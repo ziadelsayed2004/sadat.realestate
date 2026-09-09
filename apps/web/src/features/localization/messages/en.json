@@ -1,0 +1,4250 @@
+{
+  "admin/copy#getAdminCopy": {
+    "nav": {
+      "overview": "Overview",
+      "users": "Users and accounts",
+      "providers": "Property providers",
+      "properties": "Properties",
+      "requests": "Requests",
+      "content": "Content and community",
+      "advertising": "Advertising and revenue",
+      "commissions": "Commissions",
+      "notifications": "Notifications",
+      "audit": "Audit log",
+      "settings": "Settings"
+    },
+    "overview": {
+      "eyebrow": "System administrator",
+      "title": "Overview",
+      "description": "Monitor platform activity and the requests that need attention in one place.",
+      "rangeLabel": "Displayed range",
+      "refreshedLabel": "Last refreshed",
+      "platformTitle": "Platform",
+      "operationsTitle": "Operations and review",
+      "queueTitle": "Requests needing review",
+      "queueBody": "Request details are not available from the current overview contract.",
+      "activityTitle": "Recent activity",
+      "actions": {
+        "reviewAccounts": "Review accounts",
+        "reviewProperties": "Review properties",
+        "createArticle": "Create article",
+        "reviewAdvertising": "Review advertising"
+      },
+      "metrics": {
+        "users": "Total users",
+        "seekers": "Property seekers",
+        "providers": "Property providers",
+        "verifiedProviders": "Verified providers",
+        "publishedProperties": "Published properties",
+        "openRequests": "Open requests",
+        "pendingReviews": "Pending reviews"
+      },
+      "emptyTitle": "No data in this range",
+      "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading the admin dashboard",
+        "body": "Fetching metrics from the live platform source."
+      },
+      "empty": {
+        "title": "No data in this range",
+        "body": "There are no real operational records to display."
+      },
+      "error": {
+        "title": "The admin dashboard could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "The admin dashboard is unavailable",
+        "body": "Retry when the connection is available."
+      },
+      "success": {
+        "title": "Admin dashboard loaded",
+        "body": "Metrics were loaded from the implemented source."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session."
+      }
+    },
+    "retry": "Retry",
+    "unavailable": "Unavailable"
+  },
+  "admin/notifications-audit-copy#getAdminNotificationsAuditCopy": {
+    "navLabel": "Notifications and audit log",
+    "notifications": {
+      "eyebrow": "Notification center",
+      "title": "Notifications",
+      "description": "Review notifications addressed to the authenticated administrator only.",
+      "listLabel": "Notification list",
+      "unreadCount": "unread",
+      "markAll": "Mark all as read",
+      "markRead": "Mark as read",
+      "openLink": "Open link",
+      "tabs": {
+        "all": "All",
+        "unread": "Unread"
+      },
+      "empty": {
+        "all": {
+          "title": "No notifications",
+          "body": "Real notifications will appear here when they are available."
+        },
+        "unread": {
+          "title": "No unread notifications",
+          "body": "All available notifications have been reviewed."
+        }
+      },
+      "mutation": {
+        "markedRead": "Notification marked as read.",
+        "markedAll": "Notifications marked as read.",
+        "notFound": "This notification is no longer available.",
+        "permission": "You do not have permission to update this notification.",
+        "error": "The notification could not be updated."
+      }
+    },
+    "audit": {
+      "eyebrow": "Governance and traceability",
+      "title": "Audit log",
+      "description": "Review recorded events with server-redacted before and after snapshots.",
+      "filters": "Filter log",
+      "actorId": "Administrator ID",
+      "targetType": "Target type",
+      "targetId": "Target ID",
+      "action": "Action",
+      "traceId": "Trace ID",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply filters",
+      "clear": "Clear",
+      "tableLabel": "Audit events",
+      "date": "Date and time",
+      "actor": "Administrator",
+      "target": "Target",
+      "actionLabel": "Action",
+      "reason": "Reason",
+      "details": "Details",
+      "before": "Before",
+      "after": "After",
+      "snapshotNotice": "Before and after snapshots are redacted by the server; passwords, access tokens, and private documents are excluded.",
+      "metrics": {
+        "total": "Total events",
+        "onPage": "Shown on page",
+        "administrators": "Unique administrators",
+        "redactedSnapshots": "Redacted snapshots"
+      },
+      "requestId": "Request ID",
+      "trace": "Trace",
+      "view": "View details",
+      "back": "Back to audit log",
+      "noEntries": "No audit events match the current filters."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Fetching data from the implemented platform source."
+      },
+      "empty": {
+        "title": "No data",
+        "body": "There are no real records to display."
+      },
+      "error": {
+        "title": "Could not load data",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "The service is temporarily unavailable",
+        "body": "Retry when the connection is available."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator with the required permission."
+      },
+      "not_found": {
+        "title": "Audit record not found",
+        "body": "The requested audit record is no longer available."
+      },
+      "success": {
+        "title": "Loaded",
+        "body": "Data was loaded from the implemented source."
+      }
+    },
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Result pages"
+  },
+  "admin_accounts/copy#getAdminAccountsCopy": {
+    "users": {
+      "eyebrow": "Account administration",
+      "title": "Users and accounts",
+      "description": "Review seeker and provider accounts using the server projection approved for administrators.",
+      "searchLabel": "Search the loaded page",
+      "searchPlaceholder": "Name, email, phone, or account ID",
+      "roleLabel": "Account type",
+      "statusLabel": "Account status",
+      "typeLabel": "Account type",
+      "all": "All",
+      "totalLabel": "accounts",
+      "emptyTitle": "No accounts found",
+      "emptyBody": "No account records match the current filters.",
+      "columns": {
+        "name": "Account",
+        "type": "Type",
+        "phone": "Phone",
+        "email": "Email",
+        "status": "Status",
+        "locale": "Locale",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
+    },
+    "providers": {
+      "eyebrow": "Account administration",
+      "title": "Property providers",
+      "description": "Review provider applications and account states without exposing private documents or internal review data.",
+      "searchLabel": "Search the loaded page",
+      "searchPlaceholder": "Name, company, email, or provider ID",
+      "statusLabel": "Application status",
+      "typeLabel": "Provider type",
+      "all": "All",
+      "totalLabel": "providers",
+      "emptyTitle": "No providers found",
+      "emptyBody": "No provider records match the current filters.",
+      "columns": {
+        "name": "Provider",
+        "type": "Type",
+        "status": "Application status",
+        "accountStatus": "Account status",
+        "company": "Business",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
+    },
+    "verification": {
+      "eyebrow": "Verification workspace",
+      "title": "Provider verification",
+      "description": "Review provider applications and open only clean, active documents through a short-lived reviewer grant.",
+      "searchLabel": "Search the loaded page",
+      "searchPlaceholder": "Provider name, company, or application ID",
+      "statusLabel": "Application status",
+      "typeLabel": "Provider type",
+      "all": "All",
+      "totalLabel": "applications",
+      "emptyTitle": "No verification records found",
+      "emptyBody": "No provider applications match the current filters.",
+      "columns": {
+        "name": "Provider",
+        "type": "Type",
+        "status": "Application status",
+        "submitted": "Submitted",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "Loading administration records",
+        "body": "Fetching the approved administrator projection from the live API."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "There are no records to display for the current filters."
+      },
+      "error": {
+        "title": "The administration records could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "The administration service is unavailable",
+        "body": "Retry when the connection is available."
+      },
+      "success": {
+        "title": "Administration records loaded",
+        "body": "The current server projection is ready."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator with the matching read permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested account or provider is no longer available in the administrator projection."
+      }
+    },
+    "statusLabels": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "needs_information": "Needs information",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "suspended": "Suspended"
+    },
+    "accountStatusLabels": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "verified": "Verified",
+      "needs_information": "Needs information",
+      "rejected": "Rejected",
+      "restricted": "Restricted",
+      "suspended": "Suspended"
+    },
+    "providerTypeLabels": {
+      "individual_broker": "Individual broker",
+      "brokerage_office": "Brokerage office",
+      "developer_company": "Developer company"
+    },
+    "documentCategoryLabels": {
+      "government_id_front": "Government ID (front)",
+      "government_id_back": "Government ID (back)",
+      "broker_license": "Broker licence",
+      "professional_membership": "Professional membership",
+      "commercial_registration": "Commercial registration",
+      "tax_card": "Tax card",
+      "authorized_representative_id_front": "Representative ID (front)",
+      "authorized_representative_id_back": "Representative ID (back)",
+      "authorization_letter": "Authorization letter",
+      "brokerage_license": "Brokerage licence",
+      "company_profile": "Company profile",
+      "developer_license": "Developer licence",
+      "additional_supporting_document": "Supporting document"
+    },
+    "securityStateLabels": {
+      "quarantined": "Quarantined",
+      "scan_pending": "Scan pending",
+      "clean": "Clean",
+      "infected": "Infected",
+      "scan_failed": "Scan failed",
+      "deleted": "Deleted"
+    },
+    "reviewStateLabels": {
+      "uploaded": "Uploaded",
+      "pending_review": "Pending review",
+      "needs_replacement": "Needs replacement",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "retry": "Retry",
+      "view": "View details",
+      "back": "Back to list",
+      "openDocument": "Open document",
+      "unavailableDocument": "Unavailable",
+      "loadingDocument": "Opening…",
+      "reviewHeading": "Application decision",
+      "reviewReason": "Decision reason",
+      "reviewReasonPlaceholder": "Write a clear reason (at least 3 characters)",
+      "reviewReasonRequired": "Enter a valid reason before saving the decision.",
+      "reviewSaved": "The provider application decision was saved.",
+      "verify": "Verify account",
+      "reject": "Reject application",
+      "needsInformation": "Request information",
+      "suspend": "Suspend account"
+    }
+  },
+  "admin_accounts/reports-copy#getAdminAccountReportsCopy": {
+    "list": {
+      "eyebrow": "Account moderation",
+      "title": "Account reports",
+      "description": "Review reported accounts through the explicit moderation projection and resolve only with a reason.",
+      "searchLabel": "Search account reports",
+      "searchPlaceholder": "Account ID, reason, or report ID",
+      "statusLabel": "Report status",
+      "all": "All",
+      "totalLabel": "reports",
+      "emptyTitle": "No account reports found",
+      "emptyBody": "No report records match the selected filters.",
+      "columns": {
+        "account": "Account",
+        "type": "Type",
+        "reason": "Reason",
+        "related": "Related",
+        "status": "Status",
+        "created": "Created",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
+    },
+    "detail": {
+      "eyebrow": "Account report",
+      "title": "Report details",
+      "reportId": "Report ID",
+      "accountId": "Account ID",
+      "accountType": "Account type",
+      "reporter": "Reporter ID",
+      "reason": "Reason",
+      "details": "Details",
+      "related": "Related reports",
+      "created": "Created",
+      "updated": "Updated",
+      "resolution": "Resolution",
+      "resolutionReason": "Resolution reason",
+      "mutationReason": "Reason for this action",
+      "mutationReasonHint": "Enter at least five characters. The API remains authoritative.",
+      "resolve": "Resolve report",
+      "dismiss": "Dismiss report",
+      "openRestrictions": "Open account restrictions",
+      "accountStatus": "Current account status",
+      "availableActions": "Available account actions",
+      "beforeAfter": "Latest account transition",
+      "transitionReason": "Reason for account action",
+      "transition": "Apply account action",
+      "noActions": "No account action is currently available.",
+      "noAccountProjection": "The account projection is not available for this report target."
+    },
+    "restrictions": {
+      "eyebrow": "Account restrictions",
+      "title": "Account states and restrictions",
+      "description": "Review reported account targets and use only the actions returned by the administrator API.",
+      "account": "Account",
+      "status": "Status",
+      "action": "Action",
+      "view": "View report",
+      "emptyTitle": "No restriction targets found",
+      "emptyBody": "Reported account targets will appear here when the API returns them."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading account moderation",
+        "body": "Fetching the administrator projection from the live API."
+      },
+      "empty": {
+        "title": "No moderation records",
+        "body": "There are no records to display for the current filters."
+      },
+      "error": {
+        "title": "Account moderation could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Account moderation is unavailable",
+        "body": "Retry when the connection is available."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator with the matching permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested report or account is no longer available in the administrator projection."
+      }
+    },
+    "retry": "Retry",
+    "back": "Back to reports",
+    "apply": "Apply",
+    "clear": "Clear",
+    "statusLabels": {
+      "open": "Open",
+      "in_review": "In review",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    },
+    "roleLabels": {
+      "seeker": "Seeker",
+      "provider": "Provider",
+      "admin": "Administrator"
+    },
+    "actionLabels": {
+      "verify": "Verify",
+      "reject": "Reject",
+      "needs_information": "Request information",
+      "restrict": "Restrict",
+      "suspend": "Suspend"
+    },
+    "success": "The requested moderation action was applied."
+  },
+  "admin_ads/copy#getAdminAdsCopy": {
+    "eyebrow": "Advertising and payments administration",
+    "tabs": {
+      "requests": "Ad requests",
+      "pendingProofs": "Pending proofs",
+      "approvedProofs": "Approved proofs",
+      "calendar": "Ad calendar",
+      "review": "Payment review",
+      "financial": "Financial review"
+    },
+    "titles": {
+      "requests": "Advertising requests",
+      "pendingProofs": "Pending payment proofs",
+      "approvedProofs": "Approved payment proofs",
+      "calendar": "Advertising calendar",
+      "review": "Pending payment review",
+      "financial": "Operational financial review"
+    },
+    "descriptions": {
+      "requests": "Review requests and manual quotes from the approved administrative projection.",
+      "pendingProofs": "Review active payment proofs waiting for manual review.",
+      "approvedProofs": "Review active payment proofs approved by an administrator.",
+      "calendar": "View scheduled advertising events in the Cairo timezone.",
+      "review": "Approve or reject a pending proof with a reason and expected version.",
+      "financial": "Operational advertising data; this is not an accounting system or bank verification."
+    },
+    "searchLabel": "Provider ID",
+    "providerPlaceholder": "Enter a provider ID",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear",
+    "previous": "Previous",
+    "next": "Next",
+    "rowsOnPage": "Rows on page",
+    "columns": {
+      "id": "ID",
+      "request": "Ad request",
+      "provider": "Provider",
+      "placement": "Placement",
+      "purpose": "Purpose",
+      "status": "Status",
+      "quote": "Quote",
+      "interval": "Interval",
+      "filename": "Filename",
+      "size": "Size",
+      "security": "Security",
+      "version": "Version",
+      "uploaded": "Uploaded",
+      "start": "Start",
+      "end": "End",
+      "timezone": "Timezone",
+      "state": "Financial state",
+      "occurred": "Occurred",
+      "amount": "Amount",
+      "source": "Source",
+      "actions": "Actions"
+    },
+    "requestStatus": {
+      "draft": "Draft",
+      "review": "Under review",
+      "waiting_pricing": "Waiting for pricing",
+      "quote_sent": "Quote sent",
+      "waiting_payment": "Waiting for payment",
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "ended": "Ended",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "proofStatus": {
+      "uploaded": "Uploaded",
+      "pending_review": "Pending review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "calendarStatus": {
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "ended": "Ended"
+    },
+    "financialState": {
+      "not_submitted": "Not submitted",
+      "quote_only": "Quote only",
+      "payment_proof_pending_review": "Payment proof pending",
+      "payment_proof_approved": "Payment proof approved",
+      "payment_proof_rejected": "Payment proof rejected"
+    },
+    "ledgerKind": {
+      "quote_issued": "Quote issued",
+      "quote_accepted": "Quote accepted",
+      "quote_rejected": "Quote rejected",
+      "quote_cancelled": "Quote cancelled",
+      "payment_proof_uploaded": "Proof uploaded",
+      "payment_proof_approved": "Proof approved",
+      "payment_proof_rejected": "Proof rejected",
+      "scheduled": "Scheduled",
+      "active": "Activated",
+      "ended": "Ended"
+    },
+    "view": "View",
+    "reviewAction": "Review action",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reasonLabel": "Action reason",
+    "reasonPlaceholder": "Write a clear reason of at least two characters",
+    "reasonRequired": "An action reason is required.",
+    "reviewSaved": "Action saved.",
+    "reviewing": "Saving",
+    "approveRequest": "Send to pricing",
+    "rejectRequest": "Reject request",
+    "requestReviewHelp": "Choose a review decision and record its reason before pricing can begin.",
+    "detail": "Request details",
+    "back": "Back to requests",
+    "notRealized": "Operational data only; it does not represent realized revenue or bank verification.",
+    "noMetrics": "No additional metrics are present in the current contract.",
+    "unavailable": "Unavailable",
+    "directionNote": "English LTR — the admin dashboard is approved for desktop.",
+    "states": {
+      "loading": {
+        "title": "Loading data",
+        "body": "Fetching records from the approved source."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "No data matches the current filters."
+      },
+      "error": {
+        "title": "Data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested record is not present in the available projection."
+      },
+      "success": {
+        "title": "Data ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    }
+  },
+  "admin_commissions/copy#getAdminCommissionsCopy": {
+    "eyebrow": "Commission administration",
+    "navLabel": "Commissions",
+    "titles": {
+      "policies": "Commission policies",
+      "newPolicy": "Create commission policy",
+      "history": "Commission change history",
+      "account": "Account commission",
+      "exceptions": "Commission exceptions",
+      "newException": "Create exception",
+      "confirmations": "Commission confirmations"
+    },
+    "descriptions": {
+      "policies": "Review explicit policies and their effective windows.",
+      "newPolicy": "Create an explicit policy using the approved contract.",
+      "history": "Review the chronological record of sensitive changes.",
+      "account": "Review the effective policy for one account and create an override when needed.",
+      "exceptions": "Review account-linked commission exceptions.",
+      "newException": "Record an exception with a reason and effective date.",
+      "confirmations": "Review policy, account, and exception confirmations."
+    },
+    "tabs": [
+      [
+        "/admin/commissions",
+        "Policies"
+      ],
+      [
+        "/admin/commissions/new",
+        "New policy"
+      ],
+      [
+        "/admin/commissions/history",
+        "History"
+      ],
+      [
+        "/admin/commissions/account",
+        "Account"
+      ],
+      [
+        "/admin/commissions/exceptions",
+        "Exceptions"
+      ],
+      [
+        "/admin/commissions/exceptions/new",
+        "New exception"
+      ],
+      [
+        "/admin/commissions/confirmations",
+        "Confirmations"
+      ]
+    ],
+    "actions": {
+      "retry": "Retry",
+      "create": "Create",
+      "save": "Save",
+      "apply": "Apply",
+      "previous": "Previous",
+      "next": "Next",
+      "back": "Back"
+    },
+    "labels": {
+      "key": "Key",
+      "label": "Label",
+      "kind": "Kind",
+      "scope": "Scope",
+      "scopeKey": "Scope key",
+      "status": "Status",
+      "value": "Value",
+      "effectiveFrom": "Effective from",
+      "effectiveTo": "Effective to",
+      "currency": "Currency",
+      "amountMinor": "Amount in minor units",
+      "percentageBps": "Percentage basis points",
+      "accountId": "Account ID",
+      "reason": "Reason",
+      "source": "Source",
+      "policyVersion": "Policy version",
+      "action": "Action",
+      "targetType": "Target type",
+      "targetId": "Target ID",
+      "createdAt": "Created at",
+      "acknowledgedAt": "Acknowledged at",
+      "effectiveAt": "Effective at",
+      "version": "Version"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Loading commission data."
+      },
+      "empty": {
+        "title": "No records",
+        "body": "There are no commission records for this view yet."
+      },
+      "error": {
+        "title": "Unable to load",
+        "body": "The commission data could not be loaded safely."
+      },
+      "retry": {
+        "title": "Connection interrupted",
+        "body": "Retry the commission request when the connection is available."
+      },
+      "permission": {
+        "title": "Permission required",
+        "body": "This administrator session cannot view or change commission records."
+      },
+      "not_found": {
+        "title": "Account identifier required",
+        "body": "Open this view with a valid accountId. The API does not provide an account directory here."
+      }
+    },
+    "kinds": {
+      "percentage": "Percentage",
+      "fixed": "Fixed amount",
+      "exempt": "Exempt"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "active": "Active",
+      "inactive": "Inactive",
+      "archived": "Archived"
+    },
+    "scopes": {
+      "default": "Default",
+      "provider_type": "Provider type",
+      "transaction_type": "Transaction type",
+      "property_kind": "Property kind",
+      "organization": "Organization",
+      "account": "Account"
+    },
+    "sources": {
+      "exception": "Exception",
+      "account_override": "Account override",
+      "policy": "Policy",
+      "none": "None"
+    },
+    "targetTypes": {
+      "commission_policy": "Policy",
+      "commission_exception": "Exception",
+      "commission_account_override": "Account override",
+      "commission_confirmation": "Confirmation"
+    },
+    "noAccount": "Enter a 24-character hexadecimal accountId.",
+    "validation": "Review the required fields and contract rules.",
+    "saved": "Saved successfully."
+  },
+  "admin_community/copy#getAdminCommunityCopy": {
+    "eyebrow": "Community administration",
+    "title": {
+      "posts": "Community management",
+      "comments": "Comments",
+      "reports": "Reports and moderation"
+    },
+    "description": {
+      "posts": "Review community posts from the server-approved projection.",
+      "comments": "Review comment content and state without exposing unrelated internal data.",
+      "reports": "Review incoming reports and resolve them with a clear reason and version."
+    },
+    "tab": {
+      "posts": "Posts",
+      "comments": "Comments",
+      "reports": "Reports"
+    },
+    "search": "Search",
+    "searchPlaceholder": "Search title or content",
+    "status": "Status",
+    "postId": "Post ID",
+    "all": "All",
+    "apply": "Apply",
+    "clear": "Clear",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "body": "Content",
+      "post": "Post",
+      "author": "Author",
+      "reporter": "Reporter",
+      "reason": "Reason",
+      "details": "Details",
+      "status": "Status",
+      "comments": "Comments",
+      "created": "Created",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "postStatus": {
+      "draft": "Draft",
+      "published": "Published",
+      "hidden": "Hidden",
+      "removed": "Removed"
+    },
+    "commentStatus": {
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "removed": "Removed"
+    },
+    "reportStatus": {
+      "open": "Open",
+      "in_review": "In review",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    },
+    "reportReason": {
+      "spam": "Spam",
+      "abuse": "Abuse",
+      "misinformation": "Misinformation",
+      "other": "Other"
+    },
+    "action": {
+      "review": "Review",
+      "resolve": "Resolve report",
+      "dismiss": "Dismiss report",
+      "close": "Close"
+    },
+    "reason": "Decision reason",
+    "reasonPlaceholder": "Write a clear reason of at least five characters",
+    "reasonRequired": "A decision reason is required.",
+    "confirm": "Confirm",
+    "records": "Total records",
+    "visible": "Visible on page",
+    "pageLabel": "Page",
+    "pageSize": "Page size",
+    "noActions": "No actions available",
+    "states": {
+      "loading": {
+        "title": "Loading community data",
+        "body": "Fetching records from the approved source."
+      },
+      "error": {
+        "title": "Community data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current filters."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching community permission."
+      }
+    },
+    "empty": {
+      "title": "No records found",
+      "body": "No records match the current filters."
+    },
+    "directionNote": "English LTR — community administration is approved for desktop."
+  },
+  "admin_content/copy#getAdminCmsCopy": {
+    "eyebrow": "Platform content administration",
+    "namespace": {
+      "about": "About platform",
+      "team": "Team",
+      "population": "Population counter",
+      "tips": "Real-estate tips"
+    },
+    "description": {
+      "about": "Manage the approved About page content.",
+      "team": "Maintain the approved team projection and ordering.",
+      "population": "Update the population counter only from an approved source.",
+      "tips": "Manage the approved real-estate tips."
+    },
+    "add": "Add",
+    "save": "Save changes",
+    "saving": "Saving",
+    "preview": "Preview",
+    "hidePreview": "Hide preview",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "key": "Key",
+    "name": "Name",
+    "title": "Title",
+    "body": "Body",
+    "order": "Order",
+    "status": "Status",
+    "active": "Active",
+    "value": "Population value",
+    "sourceLabel": "Source label",
+    "sourceUrl": "Source URL",
+    "asOf": "As of",
+    "reason": "Change reason",
+    "reasonPlaceholder": "Write a clear reason for this change",
+    "reasonRequired": "A change reason is required.",
+    "localizedHint": "Provide approved copy in Arabic or English as applicable.",
+    "noData": "No content is available yet.",
+    "unavailable": "Value unavailable",
+    "states": {
+      "loading": {
+        "title": "Loading content",
+        "body": "Fetching records from the approved CMS source."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "Create a draft record to establish the approved content state."
+      },
+      "error": {
+        "title": "Content could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator content session."
+      },
+      "success": {
+        "title": "Content ready",
+        "body": "The server-approved projection is ready for editing or preview."
+      },
+      "not_found": {
+        "title": "Content route not found",
+        "body": "The requested content namespace is not available."
+      }
+    },
+    "statusLabels": {
+      "draft": "Draft",
+      "published": "Published",
+      "inactive": "Inactive",
+      "available": "Available",
+      "unavailable": "Unavailable"
+    }
+  },
+  "admin_content/copy#getAdminContentCopy": {
+    "eyebrow": "Content administration",
+    "articlesTitle": "Article management",
+    "articlesDescription": "Create, review, and publish articles using the server-approved permissions.",
+    "categoriesTitle": "Article categories",
+    "categoriesDescription": "Organize content categories while preserving their order and state.",
+    "createArticle": "Create article",
+    "createCategory": "Add category",
+    "categories": "Categories",
+    "articles": "Articles",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by title or slug",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "noActions": "No actions available",
+    "id": "ID",
+    "title": "Title",
+    "name": "Category name",
+    "slug": "Slug",
+    "category": "Category",
+    "description": "Description",
+    "body": "Body",
+    "order": "Order",
+    "active": "Active",
+    "version": "Version",
+    "updated": "Updated",
+    "actions": "Actions",
+    "reason": "Change reason",
+    "reasonPlaceholder": "Write a clear reason of at least five characters",
+    "reasonRequired": "A change reason is required.",
+    "titleRequired": "Provide a title and body in Arabic or English.",
+    "categoryRequired": "Choose a category.",
+    "action": {
+      "update": "Edit",
+      "submit": "Submit for review",
+      "publish": "Publish",
+      "return_to_draft": "Return to draft",
+      "archive": "Archive",
+      "restore": "Restore"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending_review": "Under review",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading content",
+        "body": "Fetching records from the approved source."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "No records match the current search or filter."
+      },
+      "error": {
+        "title": "Content could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching content permission."
+      },
+      "success": {
+        "title": "Content ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    },
+    "saved": "Saved.",
+    "deleted": "Category deleted.",
+    "directionNote": "English LTR — content administration is approved for desktop."
+  },
+  "admin_home/copy#getAdminHomeCopy": {
+    "eyebrow": "Homepage administration",
+    "banners": "Banners",
+    "newBanner": "Add banner",
+    "tips": "Tips",
+    "homepage": "Homepage sections",
+    "bannerDescription": "Manage banners from the approved administrative projection, including order and status.",
+    "tipsDescription": "Manage approved real-estate tips from the CMS projection.",
+    "homepageDescription": "Order homepage sections and control visibility and publication state.",
+    "add": "Add",
+    "save": "Save",
+    "saving": "Saving",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "preview": "Preview",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "key": "Key",
+    "placement": "Placement",
+    "title": "Title",
+    "altText": "Alt text",
+    "targetUrl": "Target URL",
+    "start": "Start",
+    "end": "End",
+    "order": "Order",
+    "status": "Status",
+    "visible": "Visible",
+    "active": "Active",
+    "version": "Version",
+    "updated": "Updated",
+    "actions": "Actions",
+    "body": "Body",
+    "reason": "Change reason",
+    "reasonPlaceholder": "Write a clear reason of at least three characters",
+    "reasonRequired": "A change reason is required.",
+    "localizedHint": "Provide Arabic and English values as applicable.",
+    "mediaUrl": "HTTPS media URL",
+    "mediaMime": "Media MIME",
+    "mediaWidth": "Width",
+    "mediaHeight": "Height",
+    "mediaNote": "Only approved HTTPS media URLs are accepted; storage keys and permanent private links are never displayed.",
+    "saved": "Saved.",
+    "validation": "Check the required fields.",
+    "statuses": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "ended": "Ended",
+      "archived": "Archived",
+      "published": "Published",
+      "inactive": "Inactive"
+    },
+    "actionsByKey": {
+      "update": "Edit",
+      "publish": "Publish",
+      "deactivate": "Deactivate"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading data",
+        "body": "Fetching records from the approved source."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "There are no records in the current projection."
+      },
+      "error": {
+        "title": "Data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching permission."
+      },
+      "not_found": {
+        "title": "Route not found",
+        "body": "No matching administration route exists."
+      },
+      "success": {
+        "title": "Data ready",
+        "body": "Records are rendered from the approved safe projection."
+      }
+    },
+    "directionNote": "English LTR — homepage administration is approved for desktop."
+  },
+  "admin_master_data/copy#getAdminMasterDataCopy": {
+    "eyebrow": "Master data administration",
+    "titles": {
+      "categories": "Property categories & types",
+      "locations": "Locations & neighborhoods",
+      "features": "Features & services"
+    },
+    "descriptions": {
+      "categories": "Manage the categories and types used by properties and projects.",
+      "locations": "Manage the geographic hierarchy of locations and neighborhoods.",
+      "features": "Manage features and services available to properties and projects."
+    },
+    "tabs": {
+      "categories": "Categories",
+      "locations": "Locations",
+      "features": "Features & services"
+    },
+    "navigationLabel": "Master data sections",
+    "add": "Add item",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Retry",
+    "confirmDelete": "Confirm item deletion",
+    "columns": {
+      "name": "Name",
+      "kind": "Type",
+      "parent": "Parent or group",
+      "order": "Order",
+      "active": "Status",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "kinds": {
+      "category": "Category",
+      "type": "Property type",
+      "location": "Location",
+      "neighborhood": "Neighborhood",
+      "feature": "Feature",
+      "service": "Service"
+    },
+    "labels": {
+      "nameAr": "Arabic name",
+      "nameEn": "English name",
+      "slug": "Slug",
+      "kind": "Type",
+      "parent": "Parent location",
+      "category": "Parent category",
+      "group": "Feature group",
+      "order": "Order",
+      "active": "Active",
+      "reason": "Change reason",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "placeholders": {
+      "nameAr": "Example: City",
+      "nameEn": "Example: City",
+      "slug": "lowercase-slug",
+      "parent": "Select parent location",
+      "category": "Select parent category",
+      "group": "building_amenities",
+      "reason": "Explain why this change is needed",
+      "latitude": "30.0000",
+      "longitude": "31.0000"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading master data",
+        "body": "Fetching the latest server-backed records."
+      },
+      "empty": {
+        "title": "No items yet",
+        "body": "This section has no available records. Add an approved item when content is ready."
+      },
+      "error": {
+        "title": "Master data unavailable",
+        "body": "The server could not return this section. Try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access unavailable",
+        "body": "The current session is not allowed to manage this data."
+      },
+      "success": {
+        "title": "Master data ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    },
+    "mutation": {
+      "created": "Item added.",
+      "updated": "Item updated.",
+      "deleted": "Item deleted.",
+      "validation": "Check required fields and the change reason.",
+      "failed": "The change could not be saved. Try again."
+    },
+    "unavailable": "Unavailable",
+    "noParent": "No parent",
+    "noGroup": "No group",
+    "noActions": "No actions available",
+    "active": "Active",
+    "inactive": "Inactive",
+    "directionNote": "English LTR — this admin surface is approved for desktop."
+  },
+  "admin_projects/copy#getAdminProjectsCopy": {
+    "eyebrow": "Project administration",
+    "listTitle": "Projects management",
+    "listDescription": "Review projects and their state before approval and publication.",
+    "reviewTitle": "Project review",
+    "reviewDescription": "Review the available projection and take an action permitted by the server.",
+    "navigationLabel": "Project administration",
+    "allProjects": "All projects",
+    "searchLabel": "Search projects",
+    "searchPlaceholder": "Search by name or slug",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear",
+    "review": "Review",
+    "back": "Back to projects",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "columns": {
+      "id": "Project ID",
+      "name": "Project name",
+      "slug": "Slug",
+      "status": "Status",
+      "version": "Version",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending_review": "Under review",
+      "needs_changes": "Needs changes",
+      "approved": "Approved",
+      "published": "Published",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "archived": "Archived"
+    },
+    "action": {
+      "needs_changes": "Request changes",
+      "approve": "Approve",
+      "reject": "Reject",
+      "publish": "Publish"
+    },
+    "reasonLabel": "Action reason",
+    "reasonPlaceholder": "Write a clear reason of at least five characters",
+    "reasonRequired": "An action reason is required.",
+    "submitReview": "Save action",
+    "reviewing": "Saving",
+    "reviewSaved": "Action saved.",
+    "states": {
+      "loading": {
+        "title": "Loading projects",
+        "body": "Fetching projects from the approved source."
+      },
+      "empty": {
+        "title": "No projects found",
+        "body": "No projects match the selected search or status."
+      },
+      "error": {
+        "title": "Projects could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching permission."
+      },
+      "not_found": {
+        "title": "Project not found",
+        "body": "The requested project is not present in the available projection."
+      },
+      "success": {
+        "title": "Projects ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    },
+    "unavailable": "Unavailable",
+    "noActions": "No actions available",
+    "directionNote": "English LTR — project administration is approved for desktop."
+  },
+  "admin_properties/copy#getAdminPropertiesCopy": {
+    "eyebrow": "Property administration",
+    "titles": {
+      "list": "Properties management",
+      "review": "Property review",
+      "duplicates": "Possible duplicate properties",
+      "reports": "Property reports"
+    },
+    "descriptions": {
+      "list": "Review new properties and changes before approval and publication.",
+      "review": "Inspect the safe property projection and take a server-permitted action.",
+      "duplicates": "Inspect explainable duplicate signals before making a review decision.",
+      "reports": "Review property reports and update their state with a clear reason."
+    },
+    "allProperties": "All properties",
+    "searchLabel": "Search properties",
+    "searchPlaceholder": "Search by name or slug",
+    "statusLabel": "Status",
+    "activeLabel": "Activity",
+    "providerLabel": "Provider ID",
+    "projectLabel": "Project ID",
+    "allStatuses": "All statuses",
+    "allActivity": "All activity",
+    "active": "Active",
+    "inactive": "Inactive",
+    "apply": "Apply",
+    "clear": "Clear",
+    "retry": "Retry",
+    "review": "Start review",
+    "details": "View details",
+    "duplicates": "Possible duplicates",
+    "reports": "Reports",
+    "back": "Back to properties",
+    "openDuplicates": "Check duplicates",
+    "openReports": "Open reports",
+    "openProperty": "Open property",
+    "previous": "Previous",
+    "next": "Next",
+    "columns": {
+      "id": "Property ID",
+      "name": "Property",
+      "source": "Property source",
+      "kind": "Kind",
+      "transaction": "Transaction",
+      "status": "Status",
+      "active": "Activity",
+      "version": "Version",
+      "updated": "Updated",
+      "reason": "Action reason",
+      "actions": "Actions",
+      "reportId": "Report ID",
+      "propertyId": "Property ID",
+      "reportReason": "Report reason",
+      "priority": "Priority",
+      "date": "Date"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending_review": "Under review",
+      "needs_changes": "Needs changes",
+      "approved": "Approved",
+      "published": "Published",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "archived": "Archived"
+    },
+    "availableAction": {
+      "update": "Update",
+      "submit": "Submit for review",
+      "needs_changes": "Request changes",
+      "approve": "Approve",
+      "reject": "Reject",
+      "publish": "Publish",
+      "hide": "Hide",
+      "restore": "Restore",
+      "archive": "Archive"
+    },
+    "visibilityAction": {
+      "hide": "Hide property",
+      "restore": "Restore visibility",
+      "archive": "Archive property"
+    },
+    "reportStatus": {
+      "open": "New",
+      "in_review": "In review",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    },
+    "reportAction": {
+      "resolve": "Resolve report",
+      "dismiss": "Dismiss report"
+    },
+    "reportReason": {
+      "duplicate": "Duplicate",
+      "fraud": "Fraud",
+      "inaccurate": "Inaccurate data",
+      "inappropriate": "Inappropriate",
+      "other": "Other"
+    },
+    "signal": {
+      "same_slug": "Matching slug",
+      "same_location_transaction": "Matching location and transaction",
+      "same_localized_name": "Matching localized name"
+    },
+    "reasonLabel": "Action reason",
+    "reasonPlaceholder": "Write a clear reason of at least five characters",
+    "reasonRequired": "An action reason is required.",
+    "saveAction": "Save action",
+    "saving": "Saving",
+    "actionSaved": "Action saved.",
+    "noActions": "No actions available",
+    "noCandidates": "No possible duplicate matches",
+    "noReports": "No matching reports",
+    "detailsLabel": "Report details",
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Fetching records from the approved source."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "No records match the current filters."
+      },
+      "error": {
+        "title": "Records could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current data."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested record is not present in the available projection."
+      },
+      "success": {
+        "title": "Records ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    },
+    "directionNote": "English LTR — property administration is approved for desktop."
+  },
+  "admin_rbac/copy#getAdminRbacCopy": {
+    "eyebrow": "Administration access",
+    "users": "Administrator users",
+    "roles": "Roles and permissions",
+    "usersDescription": "Manage administrator accounts from the protected API projection.",
+    "rolesDescription": "Build approved roles from the server permission catalog.",
+    "addUser": "Add administrator",
+    "createRole": "Create role",
+    "edit": "Edit",
+    "save": "Save changes",
+    "saving": "Saving",
+    "retry": "Retry",
+    "back": "Back",
+    "reason": "Change reason",
+    "reasonPlaceholder": "Enter a clear reason (at least 3 characters)",
+    "reasonRequired": "A change reason is required.",
+    "email": "Email",
+    "displayName": "Display name",
+    "accessLevel": "Access level",
+    "status": "Status",
+    "version": "Version",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "roleName": "Role name",
+    "description": "Description",
+    "accessMode": "Access mode",
+    "permissions": "Permissions",
+    "active": "Active",
+    "permissionCatalog": "Permission catalog",
+    "noActions": "No actions are available for this account.",
+    "noUsers": "No administrator users were returned.",
+    "noRoles": "No roles were returned.",
+    "filterStatus": "Filter by status",
+    "filterAccess": "Filter by access level",
+    "all": "All",
+    "activeStatus": "Active",
+    "disabledStatus": "Disabled",
+    "superAdmin": "Super Admin",
+    "standardAdmin": "Standard Admin",
+    "custom": "Custom",
+    "viewOnly": "View Only",
+    "enable": "Enable",
+    "disable": "Disable",
+    "validation": "Check the fields and try again.",
+    "saved": "Saved from the protected API projection.",
+    "states": {
+      "loading": {
+        "title": "Loading administration access",
+        "body": "Fetching the safe administrator projection."
+      },
+      "empty": {
+        "title": "Nothing is available yet",
+        "body": "The protected API returned no records."
+      },
+      "error": {
+        "title": "The data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without losing the current screen."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "The API did not grant the required administrator permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested administrator or role is not available."
+      },
+      "conflict": {
+        "title": "Version conflict",
+        "body": "This record changed after it was loaded. Retry after reviewing the latest projection."
+      },
+      "success": {
+        "title": "Administration access ready",
+        "body": "Values are rendered from the protected API projection."
+      }
+    },
+    "directionNote": "English uses LTR; Arabic uses RTL. Approved scope is Admin Desktop."
+  },
+  "admin_requests/copy#getAdminRequestsCopy": {
+    "eyebrow": "Request administration",
+    "titles": {
+      "all": "All requests",
+      "customer": "Customer requests",
+      "overdue": "Overdue requests",
+      "contact": "Contact requests",
+      "viewing": "Viewing requests",
+      "search": "Property search requests",
+      "issues": "Request issues"
+    },
+    "descriptions": {
+      "all": "Review requests and follow the actions permitted by the server.",
+      "customer": "Review customer requests created by providers.",
+      "overdue": "Follow requests that passed their follow-up deadline.",
+      "contact": "Review contact requests submitted by seekers.",
+      "viewing": "Review viewing appointments recorded in the system.",
+      "search": "Review seeker property-search preferences.",
+      "issues": "Resolve request issues with a reason and optimistic version."
+    },
+    "navigationLabel": "Administration navigation",
+    "allRequests": "All requests",
+    "filters": "Request filters",
+    "status": "Status",
+    "type": "Type",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "search": "Search",
+    "searchPlaceholder": "Search by ID or available text",
+    "apply": "Apply",
+    "clear": "Clear",
+    "previous": "Previous",
+    "next": "Next",
+    "view": "View",
+    "details": "Request details",
+    "closeDetails": "Close details",
+    "issueDetails": "Issue details",
+    "requestId": "Request ID",
+    "issueId": "Issue ID",
+    "requestType": "Request type",
+    "source": "Source",
+    "state": "Status",
+    "version": "Version",
+    "created": "Created",
+    "updated": "Updated",
+    "due": "Follow-up due",
+    "appointment": "Appointment",
+    "timezone": "Timezone",
+    "property": "Property",
+    "seeker": "Seeker",
+    "provider": "Provider",
+    "payload": "Available request data",
+    "noPayload": "No additional data is available.",
+    "actions": "Available actions",
+    "transition": "Status transition",
+    "transitionReason": "Transition reason",
+    "transitionReasonPlaceholder": "Write a clear reason (at least 3 characters)",
+    "transitionRequired": "Choose an action and provide a reason of at least 3 characters.",
+    "saveTransition": "Save transition",
+    "saving": "Saving",
+    "transitionSaved": "Transition saved.",
+    "assignment": "Assign request",
+    "assigneeId": "Assignee ID",
+    "assigneePlaceholder": "A 24-character administrator ID",
+    "assignmentReason": "Assignment reason",
+    "saveAssignment": "Save assignment",
+    "note": "Administrative note",
+    "notePlaceholder": "Write a clear internal note",
+    "addNote": "Add note",
+    "noteSaved": "Note added.",
+    "issueAction": "Issue action",
+    "resolve": "Resolve",
+    "dismiss": "Dismiss",
+    "resolutionReason": "Resolution reason",
+    "resolveIssue": "Save issue action",
+    "issueSaved": "Issue action saved.",
+    "retry": "Retry",
+    "backToList": "Back to list",
+    "noActions": "No actions available",
+    "directionNote": "English LTR — administration is approved for desktop only.",
+    "statusLabel": {
+      "new": "New",
+      "under_review": "Under review",
+      "contacted": "Contacted",
+      "scheduled": "Scheduled",
+      "needs_information": "Needs information",
+      "in_progress": "In progress",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "closed": "Closed"
+    },
+    "typeLabel": {
+      "contact": "Contact",
+      "viewing": "Viewing",
+      "property_search": "Property search",
+      "provider_customer": "Provider customer"
+    },
+    "transitionLabel": {
+      "start_review": "Start review",
+      "contact": "Record contact",
+      "schedule": "Schedule",
+      "needs_information": "Request information",
+      "start_progress": "Start progress",
+      "resolve": "Resolve request",
+      "cancel": "Cancel",
+      "close": "Close",
+      "reopen": "Reopen"
+    },
+    "viewingStatusLabel": {
+      "requested": "Requested",
+      "confirmed": "Confirmed",
+      "rescheduled": "Rescheduled",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    },
+    "issueStatusLabel": {
+      "open": "Open",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    },
+    "issueCategoryLabel": {
+      "duplicate": "Duplicate",
+      "abuse": "Abuse",
+      "incorrect_data": "Incorrect data",
+      "service": "Service",
+      "other": "Other"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading requests",
+        "body": "Fetching the approved projection from the server."
+      },
+      "empty": {
+        "title": "No records found",
+        "body": "No records match the current filters."
+      },
+      "error": {
+        "title": "Data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without changing the current filters."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This page requires an authenticated administrator session and the matching permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The record is not present in the available projection."
+      },
+      "success": {
+        "title": "Data ready",
+        "body": "Records are rendered from the server-approved projection."
+      }
+    }
+  },
+  "admin_settings/copy#getAdminSettingsCopy": {
+    "eyebrow": "Platform settings",
+    "platform": "Platform information",
+    "contact": "Contact information",
+    "social": "Social media accounts",
+    "labels": {
+      "platform": "Platform information",
+      "contact": "Contact information",
+      "social": "Social media accounts",
+      "properties": "Property settings",
+      "requests": "Request settings",
+      "advertising": "Advertising settings",
+      "seo": "SEO settings",
+      "privacy-security": "Privacy and security settings",
+      "display": "Display settings"
+    },
+    "descriptions": {
+      "platform": "Update approved platform data while preserving versioning and auditability.",
+      "contact": "Maintain public contact data from the approved administrative projection.",
+      "social": "Manage optional social links from the approved settings source.",
+      "properties": "Edit only the property settings present in the approved administrative projection.",
+      "requests": "Edit existing request settings without inventing operational rules.",
+      "advertising": "Manage approved advertising values without universal prices or payment claims.",
+      "seo": "Manage approved SEO values while respecting their publication state.",
+      "privacy-security": "Manage approved privacy and security values without exposing secrets or private data.",
+      "display": "Manage approved display values with versioning and auditability."
+    },
+    "fields": {
+      "platform_name": "Platform name",
+      "short_name": "Short name",
+      "description": "Description",
+      "city": "City",
+      "timezone": "Timezone",
+      "currency": "Currency",
+      "default_locale": "Default language",
+      "primary_email": "Email",
+      "primary_phone": "Phone",
+      "office_address": "Office address",
+      "working_hours": "Working hours",
+      "whatsapp_number": "WhatsApp",
+      "map_url": "Map link",
+      "facebook_url": "Facebook",
+      "instagram_url": "Instagram",
+      "linkedin_url": "LinkedIn",
+      "youtube_url": "YouTube",
+      "tiktok_url": "TikTok",
+      "requires_admin_review": "Require administrative review before publishing",
+      "publication_after_approval": "Publishing after approval",
+      "automatic_expiry": "Automatic property expiry",
+      "max_images": "Maximum images",
+      "accepted_image_formats": "Accepted image formats",
+      "max_image_size_mb": "Maximum file size (MB)",
+      "hide_provider_contact": "Hide provider contact in listings",
+      "contact_visibility": "Contact visibility",
+      "supported_placements": "Supported advertising placements",
+      "supported_ad_types": "Supported advertising types",
+      "desktop_dimensions": "Required desktop dimensions",
+      "mobile_dimensions": "Required mobile dimensions",
+      "accepted_file_formats": "Accepted file formats",
+      "quote_validity_days": "Quote validity (days)",
+      "payment_proof_methods": "Payment proof methods",
+      "default_seo_title": "Default SEO title",
+      "default_meta_description": "Default meta description",
+      "title_separator": "Title separator",
+      "canonical_domain": "Canonical domain",
+      "allow_indexing": "Allow pages to be indexed by default",
+      "sitemap_status": "Sitemap status",
+      "google_search_console_verification": "Google Search Console verification code",
+      "hide_customer_contact": "Hide customer contact from unauthorized users",
+      "hide_internal_notes": "Keep internal notes inside administration",
+      "hide_private_documents": "Keep private documents out of public views",
+      "admin_session_timeout_minutes": "Admin session timeout (minutes)",
+      "two_factor_authentication": "Two-factor authentication",
+      "page_direction": "Page direction",
+      "page_size": "Results per page",
+      "population_count": "Population counter value",
+      "population_label": "Population counter label",
+      "show_population_counter": "Show counter on homepage",
+      "blocked_word_review": "Review blocked words automatically",
+      "blocked_words": "Blocked words (one per line)",
+      "blocked_word_action": "Action when detected",
+      "daily_post_limit": "Maximum posts per day",
+      "moderation_wait_hours": "Moderation wait time (hours)",
+      "option_automatic": "Publish automatically",
+      "option_manual": "Publish manually",
+      "option_never": "Never expires",
+      "option_30_days": "30 days",
+      "option_60_days": "60 days",
+      "option_90_days": "90 days",
+      "option_authenticated": "Authenticated users only",
+      "option_public": "Everyone",
+      "option_after_request": "After a request",
+      "option_active": "Active",
+      "option_inactive": "Inactive",
+      "option_arabic": "Arabic",
+      "option_english": "English",
+      "option_rtl": "RTL (right to left)",
+      "option_ltr": "LTR (left to right)",
+      "option_manual_review": "Send to manual review",
+      "option_reject": "Reject automatically"
+    },
+    "locales": {
+      "ar": "Arabic",
+      "en": "English"
+    },
+    "save": "Save changes",
+    "saving": "Saving",
+    "retry": "Retry",
+    "reason": "Change reason",
+    "reasonPlaceholder": "Write a clear reason of at least three characters",
+    "reasonRequired": "A change reason is required.",
+    "saved": "Settings saved.",
+    "validation": "Check the fields and try again.",
+    "version": "Version",
+    "schemaVersion": "Schema version",
+    "preservedValues": "Other approved values are preserved when this screen is saved.",
+    "unavailableAction": "Create settings draft",
+    "states": {
+      "loading": {
+        "title": "Loading settings",
+        "body": "Fetching the safe administrative projection."
+      },
+      "empty": {
+        "title": "Settings are not available yet",
+        "body": "This namespace has not been created. No unverified production values are added."
+      },
+      "error": {
+        "title": "Settings could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without losing the current values."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "This screen requires an administrator session and the matching API permission."
+      },
+      "conflict": {
+        "title": "Version conflict",
+        "body": "The settings changed since the last load. Reload the projection and review it before saving."
+      },
+      "success": {
+        "title": "Settings ready",
+        "body": "Values are rendered from the approved administrative projection."
+      },
+      "not_found": {
+        "title": "Route not found",
+        "body": "No matching settings namespace exists."
+      }
+    },
+    "directionNote": "English LTR — platform settings are approved for desktop.",
+    "selectPlaceholder": "Select a value"
+  },
+  "auth/copy#getAuthCopy": {
+    "brand": "Sadat Real Estate",
+    "loginTitle": "Log in",
+    "loginDescription": "Log in to continue with your property search and requests.",
+    "identifierLabel": "Email",
+    "identifierPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rememberLabel": "Remember me",
+    "forgotPasswordAction": "Forgot password?",
+    "privacyNotice": "We protect your data and never share it without your consent.",
+    "loginAction": "Log in",
+    "loggingIn": "Logging in",
+    "createAccountPrompt": "Don't have an account?",
+    "createAccountAction": "Create an account",
+    "emailLoginPrompt": "Or continue with a code sent to your email",
+    "emailLoginAction": "Verify by email",
+    "emailTitle": "Verify your email",
+    "emailDescription": "Enter the email linked to the account. The one-time code is sent by email.",
+    "emailPlaceholder": "Enter your email",
+    "roleLabel": "Account type",
+    "roleSeeker": "Property seeker",
+    "roleProvider": "Property provider",
+    "sendCodeAction": "Send code",
+    "sendingCode": "Sending code",
+    "otpTitle": "Enter the verification code",
+    "otpDescription": "Enter the six-digit code sent to the email",
+    "codeLabel": "Verification code",
+    "verifyAction": "Verify code",
+    "verifyingCode": "Verifying code",
+    "resendAction": "Resend code",
+    "changeEmailAction": "Change email address",
+    "codeSentTitle": "Verification code sent",
+    "codeSentBody": "Check your inbox and spam folder, then enter the code to continue.",
+    "loginSuccessTitle": "You are logged in",
+    "loginSuccessBody": "Taking you to the requested page.",
+    "verificationSuccessTitle": "Email verified",
+    "verificationSuccessBody": "Your contact details are verified and you can continue registration.",
+    "invalidFormTitle": "Check your details",
+    "invalidFormBody": "Complete the required fields using the expected format.",
+    "invalidCredentialsTitle": "Unable to log in",
+    "invalidCredentialsBody": "The login details are not correct. Review them and try again.",
+    "accountNotActiveTitle": "Account unavailable",
+    "accountNotActiveBody": "This account cannot log in at this time.",
+    "invalidOtpTitle": "Incorrect verification code",
+    "invalidOtpBody": "Review the code and enter it again.",
+    "otpAttemptsTitle": "Verification attempts exceeded",
+    "otpAttemptsBody": "Request a new code and try again.",
+    "otpRateLimitedTitle": "Sending is temporarily paused",
+    "otpRateLimitedBody": "Wait a little before requesting another code.",
+    "otpProviderTitle": "Email service unavailable",
+    "otpProviderBody": "The code could not be sent right now. Try again later.",
+    "networkTitle": "Connection unavailable",
+    "networkBody": "Check your connection and try again.",
+    "genericErrorTitle": "The action could not be completed",
+    "genericErrorBody": "Try again. No sensitive data was displayed.",
+    "unknownRouteTitle": "Route unavailable",
+    "unknownRouteBody": "Return to the login page to continue.",
+    "retryAction": "Try again",
+    "registrationPurpose": "registration",
+    "registrationStepLabel": "Step 1",
+    "accountSelectionTitle": "How will you use Sadat Real Estate?",
+    "accountSelectionBody": "Choose the use that fits you. You can complete your account details in the next step.",
+    "seekerAccountTitle": "I am looking for a property",
+    "seekerAccountBody": "Explore units, save suitable properties, and send inquiry and viewing requests.",
+    "providerAccountTitle": "I want to list properties",
+    "providerAccountBody": "Add your units and follow customer requests after your account is reviewed and approved.",
+    "continueAction": "Continue",
+    "backAction": "Back to log in",
+    "registrationFormTitle": "Create your seeker account",
+    "registrationFormBody": "Complete your basic details after verifying your email.",
+    "firstNameLabel": "First name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNameLabel": "Last name",
+    "lastNamePlaceholder": "Enter your last name",
+    "registerAction": "Create account",
+    "registering": "Creating account",
+    "registrationSuccessTitle": "Your account is ready",
+    "registrationSuccessBody": "Your seeker account was created. Continue to your account to get started.",
+    "registrationNextAction": "Go to my account",
+    "invalidRegistrationTokenTitle": "Verification expired",
+    "invalidRegistrationTokenBody": "Start email verification again to continue safely.",
+    "duplicateRegistrationTitle": "Account already exists",
+    "duplicateRegistrationBody": "An account is already linked to this email. Return to log in.",
+    "registrationUnavailableTitle": "Registration cannot continue",
+    "registrationUnavailableBody": "Start registration again. Verification data is not kept on this device.",
+    "restartRegistrationAction": "Restart registration"
+  },
+  "community/copy#getCommunityCopy": {
+    "title": "Sadat Real Estate community",
+    "subtitle": "Share published property questions and experiences safely with the platform community.",
+    "moderationNotice": "Posts and comments are reviewed before they become public.",
+    "composerModerationNotice": "Posts are reviewed before they become public.",
+    "createPost": "Create a post",
+    "publishPost": "Publish post",
+    "allPosts": "All posts",
+    "openDiscussion": "Open discussion",
+    "closeDiscussion": "Close discussion",
+    "postTitle": "Post title",
+    "postBody": "Post body",
+    "postTitlePlaceholder": "Write a clear title",
+    "postBodyPlaceholder": "Share a property question or experience",
+    "composerPostBodyPlaceholder": "Post content...",
+    "commentLabel": "Add a comment",
+    "commentPlaceholder": "Write your comment",
+    "submitComment": "Post comment",
+    "reportPost": "Report post",
+    "reportReason": "Report reason",
+    "reportDetails": "Report details",
+    "reportDetailsPlaceholder": "Briefly describe the reason for reporting",
+    "submitReport": "Send report",
+    "cancel": "Cancel",
+    "close": "Close",
+    "signInToContinue": "Sign in to post, comment, or report community content.",
+    "signIn": "Sign in",
+    "authenticationRequired": "Sign-in required",
+    "loadingTitle": "Loading the community",
+    "loadingBody": "Preparing the latest published posts.",
+    "emptyTitle": "No published posts",
+    "emptyBody": "Posts will appear here after they are approved and published.",
+    "errorTitle": "The community could not load",
+    "errorBody": "Check your connection and try again.",
+    "retryTitle": "The community is temporarily unavailable",
+    "retryBody": "Retry when the connection is available.",
+    "retryLabel": "Try again",
+    "permissionTitle": "The community cannot be displayed",
+    "permissionBody": "The server did not allow access to public community content.",
+    "notFoundTitle": "Post not found",
+    "notFoundBody": "The post may no longer be published or the link may be incorrect.",
+    "successTitle": "Done",
+    "postCreated": "Your post was sent for moderation.",
+    "commentCreated": "Your comment was sent for moderation.",
+    "reportCreated": "Your report was sent for review.",
+    "validationTitle": "Check the entered details",
+    "validationBody": "Complete the required fields before submitting.",
+    "mutationErrorTitle": "The action could not be completed",
+    "mutationErrorBody": "Check your permission and try again.",
+    "reportReasons": {
+      "spam": "Spam",
+      "abuse": "Abuse",
+      "misinformation": "Misinformation",
+      "other": "Other"
+    }
+  },
+  "content/about-team-copy#getPublicAboutTeamCopy": {
+    "aboutEyebrow": "About the platform",
+    "aboutTitle": "Sadat Real Estate platform",
+    "aboutSubtitle": "A trusted public gateway for properties and content published by approved sources.",
+    "teamEyebrow": "The team",
+    "teamTitle": "The people behind the platform",
+    "teamSubtitle": "A specialist team working every day to improve your experience.",
+    "loadingTitle": "Loading published content",
+    "loadingBody": "Preparing content from the CMS.",
+    "emptyTitle": "No published content yet",
+    "emptyBody": "Content will appear here when it is published by the CMS.",
+    "errorTitle": "The content could not load",
+    "errorBody": "Check your connection and try again.",
+    "retryTitle": "The content is temporarily unavailable",
+    "retryBody": "Retry when the connection is available.",
+    "retryLabel": "Retry",
+    "permissionTitle": "This content cannot be displayed",
+    "permissionBody": "The server did not allow access to public content.",
+    "permissionLink": "Return to the public homepage",
+    "imageUnavailable": "Image unavailable",
+    "roleUnavailable": "Role unavailable",
+    "bioUnavailable": "No published biography is available.",
+    "footerDescription": "A public platform for properties and content from approved sources.",
+    "footerLinks": "Platform links"
+  },
+  "content/articles-copy#getPublicArticlesCopy": {
+    "eyebrow": "Real-estate knowledge",
+    "title": "Articles and expert content",
+    "subtitle": "Your trusted guide to the Sadat City real-estate market",
+    "searchLabel": "Search articles",
+    "searchPlaceholder": "Search articles...",
+    "allCategories": "All",
+    "categoryLabel": "Article categories",
+    "openArticle": "Read article",
+    "publishedAt": "Published",
+    "authorLabel": "Author",
+    "authorUnavailable": "Author details are not available in the public content projection.",
+    "imageUnavailable": "Article image unavailable",
+    "noSummary": "No published summary is available for this article.",
+    "backToArticles": "Back to articles",
+    "articleBody": "Article content",
+    "introduction": "Introduction",
+    "relatedArticles": "Related articles",
+    "relatedProperties": "Related properties",
+    "ctaTitle": "Looking for the right property?",
+    "ctaAction": "Search now",
+    "noRelatedArticles": "No related published articles are available yet.",
+    "searchNoMatch": "No articles match your search.",
+    "loadingTitle": "Loading articles",
+    "loadingBody": "Preparing the latest published articles.",
+    "emptyTitle": "No published articles",
+    "emptyBody": "Approved content will appear here after it is published.",
+    "errorTitle": "Articles could not be loaded",
+    "errorBody": "Check your connection and try again.",
+    "retryTitle": "Articles are temporarily unavailable",
+    "retryBody": "You can retry when the connection is available.",
+    "retryLabel": "Try again",
+    "permissionTitle": "These articles cannot be displayed",
+    "permissionBody": "The server did not allow access to public content.",
+    "permissionLink": "Back to homepage",
+    "notFoundTitle": "Article not found",
+    "notFoundBody": "The article may no longer be published or the link may be incorrect.",
+    "notFoundLink": "Browse articles",
+    "footerDescription": "Published real-estate content from approved sources.",
+    "footerLinks": "Platform links"
+  },
+  "provider/advertising-copy#getProviderAdvertisingCopy": {
+    "eyebrow": "Advertising",
+    "title": "Advertising requests",
+    "description": "Track advertising requests, administrative quotes, and payment-proof review from your account.",
+    "create": "New advertising request",
+    "refresh": "Refresh",
+    "filtersLabel": "Filter requests",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear",
+    "count": "advertising requests",
+    "columns": {
+      "request": "Request",
+      "placement": "Placement and purpose",
+      "period": "Period",
+      "status": "Status",
+      "quote": "Administrative quote",
+      "payment": "Payment proof",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "review": "Under review",
+      "waiting_pricing": "Waiting for pricing",
+      "quote_sent": "Quote sent",
+      "waiting_payment": "Waiting for payment",
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "ended": "Ended",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "quoteStatuses": {
+      "issued": "Ready to accept",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "paymentStatuses": {
+      "uploaded": "Uploaded",
+      "pending_review": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "open": "View details",
+    "backToList": "Back to requests",
+    "requestDetails": "Advertising request details",
+    "purpose": "Purpose",
+    "interval": "Period",
+    "history": "Status history",
+    "quote": "Administrative quote",
+    "quoteTotal": "Total",
+    "quoteValidUntil": "Valid until",
+    "quoteTerms": "Terms",
+    "acceptQuote": "Accept quote",
+    "submitRequest": "Submit for review",
+    "paymentProof": "Payment proof",
+    "paymentProofHelp": "Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.",
+    "uploadPaymentProof": "Upload payment proof",
+    "paymentMethod": "Payment method",
+    "paymentProofUploaded": "Payment proof was submitted for review.",
+    "noPaymentProof": "No payment proof submitted.",
+    "schedule": "Schedule",
+    "noSchedule": "No schedule is available yet.",
+    "noQuote": "No administrative quote is available yet.",
+    "noHistory": "No status history is available.",
+    "createForm": {
+      "title": "New advertising request",
+      "description": "Enter the approved request fields. Pricing is not set in this form.",
+      "placementKey": "Advertising placement key",
+      "placementKeyHelp": "Use a placement key approved by platform administration.",
+      "adType": "Advertising type",
+      "adTypeHelp": "Enter a type approved in advertising settings when required.",
+      "purpose": "Advertising purpose",
+      "start": "Period start",
+      "end": "Period end",
+      "cancel": "Cancel",
+      "save": "Submit request",
+      "validation": "Review the fields and dates before submitting.",
+      "close": "Close request form"
+    },
+    "commission": {
+      "eyebrow": "Commission",
+      "title": "Commission",
+      "description": "The effective commission policy returned for your account.",
+      "appliedPolicy": "Current policy",
+      "source": "Source",
+      "effectiveAt": "Effective from",
+      "version": "Policy version",
+      "kind": "Commission type",
+      "percentage": "Percentage",
+      "fixed": "Fixed amount",
+      "noneTitle": "No commission policy available",
+      "noneBody": "No commission policy is currently assigned to your account. No universal rate is assumed.",
+      "readOnly": "This information is read-only and cannot be changed by the provider.",
+      "unavailable": "Unavailable"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Advertising data is loading."
+      },
+      "empty": {
+        "title": "No advertising requests",
+        "body": "Advertising requests owned by your account will appear here when available."
+      },
+      "error": {
+        "title": "Advertising data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Advertising is temporarily unavailable",
+        "body": "You can retry when the connection is available."
+      },
+      "permission": {
+        "title": "Authentication required",
+        "body": "Provider advertising data is not rendered before the session is verified."
+      },
+      "notFound": {
+        "title": "Advertising request not found",
+        "body": "This request is not available in your account projection."
+      },
+      "success": {
+        "title": "Advertising data loaded",
+        "body": "Advertising data loaded successfully."
+      }
+    },
+    "retry": "Retry",
+    "notFound": "Advertising request not found",
+    "unavailable": "Unavailable",
+    "success": "Saved successfully",
+    "mutationFailed": "The action could not be completed. Try again."
+  },
+  "provider/copy#getProviderCopy": {
+    "nav": {
+      "overview": "Dashboard",
+      "properties": "My properties",
+      "projects": "Projects",
+      "requests": "Customer requests",
+      "viewings": "Viewings",
+      "advertising": "Advertising",
+      "commission": "Commission",
+      "notifications": "Notifications",
+      "settings": "Settings"
+    },
+    "overview": {
+      "eyebrow": "Provider dashboard",
+      "title": "Overview",
+      "description": "Track your account and properties using the data available to your provider session.",
+      "addProperty": "Add property",
+      "summaryTitle": "Property summary",
+      "cards": {
+        "total": "All properties",
+        "published": "Published",
+        "pending": "Pending review",
+        "drafts": "Drafts"
+      },
+      "additionalCards": {
+        "needsChanges": "Needs changes",
+        "customerRequests": "Customer requests",
+        "views": "Views",
+        "booked": "Booked"
+      },
+      "unavailableMetric": "Unavailable",
+      "unavailableMetricBody": "This metric is not provided by the current provider contract.",
+      "chart": {
+        "title": "Views and requests — last 6 months",
+        "unavailable": "Historical dashboard data is not provided by the current provider contract."
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "properties": "My properties",
+        "addProperty": "Add property",
+        "requests": "Customer requests",
+        "settings": "Settings"
+      },
+      "recentColumns": {
+        "code": "Property code",
+        "property": "Property",
+        "status": "Status",
+        "views": "Views",
+        "updated": "Added"
+      },
+      "recentTitle": "Recently updated properties",
+      "recentEmptyTitle": "No properties yet",
+      "recentEmptyBody": "Start adding a property when your provider account is eligible.",
+      "recentUnavailableTitle": "Properties are not available",
+      "recentUnavailableBody": "Try again when a valid connection is available.",
+      "openProperty": "Open property"
+    },
+    "properties": {
+      "eyebrow": "Property management",
+      "title": "My properties",
+      "description": "Review the properties owned by your provider account, their states, and the actions returned by the API.",
+      "addProperty": "Add property",
+      "filtersLabel": "Filter properties",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search by name or slug",
+      "statusLabel": "Status",
+      "allStatuses": "All statuses",
+      "applyFilters": "Apply",
+      "clearFilters": "Clear filters",
+      "countSuffix": "properties",
+      "emptyTitle": "No properties yet",
+      "emptyBody": "Properties owned by your provider account will appear here when available.",
+      "noResultsTitle": "No matching properties",
+      "noResultsBody": "Try changing the search or status filter.",
+      "columns": {
+        "property": "Property",
+        "status": "Status",
+        "type": "Type",
+        "price": "Price",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "kindLabels": {
+        "property": "Property",
+        "unit": "Unit"
+      },
+      "transactionLabels": {
+        "sale": "Sale",
+        "rent": "Rent"
+      },
+      "view": "View",
+      "edit": "Edit",
+      "submit": "Submit for review",
+      "reason": "Review note:",
+      "pagination": "Property pages",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Preparing the provider dashboard."
+      },
+      "empty": {
+        "title": "No data yet",
+        "body": "Account data will appear when implemented records are available."
+      },
+      "error": {
+        "title": "The provider dashboard could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "The provider dashboard is unavailable",
+        "body": "You can retry when the connection is available."
+      },
+      "success": {
+        "title": "Provider dashboard loaded",
+        "body": "The account data loaded successfully."
+      },
+      "permission": {
+        "title": "Authentication required",
+        "body": "Protected provider data is not rendered before the session is verified."
+      }
+    },
+    "application": {
+      "draft": {
+        "title": "Complete your provider application",
+        "body": "Complete the required information before accessing the provider dashboard."
+      },
+      "pending_review": {
+        "title": "Your application is under review",
+        "body": "The full provider dashboard will be available after the application review."
+      },
+      "needs_information": {
+        "title": "More application information is required",
+        "body": "Review the requested information and submit the application again."
+      },
+      "approved": {
+        "title": "Account approved",
+        "body": "You can manage your approved records from the provider dashboard."
+      },
+      "rejected": {
+        "title": "Application not approved",
+        "body": "Review the decision reason and the options available to your account."
+      },
+      "suspended": {
+        "title": "Account temporarily suspended",
+        "body": "Provider data access is currently restricted by the account state."
+      }
+    },
+    "propertyStatuses": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "needs_changes": "Needs changes",
+      "approved": "Approved",
+      "published": "Published",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "archived": "Archived"
+    },
+    "retry": "Retry",
+    "reviewReason": "Reason:",
+    "continueApplication": "Continue provider application",
+    "unavailable": "Unavailable"
+  },
+  "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
+    "eyebrow": "Customer request management",
+    "title": "Customer requests",
+    "description": "Track customer requests created by your provider account using the data and actions returned by the system.",
+    "add": "Add customer request",
+    "viewings": "Viewing appointments",
+    "countSuffix": "requests",
+    "filtersLabel": "Filter customer requests",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by customer name or phone",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear",
+    "columns": {
+      "customer": "Customer",
+      "request": "Request type",
+      "status": "Status",
+      "related": "Property or project",
+      "created": "Created",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "new": "New request",
+      "under_review": "Under review",
+      "contacted": "Contacted",
+      "scheduled": "Scheduled",
+      "needs_information": "Needs information",
+      "in_progress": "In progress",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "closed": "Closed"
+    },
+    "requestType": "Customer request",
+    "source": "Source",
+    "providerSource": "Provider account",
+    "transitions": {
+      "start_review": "Start review",
+      "contact": "Mark contacted",
+      "schedule": "Schedule",
+      "needs_information": "Request information",
+      "start_progress": "Start follow-up",
+      "resolve": "Resolve",
+      "cancel": "Cancel request",
+      "close": "Close request",
+      "reopen": "Reopen"
+    },
+    "noActions": "No actions available",
+    "emptyTitle": "No customer requests yet",
+    "emptyBody": "Requests created by your provider account will appear here when available.",
+    "noResultsTitle": "No matching requests",
+    "noResultsBody": "Try changing the search or status filter.",
+    "unavailable": "Unavailable",
+    "previous": "Previous page",
+    "next": "Next page",
+    "pagination": "Customer request pages",
+    "form": {
+      "title": "Add customer request",
+      "description": "Enter the customer and request data allowed for the provider account.",
+      "customerDetails": "Customer details",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone number",
+      "email": "Email",
+      "requestDetails": "Request details",
+      "message": "Request details or message",
+      "propertyId": "Property ID",
+      "projectId": "Project ID",
+      "sourceNote": "Source note",
+      "optional": "Optional",
+      "cancel": "Cancel",
+      "save": "Save request",
+      "close": "Close",
+      "validation": "Check the required fields before saving the request."
+    },
+    "transition": {
+      "title": "Update request status",
+      "description": "Confirm the action using the request version currently shown.",
+      "reason": "Reason or note",
+      "reasonHelp": "A reason is required when cancelling, requesting information, or closing.",
+      "cancel": "Cancel",
+      "confirm": "Confirm action",
+      "validation": "Enter a valid reason for this action."
+    },
+    "feedback": {
+      "created": "Customer request created.",
+      "transitioned": "Request status updated."
+    },
+    "errors": {
+      "generic": "The operation could not be completed. Try again.",
+      "conflict": "The request changed before it was saved. Reload the list.",
+      "validation": "The entered data is not valid."
+    }
+  },
+  "provider/notifications-copy#getProviderNotificationsCopy": {
+    "eyebrow": "Provider workspace",
+    "title": "Notifications",
+    "description": "Keep up with account and request updates connected to your work.",
+    "listLabel": "Provider notifications",
+    "unreadCount": "unread notification",
+    "markAll": "Mark all as read",
+    "markingAll": "Updating…",
+    "tabs": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "unreadLabel": "Unread",
+    "markRead": "Mark as read",
+    "openLink": "Open details",
+    "previous": "Previous page",
+    "next": "Next page",
+    "pagination": "Notification pages",
+    "empty": {
+      "all": {
+        "title": "No notifications",
+        "body": "Updates connected to your account will appear here."
+      },
+      "unread": {
+        "title": "No unread notifications",
+        "body": "You have read all notifications currently available to your account."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "Loading notifications",
+        "body": "Your provider notifications are being retrieved."
+      },
+      "empty": {
+        "title": "No notifications available",
+        "body": "There are no account updates available right now."
+      },
+      "retry": {
+        "title": "Notifications could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Notifications are unavailable",
+        "body": "Your provider notifications could not be read right now."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "Notifications are available only to a verified provider account."
+      }
+    },
+    "mutation": {
+      "markedRead": "Notification marked as read.",
+      "markedAll": "Unread notifications were updated.",
+      "notFound": "This notification is no longer available to your account.",
+      "permission": "Your session has expired. Sign in and try again.",
+      "error": "The notification could not be updated. Try again."
+    },
+    "typeLabels": {
+      "viewing.reminder": "Viewing reminder",
+      "request.updated": "Request update",
+      "property.updated": "Property update",
+      "profile.updated": "Profile update"
+    },
+    "retry": "Retry"
+  },
+  "provider/projects-copy#getProviderProjectsCopy": {
+    "eyebrow": "Project management",
+    "title": "Projects",
+    "description": "Manage projects owned by your provider account and review their status and server-authorized actions.",
+    "add": "Add new project",
+    "countSuffix": "projects",
+    "filtersLabel": "Filter projects",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by project name or slug",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear filters",
+    "emptyTitle": "No projects yet",
+    "emptyBody": "Projects owned by your provider account will appear here when available.",
+    "noResultsTitle": "No matching projects",
+    "noResultsBody": "Try changing the search or status filter.",
+    "columns": {
+      "project": "Project",
+      "slug": "Slug",
+      "status": "Status",
+      "reason": "Review note",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "needs_changes": "Needs changes",
+      "approved": "Approved",
+      "published": "Published",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "archived": "Archived"
+    },
+    "viewUnavailable": "Detailed view unavailable",
+    "edit": "Edit",
+    "submit": "Submit for review",
+    "noActions": "No actions available",
+    "reason": "Reason:",
+    "form": {
+      "createTitle": "Add new project",
+      "editTitle": "Edit project",
+      "createDescription": "Enter fields supported by the current project contract.",
+      "editDescription": "Edit provider-owned fields while preserving the server version.",
+      "name": "Project name",
+      "description": "Description",
+      "slug": "Slug",
+      "locationId": "Location ID",
+      "organizationId": "Organization ID",
+      "website": "Website",
+      "reason": "Change reason",
+      "reasonHelp": "Required for sensitive changes and recorded with the operation.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close",
+      "required": "Required",
+      "localeLabels": {
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "placeholders": {
+        "slug": "central-project",
+        "locationId": "Optional ID",
+        "organizationId": "Optional ID",
+        "website": "https://example.com"
+      }
+    },
+    "submitDialog": {
+      "title": "Submit project for review",
+      "description": "The project will be sent to the review workflow with its current status and version.",
+      "reason": "Submission reason",
+      "reasonHelp": "Enter a clear reason of at least 5 characters.",
+      "confirm": "Submit",
+      "cancel": "Cancel"
+    },
+    "feedback": {
+      "created": "Project created.",
+      "updated": "Project updated.",
+      "submitted": "Project submitted for review."
+    },
+    "errors": {
+      "validation": "Review the required fields before saving.",
+      "generic": "The change could not be saved. Try again.",
+      "conflict": "The project changed on the server. Reload the list before trying again."
+    },
+    "pagination": "Project pages",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
+  "provider/settings-copy#getProviderSettingsCopy": {
+    "eyebrow": "Provider workspace",
+    "title": "Settings",
+    "description": "Review account details and update the contact fields available to your account.",
+    "tabs": {
+      "account": "Account data",
+      "contact": "Contact data",
+      "security": "Security"
+    },
+    "account": {
+      "heading": "Account data",
+      "email": "Email address",
+      "legalNotice": "Commercial and legal data cannot be changed from this page.",
+      "saveEmail": "Save email address"
+    },
+    "contact": {
+      "heading": "Contact data",
+      "whatsapp": "WhatsApp number",
+      "address": "Office address",
+      "website": "Website",
+      "save": "Save contact data"
+    },
+    "security": {
+      "heading": "Security",
+      "password": "Change password",
+      "current": "Current password",
+      "next": "New password",
+      "confirm": "Confirm password",
+      "update": "Update password",
+      "deleteHeading": "Account deletion request",
+      "deleteBody": "Account deletion requests are not available from this interface yet.",
+      "deleteAction": "Request account deletion",
+      "unavailable": "Currently unavailable"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading settings",
+        "body": "Your provider settings are being retrieved."
+      },
+      "empty": {
+        "title": "Settings unavailable",
+        "body": "No settings data is available for this account."
+      },
+      "retry": {
+        "title": "Settings could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Settings are unavailable",
+        "body": "Your settings could not be read right now."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "Settings are available only to a verified provider account."
+      }
+    },
+    "feedback": {
+      "saved": "Settings saved successfully.",
+      "validation": "Review the fields and enter valid values.",
+      "conflict": "The data changed. Reload it and try again.",
+      "permission": "Your session has expired. Sign in and try again.",
+      "error": "The settings could not be saved. Try again."
+    },
+    "retry": "Retry",
+    "unavailable": "Unavailable"
+  },
+  "provider/viewings-copy#getProviderViewingsCopy": {
+    "eyebrow": "Viewing management",
+    "title": "Viewing appointments",
+    "description": "Scheduled and upcoming viewing appointments",
+    "countSuffix": "appointments",
+    "filtersLabel": "Filter viewing appointments",
+    "statusLabel": "Status",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "clear": "Clear filters",
+    "emptyTitle": "No viewing appointments yet",
+    "emptyBody": "Appointments linked to your owned properties will appear here when available.",
+    "columns": {
+      "customer": "Customer",
+      "property": "Property",
+      "date": "Viewing time",
+      "timezone": "Timezone",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "customerReference": "Customer reference",
+    "propertyReference": "Property reference",
+    "note": "Customer note",
+    "statuses": {
+      "requested": "Requested",
+      "confirmed": "Confirmed",
+      "rescheduled": "Rescheduled",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    },
+    "actions": {
+      "confirm": "Confirm",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "complete": "Mark complete",
+      "none": "No actions available"
+    },
+    "dialog": {
+      "confirmTitle": "Confirm viewing appointment",
+      "rescheduleTitle": "Reschedule viewing appointment",
+      "cancelTitle": "Cancel viewing appointment",
+      "completeTitle": "Complete viewing appointment",
+      "confirmDescription": "The status will be updated against the current record version.",
+      "rescheduleDescription": "Enter the new viewing time and timezone.",
+      "cancelDescription": "Enter a clear reason for cancelling this appointment.",
+      "completeDescription": "Mark this viewing as completed using the current record version.",
+      "date": "Viewing time",
+      "timezone": "Timezone",
+      "reason": "Reason",
+      "reasonHelp": "A reason is required for cancellation.",
+      "confirm": "Save change",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "feedback": {
+      "confirmed": "Viewing appointment confirmed.",
+      "rescheduled": "Viewing appointment rescheduled.",
+      "cancelled": "Viewing appointment cancelled.",
+      "completed": "Viewing appointment marked complete."
+    },
+    "errors": {
+      "validation": "Review the required fields before saving.",
+      "generic": "The appointment could not be updated. Try again.",
+      "conflict": "The appointment changed on the server. Reload the list before trying again."
+    },
+    "pagination": "Viewing appointment pages",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
+  "provider_auth/account-copy#getProviderAccountCopy": {
+    "title": "Account details",
+    "description": "Complete the core account details so your provider application can be saved safely.",
+    "stepLabel": "3 / 4",
+    "providerTypeLabel": "Provider type",
+    "accountOwnerFullNameLabel": "Account owner full name",
+    "accountOwnerFullNamePlaceholder": "Use the name shown on identity documents",
+    "displayNameLabel": "Provider or brand name",
+    "displayNamePlaceholder": "Name shown on the provider profile",
+    "emailLabel": "Contact email",
+    "emailPlaceholder": "name@example.com",
+    "invalidWhatsappBody": "Enter a valid WhatsApp number, for example +20 100 000 0000.",
+    "whatsappLabel": "WhatsApp number",
+    "secondaryPhoneLabel": "Secondary phone (optional)",
+    "secondaryPhonePlaceholder": "+20 100 000 0000",
+    "preferredLocaleLabel": "Preferred language",
+    "localeOptions": {
+      "ar": "Arabic",
+      "en": "English"
+    },
+    "termsLabel": "I agree to the Terms of Use",
+    "privacyLabel": "I agree to the Privacy Policy",
+    "requirementsTitle": "Additional details required later",
+    "requirementsBody": "The API reports the remaining fields required for each provider type. The application is not treated as complete until they are supplied.",
+    "unavailableLocationBody": "Primary location and service-area selection require the approved locations source, which is not available on this surface yet. No IDs or replacement data are fabricated.",
+    "saveDraftAction": "Save draft",
+    "saveContinueAction": "Save and continue",
+    "savingAction": "Saving…",
+    "retryAction": "Retry",
+    "backAction": "Back to provider type",
+    "loadingTitle": "Loading application",
+    "loadingBody": "Restoring the latest saved account details.",
+    "invalidFormTitle": "Review the required fields",
+    "invalidFormBody": "Enter the required values and accept the terms and privacy policy before saving.",
+    "savedTitle": "Account details saved",
+    "savedBody": "The details were saved through the provider application API. You can continue when the next step is available.",
+    "permissionTitle": "Application access unavailable",
+    "permissionBody": "Start provider registration or use an authenticated provider session to access these details.",
+    "notFoundTitle": "Provider application not found",
+    "notFoundBody": "Restart provider registration to create a secure application.",
+    "networkTitle": "Application could not be loaded",
+    "networkBody": "Check your connection and retry. Unconfirmed data is never displayed.",
+    "conflictTitle": "Saved data changed",
+    "conflictBody": "Load the latest application version and re-enter your change before saving.",
+    "unavailableTitle": "Registration cannot continue",
+    "unavailableBody": "The verification required to create a provider application is not available. Start from provider type selection.",
+    "invalidRegistrationTitle": "Verification expired",
+    "invalidRegistrationBody": "Verify the email address again before creating a provider application.",
+    "duplicateRegistrationTitle": "Provider application already exists",
+    "duplicateRegistrationBody": "Use the existing provider session to continue instead of creating another application.",
+    "unsupportedFieldNote": "Provider sign-in uses the verified email address. No password is requested in this flow.",
+    "missingFieldLabels": {
+      "accountOwnerFullName": "Account owner full name",
+      "displayName": "Provider name",
+      "email": "Contact email",
+      "primaryLocationId": "Primary location",
+      "serviceAreaIds": "Service areas",
+      "preferredLocale": "Preferred language",
+      "termsAcceptedAt": "Terms acceptance",
+      "privacyAcceptedAt": "Privacy acceptance"
+    }
+  },
+  "provider_auth/copy#getProviderTypeCopy": {
+    "title": "Choose your provider type",
+    "description": "Select the type that describes your real-estate activity to continue to the right fields.",
+    "optionsLabel": "Available provider types",
+    "continueAction": "Continue",
+    "backAction": "Back to account selection",
+    "guidanceTitle": "Your choice sets the next step",
+    "guidanceBody": "The next step will request the fields and documents for the provider type you choose. Applications are subject to administrative review before approval.",
+    "options": {
+      "individual_broker": {
+        "title": "Individual broker",
+        "description": "For a real-estate professional operating as an individual."
+      },
+      "brokerage_office": {
+        "title": "Brokerage office",
+        "description": "For a brokerage office representing a business activity."
+      },
+      "developer_company": {
+        "title": "Developer company",
+        "description": "For a company that develops and manages real-estate projects."
+      }
+    }
+  },
+  "provider_auth/documents-copy#getProviderDocumentsCopy": {
+    "stepLabel": "4 / 4",
+    "title": "Required documents",
+    "description": "Upload the documents for this application. These files are never public.",
+    "requiredLabel": "Required",
+    "optionalLabel": "Optional",
+    "chooseFileAction": "Choose file",
+    "replaceAction": "Replace file",
+    "removeAction": "Remove file",
+    "uploadingAction": "Uploading",
+    "uploadedLabel": "Uploaded",
+    "pendingReviewLabel": "Pending review",
+    "needsReplacementLabel": "Replacement required",
+    "approvedLabel": "Approved",
+    "rejectedLabel": "Rejected",
+    "securityPendingLabel": "Security check pending",
+    "securityCleanLabel": "Security check passed",
+    "securityFailedLabel": "Security check did not complete",
+    "requirementsTitle": "Document requirements",
+    "requirementsBody": "Document cards come from the server-provided requirement snapshot.",
+    "privacyNote": "Documents are private and protected by fresh authorization. No permanent public links are created.",
+    "emptyTitle": "Document requirements unavailable",
+    "emptyBody": "Upload cards remain hidden until the server provides the current requirement snapshot.",
+    "permissionTitle": "Documents cannot be edited",
+    "permissionBody": "Confirm that the provider application is still editable.",
+    "notFoundTitle": "Application unavailable",
+    "notFoundBody": "The current provider application could not be found.",
+    "networkTitle": "Connection unavailable",
+    "networkBody": "Check your connection and try again.",
+    "unavailableTitle": "Documents are unavailable",
+    "unavailableBody": "Try again without exposing private data or links.",
+    "uploadErrorTitle": "File could not be uploaded",
+    "uploadErrorBody": "Review the file and try again.",
+    "fileTooLargeTitle": "File is too large",
+    "fileTooLargeBody": "The file must not exceed 10 MB.",
+    "fileTypeTitle": "File type is not supported",
+    "fileTypeBody": "Use PDF, JPG, or PNG only.",
+    "invalidFileTitle": "File is not valid",
+    "invalidFileBody": "Choose a non-empty file with a supported extension.",
+    "retryAction": "Retry",
+    "backAction": "Back",
+    "reviewAction": "Review application",
+    "reviewUnavailableTitle": "Review is not ready",
+    "reviewUnavailableBody": "Complete the required details and documents, or refresh the application before continuing.",
+    "noPublicUrlNote": "The interface never exposes storage keys or permanent download URLs.",
+    "categoryLabels": {
+      "government_id_front": "Government ID — front",
+      "government_id_back": "Government ID — back",
+      "broker_license": "Broker license",
+      "professional_membership": "Professional membership",
+      "commercial_registration": "Commercial registration",
+      "tax_card": "Tax card",
+      "authorized_representative_id_front": "Authorized representative ID — front",
+      "authorized_representative_id_back": "Authorized representative ID — back",
+      "authorization_letter": "Authorization letter",
+      "brokerage_license": "Brokerage license",
+      "company_profile": "Company profile",
+      "developer_license": "Developer license",
+      "additional_supporting_document": "Additional supporting document"
+    }
+  },
+  "provider_auth/organization-copy#getProviderOrganizationCopy": {
+    "stepLabel": "3 / 4",
+    "businessTitle": "Business details",
+    "businessDescription": "Add the office details exactly as they appear on official records.",
+    "companyTitle": "Developer company details",
+    "companyDescription": "Add the company details exactly as they appear on official records.",
+    "providerTypeLabel": "Provider type",
+    "legalBusinessNameLabel": "Legal business name",
+    "legalBusinessNamePlaceholder": "Name on the commercial record",
+    "tradeNameLabel": "Trade name",
+    "tradeNamePlaceholder": "Name used with customers",
+    "legalCompanyNameLabel": "Legal company name",
+    "legalCompanyNamePlaceholder": "Name on official records",
+    "brandNameLabel": "Brand name",
+    "brandNamePlaceholder": "Brand name, if applicable",
+    "addressLabel": "Main address",
+    "addressPlaceholder": "Registered business address",
+    "commercialRegistrationNumberLabel": "Commercial registration number",
+    "commercialRegistrationNumberPlaceholder": "Enter the official number",
+    "taxRegistrationNumberLabel": "Tax registration number",
+    "taxRegistrationNumberPlaceholder": "Enter the official number",
+    "authorizedRepresentativeFullNameLabel": "Authorized representative name",
+    "authorizedRepresentativeFullNamePlaceholder": "Full name",
+    "authorizedRepresentativeTitleLabel": "Authorized representative title",
+    "authorizedRepresentativeTitlePlaceholder": "For example, managing director",
+    "authorityLabel": "Does the account owner have registered authority?",
+    "authorityPlaceholder": "Choose a status",
+    "authorityYes": "Yes, authority is registered",
+    "authorityNo": "No, an authorization letter is required",
+    "unsupportedFieldNote": "Only fields supported by the current contract are saved. Service areas and property types will appear when the real backend contract provides them.",
+    "requirementsTitle": "Step requirements",
+    "requirementsBody": "You can save a draft now. Incomplete fields remain visible before submission for review.",
+    "missingFieldLabels": {
+      "legalBusinessName": "Legal business name",
+      "tradeName": "Trade name",
+      "businessAddress": "Main address",
+      "legalCompanyName": "Legal company name",
+      "brandName": "Brand name",
+      "headOfficeAddress": "Main address",
+      "commercialRegistrationNumber": "Commercial registration number",
+      "taxRegistrationNumber": "Tax registration number",
+      "authorizedRepresentativeFullName": "Authorized representative name",
+      "authorizedRepresentativeTitle": "Authorized representative title",
+      "accountOwnerHasRegisteredAuthority": "Registered account-owner authority"
+    },
+    "saveDraftAction": "Save draft",
+    "saveContinueAction": "Save and continue",
+    "savingAction": "Saving",
+    "savedTitle": "Details saved",
+    "savedBody": "You can still edit these details before submitting the application for review.",
+    "invalidFormTitle": "Review the details",
+    "invalidFormBody": "Enter at least one valid supported value before saving.",
+    "notFoundTitle": "Application unavailable",
+    "notFoundBody": "The current provider application could not be found.",
+    "permissionTitle": "This step cannot be edited",
+    "permissionBody": "Confirm that you are signed in as the correct provider and that the application is editable.",
+    "conflictTitle": "The draft changed",
+    "conflictBody": "Reload the application and try saving again.",
+    "networkTitle": "Connection unavailable",
+    "networkBody": "Check your connection and try again.",
+    "unavailableTitle": "Details could not be saved",
+    "unavailableBody": "Try again without exposing any sensitive data.",
+    "retryAction": "Retry",
+    "backAction": "Back"
+  },
+  "provider_auth/review-copy#getProviderReviewCopy": {
+    "stepLabel": "5 / 5",
+    "title": "Review and submit",
+    "description": "Review your details and documents before submitting the provider application.",
+    "reviewTitle": "Your application is ready to submit",
+    "reviewBody": "Confirm that the details and documents are correct. After submission, the application is read-only until the team requests more information.",
+    "applicationDetailsTitle": "Application details",
+    "providerTypeLabel": "Account type",
+    "emailLabel": "Email",
+    "accountOwnerLabel": "Account owner",
+    "displayNameLabel": "Display name",
+    "organizationLabel": "Organization",
+    "addressLabel": "Address",
+    "documentsTitle": "Documents",
+    "documentsCompleteLabel": "All required documents are ready",
+    "documentsIncompleteLabel": "Some details or documents are missing",
+    "missingFieldsLabel": "Missing details",
+    "missingDocumentsLabel": "Missing documents",
+    "submitAction": "Submit registration application",
+    "submittingAction": "Submitting application",
+    "submitUnavailableTitle": "Application cannot be submitted yet",
+    "submitUnavailableBody": "Complete the required details and documents, refresh the application, and try again.",
+    "underReviewTitle": "Your application is under review",
+    "underReviewBody": "Your application was received. The Sadat Real Estate team will review the details and documents before activating the account.",
+    "trackingTitle": "Application tracking",
+    "trackingAction": "Track application",
+    "submittedStep": "Application submitted",
+    "reviewStep": "Details and documents review",
+    "informationStep": "Complete information if requested",
+    "decisionStep": "Final decision",
+    "currentStepLabel": "Current stage",
+    "submittedAtLabel": "Submitted",
+    "updatedAtLabel": "Last updated",
+    "applicationNumberLabel": "Application number",
+    "statusLabel": "Status",
+    "needsInformationTitle": "More information is needed",
+    "needsInformationBody": "Review the Sadat Real Estate team note, update the requested details or documents, and submit again.",
+    "reviewReasonLabel": "Review team note",
+    "editApplicationAction": "Edit application",
+    "approvedTitle": "Your account is approved",
+    "approvedBody": "Your provider account has been approved. You can now access the tools for managing your Sadat Real Estate activity.",
+    "openDashboardAction": "Open provider dashboard",
+    "rejectedTitle": "The application was not approved",
+    "rejectedBody": "The current application state does not allow another submission. Contact support for the next step.",
+    "suspendedTitle": "The account is temporarily suspended",
+    "suspendedBody": "Provider tools are currently unavailable. Contact support to review the account state.",
+    "privacyNote": "Only provider-safe data and review reasons returned by the API are shown. Internal notes, assignments, and audit records are never exposed.",
+    "permissionTitle": "Application status is unavailable",
+    "permissionBody": "Sign in with the correct provider account and confirm that the application is still available to you.",
+    "notFoundTitle": "Application unavailable",
+    "notFoundBody": "The current provider application could not be found.",
+    "networkTitle": "Connection unavailable",
+    "networkBody": "Check your connection and try again.",
+    "unavailableTitle": "Application status is unavailable",
+    "unavailableBody": "Try again without displaying unverified data.",
+    "emptyTitle": "No application data",
+    "emptyBody": "The application status will appear after the provider application is loaded from the server.",
+    "retryAction": "Retry",
+    "backAction": "Back",
+    "homeAction": "Back to homepage",
+    "supportAction": "Contact support",
+    "statusLabels": {
+      "draft": "Draft",
+      "pending_review": "Under review",
+      "needs_information": "Needs information",
+      "approved": "Approved",
+      "rejected": "Not approved",
+      "suspended": "Temporarily suspended"
+    },
+    "providerTypeLabels": {
+      "individual_broker": "Individual broker",
+      "brokerage_office": "Brokerage office",
+      "developer_company": "Developer company"
+    }
+  },
+  "provider_property/completion-copy#getProviderPropertyCompletionCopy": {
+    "steps": {
+      "media": "Media",
+      "contact": "Contact",
+      "review": "Review and submit"
+    },
+    "titles": {
+      "media": "Photos and media",
+      "contact": "Contact details",
+      "review": "Review and submit"
+    },
+    "descriptions": {
+      "media": "Add property photos and floor plans through the implemented media-upload boundary.",
+      "contact": "Set the contact data supported by the current property contract.",
+      "review": "Review the draft summary and submit it when the server state allows it."
+    },
+    "back": "Back",
+    "saveDraft": "Save draft",
+    "continue": "Continue",
+    "saving": "Saving…",
+    "saved": "Draft saved.",
+    "validationTitle": "Check the form",
+    "validationBody": "Complete the required fields with values accepted by the current contract.",
+    "mutationError": "The data could not be saved. Check the connection and try again.",
+    "permissionBody": "This draft or its data cannot be changed by the current session.",
+    "notFoundBody": "The draft was not found or is not owned by the current provider account.",
+    "versionConflict": "The draft changed in another session. Reload it and try again.",
+    "media": {
+      "chooseImage": "Choose image",
+      "chooseFloorPlan": "Choose floor plan",
+      "imageKind": "Image",
+      "floorPlanKind": "Floor plan",
+      "remove": "Remove",
+      "makeCover": "Make cover",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "upload": "Upload file",
+      "uploading": "Uploading…",
+      "count": "Media count",
+      "emptyTitle": "No media uploaded yet",
+      "emptyBody": "Add an image or floor plan from the supported file types.",
+      "existingUnavailableTitle": "Existing media list is not exposed by the current contract",
+      "existingUnavailableBody": "This editor shows media uploaded during the current session only; it does not fabricate old media records or URLs.",
+      "acceptedTypes": "Supported types: JPG and PNG for images, PDF for floor plans. Maximum 10 MB per file.",
+      "privacyNote": "Private media uses an authorized quarantine flow. Storage keys and permanent public URLs are never rendered.",
+      "invalidFileTitle": "File is not valid",
+      "invalidFileBody": "Choose a non-empty file with a supported extension and MIME type.",
+      "tooLargeTitle": "File is too large",
+      "tooLargeBody": "The file must not exceed 10 MB.",
+      "uploadErrorTitle": "File could not be uploaded",
+      "uploadErrorBody": "The upload did not complete. You can retry it.",
+      "storageUnavailableTitle": "Media service is temporarily unavailable",
+      "storageUnavailableBody": "The upload cannot complete until storage and scanning are ready.",
+      "permissionTitle": "Upload permission required",
+      "permissionBody": "Media cannot be uploaded for this draft or session.",
+      "versionConflictTitle": "Media version conflict",
+      "versionConflictBody": "The media order changed. Reload the draft before continuing."
+    },
+    "contact": {
+      "contactName": "Contact name",
+      "phone": "Phone number",
+      "whatsapp": "WhatsApp number",
+      "email": "Email",
+      "preferredLocale": "Contact language",
+      "contactNamePlaceholder": "Full name",
+      "phonePlaceholder": "+201234567890",
+      "whatsappPlaceholder": "+201234567891",
+      "emailPlaceholder": "example@domain.com",
+      "preferredLocaleLabels": {
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "supportedFieldsTitle": "Supported fields",
+      "supportedFieldsBody": "Only the name, phone numbers, email, and preferred locale are sent through the current contact contract.",
+      "internalNotesTitle": "Internal notes are unavailable",
+      "internalNotesBody": "The current contract has no internal notes or operational fields, so they are not rendered or submitted."
+    },
+    "review": {
+      "submit": "Submit property for review",
+      "submitting": "Submitting…",
+      "save": "Save draft",
+      "requiredConfirmationsTitle": "Required confirmations",
+      "accurateData": "I confirm that the property data entered is accurate.",
+      "authority": "I confirm that I am authorized to list and market this property.",
+      "reviewProcess": "I agree that Sadat Real Estate will review the property before publication.",
+      "missingTitle": "Cannot submit yet",
+      "missingBody": "Complete the server-defined requirements before submitting.",
+      "location": "Location",
+      "price": "Price",
+      "contact": "Contact data",
+      "status": "Status",
+      "media": "Media",
+      "noMedia": "No media uploaded in this session",
+      "mediaCount": "Uploaded media",
+      "reviewReason": "Submission reason",
+      "submittedTitle": "Draft submitted for review",
+      "submittedBody": "The server accepted the review request. The next status will appear when supplied by the server.",
+      "submittedStatus": "Pending review",
+      "notSubmittableTitle": "Submission unavailable",
+      "notSubmittableBody": "The current server state allows saving only.",
+      "safeProjectionTitle": "Safe summary",
+      "safeProjectionBody": "This summary renders only provider-permitted property contract data; administrator notes, assignments, and audit data are excluded."
+    }
+  },
+  "provider_property/copy#getProviderPropertyCopy": {
+    "navLabel": "Property management",
+    "wizard": {
+      "eyebrow": "Add property",
+      "basicTitle": "Basic information",
+      "basicDescription": "Enter the fields supported by the current property-draft contract.",
+      "locationTitle": "Location",
+      "locationDescription": "Attach an active master location or provide approximate coordinates.",
+      "steps": {
+        "basic": "Basic information",
+        "location": "Location"
+      },
+      "labels": {
+        "name": "Property name",
+        "slug": "Short identifier",
+        "kind": "Record type",
+        "transaction": "Transaction type",
+        "sourceType": "Property source type",
+        "organizationId": "Organization ID",
+        "projectId": "Project ID",
+        "parentPropertyId": "Parent property ID",
+        "reason": "Draft save reason",
+        "locationId": "Master location ID",
+        "mapUrl": "Map location link",
+        "latitude": "Latitude",
+        "longitude": "Longitude"
+      },
+      "placeholders": {
+        "name": "Example: Sadat City apartment",
+        "slug": "apartment-sadat-city",
+        "organizationId": "24 hexadecimal characters",
+        "projectId": "Optional",
+        "parentPropertyId": "Required for a unit without a project",
+        "reason": "Save basic property data",
+        "locationId": "24 hexadecimal characters",
+        "mapUrl": "https://maps.example.com/…",
+        "latitude": "30.62",
+        "longitude": "30.74"
+      },
+      "sourceTypeLabels": {
+        "individual_broker": "Individual broker",
+        "brokerage_office": "Brokerage office",
+        "developer_company": "Developer company"
+      },
+      "kindLabels": {
+        "property": "Property",
+        "unit": "Unit"
+      },
+      "transactionLabels": {
+        "sale": "Sale",
+        "rent": "Rent"
+      },
+      "statusLabels": {
+        "draft": "Draft",
+        "pending_review": "Pending review",
+        "needs_changes": "Needs changes",
+        "approved": "Approved",
+        "published": "Published",
+        "rejected": "Rejected",
+        "hidden": "Hidden",
+        "archived": "Archived"
+      },
+      "saveDraft": "Save draft",
+      "continue": "Continue",
+      "back": "Back",
+      "saved": "Draft saved.",
+      "saving": "Saving…",
+      "validationTitle": "Check the form",
+      "validationBody": "Complete the required fields using values accepted by the contract.",
+      "mutationError": "The draft could not be saved. Check the connection and try again.",
+      "locationCatalogUnavailableTitle": "The provider location catalog is unavailable",
+      "locationCatalogUnavailableBody": "The current provider contract does not expose a location list. The admin route and unapproved data are not used; enter an active location ID from an approved source or coordinates.",
+      "locationCatalogLoading": "Loading locations…",
+      "locationCatalogEmptyTitle": "No active locations",
+      "locationCatalogEmptyBody": "Add an active location from the admin dashboard, or use coordinates until one is available.",
+      "locationSearchLabel": "Search locations",
+      "locationSearchPlaceholder": "Type a city or area name",
+      "locationSelectPlaceholder": "Select a location",
+      "contractBoundaryTitle": "Fields not supported by the current contract",
+      "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
+      "coordinateHelp": "A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.",
+      "sourceHelp": "The provider identity comes from the authenticated session and cannot be changed in this form.",
+      "notFoundTitle": "Draft not found",
+      "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
+      "unavailable": "Unavailable"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Loading the property draft."
+      },
+      "error": {
+        "title": "The draft could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "The draft is temporarily unavailable",
+        "body": "Retry when a valid connection is available."
+      },
+      "permission": {
+        "title": "Permission verification required",
+        "body": "Protected property data is not rendered before the provider session is verified."
+      },
+      "not_found": {
+        "title": "Draft not found",
+        "body": "No draft with this identifier is available to the provider account."
+      },
+      "success": {
+        "title": "Draft ready",
+        "body": "You can continue saving the property data."
+      }
+    },
+    "retry": "Retry"
+  },
+  "provider_property/state-copy#getProviderPropertyStateCopy": {
+    "validation": {
+      "title": "Property needs changes",
+      "body": "Review the following requirements and complete the property data before submitting.",
+      "reasonLabel": "Review reason",
+      "reasonUnavailable": "The server did not provide an additional review reason.",
+      "issueLabels": {
+        "location": "Location",
+        "price": "Price",
+        "contact": "Contact data",
+        "status": "Status"
+      },
+      "back": "Back to properties",
+      "edit": "Make changes",
+      "editUnavailable": "This action is unavailable in the current server state.",
+      "safeTitle": "Safe summary",
+      "safeBody": "This summary renders only provider-permitted property data; administrator notes, assignments, and audit data are excluded."
+    },
+    "statuses": {
+      "pending_review": {
+        "title": "Property submitted for review",
+        "body": "The Sadat Real Estate review team will review the property data as soon as possible and notify you of the result.",
+        "reasonLabel": "Submission reason",
+        "reasonUnavailable": "The server did not provide an additional reason."
+      },
+      "rejected": {
+        "title": "Property was not approved",
+        "body": "This property did not meet the administration criteria in the current review.",
+        "reasonLabel": "Rejection reason",
+        "reasonUnavailable": "The server did not provide a decision reason."
+      },
+      "approved": {
+        "title": "Property approved",
+        "body": "The review team approved the property, but the provider contract does not expose a publish action.",
+        "reasonLabel": "Approval reason",
+        "reasonUnavailable": "The server did not provide an additional reason."
+      },
+      "published": {
+        "title": "Property published",
+        "body": "The property is available for public viewing on the Sadat Real Estate platform.",
+        "reasonLabel": "Latest review reason",
+        "reasonUnavailable": "The server did not provide an additional reason."
+      },
+      "hidden": {
+        "title": "Property is currently hidden",
+        "body": "The property remains in your account but is not available for public viewing in its current state.",
+        "reasonLabel": "State reason",
+        "reasonUnavailable": "The server did not provide an additional reason."
+      }
+    },
+    "labels": {
+      "reference": "Reference",
+      "submittedAt": "Submitted at",
+      "reviewedAt": "Reviewed at",
+      "status": "Status",
+      "views": "Views",
+      "unavailable": "Unavailable",
+      "safeTitle": "Safe data",
+      "safeBody": "This view contains only provider-permitted property contract data."
+    },
+    "actions": {
+      "back": "Back to my properties",
+      "viewProperty": "View property",
+      "viewPublic": "View public page",
+      "supportUnavailable": "A support route is not available in the current contract.",
+      "retry": "Retry"
+    }
+  },
+  "provider_property/steps-copy#getProviderPropertyAdvancedCopy": {
+    "titles": {
+      "details": "Property details",
+      "price-payment": "Price and payment",
+      "features-services": "Features and services"
+    },
+    "descriptions": {
+      "details": "Enter the area, layout, and description fields supported by the current property contract.",
+      "price-payment": "Enter the price and payment plan using the current contract rules.",
+      "features-services": "Save approved feature and service references associated with this property."
+    },
+    "steps": {
+      "details": "Property details",
+      "price-payment": "Price and payment",
+      "features-services": "Features and services"
+    },
+    "labels": {
+      "description": "Property description",
+      "propertyTypeId": "Property type reference ID",
+      "deliveryStatus": "Delivery status",
+      "area": "Area (sqm)",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "floor": "Floor",
+      "totalFloors": "Total floors",
+      "priceAmount": "Total price",
+      "currency": "Currency",
+      "paymentPlan": "Payment plan",
+      "planName": "Plan name",
+      "installments": "Installments",
+      "frequency": "Payment frequency",
+      "downPaymentAmount": "Down payment",
+      "installmentAmount": "Installment amount",
+      "featureIds": "Feature references",
+      "serviceIds": "Service references"
+    },
+    "placeholders": {
+      "description": "Write a clear property description...",
+      "propertyTypeId": "24 hexadecimal characters",
+      "area": "Example: 120",
+      "bedrooms": "0",
+      "bathrooms": "0",
+      "floor": "0",
+      "totalFloors": "1",
+      "priceAmount": "Example: 1000000",
+      "currency": "EGP",
+      "planName": "Installment plan",
+      "installments": "12",
+      "downPaymentAmount": "Optional",
+      "installmentAmount": "Example: 80000",
+      "featureIds": "Comma-separated hexadecimal references",
+      "serviceIds": "Comma-separated hexadecimal references"
+    },
+    "frequencyLabels": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "annually": "Annually"
+    },
+    "propertyTypeCatalogUnavailableTitle": "The provider property-type catalog is unavailable",
+    "propertyTypeCatalogUnavailableBody": "The current provider contract does not expose a property-type list. The admin route and invented labels are not used; an existing reference can be retained or an approved reference can be entered.",
+    "propertyTypeCatalogLoading": "Loading property types…",
+    "propertyTypeCatalogEmptyTitle": "No active property types",
+    "propertyTypeCatalogEmptyBody": "Add an active property type from the admin dashboard so it appears here.",
+    "propertyTypeSelectPlaceholder": "Select a property type",
+    "featureCatalogUnavailableTitle": "The provider feature catalog is unavailable",
+    "featureCatalogUnavailableBody": "There is no provider route for approved feature labels. Admin data and fabricated labels are not used; save approved references only.",
+    "serviceCatalogUnavailableTitle": "The provider service catalog is unavailable",
+    "serviceCatalogUnavailableBody": "There is no provider route for approved service labels. Admin data and fabricated labels are not used; save approved references only.",
+    "referenceHelp": "Use references from an approved source only. Format, duplicates, overlap, and server-side ownership rules are checked before saving.",
+    "paymentPlanHelp": "Plan currencies must match the property price currency. This form does not display a universal commission or an unsupported financing claim.",
+    "commissionBoundaryTitle": "Commission is platform-controlled",
+    "commissionBoundaryBody": "This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.",
+    "commissionTitle": "Sadat Real Estate commission",
+    "commissionLoading": "Loading commission policy…",
+    "commissionError": "The current commission policy could not load.",
+    "commissionNone": "No commission policy currently applies to this account.",
+    "commissionSource": "Policy source",
+    "commissionKind": "Calculation type",
+    "commissionValue": "Value",
+    "commissionEffective": "Effective date",
+    "commissionVersion": "Policy version",
+    "commissionExempt": "Exempt",
+    "commissionSources": {
+      "exception": "Exception",
+      "account_override": "Account override",
+      "policy": "General policy"
+    },
+    "commissionKinds": {
+      "percentage": "Percentage",
+      "fixed": "Fixed amount",
+      "exempt": "Exempt"
+    },
+    "invalidReference": "Check feature and service references. Each must be a unique 24-character hexadecimal ID with no overlap.",
+    "versionConflict": "The draft changed after it was loaded. Reload the draft before saving your changes."
+  },
+  "public/compare-copy#getPublicPropertyComparisonCopy": {
+    "title": "Unit comparison",
+    "description": "Compare two properties and choose the one that fits your needs.",
+    "showAll": "Show all details",
+    "showDifferences": "Show differences only",
+    "viewModeLabel": "Comparison view",
+    "addAnotherUnit": "+ Add another unit",
+    "fieldColumn": "Field",
+    "detailsTitle": "Comparison details",
+    "basicTitle": "Basic information",
+    "priceTitle": "Price and payment",
+    "dimensionsTitle": "Area and layout",
+    "locationTitle": "Location",
+    "remove": "Remove",
+    "viewDetails": "View details",
+    "clearAll": "Clear all and return to search",
+    "clearShort": "Clear",
+    "compareNow": "Compare now",
+    "backToProperties": "Browse properties",
+    "property": "Property",
+    "propertyType": "Property type",
+    "unit": "Unit",
+    "sale": "For sale",
+    "rent": "For rent",
+    "valueUnavailable": "Unavailable",
+    "imageUnavailable": "Image unavailable",
+    "noDifferences": "No differences are available in the selected fields.",
+    "loadingTitle": "Loading comparison",
+    "loadingBody": "Preparing published data for the selected properties.",
+    "emptyTitle": "Choose properties to compare",
+    "emptyBody": "Add one or two properties from the search results to view the available fields.",
+    "errorTitle": "Comparison could not be loaded",
+    "errorBody": "Check your connection and try again.",
+    "retryTitle": "Comparison service is temporarily unavailable",
+    "retryBody": "You can try again when the connection is restored.",
+    "retryLabel": "Retry",
+    "permissionTitle": "Comparison is unavailable",
+    "permissionBody": "The server did not allow access to the public comparison.",
+    "permissionLink": "Return home",
+    "unavailableTitle": "A property is no longer available",
+    "unavailableBody": "Published data changed. Return to the results and choose available properties.",
+    "name": "Property name",
+    "transactionType": "Transaction type",
+    "sourceName": "Provider",
+    "sourceType": "Provider type",
+    "project": "Project",
+    "developer": "Developer",
+    "reference": "Reference number",
+    "price": "Price",
+    "installment": "Installment plan",
+    "available": "Available",
+    "area": "Total area",
+    "layout": "Layout",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "floor": "Floor",
+    "deliveryStatus": "Finish status",
+    "location": "Location",
+    "developerCompany": "Real-estate developer",
+    "brokerageOffice": "Brokerage office",
+    "individualBroker": "Individual broker",
+    "sqm": "sqm",
+    "footerDescription": "Safe comparison of published property data from approved sources.",
+    "footerLinks": "Platform links"
+  },
+  "public/copy#getPublicHomepageCopy": {
+    "brand": "Sadat Real Estate",
+    "nav": {
+      "home": "Home",
+      "properties": "Properties",
+      "developers": "Developers",
+      "articles": "Articles",
+      "community": "Community",
+      "about": "About",
+      "team": "Our team"
+    },
+    "login": "Log in",
+    "createAccount": "Create account",
+    "localeLabel": "Language",
+    "heroLabel": "Sadat Real Estate platform",
+    "heroFallbackTitle": "Find your property\nnow in Sadat City",
+    "heroFallbackBody": "A complete real-estate platform for Sadat City services and properties",
+    "searchLabel": "Search for a property",
+    "searchPlaceholder": "Property name or keyword",
+    "searchAction": "Search",
+    "browseProperties": "Browse properties",
+    "featuredProperties": "Published properties",
+    "categoryEyebrow": "Discover more",
+    "categoryTitle": "Property categories",
+    "categoryDescription": "Browse all property types available in Sadat City",
+    "propertiesEyebrow": "Featured properties",
+    "propertiesTitle": "Top featured properties",
+    "articlesEyebrow": "Real estate insights",
+    "articlesTitle": "Latest articles",
+    "communityEyebrow": "Sadat community",
+    "communityTitle": "Residents' opinions and experiences",
+    "communityAction": "Join the community",
+    "communityQuestion": "Question",
+    "communityExperience": "Experience",
+    "aboutEyebrow": "About us",
+    "aboutTitle": "A complete real-estate platform for Sadat City",
+    "developers": "Developers and companies",
+    "articles": "Articles",
+    "community": "Community",
+    "about": "About the platform",
+    "tips": "Real estate tips",
+    "readyCtaTitle": "Ready to start your property journey?",
+    "readyCtaBody": "Our team is ready to help you find the perfect property.",
+    "whatsappAction": "Contact us on WhatsApp",
+    "discoverProject": "Discover the project",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "sale": "For sale",
+    "rent": "For rent",
+    "area": "Area",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "floor": "Floor",
+    "sqm": "sqm",
+    "imageUnavailable": "Image unavailable",
+    "emptyTitle": "No published data yet",
+    "emptyBody": "Homepage content will appear when published CMS data is available.",
+    "loadingTitle": "Loading the homepage",
+    "loadingBody": "Preparing published content.",
+    "errorTitle": "The homepage could not load",
+    "errorBody": "Check the connection or try again later.",
+    "retryTitle": "The content service is unavailable",
+    "retryBody": "You can try again when the connection is available.",
+    "retryLabel": "Retry",
+    "permissionTitle": "This content is unavailable",
+    "permissionBody": "The server did not allow access to the homepage content.",
+    "permissionLink": "Return to the public homepage",
+    "footerDescription": "A public platform for published properties and content from approved sources.",
+    "footerLinks": "Platform links"
+  },
+  "public/details-copy#getPublicPropertyDetailsCopy": {
+    "backToResults": "Back to results",
+    "sale": "For sale",
+    "rent": "For rent",
+    "property": "Property",
+    "unit": "Unit",
+    "code": "Code",
+    "price": "Price",
+    "area": "Area",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "floor": "Floor",
+    "sqm": "sqm",
+    "galleryTitle": "Property gallery",
+    "imageUnavailable": "Image unavailable",
+    "mediaUnavailable": "No public media is available for this property yet.",
+    "sourceTitle": "Property source",
+    "publishedSource": "Approved published source",
+    "sourceTypes": {
+      "individual_broker": "Individual broker",
+      "brokerage_office": "Brokerage office",
+      "developer_company": "Developer company"
+    },
+    "projectTitle": "Project and developer",
+    "projectUnavailable": "No published project is linked to this property.",
+    "projectDescription": "Project overview",
+    "descriptionTitle": "Property description",
+    "noDescription": "No published description is available for this property.",
+    "relatedTitle": "Similar properties",
+    "openMap": "Open location on map",
+    "contactTitle": "Ask about this property",
+    "contactBody": "Send a contact request through your property-seeker account.",
+    "messageLabel": "Your message",
+    "messagePlaceholder": "Write your question or the details you need",
+    "submitContact": "Send request",
+    "requestViewing": "Request a viewing",
+    "viewingTitle": "Request a property viewing",
+    "viewingBody": "Choose a suitable time and the team will review your request.",
+    "requestedAt": "Date and time",
+    "timezone": "Time zone",
+    "timezonePlaceholder": "Example: Africa/Cairo",
+    "note": "Additional note",
+    "notePlaceholder": "Any detail that may help the team",
+    "submitViewing": "Send viewing request",
+    "cancel": "Cancel",
+    "close": "Close",
+    "contactValidation": "Write a message before sending the request.",
+    "viewingValidation": "Enter a future time and a valid time zone.",
+    "actionLoading": "Sending",
+    "actionSuccessTitle": "Request sent",
+    "actionSuccessBody": "Your request was saved for review.",
+    "actionPermissionTitle": "Sign-in required",
+    "actionPermissionBody": "Sign in with a property-seeker account to send a request.",
+    "actionPermissionLink": "Sign in",
+    "actionErrorTitle": "Request could not be sent",
+    "actionErrorBody": "Check the connection and try again.",
+    "retryLabel": "Retry",
+    "loadingTitle": "Loading property details",
+    "loadingBody": "Preparing the published property data.",
+    "emptyTitle": "No property details available",
+    "emptyBody": "No published details are available for this property yet.",
+    "errorTitle": "Property details could not load",
+    "errorBody": "Check the address and connection, then try again.",
+    "retryTitle": "The property service is temporarily unavailable",
+    "retryBody": "You can retry when the connection is available.",
+    "permissionTitle": "These details are unavailable",
+    "permissionBody": "The server did not allow access to the public property details.",
+    "permissionLink": "Return to the homepage",
+    "notFoundTitle": "Property not found",
+    "notFoundBody": "It may have been hidden or is no longer published.",
+    "notFoundLink": "Browse properties"
+  },
+  "public/developers-copy#getPublicDevelopersCopy": {
+    "introEyebrow": "Trusted partners",
+    "title": "Developers & companies",
+    "subtitle": "Explore approved organizations, their projects, and published properties.",
+    "searchLabel": "Search organizations",
+    "searchPlaceholder": "Organization name or slug",
+    "searchAction": "Search",
+    "resetFilters": "Reset",
+    "kindLabel": "Organization type",
+    "allKinds": "All organizations",
+    "developerCompany": "Developer company",
+    "brokerageOffice": "Brokerage office",
+    "sortLabel": "Sort results",
+    "sortName": "Name",
+    "sortSlug": "Slug",
+    "directionLabel": "Sort direction",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "verified": "Approved organization",
+    "projects": "Projects",
+    "properties": "Published properties",
+    "locationsLabel": "Locations",
+    "openProfile": "View profile",
+    "backToDirectory": "Back to organizations",
+    "profileOverview": "Overview",
+    "profileProjects": "Projects",
+    "projectsSectionTitle": "Developer projects",
+    "profileProperties": "Available units",
+    "profileKind": "Organization type",
+    "profileContact": "Contact",
+    "profileContactUnavailable": "Public contact details are not available in this profile yet.",
+    "contactDeveloper": "Contact developer",
+    "availableUnitsAction": "View available units",
+    "activitySummary": "Developer activity summary",
+    "availableUnits": "Available units",
+    "totalUnits": "Total units",
+    "soldUnits": "Sold units",
+    "reservedUnits": "Reserved units",
+    "activeAreas": "Active areas",
+    "lastUpdated": "Last updated",
+    "activeAreasTitle": "Active areas",
+    "projectTypesTitle": "Project types",
+    "propertyTypesTitle": "Property types",
+    "paymentPlansTitle": "Payment plans",
+    "availableUnitsTitle": "Available units from this developer",
+    "availableUnitsEmpty": "There are no available units from this developer right now.",
+    "projectStatus": "Project status",
+    "projectUnits": "units",
+    "projectArea": "Area",
+    "projectPrice": "Price",
+    "projectDelivery": "Delivery",
+    "viewProject": "View project",
+    "advisoryTitle": "Verified information",
+    "advisoryBody": "Project and property information is reviewed before you make a purchase or reservation decision.",
+    "contactWhatsapp": "Contact on WhatsApp",
+    "contactWhatsappAvailable": "WhatsApp available",
+    "sendInquiry": "Send inquiry",
+    "fieldName": "Full name",
+    "fieldPhone": "Phone number",
+    "fieldEmail": "Email",
+    "fieldMessage": "Additional message",
+    "fieldRequestType": "Request type",
+    "fieldPreferredTime": "Preferred contact time",
+    "messagePlaceholder": "Write your questions or additional details...",
+    "formNote": "Your contact details will only be used to handle this inquiry.",
+    "descriptionTitle": "About the developer",
+    "noDescription": "No published description is available for this organization yet.",
+    "noProjects": "No published projects are linked to this organization yet.",
+    "noProperties": "No published properties are linked to this organization yet.",
+    "projectDescription": "Project overview",
+    "website": "Website",
+    "openWebsite": "Visit website",
+    "sale": "For sale",
+    "rent": "For rent",
+    "property": "Property",
+    "unit": "Unit",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "paginationLabel": "Organization directory pages",
+    "loadingTitle": "Loading organizations",
+    "loadingBody": "Preparing approved published organizations.",
+    "emptyTitle": "No matching organizations",
+    "emptyBody": "Try changing the search or organization type.",
+    "errorTitle": "Organizations could not be loaded",
+    "errorBody": "Check your connection and try again.",
+    "retryTitle": "Organization directory is temporarily unavailable",
+    "retryBody": "You can retry when the connection is available.",
+    "retryLabel": "Try again",
+    "permissionTitle": "These organizations cannot be displayed",
+    "permissionBody": "The server did not allow access to the public directory.",
+    "permissionLink": "Back to homepage",
+    "notFoundTitle": "Organization not found",
+    "notFoundBody": "The organization may no longer be published or the link may be incorrect.",
+    "notFoundLink": "Browse organizations",
+    "imageUnavailable": "Media unavailable",
+    "footerDescription": "A public directory of published organizations and properties from approved sources.",
+    "footerLinks": "Platform links"
+  },
+  "public/listing-copy#getPublicPropertyListingCopy": {
+    "title": "Property search results",
+    "filtersTitle": "Filter results",
+    "resetFilters": "Reset",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Property name or keyword",
+    "transactionLabel": "Transaction type",
+    "allTransactions": "All",
+    "sale": "For sale",
+    "rent": "For rent",
+    "kindLabel": "Record type",
+    "allKinds": "All",
+    "property": "Property",
+    "unit": "Unit",
+    "minPrice": "Minimum price",
+    "maxPrice": "Maximum price",
+    "bedrooms": "Bedrooms",
+    "locationId": "Location",
+    "projectId": "Project ID",
+    "valuePlaceholder": "Optional",
+    "applyFilters": "Apply filters",
+    "invalidFilters": "Check the filter values and try again.",
+    "sortLabel": "Sort results",
+    "sortPublishedAt": "Recently published",
+    "sortPrice": "Price",
+    "sortName": "Name",
+    "sortSlug": "Slug",
+    "directionLabel": "Sort direction",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "paginationLabel": "Property pages",
+    "loadingTitle": "Loading properties",
+    "loadingBody": "Preparing published results.",
+    "emptyTitle": "No matching properties",
+    "emptyBody": "Try changing the search or filters to see other results.",
+    "errorTitle": "Properties could not load",
+    "errorBody": "Check the connection and try again.",
+    "retryTitle": "The property service is unavailable",
+    "retryBody": "You can retry when the connection is available.",
+    "retryLabel": "Retry",
+    "permissionTitle": "These results are unavailable",
+    "permissionBody": "The server did not allow access to the public property list.",
+    "permissionLink": "Return to the homepage",
+    "imageUnavailable": "Image unavailable",
+    "area": "Area",
+    "bathrooms": "Bathrooms",
+    "floor": "Floor",
+    "sqm": "sqm",
+    "footerDescription": "A public list of published properties from approved sources.",
+    "footerLinks": "Platform links",
+    "propertyType": "Property type",
+    "propertyCountLabel": "properties",
+    "addToCompare": "Add to compare",
+    "deliveryStatus": "Delivery status",
+    "readyToMove": "Ready to move",
+    "underConstruction": "Under construction",
+    "futureDelivery": "Future delivery",
+    "views": "Views",
+    "installment": "Installments",
+    "featured": "Featured",
+    "developerSource": "Property developer",
+    "brokerageSource": "Brokerage office"
+  },
+  "seeker/copy#getSeekerCopy": {
+    "nav": {
+      "overview": "Overview",
+      "requests": "My requests",
+      "viewings": "Viewing requests",
+      "saved": "Saved properties",
+      "notifications": "Notifications",
+      "profile": "Profile and preferences",
+      "settings": "Account settings"
+    },
+    "overview": {
+      "eyebrow": "Seeker workspace",
+      "title": "Welcome to Sadat Real Estate",
+      "description": "A current summary of your activity on Sadat Real Estate.",
+      "searchProperties": "Find a new property",
+      "summaryTitle": "Activity summary",
+      "cards": {
+        "requests": "Total requests",
+        "activeRequests": "Active requests",
+        "viewings": "Upcoming viewings",
+        "savedProperties": "Saved properties",
+        "notifications": "Unread notifications"
+      },
+      "activityTitle": "Recent activity",
+      "activityBody": "Request, viewing, and notification details appear here when their own contracts are available.",
+      "recent": {
+        "requests": "Active requests",
+        "viewings": "Upcoming viewings",
+        "notifications": "Recent notifications",
+        "viewAll": "View all",
+        "empty": "No recent activity",
+        "requestId": "Request",
+        "property": "Property",
+        "status": "Status",
+        "appointment": "Appointment"
+      },
+      "unavailableTitle": "Activity details are unavailable",
+      "unavailableBody": "This section renders only the summary contract and never invents counts or content.",
+      "emptyTitle": "No activity yet",
+      "emptyBody": "Start by finding a property or save one to return to later."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading seeker dashboard",
+        "body": "Your activity summary is being retrieved."
+      },
+      "retry": {
+        "title": "The seeker dashboard could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "The seeker dashboard is unavailable",
+        "body": "The data could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "This data is available only to a verified seeker account."
+      }
+    },
+    "retry": "Retry",
+    "active": "Current",
+    "localeLabel": "Locale"
+  },
+  "seeker/notifications-copy#getSeekerNotificationsCopy": {
+    "eyebrow": "Seeker workspace",
+    "title": "Notifications",
+    "description": "Keep up with updates connected to your account and requests.",
+    "listLabel": "Account notifications",
+    "unreadCount": "unread notification",
+    "markAll": "Mark all as read",
+    "markingAll": "Marking as read…",
+    "tabs": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "unreadLabel": "Unread",
+    "markRead": "Mark as read",
+    "markedRead": "Notification marked as read.",
+    "openLink": "Open details",
+    "previous": "Previous page",
+    "next": "Next page",
+    "pagination": "Notification pages",
+    "empty": {
+      "all": {
+        "title": "No notifications",
+        "body": "Updates connected to your account will appear here."
+      },
+      "unread": {
+        "title": "No unread notifications",
+        "body": "You have read all notifications currently available to your account."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "Loading notifications",
+        "body": "Your account notifications are being retrieved from the platform."
+      },
+      "retry": {
+        "title": "Notifications could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Notifications are unavailable",
+        "body": "Your account notifications could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "Notifications are available only to a verified seeker account."
+      }
+    },
+    "mutation": {
+      "markedRead": "Notification marked as read.",
+      "markedAll": "Unread notifications were updated.",
+      "notFound": "This notification is no longer available to your account.",
+      "permission": "Your session has expired. Sign in and try again.",
+      "error": "The notification could not be updated. Try again."
+    },
+    "typeLabels": {
+      "viewing.reminder": "Viewing reminder",
+      "request.updated": "Request update",
+      "community.reply": "Community reply",
+      "property.saved": "Saved property update",
+      "profile.updated": "Profile update"
+    },
+    "retry": "Retry"
+  },
+  "seeker/profile-copy#getSeekerProfileCopy": {
+    "eyebrow": "Seeker workspace",
+    "title": "Profile and preferences",
+    "description": "Manage your personal data, search preferences, and account settings.",
+    "tabs": {
+      "preferences": "Search preferences",
+      "profile": "Personal information",
+      "settings": "Account settings"
+    },
+    "profile": {
+      "heading": "Personal information",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "language": "Preferred language",
+      "save": "Save changes",
+      "saved": "Personal information saved."
+    },
+    "preferences": {
+      "heading": "Search preferences",
+      "purpose": "Transaction purpose",
+      "anyPurpose": "Buy or rent",
+      "buy": "Buy",
+      "rent": "Rent",
+      "propertyTypes": "Property types",
+      "propertyTypesHelp": "Choose more than one type.",
+      "locations": "Preferred locations",
+      "locationsHelp": "Choose more than one area.",
+      "budgetRange": "Budget range (EGP)",
+      "minPrice": "From",
+      "maxPrice": "To",
+      "areaRange": "Preferred area (m²)",
+      "minArea": "From",
+      "maxArea": "To",
+      "bedroomsMin": "Bedrooms",
+      "bedroomsMax": "Maximum bedrooms",
+      "paymentMethod": "Preferred payment method",
+      "cash": "Cash",
+      "installment": "Installment",
+      "anyPayment": "Both",
+      "save": "Save changes",
+      "saved": "Search preferences saved.",
+      "noSavedPreferences": "No search preferences are saved yet. Start with the fields below.",
+      "invalid": "Review the entered values and make sure each range is valid."
+    },
+    "settings": {
+      "heading": "Account settings",
+      "languageHeading": "Account language",
+      "languageBody": "The language is saved to your account and used by subsequent surfaces.",
+      "securityHeading": "Security and access",
+      "securityBody": "Password changes and device management require API operations that are not implemented on this surface yet.",
+      "unavailable": "This feature is currently unavailable under the implemented contracts.",
+      "notificationHeading": "Notification settings",
+      "notificationBody": "Detailed notification choices require a separate settings contract.",
+      "sessionsHeading": "Other devices",
+      "sessionsBody": "Other-session management is unavailable until the sessions contract is implemented.",
+      "signOut": "Sign out",
+      "signedOut": "You have been signed out.",
+      "accountHeading": "Account",
+      "accountBody": "Account deletion is irreversible and requires an explicit contract that is not implemented.",
+      "deleteAccount": "Delete account permanently"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading profile",
+        "body": "Your verified account data is being retrieved."
+      },
+      "retry": {
+        "title": "The account data could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Account data is unavailable",
+        "body": "The data could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "This data is available only to a verified seeker account."
+      }
+    },
+    "retry": "Retry",
+    "validation": "Review the required fields and invalid values.",
+    "unavailable": "Unavailable",
+    "saving": "Saving..."
+  },
+  "seeker/requests-copy#getSeekerRequestsCopy": {
+    "list": {
+      "eyebrow": "Seeker workspace",
+      "title": "My requests",
+      "description": "Track only the property-search, contact, and viewing requests owned by your account.",
+      "count": "requests",
+      "emptyTitle": "No requests yet",
+      "emptyBody": "Your requests will appear here after you send a search or contact request.",
+      "requestId": "Request ID",
+      "type": "Request type",
+      "status": "Status",
+      "submitted": "Submitted",
+      "details": "View details",
+      "previous": "Previous page",
+      "next": "Next page",
+      "pagination": "Request pages"
+    },
+    "detail": {
+      "eyebrow": "Request details",
+      "title": "Your request details",
+      "summary": "Request summary",
+      "timeline": "Request timeline",
+      "type": "Request type",
+      "status": "Current status",
+      "submitted": "Submitted",
+      "updated": "Last updated",
+      "property": "Linked property",
+      "project": "Linked project",
+      "message": "Your message",
+      "note": "Your note",
+      "advanced": "Search details",
+      "budget": "Budget range",
+      "bedrooms": "Bedrooms",
+      "propertyTypes": "Property types",
+      "unavailable": "No additional details are available in the implemented contract.",
+      "back": "Back to requests",
+      "cancel": "Cancel request",
+      "cancelReason": "Cancellation reason",
+      "cancelConfirm": "Confirm cancellation",
+      "cancelError": "The request could not be cancelled. Review the reason and try again."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading requests",
+        "body": "Your request data is being retrieved from the platform."
+      },
+      "retry": {
+        "title": "Requests could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Requests are unavailable",
+        "body": "The request data could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "This data is available only to a verified seeker account."
+      },
+      "notFound": {
+        "title": "Request not found",
+        "body": "This request is not available within your account-owned requests."
+      }
+    },
+    "statuses": {
+      "new": "New",
+      "under_review": "Under review",
+      "contacted": "Contacted",
+      "scheduled": "Scheduled",
+      "needs_information": "Needs information",
+      "in_progress": "In progress",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "closed": "Closed"
+    },
+    "types": {
+      "contact": "Contact request",
+      "viewing": "Viewing request",
+      "property_search": "Property search",
+      "provider_customer": "Customer request"
+    },
+    "retry": "Retry"
+  },
+  "seeker/saved-copy#getSeekerSavedCopy": {
+    "eyebrow": "Seeker workspace",
+    "title": "Saved properties",
+    "description": "Review the properties saved to your account.",
+    "count": "saved properties",
+    "view": "View property",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "savedAt": "Saved on",
+    "imageUnavailable": "Image unavailable",
+    "sale": "For sale",
+    "rent": "For rent",
+    "property": "Property",
+    "unit": "Unit",
+    "area": "Area",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "floor": "Floor",
+    "sqm": "sqm",
+    "pagination": "Saved property pages",
+    "previous": "Previous page",
+    "next": "Next page",
+    "empty": {
+      "title": "No saved properties",
+      "body": "Properties you save will appear here."
+    },
+    "states": {
+      "loading": {
+        "title": "Loading saved properties",
+        "body": "Saved properties are being retrieved from the platform."
+      },
+      "retry": {
+        "title": "Saved properties could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Saved properties are unavailable",
+        "body": "The saved property data could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "Saved properties are available only to a verified seeker account."
+      }
+    },
+    "mutation": {
+      "removed": "Property removed from saved properties.",
+      "alreadyRemoved": "Property was already absent from saved properties.",
+      "unavailable": "This property is no longer available.",
+      "permission": "Your session has expired. Sign in and try again.",
+      "error": "Saved properties could not be updated. Try again."
+    },
+    "retry": "Retry"
+  },
+  "seeker/viewings-copy#getSeekerViewingsCopy": {
+    "eyebrow": "Seeker workspace",
+    "title": "Viewing appointments",
+    "description": "Track only the property viewing appointments connected to your account.",
+    "count": "appointments",
+    "tabs": {
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "cancelled": "Cancelled"
+    },
+    "property": "Property",
+    "location": "Location",
+    "source": "Provider",
+    "openProperty": "View property",
+    "date": "Date",
+    "time": "Time",
+    "timezone": "Timezone",
+    "note": "Your note",
+    "details": "View details",
+    "hideDetails": "Hide details",
+    "requestViewing": "Request a viewing",
+    "requestViewingTitle": "Request a new viewing",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel appointment",
+    "cancelConfirm": "Cancel this appointment?",
+    "submit": "Submit request",
+    "save": "Save appointment",
+    "close": "Close",
+    "propertyId": "Property ID",
+    "requestedAt": "Viewing time",
+    "formTimezone": "Timezone",
+    "formNote": "Optional note",
+    "required": "This field is required.",
+    "invalidProperty": "Enter a valid property ID.",
+    "invalidDate": "Choose a valid future appointment time.",
+    "invalidTimezone": "Enter a valid timezone.",
+    "invalidNote": "The note must be 1,000 characters or fewer.",
+    "empty": {
+      "upcoming": {
+        "title": "No upcoming appointments",
+        "body": "Upcoming viewing appointments connected to your account will appear here."
+      },
+      "past": {
+        "title": "No past appointments",
+        "body": "Completed viewing appointments will appear here."
+      },
+      "cancelled": {
+        "title": "No cancelled appointments",
+        "body": "Appointments cancelled by your account will appear here."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "Loading appointments",
+        "body": "Your viewing appointments are being retrieved from the platform."
+      },
+      "retry": {
+        "title": "Appointments could not load",
+        "body": "Check the connection and try again."
+      },
+      "error": {
+        "title": "Appointments are unavailable",
+        "body": "The viewing appointment data could not be read. Try again later."
+      },
+      "permission": {
+        "title": "Sign-in required",
+        "body": "This data is available only to a verified seeker account."
+      }
+    },
+    "mutation": {
+      "saving": "Saving your change…",
+      "created": "Viewing request submitted.",
+      "updated": "Viewing appointment updated.",
+      "cancelled": "Viewing appointment cancelled.",
+      "conflict": "This appointment changed or is no longer available. Refresh and try again.",
+      "notFound": "This appointment is no longer available within your account.",
+      "error": "The change could not be saved. Check the details and try again."
+    },
+    "statuses": {
+      "requested": "Requested",
+      "confirmed": "Confirmed",
+      "rescheduled": "Rescheduled",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    },
+    "retry": "Retry"
+  },
+  "frontend_foundation/locale#getFoundationCopy": {
+    "brand": "Sadat Real Estate",
+    "shellTitle": "Platform shell",
+    "shellDescription": "This is the frontend foundation. Real data appears only when its backend contract is available.",
+    "unavailable": "No screen data is available for this route yet.",
+    "retryLabel": "Retry",
+    "localeLabel": "Locale",
+    "routeLabel": "Route",
+    "surfaceLabels": {
+      "public": "Public",
+      "auth": "Authentication",
+      "seeker": "Seeker",
+      "provider": "Provider",
+      "admin": "Administration"
+    },
+    "states": {
+      "loading": {
+        "title": "Loading",
+        "body": "Preparing the interface."
+      },
+      "empty": {
+        "title": "No data yet",
+        "body": "Data will appear when an implemented backend contract is available."
+      },
+      "error": {
+        "title": "Page not found",
+        "body": "Check the address and try again."
+      },
+      "retry": {
+        "title": "The interface could not load",
+        "body": "You can try again when the connection is available."
+      },
+      "success": {
+        "title": "Loaded",
+        "body": "The interface loaded successfully."
+      },
+      "permission": {
+        "title": "Authentication required",
+        "body": "Protected data is not rendered by this foundation shell."
+      }
+    }
+  }
+}

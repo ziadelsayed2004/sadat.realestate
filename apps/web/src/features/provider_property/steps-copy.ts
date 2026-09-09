@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderPropertyAdvancedStep = 'details' | 'price-payment' | 'features-services';
@@ -114,5 +115,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
   },};
 
 export function getProviderPropertyAdvancedCopy(locale: SupportedLocale): ProviderPropertyAdvancedCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider_property/steps-copy#getProviderPropertyAdvancedCopy', locale, copyByLocale[locale]);
 }

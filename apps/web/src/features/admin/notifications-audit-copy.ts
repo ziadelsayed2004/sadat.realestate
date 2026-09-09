@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminNotificationsAuditState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
@@ -92,5 +93,5 @@ const copy: Readonly<Record<SupportedLocale, AdminNotificationsAuditCopy>> = {
   },};
 
 export function getAdminNotificationsAuditCopy(locale: SupportedLocale): AdminNotificationsAuditCopy {
-  return copy[locale];
+  return localizeCopy('admin/notifications-audit-copy#getAdminNotificationsAuditCopy', locale, copy[locale]);
 }

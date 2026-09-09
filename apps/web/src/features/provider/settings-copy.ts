@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderSettingsCopy = {
@@ -33,5 +34,5 @@ const copy: Readonly<Record<SupportedLocale, ProviderSettingsCopy>> = {
   },};
 
 export function getProviderSettingsCopy(locale: SupportedLocale): ProviderSettingsCopy {
-  return copy[locale];
+  return localizeCopy('provider/settings-copy#getProviderSettingsCopy', locale, copy[locale]);
 }

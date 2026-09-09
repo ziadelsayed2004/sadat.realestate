@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { AdminRbacState } from './views.tsx';
 
@@ -82,5 +83,5 @@ const arabic: AdminRbacCopy = {
 const copyByLocale: Readonly<Record<SupportedLocale, AdminRbacCopy>> = { ar: arabic, en: english,};
 
 export function getAdminRbacCopy(locale: SupportedLocale): AdminRbacCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_rbac/copy#getAdminRbacCopy', locale, copyByLocale[locale]);
 }

@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { ProviderType, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type OrganizationVariant = 'business' | 'company';
@@ -189,7 +190,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderOrganizationCopy>> 
   },};
 
 export function getProviderOrganizationCopy(locale: SupportedLocale): ProviderOrganizationCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider_auth/organization-copy#getProviderOrganizationCopy', locale, copyByLocale[locale]);
 }
 
 export function organizationVariant(providerType: ProviderType): OrganizationVariant | undefined {

@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminAdsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
@@ -175,5 +176,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
   },};
 
 export function getAdminAdsCopy(locale: SupportedLocale): AdminAdsCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_ads/copy#getAdminAdsCopy', locale, copyByLocale[locale]);
 }

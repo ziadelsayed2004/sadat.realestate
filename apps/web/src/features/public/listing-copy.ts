@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface PublicPropertyListingCopy {
@@ -208,5 +209,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
   },};
 
 export function getPublicPropertyListingCopy(locale: SupportedLocale): PublicPropertyListingCopy {
-  return copyByLocale[locale];
+  return localizeCopy('public/listing-copy#getPublicPropertyListingCopy', locale, copyByLocale[locale]);
 }

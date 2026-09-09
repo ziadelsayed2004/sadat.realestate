@@ -292,10 +292,33 @@ export interface StateMessageProps {
   readonly onRetry?: (() => void) | undefined;
 }
 
+export type SkeletonVariant = 'page' | 'cards' | 'list' | 'table' | 'form';
+
+export interface SkeletonProps {
+  readonly label: ReactNode;
+  readonly variant?: SkeletonVariant | undefined;
+}
+
+export function Skeleton({ label, variant = 'page' }: SkeletonProps) {
+  return (
+    <div className="ui-skeleton" data-variant={variant} role="status" aria-live="polite" aria-busy="true">
+      <span className="ui-visually-hidden">{label}</span>
+      <span className="ui-skeleton__line ui-skeleton__line--title" aria-hidden="true" />
+      <span className="ui-skeleton__line ui-skeleton__line--copy" aria-hidden="true" />
+      <span className="ui-skeleton__grid" aria-hidden="true">
+        <span /><span /><span />
+      </span>
+      <span className="ui-skeleton__line ui-skeleton__line--wide" aria-hidden="true" />
+      <span className="ui-skeleton__line ui-skeleton__line--wide" aria-hidden="true" />
+    </div>
+  );
+}
+
 export function StateMessage({ state, title, message, retryLabel, onRetry }: StateMessageProps) {
+  if (state === 'loading') return <Skeleton label={title ?? message ?? 'Loading'} />;
   const role = state === 'error' || state === 'permission' ? 'alert' : 'status';
   return (
-    <div className="ui-state-message" data-state={state} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'} aria-busy={state === 'loading' || undefined}>
+    <div className="ui-state-message" data-state={state} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>
       {title !== undefined ? <h3>{title}</h3> : null}
       {message !== undefined ? <p>{message}</p> : null}
       {state === 'retry' && onRetry !== undefined && retryLabel !== undefined ? <Button variant="secondary" size="sm" onClick={onRetry}>{retryLabel}</Button> : null}

@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface SeekerProfileCopy {
@@ -111,5 +112,5 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
   },};
 
 export function getSeekerProfileCopy(locale: SupportedLocale): SeekerProfileCopy {
-  return copy[locale];
+  return localizeCopy('seeker/profile-copy#getSeekerProfileCopy', locale, copy[locale]);
 }

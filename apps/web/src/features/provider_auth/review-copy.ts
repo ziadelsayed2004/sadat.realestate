@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { ProviderApplicationState, ProviderType, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface ProviderReviewCopy {
@@ -218,5 +219,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
   },};
 
 export function getProviderReviewCopy(locale: SupportedLocale): ProviderReviewCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider_auth/review-copy#getProviderReviewCopy', locale, copyByLocale[locale]);
 }

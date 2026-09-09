@@ -4,6 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Sadat Real Estate web application shell" />
+    <script>
+      (() => {
+        const params = new URLSearchParams(location.search);
+        const cookieLocale = document.cookie.match(/(?:^|;\s*)sadat-real-estate\.locale=(ar|en)(?:;|$)/)?.[1];
+        const locale = params.get('lang') === 'en' || params.get('lang') === 'ar'
+          ? params.get('lang')
+          : cookieLocale === 'en' ? 'en' : 'ar';
+        document.documentElement.lang = locale;
+        document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.classList.add('app-booting');
+        addEventListener('pageshow', () => document.documentElement.classList.remove('app-navigating'));
+        addEventListener('click', event => {
+          const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+          if (!(link instanceof HTMLAnchorElement) || event.defaultPrevented || event.button !== 0 || link.target === '_blank' || link.hasAttribute('download')) return;
+          const target = new URL(link.href, location.href);
+          if (target.origin === location.origin && target.href !== location.href) document.documentElement.classList.add('app-navigating');
+        }, { capture: true });
+        addEventListener('submit', () => document.documentElement.classList.add('app-navigating'), { capture: true });
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/assets/sadat-real-estate-favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,6 +46,9 @@
     <title>Sadat Real Estate</title>
   </head>
   <body>
+    <div id="app-transition-loader" aria-hidden="true">
+      <div class="ui-skeleton" data-variant="page"><span class="ui-skeleton__line ui-skeleton__line--title"></span><span class="ui-skeleton__line ui-skeleton__line--copy"></span><span class="ui-skeleton__grid"><span></span><span></span><span></span></span><span class="ui-skeleton__line ui-skeleton__line--wide"></span><span class="ui-skeleton__line ui-skeleton__line--wide"></span></div>
+    </div>
     <div id="app"><!--ssr-outlet--></div>
     <script type="module" src="/src/features/frontend_foundation/entry-client.tsx"></script>
   </body>

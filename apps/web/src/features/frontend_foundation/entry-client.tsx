@@ -252,6 +252,7 @@ function ClientApp(props: typeof appProps) {
   };
 
   useEffect(() => {
+    document.documentElement.classList.remove('app-booting', 'app-navigating');
     const onLocaleEvent = (event: Event) => {
       const detail = (event as CustomEvent<{ readonly locale?: unknown }>).detail;
       const nextLocale = normalizeLocale(detail?.locale);

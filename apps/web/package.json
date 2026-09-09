@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "prepare:contracts": "npm run build --workspace @sadat-real-estate/contracts",
+    "translations:check": "node --import tsx scripts/build-copy-catalog.mjs",
+    "translations:sync": "node --import tsx scripts/build-copy-catalog.mjs --write",
     "predev": "npm run prepare:contracts",
     "dev": "node server.mjs --mode development",
-    "prebuild": "npm run prepare:contracts",
+    "prebuild": "npm run prepare:contracts && npm run translations:check",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --config vite.config.ts && node scripts/check-bundle-budget.mjs",
     "build:server": "vite build --config vite.config.ts --ssr src/features/frontend_foundation/entry-server.tsx",

@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { ProviderAdvertisingStatus } from './advertising-data.ts';
 
@@ -179,5 +180,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
   },};
 
 export function getProviderAdvertisingCopy(locale: SupportedLocale): ProviderAdvertisingCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider/advertising-copy#getProviderAdvertisingCopy', locale, copyByLocale[locale]);
 }

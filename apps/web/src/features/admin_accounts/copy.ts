@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminAccountsView = 'users' | 'seekers' | 'providers' | 'verification';
@@ -172,5 +173,5 @@ const arabic: AdminAccountsCopy = {
 const copies: Readonly<Record<SupportedLocale, AdminAccountsCopy>> = { ar: arabic, en: english,};
 
 export function getAdminAccountsCopy(locale: SupportedLocale): AdminAccountsCopy {
-  return copies[locale];
+  return localizeCopy('admin_accounts/copy#getAdminAccountsCopy', locale, copies[locale]);
 }

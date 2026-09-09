@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminMasterDataTab = 'categories' | 'locations' | 'features';
@@ -91,5 +92,5 @@ const copies: Readonly<Record<SupportedLocale, AdminMasterDataCopy>> = {
   },};
 
 export function getAdminMasterDataCopy(locale: SupportedLocale): AdminMasterDataCopy {
-  return copies[locale];
+  return localizeCopy('admin_master_data/copy#getAdminMasterDataCopy', locale, copies[locale]);
 }

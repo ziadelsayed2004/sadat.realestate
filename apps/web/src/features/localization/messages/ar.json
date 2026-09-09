@@ -1,0 +1,4250 @@
+{
+  "admin/copy#getAdminCopy": {
+    "nav": {
+      "overview": "نظرة عامة",
+      "users": "المستخدمون والحسابات",
+      "providers": "مقدمو العقارات",
+      "properties": "العقارات",
+      "requests": "الطلبات",
+      "content": "المحتوى والمجتمع",
+      "advertising": "الإعلانات والإيرادات",
+      "commissions": "العمولات",
+      "notifications": "الإشعارات",
+      "audit": "سجل التدقيق",
+      "settings": "الإعدادات"
+    },
+    "overview": {
+      "eyebrow": "مدير النظام",
+      "title": "نظرة عامة",
+      "description": "تابع نشاط المنصة والطلبات التي تحتاج إلى مراجعة من مكان واحد.",
+      "rangeLabel": "الفترة المعروضة",
+      "refreshedLabel": "آخر تحديث",
+      "platformTitle": "المنصة",
+      "operationsTitle": "التشغيل والمراجعة",
+      "queueTitle": "طلبات تحتاج إلى مراجعة",
+      "queueBody": "تفاصيل الطلبات غير متاحة من عقد لوحة المؤشرات الحالي.",
+      "activityTitle": "آخر الإجراءات",
+      "actions": {
+        "reviewAccounts": "مراجعة الحسابات",
+        "reviewProperties": "مراجعة العقارات",
+        "createArticle": "إنشاء مقال",
+        "reviewAdvertising": "مراجعة الإعلانات"
+      },
+      "metrics": {
+        "users": "إجمالي المستخدمين",
+        "seekers": "الباحثون عن عقار",
+        "providers": "مقدمو العقارات",
+        "verifiedProviders": "مقدمو العقارات الموثقون",
+        "publishedProperties": "العقارات المنشورة",
+        "openRequests": "الطلبات المفتوحة",
+        "pendingReviews": "المراجعات المعلقة"
+      },
+      "emptyTitle": "لا توجد بيانات في هذه الفترة",
+      "emptyBody": "لم تُسجل مؤشرات تشغيلية ضمن الفترة المحددة. ستظهر البيانات هنا عند توفر سجلات فعلية."
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل لوحة الإدارة",
+        "body": "يتم جلب المؤشرات من مصدر المنصة الفعلي."
+      },
+      "empty": {
+        "title": "لا توجد بيانات في هذه الفترة",
+        "body": "لا توجد سجلات تشغيلية فعلية لعرضها."
+      },
+      "error": {
+        "title": "تعذر تحميل لوحة الإدارة",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "تعذر الوصول إلى لوحة الإدارة",
+        "body": "يمكنك إعادة المحاولة عند توفر الاتصال."
+      },
+      "success": {
+        "title": "تم تحميل لوحة الإدارة",
+        "body": "تم تحميل المؤشرات من المصدر الفعلي."
+      },
+      "permission": {
+        "title": "لا تملك صلاحية الوصول",
+        "body": "تتطلب هذه الصفحة جلسة مدير نظام مصادقاً عليها."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "unavailable": "غير متاح"
+  },
+  "admin/notifications-audit-copy#getAdminNotificationsAuditCopy": {
+    "navLabel": "الإشعارات وسجل التدقيق",
+    "notifications": {
+      "eyebrow": "مركز التنبيهات",
+      "title": "الإشعارات",
+      "description": "راجع التنبيهات الموجهة إلى حسابك الإداري فقط.",
+      "listLabel": "قائمة الإشعارات",
+      "unreadCount": "غير مقروء",
+      "markAll": "تحديد الكل كمقروء",
+      "markRead": "تحديد كمقروء",
+      "openLink": "فتح الرابط",
+      "tabs": {
+        "all": "الكل",
+        "unread": "غير مقروء"
+      },
+      "empty": {
+        "all": {
+          "title": "لا توجد إشعارات",
+          "body": "ستظهر الإشعارات الحقيقية هنا عند توفرها."
+        },
+        "unread": {
+          "title": "لا توجد إشعارات غير مقروءة",
+          "body": "تمت مراجعة جميع الإشعارات المتاحة."
+        }
+      },
+      "mutation": {
+        "markedRead": "تم تحديد الإشعار كمقروء.",
+        "markedAll": "تم تحديد الإشعارات كمقروءة.",
+        "notFound": "لم يعد هذا الإشعار متاحاً.",
+        "permission": "لا تملك صلاحية تعديل هذا الإشعار.",
+        "error": "تعذر تحديث الإشعار."
+      }
+    },
+    "audit": {
+      "eyebrow": "الحوكمة والتدقيق",
+      "title": "سجل التدقيق",
+      "description": "راجع الأحداث المسجلة مع لقطات قبل وبعد المنقحة من الخادم.",
+      "filters": "تصفية السجل",
+      "actorId": "معرف المسؤول",
+      "targetType": "نوع الهدف",
+      "targetId": "معرف الهدف",
+      "action": "الإجراء",
+      "traceId": "معرف التتبع",
+      "from": "من",
+      "to": "إلى",
+      "apply": "تطبيق الفلاتر",
+      "clear": "مسح",
+      "tableLabel": "أحداث التدقيق",
+      "date": "التاريخ والوقت",
+      "actor": "المسؤول",
+      "target": "الهدف",
+      "actionLabel": "الإجراء",
+      "reason": "السبب",
+      "details": "التفاصيل",
+      "before": "قبل",
+      "after": "بعد",
+      "snapshotNotice": "اللقطات قبل وبعد منقحة من الخادم ولا تعرض كلمات مرور أو رموز وصول أو مستندات خاصة.",
+      "metrics": {
+        "total": "إجمالي الأحداث",
+        "onPage": "المعروض في الصفحة",
+        "administrators": "المسؤولون الفريدون",
+        "redactedSnapshots": "لقطات منقحة"
+      },
+      "requestId": "معرف الطلب",
+      "trace": "التتبع",
+      "view": "عرض التفاصيل",
+      "back": "العودة إلى السجل",
+      "noEntries": "لا توجد أحداث تدقيق مطابقة."
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم جلب البيانات من مصدر المنصة الفعلي."
+      },
+      "empty": {
+        "title": "لا توجد بيانات",
+        "body": "لا توجد سجلات فعلية لعرضها."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الخدمة غير متاحة مؤقتاً",
+        "body": "يمكنك إعادة المحاولة عند عودة الاتصال."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الصفحة جلسة مسؤول والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "لم يعد سجل التدقيق المطلوب متاحاً."
+      },
+      "success": {
+        "title": "تم التحميل",
+        "body": "تم تحميل البيانات من المصدر الفعلي."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "previous": "السابق",
+    "next": "التالي",
+    "pagination": "صفحات النتائج"
+  },
+  "admin_accounts/copy#getAdminAccountsCopy": {
+    "users": {
+      "eyebrow": "إدارة الحسابات",
+      "title": "المستخدمون والحسابات",
+      "description": "راجع حسابات الباحثين ومقدمي العقارات من خلال البيانات المعتمدة للمديرين.",
+      "searchLabel": "البحث في الصفحة المحملة",
+      "searchPlaceholder": "الاسم أو البريد أو الهاتف أو معرف الحساب",
+      "roleLabel": "نوع الحساب",
+      "statusLabel": "حالة الحساب",
+      "typeLabel": "نوع الحساب",
+      "all": "الكل",
+      "totalLabel": "حسابات",
+      "emptyTitle": "لا توجد حسابات",
+      "emptyBody": "لا توجد حسابات تطابق عوامل التصفية الحالية.",
+      "columns": {
+        "name": "الحساب",
+        "type": "النوع",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني",
+        "status": "الحالة",
+        "locale": "اللغة",
+        "updated": "آخر تحديث",
+        "actions": "الإجراءات"
+      }
+    },
+    "providers": {
+      "eyebrow": "إدارة الحسابات",
+      "title": "مقدمو العقارات",
+      "description": "راجع طلبات مقدمي العقارات وحالات حساباتهم دون كشف المستندات الخاصة أو بيانات المراجعة الداخلية.",
+      "searchLabel": "البحث في الصفحة المحملة",
+      "searchPlaceholder": "الاسم أو الشركة أو البريد أو معرف مقدم الخدمة",
+      "statusLabel": "حالة الطلب",
+      "typeLabel": "نوع مقدم الخدمة",
+      "all": "الكل",
+      "totalLabel": "مقدمين",
+      "emptyTitle": "لا يوجد مقدمو عقارات",
+      "emptyBody": "لا توجد سجلات تطابق عوامل التصفية الحالية.",
+      "columns": {
+        "name": "مقدم العقار",
+        "type": "النوع",
+        "status": "حالة الطلب",
+        "accountStatus": "حالة الحساب",
+        "company": "النشاط",
+        "updated": "آخر تحديث",
+        "actions": "الإجراءات"
+      }
+    },
+    "verification": {
+      "eyebrow": "مساحة التحقق",
+      "title": "التحقق من مقدمي العقارات",
+      "description": "راجع الطلبات وافتح فقط المستندات النظيفة والنشطة من خلال صلاحية مراجعة مؤقتة.",
+      "searchLabel": "البحث في الصفحة المحملة",
+      "searchPlaceholder": "اسم المقدم أو الشركة أو معرف الطلب",
+      "statusLabel": "حالة الطلب",
+      "typeLabel": "نوع مقدم الخدمة",
+      "all": "الكل",
+      "totalLabel": "طلبات",
+      "emptyTitle": "لا توجد سجلات تحقق",
+      "emptyBody": "لا توجد طلبات مقدمي عقارات تطابق عوامل التصفية الحالية.",
+      "columns": {
+        "name": "مقدم العقار",
+        "type": "النوع",
+        "status": "حالة الطلب",
+        "submitted": "تاريخ التقديم",
+        "updated": "آخر تحديث",
+        "actions": "الإجراءات"
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "جار تحميل سجلات الإدارة",
+        "body": "يتم جلب البيانات المعتمدة للمدير من واجهة البرمجة الفعلية."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد سجلات لعرضها وفق عوامل التصفية الحالية."
+      },
+      "error": {
+        "title": "تعذر تحميل سجلات الإدارة",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "خدمة الإدارة غير متاحة",
+        "body": "أعد المحاولة عند توفر الاتصال."
+      },
+      "success": {
+        "title": "تم تحميل سجلات الإدارة",
+        "body": "البيانات الحالية من المصدر المعتمد جاهزة."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الصفحة جلسة مدير موثقة والصلاحية المناسبة للقراءة."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "لم يعد الحساب أو مقدم العقار المطلوب متاحاً في بيانات الإدارة."
+      }
+    },
+    "statusLabels": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_information": "يحتاج معلومات",
+      "approved": "معتمد",
+      "rejected": "مرفوض",
+      "suspended": "موقوف"
+    },
+    "accountStatusLabels": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "verified": "موثق",
+      "needs_information": "يحتاج معلومات",
+      "rejected": "مرفوض",
+      "restricted": "مقيد",
+      "suspended": "موقوف"
+    },
+    "providerTypeLabels": {
+      "individual_broker": "وسيط فردي",
+      "brokerage_office": "مكتب وساطة",
+      "developer_company": "شركة تطوير"
+    },
+    "documentCategoryLabels": {
+      "government_id_front": "الهوية (أمام)",
+      "government_id_back": "الهوية (خلف)",
+      "broker_license": "رخصة الوساطة",
+      "professional_membership": "عضوية مهنية",
+      "commercial_registration": "السجل التجاري",
+      "tax_card": "البطاقة الضريبية",
+      "authorized_representative_id_front": "هوية الممثل (أمام)",
+      "authorized_representative_id_back": "هوية الممثل (خلف)",
+      "authorization_letter": "خطاب التفويض",
+      "brokerage_license": "ترخيص الوساطة",
+      "company_profile": "ملف الشركة",
+      "developer_license": "ترخيص المطور",
+      "additional_supporting_document": "مستند داعم"
+    },
+    "securityStateLabels": {
+      "quarantined": "معزول",
+      "scan_pending": "في انتظار الفحص",
+      "clean": "نظيف",
+      "infected": "مصاب",
+      "scan_failed": "فشل الفحص",
+      "deleted": "محذوف"
+    },
+    "reviewStateLabels": {
+      "uploaded": "تم الرفع",
+      "pending_review": "قيد المراجعة",
+      "needs_replacement": "يحتاج استبدالاً",
+      "approved": "معتمد",
+      "rejected": "مرفوض"
+    },
+    "actions": {
+      "retry": "إعادة المحاولة",
+      "view": "عرض التفاصيل",
+      "back": "العودة للقائمة",
+      "openDocument": "فتح المستند",
+      "unavailableDocument": "غير متاح",
+      "loadingDocument": "جار الفتح…",
+      "reviewHeading": "قرار مراجعة الطلب",
+      "reviewReason": "سبب القرار",
+      "reviewReasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن 3 أحرف",
+      "reviewReasonRequired": "أدخل سبباً صحيحاً قبل حفظ القرار.",
+      "reviewSaved": "تم حفظ قرار مراجعة طلب مقدم العقار.",
+      "verify": "توثيق الحساب",
+      "reject": "رفض الطلب",
+      "needsInformation": "طلب استكمال البيانات",
+      "suspend": "إيقاف الحساب"
+    }
+  },
+  "admin_accounts/reports-copy#getAdminAccountReportsCopy": {
+    "list": {
+      "eyebrow": "مراجعة الحسابات",
+      "title": "بلاغات الحسابات",
+      "description": "راجع الحسابات المبلغ عنها ونفذ الإجراءات بسبب موثق.",
+      "searchLabel": "البحث في البلاغات",
+      "searchPlaceholder": "معرف الحساب أو السبب أو معرف البلاغ",
+      "statusLabel": "حالة البلاغ",
+      "all": "الكل",
+      "totalLabel": "بلاغات",
+      "emptyTitle": "لا توجد بلاغات حسابات",
+      "emptyBody": "لا توجد سجلات تطابق عوامل التصفية الحالية.",
+      "columns": {
+        "account": "الحساب",
+        "type": "النوع",
+        "reason": "السبب",
+        "related": "مرتبط",
+        "status": "الحالة",
+        "created": "الإنشاء",
+        "updated": "التحديث",
+        "actions": "الإجراءات"
+      }
+    },
+    "detail": {
+      "eyebrow": "بلاغ حساب",
+      "title": "تفاصيل البلاغ",
+      "reportId": "معرف البلاغ",
+      "accountId": "معرف الحساب",
+      "accountType": "نوع الحساب",
+      "reporter": "معرف المبلغ",
+      "reason": "السبب",
+      "details": "التفاصيل",
+      "related": "البلاغات المرتبطة",
+      "created": "تاريخ الإنشاء",
+      "updated": "آخر تحديث",
+      "resolution": "الحالة النهائية",
+      "resolutionReason": "سبب الإجراء",
+      "mutationReason": "سبب هذا الإجراء",
+      "mutationReasonHint": "أدخل خمسة أحرف على الأقل. الواجهة الفعلية هي المصدر.",
+      "resolve": "إغلاق البلاغ",
+      "dismiss": "رفض البلاغ",
+      "openRestrictions": "فتح قيود الحساب",
+      "accountStatus": "حالة الحساب الحالية",
+      "availableActions": "إجراءات الحساب المتاحة",
+      "beforeAfter": "آخر تغيير للحساب",
+      "transitionReason": "سبب إجراء الحساب",
+      "transition": "تنفيذ إجراء الحساب",
+      "noActions": "لا توجد إجراءات متاحة حالياً.",
+      "noAccountProjection": "لا تتوفر بيانات الحساب لهذا الهدف."
+    },
+    "restrictions": {
+      "eyebrow": "قيود الحسابات",
+      "title": "حالات وقيود الحساب",
+      "description": "راجع الحسابات واستخدم فقط الإجراءات المعادة من واجهة الإدارة.",
+      "account": "الحساب",
+      "status": "الحالة",
+      "action": "الإجراء",
+      "view": "عرض البلاغ",
+      "emptyTitle": "لا توجد حسابات مقيدة",
+      "emptyBody": "ستظهر الحسابات عند وصول البيانات الفعلية."
+    },
+    "states": {
+      "loading": {
+        "title": "جار تحميل الإدارة",
+        "body": "يتم جلب البيانات من المصدر الفعلي."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد سجلات لعرضها."
+      },
+      "error": {
+        "title": "تعذر تحميل البلاغات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "خدمة الإدارة غير متاحة",
+        "body": "أعد المحاولة عند توفر الاتصال."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الصفحة جلسة مدير موثق."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "لم يعد السجل متاحاً."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "back": "العودة للبلاغات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "statusLabels": {
+      "open": "مفتوح",
+      "in_review": "قيد المراجعة",
+      "resolved": "تم الحل",
+      "dismissed": "مرفوض"
+    },
+    "roleLabels": {
+      "seeker": "باحث عن عقار",
+      "provider": "مقدم عقار",
+      "admin": "مدير"
+    },
+    "actionLabels": {
+      "verify": "توثيق",
+      "reject": "رفض",
+      "needs_information": "طلب معلومات",
+      "restrict": "تقييد",
+      "suspend": "إيقاف"
+    },
+    "success": "تم تنفيذ الإجراء."
+  },
+  "admin_ads/copy#getAdminAdsCopy": {
+    "eyebrow": "إدارة الإعلانات والمدفوعات",
+    "tabs": {
+      "requests": "طلبات الإعلانات",
+      "pendingProofs": "إثباتات قيد المراجعة",
+      "approvedProofs": "إثباتات معتمدة",
+      "calendar": "تقويم الإعلانات",
+      "review": "مراجعة المدفوعات",
+      "financial": "المراجعة المالية"
+    },
+    "titles": {
+      "requests": "طلبات الإعلانات",
+      "pendingProofs": "إثباتات الدفع المعلقة",
+      "approvedProofs": "إثباتات الدفع المعتمدة",
+      "calendar": "تقويم الإعلانات",
+      "review": "مراجعة المدفوعات",
+      "financial": "المراجعة المالية التشغيلية"
+    },
+    "descriptions": {
+      "requests": "راجع الطلبات والاقتباسات اليدوية من الإسقاط الإداري المعتمد.",
+      "pendingProofs": "اعرض إثباتات الدفع التي تنتظر المراجعة اليدوية.",
+      "approvedProofs": "اعرض الإثباتات التي تمت الموافقة عليها يدوياً.",
+      "calendar": "اعرض المواعيد المنشورة في المنطقة الزمنية للقاهرة.",
+      "review": "اتخذ قراراً يسبباً على إثبات قيد المراجعة مع سبب وإصدار متوقع.",
+      "financial": "بيانات تشغيلية للإعلانات وليست نظاماً محاسبياً أو إثباتاً مصرفياً."
+    },
+    "searchLabel": "معرّف مقدم الخدمة",
+    "providerPlaceholder": "أدخل معرّف مقدم الخدمة",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "previous": "السابق",
+    "next": "التالي",
+    "rowsOnPage": "سجلات الصفحة",
+    "columns": {
+      "id": "المعرّف",
+      "request": "طلب الإعلان",
+      "provider": "مقدم الخدمة",
+      "placement": "الموضع",
+      "purpose": "الغرض",
+      "status": "الحالة",
+      "quote": "الاقتباس",
+      "interval": "الفترة",
+      "filename": "اسم الملف",
+      "size": "الحجم",
+      "security": "الفحص",
+      "version": "الإصدار",
+      "uploaded": "تاريخ الرفع",
+      "start": "البداية",
+      "end": "النهاية",
+      "timezone": "المنطقة الزمنية",
+      "state": "الحالة المالية",
+      "occurred": "حدث في",
+      "amount": "المبلغ",
+      "source": "المصدر",
+      "actions": "الإجراءات"
+    },
+    "requestStatus": {
+      "draft": "مسودة",
+      "review": "قيد المراجعة",
+      "waiting_pricing": "بانتظار التسعير",
+      "quote_sent": "تم إرسال الاقتباس",
+      "waiting_payment": "بانتظار الدفع",
+      "scheduled": "مجدول",
+      "active": "نشط",
+      "ended": "منتهٍ",
+      "rejected": "مرفوض",
+      "cancelled": "ملغى",
+      "expired": "منتهي"
+    },
+    "proofStatus": {
+      "uploaded": "تم الرفع",
+      "pending_review": "قيد المراجعة",
+      "approved": "معتمد",
+      "rejected": "مرفوض"
+    },
+    "calendarStatus": {
+      "scheduled": "مجدول",
+      "active": "نشط",
+      "ended": "منتهٍ"
+    },
+    "financialState": {
+      "not_submitted": "لم يُرسل",
+      "quote_only": "اقتباس فقط",
+      "payment_proof_pending_review": "إثبات قيد المراجعة",
+      "payment_proof_approved": "إثبات معتمد",
+      "payment_proof_rejected": "إثبات مرفوض"
+    },
+    "ledgerKind": {
+      "quote_issued": "إصدار اقتباس",
+      "quote_accepted": "قبول اقتباس",
+      "quote_rejected": "رفض اقتباس",
+      "quote_cancelled": "إلغاء اقتباس",
+      "payment_proof_uploaded": "رفع إثبات",
+      "payment_proof_approved": "اعتماد إثبات",
+      "payment_proof_rejected": "رفض إثبات",
+      "scheduled": "جدولة",
+      "active": "تفعيل",
+      "ended": "إنهاء"
+    },
+    "view": "عرض",
+    "reviewAction": "إجراء المراجعة",
+    "approve": "اعتماد",
+    "reject": "رفض",
+    "reasonLabel": "سبب الإجراء",
+    "reasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن حرفين",
+    "reasonRequired": "سبب الإجراء مطلوب.",
+    "reviewSaved": "تم حفظ الإجراء.",
+    "reviewing": "جارٍ الحفظ",
+    "approveRequest": "إحالة إلى التسعير",
+    "rejectRequest": "رفض الطلب",
+    "requestReviewHelp": "اختر قرار المراجعة وسجّل سببه قبل الانتقال إلى التسعير.",
+    "detail": "تفاصيل الطلب",
+    "back": "العودة إلى الطلبات",
+    "notRealized": "بيانات تشغيلية فقط؛ لا تمثل إيراداً محققاً أو تحققاً بنكياً.",
+    "noMetrics": "لا توجد مؤشرات إضافية في العقد الحالي.",
+    "unavailable": "غير متاح",
+    "directionNote": "العربية RTL — لوحة الإدارة معتمدة لسطح المكتب.",
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم جلب البيانات من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد بيانات مطابقة للمرشحات الحالية."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "يمكنك إعادة المحاولة دون تغيير البيانات الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير مصادق عليها والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "تعذر العثور على السجل المطلوب ضمن الإسقاط المتاح."
+      },
+      "success": {
+        "title": "البيانات جاهزة",
+        "body": "تُعرض السجلات من إسقاط الخادم المعتمد."
+      }
+    }
+  },
+  "admin_commissions/copy#getAdminCommissionsCopy": {
+    "eyebrow": "إدارة العمولات",
+    "navLabel": "العمولات",
+    "titles": {
+      "policies": "سياسات العمولات",
+      "newPolicy": "إنشاء سياسة عمولة",
+      "history": "سجل تغييرات العمولات",
+      "account": "عمولة الحساب",
+      "exceptions": "استثناءات العمولات",
+      "newException": "إنشاء استثناء",
+      "confirmations": "تأكيدات العمولات"
+    },
+    "descriptions": {
+      "policies": "راجع السياسات الصريحة وتواريخ سريانها.",
+      "newPolicy": "أنشئ سياسة صريحة وفق العقد المعتمد.",
+      "history": "راجع السجل الزمني للتغييرات الحساسة.",
+      "account": "راجع السياسة الفعالة لحساب محدد وأنشئ تجاوزاً عند الحاجة.",
+      "exceptions": "راجع الاستثناءات المرتبطة بالحسابات.",
+      "newException": "سجّل استثناءً مع سبب وتاريخ سريان.",
+      "confirmations": "راجع تأكيدات السياسة والحساب والاستثناء."
+    },
+    "tabs": [
+      [
+        "/admin/commissions",
+        "السياسات"
+      ],
+      [
+        "/admin/commissions/new",
+        "إنشاء سياسة"
+      ],
+      [
+        "/admin/commissions/history",
+        "السجل"
+      ],
+      [
+        "/admin/commissions/account",
+        "الحساب"
+      ],
+      [
+        "/admin/commissions/exceptions",
+        "الاستثناءات"
+      ],
+      [
+        "/admin/commissions/exceptions/new",
+        "إنشاء استثناء"
+      ],
+      [
+        "/admin/commissions/confirmations",
+        "التأكيدات"
+      ]
+    ],
+    "actions": {
+      "retry": "إعادة المحاولة",
+      "create": "إنشاء",
+      "save": "حفظ",
+      "apply": "تطبيق",
+      "previous": "السابق",
+      "next": "التالي",
+      "back": "رجوع"
+    },
+    "labels": {
+      "key": "المفتاح",
+      "label": "الاسم",
+      "kind": "النوع",
+      "scope": "النطاق",
+      "scopeKey": "مفتاح النطاق",
+      "status": "الحالة",
+      "value": "القيمة",
+      "effectiveFrom": "يبدأ في",
+      "effectiveTo": "ينتهي في",
+      "currency": "العملة",
+      "amountMinor": "المبلغ بالقروش",
+      "percentageBps": "النسبة بالنقاط الأساسية",
+      "accountId": "معرّف الحساب",
+      "reason": "السبب",
+      "source": "المصدر",
+      "policyVersion": "إصدار السياسة",
+      "action": "الإجراء",
+      "targetType": "نوع السجل",
+      "targetId": "معرّف السجل",
+      "createdAt": "أنشئ في",
+      "acknowledgedAt": "أكّد في",
+      "effectiveAt": "فعّال في",
+      "version": "الإصدار"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "جارٍ تحميل بيانات العمولات."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد سجلات عمولات لهذا العرض حتى الآن."
+      },
+      "error": {
+        "title": "تعذر التحميل",
+        "body": "تعذر تحميل بيانات العمولات بأمان."
+      },
+      "retry": {
+        "title": "انقطع الاتصال",
+        "body": "أعد محاولة طلب العمولات عند توفر الاتصال."
+      },
+      "permission": {
+        "title": "الإذن مطلوب",
+        "body": "لا تملك جلسة المسؤول هذه إذناً لعرض أو تغيير سجلات العمولات."
+      },
+      "not_found": {
+        "title": "معرّف الحساب مطلوب",
+        "body": "افتح هذا العرض مع accountId صالح. لا يوفر هذا المسار دليلاً للحسابات."
+      }
+    },
+    "kinds": {
+      "percentage": "نسبة",
+      "fixed": "مبلغ ثابت",
+      "exempt": "إعفاء"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "active": "فعالة",
+      "inactive": "غير فعالة",
+      "archived": "مؤرشفة"
+    },
+    "scopes": {
+      "default": "افتراضي",
+      "provider_type": "نوع مقدم الخدمة",
+      "transaction_type": "نوع المعاملة",
+      "property_kind": "نوع العقار",
+      "organization": "المنظمة",
+      "account": "الحساب"
+    },
+    "sources": {
+      "exception": "استثناء",
+      "account_override": "تجاوز حساب",
+      "policy": "سياسة",
+      "none": "لا يوجد"
+    },
+    "targetTypes": {
+      "commission_policy": "سياسة",
+      "commission_exception": "استثناء",
+      "commission_account_override": "تجاوز حساب",
+      "commission_confirmation": "تأكيد"
+    },
+    "noAccount": "أدخل معرّف حساب مكوّناً من 24 حرفاً سداسياً عشرياً.",
+    "validation": "راجع الحقول المطلوبة وقواعد العقد.",
+    "saved": "تم الحفظ بنجاح."
+  },
+  "admin_community/copy#getAdminCommunityCopy": {
+    "eyebrow": "إدارة المجتمع",
+    "title": {
+      "posts": "إدارة المجتمع",
+      "comments": "التعليقات",
+      "reports": "البلاغات والإشراف"
+    },
+    "description": {
+      "posts": "راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.",
+      "comments": "راجع التعليقات وحالتها دون عرض بيانات داخلية غير مصرح بها.",
+      "reports": "راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع."
+    },
+    "tab": {
+      "posts": "المنشورات",
+      "comments": "التعليقات",
+      "reports": "البلاغات"
+    },
+    "search": "بحث",
+    "searchPlaceholder": "ابحث في العنوان أو المحتوى",
+    "status": "الحالة",
+    "postId": "معرّف المنشور",
+    "all": "الكل",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "retry": "إعادة المحاولة",
+    "previous": "السابق",
+    "next": "التالي",
+    "columns": {
+      "id": "المعرّف",
+      "title": "العنوان",
+      "body": "المحتوى",
+      "post": "المنشور",
+      "author": "الكاتب",
+      "reporter": "المبلّغ",
+      "reason": "السبب",
+      "details": "التفاصيل",
+      "status": "الحالة",
+      "comments": "التعليقات",
+      "created": "تاريخ الإنشاء",
+      "updated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "postStatus": {
+      "draft": "مسودة",
+      "published": "منشور",
+      "hidden": "مخفي",
+      "removed": "محذوف"
+    },
+    "commentStatus": {
+      "visible": "ظاهر",
+      "hidden": "مخفي",
+      "removed": "محذوف"
+    },
+    "reportStatus": {
+      "open": "مفتوح",
+      "in_review": "قيد المراجعة",
+      "resolved": "تم الحل",
+      "dismissed": "مرفوض"
+    },
+    "reportReason": {
+      "spam": "رسائل مزعجة",
+      "abuse": "إساءة",
+      "misinformation": "معلومات مضللة",
+      "other": "أخرى"
+    },
+    "action": {
+      "review": "مراجعة",
+      "resolve": "حل البلاغ",
+      "dismiss": "رفض البلاغ",
+      "close": "إغلاق"
+    },
+    "reason": "سبب القرار",
+    "reasonPlaceholder": "اكتب سبباً واضحاً من خمسة أحرف على الأقل",
+    "reasonRequired": "سبب القرار مطلوب.",
+    "confirm": "تأكيد",
+    "records": "إجمالي السجلات",
+    "visible": "في الصفحة الحالية",
+    "pageLabel": "الصفحة",
+    "pageSize": "حجم الصفحة",
+    "noActions": "لا توجد إجراءات متاحة",
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل المجتمع",
+        "body": "يتم جلب السجلات من المصدر المعتمد."
+      },
+      "error": {
+        "title": "تعذر تحميل المجتمع",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "أعد المحاولة دون تغيير الفلاتر الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير متاح",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير وصلاحية المجتمع المناسبة."
+      }
+    },
+    "empty": {
+      "title": "لا توجد سجلات",
+      "body": "لا توجد بيانات مطابقة للفلاتر الحالية."
+    },
+    "directionNote": "العربية RTL — إدارة المجتمع متاحة لسطح المكتب."
+  },
+  "admin_content/copy#getAdminCmsCopy": {
+    "eyebrow": "إدارة محتوى المنصة",
+    "namespace": {
+      "about": "عن المنصة",
+      "team": "فريق العمل",
+      "population": "عداد سكان مدينة السادات",
+      "tips": "نصائح عقارية"
+    },
+    "description": {
+      "about": "أدر المحتوى الظاهر في صفحة عن المنصة.",
+      "team": "حافظ على ترتيب أعضاء الفريق وعرضهم بأمان.",
+      "population": "حدث عداد السكان من مصدر معتمد فقط.",
+      "tips": "أدر النصائح العقارية المعتمدة."
+    },
+    "add": "إضافة",
+    "save": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ",
+    "preview": "معاينة",
+    "hidePreview": "إخفاء المعاينة",
+    "cancel": "إلغاء",
+    "retry": "إعادة المحاولة",
+    "key": "المفتاح",
+    "name": "الاسم",
+    "title": "العنوان",
+    "body": "المحتوى",
+    "order": "الترتيب",
+    "status": "الحالة",
+    "active": "نشط",
+    "value": "القيمة",
+    "sourceLabel": "اسم المصدر",
+    "sourceUrl": "رابط المصدر",
+    "asOf": "تاريخ البيان",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اكتب سببًا واضحًا",
+    "reasonRequired": "سبب التغيير مطلوب.",
+    "localizedHint": "أدخل النص بالعربية والإنجليزية والصينية عند الحاجة.",
+    "noData": "لا توجد بيانات متاحة.",
+    "unavailable": "القيمة غير متاحة",
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل المحتوى",
+        "body": "يتم جلب البيانات من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "أضف محتوى ًا لإظهار الحالة المعتمدة."
+      },
+      "error": {
+        "title": "تعذر تحميل المحتوى",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح",
+        "body": "يمكن إعادة المحاولة دون تغيير البيانات."
+      },
+      "permission": {
+        "title": "الوصول غير ممكن",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير مص窐لح."
+      },
+      "success": {
+        "title": "المحتوى جاهز",
+        "body": "البيانات جاهزة للمعاينة."
+      },
+      "not_found": {
+        "title": "المحتوى غير موجود",
+        "body": "المسار غير معروف."
+      }
+    },
+    "statusLabels": {
+      "draft": "مسودة",
+      "published": "منشور",
+      "inactive": "غير نشط",
+      "available": "متاح",
+      "unavailable": "غير متاح"
+    }
+  },
+  "admin_content/copy#getAdminContentCopy": {
+    "eyebrow": "إدارة المحتوى",
+    "articlesTitle": "إدارة المقالات",
+    "articlesDescription": "أنشئ المقالات وراجعها وانشرها وفق الصلاحيات المعتمدة.",
+    "categoriesTitle": "تصنيفات المقالات",
+    "categoriesDescription": "نظّم تصنيفات المحتوى مع الحفاظ على ترتيبها وحالتها.",
+    "createArticle": "إنشاء مقال",
+    "createCategory": "إضافة تصنيف",
+    "categories": "التصنيفات",
+    "articles": "المقالات",
+    "searchLabel": "البحث",
+    "searchPlaceholder": "ابحث بالعنوان أو المعرّف المختصر",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "edit": "تعديل",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ",
+    "cancel": "إلغاء",
+    "retry": "إعادة المحاولة",
+    "previous": "السابق",
+    "next": "التالي",
+    "noActions": "لا توجد إجراءات متاحة",
+    "id": "المعرّف",
+    "title": "العنوان",
+    "name": "اسم التصنيف",
+    "slug": "المعرّف المختصر",
+    "category": "التصنيف",
+    "description": "الوصف",
+    "body": "المحتوى",
+    "order": "الترتيب",
+    "active": "نشط",
+    "version": "الإصدار",
+    "updated": "آخر تحديث",
+    "actions": "الإجراءات",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اكتب سبباً واضحاً من خمسة أحرف على الأقل",
+    "reasonRequired": "سبب التغيير مطلوب.",
+    "titleRequired": "العنوان والمحتوى مطلوبان بالعربية أو الإنجليزية أو الصينية.",
+    "categoryRequired": "اختر تصنيفاً.",
+    "action": {
+      "update": "تعديل",
+      "submit": "إرسال للمراجعة",
+      "publish": "نشر",
+      "return_to_draft": "إعادة لمسودة",
+      "archive": "أرشفة",
+      "restore": "استعادة"
+    },
+    "status": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "published": "منشور",
+      "archived": "مؤرشف"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل المحتوى",
+        "body": "يتم جلب البيانات من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد بيانات مطابقة للبحث أو الفلتر الحالي."
+      },
+      "error": {
+        "title": "تعذر تحميل المحتوى",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "يمكن إعادة المحاولة دون تغيير البيانات."
+      },
+      "permission": {
+        "title": "الوصول غير متاح",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير وصلاحية المحتوى المناسبة."
+      },
+      "success": {
+        "title": "المحتوى جاهز",
+        "body": "تُعرض البيانات من الإسقاط المعتمد للخادم."
+      }
+    },
+    "saved": "تم الحفظ.",
+    "deleted": "تم حذف التصنيف.",
+    "directionNote": "العربية RTL — إدارة المحتوى معتمدة لسطح المكتب."
+  },
+  "admin_home/copy#getAdminHomeCopy": {
+    "eyebrow": "إدارة الصفحة الرئيسية",
+    "banners": "البانرات",
+    "newBanner": "إضافة بانر",
+    "tips": "النصائح",
+    "homepage": "أقسام الصفحة الرئيسية",
+    "bannerDescription": "أدر البانرات من الإسقاط الإداري المعتمد مع ترتيبها وحالتها.",
+    "tipsDescription": "أدر النصائح العقارية المنشورة أو المسودة من مصدر المحتوى المعتمد.",
+    "homepageDescription": "رتب أقسام الصفحة الرئيسية وحدد ظهورها وحالتها.",
+    "add": "إضافة",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ",
+    "cancel": "إلغاء",
+    "retry": "إعادة المحاولة",
+    "preview": "معاينة",
+    "moveUp": "تحريك لأعلى",
+    "moveDown": "تحريك لأسفل",
+    "key": "المفتاح",
+    "placement": "الموضع",
+    "title": "العنوان",
+    "altText": "النص البديل",
+    "targetUrl": "الرابط المستهدف",
+    "start": "البداية",
+    "end": "النهاية",
+    "order": "الترتيب",
+    "status": "الحالة",
+    "visible": "ظاهر",
+    "active": "نشط",
+    "version": "الإصدار",
+    "updated": "آخر تحديث",
+    "actions": "الإجراءات",
+    "body": "المحتوى",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اكتب سببًا واضحًا لا يقل عن ثلاثة أحرف",
+    "reasonRequired": "سبب التغيير مطلوب.",
+    "localizedHint": "أدخل النص بالعربية والإنجليزية والصينية عند الحاجة.",
+    "mediaUrl": "رابط الوسائط HTTPS",
+    "mediaMime": "نوع الوسائط",
+    "mediaWidth": "العرض",
+    "mediaHeight": "الارتفاع",
+    "mediaNote": "يقبل النظام رابط HTTPS المعتمد فقط؛ لا تعرض مفاتيح التخزين أو روابط خاصة دائمة.",
+    "saved": "تم الحفظ.",
+    "validation": "تحقق من الحقول المطلوبة.",
+    "statuses": {
+      "draft": "مسودة",
+      "scheduled": "مجدول",
+      "active": "نشط",
+      "ended": "منتهٍ",
+      "archived": "مؤرشف",
+      "published": "منشور",
+      "inactive": "غير نشط"
+    },
+    "actionsByKey": {
+      "update": "تعديل",
+      "publish": "نشر",
+      "deactivate": "تعطيل"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل البيانات",
+        "body": "يتم جلب السجلات من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد سجلات متاحة في الإسقاط الحالي."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتًا",
+        "body": "يمكن إعادة المحاولة دون تغيير البيانات الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الصفحة جلسة مدير مصادقًا عليها والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "المسار غير موجود",
+        "body": "لا يوجد مسار إدارة مطابق."
+      },
+      "success": {
+        "title": "البيانات جاهزة",
+        "body": "تُعرض السجلات من الإسقاط الآمن المعتمد."
+      }
+    },
+    "directionNote": "العربية RTL — إدارة الصفحة الرئيسية معتمدة لسطح المكتب."
+  },
+  "admin_master_data/copy#getAdminMasterDataCopy": {
+    "eyebrow": "إدارة البيانات الأساسية",
+    "titles": {
+      "categories": "أنواع وتصنيفات العقارات",
+      "locations": "المواقع والأحياء",
+      "features": "المميزات والخدمات"
+    },
+    "descriptions": {
+      "categories": "إدارة التصنيفات والأنواع المستخدمة في العقارات والمشروعات.",
+      "locations": "إدارة التسلسل الجغرافي للمحافظات والمدن والأحياء.",
+      "features": "إدارة المميزات والخدمات المتاحة في بيانات العقارات والمشروعات."
+    },
+    "tabs": {
+      "categories": "التصنيفات",
+      "locations": "المواقع",
+      "features": "المميزات والخدمات"
+    },
+    "navigationLabel": "تبويبات إدارة البيانات الأساسية",
+    "add": "إضافة عنصر",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "retry": "إعادة المحاولة",
+    "confirmDelete": "تأكيد حذف العنصر",
+    "columns": {
+      "name": "الاسم",
+      "kind": "النوع",
+      "parent": "المجموعة أو الأب",
+      "order": "الترتيب",
+      "active": "الحالة",
+      "updated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "kinds": {
+      "category": "تصنيف",
+      "type": "نوع عقار",
+      "location": "موقع",
+      "neighborhood": "حي",
+      "feature": "ميزة",
+      "service": "خدمة"
+    },
+    "labels": {
+      "nameAr": "الاسم بالعربية",
+      "nameEn": "الاسم بالإنجليزية",
+      "slug": "المعرّف المختصر",
+      "kind": "النوع",
+      "parent": "العنصر الأب",
+      "category": "التصنيف الأب",
+      "group": "مجموعة الميزة",
+      "order": "الترتيب",
+      "active": "نشط",
+      "reason": "سبب التغيير",
+      "latitude": "خط العرض",
+      "longitude": "خط الطول"
+    },
+    "placeholders": {
+      "nameAr": "مثال: مدينة",
+      "nameEn": "Example: City",
+      "slug": "lowercase-slug",
+      "parent": "اختر الموقع الأب",
+      "category": "اختر التصنيف الأب",
+      "group": "building_amenities",
+      "reason": "اذكر سبب الحفظ أو التعديل",
+      "latitude": "30.0000",
+      "longitude": "31.0000"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل البيانات",
+        "body": "نحضر أحدث البيانات من الخادم."
+      },
+      "empty": {
+        "title": "لا توجد عناصر بعد",
+        "body": "لا توجد سجلات منشورة في هذا القسم. يمكنك إضافة عنصر عندما تتوفر بيانات معتمدة."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "حدث خطأ أثناء الاتصال بالخادم. حاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "يمكنك إعادة المحاولة دون تغيير البيانات."
+      },
+      "permission": {
+        "title": "الوصول غير متاح",
+        "body": "لا تملك الجلسة الحالية صلاحية إدارة هذه البيانات."
+      },
+      "success": {
+        "title": "البيانات جاهزة",
+        "body": "تُعرض السجلات وفق الإسقاط المسموح به من الخادم."
+      }
+    },
+    "mutation": {
+      "created": "تمت إضافة العنصر.",
+      "updated": "تم تحديث العنصر.",
+      "deleted": "تم حذف العنصر.",
+      "validation": "تحقق من الحقول المطلوبة وسبب التغيير.",
+      "failed": "تعذر حفظ التغيير. أعد المحاولة."
+    },
+    "unavailable": "غير متاح",
+    "noParent": "بدون أب",
+    "noGroup": "بدون مجموعة",
+    "noActions": "لا توجد إجراءات متاحة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "directionNote": "العربية RTL — الإدارة معتمدة لسطح المكتب."
+  },
+  "admin_projects/copy#getAdminProjectsCopy": {
+    "eyebrow": "إدارة المشاريع",
+    "listTitle": "إدارة المشاريع",
+    "listDescription": "راجع المشاريع وتحقق من حالتها قبل اعتمادها ونشرها.",
+    "reviewTitle": "مراجعة المشروع",
+    "reviewDescription": "راجع البيانات المتاحة واتخذ إجراءً من الإجراءات المسموح بها.",
+    "navigationLabel": "إدارة المشاريع",
+    "allProjects": "جميع المشاريع",
+    "searchLabel": "البحث في المشاريع",
+    "searchPlaceholder": "ابحث بالاسم أو المعرّف المختصر",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "review": "مراجعة",
+    "back": "العودة إلى المشاريع",
+    "retry": "إعادة المحاولة",
+    "previous": "السابق",
+    "next": "التالي",
+    "columns": {
+      "id": "رقم المشروع",
+      "name": "اسم المشروع",
+      "slug": "المعرّف المختصر",
+      "status": "الحالة",
+      "version": "الإصدار",
+      "updated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_changes": "يحتاج تعديلات",
+      "approved": "معتمد",
+      "published": "منشور",
+      "rejected": "مرفوض",
+      "hidden": "مخفي",
+      "archived": "مؤرشف"
+    },
+    "action": {
+      "needs_changes": "طلب تعديلات",
+      "approve": "اعتماد",
+      "reject": "رفض",
+      "publish": "نشر"
+    },
+    "reasonLabel": "سبب الإجراء",
+    "reasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن خمسة أحرف",
+    "reasonRequired": "سبب الإجراء مطلوب.",
+    "submitReview": "حفظ الإجراء",
+    "reviewing": "جارٍ الحفظ",
+    "reviewSaved": "تم حفظ الإجراء.",
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل المشاريع",
+        "body": "يتم جلب المشاريع من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد مشاريع",
+        "body": "لا توجد مشاريع مطابقة للبحث أو الحالة المحددة."
+      },
+      "error": {
+        "title": "تعذر تحميل المشاريع",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "يمكنك إعادة المحاولة دون تغيير البيانات."
+      },
+      "permission": {
+        "title": "الوصول غير متاح",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير مصادق عليها والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "المشروع غير موجود",
+        "body": "تعذر العثور على المشروع المطلوب ضمن الإسقاط المتاح."
+      },
+      "success": {
+        "title": "المشاريع جاهزة",
+        "body": "تُعرض البيانات من الإسقاط المعتمد للخادم."
+      }
+    },
+    "unavailable": "غير متاح",
+    "noActions": "لا توجد إجراءات متاحة",
+    "directionNote": "العربية RTL — سطح إدارة المشاريع معتمد لسطح المكتب."
+  },
+  "admin_properties/copy#getAdminPropertiesCopy": {
+    "eyebrow": "إدارة العقارات",
+    "titles": {
+      "list": "إدارة العقارات",
+      "review": "مراجعة العقار",
+      "duplicates": "عقارات محتملة التكرار",
+      "reports": "بلاغات العقارات"
+    },
+    "descriptions": {
+      "list": "راجع العقارات الجديدة والتعديلات قبل اعتماد النشر.",
+      "review": "اعرض الإسقاط الآمن للعقار واتخذ إجراءً مسموحًا من الخادم.",
+      "duplicates": "افحص إشارات التكرار المفسرة قبل اتخاذ قرار المراجعة.",
+      "reports": "راجع بلاغات العقارات وحدث حالتها بسبب واضح."
+    },
+    "allProperties": "جميع العقارات",
+    "searchLabel": "البحث في العقارات",
+    "searchPlaceholder": "ابحث بالاسم أو المعرّف المختصر",
+    "statusLabel": "الحالة",
+    "activeLabel": "النشاط",
+    "providerLabel": "معرّف مقدم العقار",
+    "projectLabel": "معرّف المشروع",
+    "allStatuses": "كل الحالات",
+    "allActivity": "كل حالات النشاط",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "retry": "إعادة المحاولة",
+    "review": "بدء المراجعة",
+    "details": "عرض التفاصيل",
+    "duplicates": "التكرار المحتمل",
+    "reports": "البلاغات",
+    "back": "العودة إلى العقارات",
+    "openDuplicates": "فحص التكرار",
+    "openReports": "فتح البلاغات",
+    "openProperty": "فتح العقار",
+    "previous": "السابق",
+    "next": "التالي",
+    "columns": {
+      "id": "رقم العقار",
+      "name": "العقار",
+      "source": "مصدر العقار",
+      "kind": "النوع",
+      "transaction": "نوع المعاملة",
+      "status": "الحالة",
+      "active": "النشاط",
+      "version": "الإصدار",
+      "updated": "آخر تحديث",
+      "reason": "سبب الإجراء",
+      "actions": "الإجراءات",
+      "reportId": "رقم البلاغ",
+      "propertyId": "رقم العقار",
+      "reportReason": "سبب البلاغ",
+      "priority": "الأولوية",
+      "date": "التاريخ"
+    },
+    "status": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_changes": "يحتاج تعديلًا",
+      "approved": "معتمد",
+      "published": "منشور",
+      "rejected": "مرفوض",
+      "hidden": "مخفي",
+      "archived": "مؤرشف"
+    },
+    "availableAction": {
+      "update": "تعديل",
+      "submit": "إرسال للمراجعة",
+      "needs_changes": "طلب تعديل",
+      "approve": "اعتماد",
+      "reject": "رفض",
+      "publish": "نشر",
+      "hide": "إخفاء",
+      "restore": "استعادة",
+      "archive": "أرشفة"
+    },
+    "visibilityAction": {
+      "hide": "إخفاء العقار",
+      "restore": "استعادة الظهور",
+      "archive": "أرشفة العقار"
+    },
+    "reportStatus": {
+      "open": "جديد",
+      "in_review": "قيد المراجعة",
+      "resolved": "تم الحل",
+      "dismissed": "مرفوض"
+    },
+    "reportAction": {
+      "resolve": "حل البلاغ",
+      "dismiss": "رفض البلاغ"
+    },
+    "reportReason": {
+      "duplicate": "تكرار",
+      "fraud": "احتيال",
+      "inaccurate": "بيانات غير دقيقة",
+      "inappropriate": "محتوى غير مناسب",
+      "other": "أخرى"
+    },
+    "signal": {
+      "same_slug": "معرّف مختصر متطابق",
+      "same_location_transaction": "موقع ومعاملة متطابقان",
+      "same_localized_name": "اسم مترجم متطابق"
+    },
+    "reasonLabel": "سبب الإجراء",
+    "reasonPlaceholder": "اكتب سببًا واضحًا لا يقل عن خمسة أحرف",
+    "reasonRequired": "سبب الإجراء مطلوب.",
+    "saveAction": "حفظ الإجراء",
+    "saving": "جارٍ الحفظ",
+    "actionSaved": "تم حفظ الإجراء.",
+    "noActions": "لا توجد إجراءات متاحة",
+    "noCandidates": "لا توجد نتائج تكرار محتملة",
+    "noReports": "لا توجد بلاغات مطابقة",
+    "detailsLabel": "تفاصيل البلاغ",
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم جلب البيانات من المصدر المعتمد."
+      },
+      "empty": {
+        "title": "لا توجد بيانات",
+        "body": "لا توجد سجلات مطابقة للمرشحات الحالية."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتًا",
+        "body": "يمكن إعادة المحاولة دون تغيير البيانات الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير متاح",
+        "body": "تحتاج هذه الصفحة إلى جلسة مدير موثقة والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "تعذر العثور على السجل المطلوب ضمن الإسقاط المتاح."
+      },
+      "success": {
+        "title": "البيانات جاهزة",
+        "body": "تُعرض السجلات من الإسقاط المعتمد من الخادم."
+      }
+    },
+    "directionNote": "العربية RTL — إدارة العقارات معتمدة لسطح المكتب."
+  },
+  "admin_rbac/copy#getAdminRbacCopy": {
+    "eyebrow": "صلاحيات الإدارة",
+    "users": "مستخدمو الإدارة",
+    "roles": "الأدوار والصلاحيات",
+    "usersDescription": "إدارة حسابات المسؤولين من الإسقاط المحمي للواجهة البرمجية.",
+    "rolesDescription": "إنشاء الأدوار من كتالوج الصلاحيات المعتمد من الخادم.",
+    "addUser": "إضافة مسؤول",
+    "createRole": "إنشاء دور",
+    "edit": "تعديل",
+    "save": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ",
+    "retry": "إعادة المحاولة",
+    "back": "رجوع",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن ثلاثة أحرف",
+    "reasonRequired": "سبب التغيير مطلوب.",
+    "email": "البريد الإلكتروني",
+    "displayName": "الاسم الظاهر",
+    "accessLevel": "مستوى الوصول",
+    "status": "الحالة",
+    "version": "الإصدار",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "roleName": "اسم الدور",
+    "description": "الوصف",
+    "accessMode": "نمط الوصول",
+    "permissions": "الصلاحيات",
+    "active": "نشط",
+    "permissionCatalog": "كتالوج الصلاحيات",
+    "noActions": "لا توجد إجراءات متاحة لهذا الحساب.",
+    "noUsers": "لم يعرض الخادم مستخدمي إدارة.",
+    "noRoles": "لم يعرض الخادم أدواراً.",
+    "filterStatus": "التصفية حسب الحالة",
+    "filterAccess": "التصفية حسب مستوى الوصول",
+    "all": "الكل",
+    "activeStatus": "نشط",
+    "disabledStatus": "معطل",
+    "superAdmin": "مسؤول أعلى",
+    "standardAdmin": "مسؤول قياسي",
+    "custom": "مخصص",
+    "viewOnly": "عرض فقط",
+    "enable": "تفعيل",
+    "disable": "تعطيل",
+    "validation": "تحقق من الحقول ثم أعد المحاولة.",
+    "saved": "تم الحفظ من الإسقاط المحمي للواجهة البرمجية.",
+    "states": {
+      "loading": {
+        "title": "Loading administration access",
+        "body": "Fetching the safe administrator projection."
+      },
+      "empty": {
+        "title": "Nothing is available yet",
+        "body": "The protected API returned no records."
+      },
+      "error": {
+        "title": "The data could not load",
+        "body": "Check the connection and try again."
+      },
+      "retry": {
+        "title": "Connection temporarily unavailable",
+        "body": "Retry without losing the current screen."
+      },
+      "permission": {
+        "title": "Access is not permitted",
+        "body": "The API did not grant the required administrator permission."
+      },
+      "not_found": {
+        "title": "Record not found",
+        "body": "The requested administrator or role is not available."
+      },
+      "conflict": {
+        "title": "Version conflict",
+        "body": "This record changed after it was loaded. Retry after reviewing the latest projection."
+      },
+      "success": {
+        "title": "Administration access ready",
+        "body": "Values are rendered from the protected API projection."
+      }
+    },
+    "directionNote": "العربية RTL — النطاق المعتمد هو سطح مكتب الإدارة."
+  },
+  "admin_requests/copy#getAdminRequestsCopy": {
+    "eyebrow": "إدارة الطلبات",
+    "titles": {
+      "all": "إدارة كل الطلبات",
+      "customer": "طلبات العملاء",
+      "overdue": "الطلبات المتأخرة",
+      "contact": "طلبات التواصل",
+      "viewing": "طلبات المعاينة",
+      "search": "طلبات البحث عن عقار",
+      "issues": "بلاغات الطلبات"
+    },
+    "descriptions": {
+      "all": "راجع الطلبات وتابع حالتها والإجراءات التي يسمح بها الخادم.",
+      "customer": "راجع طلبات العملاء التي أنشأها مزودو الخدمة.",
+      "overdue": "تابع الطلبات التي تجاوزت موعد المتابعة.",
+      "contact": "راجع طلبات التواصل الواردة من الباحثين.",
+      "viewing": "راجع مواعيد المعاينة المسجلة في النظام.",
+      "search": "راجع تفضيلات البحث عن العقارات.",
+      "issues": "عالج بلاغات الطلبات مع سبب واضح وإصدار متزامن."
+    },
+    "navigationLabel": "تنقل الإدارة",
+    "allRequests": "كل الطلبات",
+    "filters": "تصفية الطلبات",
+    "status": "الحالة",
+    "type": "النوع",
+    "allStatuses": "كل الحالات",
+    "allTypes": "كل الأنواع",
+    "search": "بحث",
+    "searchPlaceholder": "ابحث بالمعرّف أو النص المتاح",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "previous": "السابق",
+    "next": "التالي",
+    "view": "عرض",
+    "details": "تفاصيل الطلب",
+    "closeDetails": "إغلاق التفاصيل",
+    "issueDetails": "تفاصيل البلاغ",
+    "requestId": "معرّف الطلب",
+    "issueId": "معرّف البلاغ",
+    "requestType": "نوع الطلب",
+    "source": "المصدر",
+    "state": "الحالة",
+    "version": "الإصدار",
+    "created": "تاريخ الإنشاء",
+    "updated": "آخر تحديث",
+    "due": "موعد المتابعة",
+    "appointment": "موعد المعاينة",
+    "timezone": "المنطقة الزمنية",
+    "property": "العقار",
+    "seeker": "الباحث",
+    "provider": "مزود الخدمة",
+    "payload": "بيانات الطلب المتاحة",
+    "noPayload": "لا توجد بيانات إضافية متاحة.",
+    "actions": "الإجراءات المتاحة",
+    "transition": "انتقال الحالة",
+    "transitionReason": "سبب الانتقال",
+    "transitionReasonPlaceholder": "اكتب سببًا واضحًا (3 أحرف على الأقل)",
+    "transitionRequired": "اختر إجراءً وأدخل سببًا من 3 أحرف على الأقل.",
+    "saveTransition": "حفظ الانتقال",
+    "saving": "جارٍ الحفظ",
+    "transitionSaved": "تم حفظ الانتقال.",
+    "assignment": "تعيين الطلب",
+    "assigneeId": "معرّف المسؤول",
+    "assigneePlaceholder": "معرّف مسؤول مكوّن من 24 حرفاً",
+    "assignmentReason": "سبب التعيين",
+    "saveAssignment": "حفظ التعيين",
+    "note": "ملاحظة إدارية",
+    "notePlaceholder": "اكتب ملاحظة داخلية واضحة",
+    "addNote": "إضافة الملاحظة",
+    "noteSaved": "تمت إضافة الملاحظة.",
+    "issueAction": "إجراء البلاغ",
+    "resolve": "حل البلاغ",
+    "dismiss": "إغلاق البلاغ",
+    "resolutionReason": "سبب الإجراء",
+    "resolveIssue": "حفظ إجراء البلاغ",
+    "issueSaved": "تم حفظ إجراء البلاغ.",
+    "retry": "إعادة المحاولة",
+    "backToList": "العودة إلى القائمة",
+    "noActions": "لا توجد إجراءات متاحة",
+    "directionNote": "العربية RTL — مساحة الإدارة معتمدة لسطح المكتب فقط.",
+    "statusLabel": {
+      "new": "جديد",
+      "under_review": "قيد المراجعة",
+      "contacted": "تم التواصل",
+      "scheduled": "مجدول",
+      "needs_information": "يحتاج معلومات",
+      "in_progress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "cancelled": "ملغى",
+      "closed": "مغلق"
+    },
+    "typeLabel": {
+      "contact": "تواصل",
+      "viewing": "معاينة",
+      "property_search": "بحث عن عقار",
+      "provider_customer": "عميل مزود الخدمة"
+    },
+    "transitionLabel": {
+      "start_review": "بدء المراجعة",
+      "contact": "تسجيل التواصل",
+      "schedule": "جدولة",
+      "needs_information": "طلب معلومات",
+      "start_progress": "بدء التنفيذ",
+      "resolve": "حل الطلب",
+      "cancel": "إلغاء",
+      "close": "إغلاق",
+      "reopen": "إعادة الفتح"
+    },
+    "viewingStatusLabel": {
+      "requested": "مطلوب",
+      "confirmed": "مؤكد",
+      "rescheduled": "أعيدت جدولته",
+      "cancelled": "ملغى",
+      "completed": "مكتمل"
+    },
+    "issueStatusLabel": {
+      "open": "مفتوح",
+      "resolved": "تم الحل",
+      "dismissed": "مغلق"
+    },
+    "issueCategoryLabel": {
+      "duplicate": "مكرر",
+      "abuse": "إساءة",
+      "incorrect_data": "بيانات غير صحيحة",
+      "service": "خدمة",
+      "other": "أخرى"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الطلبات",
+        "body": "يتم جلب الإسقاط المعتمد من الخادم."
+      },
+      "empty": {
+        "title": "لا توجد سجلات",
+        "body": "لا توجد سجلات مطابقة للتصفية الحالية."
+      },
+      "error": {
+        "title": "تعذر تحميل البيانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتاً",
+        "body": "أعد المحاولة مع الحفاظ على التصفية الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الصفحة جلسة مدير موثقة والصلاحية المناسبة."
+      },
+      "not_found": {
+        "title": "السجل غير موجود",
+        "body": "تعذر العثور على السجل ضمن الإسقاط المتاح."
+      },
+      "success": {
+        "title": "البيانات جاهزة",
+        "body": "تُعرض البيانات من الإسقاط المعتمد للخادم."
+      }
+    }
+  },
+  "admin_settings/copy#getAdminSettingsCopy": {
+    "eyebrow": "إعدادات المنصة",
+    "platform": "معلومات المنصة",
+    "contact": "معلومات التواصل",
+    "social": "حسابات التواصل الاجتماعي",
+    "labels": {
+      "platform": "معلومات المنصة",
+      "contact": "معلومات التواصل",
+      "social": "حسابات التواصل الاجتماعي",
+      "properties": "إعدادات العقارات",
+      "requests": "إعدادات الطلبات",
+      "advertising": "إعدادات الإعلانات",
+      "seo": "إعدادات تحسين محركات البحث",
+      "privacy-security": "إعدادات الخصوصية والأمان",
+      "display": "إعدادات العرض"
+    },
+    "descriptions": {
+      "platform": "حدّث بيانات المنصة المعتمدة مع الحفاظ على الإصدار والتدقيق.",
+      "contact": "حافظ على بيانات التواصل العامة من الإسقاط الإداري المعتمد.",
+      "social": "أدر روابط الحسابات الاجتماعية الاختيارية من المصدر المعتمد.",
+      "properties": "حدّث قيم إعدادات العقارات الموجودة في الإسقاط الإداري المعتمد فقط.",
+      "requests": "حدّث قيم إعدادات الطلبات الموجودة دون اختراع قواعد تشغيلية.",
+      "advertising": "أدر قيم الإعلانات المعتمدة دون إضافة أسعار عامة أو قيم دفع.",
+      "seo": "أدر قيم تحسين محركات البحث المعتمدة مع احترام حالة النشر.",
+      "privacy-security": "أدر قيم الخصوصية والأمان المعتمدة دون كشف أسرار أو بيانات خاصة.",
+      "display": "أدر قيم العرض المعتمدة مع الحفاظ على النسخة والتدقيق."
+    },
+    "fields": {
+      "platform_name": "اسم المنصة",
+      "short_name": "الاسم المختصر",
+      "description": "الوصف",
+      "city": "المدينة",
+      "timezone": "المنطقة الزمنية",
+      "currency": "العملة",
+      "default_locale": "اللغة الافتراضية",
+      "primary_email": "البريد الإلكتروني",
+      "primary_phone": "رقم الهاتف",
+      "office_address": "عنوان المكتب",
+      "working_hours": "ساعات العمل",
+      "whatsapp_number": "واتساب",
+      "map_url": "رابط الخريطة",
+      "facebook_url": "فيسبوك",
+      "instagram_url": "إنستغرام",
+      "linkedin_url": "لينكدإن",
+      "youtube_url": "يوتيوب",
+      "tiktok_url": "تيك توك",
+      "requires_admin_review": "المراجعة الإدارية مطلوبة قبل النشر",
+      "publication_after_approval": "سلوك النشر بعد الاعتماد",
+      "automatic_expiry": "انتهاء صلاحية العقار تلقائيًا",
+      "max_images": "الحد الأقصى للصور",
+      "accepted_image_formats": "صيغ الصور المقبولة",
+      "max_image_size_mb": "الحد الأقصى للحجم (MB)",
+      "hide_provider_contact": "إخفاء بيانات تواصل المقدم في القوائم",
+      "contact_visibility": "قواعد رؤية بيانات التواصل",
+      "supported_placements": "مواضع الإعلان المدعومة",
+      "supported_ad_types": "أنواع الإعلان المدعومة",
+      "desktop_dimensions": "أبعاد Desktop المطلوبة",
+      "mobile_dimensions": "أبعاد Mobile المطلوبة",
+      "accepted_file_formats": "صيغ الملفات المقبولة",
+      "quote_validity_days": "صلاحية عرض السعر (أيام)",
+      "payment_proof_methods": "طرق إثبات الدفع",
+      "default_seo_title": "عنوان SEO الافتراضي",
+      "default_meta_description": "الوصف الافتراضي (Meta Description)",
+      "title_separator": "فاصل العنوان",
+      "canonical_domain": "النطاق الأساسي",
+      "allow_indexing": "السماح بفهرسة الصفحات افتراضيًا",
+      "sitemap_status": "حالة Sitemap",
+      "google_search_console_verification": "كود التحقق من Google Search Console",
+      "hide_customer_contact": "إخفاء بيانات تواصل العميل عن غير المصرح لهم",
+      "hide_internal_notes": "الملاحظات الداخلية لا تظهر خارج الإدارة",
+      "hide_private_documents": "المستندات الخاصة لا تُعرض علنًا",
+      "admin_session_timeout_minutes": "مدة انتهاء جلسة الإدارة (دقائق)",
+      "two_factor_authentication": "المصادقة الثنائية",
+      "page_direction": "اتجاه الصفحة",
+      "page_size": "عدد النتائج في الصفحة",
+      "population_count": "قيمة عداد السكان",
+      "population_label": "النص التوضيحي للعداد",
+      "show_population_counter": "إظهار العداد في الصفحة الرئيسية",
+      "blocked_word_review": "مراجعة تلقائية بالكلمات المحظورة",
+      "blocked_words": "الكلمات المحظورة (كلمة في كل سطر)",
+      "blocked_word_action": "الإجراء التلقائي عند الاكتشاف",
+      "daily_post_limit": "الحد الأقصى للمنشورات يوميًا",
+      "moderation_wait_hours": "وقت انتظار المراجعة (ساعات)",
+      "option_automatic": "نشر تلقائي",
+      "option_manual": "نشر يدوي",
+      "option_never": "لا ينتهي",
+      "option_30_days": "30 يومًا",
+      "option_60_days": "60 يومًا",
+      "option_90_days": "90 يومًا",
+      "option_authenticated": "للمستخدمين المسجلين فقط",
+      "option_public": "للجميع",
+      "option_after_request": "بعد إرسال طلب",
+      "option_active": "نشط",
+      "option_inactive": "غير نشط",
+      "option_arabic": "العربية",
+      "option_english": "الإنجليزية",
+      "option_rtl": "RTL (يمين لليسار)",
+      "option_ltr": "LTR (يسار لليمين)",
+      "option_manual_review": "إرسال للمراجعة اليدوية",
+      "option_reject": "رفض تلقائي"
+    },
+    "locales": {
+      "ar": "العربية",
+      "en": "English"
+    },
+    "save": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ",
+    "retry": "إعادة المحاولة",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اكتب سببًا واضحًا لا يقل عن ثلاثة أحرف",
+    "reasonRequired": "سبب التغيير مطلوب.",
+    "saved": "تم حفظ الإعدادات.",
+    "validation": "تحقق من الحقول وأعد المحاولة.",
+    "version": "الإصدار",
+    "schemaVersion": "إصدار المخطط",
+    "preservedValues": "تُحفظ القيم المعتمدة الأخرى عند تحديث هذه الشاشة.",
+    "unavailableAction": "إنشاء مسودة إعدادات",
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الإعدادات",
+        "body": "يتم جلب الإسقاط الإداري الآمن."
+      },
+      "empty": {
+        "title": "الإعدادات غير متاحة بعد",
+        "body": "لم يتم إنشاء هذا النطاق بعد. لا تُضاف قيم إنتاجية غير موثقة."
+      },
+      "error": {
+        "title": "تعذر تحميل الإعدادات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الاتصال غير متاح مؤقتًا",
+        "body": "أعد المحاولة دون فقدان القيم الحالية."
+      },
+      "permission": {
+        "title": "الوصول غير مسموح",
+        "body": "تتطلب هذه الشاشة جلسة مدير والصلاحية المطابقة من واجهة البرمجة."
+      },
+      "conflict": {
+        "title": "تعارض في الإصدار",
+        "body": "تغيرت الإعدادات منذ آخر تحميل. أعد تحميل الإسقاط وراجعه قبل الحفظ."
+      },
+      "success": {
+        "title": "الإعدادات جاهزة",
+        "body": "تُعرض القيم من الإسقاط الإداري المعتمد."
+      },
+      "not_found": {
+        "title": "المسار غير موجود",
+        "body": "لا يوجد نطاق إعدادات مطابق."
+      }
+    },
+    "directionNote": "العربية RTL — إعدادات المنصة معتمدة لسطح المكتب.",
+    "selectPlaceholder": "اختر قيمة"
+  },
+  "auth/copy#getAuthCopy": {
+    "brand": "عقارات السادات",
+    "loginTitle": "مرحباً لعودتك",
+    "loginDescription": "سجل دخولك لمتابعة طلباتك وعقاراتك.",
+    "identifierLabel": "البريد الإلكتروني",
+    "identifierPlaceholder": "أدخل البريد الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "rememberLabel": "تذكرني",
+    "forgotPasswordAction": "نسيت كلمة المرور؟",
+    "privacyNotice": "نحافظ على خصوصية بياناتك ولا نشاركها دون إذنك.",
+    "loginAction": "تسجيل الدخول",
+    "loggingIn": "جارٍ تسجيل الدخول",
+    "createAccountPrompt": "ليس لديك حساب؟",
+    "createAccountAction": "إنشاء حساب",
+    "emailLoginPrompt": "أو تابع برمز يُرسل إلى بريدك الإلكتروني",
+    "emailLoginAction": "التحقق بالبريد",
+    "emailTitle": "تأكيد البريد الإلكتروني",
+    "emailDescription": "أدخل البريد الإلكتروني المرتبط بالحساب لإرسال رمز تحقق.",
+    "emailPlaceholder": "أدخل البريد الإلكتروني",
+    "roleLabel": "نوع الحساب",
+    "roleSeeker": "باحث عن عقار",
+    "roleProvider": "مقدم عقار",
+    "sendCodeAction": "إرسال الرمز",
+    "sendingCode": "جارٍ إرسال الرمز",
+    "otpTitle": "أدخل رمز التحقق",
+    "otpDescription": "أدخل الرمز المكوّن من ستة أرقام المرسل إلى البريد",
+    "codeLabel": "رمز التحقق",
+    "verifyAction": "تأكيد الرمز",
+    "verifyingCode": "جارٍ تأكيد الرمز",
+    "resendAction": "إعادة إرسال الرمز",
+    "changeEmailAction": "تغيير البريد الإلكتروني",
+    "codeSentTitle": "تم إرسال رمز التحقق",
+    "codeSentBody": "تحقق من صندوق البريد والرسائل غير المرغوبة ثم أدخل الرمز للمتابعة.",
+    "loginSuccessTitle": "تم تسجيل الدخول",
+    "loginSuccessBody": "جارٍ نقلك إلى الصفحة المطلوبة.",
+    "verificationSuccessTitle": "تم تأكيد البريد الإلكتروني",
+    "verificationSuccessBody": "تم التحقق من بيانات الاتصال ويمكنك متابعة التسجيل.",
+    "invalidFormTitle": "تحقق من البيانات",
+    "invalidFormBody": "أكمل الحقول المطلوبة بالصيغة الصحيحة.",
+    "invalidCredentialsTitle": "تعذر تسجيل الدخول",
+    "invalidCredentialsBody": "بيانات الدخول غير صحيحة. راجعها وحاول مرة أخرى.",
+    "accountNotActiveTitle": "الحساب غير متاح",
+    "accountNotActiveBody": "لا يمكن تسجيل الدخول بهذا الحساب في الوقت الحالي.",
+    "invalidOtpTitle": "رمز التحقق غير صحيح",
+    "invalidOtpBody": "راجع الرمز وأدخله مرة أخرى.",
+    "otpAttemptsTitle": "تم تجاوز محاولات التحقق",
+    "otpAttemptsBody": "اطلب رمزًا جديدًا وحاول مرة أخرى.",
+    "otpRateLimitedTitle": "تم إيقاف الإرسال مؤقتًا",
+    "otpRateLimitedBody": "انتظر قليلًا قبل طلب رمز آخر.",
+    "otpProviderTitle": "خدمة البريد غير متاحة",
+    "otpProviderBody": "تعذر إرسال الرمز الآن. حاول مرة أخرى لاحقًا.",
+    "networkTitle": "تعذر الاتصال",
+    "networkBody": "تحقق من اتصالك وحاول مرة أخرى.",
+    "genericErrorTitle": "تعذر إكمال العملية",
+    "genericErrorBody": "حاول مرة أخرى. لم يتم عرض أي بيانات حساسة.",
+    "unknownRouteTitle": "المسار غير متاح",
+    "unknownRouteBody": "ارجع إلى صفحة تسجيل الدخول للمتابعة.",
+    "retryAction": "إعادة المحاولة",
+    "registrationPurpose": "التسجيل",
+    "registrationStepLabel": "الخطوة 1",
+    "accountSelectionTitle": "ما هدفك من استخدام عقارات السادات؟",
+    "accountSelectionBody": "اختر نوع الاستخدام المناسب لك، ويمكنك استكمال بيانات حسابك في الخطوة التالية.",
+    "seekerAccountTitle": "أبحث عن عقار",
+    "seekerAccountBody": "استكشف الوحدات، احفظ العقارات المناسبة، وأرسل طلبات الاستفسار والمعاينة.",
+    "providerAccountTitle": "أريد عرض عقارات",
+    "providerAccountBody": "أضف وحداتك وتابع طلبات العملاء بعد مراجعة واعتماد حسابك.",
+    "continueAction": "متابعة",
+    "backAction": "العودة إلى تسجيل الدخول",
+    "registrationFormTitle": "إنشاء حساب الباحث عن عقار",
+    "registrationFormBody": "أكمل بياناتك الأساسية بعد تأكيد البريد الإلكتروني.",
+    "firstNameLabel": "الاسم الأول",
+    "firstNamePlaceholder": "أدخل الاسم الأول",
+    "lastNameLabel": "اسم العائلة",
+    "lastNamePlaceholder": "أدخل اسم العائلة",
+    "registerAction": "إنشاء الحساب",
+    "registering": "جارٍ إنشاء الحساب",
+    "registrationSuccessTitle": "تم إنشاء حسابك",
+    "registrationSuccessBody": "أصبح حساب الباحث عن عقار جاهزًا. يمكنك المتابعة إلى حسابك.",
+    "registrationNextAction": "الانتقال إلى حسابي",
+    "invalidRegistrationTokenTitle": "انتهت صلاحية التحقق",
+    "invalidRegistrationTokenBody": "ابدأ التحقق من البريد الإلكتروني مرة أخرى للمتابعة بأمان.",
+    "duplicateRegistrationTitle": "الحساب موجود بالفعل",
+    "duplicateRegistrationBody": "يوجد حساب مرتبط بهذا البريد. ارجع إلى تسجيل الدخول للمتابعة.",
+    "registrationUnavailableTitle": "لا يمكن متابعة التسجيل",
+    "registrationUnavailableBody": "ابدأ التسجيل من جديد. لم يتم الاحتفاظ ببيانات التحقق على هذا الجهاز.",
+    "restartRegistrationAction": "بدء التسجيل من جديد"
+  },
+  "community/copy#getCommunityCopy": {
+    "title": "آراء وتجارب المقيمين",
+    "subtitle": "شارك الأسئلة والتجارب العقارية المنشورة بأمان مع مجتمع المنصة.",
+    "moderationNotice": "سيتم مراجعة كل بوست من فريق الإشراف قبل ظهوره للعامة",
+    "composerModerationNotice": "سيتم مراجعة البوست قبل ظهوره للعامة",
+    "createPost": "انشر بوست",
+    "publishPost": "نشر البوست",
+    "allPosts": "الكل",
+    "openDiscussion": "عرض النقاش",
+    "closeDiscussion": "إغلاق النقاش",
+    "postTitle": "عنوان البوست",
+    "postBody": "محتوى البوست",
+    "postTitlePlaceholder": "عنوان البوست",
+    "postBodyPlaceholder": "محتوى البوست…",
+    "composerPostBodyPlaceholder": "محتوى البوست...",
+    "commentLabel": "أضف تعليقاً",
+    "commentPlaceholder": "اكتب تعليقك",
+    "submitComment": "نشر التعليق",
+    "reportPost": "الإبلاغ عن المشاركة",
+    "reportReason": "سبب البلاغ",
+    "reportDetails": "تفاصيل البلاغ",
+    "reportDetailsPlaceholder": "اذكر سبب البلاغ باختصار",
+    "submitReport": "إرسال البلاغ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "signInToContinue": "سجّل الدخول للمشاركة والتعليق والإبلاغ.",
+    "signIn": "تسجيل الدخول",
+    "authenticationRequired": "تسجيل الدخول مطلوب",
+    "loadingTitle": "جارٍ تحميل المجتمع",
+    "loadingBody": "نجهز أحدث المشاركات المنشورة.",
+    "emptyTitle": "لا توجد مشاركات منشورة",
+    "emptyBody": "ستظهر المشاركات هنا بعد اعتمادها ونشرها.",
+    "errorTitle": "تعذر تحميل المجتمع",
+    "errorBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "retryTitle": "المجتمع غير متاح مؤقتاً",
+    "retryBody": "يمكنك إعادة المحاولة عند عودة الاتصال.",
+    "retryLabel": "حاول مرة أخرى",
+    "permissionTitle": "لا يمكن عرض المجتمع",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى المحتوى العام.",
+    "notFoundTitle": "المشاركة غير موجودة",
+    "notFoundBody": "ربما لم تعد المشاركة منشورة أو أن الرابط غير صحيح.",
+    "successTitle": "تم بنجاح",
+    "postCreated": "تم إرسال مشاركتك للمراجعة.",
+    "commentCreated": "تم إرسال تعليقك للمراجعة.",
+    "reportCreated": "تم إرسال البلاغ للمراجعة.",
+    "validationTitle": "راجع البيانات المدخلة",
+    "validationBody": "أكمل الحقول المطلوبة قبل الإرسال.",
+    "mutationErrorTitle": "تعذر إكمال العملية",
+    "mutationErrorBody": "تحقق من صلاحيتك وحاول مرة أخرى.",
+    "reportReasons": {
+      "spam": "محتوى مزعج",
+      "abuse": "إساءة",
+      "misinformation": "معلومات مضللة",
+      "other": "سبب آخر"
+    }
+  },
+  "content/about-team-copy#getPublicAboutTeamCopy": {
+    "aboutEyebrow": "عن المنصة",
+    "aboutTitle": "منصة السادات للعقارات",
+    "aboutSubtitle": "أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.",
+    "teamEyebrow": "الفريق",
+    "teamTitle": "الأشخاص خلف المنصة",
+    "teamSubtitle": "فريق متخصص يعمل يوميًا لتحسين تجربتك.",
+    "loadingTitle": "جارٍ تحميل المحتوى",
+    "loadingBody": "نجهز المحتوى المنشور من نظام إدارة المحتوى.",
+    "emptyTitle": "لا يوجد محتوى منشور بعد",
+    "emptyBody": "سيظهر المحتوى هنا بعد نشره من نظام إدارة المحتوى.",
+    "errorTitle": "تعذر تحميل المحتوى",
+    "errorBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "retryTitle": "المحتوى غير متاح مؤقتًا",
+    "retryBody": "أعد المحاولة عند عودة الاتصال.",
+    "retryLabel": "إعادة المحاولة",
+    "permissionTitle": "لا يمكن عرض المحتوى",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى المحتوى العام.",
+    "permissionLink": "العودة إلى الصفحة العامة",
+    "imageUnavailable": "الصورة غير متاحة",
+    "roleUnavailable": "الدور غير متاح",
+    "bioUnavailable": "لا توجد نبذة منشورة.",
+    "footerDescription": "منصة عامة للعقارات والمحتوى المنشور من مصادر معتمدة.",
+    "footerLinks": "روابط المنصة"
+  },
+  "content/articles-copy#getPublicArticlesCopy": {
+    "eyebrow": "معرفة عقارية",
+    "title": "مقالات ومحتوى متخصص",
+    "subtitle": "دليلك الموثوق في سوق عقارات مدينة السادات",
+    "searchLabel": "البحث في المقالات",
+    "searchPlaceholder": "ابحث في المقالات...",
+    "allCategories": "الكل",
+    "categoryLabel": "تصنيفات المقالات",
+    "openArticle": "اقرأ المقال",
+    "publishedAt": "تاريخ النشر",
+    "authorLabel": "الكاتب",
+    "authorUnavailable": "بيانات الكاتب غير متاحة في المحتوى العام",
+    "imageUnavailable": "صورة المقال غير متاحة",
+    "noSummary": "لا يوجد ملخص منشور لهذا المقال.",
+    "backToArticles": "العودة للمقالات",
+    "articleBody": "محتوى المقال",
+    "introduction": "مقدمة",
+    "relatedArticles": "مقالات ذات صلة",
+    "relatedProperties": "عقارات ذات صلة",
+    "ctaTitle": "هل تبحث عن عقار مناسب؟",
+    "ctaAction": "ابحث الآن",
+    "noRelatedArticles": "لا توجد مقالات ذات صلة منشورة حاليًا.",
+    "searchNoMatch": "لا توجد مقالات تطابق بحثك.",
+    "loadingTitle": "جاري تحميل المقالات",
+    "loadingBody": "نجهز لك أحدث المقالات المنشورة.",
+    "emptyTitle": "لا توجد مقالات منشورة",
+    "emptyBody": "سيظهر المحتوى هنا بعد نشر مقالات معتمدة.",
+    "errorTitle": "تعذر تحميل المقالات",
+    "errorBody": "تحقق من الاتصال ثم حاول مرة أخرى.",
+    "retryTitle": "المقالات غير متاحة مؤقتًا",
+    "retryBody": "يمكنك إعادة المحاولة عند عودة الاتصال.",
+    "retryLabel": "حاول مرة أخرى",
+    "permissionTitle": "لا يمكن عرض هذه المقالات",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى المحتوى العام.",
+    "permissionLink": "العودة إلى الرئيسية",
+    "notFoundTitle": "المقال غير موجود",
+    "notFoundBody": "ربما لم يعد المقال منشورًا أو أن الرابط غير صحيح.",
+    "notFoundLink": "تصفح المقالات",
+    "footerDescription": "محتوى عقاري منشور من مصادر معتمدة.",
+    "footerLinks": "روابط المنصة"
+  },
+  "provider/advertising-copy#getProviderAdvertisingCopy": {
+    "eyebrow": "الإعلانات",
+    "title": "طلبات الإعلان",
+    "description": "تابع طلبات الإعلان والأسعار الإدارية وحالة إثبات الدفع من حسابك.",
+    "create": "طلب إعلان جديد",
+    "refresh": "تحديث",
+    "filtersLabel": "تصفية الطلبات",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "count": "طلب إعلان",
+    "columns": {
+      "request": "رقم الطلب",
+      "placement": "الموضع والغرض",
+      "period": "الفترة",
+      "status": "الحالة",
+      "quote": "السعر الإداري",
+      "payment": "إثبات الدفع",
+      "actions": "الإجراءات"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "review": "قيد المراجعة",
+      "waiting_pricing": "في انتظار التسعير",
+      "quote_sent": "تم إرسال العرض",
+      "waiting_payment": "في انتظار الدفع",
+      "scheduled": "مجدول",
+      "active": "نشط",
+      "ended": "منتهٍ",
+      "rejected": "مرفوض",
+      "cancelled": "ملغى",
+      "expired": "منتهي الصلاحية"
+    },
+    "quoteStatuses": {
+      "issued": "متاح للقبول",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "cancelled": "ملغى",
+      "expired": "منتهي الصلاحية"
+    },
+    "paymentStatuses": {
+      "uploaded": "تم الرفع",
+      "pending_review": "قيد المراجعة",
+      "approved": "تمت الموافقة",
+      "rejected": "مرفوض"
+    },
+    "open": "عرض التفاصيل",
+    "backToList": "العودة إلى الطلبات",
+    "requestDetails": "تفاصيل طلب الإعلان",
+    "purpose": "الغرض",
+    "interval": "الفترة",
+    "history": "سجل الحالة",
+    "quote": "العرض الإداري",
+    "quoteTotal": "الإجمالي",
+    "quoteValidUntil": "صالح حتى",
+    "quoteTerms": "الشروط",
+    "acceptQuote": "قبول العرض",
+    "submitRequest": "إرسال للمراجعة",
+    "paymentProof": "إثبات الدفع",
+    "paymentProofHelp": "ارفع ملف PDF أو JPG أو PNG بحجم لا يتجاوز 10 ميجابايت. يتم فحص الملف ومراجعته يدويًا؛ لا يعني الرفع التحقق البنكي.",
+    "uploadPaymentProof": "رفع إثبات الدفع",
+    "paymentMethod": "طريقة الدفع",
+    "paymentProofUploaded": "تم إرسال إثبات الدفع للمراجعة.",
+    "noPaymentProof": "لم يتم إرسال إثبات دفع.",
+    "schedule": "الجدولة",
+    "noSchedule": "لا توجد جدولة متاحة بعد.",
+    "noQuote": "لا يوجد عرض إداري بعد.",
+    "noHistory": "لا يوجد سجل تغييرات.",
+    "createForm": {
+      "title": "طلب إعلان جديد",
+      "description": "أدخل بيانات الطلب المعتمدة. لا يتم تحديد السعر من هذا النموذج.",
+      "placementKey": "مفتاح موضع الإعلان",
+      "placementKeyHelp": "استخدم مفتاح موضع معتمد من إدارة المنصة.",
+      "adType": "نوع الإعلان",
+      "adTypeHelp": "أدخل نوعًا معتمدًا من إعدادات الإعلانات عند طلبه.",
+      "purpose": "الغرض من الإعلان",
+      "start": "بداية الفترة",
+      "end": "نهاية الفترة",
+      "cancel": "إلغاء",
+      "save": "إرسال الطلب",
+      "validation": "راجع الحقول والتواريخ قبل الإرسال.",
+      "close": "إغلاق نموذج الطلب"
+    },
+    "commission": {
+      "eyebrow": "العمولة",
+      "title": "العمولة",
+      "description": "سياسة العمولة المطبقة على حسابك كما يحددها النظام.",
+      "appliedPolicy": "السياسة الحالية",
+      "source": "المصدر",
+      "effectiveAt": "سارية من",
+      "version": "إصدار السياسة",
+      "kind": "نوع العمولة",
+      "percentage": "نسبة مئوية",
+      "fixed": "مبلغ ثابت",
+      "noneTitle": "لا توجد سياسة عمولة متاحة",
+      "noneBody": "لم يتم تحديد سياسة عمولة لحسابك حاليًا. لا يتم افتراض نسبة عامة.",
+      "readOnly": "هذه البيانات للعرض فقط ولا يمكن تغييرها من حساب المزود.",
+      "unavailable": "غير متاح"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم تحميل بيانات الإعلانات."
+      },
+      "empty": {
+        "title": "لا توجد طلبات إعلان",
+        "body": "ستظهر طلبات الإعلان الخاصة بحسابك هنا عند توفرها."
+      },
+      "error": {
+        "title": "تعذر تحميل الإعلانات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "الإعلانات غير متاحة مؤقتًا",
+        "body": "يمكنك إعادة المحاولة عند توفر الاتصال."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "لا يتم عرض بيانات الإعلانات قبل التحقق من جلسة المزود."
+      },
+      "notFound": {
+        "title": "طلب الإعلان غير موجود",
+        "body": "لا يمكن العثور على هذا الطلب ضمن بيانات حسابك."
+      },
+      "success": {
+        "title": "تم تحميل الإعلانات",
+        "body": "تم تحميل بيانات الإعلانات بنجاح."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "notFound": "طلب الإعلان غير موجود",
+    "unavailable": "غير متاح",
+    "success": "تم الحفظ بنجاح",
+    "mutationFailed": "تعذر تنفيذ الإجراء. حاول مرة أخرى."
+  },
+  "provider/copy#getProviderCopy": {
+    "nav": {
+      "overview": "لوحة التحكم",
+      "properties": "عقاراتي",
+      "projects": "المشاريع",
+      "requests": "طلبات العملاء",
+      "viewings": "المعاينات",
+      "advertising": "الإعلانات",
+      "commission": "العمولة",
+      "notifications": "الإشعارات",
+      "settings": "الإعدادات"
+    },
+    "overview": {
+      "eyebrow": "لوحة مزود العقار",
+      "title": "نظرة عامة",
+      "description": "تابع حالة حسابك وعقاراتك من خلال بيانات الحساب الفعلية.",
+      "addProperty": "إضافة عقار",
+      "summaryTitle": "ملخص العقارات",
+      "cards": {
+        "total": "كل العقارات",
+        "published": "منشورة",
+        "pending": "قيد المراجعة",
+        "drafts": "مسودات"
+      },
+      "additionalCards": {
+        "needsChanges": "تحتاج تعديل",
+        "customerRequests": "طلبات العملاء",
+        "views": "المشاهدات",
+        "booked": "المحجوزة"
+      },
+      "unavailableMetric": "غير متاح",
+      "unavailableMetricBody": "لا يقدم النظام الحالي هذا المؤشر في لوحة المزود.",
+      "chart": {
+        "title": "المشاهدات والطلبات — آخر 6 أشهر",
+        "unavailable": "لا توجد بيانات تاريخية في عقد المزود الحالي."
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "properties": "عقاراتي",
+        "addProperty": "إضافة عقار",
+        "requests": "طلبات العملاء",
+        "settings": "الإعدادات"
+      },
+      "recentColumns": {
+        "code": "كود العقار",
+        "property": "العنوان",
+        "status": "الحالة",
+        "views": "المشاهدات",
+        "updated": "تاريخ الإضافة"
+      },
+      "recentTitle": "آخر العقارات تحديثاً",
+      "recentEmptyTitle": "لا توجد عقارات بعد",
+      "recentEmptyBody": "يمكنك بدء إضافة عقار عندما تكون حالة حساب المزود مؤهلة.",
+      "recentUnavailableTitle": "لا يمكن عرض العقارات الآن",
+      "recentUnavailableBody": "حاول مرة أخرى عند توفر اتصال صالح.",
+      "openProperty": "فتح العقار"
+    },
+    "properties": {
+      "eyebrow": "إدارة العقارات",
+      "title": "عقاراتي",
+      "description": "راجع عقاراتك وحالاتها وإجراءاتها المتاحة من خلال سجلات المزود المملوكة لك.",
+      "addProperty": "إضافة عقار",
+      "filtersLabel": "تصفية العقارات",
+      "searchLabel": "بحث",
+      "searchPlaceholder": "ابحث بالاسم أو الرابط المختصر",
+      "statusLabel": "الحالة",
+      "allStatuses": "كل الحالات",
+      "applyFilters": "تطبيق",
+      "clearFilters": "مسح الفلاتر",
+      "countSuffix": "عقار",
+      "emptyTitle": "لا توجد عقارات بعد",
+      "emptyBody": "ستظهر العقارات التي يملكها حسابك هنا عند توفرها.",
+      "noResultsTitle": "لا توجد نتائج مطابقة",
+      "noResultsBody": "جرّب تغيير البحث أو الحالة لعرض عقاراتك.",
+      "columns": {
+        "property": "العقار",
+        "status": "الحالة",
+        "type": "النوع",
+        "price": "السعر",
+        "updated": "آخر تحديث",
+        "actions": "الإجراءات"
+      },
+      "kindLabels": {
+        "property": "عقار",
+        "unit": "وحدة"
+      },
+      "transactionLabels": {
+        "sale": "بيع",
+        "rent": "إيجار"
+      },
+      "view": "عرض",
+      "edit": "تعديل",
+      "submit": "إرسال للمراجعة",
+      "reason": "ملاحظة المراجعة:",
+      "pagination": "صفحات العقارات",
+      "previous": "الصفحة السابقة",
+      "next": "الصفحة التالية"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم تجهيز لوحة المزود."
+      },
+      "empty": {
+        "title": "لا توجد بيانات بعد",
+        "body": "ستظهر البيانات عندما تتوفر سجلات الحساب الفعلية."
+      },
+      "error": {
+        "title": "تعذر تحميل لوحة المزود",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "تعذر الوصول إلى لوحة المزود",
+        "body": "يمكنك إعادة المحاولة عند توفر الاتصال."
+      },
+      "success": {
+        "title": "تم تحميل لوحة المزود",
+        "body": "تم تحميل بيانات الحساب بنجاح."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "لا يتم عرض بيانات المزود المحمية قبل التحقق من الجلسة."
+      }
+    },
+    "application": {
+      "draft": {
+        "title": "أكمل طلب المزود",
+        "body": "أكمل البيانات المطلوبة قبل الوصول إلى لوحة المزود."
+      },
+      "pending_review": {
+        "title": "طلبك قيد المراجعة",
+        "body": "ستظهر لوحة المزود الكاملة بعد انتهاء مراجعة الطلب."
+      },
+      "needs_information": {
+        "title": "يلزم استكمال معلومات الطلب",
+        "body": "راجع المعلومات المطلوبة ثم أعد إرسال الطلب."
+      },
+      "approved": {
+        "title": "الحساب معتمد",
+        "body": "يمكنك إدارة سجلاتك المعتمدة من لوحة المزود."
+      },
+      "rejected": {
+        "title": "لم تتم الموافقة على الطلب",
+        "body": "يمكنك مراجعة سبب القرار والخيارات المتاحة لحسابك."
+      },
+      "suspended": {
+        "title": "الحساب موقوف مؤقتاً",
+        "body": "الوصول إلى بيانات المزود مقيد حالياً وفقاً لحالة الحساب."
+      }
+    },
+    "propertyStatuses": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_changes": "تحتاج إلى تعديلات",
+      "approved": "معتمدة",
+      "published": "منشورة",
+      "rejected": "مرفوضة",
+      "hidden": "مخفية",
+      "archived": "مؤرشفة"
+    },
+    "retry": "إعادة المحاولة",
+    "reviewReason": "السبب:",
+    "continueApplication": "متابعة طلب المزود",
+    "unavailable": "غير متاح"
+  },
+  "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
+    "eyebrow": "إدارة طلبات العملاء",
+    "title": "طلبات العملاء",
+    "description": "تابع طلبات العملاء التي أنشأها حسابك باستخدام البيانات والإجراءات التي يعيدها النظام.",
+    "add": "إضافة طلب يدوي",
+    "viewings": "مواعيد المعاينات",
+    "countSuffix": "طلب",
+    "filtersLabel": "تصفية طلبات العملاء",
+    "searchLabel": "بحث",
+    "searchPlaceholder": "ابحث باسم العميل أو رقم الهاتف",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح",
+    "columns": {
+      "customer": "العميل",
+      "request": "نوع الطلب",
+      "status": "الحالة",
+      "related": "العقار أو المشروع",
+      "created": "تاريخ الإنشاء",
+      "updated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "statuses": {
+      "new": "طلب جديد",
+      "under_review": "قيد المراجعة",
+      "contacted": "تم التواصل",
+      "scheduled": "موعد محدد",
+      "needs_information": "يحتاج معلومات",
+      "in_progress": "قيد المتابعة",
+      "resolved": "مكتمل",
+      "cancelled": "ملغى",
+      "closed": "مغلق"
+    },
+    "requestType": "طلب عميل",
+    "source": "المصدر",
+    "providerSource": "من حساب المزود",
+    "transitions": {
+      "start_review": "بدء المراجعة",
+      "contact": "تم التواصل",
+      "schedule": "تحديد موعد",
+      "needs_information": "طلب معلومات",
+      "start_progress": "بدء المتابعة",
+      "resolve": "إغلاق الطلب كمكتمل",
+      "cancel": "إلغاء الطلب",
+      "close": "إغلاق الطلب",
+      "reopen": "إعادة فتح الطلب"
+    },
+    "noActions": "لا توجد إجراءات متاحة",
+    "emptyTitle": "لا توجد طلبات عملاء بعد",
+    "emptyBody": "ستظهر الطلبات التي ينشئها حسابك هنا عند توفرها.",
+    "noResultsTitle": "لا توجد نتائج مطابقة",
+    "noResultsBody": "جرّب تغيير البحث أو الحالة.",
+    "unavailable": "غير متاح",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية",
+    "pagination": "صفحات طلبات العملاء",
+    "form": {
+      "title": "إضافة طلب عميل",
+      "description": "أدخل بيانات العميل والطلب المسموح بها لحساب المزود.",
+      "customerDetails": "بيانات العميل",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "requestDetails": "تفاصيل الطلب",
+      "message": "تفاصيل أو رسالة الطلب",
+      "propertyId": "معرّف العقار",
+      "projectId": "معرّف المشروع",
+      "sourceNote": "ملاحظة المصدر",
+      "optional": "اختياري",
+      "cancel": "إلغاء",
+      "save": "حفظ الطلب",
+      "close": "إغلاق",
+      "validation": "تحقق من البيانات المطلوبة قبل حفظ الطلب."
+    },
+    "transition": {
+      "title": "تحديث حالة الطلب",
+      "description": "أكد الإجراء باستخدام الإصدار الحالي للطلب.",
+      "reason": "السبب أو الملاحظة",
+      "reasonHelp": "السبب مطلوب عند الإلغاء أو طلب معلومات أو الإغلاق.",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد الإجراء",
+      "validation": "أدخل سبباً صالحاً لهذا الإجراء."
+    },
+    "feedback": {
+      "created": "تم إنشاء طلب العميل.",
+      "transitioned": "تم تحديث حالة الطلب."
+    },
+    "errors": {
+      "generic": "تعذر تنفيذ العملية. حاول مرة أخرى.",
+      "conflict": "تغير الطلب قبل حفظه. أعد تحميل القائمة.",
+      "validation": "البيانات المدخلة غير صالحة."
+    }
+  },
+  "provider/notifications-copy#getProviderNotificationsCopy": {
+    "eyebrow": "مساحة المزوّد",
+    "title": "الإشعارات",
+    "description": "تابع تحديثات الحساب والطلبات المرتبطة بعملك.",
+    "listLabel": "إشعارات المزوّد",
+    "unreadCount": "إشعار غير مقروء",
+    "markAll": "تحديد الكل كمقروء",
+    "markingAll": "جارٍ التحديث…",
+    "tabs": {
+      "all": "الكل",
+      "unread": "غير مقروء"
+    },
+    "unreadLabel": "غير مقروء",
+    "markRead": "تحديد كمقروء",
+    "openLink": "فتح التفاصيل",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية",
+    "pagination": "صفحات الإشعارات",
+    "empty": {
+      "all": {
+        "title": "لا توجد إشعارات",
+        "body": "ستظهر التحديثات الخاصة بحسابك هنا عند توفرها."
+      },
+      "unread": {
+        "title": "لا توجد إشعارات غير مقروءة",
+        "body": "تمت قراءة كل الإشعارات المتاحة لحسابك."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الإشعارات",
+        "body": "يتم جلب إشعارات حساب المزوّد."
+      },
+      "empty": {
+        "title": "لا توجد إشعارات متاحة",
+        "body": "لا توجد تحديثات مرتبطة بحسابك في الوقت الحالي."
+      },
+      "retry": {
+        "title": "تعذر تحميل الإشعارات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "الإشعارات غير متاحة",
+        "body": "تعذر قراءة إشعارات حسابك الآن."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "الإشعارات متاحة لحساب مزوّد موثّق فقط."
+      }
+    },
+    "mutation": {
+      "markedRead": "تم تحديد الإشعار كمقروء.",
+      "markedAll": "تم تحديث الإشعارات غير المقروءة.",
+      "notFound": "لم يعد هذا الإشعار متاحًا لحسابك.",
+      "permission": "انتهت صلاحية الجلسة. سجّل الدخول وحاول مرة أخرى.",
+      "error": "تعذر تحديث الإشعار. حاول مرة أخرى."
+    },
+    "typeLabels": {
+      "viewing.reminder": "تذكير بموعد معاينة",
+      "request.updated": "تحديث على طلب",
+      "property.updated": "تحديث على عقار",
+      "profile.updated": "تحديث الملف"
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "provider/projects-copy#getProviderProjectsCopy": {
+    "eyebrow": "إدارة المشاريع",
+    "title": "المشاريع",
+    "description": "أدر المشاريع التابعة لحساب مزود العقار واعرض حالتها والإجراءات المتاحة من النظام.",
+    "add": "إضافة مشروع جديد",
+    "countSuffix": "مشروع",
+    "filtersLabel": "تصفية المشاريع",
+    "searchLabel": "بحث",
+    "searchPlaceholder": "ابحث باسم المشروع أو الرابط المختصر",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح الفلاتر",
+    "emptyTitle": "لا توجد مشاريع بعد",
+    "emptyBody": "ستظهر المشاريع التي يملكها حسابك هنا عند توفرها.",
+    "noResultsTitle": "لا توجد نتائج مطابقة",
+    "noResultsBody": "جرّب تغيير البحث أو الحالة.",
+    "columns": {
+      "project": "المشروع",
+      "slug": "الرابط المختصر",
+      "status": "الحالة",
+      "reason": "ملاحظة المراجعة",
+      "updated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_changes": "تحتاج تعديلات",
+      "approved": "معتمد",
+      "published": "منشور",
+      "rejected": "مرفوض",
+      "hidden": "مخفي",
+      "archived": "مؤرشف"
+    },
+    "viewUnavailable": "العرض التفصيلي غير متاح",
+    "edit": "تعديل",
+    "submit": "إرسال للمراجعة",
+    "noActions": "لا توجد إجراءات متاحة",
+    "reason": "السبب:",
+    "form": {
+      "createTitle": "إضافة مشروع جديد",
+      "editTitle": "تعديل المشروع",
+      "createDescription": "أدخل البيانات التي يدعمها عقد المشروع الحالي.",
+      "editDescription": "عدّل البيانات المملوكة للمشروع مع الاحتفاظ بإصدار الخادم.",
+      "name": "اسم المشروع",
+      "description": "الوصف",
+      "slug": "الرابط المختصر",
+      "locationId": "معرّف الموقع",
+      "organizationId": "معرّف المؤسسة",
+      "website": "الموقع الإلكتروني",
+      "reason": "سبب التغيير",
+      "reasonHelp": "مطلوب للتغييرات الحساسة ويسجل مع العملية.",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "close": "إغلاق",
+      "required": "مطلوب",
+      "localeLabels": {
+        "ar": "العربية",
+        "en": "English"
+      },
+      "placeholders": {
+        "slug": "central-project",
+        "locationId": "معرّف اختياري",
+        "organizationId": "معرّف اختياري",
+        "website": "https://example.com"
+      }
+    },
+    "submitDialog": {
+      "title": "إرسال المشروع للمراجعة",
+      "description": "سيرسل المشروع بالحالة والإصدار الحاليين إلى مسار المراجعة.",
+      "reason": "سبب الإرسال",
+      "reasonHelp": "اكتب سبباً واضحاً من 5 أحرف على الأقل.",
+      "confirm": "إرسال",
+      "cancel": "إلغاء"
+    },
+    "feedback": {
+      "created": "تم إنشاء المشروع.",
+      "updated": "تم تحديث المشروع.",
+      "submitted": "تم إرسال المشروع للمراجعة."
+    },
+    "errors": {
+      "validation": "راجع الحقول المطلوبة قبل الحفظ.",
+      "generic": "تعذر حفظ التغيير. حاول مرة أخرى.",
+      "conflict": "تغير المشروع على الخادم. أعد تحميل القائمة قبل المحاولة مرة أخرى."
+    },
+    "pagination": "صفحات المشاريع",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية"
+  },
+  "provider/settings-copy#getProviderSettingsCopy": {
+    "eyebrow": "مساحة المزوّد",
+    "title": "الإعدادات",
+    "description": "راجع بيانات الحساب وتواصل معنا من خلال البيانات المسموح بها.",
+    "tabs": {
+      "account": "بيانات الحساب",
+      "contact": "بيانات التواصل",
+      "security": "الأمان"
+    },
+    "account": {
+      "heading": "بيانات الحساب",
+      "email": "البريد الإلكتروني",
+      "legalNotice": "لا يمكن تغيير البيانات التجارية أو القانونية من هذه الصفحة.",
+      "saveEmail": "حفظ البريد الإلكتروني"
+    },
+    "contact": {
+      "heading": "بيانات التواصل",
+      "whatsapp": "واتساب",
+      "address": "عنوان المكتب",
+      "website": "الموقع الإلكتروني",
+      "save": "حفظ بيانات التواصل"
+    },
+    "security": {
+      "heading": "الأمان",
+      "password": "تغيير كلمة المرور",
+      "current": "كلمة المرور الحالية",
+      "next": "كلمة المرور الجديدة",
+      "confirm": "تأكيد كلمة المرور",
+      "update": "تحديث كلمة المرور",
+      "deleteHeading": "طلب حذف الحساب",
+      "deleteBody": "طلب حذف الحساب غير متاح من خلال هذه الواجهة حاليًا.",
+      "deleteAction": "طلب حذف الحساب",
+      "unavailable": "غير متاح حاليًا"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الإعدادات",
+        "body": "يتم جلب بيانات إعدادات المزوّد."
+      },
+      "empty": {
+        "title": "الإعدادات غير متاحة",
+        "body": "لا توجد بيانات إعدادات قابلة للعرض لهذا الحساب."
+      },
+      "retry": {
+        "title": "تعذر تحميل الإعدادات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "الإعدادات غير متاحة",
+        "body": "تعذر قراءة إعدادات حسابك الآن."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "الإعدادات متاحة لحساب مزوّد موثّق فقط."
+      }
+    },
+    "feedback": {
+      "saved": "تم حفظ البيانات بنجاح.",
+      "validation": "راجع الحقول وأدخل بيانات صحيحة.",
+      "conflict": "تغيرت البيانات. أعد التحميل ثم حاول مرة أخرى.",
+      "permission": "انتهت صلاحية الجلسة. سجّل الدخول وحاول مرة أخرى.",
+      "error": "تعذر حفظ البيانات. حاول مرة أخرى."
+    },
+    "retry": "إعادة المحاولة",
+    "unavailable": "غير متاح"
+  },
+  "provider/viewings-copy#getProviderViewingsCopy": {
+    "eyebrow": "إدارة المعاينات",
+    "title": "مواعيد المعاينات",
+    "description": "مواعيد المعاينة المجدولة والقادمة",
+    "countSuffix": "مواعيد",
+    "filtersLabel": "تصفية المعاينات",
+    "statusLabel": "الحالة",
+    "allStatuses": "كل الحالات",
+    "apply": "تطبيق",
+    "clear": "مسح الفلاتر",
+    "emptyTitle": "لا توجد معاينات بعد",
+    "emptyBody": "ستظهر المواعيد المرتبطة بعقاراتك هنا عند توفرها.",
+    "columns": {
+      "customer": "العميل",
+      "property": "العقار",
+      "date": "موعد المعاينة",
+      "timezone": "المنطقة الزمنية",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "customerReference": "مرجع العميل",
+    "propertyReference": "مرجع العقار",
+    "note": "ملاحظة العميل",
+    "statuses": {
+      "requested": "مطلوب",
+      "confirmed": "مؤكد",
+      "rescheduled": "أعيدت جدولته",
+      "cancelled": "ملغى",
+      "completed": "مكتمل"
+    },
+    "actions": {
+      "confirm": "تأكيد الموعد",
+      "reschedule": "إعادة الجدولة",
+      "cancel": "إلغاء",
+      "complete": "تسجيل كمكتمل",
+      "none": "لا توجد إجراءات متاحة"
+    },
+    "dialog": {
+      "confirmTitle": "تأكيد موعد المعاينة",
+      "rescheduleTitle": "إعادة جدولة المعاينة",
+      "cancelTitle": "إلغاء المعاينة",
+      "completeTitle": "إكمال المعاينة",
+      "confirmDescription": "سيتم تحديث الحالة وفقًا لإصدار السجل الحالي.",
+      "rescheduleDescription": "أدخل الموعد والمنطقة الزمنية الجديدة.",
+      "cancelDescription": "أدخل سببًا واضحًا لإلغاء الموعد.",
+      "completeDescription": "سجّل المعاينة كمكتملة وفقًا للحالة الحالية.",
+      "date": "موعد المعاينة",
+      "timezone": "المنطقة الزمنية",
+      "reason": "السبب",
+      "reasonHelp": "السبب مطلوب للإلغاء.",
+      "confirm": "حفظ التغيير",
+      "cancel": "إلغاء",
+      "close": "إغلاق"
+    },
+    "feedback": {
+      "confirmed": "تم تأكيد الموعد.",
+      "rescheduled": "تمت إعادة جدولة الموعد.",
+      "cancelled": "تم إلغاء الموعد.",
+      "completed": "تم تسجيل المعاينة كمكتملة."
+    },
+    "errors": {
+      "validation": "راجع الحقول المطلوبة قبل الحفظ.",
+      "generic": "تعذر تحديث الموعد. حاول مرة أخرى.",
+      "conflict": "تغير الموعد على الخادم. أعد تحميل القائمة قبل المحاولة."
+    },
+    "pagination": "صفحات المعاينات",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية"
+  },
+  "provider_auth/account-copy#getProviderAccountCopy": {
+    "title": "بيانات الحساب",
+    "description": "أكمل بيانات الحساب الأساسية حتى نتمكن من حفظ طلب مقدم العقار بأمان.",
+    "stepLabel": "3 / 4",
+    "providerTypeLabel": "نوع مقدم العقار",
+    "accountOwnerFullNameLabel": "الاسم الكامل لصاحب الحساب",
+    "accountOwnerFullNamePlaceholder": "اكتب الاسم كما يظهر في مستندات الهوية",
+    "displayNameLabel": "اسم مقدم العقار أو العلامة التجارية",
+    "displayNamePlaceholder": "الاسم الذي سيظهر في ملف مقدم العقار",
+    "emailLabel": "البريد الإلكتروني للتواصل",
+    "emailPlaceholder": "name@example.com",
+    "invalidWhatsappBody": "أدخل رقم واتساب صحيحًا، مثل +20 100 000 0000.",
+    "whatsappLabel": "رقم واتساب",
+    "secondaryPhoneLabel": "رقم هاتف إضافي (اختياري)",
+    "secondaryPhonePlaceholder": "+20 100 000 0000",
+    "preferredLocaleLabel": "اللغة المفضلة",
+    "localeOptions": {
+      "ar": "العربية",
+      "en": "الإنجليزية"
+    },
+    "termsLabel": "أوافق على شروط الاستخدام",
+    "privacyLabel": "أوافق على سياسة الخصوصية",
+    "requirementsTitle": "بيانات إضافية مطلوبة لاحقًا",
+    "requirementsBody": "يعرض الخادم الحقول المتبقية المطلوبة لكل نوع مقدم عقار. لن نعتبر الطلب مكتملًا قبل استيفائها.",
+    "unavailableLocationBody": "اختيار الموقع الرئيسي ومناطق الخدمة يحتاج إلى مصدر المواقع المعتمد، وهو غير متاح لهذا السطح حاليًا. لم يتم اختلاق معرفات أو بيانات بديلة.",
+    "saveDraftAction": "حفظ كمسودة",
+    "saveContinueAction": "حفظ ومتابعة",
+    "savingAction": "جارٍ الحفظ…",
+    "retryAction": "إعادة المحاولة",
+    "backAction": "العودة إلى اختيار النوع",
+    "loadingTitle": "جارٍ تحميل الطلب",
+    "loadingBody": "نستعيد آخر نسخة محفوظة من بيانات الحساب.",
+    "invalidFormTitle": "راجع البيانات المطلوبة",
+    "invalidFormBody": "أدخل القيم المطلوبة ووافق على الشروط وسياسة الخصوصية قبل الحفظ.",
+    "savedTitle": "تم حفظ بيانات الحساب",
+    "savedBody": "حُفظت البيانات عبر طلب مقدم العقار. يمكنك المتابعة عندما تتوفر الخطوة التالية.",
+    "permissionTitle": "لا يمكن الوصول إلى هذا الطلب",
+    "permissionBody": "يلزم بدء تسجيل مقدم العقار أو امتلاك جلسة مقدم العقار للوصول إلى هذه البيانات.",
+    "notFoundTitle": "طلب مقدم العقار غير موجود",
+    "notFoundBody": "ابدأ تسجيل مقدم العقار من جديد لإنشاء طلب آمن.",
+    "networkTitle": "تعذر تحميل الطلب",
+    "networkBody": "تحقق من الاتصال ثم أعد المحاولة. لم يتم عرض بيانات غير مؤكدة.",
+    "conflictTitle": "تغيرت البيانات المحفوظة",
+    "conflictBody": "حمّل النسخة الأحدث من الطلب ثم أعد إدخال التعديل قبل الحفظ.",
+    "unavailableTitle": "لا يمكن متابعة التسجيل",
+    "unavailableBody": "لم يكتمل التحقق المطلوب لإنشاء طلب مقدم العقار. ابدأ من اختيار النوع.",
+    "invalidRegistrationTitle": "انتهت صلاحية التحقق",
+    "invalidRegistrationBody": "أعد التحقق من البريد الإلكتروني قبل إنشاء طلب مقدم العقار.",
+    "duplicateRegistrationTitle": "يوجد طلب مقدم عقار بالفعل",
+    "duplicateRegistrationBody": "استخدم جلسة مقدم العقار الحالية لاستكمال الطلب بدل إنشاء طلب آخر.",
+    "unsupportedFieldNote": "يعتمد تسجيل الدخول على البريد الإلكتروني الموثق. لا نطلب كلمة مرور في هذا المسار.",
+    "missingFieldLabels": {
+      "accountOwnerFullName": "الاسم الكامل لصاحب الحساب",
+      "displayName": "اسم مقدم العقار",
+      "email": "البريد الإلكتروني",
+      "primaryLocationId": "الموقع الرئيسي",
+      "serviceAreaIds": "مناطق الخدمة",
+      "preferredLocale": "اللغة المفضلة",
+      "termsAcceptedAt": "الموافقة على الشروط",
+      "privacyAcceptedAt": "الموافقة على الخصوصية"
+    }
+  },
+  "provider_auth/copy#getProviderTypeCopy": {
+    "title": "اختر نوع مقدم العقار",
+    "description": "اختر النوع الذي يصف نشاطك العقاري للمتابعة إلى الحقول المناسبة.",
+    "optionsLabel": "أنواع مقدمي العقارات المتاحة",
+    "continueAction": "متابعة",
+    "backAction": "العودة إلى اختيار الحساب",
+    "guidanceTitle": "اختيارك يحدد الخطوة التالية",
+    "guidanceBody": "سنطلب في الخطوة التالية البيانات والوثائق المناسبة لنوع مقدم العقار الذي اخترته. تخضع الطلبات للمراجعة الإدارية قبل الموافقة.",
+    "options": {
+      "individual_broker": {
+        "title": "وسيط عقاري فردي",
+        "description": "للمهني العقاري الذي يعمل بصفته الفردية."
+      },
+      "brokerage_office": {
+        "title": "مكتب وساطة عقارية",
+        "description": "لمكتب الوساطة الذي يمثل نشاطًا تجاريًا."
+      },
+      "developer_company": {
+        "title": "شركة مطورة",
+        "description": "للشركة التي تطور وتدير مشروعات عقارية."
+      }
+    }
+  },
+  "provider_auth/documents-copy#getProviderDocumentsCopy": {
+    "stepLabel": "4 / 4",
+    "title": "المستندات المطلوبة",
+    "description": "ارفع المستندات الخاصة بالطلب. لن تظهر هذه الملفات للعامة.",
+    "requiredLabel": "مطلوب",
+    "optionalLabel": "اختياري",
+    "chooseFileAction": "اختيار ملف",
+    "replaceAction": "استبدال الملف",
+    "removeAction": "إزالة الملف",
+    "uploadingAction": "جارٍ الرفع",
+    "uploadedLabel": "تم الرفع",
+    "pendingReviewLabel": "في انتظار المراجعة",
+    "needsReplacementLabel": "مطلوب استبدال الملف",
+    "approvedLabel": "تمت الموافقة",
+    "rejectedLabel": "تم رفض الملف",
+    "securityPendingLabel": "فحص الأمان قيد التنفيذ",
+    "securityCleanLabel": "اجتاز فحص الأمان",
+    "securityFailedLabel": "تعذر إكمال فحص الأمان",
+    "requirementsTitle": "متطلبات المستندات",
+    "requirementsBody": "تحدد متطلبات المستندات من لقطة المتطلبات التي يرسلها الخادم.",
+    "privacyNote": "المستندات خاصة ومحمية بصلاحية حديثة. لا يتم إنشاء روابط عامة دائمة.",
+    "emptyTitle": "متطلبات المستندات غير متاحة",
+    "emptyBody": "لا يمكن عرض بطاقات الرفع حتى يرسل الخادم لقطة المتطلبات الحالية.",
+    "permissionTitle": "لا يمكن تعديل المستندات",
+    "permissionBody": "تأكد من أن طلب مقدم الخدمة ما زال قابلاً للتعديل.",
+    "notFoundTitle": "الطلب غير متاح",
+    "notFoundBody": "لا يمكن العثور على طلب مقدم الخدمة الحالي.",
+    "networkTitle": "تعذر الاتصال",
+    "networkBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "unavailableTitle": "المستندات غير متاحة الآن",
+    "unavailableBody": "حاول مرة أخرى دون عرض أي بيانات أو روابط خاصة.",
+    "uploadErrorTitle": "تعذر رفع الملف",
+    "uploadErrorBody": "راجع الملف وحاول مرة أخرى.",
+    "fileTooLargeTitle": "الملف كبير جدًا",
+    "fileTooLargeBody": "يجب ألا يتجاوز الملف 10 ميجابايت.",
+    "fileTypeTitle": "نوع الملف غير مدعوم",
+    "fileTypeBody": "استخدم PDF أو JPG أو PNG فقط.",
+    "invalidFileTitle": "الملف غير صالح",
+    "invalidFileBody": "اختر ملفًا غير فارغ بالامتداد الصحيح.",
+    "retryAction": "إعادة المحاولة",
+    "backAction": "رجوع",
+    "reviewAction": "مراجعة الطلب",
+    "reviewUnavailableTitle": "لا يمكن الانتقال للمراجعة",
+    "reviewUnavailableBody": "اكتمل البيانات والمستندات المطلوبة أوحدث الطلب قبل المتابعة.",
+    "noPublicUrlNote": "لا تعرض الواجهة عنوان التخزين أو رابط تنزيل دائم.",
+    "categoryLabels": {
+      "government_id_front": "الهوية الحكومية - الوجه الأمامي",
+      "government_id_back": "الهوية الحكومية - الوجه الخلفي",
+      "broker_license": "ترخيص الوساطة",
+      "professional_membership": "عضوية مهنية",
+      "commercial_registration": "السجل التجاري",
+      "tax_card": "البطاقة الضريبية",
+      "authorized_representative_id_front": "هوية الممثل المفوض - الوجه الأمامي",
+      "authorized_representative_id_back": "هوية الممثل المفوض - الوجه الخلفي",
+      "authorization_letter": "خطاب التفويض",
+      "brokerage_license": "ترخيص المكتب",
+      "company_profile": "ملف الشركة",
+      "developer_license": "ترخيص المطور",
+      "additional_supporting_document": "مستند داعم إضافي"
+    }
+  },
+  "provider_auth/organization-copy#getProviderOrganizationCopy": {
+    "stepLabel": "3 / 4",
+    "businessTitle": "بيانات المكتب العقاري",
+    "businessDescription": "أضف بيانات المكتب المسجلة كما هي في المستندات الرسمية.",
+    "companyTitle": "بيانات شركة التطوير",
+    "companyDescription": "أضف بيانات الشركة المسجلة كما هي في المستندات الرسمية.",
+    "providerTypeLabel": "نوع مقدم الخدمة",
+    "legalBusinessNameLabel": "الاسم القانوني للمكتب",
+    "legalBusinessNamePlaceholder": "الاسم كما يظهر في السجل التجاري",
+    "tradeNameLabel": "الاسم التجاري",
+    "tradeNamePlaceholder": "الاسم المستخدم أمام العملاء",
+    "legalCompanyNameLabel": "الاسم القانوني للشركة",
+    "legalCompanyNamePlaceholder": "الاسم كما يظهر في المستندات الرسمية",
+    "brandNameLabel": "اسم العلامة التجارية",
+    "brandNamePlaceholder": "اسم العلامة إن وُجد",
+    "addressLabel": "العنوان الرئيسي",
+    "addressPlaceholder": "العنوان المسجل للنشاط",
+    "commercialRegistrationNumberLabel": "رقم السجل التجاري",
+    "commercialRegistrationNumberPlaceholder": "أدخل الرقم الرسمي",
+    "taxRegistrationNumberLabel": "رقم التسجيل الضريبي",
+    "taxRegistrationNumberPlaceholder": "أدخل الرقم الرسمي",
+    "authorizedRepresentativeFullNameLabel": "اسم الممثل المفوض",
+    "authorizedRepresentativeFullNamePlaceholder": "الاسم الكامل",
+    "authorizedRepresentativeTitleLabel": "صفة الممثل المفوض",
+    "authorizedRepresentativeTitlePlaceholder": "مثال: المدير المسؤول",
+    "authorityLabel": "هل يملك صاحب الحساب صلاحية مسجلة؟",
+    "authorityPlaceholder": "اختر الحالة",
+    "authorityYes": "نعم، الصلاحية مسجلة",
+    "authorityNo": "لا، أرفق خطاب التفويض",
+    "unsupportedFieldNote": "يتم حفظ الحقول المدعومة بالعقد الحالي فقط. ستظهر بيانات المناطق وأنواع العقارات عندما يوفرها العقد الخلفي الفعلي.",
+    "requirementsTitle": "متطلبات الخطوة",
+    "requirementsBody": "يمكنك حفظ مسودة الآن. ستظل الحقول غير المكتملة ظاهرة قبل الإرسال للمراجعة.",
+    "missingFieldLabels": {
+      "legalBusinessName": "الاسم القانوني للمكتب",
+      "tradeName": "الاسم التجاري",
+      "businessAddress": "العنوان الرئيسي",
+      "legalCompanyName": "الاسم القانوني للشركة",
+      "brandName": "اسم العلامة التجارية",
+      "headOfficeAddress": "العنوان الرئيسي",
+      "commercialRegistrationNumber": "رقم السجل التجاري",
+      "taxRegistrationNumber": "رقم التسجيل الضريبي",
+      "authorizedRepresentativeFullName": "اسم الممثل المفوض",
+      "authorizedRepresentativeTitle": "صفة الممثل المفوض",
+      "accountOwnerHasRegisteredAuthority": "صلاحية صاحب الحساب المسجلة"
+    },
+    "saveDraftAction": "حفظ المسودة",
+    "saveContinueAction": "حفظ ومتابعة",
+    "savingAction": "جارٍ الحفظ",
+    "savedTitle": "تم حفظ البيانات",
+    "savedBody": "يمكنك تعديل هذه البيانات قبل إرسال الطلب للمراجعة.",
+    "invalidFormTitle": "راجع البيانات",
+    "invalidFormBody": "أدخل قيمة صحيحة واحدة على الأقل قبل الحفظ.",
+    "notFoundTitle": "الطلب غير متاح",
+    "notFoundBody": "لا يمكن العثور على طلب مقدم الخدمة الحالي.",
+    "permissionTitle": "لا يمكن تعديل هذه الخطوة",
+    "permissionBody": "تأكد من تسجيل دخولك كمقدم الخدمة الصحيح وأن الطلب ما زال قابلاً للتعديل.",
+    "conflictTitle": "تغيرت المسودة",
+    "conflictBody": "أعد تحميل البيانات ثم حاول الحفظ مرة أخرى.",
+    "networkTitle": "تعذر الاتصال",
+    "networkBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "unavailableTitle": "تعذر حفظ البيانات",
+    "unavailableBody": "حاول مرة أخرى دون عرض أي بيانات حساسة.",
+    "retryAction": "إعادة المحاولة",
+    "backAction": "رجوع"
+  },
+  "provider_auth/review-copy#getProviderReviewCopy": {
+    "stepLabel": "5 / 5",
+    "title": "مراجعة وإرسال الطلب",
+    "description": "راجع بياناتك ومستنداتك قبل إرسال طلب مقدم الخدمة للمراجعة.",
+    "reviewTitle": "طلبك جاهز للمراجعة",
+    "reviewBody": "تأكد من صحة البيانات والمستندات. بعد الإرسال سيصبح الطلب قيد المراجعة ولا يمكن تعديل البيانات حتى يطلب الفريق معلومات إضافية.",
+    "applicationDetailsTitle": "بيانات الطلب",
+    "providerTypeLabel": "نوع الحساب",
+    "emailLabel": "البريد الإلكتروني",
+    "accountOwnerLabel": "مسؤول الحساب",
+    "displayNameLabel": "اسم العرض",
+    "organizationLabel": "المنشأة",
+    "addressLabel": "العنوان",
+    "documentsTitle": "المستندات",
+    "documentsCompleteLabel": "اكتملت المستندات المطلوبة",
+    "documentsIncompleteLabel": "توجد مستندات أو بيانات ناقصة",
+    "missingFieldsLabel": "البيانات الناقصة",
+    "missingDocumentsLabel": "المستندات الناقصة",
+    "submitAction": "إرسال طلب التسجيل",
+    "submittingAction": "جارٍ إرسال الطلب",
+    "submitUnavailableTitle": "لا يمكن إرسال الطلب الآن",
+    "submitUnavailableBody": "أكمل البيانات والمستندات المطلوبة أو حدّث الطلب ثم حاول مرة أخرى.",
+    "underReviewTitle": "حسابك قيد المراجعة",
+    "underReviewBody": "تم استلام طلبك بنجاح. سيراجع فريق عقارات السادات البيانات والمستندات قبل تفعيل الحساب.",
+    "trackingTitle": "متابعة حالة الطلب",
+    "trackingAction": "تتبع حالة الطلب",
+    "submittedStep": "تم إرسال الطلب",
+    "reviewStep": "مراجعة البيانات والمستندات",
+    "informationStep": "استكمال البيانات عند الحاجة",
+    "decisionStep": "القرار النهائي",
+    "currentStepLabel": "المرحلة الحالية",
+    "submittedAtLabel": "تاريخ الإرسال",
+    "updatedAtLabel": "آخر تحديث",
+    "applicationNumberLabel": "رقم الطلب",
+    "statusLabel": "الحالة",
+    "needsInformationTitle": "نحتاج إلى استكمال بعض البيانات",
+    "needsInformationBody": "راجع ملاحظات فريق عقارات السادات وحدّث البيانات أو المستندات المطلوبة قبل إعادة إرسال الطلب.",
+    "reviewReasonLabel": "ملاحظة فريق المراجعة",
+    "editApplicationAction": "تعديل الطلب",
+    "approvedTitle": "تم اعتماد حسابك",
+    "approvedBody": "تم اعتماد حساب مقدم الخدمة الخاص بك. يمكنك الآن الوصول إلى أدوات إدارة نشاطك على عقارات السادات.",
+    "openDashboardAction": "الانتقال إلى لوحة مقدم الخدمة",
+    "rejectedTitle": "لم تتم الموافقة على الطلب",
+    "rejectedBody": "حالة الطلب الحالية لا تسمح بإعادة الإرسال. تواصل مع الدعم لمعرفة الخطوة التالية.",
+    "suspendedTitle": "الحساب موقوف مؤقتًا",
+    "suspendedBody": "الوصول إلى أدوات مقدم الخدمة متوقف حاليًا. تواصل مع الدعم لمراجعة الحالة.",
+    "privacyNote": "تظهر لك فقط البيانات والملاحظات التي يسمح بها نطاق مقدم الخدمة. لا يتم عرض الملاحظات الداخلية أو بيانات التعيين أو سجلات التدقيق.",
+    "permissionTitle": "لا يمكن عرض حالة الطلب",
+    "permissionBody": "تأكد من تسجيل الدخول بحساب مقدم الخدمة الصحيح وأن الطلب ما زال متاحًا لك.",
+    "notFoundTitle": "الطلب غير متاح",
+    "notFoundBody": "تعذر العثور على طلب مقدم الخدمة الحالي.",
+    "networkTitle": "تعذر الاتصال",
+    "networkBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "unavailableTitle": "حالة الطلب غير متاحة",
+    "unavailableBody": "حاول مرة أخرى دون عرض بيانات غير مؤكدة.",
+    "emptyTitle": "لا توجد بيانات طلب",
+    "emptyBody": "ستظهر حالة الطلب بعد تحميل طلب مقدم الخدمة من الخادم.",
+    "retryAction": "إعادة المحاولة",
+    "backAction": "رجوع",
+    "homeAction": "العودة إلى الصفحة الرئيسية",
+    "supportAction": "التواصل مع الدعم",
+    "statusLabels": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "needs_information": "يحتاج إلى استكمال",
+      "approved": "تم الاعتماد",
+      "rejected": "غير معتمد",
+      "suspended": "موقوف مؤقتًا"
+    },
+    "providerTypeLabels": {
+      "individual_broker": "وسيط عقاري فردي",
+      "brokerage_office": "مكتب وساطة عقارية",
+      "developer_company": "شركة تطوير عقاري"
+    }
+  },
+  "provider_property/completion-copy#getProviderPropertyCompletionCopy": {
+    "steps": {
+      "media": "الصور والوسائط",
+      "contact": "التواصل",
+      "review": "المراجعة والإرسال"
+    },
+    "titles": {
+      "media": "الصور والوسائط",
+      "contact": "بيانات التواصل",
+      "review": "المراجعة والإرسال"
+    },
+    "descriptions": {
+      "media": "أضف صور العقار والمخطط من خلال مسار رفع الوسائط المعتمد.",
+      "contact": "حدد بيانات التواصل التي يدعمها عقد العقار الحالي.",
+      "review": "راجع ملخص المسودة وأرسلها للمراجعة عندما تسمح حالة الخادم بذلك."
+    },
+    "back": "السابق",
+    "saveDraft": "حفظ كمسودة",
+    "continue": "متابعة",
+    "saving": "جارٍ الحفظ…",
+    "saved": "تم حفظ المسودة.",
+    "validationTitle": "تحقق من البيانات",
+    "validationBody": "أكمل الحقول المطلوبة باستخدام قيم يقبلها العقد الحالي.",
+    "mutationError": "تعذر حفظ البيانات. تحقق من الاتصال وحاول مرة أخرى.",
+    "permissionBody": "لا يمكن تعديل هذه المسودة أو بياناتها من خلال الجلسة الحالية.",
+    "notFoundBody": "المسودة غير موجودة أو لا تنتمي إلى حساب المزود الحالي.",
+    "versionConflict": "تغيرت المسودة في جلسة أخرى. أعد تحميلها ثم حاول مرة أخرى.",
+    "media": {
+      "chooseImage": "اختيار صورة",
+      "chooseFloorPlan": "اختيار مخطط",
+      "imageKind": "صورة",
+      "floorPlanKind": "مخطط طابق",
+      "remove": "إزالة",
+      "makeCover": "تعيين كغلاف",
+      "moveUp": "تحريك لأعلى",
+      "moveDown": "تحريك لأسفل",
+      "upload": "رفع الملف",
+      "uploading": "جارٍ الرفع…",
+      "count": "عدد الوسائط",
+      "emptyTitle": "لم يتم رفع وسائط بعد",
+      "emptyBody": "أضف صورة أو مخططاً من الملفات المعتمدة.",
+      "existingUnavailableTitle": "قائمة الوسائط السابقة غير متاحة في العقد الحالي",
+      "existingUnavailableBody": "يعرض هذا المحرر الوسائط التي تم رفعها خلال الجلسة الحالية فقط؛ لا يتم اختلاق روابط أو بيانات لوسائط سابقة.",
+      "acceptedTypes": "الأنواع المدعومة: JPG وPNG للصور، وPDF للمخططات. الحد الأقصى 10 ميجابايت للملف.",
+      "privacyNote": "الوسائط الخاصة تمر عبر تخزين مؤقت مصرح به. لن يتم عرض مفتاح تخزين أو رابط عام دائم.",
+      "invalidFileTitle": "الملف غير صالح",
+      "invalidFileBody": "اختر ملفاً غير فارغ بامتداد ونوع مدعومين.",
+      "tooLargeTitle": "الملف كبير جداً",
+      "tooLargeBody": "يجب ألا يتجاوز الملف 10 ميجابايت.",
+      "uploadErrorTitle": "تعذر رفع الملف",
+      "uploadErrorBody": "تعذر إكمال الرفع. يمكنك المحاولة مرة أخرى.",
+      "storageUnavailableTitle": "خدمة الوسائط غير متاحة مؤقتاً",
+      "storageUnavailableBody": "لا يمكن إكمال الرفع حتى تصبح خدمة التخزين والفحص متاحة.",
+      "permissionTitle": "لا توجد صلاحية للرفع",
+      "permissionBody": "لا يمكن رفع وسائط لهذه المسودة أو للجلسة الحالية.",
+      "versionConflictTitle": "تعارض في نسخة الوسائط",
+      "versionConflictBody": "تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة."
+    },
+    "contact": {
+      "contactName": "اسم مسؤول التواصل",
+      "phone": "رقم الهاتف",
+      "whatsapp": "رقم واتساب",
+      "email": "البريد الإلكتروني",
+      "preferredLocale": "لغة التواصل",
+      "contactNamePlaceholder": "الاسم الكامل",
+      "phonePlaceholder": "+201234567890",
+      "whatsappPlaceholder": "+201234567891",
+      "emailPlaceholder": "example@domain.com",
+      "preferredLocaleLabels": {
+        "ar": "العربية",
+        "en": "English"
+      },
+      "supportedFieldsTitle": "الحقول المدعومة",
+      "supportedFieldsBody": "يتم إرسال الاسم وأرقام الهاتف والبريد واللغة فقط وفق عقد التواصل الحالي.",
+      "internalNotesTitle": "الملاحظات الداخلية غير متاحة",
+      "internalNotesBody": "لا يدعم العقد الحالي ملاحظات داخلية أو بيانات تشغيلية، لذلك لا يتم عرضها أو إرسالها."
+    },
+    "review": {
+      "submit": "إرسال العقار للمراجعة",
+      "submitting": "جارٍ الإرسال…",
+      "save": "حفظ كمسودة",
+      "requiredConfirmationsTitle": "التأكيدات المطلوبة",
+      "accurateData": "أقر بأن بيانات العقار المدخلة دقيقة.",
+      "authority": "أقر بأن لدي الصلاحية لعرض هذا العقار وتسويقه.",
+      "reviewProcess": "أوافق على مراجعة فريق سادات للعقار قبل النشر.",
+      "missingTitle": "لا يمكن الإرسال بعد",
+      "missingBody": "أكمل المتطلبات التي يحددها الخادم قبل الإرسال.",
+      "location": "الموقع",
+      "price": "السعر",
+      "contact": "بيانات التواصل",
+      "status": "الحالة",
+      "media": "الصور",
+      "noMedia": "لا توجد وسائط مرفوعة في هذه الجلسة",
+      "mediaCount": "وسائط مرفوعة",
+      "reviewReason": "سبب الإرسال",
+      "submittedTitle": "تم إرسال المسودة للمراجعة",
+      "submittedBody": "استلم الخادم طلب المراجعة. ستظهر الحالة التالية عند توفرها من الخادم.",
+      "submittedStatus": "قيد المراجعة",
+      "notSubmittableTitle": "الإرسال غير متاح",
+      "notSubmittableBody": "تسمح حالة الخادم الحالية بالحفظ فقط.",
+      "safeProjectionTitle": "ملخص آمن",
+      "safeProjectionBody": "يعرض هذا الملخص بيانات العقار التي يسمح بها عقد المزود فقط، ولا يعرض ملاحظات الإدارة أو التعيينات أو بيانات التدقيق."
+    }
+  },
+  "provider_property/copy#getProviderPropertyCopy": {
+    "navLabel": "إدارة العقارات",
+    "wizard": {
+      "eyebrow": "إضافة عقار",
+      "basicTitle": "البيانات الأساسية",
+      "basicDescription": "أدخل البيانات التي يدعمها عقد إنشاء مسودة العقار الحالي.",
+      "locationTitle": "الموقع",
+      "locationDescription": "اربط المسودة بموقع رئيسي نشط أو أضف إحداثيات تقريبية.",
+      "steps": {
+        "basic": "البيانات الأساسية",
+        "location": "الموقع"
+      },
+      "labels": {
+        "name": "اسم العقار",
+        "slug": "المعرّف المختصر",
+        "kind": "نوع السجل",
+        "transaction": "نوع المعاملة",
+        "sourceType": "نوع مصدر العقار",
+        "organizationId": "معرّف المؤسسة",
+        "projectId": "معرّف المشروع",
+        "parentPropertyId": "معرّف العقار الأب",
+        "reason": "سبب حفظ المسودة",
+        "locationId": "معرّف الموقع الرئيسي",
+        "mapUrl": "رابط موقع الخريطة",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول"
+      },
+      "placeholders": {
+        "name": "مثال: شقة في مدينة السادات",
+        "slug": "apartment-sadat-city",
+        "organizationId": "24 حرفاً سداسياً عشرينياً",
+        "projectId": "اختياري",
+        "parentPropertyId": "مطلوب للوحدة إن لم يوجد مشروع",
+        "reason": "حفظ البيانات الأساسية",
+        "locationId": "24 حرفاً سداسياً عشرينياً",
+        "mapUrl": "https://maps.example.com/…",
+        "latitude": "30.62",
+        "longitude": "30.74"
+      },
+      "sourceTypeLabels": {
+        "individual_broker": "وسيط فردي",
+        "brokerage_office": "مكتب وساطة",
+        "developer_company": "شركة مطوّرة"
+      },
+      "kindLabels": {
+        "property": "عقار",
+        "unit": "وحدة"
+      },
+      "transactionLabels": {
+        "sale": "بيع",
+        "rent": "إيجار"
+      },
+      "statusLabels": {
+        "draft": "مسودة",
+        "pending_review": "قيد المراجعة",
+        "needs_changes": "تحتاج تعديلات",
+        "approved": "معتمدة",
+        "published": "منشورة",
+        "rejected": "مرفوضة",
+        "hidden": "مخفية",
+        "archived": "مؤرشفة"
+      },
+      "saveDraft": "حفظ المسودة",
+      "continue": "متابعة",
+      "back": "رجوع",
+      "saved": "تم حفظ المسودة.",
+      "saving": "جارٍ الحفظ…",
+      "validationTitle": "تحقق من البيانات",
+      "validationBody": "أكمل الحقول المطلوبة واستخدم القيم التي يقبلها العقد.",
+      "mutationError": "تعذر حفظ المسودة. تحقق من الاتصال وحاول مرة أخرى.",
+      "locationCatalogUnavailableTitle": "دليل المواقع غير متاح للمزوّد حالياً",
+      "locationCatalogUnavailableBody": "لا يعرض العقد الحالي قائمة مواقع للمزوّد. لن نستخدم مسار الإدارة أو بيانات غير معتمدة؛ استخدم معرّف موقع نشطاً من المصدر المصرح به أو الإحداثيات.",
+      "locationCatalogLoading": "جارٍ تحميل المناطق…",
+      "locationCatalogEmptyTitle": "لا توجد مناطق نشطة",
+      "locationCatalogEmptyBody": "أضف منطقة نشطة من لوحة الإدارة أو استخدم الإحداثيات لحين توفرها.",
+      "locationSearchLabel": "البحث عن المنطقة",
+      "locationSearchPlaceholder": "اكتب اسم المدينة أو المنطقة",
+      "locationSelectPlaceholder": "اختر المنطقة",
+      "contractBoundaryTitle": "حقول غير مدعومة حالياً",
+      "contractBoundaryBody": "حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.",
+      "coordinateHelp": "يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.",
+      "sourceHelp": "يتم أخذ هوية المزوّد من جلسة الدخول ولا يمكن تعديلها من النموذج.",
+      "notFoundTitle": "المسودة غير موجودة",
+      "notFoundBody": "لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.",
+      "unavailable": "غير متاح"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم تحميل بيانات مسودة العقار."
+      },
+      "error": {
+        "title": "تعذر تحميل المسودة",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "المسودة غير متاحة مؤقتاً",
+        "body": "يمكنك إعادة المحاولة عند توفر اتصال صالح."
+      },
+      "permission": {
+        "title": "يلزم التحقق من الصلاحية",
+        "body": "لا يتم عرض بيانات العقار المحمية قبل تحقق جلسة المزوّد."
+      },
+      "not_found": {
+        "title": "المسودة غير موجودة",
+        "body": "لا توجد مسودة متاحة بهذه الهوية ضمن حساب المزوّد."
+      },
+      "success": {
+        "title": "بيانات المسودة جاهزة",
+        "body": "يمكنك متابعة حفظ بيانات العقار."
+      }
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "provider_property/state-copy#getProviderPropertyStateCopy": {
+    "validation": {
+      "title": "العقار بحاجة إلى إجراء تعديلات",
+      "body": "راجع المتطلبات التالية وأكمل بيانات العقار قبل الإرسال.",
+      "reasonLabel": "سبب المراجعة",
+      "reasonUnavailable": "لم يرسل الخادم سببًا إضافيًا للمراجعة.",
+      "issueLabels": {
+        "location": "الموقع",
+        "price": "السعر",
+        "contact": "بيانات التواصل",
+        "status": "الحالة"
+      },
+      "back": "العودة إلى العقارات",
+      "edit": "إجراء التعديل",
+      "editUnavailable": "الإجراء غير متاح من حالة الخادم الحالية.",
+      "safeTitle": "ملخص آمن",
+      "safeBody": "يعرض هذا الملخص بيانات العقار المسموح بها لمقدم الخدمة فقط، ولا يعرض ملاحظات الإدارة أو التعيينات أو بيانات التدقيق."
+    },
+    "statuses": {
+      "pending_review": {
+        "title": "تم إرسال العقار للمراجعة",
+        "body": "سيراجع فريق عقارات السادات بيانات العقار في أقرب وقت ممكن، وسيتم إشعارك بالنتيجة.",
+        "reasonLabel": "سبب الإرسال",
+        "reasonUnavailable": "لم يرسل الخادم سببًا إضافيًا."
+      },
+      "rejected": {
+        "title": "لم يتم اعتماد العقار",
+        "body": "لم يستوف هذا العقار معايير الإدارة في المراجعة الحالية.",
+        "reasonLabel": "سبب الرفض",
+        "reasonUnavailable": "لم يرسل الخادم سببًا للقرار."
+      },
+      "approved": {
+        "title": "تم اعتماد العقار",
+        "body": "تم اعتماد العقار من فريق المراجعة، ولم يقدّم الخادم إجراء نشر لمقدم الخدمة.",
+        "reasonLabel": "سبب الاعتماد",
+        "reasonUnavailable": "لم يرسل الخادم سببًا إضافيًا."
+      },
+      "published": {
+        "title": "تم نشر العقار",
+        "body": "العقار متاح للعرض العام على منصة عقارات السادات.",
+        "reasonLabel": "آخر سبب للمراجعة",
+        "reasonUnavailable": "لم يرسل الخادم سببًا إضافيًا."
+      },
+      "hidden": {
+        "title": "العقار غير ظاهر حاليًا",
+        "body": "العقار محفوظ في حسابك لكنه غير متاح للعرض العام وفق حالته الحالية.",
+        "reasonLabel": "سبب الحالة",
+        "reasonUnavailable": "لم يرسل الخادم سببًا إضافيًا."
+      }
+    },
+    "labels": {
+      "reference": "المرجع",
+      "submittedAt": "تاريخ الإرسال",
+      "reviewedAt": "تاريخ المراجعة",
+      "status": "الحالة",
+      "views": "المشاهدات",
+      "unavailable": "غير متاح",
+      "safeTitle": "بيانات آمنة",
+      "safeBody": "يظهر هذا العرض فقط بيانات عقد العقار المسموح بها لمقدم الخدمة."
+    },
+    "actions": {
+      "back": "العودة إلى عقاراتي",
+      "viewProperty": "عرض العقار",
+      "viewPublic": "عرض الصفحة العامة",
+      "supportUnavailable": "لا يتوفر مسار دعم في العقد الحالي.",
+      "retry": "إعادة المحاولة"
+    }
+  },
+  "provider_property/steps-copy#getProviderPropertyAdvancedCopy": {
+    "titles": {
+      "details": "تفاصيل العقار",
+      "price-payment": "السعر والسداد",
+      "features-services": "المميزات والخدمات"
+    },
+    "descriptions": {
+      "details": "أدخل المساحات والتقسيم الداخلي والوصف المدعوم في مسودة العقار.",
+      "price-payment": "أدخل السعر وخطة السداد كما يسمح بها العقد الحالي.",
+      "features-services": "احفظ مراجع المميزات والخدمات المعتمدة المرتبطة بالعقار."
+    },
+    "steps": {
+      "details": "تفاصيل العقار",
+      "price-payment": "السعر والسداد",
+      "features-services": "المميزات والخدمات"
+    },
+    "labels": {
+      "description": "وصف العقار",
+      "propertyTypeId": "معرّف نوع العقار",
+      "deliveryStatus": "حالة التسليم",
+      "area": "المساحة (م²)",
+      "bedrooms": "عدد غرف النوم",
+      "bathrooms": "عدد دورات المياه",
+      "floor": "الطابق",
+      "totalFloors": "إجمالي الطوابق",
+      "priceAmount": "السعر الإجمالي",
+      "currency": "العملة",
+      "paymentPlan": "خطة سداد",
+      "planName": "اسم الخطة",
+      "installments": "عدد الأقساط",
+      "frequency": "دورية السداد",
+      "downPaymentAmount": "الدفعة المقدمة",
+      "installmentAmount": "قيمة القسط",
+      "featureIds": "مراجع المميزات",
+      "serviceIds": "مراجع الخدمات"
+    },
+    "placeholders": {
+      "description": "اكتب وصفاً واضحاً للعقار...",
+      "propertyTypeId": "24 حرفاً سداسياً عشرينياً",
+      "area": "مثال: 120",
+      "bedrooms": "0",
+      "bathrooms": "0",
+      "floor": "0",
+      "totalFloors": "1",
+      "priceAmount": "مثال: 1000000",
+      "currency": "EGP",
+      "planName": "خطة تقسيط",
+      "installments": "12",
+      "downPaymentAmount": "اختياري",
+      "installmentAmount": "مثال: 80000",
+      "featureIds": "مراجع سداسية عشرية مفصولة بفواصل",
+      "serviceIds": "مراجع سداسية عشرية مفصولة بفواصل"
+    },
+    "frequencyLabels": {
+      "monthly": "شهري",
+      "quarterly": "ربع سنوي",
+      "annually": "سنوي"
+    },
+    "propertyTypeCatalogUnavailableTitle": "دليل أنواع العقارات غير متاح للمزوّد حالياً",
+    "propertyTypeCatalogUnavailableBody": "لا يعرض العقد الحالي قائمة أنواع للمزوّد. لن نستخدم مسار الإدارة أو نخترع نوعاً؛ يمكن الاحتفاظ بمرجع موجود أو إدخال مرجع معتمد من مصدر مصرح به.",
+    "propertyTypeCatalogLoading": "جارٍ تحميل أنواع العقارات…",
+    "propertyTypeCatalogEmptyTitle": "لا توجد أنواع عقارات نشطة",
+    "propertyTypeCatalogEmptyBody": "أضف نوع عقار نشطًا من لوحة الإدارة ليظهر هنا.",
+    "propertyTypeSelectPlaceholder": "اختر نوع العقار",
+    "featureCatalogUnavailableTitle": "دليل المميزات غير متاح للمزوّد حالياً",
+    "featureCatalogUnavailableBody": "لا يوجد مسار مزوّد لعرض المميزات المعتمدة. لن نستخدم بيانات الإدارة أو أسماء وهمية؛ احفظ مراجع معتمدة فقط.",
+    "serviceCatalogUnavailableTitle": "دليل الخدمات غير متاح للمزوّد حالياً",
+    "serviceCatalogUnavailableBody": "لا يوجد مسار مزوّد لعرض الخدمات المعتمدة. لن نستخدم بيانات الإدارة أو أسماء وهمية؛ احفظ مراجع معتمدة فقط.",
+    "referenceHelp": "استخدم مراجع سداسية عشرية من مصدر معتمد فقط. سيتم التحقق من الشكل والتكرار والتداخل قبل الإرسال.",
+    "paymentPlanHelp": "يجب أن تطابق عملة الخطة عملة السعر. لا يتم عرض عمولة عامة أو قيمة تمويل غير صادرة من الخادم.",
+    "commissionBoundaryTitle": "العمولة يحددها النظام",
+    "commissionBoundaryBody": "لا يعرض هذا النموذج نسبة عمولة مفترضة أو سعراً عاماً. أي سياسة فعالة يجب أن تأتي من بيانات المنصة المعتمدة.",
+    "commissionTitle": "عمولة عقارات السادات",
+    "commissionLoading": "جارٍ تحميل سياسة العمولة…",
+    "commissionError": "تعذر تحميل سياسة العمولة الحالية.",
+    "commissionNone": "لا توجد سياسة عمولة مطبقة على هذا الحساب حالياً.",
+    "commissionSource": "مصدر السياسة",
+    "commissionKind": "نوع الحساب",
+    "commissionValue": "القيمة",
+    "commissionEffective": "تاريخ السريان",
+    "commissionVersion": "إصدار السياسة",
+    "commissionExempt": "معفى",
+    "commissionSources": {
+      "exception": "استثناء",
+      "account_override": "تخصيص الحساب",
+      "policy": "السياسة العامة"
+    },
+    "commissionKinds": {
+      "percentage": "نسبة مئوية",
+      "fixed": "قيمة ثابتة",
+      "exempt": "معفى"
+    },
+    "invalidReference": "تحقق من مراجع المميزات والخدمات؛ كل مرجع يجب أن يكون 24 حرفاً سداسياً عشرياً وفريداً.",
+    "versionConflict": "تغيرت المسودة منذ تحميلها. أعد تحميلها قبل حفظ تعديلاتك."
+  },
+  "public/compare-copy#getPublicPropertyComparisonCopy": {
+    "title": "مقارنة الوحدات",
+    "description": "قارن بين تفاصيل وحدتين واختر الأنسب لاحتياجاتك.",
+    "showAll": "إظهار كل التفاصيل",
+    "showDifferences": "إظهار الاختلافات فقط",
+    "viewModeLabel": "طريقة عرض المقارنة",
+    "addAnotherUnit": "+ إضافة وحدة أخرى",
+    "fieldColumn": "البيان",
+    "detailsTitle": "تفاصيل المقارنة",
+    "basicTitle": "البيانات الأساسية",
+    "priceTitle": "السعر والدفع",
+    "dimensionsTitle": "المساحات والتقسيم",
+    "locationTitle": "الموقع",
+    "remove": "إزالة",
+    "viewDetails": "عرض التفاصيل",
+    "clearAll": "مسح الكل والعودة للبحث",
+    "clearShort": "مسح",
+    "compareNow": "قارن الآن",
+    "backToProperties": "تصفح العقارات",
+    "property": "عقار",
+    "propertyType": "نوع العقار",
+    "unit": "وحدة",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "valueUnavailable": "غير متاح",
+    "imageUnavailable": "الصورة غير متاحة",
+    "noDifferences": "لا توجد اختلافات في الحقول المتاحة.",
+    "loadingTitle": "جارٍ تحميل المقارنة",
+    "loadingBody": "نجهز البيانات المنشورة للعقارات المحددة.",
+    "emptyTitle": "اختر عقارات للمقارنة",
+    "emptyBody": "أضف عقارًا واحدًا أو عقارين من نتائج البحث لعرض الحقول المتاحة.",
+    "errorTitle": "تعذر تحميل المقارنة",
+    "errorBody": "تحقق من الاتصال ثم حاول مرة أخرى.",
+    "retryTitle": "خدمة المقارنة غير متاحة مؤقتًا",
+    "retryBody": "يمكنك المحاولة مرة أخرى بعد عودة الاتصال.",
+    "retryLabel": "إعادة المحاولة",
+    "permissionTitle": "المقارنة غير متاحة",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى المقارنة العامة.",
+    "permissionLink": "العودة إلى الرئيسية",
+    "unavailableTitle": "أحد العقارات لم يعد متاحًا",
+    "unavailableBody": "تم تحديث البيانات المنشورة. ارجع إلى النتائج واختر عقارات متاحة للمقارنة.",
+    "name": "اسم العقار",
+    "transactionType": "نوع المعاملة",
+    "sourceName": "مقدم العقار",
+    "sourceType": "نوع مقدم العقار",
+    "project": "المشروع",
+    "developer": "المطور العقاري",
+    "reference": "الرقم المرجعي",
+    "price": "السعر",
+    "installment": "التقسيط",
+    "available": "متاح",
+    "area": "المساحة الإجمالية",
+    "layout": "التقسيم",
+    "bedrooms": "غرف النوم",
+    "bathrooms": "الحمامات",
+    "floor": "الدور",
+    "deliveryStatus": "حالة التشطيب",
+    "location": "الموقع",
+    "developerCompany": "شركة تطوير عقاري",
+    "brokerageOffice": "مكتب وساطة عقارية",
+    "individualBroker": "وسيط عقاري",
+    "sqm": "م²",
+    "footerDescription": "مقارنة آمنة لبيانات العقارات المنشورة من مصادر معتمدة.",
+    "footerLinks": "روابط المنصة"
+  },
+  "public/copy#getPublicHomepageCopy": {
+    "brand": "عقارات السادات",
+    "nav": {
+      "home": "الرئيسية",
+      "properties": "العقارات",
+      "developers": "المطورون",
+      "articles": "المقالات",
+      "community": "المجتمع",
+      "about": "عن المنصة",
+      "team": "فريقنا"
+    },
+    "login": "تسجيل الدخول",
+    "createAccount": "إنشاء حساب",
+    "localeLabel": "اللغة",
+    "heroLabel": "🏙️ بوابتك لعقارات مدينة السادات",
+    "heroFallbackTitle": "ابحث عن عقارك\nالان في السادات",
+    "heroFallbackBody": "منصة متكاملة لعقارات وخدمات مدينة السادات",
+    "searchLabel": "ابحث عن عقار",
+    "searchPlaceholder": "اكتب اسم العقار أو الكلمة المفتاحية",
+    "searchAction": "بحث",
+    "browseProperties": "تصفح العقارات",
+    "featuredProperties": "عقارات منشورة",
+    "categoryEyebrow": "اكتشف أكثر",
+    "categoryTitle": "فئات العقارات",
+    "categoryDescription": "تصفح جميع أنواع العقارات المتاحة في مدينة السادات",
+    "propertiesEyebrow": "عقارات مختارة",
+    "propertiesTitle": "أبرز العقارات المميزة",
+    "articlesEyebrow": "معرفة عقارية",
+    "articlesTitle": "أحدث المقالات",
+    "communityEyebrow": "مجتمع السادات",
+    "communityTitle": "آراء وتجارب السكان",
+    "communityAction": "انضم للمجتمع",
+    "communityQuestion": "سؤال",
+    "communityExperience": "تجربة",
+    "aboutEyebrow": "من نحن",
+    "aboutTitle": "منصة متكاملة لعقارات مدينة السادات",
+    "developers": "المطورون والشركات",
+    "articles": "المقالات",
+    "community": "المجتمع",
+    "about": "عن المنصة",
+    "tips": "نصائح عقارية",
+    "readyCtaTitle": "مستعد تبدأ رحلتك العقارية؟",
+    "readyCtaBody": "فريقنا جاهز لمساعدتك في العثور على العقار المثالي",
+    "whatsappAction": "تواصل واتساب",
+    "discoverProject": "اكتشف المشروع",
+    "viewAll": "عرض الكل",
+    "readMore": "اقرأ المزيد",
+    "sale": "للبيع",
+    "rent": "للإيجار",
+    "area": "المساحة",
+    "bedrooms": "غرف النوم",
+    "bathrooms": "الحمامات",
+    "floor": "الطابق",
+    "sqm": "م²",
+    "imageUnavailable": "الصورة غير متاحة",
+    "emptyTitle": "لا توجد بيانات منشورة بعد",
+    "emptyBody": "ستظهر محتويات الصفحة الرئيسية عند توفر بيانات منشورة من نظام إدارة المحتوى.",
+    "loadingTitle": "جارٍ تحميل الصفحة الرئيسية",
+    "loadingBody": "يتم تجهيز المحتوى المنشور.",
+    "errorTitle": "تعذر تحميل الصفحة الرئيسية",
+    "errorBody": "تحقق من الاتصال أو حاول مرة أخرى لاحقًا.",
+    "retryTitle": "تعذر الاتصال بالمحتوى",
+    "retryBody": "يمكنك إعادة المحاولة عند توفر الاتصال.",
+    "retryLabel": "إعادة المحاولة",
+    "permissionTitle": "لا يمكن عرض هذا المحتوى",
+    "permissionBody": "رفض الخادم الوصول إلى محتوى الصفحة الرئيسية.",
+    "permissionLink": "العودة إلى الصفحة العامة",
+    "footerDescription": "بوابتك الموثوقة لعقارات مدينة السادات",
+    "footerLinks": "روابط المنصة"
+  },
+  "public/details-copy#getPublicPropertyDetailsCopy": {
+    "backToResults": "العودة إلى النتائج",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "property": "عقار",
+    "unit": "وحدة",
+    "code": "الكود",
+    "price": "السعر",
+    "area": "المساحة",
+    "bedrooms": "الغرف",
+    "bathrooms": "الحمامات",
+    "floor": "الدور",
+    "sqm": "م²",
+    "galleryTitle": "صور العقار",
+    "imageUnavailable": "الصورة غير متاحة",
+    "mediaUnavailable": "لا تتوفر وسائط عامة لهذا العقار حالياً.",
+    "sourceTitle": "مصدر هذا العقار",
+    "publishedSource": "مصدر منشور معتمد",
+    "sourceTypes": {
+      "individual_broker": "وسيط عقاري فردي",
+      "brokerage_office": "مكتب وساطة عقارية",
+      "developer_company": "شركة تطوير عقاري"
+    },
+    "projectTitle": "المشروع والمطور",
+    "projectUnavailable": "لا يوجد مشروع منشور مرتبط بهذا العقار.",
+    "projectDescription": "نبذة عن المشروع",
+    "descriptionTitle": "وصف العقار",
+    "noDescription": "لا يوجد وصف منشور لهذا العقار.",
+    "relatedTitle": "عقارات مشابهة",
+    "openMap": "فتح الموقع على الخريطة",
+    "contactTitle": "استفسر عن هذا العقار",
+    "contactBody": "أرسل طلب تواصل من خلال حساب الباحث عن عقار.",
+    "messageLabel": "رسالتك",
+    "messagePlaceholder": "اكتب سؤالك أو التفاصيل التي تريد معرفتها",
+    "submitContact": "أرسل الطلب",
+    "requestViewing": "طلب معاينة",
+    "viewingTitle": "طلب معاينة العقار",
+    "viewingBody": "اختر الوقت المناسب وسيراجع الفريق طلبك.",
+    "requestedAt": "التاريخ والوقت",
+    "timezone": "المنطقة الزمنية",
+    "timezonePlaceholder": "مثال: Africa/Cairo",
+    "note": "ملاحظة إضافية",
+    "notePlaceholder": "أي تفاصيل تساعد الفريق",
+    "submitViewing": "إرسال طلب المعاينة",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "contactValidation": "اكتب رسالة قبل إرسال الطلب.",
+    "viewingValidation": "أدخل وقتاً مستقبلياً ومنطقة زمنية صحيحة.",
+    "actionLoading": "جارٍ الإرسال",
+    "actionSuccessTitle": "تم إرسال الطلب",
+    "actionSuccessBody": "تم حفظ طلبك في النظام للمراجعة.",
+    "actionPermissionTitle": "يلزم تسجيل الدخول",
+    "actionPermissionBody": "سجّل الدخول بحساب باحث عن عقار لإرسال الطلب.",
+    "actionPermissionLink": "تسجيل الدخول",
+    "actionErrorTitle": "تعذر إرسال الطلب",
+    "actionErrorBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "retryLabel": "إعادة المحاولة",
+    "loadingTitle": "جارٍ تحميل تفاصيل العقار",
+    "loadingBody": "يتم تجهيز البيانات المنشورة.",
+    "emptyTitle": "لا توجد تفاصيل متاحة",
+    "emptyBody": "لا تتوفر تفاصيل منشورة لهذا العقار حالياً.",
+    "errorTitle": "تعذر تحميل تفاصيل العقار",
+    "errorBody": "تحقق من الرابط والاتصال ثم حاول مرة أخرى.",
+    "retryTitle": "خدمة العقار غير متاحة مؤقتاً",
+    "retryBody": "يمكنك إعادة المحاولة عند توفر الاتصال.",
+    "permissionTitle": "لا يمكن عرض هذه التفاصيل",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى تفاصيل العقار العامة.",
+    "permissionLink": "العودة إلى الصفحة الرئيسية",
+    "notFoundTitle": "العقار غير موجود",
+    "notFoundBody": "ربما تم إخفاء العقار أو لم يعد منشوراً.",
+    "notFoundLink": "تصفح العقارات"
+  },
+  "public/developers-copy#getPublicDevelopersCopy": {
+    "introEyebrow": "شركاء الثقة",
+    "title": "المطورون والشركات العقارية",
+    "subtitle": "أبرز المطورين العاملين في مدينة السادات",
+    "searchLabel": "البحث في الجهات",
+    "searchPlaceholder": "اسم الجهة أو المعرّف المختصر",
+    "searchAction": "بحث",
+    "resetFilters": "إعادة ضبط",
+    "kindLabel": "نوع الجهة",
+    "allKinds": "كل الجهات",
+    "developerCompany": "شركة مطوّرة",
+    "brokerageOffice": "مكتب وساطة",
+    "sortLabel": "ترتيب النتائج",
+    "sortName": "الاسم",
+    "sortSlug": "المعرّف المختصر",
+    "directionLabel": "اتجاه الترتيب",
+    "ascending": "تصاعدي",
+    "descending": "تنازلي",
+    "verified": "موثق",
+    "projects": "المشروعات",
+    "properties": "العقارات المنشورة",
+    "locationsLabel": "المواقع",
+    "openProfile": "عرض المطور",
+    "backToDirectory": "العودة للمطورين",
+    "profileOverview": "نبذة",
+    "profileProjects": "المشاريع",
+    "projectsSectionTitle": "مشاريع المطور",
+    "profileProperties": "الوحدات المتاحة",
+    "profileKind": "نوع الجهة",
+    "profileContact": "التواصل",
+    "profileContactUnavailable": "بيانات التواصل العامة غير متاحة في هذا الملف حالياً.",
+    "contactDeveloper": "تواصل مع المطور",
+    "availableUnitsAction": "عرض الوحدات المتاحة",
+    "activitySummary": "ملخص نشاط المطور",
+    "availableUnits": "وحدة متاحة",
+    "totalUnits": "إجمالي الوحدات",
+    "soldUnits": "وحدة مباعة",
+    "reservedUnits": "وحدة محجوزة",
+    "activeAreas": "مناطق النشاط",
+    "lastUpdated": "آخر تحديث",
+    "activeAreasTitle": "مناطق النشاط",
+    "projectTypesTitle": "أنواع المشروعات",
+    "propertyTypesTitle": "أنواع العقارات",
+    "paymentPlansTitle": "أنظمة السداد",
+    "availableUnitsTitle": "الوحدات المتاحة لدى المطور",
+    "availableUnitsEmpty": "لا توجد وحدات متاحة لدى هذا المطور حالياً.",
+    "projectStatus": "حالة المشروع",
+    "projectUnits": "وحدة",
+    "projectArea": "المساحة",
+    "projectPrice": "الأسعار",
+    "projectDelivery": "التسليم",
+    "viewProject": "عرض المشروع",
+    "advisoryTitle": "معلومات موثوقة",
+    "advisoryBody": "يتم مراجعة البيانات والتأكد من جميع التفاصيل قبل إتمام أي عملية شراء أو حجز.",
+    "contactWhatsapp": "تواصل عبر واتساب",
+    "contactWhatsappAvailable": "واتساب متاح",
+    "sendInquiry": "إرسال الاستفسار",
+    "fieldName": "الاسم الكامل",
+    "fieldPhone": "رقم الهاتف",
+    "fieldEmail": "البريد الإلكتروني",
+    "fieldMessage": "رسالة إضافية",
+    "fieldRequestType": "نوع الطلب",
+    "fieldPreferredTime": "وقت التواصل المناسب",
+    "messagePlaceholder": "اكتب استفساراتك أو تفاصيل إضافية...",
+    "formNote": "سيتم استخدام بيانات التواصل ليخص طلبك فقط.",
+    "descriptionTitle": "عن المطور",
+    "noDescription": "لا توجد نبذة منشورة عن هذه الجهة حالياً.",
+    "noProjects": "لا توجد مشروعات منشورة مرتبطة بهذه الجهة حالياً.",
+    "noProperties": "لا توجد عقارات منشورة مرتبطة بهذه الجهة حالياً.",
+    "projectDescription": "نبذة عن المشروع",
+    "website": "الموقع الإلكتروني",
+    "openWebsite": "زيارة الموقع الإلكتروني",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "property": "عقار",
+    "unit": "وحدة",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "paginationLabel": "صفحات دليل الجهات",
+    "loadingTitle": "جارٍ تحميل الجهات",
+    "loadingBody": "يتم تجهيز الجهات المعتمدة المنشورة.",
+    "emptyTitle": "لا توجد جهات مطابقة",
+    "emptyBody": "جرّب تعديل البحث أو نوع الجهة لرؤية نتائج أخرى.",
+    "errorTitle": "تعذر تحميل الجهات",
+    "errorBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "retryTitle": "دليل الجهات غير متاح مؤقتاً",
+    "retryBody": "يمكنك إعادة المحاولة عند توفر الاتصال.",
+    "retryLabel": "إعادة المحاولة",
+    "permissionTitle": "لا يمكن عرض هذه الجهات",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى دليل الجهات العام.",
+    "permissionLink": "العودة إلى الصفحة الرئيسية",
+    "notFoundTitle": "الجهة غير موجودة",
+    "notFoundBody": "ربما لم تعد الجهة منشورة أو أن الرابط غير صحيح.",
+    "notFoundLink": "تصفح دليل الجهات",
+    "imageUnavailable": "الوسائط غير متاحة",
+    "footerDescription": "دليل عام للجهات والعقارات المنشورة من مصادر معتمدة.",
+    "footerLinks": "روابط المنصة"
+  },
+  "public/listing-copy#getPublicPropertyListingCopy": {
+    "title": "نتائج البحث عن العقارات",
+    "filtersTitle": "تصفية النتائج",
+    "resetFilters": "إعادة ضبط",
+    "searchLabel": "البحث",
+    "searchPlaceholder": "اسم العقار أو كلمة مفتاحية",
+    "transactionLabel": "نوع المعاملة",
+    "allTransactions": "الكل",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "kindLabel": "نوع السجل",
+    "allKinds": "الكل",
+    "property": "عقار",
+    "unit": "وحدة",
+    "minPrice": "الحد الأدنى للسعر",
+    "maxPrice": "الحد الأقصى للسعر",
+    "bedrooms": "غرف النوم",
+    "locationId": "المنطقة",
+    "projectId": "معرّف المشروع",
+    "valuePlaceholder": "اختياري",
+    "applyFilters": "تطبيق التصفية",
+    "invalidFilters": "تحقق من قيم التصفية المدخلة ثم حاول مرة أخرى.",
+    "sortLabel": "ترتيب النتائج",
+    "sortPublishedAt": "الأحدث نشرًا",
+    "sortPrice": "السعر",
+    "sortName": "الاسم",
+    "sortSlug": "المعرّف المختصر",
+    "directionLabel": "اتجاه الترتيب",
+    "ascending": "تصاعدي",
+    "descending": "تنازلي",
+    "gridView": "عرض شبكي",
+    "listView": "عرض قائمة",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "paginationLabel": "صفحات العقارات",
+    "loadingTitle": "جارٍ تحميل العقارات",
+    "loadingBody": "يتم تجهيز النتائج المنشورة.",
+    "emptyTitle": "لا توجد عقارات مطابقة",
+    "emptyBody": "جرّب تعديل البحث أو التصفية لرؤية نتائج أخرى.",
+    "errorTitle": "تعذر تحميل العقارات",
+    "errorBody": "تحقق من الاتصال وحاول مرة أخرى.",
+    "retryTitle": "خدمة العقارات غير متاحة مؤقتًا",
+    "retryBody": "يمكنك إعادة المحاولة عند توفر الاتصال.",
+    "retryLabel": "إعادة المحاولة",
+    "permissionTitle": "لا يمكن عرض هذه النتائج",
+    "permissionBody": "لم يسمح الخادم بالوصول إلى قائمة العقارات العامة.",
+    "permissionLink": "العودة إلى الصفحة الرئيسية",
+    "imageUnavailable": "الصورة غير متاحة",
+    "area": "المساحة",
+    "bathrooms": "الحمامات",
+    "floor": "الطابق",
+    "sqm": "م²",
+    "footerDescription": "بوابتك الموثوقة لعقارات مدينة السادات",
+    "footerLinks": "روابط المنصة",
+    "propertyType": "نوع العقار",
+    "propertyCountLabel": "عقار",
+    "addToCompare": "أضف للمقارنة",
+    "deliveryStatus": "حالة الاستلام",
+    "readyToMove": "جاهز للاستلام",
+    "underConstruction": "تحت الإنشاء",
+    "futureDelivery": "استلام مستقبلي",
+    "views": "مشاهدة",
+    "installment": "تقسيط",
+    "featured": "مميز",
+    "developerSource": "المطور العقاري",
+    "brokerageSource": "مكتب عقاري"
+  },
+  "seeker/copy#getSeekerCopy": {
+    "nav": {
+      "overview": "نظرة عامة",
+      "requests": "طلباتي",
+      "viewings": "طلبات المعاينة",
+      "saved": "العقارات المحفوظة",
+      "notifications": "الإشعارات",
+      "profile": "الملف الشخصي والتفضيلات",
+      "settings": "إعدادات الحساب"
+    },
+    "overview": {
+      "eyebrow": "مساحة الباحث عن عقار",
+      "title": "أهلاً بك في عقارات السادات",
+      "description": "هذه نظرة عامة على نشاطك الحالي في منصة عقارات السادات.",
+      "searchProperties": "ابحث عن عقار جديد",
+      "summaryTitle": "ملخص النشاط",
+      "cards": {
+        "activeRequests": "الطلبات النشطة",
+        "requests": "إجمالي الطلبات",
+        "viewings": "المعاينات القادمة",
+        "savedProperties": "العقارات المحفوظة",
+        "notifications": "الإشعارات غير المقروءة"
+      },
+      "activityTitle": "آخر النشاط",
+      "activityBody": "ستظهر تفاصيل الطلبات والمعاينات والإشعارات هنا عند توفرها من العقود الخاصة بها.",
+      "recent": {
+        "requests": "طلباتي النشطة",
+        "viewings": "معاينات قادمة",
+        "notifications": "آخر الإشعارات",
+        "viewAll": "عرض الكل",
+        "empty": "لا توجد بيانات حديثة",
+        "requestId": "رقم الطلب",
+        "property": "العقار",
+        "status": "الحالة",
+        "appointment": "الموعد"
+      },
+      "unavailableTitle": "تفاصيل النشاط غير متاحة بعد",
+      "unavailableBody": "يعرض هذا القسم البيانات التي يوفرها عقد الملخص فقط، ولا يضيف أرقاماً أو محتوى غير موجود.",
+      "emptyTitle": "لا يوجد نشاط بعد",
+      "emptyBody": "ابدأ بالبحث عن عقار أو احفظ عقاراً للعودة إليه لاحقاً."
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل لوحة الباحث",
+        "body": "يتم جلب ملخص نشاطك من المنصة."
+      },
+      "retry": {
+        "title": "تعذر تحميل لوحة الباحث",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "تعذر عرض لوحة الباحث",
+        "body": "حدث خطأ أثناء قراءة البيانات. حاول مرة أخرى لاحقاً."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "هذه البيانات متاحة لحساب الباحث الموثق فقط."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "active": "الحالي",
+    "localeLabel": "اللغة"
+  },
+  "seeker/notifications-copy#getSeekerNotificationsCopy": {
+    "eyebrow": "مساحة الباحث عن عقار",
+    "title": "الإشعارات",
+    "description": "تابع آخر التحديثات المرتبطة بحسابك وطلباتك.",
+    "listLabel": "إشعارات الحساب",
+    "unreadCount": "إشعار غير مقروء",
+    "markAll": "تعليم الكل كمقروء",
+    "markingAll": "جارٍ التعليم كمقروء…",
+    "tabs": {
+      "all": "الكل",
+      "unread": "غير مقروء"
+    },
+    "unreadLabel": "غير مقروء",
+    "markRead": "تعليم كمقروء",
+    "markedRead": "تم تعليم الإشعار كمقروء.",
+    "openLink": "فتح التفاصيل",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية",
+    "pagination": "صفحات الإشعارات",
+    "empty": {
+      "all": {
+        "title": "لا توجد إشعارات",
+        "body": "ستظهر التحديثات المرتبطة بحسابك هنا."
+      },
+      "unread": {
+        "title": "لا توجد إشعارات غير مقروءة",
+        "body": "لقد قرأت كل التحديثات المتاحة لحسابك."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الإشعارات",
+        "body": "يتم جلب إشعارات حسابك من المنصة."
+      },
+      "retry": {
+        "title": "تعذر تحميل الإشعارات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "الإشعارات غير متاحة",
+        "body": "تعذر قراءة إشعارات حسابك حالياً. حاول لاحقاً."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "الإشعارات متاحة لحساب الباحث الموثق فقط."
+      }
+    },
+    "mutation": {
+      "markedRead": "تم تعليم الإشعار كمقروء.",
+      "markedAll": "تم تحديث الإشعارات غير المقروءة.",
+      "notFound": "لم يعد هذا الإشعار متاحاً لحسابك.",
+      "permission": "انتهت صلاحية الجلسة. سجّل الدخول وحاول مرة أخرى.",
+      "error": "تعذر تحديث الإشعار. حاول مرة أخرى."
+    },
+    "typeLabels": {
+      "viewing.reminder": "تذكير بموعد معاينة",
+      "request.updated": "تحديث على طلب",
+      "community.reply": "رد على منشور",
+      "property.saved": "تحديث على عقار محفوظ",
+      "profile.updated": "تحديث الملف الشخصي"
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "seeker/profile-copy#getSeekerProfileCopy": {
+    "eyebrow": "مساحة الباحث عن عقار",
+    "title": "الملف الشخصي والتفضيلات",
+    "description": "أدر بياناتك الشخصية وتفضيلات البحث وإعدادات حسابك.",
+    "tabs": {
+      "preferences": "تفضيلات البحث",
+      "profile": "المعلومات الشخصية",
+      "settings": "إعدادات الحساب"
+    },
+    "profile": {
+      "heading": "المعلومات الشخصية",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "language": "اللغة المفضلة",
+      "save": "حفظ التغييرات",
+      "saved": "تم حفظ البيانات الشخصية."
+    },
+    "preferences": {
+      "heading": "تفضيلات البحث",
+      "purpose": "نوع العملية",
+      "anyPurpose": "شراء أو إيجار",
+      "buy": "شراء",
+      "rent": "إيجار",
+      "propertyTypes": "أنواع العقارات",
+      "propertyTypesHelp": "اختر أكثر من نوع.",
+      "locations": "المناطق المفضلة",
+      "locationsHelp": "اختر أكثر من منطقة.",
+      "budgetRange": "نطاق الميزانية (ج.م)",
+      "minPrice": "من",
+      "maxPrice": "إلى",
+      "areaRange": "المساحة المفضلة (م²)",
+      "minArea": "من",
+      "maxArea": "إلى",
+      "bedroomsMin": "عدد غرف النوم",
+      "bedroomsMax": "الحد الأقصى لغرف النوم",
+      "paymentMethod": "طريقة الدفع المفضلة",
+      "cash": "كاش",
+      "installment": "تقسيط",
+      "anyPayment": "كلاهما",
+      "save": "حفظ التغييرات",
+      "saved": "تم حفظ تفضيلات البحث.",
+      "noSavedPreferences": "لم تحفظ تفضيلات بحث بعد. يمكنك البدء من الحقول أدناه.",
+      "invalid": "راجع القيم المدخلة وتأكد من صحة النطاقات."
+    },
+    "settings": {
+      "heading": "إعدادات الحساب",
+      "languageHeading": "لغة الحساب",
+      "languageBody": "تُحفظ اللغة على حسابك وتُستخدم في الواجهات التالية.",
+      "securityHeading": "الأمان والوصول",
+      "securityBody": "تغيير كلمة المرور وإدارة الأجهزة تحتاج إلى عمليات API غير متاحة على هذا السطح بعد.",
+      "unavailable": "هذه الوظيفة غير متاحة حالياً وفق العقود المنفذة.",
+      "notificationHeading": "إعدادات الإشعارات",
+      "notificationBody": "خيارات الإشعارات التفصيلية تحتاج إلى عقد إعدادات منفصل.",
+      "sessionsHeading": "الأجهزة الأخرى",
+      "sessionsBody": "إدارة الجلسات الأخرى غير متاحة حتى يتم تنفيذ عقد الجلسات.",
+      "signOut": "تسجيل الخروج",
+      "signedOut": "تم تسجيل الخروج من الحساب.",
+      "accountHeading": "الحساب",
+      "accountBody": "حذف الحساب إجراء غير قابل للتراجع ويتطلب عقداً صريحاً غير متاح.",
+      "deleteAccount": "حذف الحساب نهائياً"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الملف الشخصي",
+        "body": "يتم جلب بياناتك من الحساب الموثق."
+      },
+      "retry": {
+        "title": "تعذر تحميل بيانات الحساب",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "بيانات الحساب غير متاحة",
+        "body": "تعذر قراءة البيانات. حاول مرة أخرى لاحقاً."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "هذه البيانات متاحة لحساب الباحث الموثق فقط."
+      }
+    },
+    "retry": "إعادة المحاولة",
+    "validation": "راجع الحقول المطلوبة والقيم غير الصحيحة.",
+    "unavailable": "غير متاح",
+    "saving": "جارٍ الحفظ..."
+  },
+  "seeker/requests-copy#getSeekerRequestsCopy": {
+    "list": {
+      "eyebrow": "مساحة الباحث عن عقار",
+      "title": "طلباتي",
+      "description": "تابع طلبات البحث والتواصل والمعاينة التي تخص حسابك فقط.",
+      "count": "طلب",
+      "emptyTitle": "لا توجد طلبات بعد",
+      "emptyBody": "ستظهر طلباتك هنا عند إرسال طلب بحث أو تواصل من حسابك.",
+      "requestId": "رقم الطلب",
+      "type": "نوع الطلب",
+      "status": "الحالة",
+      "submitted": "تاريخ الإرسال",
+      "details": "عرض التفاصيل",
+      "previous": "الصفحة السابقة",
+      "next": "الصفحة التالية",
+      "pagination": "صفحات الطلبات"
+    },
+    "detail": {
+      "eyebrow": "تفاصيل الطلب",
+      "title": "تفاصيل طلبك",
+      "summary": "ملخص الطلب",
+      "timeline": "مسار الطلب",
+      "type": "نوع الطلب",
+      "status": "الحالة الحالية",
+      "submitted": "تاريخ الإرسال",
+      "updated": "آخر تحديث",
+      "property": "العقار المرتبط",
+      "project": "المشروع المرتبط",
+      "message": "رسالتك",
+      "note": "ملاحظتك",
+      "advanced": "تفاصيل البحث",
+      "budget": "نطاق الميزانية",
+      "bedrooms": "عدد غرف النوم",
+      "propertyTypes": "أنواع العقارات",
+      "unavailable": "لا توجد تفاصيل إضافية في العقد المتاح.",
+      "back": "العودة إلى الطلبات",
+      "cancel": "إلغاء الطلب",
+      "cancelReason": "سبب إلغاء الطلب",
+      "cancelConfirm": "تأكيد الإلغاء",
+      "cancelError": "تعذر إلغاء الطلب. راجع السبب وحاول مجددًا."
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل الطلبات",
+        "body": "يتم جلب بيانات طلباتك من المنصة."
+      },
+      "retry": {
+        "title": "تعذر تحميل الطلبات",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "الطلبات غير متاحة",
+        "body": "تعذر قراءة بيانات الطلبات. حاول لاحقًا."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "هذه البيانات متاحة لحساب الباحث الموثق فقط."
+      },
+      "notFound": {
+        "title": "الطلب غير موجود",
+        "body": "لا يمكن العثور على هذا الطلب ضمن طلبات حسابك."
+      }
+    },
+    "statuses": {
+      "new": "جديد",
+      "under_review": "قيد المراجعة",
+      "contacted": "تم التواصل",
+      "scheduled": "مجدول",
+      "needs_information": "يحتاج معلومات",
+      "in_progress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "cancelled": "ملغى",
+      "closed": "مغلق"
+    },
+    "types": {
+      "contact": "طلب تواصل",
+      "viewing": "طلب معاينة",
+      "property_search": "بحث عن عقار",
+      "provider_customer": "طلب عميل"
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "seeker/saved-copy#getSeekerSavedCopy": {
+    "eyebrow": "مساحة الباحث عن عقار",
+    "title": "العقارات المحفوظة",
+    "description": "راجع العقارات التي حفظتها في حسابك.",
+    "count": "عقار محفوظ",
+    "view": "عرض العقار",
+    "remove": "إزالة",
+    "removing": "جارٍ الإزالة…",
+    "savedAt": "تاريخ الحفظ",
+    "imageUnavailable": "الصورة غير متاحة",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "property": "عقار",
+    "unit": "وحدة",
+    "area": "المساحة",
+    "bedrooms": "غرف",
+    "bathrooms": "حمامات",
+    "floor": "الطابق",
+    "sqm": "م²",
+    "pagination": "صفحات العقارات المحفوظة",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية",
+    "empty": {
+      "title": "لا توجد عقارات محفوظة",
+      "body": "ستظهر العقارات التي تحفظها هنا."
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل العقارات المحفوظة",
+        "body": "يتم جلب العقارات المحفوظة من المنصة."
+      },
+      "retry": {
+        "title": "تعذر تحميل العقارات المحفوظة",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "العقارات المحفوظة غير متاحة",
+        "body": "تعذر قراءة العقارات المحفوظة. حاول لاحقاً."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "العقارات المحفوظة متاحة لحساب الباحث الموثق فقط."
+      }
+    },
+    "mutation": {
+      "removed": "تمت إزالة العقار من المحفوظات.",
+      "alreadyRemoved": "العقار غير موجود في المحفوظات.",
+      "unavailable": "هذا العقار غير متاح حالياً.",
+      "permission": "انتهت صلاحية الجلسة. سجل الدخول وحاول مرة أخرى.",
+      "error": "تعذر تحديث المحفوظات. حاول مرة أخرى."
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "seeker/viewings-copy#getSeekerViewingsCopy": {
+    "eyebrow": "مساحة الباحث عن عقار",
+    "title": "مواعيد المعاينة",
+    "description": "تابع مواعيد معاينة العقارات المرتبطة بحسابك فقط.",
+    "count": "مواعيد",
+    "tabs": {
+      "upcoming": "القادمة",
+      "past": "السابقة",
+      "cancelled": "الملغاة"
+    },
+    "property": "العقار",
+    "location": "الموقع",
+    "source": "المزوّد",
+    "openProperty": "عرض العقار",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "timezone": "المنطقة الزمنية",
+    "note": "ملاحظتك",
+    "details": "عرض التفاصيل",
+    "hideDetails": "إخفاء التفاصيل",
+    "requestViewing": "طلب موعد معاينة",
+    "requestViewingTitle": "طلب موعد معاينة جديد",
+    "reschedule": "إعادة الجدولة",
+    "cancel": "إلغاء الموعد",
+    "cancelConfirm": "هل تريد إلغاء هذا الموعد؟",
+    "submit": "إرسال الطلب",
+    "save": "حفظ الموعد",
+    "close": "إغلاق",
+    "propertyId": "معرّف العقار",
+    "requestedAt": "موعد المعاينة",
+    "formTimezone": "المنطقة الزمنية",
+    "formNote": "ملاحظة اختيارية",
+    "required": "هذا الحقل مطلوب.",
+    "invalidProperty": "أدخل معرّف عقار صالحاً.",
+    "invalidDate": "اختر موعداً مستقبلياً صالحاً.",
+    "invalidTimezone": "أدخل منطقة زمنية صالحة.",
+    "invalidNote": "يجب ألا تتجاوز الملاحظة 1000 حرف.",
+    "empty": {
+      "upcoming": {
+        "title": "لا توجد مواعيد قادمة",
+        "body": "ستظهر مواعيد المعاينة القادمة المرتبطة بحسابك هنا."
+      },
+      "past": {
+        "title": "لا توجد مواعيد سابقة",
+        "body": "ستظهر مواعيد المعاينة المكتملة هنا."
+      },
+      "cancelled": {
+        "title": "لا توجد مواعيد ملغاة",
+        "body": "ستظهر المواعيد التي ألغيتها هنا."
+      }
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ تحميل المواعيد",
+        "body": "يتم جلب مواعيد المعاينة من المنصة."
+      },
+      "retry": {
+        "title": "تعذر تحميل المواعيد",
+        "body": "تحقق من الاتصال وحاول مرة أخرى."
+      },
+      "error": {
+        "title": "المواعيد غير متاحة",
+        "body": "تعذر قراءة مواعيد المعاينة. حاول لاحقاً."
+      },
+      "permission": {
+        "title": "يلزم تسجيل الدخول",
+        "body": "هذه البيانات متاحة لحساب الباحث الموثق فقط."
+      }
+    },
+    "mutation": {
+      "saving": "جارٍ حفظ التغيير…",
+      "created": "تم إرسال طلب المعاينة.",
+      "updated": "تم تحديث موعد المعاينة.",
+      "cancelled": "تم إلغاء موعد المعاينة.",
+      "conflict": "تغير هذا الموعد أو لم يعد متاحاً. حدّث القائمة وحاول مرة أخرى.",
+      "notFound": "لم يعد هذا الموعد متاحاً ضمن مواعيد حسابك.",
+      "error": "تعذر حفظ التغيير. تحقق من البيانات وحاول مرة أخرى."
+    },
+    "statuses": {
+      "requested": "قيد الطلب",
+      "confirmed": "مؤكد",
+      "rescheduled": "أعيدت جدولته",
+      "cancelled": "ملغى",
+      "completed": "مكتمل"
+    },
+    "retry": "إعادة المحاولة"
+  },
+  "frontend_foundation/locale#getFoundationCopy": {
+    "brand": "عقارات السادات",
+    "shellTitle": "واجهة المنصة",
+    "shellDescription": "هذه بنية الواجهة الأساسية، وتظهر البيانات الحقيقية عند توفر عقدها الخلفي.",
+    "unavailable": "لا توجد بيانات واجهة متاحة لهذا المسار بعد.",
+    "retryLabel": "إعادة المحاولة",
+    "localeLabel": "اللغة",
+    "routeLabel": "المسار",
+    "surfaceLabels": {
+      "public": "عام",
+      "auth": "تسجيل الدخول",
+      "seeker": "الباحث عن عقار",
+      "provider": "مزود العقار",
+      "admin": "الإدارة"
+    },
+    "states": {
+      "loading": {
+        "title": "جارٍ التحميل",
+        "body": "يتم تجهيز الواجهة."
+      },
+      "empty": {
+        "title": "لا توجد بيانات بعد",
+        "body": "ستظهر البيانات عندما يتوفر العقد الخلفي الفعلي."
+      },
+      "error": {
+        "title": "تعذر العثور على الصفحة",
+        "body": "تحقق من الرابط وحاول مرة أخرى."
+      },
+      "retry": {
+        "title": "تعذر تحميل الواجهة",
+        "body": "يمكنك المحاولة مرة أخرى عندما يتوفر الاتصال."
+      },
+      "success": {
+        "title": "تم التحميل",
+        "body": "تم تحميل الواجهة بنجاح."
+      },
+      "permission": {
+        "title": "يتطلب هذا القسم تسجيل الدخول",
+        "body": "لا يتم عرض بيانات محمية داخل هذه البنية الأساسية."
+      }
+    }
+  }
+}

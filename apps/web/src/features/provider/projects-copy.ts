@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { ProjectStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface ProviderProjectsCopy {
@@ -82,5 +83,5 @@ const copy: Readonly<Record<SupportedLocale, ProviderProjectsCopy>> = {
   },};
 
 export function getProviderProjectsCopy(locale: SupportedLocale): ProviderProjectsCopy {
-  return copy[locale];
+  return localizeCopy('provider/projects-copy#getProviderProjectsCopy', locale, copy[locale]);
 }

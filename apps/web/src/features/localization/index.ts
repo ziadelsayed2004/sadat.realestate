@@ -29,3 +29,4 @@ export {
   type LocaleStoreOptions
 } from './runtime.js';
 export { LocaleSwitcher, type LocaleSwitcherProps } from './switcher.js';
+export { getEditableCopyCatalog, localizeCopy } from './copy-catalog.js';

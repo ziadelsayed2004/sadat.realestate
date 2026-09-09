@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { PropertyAvailableAction, PropertyReportAction, PropertyReportReason, PropertyReportStatus, PropertyStatus, PropertyVisibilityAction, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminPropertiesView = 'list' | 'review' | 'duplicates' | 'reports';
@@ -105,5 +106,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminPropertiesCopy>> = {
   },};
 
 export function getAdminPropertiesCopy(locale: SupportedLocale): AdminPropertiesCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_properties/copy#getAdminPropertiesCopy', locale, copyByLocale[locale]);
 }

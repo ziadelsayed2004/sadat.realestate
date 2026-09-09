@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { AdminSettingsNamespace, SupportedLocale } from '@sadat-real-estate/contracts';
 import type { AdminSettingsState } from './views.tsx';
 
@@ -184,5 +185,5 @@ const extendedFieldCopy: Readonly<Record<SupportedLocale, Readonly<Record<string
 
 export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy {
   const copy = copyByLocale[locale];
-  return { ...copy, fields: { ...copy.fields, ...extendedFieldCopy[locale] }, selectPlaceholder: locale === 'ar' ? 'اختر قيمة' : 'Select a value' };
+  return localizeCopy('admin_settings/copy#getAdminSettingsCopy', locale, { ...copy, fields: { ...copy.fields, ...extendedFieldCopy[locale] }, selectPlaceholder: locale === 'ar' ? 'اختر قيمة' : 'Select a value' });
 }

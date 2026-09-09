@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface AdminAccountReportsCopy {
@@ -210,5 +211,5 @@ const arabic: AdminAccountReportsCopy = {
 const copies: Readonly<Record<SupportedLocale, AdminAccountReportsCopy>> = { ar: arabic, en: english,};
 
 export function getAdminAccountReportsCopy(locale: SupportedLocale): AdminAccountReportsCopy {
-  return copies[locale];
+  return localizeCopy('admin_accounts/reports-copy#getAdminAccountReportsCopy', locale, copies[locale]);
 }

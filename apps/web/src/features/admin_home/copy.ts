@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminHomeState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
@@ -68,5 +69,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminHomeCopy>> = {
   },};
 
 export function getAdminHomeCopy(locale: SupportedLocale): AdminHomeCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_home/copy#getAdminHomeCopy', locale, copyByLocale[locale]);
 }

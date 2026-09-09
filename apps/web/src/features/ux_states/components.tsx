@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
+import { Skeleton } from '../design_system/index.ts';
 import { getUxStateSemantics, type UxState } from './model.js';
 
 type StateViewAttributes = Omit<
@@ -77,6 +78,15 @@ export function UxStateView({
         {message !== undefined ? <p data-text-wrap="safe" style={longTextStyle}>{message}</p> : null}
         {message === undefined && children !== undefined ? <div data-text-wrap="safe" style={longTextStyle}>{children}</div> : null}
       </section>
+    );
+  }
+
+  if (state === 'loading') {
+    return (
+      <div {...sharedAttributes}>
+        <Skeleton label={title ?? message ?? 'Loading'} />
+        {title !== undefined && message !== undefined ? <span className="ui-visually-hidden">{message}</span> : null}
+      </div>
     );
   }
 

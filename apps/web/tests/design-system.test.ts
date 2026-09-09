@@ -10,6 +10,8 @@ import {
   DESIGN_ASSET_SLOTS,
   DESIGN_TOKEN_CSS_VARIABLES,
   DESIGN_TOKENS,
+  Skeleton,
+  StateMessage,
   isPublicAssetPath,
   resolveDesignAsset
 } from '../src/features/design_system/index.ts';
@@ -81,6 +83,21 @@ test('brand rendering uses the approved default asset and keeps a truthful expli
     assets: { logo: 'https://example.test/logo.svg' }
   }));
   assert.doesNotMatch(unsafe, /<img/);
+});
+
+test('loading state renders an accessible adaptive skeleton instead of copy flash', () => {
+  const markup = renderToStaticMarkup(createElement(StateMessage, { state: 'loading', title: 'Loading records' }));
+  assert.match(markup, /class="ui-skeleton"/);
+  assert.match(markup, /aria-busy="true"/);
+  assert.match(markup, /Loading records/);
+  assert.doesNotMatch(markup, /ui-state-message/);
+});
+
+test('skeleton supports page, card, list, table, and form layouts', () => {
+  for (const variant of ['page', 'cards', 'list', 'table', 'form'] as const) {
+    const markup = renderToStaticMarkup(createElement(Skeleton, { label: 'Loading', variant }));
+    assert.match(markup, new RegExp(`data-variant="${variant}"`));
+  }
 });
 
 test('the committed runtime logo is the approved handoff asset, not supplier artwork', () => {

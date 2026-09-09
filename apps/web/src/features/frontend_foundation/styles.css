@@ -22,6 +22,32 @@ body {
   background: var(--color-page-background);
 }
 
+#app-transition-loader {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: none;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: var(--color-page-background);
+}
+
+.app-booting #app-transition-loader,
+.app-navigating #app-transition-loader {
+  display: grid;
+}
+
+.app-booting #app,
+.app-navigating #app {
+  visibility: hidden;
+}
+
+#app-transition-loader .ui-skeleton {
+  inline-size: min(100%, 72rem);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
 button,
 a {
   font: inherit;

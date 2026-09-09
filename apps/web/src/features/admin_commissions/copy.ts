@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminCommissionsState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission' | 'not_found';
@@ -73,5 +74,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCommissionsCopy>> = {
   },};
 
 export function getAdminCommissionsCopy(locale: SupportedLocale): AdminCommissionsCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_commissions/copy#getAdminCommissionsCopy', locale, copyByLocale[locale]);
 }

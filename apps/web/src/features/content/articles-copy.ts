@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface PublicArticlesCopy {
@@ -133,5 +134,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
   },};
 
 export function getPublicArticlesCopy(locale: SupportedLocale): PublicArticlesCopy {
-  return copyByLocale[locale];
+  return localizeCopy('content/articles-copy#getPublicArticlesCopy', locale, copyByLocale[locale]);
 }

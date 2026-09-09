@@ -1,4 +1,5 @@
 import { createElement, type ReactNode } from 'react';
+import { Skeleton } from '../design_system/index.ts';
 import { FOUNDATION_STATE_SEMANTICS, type FoundationState } from './state-model.ts';
 import type { FoundationCopy } from './locale.ts';
 
@@ -37,11 +38,9 @@ export function RouteStateView({ state, copy, children, onRetry }: RouteStateVie
 
   if (state === 'loading') {
     return createElement(
-      'p',
+      'div',
       { ...commonProps, role: semantics.role, 'aria-busy': 'true' },
-      message.title,
-      ': ',
-      message.body
+      createElement(Skeleton, { label: `${message.title}: ${message.body}` })
     );
   }
 

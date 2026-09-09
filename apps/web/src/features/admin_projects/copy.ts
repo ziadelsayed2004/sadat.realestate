@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { ProjectReviewAction, ProjectStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminProjectsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
@@ -135,5 +136,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminProjectsCopy>> = {
   },};
 
 export function getAdminProjectsCopy(locale: SupportedLocale): AdminProjectsCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_projects/copy#getAdminProjectsCopy', locale, copyByLocale[locale]);
 }

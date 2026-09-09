@@ -28,6 +28,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             const normalizedId = id.replaceAll('\\\\', '/');
             if (normalizedId.includes('/node_modules/react/') || normalizedId.includes('/node_modules/react-dom/')) return 'vendor-react';
             if (normalizedId.includes('/node_modules/zod/')) return 'vendor-validation';
+            if (normalizedId.includes('/src/features/localization/copy-catalog') || normalizedId.includes('/src/features/localization/messages/')) return 'locale-copy';
             if (normalizedId.includes('/src/features/admin')) return 'feature-admin';
             if (normalizedId.includes('/src/features/admin_')) return 'feature-admin-operations';
             if (normalizedId.includes('/src/features/provider_property')) return 'feature-provider-property';

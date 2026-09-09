@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { RequestStatus, RequestTransition, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface ProviderCustomerRequestsCopy {
@@ -139,5 +140,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
   },};
 
 export function getProviderCustomerRequestsCopy(locale: SupportedLocale): ProviderCustomerRequestsCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider/customer-requests-copy#getProviderCustomerRequestsCopy', locale, copyByLocale[locale]);
 }

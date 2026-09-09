@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { PropertyKind, PropertyStatus, PropertyTransactionType, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderPropertySourceType = 'individual_broker' | 'brokerage_office' | 'developer_company';
@@ -145,5 +146,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
   },};
 
 export function getProviderPropertyCopy(locale: SupportedLocale): ProviderPropertyCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider_property/copy#getProviderPropertyCopy', locale, copyByLocale[locale]);
 }

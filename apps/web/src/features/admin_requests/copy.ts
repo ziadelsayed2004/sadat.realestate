@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { RequestStatus, RequestTransition, RequestType, SupportedLocale, ViewingStatus } from '@sadat-real-estate/contracts';
 
 export type AdminRequestsScreen = 'all' | 'customer' | 'overdue' | 'contact' | 'viewing' | 'search' | 'issues';
@@ -94,5 +95,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminRequestsCopy>> = {
   },};
 
 export function getAdminRequestsCopy(locale: SupportedLocale): AdminRequestsCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_requests/copy#getAdminRequestsCopy', locale, copyByLocale[locale]);
 }

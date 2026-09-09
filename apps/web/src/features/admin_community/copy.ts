@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminCommunityView = 'posts' | 'comments' | 'reports';
@@ -80,5 +81,5 @@ const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
   },};
 
 export function getAdminCommunityCopy(locale: SupportedLocale): AdminCommunityCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_community/copy#getAdminCommunityCopy', locale, copyByLocale[locale]);
 }

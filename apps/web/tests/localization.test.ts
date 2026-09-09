@@ -4,18 +4,33 @@ import test from 'node:test';
 import {
   createTranslator,
   getTranslationCatalog,
+  getEditableCopyCatalog,
   isTranslationKey,
   LocaleStore,
   LOCALE_STORAGE_KEY,
   applyLocaleToDocument,
   directionForLocale,
   isSupportedLocale,
+  localizeCopy,
   normalizeLocale,
   replaceLocaleInUrl,
   resolveLocale,
   TRANSLATION_KEYS,
   translate
 } from '../src/features/localization/index.ts';
+import arMessages from '../src/features/localization/messages/ar.json';
+import enMessages from '../src/features/localization/messages/en.json';
+
+function translationLeafPaths(value: unknown, prefix = '', result: string[] = []): string[] {
+  if (typeof value === 'string') {
+    result.push(prefix);
+  } else if (Array.isArray(value)) {
+    value.forEach((item, index) => translationLeafPaths(item, `${prefix}[${index}]`, result));
+  } else if (value !== null && typeof value === 'object') {
+    Object.entries(value).forEach(([key, item]) => translationLeafPaths(item, prefix === '' ? key : `${prefix}.${key}`, result));
+  }
+  return result;
+}
 
 class MemoryStorage {
   private readonly values = new Map<string, string>();
@@ -46,6 +61,29 @@ test('all supported locales expose the same validated UI translation keys', () =
   assert.equal(createTranslator('en')('shell.retry'), 'Retry');
   assert.throws(() => translate('fr', 'app.brand'), /Unsupported locale/);
   assert.throws(() => translate('en', 'shell.unknown'), /Unknown UI translation key/);
+});
+
+test('editable Arabic and English JSON catalogs cover every static screen copy key', () => {
+  const arabicKeys = translationLeafPaths(arMessages).sort();
+  const englishKeys = translationLeafPaths(enMessages).sort();
+  assert.deepEqual(arabicKeys, englishKeys);
+  assert.ok(arabicKeys.length >= 3_200);
+  assert.equal(Object.keys(arMessages).length, 48);
+  assert.equal(Object.keys(enMessages).length, 48);
+});
+
+test('localized copy keeps referential identity for render effect dependencies', () => {
+  assert.equal(getEditableCopyCatalog('ar'), getEditableCopyCatalog('ar'));
+  const fallback = { title: 'fallback' };
+  assert.equal(localizeCopy('test.identity', 'ar', fallback), localizeCopy('test.identity', 'ar', fallback));
+});
+
+test('the early locale guard and transition skeleton are present before hydration', () => {
+  const indexHtml = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(indexHtml, /classList\.add\('app-booting'\)/);
+  assert.match(indexHtml, /sadat-real-estate\\\.locale=\(ar\|en\)/);
+  assert.match(indexHtml, /id="app-transition-loader"/);
+  assert.ok(indexHtml.indexOf('app-booting') < indexHtml.indexOf('id="app"'));
 });
 
 test('locale normalization preserves approved direction rules and falls back safely', () => {

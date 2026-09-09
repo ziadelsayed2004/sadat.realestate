@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface ProviderNotificationsCopy {
@@ -45,5 +46,5 @@ const copy: Readonly<Record<SupportedLocale, ProviderNotificationsCopy>> = {
   },};
 
 export function getProviderNotificationsCopy(locale: SupportedLocale): ProviderNotificationsCopy {
-  return copy[locale];
+  return localizeCopy('provider/notifications-copy#getProviderNotificationsCopy', locale, copy[locale]);
 }

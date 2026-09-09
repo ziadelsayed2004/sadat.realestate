@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale, ViewingStatus } from '@sadat-real-estate/contracts';
 
 export type SeekerViewingTab = 'upcoming' | 'past' | 'cancelled';
@@ -170,5 +171,5 @@ const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
   },};
 
 export function getSeekerViewingsCopy(locale: SupportedLocale): SeekerViewingsCopy {
-  return copy[locale];
+  return localizeCopy('seeker/viewings-copy#getSeekerViewingsCopy', locale, copy[locale]);
 }

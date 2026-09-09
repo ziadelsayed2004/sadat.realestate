@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { ArticleAvailableAction, ArticleStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminContentState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'success';
@@ -74,7 +75,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminContentCopy>> = {
   },};
 
 export function getAdminContentCopy(locale: SupportedLocale): AdminContentCopy {
-  return copyByLocale[locale];
+  return localizeCopy('admin_content/copy#getAdminContentCopy', locale, copyByLocale[locale]);
 }
 
 export type AdminCmsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'success' | 'not_found';
@@ -122,9 +123,9 @@ const cmsCopyByLocale: Readonly<Record<SupportedLocale, AdminCmsCopy>> = {
     statusLabels: { draft: '\u0645\u0633\u0648\u062f\u0629', published: '\u0645\u0646\u0634\u0648\u0631', inactive: '\u063a\u064a\u0631 \u0646\u0634\u0637', available: '\u0645\u062a\u0627\u062d', unavailable: '\u063a\u064a\u0631 \u0645\u062a\u0627\u062d' }
   },
   en: {
-    eyebrow: 'Platform content administration', namespace: { about: 'About platform', team: 'Team', population: 'Population counter' }, description: { about: 'Manage the approved About page content.', team: 'Maintain the approved team projection and ordering.', population: 'Update the population counter only from an approved source.' }, add: 'Add', save: 'Save changes', saving: 'Saving', preview: 'Preview', hidePreview: 'Hide preview', cancel: 'Cancel', retry: 'Retry', key: 'Key', name: 'Name', title: 'Title', body: 'Body', order: 'Order', status: 'Status', active: 'Active', value: 'Population value', sourceLabel: 'Source label', sourceUrl: 'Source URL', asOf: 'As of', reason: 'Change reason', reasonPlaceholder: 'Write a clear reason for this change', reasonRequired: 'A change reason is required.', localizedHint: 'Provide approved copy in Arabic or English as applicable.', noData: 'No content is available yet.', unavailable: 'Value unavailable', states: { loading: { title: 'Loading content', body: 'Fetching records from the approved CMS source.' }, empty: { title: 'No records found', body: 'Create a draft record to establish the approved content state.' }, error: { title: 'Content could not load', body: 'Check the connection and try again.' }, retry: { title: 'Connection temporarily unavailable', body: 'Retry without changing the current data.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator content session.' }, success: { title: 'Content ready', body: 'The server-approved projection is ready for editing or preview.' }, not_found: { title: 'Content route not found', body: 'The requested content namespace is not available.' } }, statusLabels: { draft: 'Draft', published: 'Published', inactive: 'Inactive', available: 'Available', unavailable: 'Unavailable' }
+    eyebrow: 'Platform content administration', namespace: { about: 'About platform', team: 'Team', population: 'Population counter', tips: 'Real-estate tips' }, description: { about: 'Manage the approved About page content.', team: 'Maintain the approved team projection and ordering.', population: 'Update the population counter only from an approved source.', tips: 'Manage the approved real-estate tips.' }, add: 'Add', save: 'Save changes', saving: 'Saving', preview: 'Preview', hidePreview: 'Hide preview', cancel: 'Cancel', retry: 'Retry', key: 'Key', name: 'Name', title: 'Title', body: 'Body', order: 'Order', status: 'Status', active: 'Active', value: 'Population value', sourceLabel: 'Source label', sourceUrl: 'Source URL', asOf: 'As of', reason: 'Change reason', reasonPlaceholder: 'Write a clear reason for this change', reasonRequired: 'A change reason is required.', localizedHint: 'Provide approved copy in Arabic or English as applicable.', noData: 'No content is available yet.', unavailable: 'Value unavailable', states: { loading: { title: 'Loading content', body: 'Fetching records from the approved CMS source.' }, empty: { title: 'No records found', body: 'Create a draft record to establish the approved content state.' }, error: { title: 'Content could not load', body: 'Check the connection and try again.' }, retry: { title: 'Connection temporarily unavailable', body: 'Retry without changing the current data.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator content session.' }, success: { title: 'Content ready', body: 'The server-approved projection is ready for editing or preview.' }, not_found: { title: 'Content route not found', body: 'The requested content namespace is not available.' } }, statusLabels: { draft: 'Draft', published: 'Published', inactive: 'Inactive', available: 'Available', unavailable: 'Unavailable' }
   },};
 
 export function getAdminCmsCopy(locale: SupportedLocale): AdminCmsCopy {
-  return cmsCopyByLocale[locale];
+  return localizeCopy('admin_content/copy#getAdminCmsCopy', locale, cmsCopyByLocale[locale]);
 }

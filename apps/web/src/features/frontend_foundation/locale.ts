@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import {
   DEFAULT_CONTENT_LOCALE,
   LOCALE_DIRECTIONS,
@@ -89,5 +90,5 @@ export function directionForLocale(locale: SupportedLocale): TextDirection {
 }
 
 export function getFoundationCopy(locale: SupportedLocale): FoundationCopy {
-  return copyByLocale[locale];
+  return localizeCopy('frontend_foundation/locale#getFoundationCopy', locale, copyByLocale[locale]);
 }

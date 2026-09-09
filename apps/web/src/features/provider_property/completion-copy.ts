@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderPropertyCompletionStep = 'media' | 'contact' | 'review';
@@ -145,5 +146,5 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
   },};
 
 export function getProviderPropertyCompletionCopy(locale: SupportedLocale): ProviderPropertyCompletionCopy {
-  return copyByLocale[locale];
+  return localizeCopy('provider_property/completion-copy#getProviderPropertyCompletionCopy', locale, copyByLocale[locale]);
 }

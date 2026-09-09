@@ -1,3 +1,4 @@
+import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface AuthCopy {
@@ -280,5 +281,5 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
   },};
 
 export function getAuthCopy(locale: SupportedLocale): AuthCopy {
-  return copies[locale];
+  return localizeCopy('auth/copy#getAuthCopy', locale, copies[locale]);
 }
