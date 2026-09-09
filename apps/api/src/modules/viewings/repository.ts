@@ -128,8 +128,12 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
         ...unexpiredPropertyFilter()
       };
       const property = await properties.findOne(propertyFilter, { projection: { providerId: 1 } });
-      const providerId = publicRelatedId(property?.providerId);
+      let providerId = publicRelatedId(property?.providerId);
       if (!providerId || !Types.ObjectId.isValid(providerId)) throw new ViewingServiceError('VIEWING_NOT_FOUND');
+      const profile = await connection.collection('provider_profiles').findOne({ _id: oid(providerId) }, { projection: { userId: 1 } });
+      providerId = publicRelatedId(profile?.userId) ?? providerId;
+      const owner = await connection.collection('users').findOne({ _id: oid(providerId), roleType: 'provider', status: 'verified' }, { projection: { _id: 1 } });
+      if (!owner) throw new ViewingServiceError('VIEWING_NOT_FOUND');
       row = { ...row, providerId };
       await collection.createIndex({ propertyId: 1, requestedAt: 1, status: 1 });
       await prepareLock(row.propertyId);

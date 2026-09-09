@@ -106,7 +106,7 @@ try {
   await expect(page.locator('[data-details-state="success"]')).toBeVisible();
   const contactAuthorization = `Bearer ${(await (await contactRefresh).json()).data.accessToken}`;
   evidence.contactJourneyEvidence = await verifyContactJourney(page, browser, base, contactAuthorization);
-  evidence.viewingJourneyEvidence = await verifySeekerViewingJourney(page, base, propertyId);
+  evidence.viewingJourneyEvidence = await verifySeekerViewingJourney(page, base, propertyId, browser);
   const logout = await page.request.post(`${base}/api/v1/auth/logout`, { data: {} });
   assert.equal(logout.status(), 200);
   const refreshAfterLogout = await page.request.post(`${base}/api/v1/auth/refresh`, { data: {} });

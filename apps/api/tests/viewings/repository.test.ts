@@ -8,13 +8,13 @@ const owner = '2123456789abcdef01234567';
 const stamp = new Date('2026-09-05T10:00:00Z');
 const row: ViewingRecord = { id: '4123456789abcdef01234567', propertyId: '3123456789abcdef01234567', seekerId: '0123456789abcdef01234567', status: 'requested', requestedAt: stamp, timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp };
 
-function fixture(property: Record<string, unknown> | null) {
+function fixture(property: Record<string, unknown> | null, profileUserId?: string) {
   const inserted: Record<string, unknown>[] = [];
   let lookup: Record<string, unknown> | undefined;
   const connection = { async transaction(work: (session: object) => Promise<unknown>) { return work({}); }, collection(_name: string) {
     return {
       async updateOne() {},
-      async findOne(filter: Record<string, unknown>) { if (_name !== 'properties') return null; lookup = filter; return property; },
+      async findOne(filter: Record<string, unknown>) { if (_name === 'provider_profiles' && profileUserId) return { userId: new Types.ObjectId(profileUserId) }; if (_name === 'users') return { _id: new Types.ObjectId(owner) }; if (_name !== 'properties') return null; lookup = filter; return property; },
       async createIndex() {},
       async insertOne(value: Record<string, unknown>) { inserted.push(value); },
       find() { return { async toArray() { return []; } }; }
@@ -38,4 +38,12 @@ test('rejects missing, unavailable or ownerless properties without writing a vie
     await assert.rejects(() => setup.repository.create(row), /VIEWING_NOT_FOUND/);
     assert.equal(setup.inserted.length, 0);
   }
+});
+
+test('resolves a property provider profile to the account used for appointment ownership', async () => {
+  const profileId = '7123456789abcdef01234567';
+  const setup = fixture({ providerId: new Types.ObjectId(profileId) }, owner);
+  const created = await setup.repository.create(row);
+  assert.equal(created.providerId, owner);
+  assert.equal(String(setup.inserted[0]?.providerId), owner);
 });
