@@ -13,28 +13,35 @@ export async function verifyContactJourney(page, browser, base, seekerAuthorizat
   assert.equal(response.status(), 201);
   let current = (await response.json()).data;
   assert.equal(current.status, 'new');
-  const evidence = { journeys: ['GUIDE-06', 'GUIDE-21'], status: 'PASS_LOCAL_CONTACT_PARTIAL_GUIDES', transitions: ['browser_contact_created'], checks: [], remaining: ['Admin browser actions', 'Other request types', 'Production verification'] };
+  const evidence = { journeys: ['GUIDE-06', 'GUIDE-21'], status: 'PASS_LOCAL_CONTACT_PARTIAL_GUIDES', transitions: ['browser_contact_created'], checks: [], remaining: ['Other request types', 'Production verification'] };
   const adminContext = await browser.newContext();
   try {
     const login = await adminContext.request.post(`${base}/api/v1/auth/login`, { data: { email: 'admin.operations@example.invalid', password: 'LocalPreview-Admin-Only-2026!' } });
     assert.equal(login.status(), 200);
     const session = (await login.json()).data;
     assert.equal(session.user.roleType, 'admin');
-    const headers = { authorization: `Bearer ${session.accessToken}` };
+    const adminPage = await adminContext.newPage();
+    await adminPage.goto(`${base}/admin/requests?lang=en&requestId=${current.id}`, { waitUntil: 'networkidle' });
+    await expect(adminPage.getByTestId('admin-request-detail')).toBeVisible();
+    evidence.checks.push('admin_browser_loads_real_request_details');
     const path = `/api/v1/admin/requests/${current.id}/transitions`;
     const denied = await page.request.post(`${base}${path}`, { headers: { authorization: seekerAuthorization }, data: { transition: 'start_review', expectedVersion: 0 } });
     assert.equal(denied.status(), 403);
     evidence.checks.push('seeker_denied_admin_transition_403');
     for (const [transition, status] of [['start_review', 'under_review'], ['contact', 'contacted'], ['resolve', 'resolved'], ['close', 'closed']]) {
       const previousVersion = current.version;
-      const changed = await adminContext.request.post(`${base}${path}`, { headers, data: { transition, expectedVersion: previousVersion, reason: 'Synthetic local journey verification' } });
+      await adminPage.getByLabel('Status transition', { exact: true }).selectOption(transition);
+      await adminPage.getByLabel('Transition reason', { exact: true }).fill('Synthetic local journey verification');
+      const pendingChange = adminPage.waitForResponse(response => new URL(response.url()).pathname === path && response.request().method() === 'POST');
+      await adminPage.getByRole('button', { name: 'Save transition', exact: true }).click();
+      const changed = await pendingChange;
       assert.equal(changed.status(), 200);
       current = (await changed.json()).data;
       assert.equal(current.status, status);
       assert.ok(current.version > previousVersion);
-      evidence.transitions.push(status);
+      evidence.transitions.push(`admin_browser_${status}`);
       if (transition === 'start_review') {
-        const stale = await adminContext.request.post(`${base}${path}`, { headers, data: { transition: 'contact', expectedVersion: previousVersion } });
+        const stale = await adminContext.request.post(`${base}${path}`, { headers: { authorization: changed.request().headers().authorization }, data: { transition: 'contact', reason: 'Verify stale version rejection', expectedVersion: previousVersion } });
         assert.equal(stale.status(), 409);
         evidence.checks.push('stale_version_rejected_409');
       }

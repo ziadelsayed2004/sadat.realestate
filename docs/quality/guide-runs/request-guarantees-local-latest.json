@@ -1,0 +1,21 @@
+{
+  "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+  "database": "request_guarantees_1788942748162",
+  "testedAt": "2026-09-09T08:32:28.185Z",
+  "commit": "83c8ffbec7d0c12610272c8f3b70ce520ea5f9f7",
+  "worktreeChanges": true,
+  "checks": [
+    "concurrent_identical_creation_one_201_one_409_one_record",
+    "foreign_request_read_and_cancel_404",
+    "current_account_status_overrides_previously_issued_tokens",
+    "live_RBAC_revocation_denies_write_keeps_authorized_read",
+    "missing_reason_400",
+    "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+    "concurrent_decisions_one_success_one_409_one_audit",
+    "replayed_decision_no_duplicate_effect_or_audit",
+    "durable_actor_reason_versions_and_trace",
+    "assignment_and_note_atomic_audit_rollback_and_replay_409",
+    "private_note_hidden_from_seeker"
+  ],
+  "status": "PASS_LOCAL"
+}

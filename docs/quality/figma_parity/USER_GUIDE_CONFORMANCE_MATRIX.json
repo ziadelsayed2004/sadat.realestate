@@ -1303,6 +1303,11 @@
           "Other request types",
           "Production"
         ]
+      },
+      "backendGuaranteesEvidence": {
+        "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+        "status": "PASS_LOCAL_REQUEST_SUBCASES",
+        "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
       }
     },
     {
@@ -1492,6 +1497,11 @@
           "Other request types",
           "Production"
         ]
+      },
+      "backendGuaranteesEvidence": {
+        "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+        "status": "PASS_LOCAL_REQUEST_SUBCASES",
+        "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
       }
     },
     {
@@ -1568,7 +1578,12 @@
         "ADM-65",
         "ADM-66"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW",
+      "backendGuaranteesEvidence": {
+        "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+        "status": "PASS_LOCAL_REQUEST_SUBCASES",
+        "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
+      }
     }
   ],
   "executionSummary": {

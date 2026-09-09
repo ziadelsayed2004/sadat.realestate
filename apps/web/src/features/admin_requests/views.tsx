@@ -210,7 +210,7 @@ function RequestDetail({ copy, locale, request, onClose, onTransition, onAssign,
   const payload = requestPayloadEntries(request);
 
   async function saveTransition(): Promise<void> {
-    if (transitionValue === '' || (['needs_information', 'cancel', 'close'].includes(transitionValue) && transitionReason.trim().length === 0)) { setFeedback(copy.transitionRequired); return; }
+    if (transitionValue === '' || transitionReason.trim().length < 3) { setFeedback(copy.transitionRequired); return; }
     setSaving('transition'); setFeedback(undefined);
     try { await onTransition(request.id, { transition: transitionValue, expectedVersion: request.version, ...(transitionReason.trim() === '' ? {} : { reason: transitionReason.trim() }) }); setFeedback(copy.transitionSaved); } catch { setFeedback(copy.states.error.body); } finally { setSaving(undefined); }
   }

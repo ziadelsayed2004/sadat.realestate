@@ -2,7 +2,7 @@
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T07:55:25.008Z",
+  "startedAt": "2026-09-09T08:54:42.430Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -124,7 +124,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/seeker/requests/53f4ffd26a24f712f31d4ee2",
+      "path": "/api/v1/seeker/requests/508ba87fb332b33029edf86c",
       "status": 200
     },
     {
@@ -161,22 +161,22 @@
     "status": "PASS_LOCAL_CONTACT_PARTIAL_GUIDES",
     "transitions": [
       "browser_contact_created",
-      "under_review",
-      "contacted",
-      "resolved",
-      "closed"
+      "admin_browser_under_review",
+      "admin_browser_contacted",
+      "admin_browser_resolved",
+      "admin_browser_closed"
     ],
     "checks": [
+      "admin_browser_loads_real_request_details",
       "seeker_denied_admin_transition_403",
       "stale_version_rejected_409",
       "seeker_reads_final_closed_state",
       "seeker_browser_shows_closed"
     ],
     "remaining": [
-      "Admin browser actions",
       "Other request types",
       "Production verification"
     ]
   },
-  "finishedAt": "2026-09-09T07:55:32.814Z"
+  "finishedAt": "2026-09-09T08:54:51.759Z"
 }

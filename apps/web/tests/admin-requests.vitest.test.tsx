@@ -122,7 +122,10 @@ describe('Admin request administration contracts and views', () => {
     renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={requestList} transition={transition} assign={assign} />, { locale: 'en' });
     fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').view }));
     fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').saveTransition }));
-    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_review', expectedVersion: 2 }, undefined));
+    expect(transition).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText(getAdminRequestsCopy('en').transitionReason), { target: { value: 'Begin customer review' } });
+    fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').saveTransition }));
+    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_review', expectedVersion: 2, reason: 'Begin customer review' }, undefined));
     expect(screen.getByText(getAdminRequestsCopy('en').noActions)).toBeInTheDocument();
     expect(assign).not.toHaveBeenCalled();
   });

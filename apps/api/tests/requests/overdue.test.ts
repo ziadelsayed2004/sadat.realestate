@@ -12,7 +12,7 @@ test('filters overdue requests before pagination and preserves the full matching
     dueAt: new Date(now.getTime() + (index === 0 ? 3600000 : -3600000)),
     version: 0, createdAt: new Date(now.getTime() - index * 1000), updatedAt: now
   }));
-  const service = createRequestService({ repository: createInMemoryRequestRepository(rows), now: () => now });
+  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(rows), now: () => now });
   for (let page = 1; page <= 3; page++) {
     const result = await service.overdue(admin, { page, limit: 2 });
     assert.equal(result.total, 6);
@@ -31,7 +31,7 @@ test('derives bounded overdue requests from server-owned due dates and excludes 
   const base = { type: 'contact' as const, source: 'seeker' as const, seekerId: '0123456789abcdef01234567', creatorId: '0123456789abcdef01234567', payload: { message: 'hello' }, version: 0, createdAt: now, updatedAt: now };
   const overdue = { ...base, id: '4123456789abcdef01234567', status: 'under_review' as const, dueAt: new Date('2026-08-13T10:00:00.000Z') } satisfies RequestRecord;
   const closed = { ...base, id: '5123456789abcdef01234567', status: 'closed' as const, dueAt: new Date('2026-08-13T10:00:00.000Z') } satisfies RequestRecord;
-  const service = createRequestService({ repository: createInMemoryRequestRepository([overdue, closed]), now: () => now });
+  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository([overdue, closed]), now: () => now });
   const result = await service.overdue(admin, { page: 1, limit: 20 });
   assert.equal(result.total, 1); assert.equal(result.items[0].request.id, overdue.id); assert.equal(result.items[0].overdueBySeconds, 86_400);
 });

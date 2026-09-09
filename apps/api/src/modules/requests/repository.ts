@@ -1,4 +1,6 @@
+import { createHash } from 'node:crypto';
 import { Types, type Connection } from 'mongoose';
+import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { RequestListQuery } from '@sadat-real-estate/contracts';
 import {
   publicRelatedId,
@@ -43,9 +45,17 @@ function escapedSearch(value: string): RegExp {
   return new RegExp(value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&'), 'i');
 }
 
-export function createMongooseRequestRepository(connection: Connection): RequestRepository {
+export function createMongooseRequestRepository(connection: Connection, audit?: AuditWriter): RequestRepository {
   const requests = connection.collection('requests');
   const properties = connection.collection('properties');
+  let creationIndex: Promise<string> | undefined;
+  function ensureCreationIndex(): Promise<string> {
+    creationIndex ??= requests.createIndex({ creationFingerprint: 1 }, {
+      name: 'requests_new_creation_fingerprint_unique', unique: true,
+      partialFilterExpression: { status: 'new', creationFingerprint: { $type: 'string' } }
+    }).catch(error => { creationIndex = undefined; throw error; });
+    return creationIndex;
+  }
 
   async function enrich(items: readonly RequestRecord[]): Promise<RequestRecord[]> {
     const propertyIds = publicRelatedUnique(items.flatMap(item => item.propertyId ? [item.propertyId] : []));
@@ -93,11 +103,31 @@ export function createMongooseRequestRepository(connection: Connection): Request
     return enriched;
   }
 
+  async function write(input: { id: string; expectedVersion: number; audit: AuditRecordInput }, update: Row) {
+    if (!audit) throw new Error('AUDIT_UNAVAILABLE');
+    const result = await connection.transaction(async session => {
+      const updated = await requests.findOneAndUpdate(
+        { _id: toObjectId(input.id), version: input.expectedVersion }, update,
+        { returnDocument: 'after', session }
+      );
+      if (updated) await audit.record(input.audit, session);
+      return updated;
+    });
+    if (!result) return { kind: 'version_conflict' } as const;
+    const parsed = await enrichedResult(result);
+    return parsed ? { kind: 'written', request: parsed } as const : { kind: 'not_found' } as const;
+  }
+
   return {
+    async isActiveAccount(claims) {
+      return Boolean(await connection.collection('users').findOne({ _id: toObjectId(claims.sub), roleType: claims.role, status: 'verified' }, { projection: { _id: 1 } }));
+    },
     async create(request) {
+      await ensureCreationIndex();
       try {
         const doc = {
           _id: toObjectId(request.id),
+          creationFingerprint: createHash('sha256').update(JSON.stringify([request.creatorId, request.type, request.payload])).digest('hex'),
           type: request.type,
           source: request.source,
           ...(request.creatorId ? { creatorId: toObjectId(request.creatorId) } : {}),
@@ -167,22 +197,13 @@ export function createMongooseRequestRepository(connection: Connection): Request
       return enrichedResult(await requests.findOne(filter));
     },
     async transition(input) {
-      const result = await requests.findOneAndUpdate({ _id: toObjectId(input.id), version: input.expectedVersion }, { $set: { status: input.status, updatedAt: input.now }, $inc: { version: 1 } }, { returnDocument: 'after' });
-      if (!result) return { kind: 'version_conflict' };
-      const parsed = await enrichedResult(result);
-      return parsed ? { kind: 'written', request: parsed } : { kind: 'not_found' };
+      return write(input, { $set: { status: input.status, updatedAt: input.now }, $inc: { version: 1 } });
     },
     async assign(input) {
-      const result = await requests.findOneAndUpdate({ _id: toObjectId(input.id), version: input.expectedVersion }, { $set: { assignedTo: toObjectId(input.assigneeId), updatedAt: input.now }, $inc: { version: 1 } }, { returnDocument: 'after' });
-      if (!result) return { kind: 'version_conflict' };
-      const parsed = await enrichedResult(result);
-      return parsed ? { kind: 'written', request: parsed } : { kind: 'not_found' };
+      return write(input, { $set: { assignedTo: toObjectId(input.assigneeId), updatedAt: input.now }, $inc: { version: 1 } });
     },
     async addNote(input) {
-      const result = await requests.findOneAndUpdate({ _id: toObjectId(input.id), version: input.expectedVersion }, ({ $push: { internalNotes: input.note }, $set: { updatedAt: input.now }, $inc: { version: 1 } } as never), { returnDocument: 'after' });
-      if (!result) return { kind: 'version_conflict' };
-      const parsed = await enrichedResult(result);
-      return parsed ? { kind: 'written', request: parsed } : { kind: 'not_found' };
+      return write(input, { $push: { internalNotes: input.note }, $set: { updatedAt: input.now }, $inc: { version: 1 } });
     }
   };
 }
