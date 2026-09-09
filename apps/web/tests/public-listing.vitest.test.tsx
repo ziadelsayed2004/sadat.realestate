@@ -54,6 +54,19 @@ describe('public property listing', () => {
     expect(result.container.textContent).not.toContain('audit');
   });
 
+  it('uses API category names and counts without inventing missing categories or a global total', () => {
+    const data = publicPropertyListDataSchema.parse({
+      ...listingData,
+      categories: [],
+      propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'villa', name: { en: 'Managed villas' }, propertyCount: 2, order: 0 }]
+    });
+    const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} initialQuery={defaultPublicPropertySearchQuery()} />, { locale: 'en' });
+    expect(screen.getByRole('button', { name: /^Managed villas\s*2 properties$/ })).toBeEnabled();
+    expect(screen.queryByRole('button', { name: /Restaurants and cafés/ })).not.toBeInTheDocument();
+    expect(result.container.textContent).not.toContain('1,200+');
+    expect(result.container.textContent).not.toContain('87 properties');
+  });
+
   it('uses the compact comparison control and an accessible mobile navigation toggle', () => {
     renderWithLocale(
       <PublicPropertyListing locale="en" initialData={listingData} initialQuery={defaultPublicPropertySearchQuery()} />,

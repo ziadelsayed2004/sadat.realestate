@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   PublicPropertyDetails as PublicPropertyDetailsData,
   PublicPropertyMedia,
@@ -692,6 +692,8 @@ export function PublicPropertyDetails({
   const [view, setView] = useState<PublicPropertyDetailsViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
   const authorizationHeader = authClient?.getAuthorizationHeader();
+  const hasRequestedData = useRef(false);
+  const [dataScope, setDataScope] = useState({ slug, authorizationHeader: undefined as string | undefined });
   const resolvedLoader = useMemo(
     () => load === defaultPublicPropertyDetailsLoader && authorizationHeader !== undefined
       ? createPublicPropertyDetailsLoader({ authorizationHeader })
@@ -706,17 +708,19 @@ export function PublicPropertyDetails({
   );
 
   useEffect(() => {
-    if (initialData !== undefined && attempt === 0 && authorizationHeader === undefined) return;
+    if (initialData?.slug === slug && attempt === 0 && authorizationHeader === undefined && !hasRequestedData.current) return;
     if (slug === undefined) {
       setView('not_found');
       return;
     }
     const controller = new AbortController();
+    hasRequestedData.current = true;
     setView('loading');
     void resolvedLoader(slug, controller.signal)
       .then(nextData => {
         if (controller.signal.aborted) return;
         setData(nextData);
+        setDataScope({ slug, authorizationHeader });
         setView('success');
       })
       .catch(error => {
@@ -727,11 +731,12 @@ export function PublicPropertyDetails({
   }, [attempt, authorizationHeader, initialData, resolvedLoader, slug]);
 
   const retry = () => setAttempt(value => value + 1);
+  const visibleView = view === 'success' && (dataScope.slug !== slug || dataScope.authorizationHeader !== authorizationHeader) ? 'loading' : view;
 
   return (
-    <div className="public-property-details" data-page="public-property-details" data-details-state={view}>
+    <div className="public-property-details" data-page="public-property-details" data-details-state={visibleView}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
-      {view === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined ? undefined : retry} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} url={url} onRetry={retry} />}
+      {visibleView === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined ? undefined : retry} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

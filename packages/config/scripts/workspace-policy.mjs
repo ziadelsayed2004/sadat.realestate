@@ -22,7 +22,7 @@ export const EXPECTED_API_DEPENDENCIES = {
     express: '5.2.1',
     helmet: '8.3.0',
     mongoose: '9.9.2',
-    nodemailer: '9.0.5'
+    nodemailer: '9.1.1'
   },
   devDependencies: {
     '@types/express': '5.0.6',
@@ -57,7 +57,7 @@ export const EXPECTED_WEB_DEPENDENCIES = {
     jsdom: '29.1.1',
     msw: '2.15.0',
     vite: '7.3.6',
-    vitest: '4.1.10'
+    vitest: '4.1.11'
   },
   peerDependencies: {}
 };

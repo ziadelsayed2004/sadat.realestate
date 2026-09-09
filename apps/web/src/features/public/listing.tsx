@@ -59,17 +59,17 @@ type ListingRailItem = PublicHomepageCategory & {
 function listingRailItems(data: PublicPropertyListData): ReadonlyArray<ListingRailItem> {
   const categories = new Map(data.categories.map(item => [item.slug, item] as const));
   const propertyTypes = new Map(data.propertyTypes.map(item => [item.slug, item] as const));
-  const canonical = canonicalHomepageCategories.map(item => {
+  const canonical: ListingRailItem[] = canonicalHomepageCategories.flatMap(item => {
     const actual = categories.get(item.slug) ?? propertyTypes.get(item.slug);
     return actual === undefined
-      ? item
-      : {
+      ? []
+      : [{
           ...item,
-          id: actual.id,
+          ...actual,
           ...(actual.imageUrl ? { imageUrl: actual.imageUrl } : {}),
           actualId: actual.id,
           actualKind: categories.has(item.slug) ? 'category' as const : 'type' as const
-        };
+        }];
   });
   const canonicalSlugs = new Set(canonical.map(item => item.slug));
   const extras: ListingRailItem[] = [];
@@ -464,7 +464,7 @@ export function PublicPropertyListing({
       </section>
       {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
         {railItems.slice(0, 1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
-        <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.allPropertiesCount} {copy.propertyCountLabel}</span></button>
+        <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.propertyCountLabel}</span></button>
         {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">

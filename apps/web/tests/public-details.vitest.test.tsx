@@ -131,6 +131,30 @@ describe('public property details', () => {
     expect(screen.getByRole('link', { name: 'sales@example.com' })).toHaveAttribute('href', 'mailto:sales@example.com');
   });
 
+  it('removes authorized contacts immediately on logout and reloads the guest projection', async () => {
+    const authorized = publicPropertyDetailsSchema.parse({
+      ...detailsData,
+      contact: { phone: '+201234567890' }
+    });
+    let token: string | undefined = 'Bearer seeker';
+    const authClient = { getAuthorizationHeader: () => token };
+    let finishGuest: ((value: typeof detailsData) => void) | undefined;
+    const load = vi.fn()
+      .mockResolvedValueOnce(authorized)
+      .mockImplementationOnce(() => new Promise<typeof detailsData>(resolve => { finishGuest = resolve; }));
+    const page = () => <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={load} />;
+    const result = renderWithLocale(page(), { locale: 'en' });
+    await screen.findByRole('link', { name: '+201234567890' });
+
+    token = undefined;
+    result.rerender(page());
+    expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument();
+    await waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    finishGuest?.(detailsData);
+    await screen.findByRole('heading', { name: 'Published home', level: 1 });
+    expect(result.container.querySelector('[data-contact-revealed="true"]')).not.toBeInTheDocument();
+  });
+
   it.each(['ar', 'en'] as const)('renders the localized public projection and safe media state for %s', locale => {
     const copy = getPublicPropertyDetailsCopy(locale);
     const result = renderWithLocale(

@@ -1233,7 +1233,24 @@
         "AUTH-04",
         "AUTH-06"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+        "verifiedAt": "2026-09-09T07:31:15.110Z",
+        "mockedRoutes": false,
+        "coverage": [
+          "browser role selection",
+          "local SMTP email OTP",
+          "verified seeker creation",
+          "authenticated dashboard after navigation",
+          "admin permission denial 403",
+          "logout refresh rejection 401",
+          "402px viewport without overflow"
+        ],
+        "guideDeviation": "Email OTP replaces the historical phone OTP authority.",
+        "production": "PENDING",
+        "conflict": "Not applicable to registration; OTP replay and duplicate registration remain separate negative cases to verify."
+      }
     },
     {
       "id": "GUIDE-05",
@@ -1500,5 +1517,12 @@
       ],
       "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
     }
-  ]
+  ],
+  "executionSummary": {
+    "updatedAt": "2026-09-09T07:31:15.110Z",
+    "totalJourneys": 26,
+    "localE2ePassed": 1,
+    "productionVerified": 0,
+    "fullyClosed": 0
+  }
 }

@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-09-09T04:42:49.240Z",
+  "scope": "Read-only Production availability; no deployment or authenticated admin verification in this run",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/api/v1/public/properties",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/api/v1/public/articles",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/api/v1/public/settings/seo",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8"
+    }
+  ]
+}
