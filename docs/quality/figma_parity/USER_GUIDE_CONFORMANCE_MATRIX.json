@@ -1321,11 +1321,15 @@
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
         "section": "viewingJourneyEvidence",
         "environment": "local-real-browser-API-MongoDB",
-        "scope": "Seeker creation, rescheduling, cancellation and empty tab recovery without refresh",
+        "scope": "Seeker create/reschedule/cancel; provider OTP login, confirm/reschedule/complete and cancellation with mandatory reason; final states in seeker browser; empty tab recovery without refresh",
         "remaining": [
-          "Provider browser lifecycle",
-          "Production verification"
+          "Production verification",
+          "Visual parity verification"
         ]
+      },
+      "backendGuaranteesEvidence": {
+        "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+        "scope": "Ownership including legacy profile links, RBAC, current account status, atomic audit rollback, concurrent decisions and competing appointment slots"
       }
     },
     {

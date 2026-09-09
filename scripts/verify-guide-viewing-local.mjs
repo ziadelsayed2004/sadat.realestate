@@ -4,6 +4,7 @@ import { expect } from '@playwright/test';
 
 export async function verifySeekerViewingJourney(page, base, propertyId, browser) {
   assert.equal(new URL(base).hostname, '127.0.0.1');
+  const runOffset = Math.floor(Math.random() * 180) * 60000;
   const evidence = { journey: 'GUIDE-07', status: 'RUNNING', environment: 'local-real-browser-API-MongoDB', checks: [], remaining: ['Provider browser confirmation/reschedule/completion', 'Production verification'] };
   await page.goto(`${base}/seeker/viewings?lang=en`, { waitUntil: 'networkidle' });
   await expect(page.getByRole('heading', { name: 'No upcoming appointments' })).toBeVisible();
@@ -14,7 +15,7 @@ export async function verifySeekerViewingJourney(page, base, propertyId, browser
   await page.getByRole('button', { name: 'Request a viewing', exact: true }).click();
   const form = page.getByRole('form', { name: 'Request a new viewing', exact: true });
   await form.getByLabel('Property ID', { exact: true }).fill(propertyId);
-  const requestedAt = new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 16);
+  const requestedAt = new Date(Date.now() + 5 * 86400000 + runOffset).toISOString().slice(0, 16);
   await form.getByLabel('Viewing time', { exact: true }).fill(requestedAt);
   await form.getByLabel('Timezone', { exact: true }).fill('Africa/Cairo');
   const createdResponse = page.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname === '/api/v1/seeker/viewings');
@@ -25,7 +26,7 @@ export async function verifySeekerViewingJourney(page, base, propertyId, browser
   const card = page.getByTestId(`seeker-viewing-${viewing.id}`);
   await expect(card).toHaveAttribute('data-viewing-status', 'requested');
   await card.getByRole('button', { name: 'Reschedule', exact: true }).click();
-  await card.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 6 * 86400000).toISOString().slice(0, 16));
+  await card.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 6 * 86400000 + runOffset).toISOString().slice(0, 16));
   const patchedResponse = page.waitForResponse(response => response.request().method() === 'PATCH' && new URL(response.url()).pathname === `/api/v1/seeker/viewings/${viewing.id}`);
   await card.getByRole('button', { name: 'Save appointment', exact: true }).click();
   assert.equal((await patchedResponse).status(), 200);
@@ -72,7 +73,7 @@ export async function verifySeekerViewingJourney(page, base, propertyId, browser
     const secondForm = page.getByRole('form', { name: 'Request a new viewing', exact: true });
     const marker = `Local provider journey ${Date.now()}`;
     await secondForm.getByLabel('Property ID', { exact: true }).fill(propertyId);
-    await secondForm.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 8 * 86400000).toISOString().slice(0, 16));
+    await secondForm.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 5 * 3600000 + runOffset).toISOString().slice(0, 16));
     await secondForm.getByLabel('Timezone', { exact: true }).fill('Africa/Cairo');
     await secondForm.getByLabel('Optional note', { exact: true }).fill(marker);
     const newResponse = page.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname === '/api/v1/seeker/viewings');
@@ -88,7 +89,7 @@ export async function verifySeekerViewingJourney(page, base, propertyId, browser
       await providerCard.getByRole('button', { name: new RegExp(`^${label}`) }).click();
       const dialog = providerPage.getByRole('dialog');
       if (action === 'reschedule') {
-        await dialog.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 9 * 86400000).toISOString().slice(0, 16));
+        await dialog.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 8 * 3600000 + runOffset).toISOString().slice(0, 16));
       }
       const transitionResponse = providerPage.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname === `/api/v1/provider/viewings/${newId}/transitions`);
       await dialog.getByRole('button', { name: 'Save change', exact: true }).click();
@@ -100,7 +101,42 @@ export async function verifySeekerViewingJourney(page, base, propertyId, browser
     await page.getByRole('tab', { name: 'Past', exact: true }).click();
     await expect(page.getByTestId(`seeker-viewing-${newId}`)).toHaveAttribute('data-viewing-status', 'completed');
     evidence.checks.push('seeker_reads_provider_completed_state');
-    evidence.remaining = ['Provider cancellation browser branch', 'Production verification'];
+    await page.getByRole('button', { name: 'Request a viewing', exact: true }).click();
+    const cancellationForm = page.getByRole('form', { name: 'Request a new viewing', exact: true });
+    const cancelMarker = `Local provider cancellation ${Date.now()}`;
+    await cancellationForm.getByLabel('Property ID', { exact: true }).fill(propertyId);
+    await cancellationForm.getByLabel('Viewing time', { exact: true }).fill(new Date(Date.now() + 9 * 3600000 + runOffset).toISOString().slice(0, 16));
+    await cancellationForm.getByLabel('Timezone', { exact: true }).fill('Africa/Cairo');
+    await cancellationForm.getByLabel('Optional note', { exact: true }).fill(cancelMarker);
+    const cancellationCreated = page.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname === '/api/v1/seeker/viewings');
+    await cancellationForm.getByRole('button', { name: 'Submit request', exact: true }).click();
+    const cancellationCreation = await cancellationCreated;
+    assert.equal(cancellationCreation.status(), 201);
+    const cancellationId = (await cancellationCreation.json()).data.id;
+    await providerPage.goto(`${base}/provider/viewings?lang=en`, { waitUntil: 'networkidle' });
+    const cancellationCard = providerPage.getByTestId('provider-viewing-row').filter({ hasText: cancelMarker });
+    for (let index = 0; index < 20 && await cancellationCard.count() === 0; index++) {
+      const next = providerPage.getByRole('button', { name: 'Next page', exact: true });
+      assert.ok(await next.isEnabled(), 'Created appointment must be present in provider pagination');
+      const loaded = providerPage.waitForResponse(response => response.request().method() === 'GET' && new URL(response.url()).pathname === '/api/v1/provider/viewings');
+      await next.click();
+      assert.equal((await loaded).status(), 200);
+      await providerPage.waitForLoadState('networkidle');
+    }
+    await cancellationCard.getByRole('button', { name: /^Cancel:/ }).click();
+    const cancelDialog = providerPage.getByRole('dialog');
+    await cancelDialog.getByRole('button', { name: 'Save change', exact: true }).click();
+    await expect(cancelDialog.getByRole('alert')).toContainText('Review the required fields');
+    await cancelDialog.getByLabel('Reason', { exact: true }).fill('Customer requested a different property');
+    const cancellationResponse = providerPage.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname === `/api/v1/provider/viewings/${cancellationId}/transitions`);
+    await cancelDialog.getByRole('button', { name: 'Save change', exact: true }).click();
+    assert.equal((await cancellationResponse).status(), 200);
+    await expect(cancellationCard).toHaveAttribute('data-viewing-status', 'cancelled');
+    await page.goto(`${base}/seeker/viewings?lang=en`, { waitUntil: 'networkidle' });
+    await page.getByRole('tab', { name: 'Cancelled', exact: true }).click();
+    await expect(page.getByTestId(`seeker-viewing-${cancellationId}`)).toHaveAttribute('data-viewing-status', 'cancelled');
+    evidence.checks.push('provider_browser_cancel_requires_reason', 'provider_browser_cancel_200', 'seeker_reads_provider_cancelled_state');
+    evidence.remaining = ['Production verification'];
   } finally { await providerContext.close(); }
   evidence.status = 'PASS_LOCAL_VIEWING_PARTIAL_GUIDE';
   return evidence;

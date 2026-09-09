@@ -2,7 +2,7 @@
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T14:29:22.875Z",
+  "startedAt": "2026-09-09T14:48:13.125Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -124,7 +124,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/seeker/requests/976abe1bcfc59c4c1b7cbde4",
+      "path": "/api/v1/seeker/requests/ce04a67acd9a0c3a68a2d17d",
       "status": 200
     },
     {
@@ -164,7 +164,7 @@
     },
     {
       "method": "PATCH",
-      "path": "/api/v1/seeker/viewings/0aca8b9ff7451ab9b3df2bb3",
+      "path": "/api/v1/seeker/viewings/67063dd2f0cd43975603846d",
       "status": 200
     },
     {
@@ -174,12 +174,42 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/seeker/viewings/0aca8b9ff7451ab9b3df2bb3/cancel",
+      "path": "/api/v1/seeker/viewings/67063dd2f0cd43975603846d/cancel",
       "status": 200
     },
     {
       "method": "GET",
       "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/viewings",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
       "status": 200
     },
     {
@@ -287,12 +317,14 @@
       "provider_browser_reschedule_200",
       "provider_browser_confirm_200",
       "provider_browser_complete_200",
-      "seeker_reads_provider_completed_state"
+      "seeker_reads_provider_completed_state",
+      "provider_browser_cancel_requires_reason",
+      "provider_browser_cancel_200",
+      "seeker_reads_provider_cancelled_state"
     ],
     "remaining": [
-      "Provider cancellation browser branch",
       "Production verification"
     ]
   },
-  "finishedAt": "2026-09-09T14:29:33.472Z"
+  "finishedAt": "2026-09-09T14:48:25.431Z"
 }
