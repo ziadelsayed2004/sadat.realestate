@@ -1316,7 +1316,17 @@
       "screenIds": [
         "SEK-05"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL_LOCAL_BROWSER_VERIFIED",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+        "section": "viewingJourneyEvidence",
+        "environment": "local-real-browser-API-MongoDB",
+        "scope": "Seeker creation, rescheduling, cancellation and empty tab recovery without refresh",
+        "remaining": [
+          "Provider browser lifecycle",
+          "Production verification"
+        ]
+      }
     },
     {
       "id": "GUIDE-08",

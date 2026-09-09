@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
+import { verifySeekerViewingJourney } from './verify-guide-viewing-local.mjs';
 import { verifyContactJourney } from './verify-guide-contact-local.mjs';
 
 // Uses the repository's loopback preview and mail catcher, never external mail.
@@ -105,6 +106,7 @@ try {
   await expect(page.locator('[data-details-state="success"]')).toBeVisible();
   const contactAuthorization = `Bearer ${(await (await contactRefresh).json()).data.accessToken}`;
   evidence.contactJourneyEvidence = await verifyContactJourney(page, browser, base, contactAuthorization);
+  evidence.viewingJourneyEvidence = await verifySeekerViewingJourney(page, base, propertyId);
   const logout = await page.request.post(`${base}/api/v1/auth/logout`, { data: {} });
   assert.equal(logout.status(), 200);
   const refreshAfterLogout = await page.request.post(`${base}/api/v1/auth/refresh`, { data: {} });

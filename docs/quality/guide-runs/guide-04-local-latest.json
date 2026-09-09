@@ -2,7 +2,7 @@
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T08:54:42.430Z",
+  "startedAt": "2026-09-09T14:24:44.881Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -124,7 +124,67 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/seeker/requests/508ba87fb332b33029edf86c",
+      "path": "/api/v1/seeker/requests/b1b32cf05aa9d369a4aef422",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/viewings",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/seeker/viewings/a2d22781286f9daaa4c886a7",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/viewings/a2d22781286f9daaa4c886a7/cancel",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
       "status": 200
     },
     {
@@ -178,5 +238,21 @@
       "Production verification"
     ]
   },
-  "finishedAt": "2026-09-09T08:54:51.759Z"
+  "viewingJourneyEvidence": {
+    "journey": "GUIDE-07",
+    "status": "PASS_LOCAL_SEEKER_VIEWING_PARTIAL_GUIDE",
+    "environment": "local-real-browser-API-MongoDB",
+    "checks": [
+      "empty_tabs_recover_without_refresh",
+      "browser_create_201",
+      "browser_reschedule_200",
+      "browser_cancel_200",
+      "cancelled_tab_shows_final_state"
+    ],
+    "remaining": [
+      "Provider browser confirmation/reschedule/completion",
+      "Production verification"
+    ]
+  },
+  "finishedAt": "2026-09-09T14:24:55.543Z"
 }
