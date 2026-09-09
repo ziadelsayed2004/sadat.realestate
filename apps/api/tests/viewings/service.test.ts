@@ -18,3 +18,33 @@ test('exposes customer names only through owned appointment access', async () =>
 test('creates future request-and-confirm viewings and prevents duplicate competing times', async () => { const repo = createInMemoryViewingRepository(); const service = createViewingService({ authorization: { authorize: async () => true }, repository: repo, now: () => stamp }); const created = await service.create(seeker, { propertyId: property, requestedAt: '2026-08-15T10:00:00.000Z', timezone: 'Africa/Cairo' }); assert.equal(created.status, 'requested'); assert.equal(created.version, 0); await assert.rejects(() => service.create(seeker, { propertyId: property, requestedAt: '2026-08-15T10:00:00.000Z', timezone: 'Africa/Cairo' }), /VIEWING_CONFLICT/); await assert.rejects(() => service.create(seeker, { propertyId: property, requestedAt: '2026-08-13T10:00:00.000Z', timezone: 'Africa/Cairo' }), /VIEWING_INVALID_STATE/); });
 test('enforces seeker ownership, optimistic reschedule/cancel, and provider scope', async () => { const seed: ViewingRecord = { id: viewingId, propertyId: property, seekerId: seeker.sub, providerId: provider.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00.000Z'), timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp }; const service = createViewingService({ authorization: { authorize: async () => true }, repository: createInMemoryViewingRepository([seed]), now: () => stamp }); const rescheduled = await service.patch(seeker, viewingId, { requestedAt: '2026-08-16T10:00:00.000Z', timezone: 'UTC', expectedVersion: 0 }); assert.equal(rescheduled.status, 'rescheduled'); await assert.rejects(() => service.cancel({ ...seeker, sub: '5123456789abcdef01234567' } as AccessTokenClaims, viewingId, 1), /VIEWING_NOT_FOUND/); const confirmed = await service.transition(provider, viewingId, { action: 'confirm', expectedVersion: 1 }); assert.equal(confirmed.status, 'confirmed'); const cancelled = await service.cancel(seeker, viewingId, 2); assert.equal(cancelled.status, 'cancelled'); });
 test('allows verified administrators to list all viewing records without provider scoping', async () => { const seed: ViewingRecord = { id: viewingId, propertyId: property, seekerId: seeker.sub, providerId: provider.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00.000Z'), timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp }; const service = createViewingService({ authorization: { authorize: async () => true }, repository: createInMemoryViewingRepository([seed]), now: () => stamp }); const result = await service.list(admin, { page: 1, limit: 20 }); assert.equal(result.total, 1); assert.equal(result.items[0]?.id, viewingId); });
+
+test('applies the same future horizon and timezone rules to creation and both reschedule paths', async () => {
+  const seed: ViewingRecord = { id: viewingId, propertyId: property, seekerId: seeker.sub, providerId: provider.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00Z'), timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp };
+  const service = createViewingService({ repository: createInMemoryViewingRepository([seed]), now: () => stamp });
+  for (const input of [
+    { requestedAt: '2026-08-13T10:00:00Z', timezone: 'UTC' },
+    { requestedAt: '2028-08-15T10:00:00Z', timezone: 'UTC' },
+    { requestedAt: '2026-08-15T10:00:00Z', timezone: 'Mars/Olympus' }
+  ]) {
+    await assert.rejects(() => service.create(seeker, { propertyId: property, ...input }), /VIEWING_INVALID_STATE/);
+    await assert.rejects(() => service.patch(seeker, viewingId, { ...input, expectedVersion: 0 }), /VIEWING_INVALID_STATE/);
+    await assert.rejects(() => service.transition(provider, viewingId, { action: 'reschedule', ...input, expectedVersion: 0 }), /VIEWING_INVALID_STATE/);
+  }
+  for (const value of [null, false, '', '0', undefined, 0.5, -1]) {
+    await assert.rejects(() => service.cancel(seeker, viewingId, value), /VIEWING_INVALID_STATE/);
+  }
+  assert.equal((await service.get(seeker, viewingId)).version, 0);
+});
+
+test('confirm cannot smuggle a date change while explicit provider reschedule updates time and version', async () => {
+  const seed: ViewingRecord = { id: viewingId, propertyId: property, seekerId: seeker.sub, providerId: provider.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00Z'), timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp };
+  const service = createViewingService({ repository: createInMemoryViewingRepository([seed]), now: () => stamp });
+  for (const fields of [{ requestedAt: '2026-08-16T10:00:00Z' }, { timezone: 'Africa/Cairo' }]) {
+    await assert.rejects(() => service.transition(provider, viewingId, { action: 'confirm', ...fields, expectedVersion: 0 }), /VIEWING_INVALID_STATE/);
+  }
+  const updated = await service.transition(provider, viewingId, { action: 'reschedule', requestedAt: '2026-08-16T10:00:00Z', timezone: 'Africa/Cairo', expectedVersion: 0 });
+  assert.equal(updated.status, 'rescheduled');
+  assert.equal(updated.version, 1);
+  assert.equal(updated.requestedAt, '2026-08-16T10:00:00.000Z');
+});

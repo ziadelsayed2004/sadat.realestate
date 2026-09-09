@@ -1,3 +1,4 @@
+import type { AuditWriter } from '../audit/writer.js';
 import { Types, type Connection } from 'mongoose';
 import { type ViewingListQuery } from '@sadat-real-estate/contracts';
 import {
@@ -36,7 +37,7 @@ function parse(value: Row): ViewingRecord | undefined {
   };
 }
 
-export function createMongooseViewingRepository(connection: Connection): ViewingRepository {
+export function createMongooseViewingRepository(connection: Connection, audit?: AuditWriter): ViewingRepository {
   const collection = connection.collection('viewings');
   const properties = connection.collection('properties');
 
@@ -159,7 +160,9 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
       return enriched;
     },
     async update(input) {
-      const result = await collection.findOneAndUpdate(
+      if (!audit) throw new Error('AUDIT_UNAVAILABLE');
+      const result = await connection.transaction(async session => {
+      const updated = await collection.findOneAndUpdate(
         { _id: oid(input.id), version: input.expectedVersion },
         {
           $set: {
@@ -170,8 +173,11 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
           },
           $inc: { version: 1 }
         },
-        { returnDocument: 'after' }
+        { returnDocument: 'after', session }
       );
+      if (updated) await audit.record(input.audit, session);
+      return updated;
+      });
       if (!result) return { kind: 'version_conflict' };
       const parsed = parse(result as unknown as Row);
       if (!parsed) return { kind: 'not_found' };
