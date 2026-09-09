@@ -11,9 +11,10 @@ const row: ViewingRecord = { id: '4123456789abcdef01234567', propertyId: '312345
 function fixture(property: Record<string, unknown> | null) {
   const inserted: Record<string, unknown>[] = [];
   let lookup: Record<string, unknown> | undefined;
-  const connection = { collection(_name: string) {
+  const connection = { async transaction(work: (session: object) => Promise<unknown>) { return work({}); }, collection(_name: string) {
     return {
-      async findOne(filter: Record<string, unknown>) { lookup = filter; return property; },
+      async updateOne() {},
+      async findOne(filter: Record<string, unknown>) { if (_name !== 'properties') return null; lookup = filter; return property; },
       async createIndex() {},
       async insertOne(value: Record<string, unknown>) { inserted.push(value); },
       find() { return { async toArray() { return []; } }; }

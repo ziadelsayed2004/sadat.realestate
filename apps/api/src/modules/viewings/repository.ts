@@ -1,5 +1,5 @@
 import type { AuditWriter } from '../audit/writer.js';
-import { Types, type Connection } from 'mongoose';
+import { Types, type ClientSession, type Connection } from 'mongoose';
 import { type ViewingListQuery } from '@sadat-real-estate/contracts';
 import {
   publicRelatedObjectIds,
@@ -40,6 +40,20 @@ function parse(value: Row): ViewingRecord | undefined {
 export function createMongooseViewingRepository(connection: Connection, audit?: AuditWriter): ViewingRepository {
   const collection = connection.collection('viewings');
   const properties = connection.collection('properties');
+  const locks = connection.collection('viewing_schedule_locks');
+  async function prepareLock(propertyId: string): Promise<void> {
+    try { await locks.updateOne({ _id: oid(propertyId) }, { $setOnInsert: { revision: 0 } }, { upsert: true }); }
+    catch (error) { if (!(typeof error === 'object' && error !== null && 'code' in error && error.code === 11000)) throw error; }
+  }
+  async function lockSchedule(propertyId: string, session: ClientSession): Promise<void> {
+    await locks.updateOne({ _id: oid(propertyId) }, { $inc: { revision: 1 } }, { session });
+  }
+  async function occupied(propertyId: string, requestedAt: Date, session: ClientSession, excluding?: string): Promise<boolean> {
+    return Boolean(await collection.findOne({ propertyId, requestedAt,
+      status: { $in: ['requested', 'confirmed', 'rescheduled'] },
+      ...(excluding ? { _id: { $ne: oid(excluding) } } : {})
+    }, { session, projection: { _id: 1 } }));
+  }
 
   async function enrich(records: readonly ViewingRecord[]): Promise<ViewingRecord[]> {
     if (records.length === 0) return [];
@@ -118,6 +132,10 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       if (!providerId || !Types.ObjectId.isValid(providerId)) throw new ViewingServiceError('VIEWING_NOT_FOUND');
       row = { ...row, providerId };
       await collection.createIndex({ propertyId: 1, requestedAt: 1, status: 1 });
+      await prepareLock(row.propertyId);
+      await connection.transaction(async session => {
+      await lockSchedule(row.propertyId, session);
+      if (await occupied(row.propertyId, row.requestedAt, session)) throw new ViewingServiceError('VIEWING_CONFLICT');
       await collection.insertOne({
         _id: oid(row.id),
         propertyId: row.propertyId,
@@ -130,6 +148,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
         version: row.version,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt
+      }, { session });
       });
       const [enriched] = await enrich([row]);
       return enriched ?? row;
@@ -161,7 +180,17 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     },
     async update(input) {
       if (!audit) throw new Error('AUDIT_UNAVAILABLE');
+      const existing = await collection.findOne({ _id: oid(input.id) });
+      if (!existing || typeof existing.propertyId !== 'string') return { kind: 'not_found' };
+      await prepareLock(existing.propertyId);
       const result = await connection.transaction(async session => {
+      await lockSchedule(existing.propertyId as string, session);
+      const current = await collection.findOne({ _id: oid(input.id), version: input.expectedVersion }, { session });
+      if (!current) return null;
+      if (!['cancelled', 'completed'].includes(input.status ?? String(current.status))
+        && await occupied(existing.propertyId as string, input.requestedAt ?? current.requestedAt as Date, session, input.id)) {
+        throw new ViewingServiceError('VIEWING_CONFLICT');
+      }
       const updated = await collection.findOneAndUpdate(
         { _id: oid(input.id), version: input.expectedVersion },
         {

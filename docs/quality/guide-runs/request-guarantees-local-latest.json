@@ -1,8 +1,8 @@
 {
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "request_guarantees_1788944418891",
-  "testedAt": "2026-09-09T09:00:18.918Z",
-  "commit": "282a426672a3ac59c50e42b591f46917b5008ae3",
+  "database": "request_guarantees_1788963775661",
+  "testedAt": "2026-09-09T14:22:55.685Z",
+  "commit": "96a59a101c79a4b1f08f9c115ea4d1a36728458d",
   "worktreeChanges": true,
   "checks": [
     "concurrent_identical_creation_one_201_one_409_one_record",
@@ -20,7 +20,11 @@
     "viewing_audit_failure_rolls_back_mutation_and_audit",
     "viewing_concurrent_confirmation_one_200_one_409",
     "viewing_past_reschedule_rejected",
-    "viewing_cancellation_reason_persisted"
+    "viewing_cancellation_reason_persisted",
+    "two_customers_same_slot_one_201_one_409",
+    "cancelled_slot_can_be_booked_again",
+    "reschedule_into_occupied_slot_409_without_mutation_or_audit",
+    "legacy_active_viewing_reserves_slot_without_migration"
   ],
   "status": "PASS_LOCAL"
 }

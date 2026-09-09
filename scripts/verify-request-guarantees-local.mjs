@@ -140,6 +140,27 @@ try {
   assert.equal(viewingAudit.reason, 'Customer requested cancellation');
   assert.equal(viewingAudit.actorId.toHexString(), providerId.toHexString());
   evidence.checks.push('viewing_audit_failure_rolls_back_mutation_and_audit', 'viewing_concurrent_confirmation_one_200_one_409', 'viewing_past_reschedule_rejected', 'viewing_cancellation_reason_persisted');
+  const competingTime = new Date(Date.now() + 172800000).toISOString();
+  const competing = await Promise.all(['seeker', 'other'].map(actor => call(actor, '/seeker/viewings', {
+    propertyId: propertyId.toHexString(), requestedAt: competingTime, timezone: 'UTC'
+  })));
+  assert.deepEqual(competing.map(result => result.status).sort(), [201, 409]);
+  const booked = competing.find(result => result.status === 201).body.data;
+  assert.equal((await call('provider', `/provider/viewings/${booked.id}/transitions`, { action: 'cancel', reason: 'Release appointment for local verification', expectedVersion: 0 })).status, 200);
+  assert.equal((await call('other', '/seeker/viewings', { propertyId: propertyId.toHexString(), requestedAt: competingTime, timezone: 'UTC' })).status, 201);
+  evidence.checks.push('two_customers_same_slot_one_201_one_409', 'cancelled_slot_can_be_booked_again');
+  const anotherTime = new Date(Date.now() + 259200000).toISOString();
+  const anotherViewing = await call('seeker', '/seeker/viewings', { propertyId: propertyId.toHexString(), requestedAt: anotherTime, timezone: 'UTC' });
+  assert.equal(anotherViewing.status, 201);
+  const anotherId = anotherViewing.body.data.id;
+  assert.equal((await call('provider', `/provider/viewings/${anotherId}/transitions`, { action: 'reschedule', requestedAt: competingTime, timezone: 'UTC', expectedVersion: 0 })).status, 409);
+  assert.equal((await connection.collection('viewings').findOne({ _id: new Types.ObjectId(anotherId) })).version, 0);
+  assert.equal(await auditModels.AuditLog.countDocuments({ targetId: anotherId }), 0);
+  // Legacy rows have no lock metadata; they must still reserve their active slot.
+  const legacyTime = new Date(Date.now() + 345600000);
+  await connection.collection('viewings').insertOne({ _id: new Types.ObjectId(), propertyId: propertyId.toHexString(), seekerId: ids.other, providerId, status: 'confirmed', requestedAt: legacyTime, timezone: 'UTC', version: 0, createdAt: new Date(), updatedAt: new Date() });
+  assert.equal((await call('seeker', '/seeker/viewings', { propertyId: propertyId.toHexString(), requestedAt: legacyTime.toISOString(), timezone: 'UTC' })).status, 409);
+  evidence.checks.push('reschedule_into_occupied_slot_409_without_mutation_or_audit', 'legacy_active_viewing_reserves_slot_without_migration');
   evidence.status = 'PASS_LOCAL';
 } catch (error) {
   evidence.status = 'FAIL_LOCAL';
