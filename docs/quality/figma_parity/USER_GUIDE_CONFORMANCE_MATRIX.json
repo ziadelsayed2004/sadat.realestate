@@ -1601,11 +1601,11 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T07:55:32.814Z",
+    "updatedAt": "2026-09-09T14:52:43.825517+00:00",
     "totalJourneys": 26,
     "localE2ePassed": 3,
     "productionVerified": 0,
     "fullyClosed": 0,
-    "localE2ePartial": 2
+    "localE2ePartial": 3
   }
 }

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import { chromium, expect } from '@playwright/test';
 import { verifySeekerViewingJourney } from './verify-guide-viewing-local.mjs';
 import { verifyContactJourney } from './verify-guide-contact-local.mjs';
@@ -8,6 +9,8 @@ import { verifyContactJourney } from './verify-guide-contact-local.mjs';
 const base = 'http://127.0.0.1:4173';
 const email = `guide04-${Date.now()}@example.invalid`;
 const evidence = {
+  commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+  worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0,
   journey: 'GUIDE-04', environment: 'local', mockedRoutes: false,
   startedAt: new Date().toISOString(), status: 'RUNNING',
   scope: 'Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.',

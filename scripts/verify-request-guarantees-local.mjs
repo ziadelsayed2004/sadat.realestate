@@ -15,7 +15,7 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 const database = `request_guarantees_${Date.now()}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
 const evidence = { environment: 'isolated-local-MongoDB-rs0-real-HTTP', database, testedAt: new Date().toISOString(),
-  commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), worktreeChanges: true, checks: [], status: 'RUNNING' };
+  commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0, checks: [], status: 'RUNNING' };
 let server;
 try {
   const accessTokens = createHmacAccessTokenService(randomBytes(32), 3600);
