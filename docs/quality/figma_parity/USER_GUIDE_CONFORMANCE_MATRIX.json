@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-09T21:04:18.167Z",
+  "generatedAt": "2026-09-09T21:54:32.286Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1365,31 +1365,31 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "public"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -1397,10 +1397,59 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-09T21:46:19.947Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/community-local-latest.json",
+        "status": "PASS_LOCAL",
+        "verifiedAt": "2026-09-09T21:54:31.821Z",
+        "environment": "local",
+        "mockedRoutes": false,
+        "transitions": [
+          "verified_seeker_registered",
+          "browser_post_created_as_draft",
+          "browser_admin_published_v1",
+          "public_api_and_browser_show_published_post",
+          "concurrent_hide_one_200_one_409_v2",
+          "browser_republished_v3",
+          "browser_hidden_v4",
+          "browser_rejected_v5",
+          "public_api_and_browser_hide_rejected_post"
+        ],
+        "authorization": [
+          "limited_admin_moderation_denied_403",
+          "full_admin_moderation_allowed",
+          "public_projection_only_exposes_published"
+        ],
+        "mongo": {
+          "collections": [
+            "community_posts",
+            "audit_logs"
+          ],
+          "finalStatus": "rejected",
+          "finalVersion": 5,
+          "auditCount": 5,
+          "actions": [
+            "community_post.publish",
+            "community_post.hide",
+            "community_post.publish",
+            "community_post.hide",
+            "community_post.reject"
+          ],
+          "orderedAfterVersions": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "remaining": [
+          "Run the same journey on Production after deployment of this commit."
+        ]
+      }
     },
     {
       "id": "GUIDE-04",
@@ -2651,31 +2700,31 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2683,10 +2732,59 @@
         "section": "#admin",
         "journeyId": "GUIDE-22"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-09T21:46:19.947Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/community-local-latest.json",
+        "status": "PASS_LOCAL",
+        "verifiedAt": "2026-09-09T21:54:31.821Z",
+        "environment": "local",
+        "mockedRoutes": false,
+        "transitions": [
+          "verified_seeker_registered",
+          "browser_post_created_as_draft",
+          "browser_admin_published_v1",
+          "public_api_and_browser_show_published_post",
+          "concurrent_hide_one_200_one_409_v2",
+          "browser_republished_v3",
+          "browser_hidden_v4",
+          "browser_rejected_v5",
+          "public_api_and_browser_hide_rejected_post"
+        ],
+        "authorization": [
+          "limited_admin_moderation_denied_403",
+          "full_admin_moderation_allowed",
+          "public_projection_only_exposes_published"
+        ],
+        "mongo": {
+          "collections": [
+            "community_posts",
+            "audit_logs"
+          ],
+          "finalStatus": "rejected",
+          "finalVersion": 5,
+          "auditCount": 5,
+          "actions": [
+            "community_post.publish",
+            "community_post.hide",
+            "community_post.publish",
+            "community_post.hide",
+            "community_post.reject"
+          ],
+          "orderedAfterVersions": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "remaining": [
+          "Run the same journey on Production after deployment of this commit."
+        ]
+      }
     },
     {
       "id": "GUIDE-23",
@@ -2984,12 +3082,12 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T21:04:18.167Z",
+    "updatedAt": "2026-09-09T21:54:32.286Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
     "blocked": 0,
-    "localWithAnyExecutionEvidence": 6,
+    "localWithAnyExecutionEvidence": 8,
     "productionVerified": 0,
     "fullyClosed": 0
   },

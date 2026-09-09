@@ -1,0 +1,155 @@
+{
+  "commit": "dcac4d39ed106f3dbdf7187082e00310895cad01",
+  "worktreeChanges": true,
+  "journeys": [
+    "GUIDE-03",
+    "GUIDE-22"
+  ],
+  "environment": "local",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-09T21:54:25.005Z",
+  "status": "PASS_LOCAL",
+  "transitions": [
+    "verified_seeker_registered",
+    "browser_post_created_as_draft",
+    "browser_admin_published_v1",
+    "public_api_and_browser_show_published_post",
+    "concurrent_hide_one_200_one_409_v2",
+    "browser_republished_v3",
+    "browser_hidden_v4",
+    "browser_rejected_v5",
+    "public_api_and_browser_hide_rejected_post"
+  ],
+  "authorization": [
+    "limited_admin_moderation_denied_403",
+    "full_admin_moderation_allowed",
+    "public_projection_only_exposes_published"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/send",
+      "status": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register/seeker",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/public/community/posts",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/community/posts/1b980252d87839475e89c897",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/community/posts/1b980252d87839475e89c897",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/posts/1b980252d87839475e89c897/moderate",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/community/posts/1b980252d87839475e89c897",
+      "status": 404
+    }
+  ],
+  "browser": [
+    {
+      "role": "seeker",
+      "width": 402,
+      "overflow": false
+    },
+    {
+      "role": "admin",
+      "width": 1440,
+      "overflow": false,
+      "stuckNavigationClass": false
+    }
+  ],
+  "mongo": {
+    "collections": [
+      "community_posts",
+      "audit_logs"
+    ],
+    "finalStatus": "rejected",
+    "finalVersion": 5,
+    "auditCount": 5,
+    "actions": [
+      "community_post.publish",
+      "community_post.hide",
+      "community_post.publish",
+      "community_post.hide",
+      "community_post.reject"
+    ],
+    "orderedAfterVersions": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "remaining": [
+    "Run the same journey on Production after deployment of this commit."
+  ],
+  "finishedAt": "2026-09-09T21:54:31.821Z"
+}
