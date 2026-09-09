@@ -293,3 +293,17 @@ test('versions replacements and maps an atomic concurrent loser without leaving 
   ));
   assert.equal(conflictStorage.has(`quarantine/${'f'.repeat(32)}`), false);
 });
+
+test('revokes a signed download immediately when its document is retired or deleted', async () => {
+  for (const change of ['inactive', 'deletedAt'] as const) {
+    const value = fixture();
+    const uploaded = await value.service.upload(claims, headers, Readable.from(pdf));
+    const grant = await value.service.createAccessGrant(claims, uploaded.id, 'provider_review', { requestId: 'revoke-test' });
+    const url = new URL(grant.url, 'http://private.test');
+    const document = value.documents.get(uploaded.id)!;
+    if (change === 'inactive') document.active = false;
+    else document.deletedAt = new Date('2026-08-13T12:00:01Z');
+    await assert.rejects(value.service.resolveDownload(uploaded.id, url.searchParams.get('expires')!, url.searchParams.get('signature')!), /DOCUMENT_NOT_FOUND/);
+    await assert.rejects(value.service.createAccessGrant(claims, uploaded.id, 'provider_review', { requestId: 'new-grant' }), /DOCUMENT_NOT_FOUND/);
+  }
+});

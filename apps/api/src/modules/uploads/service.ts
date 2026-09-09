@@ -276,7 +276,7 @@ export function createProviderDocumentService(
     async createAccessGrant(claims, documentId, purpose, context) {
       const ownerId = providerId(claims);
       const document = await dependencies.repository.findOwned(ownerId, documentId);
-      if (!document || document.securityState === 'deleted') {
+      if (!document || !document.active || document.deletedAt || document.securityState === 'deleted') {
         throw new UploadServiceError('DOCUMENT_NOT_FOUND');
       }
       if (document.securityState !== 'clean') throw new UploadServiceError('DOCUMENT_NOT_CLEAN');
@@ -289,7 +289,7 @@ export function createProviderDocumentService(
         throw new UploadServiceError('DOCUMENT_REVIEW_FORBIDDEN');
       }
       const document = await dependencies.repository.findById(documentId);
-      if (!document || !document.active || document.securityState === 'deleted') {
+      if (!document || !document.active || document.deletedAt || document.securityState === 'deleted') {
         throw new UploadServiceError('DOCUMENT_NOT_FOUND');
       }
       if (document.securityState !== 'clean') throw new UploadServiceError('DOCUMENT_NOT_CLEAN');
@@ -301,7 +301,7 @@ export function createProviderDocumentService(
         throw new UploadServiceError('INVALID_DOWNLOAD_GRANT');
       }
       const document = await dependencies.repository.findById(documentId);
-      if (!document || document.securityState === 'deleted') throw new UploadServiceError('DOCUMENT_NOT_FOUND');
+      if (!document || !document.active || document.deletedAt || document.securityState === 'deleted') throw new UploadServiceError('DOCUMENT_NOT_FOUND');
       if (document.securityState !== 'clean') throw new UploadServiceError('DOCUMENT_NOT_CLEAN');
       return {
         source: await dependencies.storage.openPrivate(document.storageKey),
