@@ -517,6 +517,17 @@ function RequestPanel({
   const [note, setNote] = useState('');
   const [viewingValidation, setViewingValidation] = useState(false);
   const [viewingState, setViewingState] = useState<ActionState>('idle');
+  const [saveState, setSaveState] = useState<ActionState>('idle');
+  const saveProperty = async () => {
+    if (!actions.saveProperty || saveState === 'submitting') return;
+    setSaveState('submitting');
+    try {
+      await actions.saveProperty(data.id);
+      setSaveState('success');
+    } catch (error) {
+      setSaveState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+    }
+  };
 
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -579,6 +590,12 @@ function RequestPanel({
 
   return (
     <aside className="public-property-details__actions" aria-labelledby="public-property-details-contact-title">
+      {actions.saveProperty ? <>
+        <Button type="button" variant="secondary" fullWidth loading={saveState === 'submitting'} disabled={saveState === 'success'} onClick={() => { void saveProperty(); }}>{saveState === 'success' ? (locale === 'ar' ? 'تم حفظ العقار' : 'Property saved') : (locale === 'ar' ? 'حفظ العقار' : 'Save property')}</Button>
+        {saveState === 'success' ? <a href={`/seeker/saved?lang=${locale}`}>{locale === 'ar' ? 'عرض العقارات المحفوظة' : 'View saved properties'}</a> : null}
+        {saveState === 'permission' ? <p role="alert">{locale === 'ar' ? 'الحفظ متاح لحساب الباحث عن عقار.' : 'Saving properties requires a seeker account.'} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
+        {saveState === 'error' ? <p role="alert">{locale === 'ar' ? 'تعذر حفظ العقار. حاول مرة أخرى.' : 'Could not save the property. Please try again.'}</p> : null}
+      </> : null}
       <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { setViewingState('idle'); setViewingOpen(true); }}>{copy.requestViewing}</Button>
       <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>

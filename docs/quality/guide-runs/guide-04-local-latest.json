@@ -2,7 +2,7 @@
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T07:31:10.640Z",
+  "startedAt": "2026-09-09T07:42:51.378Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -54,6 +54,46 @@
     },
     {
       "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/favorites",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/favorites",
+      "status": 200
+    },
+    {
+      "method": "POST",
       "path": "/api/v1/auth/logout",
       "status": 200
     },
@@ -67,5 +107,16 @@
     "innerWidth": 402,
     "scrollWidth": 402
   },
-  "finishedAt": "2026-09-09T07:31:15.110Z"
+  "relatedJourneyEvidence": {
+    "journey": "GUIDE-02",
+    "status": "PASS_LOCAL_FAVORITES",
+    "passed": [
+      "browser detail save",
+      "idempotent repeat save",
+      "browser saved-property projection",
+      "browser remove"
+    ],
+    "remaining": "Production verification pending."
+  },
+  "finishedAt": "2026-09-09T07:42:56.209Z"
 }

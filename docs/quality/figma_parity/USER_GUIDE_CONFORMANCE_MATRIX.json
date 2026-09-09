@@ -1199,7 +1199,14 @@
         "PUB-02",
         "PUB-05"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/discovery-local-latest.json",
+        "verifiedAt": "2026-09-09T07:34:36.467Z",
+        "mockedRoutes": false,
+        "production": "PENDING",
+        "remaining": []
+      }
     },
     {
       "id": "GUIDE-02",
@@ -1210,7 +1217,17 @@
         "PUB-04",
         "PUB-06"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "executionEvidence": {
+        "paths": [
+          "docs/quality/guide-runs/discovery-local-latest.json",
+          "docs/quality/guide-runs/guide-04-local-latest.json"
+        ],
+        "verifiedAt": "2026-09-09T07:42:56.209Z",
+        "mockedRoutes": false,
+        "production": "PENDING",
+        "remaining": []
+      }
     },
     {
       "id": "GUIDE-03",
@@ -1236,7 +1253,7 @@
       "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
-        "verifiedAt": "2026-09-09T07:31:15.110Z",
+        "verifiedAt": "2026-09-09T07:42:56.209Z",
         "mockedRoutes": false,
         "coverage": [
           "browser role selection",
@@ -1519,10 +1536,11 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T07:31:15.110Z",
+    "updatedAt": "2026-09-09T07:42:56.209Z",
     "totalJourneys": 26,
-    "localE2ePassed": 1,
+    "localE2ePassed": 3,
     "productionVerified": 0,
-    "fullyClosed": 0
+    "fullyClosed": 0,
+    "localE2ePartial": 0
   }
 }

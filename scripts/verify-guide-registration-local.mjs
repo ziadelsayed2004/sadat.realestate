@@ -69,6 +69,36 @@ try {
   evidence.width = await page.evaluate(() => ({ innerWidth: window.innerWidth, scrollWidth: document.documentElement.scrollWidth }));
   assert.equal(evidence.width.innerWidth, 402);
   assert.ok(evidence.width.scrollWidth <= 402);
+  const properties = await page.request.get(`${base}/api/v1/public/properties`);
+  assert.equal(properties.status(), 200);
+  const property = (await properties.json()).data.items[0];
+  const propertyId = property?.id;
+  assert.match(propertyId, /^[a-f0-9]{24}$/u);
+  const favoritePath = `/api/v1/seeker/favorites/${propertyId}`;
+  const refreshed = page.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/auth/refresh' && response.status() === 200);
+  await page.goto(`${base}/properties/${property.slug}?lang=en`, { waitUntil: 'networkidle' });
+  await expect(page.locator('[data-details-state="success"]')).toBeVisible();
+  const savedResponse = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname === favoritePath);
+  await page.getByRole('button', { name: 'Save property', exact: true }).click();
+  const saved = await savedResponse;
+  assert.equal(saved.status(), 200);
+  assert.equal((await saved.json()).data.alreadySaved, false);
+  await expect(page.getByRole('button', { name: 'Property saved' })).toBeDisabled();
+  const authHeaders = { authorization: `Bearer ${(await (await refreshed).json()).data.accessToken}` };
+  const savedAgain = await page.request.put(`${base}${favoritePath}`, { headers: authHeaders });
+  assert.equal(savedAgain.status(), 200);
+  assert.equal((await savedAgain.json()).data.alreadySaved, true);
+  await page.getByRole('link', { name: 'View saved properties', exact: true }).click();
+  await expect(page.getByTestId(`seeker-saved-property-${propertyId}`)).toBeVisible();
+  const removed = page.waitForResponse(response => response.request().method() === 'DELETE' && new URL(response.url()).pathname === favoritePath);
+  await page.getByTestId(`seeker-saved-property-${propertyId}`).getByRole('button', { name: 'Remove', exact: true }).click();
+  assert.equal((await removed).status(), 200);
+  await expect(page.getByTestId(`seeker-saved-property-${propertyId}`)).toHaveCount(0);
+  evidence.relatedJourneyEvidence = {
+    journey: 'GUIDE-02', status: 'PASS_LOCAL_FAVORITES',
+    passed: ['browser detail save', 'idempotent repeat save', 'browser saved-property projection', 'browser remove'],
+    remaining: 'Production verification pending.'
+  };
   const logout = await page.request.post(`${base}/api/v1/auth/logout`, { data: {} });
   assert.equal(logout.status(), 200);
   const refreshAfterLogout = await page.request.post(`${base}/api/v1/auth/refresh`, { data: {} });

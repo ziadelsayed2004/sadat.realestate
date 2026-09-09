@@ -1,4 +1,6 @@
 import {
+  favoriteSaveDataSchema,
+  favoritePropertyParamsSchema,
   propertySlugSchema,
   publicPropertyDetailsSuccessEnvelopeSchema,
   requestCreateSchema,
@@ -7,6 +9,7 @@ import {
   viewingCreateSchema,
   viewingDataSchema,
   type PublicPropertyDetails,
+  type FavoriteSaveData,
   type RequestData,
   type SupportedLocale,
   type ViewingCreate,
@@ -41,6 +44,7 @@ export interface PublicContactRequestInput {
 }
 
 export interface PublicPropertyDetailsActions {
+  saveProperty?(propertyId: string): Promise<FavoriteSaveData>;
   submitContact(input: PublicContactRequestInput): Promise<RequestData>;
   submitViewing(input: ViewingCreate): Promise<ViewingData>;
 }
@@ -110,6 +114,16 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
   const viewingResponseSchema = successEnvelopeSchema(viewingDataSchema);
 
   return {
+    async saveProperty(propertyId) {
+      const id = favoritePropertyParamsSchema.parse({ propertyId }).propertyId;
+      const headers = actionHeaders(options);
+      const response = await client.request(`/seeker/favorites/${id}`, {
+        method: 'PUT',
+        ...(headers === undefined ? {} : { headers }),
+        responseSchema: successEnvelopeSchema(favoriteSaveDataSchema)
+      });
+      return response.data.data;
+    },
     async submitContact(input) {
       const headers = actionHeaders(options);
       const request = requestCreateSchema.parse({

@@ -235,7 +235,7 @@ function ListingFilters({
         <fieldset className="public-property-listing__filter-chips public-property-listing__filter-chips--types">
           <legend>{copy.propertyType}</legend>
           <label><input type="radio" name="propertyTypeId" value="" checked={draft.propertyTypeId === ''} onChange={() => onCommit('propertyTypeId', '')} /> {copy.allKinds}</label>
-          {categories.map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, 'ar') ?? category.slug}</label>)}
+          {categories.map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, locale) ?? category.slug}</label>)}
         </fieldset>
         <FilterField id="public-property-location" label={copy.locationId}>
           <CustomSelect

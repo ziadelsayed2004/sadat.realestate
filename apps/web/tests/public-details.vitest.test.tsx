@@ -94,6 +94,20 @@ const viewingResponse = viewingDataSchema.parse({
 });
 
 describe('public property details', () => {
+  it('saves the property through the authenticated API and exposes the saved-properties destination', async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      expect(init?.method).toBe('PUT');
+      expect(new Headers(init?.headers).get('authorization')).toBe('Bearer seeker-token');
+      return new Response(JSON.stringify({ data: { saved: true, alreadySaved: false, item: { id: detailsData.id, slug: detailsData.slug, kind: detailsData.kind, name: detailsData.name, transactionType: detailsData.transactionType, savedAt: '2026-09-09T00:00:00.000Z' } }, meta: { requestId: 'favorite-save' } }), { headers: { 'content-type': 'application/json' } });
+    });
+    const actions = createPublicPropertyDetailsActions({ apiClient: new ApiClient({ fetcher }), authorizationHeader: 'Bearer seeker-token' });
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={actions} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Save property' }));
+    await screen.findByRole('link', { name: 'View saved properties' });
+    expect(fetcher).toHaveBeenCalledWith(`/api/v1/seeker/favorites/${propertyId}`, expect.any(Object));
+    expect(screen.getByRole('button', { name: 'Property saved' })).toBeDisabled();
+  });
+
   it('uses the implemented details contract with one API prefix and a validated slug', async () => {
     let seenUrl = '';
     let seenInit: RequestInit | undefined;

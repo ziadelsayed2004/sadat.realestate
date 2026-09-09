@@ -1,0 +1,37 @@
+{
+  "journeys": [
+    "GUIDE-01",
+    "GUIDE-02"
+  ],
+  "environment": "local",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-09T07:34:28.641Z",
+  "status": "PASS_LOCAL_PARTIAL",
+  "transitions": [
+    "homepage_search_to_listing",
+    "rent_filter_applied",
+    "empty_results_reset_without_document_navigation",
+    "two_properties_selected_for_comparison",
+    "published_property_detail",
+    "developer_directory_to_public_profile"
+  ],
+  "http": [
+    {
+      "path": "/api/v1/public/properties",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/public/properties",
+      "status": 200
+    }
+  ],
+  "width": {
+    "innerWidth": 402,
+    "scrollWidth": 402
+  },
+  "remaining": [
+    "Authenticated favorites must be exercised before GUIDE-02 closure.",
+    "Production verification remains pending."
+  ],
+  "finishedAt": "2026-09-09T07:34:36.467Z"
+}
