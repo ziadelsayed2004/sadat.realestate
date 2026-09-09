@@ -55,6 +55,13 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     }, { session, projection: { _id: 1 } }));
   }
 
+  async function providerScope(accountId: string): Promise<{ $in: Types.ObjectId[] }> {
+    const profiles = await connection.collection('provider_profiles').find(
+      { userId: oid(accountId) }, { projection: { _id: 1 } }
+    ).toArray();
+    return { $in: [oid(accountId), ...profiles.flatMap(profile => profile._id instanceof Types.ObjectId ? [profile._id] : [])] };
+  }
+
   async function enrich(records: readonly ViewingRecord[]): Promise<ViewingRecord[]> {
     if (records.length === 0) return [];
     const profiles = await connection.collection('seeker_profiles').find(
@@ -161,7 +168,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       const filter: Record<string, unknown> = {};
       if (query.status) filter.status = query.status;
       if (scope.seekerId) filter.seekerId = oid(scope.seekerId);
-      if (scope.providerId) filter.providerId = oid(scope.providerId);
+      if (scope.providerId) filter.providerId = await providerScope(scope.providerId);
       const [rows, total] = await Promise.all([
         collection.find(filter).sort({ requestedAt: 1, _id: 1 }).skip((query.page - 1) * query.limit).limit(query.limit).toArray(),
         collection.countDocuments(filter)
@@ -175,7 +182,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     async get(viewingId, scope) {
       const filter: Record<string, unknown> = { _id: oid(viewingId) };
       if (scope.seekerId) filter.seekerId = oid(scope.seekerId);
-      if (scope.providerId) filter.providerId = oid(scope.providerId);
+      if (scope.providerId) filter.providerId = await providerScope(scope.providerId);
       const value = await collection.findOne(filter);
       const parsed = value ? parse(value as Row) : undefined;
       if (!parsed) return undefined;

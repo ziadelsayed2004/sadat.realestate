@@ -1,8 +1,8 @@
 {
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "request_guarantees_1788963775661",
-  "testedAt": "2026-09-09T14:22:55.685Z",
-  "commit": "96a59a101c79a4b1f08f9c115ea4d1a36728458d",
+  "database": "request_guarantees_1788964325561",
+  "testedAt": "2026-09-09T14:32:05.585Z",
+  "commit": "ef9a38022a0368ac58bb169abd92a4a0d7c6036b",
   "worktreeChanges": true,
   "checks": [
     "concurrent_identical_creation_one_201_one_409_one_record",
@@ -24,7 +24,8 @@
     "two_customers_same_slot_one_201_one_409",
     "cancelled_slot_can_be_booked_again",
     "reschedule_into_occupied_slot_409_without_mutation_or_audit",
-    "legacy_active_viewing_reserves_slot_without_migration"
+    "legacy_active_viewing_reserves_slot_without_migration",
+    "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
   ],
   "status": "PASS_LOCAL"
 }

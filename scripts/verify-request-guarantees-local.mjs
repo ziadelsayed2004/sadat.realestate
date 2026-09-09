@@ -161,6 +161,20 @@ try {
   await connection.collection('viewings').insertOne({ _id: new Types.ObjectId(), propertyId: propertyId.toHexString(), seekerId: ids.other, providerId, status: 'confirmed', requestedAt: legacyTime, timezone: 'UTC', version: 0, createdAt: new Date(), updatedAt: new Date() });
   assert.equal((await call('seeker', '/seeker/viewings', { propertyId: propertyId.toHexString(), requestedAt: legacyTime.toISOString(), timezone: 'UTC' })).status, 409);
   evidence.checks.push('reschedule_into_occupied_slot_409_without_mutation_or_audit', 'legacy_active_viewing_reserves_slot_without_migration');
+  const legacyProfileId = new Types.ObjectId();
+  const legacyViewingId = new Types.ObjectId();
+  await connection.collection('provider_profiles').insertOne({ _id: legacyProfileId, userId: providerId });
+  await connection.collection('viewings').insertOne({ _id: legacyViewingId, propertyId: propertyId.toHexString(), seekerId: ids.seeker, providerId: legacyProfileId, status: 'requested', requestedAt: new Date(Date.now() + 432000000), timezone: 'UTC', version: 0, createdAt: new Date(), updatedAt: new Date() });
+  const ownedLegacy = await call('provider', '/provider/viewings');
+  assert.equal(ownedLegacy.status, 200);
+  assert.ok(ownedLegacy.body.data.items.some(item => item.id === legacyViewingId.toHexString()));
+  assert.equal((await call('provider', `/provider/viewings/${legacyViewingId}/transitions`, { action: 'confirm', expectedVersion: 0 })).status, 200);
+  const foreignProviderId = new Types.ObjectId();
+  await connection.collection('users').insertOne({ _id: foreignProviderId, roleType: 'provider', status: 'verified' });
+  tokens.foreignProvider = accessTokens.issue({ id: foreignProviderId.toHexString(), roleType: 'provider', status: 'verified' }, new Types.ObjectId().toHexString(), new Date());
+  assert.equal((await call('foreignProvider', '/provider/viewings')).body.data.total, 0);
+  assert.equal((await call('foreignProvider', `/provider/viewings/${legacyViewingId}/transitions`, { action: 'cancel', reason: 'Attempt foreign cancellation', expectedVersion: 1 })).status, 404);
+  evidence.checks.push('legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account');
   evidence.status = 'PASS_LOCAL';
 } catch (error) {
   evidence.status = 'FAIL_LOCAL';

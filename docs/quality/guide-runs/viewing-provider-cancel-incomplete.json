@@ -1,0 +1,207 @@
+{
+  "journey": "GUIDE-04",
+  "environment": "local",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-09T14:46:27.516Z",
+  "status": "FAIL_LOCAL",
+  "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
+  "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
+  "transitions": [
+    "role_selected",
+    "email_challenge_issued",
+    "email_verified",
+    "seeker_denied_admin_settings",
+    "verified_seeker_created",
+    "success_screen",
+    "authenticated_dashboard_after_full_navigation"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/send",
+      "status": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register/seeker",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/settings/properties",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/favorites",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/favorites",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/contact-requests",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/requests/d259c35dc93b59740ab0e1a2",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/viewings",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/viewings",
+      "status": 429
+    }
+  ],
+  "width": {
+    "innerWidth": 402,
+    "scrollWidth": 402
+  },
+  "relatedJourneyEvidence": {
+    "journey": "GUIDE-02",
+    "status": "PASS_LOCAL_FAVORITES",
+    "passed": [
+      "browser detail save",
+      "idempotent repeat save",
+      "browser saved-property projection",
+      "browser remove"
+    ],
+    "remaining": "Production verification pending."
+  },
+  "contactJourneyEvidence": {
+    "journeys": [
+      "GUIDE-06",
+      "GUIDE-21"
+    ],
+    "status": "PASS_LOCAL_CONTACT_PARTIAL_GUIDES",
+    "transitions": [
+      "browser_contact_created",
+      "admin_browser_under_review",
+      "admin_browser_contacted",
+      "admin_browser_resolved",
+      "admin_browser_closed"
+    ],
+    "checks": [
+      "admin_browser_loads_real_request_details",
+      "seeker_denied_admin_transition_403",
+      "stale_version_rejected_409",
+      "seeker_reads_final_closed_state",
+      "seeker_browser_shows_closed"
+    ],
+    "remaining": [
+      "Other request types",
+      "Production verification"
+    ]
+  },
+  "failure": "expect(locator).toHaveAttribute(expected) failed\n\nLocator: getByTestId('seeker-viewing-38498053b832ef25d0a87319')\nExpected: \"requested\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.have.attribute.value\" with timeout 5000ms\n  - waiting for getByTestId('seeker-viewing-38498053b832ef25d0a87319')\n",
+  "finishedAt": "2026-09-09T14:46:39.682Z"
+}
