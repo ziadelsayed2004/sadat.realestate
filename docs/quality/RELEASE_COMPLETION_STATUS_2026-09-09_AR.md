@@ -65,7 +65,7 @@ GUIDE-01/02: نجح البحث من الرئيسية، فلتر الإيجار،
 
 آخر حزمة API مكتملة أثناء هذا الاستئناف: **582/582**؛ coverage **80.98% lines، 77.79% branches، 80.69% functions**، أعلى من الحدود 80/70/80.
 
-فحص الجودة كشف ثغرات اعتماديات حالية، لذلك حُدث Nodemailer من 9.0.5 إلى 9.1.1 وVitest من 4.1.10 إلى 4.1.11، مع تثبيت النسخ في سياسة الـworkspace وملف القفل. اكتمل `npm run quality` بعد التحديث **بنجاح وخروج 0**، شاملًا lint وtypecheck واختبارات workspace وتغطية API والبناء والعقود وOpenAPI وPostman وتدقيق الاعتماديات وسجل المشروع. تدقيق الأمان: **صفر ثغرات**. السجل المحلي `.codex-quality-6.log`.
+فحص الجودة كشف ثغرات اعتماديات حالية، لذلك حُدث Nodemailer من 9.0.5 إلى 9.1.1 وVitest من 4.1.10 إلى 4.1.11، مع تثبيت النسخ في سياسة الـworkspace وملف القفل. اكتمل `npm run quality` بعد التحديث **بنجاح وخروج 0**، شاملًا lint وtypecheck واختبارات workspace وتغطية API والبناء والعقود وOpenAPI وPostman وتدقيق الاعتماديات وسجل المشروع. تدقيق الأمان: **صفر ثغرات**. السجل المحلي `.local/logs/root-cleanup-2026-09-09/.codex-quality-6.log`.
 
 مراجع الإصلاح: [Nodemailer 9.1.1](https://github.com/nodemailer/nodemailer/releases/tag/v9.1.1)، [Nodemailer 9.1.0](https://github.com/nodemailer/nodemailer/releases/tag/v9.1.0)، [Vitest advisory](https://github.com/advisories/GHSA-82fw-gwwq-j7x9).
 
