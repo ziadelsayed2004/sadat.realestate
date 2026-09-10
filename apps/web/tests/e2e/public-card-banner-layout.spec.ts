@@ -70,3 +70,40 @@ test('banner text remains fully visible and its action fits inside the banner', 
   expect(geometry).toEqual({ overflow: false, clipped: [] });
   await card.screenshot({ path: test.info().outputPath('banner.png') });
 });
+
+test('developer profile media and identity stay inside their responsive frame', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await page.route('**/api/v1/public/developers/approved-builder', route => route.fulfill({ json: {
+    data: {
+      id: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'developer_company', slug: 'approved-builder',
+      name: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+      description: { ar: 'شركة رائدة في تطوير العقارات بمدينة السادات منذ أكثر من خمسة عشر عامًا.', en: 'A leading Sadat City developer for more than fifteen years.' },
+      imageUrl: '/assets/clone/pub05-a.png', logoUrl: '/assets/clone/pub05-b.png',
+      locations: [{ ar: 'الحي الأول', en: 'First District' }], verified: true,
+      projectCount: 1, propertyCount: 0,
+      projects: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'central-project', name: { ar: 'المشروع المركزي', en: 'Central project' } }],
+      properties: [], stats: { publishedProjects: 1, availableProperties: 0, saleProperties: 0, rentalProperties: 0 }
+    }, meta: { requestId: 'developer-layout' }
+  } }));
+  await page.goto(`/developers/approved-builder?lang=${locale}`, { waitUntil: 'networkidle' });
+  await expect(page.locator('#public-developer-profile-title')).toBeVisible();
+  const geometry = await page.evaluate(() => {
+    const hero = document.querySelector<HTMLElement>('.public-developer-profile__hero')!.getBoundingClientRect();
+    const media = document.querySelector<HTMLElement>('.public-developer-profile__hero-media')!.getBoundingClientRect();
+    const identity = document.querySelector<HTMLElement>('.public-developer-profile__identity')!.getBoundingClientRect();
+    const tabs = document.querySelector<HTMLElement>('.public-developer-profile__tabs')!.getBoundingClientRect();
+    return {
+      viewport: window.innerWidth,
+      mediaHeight: Math.round(media.height),
+      identityHeight: Math.round(identity.height),
+      identityInsideHero: identity.left >= hero.left - 1 && identity.right <= hero.right + 1 && identity.bottom <= hero.bottom + 1,
+      tabsAfterHero: tabs.top >= hero.bottom - 1,
+      overflow: document.documentElement.scrollWidth > window.innerWidth
+    };
+  });
+  expect(geometry.mediaHeight).toBe(geometry.viewport <= 768 ? 192 : 288);
+  expect(geometry.identityHeight).toBeLessThan(geometry.viewport <= 768 ? 420 : 300);
+  expect(geometry.identityInsideHero).toBe(true);
+  expect(geometry.tabsAfterHero).toBe(true);
+  expect(geometry.overflow).toBe(false);
+});

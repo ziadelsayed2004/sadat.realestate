@@ -1609,6 +1609,34 @@ export const FIGMA_PUBLIC_PROFILE_CONTENT_SEED_STEP: DevelopmentSeedStep = {
 };
 
 /**
+ * Makes the first visible directory company a complete, demonstrable profile.
+ * Earlier showcase data kept the canonical profile under a hidden route, so a
+ * customer following the first directory card reached a valid but empty page.
+ */
+export const FIGMA_PUBLIC_DIRECTORY_PROFILE_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-directory-profile-v17',
+  async run(connection) {
+    const source = await connection.collection('organizations').findOne(
+      { _id: ids.directoryProfileOrganization, synthetic: true },
+      { projection: {
+        activeAreas: 1, projectTypes: 1, propertyTypes: 1, paymentPlans: 1,
+        totalUnits: 1, availableUnits: 1, soldUnits: 1, reservedUnits: 1,
+        activeAreaCount: 1, lastUpdated: 1, contactPhone: 1, whatsappUrl: 1,
+        contactAddress: 1, profileProjects: 1, profileProperties: 1
+      } }
+    );
+    if (!source) throw new Error('Canonical public developer profile seed is missing');
+    const { _id: sourceId, ...profileFields } = source;
+    void sourceId;
+    const result = await connection.collection('organizations').updateOne(
+      { _id: ids.directoryAsOrganization, synthetic: true },
+      { $set: { ...profileFields, seedKey: 'figma-public-directory-profile-v17', updatedAt: SEEDED_AT } }
+    );
+    if (result.matchedCount !== undefined && result.matchedCount !== 1) throw new Error('Visible public developer seed is missing');
+  }
+};
+
+/**
  * Brings the local article catalogue in line with the approved Figma article
  * list and article-details fixture. The records stay synthetic and the step
  * is safe to apply to databases that already ran the earlier showcase seed.
@@ -1940,6 +1968,7 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_DIRECTORY_PARITY_SEED_STEP,
   FIGMA_PUBLIC_PROFILE_PARITY_SEED_STEP,
   FIGMA_PUBLIC_PROFILE_CONTENT_SEED_STEP,
+  FIGMA_PUBLIC_DIRECTORY_PROFILE_SEED_STEP,
   FIGMA_PUBLIC_ARTICLES_PARITY_SEED_STEP,
   FIGMA_PUBLIC_ARTICLE_ROUTE_SEED_STEP,
   FIGMA_PUBLIC_ARTICLE_DATES_SEED_STEP,

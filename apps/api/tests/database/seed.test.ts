@@ -6,12 +6,31 @@ import {
   FIGMA_PUBLIC_ABOUT_SEED_STEP,
   FIGMA_PUBLIC_DETAILS_SEED_STEP,
   FIGMA_PUBLIC_LISTING_SEED_STEP,
+  FIGMA_PUBLIC_DIRECTORY_PROFILE_SEED_STEP,
   DEVELOPMENT_SEED_STEPS,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
   SYNTHETIC_BROKER_APPLICATION_SEED_STEP
 } from '../../src/modules/database/seed.js';
+
+test('visible directory company receives the complete canonical profile without replacing its identity', async () => {
+  const profileProjects = [{ slug: 'showcase-project', status: 'published' }];
+  let update: Record<string, Record<string, unknown>> | undefined;
+  const connection = {
+    collection() {
+      return {
+        async findOne() { return { _id: 'source-profile', profileProjects, totalUnits: 128, contactPhone: '01001234567' }; },
+        async updateOne(_filter: unknown, next: Record<string, Record<string, unknown>>) { update = next; return { matchedCount: 1 }; }
+      };
+    }
+  } as unknown as Connection;
+  await FIGMA_PUBLIC_DIRECTORY_PROFILE_SEED_STEP.run(connection);
+  assert.equal(update?.$set?._id, undefined);
+  assert.equal(update?.$set?.totalUnits, 128);
+  assert.deepEqual(update?.$set?.profileProjects, profileProjects);
+  assert.equal(update?.$set?.seedKey, 'figma-public-directory-profile-v17');
+});
 
 test('every registered development fixture executes against insert-only synthetic storage', async () => {
   const writes: Array<{ collection: string; filter: Record<string, unknown>; update: Record<string, unknown> }> = [];
