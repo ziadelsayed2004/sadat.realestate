@@ -14,6 +14,7 @@ const tokens: AccessTokenService = {
 const service: PropertyRouterDependencies['service'] = {
   async list() { return { data: { items: [{ ...property, availableActions: ['update', 'submit'] as const }] }, page: 1, limit: 20, total: 1 }; },
   async adminList() { return { data: { items: [{ ...property, availableActions: ['archive'] as const }] }, page: 1, limit: 20, total: 1 }; },
+  async adminGet() { return { ...property, availableActions: ['archive'] as const }; },
   async duplicates() { return { propertyId, items: [{ candidateId: propertyId, signals: ['same_slug'] as const, explanation: 'Deterministic signals: same_slug' }], total: 1 }; },
   async create() { return property; },
   async get() { return property; },
@@ -52,6 +53,10 @@ test('property draft routes expose strict create, get, and step-save envelopes',
 
 test('admin review and visibility routes require admin authentication and strict reasons', async () => run(async url => {
   assert.equal((await request(url, 'GET', '/api/v1/admin/properties?status=draft&limit=20', 'admin')).status, 200);
+  const detail = await request(url, 'GET', `/api/v1/admin/properties/${propertyId}`, 'admin');
+  assert.equal(detail.status, 200);
+  assert.equal((await detail.json() as { data: { id: string } }).data.id, propertyId);
+  assert.equal((await request(url, 'GET', `/api/v1/admin/properties/${propertyId}`, 'provider')).status, 403);
   assert.equal((await request(url, 'GET', `/api/v1/admin/properties/possible-duplicates?propertyId=${propertyId}&limit=20`, 'admin')).status, 200);
   assert.equal((await request(url, 'POST', `/api/v1/admin/properties/${propertyId}/review`, 'provider', { version: 0, action: 'approve', reason: 'Approve property' })).status, 403);
   assert.equal((await request(url, 'POST', `/api/v1/admin/properties/${propertyId}/review`, 'admin', { version: 0, action: 'approve', reason: 'Approve property' })).status, 200);

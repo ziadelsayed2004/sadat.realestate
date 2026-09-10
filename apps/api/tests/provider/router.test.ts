@@ -153,6 +153,15 @@ const commissionConfirmation = createProviderCommissionConfirmationService({
     now: () => new Date('2026-08-14T01:00:00.000Z')
   })
 });
+const dashboard = {
+  async read() {
+    return {
+      application: { applicationId: 'abcdefabcdefabcdefabcdef', providerType: 'individual_broker' as const, status: 'approved' as const, version: 1, availableActions: ['open_dashboard' as const] },
+      properties: { total: 0, published: 0, pendingReview: 0, needsChanges: 0, drafts: 0, recent: [] },
+      activity: { customerRequests: 0, bookedViewings: 0 }
+    };
+  }
+};
 
 const advertisingWorkflow = {
   async createRequest(claims: Parameters<typeof advertisingProjection.list>[0], input: unknown) {
@@ -227,7 +236,7 @@ const advertisingWorkflow = {
 async function withServer(run: (baseUrl: string) => Promise<void>) {
   const server = createApiServer({
     database: { isReady: async () => true },
-    provider: { service, accessTokens, cookie, advertisingProjection, advertisingWorkflow, commissionProjection, commissionConfirmation }
+    provider: { service, accessTokens, cookie, advertisingProjection, advertisingWorkflow, commissionProjection, commissionConfirmation, dashboard }
   });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try {
@@ -236,6 +245,18 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
     await stopApiServer(server);
   }
 }
+
+test('returns the consolidated dashboard only to an authenticated provider', async () => {
+  await withServer(async (baseUrl) => {
+    const path = `${baseUrl}/api/v1/provider/dashboard`;
+    assert.equal((await fetch(path)).status, 401);
+    assert.equal((await fetch(path, { headers: { Authorization: `Bearer ${seekerToken}` } })).status, 403);
+    const response = await fetch(path, { headers: { Authorization: `Bearer ${providerToken}` } });
+    assert.equal(response.status, 200);
+    const body = await response.json() as { data: { properties: { total: number } } };
+    assert.equal(body.data.properties.total, 0);
+  });
+});
 
 test('registers a provider draft through verified authority without accepting extra fields', async () => {
   await withServer(async (baseUrl) => {

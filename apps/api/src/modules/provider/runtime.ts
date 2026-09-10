@@ -25,13 +25,15 @@ import {
 import type { ProviderRouterDependencies } from './router.js';
 import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { createProviderService } from './service.js';
+import { createProviderDashboardService, type ProviderDashboardDependencies } from './dashboard.js';
 
 export function createProviderRuntime(
   connection: Connection,
   authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>,
   accessTokens: AccessTokenService,
   cookie: AuthCookiePolicy,
-  authorization?: Pick<RbacService, 'authorize'>
+  authorization?: Pick<RbacService, 'authorize'>,
+  dashboardDependencies?: Omit<ProviderDashboardDependencies, 'application'>
 ): ProviderRouterDependencies {
   const identityModels = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
@@ -50,31 +52,33 @@ export function createProviderRuntime(
     ),
     runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
   });
+  const service = createProviderService({
+    repository: createMongooseProviderRepository(
+      connection,
+      identityModels,
+      createProviderModels(connection)
+    ),
+    documentInventory: createMongooseProviderDocumentInventory(connection),
+    registrationTokens: createOpaqueTokenService(),
+    async redeemRegistrationGrant(verificationTokenHash, roleType, now) {
+      const grant = await otpRepository.redeemRegistrationGrant(
+        verificationTokenHash,
+        roleType,
+        now
+      );
+      return grant?.roleType === 'provider'
+        ? {
+            email: grant.email,
+            roleType: 'provider',
+            purpose: 'registration'
+          }
+        : undefined;
+    },
+    authService
+  });
   return {
-    service: createProviderService({
-      repository: createMongooseProviderRepository(
-        connection,
-        identityModels,
-        createProviderModels(connection)
-      ),
-      documentInventory: createMongooseProviderDocumentInventory(connection),
-      registrationTokens: createOpaqueTokenService(),
-      async redeemRegistrationGrant(verificationTokenHash, roleType, now) {
-        const grant = await otpRepository.redeemRegistrationGrant(
-          verificationTokenHash,
-          roleType,
-          now
-        );
-        return grant?.roleType === 'provider'
-          ? {
-              email: grant.email,
-              roleType: 'provider',
-              purpose: 'registration'
-            }
-          : undefined;
-      },
-      authService
-    }),
+    service,
+    ...(dashboardDependencies ? { dashboard: createProviderDashboardService({ application: service, ...dashboardDependencies }) } : {}),
     advertisingProjection: createProviderAdvertisingProjectionService({
       source: createMongooseProviderAdvertisingSource(
         connection,

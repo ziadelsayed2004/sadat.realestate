@@ -154,6 +154,15 @@ test('admin list requires view permission and exposes safe state actions', async
   await assert.rejects(service.adminList(other, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
 });
 
+test('admin detail requires view permission and returns the requested record with admin actions', async () => {
+  const { service } = fixture();
+  const result = await service.adminGet(admin, id);
+  assert.equal(result.id, id);
+  assert.deepEqual(result.availableActions, ['archive']);
+  await assert.rejects(service.adminGet(other, id), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
+  await assert.rejects(service.adminGet(admin, '8123456789abcdef01234567'), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_NOT_FOUND');
+});
+
 test('admin list tolerates legacy payment-plan records while preserving valid rows', async () => {
   const { service, rows } = fixture();
   rows.set(id, record({ paymentPlans: [{ downPaymentPercentage: 15 }] as never }));

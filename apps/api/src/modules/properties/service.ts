@@ -56,6 +56,7 @@ export interface PropertyAuthorization { authorize(adminId: string, permission: 
 export interface PropertyService {
   list(claims: AccessTokenClaims, query: unknown): Promise<{ data: PropertyListData; page: number; limit: number; total: number }>;
   adminList(adminId: string, query: unknown): Promise<{ data: PropertyListData; page: number; limit: number; total: number }>;
+  adminGet(adminId: string, id: string): Promise<PropertyData>;
   duplicates(adminId: string, query: unknown): Promise<PropertyDuplicateData>;
   create(claims: AccessTokenClaims, input: PropertyDraftCreate, context: PropertyMutationContext): Promise<PropertyData>;
   get(claims: AccessTokenClaims, id: string): Promise<PropertyData>;
@@ -173,6 +174,13 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const query = propertyAdminListQuerySchema.parse(unparsedQuery) as PropertyAdminListQuery;
       const result = await dependencies.repository.listAdmin(query);
       return { data: { items: result.items.map(item => data(item, 'admin')) }, page: query.page, limit: query.limit, total: result.total };
+    },
+    async adminGet(adminId, id) {
+      await adminViewPermission(adminId);
+      propertyObjectIdSchema.parse(id);
+      const result = await dependencies.repository.findByIdAny(id);
+      if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
+      return data(result, 'admin');
     },
     async duplicates(adminId, unparsedQuery) {
       await adminPermission(adminId, 'admin:properties.review');

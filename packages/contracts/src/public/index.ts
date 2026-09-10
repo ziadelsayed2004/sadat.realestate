@@ -3,6 +3,7 @@ import { localizedTextSchema } from '../localization/index.js';
 import { propertyAreaSchema, propertyContactSchema, propertyDeliveryStatusSchema, propertyKindSchema, propertyLayoutSchema, propertyMapUrlSchema, propertyMoneySchema, propertyObjectIdSchema, propertySlugSchema, propertyTransactionTypeSchema } from '../properties/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 import { locationKindSchema, locationObjectIdSchema, locationSlugSchema } from '../locations/index.js';
+import { supportedLocaleSchema, textDirectionSchema } from '../localization/index.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
 // Public media can be an external CDN URL or a same-origin repository asset.
@@ -118,6 +119,25 @@ export const publicHomepageDataSchema = z.object({
 
 export const publicHomepageSuccessEnvelopeSchema = successEnvelopeSchema(publicHomepageDataSchema);
 
+export const publicBootstrapDataSchema = z.object({
+  defaultLocale: supportedLocaleSchema,
+  supportedLocales: z.array(supportedLocaleSchema).length(2),
+  directions: z.object({ ar: textDirectionSchema, en: textDirectionSchema }).strict(),
+  display: z.object({
+    populationCount: z.number().int().nonnegative().max(100_000_000).optional(),
+    populationLabel: localizedTextSchema.optional(),
+    showPopulationCounter: z.boolean().optional()
+  }).strict()
+}).strict();
+export const publicBootstrapSuccessEnvelopeSchema = successEnvelopeSchema(publicBootstrapDataSchema);
+
+export const publicSitemapItemSchema = z.object({
+  path: z.string().trim().min(1).max(512).regex(/^\/(?!\/)[^\s?#]*$/u),
+  updatedAt: z.string().datetime({ offset: true }).optional()
+}).strict();
+export const publicSitemapDataSchema = z.object({ items: z.array(publicSitemapItemSchema).max(10_000) }).strict();
+export const publicSitemapSuccessEnvelopeSchema = successEnvelopeSchema(publicSitemapDataSchema);
+
 export const publicPropertySourceSchema = z.object({
   sourceType: z.enum(['individual_broker', 'brokerage_office', 'developer_company']),
   organizationId: propertyObjectIdSchema.optional(),
@@ -214,3 +234,6 @@ export type PublicHomepageDeveloper = z.infer<typeof publicHomepageDeveloperSche
 export type PublicHomepageContent = z.infer<typeof publicHomepageContentSchema>;
 export type PublicHomepageBanner = z.infer<typeof publicHomepageBannerSchema>;
 export type PublicHomepageData = z.infer<typeof publicHomepageDataSchema>;
+export type PublicBootstrapData = z.infer<typeof publicBootstrapDataSchema>;
+export type PublicSitemapItem = z.infer<typeof publicSitemapItemSchema>;
+export type PublicSitemapData = z.infer<typeof publicSitemapDataSchema>;

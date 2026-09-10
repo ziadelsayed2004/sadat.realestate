@@ -19,9 +19,9 @@
 ## نتائج الاختبارات المحلية
 
 - `npm run quality`: **PASS** برمز خروج 0 في 10 سبتمبر 2026. شمل lint وtypecheck والاختبارات والبناء وميزانيات الحزم وتدقيق العقود وOpenAPI وPostman وحزمة التسليم وفحص التبعيات.
-- تدقيق API: **195** عملية في Blueprint؛ **191 implemented**، و**191 runtime routes**، و**191 policy routes**، ولا توجد أخطاء drift. توجد **4 عمليات planned** خارج التنفيذ الحالي، ولذلك لا تُحسب ضمن المسارات العاملة.
-- العمليات المخططة هي: `GET /public/bootstrap`، و`GET /public/sitemap`، و`GET /provider/dashboard`، و`GET /admin/properties/:propertyId`. بعض العمليات لها مسارات بديلة منفذة مثل Provider overview، لكن يلزم قرار نطاق موثق أو تنفيذ العقد نفسه قبل وصف جميع خيارات Blueprint بأنها مكتملة.
-- مجموعة تغطية Backend: **601/601 passed**، واجتازت حدود التغطية الإلزامية المطبقة داخل بوابة الجودة.
+- تدقيق API: **195/195 implemented**، و**195 runtime routes**، و**195 policy routes**، و**0 planned**، ولا توجد أخطاء drift.
+- أُغلقت آخر أربعة عقود: `GET /public/bootstrap`، و`GET /public/sitemap`، و`GET /provider/dashboard`، و`GET /admin/properties/:propertyId`. لوحة Provider تستخدم الآن عقد Dashboard الموحّد بدل تجميع عدة طلبات من المتصفح، وتبقى بيانات الأعمال محجوبة قبل اعتماد مقدم العقار.
+- مجموعة تغطية Backend: **608/608 passed**، واجتازت حدود التغطية الإلزامية المطبقة داخل بوابة الجودة.
 - OpenAPI: `OPENAPI_VALID`. Postman: `POSTMAN_VALID`. فحص التبعيات: 0 vulnerabilities.
 - Admin UI: **402/402** حالة نظيفة على Desktop/Tablet/Mobile بالعربية والإنجليزية.
 - الجولة المجمعة للـAdmin/Provider/Seeker: 749 passed و108 skipped وحالة Admin عابرة واحدة؛ أعيدت الحالة منفردة ونجحت، ثم أعيدت مجموعة Admin كاملة ونجحت 402/402. لا يُسجل ذلك كتشغيل واحد 858/858.
@@ -100,7 +100,7 @@
 
 ## حالة التسليم
 
-**البرمجة المحلية وبوابات الجودة: ناجحة.**  
+**البرمجة المحلية وبوابات الجودة: ناجحة، وعقد API مغلق 195/195 بلا عمليات planned.**
 **Admin Production الثابت: 62/62 شاشة قابلة للوصول، مع مانع مرئي واحد معروف في `ADM-54` قبل نشر آخر commit.**  
 **رحلات الدليل: 26/26 لها أدلة محلية جزئية؛ 0/26 مغلقة بالكامل على Production.**  
 **Figma الصارم: 90/119 مغلق، 29 مفتوح.**

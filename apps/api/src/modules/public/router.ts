@@ -6,8 +6,12 @@ import type { PublicHomepageData } from '@sadat-real-estate/contracts';
 import { propertySlugSchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { ApiContractError } from '../contracts/error-boundary.js';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
+import type { PublicBootstrapService } from './bootstrap.js';
+import type { PublicSitemapService } from './sitemap.js';
 
 export const PUBLIC_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/public/bootstrap', operationId: 'getPublicBootstrap' },
+  { method: 'GET', path: '/api/v1/public/sitemap', operationId: 'getPublicSitemap' },
   { method: 'GET', path: '/api/v1/public/home', operationId: 'getPublicHomepage' },
   { method: 'GET', path: '/api/v1/public/properties/:slug', operationId: 'getPublicPropertyDetails' }
 ] as const;
@@ -16,6 +20,8 @@ export interface PublicRouterDependencies {
   service: { read(): Promise<PublicHomepageData> };
   details?: { get(slug: string, viewer?: AccessTokenClaims): Promise<PublicPropertyDetails | null> };
   accessTokens?: AccessTokenService;
+  bootstrap?: PublicBootstrapService;
+  sitemap?: PublicSitemapService;
 }
 
 function requestId(request: Request): string { return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request'; }
@@ -33,6 +39,26 @@ function optionalViewer(request: Request, accessTokens: AccessTokenService | und
 
 export function createPublicRouter(dependencies: PublicRouterDependencies): Router {
   const router = Router();
+  router.get('/public/bootstrap', async (request, response) => {
+    try {
+      if (!dependencies.bootstrap) throw new ApiContractError('PUBLIC_BOOTSTRAP_UNAVAILABLE', 'errors.internal', 503);
+      response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      response.status(200).json(toSuccessResponse(await dependencies.bootstrap.read(), requestId(request)));
+    } catch (error) {
+      const mapped = toApiErrorResponse(error, requestId(request));
+      response.status(mapped.statusCode).json(mapped.body);
+    }
+  });
+  router.get('/public/sitemap', async (request, response) => {
+    try {
+      if (!dependencies.sitemap) throw new ApiContractError('PUBLIC_SITEMAP_UNAVAILABLE', 'errors.internal', 503);
+      response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      response.status(200).json(toSuccessResponse(await dependencies.sitemap.read(), requestId(request)));
+    } catch (error) {
+      const mapped = toApiErrorResponse(error, requestId(request));
+      response.status(mapped.statusCode).json(mapped.body);
+    }
+  });
   router.get('/public/home', async (request, response) => {
     try {
       response.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');

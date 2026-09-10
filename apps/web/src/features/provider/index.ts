@@ -1,5 +1,6 @@
 export {
   PROVIDER_APPLICATION_STATUS_ROUTE,
+  PROVIDER_DASHBOARD_ROUTE,
   PROVIDER_PROPERTIES_ROUTE,
   createProviderOverviewLoader,
   createProviderPropertiesLoader,

@@ -4223,6 +4223,41 @@
           }
         },
         {
+          "name": "Get Property Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires admin:properties.view. Returns the current administrative property projection and state-derived actions.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Find Possible Duplicates",
           "request": {
             "method": "GET",
@@ -7474,6 +7509,70 @@
               "language": "json"
             }
           }
+        }
+      }
+    },
+    {
+      "name": "Public - Bootstrap",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/bootstrap",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "bootstrap"
+          ]
+        },
+        "description": "Public locale direction and display bootstrap."
+      }
+    },
+    {
+      "name": "Public - Sitemap Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/sitemap",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "sitemap"
+          ]
+        },
+        "description": "Safe static and published dynamic sitemap paths."
+      }
+    },
+    {
+      "name": "Provider - Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/dashboard",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "dashboard"
+          ]
+        },
+        "description": "Owner-scoped provider application, property KPIs, customer request count, and booked viewing count.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     }

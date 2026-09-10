@@ -30,6 +30,7 @@ import {
   type ProviderCommissionConfirmationService
 } from './commission-confirmation.js';
 import { ProviderServiceError, type ProviderService } from './service.js';
+import type { ProviderDashboardService } from './dashboard.js';
 
 export const PROVIDER_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/provider/application', operationId: 'createProviderApplication' },
@@ -39,6 +40,7 @@ export const PROVIDER_ROUTE_DEFINITIONS = [
   { method: 'PATCH', path: '/api/v1/provider/application/company', operationId: 'updateProviderCompanyStep' },
   { method: 'POST', path: '/api/v1/provider/application/submit', operationId: 'submitProviderApplication' },
   { method: 'GET', path: '/api/v1/provider/application/status', operationId: 'getProviderApplicationStatus' },
+  { method: 'GET', path: '/api/v1/provider/dashboard', operationId: 'getProviderDashboard' },
   { method: 'GET', path: '/api/v1/provider/ads', operationId: 'listProviderAds' },
   { method: 'POST', path: '/api/v1/provider/ads', operationId: 'createProviderAdRequest' },
   { method: 'POST', path: '/api/v1/provider/ads/:adRequestId/submit', operationId: 'submitProviderAdRequest' },
@@ -57,6 +59,7 @@ export interface ProviderRouterDependencies {
   advertisingWorkflow?: AdRequestWorkflowService;
   commissionProjection?: ProviderCommissionProjectionService;
   commissionConfirmation?: ProviderCommissionConfirmationService;
+  dashboard?: ProviderDashboardService;
 }
 
 const PROVIDER_ERROR_MAP = Object.freeze({
@@ -241,6 +244,15 @@ export function createProviderRouter(dependencies: ProviderRouterDependencies): 
         await dependencies.service.getStatus(claims(response)),
         requestId(request)
       ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.get('/provider/dashboard', async (request, response) => {
+    try {
+      if (!dependencies.dashboard) throw new ApiContractError('PROVIDER_DASHBOARD_UNAVAILABLE', 'errors.internal', 503);
+      response.status(200).json(toSuccessResponse(await dependencies.dashboard.read(claims(response)), requestId(request)));
     } catch (error) {
       sendError(request, response, error);
     }

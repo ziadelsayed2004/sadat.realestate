@@ -372,7 +372,7 @@
       "public"
     ],
     "purpose": "Locale/display bootstrap",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -582,7 +582,7 @@
       "crawler"
     ],
     "purpose": "Sitemap data projection",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -786,7 +786,7 @@
       "approved-provider"
     ],
     "purpose": "Provider KPIs",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1568,7 +1568,7 @@
       "admin:properties.view"
     ],
     "purpose": "Property/revision details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

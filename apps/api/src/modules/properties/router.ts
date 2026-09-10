@@ -17,6 +17,7 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/review', operationId: 'reviewAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/visibility', operationId: 'changeAdminPropertyVisibility' }
   ,{ method: 'GET', path: '/api/v1/admin/properties', operationId: 'listAdminProperties' }
+  ,{ method: 'GET', path: '/api/v1/admin/properties/:propertyId', operationId: 'getAdminProperty' }
   ,{ method: 'GET', path: '/api/v1/admin/properties/possible-duplicates', operationId: 'listPossiblePropertyDuplicates' }
 ] as const;
 
@@ -86,6 +87,10 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
   });
   router.get('/admin/properties/possible-duplicates', async (request, response) => {
     try { const query = propertyDuplicateQuerySchema.parse(request.query); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.duplicates(adminId(response), query), current.requestId)); }
+    catch (error) { sendError(request, response, error); }
+  });
+  router.get('/admin/properties/:propertyId', async (request, response) => {
+    try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.adminGet(adminId(response), propertyId), current.requestId)); }
     catch (error) { sendError(request, response, error); }
   });
   router.post('/admin/properties/:propertyId/visibility', async (request, response) => {

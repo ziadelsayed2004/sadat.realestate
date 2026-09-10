@@ -9957,6 +9957,188 @@
           }
         }
       }
+    },
+    "/api/v1/admin/properties/{propertyId}": {
+      "get": {
+        "operationId": "getAdminProperty",
+        "summary": "Get property details for an authorized administrator",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Administrative property details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      }
+    },
+    "/api/v1/public/bootstrap": {
+      "get": {
+        "operationId": "getPublicBootstrap",
+        "summary": "Get public locale and display bootstrap",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Public bootstrap",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PublicBootstrapData"
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "503": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
+    },
+    "/api/v1/public/sitemap": {
+      "get": {
+        "operationId": "getPublicSitemap",
+        "summary": "Get sitemap data projection",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Sitemap data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PublicSitemapData"
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "503": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
+    },
+    "/api/v1/provider/dashboard": {
+      "get": {
+        "operationId": "getProviderDashboard",
+        "summary": "Get owner-scoped provider dashboard KPIs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ProviderDashboardData"
+                        }
+                      },
+                      "required": [
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -22818,6 +23000,175 @@
             }
           }
         ]
+      },
+      "PublicBootstrapData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "defaultLocale",
+          "supportedLocales",
+          "directions",
+          "display"
+        ],
+        "properties": {
+          "defaultLocale": {
+            "type": "string",
+            "enum": [
+              "ar",
+              "en"
+            ]
+          },
+          "supportedLocales": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "string",
+              "enum": [
+                "ar",
+                "en"
+              ]
+            }
+          },
+          "directions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ar",
+              "en"
+            ],
+            "properties": {
+              "ar": {
+                "const": "rtl"
+              },
+              "en": {
+                "const": "ltr"
+              }
+            }
+          },
+          "display": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "populationCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "populationLabel": {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              "showPopulationCounter": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "PublicSitemapData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "pattern": "^/(?!/)[^\\s?#]*$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProviderDashboardData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "application",
+          "properties",
+          "activity"
+        ],
+        "properties": {
+          "application": {
+            "$ref": "#/components/schemas/ProviderApplicationStatusData"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "total",
+              "published",
+              "pendingReview",
+              "needsChanges",
+              "drafts",
+              "recent"
+            ],
+            "properties": {
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "published": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pendingReview": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "needsChanges": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "drafts": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "recent": {
+                "type": "array",
+                "maxItems": 5,
+                "items": {
+                  "$ref": "#/components/schemas/PropertyData"
+                }
+              }
+            }
+          },
+          "activity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "customerRequests",
+              "bookedViewings"
+            ],
+            "properties": {
+              "customerRequests": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "bookedViewings": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
       }
     }
   }

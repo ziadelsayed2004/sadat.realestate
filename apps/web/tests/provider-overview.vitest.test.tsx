@@ -59,12 +59,7 @@ describe('Provider overview', () => {
       fetcher: async (input, init) => {
         const url = new URL(String(input), 'http://sadat-real-estate.local');
         requests.push({ url: `${url.pathname}${url.search}`, authorization: new Headers(init?.headers).get('authorization') });
-        if (url.pathname.endsWith('/application/status')) return success(application, 'provider-application-status');
-        if (url.pathname.endsWith('/customer-requests')) return success({ items: [], page: 1, limit: 1, total: 23 }, 'provider-customer-requests');
-        if (url.pathname.endsWith('/viewings')) return success({ items: [], page: 1, limit: 1, total: 1 }, 'provider-viewings');
-        const status = url.searchParams.get('status');
-        const total = status === null ? 3 : status === 'published' ? 1 : status === 'pending_review' ? 1 : status === 'draft' ? 1 : 0;
-        return success({ items: status === null ? [property] : [] }, `provider-properties-${status ?? 'all'}`, total);
+        return success(overview, 'provider-dashboard');
       }
     });
 
@@ -73,10 +68,9 @@ describe('Provider overview', () => {
       properties: { total: 3, published: 1, pendingReview: 1, needsChanges: 0, drafts: 1, recent: [property] },
       activity: { customerRequests: 23, bookedViewings: 1 }
     });
-    expect(requests).toHaveLength(8);
+    expect(requests).toHaveLength(1);
     expect(requests.every(request => request.authorization === 'Bearer provider-token')).toBe(true);
-    expect(requests.some(request => request.url === '/api/v1/provider/application/status')).toBe(true);
-    expect(requests.some(request => request.url.includes('/api/v1/provider/properties?') && request.url.includes('status=published'))).toBe(true);
+    expect(requests[0]?.url).toBe('/api/v1/provider/dashboard');
   });
 
   it.each(['ar', 'en',] as const)('renders real totals, locale direction, and safe provider projections for %s', locale => {

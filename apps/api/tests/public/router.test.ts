@@ -22,6 +22,29 @@ test('homepage is unauthenticated and returns the stable public envelope', async
   }
 });
 
+test('bootstrap and sitemap expose safe cacheable public projections', async () => {
+  const server = createApiServer({
+    database: { isReady: async () => true },
+    publicHomepage: {
+      service,
+      bootstrap: { async read() { return { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {} }; } },
+      sitemap: { async read() { return { items: [{ path: '/' }, { path: '/properties/published-home', updatedAt: '2026-09-10T00:00:00.000Z' }] }; } }
+    }
+  });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  try {
+    const bootstrap = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/bootstrap`);
+    assert.equal(bootstrap.status, 200);
+    assert.equal((await bootstrap.json() as { data: { defaultLocale: string } }).data.defaultLocale, 'ar');
+    const sitemap = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/sitemap`);
+    assert.equal(sitemap.status, 200);
+    assert.deepEqual((await sitemap.json() as { data: { items: Array<{ path: string }> } }).data.items.map(item => item.path), ['/', '/properties/published-home']);
+    assert.match(bootstrap.headers.get('cache-control') ?? '', /max-age=300/);
+  } finally {
+    await stopApiServer(server);
+  }
+});
+
 test('homepage failures use the standard internal error envelope', async () => {
   const server = createApiServer({ database: { isReady: async () => true }, publicHomepage: { service: { async read() { throw new Error('database unavailable'); } } } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });

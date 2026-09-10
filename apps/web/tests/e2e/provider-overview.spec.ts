@@ -38,7 +38,7 @@ async function routeProviderSession(page: import('@playwright/test').Page, allow
 }
 
 async function routeProviderOverview(page: import('@playwright/test').Page): Promise<void> {
-  await page.route('**/api/v1/provider/application/status', async route => {
+  await page.route('**/api/v1/provider/dashboard', async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
     await route.fulfill({
@@ -46,58 +46,12 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
       contentType: 'application/json',
       body: JSON.stringify({
         data: {
-          applicationId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
-          providerType: 'individual_broker',
-          status: 'approved',
-          version: 2,
-          availableActions: ['open_dashboard']
+          application: { applicationId: 'bbbbbbbbbbbbbbbbbbbbbbbb', providerType: 'individual_broker', status: 'approved', version: 2, availableActions: ['open_dashboard'] },
+          properties: { total: 3, published: 1, pendingReview: 1, needsChanges: 0, drafts: 1, recent: [{ id: 'cccccccccccccccccccccccc', kind: 'property', name: { ar: 'عقار المزود', en: 'Provider property' }, slug: 'provider-property', transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'published', active: true, version: 1, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-18T09:00:00.000Z', availableActions: [] }] },
+          activity: { customerRequests: 0, bookedViewings: 0 }
         },
-        ...successMeta('provider-application-status')
+        ...successMeta('provider-dashboard')
       })
-    });
-  });
-  await page.route('**/api/v1/provider/properties**', async route => {
-    expect(route.request().method()).toBe('GET');
-    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
-    const url = new URL(route.request().url());
-    const status = url.searchParams.get('status');
-    const total = status === null ? 3 : status === 'published' ? 1 : status === 'pending_review' ? 1 : status === 'draft' ? 1 : 0;
-    const item = {
-      id: 'cccccccccccccccccccccccc',
-      kind: 'property',
-      name: { ar: 'عقار المزود', en: 'Provider property',},
-      slug: 'provider-property',
-      transactionType: 'sale',
-      source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' },
-      status: 'published',
-      active: true,
-      version: 1,
-      createdAt: '2026-08-18T08:00:00.000Z',
-      updatedAt: '2026-08-18T09:00:00.000Z',
-      availableActions: []
-    };
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ data: { items: status === null ? [item] : [] }, ...successMeta(`provider-properties-${status ?? 'all'}`, total) })
-    });
-  });
-  await page.route('**/api/v1/provider/customer-requests**', async route => {
-    expect(route.request().method()).toBe('GET');
-    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ data: { items: [], page: 1, limit: 1, total: 0 }, ...successMeta('provider-customer-requests') })
-    });
-  });
-  await page.route('**/api/v1/provider/viewings**', async route => {
-    expect(route.request().method()).toBe('GET');
-    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ data: { items: [], page: 1, limit: 1, total: 0 }, ...successMeta('provider-viewings') })
     });
   });
 }

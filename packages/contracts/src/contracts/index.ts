@@ -121,6 +121,8 @@ export {
   providerApplicationStateSchema,
   providerApplicationStatusDataSchema,
   providerApplicationStatusSuccessEnvelopeSchema,
+  providerDashboardDataSchema,
+  providerDashboardSuccessEnvelopeSchema,
   providerApplicationSuccessEnvelopeSchema,
   providerApplicationVersionSchema,
   providerAdvertisingRequestListDataSchema,
@@ -158,6 +160,7 @@ export type {
   ProviderApplicationData,
   ProviderApplicationState,
   ProviderApplicationStatusData,
+  ProviderDashboardData,
   ProviderBusinessPatch,
   ProviderCompanyPatch,
   ProviderDocumentCategory,
@@ -500,8 +503,8 @@ export type { ProjectCreate, ProjectData, ProjectListData, ProjectListQuery, Pro
 export { PROPERTY_AVAILABLE_ACTIONS, PROPERTY_DELIVERY_STATUSES, PROPERTY_DRAFT_STEPS, PROPERTY_DUPLICATE_SIGNALS, PROPERTY_KINDS, PROPERTY_REVIEW_ACTIONS, PROPERTY_STATUSES, PROPERTY_TRANSACTION_TYPES, PROPERTY_VISIBILITY_ACTIONS, propertyAdminListQuerySchema, propertyAreaSchema, propertyAvailableActionSchema, propertyContactSchema, propertyContactStepSchema, propertyCoordinatesSchema, propertyCoreStepSchema, propertyCreateSchema, propertyDataSchema, propertyDeliveryStatusSchema, propertyDescriptionSchema, propertyDetailsStepSchema, propertyDraftCreateSchema, propertyDraftStepSchema, propertyDuplicateCandidateSchema, propertyDuplicateDataSchema, propertyDuplicateQuerySchema, propertyDuplicateSignalSchema, propertyFeaturesServicesStepSchema, propertyIdParamsSchema, propertyKindSchema, propertyLayoutSchema, propertyListDataSchema, propertyListQuerySchema, propertyLocaleSchema, propertyLocationStepSchema, propertyMapUrlSchema, propertyMoneySchema, propertyObjectIdSchema, propertyPaymentPlanSchema, propertyPricingStepSchema, propertyReviewActionSchema, propertyReviewSchema, propertySourceIdentitySchema, propertySourceSchema, propertySlugSchema, propertyStatusSchema, propertyStepParamsSchema, propertyStepSchema, propertySubmitSchema, propertyTransactionTypeSchema, propertyUnitSchema, propertyValidationDataSchema, propertyValidationIssueSchema, propertyVisibilityActionSchema, propertyVisibilitySchema } from '../properties/index.js';
 export type { PropertyAdminListQuery, PropertyArea, PropertyAvailableAction, PropertyContact, PropertyContactStep, PropertyCoordinates, PropertyCoreStep, PropertyCreate, PropertyData, PropertyDeliveryStatus, PropertyDescription, PropertyDetailsStep, PropertyDraftCreate, PropertyDraftStep, PropertyDuplicateCandidate, PropertyDuplicateData, PropertyDuplicateQuery, PropertyFeaturesServicesStep, PropertyIdParams, PropertyKind, PropertyLayout, PropertyListData, PropertyListQuery, PropertyLocationStep, PropertyMapUrl, PropertyMoney, PropertyPaymentPlan, PropertyPricingStep, PropertyReview, PropertyReviewAction, PropertySource, PropertySourceIdentity, PropertyStatus, PropertyStep, PropertyStepParams, PropertySubmit, PropertyTransactionType, PropertyUnit, PropertyValidationData, PropertyValidationIssue, PropertyVisibility, PropertyVisibilityAction } from '../properties/index.js';
 
-export { publicHomepageBannerSchema, publicHomepageCategorySchema, publicHomepageContentSchema, publicHomepageDataSchema, publicHomepageDeveloperSchema, publicHomepageLocationSchema, publicHomepageMetricSchema, publicHomepagePropertySchema, publicHomepageSectionSchema, publicHomepageSuccessEnvelopeSchema, publicPropertyAmenitySchema, publicPropertyDetailsSchema, publicPropertyDetailsSuccessEnvelopeSchema, publicPropertyMediaSchema, publicPropertyProjectSchema, publicPropertyRelatedPropertySchema, publicPropertySeoSchema, publicPropertySourceSchema } from '../public/index.js';
-export type { PublicHomepageBanner, PublicHomepageCategory, PublicHomepageContent, PublicHomepageData, PublicHomepageDeveloper, PublicHomepageLocation, PublicHomepageMetric, PublicHomepageProperty, PublicHomepageSection, PublicPropertyAmenity, PublicPropertyDetails, PublicPropertyMedia, PublicPropertyProject, PublicPropertyRelatedProperty, PublicPropertySeo, PublicPropertySource } from '../public/index.js';
+export { publicBootstrapDataSchema, publicBootstrapSuccessEnvelopeSchema, publicHomepageBannerSchema, publicHomepageCategorySchema, publicHomepageContentSchema, publicHomepageDataSchema, publicHomepageDeveloperSchema, publicHomepageLocationSchema, publicHomepageMetricSchema, publicHomepagePropertySchema, publicHomepageSectionSchema, publicHomepageSuccessEnvelopeSchema, publicPropertyAmenitySchema, publicPropertyDetailsSchema, publicPropertyDetailsSuccessEnvelopeSchema, publicPropertyMediaSchema, publicPropertyProjectSchema, publicPropertyRelatedPropertySchema, publicPropertySeoSchema, publicPropertySourceSchema, publicSitemapDataSchema, publicSitemapItemSchema, publicSitemapSuccessEnvelopeSchema } from '../public/index.js';
+export type { PublicBootstrapData, PublicHomepageBanner, PublicHomepageCategory, PublicHomepageContent, PublicHomepageData, PublicHomepageDeveloper, PublicHomepageLocation, PublicHomepageMetric, PublicHomepageProperty, PublicHomepageSection, PublicPropertyAmenity, PublicPropertyDetails, PublicPropertyMedia, PublicPropertyProject, PublicPropertyRelatedProperty, PublicPropertySeo, PublicPropertySource, PublicSitemapData, PublicSitemapItem } from '../public/index.js';
 export { publicPropertyListDataSchema, publicPropertyListItemSchema, publicPropertyLocationSchema, publicPropertyListSuccessEnvelopeSchema, publicPropertySearchQuerySchema } from '../search/index.js';
 export type { PublicPropertyListData, PublicPropertyListItem, PublicPropertyLocation, PublicPropertySearchQuery } from '../search/index.js';
 

@@ -3,6 +3,7 @@ import { adCalendarStatusSchema, adQuoteLineItemSchema, adRequestStatusSchema } 
 import { accountPasswordSchema, authSessionDataSchema, normalizedEmailSchema, normalizedPhoneSchema } from '../auth/index.js';
 import { commissionPolicyKindSchema, commissionResolutionSourceSchema } from '../commissions/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
+import { propertyDataSchema } from '../properties/index.js';
 
 export const PROVIDER_TYPES = [
   'individual_broker',
@@ -211,6 +212,23 @@ export const providerRegistrationSuccessEnvelopeSchema = successEnvelopeSchema(p
 export const providerApplicationSuccessEnvelopeSchema = successEnvelopeSchema(providerApplicationDataSchema);
 export const providerApplicationStatusSuccessEnvelopeSchema = successEnvelopeSchema(providerApplicationStatusDataSchema);
 
+export const providerDashboardDataSchema = z.object({
+  application: providerApplicationStatusDataSchema,
+  properties: z.object({
+    total: z.number().int().nonnegative(),
+    published: z.number().int().nonnegative(),
+    pendingReview: z.number().int().nonnegative(),
+    needsChanges: z.number().int().nonnegative(),
+    drafts: z.number().int().nonnegative(),
+    recent: z.array(propertyDataSchema).max(5)
+  }).strict(),
+  activity: z.object({
+    customerRequests: z.number().int().nonnegative(),
+    bookedViewings: z.number().int().nonnegative()
+  }).strict()
+}).strict();
+export const providerDashboardSuccessEnvelopeSchema = successEnvelopeSchema(providerDashboardDataSchema);
+
 const providerAdvertisingObjectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 const providerAdvertisingDateSchema = z.string().datetime({ offset: true });
 export const providerAdRequestHistoryEntrySchema = z.object({
@@ -360,6 +378,7 @@ export type ProviderDocumentRequirement = z.infer<typeof providerDocumentRequire
 export type ProviderRequirementSnapshot = z.infer<typeof providerRequirementSnapshotSchema>;
 export type ProviderApplicationData = z.infer<typeof providerApplicationDataSchema>;
 export type ProviderApplicationStatusData = z.infer<typeof providerApplicationStatusDataSchema>;
+export type ProviderDashboardData = z.infer<typeof providerDashboardDataSchema>;
 export type ProviderRegistrationData = z.infer<typeof providerRegistrationDataSchema>;
 export type ProviderAdRequestHistoryEntry = z.infer<typeof providerAdRequestHistoryEntrySchema>;
 export type ProviderAdQuoteProjection = z.infer<typeof providerAdQuoteProjectionSchema>;

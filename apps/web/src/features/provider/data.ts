@@ -1,9 +1,7 @@
 import {
-  providerApplicationStatusSuccessEnvelopeSchema,
+  providerDashboardSuccessEnvelopeSchema,
   propertyListDataSchema,
-  requestListDataSchema,
   successEnvelopeSchema,
-  viewingListDataSchema,
   type PropertyData,
   type PropertyStatus,
   type ProviderApplicationStatusData
@@ -11,9 +9,8 @@ import {
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 
 export const PROVIDER_APPLICATION_STATUS_ROUTE = '/provider/application/status' as const;
+export const PROVIDER_DASHBOARD_ROUTE = '/provider/dashboard' as const;
 export const PROVIDER_PROPERTIES_ROUTE = '/provider/properties' as const;
-export const PROVIDER_CUSTOMER_REQUESTS_ROUTE = '/provider/customer-requests' as const;
-export const PROVIDER_VIEWINGS_ROUTE = '/provider/viewings' as const;
 
 export interface ProviderAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
@@ -82,90 +79,15 @@ function authorizationHeaders(source: ProviderAuthorizationSource | undefined): 
   return authorization === undefined ? undefined : { authorization };
 }
 
-interface PropertyQueryResult {
-  readonly items: readonly PropertyData[];
-  readonly total: number;
-}
-
-async function loadProperties(
-  client: ApiClient,
-  headers: HeadersInit | undefined,
-  status: PropertyStatus | undefined,
-  signal: AbortSignal | undefined
-): Promise<PropertyQueryResult> {
-  const response = await client.request(PROVIDER_PROPERTIES_ROUTE, {
-    responseSchema: successEnvelopeSchema(propertyListDataSchema),
-    ...(headers === undefined ? {} : { headers }),
-    query: {
-      page: 1,
-      limit: status === undefined ? 5 : 1,
-      sort: 'updatedAt',
-      direction: 'desc',
-      ...(status === undefined ? {} : { status })
-    },
-    ...(signal === undefined ? {} : { signal })
-  });
-  return {
-    items: response.data.data.items,
-    total: response.data.meta.total ?? response.data.data.items.length
-  };
-}
-
-const emptyProperties: ProviderOverviewProperties = Object.freeze({
-  total: 0,
-  published: 0,
-  pendingReview: 0,
-  needsChanges: 0,
-  drafts: 0,
-  recent: Object.freeze([])
-});
-
 export async function loadProviderOverview(options: ProviderOverviewLoadOptions = {}): Promise<ProviderOverviewData> {
   const client = clientFor(options);
   const headers = authorizationHeaders(options.authorization);
-  const applicationResponse = await client.request(PROVIDER_APPLICATION_STATUS_ROUTE, {
-    responseSchema: providerApplicationStatusSuccessEnvelopeSchema,
+  const response = await client.request(PROVIDER_DASHBOARD_ROUTE, {
+    responseSchema: providerDashboardSuccessEnvelopeSchema,
     ...(headers === undefined ? {} : { headers }),
     ...(options.signal === undefined ? {} : { signal: options.signal })
   });
-  const application = applicationResponse.data.data;
-  if (application.status !== 'approved') return { application, properties: emptyProperties, activity: { customerRequests: 0, bookedViewings: 0 } };
-
-  const [all, published, pendingReview, needsChanges, drafts, customerRequestsResponse, bookedViewingsResponse] = await Promise.all([
-    loadProperties(client, headers, undefined, options.signal),
-    loadProperties(client, headers, 'published', options.signal),
-    loadProperties(client, headers, 'pending_review', options.signal),
-    loadProperties(client, headers, 'needs_changes', options.signal),
-    loadProperties(client, headers, 'draft', options.signal),
-    client.request(PROVIDER_CUSTOMER_REQUESTS_ROUTE, {
-      responseSchema: successEnvelopeSchema(requestListDataSchema),
-      ...(headers === undefined ? {} : { headers }),
-      query: { page: 1, limit: 1, source: 'provider', type: 'provider_customer' },
-      ...(options.signal === undefined ? {} : { signal: options.signal })
-    }),
-    client.request(PROVIDER_VIEWINGS_ROUTE, {
-      responseSchema: successEnvelopeSchema(viewingListDataSchema),
-      ...(headers === undefined ? {} : { headers }),
-      query: { page: 1, limit: 1, status: 'confirmed' },
-      ...(options.signal === undefined ? {} : { signal: options.signal })
-    })
-  ]);
-
-  return {
-    application,
-    properties: {
-      total: all.total,
-      published: published.total,
-      pendingReview: pendingReview.total,
-      needsChanges: needsChanges.total,
-      drafts: drafts.total,
-      recent: all.items
-    },
-    activity: {
-      customerRequests: customerRequestsResponse.data.data.total,
-      bookedViewings: bookedViewingsResponse.data.data.total
-    }
-  };
+  return response.data.data;
 }
 
 export function createProviderOverviewLoader(
