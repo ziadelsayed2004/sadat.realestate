@@ -181,7 +181,12 @@ test.describe('F5 Admin Dashboard QA', () => {
       const skipLink = page.locator('.a11y-skip-link');
       await skipLink.focus();
       await expect(skipLink, `${screenId} skip link`).toBeFocused();
-      const firstNavigationLink = page.locator('.admin-dashboard__navigation a').first();
+      const responsiveMenu = page.locator('.admin-shell-header__menu');
+      if (await responsiveMenu.isVisible()) {
+        await responsiveMenu.click();
+        await expect(responsiveMenu, `${screenId} responsive menu`).toHaveAttribute('aria-expanded', 'true');
+      }
+      const firstNavigationLink = page.locator('.admin-dashboard__navigation a:visible').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink, `${screenId} first navigation link`).toBeFocused();
 

@@ -136,7 +136,7 @@ test.describe('F4 Provider Dashboard QA', () => {
       const skipLink = page.locator('.a11y-skip-link');
       await skipLink.focus();
       await expect(skipLink).toBeFocused();
-      const firstNavigationLink = page.locator('.provider-dashboard__navigation a').first();
+      const firstNavigationLink = page.locator('.provider-dashboard__navigation a:visible').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink).toBeFocused();
     });
