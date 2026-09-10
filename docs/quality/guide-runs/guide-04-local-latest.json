@@ -1,8 +1,10 @@
 {
+  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
+  "worktreeChanges": true,
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T14:48:13.125Z",
+  "startedAt": "2026-09-10T10:06:24.480Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -59,12 +61,12 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 200
     },
     {
       "method": "PUT",
-      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "path": "/api/v1/seeker/favorites/6aa280a83a9595f84abef95c",
       "status": 200
     },
     {
@@ -84,7 +86,7 @@
     },
     {
       "method": "DELETE",
-      "path": "/api/v1/seeker/favorites/670000000000000000000007",
+      "path": "/api/v1/seeker/favorites/6aa280a83a9595f84abef95c",
       "status": 200
     },
     {
@@ -99,7 +101,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 200
     },
     {
@@ -109,7 +111,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 200
     },
     {
@@ -124,7 +126,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/seeker/requests/ce04a67acd9a0c3a68a2d17d",
+      "path": "/api/v1/seeker/requests/3ca8134a1023fee6aca40c24",
       "status": 200
     },
     {
@@ -164,7 +166,7 @@
     },
     {
       "method": "PATCH",
-      "path": "/api/v1/seeker/viewings/67063dd2f0cd43975603846d",
+      "path": "/api/v1/seeker/viewings/f6953bc225da2d50a5814684",
       "status": 200
     },
     {
@@ -174,7 +176,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/seeker/viewings/67063dd2f0cd43975603846d/cancel",
+      "path": "/api/v1/seeker/viewings/f6953bc225da2d50a5814684/cancel",
       "status": 200
     },
     {
@@ -326,5 +328,5 @@
       "Production verification"
     ]
   },
-  "finishedAt": "2026-09-09T14:48:25.431Z"
+  "finishedAt": "2026-09-10T10:06:46.846Z"
 }

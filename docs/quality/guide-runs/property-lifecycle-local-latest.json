@@ -1,5 +1,5 @@
 {
-  "commit": "a37032062c992f816dcc35f66f9531296df1e8db",
+  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-14",
@@ -7,7 +7,7 @@
   ],
   "environment": "local-real-browser-api-mongodb-storage",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T06:22:53.521Z",
+  "startedAt": "2026-09-10T10:04:21.531Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "approved_provider_organization_fixture_inserted",
@@ -55,12 +55,12 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/login",
+      "path": "/api/v1/auth/refresh",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/refresh",
+      "path": "/api/v1/auth/login",
       "status": 200
     },
     {
@@ -295,7 +295,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789021374287",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 200
     },
     {
@@ -310,7 +310,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789021374287",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 404
     },
     {
@@ -320,7 +320,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789021374287",
+      "path": "/api/v1/public/properties/delivery-property-1789034661899",
       "status": 200
     }
   ],
@@ -391,6 +391,7 @@
       "scrollWidth": 402
     }
   ],
+  "rateLimitRetries": [],
   "contactLayout": {
     "stepRows": 1,
     "fieldPadding": "0px",
@@ -420,5 +421,5 @@
   "remaining": [
     "Run GUIDE-14 and GUIDE-15 on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T06:23:09.576Z"
+  "finishedAt": "2026-09-10T10:04:38.244Z"
 }

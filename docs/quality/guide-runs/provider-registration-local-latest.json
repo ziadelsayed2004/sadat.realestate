@@ -1,5 +1,5 @@
 {
-  "commit": "04e1d2cbdd8aacfff060477d61dab821c1353d4d",
+  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-11",
@@ -8,7 +8,7 @@
   ],
   "environment": "local-real-browser-api-mailhog-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T02:49:26.242Z",
+  "startedAt": "2026-09-10T09:59:20.895Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "browser_provider_type_password_and_email_otp",
@@ -158,7 +158,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "path": "/api/v1/admin/providers/6aa27f7b3a9595f84abef90d/review",
       "status": 403
     },
     {
@@ -168,7 +168,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "path": "/api/v1/admin/providers/6aa27f7b3a9595f84abef90d/review",
       "status": 200
     },
     {
@@ -178,7 +178,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "path": "/api/v1/admin/providers/6aa27f7b3a9595f84abef90d/review",
       "status": 409
     },
     {
@@ -208,7 +208,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "path": "/api/v1/admin/providers/6aa27f7b3a9595f84abef90d/review",
       "status": 200
     },
     {
@@ -277,5 +277,5 @@
   "remaining": [
     "Run the same provider registration and review lifecycle on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T02:49:34.639Z"
+  "finishedAt": "2026-09-10T09:59:36.199Z"
 }

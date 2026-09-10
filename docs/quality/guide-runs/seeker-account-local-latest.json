@@ -1,5 +1,5 @@
 {
-  "commit": "d49949e714e4c51526e2c115370b61af063e0c24",
+  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-09",
@@ -7,7 +7,7 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T03:01:44.107Z",
+  "startedAt": "2026-09-10T09:59:00.912Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "explicit_notification_fixture_inserted",
@@ -230,5 +230,5 @@
   "remaining": [
     "Run GUIDE-09 and GUIDE-10 on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T03:01:51.229Z"
+  "finishedAt": "2026-09-10T09:59:09.715Z"
 }

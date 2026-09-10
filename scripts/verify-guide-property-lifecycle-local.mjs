@@ -11,7 +11,7 @@ const evidence = {
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0,
   journeys: ['GUIDE-14', 'GUIDE-15'], environment: 'local-real-browser-api-mongodb-storage', mockedRoutes: false,
-  startedAt: new Date().toISOString(), status: 'RUNNING', transitions: [], authorization: [], http: [], browser: []
+  startedAt: new Date().toISOString(), status: 'RUNNING', transitions: [], authorization: [], http: [], browser: [], rateLimitRetries: []
 };
 
 function parseEnvironment(source) {
@@ -60,17 +60,26 @@ async function loginApi(email, password, role) {
   assert.equal(typeof session.accessToken, 'string');
   return session;
 }
-async function api(path, { method = 'GET', token, body, expected = 200 } = {}) {
-  const response = await fetch(`${base}/api/v1${path}`, {
-    method,
-    headers: { ...(token ? { authorization: `Bearer ${token}` } : {}), ...(body === undefined ? {} : { 'content-type': 'application/json' }) },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) })
-  });
-  record(method, `/api/v1${path}`, response.status);
-  let payload;
-  try { payload = await response.json(); } catch { payload = undefined; }
-  assert.equal(response.status, expected, `${path} returned ${response.status} ${payload?.error?.code ?? ''}`);
-  return payload?.data;
+async function api(path, { method = 'GET', token, body, expected = 200, retryRateLimit = false } = {}) {
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const response = await fetch(`${base}/api/v1${path}`, {
+      method,
+      headers: { ...(token ? { authorization: `Bearer ${token}` } : {}), ...(body === undefined ? {} : { 'content-type': 'application/json' }) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) })
+    });
+    record(method, `/api/v1${path}`, response.status);
+    let payload;
+    try { payload = await response.json(); } catch { payload = undefined; }
+    if (response.status !== 429 || !retryRateLimit || attempt > 0) {
+      assert.equal(response.status, expected, `${path} returned ${response.status} ${payload?.error?.code ?? ''}`);
+      return payload?.data;
+    }
+    const retryAfterSeconds = Number.parseInt(response.headers.get('retry-after') ?? '1', 10);
+    const waitMs = Math.min(Math.max(Number.isFinite(retryAfterSeconds) ? retryAfterSeconds : 1, 1), 60) * 1_000 + 250;
+    evidence.rateLimitRetries.push({ method, path: safePath(`/api/v1${path}`), retryAfterSeconds, waitMs });
+    await new Promise(resolve => setTimeout(resolve, waitMs));
+  }
+  throw new Error(`Rate-limit retry exhausted for ${path}`);
 }
 async function screen(page, id) {
   await expect(page.locator(`[data-screen-id="${id}"]`).first()).toBeVisible();
@@ -355,7 +364,8 @@ try {
   await api(`/public/properties/${slug}`, { expected: 404 });
   const restored = await api(`/admin/properties/${propertyId}/visibility`, {
     method: 'POST', token: adminToken,
-    body: { version: hidden.version, action: 'restore', reason: 'Restore property after visibility lifecycle verification' }
+    body: { version: hidden.version, action: 'restore', reason: 'Restore property after visibility lifecycle verification' },
+    retryRateLimit: true
   });
   assert.equal(restored.status, 'published');
   await api(`/public/properties/${slug}`);
