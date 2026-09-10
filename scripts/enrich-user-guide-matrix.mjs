@@ -60,7 +60,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const source = journeySource.get(journey.id);
   if (!source) throw new Error(`Missing structured guide source for ${journey.id}`);
   const communityRunApplies = communityEvidence?.status === "PASS_LOCAL" && communityEvidence.journeys?.includes(journey.id);
-  const privacyRunApplies = privacySecurityEvidence?.status === "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS" && privacySecurityEvidence.journeys?.includes(journey.id);
+  const privacyRunApplies = privacySecurityEvidence?.status?.startsWith("PASS_LOCAL") && privacySecurityEvidence.journeys?.includes(journey.id);
   const evidenceAttachments = supplementalRuns.flatMap(([path, evidence]) => evidence.journeys?.includes(journey.id) ? [{
     path,
     status: evidence.status,

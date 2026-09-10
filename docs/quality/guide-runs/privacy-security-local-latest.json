@@ -1,55 +1,90 @@
 {
-  "schemaVersion": 1,
-  "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS",
-  "finishedAt": "2026-09-10T02:17:01.769Z",
-  "environment": "local",
-  "mockedRoutes": false,
+  "commit": "85caa126fa31531ca0003b44ccf0b40fa1bc8b4e",
+  "worktreeChanges": true,
   "journeys": [
-    "GUIDE-02",
     "GUIDE-25",
     "GUIDE-26"
   ],
-  "tests": {
-    "command": "node --import tsx --test apps/api/tests/settings/privacy-security-policy.test.ts apps/api/tests/public/properties.test.ts apps/api/tests/security/authorization-matrix.test.ts apps/api/tests/auth/service.test.ts",
-    "result": "22/22 passed"
-  },
-  "runtimeBindings": [
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-10T12:54:30.357Z",
+  "status": "PASS_LOCAL",
+  "transitions": [
+    "admin_browser_saved_privacy_security",
+    "browser_received_incremented_version",
+    "same_mongo_record_contains_browser_change",
+    "privacy_booleans_preserved",
+    "admin_browser_restored_approved_values",
+    "two_ordered_audit_records_persisted"
+  ],
+  "authorization": [
+    "stale_settings_version_rejected_409",
+    "limited_admin_settings_mutation_denied_403"
+  ],
+  "http": [
     {
-      "setting": "admin_session_timeout_minutes",
-      "consumer": "apps/api/src/modules/rbac/auth.ts",
-      "behavior": "rejects an Admin access token whose iat exceeds the saved timeout"
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
     },
     {
-      "setting": "two_factor_authentication",
-      "consumers": [
-        "apps/api/src/modules/auth/service.ts",
-        "apps/api/src/modules/rbac/auth.ts"
-      ],
-      "behavior": "requires the Admin email OTP during login and rejects non-MFA Admin tokens while enabled"
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
     },
     {
-      "settings": [
-        "hide_provider_contact",
-        "contact_visibility"
-      ],
-      "consumer": "apps/api/src/modules/public/properties.ts",
-      "behavior": "projects contact data only for public, verified authenticated, or verified after-request viewers according to the saved policy"
+      "method": "GET",
+      "path": "/api/v1/admin/settings/privacy-security",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/settings/privacy-security",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/settings/privacy-security",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/settings/privacy-security",
+      "status": 403
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/settings/privacy-security",
+      "status": 200
     }
   ],
-  "authorization": {
-    "negativeMatrix": "derived from every implemented route",
-    "crossRoleAccess": "seeker/provider/admin boundaries passed",
-    "contactVisibilityCases": [
-      "guest hidden",
-      "authenticated verified visible",
-      "after_request hidden before request",
-      "after_request visible after request",
-      "owner provider visible",
-      "admin visible"
+  "mongo": {
+    "collection": "admin_settings",
+    "namespace": "privacy-security",
+    "versionBefore": 1,
+    "versionAfter": 3,
+    "restoredValues": true,
+    "auditActions": [
+      "settings.update",
+      "settings.update"
+    ],
+    "auditReasons": [
+      "Restore the approved privacy policy after verification",
+      "Verify the live privacy policy consumer binding"
     ]
   },
   "remaining": [
-    "save settings through the real Admin browser and verify consumers against the same local Mongo record",
-    "Production verification after the current commit is deployed"
-  ]
+    "Run the same browser, API and MongoDB verification on Production after deployment."
+  ],
+  "finishedAt": "2026-09-10T12:54:32.553Z"
 }
