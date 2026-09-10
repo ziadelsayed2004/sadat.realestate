@@ -4,13 +4,15 @@ const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
 const routeMatrixPath = "docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json";
 
-const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence] = await Promise.all([
+const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence, guide04Evidence, providerRegistrationEvidence] = await Promise.all([
   readFile(guideSourcePath, "utf8").then(JSON.parse),
   readFile(matrixPath, "utf8").then(JSON.parse),
   readFile(routeMatrixPath, "utf8").then(JSON.parse),
   readFile("docs/quality/guide-runs/community-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/admin-requests-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/privacy-security-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/guide-04-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/provider-registration-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
@@ -32,6 +34,7 @@ function hasExecutedEvidence(journey) {
 const supplementalRuns = [
   ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],
   ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
+  ["docs/quality/guide-runs/provider-registration-local-latest.json", providerRegistrationEvidence],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -57,6 +60,28 @@ matrix.journeys = matrix.journeys.map((journey) => {
     mockedRoutes: evidence.mockedRoutes,
     remaining: evidence.remaining,
   }] : []);
+  if (guide04Evidence?.status === "PASS_LOCAL") {
+    const scopedGuide04Evidence = {
+      "GUIDE-05": guide04Evidence.transitions?.includes("authenticated_dashboard_after_full_navigation") ? {
+        status: "PASS_LOCAL_DASHBOARD_ENTRY",
+        checks: ["authenticated_dashboard_after_full_navigation", "mobile_width_without_overflow"],
+      } : null,
+      "GUIDE-08": guide04Evidence.relatedJourneyEvidence?.status === "PASS_LOCAL_FAVORITES" ? guide04Evidence.relatedJourneyEvidence : null,
+      "GUIDE-16": guide04Evidence.viewingJourneyEvidence?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" ? {
+        status: "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
+        checks: guide04Evidence.viewingJourneyEvidence.checks?.filter((check) => check.startsWith("provider_")) ?? [],
+        remaining: ["Provider dashboard and non-viewing work queues", "Production verification"],
+      } : null,
+    }[journey.id];
+    if (scopedGuide04Evidence) evidenceAttachments.push({
+      path: "docs/quality/guide-runs/guide-04-local-latest.json",
+      status: scopedGuide04Evidence.status,
+      verifiedAt: guide04Evidence.finishedAt,
+      environment: guide04Evidence.environment,
+      mockedRoutes: guide04Evidence.mockedRoutes,
+      scope: scopedGuide04Evidence,
+    });
+  }
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
     status: communityEvidence.status,

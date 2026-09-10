@@ -437,7 +437,12 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
         setLoadError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
         return;
       }
-      if (nextApplication.status === 'approved' && client.refresh !== undefined) {
+      // A protected route has already refreshed the browser session before it
+      // can fetch the application. Refreshing again after an API-loaded
+      // approval temporarily makes the route anonymous, unmounts this view,
+      // and starts the same load/refresh cycle again. An embedded approval
+      // (the immediate transition result) still needs the one session refresh.
+      if (nextApplication.status === 'approved' && client.refresh !== undefined && client.getProviderApplication === undefined) {
         await client.refresh();
       }
       setApplication(nextApplication);

@@ -196,6 +196,26 @@ describe('provider application review and status', () => {
     expect(screen.getByTestId('provider-review-dashboard')).toBeInTheDocument();
   });
 
+  it('does not start a second session refresh after a protected route fetches an approved application', async () => {
+    const refresh = vi.fn().mockResolvedValue(undefined);
+    const getProviderApplication = vi.fn().mockResolvedValue(application({
+      status: 'approved',
+      availableActions: ['view_status', 'open_dashboard']
+    }));
+    renderWithLocale(
+      <ProviderReviewPage
+        client={{ getProviderApplication, refresh }}
+        locale="en"
+        onBack={vi.fn()}
+      />,
+      { locale: 'en' }
+    );
+
+    await waitFor(() => expect(screen.getByTestId('provider-review')).toHaveAttribute('data-screen-id', 'AUTH-17'));
+    expect(getProviderApplication).toHaveBeenCalledTimes(1);
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
   it('fails closed for an unavailable application and exposes retry without private response data', async () => {
     const copy = getProviderReviewCopy('en');
     const getProviderApplication = vi.fn().mockRejectedValue({ status: 503 });

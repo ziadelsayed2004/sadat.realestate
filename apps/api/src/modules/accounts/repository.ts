@@ -541,8 +541,11 @@ export function createMongooseAccountRepository(
         return await connection.transaction(async (session) => {
           const userId = objectId(input.target.userId);
           const providerApplicationId = objectId(input.target.providerApplicationId);
-          const [applicationWrite, profileWrite, accountWrite] = await Promise.all([
-            ProviderApplication.updateOne(
+          // MongoDB transactions do not support parallel operations on the same
+          // session. Keep the three coherent state writes sequential so the
+          // transaction can either commit all of them with its audit records or
+          // roll every collection back.
+          const applicationWrite = await ProviderApplication.updateOne(
               {
                 _id: providerApplicationId,
                 userId,
@@ -558,8 +561,8 @@ export function createMongooseAccountRepository(
                 $inc: { version: 1 }
               },
               { session, runValidators: true }
-            ).exec(),
-            ProviderProfile.updateOne(
+            ).exec();
+          const profileWrite = await ProviderProfile.updateOne(
               {
                 userId,
                 status: input.target.profileStatus,
@@ -570,8 +573,8 @@ export function createMongooseAccountRepository(
                 $inc: { version: 1 }
               },
               { session, runValidators: true }
-            ).exec(),
-            User.updateOne(
+            ).exec();
+          const accountWrite = await User.updateOne(
               {
                 _id: userId,
                 roleType: 'provider',
@@ -583,8 +586,7 @@ export function createMongooseAccountRepository(
                 $inc: { version: 1 }
               },
               { session, runValidators: true }
-            ).exec()
-          ]);
+            ).exec();
           if (
             applicationWrite.modifiedCount !== 1
             || profileWrite.modifiedCount !== 1

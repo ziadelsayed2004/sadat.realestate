@@ -40,6 +40,7 @@
     "guide:sync": "npm run guide:generate && npm run guide:matrix",
     "guide:check": "node scripts/verify-client-user-guide.mjs",
     "guide:community:local": "node scripts/verify-guide-community-local.mjs",
+    "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
     "figma:closure:audit": "node scripts/audit-figma-screen-closure.mjs --write",
     "figma:closure:gate": "node scripts/audit-figma-screen-closure.mjs --strict",
     "db:seed": "npm run db:seed --workspace apps/api",

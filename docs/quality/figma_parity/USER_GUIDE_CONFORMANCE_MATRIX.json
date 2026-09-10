@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T02:17:02.181Z",
+  "generatedAt": "2026-09-10T02:50:18.882Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1560,12 +1560,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -1584,7 +1584,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -1592,10 +1592,26 @@
         "section": "#seeker",
         "journeyId": "GUIDE-05"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-09T14:48:25.431Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_DASHBOARD_ENTRY",
+          "verifiedAt": "2026-09-09T14:48:25.431Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "status": "PASS_LOCAL_DASHBOARD_ENTRY",
+            "checks": [
+              "authenticated_dashboard_after_full_navigation",
+              "mobile_width_without_overflow"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "GUIDE-06",
@@ -1772,12 +1788,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -1797,7 +1813,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -1805,10 +1821,30 @@
         "section": "#seeker",
         "journeyId": "GUIDE-08"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-09T14:48:25.431Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_FAVORITES",
+          "verifiedAt": "2026-09-09T14:48:25.431Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "journey": "GUIDE-02",
+            "status": "PASS_LOCAL_FAVORITES",
+            "passed": [
+              "browser detail save",
+              "idempotent repeat save",
+              "browser saved-property projection",
+              "browser remove"
+            ],
+            "remaining": "Production verification pending."
+          }
+        }
+      ]
     },
     {
       "id": "GUIDE-09",
@@ -1954,12 +1990,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -1978,7 +2014,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -1986,10 +2022,22 @@
         "section": "#provider",
         "journeyId": "GUIDE-11"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T02:49:34.639Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T02:49:34.639Z",
+          "environment": "local-real-browser-api-mailhog-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Run the same provider registration and review lifecycle on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-12",
@@ -2016,12 +2064,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2040,7 +2088,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2048,10 +2096,22 @@
         "section": "#provider",
         "journeyId": "GUIDE-12"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T02:49:34.639Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T02:49:34.639Z",
+          "environment": "local-real-browser-api-mailhog-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Run the same provider registration and review lifecycle on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-13",
@@ -2078,12 +2138,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2102,7 +2162,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2110,10 +2170,22 @@
         "section": "#provider",
         "journeyId": "GUIDE-13"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T02:49:34.639Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T02:49:34.639Z",
+          "environment": "local-real-browser-api-mailhog-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Run the same provider registration and review lifecycle on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-14",
@@ -2282,12 +2354,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2306,7 +2378,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2314,10 +2386,34 @@
         "section": "#provider",
         "journeyId": "GUIDE-16"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-09T14:48:25.431Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
+          "verifiedAt": "2026-09-09T14:48:25.431Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
+            "checks": [
+              "provider_browser_confirm_200",
+              "provider_browser_reschedule_200",
+              "provider_browser_confirm_200",
+              "provider_browser_complete_200",
+              "provider_browser_cancel_requires_reason",
+              "provider_browser_cancel_200"
+            ],
+            "remaining": [
+              "Provider dashboard and non-viewing work queues",
+              "Production verification"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "GUIDE-17",
@@ -3135,12 +3231,12 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-10T02:17:02.181Z",
+    "updatedAt": "2026-09-10T02:50:18.882Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
     "blocked": 0,
-    "localWithAnyExecutionEvidence": 10,
+    "localWithAnyExecutionEvidence": 16,
     "productionVerified": 0,
     "fullyClosed": 0
   },

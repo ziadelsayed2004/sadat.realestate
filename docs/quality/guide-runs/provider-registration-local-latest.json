@@ -1,0 +1,281 @@
+{
+  "commit": "04e1d2cbdd8aacfff060477d61dab821c1353d4d",
+  "worktreeChanges": true,
+  "journeys": [
+    "GUIDE-11",
+    "GUIDE-12",
+    "GUIDE-13"
+  ],
+  "environment": "local-real-browser-api-mailhog-mongodb",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-10T02:49:26.242Z",
+  "status": "PASS_LOCAL",
+  "transitions": [
+    "browser_provider_type_password_and_email_otp",
+    "provider_draft_created",
+    "browser_account_step_visible",
+    "incomplete_submission_rejected_409",
+    "account_and_company_completed",
+    "four_required_documents_uploaded",
+    "duplicate_document_upload_idempotent",
+    "application_submitted",
+    "browser_pending_review_visible",
+    "admin_browser_requested_information",
+    "provider_browser_saw_review_reason",
+    "provider_revised_and_resubmitted",
+    "admin_browser_approved_provider",
+    "provider_reauthenticated_as_verified",
+    "browser_approved_state_and_dashboard_action_visible"
+  ],
+  "authorization": [
+    "draft_provider_denied_admin_projection_403",
+    "limited_admin_provider_review_denied_403",
+    "admin_review_reason_required_in_browser",
+    "repeated_stale_review_rejected_409",
+    "provider_sessions_revoked_after_each_admin_decision",
+    "provider_reauthentication_reflects_authoritative_status"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/send",
+      "status": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/submit",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties?page=1&limit=1",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/application/account",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/application/company",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/documents",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/documents",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/documents",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/documents",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/documents",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application/documents",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/submit",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/application/account",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/application/submit",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/providers/6aa21ab86e89ef098e7efec1/review",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/application",
+      "status": 200
+    }
+  ],
+  "browser": [
+    {
+      "stage": "pending_review",
+      "width": 402,
+      "overflow": false
+    },
+    {
+      "stage": "needs_information",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "stage": "approved",
+      "width": 390,
+      "overflow": false
+    }
+  ],
+  "mongo": {
+    "collections": [
+      "users",
+      "provider_profiles",
+      "provider_applications",
+      "provider_documents",
+      "account_state_transitions",
+      "audit_logs"
+    ],
+    "finalStates": {
+      "account": "verified",
+      "profile": "approved",
+      "application": "approved"
+    },
+    "activeDocumentCount": 4,
+    "transitionActions": [
+      "needs_information",
+      "verify"
+    ],
+    "auditActions": [
+      "provider.needs_information",
+      "provider.verify"
+    ],
+    "atomicStateCoherence": true
+  },
+  "remaining": [
+    "Run the same provider registration and review lifecycle on Production after deployment."
+  ],
+  "finishedAt": "2026-09-10T02:49:34.639Z"
+}
