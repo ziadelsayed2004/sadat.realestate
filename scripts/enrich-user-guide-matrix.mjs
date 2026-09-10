@@ -4,7 +4,7 @@ const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
 const routeMatrixPath = "docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json";
 
-const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence, guide04Evidence, providerRegistrationEvidence] = await Promise.all([
+const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence, guide04Evidence, providerRegistrationEvidence, seekerAccountEvidence] = await Promise.all([
   readFile(guideSourcePath, "utf8").then(JSON.parse),
   readFile(matrixPath, "utf8").then(JSON.parse),
   readFile(routeMatrixPath, "utf8").then(JSON.parse),
@@ -13,6 +13,7 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
   readFile("docs/quality/guide-runs/privacy-security-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/guide-04-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/provider-registration-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/seeker-account-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
@@ -35,6 +36,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],
   ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
   ["docs/quality/guide-runs/provider-registration-local-latest.json", providerRegistrationEvidence],
+  ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
