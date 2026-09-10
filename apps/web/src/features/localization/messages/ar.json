@@ -1928,7 +1928,16 @@
     "duplicateRegistrationBody": "يوجد حساب مرتبط بهذا البريد. ارجع إلى تسجيل الدخول للمتابعة.",
     "registrationUnavailableTitle": "لا يمكن متابعة التسجيل",
     "registrationUnavailableBody": "ابدأ التسجيل من جديد. لم يتم الاحتفاظ ببيانات التحقق على هذا الجهاز.",
-    "restartRegistrationAction": "بدء التسجيل من جديد"
+    "restartRegistrationAction": "بدء التسجيل من جديد",
+    "administratorRole": "مدير النظام",
+    "resetPasswordTitle": "تعيين كلمة مرور جديدة",
+    "resetPasswordDescription": "استخدم 8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.",
+    "resetPasswordValidation": "تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.",
+    "resetPasswordSuccessTitle": "تم تغيير كلمة المرور",
+    "resetPasswordSuccessBody": "يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+    "newPasswordLabel": "كلمة المرور الجديدة",
+    "confirmPasswordLabel": "تأكيد كلمة المرور",
+    "savePasswordAction": "حفظ كلمة المرور"
   },
   "community/copy#getCommunityCopy": {
     "title": "آراء وتجارب المقيمين",
@@ -3104,7 +3113,11 @@
       "internalNotesBody": "ملاحظات داخلية لا تظهر للمستخدمين...",
       "preferredContactTime": "الوقت المناسب للتواصل",
       "contactRole": "مسؤول التواصل",
-      "contactRoles": { "account_owner": "مسؤول الحساب", "sales_agent": "موظف مبيعات", "custom": "رقم مخصص" },
+      "contactRoles": {
+        "account_owner": "مسؤول الحساب",
+        "sales_agent": "موظف مبيعات",
+        "custom": "رقم مخصص"
+      },
       "visibilityTitle": "عرض البيانات للمستخدمين",
       "showPhone": "إظهار رقم الهاتف للمستخدمين",
       "showWhatsapp": "إظهار رقم واتساب للمستخدمين",
@@ -3619,7 +3632,23 @@
     "permissionLink": "العودة إلى الصفحة الرئيسية",
     "notFoundTitle": "العقار غير موجود",
     "notFoundBody": "ربما تم إخفاء العقار أو لم يعد منشوراً.",
-    "notFoundLink": "تصفح العقارات"
+    "notFoundLink": "تصفح العقارات",
+    "installments": "تقسيط",
+    "verified": "موثق",
+    "viewDeveloperProfile": "عرض ملف المطور",
+    "defaultContactMessage": "طلب تواصل واستفسار",
+    "saveProperty": "حفظ العقار",
+    "propertySaved": "تم حفظ العقار",
+    "viewSavedProperties": "عرض العقارات المحفوظة",
+    "savePermission": "الحفظ متاح لحساب الباحث عن عقار.",
+    "saveError": "تعذر حفظ العقار. حاول مرة أخرى.",
+    "fullName": "الاسم الكامل",
+    "phoneNumber": "رقم الهاتف",
+    "contactTime": "وقت التواصل",
+    "morning": "صباحاً",
+    "evening": "مساءً",
+    "extraMessage": "رسالة إضافية",
+    "contactWhatsapp": "تواصل عبر واتساب"
   },
   "public/developers-copy#getPublicDevelopersCopy": {
     "introEyebrow": "شركاء الثقة",
@@ -3784,7 +3813,11 @@
     "installment": "تقسيط",
     "featured": "مميز",
     "developerSource": "المطور العقاري",
-    "brokerageSource": "مكتب عقاري"
+    "brokerageSource": "مكتب عقاري",
+    "comparisonSelected": "{count} عقار في المقارنة",
+    "compareNow": "قارن الآن",
+    "clearComparison": "مسح",
+    "addedToCompare": "تمت الإضافة"
   },
   "seeker/copy#getSeekerCopy": {
     "nav": {

@@ -384,11 +384,11 @@ function ForgotPasswordPage({ client, locale, url }: { readonly client: AuthFlow
 
   return <section className="auth-page auth-page--email" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
     <div className="auth-card auth-card--form">
-      <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{locale === 'ar' ? 'تعيين كلمة مرور جديدة' : 'Set a new password'}</h1><p>{locale === 'ar' ? 'استخدم 8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.'}</p></header>
+      <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{copy.resetPasswordTitle}</h1><p>{copy.resetPasswordDescription}</p></header>
       <div className="auth-card__body">
-        {state === 'error' ? <StateMessage state="error" title={copy.invalidFormTitle} message={locale === 'ar' ? 'تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.' : 'Passwords must match and include upper/lowercase letters, a number, and a symbol.'} /> : null}
-        {state === 'success' ? <StateMessage state="success" title={locale === 'ar' ? 'تم تغيير كلمة المرور' : 'Password changed'} message={locale === 'ar' ? 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.' : 'You can now log in with the new password.'} /> : null}
-        {state !== 'success' ? <form className="auth-form" onSubmit={event => void submit(event)}><Input id="auth-new-password" label={locale === 'ar' ? 'كلمة المرور الجديدة' : 'New password'} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required /><Input id="auth-confirm-password" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} type="password" autoComplete="new-password" value={confirmation} onChange={event => setConfirmation(event.currentTarget.value)} required /><Button type="submit" fullWidth size="lg" loading={state === 'loading'}>{locale === 'ar' ? 'حفظ كلمة المرور' : 'Save password'}</Button></form> : null}
+        {state === 'error' ? <StateMessage state="error" title={copy.invalidFormTitle} message={copy.resetPasswordValidation} /> : null}
+        {state === 'success' ? <StateMessage state="success" title={copy.resetPasswordSuccessTitle} message={copy.resetPasswordSuccessBody} /> : null}
+        {state !== 'success' ? <form className="auth-form" onSubmit={event => void submit(event)}><Input id="auth-new-password" label={copy.newPasswordLabel} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required /><Input id="auth-confirm-password" label={copy.confirmPasswordLabel} type="password" autoComplete="new-password" value={confirmation} onChange={event => setConfirmation(event.currentTarget.value)} required /><Button type="submit" fullWidth size="lg" loading={state === 'loading'}>{copy.savePasswordAction}</Button></form> : null}
         <p className="auth-card__prompt"><a href={`/auth/login?lang=${locale}`}>{copy.loginAction}</a></p>
       </div>
     </div>
@@ -594,7 +594,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                 options={[
                   { value: 'seeker', label: copy.roleSeeker },
                   { value: 'provider', label: copy.roleProvider },
-                  ...(purpose === 'password_reset' || roleType === 'admin' ? [{ value: 'admin', label: locale === 'ar' ? 'مدير النظام' : 'Administrator' }] : [])
+                  ...(purpose === 'password_reset' || roleType === 'admin' ? [{ value: 'admin', label: copy.administratorRole }] : [])
                 ]}
               />
               <Button type="submit" fullWidth size="lg" loading={state === 'loading'} disabled={cooldownSeconds > 0}>

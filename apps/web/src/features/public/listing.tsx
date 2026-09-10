@@ -316,7 +316,7 @@ function PropertyResults({
             image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} />} />}
             imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
-            action={<button type="button" className={`public-property-listing__compare-button${comparedIds.includes(property.id) ? ' is-selected' : ''}`} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : copy.addToCompare}</button>}
+            action={<button type="button" className={`public-property-listing__compare-button${comparedIds.includes(property.id) ? ' is-selected' : ''}`} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? copy.addedToCompare : copy.addToCompare}</button>}
           />
         ))}
       </div>
@@ -498,7 +498,7 @@ export function PublicPropertyListing({
           {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} comparedIds={comparedIds} onToggleCompare={toggleCompare} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
         </section>
       </div>
-      {comparedIds.length > 0 ? <aside className="public-property-listing__compare-tray" aria-live="polite"><span>{locale === 'ar' ? `${comparedIds.length} عقار في المقارنة` : `${comparedIds.length} properties selected`}</span><a href={publicPropertyComparisonUrl(comparedIds, `/compare?lang=${locale}`)}>{locale === 'ar' ? 'قارن الآن' : 'Compare now'}</a><button type="button" onClick={() => { setComparedIds([]); if (typeof window !== 'undefined') window.localStorage.removeItem('sadat-property-comparison'); }}>{locale === 'ar' ? 'مسح' : 'Clear'}</button></aside> : null}
+      {comparedIds.length > 0 ? <aside className="public-property-listing__compare-tray" aria-live="polite"><span>{copy.comparisonSelected.replace('{count}', String(comparedIds.length))}</span><a href={publicPropertyComparisonUrl(comparedIds, `/compare?lang=${locale}`)}>{copy.compareNow}</a><button type="button" onClick={() => { setComparedIds([]); if (typeof window !== 'undefined') window.localStorage.removeItem('sadat-property-comparison'); }}>{copy.clearComparison}</button></aside> : null}
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );

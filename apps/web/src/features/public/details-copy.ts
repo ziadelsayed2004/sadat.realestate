@@ -69,6 +69,22 @@ export interface PublicPropertyDetailsCopy {
   readonly notFoundTitle: string;
   readonly notFoundBody: string;
   readonly notFoundLink: string;
+  readonly installments: string;
+  readonly verified: string;
+  readonly viewDeveloperProfile: string;
+  readonly defaultContactMessage: string;
+  readonly saveProperty: string;
+  readonly propertySaved: string;
+  readonly viewSavedProperties: string;
+  readonly savePermission: string;
+  readonly saveError: string;
+  readonly fullName: string;
+  readonly phoneNumber: string;
+  readonly contactTime: string;
+  readonly morning: string;
+  readonly evening: string;
+  readonly extraMessage: string;
+  readonly contactWhatsapp: string;
 }
 
 const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>> = {
@@ -143,7 +159,23 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     permissionLink: 'العودة إلى الصفحة الرئيسية',
     notFoundTitle: 'العقار غير موجود',
     notFoundBody: 'ربما تم إخفاء العقار أو لم يعد منشوراً.',
-    notFoundLink: 'تصفح العقارات'
+    notFoundLink: 'تصفح العقارات',
+    installments: 'تقسيط',
+    verified: 'موثق',
+    viewDeveloperProfile: 'عرض ملف المطور',
+    defaultContactMessage: 'طلب تواصل واستفسار',
+    saveProperty: 'حفظ العقار',
+    propertySaved: 'تم حفظ العقار',
+    viewSavedProperties: 'عرض العقارات المحفوظة',
+    savePermission: 'الحفظ متاح لحساب الباحث عن عقار.',
+    saveError: 'تعذر حفظ العقار. حاول مرة أخرى.',
+    fullName: 'الاسم الكامل',
+    phoneNumber: 'رقم الهاتف',
+    contactTime: 'وقت التواصل',
+    morning: 'صباحاً',
+    evening: 'مساءً',
+    extraMessage: 'رسالة إضافية',
+    contactWhatsapp: 'تواصل عبر واتساب'
   },
   en: {
     backToResults: 'Back to results',
@@ -216,7 +248,23 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     permissionLink: 'Return to the homepage',
     notFoundTitle: 'Property not found',
     notFoundBody: 'It may have been hidden or is no longer published.',
-    notFoundLink: 'Browse properties'
+    notFoundLink: 'Browse properties',
+    installments: 'Installments',
+    verified: 'Verified',
+    viewDeveloperProfile: 'View developer profile',
+    defaultContactMessage: 'Contact inquiry request',
+    saveProperty: 'Save property',
+    propertySaved: 'Property saved',
+    viewSavedProperties: 'View saved properties',
+    savePermission: 'Saving properties requires a seeker account.',
+    saveError: 'Could not save the property. Please try again.',
+    fullName: 'Full name',
+    phoneNumber: 'Phone number',
+    contactTime: 'Contact time',
+    morning: 'Morning',
+    evening: 'Evening',
+    extraMessage: 'Additional message',
+    contactWhatsapp: 'Contact on WhatsApp'
   },};
 
 export function getPublicPropertyDetailsCopy(locale: SupportedLocale): PublicPropertyDetailsCopy {

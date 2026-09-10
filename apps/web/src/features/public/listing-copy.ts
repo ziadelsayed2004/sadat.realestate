@@ -68,6 +68,10 @@ export interface PublicPropertyListingCopy {
   readonly featured: string;
   readonly developerSource: string;
   readonly brokerageSource: string;
+  readonly comparisonSelected: string;
+  readonly compareNow: string;
+  readonly clearComparison: string;
+  readonly addedToCompare: string;
 }
 
 const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>> = {
@@ -137,7 +141,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     installment: 'تقسيط',
     featured: 'مميز',
     developerSource: 'المطور العقاري',
-    brokerageSource: 'مكتب عقاري'
+    brokerageSource: 'مكتب عقاري',
+    comparisonSelected: '{count} عقار في المقارنة',
+    compareNow: 'قارن الآن',
+    clearComparison: 'مسح',
+    addedToCompare: 'تمت الإضافة'
   },
   en: {
     title: 'Property search results',
@@ -205,7 +213,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     installment: 'Installments',
     featured: 'Featured',
     developerSource: 'Property developer',
-    brokerageSource: 'Brokerage office'
+    brokerageSource: 'Brokerage office',
+    comparisonSelected: '{count} properties selected',
+    compareNow: 'Compare now',
+    clearComparison: 'Clear',
+    addedToCompare: 'Added'
   },};
 
 export function getPublicPropertyListingCopy(locale: SupportedLocale): PublicPropertyListingCopy {

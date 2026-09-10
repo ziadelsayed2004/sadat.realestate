@@ -139,7 +139,7 @@ function Gallery({
     <section className="public-property-details__gallery" aria-labelledby="public-property-details-gallery-title" data-gallery="true">
       <h2 id="public-property-details-gallery-title" className="public-property-details__visually-hidden">{copy.galleryTitle}</h2>
       <div className="public-property-details__gallery-badges" aria-label={copy.sale}>
-        {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{locale === 'ar' ? 'تقسيط' :'Installments'}</span> : null}
+        {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{copy.installments}</span> : null}
         <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{locale === 'ar' ? 'بيع' :copy.sale}</span>
       </div>
       <div className="public-property-details__gallery-main">
@@ -360,7 +360,7 @@ function SourceAndProject({
       <div className="public-property-details__source-identity">
         {data.source.imageUrl ? <img src={data.source.imageUrl} alt="" width="48" height="48" loading="lazy" decoding="async" /> : null}
         <div>
-          <p className="public-property-details__eyebrow">{locale === 'ar' ? 'مقدم هذا العقار' :'Property provider'}</p>
+          <p className="public-property-details__eyebrow">{copy.sourceTitle}</p>
           <h2 id="public-property-details-source-title">{sourceName}</h2>
           <p>
             {sourceDescriptorParts.map((part, index) => (
@@ -371,9 +371,9 @@ function SourceAndProject({
             ))}
           </p>
         </div>
-        {data.source.verified ? <span className="public-property-details__verified">{locale === 'ar' ? 'موثق' :'Verified'}</span> : null}
+        {data.source.verified ? <span className="public-property-details__verified">{copy.verified}</span> : null}
       </div>
-      <a className="public-property-details__profile-link" href={data.source.organizationId ? `/developers/${data.source.organizationId}` : '/developers'}>{locale === 'ar' ? 'عرض ملف المطور' :'View developer profile'}</a>
+      <a className="public-property-details__profile-link" href={data.source.organizationId ? `/developers/${data.source.organizationId}` : '/developers'}>{copy.viewDeveloperProfile}</a>
     </section>
   );
 }
@@ -539,7 +539,7 @@ function RequestPanel({
     setContactState('submitting');
     const trimmedMessage = message.trim();
     const input: PublicContactRequestInput = {
-      message: trimmedMessage.length > 0 ? trimmedMessage : (locale === 'ar' ? 'طلب تواصل واستفسار' : 'Contact inquiry request'),
+      message: trimmedMessage.length > 0 ? trimmedMessage : copy.defaultContactMessage,
       fullName: fullName.trim(),
       phone: phone.trim(),
       preferredContactTime: contactTime as 'morning' | 'evening',
@@ -591,10 +591,10 @@ function RequestPanel({
   return (
     <aside className="public-property-details__actions" aria-labelledby="public-property-details-contact-title">
       {actions.saveProperty ? <>
-        <Button type="button" variant="secondary" fullWidth loading={saveState === 'submitting'} disabled={saveState === 'success'} onClick={() => { void saveProperty(); }}>{saveState === 'success' ? (locale === 'ar' ? 'تم حفظ العقار' : 'Property saved') : (locale === 'ar' ? 'حفظ العقار' : 'Save property')}</Button>
-        {saveState === 'success' ? <a href={`/seeker/saved?lang=${locale}`}>{locale === 'ar' ? 'عرض العقارات المحفوظة' : 'View saved properties'}</a> : null}
-        {saveState === 'permission' ? <p role="alert">{locale === 'ar' ? 'الحفظ متاح لحساب الباحث عن عقار.' : 'Saving properties requires a seeker account.'} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
-        {saveState === 'error' ? <p role="alert">{locale === 'ar' ? 'تعذر حفظ العقار. حاول مرة أخرى.' : 'Could not save the property. Please try again.'}</p> : null}
+        <Button type="button" variant="secondary" fullWidth loading={saveState === 'submitting'} disabled={saveState === 'success'} onClick={() => { void saveProperty(); }}>{saveState === 'success' ? copy.propertySaved : copy.saveProperty}</Button>
+        {saveState === 'success' ? <a href={`/seeker/saved?lang=${locale}`}>{copy.viewSavedProperties}</a> : null}
+        {saveState === 'permission' ? <p role="alert">{copy.savePermission} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
+        {saveState === 'error' ? <p role="alert">{copy.saveError}</p> : null}
       </> : null}
       <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { setViewingState('idle'); setViewingOpen(true); }}>{copy.requestViewing}</Button>
       <section className="public-property-details__card public-property-details__contact">
@@ -610,24 +610,24 @@ function RequestPanel({
         )}
         {contactState === 'success' || contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
-          <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{locale === 'ar' ? 'الاسم الكامل' : 'Full name'}</label>
-          <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={locale === 'ar' ? 'الاسم الكامل' : 'Full name'} onChange={event => setFullName(event.target.value)} />
-          <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{locale === 'ar' ? 'رقم الهاتف' : 'Phone number'}</label>
-          <input id="public-property-contact-phone" name="phone" type="tel" required value={phone} placeholder={locale === 'ar' ? 'رقم الهاتف' : 'Phone number'} onChange={event => setPhone(event.target.value)} />
-          <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} required placeholder={locale === 'ar' ? 'وقت التواصل' : 'Contact time'} ariaLabel={locale === 'ar' ? 'وقت التواصل' : 'Contact time'} options={[{ value: 'morning', label: locale === 'ar' ? 'صباحاً' : 'Morning' }, { value: 'evening', label: locale === 'ar' ? 'مساءً' : 'Evening' }]} />
+          <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{copy.fullName}</label>
+          <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
+          <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{copy.phoneNumber}</label>
+          <input id="public-property-contact-phone" name="phone" type="tel" required value={phone} placeholder={copy.phoneNumber} onChange={event => setPhone(event.target.value)} />
+          <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} required placeholder={copy.contactTime} ariaLabel={copy.contactTime} options={[{ value: 'morning', label: copy.morning }, { value: 'evening', label: copy.evening }]} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-message">{copy.messageLabel}</label>
           <textarea
             id="public-property-contact-message"
             name="message"
             rows={5}
             value={message}
-            placeholder={locale === 'ar' ? 'رسالة إضافية' : copy.messagePlaceholder}
+            placeholder={copy.extraMessage}
             onChange={event => setMessage(event.target.value)}
           />
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
         </form>
-        <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{locale === 'ar' ? 'تواصل عبر واتساب' :'Contact on WhatsApp'}</span></a>
+        <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{copy.contactWhatsapp}</span></a>
       </section>
       {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
       <Modal

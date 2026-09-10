@@ -92,6 +92,15 @@ export interface AuthCopy {
   readonly registrationUnavailableTitle: string;
   readonly registrationUnavailableBody: string;
   readonly restartRegistrationAction: string;
+  readonly administratorRole: string;
+  readonly resetPasswordTitle: string;
+  readonly resetPasswordDescription: string;
+  readonly resetPasswordValidation: string;
+  readonly resetPasswordSuccessTitle: string;
+  readonly resetPasswordSuccessBody: string;
+  readonly newPasswordLabel: string;
+  readonly confirmPasswordLabel: string;
+  readonly savePasswordAction: string;
 }
 
 const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
@@ -185,7 +194,16 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     duplicateRegistrationBody: 'يوجد حساب مرتبط بهذا البريد. ارجع إلى تسجيل الدخول للمتابعة.',
     registrationUnavailableTitle: 'لا يمكن متابعة التسجيل',
     registrationUnavailableBody: 'ابدأ التسجيل من جديد. لم يتم الاحتفاظ ببيانات التحقق على هذا الجهاز.',
-    restartRegistrationAction: 'بدء التسجيل من جديد'
+    restartRegistrationAction: 'بدء التسجيل من جديد',
+    administratorRole: 'مدير النظام',
+    resetPasswordTitle: 'تعيين كلمة مرور جديدة',
+    resetPasswordDescription: 'استخدم 8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.',
+    resetPasswordValidation: 'تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.',
+    resetPasswordSuccessTitle: 'تم تغيير كلمة المرور',
+    resetPasswordSuccessBody: 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.',
+    newPasswordLabel: 'كلمة المرور الجديدة',
+    confirmPasswordLabel: 'تأكيد كلمة المرور',
+    savePasswordAction: 'حفظ كلمة المرور'
   },
   en: {
     brand: 'Sadat Real Estate',
@@ -277,7 +295,16 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     duplicateRegistrationBody: 'An account is already linked to this email. Return to log in.',
     registrationUnavailableTitle: 'Registration cannot continue',
     registrationUnavailableBody: 'Start registration again. Verification data is not kept on this device.',
-    restartRegistrationAction: 'Restart registration'
+    restartRegistrationAction: 'Restart registration',
+    administratorRole: 'Administrator',
+    resetPasswordTitle: 'Set a new password',
+    resetPasswordDescription: 'Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.',
+    resetPasswordValidation: 'Passwords must match and include uppercase and lowercase letters, a number, and a symbol.',
+    resetPasswordSuccessTitle: 'Password changed',
+    resetPasswordSuccessBody: 'You can now log in with the new password.',
+    newPasswordLabel: 'New password',
+    confirmPasswordLabel: 'Confirm password',
+    savePasswordAction: 'Save password'
   },};
 
 export function getAuthCopy(locale: SupportedLocale): AuthCopy {

@@ -1928,7 +1928,16 @@
     "duplicateRegistrationBody": "An account is already linked to this email. Return to log in.",
     "registrationUnavailableTitle": "Registration cannot continue",
     "registrationUnavailableBody": "Start registration again. Verification data is not kept on this device.",
-    "restartRegistrationAction": "Restart registration"
+    "restartRegistrationAction": "Restart registration",
+    "administratorRole": "Administrator",
+    "resetPasswordTitle": "Set a new password",
+    "resetPasswordDescription": "Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.",
+    "resetPasswordValidation": "Passwords must match and include uppercase and lowercase letters, a number, and a symbol.",
+    "resetPasswordSuccessTitle": "Password changed",
+    "resetPasswordSuccessBody": "You can now log in with the new password.",
+    "newPasswordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+    "savePasswordAction": "Save password"
   },
   "community/copy#getCommunityCopy": {
     "title": "Sadat Real Estate community",
@@ -3104,7 +3113,11 @@
       "internalNotesBody": "Internal notes are not shown publicly...",
       "preferredContactTime": "Best time to contact",
       "contactRole": "Contact person",
-      "contactRoles": { "account_owner": "Account owner", "sales_agent": "Sales agent", "custom": "Custom number" },
+      "contactRoles": {
+        "account_owner": "Account owner",
+        "sales_agent": "Sales agent",
+        "custom": "Custom number"
+      },
       "visibilityTitle": "Public contact details",
       "showPhone": "Show phone number",
       "showWhatsapp": "Show WhatsApp number",
@@ -3619,7 +3632,23 @@
     "permissionLink": "Return to the homepage",
     "notFoundTitle": "Property not found",
     "notFoundBody": "It may have been hidden or is no longer published.",
-    "notFoundLink": "Browse properties"
+    "notFoundLink": "Browse properties",
+    "installments": "Installments",
+    "verified": "Verified",
+    "viewDeveloperProfile": "View developer profile",
+    "defaultContactMessage": "Contact inquiry request",
+    "saveProperty": "Save property",
+    "propertySaved": "Property saved",
+    "viewSavedProperties": "View saved properties",
+    "savePermission": "Saving properties requires a seeker account.",
+    "saveError": "Could not save the property. Please try again.",
+    "fullName": "Full name",
+    "phoneNumber": "Phone number",
+    "contactTime": "Contact time",
+    "morning": "Morning",
+    "evening": "Evening",
+    "extraMessage": "Additional message",
+    "contactWhatsapp": "Contact on WhatsApp"
   },
   "public/developers-copy#getPublicDevelopersCopy": {
     "introEyebrow": "Trusted partners",
@@ -3784,7 +3813,11 @@
     "installment": "Installments",
     "featured": "Featured",
     "developerSource": "Property developer",
-    "brokerageSource": "Brokerage office"
+    "brokerageSource": "Brokerage office",
+    "comparisonSelected": "{count} properties selected",
+    "compareNow": "Compare now",
+    "clearComparison": "Clear",
+    "addedToCompare": "Added"
   },
   "seeker/copy#getSeekerCopy": {
     "nav": {
