@@ -163,7 +163,7 @@ function StatePanel({ state, onRetry, copy }: { readonly state: ViewState; reado
   const componentState = state === 'not_found' ? 'error' : state;
   return (
     <section className="provider-property-completion__state">
-      <StateMessage state={componentState} title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
+      <StateMessage state={componentState} loadingVariant="form" title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
       {(state === 'error' || state === 'not_found') ? <Button type="button" variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );

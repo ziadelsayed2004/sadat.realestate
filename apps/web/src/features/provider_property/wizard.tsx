@@ -150,7 +150,7 @@ function StatePanel({ state, copy, onRetry }: { readonly state: Exclude<Provider
   const componentState = state === 'not_found' ? 'error' : state;
   return (
     <section className="provider-property-wizard__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={componentState} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={componentState} loadingVariant="form" title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' || state === 'not_found' ? <Button type="button" variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );

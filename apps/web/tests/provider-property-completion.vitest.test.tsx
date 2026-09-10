@@ -63,6 +63,18 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('provider property media, contact, and review completion', () => {
+  it('keeps an Arabic form skeleton until contact data resolves, then replaces it with the form', async () => {
+    let resolve!: (value: PropertyData) => void;
+    const pending = new Promise<PropertyData>(done => { resolve = done; });
+    const { container } = renderWithLocale(<ProviderPropertyCompletionWizard locale="ar" session={session} step="contact" propertyId={propertyId} load={() => pending} />, { locale: 'ar' });
+    expect(container.querySelector('.ui-skeleton[data-variant="form"]')).not.toBeNull();
+    expect(container.querySelector('#provider-property-contact-name')).toBeNull();
+    expect(screen.getByText(getProviderPropertyCopy('ar').states.loading.title)).toBeInTheDocument();
+    expect(screen.queryByText('Loading')).not.toBeInTheDocument();
+    resolve(property());
+    await waitFor(() => expect(container.querySelector('#provider-property-contact-name')).not.toBeNull());
+    expect(container.querySelector('.ui-skeleton')).toBeNull();
+  });
   it('uses the implemented media, contact, and submit routes with authorization and strict payloads', async () => {
     const requests: Array<{ path: string; method: string; authorization: string | null; body?: unknown }> = [];
     const client = new ApiClient({

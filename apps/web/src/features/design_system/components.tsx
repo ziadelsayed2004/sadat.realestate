@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type ButtonHTMLAttributes,
+  type CSSProperties,
   type HTMLAttributes,
   type InputHTMLAttributes,
   type KeyboardEvent,
@@ -285,6 +286,7 @@ export function Badge({ tone = 'neutral', dot = false, className, children, ...s
 }
 
 export interface StateMessageProps {
+  readonly loadingVariant?: SkeletonVariant | undefined;
   readonly state: NonDefaultComponentState;
   readonly title?: ReactNode | undefined;
   readonly message?: ReactNode | undefined;
@@ -300,8 +302,15 @@ export interface SkeletonProps {
 }
 
 export function Skeleton({ label, variant = 'page' }: SkeletonProps) {
+  const dimensions = {
+    page: {},
+    form: { '--skeleton-columns': 2, '--skeleton-height': '2.75rem' },
+    list: { '--skeleton-columns': 1, '--skeleton-height': '4rem' },
+    table: { '--skeleton-columns': 1, '--skeleton-height': '2.75rem' },
+    cards: { '--skeleton-columns': 3, '--skeleton-height': '12rem' }
+  }[variant] as CSSProperties;
   return (
-    <div className="ui-skeleton" data-variant={variant} role="status" aria-live="polite" aria-busy="true">
+    <div className="ui-skeleton" style={dimensions} data-variant={variant} role="status" aria-live="polite" aria-busy="true">
       <span className="ui-visually-hidden">{label}</span>
       <span className="ui-skeleton__line ui-skeleton__line--title" aria-hidden="true" />
       <span className="ui-skeleton__line ui-skeleton__line--copy" aria-hidden="true" />
@@ -314,8 +323,8 @@ export function Skeleton({ label, variant = 'page' }: SkeletonProps) {
   );
 }
 
-export function StateMessage({ state, title, message, retryLabel, onRetry }: StateMessageProps) {
-  if (state === 'loading') return <Skeleton label={title ?? message ?? 'Loading'} />;
+export function StateMessage({ state, title, message, retryLabel, onRetry, loadingVariant }: StateMessageProps) {
+  if (state === 'loading') return <Skeleton label={title ?? message ?? 'Loading'} variant={loadingVariant} />;
   const role = state === 'error' || state === 'permission' ? 'alert' : 'status';
   return (
     <div className="ui-state-message" data-state={state} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>

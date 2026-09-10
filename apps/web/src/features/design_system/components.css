@@ -379,8 +379,8 @@ select:not(.a11y-visually-hidden):disabled {
 .ui-skeleton__line--title { inline-size: min(42%, 18rem); block-size: 1.8rem; }
 .ui-skeleton__line--copy { inline-size: min(66%, 32rem); }
 .ui-skeleton__line--wide { min-block-size: 2.75rem; }
-.ui-skeleton__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); }
-.ui-skeleton__grid > span { min-block-size: 7rem; }
+.ui-skeleton__grid { display: grid; grid-template-columns: repeat(var(--skeleton-columns, 3), minmax(0, 1fr)); gap: var(--space-md); }
+.ui-skeleton__grid > span { min-block-size: var(--skeleton-height, 7rem); }
 
 @keyframes ui-skeleton-shimmer {
   to { background-position-x: -220%; }
@@ -702,7 +702,7 @@ select:not(.a11y-visually-hidden):disabled {
 @media (max-width: 640px) {
   .ui-skeleton { padding: var(--space-md); }
   .ui-skeleton__grid { grid-template-columns: 1fr; }
-  .ui-skeleton__grid > span { min-block-size: 4.5rem; }
+  .ui-skeleton__grid > span { min-block-size: var(--skeleton-height, 4.5rem); }
 }
 
 /* Custom Floating Locale Switcher Component */
