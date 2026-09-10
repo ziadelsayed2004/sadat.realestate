@@ -3101,6 +3101,8 @@
       "internalNotesTitle": "Internal notes",
       "internalNotesBody": "Internal notes are not shown publicly...",
       "preferredContactTime": "Best time to contact",
+      "contactRole": "Contact person",
+      "contactRoles": { "account_owner": "Account owner", "sales_agent": "Sales agent", "custom": "Custom number" },
       "visibilityTitle": "Public contact details",
       "showPhone": "Show phone number",
       "showWhatsapp": "Show WhatsApp number",

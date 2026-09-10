@@ -12,7 +12,7 @@ const localized = { ar: 'شقة', en: 'Apartment' };
 test('public response contract rejects private contact fields even if a producer accidentally includes them', () => {
   const schema = publicPropertyDetailsSchema.shape.contact;
   assert.equal(schema.safeParse({ phone: '+201234567890', preferredContactTime: '9 to 5' }).success, true);
-  for (const [key, value] of Object.entries({ internalNotes: 'Private instructions', showPhone: false, showWhatsapp: false, showEmail: false })) {
+  for (const [key, value] of Object.entries({ contactRole: 'account_owner', internalNotes: 'Private instructions', showPhone: false, showWhatsapp: false, showEmail: false })) {
     assert.equal(schema.safeParse({ phone: '+201234567890', [key]: value }).success, false, key);
   }
   assert.equal(schema.safeParse({}).success, false);

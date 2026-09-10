@@ -224,17 +224,20 @@ try {
 
   await screen(page, 'PRV-09');
   await page.locator('#provider-property-contact-name').fill('Delivery Provider Contact');
+  await page.locator('input[name="contactRole"][value="sales_agent"]').check();
   await page.locator('#provider-property-contact-phone').fill('+201001234567');
   await page.locator('#provider-property-contact-email').fill('delivery-contact@example.invalid');
   await page.locator('#provider-property-contact-time').fill('Daily 9 to 5');
   await page.locator('#provider-property-contact-notes').fill('Private delivery contact instructions');
   await page.locator('.provider-property-completion__visibility input').nth(0).uncheck();
   await page.locator('.provider-property-completion__visibility input').nth(2).uncheck();
+  await page.screenshot({ path: '.local/contact-role-mobile.png', fullPage: true });
   const contactPending = page.waitForResponse(response => response.request().method() === 'PATCH' && new URL(response.url()).pathname.endsWith('/steps/contact'));
   await page.locator('form.provider-property-completion__form button[type="submit"]').click();
   assert.equal((await contactPending).status(), 200);
   const savedContact = (await api(`/provider/properties/${propertyId}`, { token: providerToken })).contact;
   assert.equal(savedContact.preferredContactTime, 'Daily 9 to 5');
+  assert.equal(savedContact.contactRole, 'sales_agent');
   assert.equal(savedContact.internalNotes, 'Private delivery contact instructions');
   assert.equal(savedContact.showPhone, false);
   assert.equal(savedContact.showEmail, false);

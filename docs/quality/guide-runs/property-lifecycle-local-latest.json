@@ -1,5 +1,5 @@
 {
-  "commit": "8010cfdb38917f354625ad94618598d0a388cc7a",
+  "commit": "7b8c896b6da14493dbe7911e92fe3a7df7d63e7d",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-14",
@@ -7,7 +7,7 @@
   ],
   "environment": "local-real-browser-api-mongodb-storage",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T06:11:37.309Z",
+  "startedAt": "2026-09-10T06:18:02.487Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "approved_provider_organization_fixture_inserted",
@@ -55,12 +55,12 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/login",
+      "path": "/api/v1/auth/refresh",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/refresh",
+      "path": "/api/v1/auth/login",
       "status": 200
     },
     {
@@ -295,7 +295,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789020697760",
+      "path": "/api/v1/public/properties/delivery-property-1789021083353",
       "status": 200
     },
     {
@@ -310,7 +310,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789020697760",
+      "path": "/api/v1/public/properties/delivery-property-1789021083353",
       "status": 404
     },
     {
@@ -320,7 +320,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789020697760",
+      "path": "/api/v1/public/properties/delivery-property-1789021083353",
       "status": 200
     }
   ],
@@ -414,5 +414,5 @@
   "remaining": [
     "Run GUIDE-14 and GUIDE-15 on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T06:11:55.873Z"
+  "finishedAt": "2026-09-10T06:18:19.794Z"
 }

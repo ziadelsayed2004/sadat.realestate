@@ -46,6 +46,7 @@ type ViewState = 'loading' | 'success' | 'retry' | 'error' | 'permission' | 'not
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
 interface ContactForm {
+  readonly contactRole: 'account_owner' | 'sales_agent' | 'custom';
   readonly contactName: string;
   readonly phone: string;
   readonly whatsappNumber: string;
@@ -114,6 +115,7 @@ function contactFromProperty(property: PropertyData | undefined, locale: Support
   const contact = property?.contact;
   return {
     contactName: contact?.contactName ?? '',
+    contactRole: contact?.contactRole ?? (contact === undefined ? 'account_owner' : 'custom'),
     phone: contact?.phone ?? '',
     whatsappNumber: contact?.whatsappNumber ?? '',
     email: contact?.email ?? '',
@@ -227,6 +229,13 @@ function ContactView({
       <section className="provider-property-completion__card" aria-labelledby="provider-property-contact-fields">
         <h2 id="provider-property-contact-fields">{copy.titles.contact}</h2>
         <p>{fields.supportedFieldsBody}</p>
+        <fieldset className="provider-property-completion__contact-roles">
+          <legend>{fields.contactRole}</legend>
+          {(['account_owner', 'sales_agent', 'custom'] as const).map(role => <label key={role}>
+            <input type="radio" name="contactRole" value={role} checked={form.contactRole === role} onChange={() => onChange('contactRole', role)} />
+            <span>{fields.contactRoles[role]}</span>
+          </label>)}
+        </fieldset>
         <div className="provider-property-wizard__grid">
           <Input id="provider-property-contact-name" label={fields.contactName} value={form.contactName} placeholder={fields.contactNamePlaceholder} onChange={event => onChange('contactName', event.target.value)} />
           <Input id="provider-property-contact-phone" label={fields.phone} value={form.phone} placeholder={fields.phonePlaceholder} onChange={event => onChange('phone', event.target.value)} inputMode="tel" />
@@ -508,6 +517,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
     setValidationError(false);
     setMutationMessage(undefined);
     const contactValue: PropertyContact = {
+      contactRole: contact.contactRole,
       ...(optionalValue(contact.contactName) === undefined ? {} : { contactName: optionalValue(contact.contactName) }),
       ...(optionalValue(contact.phone) === undefined ? {} : { phone: optionalValue(contact.phone) }),
       ...(optionalValue(contact.whatsappNumber) === undefined ? {} : { whatsappNumber: optionalValue(contact.whatsappNumber) }),

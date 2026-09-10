@@ -3101,6 +3101,8 @@
       "internalNotesTitle": "ملاحظات داخلية",
       "internalNotesBody": "ملاحظات داخلية لا تظهر للمستخدمين...",
       "preferredContactTime": "الوقت المناسب للتواصل",
+      "contactRole": "مسؤول التواصل",
+      "contactRoles": { "account_owner": "مسؤول الحساب", "sales_agent": "موظف مبيعات", "custom": "رقم مخصص" },
       "visibilityTitle": "عرض البيانات للمستخدمين",
       "showPhone": "إظهار رقم الهاتف للمستخدمين",
       "showWhatsapp": "إظهار رقم واتساب للمستخدمين",

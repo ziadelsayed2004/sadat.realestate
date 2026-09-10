@@ -213,6 +213,7 @@ export const propertyFeaturesServicesStepSchema = draftPatch({
 const propertyContactNameSchema = z.string().trim().min(1).max(160).regex(/^[^\u0000-\u001f\u007f]+$/u);
 const propertyContactEmailSchema = z.string().trim().toLowerCase().email().max(254);
 export const propertyContactSchema = z.object({
+  contactRole: z.enum(['account_owner', 'sales_agent', 'custom']).optional(),
   contactName: propertyContactNameSchema.optional(),
   phone: normalizedPhoneSchema.optional(),
   whatsappNumber: normalizedPhoneSchema.optional(),

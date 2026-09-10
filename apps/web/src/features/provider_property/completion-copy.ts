@@ -50,6 +50,8 @@ export interface ProviderPropertyCompletionCopy {
     readonly versionConflictBody: string;
   };
   readonly contact: {
+    readonly contactRole: string;
+    readonly contactRoles: Readonly<Record<'account_owner' | 'sales_agent' | 'custom', string>>;
     readonly preferredContactTime: string;
     readonly visibilityTitle: string;
     readonly showPhone: string;
@@ -120,6 +122,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
     contact: {
       contactName: 'اسم مسؤول التواصل', phone: 'رقم الهاتف', whatsapp: 'رقم واتساب', email: 'البريد الإلكتروني', preferredLocale: 'لغة التواصل', contactNamePlaceholder: 'الاسم الكامل', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'العربية', en: 'English',}, supportedFieldsTitle: 'الحقول المدعومة', supportedFieldsBody: 'أدخل بيانات المسؤول الذي سيتلقى استفسارات العقار.', internalNotesTitle: 'ملاحظات داخلية', internalNotesBody: 'ملاحظات داخلية لا تظهر للمستخدمين...',
       preferredContactTime: 'الوقت المناسب للتواصل',
+      contactRole: 'مسؤول التواصل',
+      contactRoles: { account_owner: 'مسؤول الحساب', sales_agent: 'موظف مبيعات', custom: 'رقم مخصص' },
       visibilityTitle: 'عرض البيانات للمستخدمين',
       showPhone: 'إظهار رقم الهاتف للمستخدمين',
       showWhatsapp: 'إظهار رقم واتساب للمستخدمين',
@@ -150,6 +154,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
     contact: {
       contactName: 'Contact name', phone: 'Phone number', whatsapp: 'WhatsApp number', email: 'Email', preferredLocale: 'Contact language', contactNamePlaceholder: 'Full name', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'Arabic', en: 'English',}, supportedFieldsTitle: 'Supported fields', supportedFieldsBody: 'Enter the details of the person receiving property enquiries.', internalNotesTitle: 'Internal notes', internalNotesBody: 'Internal notes are not shown publicly...',
       preferredContactTime: 'Best time to contact',
+      contactRole: 'Contact person',
+      contactRoles: { account_owner: 'Account owner', sales_agent: 'Sales agent', custom: 'Custom number' },
       visibilityTitle: 'Public contact details',
       showPhone: 'Show phone number',
       showWhatsapp: 'Show WhatsApp number',

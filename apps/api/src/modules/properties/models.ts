@@ -49,6 +49,7 @@ const money = new Schema<PropertyMoney>({ amount: { type: Number, min: 0, max: 1
 const paymentPlan = new Schema<PropertyPaymentPlan>({ name: { type: localized, required: true }, installments: { type: Number, min: 1, max: 120, required: true }, frequency: { type: String, enum: ['monthly', 'quarterly', 'annually'], required: true }, downPayment: money, installmentAmount: { type: money, required: true } }, { _id: false, strict: 'throw' });
 const contact = new Schema<PropertyContact>({
   contactName: { type: String, trim: true, maxlength: 160 },
+  contactRole: { type: String, enum: ['account_owner', 'sales_agent', 'custom'] },
   phone: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   whatsappNumber: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   email: { type: String, trim: true, lowercase: true, maxlength: 254 },

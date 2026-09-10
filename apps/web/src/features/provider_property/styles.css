@@ -443,6 +443,17 @@
 .provider-property-completion__visibility input:checked { background: #17233d; }
 .provider-property-completion__visibility input:checked::before { margin-inline-start: 18px; }
 .provider-property-completion__visibility input:focus-visible { outline: 2px solid #155e53; outline-offset: 3px; }
+.provider-property-completion__contact-roles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; border: 0; padding: 0; margin: 20px 0; min-width: 0; }
+.provider-property-completion__contact-roles label { position: relative; min-width: 0; }
+.provider-property-completion__contact-roles legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.provider-property-completion__contact-roles input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.provider-property-completion__contact-roles span { display: flex; justify-content: center; align-items: center; min-height: 44px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 10px; color: #364153; font-size: 13px; cursor: pointer; }
+.provider-property-completion__contact-roles input:checked + span { background: #17233d; color: #fff; font-weight: 700; }
+.provider-property-completion__contact-roles input:focus-visible + span { outline: 2px solid #155e53; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .provider-property-completion__contact-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .provider-property-completion__contact-roles label:first-of-type { grid-column: 1 / -1; }
+}
 
 .provider-property-completion__notice { border-style: dashed; color: #586981; line-height: 1.6; }
 .provider-property-completion__notice strong { color: #33435e; }

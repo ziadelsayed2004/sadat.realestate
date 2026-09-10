@@ -11,4 +11,8 @@ Verification: lint, typecheck, production build, translation key check and 15 ta
 
 Follow-up: the public response contract now has a separate strict contact schema that rejects internal notes and visibility controls even if accidentally included by a producer. The public property page renders the preferred contact time only inside the authorized contact response. Typecheck, 16 targeted API/contract tests and all 14 public-details UI tests passed after this follow-up.
 
-Remaining: full contact-card geometry parity and source contact-role tabs. Runtime success does not close visual parity. Production verification is pending deployment by the user.
+Contact-role follow-up: account owner, sales agent and custom-number choices now persist as a bounded contactRole enum. Native radio inputs provide keyboard selection; mobile places the first option above the other two, as in the inspected source. This classifies the entered contact details; it does not assign an application role or automatically retrieve a staff account. Historical contacts without a role are shown as custom. The public contract rejects this provider-side metadata.
+
+The real browser lifecycle passed with the sales-agent selection persisted and read back from the provider API. A local full-page mobile capture (`.local/contact-role-mobile.png`) was inspected: the role control renders, but the wizard stepper is vertical and input wrappers have excess card padding/gaps versus the source. These are confirmed visual defects for the next repair, not closed parity.
+
+Remaining: full contact-card and mobile-stepper geometry parity. Runtime success does not close visual parity. Production verification is pending deployment by the user.
