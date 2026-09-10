@@ -85,7 +85,7 @@ try {
   const changedTimeout = originalTimeout >= 1_440 ? originalTimeout - 1 : originalTimeout + 1;
 
   const context = await browser.newContext({ viewport: { width: 402, height: 874 }, isMobile: true });
-  const session = await login(context.request, 'admin.demo@example.invalid');
+  await login(context.request, 'admin.demo@example.invalid');
   const page = await context.newPage();
   page.on('response', response => {
     const path = new URL(response.url()).pathname;
@@ -116,12 +116,15 @@ try {
   }
   evidence.transitions.push('same_mongo_record_contains_browser_change', 'privacy_booleans_preserved');
 
-  await putSettings(context.request, session.accessToken, {
+  const staleContext = await browser.newContext();
+  const staleSession = await login(staleContext.request, 'admin.demo@example.invalid');
+  await putSettings(staleContext.request, staleSession.accessToken, {
     schemaVersion: saved.schemaVersion,
     values: saved.values,
     expectedVersion: before.version,
     reason: 'A stale privacy update must be rejected'
   }, 409);
+  await staleContext.close();
   evidence.authorization.push('stale_settings_version_rejected_409');
 
   const limitedContext = await browser.newContext();
