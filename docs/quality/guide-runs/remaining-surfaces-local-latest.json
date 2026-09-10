@@ -1,0 +1,616 @@
+{
+  "commit": "cb3c7c1307b353b0db82d0b8785e5e42867401c7",
+  "worktreeChanges": true,
+  "journeys": [
+    "GUIDE-17",
+    "GUIDE-18",
+    "GUIDE-19",
+    "GUIDE-20",
+    "GUIDE-23",
+    "GUIDE-24"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-10T05:48:44.371Z",
+  "status": "PASS_LOCAL",
+  "browser": [
+    {
+      "screen": "PRV-19",
+      "route": "/provider/ads",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-20",
+      "route": "/provider/commission",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-21",
+      "route": "/provider/notifications",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-22-1",
+      "route": "/provider/settings?tab=account",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-22-2",
+      "route": "/provider/settings?tab=contact",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-22-3",
+      "route": "/provider/settings?tab=security",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-01",
+      "route": "/admin",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-02",
+      "route": "/admin/users",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-03",
+      "route": "/admin/property-seekers",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-04",
+      "route": "/admin/providers",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-05",
+      "route": "/admin/verification",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-06",
+      "route": "/admin/account-reports",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-07",
+      "route": "/admin/account-reports?reportId=:id",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-08",
+      "route": "/admin/account-restrictions",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-09",
+      "route": "/admin/property-categories",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-10",
+      "route": "/admin/locations",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-11",
+      "route": "/admin/features",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-12",
+      "route": "/admin/projects",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-13",
+      "route": "/admin/projects/review",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-14",
+      "route": "/admin/properties",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-15",
+      "route": "/admin/properties/review?propertyId=:id",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-16",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-17",
+      "route": "/admin/property-reports",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-33",
+      "route": "/admin/ads/requests",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-34",
+      "route": "/admin/ads/payment-proofs/pending",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-35",
+      "route": "/admin/ads/payment-proofs/approved",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-36",
+      "route": "/admin/ads/calendar",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-37",
+      "route": "/admin/ads/payments/pending-review",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-38",
+      "route": "/admin/ads/financial-review",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-39",
+      "route": "/admin/commissions",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-40",
+      "route": "/admin/commissions/new",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-41",
+      "route": "/admin/commissions/history",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-42",
+      "route": "/admin/commissions/account?accountId=:id",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-43",
+      "route": "/admin/commissions/exceptions",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-44",
+      "route": "/admin/commissions/exceptions/new",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-45",
+      "route": "/admin/commissions/confirmations",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
+    }
+  ],
+  "mongo": {
+    "collectionsRead": [
+      "users",
+      "properties",
+      "account_reports"
+    ],
+    "providerFixture": true,
+    "propertyFixture": true,
+    "accountReportFixture": true
+  },
+  "remaining": [
+    "Mutation-specific proofs remain in the dedicated API suites.",
+    "Repeat these six journeys on Production after deployment."
+  ],
+  "finishedAt": "2026-09-10T05:49:21.006Z"
+}

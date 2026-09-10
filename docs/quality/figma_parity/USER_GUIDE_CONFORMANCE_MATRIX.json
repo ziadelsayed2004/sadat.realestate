@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T05:38:13.805Z",
+  "generatedAt": "2026-09-10T05:49:35.296Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2486,12 +2486,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2510,7 +2510,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2518,10 +2518,23 @@
         "section": "#provider",
         "journeyId": "GUIDE-17"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-18",
@@ -2548,12 +2561,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2572,7 +2585,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2580,10 +2593,23 @@
         "section": "#provider",
         "journeyId": "GUIDE-18"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-19",
@@ -2620,12 +2646,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2644,7 +2670,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2652,10 +2678,23 @@
         "section": "#admin",
         "journeyId": "GUIDE-19"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-20",
@@ -2694,12 +2733,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2718,7 +2757,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2726,10 +2765,23 @@
         "section": "#admin",
         "journeyId": "GUIDE-20"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-21",
@@ -2988,12 +3040,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -3012,7 +3064,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -3020,10 +3072,23 @@
         "section": "#admin",
         "journeyId": "GUIDE-23"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-24",
@@ -3058,12 +3123,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -3082,7 +3147,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -3090,10 +3155,23 @@
         "section": "#admin",
         "journeyId": "GUIDE-24"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:49:21.006Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:49:21.006Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Mutation-specific proofs remain in the dedicated API suites.",
+            "Repeat these six journeys on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-25",
@@ -3279,12 +3357,12 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-10T05:38:13.805Z",
+    "updatedAt": "2026-09-10T05:49:35.296Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
     "blocked": 0,
-    "localWithAnyExecutionEvidence": 20,
+    "localWithAnyExecutionEvidence": 26,
     "productionVerified": 0,
     "fullyClosed": 0
   },
