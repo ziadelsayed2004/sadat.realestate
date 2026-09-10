@@ -50,7 +50,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
           if (existing) return { kind: 'replay' as const, media: toStored(existing as PropertyMediaRecord & { _id: Types.ObjectId }) };
           const count = await models.PropertyMedia.countDocuments({ propertyId: new Types.ObjectId(input.propertyId), active: true }).session(session);
           if (count >= input.capacity) return { kind: 'capacity' as const };
-          const created = new models.PropertyMedia({ propertyId: new Types.ObjectId(input.propertyId), providerId: new Types.ObjectId(input.providerId), kind: input.kind, originalFilename: input.originalFilename, declaredMime: input.declaredMime, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, sortOrder: count, isCover: count === 0, processingState: 'processing', active: true, createdAt: input.metadata.changedAt, updatedAt: input.metadata.changedAt });
+          const created = new models.PropertyMedia({ propertyId: new Types.ObjectId(input.propertyId), providerId: new Types.ObjectId(input.providerId), kind: input.kind, originalFilename: input.originalFilename, declaredMime: input.declaredMime, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, sortOrder: count, isCover: false, processingState: 'processing', active: true, createdAt: input.metadata.changedAt, updatedAt: input.metadata.changedAt });
           await created.save({ session });
           const media = toStored(created.toObject() as PropertyMediaRecord & { _id: Types.ObjectId });
           await auditWrite('property_media.create', media.id, null, media, input.metadata, session);
@@ -63,7 +63,8 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
       if (!current) return { kind: 'not_found' };
       if (!['processing', 'failed'].includes(current.processingState)) return { kind: 'version_conflict' };
       const media = await tx(async session => {
-        const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, providerId: input.providerId, processingState: current.processingState, active: true }, { $set: { processingState: input.state, ...(input.failureCode ? { failureCode: input.failureCode } : { failureCode: null }), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
+        const hasCover = input.state === 'ready' && await models.PropertyMedia.exists({ propertyId: current.propertyId, providerId: input.providerId, isCover: true, active: true, processingState: 'ready' }).session(session);
+        const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, providerId: input.providerId, processingState: current.processingState, active: true }, { $set: { processingState: input.state, ...(input.state === 'ready' && !hasCover ? { isCover: true } : {}), ...(input.failureCode ? { failureCode: input.failureCode } : { failureCode: null }), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return null;
         const output = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId });
         await auditWrite('property_media.processing', output.id, current, output, input.metadata, session);

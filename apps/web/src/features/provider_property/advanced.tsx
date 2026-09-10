@@ -463,6 +463,7 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
       setMutationMessage(copy.wizard.saved);
       if (continueAfter && step === 'details') setBrowserPath(stepPath(locale, propertyId, 'price-payment'));
       if (continueAfter && step === 'price-payment') setBrowserPath(stepPath(locale, propertyId, 'features-services'));
+      if (continueAfter && step === 'features-services') setBrowserPath(`/provider/properties/${encodeURIComponent(propertyId)}/media?lang=${locale}`);
     } catch (error) {
       mutationFailure(error);
     }

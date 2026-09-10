@@ -157,7 +157,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         }
         if ('coordinates' in set) set.coordinates = coordinates(set.coordinates as PropertyCoordinates | null);
         const unset: Record<string, 1> = {};
-        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'mapUrl', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (set[field] === undefined || set[field] === null) { delete set[field]; unset[field] = 1; }
+        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'mapUrl', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (field in set && (set[field] === undefined || set[field] === null)) { delete set[field]; unset[field] = 1; }
         const result = await models.Property.findOneAndUpdate(
           { _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion },
           { $set: set, ...(Object.keys(unset).length ? { $unset: unset } : {}), $inc: { version: 1 } },
@@ -350,7 +350,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         reviewedAt: input.metadata.changedAt,
         reviewReason: input.metadata.reason,
         updatedAt: input.metadata.changedAt,
-        ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : { active: false })
+        ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : { active: input.toStatus === 'needs_changes' })
       };
       return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'published' ? (input.before.status === 'pending_review' ? 'pending_review' : 'approved') : 'pending_review' }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
     },

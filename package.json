@@ -42,6 +42,7 @@
     "guide:community:local": "node scripts/verify-guide-community-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
     "guide:seeker-account:local": "node scripts/verify-guide-seeker-account-local.mjs",
+    "guide:property-lifecycle:local": "node scripts/verify-guide-property-lifecycle-local.mjs",
     "figma:closure:audit": "node scripts/audit-figma-screen-closure.mjs --write",
     "figma:closure:gate": "node scripts/audit-figma-screen-closure.mjs --strict",
     "db:seed": "npm run db:seed --workspace apps/api",
