@@ -73,6 +73,16 @@ function classifyRoute(route: (typeof IMPLEMENTED_ROUTE_DEFINITIONS)[number]): A
     };
   }
 
+  if (route.path === '/api/v1/me/sessions' || route.path === '/api/v1/me/sessions/:sessionId') {
+    return {
+      ...route,
+      access: 'role',
+      requiredRoles: ['seeker', 'provider', 'admin'],
+      scope: 'self',
+      negativeCases: ['unauthenticated', 'ownership-boundary', 'invalid-session']
+    };
+  }
+
   if (route.method === 'POST' && route.path === '/api/v1/provider/application') {
     return {
       ...route,

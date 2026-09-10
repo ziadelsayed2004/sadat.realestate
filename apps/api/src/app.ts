@@ -12,6 +12,7 @@ import {
   type ObservabilityOptions
 } from './modules/observability/middleware.js';
 import { createAuthRouter, type AuthRouterDependencies } from './modules/auth/router.js';
+import { createSessionManagementRouter, type SessionManagementRouterDependencies } from './modules/auth/session-router.js';
 import { createSeekerRouter, type SeekerRouterDependencies } from './modules/seeker/router.js';
 import { createProviderRouter, type ProviderRouterDependencies } from './modules/provider/router.js';
 import { createPaymentProofRouter, type PaymentProofRouterDependencies } from './modules/payments/router.js';
@@ -56,6 +57,7 @@ import { createCommissionChangeLogRouter, type CommissionChangeLogRouterDependen
 export interface AppDependencies {
   database: DatabaseReadiness;
   auth?: AuthRouterDependencies;
+  sessionManagement?: SessionManagementRouterDependencies;
   seeker?: SeekerRouterDependencies;
   provider?: ProviderRouterDependencies;
   payments?: PaymentProofRouterDependencies;
@@ -115,6 +117,7 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.accounts?.accessGuard) {
     app.use('/api/v1', dependencies.accounts.accessGuard);
   }
+  if (dependencies.sessionManagement) app.use('/api/v1', createSessionManagementRouter(dependencies.sessionManagement));
   if (dependencies.seeker) app.use('/api/v1', createSeekerRouter(dependencies.seeker));
   if (dependencies.provider) app.use('/api/v1', createProviderRouter(dependencies.provider));
   if (dependencies.adminAds) app.use('/api/v1', createAdminAdsRouter(dependencies.adminAds));

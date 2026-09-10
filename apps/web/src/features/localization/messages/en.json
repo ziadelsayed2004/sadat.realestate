@@ -4203,12 +4203,12 @@
       "languageHeading": "Account language",
       "languageBody": "The language is saved to your account and used by subsequent surfaces.",
       "securityHeading": "Security and access",
-      "securityBody": "Password changes and device management require API operations that are not implemented on this surface yet.",
+      "securityBody": "Change your password and review active account sessions.",
       "unavailable": "This feature is currently unavailable under the implemented contracts.",
       "notificationHeading": "Notification settings",
       "notificationBody": "Detailed notification choices require a separate settings contract.",
-      "sessionsHeading": "Other devices",
-      "sessionsBody": "Other-session management is unavailable until the sessions contract is implemented.",
+      "sessionsHeading": "Devices and sessions",
+      "sessionsBody": "Review active sessions and revoke any session you do not recognize.",
       "signOut": "Sign out",
       "signedOut": "You have been signed out.",
       "accountHeading": "Account",
@@ -4508,5 +4508,24 @@
         "body": "Protected data is not rendered by this foundation shell."
       }
     }
+  },
+  "seeker/session-copy#getAccountSessionCopy": {
+    "heading": "Devices and sessions",
+    "body": "Review active sessions and revoke any session you do not recognize.",
+    "loading": "Loading active sessions…",
+    "empty": "No active sessions were found.",
+    "error": "Sessions could not load. Try again.",
+    "retry": "Retry",
+    "current": "Current session",
+    "other": "Other session",
+    "revoke": "Sign out this session",
+    "revokeOthers": "Sign out all other sessions",
+    "revoked": "The session was revoked.",
+    "started": "Started",
+    "lastUsed": "Last used",
+    "expires": "Expires",
+    "password": "Password",
+    "otp": "Email code",
+    "mfa": "Two-factor authentication"
   }
 }

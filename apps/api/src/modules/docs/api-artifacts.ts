@@ -1,5 +1,6 @@
 import { OPERATIONAL_ROUTE_DEFINITIONS } from '../database/health.js';
 import { AUTH_ROUTE_DEFINITIONS } from '../auth/router.js';
+import { SESSION_MANAGEMENT_ROUTE_DEFINITIONS } from '../auth/session-router.js';
 import { SEEKER_ROUTE_DEFINITIONS } from '../seeker/router.js';
 import { PROVIDER_ROUTE_DEFINITIONS } from '../provider/router.js';
 import { PAYMENT_ROUTE_DEFINITIONS } from '../payments/router.js';
@@ -41,6 +42,7 @@ import { ADMIN_COMMISSION_CHANGE_LOG_ROUTE_DEFINITIONS } from '../commissions/ch
 export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...OPERATIONAL_ROUTE_DEFINITIONS,
   ...AUTH_ROUTE_DEFINITIONS,
+  ...SESSION_MANAGEMENT_ROUTE_DEFINITIONS,
   ...SEEKER_ROUTE_DEFINITIONS,
   ...PROVIDER_ROUTE_DEFINITIONS,
   ...PAYMENT_ROUTE_DEFINITIONS,

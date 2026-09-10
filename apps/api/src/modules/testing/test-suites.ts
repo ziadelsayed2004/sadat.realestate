@@ -8,6 +8,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/auth/email-only-migration.test.ts',
     'tests/auth/repository.test.ts',
     'tests/auth/service.test.ts',
+    'tests/auth/session-service.test.ts',
     'tests/admin/contracts.test.ts',
     'tests/admin/models.test.ts',
     'tests/admin/repository.test.ts',
@@ -142,6 +143,7 @@ export const TEST_SUITES = Object.freeze({
   ]),
   api: Object.freeze([
     'tests/auth/router.test.ts',
+    'tests/auth/session-router.test.ts',
     'tests/seeker/router.test.ts',
     'tests/seeker/overview.test.ts',
     'tests/notifications/router.test.ts',

@@ -171,6 +171,31 @@ export const passwordResetSuccessEnvelopeSchema = successEnvelopeSchema(password
 export const logoutDataSchema = z.object({ loggedOut: z.literal(true) }).strict();
 export const logoutSuccessEnvelopeSchema = successEnvelopeSchema(logoutDataSchema);
 
+export const authManagedSessionSchema = z.object({
+  id: z.string().regex(/^[a-f0-9]{24}$/),
+  current: z.boolean(),
+  authenticationMethod: z.enum(['password', 'otp', 'mfa']),
+  createdAt: z.string().datetime({ offset: true }),
+  lastUsedAt: z.string().datetime({ offset: true }).nullable(),
+  expiresAt: z.string().datetime({ offset: true })
+}).strict();
+
+export const authManagedSessionListDataSchema = z.object({
+  items: z.array(authManagedSessionSchema)
+}).strict();
+
+export const authSessionIdParamsSchema = z.object({
+  sessionId: z.string().regex(/^[a-f0-9]{24}$/)
+}).strict();
+
+export const authSessionRevocationDataSchema = z.object({
+  sessionId: z.string().regex(/^[a-f0-9]{24}$/),
+  revoked: z.literal(true)
+}).strict();
+
+export const authManagedSessionListSuccessEnvelopeSchema = successEnvelopeSchema(authManagedSessionListDataSchema);
+export const authSessionRevocationSuccessEnvelopeSchema = successEnvelopeSchema(authSessionRevocationDataSchema);
+
 export type AuthRoleType = z.infer<typeof authenticatedUserSchema>['roleType'];
 export type AuthAccountState = z.infer<typeof authenticatedUserSchema>['status'];
 export type AdminLoginRequest = z.infer<typeof adminLoginRequestSchema>;
@@ -180,6 +205,9 @@ export type PasswordResetRequest = z.infer<typeof passwordResetRequestSchema>;
 export type PasswordChangeRequest = z.infer<typeof passwordChangeRequestSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
 export type AuthSessionData = z.infer<typeof authSessionDataSchema>;
+export type AuthManagedSession = z.infer<typeof authManagedSessionSchema>;
+export type AuthManagedSessionListData = z.infer<typeof authManagedSessionListDataSchema>;
+export type AuthSessionRevocationData = z.infer<typeof authSessionRevocationDataSchema>;
 export type AuthLoginData = z.infer<typeof authLoginDataSchema>;
 export type LogoutData = z.infer<typeof logoutDataSchema>;
 export type NormalizedPhone = z.infer<typeof normalizedPhoneSchema>;

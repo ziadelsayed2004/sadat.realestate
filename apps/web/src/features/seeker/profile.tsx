@@ -7,24 +7,30 @@ import {
   type SeekerPreferencesPatch,
   type SeekerProfileData,
   type SeekerProfilePatch,
+  type AuthManagedSession,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Button, Input, StateMessage } from '../design_system/index.ts';
+import { Button, Input, Skeleton, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerProfileActions,
   createSeekerProfileLoader,
+  createAccountSessionsLoader,
+  createAccountSessionRevoker,
   createSeekerPreferencesLoader as createPreferencesLoader,
   isAuthenticatedSeekerSession,
   localeForSeekerPath,
   type SeekerAuthorizationSource,
+  type AccountSessionsLoader,
+  type AccountSessionRevoker,
   type SeekerPreferencesLoader,
   type SeekerProfileActions,
   type SeekerProfileLoader
 } from './data.ts';
 import { SeekerNavigation } from './overview.tsx';
 import { getSeekerProfileCopy } from './profile-copy.ts';
+import { getAccountSessionCopy } from './session-copy.ts';
 import './styles.css';
 
 export type SeekerProfileTab = 'preferences' | 'profile' | 'settings';
@@ -44,6 +50,8 @@ export interface SeekerProfileProps {
   readonly loadProfile?: SeekerProfileLoader | undefined;
   readonly loadPreferences?: SeekerPreferencesLoader | undefined;
   readonly actions?: SeekerProfileActions | undefined;
+  readonly loadSessions?: AccountSessionsLoader | undefined;
+  readonly revokeSession?: AccountSessionRevoker | undefined;
 }
 
 type MutationFeedback = 'profileSaved' | 'preferencesSaved' | 'signedOut';
@@ -423,7 +431,9 @@ function SettingsContent({
   saving,
   onChangePassword,
   onUpdateLocale,
-  onSignOut
+  onSignOut,
+  loadSessions,
+  revokeSession
 }: {
   readonly locale: SupportedLocale;
   readonly profile: SeekerProfileData;
@@ -433,8 +443,11 @@ function SettingsContent({
   readonly onChangePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   readonly onUpdateLocale: (locale: SupportedLocale) => Promise<void>;
   readonly onSignOut: () => void;
+  readonly loadSessions: AccountSessionsLoader;
+  readonly revokeSession: AccountSessionRevoker;
 }) {
   const surfaceCopy = settingsSurfaceCopy(locale);
+  const sessionCopy = getAccountSessionCopy(locale);
   const notificationSettings = [
     { id: 'request-updates', label: surfaceCopy.requestUpdates, body: surfaceCopy.requestUpdatesBody, enabled: true },
     { id: 'viewing-reminders', label: surfaceCopy.viewingReminders, body: surfaceCopy.viewingRemindersBody, enabled: true },
@@ -446,6 +459,61 @@ function SettingsContent({
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string>();
+  const [sessionState, setSessionState] = useState<'loading' | 'success' | 'error'>('loading');
+  const [sessions, setSessions] = useState<readonly AuthManagedSession[]>([]);
+  const [sessionAttempt, setSessionAttempt] = useState(0);
+  const [revokingSessionId, setRevokingSessionId] = useState<string>();
+  const [sessionFeedback, setSessionFeedback] = useState<string>();
+  useEffect(() => {
+    const controller = new AbortController();
+    setSessionState('loading');
+    setSessionFeedback(undefined);
+    void loadSessions(controller.signal).then(result => {
+      if (controller.signal.aborted) return;
+      setSessions(result.items);
+      setSessionState('success');
+    }).catch(() => {
+      if (!controller.signal.aborted) setSessionState('error');
+    });
+    return () => controller.abort();
+  }, [loadSessions, sessionAttempt]);
+  const revoke = async (sessionId: string) => {
+    setRevokingSessionId(sessionId);
+    setSessionFeedback(undefined);
+    try {
+      await revokeSession(sessionId);
+      setSessions(current => current.filter(session => session.id !== sessionId));
+      setSessionFeedback(sessionCopy.revoked);
+    } catch {
+      setSessionFeedback(sessionCopy.error);
+    } finally {
+      setRevokingSessionId(undefined);
+    }
+  };
+  const revokeOthers = async () => {
+    const others = sessions.filter(session => !session.current);
+    if (others.length === 0) return;
+    setRevokingSessionId('all');
+    setSessionFeedback(undefined);
+    try {
+      await Promise.all(others.map(session => revokeSession(session.id)));
+      setSessions(current => current.filter(session => session.current));
+      setSessionFeedback(sessionCopy.revoked);
+    } catch {
+      setSessionFeedback(sessionCopy.error);
+      setSessionAttempt(value => value + 1);
+    } finally {
+      setRevokingSessionId(undefined);
+    }
+  };
+  const formatSessionDate = (value: string | null) => value === null
+    ? '—'
+    : new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+  const authenticationLabel = (method: AuthManagedSession['authenticationMethod']) => method === 'mfa'
+    ? sessionCopy.mfa
+    : method === 'otp'
+      ? sessionCopy.otp
+      : sessionCopy.password;
   const submitPassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (newPassword !== confirmPassword || !passwordChangeRequestSchema.safeParse({ currentPassword, newPassword }).success) {
@@ -504,12 +572,38 @@ function SettingsContent({
         </div>
         <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
       </section>
-      <section className="seeker-profile__settings-card" data-state="unavailable" aria-labelledby="seeker-profile-sessions-title">
-        <h3 id="seeker-profile-sessions-title">{surfaceCopy.otherDevicesHeading}</h3>
-        <p>{surfaceCopy.otherDevicesBody}</p>
+      <section className="seeker-profile__settings-card" data-state={sessionState} aria-labelledby="seeker-profile-sessions-title">
+        <h3 id="seeker-profile-sessions-title">{sessionCopy.heading}</h3>
+        <p>{sessionCopy.body}</p>
+        {sessionState === 'loading' ? <Skeleton variant="list" label={sessionCopy.loading} /> : null}
+        {sessionState === 'error' ? (
+          <div className="seeker-profile__settings-actions" role="alert">
+            <p>{sessionCopy.error}</p>
+            <Button type="button" variant="secondary" onClick={() => setSessionAttempt(value => value + 1)}>{sessionCopy.retry}</Button>
+          </div>
+        ) : null}
+        {sessionState === 'success' && sessions.length === 0 ? <p className="seeker-profile__empty-note" data-state="empty">{sessionCopy.empty}</p> : null}
+        {sessionState === 'success' && sessions.length > 0 ? (
+          <div className="seeker-profile__toggle-list">
+            {sessions.map(managedSession => (
+              <article className="seeker-profile__toggle-row seeker-profile__session" data-current={managedSession.current} key={managedSession.id}>
+                <div>
+                  <strong>{managedSession.current ? sessionCopy.current : sessionCopy.other}</strong>
+                  <span>{authenticationLabel(managedSession.authenticationMethod)}</span>
+                </div>
+                <dl>
+                  <div><dt>{sessionCopy.started}</dt><dd>{formatSessionDate(managedSession.createdAt)}</dd></div>
+                  <div><dt>{sessionCopy.lastUsed}</dt><dd>{formatSessionDate(managedSession.lastUsedAt)}</dd></div>
+                  <div><dt>{sessionCopy.expires}</dt><dd>{formatSessionDate(managedSession.expiresAt)}</dd></div>
+                </dl>
+                {!managedSession.current ? <Button type="button" variant="secondary" loading={revokingSessionId === managedSession.id} disabled={revokingSessionId !== undefined} onClick={() => { void revoke(managedSession.id); }}>{sessionCopy.revoke}</Button> : null}
+              </article>
+            ))}
+          </div>
+        ) : null}
+        {sessionFeedback ? <p className="seeker-profile__feedback" data-state={sessionFeedback === sessionCopy.revoked ? 'success' : 'error'} role="status">{sessionFeedback}</p> : null}
         <div className="seeker-profile__settings-actions">
-          <Button type="button" variant="secondary" disabled>{surfaceCopy.signOutOtherDevices}</Button>
-          <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
+          <Button type="button" variant="secondary" loading={revokingSessionId === 'all'} disabled={sessionState !== 'success' || sessions.every(session => session.current) || revokingSessionId !== undefined} onClick={() => { void revokeOthers(); }}>{sessionCopy.revokeOthers}</Button>
         </div>
         {authClient?.logout ? <Button type="button" variant="ghost" loading={saving} onClick={onSignOut}>{copy.settings.signOut}</Button> : null}
       </section>
@@ -525,12 +619,14 @@ function SettingsContent({
   );
 }
 
-export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loadProfile, loadPreferences, actions }: SeekerProfileProps) {
+export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loadProfile, loadPreferences, actions, loadSessions, revokeSession }: SeekerProfileProps) {
   const copy = getSeekerProfileCopy(locale);
   const activeTab = tab === undefined ? profileTabForLocation('preferences') : tab;
   const profileSource = useMemo(() => loadProfile ?? createSeekerProfileLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadProfile]);
   const preferencesSource = useMemo(() => loadPreferences ?? createPreferencesLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadPreferences]);
   const actionSource = useMemo(() => actions ?? createSeekerProfileActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
+  const sessionSource = useMemo(() => loadSessions ?? createAccountSessionsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadSessions]);
+  const sessionRevoker = useMemo(() => revokeSession ?? createAccountSessionRevoker({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, revokeSession]);
   const [profileState, setProfileState] = useState<SeekerProfileViewState>('loading');
   const [preferencesState, setPreferencesState] = useState<SeekerProfileViewState>('loading');
   const [profile, setProfile] = useState<SeekerProfileData | undefined>();
@@ -695,7 +791,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
                 <ProfileForm locale={locale} profile={profile} draft={profileDraft} copy={copy} saving={saving} onChange={patch => { setProfileDraft(current => current === undefined ? current : { ...current, ...patch }); setValidationError(false); }} onSubmit={submitProfile} />
               </section>
             ) : (
-              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onChangePassword={changePassword} onUpdateLocale={updateLocale} onSignOut={signOut} />
+              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onChangePassword={changePassword} onUpdateLocale={updateLocale} onSignOut={signOut} loadSessions={sessionSource} revokeSession={sessionRevoker} />
             )}
           </>
         ) : null}

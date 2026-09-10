@@ -1724,6 +1724,31 @@
   padding-block-end: 1.5rem;
   border-block-end: 1px solid #ebe6dc;
 }
+
+.seeker-profile__session {
+  cursor: auto;
+}
+
+.seeker-profile__session[data-current="true"] {
+  background: var(--color-brand-soft);
+}
+
+.seeker-profile__session dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin: 0;
+}
+
+.seeker-profile__session dt,
+.seeker-profile__session dd {
+  margin: 0;
+}
+
+.seeker-profile__session dt {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
 .seeker-profile__identity > span:last-child { display: grid; gap: .35rem; }
 .seeker-profile__identity strong { color: #17233d; font-size: 1.15rem; }
 .seeker-profile__identity small { color: #7d8492; }

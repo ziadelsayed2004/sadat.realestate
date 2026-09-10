@@ -164,8 +164,14 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/public/settings/seo",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["public", "settings", "seo"]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "settings",
+            "seo"
+          ]
         },
         "description": "Unauthenticated projection of complete SEO defaults only; version, actor, audit, and verification fields are excluded."
       }
@@ -1912,6 +1918,96 @@
               "key": "token",
               "value": "{{syntheticBearer}}",
               "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Account - List Active Sessions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Session inventory never exposes token material', function () {",
+              "  pm.expect([200, 401, 403, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.text()).not.to.match(/tokenHash|refreshToken/);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me/sessions",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me",
+            "sessions"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Account - Revoke Owned Session",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Owned session revocation preserves authorization boundaries', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 409, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me/sessions/:sessionId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me",
+            "sessions",
+            ":sessionId"
+          ],
+          "variable": [
+            {
+              "key": "sessionId",
+              "value": "000000000000000000000000"
             }
           ]
         }
@@ -5225,19 +5321,41 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"expectedVersion\": 0\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{apiV1BaseUrl}}/provider/ads/:adRequestId/submit",
-              "host": ["{{apiV1BaseUrl}}"],
-              "path": ["provider", "ads", ":adRequestId", "submit"],
-              "variable": [{ "key": "adRequestId", "value": "000000000000000000000000" }]
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads",
+                ":adRequestId",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
             },
             "description": "Submits an owner-scoped draft for administrative review using optimistic version control."
           }
@@ -5429,19 +5547,41 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"action\": \"approve\",\n  \"expectedVersion\": 1,\n  \"reason\": \"Reviewed and ready for pricing\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{apiV1BaseUrl}}/admin/ad-requests/:adRequestId/review",
-              "host": ["{{apiV1BaseUrl}}"],
-              "path": ["admin", "ad-requests", ":adRequestId", "review"],
-              "variable": [{ "key": "adRequestId", "value": "000000000000000000000000" }]
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-requests",
+                ":adRequestId",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
             },
             "description": "Requires admin:ads.price. Approval advances a submitted request to pricing; rejection also requires a recorded reason and expected version."
           }

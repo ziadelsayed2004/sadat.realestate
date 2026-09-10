@@ -204,7 +204,7 @@
       "authenticated"
     ],
     "purpose": "List sessions",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -216,7 +216,7 @@
       "authenticated"
     ],
     "purpose": "Revoke owned session",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

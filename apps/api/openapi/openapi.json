@@ -6074,23 +6074,69 @@
     },
     "/api/v1/provider/ads/{adRequestId}/submit": {
       "parameters": [
-        { "name": "adRequestId", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdObjectId" } }
+        {
+          "name": "adRequestId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/AdObjectId"
+          }
+        }
       ],
       "post": {
         "operationId": "submitProviderAdRequest",
         "summary": "Submit a provider-owned advertising draft for review",
-        "security": [{ "bearerAuth": [] }],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["expectedVersion"], "properties": { "expectedVersion": { "type": "integer", "minimum": 0 } } } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "expectedVersion"
+                ],
+                "properties": {
+                  "expectedVersion": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
-          "200": { "description": "Advertising request submitted for administrative review", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "401": { "$ref": "#/components/responses/AuthError" },
-          "403": { "$ref": "#/components/responses/AuthError" },
-          "404": { "$ref": "#/components/responses/ProviderError" },
-          "409": { "$ref": "#/components/responses/ProviderError" }
+          "200": {
+            "description": "Advertising request submitted for administrative review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
         }
       }
     },
@@ -6498,24 +6544,84 @@
     },
     "/api/v1/admin/ad-requests/{adRequestId}/review": {
       "parameters": [
-        { "name": "adRequestId", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdObjectId" } }
+        {
+          "name": "adRequestId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/AdObjectId"
+          }
+        }
       ],
       "post": {
         "operationId": "reviewAdminAdRequest",
         "summary": "Approve an advertising request for pricing or reject it",
         "description": "Requires admin:ads.price and records a reason through an optimistic version transition.",
-        "security": [{ "bearerAuth": [] }],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["action", "expectedVersion", "reason"], "properties": { "action": { "type": "string", "enum": ["approve", "reject"] }, "expectedVersion": { "type": "integer", "minimum": 0 }, "reason": { "type": "string", "minLength": 2, "maxLength": 500 } } } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "action",
+                  "expectedVersion",
+                  "reason"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "reject"
+                    ]
+                  },
+                  "expectedVersion": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
-          "200": { "description": "Reviewed administrative advertising request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdAdminRequestSuccessEnvelope" } } } },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "401": { "$ref": "#/components/responses/AuthError" },
-          "403": { "$ref": "#/components/responses/AuthError" },
-          "404": { "$ref": "#/components/responses/ProviderError" },
-          "409": { "$ref": "#/components/responses/ProviderError" }
+          "200": {
+            "description": "Reviewed administrative advertising request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdAdminRequestSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
         }
       }
     },
@@ -9742,6 +9848,70 @@
           }
         }
       }
+    },
+    "/api/v1/me/sessions": {
+      "get": {
+        "operationId": "listOwnSessions",
+        "summary": "List active sessions owned by the authenticated account",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthManagedSessionListSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
+    },
+    "/api/v1/me/sessions/{sessionId}": {
+      "delete": {
+        "operationId": "revokeOwnSession",
+        "summary": "Revoke an active non-current session owned by the authenticated account",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthSessionRevocationSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "409": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -10818,6 +10988,50 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ErrorEnvelope"
+            }
+          }
+        }
+      },
+      "AuthManagedSessionListSuccess": {
+        "description": "Active sessions owned by the authenticated account",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AuthManagedSessionListData"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "AuthSessionRevocationSuccess": {
+        "description": "Owned session revoked",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AuthSessionRevocationData"
+                    }
+                  }
+                }
+              ]
             }
           }
         }
@@ -17818,21 +18032,66 @@
       "PublicSeoSettings": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["title", "description", "canonicalUrl", "robots", "sitemapStatus"],
+        "required": [
+          "title",
+          "description",
+          "canonicalUrl",
+          "robots",
+          "sitemapStatus"
+        ],
         "properties": {
-          "title": { "$ref": "#/components/schemas/LocalizedText" },
-          "description": { "$ref": "#/components/schemas/LocalizedText" },
-          "canonicalUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
-          "robots": { "type": "string", "enum": ["index,follow", "noindex,nofollow", "noindex,follow", "index,nofollow"] },
-          "titleSeparator": { "type": "string", "minLength": 1, "maxLength": 10 },
-          "sitemapStatus": { "type": "string", "enum": ["active", "inactive"] },
-          "googleSiteVerification": { "type": "string", "minLength": 1, "maxLength": 512 }
+          "title": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "description": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "canonicalUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "robots": {
+            "type": "string",
+            "enum": [
+              "index,follow",
+              "noindex,nofollow",
+              "noindex,follow",
+              "index,nofollow"
+            ]
+          },
+          "titleSeparator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10
+          },
+          "sitemapStatus": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive"
+            ]
+          },
+          "googleSiteVerification": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
         }
       },
       "PublicSeoSettingsSuccessEnvelope": {
         "allOf": [
-          { "$ref": "#/components/schemas/SuccessEnvelope" },
-          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/PublicSeoSettings" } } }
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/PublicSeoSettings"
+              }
+            }
+          }
         ]
       },
       "AdminSettingsSuccessEnvelope": {
@@ -22349,6 +22608,87 @@
             "minLength": 5,
             "maxLength": 500,
             "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          }
+        }
+      },
+      "AuthManagedSession": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "current",
+          "authenticationMethod",
+          "createdAt",
+          "lastUsedAt",
+          "expiresAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "authenticationMethod": {
+            "type": "string",
+            "enum": [
+              "password",
+              "otp",
+              "mfa"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuthManagedSessionListData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthManagedSession"
+            }
+          }
+        }
+      },
+      "AuthSessionRevocationData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sessionId",
+          "revoked"
+        ],
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "revoked": {
+            "type": "boolean",
+            "const": true
           }
         }
       }

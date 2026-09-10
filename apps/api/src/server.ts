@@ -12,6 +12,7 @@ import {
   parseAuthEnvironment
 } from './modules/auth/environment.js';
 import { createAuthRuntime } from './modules/auth/runtime.js';
+import { createSessionManagementRuntime } from './modules/auth/session-runtime.js';
 import { createSeekerRuntime } from './modules/seeker/runtime.js';
 import { createProviderRuntime } from './modules/provider/runtime.js';
 import { createPaymentProofRuntime } from './modules/payments/runtime.js';
@@ -135,6 +136,11 @@ async function runEntrypoint(): Promise<void> {
     auth.cookie
   );
   const auditInfrastructure = createAuditInfrastructure(database.nativeConnection);
+  const sessionManagement = createSessionManagementRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    auditInfrastructure.writer
+  );
   const rbac = createRbacRuntime(
     database.nativeConnection,
     auth.accessTokens,
@@ -222,6 +228,7 @@ async function runEntrypoint(): Promise<void> {
   const server = createApiServer({
     database,
     auth,
+    sessionManagement,
     seeker,
     provider,
     payments,

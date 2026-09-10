@@ -1,4 +1,6 @@
 import {
+  authManagedSessionListSuccessEnvelopeSchema,
+  authSessionRevocationSuccessEnvelopeSchema,
   favoriteListDataSchema,
   favoriteRemoveDataSchema,
   favoriteSaveDataSchema,
@@ -23,6 +25,8 @@ import {
   viewingListDataSchema,
   viewingPatchSchema,
   type RequestData,
+  type AuthManagedSessionListData,
+  type AuthSessionRevocationData,
   type RequestListData,
   type RequestListQuery,
   type RequestTransitionRequest,
@@ -57,6 +61,7 @@ export const SEEKER_FAVORITES_ROUTE = '/seeker/favorites' as const;
 export const SEEKER_NOTIFICATIONS_ROUTE = '/seeker/notifications' as const;
 export const SEEKER_PROFILE_ROUTE = '/me' as const;
 export const SEEKER_PREFERENCES_ROUTE = '/me/preferences' as const;
+export const ACCOUNT_SESSIONS_ROUTE = '/me/sessions' as const;
 
 export interface SeekerAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
@@ -83,6 +88,8 @@ export type SeekerFavoritesLoader = (query?: FavoriteListQuery, signal?: AbortSi
 export type SeekerNotificationsLoader = (query?: NotificationListQuery, signal?: AbortSignal) => Promise<NotificationListData>;
 export type SeekerProfileLoader = (signal?: AbortSignal) => Promise<SeekerProfileData>;
 export type SeekerPreferencesLoader = (signal?: AbortSignal) => Promise<SeekerPreferencesData>;
+export type AccountSessionsLoader = (signal?: AbortSignal) => Promise<AuthManagedSessionListData>;
+export type AccountSessionRevoker = (sessionId: string, signal?: AbortSignal) => Promise<AuthSessionRevocationData>;
 
 export interface SeekerViewingActions {
   create(input: ViewingCreate, signal?: AbortSignal): Promise<ViewingData>;
@@ -444,6 +451,36 @@ export function createSeekerProfileActions(options: SeekerOverviewLoadOptions = 
         ...(signal === undefined ? {} : { signal })
       });
     }
+  };
+}
+
+export function loadAccountSessions(options: SeekerOverviewLoadOptions = {}): Promise<AuthManagedSessionListData> {
+  const client = clientFor(options);
+  const headers = authorizationHeaders(options.authorization);
+  return client.request(ACCOUNT_SESSIONS_ROUTE, {
+    responseSchema: authManagedSessionListSuccessEnvelopeSchema,
+    ...(headers === undefined ? {} : { headers }),
+    ...(options.signal === undefined ? {} : { signal: options.signal })
+  }).then(response => response.data.data);
+}
+
+export function createAccountSessionsLoader(
+  options: Omit<SeekerOverviewLoadOptions, 'signal'> = {}
+): AccountSessionsLoader {
+  return signal => loadAccountSessions({ ...options, ...(signal === undefined ? {} : { signal }) });
+}
+
+export function createAccountSessionRevoker(options: SeekerOverviewLoadOptions = {}): AccountSessionRevoker {
+  const client = clientFor(options);
+  const headers = authorizationHeaders(options.authorization);
+  return async (sessionId, signal) => {
+    const response = await client.request(`${ACCOUNT_SESSIONS_ROUTE}/${encodeURIComponent(sessionId)}`, {
+      method: 'DELETE',
+      responseSchema: authSessionRevocationSuccessEnvelopeSchema,
+      ...(headers === undefined ? {} : { headers }),
+      ...(signal === undefined ? {} : { signal })
+    });
+    return response.data.data;
   };
 }
 

@@ -8,8 +8,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   SeekerProfile,
+  createAccountSessionRevoker,
   createSeekerProfileActions,
   getSeekerProfileCopy,
+  getAccountSessionCopy,
+  loadAccountSessions,
   loadSeekerPreferences,
   loadSeekerProfile
 } from '../src/features/seeker/index.ts';
@@ -64,6 +67,23 @@ describe('Seeker profile, preferences, and settings', () => {
       { url: '/api/v1/me', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ firstName: 'Mariam' }) },
       { url: '/api/v1/me/preferences', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ locations: ['sheikh-zayed'] }) },
       { url: '/api/v1/auth/account-access/change', method: 'POST', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' }) }
+    ]);
+  });
+
+  it('uses the owned session inventory and revocation contracts with authorization', async () => {
+    const calls: Array<{ url: string; method: string; authorization: string | null }> = [];
+    const sessions = { items: [{ id: '111111111111111111111111', current: true, authenticationMethod: 'mfa' as const, createdAt: '2026-09-10T08:00:00.000Z', lastUsedAt: null, expiresAt: '2026-10-10T08:00:00.000Z' }] };
+    const client = new ApiClient({ fetcher: async (input, init) => {
+      calls.push({ url: String(input), method: init?.method ?? 'GET', authorization: new Headers(init?.headers).get('authorization') });
+      const data = init?.method === 'DELETE' ? { sessionId: '222222222222222222222222', revoked: true } : sessions;
+      return new Response(JSON.stringify({ data, meta: { requestId: 'sessions-test' } }), { status: 200 });
+    } });
+    const authorization = { getAuthorizationHeader: () => 'Bearer seeker.sessions.token' };
+    await expect(loadAccountSessions({ apiClient: client, authorization })).resolves.toEqual(sessions);
+    await expect(createAccountSessionRevoker({ apiClient: client, authorization })('222222222222222222222222')).resolves.toEqual({ sessionId: '222222222222222222222222', revoked: true });
+    expect(calls).toEqual([
+      { url: '/api/v1/me/sessions', method: 'GET', authorization: 'Bearer seeker.sessions.token' },
+      { url: '/api/v1/me/sessions/222222222222222222222222', method: 'DELETE', authorization: 'Bearer seeker.sessions.token' }
     ]);
   });
 
@@ -123,7 +143,7 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
     profileResult.unmount();
 
-    const settingsResult = renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
+    const settingsResult = renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} loadSessions={async () => ({ items: [] })} revokeSession={async sessionId => ({ sessionId, revoked: true })} actions={emptyActions()} />, { locale: 'en' });
     const settingsCopy = getSeekerProfileCopy('en');
     await waitFor(() => expect(screen.getByRole('heading', { name: settingsCopy.settings.heading, level: 1 })).toBeInTheDocument());
     expect(settingsResult.container.querySelector('[data-screen-id="SEK-10"]')).not.toBeNull();
@@ -137,9 +157,35 @@ describe('Seeker profile, preferences, and settings', () => {
     settingsResult.unmount();
   });
 
+  it('loads active sessions and revokes another owned session without refreshing the page', async () => {
+    const copy = getAccountSessionCopy('en');
+    const revokeSession = vi.fn().mockResolvedValue({ sessionId: '222222222222222222222222', revoked: true });
+    renderWithLocale(
+      <SeekerProfile
+        locale="en"
+        session={session}
+        tab="settings"
+        loadProfile={async () => profile}
+        loadSessions={async () => ({ items: [
+          { id: '111111111111111111111111', current: true, authenticationMethod: 'mfa', createdAt: '2026-09-10T08:00:00.000Z', lastUsedAt: '2026-09-10T09:00:00.000Z', expiresAt: '2026-10-10T08:00:00.000Z' },
+          { id: '222222222222222222222222', current: false, authenticationMethod: 'password', createdAt: '2026-09-09T08:00:00.000Z', lastUsedAt: null, expiresAt: '2026-10-09T08:00:00.000Z' }
+        ] })}
+        revokeSession={revokeSession}
+        actions={emptyActions()}
+      />,
+      { locale: 'en' }
+    );
+    await waitFor(() => expect(screen.getByText(copy.current)).toBeInTheDocument());
+    expect(screen.getByText(copy.other)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.revoke }));
+    await waitFor(() => expect(revokeSession).toHaveBeenCalledWith('222222222222222222222222'));
+    await waitFor(() => expect(screen.queryByText(copy.other)).not.toBeInTheDocument());
+    expect(screen.getByText(copy.revoked)).toBeInTheDocument();
+  });
+
   it('updates the persisted account locale from settings', async () => {
     const actions = emptyActions();
-    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={actions} />, { locale: 'en' });
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} loadSessions={async () => ({ items: [] })} actions={actions} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByLabelText('Preferred language')).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText('Preferred language'), { target: { value: 'en' } });
     await waitFor(() => expect(actions.updateProfile).toHaveBeenCalledWith({ locale: 'en' }));
@@ -152,7 +198,7 @@ describe('Seeker profile, preferences, and settings', () => {
       getAuthorizationHeader: () => undefined,
       logout: vi.fn().mockResolvedValue(undefined)
     };
-    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={actions} authClient={authClient} />, { locale: 'en' });
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} loadSessions={async () => ({ items: [] })} actions={actions} authClient={authClient} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByLabelText('Current password')).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText('Current password'), { target: { value: 'Current-Password-1!' } });
     fireEvent.change(screen.getByLabelText('New password'), { target: { value: 'New-Password-2!' } });
