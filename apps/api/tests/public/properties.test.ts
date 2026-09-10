@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { publicPropertyDetailsSchema } from '@sadat-real-estate/contracts';
 import { createPublicPropertyDetailsService, publicPropertyDetailsProjection, type PublicPropertyDetailsRepository, type PublicPropertyDetailsSource } from '../../src/modules/public/properties.js';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, type PropertyRuntimeSettings } from '../../src/modules/settings/property-policy.js';
@@ -7,6 +8,15 @@ import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, type PropertyRuntimeSettings } from 
 const id = '0123456789abcdef01234567';
 const relatedId = '1123456789abcdef01234567';
 const localized = { ar: 'شقة', en: 'Apartment' };
+
+test('public response contract rejects private contact fields even if a producer accidentally includes them', () => {
+  const schema = publicPropertyDetailsSchema.shape.contact;
+  assert.equal(schema.safeParse({ phone: '+201234567890', preferredContactTime: '9 to 5' }).success, true);
+  for (const [key, value] of Object.entries({ internalNotes: 'Private instructions', showPhone: false, showWhatsapp: false, showEmail: false })) {
+    assert.equal(schema.safeParse({ phone: '+201234567890', [key]: value }).success, false, key);
+  }
+  assert.equal(schema.safeParse({}).success, false);
+});
 
 test('public contact respects each channel toggle and never exposes provider notes or controls', () => {
   const settings = { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, hideProviderContact: false, contactVisibility: 'public' as const };

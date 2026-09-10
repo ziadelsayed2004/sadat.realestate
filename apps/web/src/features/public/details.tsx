@@ -602,6 +602,7 @@ function RequestPanel({
         {data.contact === undefined ? null : (
           <div className="public-property-details__revealed-contact" data-contact-revealed="true">
             {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
+            {data.contact.preferredContactTime ? <p>{data.contact.preferredContactTime}</p> : null}
             {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
             {data.contact.whatsappNumber ? <a href={`https://wa.me/${data.contact.whatsappNumber.replace(/\D/gu, '')}`} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
             {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}

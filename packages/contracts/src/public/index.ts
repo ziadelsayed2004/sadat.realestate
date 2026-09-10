@@ -171,13 +171,23 @@ export const publicPropertyAmenitySchema = z.object({
   slug: propertySlugSchema,
   order: publicOrderSchema
 }).strict();
+// Public responses must not accept provider-only notes or visibility settings.
+const publicPropertyContactSchema = z.object({
+  contactName: propertyContactSchema.shape.contactName,
+  phone: propertyContactSchema.shape.phone,
+  whatsappNumber: propertyContactSchema.shape.whatsappNumber,
+  email: propertyContactSchema.shape.email,
+  preferredLocale: propertyContactSchema.shape.preferredLocale,
+  preferredContactTime: propertyContactSchema.shape.preferredContactTime
+}).strict().refine(value => Object.values(value).some(item => item !== undefined), { message: 'Public contact data cannot be empty' });
+
 export const publicPropertyDetailsSchema = publicHomepagePropertySchema.extend({
   locationName: localizedTextSchema.optional(),
   mapUrl: propertyMapUrlSchema.optional(),
   publicCode: publicPropertyCodeSchema.optional(),
   deliveryStatus: propertyDeliveryStatusSchema.optional(),
   installmentAvailable: z.boolean().optional(),
-  contact: propertyContactSchema.optional(),
+  contact: publicPropertyContactSchema.optional(),
   source: publicPropertySourceSchema,
   seo: publicPropertySeoSchema,
   project: publicPropertyProjectSchema.nullable(),
