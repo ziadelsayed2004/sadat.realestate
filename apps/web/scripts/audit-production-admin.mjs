@@ -7,11 +7,26 @@ import { createInterface } from 'node:readline/promises';
 const baseUrl = (process.env.ADMIN_AUDIT_BASE_URL?.trim() || 'https://elsadatrealestate.com').replace(/\/$/u, '');
 const outputDirectory = path.resolve(process.env.ADMIN_AUDIT_OUTPUT ?? 'test-results/production-admin-audit');
 const sidebarSource = readFileSync(new URL('../src/features/admin/overview.tsx', import.meta.url), 'utf8');
-const routes = [...sidebarSource.matchAll(/sidebarItem\('([^']+)', '([^']+)'/gu)].map(([, name, route]) => [`${route}?lang=ar`, name]);
+const sidebarRoutes = [...sidebarSource.matchAll(/sidebarItem\('([^']+)', '([^']+)'/gu)]
+  .map(([, name, route]) => [`${route}?lang=ar`, name]);
+const supplementalRoutes = [
+  ['/admin/commissions/new?lang=ar', 'commission-policy-new'],
+  ['/admin/commissions/history?lang=ar', 'commission-history'],
+  ['/admin/commissions/exceptions/new?lang=ar', 'commission-exception-new'],
+  ['/admin/banners/new?lang=ar', 'banner-new'],
+  ['/admin/settings/social?lang=ar', 'social-settings'],
+  ['/admin/settings/properties?lang=ar', 'property-settings'],
+  ['/admin/settings/requests?lang=ar', 'request-settings'],
+  ['/admin/settings/advertising?lang=ar', 'advertising-settings'],
+  ['/admin/settings/privacy-security?lang=ar', 'privacy-security-settings'],
+  ['/admin/settings/display?lang=ar', 'display-settings'],
+  ['/admin/admin-users/new?lang=ar', 'admin-user-new'],
+];
+const routes = [...new Map([...sidebarRoutes, ...supplementalRoutes].map(([route, name]) => [route, [route, name]])).values()];
 
 function isExpectedEmptySettingsResponse(error) {
   if (error.method !== 'GET' || error.status !== 404) return false;
-  if (!/^\/api\/v1\/admin\/settings\/(platform|contact|seo)$/u.test(error.path.split('?')[0])) return false;
+  if (!/^\/api\/v1\/admin\/settings\/(platform|contact|social|properties|requests|advertising|seo|privacy-security|display)$/u.test(error.path.split('?')[0])) return false;
   try {
     return JSON.parse(error.body)?.error?.code === 'SETTINGS_NOT_FOUND';
   } catch {
@@ -132,7 +147,12 @@ async function main() {
       loginPage.waitForLoadState('networkidle', { timeout: 45_000 }).catch(() => undefined),
       loginPage.locator('.auth-form button[type="submit"]').click(),
     ]);
-    await loginPage.waitForTimeout(1_000);
+    await loginPage.waitForFunction(() => {
+      if (location.pathname === '/auth/login') {
+        return document.querySelector('[role="alert"], .auth-form__error, .auth-otp') !== null;
+      }
+      return document.querySelector('[data-screen-id], [data-access]') !== null;
+    }, undefined, { timeout: 45_000 });
     credentials.email = '';
     credentials.password = '';
 
@@ -161,9 +181,28 @@ async function main() {
     }
     await mobile.close();
 
+    const results = [...desktopResults, ...mobileResults];
+    const ok = login.screenId === 'ADM-01'
+      && !login.error
+      && results.every(result => result.status === 200
+        && !result.access
+        && result.unexpectedHttpErrors.length === 0
+        && result.requestFailures.length === 0
+        && result.overflowPixels === 0
+        && result.viewportWidth === (result.device === 'mobile' ? 393 : 1440));
     const report = {
       generatedAt: new Date().toISOString(),
       baseUrl,
+      ok,
+      summary: {
+        routesPerDevice: routes.length,
+        visits: results.length,
+        uniqueScreenIds: new Set(results.map(result => result.screenId).filter(Boolean)).size,
+        unexpectedHttpErrors: results.reduce((total, result) => total + result.unexpectedHttpErrors.length, 0),
+        requestFailures: results.reduce((total, result) => total + result.requestFailures.length, 0),
+        overflowFailures: results.filter(result => result.overflowPixels > 0).length,
+        mobileViewportWidths: [...new Set(mobileResults.map(result => result.viewportWidth))],
+      },
       login,
       desktop: desktopResults,
       mobile: mobileResults,
@@ -171,7 +210,8 @@ async function main() {
     };
     await writeFile(path.join(outputDirectory, 'report.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
     process.stdout.write(JSON.stringify({
-      ok: login.screenId === 'ADM-01' && !login.error && [...desktopResults, ...mobileResults].every(result => result.status === 200 && !result.access && result.unexpectedHttpErrors.length === 0 && result.viewportWidth === (result.device === 'mobile' ? 393 : 1440)),
+      ok,
+      summary: report.summary,
       login,
       desktop: desktopResults.map(({ screenshot: _screenshot, ...result }) => result),
       mobile: mobileResults.map(({ screenshot: _screenshot, ...result }) => result),
