@@ -1,9 +1,9 @@
 {
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "request_guarantees_1788964325561",
-  "testedAt": "2026-09-09T14:32:05.585Z",
-  "commit": "ef9a38022a0368ac58bb169abd92a4a0d7c6036b",
-  "worktreeChanges": true,
+  "database": "request_guarantees_1789044099118",
+  "testedAt": "2026-09-10T12:41:39.149Z",
+  "commit": "cbdbd0937c351cbc055367ae3ece1e58b0bc4f7d",
+  "worktreeChanges": false,
   "checks": [
     "concurrent_identical_creation_one_201_one_409_one_record",
     "foreign_request_read_and_cancel_404",
