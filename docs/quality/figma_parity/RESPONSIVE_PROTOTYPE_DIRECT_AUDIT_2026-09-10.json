@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-09-10",
+  "fileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "pageNodeId": "6017:4357",
+  "prototypeStartNodeId": "6017:110792",
+  "source": "Direct Figma metadata and design-context inspection",
+  "providerMappings": [
+    { "screenId": "PRV-01", "tablet": { "nodeId": "6017:117277", "width": 1024, "height": 1432 }, "mobile": { "nodeId": "6017:117525", "width": 402, "height": 1786 } },
+    { "screenId": "PRV-03", "tablet": { "nodeId": "6017:115748", "width": 1024, "height": 917 }, "mobile": { "nodeId": "6017:117871", "width": 402, "height": 957 } },
+    { "screenId": "PRV-04", "tablet": { "nodeId": "6017:115960", "width": 1024, "height": 1008 }, "mobile": { "nodeId": "6017:118000", "width": 402, "height": 965 } },
+    { "screenId": "PRV-05", "tablet": { "nodeId": "6017:116166", "width": 1024, "height": 900 }, "mobile": { "nodeId": "6017:118128", "width": 402, "height": 969 } },
+    { "screenId": "PRV-06", "tablet": { "nodeId": "6017:119913", "width": 1024, "height": 1340 }, "mobile": { "nodeId": "6017:118284", "width": 402, "height": 1514 } },
+    { "screenId": "PRV-07", "tablet": { "nodeId": "6017:120130", "width": 1024, "height": 1340 }, "mobile": { "nodeId": "6017:118435", "width": 402, "height": 950 } },
+    { "screenId": "PRV-08", "tablet": { "nodeId": "6017:116402", "width": 1024, "height": 1042 }, "mobile": { "nodeId": "6017:118561", "width": 402, "height": 1209 } },
+    { "screenId": "PRV-09", "tablet": { "nodeId": "6017:116610", "width": 1024, "height": 1291 }, "mobile": { "nodeId": "6017:118695", "width": 402, "height": 1427 } },
+    { "screenId": "PRV-10", "tablet": { "nodeId": "6017:116846", "width": 1024, "height": 1436 }, "mobile": { "nodeId": "6017:118851", "width": 402, "height": 1385 } },
+    { "screenId": "PRV-15", "tablet": { "nodeId": "6017:120496", "width": 1024, "height": 916 }, "mobile": { "nodeId": "6017:119219", "width": 402, "height": 1327 } },
+    { "screenId": "PRV-16", "tablet": { "nodeId": "6017:120752", "width": 1024, "height": 936 }, "mobile": { "nodeId": "6017:119345", "width": 402, "height": 1282 } },
+    { "screenId": "PRV-17", "tablet": { "nodeId": "6017:121002", "width": 1024, "height": 936 }, "mobile": { "nodeId": "6017:119479", "width": 402, "height": 1560 } },
+    { "screenId": "PRV-18", "tablet": { "nodeId": "6017:121591", "width": 1024, "height": 944 }, "mobile": { "nodeId": "6017:119785", "width": 402, "height": 1042 } },
+    { "screenId": "PRV-19", "tablet": { "nodeId": "6017:121347", "width": 1024, "height": 760 }, "mobile": { "nodeId": "6017:119686", "width": 402, "height": 1062 } }
+  ],
+  "responsiveSourceNotFoundOnPage": ["PRV-20", "PRV-22-2", "PRV-22-3", "SEK-01", "SEK-02", "SEK-03", "SEK-04", "SEK-05", "SEK-06", "SEK-07", "SEK-08", "SEK-09", "SEK-10", "ADM-54"],
+  "closureImpact": {
+    "strictClosedBefore": 90,
+    "strictClosedAfter": 90,
+    "reason": "Direct responsive source discovery is proven, but runtime-to-source comparison evidence is still required before closing a screen."
+  }
+}
