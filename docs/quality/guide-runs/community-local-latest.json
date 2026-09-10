@@ -1,5 +1,5 @@
 {
-  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
+  "commit": "3eb685648d0f8c73a620db11a3cc54a209a0baf6",
   "worktreeChanges": false,
   "journeys": [
     "GUIDE-03",
@@ -7,7 +7,7 @@
   ],
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T09:58:35.804Z",
+  "startedAt": "2026-09-10T12:35:26.142Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "verified_seeker_registered",
@@ -48,7 +48,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/community/posts/7b373af4303b5d4aa729a1c0",
+      "path": "/api/v1/public/community/posts/7e9cd380561a6a3ab38525bf",
       "status": 404
     },
     {
@@ -58,7 +58,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 403
     },
     {
@@ -68,12 +68,12 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/community/posts/7b373af4303b5d4aa729a1c0",
+      "path": "/api/v1/public/community/posts/7e9cd380561a6a3ab38525bf",
       "status": 200
     },
     {
@@ -83,32 +83,32 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 409
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/community/posts/7b373af4303b5d4aa729a1c0/moderate",
+      "path": "/api/v1/admin/community/posts/7e9cd380561a6a3ab38525bf/moderate",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/community/posts/7b373af4303b5d4aa729a1c0",
+      "path": "/api/v1/public/community/posts/7e9cd380561a6a3ab38525bf",
       "status": 404
     }
   ],
@@ -151,5 +151,5 @@
   "remaining": [
     "Run the same journey on Production after deployment of this commit."
   ],
-  "finishedAt": "2026-09-10T09:58:47.175Z"
+  "finishedAt": "2026-09-10T12:35:34.122Z"
 }
