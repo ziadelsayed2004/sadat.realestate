@@ -18,6 +18,7 @@
 
 - `npm run quality`: **PASS** برمز خروج 0 في 10 سبتمبر 2026. شمل lint وtypecheck والاختبارات والبناء وميزانيات الحزم وتدقيق العقود وOpenAPI وPostman وحزمة التسليم وفحص التبعيات.
 - تدقيق API: **195** عملية في Blueprint؛ **188 implemented**، و**188 runtime routes**، و**188 policy routes**، ولا توجد أخطاء drift. توجد **7 عمليات planned** خارج التنفيذ الحالي، ولذلك لا تُحسب ضمن المسارات العاملة.
+- العمليات المخططة هي: `GET /me/sessions`، و`DELETE /me/sessions/:sessionId`، و`GET /public/bootstrap`، و`GET /public/sitemap`، و`GET /provider/dashboard`، و`POST /provider/commission/confirm`، و`GET /admin/properties/:propertyId`. إدارة الأجهزة تظهر حاليًا في واجهة Seeker كحالة unavailable صريحة؛ أما بعض العمليات الأخرى فلها مسارات بديلة منفذة مثل Provider overview. يلزم قرار نطاق أو تنفيذ قبل وصف جميع خيارات Blueprint بأنها مكتملة.
 - OpenAPI: `OPENAPI_VALID`. Postman: `POSTMAN_VALID`. فحص التبعيات: 0 vulnerabilities.
 - Admin UI: **402/402** حالة نظيفة على Desktop/Tablet/Mobile بالعربية والإنجليزية.
 - الجولة المجمعة للـAdmin/Provider/Seeker: 749 passed و108 skipped وحالة Admin عابرة واحدة؛ أعيدت الحالة منفردة ونجحت، ثم أعيدت مجموعة Admin كاملة ونجحت 402/402. لا يُسجل ذلك كتشغيل واحد 858/858.
