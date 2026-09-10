@@ -1,5 +1,5 @@
 {
-  "commit": "544ab5c7f71b4f9612c3bd688534cef3326d14fc",
+  "commit": "e0f88c5f09dbd6b05ed4f71e0d650a9720ff8b5d",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-17",
@@ -11,7 +11,7 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T10:05:07.059Z",
+  "startedAt": "2026-09-10T12:38:30.071Z",
   "status": "PASS_LOCAL",
   "browser": [
     {
@@ -612,5 +612,5 @@
     "Mutation-specific proofs remain in the dedicated API suites.",
     "Repeat these six journeys on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T10:05:44.161Z"
+  "finishedAt": "2026-09-10T12:38:59.230Z"
 }
