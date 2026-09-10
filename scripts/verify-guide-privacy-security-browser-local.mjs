@@ -57,7 +57,27 @@ let mongo;
 try {
   const env = environment(await readFile('.env.local', 'utf8'));
   mongo = await mongoose.createConnection(env.MONGODB_URI).asPromise();
-  const before = await mongo.collection('admin_settings').findOne({ namespace: 'privacy-security' });
+  let before = await mongo.collection('admin_settings').findOne({ namespace: 'privacy-security' });
+  if (!before) {
+    const admin = await mongo.collection('users').findOne({ normalizedEmail: 'admin.demo@example.invalid', roleType: 'admin', status: 'verified' });
+    assert.ok(admin?._id instanceof mongoose.Types.ObjectId);
+    await mongo.collection('admin_settings').insertOne({
+      namespace: 'privacy-security',
+      schemaVersion: 1,
+      values: {
+        hide_customer_contact: true,
+        hide_internal_notes: true,
+        hide_private_documents: true,
+        admin_session_timeout_minutes: 30,
+        two_factor_authentication: false
+      },
+      version: 0,
+      updatedBy: admin._id,
+      updatedAt: new Date()
+    });
+    before = await mongo.collection('admin_settings').findOne({ namespace: 'privacy-security' });
+    evidence.transitions.push('secure_local_baseline_fixture_inserted');
+  }
   assert.ok(before);
   assert.equal(typeof before.version, 'number');
   const originalValues = structuredClone(before.values);
