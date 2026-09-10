@@ -99,6 +99,7 @@ function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: s
 export function ProviderNavigation({ locale, activePath, authClient }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined }) {
   const copy = getProviderCopy(locale);
   const [signingOut, setSigningOut] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigationList = useRef<HTMLUListElement>(null);
   useEffect(() => {
     const revealActive = () => {
@@ -122,6 +123,11 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   return (
     <>
       <header className="provider-dashboard__topbar">
+        <button className="provider-dashboard__menu-button" type="button" aria-expanded={mobileMenuOpen} aria-controls="provider-navigation-list" onClick={() => setMobileMenuOpen(open => !open)}>
+          <img src={`${providerNavigationAssetRoot}/menu.svg`} alt="" width="20" height="20" />
+          <span className="sr-only">{locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu'}</span>
+        </button>
+        <span className="provider-dashboard__mobile-brand"><strong>{copy.overview.eyebrow}</strong><img src="/assets/sadat-real-estate-logo.png" alt="" width="24" height="24" /></span>
         <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
         <span className="provider-dashboard__topbar-spacer" />
         <span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span>
@@ -129,18 +135,19 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
           <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
         </a>
       </header>
-      <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow}>
+      {mobileMenuOpen ? <button className="provider-dashboard__navigation-backdrop" type="button" aria-label={locale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu'} onClick={() => setMobileMenuOpen(false)} /> : null}
+      <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow} data-mobile-open={mobileMenuOpen ? 'true' : undefined}>
         <a className="provider-dashboard__brand" href={localeForProviderPath(locale, '/provider')} aria-label={copy.overview.eyebrow}>
           <img src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
           <span>{copy.overview.eyebrow}</span>
         </a>
         <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
-        <ul ref={navigationList}>
+        <ul ref={navigationList} id="provider-navigation-list">
           {navigationItems.map(([id, path]) => {
             const active = navigationItemIsActive(id, path, activePath);
             const icon = navigationIcons[id];
             return (
-              <li key={id}>
+              <li key={id} data-provider-nav={id}>
                 <a href={localeForProviderPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : undefined}>
                   <span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>
                     <img src={active ? icon.active : icon.default} alt="" width={19} height={19} style={providerNavigationIconStyle} />

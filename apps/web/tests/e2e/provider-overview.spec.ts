@@ -60,11 +60,11 @@ test.describe('PRV-01 Provider Overview', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-01' });
     testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-01.png; Figma node 6017:19032; Drive folder 1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Provider dashboard is approved for desktop only.');
     void page;
   });
 
-  test('loads owner-scoped totals, preserves desktop direction, and omits internal provider data', async ({ page }) => {
+  test('loads owner-scoped totals, preserves desktop direction, and omits internal provider data', async ({ page }, testInfo) => {
+    test.skip(!testInfo.project.name.includes('desktop'), 'Desktop geometry assertion.');
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderOverview(page);
@@ -109,6 +109,7 @@ test.describe('PRV-01 Provider Overview', () => {
   });
 
   test('keeps the canonical 1577px desktop frame geometry', async ({ page }, testInfo) => {
+    test.skip(!testInfo.project.name.includes('desktop'), 'Desktop geometry assertion.');
     const locale = localeForProject();
     await page.setViewportSize({ width: 1577, height: 1067 });
     await routeProviderSession(page);
@@ -135,5 +136,39 @@ test.describe('PRV-01 Provider Overview', () => {
     expect(chartBox?.height).toBe(277);
     await expect(metricGrid).toHaveCSS('grid-template-columns', '313.25px 313.25px 313.25px 313.25px');
     await page.screenshot({ path: testInfo.outputPath(`provider-1577-${locale}.png`), fullPage: true });
+  });
+
+  test('matches the direct responsive shell geometry and mobile navigation behavior', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name.includes('desktop'), 'Responsive source assertion.');
+    const locale = localeForProject();
+    await routeProviderSession(page);
+    await routeProviderOverview(page);
+    await page.goto(`/provider?lang=${encodeURIComponent(locale)}`);
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await page.locator('.provider-dashboard').evaluate(element => ({
+      innerWidth: window.innerWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      columns: getComputedStyle(element).gridTemplateColumns
+    }));
+    expect(geometry.innerWidth).toBe(viewportWidth);
+    expect(geometry.documentWidth).toBeLessThanOrEqual(viewportWidth);
+
+    if (testInfo.project.name.includes('mobile')) {
+      await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '56px');
+      await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('position', 'fixed');
+      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(4);
+      await expect(page.locator('.provider-dashboard__metric-grid')).toHaveCSS('grid-template-columns', '181px 181px');
+      const menu = page.locator('.provider-dashboard__menu-button');
+      await menu.click();
+      await expect(menu).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(10);
+      await page.locator('.provider-dashboard__navigation-backdrop').click({ position: { x: 2, y: 300 } });
+      await expect(menu).toHaveAttribute('aria-expanded', 'false');
+    } else {
+      await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('width', '72px');
+      await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '64px');
+      expect(geometry.columns).toContain('72px');
+    }
   });
 });
