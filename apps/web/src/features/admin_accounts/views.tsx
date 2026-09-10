@@ -110,26 +110,7 @@ interface AccountMetricDefinition {
 }
 
 function accountMetricLabels(locale: SupportedLocale, view: AdminAccountsView): ReadonlyArray<string> {
-  const arabic = {
-    totalAccounts: '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a',
-    totalSeekers: '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0628\u0627\u062d\u062b\u064a\u0646',
-    loaded: '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629',
-    seekers: '\u0627\u0644\u0628\u0627\u062d\u062b\u0648\u0646 \u0639\u0646 \u0639\u0642\u0627\u0631',
-    providers: '\u0645\u0642\u062f\u0645\u0648 \u0627\u0644\u0639\u0642\u0627\u0631\u0627\u062a',
-    verified: '\u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a \u0627\u0644\u0645\u0648\u062b\u0642\u0629',
-    pending: '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629',
-    restricted: '\u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a \u0627\u0644\u0645\u0642\u064a\u062f\u0629',
-    totalProviders: '\u0625\u062c\u0645\u0627\u0644\u064a \u0645\u0642\u062f\u0645\u064a \u0627\u0644\u0639\u0642\u0627\u0631\u0627\u062a',
-    approved: '\u0645\u0639\u062a\u0645\u062f\u0629',
-    rejected: '\u0645\u0631\u0641\u0648\u0636\u0629',
-    suspended: '\u0645\u0648\u0642\u0648\u0641\u0629',
-    totalRequests: '\u0625\u062c\u0645\u0627\u0644\u064a \u0637\u0644\u0628\u0627\u062a \u0627\u0644\u062a\u062d\u0642\u0642',
-    needsInformation: '\u062a\u062d\u062a\u0627\u062c \u0645\u0639\u0644\u0648\u0645\u0627\u062a'
-  } as const;
-  const english = {
-    totalAccounts: 'Total accounts', totalSeekers: 'Total seekers', loaded: 'Loaded records', seekers: 'Seekers', providers: 'Providers', verified: 'Verified accounts', pending: 'Pending review', restricted: 'Restricted accounts', totalProviders: 'Total providers', approved: 'Approved', rejected: 'Rejected', suspended: 'Suspended', totalRequests: 'Total applications', needsInformation: 'Needs information'
-  } as const;
-  const labels = locale === 'ar' ? arabic : english;
+  const labels = getAdminAccountsCopy(locale).metricLabels;
   if (view === 'seekers') return [labels.totalSeekers, labels.loaded, labels.verified, labels.pending, labels.restricted];
   if (view === 'providers') return [labels.totalProviders, labels.loaded, labels.pending, labels.approved, labels.rejected, labels.suspended];
   if (view === 'verification') return [labels.totalRequests, labels.loaded, labels.pending, labels.needsInformation, labels.approved, labels.rejected];
@@ -157,7 +138,7 @@ function AccountMetricStrip({ view, data, locale }: { readonly view: AdminAccoun
   const definitions = accountMetrics(view, data);
   const localizedLabels = accountMetricLabels(locale, view);
   return (
-    <section aria-label={locale === 'ar' ? '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0633\u062c\u0644\u0627\u062a' : 'Record metrics'} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
+    <section aria-label={getAdminAccountsCopy(locale).common.metricsLabel} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
       <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
         {definitions.map((definition, index) => (
           <article className="admin-dashboard__metric" data-testid={index === 0 ? 'admin-accounts-total' : `admin-accounts-metric-${index}`} key={`${definition.label}-${index}`}>
@@ -179,7 +160,7 @@ function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, o
   readonly onProviderTypeChange: (value: ProviderTypeFilter) => void;
 }) {
   const copy = getAdminAccountsCopy(locale);
-  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' :'All';
+  const allLabel = copy.users.all;
   const statusEntries = Object.entries(view === 'users' || view === 'seekers' ? copy.accountStatusLabels : copy.statusLabels);
   const typeEntries = Object.entries(copy.providerTypeLabels);
   const strip = (label: string, entries: ReadonlyArray<readonly [string, string]>, active: string, onChange: (value: string) => void) => (
@@ -192,8 +173,8 @@ function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, o
   );
   return (
     <>
-      {view === 'providers' ? strip(locale === 'ar' ? '\u0646\u0648\u0639 \u0645\u0642\u062f\u0645 \u0627\u0644\u0639\u0642\u0627\u0631' : 'Provider type', typeEntries, providerTypeFilter, value => onProviderTypeChange(value as ProviderTypeFilter)) : null}
-      {view !== 'seekers' ? strip(locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0633\u062c\u0644' : 'Record status', statusEntries, statusFilter, value => onStatusChange(value as UserStatusFilter | ProviderStatusFilter)) : null}
+      {view === 'providers' ? strip(copy.common.providerTypeFilter, typeEntries, providerTypeFilter, value => onProviderTypeChange(value as ProviderTypeFilter)) : null}
+      {view !== 'seekers' ? strip(copy.common.recordStatusFilter, statusEntries, statusFilter, value => onStatusChange(value as UserStatusFilter | ProviderStatusFilter)) : null}
     </>
   );
 }
@@ -250,8 +231,8 @@ function FilterBar({
           <label htmlFor="admin-accounts-role">{copy.users.roleLabel}</label>
           <select id="admin-accounts-role" value={roleFilter} onChange={event => onRoleChange(event.target.value as UserRoleFilter)}>
             <option value="all">{copy.users.all}</option>
-            <option value="seeker">{locale === 'ar' ? 'باحث عن عقار' :'Seeker'}</option>
-            <option value="provider">{locale === 'ar' ? 'مقدم عقار' :'Provider'}</option>
+            <option value="seeker">{getAdminAccountsCopy(locale).roleLabels.seeker}</option>
+            <option value="provider">{getAdminAccountsCopy(locale).roleLabels.provider}</option>
           </select>
         </div>
       ) : (
@@ -273,8 +254,8 @@ function FilterBar({
         </>
       )}
       <div className="admin-accounts__filter-actions">
-        <Button type="submit" size="sm">{locale === 'ar' ? 'تطبيق' :'Apply'}</Button>
-        <Button type="button" variant="secondary" size="sm" onClick={onClear}>{locale === 'ar' ? 'مسح' :'Clear'}</Button>
+        <Button type="submit" size="sm">{copy.common.apply}</Button>
+        <Button type="button" variant="secondary" size="sm" onClick={onClear}>{copy.common.clear}</Button>
       </div>
     </form>
   );
@@ -297,7 +278,7 @@ function UsersTable({ data, locale, search, onPageChange }: { readonly data: Adm
             {filteredItems.map(user => (
               <tr key={user.id} data-testid={`admin-user-${user.id}`}>
                 <td><div className="admin-accounts__identity"><strong>{userName(user)}</strong><small>{user.id}</small></div></td>
-                <td>{user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' :'Seeker') : (locale === 'ar' ? 'مقدم عقار' :'Provider')}</td>
+                <td>{user.roleType === 'seeker' ? (getAdminAccountsCopy(locale).roleLabels.seeker) : (getAdminAccountsCopy(locale).roleLabels.provider)}</td>
                 <td>{user.phone ?? <span className="admin-accounts__muted">—</span>}</td>
                 <td>{user.email ?? <span className="admin-accounts__muted">—</span>}</td>
                 <td><StatusBadge label={getAdminAccountsCopy(locale).accountStatusLabels[user.status] ?? user.status} value={user.status} /></td>
@@ -380,9 +361,9 @@ function VerificationRow({ provider, locale }: { readonly provider: AdminProvide
 
 function Pagination({ page, pageCount, locale, onPageChange }: { readonly page: number; readonly pageCount: number; readonly locale: SupportedLocale; readonly onPageChange: (page: number) => void }) {
   if (pageCount <= 1) return null;
-  const previous = locale === 'ar' ? 'السابق' :'Previous';
-  const next = locale === 'ar' ? 'التالي' :'Next';
-  return <nav className="admin-accounts__pagination" aria-label={locale === 'ar' ? 'ترقيم الصفحات' :'Pagination'}><button type="button" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>{previous}</button><span>{page} / {pageCount}</span><button type="button" disabled={page >= pageCount} onClick={() => onPageChange(page + 1)}>{next}</button></nav>;
+  const previous = getAdminAccountsCopy(locale).common.previous;
+  const next = getAdminAccountsCopy(locale).common.next;
+  return <nav className="admin-accounts__pagination" aria-label={getAdminAccountsCopy(locale).common.pagination}><button type="button" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>{previous}</button><span>{page} / {pageCount}</span><button type="button" disabled={page >= pageCount} onClick={() => onPageChange(page + 1)}>{next}</button></nav>;
 }
 
 function ListContent({
@@ -420,14 +401,10 @@ function ListContent({
 }) {
   const copy = getAdminAccountsCopy(locale);
   const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users;
-  const headingLinks: ReadonlyArray<readonly [string, string]> = locale === 'ar' ? [
-    ['إضافة مستخدم', '/admin/admin-users/new'],
-    ['الباحثون', '/admin/property-seekers'],
-    ['مقدمو العقارات', '/admin/providers']
-  ] : [
-    ['Add user', '/admin/admin-users/new'],
-    ['Seekers', '/admin/property-seekers'],
-    ['Property providers', '/admin/providers']
+  const headingLinks: ReadonlyArray<readonly [string, string]> = [
+    [copy.common.addUser, '/admin/admin-users/new'],
+    [copy.common.seekers, '/admin/property-seekers'],
+    [copy.common.propertyProviders, '/admin/providers']
   ];
   return (
     <main className="admin-accounts__main" aria-labelledby="admin-accounts-title">
@@ -437,7 +414,7 @@ function ListContent({
           <h1 id="admin-accounts-title">{viewCopy.title}</h1>
           <p className="admin-accounts__description">{viewCopy.description}</p>
         </div>
-        <nav className="admin-accounts__heading-actions" aria-label={locale === 'ar' ? 'إجراءات الحسابات' : 'Account actions'}>
+        <nav className="admin-accounts__heading-actions" aria-label={copy.common.headingActionsLabel}>
           {headingLinks.map(([label, path], index) => <a className={index === 0 ? 'admin-accounts__primary-link' : undefined} href={localePath(locale, path)} key={path}>{label}</a>)}
         </nav>
       </div>
@@ -465,7 +442,7 @@ function UserDetail({ user, locale, onBack }: { readonly user: AdminAccountUserD
         <p className="admin-accounts__eyebrow">{copy.users.eyebrow}</p>
         <h1 id="admin-account-detail-title">{userName(user)}</h1>
         <DetailFields fields={[
-          [copy.users.columns.type, user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' :'Seeker') : (locale === 'ar' ? 'مقدم عقار' :'Provider')],
+          [copy.users.columns.type, user.roleType === 'seeker' ? (getAdminAccountsCopy(locale).roleLabels.seeker) : (getAdminAccountsCopy(locale).roleLabels.provider)],
           [copy.users.columns.status, copy.accountStatusLabels[user.status] ?? user.status],
           [copy.users.columns.phone, user.phone ?? '—'],
           [copy.users.columns.email, user.email ?? '—'],
@@ -515,10 +492,10 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
         {provider.reviewReason !== undefined ? <p className="admin-accounts__muted">{provider.reviewReason}</p> : null}
       </section>
       <section className="admin-accounts__detail-card" aria-labelledby="admin-provider-documents-title">
-        <h2 id="admin-provider-documents-title">{locale === 'ar' ? 'مستندات مقدم العقار' :'Provider documents'}</h2>
-        {provider.documents.length === 0 ? <p className="admin-accounts__muted">{locale === 'ar' ? 'لا توجد مستندات نشطة.' :'No active documents are available.'}</p> : (
+        <h2 id="admin-provider-documents-title">{copy.documents.title}</h2>
+        {provider.documents.length === 0 ? <p className="admin-accounts__muted">{copy.documents.empty}</p> : (
           <div className="admin-accounts__documents">
-            <table className="admin-accounts__table"><caption className="a11y-visually-hidden">{locale === 'ar' ? 'مستندات مقدم العقار' :'Provider documents'}</caption><thead><tr><th scope="col">{locale === 'ar' ? 'المستند' :'Document'}</th><th scope="col">MIME</th><th scope="col">{locale === 'ar' ? 'الحجم' :'Size'}</th><th scope="col">{locale === 'ar' ? 'حالة الأمان' :'Security state'}</th><th scope="col">{locale === 'ar' ? 'حالة المراجعة' :'Review state'}</th><th scope="col">{locale === 'ar' ? 'تاريخ الرفع' :'Uploaded'}</th><th scope="col">{locale === 'ar' ? 'الإجراء' :'Action'}</th></tr></thead><tbody>{provider.documents.map(document => <DocumentRow key={document.id} document={document} locale={locale} onOpen={onOpenDocument} opening={openingDocumentId === document.id} />)}</tbody></table>
+            <table className="admin-accounts__table"><caption className="a11y-visually-hidden">{copy.documents.title}</caption><thead><tr><th scope="col">{copy.documents.document}</th><th scope="col">{copy.documents.mime}</th><th scope="col">{copy.documents.size}</th><th scope="col">{copy.documents.securityState}</th><th scope="col">{copy.documents.reviewState}</th><th scope="col">{copy.documents.uploaded}</th><th scope="col">{copy.documents.action}</th></tr></thead><tbody>{provider.documents.map(document => <DocumentRow key={document.id} document={document} locale={locale} onOpen={onOpenDocument} opening={openingDocumentId === document.id} />)}</tbody></table>
           </div>
         )}
         {documentError !== undefined ? <p className="admin-accounts__document-error" role="alert">{documentError}</p> : null}
