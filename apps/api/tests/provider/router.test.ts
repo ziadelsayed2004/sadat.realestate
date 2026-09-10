@@ -15,6 +15,8 @@ import {
   type ProviderAdvertisingRequestRecord
 } from '../../src/modules/provider/advertising.js';
 import { createProviderCommissionProjectionService } from '../../src/modules/provider/commission.js';
+import { createProviderCommissionConfirmationService } from '../../src/modules/provider/commission-confirmation.js';
+import { createCommissionConfirmationService } from '../../src/modules/commissions/confirmation-service.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const providerToken = 'provider.header.signature';
@@ -137,12 +139,19 @@ const commissionResolution: CommissionResolution = {
   percentageBps: 250
 };
 
-const commissionProjection = createProviderCommissionProjectionService({
-  source: {
-    async getForProvider(providerId) {
-      return providerId === commissionResolution.accountId ? commissionResolution : undefined;
-    }
+const commissionSource = {
+  async getForProvider(providerId: string) {
+    return providerId === commissionResolution.accountId ? commissionResolution : undefined;
   }
+};
+const commissionProjection = createProviderCommissionProjectionService({
+  source: commissionSource
+});
+const commissionConfirmation = createProviderCommissionConfirmationService({
+  source: commissionSource,
+  confirmations: createCommissionConfirmationService({
+    now: () => new Date('2026-08-14T01:00:00.000Z')
+  })
 });
 
 const advertisingWorkflow = {
@@ -218,7 +227,7 @@ const advertisingWorkflow = {
 async function withServer(run: (baseUrl: string) => Promise<void>) {
   const server = createApiServer({
     database: { isReady: async () => true },
-    provider: { service, accessTokens, cookie, advertisingProjection, advertisingWorkflow, commissionProjection }
+    provider: { service, accessTokens, cookie, advertisingProjection, advertisingWorkflow, commissionProjection, commissionConfirmation }
   });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try {
@@ -353,6 +362,44 @@ test('returns the verified provider commission projection without resolver or ad
     assert.equal(body.data?.percentageBps, 250);
     assert.equal('sourceRecordId' in (body.data ?? {}), false);
     assert.equal('policyId' in (body.data ?? {}), false);
+  });
+});
+
+test('confirms only the current provider commission version without accepting source identity', async () => {
+  await withServer(async (baseUrl) => {
+    const path = `${baseUrl}/api/v1/provider/commission/confirm`;
+    assert.equal((await fetch(path, { method: 'POST' })).status, 401);
+    assert.equal((await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${seekerToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ policyVersion: 3, acknowledge: true })
+    })).status, 403);
+
+    const stale = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ policyVersion: 2, acknowledge: true })
+    });
+    assert.equal(stale.status, 409);
+
+    const response = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ policyVersion: 3, acknowledge: true })
+    });
+    assert.equal(response.status, 200);
+    const body = await response.json() as { data?: Record<string, unknown> };
+    assert.equal(body.data?.policyVersion, 3);
+    assert.equal(body.data?.status, 'acknowledged');
+    assert.equal('sourceRecordId' in (body.data ?? {}), false);
+    assert.equal('accountId' in (body.data ?? {}), false);
+
+    const massAssigned = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ policyVersion: 3, acknowledge: true, accountId: 'ffffffffffffffffffffffff' })
+    });
+    assert.equal(massAssigned.status, 400);
   });
 });
 

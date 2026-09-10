@@ -12,15 +12,16 @@
 - إصلاح بادجات البيع والتقسيط وكروت العقارات والبانر الإعلاني المتجاوب، وإضافة حالات loading/skeleton وتثبيت اللغة قبل hydration ضمن الدفعات السابقة.
 - ملفات الترجمة العربية والإنجليزية قابلة للمراجعة، وفحص `translations:check` جزء من البناء.
 - إدارة جلسات الحساب أصبحت عقدًا فعليًا لكل الأدوار المؤهلة: عرض الجلسات المملوكة فقط، تمييز الجلسة الحالية، وإلغاء الجلسات الأخرى من إعدادات Seeker بلا refresh. الإلغاء يمنع IDOR، ولا يكشف أي token، ويسجل الحدث داخل transaction؛ الجلسة الحالية تُغلق من مسار logout القياسي كي تُمسح refresh cookie بأمان.
+- يستطيع Provider الآن تأكيد إصدار سياسة العمولة الفعالة من شاشة العمولة. الخادم يستنتج الحساب ومصدر السياسة، يرفض mass assignment، يعيد 409 للإصدار القديم، ويحفظ تأكيدًا idempotent يمكن للإدارة مراجعته.
 - عقد API الإداري للمجتمع يفرض صلاحية moderation، سبب القرار، optimistic version، سجل التدقيق، والتراجع الذري عند فشل كتابة التدقيق. دليل التشغيل: `guide-runs/community-local-latest.json`.
 - دورة العقار المحلية تشمل الإنشاء و`paymentPlans` والإرسال والمراجعة والنشر والإخفاء. دليل التشغيل: `guide-runs/property-lifecycle-local-latest.json`.
 
 ## نتائج الاختبارات المحلية
 
 - `npm run quality`: **PASS** برمز خروج 0 في 10 سبتمبر 2026. شمل lint وtypecheck والاختبارات والبناء وميزانيات الحزم وتدقيق العقود وOpenAPI وPostman وحزمة التسليم وفحص التبعيات.
-- تدقيق API: **195** عملية في Blueprint؛ **190 implemented**، و**190 runtime routes**، و**190 policy routes**، ولا توجد أخطاء drift. توجد **5 عمليات planned** خارج التنفيذ الحالي، ولذلك لا تُحسب ضمن المسارات العاملة.
-- العمليات المخططة هي: `GET /public/bootstrap`، و`GET /public/sitemap`، و`GET /provider/dashboard`، و`POST /provider/commission/confirm`، و`GET /admin/properties/:propertyId`. بعض العمليات لها مسارات بديلة منفذة مثل Provider overview، لكن يلزم قرار نطاق موثق أو تنفيذ العقد نفسه قبل وصف جميع خيارات Blueprint بأنها مكتملة.
-- مجموعة تغطية Backend: **598/598 passed**، والتغطية الإجمالية **81.05% statements** و**78.18% branches** و**81.00% functions**.
+- تدقيق API: **195** عملية في Blueprint؛ **191 implemented**، و**191 runtime routes**، و**191 policy routes**، ولا توجد أخطاء drift. توجد **4 عمليات planned** خارج التنفيذ الحالي، ولذلك لا تُحسب ضمن المسارات العاملة.
+- العمليات المخططة هي: `GET /public/bootstrap`، و`GET /public/sitemap`، و`GET /provider/dashboard`، و`GET /admin/properties/:propertyId`. بعض العمليات لها مسارات بديلة منفذة مثل Provider overview، لكن يلزم قرار نطاق موثق أو تنفيذ العقد نفسه قبل وصف جميع خيارات Blueprint بأنها مكتملة.
+- مجموعة تغطية Backend: **601/601 passed**، واجتازت حدود التغطية الإلزامية المطبقة داخل بوابة الجودة.
 - OpenAPI: `OPENAPI_VALID`. Postman: `POSTMAN_VALID`. فحص التبعيات: 0 vulnerabilities.
 - Admin UI: **402/402** حالة نظيفة على Desktop/Tablet/Mobile بالعربية والإنجليزية.
 - الجولة المجمعة للـAdmin/Provider/Seeker: 749 passed و108 skipped وحالة Admin عابرة واحدة؛ أعيدت الحالة منفردة ونجحت، ثم أعيدت مجموعة Admin كاملة ونجحت 402/402. لا يُسجل ذلك كتشغيل واحد 858/858.

@@ -332,6 +332,18 @@ export const providerCommissionProjectionSchema = z.object({
   }
 });
 export const providerCommissionSuccessEnvelopeSchema = successEnvelopeSchema(providerCommissionProjectionSchema);
+export const providerCommissionConfirmationRequestSchema = z.object({
+  policyVersion: z.number().int().nonnegative(),
+  acknowledge: z.literal(true)
+}).strict();
+export const providerCommissionConfirmationSchema = z.object({
+  confirmationId: providerAdvertisingObjectIdSchema,
+  policyVersion: z.number().int().nonnegative(),
+  status: z.literal('acknowledged'),
+  effectiveAt: providerAdvertisingDateSchema,
+  acknowledgedAt: providerAdvertisingDateSchema
+}).strict();
+export const providerCommissionConfirmationSuccessEnvelopeSchema = successEnvelopeSchema(providerCommissionConfirmationSchema);
 
 export type ProviderType = z.infer<typeof providerTypeSchema>;
 export type ProviderApplicationState = z.infer<typeof providerApplicationStateSchema>;
@@ -358,3 +370,5 @@ export type ProviderAdRequestListQuery = z.infer<typeof providerAdRequestListQue
 export type ProviderAdRequestListData = z.infer<typeof providerAdRequestListDataSchema>;
 export type ProviderAdvertisingRequest = ProviderAdRequestProjection;
 export type ProviderCommissionProjection = z.infer<typeof providerCommissionProjectionSchema>;
+export type ProviderCommissionConfirmationRequest = z.infer<typeof providerCommissionConfirmationRequestSchema>;
+export type ProviderCommissionConfirmation = z.infer<typeof providerCommissionConfirmationSchema>;

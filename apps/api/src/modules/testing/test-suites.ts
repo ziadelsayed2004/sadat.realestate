@@ -40,6 +40,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/provider/models.test.ts',
     'tests/provider/requirements.test.ts',
     'tests/provider/service.test.ts',
+    'tests/provider/commission-confirmation.test.ts',
     'tests/provider/request-crm.test.ts',
     'tests/uploads/adapters.test.ts',
     'tests/media/governance.test.ts',

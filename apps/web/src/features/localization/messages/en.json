@@ -2368,7 +2368,11 @@
       "noneTitle": "No commission policy available",
       "noneBody": "No commission policy is currently assigned to your account. No universal rate is assumed.",
       "readOnly": "This information is read-only and cannot be changed by the provider.",
-      "unavailable": "Unavailable"
+      "unavailable": "Unavailable",
+      "confirm": "Confirm policy",
+      "confirmed": "Policy confirmed.",
+      "confirmFailed": "The policy could not be confirmed.",
+      "versionChanged": "The policy version changed. Refresh and review it again."
     },
     "states": {
       "loading": {

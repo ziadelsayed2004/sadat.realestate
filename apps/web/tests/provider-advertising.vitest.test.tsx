@@ -12,6 +12,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import {
   createProviderAdvertisingMutationApi,
+  createProviderCommissionConfirmer,
   getProviderAdvertisingCopy,
   loadProviderAdvertisingRequest,
   loadProviderAdvertisingRequests,
@@ -114,6 +115,13 @@ const commissionProjection = providerCommissionProjectionSchema.parse({
   percentageBps: 250,
   readOnly: true
 });
+const commissionConfirmation = {
+  confirmationId: 'eeeeeeeeeeeeeeeeeeeeeeee',
+  policyVersion: 3,
+  status: 'acknowledged' as const,
+  effectiveAt: commissionProjection.effectiveAt,
+  acknowledgedAt: '2026-08-19T09:00:00.000Z'
+};
 
 function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'): Response {
   return new Response(JSON.stringify({ data: payload, meta: { requestId: requestIdValue } }), { status: 200, headers: { 'content-type': 'application/json' } });
@@ -130,6 +138,7 @@ describe('Provider advertising requests and commission', () => {
         calls.push(entry);
         if (url.pathname === '/api/v1/provider/ads' && entry.method === 'GET') return envelope(data);
         if (url.pathname === `/api/v1/provider/ads/${requestId}` && entry.method === 'GET') return envelope(detail);
+        if (url.pathname === '/api/v1/provider/commission/confirm') return envelope(commissionConfirmation);
         if (url.pathname === '/api/v1/provider/commission') return envelope(commissionProjection);
         if (url.pathname === '/api/v1/provider/ads' && entry.method === 'POST') return envelope(request);
         if (url.pathname.endsWith('/accept-quote')) return envelope(quote);
@@ -140,6 +149,7 @@ describe('Provider advertising requests and commission', () => {
     await expect(loadProviderAdvertisingRequests({ apiClient: client, authorization: auth, query: { status: 'quote_sent', page: 2, limit: 5 } })).resolves.toEqual(data);
     await expect(loadProviderAdvertisingRequest(requestId, { apiClient: client, authorization: auth })).resolves.toEqual(detail);
     await expect(loadProviderCommission({ apiClient: client, authorization: auth })).resolves.toEqual(commissionProjection);
+    await expect(createProviderCommissionConfirmer({ apiClient: client, authorization: auth })(3)).resolves.toEqual(commissionConfirmation);
     const mutations = createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth });
     await expect(mutations.createRequest({ placementKey: 'homepage.hero', purpose: 'Promote an approved property campaign.', intervalStart: '2026-09-01T08:00:00.000Z', intervalEnd: '2026-09-30T08:00:00.000Z' })).resolves.toEqual(request);
     await expect(mutations.acceptQuote(requestId, { action: 'accept', expectedVersion: 2 })).resolves.toEqual(quote);
@@ -148,6 +158,7 @@ describe('Provider advertising requests and commission', () => {
     expect(calls[0]).toMatchObject({ path: '/api/v1/provider/ads', method: 'GET', query: '?status=quote_sent&page=2&limit=5', authorization: 'Bearer provider.advertising.token' });
     expect(calls.some(call => call.path === `/api/v1/provider/ads/${requestId}` && call.method === 'GET')).toBe(true);
     expect(calls.some(call => call.path === '/api/v1/provider/commission')).toBe(true);
+    expect(calls.some(call => call.path === '/api/v1/provider/commission/confirm' && call.method === 'POST' && (call.body as { policyVersion?: number })?.policyVersion === 3)).toBe(true);
     const upload = calls.at(-1);
     expect(upload).toMatchObject({ path: `/api/v1/provider/ads/${requestId}/payment-proof`, method: 'POST', authorization: 'Bearer provider.advertising.token', contentType: 'application/pdf', filename: 'receipt.pdf', paymentMethod: 'bank_transfer' });
     expect(upload?.body).toBeInstanceOf(Blob);
@@ -259,6 +270,15 @@ describe('Provider advertising requests and commission', () => {
     const unavailable = providerCommissionProjectionSchema.parse({ accountId: providerId, source: 'none', effectiveAt: '2026-08-19T08:00:00.000Z', readOnly: true });
     renderWithLocale(<ProviderCommission locale="en" session={session} initialData={unavailable} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').commission.noneTitle, level: 3 })).toBeInTheDocument();
+  });
+
+  it('confirms the displayed commission version without refreshing the page', async () => {
+    const confirm = vi.fn(async () => commissionConfirmation);
+    renderWithLocale(<ProviderCommission locale="en" session={session} initialData={commissionProjection} confirm={confirm} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getProviderAdvertisingCopy('en').commission.confirm }));
+    await waitFor(() => expect(confirm).toHaveBeenCalledWith(3));
+    expect(screen.getByText(getProviderAdvertisingCopy('en').commission.confirmed)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: getProviderAdvertisingCopy('en').commission.confirm })).toBeDisabled();
   });
 
   it('keeps Arabic commission metadata localized', () => {

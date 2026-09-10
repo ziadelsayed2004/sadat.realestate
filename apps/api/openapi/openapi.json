@@ -9912,6 +9912,51 @@
           }
         }
       }
+    },
+    "/api/v1/provider/commission/confirm": {
+      "post": {
+        "operationId": "confirmProviderCommission",
+        "summary": "Confirm the authenticated provider's current commission policy version",
+        "description": "Derives ownership and source identity from the current effective policy. The client supplies only the version it reviewed and an explicit acknowledgement.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderCommissionConfirmationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ProviderCommissionConfirmationSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -11032,6 +11077,24 @@
                   }
                 }
               ]
+            }
+          }
+        }
+      },
+      "ProviderCommissionConfirmationSuccess": {
+        "description": "Provider-owned acknowledgement of the current effective commission policy version",
+        "headers": {
+          "X-Request-Id": {
+            "$ref": "#/components/headers/X-Request-Id"
+          },
+          "Traceparent": {
+            "$ref": "#/components/headers/Traceparent"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProviderCommissionConfirmationSuccessEnvelope"
             }
           }
         }
@@ -22691,6 +22754,70 @@
             "const": true
           }
         }
+      },
+      "ProviderCommissionConfirmationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "policyVersion",
+          "acknowledge"
+        ],
+        "properties": {
+          "policyVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "acknowledge": {
+            "const": true
+          }
+        }
+      },
+      "ProviderCommissionConfirmation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "confirmationId",
+          "policyVersion",
+          "status",
+          "effectiveAt",
+          "acknowledgedAt"
+        ],
+        "properties": {
+          "confirmationId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "policyVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "const": "acknowledged"
+          },
+          "effectiveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "acknowledgedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProviderCommissionConfirmationSuccessEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/ProviderCommissionConfirmation"
+              }
+            }
+          }
+        ]
       }
     }
   }

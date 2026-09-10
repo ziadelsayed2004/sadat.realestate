@@ -5469,6 +5469,38 @@
             },
             "description": "Reads the verified provider's effective commission policy as a read-only projection. The API returns source none when no approved active commission exists; no universal value is fabricated."
           }
+        },
+        {
+          "name": "Confirm current provider commission version",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"policyVersion\": 0,\n  \"acknowledge\": true\n}"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/commission/confirm",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "commission",
+                "confirm"
+              ]
+            },
+            "description": "Confirms only the current provider-owned effective commission version. Source and account identity are derived server-side; stale versions return 409."
+          }
         }
       ]
     },

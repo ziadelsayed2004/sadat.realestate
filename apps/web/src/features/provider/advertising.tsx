@@ -15,12 +15,14 @@ import {
   createProviderAdvertisingLoader,
   createProviderAdvertisingMutationApi,
   createProviderCommissionLoader,
+  createProviderCommissionConfirmer,
   type ProviderAdvertisingDetailLoader,
   type ProviderAdvertisingLoader,
   type ProviderAdvertisingMutationApi,
   type ProviderAdvertisingQuery,
   type ProviderAdvertisingStatus,
   type ProviderCommissionLoader,
+  type ProviderCommissionConfirmer,
   PROVIDER_ADVERTISING_PAGE_LIMIT
 } from './advertising-data.ts';
 import { getProviderAdvertisingCopy, type ProviderAdvertisingCopy, type ProviderAdvertisingState } from './advertising-copy.ts';
@@ -63,6 +65,7 @@ export interface ProviderCommissionProps {
   readonly apiOrigin?: string | undefined;
   readonly initialData?: ProviderCommissionProjection | undefined;
   readonly load?: ProviderCommissionLoader | undefined;
+  readonly confirm?: ProviderCommissionConfirmer | undefined;
 }
 
 function stateForError(error: unknown, detail = false): Exclude<ProviderAdvertisingState, 'loading' | 'empty' | 'success'> {
@@ -401,7 +404,7 @@ function commissionValue(data: ProviderCommissionProjection, locale: SupportedLo
   return copy.commission.unavailable;
 }
 
-function CommissionContent({ data, locale, copy }: { readonly data: ProviderCommissionProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy }) {
+function CommissionContent({ data, locale, copy, confirming, feedback, onConfirm }: { readonly data: ProviderCommissionProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly confirming: boolean; readonly feedback?: string; readonly onConfirm: () => void }) {
   const sourceLabel = locale === 'ar'
     ? data.source === 'account_override' ? 'تخصيص الحساب' : data.source === 'exception' ? 'استثناء معتمد' : data.source === 'policy' ? 'سياسة إدارية' : copy.commission.unavailable
     : data.source === 'account_override' ? 'Account override' : data.source === 'exception' ? 'Approved exception' : data.source === 'policy' ? 'Administrative policy' : copy.commission.unavailable;
@@ -411,17 +414,36 @@ function CommissionContent({ data, locale, copy }: { readonly data: ProviderComm
       <div className="provider-commission__card-heading"><h2 id="provider-commission-card-heading">{copy.commission.appliedPolicy}</h2><Badge tone={data.source === 'none' ? 'neutral' : 'success'}>{data.source === 'none' ? copy.commission.unavailable : locale === 'ar' ? 'نشطة' : 'Active'}</Badge></div>
       {data.source === 'none' ? <div className="provider-commission__none"><h3>{copy.commission.noneTitle}</h3><p>{copy.commission.noneBody}</p></div> : <><div className="provider-commission__hero"><span>{copy.commission.kind}</span><strong>{commissionValue(data, locale, copy)}</strong><small>{kindLabel}</small></div><dl className="provider-advertising__definition-list"><div><dt>{copy.commission.source}</dt><dd>{sourceLabel}</dd></div><div><dt>{copy.commission.effectiveAt}</dt><dd>{dateLabel(data.effectiveAt, locale)}</dd></div><div><dt>{copy.commission.version}</dt><dd>{data.policyVersion ?? copy.commission.unavailable}</dd></div></dl></>}
       <p className="provider-commission__readonly">{copy.commission.readOnly}</p>
+      {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
+      {data.source !== 'none' && data.policyVersion !== undefined ? <Button loading={confirming} disabled={confirming || feedback === copy.commission.confirmed} onClick={onConfirm}>{copy.commission.confirm}</Button> : null}
     </section>
   );
 }
 
-export function ProviderCommission({ locale, session, authClient, apiOrigin, initialData, load }: ProviderCommissionProps) {
+export function ProviderCommission({ locale, session, authClient, apiOrigin, initialData, load, confirm }: ProviderCommissionProps) {
   const copy = getProviderAdvertisingCopy(locale);
   const source = useMemo(() => load ?? createProviderCommissionLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
+  const confirmAction = useMemo(() => confirm ?? createProviderCommissionConfirmer({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, confirm]);
   const isProvider = session.status === 'authenticated' && session.role === 'provider';
   const [state, setState] = useState<ProviderAdvertisingState>(!isProvider ? 'permission' : initialData === undefined ? 'loading' : 'success');
   const [data, setData] = useState(initialData);
   const [attempt, setAttempt] = useState(0);
+  const [confirming, setConfirming] = useState(false);
+  const [feedback, setFeedback] = useState<string>();
+
+  const confirmCurrent = async () => {
+    if (data?.policyVersion === undefined) return;
+    setConfirming(true);
+    setFeedback(undefined);
+    try {
+      await confirmAction(data.policyVersion);
+      setFeedback(copy.commission.confirmed);
+    } catch (error) {
+      setFeedback(error instanceof ApiClientError && error.status === 409 ? copy.commission.versionChanged : copy.commission.confirmFailed);
+    } finally {
+      setConfirming(false);
+    }
+  };
 
   useEffect(() => {
     if (!isProvider) {
@@ -442,7 +464,7 @@ export function ProviderCommission({ locale, session, authClient, apiOrigin, ini
   return (
     <section className="provider-dashboard provider-commission" data-screen-id="PRV-20" data-route="/provider/commission" data-device-scope="desktop" data-commission-state={state}>
       <ProviderNavigation locale={locale} activePath="/provider/commission" authClient={authClient} />
-      <div className="provider-dashboard__content">{!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <><div className="provider-dashboard__heading-row provider-commission__heading"><div><p className="provider-dashboard__eyebrow">{copy.commission.eyebrow}</p><h1>{copy.commission.title}</h1><p>{copy.commission.description}</p></div></div>{state === 'loading' || state === 'error' || state === 'retry' ? <StatePanel state={state} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}{state === 'success' && data !== undefined ? <CommissionContent data={data} locale={locale} copy={copy} /> : null}</>}</div>
+      <div className="provider-dashboard__content">{!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <><div className="provider-dashboard__heading-row provider-commission__heading"><div><p className="provider-dashboard__eyebrow">{copy.commission.eyebrow}</p><h1>{copy.commission.title}</h1><p>{copy.commission.description}</p></div></div>{state === 'loading' || state === 'error' || state === 'retry' ? <StatePanel state={state} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}{state === 'success' && data !== undefined ? <CommissionContent data={data} locale={locale} copy={copy} confirming={confirming} {...(feedback === undefined ? {} : { feedback })} onConfirm={() => { void confirmCurrent(); }} /> : null}</>}</div>
     </section>
   );
 }

@@ -11,6 +11,9 @@ import { createProviderAdvertisingProjectionService } from './advertising.js';
 import { createMongooseProviderAdvertisingSource } from './advertising-repository.js';
 import { createProviderCommissionProjectionService } from './commission.js';
 import { createMongooseProviderCommissionSource } from './commission-repository.js';
+import { createProviderCommissionConfirmationService } from './commission-confirmation.js';
+import { createCommissionConfirmationService } from '../commissions/confirmation-service.js';
+import { createMongooseCommissionConfirmationRepository } from '../commissions/confirmation-repository.js';
 import { createProviderAdvertisingModels } from './advertising-models.js';
 import { createAdSettingsService } from '../ads/service.js';
 import { createMongooseAdQuoteRepository, createMongooseAdRequestRepository } from '../ads/repository.js';
@@ -34,6 +37,7 @@ export function createProviderRuntime(
   const authModels = createAuthModels(connection);
   const otpRepository = createMongooseOtpRepository(identityModels, authModels);
   const advertisingModels = createProviderAdvertisingModels(connection);
+  const commissionSource = createMongooseProviderCommissionSource(connection);
   const advertisingWorkflow = createAdSettingsService({
     requestRepository: createMongooseAdRequestRepository(connection, advertisingModels),
     quoteRepository: createMongooseAdQuoteRepository(connection, advertisingModels),
@@ -78,7 +82,13 @@ export function createProviderRuntime(
       )
     }),
     commissionProjection: createProviderCommissionProjectionService({
-      source: createMongooseProviderCommissionSource(connection)
+      source: commissionSource
+    }),
+    commissionConfirmation: createProviderCommissionConfirmationService({
+      source: commissionSource,
+      confirmations: createCommissionConfirmationService({
+        repository: createMongooseCommissionConfirmationRepository(connection)
+      })
     }),
     advertisingWorkflow,
     accessTokens,

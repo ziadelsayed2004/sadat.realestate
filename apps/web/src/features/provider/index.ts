@@ -30,6 +30,7 @@ export {
   createProviderAdvertisingLoader,
   createProviderAdvertisingMutationApi,
   createProviderCommissionLoader,
+  createProviderCommissionConfirmer,
   defaultProviderAdvertisingDetailLoader,
   defaultProviderAdvertisingLoader,
   defaultProviderAdvertisingMutationApi,
@@ -47,7 +48,8 @@ export type {
   ProviderAdvertisingMutationOptions,
   ProviderAdvertisingQuery,
   ProviderAdvertisingStatus,
-  ProviderCommissionLoader
+  ProviderCommissionLoader,
+  ProviderCommissionConfirmer
 } from './advertising-data.ts';
 export { getProviderAdvertisingCopy } from './advertising-copy.ts';
 export type { ProviderAdvertisingCopy, ProviderAdvertisingPaymentStatus, ProviderAdvertisingQuoteStatus } from './advertising-copy.ts';

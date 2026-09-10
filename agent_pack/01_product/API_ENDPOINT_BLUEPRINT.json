@@ -1112,7 +1112,7 @@
       "approved-provider"
     ],
     "purpose": "Confirm policy version",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

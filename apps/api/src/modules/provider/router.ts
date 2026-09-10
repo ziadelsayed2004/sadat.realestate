@@ -25,6 +25,10 @@ import {
   ProviderCommissionProjectionError,
   type ProviderCommissionProjectionService
 } from './commission.js';
+import {
+  ProviderCommissionConfirmationError,
+  type ProviderCommissionConfirmationService
+} from './commission-confirmation.js';
 import { ProviderServiceError, type ProviderService } from './service.js';
 
 export const PROVIDER_ROUTE_DEFINITIONS = [
@@ -41,6 +45,7 @@ export const PROVIDER_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/provider/ads/:adRequestId', operationId: 'getProviderAd' },
   { method: 'POST', path: '/api/v1/provider/ads/:adRequestId/accept-quote', operationId: 'acceptProviderAdQuote' },
   { method: 'GET', path: '/api/v1/provider/commission', operationId: 'getProviderCommission' },
+  { method: 'POST', path: '/api/v1/provider/commission/confirm', operationId: 'confirmProviderCommission' },
   { method: 'POST', path: '/api/v1/admin/ad-requests/:adRequestId/quote', operationId: 'issueAdminAdQuote' }
 ] as const;
 
@@ -51,6 +56,7 @@ export interface ProviderRouterDependencies {
   advertisingProjection?: ProviderAdvertisingProjectionService;
   advertisingWorkflow?: AdRequestWorkflowService;
   commissionProjection?: ProviderCommissionProjectionService;
+  commissionConfirmation?: ProviderCommissionConfirmationService;
 }
 
 const PROVIDER_ERROR_MAP = Object.freeze({
@@ -67,6 +73,11 @@ const PROVIDER_ERROR_MAP = Object.freeze({
   PROVIDER_COMMISSION_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
   PROVIDER_COMMISSION_NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
   PROVIDER_COMMISSION_SOURCE_INVALID: { statusCode: 500, messageKey: 'errors.internal' },
+  PROVIDER_COMMISSION_CONFIRMATION_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
+  PROVIDER_COMMISSION_CONFIRMATION_NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
+  PROVIDER_COMMISSION_CONFIRMATION_VERSION_CONFLICT: { statusCode: 409, messageKey: 'errors.conflict' },
+  PROVIDER_COMMISSION_CONFIRMATION_CONFLICT: { statusCode: 409, messageKey: 'errors.conflict' },
+  PROVIDER_COMMISSION_CONFIRMATION_SOURCE_INVALID: { statusCode: 500, messageKey: 'errors.internal' },
   AD_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
   AD_NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
   AD_DUPLICATE: { statusCode: 409, messageKey: 'errors.conflict' },
@@ -82,6 +93,7 @@ function sendError(request: Request, response: Response, error: unknown): void {
   const providerError = error instanceof ProviderServiceError ? error : undefined;
   const advertisingError = error instanceof ProviderAdvertisingProjectionError ? error : undefined;
   const commissionError = error instanceof ProviderCommissionProjectionError ? error : undefined;
+  const commissionConfirmationError = error instanceof ProviderCommissionConfirmationError ? error : undefined;
   const adWorkflowError = error instanceof AdSettingsServiceError ? error : undefined;
   const mapped = providerError
     ? PROVIDER_ERROR_MAP[providerError.code]
@@ -89,13 +101,15 @@ function sendError(request: Request, response: Response, error: unknown): void {
       ? PROVIDER_ERROR_MAP[advertisingError.code]
       : commissionError
         ? PROVIDER_ERROR_MAP[commissionError.code]
+      : commissionConfirmationError
+        ? PROVIDER_ERROR_MAP[commissionConfirmationError.code]
       : adWorkflowError
         ? PROVIDER_ERROR_MAP[`AD_${adWorkflowError.code}` as keyof typeof PROVIDER_ERROR_MAP]
       : undefined;
   const body = toApiErrorResponse(
     mapped
       ? new ApiContractError(
-          providerError?.code ?? advertisingError?.code ?? commissionError?.code ?? `AD_${adWorkflowError!.code}`,
+          providerError?.code ?? advertisingError?.code ?? commissionError?.code ?? commissionConfirmationError?.code ?? `AD_${adWorkflowError!.code}`,
           mapped.messageKey,
           mapped.statusCode,
           providerError?.details
@@ -239,6 +253,20 @@ export function createProviderRouter(dependencies: ProviderRouterDependencies): 
       }
       response.status(200).json(toSuccessResponse(
         await dependencies.commissionProjection.get(claims(response)),
+        requestId(request)
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.post('/provider/commission/confirm', async (request, response) => {
+    try {
+      if (!dependencies.commissionConfirmation) {
+        throw new ProviderCommissionConfirmationError('PROVIDER_COMMISSION_CONFIRMATION_SOURCE_INVALID');
+      }
+      response.status(200).json(toSuccessResponse(
+        await dependencies.commissionConfirmation.confirm(claims(response), request.body ?? {}),
         requestId(request)
       ));
     } catch (error) {

@@ -11,6 +11,8 @@ import {
   providerAdRequestListSuccessEnvelopeSchema,
   providerAdRequestSuccessEnvelopeSchema,
   providerCommissionSuccessEnvelopeSchema,
+  providerCommissionConfirmationRequestSchema,
+  providerCommissionConfirmationSuccessEnvelopeSchema,
   successEnvelopeSchema,
   type AdQuote,
   type AdQuoteDecision,
@@ -19,7 +21,8 @@ import {
   type PaymentProofData,
   type ProviderAdRequestListData,
   type ProviderAdRequestProjection,
-  type ProviderCommissionProjection
+  type ProviderCommissionProjection,
+  type ProviderCommissionConfirmation
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from './data.ts';
@@ -61,6 +64,7 @@ export interface ProviderAdvertisingDetailLoadOptions {
 export type ProviderAdvertisingLoader = (query: ProviderAdvertisingQuery, signal?: AbortSignal) => Promise<ProviderAdRequestListData>;
 export type ProviderAdvertisingDetailLoader = (requestId: string, signal?: AbortSignal) => Promise<ProviderAdRequestProjection>;
 export type ProviderCommissionLoader = (signal?: AbortSignal) => Promise<ProviderCommissionProjection>;
+export type ProviderCommissionConfirmer = (policyVersion: number, signal?: AbortSignal) => Promise<ProviderCommissionConfirmation>;
 
 export interface ProviderAdvertisingMutationOptions {
   readonly apiClient?: ApiClient | undefined;
@@ -155,6 +159,23 @@ export function createProviderCommissionLoader(
 }
 
 export const defaultProviderCommissionLoader = createProviderCommissionLoader();
+
+export function createProviderCommissionConfirmer(
+  options: Omit<ProviderAdvertisingDetailLoadOptions, 'signal'> = {}
+): ProviderCommissionConfirmer {
+  return async (policyVersion, signal) => {
+    const client = clientFor(options);
+    const headers = authorizationHeaders(options.authorization);
+    const response = await client.request(`${PROVIDER_COMMISSION_ROUTE}/confirm`, {
+      method: 'POST',
+      responseSchema: providerCommissionConfirmationSuccessEnvelopeSchema,
+      ...(headers === undefined ? {} : { headers }),
+      json: providerCommissionConfirmationRequestSchema.parse({ policyVersion, acknowledge: true }),
+      ...(signal === undefined ? {} : { signal })
+    });
+    return response.data.data;
+  };
+}
 
 export function createProviderAdvertisingMutationApi(options: ProviderAdvertisingMutationOptions = {}): ProviderAdvertisingMutationApi {
   const client = clientFor(options);
