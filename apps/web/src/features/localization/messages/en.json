@@ -13,6 +13,78 @@
       "audit": "Audit log",
       "settings": "Settings"
     },
+    "sidebar": {
+      "groups": {
+        "home": "Home",
+        "accounts": "Users and accounts",
+        "properties": "Property management",
+        "requests": "Requests and operations",
+        "content": "Content and community",
+        "revenue": "Advertising and payments",
+        "experience": "Platform experience",
+        "system": "System"
+      },
+      "items": {
+        "overview": "Overview",
+        "users": "All users",
+        "seekers": "Property seekers",
+        "providers": "Property providers",
+        "verification": "Verification queue",
+        "account-reports": "Account reports",
+        "account-restrictions": "Account restrictions",
+        "properties": "Properties",
+        "property-review": "Property review",
+        "property-duplicates": "Possible duplicates",
+        "property-reports": "Property reports",
+        "projects": "Projects",
+        "project-review": "Project review",
+        "categories": "Property categories",
+        "locations": "Locations and districts",
+        "features": "Features and services",
+        "requests": "All requests",
+        "customer-requests": "Customer requests",
+        "overdue-requests": "Overdue requests",
+        "contact-requests": "Contact requests",
+        "viewing-requests": "Viewing requests",
+        "search-requests": "Property search requests",
+        "request-issues": "Request issues",
+        "articles": "Articles",
+        "article-categories": "Article categories",
+        "community": "Community",
+        "community-comments": "Comments",
+        "community-reports": "Reports",
+        "about": "About the platform",
+        "team": "Team",
+        "population": "Sadat population counter",
+        "advertising": "Ad requests",
+        "approved-proofs": "Approved payment proofs",
+        "payment-review": "Payment review",
+        "ad-calendar": "Ad calendar",
+        "payment-proofs": "Payment proofs",
+        "financial-review": "Financial summary",
+        "commission-policies": "Commission policies",
+        "commission-assignments": "Commission assignments",
+        "commission-exceptions": "Commission exceptions",
+        "commission-confirmations": "Policy confirmations",
+        "banners": "Banners",
+        "tips": "Property tips",
+        "homepage": "Homepage management",
+        "contact-social": "Contact and social",
+        "seo": "SEO settings",
+        "admin-users": "Admin users",
+        "roles": "Roles and permissions",
+        "notifications": "Admin notifications",
+        "audit": "Action log",
+        "settings": "General settings"
+      },
+      "website": "View website",
+      "brandAlt": "Sadat Real Estate",
+      "signOut": "Sign out",
+      "signingOut": "Signing out…",
+      "avatar": "A",
+      "profileTitle": "System administrator",
+      "profileSubtitle": "Administrator account"
+    },
     "overview": {
       "eyebrow": "System administrator",
       "title": "Overview",
@@ -39,6 +111,26 @@
         "openRequests": "Open requests",
         "pendingReviews": "Pending reviews"
       },
+      "placeholderSections": [
+        {
+          "title": "Content and community",
+          "labels": [
+            "Published articles",
+            "Community posts",
+            "Comments",
+            "Content reports"
+          ]
+        },
+        {
+          "title": "Advertising and revenue",
+          "labels": [
+            "Ad requests",
+            "Payment proofs",
+            "Active ads",
+            "Total revenue"
+          ]
+        }
+      ],
       "emptyTitle": "No data in this range",
       "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available."
     },

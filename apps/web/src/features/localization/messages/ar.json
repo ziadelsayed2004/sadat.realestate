@@ -13,6 +13,78 @@
       "audit": "سجل التدقيق",
       "settings": "الإعدادات"
     },
+    "sidebar": {
+      "groups": {
+        "home": "الرئيسية",
+        "accounts": "المستخدمون والحسابات",
+        "properties": "إدارة العقارات",
+        "requests": "الطلبات والعمليات",
+        "content": "المحتوى والكوميونيتي",
+        "revenue": "الإعلانات والمدفوعات",
+        "experience": "تجربة المنصة",
+        "system": "النظام"
+      },
+      "items": {
+        "overview": "نظرة عامة",
+        "users": "جميع المستخدمين",
+        "seekers": "الباحثون عن عقار",
+        "providers": "مقدمو العقارات",
+        "verification": "قائمة التوثيق",
+        "account-reports": "بلاغات الحسابات",
+        "account-restrictions": "قيود الحسابات",
+        "properties": "العقارات",
+        "property-review": "مراجعة العقارات",
+        "property-duplicates": "عقارات مكررة محتملة",
+        "property-reports": "بلاغات العقارات",
+        "projects": "المشروعات",
+        "project-review": "مراجعة المشروعات",
+        "categories": "التصنيفات وأنواع العقارات",
+        "locations": "المناطق والأحياء",
+        "features": "المميزات والخدمات",
+        "requests": "كل الطلبات",
+        "customer-requests": "طلبات العملاء",
+        "overdue-requests": "الطلبات المتأخرة",
+        "contact-requests": "طلبات التواصل",
+        "viewing-requests": "طلبات المعاينة",
+        "search-requests": "طلبات البحث عن عقار",
+        "request-issues": "بلاغات ومشكلات الطلبات",
+        "articles": "المقالات",
+        "article-categories": "تصنيفات المقالات",
+        "community": "الكوميونيتي",
+        "community-comments": "التعليقات",
+        "community-reports": "البلاغات",
+        "about": "النبذة عن المنصة",
+        "team": "فريق العمل",
+        "population": "عدّاد سكان مدينة السادات",
+        "advertising": "طلبات الإعلانات",
+        "approved-proofs": "إثباتات الدفع المعتمدة",
+        "payment-review": "مراجعة المدفوعات",
+        "ad-calendar": "تقويم الإعلانات",
+        "payment-proofs": "إثباتات الدفع",
+        "financial-review": "الملخص المالي",
+        "commission-policies": "سياسات العمولات",
+        "commission-assignments": "تعيين العمولات",
+        "commission-exceptions": "استثناءات العمولات",
+        "commission-confirmations": "تأكيد السياسات",
+        "banners": "البانرات الإعلانية",
+        "tips": "نصائح عقارات السادات",
+        "homepage": "إدارة الصفحة الرئيسية",
+        "contact-social": "بيانات التواصل والسوشيال",
+        "seo": "إعدادات SEO",
+        "admin-users": "المستخدمون الإداريون",
+        "roles": "الأدوار والصلاحيات",
+        "notifications": "إشعارات الإدارة",
+        "audit": "سجل الإجراءات",
+        "settings": "الإعدادات العامة"
+      },
+      "website": "عرض الموقع",
+      "brandAlt": "عقارات السادات",
+      "signOut": "تسجيل الخروج",
+      "signingOut": "جارٍ تسجيل الخروج…",
+      "avatar": "م",
+      "profileTitle": "مدير النظام",
+      "profileSubtitle": "حساب إداري"
+    },
     "overview": {
       "eyebrow": "مدير النظام",
       "title": "نظرة عامة",
@@ -39,6 +111,26 @@
         "openRequests": "الطلبات المفتوحة",
         "pendingReviews": "المراجعات المعلقة"
       },
+      "placeholderSections": [
+        {
+          "title": "المحتوى والمجتمع",
+          "labels": [
+            "المقالات المنشورة",
+            "المنشورات المجتمعية",
+            "التعليقات",
+            "بلاغات المحتوى"
+          ]
+        },
+        {
+          "title": "الإعلانات والإيرادات",
+          "labels": [
+            "طلبات الإعلانات",
+            "إثباتات الدفع",
+            "الإعلانات النشطة",
+            "إجمالي الإيرادات"
+          ]
+        }
+      ],
       "emptyTitle": "لا توجد بيانات في هذه الفترة",
       "emptyBody": "لم تُسجل مؤشرات تشغيلية ضمن الفترة المحددة. ستظهر البيانات هنا عند توفر سجلات فعلية."
     },

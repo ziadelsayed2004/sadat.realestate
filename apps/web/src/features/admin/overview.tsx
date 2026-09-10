@@ -253,8 +253,8 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
   return (
     <nav className="admin-dashboard__navigation" aria-label={copy.overview.eyebrow} data-testid="admin-sidebar">
       <div className="admin-dashboard__navigation-brand">
-        <a href={localePath(locale, '/')} aria-label={locale === 'ar' ? 'عرض الموقع' : 'View website'}>
-          <img src="/assets/sadat-real-estate-logo.png" alt={locale === 'ar' ? 'عقارات السادات' : 'Sadat Real Estate'} />
+        <a href={localePath(locale, '/')} aria-label={copy.sidebar.website}>
+          <img src="/assets/sadat-real-estate-logo.png" alt={copy.sidebar.brandAlt} />
         </a>
       </div>
       <div className="admin-dashboard__navigation-scroll" ref={navigationScroll}>
@@ -262,7 +262,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
           {sidebarGroups.map(group => (
             <div className="admin-dashboard__navigation-group" key={group.id}>
               <button type="button" className="admin-dashboard__navigation-kicker" aria-expanded={!collapsedGroups.includes(group.id)} aria-controls={`admin-navigation-${group.id}`} onClick={() => toggleGroup(group.id)}>
-                <span>{group.label[locale]}</span>
+                <span>{copy.sidebar.groups[group.id] ?? group.label[locale]}</span>
                 <span aria-hidden="true">{collapsedGroups.includes(group.id) ? '+' : '−'}</span>
               </button>
               <ul id={`admin-navigation-${group.id}`} hidden={collapsedGroups.includes(group.id)}>
@@ -274,7 +274,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
                         <span aria-hidden="true" className="admin-dashboard__navigation-icon">
                           <img src={navigationIconSources[item.icon]} alt="" width="17" height="17" />
                         </span>
-                        <span>{item.label[locale]}</span>
+                        <span>{copy.sidebar.items[item.id] ?? item.label[locale]}</span>
                       </a>
                     </li>
                   );
@@ -284,21 +284,21 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
           ))}
         </div>
         <div className="admin-dashboard__navigation-mobile-actions">
-          <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}>
+          <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}>
             <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
-            <span>{signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}</span>
+            <span>{signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}</span>
           </button>
         </div>
       </div>
       <div className="admin-dashboard__navigation-footer">
         <div className="admin-dashboard__navigation-profile">
-          <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'A'}</span>
-          <span><strong>{locale === 'ar' ? 'مدير النظام' : 'System administrator'}</strong><small>{locale === 'ar' ? 'حساب إداري' : 'Administrator account'}</small></span>
+          <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{copy.sidebar.avatar}</span>
+          <span><strong>{copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>
         </div>
-        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">{locale === 'ar' ? 'عرض الموقع' : 'View website'}</a>
-        <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}>
+        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">{copy.sidebar.website}</a>
+        <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}>
           <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
-          {signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}
+          {signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}
         </button>
       </div>
     </nav>
@@ -470,13 +470,7 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 
 function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
-  const extraMetricSections = locale === 'ar' ? [
-    { title: 'المحتوى والمجتمع', labels: ['المقالات المنشورة', 'المنشورات المجتمعية', 'التعليقات', 'بلاغات المحتوى'] },
-    { title: 'الإعلانات والإيرادات', labels: ['طلبات الإعلانات', 'إثباتات الدفع', 'الإعلانات النشطة', 'إجمالي الإيرادات'] }
-  ] : [
-    { title: 'Content and community', labels: ['Published articles', 'Community posts', 'Comments', 'Content reports'] },
-    { title: 'Advertising and revenue', labels: ['Ad requests', 'Payment proofs', 'Active ads', 'Total revenue'] }
-  ];
+  const extraMetricSections = copy.overview.placeholderSections;
   const headingActions = [
     [copy.overview.actions.reviewAccounts, '/admin/users'],
     [copy.overview.actions.reviewProperties, '/admin/properties'],

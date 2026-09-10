@@ -7,6 +7,17 @@ export type AdminMetricKey = 'users' | 'seekers' | 'providers' | 'verifiedProvid
 
 export interface AdminCopy {
   readonly nav: Readonly<Record<AdminNavKey, string>>;
+  readonly sidebar: {
+    readonly groups: Readonly<Record<string, string>>;
+    readonly items: Readonly<Record<string, string>>;
+    readonly website: string;
+    readonly brandAlt: string;
+    readonly signOut: string;
+    readonly signingOut: string;
+    readonly avatar: string;
+    readonly profileTitle: string;
+    readonly profileSubtitle: string;
+  };
   readonly overview: {
     readonly eyebrow: string;
     readonly title: string;
@@ -20,6 +31,7 @@ export interface AdminCopy {
     readonly activityTitle: string;
     readonly actions: Readonly<{ readonly reviewAccounts: string; readonly reviewProperties: string; readonly createArticle: string; readonly reviewAdvertising: string }>;
     readonly metrics: Readonly<Record<AdminMetricKey, string>>;
+    readonly placeholderSections: readonly Readonly<{ readonly title: string; readonly labels: readonly string[] }>[];
     readonly emptyTitle: string;
     readonly emptyBody: string;
   };
@@ -43,6 +55,78 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       audit: 'سجل التدقيق',
       settings: 'الإعدادات'
     },
+    sidebar: {
+      groups: {
+        home: 'الرئيسية',
+        accounts: 'المستخدمون والحسابات',
+        properties: 'إدارة العقارات',
+        requests: 'الطلبات والعمليات',
+        content: 'المحتوى والكوميونيتي',
+        revenue: 'الإعلانات والمدفوعات',
+        experience: 'تجربة المنصة',
+        system: 'النظام'
+      },
+      items: {
+        overview: 'نظرة عامة',
+        users: 'جميع المستخدمين',
+        seekers: 'الباحثون عن عقار',
+        providers: 'مقدمو العقارات',
+        verification: 'قائمة التوثيق',
+        'account-reports': 'بلاغات الحسابات',
+        'account-restrictions': 'قيود الحسابات',
+        properties: 'العقارات',
+        'property-review': 'مراجعة العقارات',
+        'property-duplicates': 'عقارات مكررة محتملة',
+        'property-reports': 'بلاغات العقارات',
+        projects: 'المشروعات',
+        'project-review': 'مراجعة المشروعات',
+        categories: 'التصنيفات وأنواع العقارات',
+        locations: 'المناطق والأحياء',
+        features: 'المميزات والخدمات',
+        requests: 'كل الطلبات',
+        'customer-requests': 'طلبات العملاء',
+        'overdue-requests': 'الطلبات المتأخرة',
+        'contact-requests': 'طلبات التواصل',
+        'viewing-requests': 'طلبات المعاينة',
+        'search-requests': 'طلبات البحث عن عقار',
+        'request-issues': 'بلاغات ومشكلات الطلبات',
+        articles: 'المقالات',
+        'article-categories': 'تصنيفات المقالات',
+        community: 'الكوميونيتي',
+        'community-comments': 'التعليقات',
+        'community-reports': 'البلاغات',
+        about: 'النبذة عن المنصة',
+        team: 'فريق العمل',
+        population: 'عدّاد سكان مدينة السادات',
+        advertising: 'طلبات الإعلانات',
+        'approved-proofs': 'إثباتات الدفع المعتمدة',
+        'payment-review': 'مراجعة المدفوعات',
+        'ad-calendar': 'تقويم الإعلانات',
+        'payment-proofs': 'إثباتات الدفع',
+        'financial-review': 'الملخص المالي',
+        'commission-policies': 'سياسات العمولات',
+        'commission-assignments': 'تعيين العمولات',
+        'commission-exceptions': 'استثناءات العمولات',
+        'commission-confirmations': 'تأكيد السياسات',
+        banners: 'البانرات الإعلانية',
+        tips: 'نصائح عقارات السادات',
+        homepage: 'إدارة الصفحة الرئيسية',
+        'contact-social': 'بيانات التواصل والسوشيال',
+        seo: 'إعدادات SEO',
+        'admin-users': 'المستخدمون الإداريون',
+        roles: 'الأدوار والصلاحيات',
+        notifications: 'إشعارات الإدارة',
+        audit: 'سجل الإجراءات',
+        settings: 'الإعدادات العامة'
+      },
+      website: 'عرض الموقع',
+      brandAlt: 'عقارات السادات',
+      signOut: 'تسجيل الخروج',
+      signingOut: 'جارٍ تسجيل الخروج…',
+      avatar: 'م',
+      profileTitle: 'مدير النظام',
+      profileSubtitle: 'حساب إداري'
+    },
     overview: {
       eyebrow: 'مدير النظام',
       title: 'نظرة عامة',
@@ -64,6 +148,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
         openRequests: 'الطلبات المفتوحة',
         pendingReviews: 'المراجعات المعلقة'
       },
+      placeholderSections: [
+        { title: 'المحتوى والمجتمع', labels: ['المقالات المنشورة', 'المنشورات المجتمعية', 'التعليقات', 'بلاغات المحتوى'] },
+        { title: 'الإعلانات والإيرادات', labels: ['طلبات الإعلانات', 'إثباتات الدفع', 'الإعلانات النشطة', 'إجمالي الإيرادات'] }
+      ],
       emptyTitle: 'لا توجد بيانات في هذه الفترة',
       emptyBody: 'لم تُسجل مؤشرات تشغيلية ضمن الفترة المحددة. ستظهر البيانات هنا عند توفر سجلات فعلية.'
     },
@@ -92,6 +180,78 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       audit: 'Audit log',
       settings: 'Settings'
     },
+    sidebar: {
+      groups: {
+        home: 'Home',
+        accounts: 'Users and accounts',
+        properties: 'Property management',
+        requests: 'Requests and operations',
+        content: 'Content and community',
+        revenue: 'Advertising and payments',
+        experience: 'Platform experience',
+        system: 'System'
+      },
+      items: {
+        overview: 'Overview',
+        users: 'All users',
+        seekers: 'Property seekers',
+        providers: 'Property providers',
+        verification: 'Verification queue',
+        'account-reports': 'Account reports',
+        'account-restrictions': 'Account restrictions',
+        properties: 'Properties',
+        'property-review': 'Property review',
+        'property-duplicates': 'Possible duplicates',
+        'property-reports': 'Property reports',
+        projects: 'Projects',
+        'project-review': 'Project review',
+        categories: 'Property categories',
+        locations: 'Locations and districts',
+        features: 'Features and services',
+        requests: 'All requests',
+        'customer-requests': 'Customer requests',
+        'overdue-requests': 'Overdue requests',
+        'contact-requests': 'Contact requests',
+        'viewing-requests': 'Viewing requests',
+        'search-requests': 'Property search requests',
+        'request-issues': 'Request issues',
+        articles: 'Articles',
+        'article-categories': 'Article categories',
+        community: 'Community',
+        'community-comments': 'Comments',
+        'community-reports': 'Reports',
+        about: 'About the platform',
+        team: 'Team',
+        population: 'Sadat population counter',
+        advertising: 'Ad requests',
+        'approved-proofs': 'Approved payment proofs',
+        'payment-review': 'Payment review',
+        'ad-calendar': 'Ad calendar',
+        'payment-proofs': 'Payment proofs',
+        'financial-review': 'Financial summary',
+        'commission-policies': 'Commission policies',
+        'commission-assignments': 'Commission assignments',
+        'commission-exceptions': 'Commission exceptions',
+        'commission-confirmations': 'Policy confirmations',
+        banners: 'Banners',
+        tips: 'Property tips',
+        homepage: 'Homepage management',
+        'contact-social': 'Contact and social',
+        seo: 'SEO settings',
+        'admin-users': 'Admin users',
+        roles: 'Roles and permissions',
+        notifications: 'Admin notifications',
+        audit: 'Action log',
+        settings: 'General settings'
+      },
+      website: 'View website',
+      brandAlt: 'Sadat Real Estate',
+      signOut: 'Sign out',
+      signingOut: 'Signing out…',
+      avatar: 'A',
+      profileTitle: 'System administrator',
+      profileSubtitle: 'Administrator account'
+    },
     overview: {
       eyebrow: 'System administrator',
       title: 'Overview',
@@ -113,6 +273,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
         openRequests: 'Open requests',
         pendingReviews: 'Pending reviews'
       },
+      placeholderSections: [
+        { title: 'Content and community', labels: ['Published articles', 'Community posts', 'Comments', 'Content reports'] },
+        { title: 'Advertising and revenue', labels: ['Ad requests', 'Payment proofs', 'Active ads', 'Total revenue'] }
+      ],
       emptyTitle: 'No data in this range',
       emptyBody: 'There are no operational records for the selected range. Real metrics will appear when records are available.'
     },
