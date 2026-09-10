@@ -56,10 +56,10 @@ const browser = await chromium.launch({ headless: true });
 try {
   const env = environment(await readFile('.env.local', 'utf8'));
   mongo = await mongoose.createConnection(env.MONGODB_URI).asPromise();
-  const provider = await mongo.collection('users').findOne({ roleType: 'provider', status: 'verified', normalizedEmail: /^guide-provider-/u }, { sort: { _id: -1 } });
-  assert.ok(provider?._id instanceof mongoose.Types.ObjectId);
-  const property = await mongo.collection('properties').findOne({ providerId: provider._id }, { sort: { updatedAt: -1 } });
+  const property = await mongo.collection('properties').findOne({ status: 'published' }, { sort: { updatedAt: -1 } });
   assert.ok(property?._id instanceof mongoose.Types.ObjectId);
+  const provider = await mongo.collection('users').findOne({ _id: property.providerId, roleType: 'provider', status: 'verified' });
+  assert.ok(provider?._id instanceof mongoose.Types.ObjectId);
   let report = await mongo.collection('account_reports').findOne({}, { sort: { updatedAt: -1 } });
   if (!report) {
     const now = new Date();
