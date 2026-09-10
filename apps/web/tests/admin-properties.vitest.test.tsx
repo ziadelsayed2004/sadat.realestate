@@ -62,6 +62,10 @@ function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
 }
 
 describe('Admin property management contracts and views', () => {
+  it('uses a table skeleton while property rows are loading', () => {
+    const result = renderWithLocale(<AdminProperties locale="ar" session={session} view="properties" loadProperties={() => new Promise(() => undefined)} />, { locale: 'ar' });
+    expect(result.container.querySelector('.ui-skeleton[data-variant="table"]')).not.toBeNull();
+  });
   it('uses implemented property, duplicate, and report routes with strict schemas and authorization', async () => {
     const requests: Array<{ method: string; path: string; query: URLSearchParams; authorization: string | null; body: unknown }> = [];
     const client = new ApiClient({

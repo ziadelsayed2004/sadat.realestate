@@ -79,6 +79,13 @@ function success(data: unknown): Response {
 }
 
 describe('Admin account and verification views', () => {
+  it('uses table and form skeletons for account lists and details', () => {
+    const list = renderWithLocale(<AdminAccounts locale="ar" session={session} view="users" loadUsers={() => new Promise(() => undefined)} />, { locale: 'ar' });
+    expect(list.container.querySelector('.ui-skeleton[data-variant="table"]')).not.toBeNull();
+    list.unmount();
+    const detail = renderWithLocale(<AdminAccounts locale="ar" session={session} view="users" detailId={user.id} loadUser={() => new Promise(() => undefined)} />, { locale: 'ar' });
+    expect(detail.container.querySelector('.ui-skeleton[data-variant="form"]')).not.toBeNull();
+  });
   it('uses the implemented list and reviewer document contracts with authorization', async () => {
     const requests: Array<{ path: string; query: URLSearchParams; authorization: string | null; method: string; body?: unknown }> = [];
     const client = new ApiClient({

@@ -198,12 +198,12 @@ function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, o
   );
 }
 
-function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminAccountsState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
+function StatePanel({ state, locale, onRetry, detail = false }: { readonly state: Exclude<AdminAccountsState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void; readonly detail?: boolean }) {
   const copy = getAdminAccountsCopy(locale);
   const message = copy.states[state];
   return (
     <section className="admin-accounts__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.actions.retry} />
+      <StateMessage state={state} loadingVariant={detail ? 'form' : 'table'} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.actions.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.actions.retry}</Button> : null}
     </section>
   );
@@ -662,7 +662,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
     <section className="admin-dashboard admin-accounts" data-screen-id={view === 'users' ? 'ADM-02' : view === 'seekers' ? 'ADM-03' : view === 'providers' ? 'ADM-04' : 'ADM-05'} data-route={path} data-device-scope="desktop" data-admin-accounts-state={state}>
       <AdminNavigation locale={locale} activePath={activePath} />
       <div className="admin-dashboard__content">
-        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
+        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={detailId !== undefined} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={backPath}>{copy.actions.back}</a></section> : null}
         {state === 'success' && isDetail && isUserView && userData !== undefined ? <UserDetail user={userData} locale={locale} onBack={backPath} /> : null}
         {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}

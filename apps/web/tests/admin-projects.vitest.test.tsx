@@ -48,6 +48,10 @@ function apiClientFor(requests: Array<{ method: string; path: string; authorizat
 }
 
 describe('Admin project management contracts and views', () => {
+  it('uses a table skeleton while the project list is loading', () => {
+    const result = renderWithLocale(<AdminProjects locale="ar" session={session} load={() => new Promise(() => undefined)} />, { locale: 'ar' });
+    expect(result.container.querySelector('.ui-skeleton[data-variant="table"]')).not.toBeNull();
+  });
   it('uses the implemented list and review routes with strict schemas and authorization', async () => {
     const requests: Array<{ method: string; path: string; authorization: string | null; body: unknown }> = [];
     const client = apiClientFor(requests);
