@@ -522,7 +522,6 @@
 .public-property-details__actions > .ux-state-view a,
 .public-property-details__contact .ux-state-view a,
 .public-property-details__state-link {
-  color: var(--color-brand-primary);
   font-weight: var(--font-weight-bold);
 }
 
