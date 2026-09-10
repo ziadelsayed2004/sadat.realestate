@@ -5,7 +5,7 @@
   ],
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T10:06:16.217Z",
+  "startedAt": "2026-09-10T12:40:49.287Z",
   "status": "PASS_LOCAL_PARTIAL",
   "transitions": [
     "homepage_search_to_listing",
@@ -33,5 +33,5 @@
     "Authenticated favorites must be exercised before GUIDE-02 closure.",
     "Production verification remains pending."
   ],
-  "finishedAt": "2026-09-10T10:06:23.284Z"
+  "finishedAt": "2026-09-10T12:40:54.793Z"
 }
