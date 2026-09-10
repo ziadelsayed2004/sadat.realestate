@@ -6,6 +6,7 @@ export { AuthenticationRequiredPage, ForbiddenPage, NotFoundPage, RouteErrorPage
 export type { RoutePageProps } from './pages.tsx';
 export {
   AdminShell,
+  AdminSidebarContext,
   AuthShell,
   ProviderShell,
   PublicShell,
@@ -14,4 +15,4 @@ export {
   SeekerShell,
   shellKindForRoute
 } from './shells.tsx';
-export type { RouteShellAuthClient, RouteShellProps, ShellKind } from './shells.tsx';
+export type { AdminSidebarController, RouteShellAuthClient, RouteShellProps, ShellKind } from './shells.tsx';

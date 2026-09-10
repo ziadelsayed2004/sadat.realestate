@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { StateMessage } from '../design_system/index.ts';
-import { RouteShellAuthContext, type RouteSession } from '../routing/index.ts';
+import { AdminSidebarContext, RouteShellAuthContext, type RouteSession } from '../routing/index.ts';
 import { getAdminCopy, type AdminMetricKey, type AdminOverviewState } from './copy.ts';
 import {
   createAdminOverviewLoader,
@@ -190,6 +190,7 @@ const sidebarGroups: readonly AdminSidebarGroup[] = [
 export function AdminNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getAdminCopy(locale);
   const authClient = useContext(RouteShellAuthContext);
+  const sidebarController = useContext(AdminSidebarContext);
   const [signingOut, setSigningOut] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<readonly string[]>([]);
   const navigationScroll = useRef<HTMLDivElement>(null);
@@ -251,7 +252,16 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
     });
   };
   return (
-    <nav className="admin-dashboard__navigation" aria-label={copy.overview.eyebrow} data-testid="admin-sidebar">
+    <nav
+      aria-label={copy.overview.eyebrow}
+      className="admin-dashboard__navigation"
+      data-drawer-open={sidebarController?.open || undefined}
+      data-testid="admin-sidebar"
+      id="admin-dashboard-navigation"
+      onClick={event => {
+        if ((event.target as HTMLElement).closest('a')) sidebarController?.setOpen(false);
+      }}
+    >
       <div className="admin-dashboard__navigation-brand">
         <a href={localePath(locale, '/')} aria-label={copy.sidebar.website}>
           <img src="/assets/sadat-real-estate-logo.png" alt={copy.sidebar.brandAlt} />

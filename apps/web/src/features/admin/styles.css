@@ -10,7 +10,42 @@
 .admin-shell-header__identity-copy small { color: #8a94a5; }
 .admin-shell-header__search { direction: rtl; display: flex; flex: 1; align-items: center; max-width: 540px; margin-inline: auto; padding: 9px 16px; border: 1px solid #e5d9bd; border-radius: 999px; background: #f8efd9; color: #69768b; }
 .admin-shell-header__search input { width: 100%; border: 0; outline: 0; background: transparent; color: inherit; }
-.admin-shell-header__menu { color: #1b2942; font-size: 1.25rem; line-height: 1; }
+.admin-shell-header__menu {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d8ceb7;
+  border-radius: 13px;
+  background: #fff;
+  color: #1b2942;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgb(31 53 95 / 8%);
+}
+
+.admin-shell-header__menu-glyph {
+  display: grid;
+  width: 22px;
+  height: 18px;
+  align-content: space-between;
+}
+
+.admin-shell-header__menu-glyph i {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+  transition: transform 180ms ease, opacity 140ms ease;
+}
+
+.admin-shell-header__menu[aria-expanded="true"] .admin-shell-header__menu-glyph i:first-child { transform: translateY(8px) rotate(45deg); }
+.admin-shell-header__menu[aria-expanded="true"] .admin-shell-header__menu-glyph i:nth-child(2) { opacity: 0; transform: scaleX(.4); }
+.admin-shell-header__menu[aria-expanded="true"] .admin-shell-header__menu-glyph i:last-child { transform: translateY(-8px) rotate(-45deg); }
+.admin-dashboard__navigation-backdrop { display: none; }
 
 .route-shell--admin .route-shell__body {
   grid-template-columns: minmax(0, 1fr);
@@ -501,6 +536,39 @@
 }
 
 @media (max-width: 1100px) {
+  .route-shell--admin > .route-shell__header {
+    position: sticky;
+    z-index: 60;
+    top: 0;
+    min-height: 64px;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .admin-shell-header__menu { display: grid; }
+
+  .admin-dashboard__navigation-backdrop {
+    position: fixed;
+    z-index: 50;
+    inset: 64px 0 0;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: rgb(15 23 42 / 38%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 180ms ease, visibility 0s linear 180ms;
+  }
+
+  .route-shell--admin[data-admin-sidebar-open="true"] > .admin-dashboard__navigation-backdrop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
   .route-shell--admin .route-shell__body > .app-main > :has(> .admin-dashboard__navigation) {
     grid-template-columns: minmax(0, 1fr);
     min-width: 0;
@@ -508,88 +576,85 @@
   }
 
   .route-shell--admin .app-main > :has(> .admin-dashboard__navigation) > .admin-dashboard__navigation {
-    position: sticky;
-    z-index: 20;
-    top: 0;
-    display: block !important;
-    height: auto;
-    min-width: 0;
-    padding: 10px 12px;
+    position: fixed;
+    z-index: 55;
+    top: 64px;
+    bottom: 0;
+    display: grid !important;
+    width: min(20rem, calc(100vw - 48px));
+    height: calc(100dvh - 64px);
+    padding: 0;
     overflow: hidden;
-    border-inline-end: 0;
-    border-block-end: 1px solid #e4e7ec;
+    border: 0;
+    background: #fff;
+    box-shadow: 0 18px 48px rgb(15 23 42 / 20%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 220ms cubic-bezier(.2, .8, .2, 1), visibility 0s linear 220ms;
+  }
+
+  .route-shell--admin[dir="ltr"] .admin-dashboard__navigation { left: 0; transform: translateX(-104%); }
+  .route-shell--admin[dir="rtl"] .admin-dashboard__navigation { right: 0; transform: translateX(104%); }
+  .route-shell--admin .app-main > :has(> .admin-dashboard__navigation) > .admin-dashboard__navigation[data-drawer-open="true"] {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
 
   .admin-dashboard__navigation {
-    height: auto;
+    height: calc(100dvh - 64px);
     min-height: 0;
-    grid-template-rows: auto;
-    overflow: visible;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
   }
 
-  .admin-dashboard__navigation-brand,
-  .admin-dashboard__navigation-footer {
-    display: none;
-  }
+  .admin-dashboard__navigation-brand { display: grid; }
+  .admin-dashboard__navigation-footer { display: grid; }
 
   .admin-dashboard__navigation-scroll {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    display: block;
+    min-height: 0;
+    padding: 12px 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .admin-dashboard__navigation-groups {
-    display: flex;
-    flex: 0 0 auto;
-    width: max-content;
+    display: grid;
+    width: auto;
     gap: 8px;
-    align-items: flex-start;
   }
 
-  .admin-dashboard__navigation-mobile-actions {
-    display: flex;
-    flex: 0 0 auto;
-    padding-block-end: 4px;
-  }
-
-  .admin-dashboard__navigation-mobile-actions .admin-dashboard__navigation-footer-link {
-    min-height: 42px;
-    white-space: nowrap;
-    background: #fff7e5;
-    color: #9a5f16;
-  }
+  .admin-dashboard__navigation-mobile-actions { display: none; }
 
   .admin-dashboard__navigation-group,
   .admin-dashboard__navigation-group + .admin-dashboard__navigation-group {
-    padding: 0;
-    border: 0;
+    padding: 0 0 8px;
+    border-block-end: 1px solid #eff0f1;
   }
 
   .admin-dashboard__navigation-kicker {
-    min-height: 44px;
-    white-space: nowrap;
+    min-height: 40px;
+    white-space: normal;
   }
 
   .admin-dashboard__navigation ul {
-    display: flex;
-    gap: 8px;
-    padding-block-end: 4px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scrollbar-width: thin;
+    display: grid;
+    gap: 2px;
+    padding: 0;
+    overflow: visible;
   }
 
   .admin-dashboard__navigation li {
-    flex: 0 0 auto;
+    min-width: 0;
   }
 
   .admin-dashboard__navigation a {
-    min-height: 42px;
+    min-height: 44px;
     padding-inline: 12px;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .admin-dashboard__metric-grid {
@@ -604,8 +669,12 @@
 
 @media (max-width: 760px) {
   .admin-shell-header__search { display: none; }
-  .admin-shell-header { gap: 10px; }
-  .admin-shell-header__identity-copy { display: none; }
+  .admin-shell-header { justify-content: center; gap: 10px; }
+  .admin-shell-header__identity { display: none; }
+  .admin-shell-header__menu { position: absolute; top: 10px; }
+  .route-shell--admin[dir="rtl"] .admin-shell-header__menu { right: auto; left: 12px; }
+  .route-shell--admin[dir="ltr"] .admin-shell-header__menu { right: 12px; left: auto; }
+  .route-shell--admin > .route-shell__header { padding: 8px 12px; }
   .route-shell--admin .app-main > :has(> .admin-dashboard__navigation) {
     min-width: 0 !important;
     overflow: clip;
@@ -637,6 +706,14 @@
   .admin-dashboard__empty {
     margin-block: 24px;
     padding: 22px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell-header__menu-glyph i,
+  .admin-dashboard__navigation,
+  .admin-dashboard__navigation-backdrop {
+    transition-duration: 0.01ms !important;
   }
 }
 
