@@ -1246,7 +1246,7 @@
   display: grid !important;
   align-content: center;
   gap: var(--space-md);
-  padding: clamp(2rem, 5vw, 4rem) !important;
+  padding: clamp(1.5rem, 2.5vw, 2.5rem);
   direction: rtl;
 }
 
@@ -2731,12 +2731,12 @@
   }
 
   .public-homepage__section--banners .public-homepage__banner-link {
-    aspect-ratio: 2.797 / 1;
+    min-block-size: 27rem;
   }
 
   .public-homepage__section--banners .public-homepage__banner-media-wrapper,
   .public-homepage__section--banners .public-homepage__banner-copy {
-    block-size: 100%;
+    block-size: auto;
     min-block-size: 0;
   }
 
@@ -2747,18 +2747,10 @@
 
   .public-homepage__section--banners .public-homepage__banner-title,
   .public-homepage__section--banners .public-homepage__banner-body {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
+    overflow: visible;
+    overflow-wrap: anywhere;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-title {
-    -webkit-line-clamp: 2;
-  }
-
-  .public-homepage__section--banners .public-homepage__banner-body {
-    -webkit-line-clamp: 2;
-  }
 }
 
 @media (min-width: 64.0625rem) {
@@ -2795,3 +2787,8 @@
     inset-inline-end: -3rem;
   }
 }
+
+.public-homepage__banner-copy { min-inline-size: 0; overflow-wrap: anywhere; }
+.public-homepage__banner-copy > * { min-inline-size: 0; }
+.public-homepage__banner-title { line-height: 1.55; }
+.public-homepage__banner-provider > img, .public-homepage__banner-verified { flex-shrink: 0; }

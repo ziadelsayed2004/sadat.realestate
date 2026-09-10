@@ -120,12 +120,12 @@ function NotFoundNotice({ copy }: { readonly copy: PublicPropertyDetailsCopy }) 
 function Gallery({
   media,
   copy,
-  locale,
+  transactionType,
   installmentAvailable
 }: {
   readonly media: readonly PublicPropertyMedia[];
   readonly copy: PublicPropertyDetailsCopy;
-  readonly locale: SupportedLocale;
+  readonly transactionType: PublicPropertyDetailsData['transactionType'];
   readonly installmentAvailable?: boolean | undefined;
 }) {
   const [selectedId, setSelectedId] = useState<string | undefined>(media[0]?.id);
@@ -138,9 +138,9 @@ function Gallery({
   return (
     <section className="public-property-details__gallery" aria-labelledby="public-property-details-gallery-title" data-gallery="true">
       <h2 id="public-property-details-gallery-title" className="public-property-details__visually-hidden">{copy.galleryTitle}</h2>
-      <div className="public-property-details__gallery-badges" aria-label={copy.sale}>
+      <div className="public-property-details__gallery-badges" aria-label={transactionType === 'sale' ? copy.sale : copy.rent}>
         {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{copy.installments}</span> : null}
-        <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{locale === 'ar' ? 'بيع' :copy.sale}</span>
+        <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{transactionType === 'sale' ? copy.sale : copy.rent}</span>
       </div>
       <div className="public-property-details__gallery-main">
         <PublicMediaImage
@@ -678,7 +678,7 @@ function SuccessDetails({
         <a className="public-property-details__back" href="/properties"><DetailLineIcon kind="back" />{copy.backToResults}</a>
         <div className="public-property-details__layout">
           <div className="public-property-details__main-column">
-            <Gallery media={galleryMedia(data)} copy={copy} locale={locale} installmentAvailable={data.installmentAvailable} />
+            <Gallery media={galleryMedia(data)} copy={copy} transactionType={data.transactionType} installmentAvailable={data.installmentAvailable} />
             <PropertySummary data={data} locale={locale} copy={copy} />
             <SourceAndProject data={data} locale={locale} copy={copy} />
             <Description data={data} locale={locale} copy={copy} />

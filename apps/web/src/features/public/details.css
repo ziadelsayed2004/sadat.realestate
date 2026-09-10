@@ -122,6 +122,7 @@
 }
 
 .public-property-details__gallery {
+  position: relative;
   overflow: hidden;
 }
 
@@ -733,7 +734,6 @@
   }
 
   .public-property-details__gallery {
-    position: relative;
     height: 384px;
     border-radius: 12px;
     border: 0;
@@ -743,36 +743,6 @@
   .public-property-details__gallery-main > img {
     height: 384px;
     min-height: 384px;
-  }
-
-  .public-property-details__gallery-badges {
-    position: absolute;
-    z-index: 1;
-    inset-block-start: 12px;
-    display: flex;
-    gap: 8px;
-    direction: rtl;
-  }
-
-  .public-property-details__gallery-badge {
-    display: inline-flex;
-    min-height: 22px;
-    align-items: center;
-    padding: 2px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 18px;
-  }
-
-  .public-property-details__gallery-badge--installment {
-    color: #0f4a3b;
-    background: #d9f3df;
-  }
-
-  .public-property-details__gallery-badge--transaction {
-    color: #a76b2b;
-    background: #fff1d8;
   }
 
   .public-property-details__gallery-thumbnails:has(button:only-child) {
@@ -1425,11 +1395,6 @@
     inset-inline-start: 1px;
   }
 
-  .public-property-details__gallery-badges {
-    inset-inline-start: 16px;
-    inset-inline-end: auto;
-  }
-
   .public-property-details__related-badge {
     inset-inline-start: 12px;
     inset-inline-end: auto;
@@ -1560,4 +1525,35 @@
     justify-content: flex-end;
     gap: 4px;
   }
+}
+
+.public-property-details__gallery-badges {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  inset-inline: 12px;
+}
+
+.public-property-details__gallery-badge {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.public-property-details__gallery-badge--installment {
+  color: #0f4a3b;
+  background: #d9f3df;
+}
+
+.public-property-details__gallery-badge--transaction {
+  color: #a76b2b;
+  background: #fff1d8;
 }
