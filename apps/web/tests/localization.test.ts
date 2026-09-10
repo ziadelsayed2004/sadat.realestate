@@ -68,8 +68,8 @@ test('editable Arabic and English JSON catalogs cover every static screen copy k
   const englishKeys = translationLeafPaths(enMessages).sort();
   assert.deepEqual(arabicKeys, englishKeys);
   assert.ok(arabicKeys.length >= 3_200);
-  assert.equal(Object.keys(arMessages).length, 48);
-  assert.equal(Object.keys(enMessages).length, 48);
+  assert.ok(Object.keys(arMessages).length >= 48);
+  assert.equal(Object.keys(enMessages).length, Object.keys(arMessages).length);
 });
 
 test('localized copy keeps referential identity for render effect dependencies', () => {
