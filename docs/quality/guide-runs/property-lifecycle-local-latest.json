@@ -1,0 +1,413 @@
+{
+  "commit": "38bba146ae99867fb8f727c9db93029ad5603cc0",
+  "worktreeChanges": true,
+  "journeys": [
+    "GUIDE-14",
+    "GUIDE-15"
+  ],
+  "environment": "local-real-browser-api-mongodb-storage",
+  "mockedRoutes": false,
+  "startedAt": "2026-09-10T05:37:38.011Z",
+  "status": "PASS_LOCAL",
+  "transitions": [
+    "approved_provider_organization_fixture_inserted",
+    "invalid_basic_blocked_before_api",
+    "draft_created_from_browser",
+    "location_saved_from_browser",
+    "details_saved_from_browser",
+    "price_and_payment_plan_saved_from_browser",
+    "optional_features_services_saved_from_browser",
+    "image_uploaded_scanned_and_rendered_from_browser",
+    "contact_saved_from_browser",
+    "short_submit_reason_blocked_before_api",
+    "submitted_for_review_from_browser",
+    "submitted_state_rendered",
+    "admin_reason_required_before_review",
+    "admin_requested_changes_from_browser",
+    "provider_saw_review_reason",
+    "provider_revised_and_resubmitted",
+    "admin_approved_property_from_browser",
+    "admin_published_approved_property_from_browser",
+    "published_state_rendered",
+    "public_projection_200_after_compatible_payment_plan_persistence",
+    "admin_hid_property_via_protected_api_and_public_returned_404",
+    "admin_restored_property_via_protected_api_and_public_returned_200"
+  ],
+  "authorization": [
+    "stale_provider_update_rejected_409",
+    "view_only_admin_review_denied_403"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/properties",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/location",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/location",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/details",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/price-payment",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/features-services",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/properties/:id/media",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/contact",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/properties/:id/submit",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/review",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/review",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/provider/properties/:id/steps/contact",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/properties/:id/submit",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/review",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/review",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/delivery-property-1789018658387",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/visibility",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/delivery-property-1789018658387",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/visibility",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/delivery-property-1789018658387",
+      "status": 200
+    }
+  ],
+  "browser": [
+    {
+      "screen": "PRV-03",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-04",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-05",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-06",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-07",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-08",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-09",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-10",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-12",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-15",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-02",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "ADM-15",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
+      "screen": "PRV-14",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    }
+  ],
+  "mongo": {
+    "collections": [
+      "properties",
+      "property_media",
+      "audit_logs"
+    ],
+    "finalStatus": "published",
+    "finalVersion": 13,
+    "activeMedia": 1,
+    "paymentPlanInstallments": 24,
+    "auditActions": [
+      "property.create",
+      "property.update",
+      "property_media.create",
+      "property_media.processing",
+      "property.submit",
+      "property.review",
+      "property.visibility"
+    ]
+  },
+  "remaining": [
+    "Run GUIDE-14 and GUIDE-15 on Production after deployment."
+  ],
+  "finishedAt": "2026-09-10T05:37:54.797Z"
+}

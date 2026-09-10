@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T03:02:01.080Z",
+  "generatedAt": "2026-09-10T05:38:13.805Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2250,12 +2250,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2274,7 +2274,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2282,10 +2282,22 @@
         "section": "#provider",
         "journeyId": "GUIDE-14"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:37:54.797Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:37:54.797Z",
+          "environment": "local-real-browser-api-mongodb-storage",
+          "mockedRoutes": false,
+          "remaining": [
+            "Run GUIDE-14 and GUIDE-15 on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-15",
@@ -2314,12 +2326,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2338,7 +2350,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2346,10 +2358,22 @@
         "section": "#provider",
         "journeyId": "GUIDE-15"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T05:37:54.797Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T05:37:54.797Z",
+          "environment": "local-real-browser-api-mongodb-storage",
+          "mockedRoutes": false,
+          "remaining": [
+            "Run GUIDE-14 and GUIDE-15 on Production after deployment."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-16",
@@ -3255,12 +3279,12 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-10T03:02:01.080Z",
+    "updatedAt": "2026-09-10T05:38:13.805Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
     "blocked": 0,
-    "localWithAnyExecutionEvidence": 18,
+    "localWithAnyExecutionEvidence": 20,
     "productionVerified": 0,
     "fullyClosed": 0
   },
