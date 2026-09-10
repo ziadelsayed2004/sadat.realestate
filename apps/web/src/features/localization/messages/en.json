@@ -3025,6 +3025,8 @@
     }
   },
   "provider_property/completion-copy#getProviderPropertyCompletionCopy": {
+    "pageTitle": "Add new property",
+    "pageDescription": "Complete the following steps to add your property to the platform.",
     "steps": {
       "media": "Media",
       "contact": "Contact",

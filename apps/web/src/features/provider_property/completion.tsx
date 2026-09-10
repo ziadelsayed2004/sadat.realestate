@@ -169,13 +169,11 @@ function StatePanel({ state, onRetry, copy }: { readonly state: ViewState; reado
   );
 }
 
-function CompletionPageIntro({ locale, fallbackTitle, fallbackDescription }: { readonly locale: SupportedLocale; readonly fallbackTitle: string; readonly fallbackDescription: string }) {
-  const title = locale === 'ar' ? 'إضافة عقار جديد' : locale === 'en' ? 'Add new property' : fallbackTitle;
-  const description = locale === 'ar' ? 'أكمل الخطوات التالية لإضافة عقارك للمنصة' : locale === 'en' ? 'Complete the following steps to add your property to the platform.' : fallbackDescription;
+function CompletionPageIntro({ copy }: { readonly copy: ReturnType<typeof getProviderPropertyCompletionCopy> }) {
   return (
     <div className="provider-property-wizard__intro">
-      <h1 id="provider-property-completion-title">{title}</h1>
-      <p>{description}</p>
+      <h1 id="provider-property-completion-title">{copy.pageTitle}</h1>
+      <p>{copy.pageDescription}</p>
     </div>
   );
 }
@@ -225,7 +223,7 @@ function ContactView({
   const saving = mutationState === 'saving';
   return (
     <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
-      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.contact} fallbackDescription={copy.descriptions.contact} />
+      <CompletionPageIntro copy={copy} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-contact-fields">
         <h2 id="provider-property-contact-fields">{copy.titles.contact}</h2>
         <p>{fields.supportedFieldsBody}</p>
@@ -299,7 +297,7 @@ function MediaView({
   const dropzoneTitle = locale === 'ar' ? 'اسحب الصور هنا أو انقر للرفع' : locale === 'en' ? 'Drag images here or click to upload' : labels.emptyTitle;
   return (
     <div className="provider-property-completion__form">
-      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.media} fallbackDescription={copy.descriptions.media} />
+      <CompletionPageIntro copy={copy} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-media-upload">
         <h2 id="provider-property-media-upload">{copy.titles.media}</h2>
         <p>{labels.acceptedTypes}</p>
@@ -426,7 +424,7 @@ function ReviewView({
   const submittedView = submitted || property.status === 'pending_review';
   return (
     <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
-      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.review} fallbackDescription={copy.descriptions.review} />
+      <CompletionPageIntro copy={copy} />
       {submittedView ? <section className="provider-property-completion__submitted" role="status"><h2>{review.submittedTitle}</h2><p>{review.submittedBody}</p><strong>{review.submittedStatus}</strong></section> : null}
       <section className="provider-property-completion__card" aria-labelledby="provider-property-review-summary">
         <h2 id="provider-property-review-summary">{review.safeProjectionTitle}</h2>

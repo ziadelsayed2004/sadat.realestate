@@ -3025,6 +3025,8 @@
     }
   },
   "provider_property/completion-copy#getProviderPropertyCompletionCopy": {
+    "pageTitle": "إضافة عقار جديد",
+    "pageDescription": "أكمل الخطوات التالية لإضافة عقارك للمنصة",
     "steps": {
       "media": "الصور والوسائط",
       "contact": "التواصل",

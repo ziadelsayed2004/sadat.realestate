@@ -4,6 +4,8 @@ import type { SupportedLocale } from '@sadat-real-estate/contracts';
 export type ProviderPropertyCompletionStep = 'media' | 'contact' | 'review';
 
 export interface ProviderPropertyCompletionCopy {
+  readonly pageTitle: string;
+  readonly pageDescription: string;
   readonly steps: Readonly<Record<ProviderPropertyCompletionStep, string>>;
   readonly titles: Readonly<Record<ProviderPropertyCompletionStep, string>>;
   readonly descriptions: Readonly<Record<ProviderPropertyCompletionStep, string>>;
@@ -102,6 +104,8 @@ export interface ProviderPropertyCompletionCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionCopy>> = {
   ar: {
+    pageTitle: 'إضافة عقار جديد',
+    pageDescription: 'أكمل الخطوات التالية لإضافة عقارك للمنصة',
     steps: { media: 'الصور والوسائط', contact: 'التواصل', review: 'المراجعة والإرسال' },
     titles: { media: 'الصور والوسائط', contact: 'بيانات التواصل', review: 'المراجعة والإرسال' },
     descriptions: {
@@ -134,6 +138,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
     }
   },
   en: {
+    pageTitle: 'Add new property',
+    pageDescription: 'Complete the following steps to add your property to the platform.',
     steps: { media: 'Media', contact: 'Contact', review: 'Review and submit' },
     titles: { media: 'Photos and media', contact: 'Contact details', review: 'Review and submit' },
     descriptions: {
