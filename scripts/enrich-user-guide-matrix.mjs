@@ -4,7 +4,7 @@ const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
 const routeMatrixPath = "docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json";
 
-const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence, guide04Evidence, providerRegistrationEvidence, seekerAccountEvidence, propertyLifecycleEvidence, remainingSurfacesEvidence] = await Promise.all([
+const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence, guide04Evidence, providerRegistrationEvidence, seekerAccountEvidence, propertyLifecycleEvidence, remainingSurfacesEvidence, discoveryEvidence, requestGuaranteesEvidence] = await Promise.all([
   readFile(guideSourcePath, "utf8").then(JSON.parse),
   readFile(matrixPath, "utf8").then(JSON.parse),
   readFile(routeMatrixPath, "utf8").then(JSON.parse),
@@ -16,6 +16,8 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
   readFile("docs/quality/guide-runs/seeker-account-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/property-lifecycle-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
   readFile("docs/quality/guide-runs/remaining-surfaces-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/discovery-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/request-guarantees-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
@@ -41,6 +43,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
+  ["docs/quality/guide-runs/discovery-local-latest.json", discoveryEvidence],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -68,16 +71,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
   }] : []);
   if (guide04Evidence?.status === "PASS_LOCAL") {
     const scopedGuide04Evidence = {
+      "GUIDE-02": guide04Evidence.relatedJourneyEvidence?.status === "PASS_LOCAL_FAVORITES" ? guide04Evidence.relatedJourneyEvidence : null,
+      "GUIDE-04": {
+        status: guide04Evidence.status,
+        checks: guide04Evidence.transitions ?? [],
+      },
       "GUIDE-05": guide04Evidence.transitions?.includes("authenticated_dashboard_after_full_navigation") ? {
         status: "PASS_LOCAL_DASHBOARD_ENTRY",
         checks: ["authenticated_dashboard_after_full_navigation", "mobile_width_without_overflow"],
       } : null,
+      "GUIDE-06": guide04Evidence.contactJourneyEvidence?.status === "PASS_LOCAL_CONTACT_PARTIAL_GUIDES" ? guide04Evidence.contactJourneyEvidence : null,
+      "GUIDE-07": guide04Evidence.viewingJourneyEvidence?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" ? guide04Evidence.viewingJourneyEvidence : null,
       "GUIDE-08": guide04Evidence.relatedJourneyEvidence?.status === "PASS_LOCAL_FAVORITES" ? guide04Evidence.relatedJourneyEvidence : null,
-      "GUIDE-16": guide04Evidence.viewingJourneyEvidence?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" ? {
-        status: "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
-        checks: guide04Evidence.viewingJourneyEvidence.checks?.filter((check) => check.startsWith("provider_")) ?? [],
-        remaining: ["Provider dashboard and non-viewing work queues", "Production verification"],
-      } : null,
     }[journey.id];
     if (scopedGuide04Evidence) evidenceAttachments.push({
       path: "docs/quality/guide-runs/guide-04-local-latest.json",
@@ -86,6 +91,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
       environment: guide04Evidence.environment,
       mockedRoutes: guide04Evidence.mockedRoutes,
       scope: scopedGuide04Evidence,
+    });
+  }
+  if (["GUIDE-06", "GUIDE-07", "GUIDE-21"].includes(journey.id) && requestGuaranteesEvidence?.status === "PASS_LOCAL") {
+    evidenceAttachments.push({
+      path: "docs/quality/guide-runs/request-guarantees-local-latest.json",
+      status: requestGuaranteesEvidence.status,
+      verifiedAt: requestGuaranteesEvidence.testedAt,
+      environment: requestGuaranteesEvidence.environment,
+      mockedRoutes: false,
+      checks: requestGuaranteesEvidence.checks,
     });
   }
   const executionEvidence = communityRunApplies ? {
@@ -152,6 +167,45 @@ matrix.journeys = matrix.journeys.map((journey) => {
       : "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached.",
   };
 });
+const providerAccountTypes = ["individual_provider", "broker", "developer_company"];
+const expandedAudience = (audience) => [...new Set(audience.flatMap((accountType) => accountType === "provider" ? providerAccountTypes : [accountType]))];
+const uniqueScreens = new Set(matrix.journeys.flatMap((journey) => journey.screenIds));
+const uniqueRoutes = new Set(matrix.journeys.flatMap((journey) => journey.uiRoutes));
+const uniqueApis = new Set(matrix.journeys.flatMap((journey) => journey.apis));
+const unreferencedScreenIds = routeMatrix.rows.map((row) => row.screenId).filter((screenId) => !uniqueScreens.has(screenId));
+matrix.operationalEvidenceCoverage = {
+  contract: "Coverage means that reviewable local execution evidence is attached. It does not mean full closure until every required case, Figma frame and Production run is verified.",
+  accountTypes: guide.accountTypes.map((accountType) => {
+    const journeys = matrix.journeys.filter((journey) => expandedAudience(journey.actor).includes(accountType));
+    return {
+      accountType,
+      journeyIds: journeys.map((journey) => journey.id),
+      journeysWithLocalEvidence: journeys.filter(hasExecutedEvidence).length,
+      totalJourneys: journeys.length,
+      productionVerified: 0,
+    };
+  }),
+  featureInventory: {
+    guideJourneys: matrix.journeys.length,
+    journeysWithLocalEvidence: matrix.journeys.filter(hasExecutedEvidence).length,
+    totalProductScreens: routeMatrix.rows.length,
+    guideReferencedScreens: uniqueScreens.size,
+    unreferencedScreenIds,
+    mappedRoutes: uniqueRoutes.size,
+    declaredApiDependencies: uniqueApis.size,
+    apiDependencyGap: uniqueApis.size === 0 ? "The screen-route source has no API dependencies populated; runtime HTTP evidence remains attached per lifecycle report." : null,
+  },
+  lifecycleEvidence: [
+    { scope: "seeker registration, favorites, contact requests and viewings", path: "docs/quality/guide-runs/guide-04-local-latest.json", status: guide04Evidence?.status ?? "MISSING" },
+    { scope: "seeker profile, preferences, notifications and password", path: "docs/quality/guide-runs/seeker-account-local-latest.json", status: seekerAccountEvidence?.status ?? "MISSING" },
+    { scope: "provider application, documents, review and approval", path: "docs/quality/guide-runs/provider-registration-local-latest.json", status: providerRegistrationEvidence?.status ?? "MISSING" },
+    { scope: "property creation, payment plans, review, publication and visibility", path: "docs/quality/guide-runs/property-lifecycle-local-latest.json", status: propertyLifecycleEvidence?.status ?? "MISSING" },
+    { scope: "community creation, moderation, conflict handling and audit", path: "docs/quality/guide-runs/community-local-latest.json", status: communityEvidence?.status ?? "MISSING" },
+    { scope: "request authorization, concurrency, rollback, audit and viewing slots", path: "docs/quality/guide-runs/request-guarantees-local-latest.json", status: requestGuaranteesEvidence?.status ?? "MISSING" },
+    { scope: "provider and administrator remaining screen surfaces", path: "docs/quality/guide-runs/remaining-surfaces-local-latest.json", status: remainingSurfacesEvidence?.status ?? "MISSING" },
+    { scope: "privacy settings consumers and authorization boundaries", path: "docs/quality/guide-runs/privacy-security-local-latest.json", status: privacySecurityEvidence?.status ?? "MISSING" },
+  ],
+};
 matrix.executionSummary = {
   updatedAt: matrix.generatedAt,
   totalJourneys: matrix.journeys.length,

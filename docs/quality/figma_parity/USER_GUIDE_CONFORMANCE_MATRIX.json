@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T10:07:06.320Z",
+  "generatedAt": "2026-09-10T12:45:57.398Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1255,10 +1255,23 @@
         "section": "#public",
         "journeyId": "GUIDE-01"
       },
-      "executionDate": "2026-09-09T07:34:36.467Z",
+      "executionDate": "2026-09-10T12:40:54.793Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/discovery-local-latest.json",
+          "status": "PASS_LOCAL_PARTIAL",
+          "verifiedAt": "2026-09-10T12:40:54.793Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "remaining": [
+            "Authenticated favorites must be exercised before GUIDE-02 closure.",
+            "Production verification remains pending."
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-02",
@@ -1329,7 +1342,7 @@
         "section": "#public",
         "journeyId": "GUIDE-02"
       },
-      "executionDate": "2026-09-10T02:17:01.769Z",
+      "executionDate": "2026-09-10T12:40:54.793Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1344,6 +1357,35 @@
             "save settings through the real Admin browser and verify consumers against the same local Mongo record",
             "Production verification after the current commit is deployed"
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/discovery-local-latest.json",
+          "status": "PASS_LOCAL_PARTIAL",
+          "verifiedAt": "2026-09-10T12:40:54.793Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "remaining": [
+            "Authenticated favorites must be exercised before GUIDE-02 closure.",
+            "Production verification remains pending."
+          ]
+        },
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_FAVORITES",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "journey": "GUIDE-02",
+            "status": "PASS_LOCAL_FAVORITES",
+            "passed": [
+              "browser detail save",
+              "idempotent repeat save",
+              "browser saved-property projection",
+              "browser remove"
+            ],
+            "remaining": "Production verification pending."
+          }
         }
       ]
     },
@@ -1410,14 +1452,14 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-10T09:58:47.175Z",
+      "executionDate": "2026-09-10T12:35:34.122Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/community-local-latest.json",
         "status": "PASS_LOCAL",
-        "verifiedAt": "2026-09-10T09:58:47.175Z",
+        "verifiedAt": "2026-09-10T12:35:34.122Z",
         "environment": "local",
         "mockedRoutes": false,
         "transitions": [
@@ -1536,10 +1578,32 @@
         "section": "#seeker",
         "journeyId": "GUIDE-04"
       },
-      "executionDate": "2026-09-09T07:42:56.209Z",
+      "executionDate": "2026-09-10T12:40:22.743Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "status": "PASS_LOCAL",
+            "checks": [
+              "role_selected",
+              "email_challenge_issued",
+              "email_verified",
+              "seeker_denied_admin_settings",
+              "verified_seeker_created",
+              "success_screen",
+              "authenticated_dashboard_after_full_navigation",
+              "logout_revoked_refresh_session"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "GUIDE-05",
@@ -1592,7 +1656,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-05"
       },
-      "executionDate": "2026-09-10T10:06:46.846Z",
+      "executionDate": "2026-09-10T12:40:22.743Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1600,7 +1664,7 @@
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL_DASHBOARD_ENTRY",
-          "verifiedAt": "2026-09-10T10:06:46.846Z",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
           "environment": "local",
           "mockedRoutes": false,
           "scope": {
@@ -1690,10 +1754,74 @@
         "section": "#seeker",
         "journeyId": "GUIDE-06"
       },
-      "executionDate": "2026-09-09T07:55:32.814Z",
+      "executionDate": "2026-09-10T12:41:39.149Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_CONTACT_PARTIAL_GUIDES",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "journeys": [
+              "GUIDE-06",
+              "GUIDE-21"
+            ],
+            "status": "PASS_LOCAL_CONTACT_PARTIAL_GUIDES",
+            "transitions": [
+              "browser_contact_created",
+              "admin_browser_under_review",
+              "admin_browser_contacted",
+              "admin_browser_resolved",
+              "admin_browser_closed"
+            ],
+            "checks": [
+              "admin_browser_loads_real_request_details",
+              "seeker_denied_admin_transition_403",
+              "stale_version_rejected_409",
+              "seeker_reads_final_closed_state",
+              "seeker_browser_shows_closed"
+            ],
+            "remaining": [
+              "Other request types",
+              "Production verification"
+            ]
+          }
+        },
+        {
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T12:41:39.149Z",
+          "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            "concurrent_identical_creation_one_201_one_409_one_record",
+            "foreign_request_read_and_cancel_404",
+            "current_account_status_overrides_previously_issued_tokens",
+            "live_RBAC_revocation_denies_write_keeps_authorized_read",
+            "missing_reason_400",
+            "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+            "concurrent_decisions_one_success_one_409_one_audit",
+            "replayed_decision_no_duplicate_effect_or_audit",
+            "durable_actor_reason_versions_and_trace",
+            "assignment_and_note_atomic_audit_rollback_and_replay_409",
+            "private_note_hidden_from_seeker",
+            "viewing_admin_requires_own_permission_and_current_active_account",
+            "viewing_audit_failure_rolls_back_mutation_and_audit",
+            "viewing_concurrent_confirmation_one_200_one_409",
+            "viewing_past_reschedule_rejected",
+            "viewing_cancellation_reason_persisted",
+            "two_customers_same_slot_one_201_one_409",
+            "cancelled_slot_can_be_booked_again",
+            "reschedule_into_occupied_slot_409_without_mutation_or_audit",
+            "legacy_active_viewing_reserves_slot_without_migration",
+            "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-07",
@@ -1760,10 +1888,72 @@
         "section": "#seeker",
         "journeyId": "GUIDE-07"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T12:41:39.149Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_VIEWING_PARTIAL_GUIDE",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "journey": "GUIDE-07",
+            "status": "PASS_LOCAL_VIEWING_PARTIAL_GUIDE",
+            "environment": "local-real-browser-API-MongoDB",
+            "checks": [
+              "empty_tabs_recover_without_refresh",
+              "browser_create_201",
+              "browser_reschedule_200",
+              "browser_cancel_200",
+              "cancelled_tab_shows_final_state",
+              "provider_browser_confirm_200",
+              "provider_browser_reschedule_200",
+              "provider_browser_confirm_200",
+              "provider_browser_complete_200",
+              "seeker_reads_provider_completed_state",
+              "provider_browser_cancel_requires_reason",
+              "provider_browser_cancel_200",
+              "seeker_reads_provider_cancelled_state"
+            ],
+            "remaining": [
+              "Production verification"
+            ]
+          }
+        },
+        {
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T12:41:39.149Z",
+          "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            "concurrent_identical_creation_one_201_one_409_one_record",
+            "foreign_request_read_and_cancel_404",
+            "current_account_status_overrides_previously_issued_tokens",
+            "live_RBAC_revocation_denies_write_keeps_authorized_read",
+            "missing_reason_400",
+            "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+            "concurrent_decisions_one_success_one_409_one_audit",
+            "replayed_decision_no_duplicate_effect_or_audit",
+            "durable_actor_reason_versions_and_trace",
+            "assignment_and_note_atomic_audit_rollback_and_replay_409",
+            "private_note_hidden_from_seeker",
+            "viewing_admin_requires_own_permission_and_current_active_account",
+            "viewing_audit_failure_rolls_back_mutation_and_audit",
+            "viewing_concurrent_confirmation_one_200_one_409",
+            "viewing_past_reschedule_rejected",
+            "viewing_cancellation_reason_persisted",
+            "two_customers_same_slot_one_201_one_409",
+            "cancelled_slot_can_be_booked_again",
+            "reschedule_into_occupied_slot_409_without_mutation_or_audit",
+            "legacy_active_viewing_reserves_slot_without_migration",
+            "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-08",
@@ -1821,7 +2011,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-08"
       },
-      "executionDate": "2026-09-10T10:06:46.846Z",
+      "executionDate": "2026-09-10T12:40:22.743Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1829,7 +2019,7 @@
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL_FAVORITES",
-          "verifiedAt": "2026-09-10T10:06:46.846Z",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
           "environment": "local",
           "mockedRoutes": false,
           "scope": {
@@ -1897,7 +2087,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-09"
       },
-      "executionDate": "2026-09-10T09:59:09.715Z",
+      "executionDate": "2026-09-10T12:35:13.289Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1905,7 +2095,7 @@
         {
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T09:59:09.715Z",
+          "verifiedAt": "2026-09-10T12:35:13.289Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -1969,7 +2159,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-10"
       },
-      "executionDate": "2026-09-10T09:59:09.715Z",
+      "executionDate": "2026-09-10T12:35:13.289Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1977,7 +2167,7 @@
         {
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T09:59:09.715Z",
+          "verifiedAt": "2026-09-10T12:35:13.289Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2046,7 +2236,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-11"
       },
-      "executionDate": "2026-09-10T09:59:36.199Z",
+      "executionDate": "2026-09-10T12:34:35.554Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2054,7 +2244,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T09:59:36.199Z",
+          "verifiedAt": "2026-09-10T12:34:35.554Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2120,7 +2310,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-12"
       },
-      "executionDate": "2026-09-10T09:59:36.199Z",
+      "executionDate": "2026-09-10T12:34:35.554Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2128,7 +2318,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T09:59:36.199Z",
+          "verifiedAt": "2026-09-10T12:34:35.554Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2194,7 +2384,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-13"
       },
-      "executionDate": "2026-09-10T09:59:36.199Z",
+      "executionDate": "2026-09-10T12:34:35.554Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2202,7 +2392,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T09:59:36.199Z",
+          "verifiedAt": "2026-09-10T12:34:35.554Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2282,7 +2472,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-14"
       },
-      "executionDate": "2026-09-10T10:04:38.244Z",
+      "executionDate": "2026-09-10T12:33:22.297Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2290,7 +2480,7 @@
         {
           "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:04:38.244Z",
+          "verifiedAt": "2026-09-10T12:33:22.297Z",
           "environment": "local-real-browser-api-mongodb-storage",
           "mockedRoutes": false,
           "remaining": [
@@ -2358,7 +2548,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-15"
       },
-      "executionDate": "2026-09-10T10:04:38.244Z",
+      "executionDate": "2026-09-10T12:33:22.297Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2366,7 +2556,7 @@
         {
           "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:04:38.244Z",
+          "verifiedAt": "2026-09-10T12:33:22.297Z",
           "environment": "local-real-browser-api-mongodb-storage",
           "mockedRoutes": false,
           "remaining": [
@@ -2518,7 +2708,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-17"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2526,7 +2716,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2593,7 +2783,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-18"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2601,7 +2791,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2678,7 +2868,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-19"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2686,7 +2876,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2765,7 +2955,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-20"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2773,7 +2963,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -2869,7 +3059,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-21"
       },
-      "executionDate": "2026-09-10T02:17:01.768Z",
+      "executionDate": "2026-09-10T12:41:39.149Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2884,6 +3074,36 @@
             "real API and Mongo execution for every ADM-18 through ADM-24 subflow",
             "Production verification after the current commit is deployed",
             "historical Figma density differences outside the approved RTL direction override"
+          ]
+        },
+        {
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-10T12:41:39.149Z",
+          "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            "concurrent_identical_creation_one_201_one_409_one_record",
+            "foreign_request_read_and_cancel_404",
+            "current_account_status_overrides_previously_issued_tokens",
+            "live_RBAC_revocation_denies_write_keeps_authorized_read",
+            "missing_reason_400",
+            "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+            "concurrent_decisions_one_success_one_409_one_audit",
+            "replayed_decision_no_duplicate_effect_or_audit",
+            "durable_actor_reason_versions_and_trace",
+            "assignment_and_note_atomic_audit_rollback_and_replay_409",
+            "private_note_hidden_from_seeker",
+            "viewing_admin_requires_own_permission_and_current_active_account",
+            "viewing_audit_failure_rolls_back_mutation_and_audit",
+            "viewing_concurrent_confirmation_one_200_one_409",
+            "viewing_past_reschedule_rejected",
+            "viewing_cancellation_reason_persisted",
+            "two_customers_same_slot_one_201_one_409",
+            "cancelled_slot_can_be_booked_again",
+            "reschedule_into_occupied_slot_409_without_mutation_or_audit",
+            "legacy_active_viewing_reserves_slot_without_migration",
+            "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
           ]
         }
       ]
@@ -2955,14 +3175,14 @@
         "section": "#admin",
         "journeyId": "GUIDE-22"
       },
-      "executionDate": "2026-09-10T09:58:47.175Z",
+      "executionDate": "2026-09-10T12:35:34.122Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/community-local-latest.json",
         "status": "PASS_LOCAL",
-        "verifiedAt": "2026-09-10T09:58:47.175Z",
+        "verifiedAt": "2026-09-10T12:35:34.122Z",
         "environment": "local",
         "mockedRoutes": false,
         "transitions": [
@@ -3072,7 +3292,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-23"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -3080,7 +3300,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -3155,7 +3375,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-24"
       },
-      "executionDate": "2026-09-10T10:05:44.161Z",
+      "executionDate": "2026-09-10T12:38:59.230Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -3163,7 +3383,7 @@
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T10:05:44.161Z",
+          "verifiedAt": "2026-09-10T12:38:59.230Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -3357,7 +3577,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-10T10:07:06.320Z",
+    "updatedAt": "2026-09-10T12:45:57.398Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
@@ -3376,5 +3596,188 @@
     "partialMeaning": "Mapping or only a subset of the required browser/API/database journey is evidenced.",
     "blockedMeaning": "Execution cannot proceed because a named external prerequisite is unavailable.",
     "mocksAreCompletionEvidence": false
+  },
+  "operationalEvidenceCoverage": {
+    "contract": "Coverage means that reviewable local execution evidence is attached. It does not mean full closure until every required case, Figma frame and Production run is verified.",
+    "accountTypes": [
+      {
+        "accountType": "visitor",
+        "journeyIds": [
+          "GUIDE-01",
+          "GUIDE-02",
+          "GUIDE-03"
+        ],
+        "journeysWithLocalEvidence": 3,
+        "totalJourneys": 3,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "seeker",
+        "journeyIds": [
+          "GUIDE-01",
+          "GUIDE-02",
+          "GUIDE-03",
+          "GUIDE-04",
+          "GUIDE-05",
+          "GUIDE-06",
+          "GUIDE-07",
+          "GUIDE-08",
+          "GUIDE-09",
+          "GUIDE-10"
+        ],
+        "journeysWithLocalEvidence": 10,
+        "totalJourneys": 10,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "individual_provider",
+        "journeyIds": [
+          "GUIDE-01",
+          "GUIDE-02",
+          "GUIDE-03",
+          "GUIDE-11",
+          "GUIDE-12",
+          "GUIDE-13",
+          "GUIDE-14",
+          "GUIDE-15",
+          "GUIDE-16",
+          "GUIDE-17",
+          "GUIDE-18"
+        ],
+        "journeysWithLocalEvidence": 11,
+        "totalJourneys": 11,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "broker",
+        "journeyIds": [
+          "GUIDE-01",
+          "GUIDE-02",
+          "GUIDE-03",
+          "GUIDE-11",
+          "GUIDE-12",
+          "GUIDE-13",
+          "GUIDE-14",
+          "GUIDE-15",
+          "GUIDE-16",
+          "GUIDE-17",
+          "GUIDE-18"
+        ],
+        "journeysWithLocalEvidence": 11,
+        "totalJourneys": 11,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "developer_company",
+        "journeyIds": [
+          "GUIDE-01",
+          "GUIDE-02",
+          "GUIDE-03",
+          "GUIDE-11",
+          "GUIDE-12",
+          "GUIDE-13",
+          "GUIDE-14",
+          "GUIDE-15",
+          "GUIDE-16",
+          "GUIDE-17",
+          "GUIDE-18"
+        ],
+        "journeysWithLocalEvidence": 11,
+        "totalJourneys": 11,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "full_admin",
+        "journeyIds": [
+          "GUIDE-19",
+          "GUIDE-20",
+          "GUIDE-21",
+          "GUIDE-22",
+          "GUIDE-23",
+          "GUIDE-24",
+          "GUIDE-25",
+          "GUIDE-26"
+        ],
+        "journeysWithLocalEvidence": 8,
+        "totalJourneys": 8,
+        "productionVerified": 0
+      },
+      {
+        "accountType": "limited_admin",
+        "journeyIds": [
+          "GUIDE-19",
+          "GUIDE-20",
+          "GUIDE-21",
+          "GUIDE-22",
+          "GUIDE-23",
+          "GUIDE-24",
+          "GUIDE-25",
+          "GUIDE-26"
+        ],
+        "journeysWithLocalEvidence": 8,
+        "totalJourneys": 8,
+        "productionVerified": 0
+      }
+    ],
+    "featureInventory": {
+      "guideJourneys": 26,
+      "journeysWithLocalEvidence": 26,
+      "totalProductScreens": 131,
+      "guideReferencedScreens": 124,
+      "unreferencedScreenIds": [
+        "AUTH-01",
+        "AUTH-03",
+        "AUTH-05",
+        "AUTH-09+",
+        "AUTH-10+",
+        "ADM-18",
+        "ADM-54"
+      ],
+      "mappedRoutes": 117,
+      "declaredApiDependencies": 0,
+      "apiDependencyGap": "The screen-route source has no API dependencies populated; runtime HTTP evidence remains attached per lifecycle report."
+    },
+    "lifecycleEvidence": [
+      {
+        "scope": "seeker registration, favorites, contact requests and viewings",
+        "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "seeker profile, preferences, notifications and password",
+        "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "provider application, documents, review and approval",
+        "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "property creation, payment plans, review, publication and visibility",
+        "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "community creation, moderation, conflict handling and audit",
+        "path": "docs/quality/guide-runs/community-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "request authorization, concurrency, rollback, audit and viewing slots",
+        "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "provider and administrator remaining screen surfaces",
+        "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "privacy settings consumers and authorization boundaries",
+        "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+        "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS"
+      }
+    ]
   }
 }
