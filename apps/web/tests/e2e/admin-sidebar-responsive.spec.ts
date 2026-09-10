@@ -129,6 +129,33 @@ test.describe('Admin sidebar responsive shell', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 
+  test('uses a rounded focus ring for native selects on touch screens', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) > 1100, 'Touch focus regression applies to compact layouts.');
+    await page.goto(`/admin?lang=${localeForProject()}`);
+    await page.locator('main').evaluate(main => {
+      const select = document.createElement('select');
+      select.id = 'touch-focus-regression-select';
+      select.setAttribute('aria-label', 'Touch focus regression');
+      select.innerHTML = '<option>One</option><option>Two</option>';
+      main.prepend(select);
+    });
+    const select = page.locator('#touch-focus-regression-select');
+    await select.focus();
+    const style = await select.evaluate(element => {
+      const computed = getComputedStyle(element);
+      return {
+        outlineStyle: computed.outlineStyle,
+        boxShadow: computed.boxShadow,
+        borderRadius: computed.borderRadius,
+        tapHighlight: computed.getPropertyValue('-webkit-tap-highlight-color')
+      };
+    });
+    expect(style.outlineStyle).toBe('none');
+    expect(style.boxShadow).not.toBe('none');
+    expect(style.borderRadius).not.toBe('0px');
+    expect(style.tapHighlight).toBe('rgba(0, 0, 0, 0)');
+  });
+
   test('brings the active route into view in the compact navigation rail', async ({ page }) => {
     const locale = localeForProject();
     await page.goto(`/admin/settings/seo?lang=${locale}`);

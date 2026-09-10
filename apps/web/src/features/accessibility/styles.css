@@ -39,6 +39,25 @@
   box-shadow: 0 0 0 6px var(--color-surface);
 }
 
+/* Native outlines render as sharp rectangles around rounded selects on touch Chromium. */
+:where(select:not(.a11y-visually-hidden)) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(select:not(.a11y-visually-hidden)):focus-visible {
+  outline: none !important;
+  border-color: var(--color-brand-primary, #0f766e);
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.22) !important;
+}
+
+@media (forced-colors: active) {
+  :where(select:not(.a11y-visually-hidden)):focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px;
+    box-shadow: none !important;
+  }
+}
+
 /* Keep semantic action cues while moving button text onto an approved high-contrast surface. */
 .ui-button--danger,
 .ui-button--success {
@@ -91,4 +110,3 @@ code {
     outline-width: 4px;
   }
 }
-
