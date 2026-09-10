@@ -40,6 +40,24 @@ export interface AdminAdsCopy {
   readonly page: (page: number, total: number) => string;
   readonly count: (count: number) => string;
   readonly rowsOnPage: string;
+  readonly requestMetrics: readonly [string, string, string, string, string, string, string, string];
+  readonly proofMetrics: readonly [string, string, string, string, string, string, string, string];
+  readonly financialMetrics: readonly [string, string, string, string, string, string];
+  readonly quoteIssue: {
+    readonly title: string;
+    readonly help: string;
+    readonly description: string;
+    readonly amount: string;
+    readonly validUntil: string;
+    readonly terms: string;
+    readonly submit: string;
+    readonly error: string;
+  };
+  readonly scheduling: {
+    readonly help: string;
+    readonly submit: string;
+    readonly error: string;
+  };
   readonly columns: {
     readonly id: string;
     readonly request: string;
@@ -91,6 +109,11 @@ export interface AdminAdsCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
   ar: {
+    requestMetrics: ['طلبات جديدة', 'في انتظار التسعير', 'في انتظار الموافقة', 'في انتظار الدفع', 'مجدولة', 'نشطة', 'منتهية', 'مرفوضة'],
+    proofMetrics: ['إجمالي الإثباتات', 'السجلات المعروضة', 'قيد المراجعة', 'تحتاج فحصًا أمنيًا', 'مقبولة', 'مرفوضة', 'ملفات نظيفة', 'قابلة للمراجعة'],
+    financialMetrics: ['عروض أسعار مرسلة', 'المبالغ في انتظار الدفع', 'إثباتات الدفع قيد المراجعة', 'مدفوعات معتمدة', 'طلبات مغلقة', 'إعلانات نشطة'],
+    quoteIssue: { title: 'إصدار عرض السعر', help: 'أدخل المبلغ بالقروش المصرية وتاريخ صلاحية العرض وشروطه.', description: 'وصف البند', amount: 'المبلغ بالقروش', validUntil: 'صالح حتى', terms: 'الشروط', submit: 'إصدار العرض', error: 'تعذر إصدار العرض. راجع القيم والصلاحية وحالة الطلب.' },
+    scheduling: { help: 'تتطلب الجدولة إثبات دفع معتمدًا وفترة متاحة.', submit: 'جدولة الإعلان', error: 'تعذرت الجدولة. راجع اعتماد الدفع وتوافر الفترة وصلاحيتك، ثم حدّث الطلب.' },
     eyebrow: 'إدارة الإعلانات والمدفوعات',
     tabs: { requests: 'طلبات الإعلانات', pendingProofs: 'إثباتات قيد المراجعة', approvedProofs: 'إثباتات معتمدة', calendar: 'تقويم الإعلانات', review: 'مراجعة المدفوعات', financial: 'المراجعة المالية' },
     titles: { requests: 'طلبات الإعلانات', pendingProofs: 'إثباتات الدفع المعلقة', approvedProofs: 'إثباتات الدفع المعتمدة', calendar: 'تقويم الإعلانات', review: 'مراجعة المدفوعات', financial: 'المراجعة المالية التشغيلية' },
@@ -133,6 +156,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     states: { loading: { title: 'جارٍ التحميل', body: 'يتم جلب البيانات من المصدر المعتمد.' }, empty: { title: 'لا توجد سجلات', body: 'لا توجد بيانات مطابقة للمرشحات الحالية.' }, error: { title: 'تعذر تحميل البيانات', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الاتصال غير متاح مؤقتاً', body: 'يمكنك إعادة المحاولة دون تغيير البيانات الحالية.' }, permission: { title: 'الوصول غير مسموح', body: 'تحتاج هذه الصفحة إلى جلسة مدير مصادق عليها والصلاحية المناسبة.' }, not_found: { title: 'السجل غير موجود', body: 'تعذر العثور على السجل المطلوب ضمن الإسقاط المتاح.' }, success: { title: 'البيانات جاهزة', body: 'تُعرض السجلات من إسقاط الخادم المعتمد.' } }
   },
   en: {
+    requestMetrics: ['New requests', 'Awaiting pricing', 'Awaiting approval', 'Awaiting payment', 'Scheduled', 'Active', 'Ended', 'Rejected'],
+    proofMetrics: ['Total proofs', 'Loaded records', 'Under review', 'Security attention', 'Approved', 'Rejected', 'Clean files', 'Reviewable'],
+    financialMetrics: ['Quotes issued', 'Payments awaiting action', 'Proofs under review', 'Approved payments', 'Closed requests', 'Active ads'],
+    quoteIssue: { title: 'Issue quote', help: 'Enter the EGP amount in minor units, validity date, and terms.', description: 'Line description', amount: 'Amount in minor units', validUntil: 'Valid until', terms: 'Terms', submit: 'Issue quote', error: 'The quote could not be issued. Check the values, permission, and request state.' },
+    scheduling: { help: 'Scheduling requires an approved payment proof and an available time slot.', submit: 'Schedule advertisement', error: 'Scheduling failed. Check payment approval, slot availability and your permission, then refresh the request.' },
     eyebrow: 'Advertising and payments administration',
     tabs: { requests: 'Ad requests', pendingProofs: 'Pending proofs', approvedProofs: 'Approved proofs', calendar: 'Ad calendar', review: 'Payment review', financial: 'Financial review' },
     titles: { requests: 'Advertising requests', pendingProofs: 'Pending payment proofs', approvedProofs: 'Approved payment proofs', calendar: 'Advertising calendar', review: 'Pending payment review', financial: 'Operational financial review' },

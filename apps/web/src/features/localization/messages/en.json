@@ -593,6 +593,49 @@
     "success": "The requested moderation action was applied."
   },
   "admin_ads/copy#getAdminAdsCopy": {
+    "requestMetrics": [
+      "New requests",
+      "Awaiting pricing",
+      "Awaiting approval",
+      "Awaiting payment",
+      "Scheduled",
+      "Active",
+      "Ended",
+      "Rejected"
+    ],
+    "proofMetrics": [
+      "Total proofs",
+      "Loaded records",
+      "Under review",
+      "Security attention",
+      "Approved",
+      "Rejected",
+      "Clean files",
+      "Reviewable"
+    ],
+    "financialMetrics": [
+      "Quotes issued",
+      "Payments awaiting action",
+      "Proofs under review",
+      "Approved payments",
+      "Closed requests",
+      "Active ads"
+    ],
+    "quoteIssue": {
+      "title": "Issue quote",
+      "help": "Enter the EGP amount in minor units, validity date, and terms.",
+      "description": "Line description",
+      "amount": "Amount in minor units",
+      "validUntil": "Valid until",
+      "terms": "Terms",
+      "submit": "Issue quote",
+      "error": "The quote could not be issued. Check the values, permission, and request state."
+    },
+    "scheduling": {
+      "help": "Scheduling requires an approved payment proof and an available time slot.",
+      "submit": "Schedule advertisement",
+      "error": "Scheduling failed. Check payment approval, slot availability and your permission, then refresh the request."
+    },
     "eyebrow": "Advertising and payments administration",
     "tabs": {
       "requests": "Ad requests",
