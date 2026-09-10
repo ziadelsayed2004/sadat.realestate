@@ -19,6 +19,13 @@ export interface FoundationCopy {
   readonly retryLabel: string;
   readonly localeLabel: string;
   readonly routeLabel: string;
+  readonly adminHeader: {
+    readonly search: string;
+    readonly searchLabel: string;
+    readonly role: string;
+    readonly menu: string;
+    readonly closeMenu: string;
+  };
   readonly surfaceLabels: Readonly<Record<Surface, string>>;
   readonly states: Readonly<Record<FoundationState, { readonly title: string; readonly body: string }>>;
 }
@@ -32,6 +39,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
     retryLabel: 'إعادة المحاولة',
     localeLabel: 'اللغة',
     routeLabel: 'المسار',
+    adminHeader: { search: 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب', searchLabel: 'بحث الإدارة', role: 'مدير النظام', menu: 'فتح قائمة الإدارة', closeMenu: 'إغلاق قائمة الإدارة' },
     surfaceLabels: { public: 'عام', auth: 'تسجيل الدخول', seeker: 'الباحث عن عقار', provider: 'مزود العقار', admin: 'الإدارة' },
     states: {
       loading: { title: 'جارٍ التحميل', body: 'يتم تجهيز الواجهة.' },
@@ -50,6 +58,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
     retryLabel: 'Retry',
     localeLabel: 'Locale',
     routeLabel: 'Route',
+    adminHeader: { search: 'Search for a user, property, project, article or request', searchLabel: 'Admin search', role: 'System administrator', menu: 'Open admin menu', closeMenu: 'Close admin menu' },
     surfaceLabels: { public: 'Public', auth: 'Authentication', seeker: 'Seeker', provider: 'Provider', admin: 'Administration' },
     states: {
       loading: { title: 'Loading', body: 'Preparing the interface.' },

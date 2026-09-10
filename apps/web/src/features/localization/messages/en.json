@@ -972,6 +972,11 @@
     "pageLabel": "Page",
     "pageSize": "Page size",
     "noActions": "No actions available",
+    "idPrefix": "ID",
+    "totalPosts": "Total posts",
+    "totalReports": "Total reports",
+    "statusSummary": "Status summary",
+    "stalePost": "The post changed. Reload it before making a decision.",
     "states": {
       "loading": {
         "title": "Loading community data",
@@ -4420,6 +4425,13 @@
     "retryLabel": "Retry",
     "localeLabel": "Locale",
     "routeLabel": "Route",
+    "adminHeader": {
+      "search": "Search for a user, property, project, article or request",
+      "searchLabel": "Admin search",
+      "role": "System administrator",
+      "menu": "Open admin menu",
+      "closeMenu": "Close admin menu"
+    },
     "surfaceLabels": {
       "public": "Public",
       "auth": "Authentication",

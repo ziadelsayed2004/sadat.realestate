@@ -49,13 +49,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const accessibilityCopy = getAccessibilityCopy(locale);
-  const adminHeader = kind === 'admin' ? {
-    search: locale === 'ar' ? 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب' : 'Search for a user, property, project, article or request',
-    searchLabel: locale === 'ar' ? 'بحث الإدارة' : 'Admin search',
-    role: locale === 'ar' ? 'مدير النظام' : 'System administrator',
-    menu: locale === 'ar' ? 'فتح قائمة الإدارة' : 'Open admin menu',
-    closeMenu: locale === 'ar' ? 'إغلاق قائمة الإدارة' : 'Close admin menu'
-  } : undefined;
+  const adminHeader = kind === 'admin' ? copy.adminHeader : undefined;
   useEffect(() => {
     if (kind !== 'admin') return;
     const compactQuery = window.matchMedia('(max-width: 1100px)');

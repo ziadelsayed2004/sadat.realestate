@@ -972,6 +972,11 @@
     "pageLabel": "الصفحة",
     "pageSize": "حجم الصفحة",
     "noActions": "لا توجد إجراءات متاحة",
+    "idPrefix": "معرّف",
+    "totalPosts": "إجمالي المنشورات",
+    "totalReports": "إجمالي البلاغات",
+    "statusSummary": "ملخص الحالة",
+    "stalePost": "تم تغيير المنشور. أعد تحميل بياناته قبل اتخاذ القرار.",
     "states": {
       "loading": {
         "title": "جارٍ تحميل المجتمع",
@@ -4420,6 +4425,13 @@
     "retryLabel": "إعادة المحاولة",
     "localeLabel": "اللغة",
     "routeLabel": "المسار",
+    "adminHeader": {
+      "search": "ابحث عن مستخدم، عقار، مشروع، مقال أو طلب",
+      "searchLabel": "بحث الإدارة",
+      "role": "مدير النظام",
+      "menu": "فتح قائمة الإدارة",
+      "closeMenu": "إغلاق قائمة الإدارة"
+    },
     "surfaceLabels": {
       "public": "عام",
       "auth": "تسجيل الدخول",

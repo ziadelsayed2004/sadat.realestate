@@ -84,7 +84,7 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 }
 
 function labelValue(value: string, locale: SupportedLocale): string {
-  return locale === 'ar' ? `معرّف ${value}` :`ID ${value}`;
+  return `${getAdminCommunityCopy(locale).idPrefix} ${value}`;
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminCommunityState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
@@ -118,8 +118,8 @@ function SummaryCards({ data, locale, view }: { readonly data: { readonly total:
   if (data === undefined || view === 'comments') return null;
   const copy = getAdminCommunityCopy(locale);
   const labels = view === 'posts'
-    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.rejected] :['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.rejected])
-    : (locale === 'ar' ? ['إجمالي البلاغات', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] :['Total reports', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved]);
+    ? [copy.totalPosts, copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.rejected]
+    : [copy.totalReports, copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved];
   const statuses = view === 'posts' ? ['published', 'hidden', 'rejected'] : ['open', 'in_review', 'resolved'];
   const values = [data.total, ...statuses.map(status => statusCount(data, status))];
   const colors = ['#1b2942', '#087b43', '#bf6500', '#b42318'];
@@ -128,11 +128,11 @@ function SummaryCards({ data, locale, view }: { readonly data: { readonly total:
 
 function StatusStrip({ view, locale, selected, onSelect }: { readonly view: AdminCommunityView; readonly locale: SupportedLocale; readonly selected: string; readonly onSelect: (status: string) => void }) {
   const copy = getAdminCommunityCopy(locale);
-  const allLabel = locale === 'ar' ? 'الكل' :'All';
+  const allLabel = copy.all;
   const statuses: readonly string[] = view === 'posts' ? postStatuses : view === 'comments' ? commentStatuses : reportStatuses;
   const label = (status: string): string => view === 'posts' ? copy.postStatus[status as CommunityPostStatus] : view === 'comments' ? copy.commentStatus[status as CommunityCommentStatus] : copy.reportStatus[status as CommunityReportStatus];
   const options = [['', allLabel] as const, ...statuses.map(status => [status, label(status)] as const)];
-  return <div role="tablist" aria-label={`${copy.status} summary`} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{options.map(([status, text]) => { const active = selected === status; return <button key={status || 'all'} type="button" role="tab" aria-selected={active} onClick={() => onSelect(status)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }}>{text}</button>; })}</div>;
+  return <div role="tablist" aria-label={copy.statusSummary} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{options.map(([status, text]) => { const active = selected === status; return <button key={status || 'all'} type="button" role="tab" aria-selected={active} onClick={() => onSelect(status)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }}>{text}</button>; })}</div>;
 }
 
 function Filters({ view, locale, onApply, onClear }: { readonly view: AdminCommunityView; readonly locale: SupportedLocale; readonly onApply: (input: Record<string, string>) => void; readonly onClear: () => void }) {
@@ -294,7 +294,7 @@ function PostModeration({ post, locale, onSave, onClose, onReload }: {
     catch (failure) {
       const stale = failure instanceof ApiClientError && failure.status === 409;
       setConflict(stale);
-      setError(stale ? (locale === 'ar' ? 'تم تغيير المنشور. أعد تحميل بياناته قبل اتخاذ القرار.' : 'The post changed. Reload it before making a decision.') : copy.states.error.body);
+      setError(stale ? copy.stalePost : copy.states.error.body);
     } finally { setSaving(false); }
   }
   return <section className="admin-community__resolution" role="region" aria-label={actionLabel(primaryAction)}>
