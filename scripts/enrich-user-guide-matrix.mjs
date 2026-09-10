@@ -4,23 +4,35 @@ const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
 const routeMatrixPath = "docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json";
 
-const [guide, matrix, routeMatrix, communityEvidence] = await Promise.all([
+const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, privacySecurityEvidence] = await Promise.all([
   readFile(guideSourcePath, "utf8").then(JSON.parse),
   readFile(matrixPath, "utf8").then(JSON.parse),
   readFile(routeMatrixPath, "utf8").then(JSON.parse),
   readFile("docs/quality/guide-runs/community-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/admin-requests-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
+  readFile("docs/quality/guide-runs/privacy-security-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
-  return journey.executionEvidence?.verifiedAt ?? journey.executionEvidence?.contactJourneyEvidence?.verifiedAt ?? null;
+  const dates = [
+    journey.executionEvidence?.verifiedAt,
+    journey.executionEvidence?.contactJourneyEvidence?.verifiedAt,
+    ...(journey.evidenceAttachments ?? []).map((evidence) => evidence.verifiedAt),
+  ].filter(Boolean).sort();
+  return dates.at(-1) ?? null;
 }
 
 function hasExecutedEvidence(journey) {
-  return Boolean(journey.executionEvidence?.path || journey.backendGuaranteesEvidence?.path);
+  return Boolean(journey.executionEvidence?.path || journey.executionEvidence?.paths?.length || journey.backendGuaranteesEvidence?.path || journey.evidenceAttachments?.length);
 }
+
+const supplementalRuns = [
+  ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],
+  ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
+].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
 matrix.generatedAt = new Date().toISOString();
@@ -36,6 +48,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const source = journeySource.get(journey.id);
   if (!source) throw new Error(`Missing structured guide source for ${journey.id}`);
   const communityRunApplies = communityEvidence?.status === "PASS_LOCAL" && communityEvidence.journeys?.includes(journey.id);
+  const privacyRunApplies = privacySecurityEvidence?.status === "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS" && privacySecurityEvidence.journeys?.includes(journey.id);
+  const evidenceAttachments = supplementalRuns.flatMap(([path, evidence]) => evidence.journeys?.includes(journey.id) ? [{
+    path,
+    status: evidence.status,
+    verifiedAt: evidence.finishedAt,
+    environment: evidence.environment,
+    mockedRoutes: evidence.mockedRoutes,
+    remaining: evidence.remaining,
+  }] : []);
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
     status: communityEvidence.status,
@@ -47,10 +68,11 @@ matrix.journeys = matrix.journeys.map((journey) => {
     mongo: communityEvidence.mongo,
     remaining: communityEvidence.remaining,
   } : journey.executionEvidence;
-  const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }) };
+  const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }), ...(evidenceAttachments.length === 0 ? {} : { evidenceAttachments }) };
   const routeRows = journey.screenIds.map((screenId) => rowsByScreen.get(screenId)).filter(Boolean);
   const legacyStatus = journey.verificationStatus;
   const executed = hasExecutedEvidence(hydratedJourney);
+  const authorizationEvidence = communityRunApplies || privacyRunApplies || Boolean(journey.backendGuaranteesEvidence);
   return {
     ...hydratedJourney,
     actor: source.audience,
@@ -73,8 +95,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
     },
     permissions: {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
-      horizontalAccess: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      currentSessionState: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      horizontalAccess: authorizationEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      currentSessionState: authorizationEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
     },
     versionAndAudit: {
       expectedVersion409: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
@@ -90,7 +112,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       section: `#${source.sectionId}`,
       journeyId: journey.id,
     },
-    executionDate: evidenceDate(journey),
+    executionDate: evidenceDate(hydratedJourney),
     commit: guide.release.baselineCommit,
     legacyStatus,
     verificationStatus: "PARTIAL",

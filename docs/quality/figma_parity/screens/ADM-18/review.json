@@ -50,8 +50,8 @@
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
-      "width": 1280,
-      "height": 720,
+      "width": 1577,
+      "height": 944,
       "devicePixelRatio": 1
     },
     "deterministicState": {
@@ -82,10 +82,11 @@
       "capture": "First Admin visual capture retained before any ADM-18 repair; no pre-Admin runtime capture exists."
     },
     "after": {
-      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-08.png",
-      "sha256": "0e1b436cc2909fd951d71891fad4703d1bbb36ee7c2a8c922717c8e4d5b598a6",
-      "capture": "Fresh local runtime capture at the exact recovered Figma frame size after the final admin layout repairs."
-    }
+      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-10.png",
+      "sha256": "40d53bc64a0e53ef862596567bf4796ac534965172cc0976e5a6a490780a9e8a",
+      "capture": "Fresh local runtime capture at exact Figma frame size after current Admin repairs; geometry is recorded separately."
+    },
+    "geometry": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-10-geometry.json"
   },
   "structuredVisualComparison": {
     "reviewed": true,
@@ -109,7 +110,8 @@
       "The recovered source and runtime were captured at the same 1577 × 944 dimensions.",
       "The material pixel ratio is 39.7325% at an RGB delta threshold of 24.",
       "The source places the compact admin navigation on the left and shows a dense six-row success state; the runtime uses the current RTL navigation shell on the right and a one-row deterministic fixture.",
-      "No parity snapshot was updated from this divergent result."
+      "No parity snapshot was updated from this divergent result.",
+      "The user-supplied Production examples approve the current right-side Arabic RTL navigation; the historical left-side Figma placement is recorded as a direction exception."
     ],
     "officialClosureEligible": false
   },
@@ -121,19 +123,23 @@
   },
   "defects": [
     "The current RTL shell places navigation on the opposite side from the recovered Arabic source.",
-    "Heading, filter, table, and populated-state density differ materially from the recovered source.",
-    "A product decision is required before changing the shared admin shell because the supplied Production examples use the current right-side RTL navigation pattern."
+    "Heading, filter, table, and populated-state density differ materially from the recovered source."
   ],
   "filesRepaired": [],
   "focusedTests": [
     {
-      "name": "Admin Dashboard QA ADM-01..ADM-66 AR/EN",
-      "result": "134 passed",
+      "name": "Admin filter, page layout and sidebar responsive matrix",
+      "result": "66 passed across desktop/tablet/mobile ar/en",
       "exitCode": 0
     },
     {
-      "name": "Admin request no-update visual evidence",
-      "result": "fresh same-size source/runtime comparison captured; material divergence preserved",
+      "name": "ADM-18 through ADM-24 request administration",
+      "result": "8 passed across desktop ar/en, including audit reason and exact shell geometry",
+      "exitCode": 0
+    },
+    {
+      "name": "Privacy/security consumers",
+      "result": "22 passed",
       "exitCode": 0
     }
   ],
@@ -149,12 +155,19 @@
     "diff": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
     "review": "docs/quality/figma_parity/screens/ADM-18/review.json"
   },
-  "reviewedAt": "2026-09-08T10:30:00+03:00",
-  "externalBlocker": "Confirm whether the recovered left-side Arabic admin shell or the current right-side RTL shell shown in the supplied Production examples is the final product authority before a shared-shell rewrite.",
+  "reviewedAt": "2026-09-10T02:17:01.767Z",
+  "externalBlocker": null,
   "latestRuntimeVerification": {
-    "source": "Fresh Playwright capture and direct recovered Figma comparison",
+    "source": "Fresh Playwright capture, exact geometry assertions, and direct recovered Figma review",
     "phase": "after",
     "apiResponseStatus": 200,
-    "officialClosureEligible": false
+    "officialClosureEligible": false,
+    "reason": "Material heading, filter, table and populated-state density differences remain."
+  },
+  "productAuthorityDecision": {
+    "decidedAt": "2026-09-10",
+    "authority": "SUPPLIED_PRODUCTION_EXAMPLES_AND_CURRENT_RTL_CONVENTION",
+    "decision": "Arabic Admin navigation remains on the right; English remains on the left.",
+    "effect": "The recovered node is still used for exact dimensions, shell sizing and content review. Its left-side Arabic navigation is an explicit historical direction exception."
   }
 }

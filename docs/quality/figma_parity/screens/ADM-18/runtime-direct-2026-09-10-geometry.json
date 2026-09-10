@@ -1,0 +1,76 @@
+{
+  "capturedAt": "2026-09-10T02:09:08.076Z",
+  "url": "/admin/requests?lang=ar",
+  "viewport": {
+    "width": 1577,
+    "height": 944
+  },
+  "figma": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:69276",
+    "width": 1577,
+    "height": 944,
+    "sidebar": {
+      "x": 0,
+      "y": 0,
+      "width": 256,
+      "height": 944
+    },
+    "header": {
+      "x": 256,
+      "y": 0,
+      "width": 1321,
+      "height": 64
+    },
+    "main": {
+      "x": 256,
+      "y": 64,
+      "width": 1321,
+      "height": 880
+    }
+  },
+  "runtime": {
+    "viewport": {
+      "innerWidth": 1577,
+      "innerHeight": 944,
+      "scrollWidth": 1577
+    },
+    "direction": "rtl",
+    "sidebar": {
+      "x": 1321,
+      "y": 64,
+      "width": 256,
+      "height": 880
+    },
+    "shellHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1577,
+      "height": 64
+    },
+    "content": {
+      "x": 0,
+      "y": 64,
+      "width": 1321,
+      "height": 696
+    },
+    "heading": {
+      "x": 34,
+      "y": 92,
+      "width": 1253,
+      "height": 142
+    },
+    "filters": {
+      "x": 34,
+      "y": 256,
+      "width": 1253,
+      "height": 123
+    },
+    "panel": {
+      "x": 34,
+      "y": 403,
+      "width": 1253,
+      "height": 309
+    }
+  }
+}

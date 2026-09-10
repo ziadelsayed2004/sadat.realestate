@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-09T21:54:32.286Z",
+  "generatedAt": "2026-09-10T02:17:02.181Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1297,12 +1297,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -1312,8 +1312,8 @@
         "requiredRoles": [
           "public"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -1321,7 +1321,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -1329,10 +1329,23 @@
         "section": "#public",
         "journeyId": "GUIDE-02"
       },
-      "executionDate": "2026-09-09T07:42:56.209Z",
+      "executionDate": "2026-09-10T02:17:01.769Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS",
+          "verifiedAt": "2026-09-10T02:17:01.769Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "remaining": [
+            "save settings through the real Admin browser and verify consumers against the same local Mongo record",
+            "Production verification after the current commit is deployed"
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-03",
@@ -1397,7 +1410,7 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-09T21:46:19.947Z",
+      "executionDate": "2026-09-09T21:54:31.821Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2660,10 +2673,24 @@
         "section": "#admin",
         "journeyId": "GUIDE-21"
       },
-      "executionDate": "2026-09-09T07:55:32.814Z",
+      "executionDate": "2026-09-10T02:17:01.768Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/admin-requests-local-latest.json",
+          "status": "PASS_LOCAL_ADMIN_REQUESTS_SUBCASES",
+          "verifiedAt": "2026-09-10T02:17:01.768Z",
+          "environment": "local",
+          "mockedRoutes": true,
+          "remaining": [
+            "real API and Mongo execution for every ADM-18 through ADM-24 subflow",
+            "Production verification after the current commit is deployed",
+            "historical Figma density differences outside the approved RTL direction override"
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-22",
@@ -2732,7 +2759,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-22"
       },
-      "executionDate": "2026-09-09T21:46:19.947Z",
+      "executionDate": "2026-09-09T21:54:31.821Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2967,12 +2994,12 @@
       ],
       "apis": [],
       "mongoChanges": {
-        "status": "UNVERIFIED",
+        "status": "EVIDENCE_SCOPED",
         "collections": [],
-        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "UNVERIFIED",
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
@@ -2982,8 +3009,8 @@
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2991,7 +3018,7 @@
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
-        "local": "NOT_EXECUTED",
+        "local": "PARTIAL",
         "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
       },
       "userGuide": {
@@ -2999,10 +3026,23 @@
         "section": "#admin",
         "journeyId": "GUIDE-25"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T02:17:01.769Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS",
+          "verifiedAt": "2026-09-10T02:17:01.769Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "remaining": [
+            "save settings through the real Admin browser and verify consumers against the same local Mongo record",
+            "Production verification after the current commit is deployed"
+          ]
+        }
+      ]
     },
     {
       "id": "GUIDE-26",
@@ -3075,19 +3115,32 @@
         "section": "#admin",
         "journeyId": "GUIDE-26"
       },
-      "executionDate": null,
+      "executionDate": "2026-09-10T02:17:01.769Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS",
+          "verifiedAt": "2026-09-10T02:17:01.769Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "remaining": [
+            "save settings through the real Admin browser and verify consumers against the same local Mongo record",
+            "Production verification after the current commit is deployed"
+          ]
+        }
+      ]
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T21:54:32.286Z",
+    "updatedAt": "2026-09-10T02:17:02.181Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
     "blocked": 0,
-    "localWithAnyExecutionEvidence": 8,
+    "localWithAnyExecutionEvidence": 10,
     "productionVerified": 0,
     "fullyClosed": 0
   },

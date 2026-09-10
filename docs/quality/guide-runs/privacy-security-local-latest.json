@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_LOCAL_PRIVACY_SECURITY_CONSUMERS",
+  "finishedAt": "2026-09-10T02:17:01.769Z",
+  "environment": "local",
+  "mockedRoutes": false,
+  "journeys": [
+    "GUIDE-02",
+    "GUIDE-25",
+    "GUIDE-26"
+  ],
+  "tests": {
+    "command": "node --import tsx --test apps/api/tests/settings/privacy-security-policy.test.ts apps/api/tests/public/properties.test.ts apps/api/tests/security/authorization-matrix.test.ts apps/api/tests/auth/service.test.ts",
+    "result": "22/22 passed"
+  },
+  "runtimeBindings": [
+    {
+      "setting": "admin_session_timeout_minutes",
+      "consumer": "apps/api/src/modules/rbac/auth.ts",
+      "behavior": "rejects an Admin access token whose iat exceeds the saved timeout"
+    },
+    {
+      "setting": "two_factor_authentication",
+      "consumers": [
+        "apps/api/src/modules/auth/service.ts",
+        "apps/api/src/modules/rbac/auth.ts"
+      ],
+      "behavior": "requires the Admin email OTP during login and rejects non-MFA Admin tokens while enabled"
+    },
+    {
+      "settings": [
+        "hide_provider_contact",
+        "contact_visibility"
+      ],
+      "consumer": "apps/api/src/modules/public/properties.ts",
+      "behavior": "projects contact data only for public, verified authenticated, or verified after-request viewers according to the saved policy"
+    }
+  ],
+  "authorization": {
+    "negativeMatrix": "derived from every implemented route",
+    "crossRoleAccess": "seeker/provider/admin boundaries passed",
+    "contactVisibilityCases": [
+      "guest hidden",
+      "authenticated verified visible",
+      "after_request hidden before request",
+      "after_request visible after request",
+      "owner provider visible",
+      "admin visible"
+    ]
+  },
+  "remaining": [
+    "save settings through the real Admin browser and verify consumers against the same local Mongo record",
+    "Production verification after the current commit is deployed"
+  ]
+}

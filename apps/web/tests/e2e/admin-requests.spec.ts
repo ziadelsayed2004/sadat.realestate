@@ -3,7 +3,7 @@ import { adminIssueId, adminRequestId, adminViewingId, localeForAdminRequests, r
 
 test.describe('ADM-18 through ADM-24 request administration', () => {
   test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'design-source', description: 'ADM-18 through ADM-24 local final exports; Figma node 6017:61879 / page 6017:4356' });
+    testInfo.annotations.push({ type: 'design-source', description: 'ADM-18 exact recovered Figma node 6017:69276 / page 6017:4356; ADM-19 through ADM-24 local final exports' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminRequestApis(page);
   });
@@ -32,12 +32,42 @@ test.describe('ADM-18 through ADM-24 request administration', () => {
     }
   });
 
-  test('renders request details and submits only an available action', async ({ page }) => {
+  test('keeps the recovered ADM-18 shell measurements with the approved locale direction', async ({ page }) => {
+    const locale = localeForAdminRequests(test.info().project.name);
+    await page.setViewportSize({ width: 1577, height: 944 });
+    await page.goto(`/admin/requests?lang=${encodeURIComponent(locale)}`);
+    await expect(page.locator('[data-screen-id="ADM-18"]')).toBeVisible();
+    const geometry = await page.evaluate(() => {
+      const rectangle = (selector: string) => {
+        const element = document.querySelector(selector);
+        if (!(element instanceof HTMLElement)) throw new Error(`Missing ${selector}`);
+        const { x, y, width, height } = element.getBoundingClientRect();
+        return { x, y, width, height };
+      };
+      return {
+        viewport: { width: window.innerWidth, scrollWidth: document.documentElement.scrollWidth },
+        header: rectangle('.route-shell__header'),
+        sidebar: rectangle('.admin-dashboard__navigation')
+      };
+    });
+    expect(geometry.viewport).toEqual({ width: 1577, scrollWidth: 1577 });
+    expect(geometry.header).toMatchObject({ x: 0, y: 0, width: 1577, height: 64 });
+    expect(geometry.sidebar).toMatchObject({ x: locale === 'ar' ? 1321 : 0, y: 64, width: 256, height: 880 });
+  });
+
+  test('requires an audit reason before submitting an available action', async ({ page }) => {
     const locale = localeForAdminRequests(test.info().project.name);
     await page.goto(`/admin/requests?lang=${encodeURIComponent(locale)}`);
     await page.getByTestId(`admin-request-${adminRequestId}`).getByRole('button').click();
     await expect(page.getByTestId('admin-request-detail')).toBeVisible();
-    await page.getByRole('button', { name: /save transition|حفظ الانتقال|保存转换/iu }).click();
+    const save = page.getByRole('button', { name: /save transition|حفظ الانتقال|保存转换/iu });
+    await save.click();
+    await expect(page.getByText(/Choose an action and provide a reason|اختر إجراءً وأدخل سببًا|请选择操作并填写原因/iu)).toBeVisible();
+    await page.getByRole('textbox', { name: /transition reason|سبب الانتقال|转换原因/iu }).fill('Verified by the moderation operator');
+    const mutation = page.waitForRequest(request => request.method() === 'POST' && request.url().includes(`/api/v1/admin/requests/${adminRequestId}/transition`));
+    await save.click();
+    const request = await mutation;
+    expect(request.postDataJSON()).toMatchObject({ reason: 'Verified by the moderation operator', expectedVersion: 2 });
     await expect(page.getByText(/Transition saved|تم حفظ الانتقال|转换已保存/u)).toBeVisible();
   });
 

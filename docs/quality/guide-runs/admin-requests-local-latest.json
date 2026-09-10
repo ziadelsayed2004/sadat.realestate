@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_LOCAL_ADMIN_REQUESTS_SUBCASES",
+  "finishedAt": "2026-09-10T02:17:01.768Z",
+  "environment": "local",
+  "mockedRoutes": true,
+  "journeys": [
+    "GUIDE-21"
+  ],
+  "scope": {
+    "screens": [
+      "ADM-18",
+      "ADM-19",
+      "ADM-20",
+      "ADM-21",
+      "ADM-22",
+      "ADM-23",
+      "ADM-24"
+    ],
+    "locales": [
+      "ar",
+      "en"
+    ],
+    "devices": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ]
+  },
+  "functionalEvidence": {
+    "adminLayoutMatrix": "66/66 passed",
+    "requestFlowMatrix": "8/8 desktop ar/en passed",
+    "verified": [
+      "empty filters recover without a browser refresh",
+      "sidebar routes, collapse state, active-route reveal and logout work",
+      "request lists fail closed when the Admin session cannot refresh",
+      "a state transition is rejected without an audit reason",
+      "a valid transition sends the reason and expectedVersion to the API"
+    ]
+  },
+  "figmaEvidence": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:69276",
+    "sourceViewport": {
+      "width": 1577,
+      "height": 944
+    },
+    "runtimeViewport": {
+      "width": 1577,
+      "height": 944,
+      "scrollWidth": 1577
+    },
+    "sourceShell": {
+      "headerHeight": 64,
+      "sidebarWidth": 256
+    },
+    "runtimeShell": {
+      "headerHeight": 64,
+      "sidebarWidth": 256
+    },
+    "directionDecision": "The supplied Production examples establish the right-side RTL navigation as the current product authority. The recovered historical Arabic frame places navigation on the left, so that directional conflict is retained as an explicit source exception.",
+    "runtimeScreenshot": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-10.png",
+    "geometry": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-10-geometry.json",
+    "visualClosure": "PARTIAL_MATERIAL_DENSITY_DIFFERENCE"
+  },
+  "remaining": [
+    "real API and Mongo execution for every ADM-18 through ADM-24 subflow",
+    "Production verification after the current commit is deployed",
+    "historical Figma density differences outside the approved RTL direction override"
+  ]
+}
