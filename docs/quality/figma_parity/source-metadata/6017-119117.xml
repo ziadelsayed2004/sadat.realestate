@@ -1,0 +1,57 @@
+<frame id="6017:119117" name="Public website pages" x="-6339" y="18142" width="402" height="962">
+  <frame id="6017:119118" name="MobileHeader" x="0" y="0" width="402" height="56">
+    <frame id="6017:119119" name="LeftActions" x="16" y="12" width="72" height="32">
+      <frame id="6017:119120" name="BurgerMenuBtn" x="0" y="0" width="32" height="32">
+        <frame id="6017:119121" name="IconContainer" x="6" y="6" width="20" height="20">
+          <frame id="6017:119122" name="menu" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:119124" name="UserAvatar" x="44" y="2" width="28" height="28" />
+    </frame>
+    <frame id="6017:119125" name="RightBrand" x="188" y="16" width="198" height="24">
+      <text id="6017:119126" name="منصة السادات للعقارات" x="0" y="0" width="166" height="24" />
+      <frame id="6017:119127" name="Logo" x="174" y="0" width="24" height="24" />
+    </frame>
+  </frame>
+  <frame id="6017:119128" name="MobileContent" x="0" y="56" width="402" height="906">
+    <frame id="6017:119129" name="ContentContainer" x="16" y="16" width="370" height="788">
+      <frame id="6017:119130" name="IconContainer" x="149" y="32" width="72" height="72">
+        <frame id="6017:119131" name="DangerIcon" x="20" y="20" width="32" height="32" />
+      </frame>
+      <frame id="6017:119135" name="TextHeader" x="16" y="128" width="338" height="54">
+        <text id="6017:119136" name="تعذر اعتماد العقار" x="0" y="0" width="338" height="28" />
+        <text id="6017:119137" name="للأسف، لم يستوفِ هذا العقار معايير الإدراج في المنصة." x="0" y="36" width="338" height="18" />
+      </frame>
+      <frame id="6017:119138" name="RejectionCard" x="16" y="206" width="338" height="140">
+        <text id="6017:119139" name="سبب الرفض:" x="16" y="16" width="306" height="16" />
+        <text id="6017:119140" name="العقار لا يستوفي معايير الجودة المطلوبة لإدراجه في المنصة. الصور المرفوعة غير واضحة والبيانات المُدخلة غير مكتملة. لإعادة التقديم، يرجى مراجعة المتطلبات والتواصل مع فريق الدعم إذا احتجت مساعدة." x="16" y="44" width="306" height="80" />
+      </frame>
+      <frame id="6017:119141" name="ActionButtons" x="16" y="370" width="338" height="106">
+        <frame id="6017:119142" name="PrimaryButton" x="0" y="8" width="338" height="44">
+          <text id="6017:119143" name="العودة إلى عقاراتي" x="110" y="9" width="118" height="26" />
+        </frame>
+        <frame id="6017:119144" name="SecondaryButton" x="0" y="62" width="338" height="44">
+          <text id="6017:119145" name="التواصل مع الدعم" x="117" y="9" width="104" height="26" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="6017:119146" name="BottomNav" x="16" y="824" width="370" height="66">
+      <frame id="6017:119147" name="NavHome" x="16" y="12" width="33" height="38">
+        <frame id="6017:119148" name="home" x="6.5" y="0" width="20" height="20" />
+        <text id="6017:119150" name="الرئيسية" x="0" y="24" width="33" height="14" />
+      </frame>
+      <frame id="6017:119151" name="NavProperties" x="115" y="12" width="36" height="38">
+        <frame id="6017:119152" name="grid" x="8" y="0" width="20" height="20" />
+        <text id="6017:119154" name="العقارات" x="0" y="24" width="36" height="14" />
+      </frame>
+      <frame id="6017:119155" name="NavRequests" x="217" y="12" width="31" height="38">
+        <frame id="6017:119156" name="bell" x="5.5" y="0" width="20" height="20" />
+        <text id="6017:119158" name="الطلبات" x="0" y="24" width="31" height="14" />
+      </frame>
+      <frame id="6017:119159" name="NavSettings" x="314" y="12" width="40" height="38">
+        <frame id="6017:119160" name="settings" x="10" y="0" width="20" height="20" />
+        <text id="6017:119162" name="الإعدادات" x="0" y="24" width="40" height="14" />
+      </frame>
+    </frame>
+  </frame>
+</frame>

@@ -1,0 +1,73 @@
+<frame id="6017:119003" name="Public website pages" x="-6321" y="16045" width="402" height="858">
+  <frame id="6017:119004" name="MobileHeader" x="0" y="0" width="402" height="56">
+    <frame id="6017:119005" name="LeftActions" x="16" y="12" width="72" height="32">
+      <frame id="6017:119006" name="BurgerMenuBtn" x="0" y="0" width="32" height="32">
+        <frame id="6017:119007" name="IconContainer" x="6" y="6" width="20" height="20">
+          <frame id="6017:119008" name="menu" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:119010" name="UserAvatar" x="44" y="2" width="28" height="28" />
+    </frame>
+    <frame id="6017:119011" name="RightBrand" x="188" y="16" width="198" height="24">
+      <text id="6017:119012" name="منصة السادات للعقارات" x="0" y="0" width="166" height="24" />
+      <frame id="6017:119013" name="Logo" x="174" y="0" width="24" height="24" />
+    </frame>
+  </frame>
+  <frame id="6017:119014" name="MobileContent" x="0" y="56" width="402" height="802">
+    <frame id="6017:119015" name="ContentArea" x="16" y="16" width="370" height="684">
+      <frame id="6017:119016" name="SubmittedBadge" x="153" y="110" width="64" height="64">
+        <frame id="6017:119017" name="IconWrapper" x="18" y="18" width="28" height="28">
+          <frame id="6017:119018" name="file-text" x="1.3999996185302734" y="1.3999996185302734" width="25.200000762939453" height="25.200000762939453" />
+        </frame>
+      </frame>
+      <frame id="6017:119020" name="TextHeader" x="20" y="194" width="330" height="93">
+        <text id="6017:119021" name="تم إرسال العقار للمراجعة" x="50" y="0" width="230" height="37" />
+        <text id="6017:119022" name="سيقوم فريقنا بمراجعة بيانات عقارك وسيتم إرسال تنبيه لك في أقرب وقت." x="0" y="45" width="330" height="48" />
+      </frame>
+      <frame id="6017:119023" name="ReferenceCard" x="20" y="307" width="330" height="137">
+        <frame id="6017:119024" name="Row" x="14" y="14" width="302" height="22">
+          <text id="6017:119025" name="SDT-33390" x="0" y="4" width="65" height="14" />
+          <text id="6017:119026" name="رقم المرجع" x="248" y="0" width="54" height="22" />
+        </frame>
+        <line id="6017:119027" name="Line" x="14" y="46" width="302" height="0" />
+        <frame id="6017:119028" name="Row" x="14" y="56" width="302" height="22">
+          <text id="6017:119029" name="اليوم" x="0" y="0" width="28" height="22" />
+          <text id="6017:119030" name="تاريخ الإرسال" x="242" y="0" width="60" height="22" />
+        </frame>
+        <line id="6017:119031" name="Line" x="14" y="88" width="302" height="0" />
+        <frame id="6017:119032" name="Row" x="14" y="98" width="302" height="25">
+          <frame id="6017:119033" name="StatusBadge" x="0" y="0" width="79" height="25">
+            <text id="6017:119034" name="قيد المراجعة" x="8" y="2" width="63" height="21" />
+          </frame>
+          <text id="6017:119035" name="الحالة" x="274" y="1.5" width="28" height="22" />
+        </frame>
+      </frame>
+      <frame id="6017:119036" name="ButtonActions" x="20" y="464" width="330" height="110">
+        <frame id="6017:119037" name="BtnPrimary" x="0" y="0" width="330" height="50">
+          <text id="6017:119038" name="عرض العقار" x="130" y="12" width="70" height="26" />
+        </frame>
+        <frame id="6017:119039" name="BtnOutline" x="0" y="60" width="330" height="50">
+          <text id="6017:119040" name="العودة إلى عقاراتي" x="106" y="12" width="118" height="26" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="6017:119041" name="BottomNav" x="16" y="720" width="370" height="66">
+      <frame id="6017:119042" name="NavHome" x="16" y="12" width="33" height="38">
+        <frame id="6017:119043" name="home" x="6.5" y="0" width="20" height="20" />
+        <text id="6017:119045" name="الرئيسية" x="0" y="24" width="33" height="14" />
+      </frame>
+      <frame id="6017:119046" name="NavProperties" x="115" y="12" width="36" height="38">
+        <frame id="6017:119047" name="grid" x="8" y="0" width="20" height="20" />
+        <text id="6017:119049" name="العقارات" x="0" y="24" width="36" height="14" />
+      </frame>
+      <frame id="6017:119050" name="NavRequests" x="217" y="12" width="31" height="38">
+        <frame id="6017:119051" name="bell" x="5.5" y="0" width="20" height="20" />
+        <text id="6017:119053" name="الطلبات" x="0" y="24" width="31" height="14" />
+      </frame>
+      <frame id="6017:119054" name="NavSettings" x="314" y="12" width="40" height="38">
+        <frame id="6017:119055" name="settings" x="10" y="0" width="20" height="20" />
+        <text id="6017:119057" name="الإعدادات" x="0" y="24" width="40" height="14" />
+      </frame>
+    </frame>
+  </frame>
+</frame>

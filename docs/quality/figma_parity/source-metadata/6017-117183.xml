@@ -1,0 +1,99 @@
+<frame id="6017:117183" name="status-rejected-tablet" x="-7647" y="18494" width="1024" height="900">
+  <frame id="6017:117184" name="MainContent" x="0" y="0" width="952" height="900">
+    <frame id="6017:117185" name="Header" x="0" y="0" width="952" height="64">
+      <frame id="6017:117186" name="LeftHeader" x="24" y="14" width="140" height="36">
+        <frame id="6017:117187" name="UserBadge" x="0" y="2" width="88" height="32">
+          <frame id="6017:117188" name="UserInfo" x="0" y="1" width="48" height="30">
+            <text id="6017:117189" name="مصطفي" x="0" y="0" width="48" height="16" />
+            <text id="6017:117190" name="مدير عام" x="0" y="16" width="36" height="14" />
+          </frame>
+          <frame id="6017:117191" name="UserAvatar" x="56" y="0" width="32" height="32" />
+        </frame>
+        <frame id="6017:117192" name="NotificationBtn" x="104" y="0" width="36" height="36">
+          <frame id="6017:117193" name="IconContainer" x="9" y="9" width="18" height="18">
+            <vector id="6017:117194" name="Vector" x="0" y="0" width="18" height="18" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="6017:117195" name="RightHeader" x="718" y="16" width="210" height="32">
+        <text id="6017:117196" name="منصة السادات للعقارات" x="0" y="4" width="166" height="24" />
+        <frame id="6017:117197" name="Logo" x="178" y="0" width="32" height="32" />
+      </frame>
+    </frame>
+    <frame id="6017:117198" name="ContentContainer" x="0" y="64" width="952" height="836">
+      <frame id="6017:117199" name="IconContainer" x="436" y="223" width="80" height="80">
+        <frame id="6017:117200" name="DangerIcon" x="22" y="22" width="36" height="36" />
+      </frame>
+      <frame id="6017:117204" name="TextHeader" x="40" y="327" width="872" height="60">
+        <text id="6017:117205" name="تعذر اعتماد العقار" x="0" y="0" width="872" height="32" />
+        <text id="6017:117206" name="للأسف، لم يستوفِ هذا العقار معايير الإدراج في المنصة." x="0" y="40" width="872" height="20" />
+      </frame>
+      <frame id="6017:117207" name="RejectionCard" x="216" y="411" width="520" height="134">
+        <text id="6017:117208" name="سبب الرفض:" x="20" y="20" width="480" height="16" />
+        <text id="6017:117209" name="العقار لا يستوفي معايير الجودة المطلوبة لإدراجه في المنصة. الصور المرفوعة غير واضحة والبيانات المُدخلة غير مكتملة. لإعادة التقديم، يرجى مراجعة المتطلبات والتواصل مع فريق الدعم إذا احتجت مساعدة." x="20" y="48" width="480" height="66" />
+      </frame>
+      <frame id="6017:117210" name="ActionButtons" x="216" y="569" width="520" height="44">
+        <frame id="6017:117211" name="PrimaryButton" x="0" y="0" width="254" height="44">
+          <text id="6017:117212" name="العودة إلى عقاراتي" x="68" y="12" width="118" height="20" />
+        </frame>
+        <frame id="6017:117213" name="SecondaryButton" x="266" y="0" width="254" height="44">
+          <text id="6017:117214" name="التواصل مع الدعم" x="75" y="12" width="104" height="20" />
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="6017:117215" name="SidebarRail" x="952" y="0" width="72" height="900">
+    <frame id="6017:117216" name="LogoIcon" x="20" y="24" width="32" height="32" />
+    <frame id="6017:117217" name="MenuIcons" x="0" y="80" width="72" height="425">
+      <frame id="6017:117218" name="Icon" x="26.5" y="0" width="19" height="19" />
+      <frame id="6017:117223" name="Icon" x="26.5" y="35" width="19" height="19" />
+      <frame id="6017:117231" name="IconBtn" x="16" y="70" width="40" height="40">
+        <frame id="6017:117232" name="IconContainer" x="10" y="10" width="20" height="20">
+          <frame id="6017:117233" name="plus-square" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:117235" name="Icon" x="26.5" y="126" width="19" height="19" />
+      <frame id="6017:117239" name="IconBtn" x="16" y="161" width="40" height="40">
+        <frame id="6017:117240" name="Icon" x="10.5" y="10.5" width="19" height="19" />
+        <frame id="6017:117245" name="Badge" x="26" y="-4" width="18" height="18">
+          <text id="6017:117246" name="3" x="6" y="-0.5" width="6" height="19" />
+        </frame>
+      </frame>
+      <frame id="6017:117247" name="IconBtn" x="16" y="217" width="40" height="40">
+        <frame id="6017:117248" name="IconContainer" x="10" y="10" width="20" height="20">
+          <frame id="6017:117249" name="megaphone" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:117251" name="IconBtn" x="16" y="273" width="40" height="40">
+        <frame id="6017:117252" name="IconContainer" x="10" y="10" width="20" height="20">
+          <frame id="6017:117253" name="coins" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:117256" name="IconBtn" x="16" y="329" width="40" height="40">
+        <frame id="6017:117257" name="IconContainer" x="10" y="10" width="20" height="20">
+          <frame id="6017:117258" name="bell" x="0" y="0" width="20" height="20" />
+        </frame>
+        <frame id="6017:117261" name="Badge" x="26" y="-4" width="18" height="18">
+          <text id="6017:117262" name="3" x="6" y="-0.5" width="6" height="19" />
+        </frame>
+      </frame>
+      <frame id="6017:117263" name="IconBtn" x="16" y="385" width="40" height="40">
+        <frame id="6017:117264" name="IconContainer" x="10" y="10" width="20" height="20">
+          <frame id="6017:117265" name="gear" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="6017:117268" name="BottomSection" x="0" y="529" width="72" height="347">
+      <frame id="6017:117269" name="CompanyInfo" x="0" y="241" width="72" height="38">
+        <frame id="6017:117270" name="NameRow" x="17" y="0" width="38" height="19">
+          <text id="6017:117271" name="شركة" x="0" y="0" width="26" height="19" />
+          <frame id="6017:117272" name="OnlineDot" x="32" y="6.5" width="6" height="6" />
+        </frame>
+        <text id="6017:117273" name="عقارات" x="24.5" y="23" width="23" height="15" />
+      </frame>
+      <frame id="6017:117274" name="LogoutBtn" x="16" y="291" width="40" height="40">
+        <frame id="6017:117275" name="log-out" x="12" y="12" width="16" height="16" />
+      </frame>
+    </frame>
+  </frame>
+</frame>

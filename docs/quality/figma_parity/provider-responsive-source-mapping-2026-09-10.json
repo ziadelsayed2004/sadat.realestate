@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-10T06:02:34.972Z",
+  "fileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "pageId": "6017:4357",
+  "method": "Direct Figma get_metadata inspection of child labels and frame geometry. Mapping is source identification, not runtime visual parity.",
+  "summary": {
+    "sourceFramesIdentified": 12,
+    "canonicalScreensMapped": 5,
+    "additionalStatesIdentified": 1,
+    "runtimeParityVerified": 0
+  },
+  "mappings": [
+    {
+      "screenId": "PRV-09",
+      "state": "contact",
+      "tablet": {
+        "nodeId": "6017:116610",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:118695",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING"
+    },
+    {
+      "screenId": "PRV-10",
+      "state": "review",
+      "tablet": {
+        "nodeId": "6017:116846",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:118851",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING"
+    },
+    {
+      "screenId": "PRV-12",
+      "state": "submitted",
+      "tablet": {
+        "nodeId": "6017:121763",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:119003",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING"
+    },
+    {
+      "screenId": null,
+      "state": "needs_changes",
+      "tablet": {
+        "nodeId": "6017:117077",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:119058",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING",
+      "note": "Source explicitly says the property needs changes. No distinct canonical screen ID exists in the current provider inventory; do not mislabel this as PRV-11 validation errors."
+    },
+    {
+      "screenId": "PRV-13",
+      "state": "rejected",
+      "tablet": {
+        "nodeId": "6017:117183",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:119117",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING"
+    },
+    {
+      "screenId": "PRV-14",
+      "state": "published",
+      "tablet": {
+        "nodeId": "6017:120389",
+        "width": 1024
+      },
+      "mobile": {
+        "nodeId": "6017:119163",
+        "width": 402
+      },
+      "status": "SOURCE_IDENTIFIED_RUNTIME_COMPARISON_PENDING"
+    }
+  ]
+}

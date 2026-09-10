@@ -1,0 +1,215 @@
+<frame id="6017:118851" name="Public website pages" x="-6354" y="13717" width="402" height="1385">
+  <frame id="6017:118852" name="MobileHeader" x="0" y="0" width="402" height="56">
+    <frame id="6017:118853" name="LeftActions" x="16" y="12" width="72" height="32">
+      <frame id="6017:118854" name="BurgerMenuBtn" x="0" y="0" width="32" height="32">
+        <frame id="6017:118855" name="IconContainer" x="6" y="6" width="20" height="20">
+          <frame id="6017:118856" name="menu" x="0" y="0" width="20" height="20" />
+        </frame>
+      </frame>
+      <frame id="6017:118858" name="UserAvatar" x="44" y="2" width="28" height="28" />
+    </frame>
+    <frame id="6017:118859" name="RightBrand" x="188" y="16" width="198" height="24">
+      <text id="6017:118860" name="منصة السادات للعقارات" x="0" y="0" width="166" height="24" />
+      <frame id="6017:118861" name="Logo" x="174" y="0" width="24" height="24" />
+    </frame>
+  </frame>
+  <frame id="6017:118862" name="MobileContent" x="0" y="56" width="402" height="1329">
+    <frame id="6017:118863" name="Frame 3" x="16" y="16" width="370" height="1211">
+      <frame id="6017:118864" name="MobileStepper" x="0" y="0" width="370" height="99">
+        <frame id="6017:118865" name="StepperHeader" x="12" y="12" width="346" height="24">
+          <text id="6017:118866" name="الخطوة 7 من 8" x="0" y="1.5" width="72" height="21" />
+          <text id="6017:118867" name="البيانات الأساسية" x="246" y="0" width="100" height="24" />
+        </frame>
+        <frame id="6017:118868" name="Steps" x="12" y="44" width="346" height="43">
+          <frame id="6017:118869" name="StepItem" x="0" y="0" width="23.066667556762695" height="43">
+            <frame id="6017:118870" name="StepCircle" x="-0.46666622161865234" y="0" width="24" height="24">
+              <text id="6017:118871" name="8" x="9" y="2.5" width="6" height="19" />
+            </frame>
+            <text id="6017:118872" name="المراجعة" x="-3.4666662216186523" y="28" width="30" height="15" />
+          </frame>
+          <frame id="6017:118873" name="DividerContainer" x="23.066667556762695" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118874" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118875" name="StepItem" x="46.133331298828125" y="0" width="23.06666374206543" height="43">
+            <frame id="6017:118876" name="StepCircle" x="-0.46666812896728516" y="0" width="24" height="24">
+              <vector id="6017:118877" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118878" name="التواصل" x="-1.9666681289672852" y="28" width="27" height="15" />
+          </frame>
+          <frame id="6017:118879" name="DividerContainer" x="69.19999694824219" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118880" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118881" name="StepItem" x="92.26666259765625" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118882" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118883" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118884" name="الصور" x="2.0333328247070312" y="28" width="19" height="15" />
+          </frame>
+          <frame id="6017:118885" name="DividerContainer" x="115.33332824707031" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118886" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118887" name="StepItem" x="138.39999389648438" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118888" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118889" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118890" name="المميزات" x="-3.4666671752929688" y="28" width="30" height="15" />
+          </frame>
+          <frame id="6017:118891" name="DividerContainer" x="161.46665954589844" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118892" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118893" name="StepItem" x="184.5333251953125" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118894" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118895" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118896" name="السعر" x="1.5333328247070312" y="28" width="20" height="15" />
+          </frame>
+          <frame id="6017:118897" name="DividerContainer" x="207.5999755859375" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118898" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118899" name="StepItem" x="230.66665649414062" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118900" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118901" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118902" name="تفاصيل" x="-0.9666671752929688" y="28" width="25" height="15" />
+          </frame>
+          <frame id="6017:118903" name="DividerContainer" x="253.7333221435547" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118904" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118905" name="StepItem" x="276.79998779296875" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118906" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118907" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118908" name="الموقع" x="-0.9666671752929688" y="28" width="25" height="15" />
+          </frame>
+          <frame id="6017:118909" name="DividerContainer" x="299.86663818359375" y="0" width="23.066665649414062" height="12">
+            <frame id="6017:118910" name="StepLine" x="0" y="10" width="23.066665649414062" height="2" />
+          </frame>
+          <frame id="6017:118911" name="StepItem" x="322.93328857421875" y="0" width="23.066665649414062" height="43">
+            <frame id="6017:118912" name="StepCircle" x="-0.46666717529296875" y="0" width="24" height="24">
+              <vector id="6017:118913" name="Vector" x="7.333800315856934" y="8.791900634765625" width="9.332399368286133" height="6.416199684143066" />
+            </frame>
+            <text id="6017:118914" name="التسمية" x="-2.4666671752929688" y="28" width="28" height="15" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="6017:118915" name="FormCard" x="0" y="115" width="370" height="1096">
+        <frame id="6017:118916" name="MobileBody" x="16" y="16" width="338" height="1064">
+          <frame id="6017:118917" name="MobileHeader" x="16" y="16" width="306" height="62">
+            <text id="6017:118918" name="مراجعة البيانات وإرسال الطلب" x="0" y="0" width="306" height="34" />
+            <text id="6017:118919" name="يرجى التأكد من دقة المعلومات وتفعيل الإقرارات بالأسفل" x="0" y="38" width="306" height="24" />
+          </frame>
+          <frame id="6017:118920" name="Section-Basic" x="16" y="98" width="306" height="208">
+            <frame id="6017:118921" name="SecHeader" x="16" y="16" width="274" height="26">
+              <frame id="6017:118922" name="Badge" x="0" y="1.5" width="49" height="23">
+                <text id="6017:118923" name="مكتمل" x="8" y="2" width="33" height="19" />
+              </frame>
+              <text id="6017:118924" name="البيانات الأساسية" x="167" y="0" width="107" height="26" />
+            </frame>
+            <frame id="6017:118925" name="Rows" x="16" y="54" width="274" height="138">
+              <frame id="6017:118926" name="Row" x="0" y="0" width="274" height="46">
+                <text id="6017:118927" name="شقة فاخرة للبيع" x="0" y="10" width="96" height="26" />
+                <text id="6017:118928" name="العنوان" x="232" y="10" width="42" height="26" />
+              </frame>
+              <frame id="6017:118929" name="Row" x="0" y="46" width="274" height="46">
+                <text id="6017:118930" name="بيع" x="0" y="10" width="18" height="26" />
+                <text id="6017:118931" name="نوع العرض" x="213" y="10" width="61" height="26" />
+              </frame>
+              <frame id="6017:118932" name="Row" x="0" y="92" width="274" height="46">
+                <text id="6017:118933" name="شقة سكنية" x="0" y="10" width="71" height="26" />
+                <text id="6017:118934" name="نوع العقار" x="218" y="10" width="56" height="26" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="6017:118935" name="Section-Location" x="16" y="326" width="306" height="208">
+            <frame id="6017:118936" name="SecHeader" x="16" y="16" width="274" height="26">
+              <frame id="6017:118937" name="Badge" x="0" y="1.5" width="49" height="23">
+                <text id="6017:118938" name="مكتمل" x="8" y="2" width="33" height="19" />
+              </frame>
+              <text id="6017:118939" name="تفاصيل الموقع" x="178" y="0" width="96" height="26" />
+            </frame>
+            <frame id="6017:118940" name="Rows" x="16" y="54" width="274" height="138">
+              <frame id="6017:118941" name="Row" x="0" y="0" width="274" height="46">
+                <text id="6017:118942" name="مدينة السادات" x="0" y="10" width="83" height="26" />
+                <text id="6017:118943" name="المدينة" x="233" y="10" width="41" height="26" />
+              </frame>
+              <frame id="6017:118944" name="Row" x="0" y="46" width="274" height="46">
+                <text id="6017:118945" name="الحي الأول" x="0" y="10" width="63" height="26" />
+                <text id="6017:118946" name="المنطقة" x="225" y="10" width="49" height="26" />
+              </frame>
+              <frame id="6017:118947" name="Row" x="0" y="92" width="274" height="46">
+                <text id="6017:118948" name="شارع النصر الرئيسي" x="0" y="10" width="107" height="26" />
+                <text id="6017:118949" name="الشارع" x="238" y="10" width="36" height="26" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="6017:118950" name="Section-Price" x="16" y="554" width="306" height="162">
+            <frame id="6017:118951" name="SecHeader" x="16" y="16" width="274" height="26">
+              <frame id="6017:118952" name="Badge" x="0" y="1.5" width="49" height="23">
+                <text id="6017:118953" name="مكتمل" x="8" y="2" width="33" height="19" />
+              </frame>
+              <text id="6017:118954" name="السعر ونظام السداد" x="152" y="0" width="122" height="26" />
+            </frame>
+            <frame id="6017:118955" name="Rows" x="16" y="54" width="274" height="92">
+              <frame id="6017:118956" name="Row" x="0" y="0" width="274" height="46">
+                <text id="6017:118957" name="1.2 مليون جنيه" x="0" y="10" width="86" height="26" />
+                <text id="6017:118958" name="السعر الإجمالي" x="189" y="10" width="85" height="26" />
+              </frame>
+              <frame id="6017:118959" name="Row" x="0" y="46" width="274" height="46">
+                <text id="6017:118960" name="كاش أو تقسيط" x="0" y="10" width="90" height="26" />
+                <text id="6017:118961" name="طريقة الدفع" x="201" y="10" width="73" height="26" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="6017:118962" name="ConfirmationsBox" x="16" y="736" width="306" height="178">
+            <text id="6017:118963" name="الإقرارات والتعهدات المطلوبة" x="16" y="16" width="274" height="26" />
+            <frame id="6017:118964" name="CheckboxRow" x="16" y="54" width="274" height="28">
+              <text id="6017:118965" name="أقر بصحة بيانات العقار المدخلة." x="0" y="4" width="246" height="20" />
+              <frame id="6017:118966" name="Box" x="256" y="4" width="18" height="18">
+                <frame id="6017:118967" name="check" x="4" y="4" width="10" height="10" />
+              </frame>
+            </frame>
+            <frame id="6017:118969" name="CheckboxRow" x="16" y="94" width="274" height="28">
+              <text id="6017:118970" name="أقر بأن لدي صلاحية عرض هذا العقار." x="0" y="4" width="246" height="20" />
+              <frame id="6017:118971" name="Box" x="256" y="4" width="18" height="18">
+                <frame id="6017:118972" name="check" x="4" y="4" width="10" height="10" />
+              </frame>
+            </frame>
+            <frame id="6017:118974" name="CheckboxRow" x="16" y="134" width="274" height="28">
+              <text id="6017:118975" name="أوافق على مراجعة الإدارة قبل النشر." x="0" y="4" width="246" height="20" />
+              <frame id="6017:118976" name="Box" x="256" y="4" width="18" height="18">
+                <frame id="6017:118977" name="check" x="4" y="4" width="10" height="10" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="6017:118979" name="ActionButtons" x="16" y="934" width="306" height="114">
+            <frame id="6017:118980" name="SubmitBtn" x="0" y="0" width="306" height="54">
+              <text id="6017:118981" name="إرسال المراجعة" x="95" y="14" width="94" height="26" />
+              <frame id="6017:118982" name="send" x="197" y="20" width="14" height="14" />
+            </frame>
+            <frame id="6017:118984" name="BackBtn" x="0" y="64" width="306" height="50">
+              <text id="6017:118985" name="السابق" x="132" y="12" width="42" height="26" />
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+    <frame id="6017:118986" name="BottomNav" x="16" y="1247" width="370" height="66">
+      <frame id="6017:118987" name="NavHome" x="16" y="12" width="33" height="38">
+        <frame id="6017:118988" name="home" x="6.5" y="0" width="20" height="20" />
+        <text id="6017:118990" name="الرئيسية" x="0" y="24" width="33" height="14" />
+      </frame>
+      <frame id="6017:118991" name="NavProperties" x="115" y="12" width="36" height="38">
+        <frame id="6017:118992" name="grid" x="8" y="0" width="20" height="20" />
+        <text id="6017:118994" name="العقارات" x="0" y="24" width="36" height="14" />
+      </frame>
+      <frame id="6017:118995" name="NavRequests" x="217" y="12" width="31" height="38">
+        <frame id="6017:118996" name="bell" x="5.5" y="0" width="20" height="20" />
+        <text id="6017:118998" name="الطلبات" x="0" y="24" width="31" height="14" />
+      </frame>
+      <frame id="6017:118999" name="NavSettings" x="314" y="12" width="40" height="38">
+        <frame id="6017:119000" name="settings" x="10" y="0" width="20" height="20" />
+        <text id="6017:119002" name="الإعدادات" x="0" y="24" width="40" height="14" />
+      </frame>
+    </frame>
+  </frame>
+</frame>
