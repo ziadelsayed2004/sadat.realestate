@@ -90,13 +90,12 @@ function ProjectMetricStrip({ data, locale, review }: { readonly data: AdminProj
   const copy = getAdminProjectsCopy(locale);
   const counts = Object.fromEntries(statuses.map(status => [status, data.items.filter(project => project.status === status).length])) as Record<ProjectStatus, number>;
   const labels = review
-    ? (locale === 'ar' ? ['\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a', copy.status.pending_review, copy.status.needs_changes, '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629'] : ['Total projects', copy.status.pending_review, copy.status.needs_changes, 'Loaded records'])
-    : (locale === 'ar' ? ['\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629', copy.status.published, copy.status.pending_review, copy.status.needs_changes, copy.status.draft]
-      : ['Total projects', 'Loaded records', copy.status.published, copy.status.pending_review, copy.status.needs_changes, copy.status.draft]);
+    ? [copy.metrics.total, copy.status.pending_review, copy.status.needs_changes, copy.metrics.loaded]
+    : [copy.metrics.total, copy.metrics.loaded, copy.status.published, copy.status.pending_review, copy.status.needs_changes, copy.status.draft];
   const values = review ? [data.total, counts.pending_review, counts.needs_changes, data.items.length] : [data.total, data.items.length, counts.published, counts.pending_review, counts.needs_changes, counts.draft];
   const colors = review ? ['#1b2942', '#bf6500', '#bf6500', '#2f68c9'] : ['#1b2942', '#2f68c9', '#00854a', '#bf6500', '#bf6500', '#2f68c9'];
   return (
-    <section aria-label={locale === 'ar' ? '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a' : 'Project metrics'} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
+    <section aria-label={copy.metrics.ariaLabel} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
       <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
         {values.map((value, index) => <article className="admin-dashboard__metric" data-testid={`admin-project-metric-${index}`} key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}
       </div>
@@ -106,9 +105,9 @@ function ProjectMetricStrip({ data, locale, review }: { readonly data: AdminProj
 
 function ProjectStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ProjectStatus | ''; readonly onSelect: (status: ProjectStatus | '') => void }) {
   const copy = getAdminProjectsCopy(locale);
-  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' :'All';
+  const allLabel = copy.allTab;
   return (
-    <div role="tablist" aria-label={locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639' : 'Project status'} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+    <div role="tablist" aria-label={copy.statusTabsLabel} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
       {[['', allLabel] as const, ...statuses.map(status => [status, copy.status[status]] as const)].map(([value, label]) => {
         const active = selected === value;
         return <button aria-selected={active} data-filter-value={value || 'all'} key={value || 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>;

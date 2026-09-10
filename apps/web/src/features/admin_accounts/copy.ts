@@ -72,6 +72,33 @@ export interface AdminAccountsCopy {
     readonly needsInformation: string;
     readonly suspend: string;
   };
+  readonly roleLabels: Readonly<Record<'seeker' | 'provider', string>>;
+  readonly common: {
+    readonly apply: string;
+    readonly clear: string;
+    readonly previous: string;
+    readonly next: string;
+    readonly pagination: string;
+    readonly metricsLabel: string;
+    readonly providerTypeFilter: string;
+    readonly recordStatusFilter: string;
+    readonly headingActionsLabel: string;
+    readonly addUser: string;
+    readonly seekers: string;
+    readonly propertyProviders: string;
+  };
+  readonly metricLabels: Readonly<Record<'totalAccounts' | 'totalSeekers' | 'loaded' | 'seekers' | 'providers' | 'verified' | 'pending' | 'restricted' | 'totalProviders' | 'approved' | 'rejected' | 'suspended' | 'totalRequests' | 'needsInformation', string>>;
+  readonly documents: {
+    readonly title: string;
+    readonly empty: string;
+    readonly document: string;
+    readonly mime: string;
+    readonly size: string;
+    readonly securityState: string;
+    readonly reviewState: string;
+    readonly uploaded: string;
+    readonly action: string;
+  };
 }
 
 const english: AdminAccountsCopy = {
@@ -139,7 +166,11 @@ const english: AdminAccountsCopy = {
   },
   securityStateLabels: { quarantined: 'Quarantined', scan_pending: 'Scan pending', clean: 'Clean', infected: 'Infected', scan_failed: 'Scan failed', deleted: 'Deleted' },
   reviewStateLabels: { uploaded: 'Uploaded', pending_review: 'Pending review', needs_replacement: 'Needs replacement', approved: 'Approved', rejected: 'Rejected' },
-  actions: { retry: 'Retry', view: 'View details', back: 'Back to list', openDocument: 'Open document', unavailableDocument: 'Unavailable', loadingDocument: 'Opening…', reviewHeading: 'Application decision', reviewReason: 'Decision reason', reviewReasonPlaceholder: 'Write a clear reason (at least 3 characters)', reviewReasonRequired: 'Enter a valid reason before saving the decision.', reviewSaved: 'The provider application decision was saved.', verify: 'Verify account', reject: 'Reject application', needsInformation: 'Request information', suspend: 'Suspend account' }
+  actions: { retry: 'Retry', view: 'View details', back: 'Back to list', openDocument: 'Open document', unavailableDocument: 'Unavailable', loadingDocument: 'Opening…', reviewHeading: 'Application decision', reviewReason: 'Decision reason', reviewReasonPlaceholder: 'Write a clear reason (at least 3 characters)', reviewReasonRequired: 'Enter a valid reason before saving the decision.', reviewSaved: 'The provider application decision was saved.', verify: 'Verify account', reject: 'Reject application', needsInformation: 'Request information', suspend: 'Suspend account' },
+  roleLabels: { seeker: 'Seeker', provider: 'Provider' },
+  common: { apply: 'Apply', clear: 'Clear', previous: 'Previous', next: 'Next', pagination: 'Pagination', metricsLabel: 'Record metrics', providerTypeFilter: 'Provider type', recordStatusFilter: 'Record status', headingActionsLabel: 'Account actions', addUser: 'Add user', seekers: 'Seekers', propertyProviders: 'Property providers' },
+  metricLabels: { totalAccounts: 'Total accounts', totalSeekers: 'Total seekers', loaded: 'Loaded records', seekers: 'Seekers', providers: 'Providers', verified: 'Verified accounts', pending: 'Pending review', restricted: 'Restricted accounts', totalProviders: 'Total providers', approved: 'Approved', rejected: 'Rejected', suspended: 'Suspended', totalRequests: 'Total applications', needsInformation: 'Needs information' },
+  documents: { title: 'Provider documents', empty: 'No active documents are available.', document: 'Document', mime: 'MIME', size: 'Size', securityState: 'Security state', reviewState: 'Review state', uploaded: 'Uploaded', action: 'Action' }
 };
 
 const arabic: AdminAccountsCopy = {
@@ -167,7 +198,11 @@ const arabic: AdminAccountsCopy = {
   documentCategoryLabels: { government_id_front: 'الهوية (أمام)', government_id_back: 'الهوية (خلف)', broker_license: 'رخصة الوساطة', professional_membership: 'عضوية مهنية', commercial_registration: 'السجل التجاري', tax_card: 'البطاقة الضريبية', authorized_representative_id_front: 'هوية الممثل (أمام)', authorized_representative_id_back: 'هوية الممثل (خلف)', authorization_letter: 'خطاب التفويض', brokerage_license: 'ترخيص الوساطة', company_profile: 'ملف الشركة', developer_license: 'ترخيص المطور', additional_supporting_document: 'مستند داعم' },
   securityStateLabels: { quarantined: 'معزول', scan_pending: 'في انتظار الفحص', clean: 'نظيف', infected: 'مصاب', scan_failed: 'فشل الفحص', deleted: 'محذوف' },
   reviewStateLabels: { uploaded: 'تم الرفع', pending_review: 'قيد المراجعة', needs_replacement: 'يحتاج استبدالاً', approved: 'معتمد', rejected: 'مرفوض' },
-  actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…', reviewHeading: 'قرار مراجعة الطلب', reviewReason: 'سبب القرار', reviewReasonPlaceholder: 'اكتب سبباً واضحاً لا يقل عن 3 أحرف', reviewReasonRequired: 'أدخل سبباً صحيحاً قبل حفظ القرار.', reviewSaved: 'تم حفظ قرار مراجعة طلب مقدم العقار.', verify: 'توثيق الحساب', reject: 'رفض الطلب', needsInformation: 'طلب استكمال البيانات', suspend: 'إيقاف الحساب' }
+  actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…', reviewHeading: 'قرار مراجعة الطلب', reviewReason: 'سبب القرار', reviewReasonPlaceholder: 'اكتب سبباً واضحاً لا يقل عن 3 أحرف', reviewReasonRequired: 'أدخل سبباً صحيحاً قبل حفظ القرار.', reviewSaved: 'تم حفظ قرار مراجعة طلب مقدم العقار.', verify: 'توثيق الحساب', reject: 'رفض الطلب', needsInformation: 'طلب استكمال البيانات', suspend: 'إيقاف الحساب' },
+  roleLabels: { seeker: 'باحث عن عقار', provider: 'مقدم عقار' },
+  common: { apply: 'تطبيق', clear: 'مسح', previous: 'السابق', next: 'التالي', pagination: 'ترقيم الصفحات', metricsLabel: 'مؤشرات السجلات', providerTypeFilter: 'نوع مقدم العقار', recordStatusFilter: 'حالة السجل', headingActionsLabel: 'إجراءات الحسابات', addUser: 'إضافة مستخدم', seekers: 'الباحثون', propertyProviders: 'مقدمو العقارات' },
+  metricLabels: { totalAccounts: 'إجمالي الحسابات', totalSeekers: 'إجمالي الباحثين', loaded: 'السجلات المحملة', seekers: 'الباحثون عن عقار', providers: 'مقدمو العقارات', verified: 'الحسابات الموثقة', pending: 'قيد المراجعة', restricted: 'الحسابات المقيدة', totalProviders: 'إجمالي مقدمي العقارات', approved: 'معتمدة', rejected: 'مرفوضة', suspended: 'موقوفة', totalRequests: 'إجمالي طلبات التحقق', needsInformation: 'تحتاج معلومات' },
+  documents: { title: 'مستندات مقدم العقار', empty: 'لا توجد مستندات نشطة.', document: 'المستند', mime: 'MIME', size: 'الحجم', securityState: 'حالة الأمان', reviewState: 'حالة المراجعة', uploaded: 'تاريخ الرفع', action: 'الإجراء' }
 };
 
 const copies: Readonly<Record<SupportedLocale, AdminAccountsCopy>> = { ar: arabic, en: english,};

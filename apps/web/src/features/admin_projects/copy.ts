@@ -45,6 +45,9 @@ export interface AdminProjectsCopy {
   readonly unavailable: string;
   readonly noActions: string;
   readonly directionNote: string;
+  readonly metrics: { readonly ariaLabel: string; readonly total: string; readonly loaded: string };
+  readonly statusTabsLabel: string;
+  readonly allTab: string;
 }
 
 const copyByLocale: Readonly<Record<SupportedLocale, AdminProjectsCopy>> = {
@@ -89,7 +92,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminProjectsCopy>> = {
     },
     unavailable: 'غير متاح',
     noActions: 'لا توجد إجراءات متاحة',
-    directionNote: 'العربية RTL — سطح إدارة المشاريع معتمد لسطح المكتب.'
+    directionNote: 'العربية RTL — سطح إدارة المشاريع معتمد لسطح المكتب.',
+    metrics: { ariaLabel: 'مؤشرات المشروعات', total: 'إجمالي المشروعات', loaded: 'السجلات المحملة' },
+    statusTabsLabel: 'حالة المشروع', allTab: 'الكل'
   },
   en: {
     eyebrow: 'Project administration',
@@ -132,7 +137,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminProjectsCopy>> = {
     },
     unavailable: 'Unavailable',
     noActions: 'No actions available',
-    directionNote: 'English LTR — project administration is approved for desktop.'
+    directionNote: 'English LTR — project administration is approved for desktop.',
+    metrics: { ariaLabel: 'Project metrics', total: 'Total projects', loaded: 'Loaded records' },
+    statusTabsLabel: 'Project status', allTab: 'All'
   },};
 
 export function getAdminProjectsCopy(locale: SupportedLocale): AdminProjectsCopy {

@@ -230,7 +230,8 @@
       "trace": "Trace",
       "view": "View details",
       "back": "Back to audit log",
-      "noEntries": "No audit events match the current filters."
+      "noEntries": "No audit events match the current filters.",
+      "exportLog": "Export log"
     },
     "states": {
       "loading": {
@@ -433,6 +434,51 @@
       "reject": "Reject application",
       "needsInformation": "Request information",
       "suspend": "Suspend account"
+    },
+    "roleLabels": {
+      "seeker": "Seeker",
+      "provider": "Provider"
+    },
+    "common": {
+      "apply": "Apply",
+      "clear": "Clear",
+      "previous": "Previous",
+      "next": "Next",
+      "pagination": "Pagination",
+      "metricsLabel": "Record metrics",
+      "providerTypeFilter": "Provider type",
+      "recordStatusFilter": "Record status",
+      "headingActionsLabel": "Account actions",
+      "addUser": "Add user",
+      "seekers": "Seekers",
+      "propertyProviders": "Property providers"
+    },
+    "metricLabels": {
+      "totalAccounts": "Total accounts",
+      "totalSeekers": "Total seekers",
+      "loaded": "Loaded records",
+      "seekers": "Seekers",
+      "providers": "Providers",
+      "verified": "Verified accounts",
+      "pending": "Pending review",
+      "restricted": "Restricted accounts",
+      "totalProviders": "Total providers",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "suspended": "Suspended",
+      "totalRequests": "Total applications",
+      "needsInformation": "Needs information"
+    },
+    "documents": {
+      "title": "Provider documents",
+      "empty": "No active documents are available.",
+      "document": "Document",
+      "mime": "MIME",
+      "size": "Size",
+      "securityState": "Security state",
+      "reviewState": "Review state",
+      "uploaded": "Uploaded",
+      "action": "Action"
     }
   },
   "admin_accounts/reports-copy#getAdminAccountReportsCopy": {
@@ -1391,7 +1437,14 @@
     },
     "unavailable": "Unavailable",
     "noActions": "No actions available",
-    "directionNote": "English LTR — project administration is approved for desktop."
+    "directionNote": "English LTR — project administration is approved for desktop.",
+    "metrics": {
+      "ariaLabel": "Project metrics",
+      "total": "Total projects",
+      "loaded": "Loaded records"
+    },
+    "statusTabsLabel": "Project status",
+    "allTab": "All"
   },
   "admin_properties/copy#getAdminPropertiesCopy": {
     "eyebrow": "Property administration",
@@ -1537,7 +1590,14 @@
         "body": "Records are rendered from the server-approved projection."
       }
     },
-    "directionNote": "English LTR — property administration is approved for desktop."
+    "directionNote": "English LTR — property administration is approved for desktop.",
+    "metrics": {
+      "ariaLabel": "Property metrics",
+      "total": "Total properties",
+      "loaded": "Loaded records"
+    },
+    "statusTabsLabel": "Property status",
+    "allTab": "All"
   },
   "admin_rbac/copy#getAdminRbacCopy": {
     "eyebrow": "Administration access",

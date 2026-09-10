@@ -230,7 +230,8 @@
       "trace": "التتبع",
       "view": "عرض التفاصيل",
       "back": "العودة إلى السجل",
-      "noEntries": "لا توجد أحداث تدقيق مطابقة."
+      "noEntries": "لا توجد أحداث تدقيق مطابقة.",
+      "exportLog": "تصدير السجل"
     },
     "states": {
       "loading": {
@@ -433,6 +434,51 @@
       "reject": "رفض الطلب",
       "needsInformation": "طلب استكمال البيانات",
       "suspend": "إيقاف الحساب"
+    },
+    "roleLabels": {
+      "seeker": "باحث عن عقار",
+      "provider": "مقدم عقار"
+    },
+    "common": {
+      "apply": "تطبيق",
+      "clear": "مسح",
+      "previous": "السابق",
+      "next": "التالي",
+      "pagination": "ترقيم الصفحات",
+      "metricsLabel": "مؤشرات السجلات",
+      "providerTypeFilter": "نوع مقدم العقار",
+      "recordStatusFilter": "حالة السجل",
+      "headingActionsLabel": "إجراءات الحسابات",
+      "addUser": "إضافة مستخدم",
+      "seekers": "الباحثون",
+      "propertyProviders": "مقدمو العقارات"
+    },
+    "metricLabels": {
+      "totalAccounts": "إجمالي الحسابات",
+      "totalSeekers": "إجمالي الباحثين",
+      "loaded": "السجلات المحملة",
+      "seekers": "الباحثون عن عقار",
+      "providers": "مقدمو العقارات",
+      "verified": "الحسابات الموثقة",
+      "pending": "قيد المراجعة",
+      "restricted": "الحسابات المقيدة",
+      "totalProviders": "إجمالي مقدمي العقارات",
+      "approved": "معتمدة",
+      "rejected": "مرفوضة",
+      "suspended": "موقوفة",
+      "totalRequests": "إجمالي طلبات التحقق",
+      "needsInformation": "تحتاج معلومات"
+    },
+    "documents": {
+      "title": "مستندات مقدم العقار",
+      "empty": "لا توجد مستندات نشطة.",
+      "document": "المستند",
+      "mime": "MIME",
+      "size": "الحجم",
+      "securityState": "حالة الأمان",
+      "reviewState": "حالة المراجعة",
+      "uploaded": "تاريخ الرفع",
+      "action": "الإجراء"
     }
   },
   "admin_accounts/reports-copy#getAdminAccountReportsCopy": {
@@ -1391,7 +1437,14 @@
     },
     "unavailable": "غير متاح",
     "noActions": "لا توجد إجراءات متاحة",
-    "directionNote": "العربية RTL — سطح إدارة المشاريع معتمد لسطح المكتب."
+    "directionNote": "العربية RTL — سطح إدارة المشاريع معتمد لسطح المكتب.",
+    "metrics": {
+      "ariaLabel": "مؤشرات المشروعات",
+      "total": "إجمالي المشروعات",
+      "loaded": "السجلات المحملة"
+    },
+    "statusTabsLabel": "حالة المشروع",
+    "allTab": "الكل"
   },
   "admin_properties/copy#getAdminPropertiesCopy": {
     "eyebrow": "إدارة العقارات",
@@ -1537,7 +1590,14 @@
         "body": "تُعرض السجلات من الإسقاط المعتمد من الخادم."
       }
     },
-    "directionNote": "العربية RTL — إدارة العقارات معتمدة لسطح المكتب."
+    "directionNote": "العربية RTL — إدارة العقارات معتمدة لسطح المكتب.",
+    "metrics": {
+      "ariaLabel": "مؤشرات العقارات",
+      "total": "إجمالي العقارات",
+      "loaded": "السجلات المحملة"
+    },
+    "statusTabsLabel": "حالة العقار",
+    "allTab": "الكل"
   },
   "admin_rbac/copy#getAdminRbacCopy": {
     "eyebrow": "صلاحيات الإدارة",
