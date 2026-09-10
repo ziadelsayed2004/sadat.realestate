@@ -213,10 +213,9 @@ function DeleteCategoryPanel({ category, locale, onCancel, onDelete }: { readonl
 }
 
 function ArticleMetricStrip({ data, locale }: { readonly data: AdminArticleListData; readonly locale: SupportedLocale }) {
+  const copy = getAdminContentCopy(locale);
   const counts = Object.fromEntries(statuses.map(status => [status, data.items.filter(article => article.status === status).length])) as Record<ArticleStatus, number>;
-  const labels = locale === 'ar'
-    ? ['إجمالي المقالات', 'منشورة', 'مسودات', 'قيد المراجعة', 'مؤرشفة']
-    :['Total articles', 'Published', 'Drafts', 'Under review', 'Archived'];
+  const labels = [copy.articleMetrics.total, copy.articleMetrics.published, copy.articleMetrics.draft, copy.articleMetrics.pendingReview, copy.articleMetrics.archived];
   const values = [data.total, counts.published, counts.draft, counts.pending_review, counts.archived];
   const colors = ['#1f355f', '#138a4b', '#4263a5', '#bd7414', '#667085'];
   return <div data-testid="admin-article-metrics" aria-label={labels[0]} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, maxWidth: 1320, margin: '0 auto 12px' }}>{values.map((value, index) => <article className="admin-dashboard__metric" data-testid={`admin-article-metric-${index}`} key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
@@ -224,9 +223,9 @@ function ArticleMetricStrip({ data, locale }: { readonly data: AdminArticleListD
 
 function ArticleStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ArticleStatus | ''; readonly onSelect: (status: ArticleStatus | '') => void }) {
   const copy = getAdminContentCopy(locale);
-  const allLabel = locale === 'ar' ? 'كل المقالات' :'All articles';
+  const allLabel = copy.allArticles;
   const options = [['', allLabel] as const, ...statuses.map(status => [status, copy.status[status]] as const)];
-  return <div role="tablist" aria-label={`${copy.statusLabel} summary`} data-testid="admin-article-status-tabs" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '0 auto 16px', maxWidth: 1320 }}>{options.map(([status, label]) => <button key={status || 'all'} type="button" role="tab" aria-selected={selected === status} onClick={() => onSelect(status)} style={{ border: '1px solid #d0d5dd', borderRadius: 999, padding: '8px 14px', background: selected === status ? '#1f355f' : '#fff', color: selected === status ? '#fff' : '#344054', cursor: 'pointer' }}>{label}</button>)}</div>;
+  return <div role="tablist" aria-label={copy.statusSummary} data-testid="admin-article-status-tabs" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '0 auto 16px', maxWidth: 1320 }}>{options.map(([status, label]) => <button key={status || 'all'} type="button" role="tab" aria-selected={selected === status} onClick={() => onSelect(status)} style={{ border: '1px solid #d0d5dd', borderRadius: 999, padding: '8px 14px', background: selected === status ? '#1f355f' : '#fff', color: selected === status ? '#fff' : '#344054', cursor: 'pointer' }}>{label}</button>)}</div>;
 }
 
 export function AdminContent({ locale, session, authClient, apiOrigin, initialArticles, initialCategories, loadArticles, loadCategories, createArticle, updateArticle, transitionArticle, createCategory, updateCategory, deleteCategory }: AdminContentProps) {

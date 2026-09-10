@@ -51,6 +51,9 @@ export interface AdminContentCopy {
   readonly saved: string;
   readonly deleted: string;
   readonly directionNote: string;
+  readonly articleMetrics: Readonly<Record<'total' | 'published' | 'draft' | 'pendingReview' | 'archived', string>>;
+  readonly allArticles: string;
+  readonly statusSummary: string;
 }
 
 const copyByLocale: Readonly<Record<SupportedLocale, AdminContentCopy>> = {
@@ -62,7 +65,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminContentCopy>> = {
     action: { update: 'تعديل', submit: 'إرسال للمراجعة', publish: 'نشر', return_to_draft: 'إعادة لمسودة', archive: 'أرشفة', restore: 'استعادة' },
     status: { draft: 'مسودة', pending_review: 'قيد المراجعة', published: 'منشور', archived: 'مؤرشف' },
     states: { loading: { title: 'جارٍ تحميل المحتوى', body: 'يتم جلب البيانات من المصدر المعتمد.' }, empty: { title: 'لا توجد سجلات', body: 'لا توجد بيانات مطابقة للبحث أو الفلتر الحالي.' }, error: { title: 'تعذر تحميل المحتوى', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الاتصال غير متاح مؤقتاً', body: 'يمكن إعادة المحاولة دون تغيير البيانات.' }, permission: { title: 'الوصول غير متاح', body: 'تحتاج هذه الصفحة إلى جلسة مدير وصلاحية المحتوى المناسبة.' }, success: { title: 'المحتوى جاهز', body: 'تُعرض البيانات من الإسقاط المعتمد للخادم.' } },
-    saved: 'تم الحفظ.', deleted: 'تم حذف التصنيف.', directionNote: 'العربية RTL — إدارة المحتوى معتمدة لسطح المكتب.'
+    saved: 'تم الحفظ.', deleted: 'تم حذف التصنيف.', directionNote: 'العربية RTL — إدارة المحتوى معتمدة لسطح المكتب.', articleMetrics: { total: 'إجمالي المقالات', published: 'منشورة', draft: 'مسودات', pendingReview: 'قيد المراجعة', archived: 'مؤرشفة' }, allArticles: 'كل المقالات', statusSummary: 'ملخص حالة المقالات'
   },
   en: {
     eyebrow: 'Content administration', articlesTitle: 'Article management', articlesDescription: 'Create, review, and publish articles using the server-approved permissions.', categoriesTitle: 'Article categories', categoriesDescription: 'Organize content categories while preserving their order and state.', createArticle: 'Create article', createCategory: 'Add category', categories: 'Categories', articles: 'Articles',
@@ -71,7 +74,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminContentCopy>> = {
     action: { update: 'Edit', submit: 'Submit for review', publish: 'Publish', return_to_draft: 'Return to draft', archive: 'Archive', restore: 'Restore' },
     status: { draft: 'Draft', pending_review: 'Under review', published: 'Published', archived: 'Archived' },
     states: { loading: { title: 'Loading content', body: 'Fetching records from the approved source.' }, empty: { title: 'No records found', body: 'No records match the current search or filter.' }, error: { title: 'Content could not load', body: 'Check the connection and try again.' }, retry: { title: 'Connection temporarily unavailable', body: 'Retry without changing the current data.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator session and the matching content permission.' }, success: { title: 'Content ready', body: 'Records are rendered from the server-approved projection.' } },
-    saved: 'Saved.', deleted: 'Category deleted.', directionNote: 'English LTR — content administration is approved for desktop.'
+    saved: 'Saved.', deleted: 'Category deleted.', directionNote: 'English LTR — content administration is approved for desktop.', articleMetrics: { total: 'Total articles', published: 'Published', draft: 'Drafts', pendingReview: 'Under review', archived: 'Archived' }, allArticles: 'All articles', statusSummary: 'Article status summary'
   },};
 
 export function getAdminContentCopy(locale: SupportedLocale): AdminContentCopy {

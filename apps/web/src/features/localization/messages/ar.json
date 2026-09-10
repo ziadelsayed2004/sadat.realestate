@@ -1155,7 +1155,16 @@
     },
     "saved": "تم الحفظ.",
     "deleted": "تم حذف التصنيف.",
-    "directionNote": "العربية RTL — إدارة المحتوى معتمدة لسطح المكتب."
+    "directionNote": "العربية RTL — إدارة المحتوى معتمدة لسطح المكتب.",
+    "articleMetrics": {
+      "total": "إجمالي المقالات",
+      "published": "منشورة",
+      "draft": "مسودات",
+      "pendingReview": "قيد المراجعة",
+      "archived": "مؤرشفة"
+    },
+    "allArticles": "كل المقالات",
+    "statusSummary": "ملخص حالة المقالات"
   },
   "admin_home/copy#getAdminHomeCopy": {
     "eyebrow": "إدارة الصفحة الرئيسية",

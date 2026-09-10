@@ -1155,7 +1155,16 @@
     },
     "saved": "Saved.",
     "deleted": "Category deleted.",
-    "directionNote": "English LTR — content administration is approved for desktop."
+    "directionNote": "English LTR — content administration is approved for desktop.",
+    "articleMetrics": {
+      "total": "Total articles",
+      "published": "Published",
+      "draft": "Drafts",
+      "pendingReview": "Under review",
+      "archived": "Archived"
+    },
+    "allArticles": "All articles",
+    "statusSummary": "Article status summary"
   },
   "admin_home/copy#getAdminHomeCopy": {
     "eyebrow": "Homepage administration",
