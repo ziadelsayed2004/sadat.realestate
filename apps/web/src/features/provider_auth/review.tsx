@@ -515,7 +515,7 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
   }, [application, client, copy]);
 
   if (loadState === 'loading') {
-    return <PageFrame locale={locale} screenId="AUTH-13" state="loading"><div className="auth-card auth-card--form provider-review-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} /></div></div></PageFrame>;
+    return <PageFrame locale={locale} screenId="AUTH-13" state="loading"><div className="auth-card auth-card--form provider-review-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} loadingVariant="form" /></div></div></PageFrame>;
   }
 
   if (loadState !== 'ready') {

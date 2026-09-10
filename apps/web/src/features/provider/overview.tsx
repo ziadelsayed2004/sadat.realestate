@@ -49,7 +49,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Provid
   const message = copy.states[state];
   return (
     <section className="provider-dashboard__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="cards" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' ? <button type="button" className="provider-dashboard__secondary-action" onClick={onRetry}>{copy.retry}</button> : null}
     </section>
   );

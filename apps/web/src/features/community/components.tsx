@@ -184,7 +184,7 @@ function CommunityState({
   const text = stateCopy(state, copy);
   return (
     <section className="public-community__state" data-state={state} aria-label={text.title}>
-      <StateMessage state={state} title={text.title} message={text.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retryLabel} />
+      <StateMessage state={state} title={text.title} message={text.body} loadingVariant="cards" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retryLabel} />
       {state === 'empty' || state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retryLabel}</Button> : null}
     </section>
   );
@@ -275,7 +275,7 @@ function DetailPanel({
     return (
       <section className="public-community__detail" data-detail-state={state} aria-label={text?.title}>
         <div className="public-community__detail-header"><h2>{text?.title}</h2><Button variant="ghost" size="sm" onClick={onClose}>{copy.close}</Button></div>
-        <StateMessage state={state} title={text?.title} message={text?.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retryLabel} />
+        <StateMessage state={state} title={text?.title} message={text?.body} loadingVariant="page" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retryLabel} />
       </section>
     );
   }

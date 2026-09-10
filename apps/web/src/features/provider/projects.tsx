@@ -113,7 +113,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Provid
   const message = providerCopy.states[state];
   return (
     <section className="provider-projects__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={providerCopy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="table" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={providerCopy.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{providerCopy.retry}</Button> : null}
     </section>
   );

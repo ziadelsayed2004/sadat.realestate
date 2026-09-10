@@ -312,7 +312,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
     return (
       <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id="AUTH-09" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-account-card">
-          <div className="provider-account-state"><StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} /></div>
+          <div className="provider-account-state"><StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} loadingVariant="form" /></div>
         </div>
       </section>
     );

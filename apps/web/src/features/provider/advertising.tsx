@@ -109,12 +109,12 @@ function shortId(id: string): string {
   return id.slice(0, 8).toUpperCase();
 }
 
-function StatePanel({ state, locale, copy, onRetry }: { readonly state: Exclude<ProviderAdvertisingState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly onRetry: () => void }) {
+function StatePanel({ state, locale, copy, onRetry, detail = false }: { readonly state: Exclude<ProviderAdvertisingState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly onRetry: () => void; readonly detail?: boolean }) {
   const message = copy.states[state];
   const componentState = state === 'notFound' ? 'error' : state;
   return (
     <section className="provider-advertising__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={componentState} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={componentState} title={message.title} message={message.body} loadingVariant={detail ? 'cards' : 'table'} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' || state === 'notFound' ? <Button variant="secondary" size="sm" onClick={onRetry}>{state === 'notFound' ? copy.backToList : copy.retry}</Button> : null}
       <span className="provider-advertising__state-locale" data-locale={locale} aria-hidden="true" />
     </section>
@@ -379,7 +379,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
           <div className="provider-advertising__detail-toolbar"><a href={localizedPath(locale, '/provider/ads')}>{copy.backToList}</a></div>
           {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
           {mutationError ? <p className="provider-advertising__form-error" role="alert">{mutationError}</p> : null}
-          {detailState === 'loading' || detailState === 'error' || detailState === 'retry' || detailState === 'permission' || detailState === 'notFound' ? <StatePanel state={detailState} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}
+          {detailState === 'loading' || detailState === 'error' || detailState === 'retry' || detailState === 'permission' || detailState === 'notFound' ? <StatePanel state={detailState} locale={locale} copy={copy} detail onRetry={() => setAttempt(value => value + 1)} /> : null}
           {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={(file, paymentMethod) => { void uploadPaymentProof(file, paymentMethod); }} /> : null}
         </>}
       </div>

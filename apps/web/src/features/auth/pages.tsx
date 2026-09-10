@@ -693,7 +693,7 @@ function LegacyVerificationRedirect({ locale, url }: { readonly locale: Supporte
     <section className="auth-page auth-page--email-redirect" data-route-alias="/auth/verify-phone" data-state="redirecting" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form">
         <div className="auth-card__body">
-          <StateMessage state="loading" title={copy.emailTitle} message={copy.emailDescription} />
+          <StateMessage state="loading" title={copy.emailTitle} message={copy.emailDescription} loadingVariant="form" />
         </div>
       </div>
     </section>
@@ -1098,7 +1098,7 @@ function ProviderRegistrationState({
       <div className="auth-card auth-card--form provider-account-card">
         <div className="provider-account-state">
           {error === undefined
-            ? <StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} />
+            ? <StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} loadingVariant="form" />
             : <StateMessage state={error.state} title={error.title} message={error.message} retryLabel={copy.retryAction} onRetry={error.state === 'retry' ? onRetry : undefined} />}
           <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
         </div>

@@ -95,12 +95,12 @@ function rangeLabel(minimum: number | undefined, maximum: number | undefined, lo
   return format(minimum ?? maximum ?? 0);
 }
 
-function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<SeekerRequestsViewState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
+function StatePanel({ state, locale, onRetry, detail }: { readonly state: Exclude<SeekerRequestsViewState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void; readonly detail: boolean }) {
   const copy = getSeekerRequestsCopy(locale);
   const message = copy.states[state];
   return (
     <section className="seeker-dashboard__state" data-state={state} data-request-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant={detail ? 'form' : 'table'} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );
@@ -296,7 +296,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
     <section className="seeker-dashboard" data-screen-id={isDetail ? undefined : 'SEK-02'} data-route={isDetail ? '/seeker/requests/:requestId' : '/seeker/requests'}>
       <SeekerNavigation locale={locale} activePath={activePath} authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
-        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
+        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={isDetail} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}
         {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1 id="seeker-requests-list-title">{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel">
           <div className="seeker-requests__toolbar">

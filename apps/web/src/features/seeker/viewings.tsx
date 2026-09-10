@@ -104,7 +104,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
   const message = copy.states[state];
   return (
     <section className="seeker-dashboard__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="list" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );

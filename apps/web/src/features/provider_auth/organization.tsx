@@ -274,7 +274,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   const state = loadState === 'ready' ? saveState : loadState;
 
   if (loadState === 'loading') {
-    return <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id="AUTH-10" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-organization-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.businessTitle} message={copy.businessDescription} /></div></div></section>;
+    return <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id="AUTH-10" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-organization-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.businessTitle} message={copy.businessDescription} loadingVariant="form" /></div></div></section>;
   }
 
   if (variant === undefined || loadState === 'permission' || loadState === 'error' || loadState === 'retry') {

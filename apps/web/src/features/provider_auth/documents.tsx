@@ -347,7 +347,7 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
   }, [client, copy, documents, providerType, requirements]);
 
   if (loadState === 'loading') {
-    return <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} /></div></div></section>;
+    return <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} loadingVariant="form" /></div></div></section>;
   }
 
   if (loadState === 'permission' || loadState === 'error' || loadState === 'retry') {

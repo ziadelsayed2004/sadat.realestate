@@ -63,7 +63,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ViewSt
   const message = state === 'not_found' ? copy.states.not_found : copy.states[state];
   return (
     <section className="provider-property-state__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state === 'not_found' ? 'error' : state} title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
+      <StateMessage state={state === 'not_found' ? 'error' : state} title={message.title} message={message.body} loadingVariant="cards" retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
       {state === 'error' || state === 'not_found' ? <Button type="button" variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );
@@ -166,7 +166,7 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
     <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
-        {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} /> : null}
+        {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} loadingVariant="cards" /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'success' && property !== undefined ? <StatusContent locale={locale} property={property} route={route} /> : null}
       </div>
