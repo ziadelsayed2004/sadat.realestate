@@ -96,6 +96,10 @@ test('validates feature and service associations with deterministic references',
 });
 
 test('validates contact data without allowing identity or secret fields', () => {
+  assert.equal(propertyContactSchema.safeParse({ phone: '+201234567890', showPhone: false, showWhatsapp: true, showEmail: false, preferredContactTime: '9 to 5', internalNotes: 'Provider-only instructions' }).success, true);
+  assert.equal(propertyContactSchema.safeParse({ showPhone: 'false' }).success, false);
+  assert.equal(propertyContactSchema.safeParse({ internalNotes: 'x'.repeat(2001) }).success, false);
+  assert.equal(propertyContactSchema.safeParse({ preferredContactTime: 'x'.repeat(201) }).success, false);
   assert.equal(propertyContactSchema.safeParse({ contactName: 'Property desk', phone: '+201234567890', whatsappNumber: '+201234567891', email: 'contact@example.com', preferredLocale: 'ar' }).success, true);
   assert.equal(propertyContactStepSchema.safeParse({ version: 0, contact: { phone: '+201234567890' }, reason: 'Save property contact' }).success, true);
   assert.equal(propertyContactStepSchema.safeParse({ version: 0, contact: { phone: '01012345678' }, reason: 'Reject non normalized phone' }).success, false);

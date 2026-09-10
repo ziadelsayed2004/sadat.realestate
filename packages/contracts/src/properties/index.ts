@@ -217,7 +217,12 @@ export const propertyContactSchema = z.object({
   phone: normalizedPhoneSchema.optional(),
   whatsappNumber: normalizedPhoneSchema.optional(),
   email: propertyContactEmailSchema.optional(),
-  preferredLocale: supportedLocaleSchema.optional()
+  preferredLocale: supportedLocaleSchema.optional(),
+  preferredContactTime: z.string().trim().min(1).max(200).optional(),
+  internalNotes: z.string().trim().min(1).max(2000).optional(),
+  showPhone: z.boolean().optional(),
+  showWhatsapp: z.boolean().optional(),
+  showEmail: z.boolean().optional()
 }).strict().refine((value) => Object.keys(value).length > 0, { message: 'Contact data cannot be empty' });
 export const propertyContactStepSchema = draftPatch({
   contact: propertyContactSchema.nullable().optional()

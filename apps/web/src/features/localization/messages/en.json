@@ -3097,9 +3097,14 @@
         "en": "English"
       },
       "supportedFieldsTitle": "Supported fields",
-      "supportedFieldsBody": "Only the name, phone numbers, email, and preferred locale are sent through the current contact contract.",
-      "internalNotesTitle": "Internal notes are unavailable",
-      "internalNotesBody": "The current contract has no internal notes or operational fields, so they are not rendered or submitted."
+      "supportedFieldsBody": "Enter the details of the person receiving property enquiries.",
+      "internalNotesTitle": "Internal notes",
+      "internalNotesBody": "Internal notes are not shown publicly...",
+      "preferredContactTime": "Best time to contact",
+      "visibilityTitle": "Public contact details",
+      "showPhone": "Show phone number",
+      "showWhatsapp": "Show WhatsApp number",
+      "showEmail": "Show email address"
     },
     "review": {
       "submit": "Submit property for review",

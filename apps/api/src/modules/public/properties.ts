@@ -44,6 +44,22 @@ export interface PublicPropertyDetailsRepository {
   hasPropertyRequest?(seekerId: string, propertyId: string): Promise<boolean>;
 }
 
+// Explicit allowlist: provider notes and visibility controls never enter a public response.
+function publicContact(value: unknown): Record<string, unknown> | undefined {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return undefined;
+  const contact = value as Record<string, unknown>;
+  const visible = (flag: string) => contact[flag] === undefined || contact[flag] === true;
+  const result = Object.fromEntries([
+    ['contactName', contact.contactName],
+    ['preferredLocale', contact.preferredLocale],
+    ['preferredContactTime', contact.preferredContactTime],
+    ['phone', visible('showPhone') ? contact.phone : undefined],
+    ['whatsappNumber', visible('showWhatsapp') ? contact.whatsappNumber : undefined],
+    ['email', visible('showEmail') ? contact.email : undefined]
+  ].filter(([, item]) => item !== undefined));
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
 function card(source: { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; publicCode?: string; viewCount?: number; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }) {
   const parsed = publicPropertyRelatedPropertySchema.safeParse({
     id: source.id,
@@ -102,7 +118,7 @@ export function publicPropertyDetailsProjection(
     ...(property.publicCode ? { publicCode: property.publicCode } : {}),
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {}),
-    ...(!settings.hideProviderContact && contactAuthorized && source.contact !== undefined ? { contact: source.contact } : {})
+    ...(!settings.hideProviderContact && contactAuthorized && publicContact(source.contact) !== undefined ? { contact: publicContact(source.contact) } : {})
   };
   return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
 }

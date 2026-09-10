@@ -435,6 +435,14 @@
 .provider-property-completion__field textarea { width: 100%; border: 1px solid #cbd5e3; border-radius: 9px; background: #fff; color: #24334f; font: inherit; }
 .provider-property-completion__field select { min-height: 46px; padding: 10px 12px; }
 .provider-property-completion__field textarea { min-height: 76px; padding: 11px 12px; resize: vertical; }
+.provider-property-completion__visibility { display: grid; gap: 14px; min-width: 0; margin: 0; padding: 16px; border: 1px solid #f3f4f6; border-radius: 12px; background: #fff; }
+.provider-property-completion__visibility legend { color: #6a7282; font-size: 13px; font-weight: 700; }
+.provider-property-completion__visibility label { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #364153; font-size: 14px; }
+.provider-property-completion__visibility input { appearance: none; flex: 0 0 40px; width: 40px; height: 22px; margin: 0; padding: 2px; border: 0; border-radius: 11px; background: #6a7282; cursor: pointer; }
+.provider-property-completion__visibility input::before { content: ''; display: block; width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+.provider-property-completion__visibility input:checked { background: #17233d; }
+.provider-property-completion__visibility input:checked::before { margin-inline-start: 18px; }
+.provider-property-completion__visibility input:focus-visible { outline: 2px solid #155e53; outline-offset: 3px; }
 
 .provider-property-completion__notice { border-style: dashed; color: #586981; line-height: 1.6; }
 .provider-property-completion__notice strong { color: #33435e; }

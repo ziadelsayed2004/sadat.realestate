@@ -52,7 +52,12 @@ const contact = new Schema<PropertyContact>({
   phone: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   whatsappNumber: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   email: { type: String, trim: true, lowercase: true, maxlength: 254 },
-  preferredLocale: { type: String, enum: ['ar', 'en'] }
+  preferredLocale: { type: String, enum: ['ar', 'en'] },
+  preferredContactTime: { type: String, trim: true, maxlength: 200 },
+  internalNotes: { type: String, trim: true, maxlength: 2000 },
+  showPhone: { type: Boolean },
+  showWhatsapp: { type: Boolean },
+  showEmail: { type: Boolean }
 }, { _id: false, strict: 'throw' });
 
 export const propertySchema = new Schema<PropertyRecord>({

@@ -51,6 +51,11 @@ interface ContactForm {
   readonly whatsappNumber: string;
   readonly email: string;
   readonly preferredLocale: SupportedLocale;
+  readonly preferredContactTime: string;
+  readonly internalNotes: string;
+  readonly showPhone: boolean;
+  readonly showWhatsapp: boolean;
+  readonly showEmail: boolean;
   readonly reason: string;
 }
 
@@ -113,6 +118,11 @@ function contactFromProperty(property: PropertyData | undefined, locale: Support
     whatsappNumber: contact?.whatsappNumber ?? '',
     email: contact?.email ?? '',
     preferredLocale: contact?.preferredLocale ?? locale,
+    preferredContactTime: contact?.preferredContactTime ?? '',
+    internalNotes: contact?.internalNotes ?? '',
+    showPhone: contact?.showPhone ?? true,
+    showWhatsapp: contact?.showWhatsapp ?? true,
+    showEmail: contact?.showEmail ?? true,
     reason: 'Provider updated contact details'
   };
 }
@@ -202,7 +212,7 @@ function ContactView({
   readonly locale: SupportedLocale;
   readonly copy: ReturnType<typeof getProviderPropertyCompletionCopy>;
   readonly form: ContactForm;
-  readonly onChange: (field: keyof ContactForm, value: string) => void;
+  readonly onChange: (field: keyof ContactForm, value: string | boolean) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onBack: () => void;
   readonly mutationState: MutationState;
@@ -222,6 +232,11 @@ function ContactView({
           <Input id="provider-property-contact-phone" label={fields.phone} value={form.phone} placeholder={fields.phonePlaceholder} onChange={event => onChange('phone', event.target.value)} inputMode="tel" />
           <Input id="provider-property-contact-whatsapp" label={fields.whatsapp} value={form.whatsappNumber} placeholder={fields.whatsappPlaceholder} onChange={event => onChange('whatsappNumber', event.target.value)} inputMode="tel" />
           <Input id="provider-property-contact-email" label={fields.email} value={form.email} placeholder={fields.emailPlaceholder} onChange={event => onChange('email', event.target.value)} type="email" />
+          <Input id="provider-property-contact-time" label={fields.preferredContactTime} value={form.preferredContactTime} onChange={event => onChange('preferredContactTime', event.target.value)} />
+          <div className="provider-property-completion__field">
+            <label htmlFor="provider-property-contact-notes">{fields.internalNotesTitle}</label>
+            <textarea id="provider-property-contact-notes" value={form.internalNotes} maxLength={2000} placeholder={fields.internalNotesBody} onChange={event => onChange('internalNotes', event.target.value)} />
+          </div>
           <div className="provider-property-completion__field">
             <label htmlFor="provider-property-contact-locale">{fields.preferredLocale}</label>
             <select id="provider-property-contact-locale" value={form.preferredLocale} onChange={event => onChange('preferredLocale', event.target.value)}>
@@ -230,9 +245,13 @@ function ContactView({
           </div>
         </div>
       </section>
-      <section className="provider-property-completion__notice" aria-label={fields.internalNotesTitle}>
-        <strong>{fields.internalNotesTitle}</strong><p>{fields.internalNotesBody}</p>
-      </section>
+      <fieldset className="provider-property-completion__visibility">
+        <legend>{fields.visibilityTitle}</legend>
+        {(['showPhone', 'showWhatsapp', 'showEmail'] as const).map(field => <label key={field}>
+          <span>{fields[field]}</span>
+          <input type="checkbox" role="switch" checked={form[field]} onChange={event => onChange(field, event.target.checked)} />
+        </label>)}
+      </fieldset>
       {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{copy.validationTitle}</strong> {copy.validationBody}</p> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
       <div className="provider-property-wizard__actions">
@@ -482,7 +501,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const goBack = () => navigate(locale, propertyId, step === 'media' ? 'features-services' : step === 'contact' ? 'media' : 'contact');
   const goForward = () => { if (step === 'media') navigate(locale, propertyId, 'contact'); else if (step === 'contact') navigate(locale, propertyId, 'review'); };
 
-  const handleContactChange = (field: keyof ContactForm, value: string) => setContact(current => ({ ...current, [field]: value }));
+  const handleContactChange = (field: keyof ContactForm, value: string | boolean) => setContact(current => ({ ...current, [field]: value }));
   const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (property === undefined) return;
@@ -493,7 +512,12 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
       ...(optionalValue(contact.phone) === undefined ? {} : { phone: optionalValue(contact.phone) }),
       ...(optionalValue(contact.whatsappNumber) === undefined ? {} : { whatsappNumber: optionalValue(contact.whatsappNumber) }),
       ...(optionalValue(contact.email) === undefined ? {} : { email: optionalValue(contact.email) }),
-      preferredLocale: contact.preferredLocale
+      preferredLocale: contact.preferredLocale,
+      ...(optionalValue(contact.preferredContactTime) === undefined ? {} : { preferredContactTime: optionalValue(contact.preferredContactTime) }),
+      ...(optionalValue(contact.internalNotes) === undefined ? {} : { internalNotes: optionalValue(contact.internalNotes) }),
+      showPhone: contact.showPhone,
+      showWhatsapp: contact.showWhatsapp,
+      showEmail: contact.showEmail
     };
     const parsed = propertyContactStepSchema.safeParse({ version: property.version, contact: contactValue, reason: contact.reason.trim() });
     if (!parsed.success) { setValidationError(true); return; }
