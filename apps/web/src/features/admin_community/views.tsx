@@ -90,7 +90,7 @@ function labelValue(value: string, locale: SupportedLocale): string {
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminCommunityState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getAdminCommunityCopy(locale);
   const message = copy.states[state];
-  return <section className="admin-community__state" data-state={state} aria-label={message.title}><StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />{state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}</section>;
+  return <section className="admin-community__state" data-state={state} aria-label={message.title}><StateMessage state={state} title={message.title} message={message.body} loadingVariant="table" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />{state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}</section>;
 }
 
 function EmptyPanel({ locale }: { readonly locale: SupportedLocale }) {

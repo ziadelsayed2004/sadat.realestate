@@ -148,7 +148,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminM
   const message = copy.states[state];
   return (
     <section className="admin-master-data__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="table" retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );

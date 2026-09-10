@@ -107,7 +107,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminN
   const componentState = state === 'not_found' ? 'error' : state;
   return (
     <section className="admin-notifications-audit__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={componentState} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={componentState} title={message.title} message={message.body} loadingVariant="table" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' || state === 'not_found' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );

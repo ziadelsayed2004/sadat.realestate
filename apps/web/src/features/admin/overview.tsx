@@ -311,7 +311,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminO
   const canRetry = state === 'retry' || state === 'error';
   return (
     <section className="admin-dashboard__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="cards" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {canRetry && state !== 'retry' ? <button type="button" className="admin-dashboard__secondary-action" onClick={onRetry}>{copy.retry}</button> : null}
     </section>
   );

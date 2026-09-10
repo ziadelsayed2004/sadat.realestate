@@ -87,12 +87,12 @@ function StatusBadge({ label, value }: { readonly label: string; readonly value:
   return <span className="admin-accounts__badge" data-tone={toneFor(value)} data-status={value}>{label}</span>;
 }
 
-function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ReportState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
+function StatePanel({ state, locale, onRetry, detail }: { readonly state: Exclude<ReportState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void; readonly detail: boolean }) {
   const copy = getAdminAccountReportsCopy(locale);
   const message = copy.states[state];
   return (
     <section className="admin-accounts__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
+      <StateMessage state={state} title={message.title} message={message.body} loadingVariant={detail ? 'form' : 'table'} onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}
     </section>
   );
@@ -332,7 +332,7 @@ export function AdminAccountReports({ locale, session, view, reportId, accountId
     <section className="admin-dashboard admin-accounts admin-account-reports" data-screen-id={screenId} data-route={path} data-device-scope="desktop" data-admin-account-reports-state={state}>
       <AdminNavigation locale={locale} activePath={navigationPath} />
       <div className="admin-dashboard__content">
-        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
+        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={isDetail} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={localePath(locale, view === 'restrictions' ? '/admin/account-restrictions' : '/admin/account-reports')}>{copy.back}</a></section> : null}
         {state === 'empty' && !isDetail ? <div className="admin-accounts__empty" data-state="empty"><h1>{titleCopy.emptyTitle}</h1><p>{titleCopy.emptyBody}</p></div> : null}
         {state === 'success' && isDetail && selectedReport !== undefined ? <ReportDetail report={selectedReport} account={account} locale={locale} reason={reason} mutationError={mutationError} mutationSuccess={mutationSuccess} busyAction={busyAction} onReasonChange={setReason} onResolve={action => { void resolve(action); }} onTransition={action => { void transition(action); }} /> : null}

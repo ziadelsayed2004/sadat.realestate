@@ -89,7 +89,7 @@ function toneForStatus(status: RequestStatus | ViewingStatus | 'open' | 'resolve
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminRequestsState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getAdminRequestsCopy(locale);
   const message = copy.states[state];
-  return <section className="admin-requests__state" data-state={state} aria-label={message.title}><StateMessage state={state} title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />{state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}</section>;
+  return <section className="admin-requests__state" data-state={state} aria-label={message.title}><StateMessage state={state} title={message.title} message={message.body} loadingVariant="table" retryLabel={copy.retry} onRetry={state === 'retry' ? onRetry : undefined} />{state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{copy.retry}</Button> : null}</section>;
 }
 
 function NotFoundPanel({ locale }: { readonly locale: SupportedLocale }) {

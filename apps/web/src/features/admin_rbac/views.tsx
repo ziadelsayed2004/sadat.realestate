@@ -84,7 +84,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminR
   const message = copy.states[state];
   return (
     <section className="admin-rbac__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state === "conflict" ? "error" : state} title={message.title} message={message.body} retryLabel={copy.retry} onRetry={state === "retry" ? onRetry : undefined} />
+      <StateMessage state={state === "conflict" ? "error" : state} title={message.title} message={message.body} loadingVariant="table" retryLabel={copy.retry} onRetry={state === "retry" ? onRetry : undefined} />
       {state === "error" || state === "conflict" ? (
         <Button variant="secondary" size="sm" onClick={onRetry}>
           {copy.retry}
