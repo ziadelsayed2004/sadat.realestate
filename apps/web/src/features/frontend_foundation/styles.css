@@ -135,7 +135,7 @@ code {
   border-radius: var(--radius-sm);
 }
 
-[data-state]:not(.ui-button):not(.ui-property-card):not(.route-shell--admin *) {
+[data-state]:not(.ui-button):not(.ui-property-card):not(.ui-field):not(.route-shell--admin *) {
   max-width: 48rem;
   margin-block-start: var(--space-2xl);
   padding: var(--space-xl);

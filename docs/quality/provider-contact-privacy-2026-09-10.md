@@ -15,4 +15,6 @@ Contact-role follow-up: account owner, sales agent and custom-number choices now
 
 The real browser lifecycle passed with the sales-agent selection persisted and read back from the provider API. A local full-page mobile capture (`.local/contact-role-mobile.png`) was inspected: the role control renders, but the wizard stepper is vertical and input wrappers have excess card padding/gaps versus the source. These are confirmed visual defects for the next repair, not closed parity.
 
+Spacing follow-up: excluded `.ui-field` from the generic state-card rule, eliminating unintended wrapper borders/padding/shadows. Removed the responsive rule that collapsed the completion stepper to one column. The real browser lifecycle passed again with measured `stepRows: 1`, `fieldPadding: 0px`, and `viewportWidth === pageWidth === 402`. The updated mobile screenshot was visually inspected. This repairs those two defects; it does not establish complete source parity (stepper header, exact card dimensions, typography and full Arabic/Tablet comparisons remain).
+
 Remaining: full contact-card and mobile-stepper geometry parity. Runtime success does not close visual parity. Production verification is pending deployment by the user.

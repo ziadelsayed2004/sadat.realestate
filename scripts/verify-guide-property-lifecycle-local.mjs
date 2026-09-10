@@ -232,6 +232,13 @@ try {
   await page.locator('.provider-property-completion__visibility input').nth(0).uncheck();
   await page.locator('.provider-property-completion__visibility input').nth(2).uncheck();
   await page.screenshot({ path: '.local/contact-role-mobile.png', fullPage: true });
+  evidence.contactLayout = await page.evaluate(() => {
+    const steps = [...document.querySelectorAll('.provider-property-completion__steps li')].map(element => element.getBoundingClientRect());
+    const field = document.querySelector('#provider-property-contact-name').parentElement;
+    return { stepRows: new Set(steps.map(rect => Math.round(rect.top))).size, fieldPadding: getComputedStyle(field).padding, viewportWidth: innerWidth, pageWidth: document.documentElement.scrollWidth };
+  });
+  assert.equal(evidence.contactLayout.stepRows, 1);
+  assert.equal(evidence.contactLayout.pageWidth, evidence.contactLayout.viewportWidth);
   const contactPending = page.waitForResponse(response => response.request().method() === 'PATCH' && new URL(response.url()).pathname.endsWith('/steps/contact'));
   await page.locator('form.provider-property-completion__form button[type="submit"]').click();
   assert.equal((await contactPending).status(), 200);

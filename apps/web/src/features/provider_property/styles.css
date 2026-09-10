@@ -562,12 +562,12 @@
     display: none;
   }
 
-  .provider-property-completion__steps li:not(:last-child)::after { display: none; }
-
-  .provider-property-completion__steps,
   .provider-property-completion__summary { grid-template-columns: minmax(0, 1fr); }
 
-  .provider-property-completion__steps { display: grid; }
+  .provider-property-completion__steps { padding: 12px; border-radius: 12px; background: #faf8f2; }
+  .provider-property-completion__steps li { padding: 0; gap: 4px; }
+  .provider-property-completion__steps span { width: 24px; height: 24px; font-size: 10px; }
+  .provider-property-completion__steps strong { font-size: 8px; overflow-wrap: anywhere; }
   .provider-property-completion__media-item { align-items: flex-start; flex-direction: column; }
   .provider-property-completion__item-actions { justify-content: flex-start; }
   .provider-property-state__summary { grid-template-columns: minmax(0, 1fr); }
