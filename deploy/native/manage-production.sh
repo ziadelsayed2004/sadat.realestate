@@ -11,7 +11,8 @@ PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://elsadatrealestate.com}
 
 usage() {
   cat <<'EOF'
-Usage: sudo bash deploy/native/manage-production.sh <update|empty|launch>
+Usage: sudo bash deploy/native/manage-production.sh <demo|update|empty|launch>
+  demo   Deploy and add any missing synthetic preview data without deleting real records.
   update Deploy the latest release without changing any database records.
   empty  Deploy the latest release and remove synthetic demo records only.
   launch Deploy, back up, then purge all business data and accounts except KEEP_ADMIN_EMAIL.
@@ -24,10 +25,6 @@ if [[ $(id -u) -ne 0 ]]; then
 fi
 if [[ "$MODE" != demo && "$MODE" != update && "$MODE" != empty && "$MODE" != launch ]]; then
   usage >&2
-  exit 2
-fi
-if [[ "$MODE" == demo ]]; then
-  echo 'PRODUCTION_DEMO_DISABLED' >&2
   exit 2
 fi
 if [[ "$MODE" == launch ]]; then
@@ -83,6 +80,12 @@ restart_on_failure() {
 trap restart_on_failure EXIT
 
 case "$MODE" in
+  demo)
+    sudo -u elsadat env \
+      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
+      PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO \
+      npm --prefix /opt/elsadatrealestate/current run production:demo:seed
+    ;;
   empty)
     sudo -u elsadat env \
       PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \

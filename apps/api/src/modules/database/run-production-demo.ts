@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { parseRuntimeEnvironment } from '../config/environment.js';
 import { createDatabaseConnection } from './connection.js';
 import { parseDatabaseEnvironment } from './environment.js';
+import { DEVELOPMENT_SEED_STEPS } from './seed.js';
+const INSTALL_CONFIRMATION = 'INSTALL_FULL_LOCAL_DEMO';
 const RESET_CONFIRMATION = 'DELETE_SYNTHETIC_DEMO_DATA';
 const ledgerName = '_production_demo_runs';
 
@@ -38,8 +40,38 @@ function assertProduction(source: Record<string, string | undefined>): void {
   }
 }
 
-export async function installProductionDemo(): Promise<number> {
-  throw new Error('PRODUCTION_DEMO_DISABLED');
+export async function installProductionDemo(
+  source: Record<string, string | undefined> = process.env
+): Promise<number> {
+  const environment = await resolvedSource(source);
+  assertProduction(environment);
+  if (environment.PRODUCTION_DEMO_CONFIRM !== INSTALL_CONFIRMATION) {
+    throw new Error('PRODUCTION_DEMO_INSTALL_CONFIRMATION_REQUIRED');
+  }
+
+  const runtime = parseRuntimeEnvironment(environment);
+  const database = createDatabaseConnection(parseDatabaseEnvironment(environment), runtime.appEnvironment);
+  try {
+    await database.connect();
+    const connection = database.nativeConnection;
+    if (!connection.db) throw new Error('DATABASE_NOT_READY');
+    const ledger = connection.db.collection<{ id: string; appliedAt: Date }>(ledgerName);
+    await ledger.createIndex({ id: 1 }, { unique: true });
+    let applied = 0;
+    for (const step of DEVELOPMENT_SEED_STEPS) {
+      if (await ledger.findOne({ id: step.id })) continue;
+      await step.run(connection);
+      await ledger.updateOne(
+        { id: step.id },
+        { $setOnInsert: { id: step.id, appliedAt: new Date() } },
+        { upsert: true }
+      );
+      applied += 1;
+    }
+    return applied;
+  } finally {
+    await database.disconnect();
+  }
 }
 
 export async function resetProductionDemo(
