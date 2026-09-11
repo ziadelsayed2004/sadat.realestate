@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T16:20:26.833Z",
+  "generatedAt": "2026-09-11T16:24:15.295Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2367,7 +2367,7 @@
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -2409,6 +2409,13 @@
         }
       ],
       "reviewedSubcases": [
+        {
+          "case": "networkRetry",
+          "check": "offline_save_keeps_draft_then_persists_without_navigation",
+          "path": "docs/quality/guide-runs/seeker-save-recovery-local-latest.json",
+          "scope": "Personal profile and preferences; AR/EN on Desktop, Tablet and Pixel 5; real API and MongoDB with restored fixture",
+          "verifiedAt": "2026-09-11T16:23:08.134Z"
+        },
         {
           "case": "validation",
           "check": "invalid_preferences_blocked_before_api",
@@ -4007,7 +4014,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T16:20:26.833Z",
+    "updatedAt": "2026-09-11T16:24:15.295Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

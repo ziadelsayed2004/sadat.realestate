@@ -22,6 +22,7 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
+const seekerSaveRecovery = await readFile('docs/quality/guide-runs/seeker-save-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -151,6 +152,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-10' && seekerSaveRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && seekerSaveRecovery.mockedRoutes === false && seekerSaveRecovery.restored === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => ['personal', 'preferences'].every(tab =>
+      seekerSaveRecovery.runs?.some(run => run.locale === locale && run.device === device && run.tab === tab
+        && run.check === 'offline_save_keeps_draft_then_persists_without_navigation' && run.httpStatus === 200 && run.mongoVerified === true))))) {
+    reviewedSubcases.push({ case: 'networkRetry', check: 'offline_save_keeps_draft_then_persists_without_navigation',
+      path: 'docs/quality/guide-runs/seeker-save-recovery-local-latest.json',
+      scope: 'Personal profile and preferences; AR/EN on Desktop, Tablet and Pixel 5; real API and MongoDB with restored fixture',
+      verifiedAt: seekerSaveRecovery.finishedAt });
+  }
   if (journey.id === 'GUIDE-22' && communityBrowserRecovery?.status === 'PASS_LOCAL_SUBCASES'
     && communityBrowserRecovery.mockedRoutes === false) {
     for (const [category, check] of [

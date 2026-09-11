@@ -1,0 +1,133 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-10"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "ce5d57bdd1ba79cea1445e61a8575ad505ee14ad",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "tab": "personal",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "tab": "preferences",
+      "check": "offline_save_keeps_draft_then_persists_without_navigation",
+      "httpStatus": 200,
+      "mongoVerified": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "restored": true,
+  "finishedAt": "2026-09-11T16:23:08.134Z"
+}
