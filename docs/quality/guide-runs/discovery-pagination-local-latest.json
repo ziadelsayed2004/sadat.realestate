@@ -1,0 +1,74 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-01",
+    "GUIDE-02"
+  ],
+  "environment": "local-real-browser-api",
+  "mockedRoutes": false,
+  "commit": "833574d541ee2a7f66a5a07419326299635d69e3",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "startedAt": "2026-09-11T18:16:24.845Z",
+  "finishedAt": "2026-09-11T18:16:36.153Z"
+}

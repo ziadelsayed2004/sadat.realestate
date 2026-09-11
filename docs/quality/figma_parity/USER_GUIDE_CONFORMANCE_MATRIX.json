@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T18:08:05.499Z",
+  "generatedAt": "2026-09-11T18:16:50.059Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1256,7 +1256,7 @@
         "section": "#public",
         "journeyId": "GUIDE-01"
       },
-      "executionDate": "2026-09-10T12:40:54.793Z",
+      "executionDate": "2026-09-11T18:16:36.153Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1271,6 +1271,13 @@
             "Authenticated favorites must be exercised before GUIDE-02 closure.",
             "Production verification remains pending."
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/discovery-pagination-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T18:16:36.153Z",
+          "environment": "local-real-browser-api",
+          "mockedRoutes": false
         }
       ],
       "reviewedSubcases": [
@@ -1295,6 +1302,14 @@
           "path": "docs/quality/guide-runs/discovery-local-latest.json",
           "scope": "Property listing empty search and reset without document navigation",
           "verifiedAt": "2026-09-10T12:40:54.793Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API",
+          "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+          "path": "docs/quality/guide-runs/discovery-pagination-local-latest.json",
+          "scope": "Property listing out-of-range pagination; Arabic and English on Desktop, Tablet and Pixel 5; real API recovery without document navigation",
+          "verifiedAt": "2026-09-11T18:16:36.153Z"
         }
       ],
       "reviewedGuarantees": []
@@ -1369,7 +1384,7 @@
         "section": "#public",
         "journeyId": "GUIDE-02"
       },
-      "executionDate": "2026-09-10T12:40:54.793Z",
+      "executionDate": "2026-09-11T18:16:36.153Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1384,6 +1399,13 @@
             "Authenticated favorites must be exercised before GUIDE-02 closure.",
             "Production verification remains pending."
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/discovery-pagination-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T18:16:36.153Z",
+          "environment": "local-real-browser-api",
+          "mockedRoutes": false
         },
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
@@ -1426,6 +1448,14 @@
           "path": "docs/quality/guide-runs/discovery-local-latest.json",
           "scope": "Property listing empty search and reset without document navigation",
           "verifiedAt": "2026-09-10T12:40:54.793Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API",
+          "check": "out_of_range_empty_page_recovers_to_page_one_without_navigation",
+          "path": "docs/quality/guide-runs/discovery-pagination-local-latest.json",
+          "scope": "Property listing out-of-range pagination; Arabic and English on Desktop, Tablet and Pixel 5; real API recovery without document navigation",
+          "verifiedAt": "2026-09-11T18:16:36.153Z"
         }
       ],
       "reviewedGuarantees": []
@@ -4174,7 +4204,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T18:08:05.499Z",
+    "updatedAt": "2026-09-11T18:16:50.059Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

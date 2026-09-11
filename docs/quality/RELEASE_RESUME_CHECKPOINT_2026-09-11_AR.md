@@ -247,3 +247,10 @@
 - أُصلحت حالة واجهة حقيقية في `PublicCommunity`: الفلتر الذي لا يطابق أي منشور يعرض Empty واضحًا، وزر الاستعادة يعيد البطاقات دون navigation. كما تعيد صفحة خارج النطاق (مثل `page=999`) إلى الصفحة الأولى قبل إعادة الطلب.
 - نجحت 6 تشغيلات real browser/API/MongoDB لـGUIDE-03 على AR/EN وDesktop/Tablet/Pixel 5. أثبتت projection العامة عدم تسريب `authorId` أو `status` أو `internalNotes`، ومنعت المسودة المؤقتة من الظهور للعامة، ومنعت نموذج الإنشاء غير الصالح من أي POST، ثم تعافت من offline إلى HTTP 200 عبر Retry دون reload أو overflow.
 - حُذفت المسودة والجلسات التي أنشأها الفحص، والدليل `guide-runs/community-public-recovery-local-latest.json`. رُبطت حالات validation وempty وnetworkRetry في GUIDE-03 بالمصفوفة. ما زالت الرحلة PARTIAL بسبب بقية دورة الحسابات وProduction ومطابقة Figma.
+
+## استعادة ترقيم البحث العام — 11 سبتمبر
+
+- كُشف خلل في `PublicPropertyListing`: زر Retry لحالة نتائج فارغة خارج النطاق، مثل `page=999`، كان يعيد طلب الصفحة نفسها. صار يعيد الصفحة الأولى مع الحفاظ على بقية الفلاتر، عبر `pushState` دون document navigation.
+- أُضيف اختبار واجهة مركز في `public-listing.vitest.test.tsx`؛ نجحت الاختبارات 11/11، ونجح Web typecheck وlint وبناء الإنتاج وميزانية الحزم.
+- نجح `scripts/verify-discovery-pagination-local.mjs` في 6 تشغيلات real browser/API على AR/EN × Desktop/Tablet/Pixel 5. أعاد الطلب الأول HTTP 200 بحالة empty، ثم أعاد طلب الصفحة الأولى HTTP 200 وظهرت البطاقات دون تغيير `performance.timeOrigin` أو navigation entry أو overflow. الدليل `guide-runs/discovery-pagination-local-latest.json`.
+- رُبطت الحالة الجديدة كـempty subcase لـGUIDE-01 وGUIDE-02 في `USER_GUIDE_CONFORMANCE_MATRIX.json`. الأرقام الرسمية لم تتغير: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119؛ الديمو باقٍ ولا يُنفذ purge.

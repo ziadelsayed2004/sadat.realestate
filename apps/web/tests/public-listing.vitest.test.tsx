@@ -151,6 +151,27 @@ describe('public property listing', () => {
     expect(load).toHaveBeenCalledTimes(1);
   });
 
+  it('returns an out-of-range empty page to page one without document navigation', async () => {
+    const load = vi.fn().mockResolvedValue(listingData);
+    const copy = getPublicPropertyListingCopy('en');
+    window.history.replaceState({}, '', '/properties?lang=en&page=999');
+    const navigationCount = performance.getEntriesByType('navigation').length;
+    const timeOrigin = performance.timeOrigin;
+    renderWithLocale(
+      <PublicPropertyListing locale="en" initialData={{ ...listingData, items: [], total: 1, page: 999 }} initialQuery={{ ...defaultPublicPropertySearchQuery(), page: 999 }} load={load} />,
+      { locale: 'en' }
+    );
+
+    expect(screen.getByRole('status', { name: copy.emptyTitle })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.retryLabel }));
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }), expect.any(AbortSignal)));
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Published home' })).toBeInTheDocument());
+    expect(window.location.pathname).toBe('/properties');
+    expect(window.location.search).not.toContain('page=999');
+    expect(performance.timeOrigin).toBe(timeOrigin);
+    expect(performance.getEntriesByType('navigation').length).toBe(navigationCount);
+  });
+
   it('renders retry and permission-safe API states', async () => {
     const retryLoad = vi.fn().mockRejectedValueOnce(new ApiClientError('offline', { code: 'NETWORK_ERROR' })).mockResolvedValueOnce(listingData);
     const copy = getPublicPropertyListingCopy('en');

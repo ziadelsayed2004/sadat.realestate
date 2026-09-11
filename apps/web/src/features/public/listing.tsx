@@ -452,6 +452,13 @@ export function PublicPropertyListing({
 
   const railItems = data === undefined ? [] : listingRailItems(data);
   const filterTypes = data === undefined ? [] : listingFilterTypes(data);
+  const retryResults = () => {
+    if (view === 'empty' && query.page !== 1) {
+      navigate({ ...query, page: 1 });
+      return;
+    }
+    setAttempt(value => value + 1);
+  };
 
   return (
     <div className="public-property-listing" data-page="public-properties" data-listing-state={view}>
@@ -495,7 +502,7 @@ export function PublicPropertyListing({
               <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => setListMode(true)}><ListingIcon type="list" /></button>
             </div>
           </div>
-          {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} comparedIds={comparedIds} onToggleCompare={toggleCompare} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
+          {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} comparedIds={comparedIds} onToggleCompare={toggleCompare} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retryResults} /> : <StateNotice state={view} copy={copy} onRetry={retryResults} />}
         </section>
       </div>
       {comparedIds.length > 0 ? <aside className="public-property-listing__compare-tray" aria-live="polite"><span>{copy.comparisonSelected.replace('{count}', String(comparedIds.length))}</span><a href={publicPropertyComparisonUrl(comparedIds, `/compare?lang=${locale}`)}>{copy.compareNow}</a><button type="button" onClick={() => { setComparedIds([]); if (typeof window !== 'undefined') window.localStorage.removeItem('sadat-property-comparison'); }}>{copy.clearComparison}</button></aside> : null}

@@ -28,6 +28,7 @@ const sessionRevocation = await readFile('docs/quality/guide-runs/session-revoca
 const sessionBrowser = await readFile('docs/quality/guide-runs/session-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const discoveryPagination = await readFile('docs/quality/guide-runs/discovery-pagination-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityBrowserRecovery = await readFile('docs/quality/guide-runs/community-browser-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -66,6 +67,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
   ["docs/quality/guide-runs/discovery-local-latest.json", discoveryEvidence],
+  ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -298,6 +300,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
       scope: "Property listing empty search and reset without document navigation",
       verifiedAt: discoveryEvidence.finishedAt,
     });
+  }
+  if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
+    && discoveryPagination?.status === "PASS_LOCAL_SUBCASES"
+    && discoveryPagination.mockedRoutes === false
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => discoveryPagination.runs?.some(run =>
+      run.locale === locale && run.device === device
+      && run.check === 'out_of_range_empty_page_recovers_to_page_one_without_navigation'
+      && run.initialHttpStatus === 200 && run.recoveredHttpStatus === 200
+      && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))) {
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API',
+      check: 'out_of_range_empty_page_recovers_to_page_one_without_navigation',
+      path: 'docs/quality/guide-runs/discovery-pagination-local-latest.json',
+      scope: 'Property listing out-of-range pagination; Arabic and English on Desktop, Tablet and Pixel 5; real API recovery without document navigation',
+      verifiedAt: discoveryPagination.finishedAt });
   }
   if (journey.id === "GUIDE-07" && guide04Evidence?.status === "PASS_LOCAL") {
     const viewing = guide04Evidence.viewingJourneyEvidence;
