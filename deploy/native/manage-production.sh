@@ -11,7 +11,8 @@ PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://elsadatrealestate.com}
 
 usage() {
   cat <<'EOF'
-Usage: sudo bash deploy/native/manage-production.sh <update|empty|launch>
+Usage: sudo bash deploy/native/manage-production.sh <demo|update|empty|launch>
+  demo   Deploy the latest release and add any missing synthetic preview data.
   update Deploy the latest release without changing any database records.
   empty  Deploy the latest release and remove synthetic demo records only.
   launch Deploy, back up, then purge all business data and accounts except KEEP_ADMIN_EMAIL.
@@ -22,7 +23,7 @@ if [[ $(id -u) -ne 0 ]]; then
   echo 'Run this command as root with sudo.' >&2
   exit 1
 fi
-if [[ "$MODE" != update && "$MODE" != empty && "$MODE" != launch ]]; then
+if [[ "$MODE" != demo && "$MODE" != update && "$MODE" != empty && "$MODE" != launch ]]; then
   usage >&2
   exit 2
 fi
@@ -69,6 +70,12 @@ restart_on_failure() {
 trap restart_on_failure EXIT
 
 case "$MODE" in
+  demo)
+    sudo -u elsadat env \
+      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
+      PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO \
+      npm --prefix /opt/elsadatrealestate/current run production:demo:seed
+    ;;
   empty)
     sudo -u elsadat env \
       PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
@@ -120,4 +127,4 @@ bash /opt/elsadatrealestate/current/deploy/native/healthcheck.sh
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_ORIGIN/" >/dev/null
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_ORIGIN/api/v1/public/home" >/dev/null
 
-echo "PRODUCTION_MANAGE_OK mode=$MODE data=$([[ $MODE == launch ]] && echo real_launch_admin_only || ([[ $MODE == empty ]] && echo synthetic_demo_removed_real_data_preserved || echo preserved))"
+echo "PRODUCTION_MANAGE_OK mode=$MODE data=$([[ $MODE == demo ]] && echo synthetic_demo_installed_real_data_preserved || ([[ $MODE == launch ]] && echo real_launch_admin_only || ([[ $MODE == empty ]] && echo synthetic_demo_removed_real_data_preserved || echo preserved)))"

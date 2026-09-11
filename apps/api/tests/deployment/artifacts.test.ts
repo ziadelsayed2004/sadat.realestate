@@ -31,17 +31,18 @@ test('native MongoDB and Nginx artifacts use loopback boundaries and an authenti
   assert.doesNotMatch(nginx, /PRIVATE_DOWNLOAD_SIGNING_SECRET|SMTP_PASSWORD/);
 });
 
-test('real launch is backup-gated and no production deployment path installs demo data', async () => {
+test('real launch is backup-gated and preview demo installation remains explicitly guarded', async () => {
   const manage = await fs.readFile(path.join(repositoryRoot, 'deploy/native/manage-production.sh'), 'utf8');
   const legacyDemo = await fs.readFile(path.join(repositoryRoot, 'deploy/native/update-and-install-demo.sh'), 'utf8');
   const privatePurge = await fs.readFile(path.join(repositoryRoot, 'deploy/native/purge-private-files.sh'), 'utf8');
-  assert.match(manage, /<update\|empty\|launch>/);
+  assert.match(manage, /<demo\|update\|empty\|launch>/);
   assert.match(manage, /production:launch:plan/);
   assert.match(manage, /production:launch:purge/);
   assert.match(manage, /NATIVE_BACKUP_OK path=/);
-  assert.doesNotMatch(manage, /production:demo:seed/);
+  assert.match(manage, /PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO/);
+  assert.match(manage, /production:demo:seed/);
   const packageFile = JSON.parse(await fs.readFile(path.join(repositoryRoot, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
-  assert.equal(packageFile.scripts['production:demo:seed'], undefined);
+  assert.equal(packageFile.scripts['production:demo:seed'], 'node apps/api/dist/modules/database/run-production-demo.js install');
   assert.match(legacyDemo, /PRODUCTION_DEMO_DISABLED/);
   assert.match(privatePurge, /sha256sum --check --status SHA256SUMS/);
   assert.match(privatePurge, /resolved_private.*\/var\/lib\/elsadatrealestate\/private/);

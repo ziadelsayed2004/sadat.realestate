@@ -156,8 +156,10 @@ the original Super Admin remains unchanged and the newly entered password was no
 saved. `ADMINISTRATOR_ALREADY_EXISTS` means a non-demo administrator exists without
 the bootstrap guard and requires database investigation instead of bypassing it.
 Legacy synthetic administrators do not block the first real Super Admin, and
-`manage-production.sh empty` will not delete the real bootstrap account. Production
-demo installation is disabled for the real launch.
+`manage-production.sh empty` will not delete the real bootstrap account. Before the
+real launch, `manage-production.sh demo` deploys the release and adds only missing
+synthetic preview seed steps. It does not delete or replace real records, and repeated
+runs skip seed steps already recorded in the demo ledger.
 
 ## 9. Backup, restore, and monitoring
 
@@ -181,8 +183,8 @@ Monitor uptime, `/ready`, certificate renewal, disk/RAM/CPU, MongoDB state, Clam
 
 ## 10. Real production launch
 
-Production demo installation is disabled. After the real bootstrap Super Admin is verified,
-run the one-time guarded launch with its normalized email:
+When preview is complete and the real bootstrap Super Admin is verified, run the one-time
+guarded launch with its normalized email:
 
 ```bash
 cd /root/sadat-release

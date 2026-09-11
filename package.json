@@ -63,6 +63,7 @@
     "production:repair-mongodb-uri": "node scripts/repair-production-mongodb-uri.mjs",
     "production:config": "node scripts/native-production-check.mjs",
     "production:showcase": "node apps/api/dist/modules/database/run-production-showcase.js",
+    "production:demo:seed": "node apps/api/dist/modules/database/run-production-demo.js install",
     "production:demo:reset": "node apps/api/dist/modules/database/run-production-demo.js reset",
     "production:launch:plan": "node apps/api/dist/modules/database/production-launch.js plan",
     "production:launch:purge": "node apps/api/dist/modules/database/production-launch.js apply",
