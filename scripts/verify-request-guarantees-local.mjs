@@ -14,8 +14,10 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 // This verifier never accepts a remote URI or touches the local preview/production database.
 const database = `request_guarantees_${Date.now()}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
-const evidence = { environment: 'isolated-local-MongoDB-rs0-real-HTTP', database, testedAt: new Date().toISOString(),
-  commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0, checks: [], status: 'RUNNING' };
+const evidence = { environment: 'isolated-local-MongoDB-rs0-real-HTTP', database, mockedRoutes: false,
+  testedAt: new Date().toISOString(), commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+  worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0,
+  checks: [], cleanup: false, status: 'RUNNING' };
 let server;
 try {
   const accessTokens = createHmacAccessTokenService(randomBytes(32), 3600);
@@ -133,13 +135,23 @@ try {
   assert.deepEqual(viewingRace.map(result => result.status).sort(), [200, 409]);
   assert.equal(await auditModels.AuditLog.countDocuments({ targetId: viewingId }), 1);
   assert.equal((await call('provider', viewingPath, { action: 'reschedule', requestedAt: '2020-01-01T10:00:00Z', timezone: 'UTC', expectedVersion: 1 })).status, 409);
-  assert.equal((await call('provider', viewingPath, { action: 'cancel', expectedVersion: 1 })).status, 400);
+  const beforeInvalidCancellation = await connection.collection('viewings').findOne({ _id: new Types.ObjectId(viewingId) });
+  const auditCountBeforeInvalidCancellation = await auditModels.AuditLog.countDocuments({ targetId: viewingId });
+  for (const reason of [undefined, '', '   ', 'four']) {
+    assert.equal((await call('provider', viewingPath, { action: 'cancel', reason, expectedVersion: 1 })).status, 400);
+  }
+  const afterInvalidCancellation = await connection.collection('viewings').findOne({ _id: new Types.ObjectId(viewingId) });
+  assert.equal(afterInvalidCancellation.version, beforeInvalidCancellation.version);
+  assert.equal(afterInvalidCancellation.status, beforeInvalidCancellation.status);
+  assert.equal(await auditModels.AuditLog.countDocuments({ targetId: viewingId }), auditCountBeforeInvalidCancellation);
   const cancellation = await call('provider', viewingPath, { action: 'cancel', reason: 'Customer requested cancellation', expectedVersion: 1 });
   assert.equal(cancellation.status, 200);
   const viewingAudit = await auditModels.AuditLog.findOne({ targetId: viewingId, action: 'viewing.cancel' }).lean();
   assert.equal(viewingAudit.reason, 'Customer requested cancellation');
   assert.equal(viewingAudit.actorId.toHexString(), providerId.toHexString());
-  evidence.checks.push('viewing_audit_failure_rolls_back_mutation_and_audit', 'viewing_concurrent_confirmation_one_200_one_409', 'viewing_past_reschedule_rejected', 'viewing_cancellation_reason_persisted');
+  evidence.checks.push('viewing_audit_failure_rolls_back_mutation_and_audit', 'viewing_concurrent_confirmation_one_200_one_409',
+    'viewing_past_reschedule_rejected', 'viewing_cancel_missing_empty_whitespace_short_reason_400_without_write',
+    'viewing_cancellation_reason_persisted');
   const competingTime = new Date(Date.now() + 172800000).toISOString();
   const competing = await Promise.all(['seeker', 'other'].map(actor => call(actor, '/seeker/viewings', {
     propertyId: propertyId.toHexString(), requestedAt: competingTime, timezone: 'UTC'
@@ -182,6 +194,8 @@ try {
   throw error;
 } finally {
   if (server) await stopApiServer(server);
+  await connection.dropDatabase();
+  evidence.cleanup = (await connection.db.listCollections().toArray()).length === 0;
   await connection.close();
   await mkdir('docs/quality/guide-runs', { recursive: true });
   await writeFile('docs/quality/guide-runs/request-guarantees-local-latest.json', `${JSON.stringify(evidence, null, 2)}\n`);

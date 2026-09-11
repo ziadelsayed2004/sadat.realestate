@@ -1,8 +1,9 @@
 {
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "request_guarantees_1789044099118",
-  "testedAt": "2026-09-10T12:41:39.149Z",
-  "commit": "cbdbd0937c351cbc055367ae3ece1e58b0bc4f7d",
+  "database": "request_guarantees_1789147382432",
+  "mockedRoutes": false,
+  "testedAt": "2026-09-11T17:23:02.463Z",
+  "commit": "08980cf47129b13d287f54436ce8888b7a829746",
   "worktreeChanges": false,
   "checks": [
     "concurrent_identical_creation_one_201_one_409_one_record",
@@ -20,6 +21,7 @@
     "viewing_audit_failure_rolls_back_mutation_and_audit",
     "viewing_concurrent_confirmation_one_200_one_409",
     "viewing_past_reschedule_rejected",
+    "viewing_cancel_missing_empty_whitespace_short_reason_400_without_write",
     "viewing_cancellation_reason_persisted",
     "two_customers_same_slot_one_201_one_409",
     "cancelled_slot_can_be_booked_again",
@@ -27,5 +29,6 @@
     "legacy_active_viewing_reserves_slot_without_migration",
     "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
   ],
+  "cleanup": true,
   "status": "PASS_LOCAL"
 }

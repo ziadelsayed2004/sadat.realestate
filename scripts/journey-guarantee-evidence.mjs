@@ -21,8 +21,8 @@ export function reviewedJourneyGuarantees(journeyId, { requests, community, comm
     request('viewing_admin_requires_own_permission_and_current_active_account', 'roleAuthorization');
     request('two_customers_same_slot_one_201_one_409', 'duplicateMutation');
     request('viewing_concurrent_confirmation_one_200_one_409', 'expectedVersion409');
+    request('viewing_cancel_missing_empty_whitespace_short_reason_400_without_write', 'decisionReason');
     request('viewing_audit_failure_rolls_back_mutation_and_audit', 'atomicAuditRollback');
-    // Persisting a reason alone does not prove that omission is rejected.
   }
   if (['GUIDE-03', 'GUIDE-22'].includes(journeyId) && community?.journeys?.includes(journeyId)) {
     add(community, 'docs/quality/guide-runs/community-local-latest.json', 'authorization', 'limited_admin_moderation_denied_403', 'roleAuthorization');
