@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { installProductionDemo } from '../../src/modules/database/run-production-demo.js';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 
@@ -31,16 +32,18 @@ test('native MongoDB and Nginx artifacts use loopback boundaries and an authenti
   assert.doesNotMatch(nginx, /PRIVATE_DOWNLOAD_SIGNING_SECRET|SMTP_PASSWORD/);
 });
 
-test('real launch is backup-gated and preview demo installation remains explicitly guarded', async () => {
+test('real launch is backup-gated and production demo installation is disabled', async () => {
   const manage = await fs.readFile(path.join(repositoryRoot, 'deploy/native/manage-production.sh'), 'utf8');
   const legacyDemo = await fs.readFile(path.join(repositoryRoot, 'deploy/native/update-and-install-demo.sh'), 'utf8');
   const privatePurge = await fs.readFile(path.join(repositoryRoot, 'deploy/native/purge-private-files.sh'), 'utf8');
-  assert.match(manage, /<demo\|update\|empty\|launch>/);
+  assert.match(manage, /<update\|empty\|launch>/);
   assert.match(manage, /production:launch:plan/);
   assert.match(manage, /production:launch:purge/);
   assert.match(manage, /NATIVE_BACKUP_OK path=/);
-  assert.match(manage, /PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO/);
-  assert.match(manage, /production:demo:seed/);
+  assert.match(manage, /PRODUCTION_DEMO_DISABLED/);
+  assert.doesNotMatch(manage, /production:demo:seed/);
+  assert.ok(manage.indexOf('PRODUCTION_LAUNCH_CONFIRMATION_REQUIRED') < manage.indexOf('git -C'));
+  await assert.rejects(installProductionDemo(), /PRODUCTION_DEMO_DISABLED/);
   const packageFile = JSON.parse(await fs.readFile(path.join(repositoryRoot, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
   assert.equal(packageFile.scripts['production:demo:seed'], 'node apps/api/dist/modules/database/run-production-demo.js install');
   assert.match(legacyDemo, /PRODUCTION_DEMO_DISABLED/);

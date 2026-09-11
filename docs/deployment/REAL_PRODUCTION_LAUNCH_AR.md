@@ -38,6 +38,7 @@ cd /root/sadat-release &&
 git pull --ff-only origin main &&
 git rev-parse --short HEAD &&
 sudo env KEEP_ADMIN_EMAIL='admin@example.com' \
+  PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
   bash /root/sadat-release/deploy/native/manage-production.sh launch
 ```
 
