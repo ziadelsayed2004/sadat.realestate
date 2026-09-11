@@ -318,3 +318,9 @@
 - Replaced generic GUIDE-08 states and troubleshooting with verified saved pagination, offline retry, removal, availability, and the public-listing comparison route.
 - Added corrupted-text detection to guide validation after catching a shell encoding conversion during editing; the corrected UTF-8 source passes validation. No application styles changed.
 - Next: runtime verification of saved-card detail navigation and onward public-listing comparison, then audit remaining journey-specific guide instructions (provider registration still has generic existing-account prerequisites). Existing evidence does not close the complete journey or Production requirements.
+
+## 12 September: provider registration guide correction
+
+- Updated GUIDE-11/12/13 structured instructions and regenerated HTML. Beginning registration requires an accessible email, not an already active provider account. Draft completion, document upload, pending review, additional information and acceptance/rejection are now described separately.
+- Removed unrelated filter/admin troubleshooting from these three customer journeys. Instructions follow the provider registration verifier and implemented request lifecycle; this documentation change does not upgrade runtime verification status.
+- `guide:check` and `git diff --check` pass. No product code or styles changed. Still pending: saved-to-detail-to-comparison browser transition and remaining journey-specific guide review. Demo remains enabled; launch/purge postponed.
