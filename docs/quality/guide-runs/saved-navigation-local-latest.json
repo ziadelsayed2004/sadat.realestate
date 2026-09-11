@@ -1,0 +1,105 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-08"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "2812e18279d648157e98c1f5e7c4f9f1e584e9e7",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "detailHttpStatus": 200
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "detailHttpStatus": 200
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "detailHttpStatus": 200
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "detailHttpStatus": 200
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "detailHttpStatus": 200
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "saved_card_to_real_detail",
+        "detail_back_to_listing",
+        "listing_to_two_property_comparison",
+        "locale_preserved",
+        "no_horizontal_overflow"
+      ],
+      "savedCount": 2,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "detailHttpStatus": 200
+    }
+  ],
+  "startedAt": "2026-09-11T21:46:16.198Z",
+  "sessionsRemoved": true,
+  "favoritesUnchanged": true,
+  "finishedAt": "2026-09-11T21:46:35.935Z"
+}

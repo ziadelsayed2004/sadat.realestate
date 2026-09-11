@@ -324,3 +324,9 @@
 - Updated GUIDE-11/12/13 structured instructions and regenerated HTML. Beginning registration requires an accessible email, not an already active provider account. Draft completion, document upload, pending review, additional information and acceptance/rejection are now described separately.
 - Removed unrelated filter/admin troubleshooting from these three customer journeys. Instructions follow the provider registration verifier and implemented request lifecycle; this documentation change does not upgrade runtime verification status.
 - `guide:check` and `git diff --check` pass. No product code or styles changed. Still pending: saved-to-detail-to-comparison browser transition and remaining journey-specific guide review. Demo remains enabled; launch/purge postponed.
+
+## 12 September: saved navigation browser evidence
+
+- `scripts/verify-saved-navigation-local.mjs` passed six real browser/API/MongoDB runs: AR/EN on Desktop/Tablet/Pixel 5. Saved card opens a real detail (HTTP 200), back opens listing, two selections open successful comparison. Locale preserved; no overflow.
+- Reused matching existing build (no application changes since build). Added only temporary favorites for an empty local test account, then removed them and new sessions. Existing public properties were not replaced or deleted.
+- Attached `guide-runs/saved-navigation-local-latest.json` to GUIDE-08. This closes the previously missing navigation subcase, not the overall production journey. Next: audit the accumulated GUIDE-08 evidence against the complete journey and identify actual outstanding requirements; continue remaining journeys/Figma without rerunning unaffected successes. Demo/launch constraints remain unchanged.
