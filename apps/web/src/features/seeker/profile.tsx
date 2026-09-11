@@ -1,4 +1,4 @@
-import { getPersonalSurfaceCopy as personalSurfaceCopy, getSettingsSurfaceCopy as settingsSurfaceCopy, getProfileFeedbackCopy } from './profile-surface-copy.ts';
+import { getPersonalSurfaceCopy as personalSurfaceCopy, getSettingsSurfaceCopy as settingsSurfaceCopy, getProfileFeedbackCopy, getPreferenceOptionsCopy } from './profile-surface-copy.ts';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   passwordChangeRequestSchema,
@@ -108,45 +108,39 @@ function listValue(value: string): string[] {
 
 interface PreferenceChoice {
   readonly value: string;
-  readonly ar: string;
-  readonly en: string;
 }
 
 const propertyTypeChoices: readonly PreferenceChoice[] = [
-  { value: 'apartment', ar: 'شقة', en: 'Apartment' },
-  { value: 'villa', ar: 'فيلا', en: 'Villa' },
-  { value: 'duplex', ar: 'دوبلكس', en: 'Duplex' },
-  { value: 'roof', ar: 'رووف', en: 'Roof' },
-  { value: 'land', ar: 'أرض', en: 'Land' },
-  { value: 'office', ar: 'مكتب', en: 'Office' },
-  { value: 'commercial', ar: 'محل تجاري', en: 'Commercial shop' },
-  { value: 'factory', ar: 'مصنع', en: 'Factory' }
+  { value: 'apartment' },
+  { value: 'villa' },
+  { value: 'duplex' },
+  { value: 'roof' },
+  { value: 'land' },
+  { value: 'office' },
+  { value: 'commercial' },
+  { value: 'factory' }
 ];
 
 const locationChoices: readonly PreferenceChoice[] = [
-  { value: 'district-1', ar: 'الحي الأول', en: 'First district' },
-  { value: 'district-2', ar: 'الحي الثاني', en: 'Second district' },
-  { value: 'district-3', ar: 'الحي الثالث', en: 'Third district' },
-  { value: 'district-4', ar: 'الحي الرابع', en: 'Fourth district' },
-  { value: 'district-5', ar: 'الحي الخامس', en: 'Fifth district' },
-  { value: 'district-6', ar: 'الحي السادس', en: 'Sixth district' },
-  { value: 'district-7', ar: 'الحي السابع', en: 'Seventh district' },
-  { value: 'industrial-zone', ar: 'المنطقة الصناعية', en: 'Industrial zone' },
-  { value: 'upscale-zone', ar: 'المنطقة الراقية', en: 'Upscale zone' },
-  { value: 'new-cairo', ar: 'القاهرة الجديدة', en: 'New Cairo' }
+  { value: 'district-1' },
+  { value: 'district-2' },
+  { value: 'district-3' },
+  { value: 'district-4' },
+  { value: 'district-5' },
+  { value: 'district-6' },
+  { value: 'district-7' },
+  { value: 'industrial-zone' },
+  { value: 'upscale-zone' },
+  { value: 'new-cairo' }
 ];
 
 const bedroomChoices: readonly PreferenceChoice[] = [
-  { value: '1', ar: '1', en: '1' },
-  { value: '2', ar: '2', en: '2' },
-  { value: '3', ar: '3', en: '3' },
-  { value: '4', ar: '4', en: '4' },
-  { value: '5+', ar: '5+', en: '5+' }
+  { value: '1' },
+  { value: '2' },
+  { value: '3' },
+  { value: '4' },
+  { value: '5+' }
 ];
-
-function preferenceChoiceLabel(locale: SupportedLocale, choice: PreferenceChoice): string {
-  return locale === 'ar' ? choice.ar : choice.en;
-}
 
 function toggleListValue(current: string, value: string): string {
   const values = listValue(current);
@@ -211,11 +205,11 @@ function ProfileTabs({ locale, tab, copy }: { readonly locale: SupportedLocale; 
   );
 }
 
-function PreferenceChoiceField({ locale, label, value, choices, onChange }: { readonly locale: SupportedLocale; readonly label: string; readonly value: string; readonly choices: readonly PreferenceChoice[]; readonly onChange: (value: string) => void }) {
+function PreferenceChoiceField({ label, labels, value, choices, onChange }: { readonly label: string; readonly labels: Readonly<Record<string, string>>; readonly value: string; readonly choices: readonly PreferenceChoice[]; readonly onChange: (value: string) => void }) {
   const selected = listValue(value);
   const customChoices = selected
     .filter(item => !choices.some(choice => choice.value === item))
-    .map(item => ({ value: item, ar: item, en: item }));
+    .map(item => ({ value: item }));
   const visibleChoices = [...customChoices, ...choices];
   return (
     <fieldset className="seeker-profile__fieldset seeker-profile__chip-field">
@@ -223,7 +217,7 @@ function PreferenceChoiceField({ locale, label, value, choices, onChange }: { re
       <div className="seeker-profile__choice-list seeker-profile__choice-list--chips" role="group" aria-label={label}>
         {visibleChoices.map(choice => (
           <button key={choice.value} type="button" className="seeker-profile__choice seeker-profile__choice--chip" data-selected={selected.includes(choice.value) || undefined} aria-pressed={selected.includes(choice.value)} onClick={() => onChange(toggleListValue(value, choice.value))}>
-            {preferenceChoiceLabel(locale, choice)}{selected.includes(choice.value) ? <span aria-hidden="true"> ✓</span> : null}
+            {labels[choice.value] ?? choice.value}{selected.includes(choice.value) ? <span aria-hidden="true"> ✓</span> : null}
           </button>
         ))}
       </div>
@@ -279,6 +273,7 @@ function PreferencesForm({
   readonly onChange: (patch: Partial<PreferencesDraft>) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const optionsCopy = getPreferenceOptionsCopy(locale);
   return (
     <form className="seeker-profile__form" onSubmit={onSubmit} noValidate>
       <fieldset className="seeker-profile__fieldset">
@@ -294,8 +289,8 @@ function PreferencesForm({
         </div>
       </fieldset>
       <div className="seeker-profile__preference-stack">
-        <PreferenceChoiceField locale={locale} label={copy.preferences.propertyTypes} value={draft.propertyTypes} choices={propertyTypeChoices} onChange={propertyTypes => onChange({ propertyTypes })} />
-        <PreferenceChoiceField locale={locale} label={copy.preferences.locations} value={draft.locations} choices={locationChoices} onChange={locations => onChange({ locations })} />
+        <PreferenceChoiceField label={copy.preferences.propertyTypes} labels={optionsCopy.propertyTypes} value={draft.propertyTypes} choices={propertyTypeChoices} onChange={propertyTypes => onChange({ propertyTypes })} />
+        <PreferenceChoiceField label={copy.preferences.locations} labels={optionsCopy.locations} value={draft.locations} choices={locationChoices} onChange={locations => onChange({ locations })} />
       </div>
       <fieldset className="seeker-profile__fieldset">
         <legend>{copy.preferences.budgetRange}</legend>
@@ -307,8 +302,8 @@ function PreferencesForm({
       <fieldset className="seeker-profile__fieldset">
         <legend>{copy.preferences.areaRange}</legend>
         <div className="seeker-profile__form-grid seeker-profile__form-grid--numeric">
-          <Input id="seeker-preferences-min-area" label={copy.preferences.minArea} aria-label={`${copy.preferences.areaRange} — ${locale === 'ar' ? '\u0627\u0644\u062d\u062f \u0627\u0644\u0623\u062f\u0646\u0649' : 'Minimum'}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minArea} onChange={event => onChange({ minArea: event.target.value })} />
-          <Input id="seeker-preferences-max-area" label={copy.preferences.maxArea} aria-label={`${copy.preferences.areaRange} — ${locale === 'ar' ? '\u0627\u0644\u062d\u062f \u0627\u0644\u0623\u0642\u0635\u0649' : 'Maximum'}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxArea} onChange={event => onChange({ maxArea: event.target.value })} />
+          <Input id="seeker-preferences-min-area" label={copy.preferences.minArea} aria-label={`${copy.preferences.areaRange} — ${optionsCopy.minimum}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minArea} onChange={event => onChange({ minArea: event.target.value })} />
+          <Input id="seeker-preferences-max-area" label={copy.preferences.maxArea} aria-label={`${copy.preferences.areaRange} — ${optionsCopy.maximum}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxArea} onChange={event => onChange({ maxArea: event.target.value })} />
         </div>
       </fieldset>
       <fieldset className="seeker-profile__fieldset seeker-profile__chip-field">
@@ -316,7 +311,7 @@ function PreferencesForm({
         <div className="seeker-profile__choice-list seeker-profile__choice-list--bedrooms" role="group" aria-label={copy.preferences.bedroomsMin}>
           {bedroomChoices.map(choice => {
             const selectedBedroom = choice.value === '5+' ? draft.bedroomsMin === '5' && draft.bedroomsMax === '' : draft.bedroomsMin === choice.value && draft.bedroomsMax === choice.value;
-            return <button key={choice.value} type="button" className="seeker-profile__choice seeker-profile__choice--bedroom" data-selected={selectedBedroom || undefined} aria-pressed={selectedBedroom} onClick={() => onChange(choice.value === '5+' ? { bedroomsMin: '5', bedroomsMax: '' } : { bedroomsMin: choice.value, bedroomsMax: choice.value })}>{preferenceChoiceLabel(locale, choice)}</button>;
+            return <button key={choice.value} type="button" className="seeker-profile__choice seeker-profile__choice--bedroom" data-selected={selectedBedroom || undefined} aria-pressed={selectedBedroom} onClick={() => onChange(choice.value === '5+' ? { bedroomsMin: '5', bedroomsMax: '' } : { bedroomsMin: choice.value, bedroomsMax: choice.value })}>{choice.value}</button>;
           })}
         </div>
         {draft.bedroomsMin !== '' && draft.bedroomsMax !== '' && draft.bedroomsMin !== draft.bedroomsMax ? <p className="seeker-profile__field-note">{copy.preferences.bedroomsMin}: {draft.bedroomsMin} · {copy.preferences.bedroomsMax}: {draft.bedroomsMax}</p> : null}

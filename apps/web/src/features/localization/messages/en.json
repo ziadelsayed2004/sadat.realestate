@@ -4611,6 +4611,32 @@
     "dangerHeading": "Danger zone",
     "dangerBody": "Account deletion is final and cannot be undone. All of your data and requests will be permanently removed."
   },
+  "seeker/profile-surface-copy#getPreferenceOptionsCopy": {
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "duplex": "Duplex",
+      "roof": "Roof",
+      "land": "Land",
+      "office": "Office",
+      "commercial": "Commercial shop",
+      "factory": "Factory"
+    },
+    "locations": {
+      "district-1": "First district",
+      "district-2": "Second district",
+      "district-3": "Third district",
+      "district-4": "Fourth district",
+      "district-5": "Fifth district",
+      "district-6": "Sixth district",
+      "district-7": "Seventh district",
+      "industrial-zone": "Industrial zone",
+      "upscale-zone": "Upscale zone",
+      "new-cairo": "New Cairo"
+    },
+    "minimum": "Minimum",
+    "maximum": "Maximum"
+  },
   "seeker/profile-surface-copy#getProfileFeedbackCopy": {
     "invalidPassword": "Make sure the new passwords match and meet the requirements.",
     "passwordFailure": "Could not change the password. Check your current password and try again."

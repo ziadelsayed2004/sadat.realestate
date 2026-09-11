@@ -4611,6 +4611,32 @@
     "dangerHeading": "منطقة الخطر",
     "dangerBody": "حذف الحساب إجراء نهائي غير قابل للتراجع. ستُحذف جميع بياناتك وطلباتك نهائياً."
   },
+  "seeker/profile-surface-copy#getPreferenceOptionsCopy": {
+    "propertyTypes": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "duplex": "دوبلكس",
+      "roof": "رووف",
+      "land": "أرض",
+      "office": "مكتب",
+      "commercial": "محل تجاري",
+      "factory": "مصنع"
+    },
+    "locations": {
+      "district-1": "الحي الأول",
+      "district-2": "الحي الثاني",
+      "district-3": "الحي الثالث",
+      "district-4": "الحي الرابع",
+      "district-5": "الحي الخامس",
+      "district-6": "الحي السادس",
+      "district-7": "الحي السابع",
+      "industrial-zone": "المنطقة الصناعية",
+      "upscale-zone": "المنطقة الراقية",
+      "new-cairo": "القاهرة الجديدة"
+    },
+    "minimum": "الحد الأدنى",
+    "maximum": "الحد الأقصى"
+  },
   "seeker/profile-surface-copy#getProfileFeedbackCopy": {
     "invalidPassword": "تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.",
     "passwordFailure": "تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى."

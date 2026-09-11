@@ -25,3 +25,17 @@ export function getProfileFeedbackCopy(locale: SupportedLocale) {
     passwordFailure: ''
   });
 }
+
+export function getPreferenceOptionsCopy(locale: SupportedLocale) {
+  return localizeCopy('seeker/profile-surface-copy#getPreferenceOptionsCopy', locale, {
+    propertyTypes: {
+      apartment: '', villa: '', duplex: '', roof: '', land: '', office: '', commercial: '', factory: ''
+    },
+    locations: {
+      'district-1': '', 'district-2': '', 'district-3': '', 'district-4': '', 'district-5': '',
+      'district-6': '', 'district-7': '', 'industrial-zone': '', 'upscale-zone': '', 'new-cairo': ''
+    },
+    minimum: '',
+    maximum: ''
+  });
+}

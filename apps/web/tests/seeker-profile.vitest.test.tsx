@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   seekerProfileDataSchema,
   type SeekerPreferencesData,
@@ -98,6 +98,20 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(result.container.querySelector('[data-screen-id="SEK-08"]')).not.toBeNull();
     expect(screen.getByDisplayValue('500000')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: copy.tabs.profile })).toHaveAttribute('href', `/seeker/profile?tab=personal&lang=${locale}`);
+    const propertyLabels = locale === 'ar'
+      ? ['شقة', 'فيلا', 'دوبلكس', 'رووف', 'أرض', 'مكتب', 'محل تجاري', 'مصنع']
+      : ['Apartment', 'Villa', 'Duplex', 'Roof', 'Land', 'Office', 'Commercial shop', 'Factory'];
+    const locationLabels = locale === 'ar'
+      ? ['الحي الأول', 'الحي الثاني', 'الحي الثالث', 'الحي الرابع', 'الحي الخامس', 'الحي السادس', 'الحي السابع', 'المنطقة الصناعية', 'المنطقة الراقية', 'القاهرة الجديدة']
+      : ['First district', 'Second district', 'Third district', 'Fourth district', 'Fifth district', 'Sixth district', 'Seventh district', 'Industrial zone', 'Upscale zone', 'New Cairo'];
+    const propertyChoices = screen.getByRole('button', { name: propertyLabels[0] }).closest('.seeker-profile__choice-list');
+    const locationChoices = screen.getByRole('button', { name: locationLabels[0] }).closest('.seeker-profile__choice-list');
+    expect(propertyChoices).not.toBeNull();
+    expect(locationChoices).not.toBeNull();
+    expect(within(propertyChoices as HTMLElement).getAllByRole('button').map(button => button.textContent?.replace(' ✓', ''))).toEqual(propertyLabels);
+    expect(within(locationChoices as HTMLElement).getAllByRole('button').map(button => button.textContent?.replace(' ✓', ''))).toEqual(locationLabels);
+    expect(screen.getByLabelText(`${copy.preferences.areaRange} — ${locale === 'ar' ? 'الحد الأدنى' : 'Minimum'}`)).toBeInTheDocument();
+    expect(screen.getByLabelText(`${copy.preferences.areaRange} — ${locale === 'ar' ? 'الحد الأقصى' : 'Maximum'}`)).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('accessToken');
     expect(result.container.textContent).not.toContain('internalNote');
     result.unmount();
