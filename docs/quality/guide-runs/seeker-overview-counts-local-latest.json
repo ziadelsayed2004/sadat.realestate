@@ -1,0 +1,11 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-mongodb",
+  "checks": [
+    "empty account: zero counts and empty projections",
+    "owned counts 2/1/1/1/2/1; foreign records excluded; available favorite count matches listing",
+    "deactivation updates saved count to zero"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-11T21:56:34.973Z"
+}

@@ -10,6 +10,7 @@ import {
   type SeekerOverviewViewing
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface SeekerOverviewRepository { summary(seekerId: string): Promise<SeekerOverviewData> }
 export interface SeekerOverviewService { get(claims: AccessTokenClaims): Promise<SeekerOverviewData> }
@@ -113,7 +114,13 @@ export function createMongooseSeekerOverviewRepository(connection: Connection): 
       requestsCollection.countDocuments(owner),
       requestsCollection.countDocuments({ ...owner, status: { $in: activeRequestStatuses } }),
       viewingsCollection.countDocuments(owner),
-      connection.collection('favorites').countDocuments(owner),
+      connection.collection('favorites').aggregate<{ total: number }>([
+        { $match: owner },
+        { $lookup: { from: 'properties', localField: 'propertyId', foreignField: '_id',
+          pipeline: [{ $match: { status: 'published', active: true, ...unexpiredPropertyFilter() } }, { $project: { _id: 1 } }], as: 'property' } },
+        { $unwind: '$property' },
+        { $count: 'total' }
+      ]).toArray().then(rows => rows[0]?.total ?? 0),
       notificationsCollection.countDocuments(recipient),
       notificationsCollection.countDocuments({
         ...recipient,

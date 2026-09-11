@@ -1869,6 +1869,12 @@
               "mobile_width_without_overflow"
             ]
           }
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-overview-counts-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-11T21:56:34.973Z",
+          "environment": "isolated-local-mongodb"
         }
       ],
       "reviewedSubcases": [
@@ -1879,6 +1885,14 @@
           "evidenceType": "Browser/API",
           "scope": "Six AR/EN desktop/tablet/mobile runs; aborted initial request, no fake counts, real HTTP 200 retry without document navigation, four displayed counts match API; no fabricated response. Does not independently recompute counts from business collections.",
           "verifiedAt": "2026-09-11T21:55:00.559Z"
+        },
+        {
+          "case": "empty",
+          "check": "owned_summary_counts_and_available_favorites",
+          "path": "docs/quality/guide-runs/seeker-overview-counts-local-latest.json",
+          "evidenceType": "Repository/MongoDB",
+          "scope": "Isolated Mongo: empty counts/projections; owned request/viewing/notification counts exclude foreign records; available favorites count matches list and responds to deactivation. Not browser empty-state evidence.",
+          "verifiedAt": "2026-09-11T21:56:34.973Z"
         }
       ],
       "reviewedGuarantees": []

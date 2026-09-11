@@ -354,3 +354,10 @@
 - Added and executed `scripts/verify-seeker-overview-recovery-local.mjs`: six AR/EN Desktop/Tablet/Pixel 5 runs passed. Initial overview request deliberately aborted (no response mocking); retry returns real HTTP 200 without document reload. No summary cards during failure; four recovered values match the API; no overflow.
 - Evidence `guide-runs/seeker-overview-recovery-local-latest.json` attached to GUIDE-05. Sessions created by test removed and favorites unchanged. Count equality proves UI/API agreement, not independent business-collection aggregation correctness.
 - Next: GUIDE-05 actual empty-account overview and aggregation correctness against owned requests/viewings/favorites, including foreign records and unavailable properties; inspect existing overview service tests before executing new checks. No CSS/application changes. Preserve Demo and reuse matching local runtime only after status check.
+
+## 12 September: overview available-favorite count fix
+
+- Found and fixed a real mismatch: overview counted every favorite record, while saved listing excludes draft/inactive/expired/missing properties. Overview now joins available properties before counting, with the same expiry predicate.
+- `verify-seeker-overview-counts-local.mjs` passed on isolated MongoDB: zero-count/empty projection account, owned counts 2/1/1/1/2/1 excluding foreign records, count agrees with favorite listing, then drops to zero on deactivation. Temporary collections removed.
+- Focused overview/request-projection tests 2/2, API typecheck and targeted lint passed. No CSS changes. Evidence scope repository/MongoDB, not browser empty state.
+- Next: rebuild/restart API for the changed overview implementation before any full-runtime confirmation; currently running process still has previous compiled API. Verify actual empty-account browser overview and count change there. Do not rerun unaffected Web build or auth style checks.
