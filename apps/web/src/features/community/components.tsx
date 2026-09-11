@@ -525,6 +525,18 @@ export function PublicCommunity({
     .filter((filter): filter is { readonly key: PostCategory; readonly label: string } => filter.key !== 'all')
     .map(filter => ({ value: filter.key, label: filter.label }));
   const visiblePosts = data?.items.filter(post => activeFilter === 'all' || postPresentation(post, locale).categoryKey === activeFilter) ?? [];
+  const filteredEmpty = view === 'success' && data !== undefined && visiblePosts.length === 0;
+  const recoverList = () => {
+    if (filteredEmpty) {
+      setActiveFilter('all');
+      return;
+    }
+    if (view === 'empty' && query.page !== 1) {
+      goToPage(1);
+      return;
+    }
+    setAttempt(value => value + 1);
+  };
   const modalOpen = composerState !== 'closed';
   const composerTitle = composerState === 'permission' || composerState === 'checking'
     ? copy.authenticationRequired
@@ -542,15 +554,15 @@ export function PublicCommunity({
           <Button variant="accent" onClick={openComposer} startIcon={<span aria-hidden="true">+</span>}>{copy.createPost}</Button>
         </header>
         <div className="public-community__filters" aria-label={copy.allPosts}>
-          {filters.map(filter => <button key={filter.key} type="button" className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}
+          {filters.map(filter => <button key={filter.key} type="button" data-category-filter={filter.key} className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}
         </div>
         <p className="public-community__notice" role="note">{copy.moderationNotice}</p>
         {notice === undefined ? null : <p className="public-community__success" role="status"><strong>{copy.successTitle}:</strong> {notice}</p>}
-        {view === 'success' && data !== undefined ? (
+        {view === 'success' && data !== undefined && !filteredEmpty ? (
           <div className="public-community__grid">
             {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} />)}
           </div>
-        ) : <CommunityState state={view === 'success' ? 'empty' : view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
+        ) : <CommunityState state={view === 'success' ? 'empty' : view} copy={copy} onRetry={recoverList} />}
         {pageCount > 1 ? (
           <nav className="public-community__pagination" aria-label={copy.allPosts}>
             <Button variant="ghost" size="sm" disabled={query.page <= 1} onClick={() => goToPage(query.page - 1)}>‹</Button>

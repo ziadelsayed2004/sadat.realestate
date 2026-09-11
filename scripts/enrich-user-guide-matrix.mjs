@@ -37,6 +37,7 @@ const communityAccountState = await readFile('docs/quality/guide-runs/community-
 const seekerViewingsRecovery = await readFile('docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const communityPublicRecovery = await readFile('docs/quality/guide-runs/community-public-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -54,6 +55,7 @@ function hasExecutedEvidence(journey) {
 
 const supplementalRuns = [
   ["docs/quality/guide-runs/admin-requests-recovery-local-latest.json", adminRequestsRecovery],
+  ["docs/quality/guide-runs/community-public-recovery-local-latest.json", communityPublicRecovery],
   ["docs/quality/guide-runs/request-export-local-latest.json", requestExport],
   ["docs/quality/guide-runs/community-account-state-local-latest.json", communityAccountState],
   ["docs/quality/guide-runs/community-presentation-local-latest.json", communityPresentation],
@@ -363,6 +365,26 @@ matrix.journeys = matrix.journeys.map((journey) => {
         path: 'docs/quality/guide-runs/admin-requests-recovery-local-latest.json',
         scope: 'Six request administration screens; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed',
         verifiedAt: adminRequestsRecovery.finishedAt,
+      });
+    }
+  }
+  if (journey.id === 'GUIDE-03' && communityPublicRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && communityPublicRecovery.mockedRoutes === false && communityPublicRecovery.cleanup === true
+    && communityPublicRecovery.temporaryPostRemoved === true && communityPublicRecovery.sessionsRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => communityPublicRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device
+      && run.publicHttpStatus === 200 && run.recoveredHttpStatus === 200 && run.postMutations === 0
+      && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))) {
+    for (const [category, check] of [
+      ['validation', 'invalid_post_blocks_mutation'],
+      ['empty', 'empty_category_filter_recovers_without_navigation'],
+      ['networkRetry', 'offline_retry_recovers_without_navigation'],
+    ]) {
+      if (communityPublicRecovery.runs.every(run => run.checks?.includes(check))) reviewedSubcases.push({
+        case: category, evidenceType: 'Browser/API/MongoDB', check,
+        path: 'docs/quality/guide-runs/community-public-recovery-local-latest.json',
+        scope: 'Public community feed; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary draft and sessions removed',
+        verifiedAt: communityPublicRecovery.finishedAt,
       });
     }
   }

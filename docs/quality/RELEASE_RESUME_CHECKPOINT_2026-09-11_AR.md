@@ -241,3 +241,9 @@
 - أثبتت شاشة طلبات التواصل أن البحث بلا نتائج يعرض empty ثم يعود إلى السجلات بعد المسح دون document reload، وأن انقطاع الشبكة يعرض Retry ثم يتعافى إلى HTTP 200 دون reload.
 - مُنعت أسباب الانتقال الفارغة والمسافات والسبب الأقصر من ثلاثة أحرف داخل الواجهة قبل أي POST؛ بقي الطلب المؤقت `new` بإصدار 0 ولم يُكتب audit. حُذف الطلب المؤقت وكل الجلسات التي أنشأها الفحص، والدليل في `guide-runs/admin-requests-recovery-local-latest.json`.
 - أصبحت حالات validation وempty وnetworkRetry في GUIDE-21 مرتبطة بأدلة Browser/API/MongoDB محلية. تظل الرحلة PARTIAL لأن بقية قرارات الإدارة والنطاق الكامل وProduction ومطابقة Figma النهائية ما زالت مفتوحة. الأرقام الرسمية لم تتغير: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119. الديمو باقٍ ولا يُنفذ purge في هذه المرحلة.
+
+## استعادة المجتمع العام — 11 سبتمبر
+
+- أُصلحت حالة واجهة حقيقية في `PublicCommunity`: الفلتر الذي لا يطابق أي منشور يعرض Empty واضحًا، وزر الاستعادة يعيد البطاقات دون navigation. كما تعيد صفحة خارج النطاق (مثل `page=999`) إلى الصفحة الأولى قبل إعادة الطلب.
+- نجحت 6 تشغيلات real browser/API/MongoDB لـGUIDE-03 على AR/EN وDesktop/Tablet/Pixel 5. أثبتت projection العامة عدم تسريب `authorId` أو `status` أو `internalNotes`، ومنعت المسودة المؤقتة من الظهور للعامة، ومنعت نموذج الإنشاء غير الصالح من أي POST، ثم تعافت من offline إلى HTTP 200 عبر Retry دون reload أو overflow.
+- حُذفت المسودة والجلسات التي أنشأها الفحص، والدليل `guide-runs/community-public-recovery-local-latest.json`. رُبطت حالات validation وempty وnetworkRetry في GUIDE-03 بالمصفوفة. ما زالت الرحلة PARTIAL بسبب بقية دورة الحسابات وProduction ومطابقة Figma.

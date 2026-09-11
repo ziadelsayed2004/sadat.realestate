@@ -1,0 +1,123 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-03"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "9f5c26214d5d4a5c853b64c89808ddc60079612f",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "missingCategory": "area",
+      "checks": [
+        "public_projection_hides_private_fields",
+        "empty_category_filter_recovers_without_navigation",
+        "invalid_post_blocks_mutation",
+        "out_of_range_page_recovers_to_page_one",
+        "offline_retry_recovers_without_navigation"
+      ],
+      "publicHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "postMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "temporaryPostRemoved": true,
+  "sessionsRemoved": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-11T18:07:33.647Z"
+}

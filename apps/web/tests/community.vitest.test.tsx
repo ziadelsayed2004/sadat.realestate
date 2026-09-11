@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   communityPublicPostDetailDataSchema,
   communityPublicPostListDataSchema
@@ -54,6 +54,10 @@ describe('public community feed and post creation', () => {
     expect(result.container.querySelectorAll('.public-community__card')).toHaveLength(2);
     fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'سؤال' : 'Question' }));
     expect(result.container.querySelectorAll('.public-community__card')).toHaveLength(0);
+    const empty = screen.getByRole('region', { name: getCommunityCopy(locale).emptyTitle });
+    expect(empty).toBeInTheDocument();
+    fireEvent.click(within(empty).getByRole('button', { name: getCommunityCopy(locale).retryLabel }));
+    expect(result.container.querySelectorAll('.public-community__card')).toHaveLength(2);
   });
 
   it('loads the implemented versioned public route and keeps the safe projection', async () => {
@@ -95,6 +99,18 @@ describe('public community feed and post creation', () => {
 
     renderWithLocale(<PublicCommunity locale="en" initialData={{ items: [], page: 1, limit: 20, total: 0 }} />, { locale: 'en' });
     expect(screen.getByRole('region', { name: copy.emptyTitle })).toBeInTheDocument();
+  });
+
+  it('returns an out-of-range empty page to page one without document navigation', async () => {
+    const copy = getCommunityCopy('en');
+    const load = vi.fn().mockResolvedValue(listData);
+    renderWithLocale(
+      <PublicCommunity locale="en" url="/community?page=9" initialData={{ items: [], page: 9, limit: 20, total: 1 }} load={load} />,
+      { locale: 'en' }
+    );
+    fireEvent.click(within(screen.getByRole('region', { name: copy.emptyTitle })).getByRole('button', { name: copy.retryLabel }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: post.title, level: 2 })).toBeInTheDocument());
+    expect(load).toHaveBeenCalledWith({ page: 1, limit: 20 }, expect.any(AbortSignal));
   });
 
   it('keeps create-post access behind authentication and submits the real mutation contract', async () => {
