@@ -40,6 +40,44 @@ const list = favoriteListDataSchema.parse({ items: [saved, secondSaved], page: 1
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker saved properties', () => {
+  it('retries the requested page after a network failure without repeating mutations', async () => {
+    let fail = true;
+    const load = vi.fn(async ({ page }: { page: number } = { page: 1 }) => {
+      if (page === 2 && fail) throw new ApiClientError('Offline', { code: 'NETWORK_ERROR' });
+      return { items: [page === 1 ? saved : secondSaved], page, limit: 20, total: 21 };
+    });
+    const actions = emptyActions();
+    const copy = getSeekerSavedCopy('en');
+    renderWithLocale(<SeekerSaved locale="en" session={session} load={load} actions={actions} />, { locale: 'en' });
+    await screen.findByTestId(`seeker-saved-property-${saved.id}`);
+    fireEvent.click(screen.getByRole('button', { name: copy.next }));
+    await screen.findByRole('button', { name: copy.retry });
+    fail = false;
+    fireEvent.click(screen.getByRole('button', { name: copy.retry }));
+    await screen.findByTestId(`seeker-saved-property-${secondSaved.id}`);
+    expect(load.mock.calls.map(([query]) => query?.page)).toEqual([1, 2, 2]);
+    expect(actions.remove).not.toHaveBeenCalled();
+  });
+
+  it('returns to a valid page after removing the final item on page two', async () => {
+    let removed = false;
+    const load = vi.fn(async ({ page }: { page: number } = { page: 1 }) => ({
+      items: page === 1 ? [saved] : removed ? [] : [secondSaved],
+      page, limit: 20, total: removed ? 20 : 21
+    }));
+    const actions = emptyActions();
+    actions.remove.mockImplementation(async () => { removed = true; return { removed: true }; });
+    renderWithLocale(<SeekerSaved locale="en" session={session} load={load} actions={actions} />, { locale: 'en' });
+    await screen.findByTestId(`seeker-saved-property-${saved.id}`);
+    fireEvent.click(screen.getByRole('button', { name: getSeekerSavedCopy('en').next }));
+    await screen.findByTestId(`seeker-saved-property-${secondSaved.id}`);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    await screen.findByTestId(`seeker-saved-property-${saved.id}`);
+    expect(load.mock.calls.map(([query]) => query?.page)).toEqual([1, 2, 2, 1]);
+    expect(actions.remove).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(getSeekerSavedCopy('en').empty.title)).not.toBeInTheDocument();
+  });
+
   it('loads the list and idempotent save/remove routes with the shared contracts', async () => {
     const calls: Array<{ url: string; method: string; body: string | undefined; authorization: string | null }> = [];
     const client = new ApiClient({

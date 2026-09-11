@@ -121,6 +121,11 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
     setState('loading');
     void loadSource({ page, limit: 20 }, controller.signal).then(nextData => {
       if (controller.signal.aborted) return;
+      const lastPage = Math.max(1, Math.ceil(nextData.total / nextData.limit));
+      if (page > lastPage) {
+        setPage(lastPage);
+        return;
+      }
       setData(nextData);
       setState(nextData.items.length === 0 ? 'empty' : 'success');
     }).catch(error => {
