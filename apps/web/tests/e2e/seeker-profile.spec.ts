@@ -64,6 +64,14 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
     expect(route.request().headers().authorization).toBe('Bearer seeker.profile.token');
     const request = route.request();
     const url = new URL(request.url());
+    if (url.pathname.endsWith('/sessions')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: { items: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', current: true, authenticationMethod: 'password', createdAt: '2026-08-18T10:00:00.000Z', lastUsedAt: '2026-08-18T10:30:00.000Z', expiresAt: '2026-09-18T10:00:00.000Z' }] }, ...successMeta('profile-sessions') })
+      });
+      return;
+    }
     const isPreferences = url.pathname.endsWith('/preferences');
     if (request.method() === 'GET') {
       const locale = (url.searchParams.get('lang') ?? 'ar') as 'ar' | 'en';
@@ -133,7 +141,8 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
 
     await page.goto(`/seeker/settings?${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-10"]')).toBeVisible();
-    await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(4);
+    await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(3);
+    await expect(page.locator('.seeker-profile__settings-card[aria-labelledby="seeker-profile-sessions-title"]')).toHaveAttribute('data-state', 'success');
     await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|internalNote|providerDocument|m\.salem@email\.com/u);
     await page.evaluate(async () => {
       await document.fonts.ready;

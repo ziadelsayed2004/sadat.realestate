@@ -218,7 +218,7 @@ const profile = {
   locale: 'ar'
 };
 const preferences = {
-  preferences: { propertyTypes: ['apartment'], locations: ['First District'], purpose: 'buy', minPrice: 500000, maxPrice: 2500000, bedroomsMin: 2, bedroomsMax: 4 },
+  preferences: { propertyTypes: ['apartment'], locations: ['First District'], purpose: 'buy', minPrice: 500000, maxPrice: 2500000, minArea: 100, maxArea: 200, bedroomsMin: 2, bedroomsMax: 4 },
   updatedAt: timestamps.updated
 };
 

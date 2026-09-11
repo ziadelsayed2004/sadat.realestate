@@ -2078,6 +2078,7 @@
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs {
     width: max-content;
+    margin-block-start: 1.25rem;
     margin-inline-start: max(0px, calc((100% - 42rem) / 2));
     margin-inline-end: auto;
     padding: .25rem;
@@ -2104,12 +2105,25 @@
   }
 
   .seeker-profile__panel { text-align: start; }
-  .seeker-profile__form { gap: 1rem; margin-block-start: 1rem; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel { position: relative; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__form { gap: .6875rem; margin-block-start: 0; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__form-grid .ui-field__control {
+    min-block-size: 2.625rem;
+    padding-block: .5rem;
+  }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel .seeker-profile__form > .ui-button {
+    position: absolute;
+    inset-block-end: -3.75rem;
+    inset-inline-start: 0;
+  }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel:has(.seeker-profile__form > .ui-button) {
+    margin-block-end: 3.75rem;
+  }
   .seeker-profile__form-grid { gap: .75rem; }
   .seeker-profile__preference-stack { gap: 1rem; }
-  .seeker-profile__fieldset legend { margin-block-end: .5rem; }
-  .seeker-profile__choice { min-block-size: 2.25rem; padding: .4rem .7rem; font-size: .875rem; }
-  .seeker-profile__choice--chip { min-block-size: 2.15rem; padding-inline: .55rem; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__fieldset legend { margin-block-end: .375rem; font-size: .75rem; line-height: 1rem; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__choice { min-block-size: 2.375rem; padding: .5rem 1rem; font-size: .875rem; line-height: 1.25rem; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__choice--chip { min-block-size: 1.875rem; padding: .375rem .75rem; font-size: .75rem; line-height: 1rem; }
   .seeker-profile__choice-list { gap: .4rem; }
   .seeker-profile__choice-list--bedrooms { gap: .6rem; }
   .seeker-profile__field-note { margin: .5rem 0 0; }
