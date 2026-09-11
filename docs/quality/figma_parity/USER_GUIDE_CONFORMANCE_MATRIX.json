@@ -2315,19 +2315,19 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "seeker",
           "public"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2348,6 +2348,13 @@
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-11T20:02:33.400Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/saved-pagination-browser-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -2399,7 +2406,14 @@
           "verifiedAt": "2026-09-11T19:58:56.101Z"
         }
       ],
-      "reviewedGuarantees": []
+      "reviewedGuarantees": [
+        {
+          "check": "favorites_access_validation",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "scope": "Real HTTP with isolated MongoDB and locally signed tokens: other-account list/delete isolation; provider/admin and anonymous denied; old seeker token denied after suspended/rejected/role_changed/deleted; malformed requests rejected; unavailable properties excluded; duplicate save preserves one record. Does not exercise login/refresh/session revocation or production.",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-09",
