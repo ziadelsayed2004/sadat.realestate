@@ -467,7 +467,6 @@ function SettingsContent({
   useEffect(() => {
     const controller = new AbortController();
     setSessionState('loading');
-    setSessionFeedback(undefined);
     void loadSessions(controller.signal).then(result => {
       if (controller.signal.aborted) return;
       setSessions(result.items);
@@ -496,9 +495,14 @@ function SettingsContent({
     setRevokingSessionId('all');
     setSessionFeedback(undefined);
     try {
-      await Promise.all(others.map(session => revokeSession(session.id)));
-      setSessions(current => current.filter(session => session.current));
-      setSessionFeedback(sessionCopy.revoked);
+      const results = await Promise.allSettled(others.map(session => revokeSession(session.id)));
+      if (results.some(result => result.status === 'rejected')) {
+        setSessionFeedback(sessionCopy.error);
+        setSessionAttempt(value => value + 1);
+      } else {
+        setSessions(current => current.filter(session => session.current));
+        setSessionFeedback(sessionCopy.revoked);
+      }
     } catch {
       setSessionFeedback(sessionCopy.error);
       setSessionAttempt(value => value + 1);
@@ -579,7 +583,7 @@ function SettingsContent({
         {sessionState === 'error' ? (
           <div className="seeker-profile__settings-actions" role="alert">
             <p>{sessionCopy.error}</p>
-            <Button type="button" variant="secondary" onClick={() => setSessionAttempt(value => value + 1)}>{sessionCopy.retry}</Button>
+            <Button type="button" variant="secondary" onClick={() => { setSessionFeedback(undefined); setSessionAttempt(value => value + 1); }}>{sessionCopy.retry}</Button>
           </div>
         ) : null}
         {sessionState === 'success' && sessions.length === 0 ? <p className="seeker-profile__empty-note" data-state="empty">{sessionCopy.empty}</p> : null}

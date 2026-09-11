@@ -191,6 +191,38 @@ describe('Seeker profile, preferences, and settings', () => {
     await waitFor(() => expect(actions.updateProfile).toHaveBeenCalledWith({ locale: 'en' }));
   });
 
+  it('waits for all revocations before reconciling a partially failed batch', async () => {
+    const copy = getAccountSessionCopy('en');
+    const item = (id: string, current = false) => ({ id, current, authenticationMethod: 'password' as const,
+      createdAt: '2026-09-10T08:00:00.000Z', lastUsedAt: null, expiresAt: '2026-10-10T08:00:00.000Z' });
+    const current = item('111111111111111111111111', true);
+    const failed = item('222222222222222222222222');
+    const delayed = item('333333333333333333333333');
+    let complete: (() => void) | undefined;
+    const pending = new Promise<void>(resolve => { complete = resolve; });
+    let remaining = [current, failed, delayed];
+    const loadSessions = vi.fn(async () => ({ items: remaining }));
+    const revokeSession = vi.fn(async (sessionId: string) => {
+      if (sessionId === failed.id) throw new Error('Temporary failure');
+      await pending;
+      remaining = [current, failed];
+      return { sessionId, revoked: true as const };
+    });
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile}
+      loadSessions={loadSessions} revokeSession={revokeSession} actions={emptyActions()} />, { locale: 'en' });
+    const revokeAll = await screen.findByRole('button', { name: copy.revokeOthers });
+    await waitFor(() => expect(revokeAll).toBeEnabled());
+    fireEvent.click(revokeAll);
+    await waitFor(() => expect(revokeSession).toHaveBeenCalledTimes(2));
+    expect(loadSessions).toHaveBeenCalledTimes(1);
+    expect(revokeAll).toBeDisabled();
+    complete!();
+    await waitFor(() => expect(loadSessions).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(screen.getAllByText(copy.other)).toHaveLength(1));
+    expect(screen.getByText(copy.error)).toBeInTheDocument();
+    expect(revokeSession).not.toHaveBeenCalledWith(current.id);
+  });
+
   it('changes a valid password and signs the current browser out', async () => {
     const actions = emptyActions();
     const authClient = {
