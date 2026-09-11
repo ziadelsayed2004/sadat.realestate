@@ -4534,5 +4534,28 @@
     "password": "Password",
     "otp": "Email code",
     "mfa": "Two-factor authentication"
+  },
+  "admin_requests/metrics-copy#getRequestMetricsCopy": {
+    "totalRequests": "Total requests",
+    "loadedRecords": "Loaded records",
+    "new": "New",
+    "underReview": "Under review",
+    "contacted": "Contacted",
+    "scheduled": "Scheduled",
+    "inProgress": "In progress",
+    "resolved": "Resolved",
+    "totalOverdue": "Total overdue",
+    "requestMetrics": "Request metrics",
+    "all": "All",
+    "requestStatus": "Request status",
+    "totalViewings": "Total viewings",
+    "requested": "Requested",
+    "confirmed": "Confirmed",
+    "rescheduled": "Rescheduled",
+    "cancelled": "Cancelled",
+    "completed": "Completed",
+    "assigned": "Assigned",
+    "viewingMetrics": "Viewing metrics",
+    "viewingStatus": "Viewing status"
   }
 }

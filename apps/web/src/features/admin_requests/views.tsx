@@ -17,6 +17,7 @@ import {
   type AdminViewingsLoader
 } from './data.ts';
 import { getAdminRequestsCopy, type AdminRequestsCopy, type AdminRequestsScreen, type AdminRequestsState } from './copy.ts';
+import { requestMetricLabel } from './metrics-copy.ts';
 import './styles.css';
 
 export interface AdminRequestsProps {
@@ -101,10 +102,6 @@ function StatusBadge({ label, status }: { readonly label: string; readonly statu
   return <span className="admin-requests__badge" data-tone={toneForStatus(status)}>{label}</span>;
 }
 
-function metricText(locale: SupportedLocale, english: string, arabic: string): string {
-  return locale === 'ar' ? arabic : english;
-}
-
 type RequestMetric = readonly [value: number, label: string];
 
 function requestItems(data: RequestListData | OverdueRequestListData, overdue: boolean): readonly RequestData[] {
@@ -118,31 +115,31 @@ function RequestMetricStrip({ data, locale, variant }: { readonly data: RequestL
   const count = (status: RequestStatus) => items.filter(request => request.status === status).length;
   const metrics: readonly RequestMetric[] = variant === 'customer'
     ? [
-        [data.total, metricText(locale, 'Total requests', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0637\u0644\u0628\u0627\u062a')],
-        [items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
-        [count('new'), metricText(locale, 'New', '\u062c\u062f\u064a\u062f')],
-        [count('under_review'), metricText(locale, 'Under review', '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629')],
-        [count('contacted'), metricText(locale, 'Contacted', '\u062a\u0645 \u0627\u0644\u062a\u0648\u0627\u0635\u0644')],
-        [count('scheduled'), metricText(locale, 'Scheduled', '\u0645\u062c\u062f\u0648\u0644')],
-        [count('in_progress'), metricText(locale, 'In progress', '\u0642\u064a\u062f \u0627\u0644\u062a\u0646\u0641\u064a\u0630')],
-        [count('resolved'), metricText(locale, 'Resolved', '\u062a\u0645 \u0627\u0644\u062d\u0644')]
+        [data.total, requestMetricLabel(locale, 'totalRequests')],
+        [items.length, requestMetricLabel(locale, 'loadedRecords')],
+        [count('new'), requestMetricLabel(locale, 'new')],
+        [count('under_review'), requestMetricLabel(locale, 'underReview')],
+        [count('contacted'), requestMetricLabel(locale, 'contacted')],
+        [count('scheduled'), requestMetricLabel(locale, 'scheduled')],
+        [count('in_progress'), requestMetricLabel(locale, 'inProgress')],
+        [count('resolved'), requestMetricLabel(locale, 'resolved')]
       ]
     : [
-        [data.total, metricText(locale, 'Total overdue', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u062a\u0623\u062e\u0631')],
-        [items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
-        [count('new'), metricText(locale, 'New', '\u062c\u062f\u064a\u062f')],
-        [count('under_review'), metricText(locale, 'Under review', '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629')],
-        [count('contacted'), metricText(locale, 'Contacted', '\u062a\u0645 \u0627\u0644\u062a\u0648\u0627\u0635\u0644')],
-        [count('in_progress'), metricText(locale, 'In progress', '\u0642\u064a\u062f \u0627\u0644\u062a\u0646\u0641\u064a\u0630')]
+        [data.total, requestMetricLabel(locale, 'totalOverdue')],
+        [items.length, requestMetricLabel(locale, 'loadedRecords')],
+        [count('new'), requestMetricLabel(locale, 'new')],
+        [count('under_review'), requestMetricLabel(locale, 'underReview')],
+        [count('contacted'), requestMetricLabel(locale, 'contacted')],
+        [count('in_progress'), requestMetricLabel(locale, 'inProgress')]
       ];
   const colors = ['#1b2942', '#2f68c9', '#2f68c9', '#bf6500', '#2f68c9', '#2f68c9', '#bf6500', '#00854a'];
-  return <section aria-label={metricText(locale, 'Request metrics', '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0637\u0644\u0628\u0627\u062a')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-request-metric-' + variant + '-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
+  return <section aria-label={requestMetricLabel(locale, 'requestMetrics')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-request-metric-' + variant + '-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
 }
 
 function RequestStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: RequestStatus | undefined; readonly onSelect: (status: RequestStatus | undefined) => void }) {
   const copy = getAdminRequestsCopy(locale);
-  const allLabel = metricText(locale, 'All', '\u0627\u0644\u0643\u0644');
-  return <div role="tablist" aria-label={metricText(locale, 'Request status', '\u062d\u0627\u0644\u0629 \u0627\u0644\u0637\u0644\u0628')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+  const allLabel = requestMetricLabel(locale, 'all');
+  return <div role="tablist" aria-label={requestMetricLabel(locale, 'requestStatus')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
     {[[undefined, allLabel] as const, ...requestStatuses.map(status => [status, copy.statusLabel[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-selected={active} data-filter-value={value ?? 'all'} key={value ?? 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}
   </div>;
 }
@@ -151,24 +148,24 @@ function ViewingMetricStrip({ data, locale }: { readonly data: ViewingListData; 
   const count = (status: ViewingStatus) => data.items.filter(viewing => viewing.status === status).length;
   const assigned = data.items.filter(viewing => viewing.providerId !== undefined).length;
   const metrics: readonly RequestMetric[] = [
-    [data.total, metricText(locale, 'Total viewings', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0627\u062a')],
-    [data.items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
-    [count('requested'), metricText(locale, 'Requested', '\u0645\u0637\u0644\u0648\u0628')],
-    [count('confirmed'), metricText(locale, 'Confirmed', '\u0645\u0624\u0643\u062f')],
-    [count('rescheduled'), metricText(locale, 'Rescheduled', '\u0623\u0639\u064a\u062f\u062a \u062c\u062f\u0648\u0644\u062a\u0647')],
-    [count('cancelled'), metricText(locale, 'Cancelled', '\u0645\u0644\u063a\u0649')],
-    [count('completed'), metricText(locale, 'Completed', '\u0645\u0643\u062a\u0645\u0644')],
-    [assigned, metricText(locale, 'Assigned', '\u0645\u0633\u0646\u062f')]
+    [data.total, requestMetricLabel(locale, 'totalViewings')],
+    [data.items.length, requestMetricLabel(locale, 'loadedRecords')],
+    [count('requested'), requestMetricLabel(locale, 'requested')],
+    [count('confirmed'), requestMetricLabel(locale, 'confirmed')],
+    [count('rescheduled'), requestMetricLabel(locale, 'rescheduled')],
+    [count('cancelled'), requestMetricLabel(locale, 'cancelled')],
+    [count('completed'), requestMetricLabel(locale, 'completed')],
+    [assigned, requestMetricLabel(locale, 'assigned')]
   ];
   const colors = ['#1b2942', '#2f68c9', '#2f68c9', '#00854a', '#bf6500', '#df1c2e', '#00854a', '#2f68c9'];
-  return <section aria-label={metricText(locale, 'Viewing metrics', '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0627\u062a')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-viewing-metric-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
+  return <section aria-label={requestMetricLabel(locale, 'viewingMetrics')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-viewing-metric-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
 }
 
 function ViewingStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ViewingStatus | undefined; readonly onSelect: (status: ViewingStatus | undefined) => void }) {
   const copy = getAdminRequestsCopy(locale);
-  const allLabel = metricText(locale, 'All', '\u0627\u0644\u0643\u0644');
+  const allLabel = requestMetricLabel(locale, 'all');
   const statuses: readonly ViewingStatus[] = ['requested', 'confirmed', 'rescheduled', 'cancelled', 'completed'];
-  return <div role="tablist" aria-label={metricText(locale, 'Viewing status', '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0629')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{[[undefined, allLabel] as const, ...statuses.map(status => [status, copy.viewingStatusLabel[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-selected={active} data-filter-value={value ?? 'all'} key={value ?? 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}</div>;
+  return <div role="tablist" aria-label={requestMetricLabel(locale, 'viewingStatus')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{[[undefined, allLabel] as const, ...statuses.map(status => [status, copy.viewingStatusLabel[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-selected={active} data-filter-value={value ?? 'all'} key={value ?? 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}</div>;
 }
 
 function requestPayloadText(request: RequestData, keys: readonly string[]): string | undefined {
