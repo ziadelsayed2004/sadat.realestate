@@ -50,6 +50,19 @@
     "preferencesDeepEmpty": true,
     "readDidNotWrite": true
   },
+  "concurrentMutations": {
+    "disjointPatchStatuses": [
+      200,
+      200
+    ],
+    "disjointFieldsPreserved": true,
+    "identicalPatchStatuses": [
+      200,
+      200
+    ],
+    "identicalFinalStateStable": true,
+    "profileDocuments": 1
+  },
   "cleanup": true,
-  "finishedAt": "2026-09-11T17:08:56.158Z"
+  "finishedAt": "2026-09-11T17:19:02.572Z"
 }

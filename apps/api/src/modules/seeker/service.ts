@@ -151,10 +151,7 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
 
     async updatePreferences(claims, patch) {
       await accountFor(claims);
-      const current = await dependencies.repository.findPreferences(claims.sub);
-      if (!current) throw new SeekerServiceError('SEEKER_NOT_FOUND');
-      const merged = { ...current.preferences, ...patch };
-      const preferences = await dependencies.repository.updatePreferences(claims.sub, merged);
+      const preferences = await dependencies.repository.updatePreferences(claims.sub, patch);
       if (!preferences) throw new SeekerServiceError('SEEKER_NOT_FOUND');
       return preferencesData(preferences);
     }

@@ -167,6 +167,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
     reviewedGuarantees.push({ category: 'roleAuthorization', check: 'provider_and_admin_tokens_denied_on_seeker_profile_operations',
       path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json', verifiedAt: seekerAccountState.finishedAt });
   }
+  if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
+    && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
+    && seekerAccountState.concurrentMutations?.disjointPatchStatuses?.every(status => status === 200)
+    && seekerAccountState.concurrentMutations?.disjointFieldsPreserved === true
+    && seekerAccountState.concurrentMutations?.identicalPatchStatuses?.every(status => status === 200)
+    && seekerAccountState.concurrentMutations?.identicalFinalStateStable === true
+    && seekerAccountState.concurrentMutations?.profileDocuments === 1) {
+    reviewedGuarantees.push({ category: 'duplicateMutation',
+      check: 'concurrent_disjoint_patches_preserved_and_identical_replay_keeps_one_profile',
+      path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json',
+      verifiedAt: seekerAccountState.finishedAt });
+  }
   if (journey.id === 'GUIDE-03' && communityAccountState?.status === 'PASS_LOCAL'
     && communityAccountState.mockedRoutes === false && communityAccountState.cleanup === true
     && ['seeker', 'provider', 'admin'].every(roleType => ['suspended', 'rejected', 'role_changed', 'deleted'].every(state =>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T17:15:55.530Z",
+  "generatedAt": "2026-09-11T17:19:31.731Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2368,7 +2368,7 @@
         "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
@@ -2437,7 +2437,7 @@
           "check": "empty_preferences_return_empty_object_without_write",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
           "scope": "Fresh seeker profile preferences through real HTTP and isolated MongoDB; component empty-state rendering is covered separately",
-          "verifiedAt": "2026-09-11T17:08:56.158Z"
+          "verifiedAt": "2026-09-11T17:19:02.572Z"
         },
         {
           "case": "validation",
@@ -2471,13 +2471,19 @@
           "category": "currentSessionState",
           "check": "current_account_state_denies_profile_and_preferences_operations",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T17:08:56.158Z"
+          "verifiedAt": "2026-09-11T17:19:02.572Z"
         },
         {
           "category": "roleAuthorization",
           "check": "provider_and_admin_tokens_denied_on_seeker_profile_operations",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T17:08:56.158Z"
+          "verifiedAt": "2026-09-11T17:19:02.572Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "concurrent_disjoint_patches_preserved_and_identical_replay_keeps_one_profile",
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "verifiedAt": "2026-09-11T17:19:02.572Z"
         }
       ],
       "browserContractRegression": {
@@ -4062,7 +4068,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T17:15:55.530Z",
+    "updatedAt": "2026-09-11T17:19:31.731Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

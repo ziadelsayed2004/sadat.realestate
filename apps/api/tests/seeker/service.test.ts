@@ -119,6 +119,20 @@ test('rejects invalid grants and preserves strict self ownership for profile/pre
   );
 });
 
+test('forwards preference patches without a stale read before the atomic write', async () => {
+  let written: unknown;
+  const seeker = service(repository({
+    async findPreferences() { throw new Error('stale preference read must not precede an update'); },
+    async updatePreferences(_id, patch) {
+      written = patch;
+      return { preferences: { minArea: 90 }, updatedAt: new Date('2026-08-02T00:00:00.000Z') };
+    }
+  }));
+  const result = await seeker.updatePreferences(claims, { minArea: 90 });
+  assert.deepEqual(written, { minArea: 90 });
+  assert.deepEqual(result.data, { minArea: 90 });
+});
+
 for (const status of ['suspended', 'rejected'] as const) test(`current ${status} account overrides an earlier verified token`, async () => {
   let readsOrWrites = 0;
   const seeker = service(repository({

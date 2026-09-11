@@ -3,6 +3,7 @@ import type {
   AuthAccountState,
   SeekerLocale,
   SeekerPreferences,
+  SeekerPreferencesPatch,
   SeekerProfilePatch
 } from '@sadat-real-estate/contracts';
 import type { IdentityModels } from '../identity/models.js';
@@ -33,7 +34,7 @@ export interface SeekerRepository {
   findByUserId(userId: string): Promise<SeekerAccount | undefined>;
   updateProfile(userId: string, patch: SeekerProfilePatch): Promise<SeekerAccount | undefined>;
   findPreferences(userId: string): Promise<SeekerPreferencesRecord | undefined>;
-  updatePreferences(userId: string, preferences: SeekerPreferences): Promise<SeekerPreferencesRecord | undefined>;
+  updatePreferences(userId: string, patch: SeekerPreferencesPatch): Promise<SeekerPreferencesRecord | undefined>;
 }
 
 interface LeanUser {
@@ -98,6 +99,15 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
     return loaded ? toAccount(loaded.user, loaded.profile) : undefined;
   }
 
+  async function findPreferences(userId: string): Promise<SeekerPreferencesRecord | undefined> {
+    if (!/^[a-f0-9]{24}$/.test(userId)) return undefined;
+    const profile = await SeekerProfile.findOne({ userId: new Types.ObjectId(userId) })
+      .select('preferences updatedAt')
+      .lean<Pick<LeanProfile, 'preferences' | 'updatedAt'>>()
+      .exec();
+    return profile ? { preferences: profile.preferences ?? {}, updatedAt: profile.updatedAt } : undefined;
+  }
+
   return {
     async create(input) {
       try {
@@ -153,21 +163,20 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
       return findByUserId(userId);
     },
 
-    async findPreferences(userId) {
-      if (!/^[a-f0-9]{24}$/.test(userId)) return undefined;
-      const profile = await SeekerProfile.findOne({ userId: new Types.ObjectId(userId) })
-        .select('preferences updatedAt')
-        .lean<Pick<LeanProfile, 'preferences' | 'updatedAt'>>()
-        .exec();
-      return profile ? { preferences: profile.preferences ?? {}, updatedAt: profile.updatedAt } : undefined;
-    },
+    findPreferences,
 
-    async updatePreferences(userId, preferences) {
+    async updatePreferences(userId, patch) {
       if (!/^[a-f0-9]{24}$/.test(userId)) return undefined;
+      const preferencePatch = Object.fromEntries(
+        Object.entries(patch)
+          .filter(([, value]) => value !== undefined)
+          .map(([key, value]) => [`preferences.${key}`, value])
+      );
+      if (Object.keys(preferencePatch).length === 0) return findPreferences(userId);
       const profile = await SeekerProfile.findOneAndUpdate(
         { userId: new Types.ObjectId(userId) },
-        { $set: { preferences } },
-        { new: true }
+        { $set: preferencePatch },
+        { returnDocument: 'after' }
       )
         .select('preferences updatedAt')
         .lean<Pick<LeanProfile, 'preferences' | 'updatedAt'>>()

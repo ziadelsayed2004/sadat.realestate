@@ -10,7 +10,7 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 
 const database = `seeker_state_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
-const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], roleAuthorization: [], emptyPreferences: undefined, cleanup: false };
+const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], roleAuthorization: [], emptyPreferences: undefined, concurrentMutations: undefined, cleanup: false };
 let server;
 try {
   const tokens = createHmacAccessTokenService(randomBytes(32), 3600);
@@ -43,6 +43,31 @@ try {
     assert.deepEqual(await connection.collection('seeker_profiles').findOne({ userId }), initialProfile);
     report.roleAuthorization.push({ roleType, status: 403, operationsDenied: 4, profileUnchanged: true });
   }
+
+  const concurrentPreferenceResponses = await Promise.all([
+    invoke(['PATCH', '/me/preferences', { minArea: 90 }]),
+    invoke(['PATCH', '/me/preferences', { maxArea: 180 }]),
+  ]);
+  assert.deepEqual(concurrentPreferenceResponses.map(response => response.status).sort(), [200, 200]);
+  const afterDisjointPreferences = await connection.collection('seeker_profiles').findOne({ userId });
+  assert.equal(afterDisjointPreferences?.preferences?.minArea, 90);
+  assert.equal(afterDisjointPreferences?.preferences?.maxArea, 180);
+
+  const identicalPreferenceResponses = await Promise.all([
+    invoke(['PATCH', '/me/preferences', { paymentMethod: 'any' }]),
+    invoke(['PATCH', '/me/preferences', { paymentMethod: 'any' }]),
+  ]);
+  assert.deepEqual(identicalPreferenceResponses.map(response => response.status).sort(), [200, 200]);
+  const afterIdenticalPreferences = await connection.collection('seeker_profiles').findOne({ userId });
+  assert.equal(afterIdenticalPreferences?.preferences?.paymentMethod, 'any');
+  assert.equal(await connection.collection('seeker_profiles').countDocuments({ userId }), 1);
+  report.concurrentMutations = {
+    disjointPatchStatuses: [200, 200],
+    disjointFieldsPreserved: true,
+    identicalPatchStatuses: [200, 200],
+    identicalFinalStateStable: true,
+    profileDocuments: 1,
+  };
 
   for (const call of calls) assert.equal((await invoke(call)).status, 200);
   const before = await connection.collection('seeker_profiles').findOne({ userId });
