@@ -157,7 +157,7 @@ function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly c
   }
 
   return (
-    <Modal open title={copy.createForm.title} description={copy.createForm.description} closeLabel={copy.createForm.close} onClose={onClose} footer={(
+    <Modal open className="provider-advertising__create-modal" title={copy.createForm.title} description={copy.createForm.description} closeLabel={copy.createForm.close} onClose={onClose} footer={(
       <>
         <Button type="button" variant="secondary" onClick={onClose} disabled={busy}>{copy.createForm.cancel}</Button>
         <Button type="submit" form={formId} loading={busy}>{copy.createForm.save}</Button>
@@ -369,7 +369,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
 
   const currentState = selectedRequestId === undefined ? state : detailState;
   return (
-    <section className="provider-dashboard provider-advertising" data-screen-id="PRV-19" data-route="/provider/ads" data-device-scope="desktop" data-advertising-state={currentState}>
+    <section className="provider-dashboard provider-advertising" data-screen-id="PRV-19" data-route="/provider/ads" data-device-scope="desktop/tablet/mobile" data-advertising-state={currentState}>
       <ProviderNavigation locale={locale} activePath={selectedRequestId === undefined ? '/provider/ads' : `/provider/ads/${selectedRequestId}`} authClient={authClient} />
       <div className="provider-dashboard__content">
         {!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : selectedRequestId === undefined ? <>

@@ -63,10 +63,11 @@ async function routeAdvertisingApi(page: import('@playwright/test').Page): Promi
     expect(route.request().headers().authorization).toBe('Bearer provider.advertising.token');
     const url = new URL(route.request().url());
     const detail = url.pathname.endsWith(`/${REQUEST_ID}`);
+    const empty = !detail && url.searchParams.get('status') === 'rejected';
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: envelope(detail ? advertisingRequest() : { items: [advertisingRequest()], page: 1, limit: 5, total: 1 }, detail ? 'provider-advertising-detail' : 'provider-advertising-list', detail ? {} : { page: 1, limit: 5, total: 1 })
+      body: envelope(detail ? advertisingRequest() : { items: empty ? [] : [advertisingRequest()], page: 1, limit: 5, total: empty ? 0 : 1 }, detail ? 'provider-advertising-detail' : 'provider-advertising-list', detail ? {} : { page: 1, limit: 5, total: empty ? 0 : 1 })
     });
   });
   await page.route('**/api/v1/provider/commission', async route => {
@@ -74,6 +75,44 @@ async function routeAdvertisingApi(page: import('@playwright/test').Page): Promi
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ accountId: PROVIDER_ID, source: 'policy', effectiveAt: '2026-08-19T08:00:00.000Z', policyVersion: 3, kind: 'percentage', percentageBps: 250, readOnly: true }, 'provider-commission') });
   });
 }
+
+test('PRV-19 advertising requests match the responsive source and keep creation usable', async ({ page }, testInfo) => {
+  const locale = localeForProject();
+  if (testInfo.project.name.startsWith('tablet-')) await page.setViewportSize({ width: 1024, height: 760 });
+  if (testInfo.project.name.startsWith('mobile-')) await page.setViewportSize({ width: 402, height: 1062 });
+  testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:121347 (1024x760); mobile node 6017:119686 (402x1062)' });
+  await routeSession(page);
+  await routeAdvertisingApi(page);
+  await page.goto(`/provider/ads?lang=${encodeURIComponent(locale)}`);
+  const screen = page.locator('[data-screen-id="PRV-19"]');
+  await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+  await expect(screen).toHaveAttribute('data-advertising-state', 'success');
+  const row = page.getByTestId('provider-advertising-row');
+  await expect(row).toBeVisible();
+  const dimensions = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.width + 1);
+  const rowBounds = await row.boundingBox();
+  if (dimensions.width <= 1100) {
+    expect(rowBounds?.x).toBeGreaterThanOrEqual(0);
+    expect((rowBounds?.x ?? 0) + (rowBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width + 1);
+  }
+  await page.locator('#provider-advertising-status').selectOption('rejected');
+  await page.locator('.provider-advertising__filter-actions button').first().click();
+  await expect(page.getByTestId('provider-advertising-row')).toHaveCount(0);
+  await expect(screen).toHaveAttribute('data-advertising-state', 'empty');
+  await page.locator('.provider-advertising__filter-actions button').nth(1).click();
+  await expect(page.getByTestId('provider-advertising-row')).toBeVisible();
+  await expect(screen).toHaveAttribute('data-advertising-state', 'success');
+  await page.locator('.provider-advertising__heading > .ui-button').click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  const dialogBounds = await dialog.boundingBox();
+  expect(dialogBounds?.x).toBeGreaterThanOrEqual(0);
+  expect((dialogBounds?.x ?? 0) + (dialogBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width + 1);
+  expect(dialogBounds?.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+  await dialog.getByRole('button', { name: /Submit request|إرسال الطلب/u }).click();
+  await expect(dialog.getByRole('alert')).toBeVisible();
+});
 
 test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
   test.beforeEach(async ({ page }, testInfo) => {

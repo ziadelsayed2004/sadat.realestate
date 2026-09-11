@@ -444,7 +444,7 @@
   background: #fffaf0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .provider-advertising__filters,
   .provider-advertising__detail-grid,
   .provider-advertising__form-grid,
@@ -462,5 +462,207 @@
 
   .provider-advertising__filter-actions {
     justify-content: flex-start;
+  }
+
+  .provider-advertising__table-wrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .provider-advertising__table,
+  .provider-advertising__table tbody {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .provider-advertising__table thead {
+    display: none;
+  }
+
+  .provider-advertising__table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'placement request status'
+      'period quote payment'
+      'actions actions actions';
+    gap: 12px 18px;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #e8ecf2;
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .provider-advertising__table td {
+    display: block;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .provider-advertising__table td:nth-child(1) { grid-area: request; }
+  .provider-advertising__table td:nth-child(2) { grid-area: placement; }
+  .provider-advertising__table td:nth-child(3) { grid-area: period; }
+  .provider-advertising__table td:nth-child(4) { grid-area: status; align-self: start; }
+  .provider-advertising__table td:nth-child(5) { grid-area: quote; }
+  .provider-advertising__table td:nth-child(6) { grid-area: payment; }
+  .provider-advertising__table td:nth-child(7) { grid-area: actions; }
+
+  .provider-advertising__action-link {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+  }
+
+  .provider-advertising__create-modal {
+    width: min(100%, 36rem);
+  }
+}
+
+@media (max-width: 620px) {
+  .provider-advertising__heading {
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .provider-advertising__heading h1 {
+    margin-bottom: 4px;
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .provider-advertising__heading p:last-child {
+    color: #99a1af;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .provider-advertising__heading > .ui-button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .provider-advertising__filters {
+    gap: 12px;
+    margin-top: 20px;
+    padding: 12px;
+  }
+
+  .provider-advertising__filter-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .provider-advertising__filter-actions .ui-button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .provider-advertising__panel {
+    margin-top: 20px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .provider-advertising__panel-heading {
+    margin-bottom: 14px;
+  }
+
+  .provider-advertising__panel-heading p,
+  .provider-advertising__panel-heading > .ui-button {
+    display: none;
+  }
+
+  .provider-advertising__panel-heading h2 {
+    font-size: 15px;
+  }
+
+  .provider-advertising__table tr {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'placement status'
+      'request request'
+      'period period'
+      'quote payment'
+      'actions actions';
+    gap: 10px 12px;
+    padding: 14px;
+  }
+
+  .provider-advertising__table td:nth-child(2) strong {
+    color: #1b2942;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .provider-advertising__table td:nth-child(3) span {
+    display: inline;
+    margin-inline-end: 8px;
+  }
+
+  .provider-advertising__table td:nth-child(7) {
+    border-top: 1px solid #eef1f5;
+  }
+
+  .provider-advertising__action-link {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .provider-advertising:has(.provider-advertising__create-modal) .ui-modal-backdrop {
+    inset: 56px 0 64px;
+    z-index: 35;
+    padding: 16px;
+  }
+
+  .provider-advertising__create-modal {
+    max-height: calc(100dvh - 152px);
+    border-radius: 14px;
+  }
+
+  .provider-advertising__create-modal .ui-modal__header,
+  .provider-advertising__create-modal .ui-modal__body,
+  .provider-advertising__create-modal .ui-modal__footer {
+    padding: 12px;
+  }
+
+  .provider-advertising__create-modal .ui-modal__header h2 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .provider-advertising__create-modal .ui-modal__header p {
+    display: none;
+  }
+
+  .provider-advertising__create-modal .provider-advertising__form {
+    gap: 10px;
+  }
+
+  .provider-advertising__create-modal .provider-advertising__help {
+    margin: -6px 0 0;
+  }
+
+  .provider-advertising__create-modal .ui-modal__footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .provider-advertising__create-modal .ui-modal__footer .ui-button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
   }
 }
