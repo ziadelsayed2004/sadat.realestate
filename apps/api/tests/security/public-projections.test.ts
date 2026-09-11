@@ -51,7 +51,7 @@ test('public homepage and property details mask workflow, audit, credential, and
 });
 
 test('seeker favorites and notifications expose only explicit recipient/public fields', async () => {
-  const favorites = createFavoriteService({
+  const favorites = createFavoriteService({ isActiveSeeker: async () => true,
     repository: {
       async list() {
         return [{ favorite: { seekerId: id, propertyId: id, savedAt: new Date('2026-08-01T00:00:00.000Z') }, property: { id, slug: 'home', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true, internalNotes: 'private', assignment: { id }, documents: ['private'] } as never }];

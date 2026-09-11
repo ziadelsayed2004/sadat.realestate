@@ -10,9 +10,31 @@ const claims = { role: 'seeker', status: 'verified', sub: seekerId } as AccessTo
 const property: FavoritePropertySource = { id, slug: 'saved-property', kind: 'property', name: localized, transactionType: 'sale', imageUrl: '/assets/canonical/public/listing-property-home.png', locationName: { ar: 'الحي الأول', en: 'District 1' }, sourceName: { ar: 'شركة السادات', en: 'Sadat Development' }, sourceImageUrl: '/assets/canonical/public/developer-sadat.png', sourceType: 'developer_company', sourceVerified: true, publicCode: 'SDT-1234', viewCount: 342, installmentAvailable: true, featured: true, deliveryStatus: 'ready_to_move', status: 'published', active: true };
 const favorite = { seekerId, propertyId: id, savedAt: new Date('2026-01-01T00:00:00.000Z') };
 
+test('checks current account before every favorites read or mutation with an old token', async () => {
+  let active = true;
+  let calls = 0;
+  const service = createFavoriteService({
+    async isActiveSeeker(userId) { assert.equal(userId, seekerId); return active; },
+    repository: {
+      async list() { calls++; return []; },
+      async save() { calls++; return { kind: 'created', favorite, property }; },
+      async remove() { calls++; return true; }
+    }
+  });
+  await service.list(claims, {});
+  await service.save(claims, id);
+  await service.remove(claims, id);
+  assert.equal(calls, 3);
+  active = false;
+  await assert.rejects(service.list(claims, {}), /FAVORITE_FORBIDDEN/);
+  await assert.rejects(service.save(claims, id), /FAVORITE_FORBIDDEN/);
+  await assert.rejects(service.remove(claims, id), /FAVORITE_FORBIDDEN/);
+  assert.equal(calls, 3);
+});
+
 test('saves idempotently and returns a safe property projection', async () => {
   let calls = 0;
-  const service = createFavoriteService({ now: () => favorite.savedAt, repository: { async save() { calls += 1; return { kind: calls === 1 ? 'created' : 'existing', favorite, property }; }, async remove() { return true; }, async list() { return [{ favorite, property }]; } } });
+  const service = createFavoriteService({ isActiveSeeker: async () => true, now: () => favorite.savedAt, repository: { async save() { calls += 1; return { kind: calls === 1 ? 'created' : 'existing', favorite, property }; }, async remove() { return true; }, async list() { return [{ favorite, property }]; } } });
   const first = await service.save(claims, id);
   const second = await service.save(claims, id);
   assert.equal(first.alreadySaved, false);
@@ -25,7 +47,7 @@ test('saves idempotently and returns a safe property projection', async () => {
 });
 
 test('requires seeker ownership, rejects invalid/unavailable properties, and hides stale saves', async () => {
-  const service = createFavoriteService({ repository: { async save() { return { kind: 'unavailable' }; }, async remove() { return false; }, async list() { return [{ favorite, property: { ...property, active: false } }, { favorite, property }]; } } });
+  const service = createFavoriteService({ isActiveSeeker: async () => true, repository: { async save() { return { kind: 'unavailable' }; }, async remove() { return false; }, async list() { return [{ favorite, property: { ...property, active: false } }, { favorite, property }]; } } });
   await assert.rejects(() => service.save(claims, 'BAD_ID'));
   await assert.rejects(() => service.save(claims, id), /FAVORITE_PROPERTY_UNAVAILABLE/);
   assert.deepEqual((await service.list(claims, {})).items.map(item => item.slug), ['saved-property']);
