@@ -189,7 +189,7 @@ function requestCustomerLabel(request: RequestData, locale: SupportedLocale): st
 }
 
 function copyUnavailable(locale: SupportedLocale): string {
-  return locale === 'ar' ? '\u063a\u064a\u0631 \u0645\u062a\u0627\u062d' : 'Unavailable';
+  return requestMetricLabel(locale, 'unavailable');
 }
 
 function requestPropertyLabel(request: RequestData, locale: SupportedLocale): string {
@@ -201,10 +201,8 @@ function requestPropertyLabel(request: RequestData, locale: SupportedLocale): st
 }
 
 function requestSourceLabel(request: RequestData, locale: SupportedLocale): string {
-  const labels = locale === 'ar'
-    ? { public: '\u0627\u0644\u0645\u0648\u0642\u0639', seeker: '\u0627\u0644\u0645\u0648\u0642\u0639', provider: '\u0645\u0642\u062f\u0645 \u0627\u0644\u062e\u062f\u0645\u0629', admin: '\u0627\u0644\u0625\u062f\u0627\u0631\u0629' }
-    : { public: 'Website', seeker: 'Website', provider: 'Provider', admin: 'Administration' };
-  return labels[request.source];
+  const keys = { public: 'website', seeker: 'website', provider: 'provider', admin: 'administration' } as const;
+  return requestMetricLabel(locale, keys[request.source]);
 }
 
 function RequestTable({ copy, data, locale, onSelect, overdue = false }: { readonly copy: AdminRequestsCopy; readonly data: RequestListData | OverdueRequestListData; readonly locale: SupportedLocale; readonly onSelect: (request: RequestData) => void; readonly overdue?: boolean }) {

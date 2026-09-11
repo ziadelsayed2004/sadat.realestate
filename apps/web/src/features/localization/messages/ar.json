@@ -4556,6 +4556,10 @@
     "completed": "مكتمل",
     "assigned": "مسند",
     "viewingMetrics": "مؤشرات المعاينات",
-    "viewingStatus": "حالة المعاينة"
+    "viewingStatus": "حالة المعاينة",
+    "unavailable": "غير متاح",
+    "website": "الموقع",
+    "provider": "مقدم الخدمة",
+    "administration": "الإدارة"
   }
 }

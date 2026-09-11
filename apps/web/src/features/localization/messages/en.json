@@ -4556,6 +4556,10 @@
     "completed": "Completed",
     "assigned": "Assigned",
     "viewingMetrics": "Viewing metrics",
-    "viewingStatus": "Viewing status"
+    "viewingStatus": "Viewing status",
+    "unavailable": "Unavailable",
+    "website": "Website",
+    "provider": "Provider",
+    "administration": "Administration"
   }
 }
