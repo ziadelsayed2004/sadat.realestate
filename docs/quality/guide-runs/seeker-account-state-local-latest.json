@@ -31,6 +31,25 @@
       "profileUnchanged": true
     }
   ],
+  "roleAuthorization": [
+    {
+      "roleType": "provider",
+      "status": 403,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    },
+    {
+      "roleType": "admin",
+      "status": 403,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    }
+  ],
+  "emptyPreferences": {
+    "status": 200,
+    "preferencesDeepEmpty": true,
+    "readDidNotWrite": true
+  },
   "cleanup": true,
-  "finishedAt": "2026-09-11T16:26:26.372Z"
+  "finishedAt": "2026-09-11T17:08:56.158Z"
 }

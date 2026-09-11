@@ -160,6 +160,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
     reviewedGuarantees.push({ category: 'currentSessionState', check: 'current_account_state_denies_profile_and_preferences_operations',
       path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json', verifiedAt: seekerAccountState.finishedAt });
   }
+  if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
+    && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
+    && ['provider', 'admin'].every(roleType => seekerAccountState.roleAuthorization?.some(check =>
+      check.roleType === roleType && check.status === 403 && check.operationsDenied === 4 && check.profileUnchanged === true))) {
+    reviewedGuarantees.push({ category: 'roleAuthorization', check: 'provider_and_admin_tokens_denied_on_seeker_profile_operations',
+      path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json', verifiedAt: seekerAccountState.finishedAt });
+  }
   if (journey.id === 'GUIDE-03' && communityAccountState?.status === 'PASS_LOCAL'
     && communityAccountState.mockedRoutes === false && communityAccountState.cleanup === true
     && ['seeker', 'provider', 'admin'].every(roleType => ['suspended', 'rejected', 'role_changed', 'deleted'].every(state =>
@@ -190,6 +197,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/seeker-save-recovery-local-latest.json',
       scope: 'Personal profile and preferences; AR/EN on Desktop, Tablet and Pixel 5; real API and MongoDB with restored fixture',
       verifiedAt: seekerSaveRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
+    && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
+    && seekerAccountState.emptyPreferences?.status === 200
+    && seekerAccountState.emptyPreferences.preferencesDeepEmpty === true
+    && seekerAccountState.emptyPreferences.readDidNotWrite === true) {
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'API', check: 'empty_preferences_return_empty_object_without_write',
+      path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json',
+      scope: 'Fresh seeker profile preferences through real HTTP and isolated MongoDB; component empty-state rendering is covered separately',
+      verifiedAt: seekerAccountState.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && communityBrowserRecovery?.status === 'PASS_LOCAL_SUBCASES'
     && communityBrowserRecovery.mockedRoutes === false) {
@@ -279,7 +296,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
     cases: {
       success: executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
       validation: reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
-      empty: reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
       duplicateMutation: guaranteeStatus('duplicateMutation'),
     },

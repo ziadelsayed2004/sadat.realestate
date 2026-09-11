@@ -10,7 +10,7 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 
 const database = `seeker_state_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
-const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], cleanup: false };
+const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], roleAuthorization: [], emptyPreferences: undefined, cleanup: false };
 let server;
 try {
   const tokens = createHmacAccessTokenService(randomBytes(32), 3600);
@@ -24,7 +24,26 @@ try {
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   const base = `http://127.0.0.1:${address.port}/api/v1`;
   const calls = [['GET', '/me'], ['PATCH', '/me', { firstName: 'Changed' }], ['GET', '/me/preferences'], ['PATCH', '/me/preferences', { minPrice: 100 }]];
-  const invoke = ([method, path, body]) => fetch(`${base}${path}`, { method, headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const invokeWith = (accessToken, [method, path, body]) => fetch(`${base}${path}`, { method, headers: { authorization: `Bearer ${accessToken}`, 'content-type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const invoke = call => invokeWith(token, call);
+
+  const profileBeforeEmptyRead = await connection.collection('seeker_profiles').findOne({ userId });
+  assert.deepEqual(profileBeforeEmptyRead?.preferences ?? {}, {});
+  const emptyResponse = await invoke(['GET', '/me/preferences']);
+  assert.equal(emptyResponse.status, 200);
+  const emptyData = (await emptyResponse.json()).data;
+  assert.deepEqual(emptyData.preferences, {});
+  const initialProfile = await connection.collection('seeker_profiles').findOne({ userId });
+  assert.deepEqual(initialProfile, profileBeforeEmptyRead);
+  report.emptyPreferences = { status: 200, preferencesDeepEmpty: true, readDidNotWrite: true };
+
+  for (const roleType of ['provider', 'admin']) {
+    const wrongRoleToken = tokens.issue({ id: account.id, roleType, status: 'verified' }, new Types.ObjectId().toHexString(), new Date());
+    for (const call of calls) assert.equal((await invokeWith(wrongRoleToken, call)).status, 403, `${roleType} ${call[0]} ${call[1]}`);
+    assert.deepEqual(await connection.collection('seeker_profiles').findOne({ userId }), initialProfile);
+    report.roleAuthorization.push({ roleType, status: 403, operationsDenied: 4, profileUnchanged: true });
+  }
+
   for (const call of calls) assert.equal((await invoke(call)).status, 200);
   const before = await connection.collection('seeker_profiles').findOne({ userId });
   for (const state of ['suspended', 'rejected', 'role_changed', 'deleted']) {

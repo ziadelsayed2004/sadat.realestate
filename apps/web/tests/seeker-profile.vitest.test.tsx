@@ -104,8 +104,8 @@ describe('Seeker profile, preferences, and settings', () => {
     const locationLabels = locale === 'ar'
       ? ['الحي الأول', 'الحي الثاني', 'الحي الثالث', 'الحي الرابع', 'الحي الخامس', 'الحي السادس', 'الحي السابع', 'المنطقة الصناعية', 'المنطقة الراقية', 'القاهرة الجديدة']
       : ['First district', 'Second district', 'Third district', 'Fourth district', 'Fifth district', 'Sixth district', 'Seventh district', 'Industrial zone', 'Upscale zone', 'New Cairo'];
-    const propertyChoices = screen.getByRole('button', { name: propertyLabels[0] }).closest('.seeker-profile__choice-list');
-    const locationChoices = screen.getByRole('button', { name: locationLabels[0] }).closest('.seeker-profile__choice-list');
+    const propertyChoices = screen.getByRole('button', { name: propertyLabels[0]! }).closest('.seeker-profile__choice-list');
+    const locationChoices = screen.getByRole('button', { name: locationLabels[0]! }).closest('.seeker-profile__choice-list');
     expect(propertyChoices).not.toBeNull();
     expect(locationChoices).not.toBeNull();
     expect(within(propertyChoices as HTMLElement).getAllByRole('button').map(button => button.textContent?.replace(' ✓', ''))).toEqual(propertyLabels);
@@ -132,6 +132,18 @@ describe('Seeker profile, preferences, and settings', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
     await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ minPrice: 2000000, maxPrice: 2500000 })));
     expect(await screen.findByText(copy.preferences.saved)).toBeInTheDocument();
+  });
+
+  it.each(['ar', 'en'] as const)('renders editable empty preferences for %s', async locale => {
+    const copy = getSeekerProfileCopy(locale);
+    const result = renderWithLocale(
+      <SeekerProfile locale={locale} session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => ({ preferences: {}, updatedAt: '2026-09-11T17:00:00.000Z' })} actions={emptyActions()} />,
+      { locale }
+    );
+    await waitFor(() => expect(screen.getByText(copy.preferences.noSavedPreferences)).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: copy.preferences.save })).toBeEnabled();
+    expect(screen.getByRole('spinbutton', { name: `${copy.preferences.budgetRange} — ${copy.preferences.minPrice}` })).toHaveValue(null);
+    result.unmount();
   });
 
   it('maps the preference chips to the supported preference patch', async () => {
@@ -282,6 +294,16 @@ describe('Seeker profile, preferences, and settings', () => {
 
     renderWithLocale(<SeekerProfile locale="en" session={{ status: 'anonymous' }} loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: copy.states.permission.title })).toBeInTheDocument();
+  });
+
+  it.each(['provider', 'admin'] as const)('fails closed for an authenticated %s session before loading seeker data', role => {
+    const loadProfile = vi.fn<() => Promise<SeekerProfileData>>().mockResolvedValue(profile);
+    const loadPreferences = vi.fn<() => Promise<SeekerPreferencesData>>().mockResolvedValue(preferences);
+    const result = renderWithLocale(<SeekerProfile locale="en" session={{ status: 'authenticated', role }} tab="preferences" loadProfile={loadProfile} loadPreferences={loadPreferences} actions={emptyActions()} />, { locale: 'en' });
+    expect(screen.getByRole('heading', { name: getSeekerProfileCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(loadProfile).not.toHaveBeenCalled();
+    expect(loadPreferences).not.toHaveBeenCalled();
+    result.unmount();
   });
 });
 

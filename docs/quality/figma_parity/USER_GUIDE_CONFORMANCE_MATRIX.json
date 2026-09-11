@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T16:51:23.115Z",
+  "generatedAt": "2026-09-11T17:09:41.977Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2366,7 +2366,7 @@
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "PARTIAL_API_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
@@ -2376,7 +2376,7 @@
         ],
         "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
         "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "roleAuthorization": "UNVERIFIED"
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2424,6 +2424,14 @@
           "verifiedAt": "2026-09-11T16:23:08.134Z"
         },
         {
+          "case": "empty",
+          "evidenceType": "API",
+          "check": "empty_preferences_return_empty_object_without_write",
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "scope": "Fresh seeker profile preferences through real HTTP and isolated MongoDB; component empty-state rendering is covered separately",
+          "verifiedAt": "2026-09-11T17:08:56.158Z"
+        },
+        {
           "case": "validation",
           "check": "invalid_preferences_blocked_before_api",
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
@@ -2455,7 +2463,13 @@
           "category": "currentSessionState",
           "check": "current_account_state_denies_profile_and_preferences_operations",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T16:26:26.372Z"
+          "verifiedAt": "2026-09-11T17:08:56.158Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "provider_and_admin_tokens_denied_on_seeker_profile_operations",
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "verifiedAt": "2026-09-11T17:08:56.158Z"
         }
       ],
       "browserContractRegression": {
@@ -4040,7 +4054,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T16:51:23.115Z",
+    "updatedAt": "2026-09-11T17:09:41.977Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
