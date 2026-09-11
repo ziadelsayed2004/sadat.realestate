@@ -9,9 +9,12 @@ Measured Arabic result:
 - source: 1551×997
 - runtime: 1551×997
 - previous material difference (`identity-v3`): 15.2225%
-- current material difference (`density-v8`): 11.4193%
-- evidence: `runtime-after-density-v8.png`, `diff-density-v8.png`, `visual-metrics-density-v8.json`, and `runtime-after-density-v8-capture.json`
+- density repair material difference (`density-v8`): 11.4193%
+- current material difference after canonical physical alignment (`alignment-v10`): 10.7747%
+- latest evidence: `runtime-after-alignment-v10.png`, `diff-alignment-v10.png`, `visual-metrics-alignment-v10.json`, and `runtime-after-alignment-v10-capture.json`
 
 The English LTR capture also has matching 1551×997 dimensions and is preserved as `density-v8-en`. Its pixel percentage is compared with the Arabic canonical frame, so it is evidence for layout/direction only and is not used as an English visual-parity score.
 
-SEK-08 remains `PARTIAL_EXTERNAL`. The direct pixel difference is still material and the canonical named identity/avatar prerequisite remains unresolved, so this repair does not promote the strict Figma closure counter.
+The choice groups now follow the source's physical left-to-right order while the numeric range grids retain their Arabic `من`/`إلى` direction. The submit action is physically left aligned, and the Arabic subtitle and “both” choice use the canonical wording.
+
+SEK-08 remains `PARTIAL_EXTERNAL`. The direct pixel difference is still material and the canonical named identity/avatar prerequisite remains unresolved, so these repairs do not promote the strict Figma closure counter.

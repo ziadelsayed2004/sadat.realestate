@@ -112,14 +112,14 @@ interface PreferenceChoice {
 }
 
 const propertyTypeChoices: readonly PreferenceChoice[] = [
-  { value: 'factory', ar: 'مصنع', en: 'Factory' },
-  { value: 'commercial', ar: 'محل تجاري', en: 'Commercial shop' },
-  { value: 'office', ar: 'مكتب', en: 'Office' },
-  { value: 'land', ar: 'أرض', en: 'Land' },
-  { value: 'roof', ar: 'رووف', en: 'Roof' },
-  { value: 'duplex', ar: 'دوبلكس', en: 'Duplex' },
+  { value: 'apartment', ar: 'شقة', en: 'Apartment' },
   { value: 'villa', ar: 'فيلا', en: 'Villa' },
-  { value: 'apartment', ar: 'شقة', en: 'Apartment' }
+  { value: 'duplex', ar: 'دوبلكس', en: 'Duplex' },
+  { value: 'roof', ar: 'رووف', en: 'Roof' },
+  { value: 'land', ar: 'أرض', en: 'Land' },
+  { value: 'office', ar: 'مكتب', en: 'Office' },
+  { value: 'commercial', ar: 'محل تجاري', en: 'Commercial shop' },
+  { value: 'factory', ar: 'مصنع', en: 'Factory' }
 ];
 
 const locationChoices: readonly PreferenceChoice[] = [
@@ -374,9 +374,9 @@ function PreferencesForm({
         <legend>{copy.preferences.purpose}</legend>
         <div className="seeker-profile__choice-list" role="group" aria-label={copy.preferences.purpose}>
           {([
-            ['', copy.preferences.anyPurpose],
             ['buy', copy.preferences.buy],
-            ['rent', copy.preferences.rent]
+            ['rent', copy.preferences.rent],
+            ['', copy.preferences.anyPurpose]
           ] as const).map(([value, label]) => (
             <button key={value || 'any'} type="button" className="seeker-profile__choice" data-selected={draft.purpose === value || undefined} aria-pressed={draft.purpose === value} onClick={() => onChange({ purpose: value })}>{label}</button>
           ))}

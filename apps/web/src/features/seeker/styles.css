@@ -2114,7 +2114,7 @@
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel .seeker-profile__form > .ui-button {
     position: absolute;
     inset-block-end: -3.75rem;
-    inset-inline-start: 0;
+    left: 0;
   }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel:has(.seeker-profile__form > .ui-button) {
     margin-block-end: 3.75rem;
@@ -2124,6 +2124,8 @@
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__fieldset legend { margin-block-end: .375rem; font-size: .75rem; line-height: 1rem; }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__choice { min-block-size: 2.375rem; padding: .5rem 1rem; font-size: .875rem; line-height: 1.25rem; }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__choice--chip { min-block-size: 1.875rem; padding: .375rem .75rem; font-size: .75rem; line-height: 1rem; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__choice-list { direction: ltr; justify-content: flex-start; }
+  .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__form-grid--numeric { direction: rtl; }
   .seeker-profile__choice-list { gap: .4rem; }
   .seeker-profile__choice-list--bedrooms { gap: .6rem; }
   .seeker-profile__field-note { margin: .5rem 0 0; }
