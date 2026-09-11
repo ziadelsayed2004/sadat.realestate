@@ -8,3 +8,12 @@
 - Status remains PARTIAL_EXTERNAL; the official inventory remains 90/119. This review supplements the historical review.json; it does not close remaining repository visual differences or external identity requirements.
 
 Next: finish the remaining SEK-09 visual differences using the working official Figma server, then verify Tablet/Pixel 5 and proceed through the remaining screen queue. Keep Demo enabled per the user's current phase decision.
+
+## Controls and responsive follow-up
+
+- `personal-controls-v6` implements the source's white active tab, 20px horizontal tab padding, 12px field labels, 16px field-grid gaps, and 42px rounded inputs (14px/20px text).
+- Directly inspected runtime remains 1551×862. Overall material difference is **7.4851%**, up from 7.1404%; this is not a net pixel-parity improvement. Compact fields reduce card height while the source's avatar and legacy field composition remain different. Keep the source-sized controls; do not stretch them to compensate for unrelated composition differences.
+- The existing responsive test now covers both preferences and personal routes, asserts `window.innerWidth === viewport.width`, no horizontal overflow, and a visible save button within horizontal bounds after scrolling. All 12 route/locale/device combinations passed (Desktop Chrome, Galaxy Tab S4, Pixel 5; AR/EN).
+- Removed the blanket desktop-only skip from functional save/authentication tests. The desktop visual-baseline case alone remains desktop-only. All 8 newly enabled Tablet/Pixel 5 save-contract and denied-session cases passed; desktop's 6 functional/visual cases also passed. Total distinct passing cases: 26, with 4 desktop-only visual cases skipped on the other devices. This is intercepted browser-contract evidence, not live backend or Production verification.
+- Production build, translation check, bundle budget and lint passed. Current visual repository defects are now recorded in review.json instead of its historical empty list.
+- Remaining: reconcile the source composition with the approved email-only identity model, review heading/identity alignment and save icon/geometry, and then proceed to the other open screens. No Figma closure counter was increased.

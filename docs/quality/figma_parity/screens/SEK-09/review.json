@@ -123,7 +123,9 @@
     "result": "PASS: route-specific navigation/query/control interaction assertions passed for ar/en."
   },
   "defects": {
-    "repository": [],
+    "repository": [
+      "Current runtime still differs from the source in heading/identity alignment, card geometry, and save-button composition; see personal-density-review-2026-09-11.md. Historical empty defect lists must not be interpreted as current visual closure."
+    ],
     "approvedExternal": [
       "The canonical export includes a phone field and avatar artwork; phone is intentionally absent under the approved identity contract, and avatar media is unavailable."
     ]
@@ -151,6 +153,9 @@
     "repositoryOwnedDefects": []
   },
   "evidencePaths": {
+    "latestProgressReview": "docs/quality/figma_parity/screens/SEK-09/personal-density-review-2026-09-11.md",
+    "latestArabicRuntime": "docs/quality/figma_parity/screens/SEK-09/runtime-after-personal-controls-v6.png",
+    "latestArabicMetrics": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-personal-controls-v6.json",
     "figma": "docs/quality/figma_parity/screens/SEK-09/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/SEK-09/runtime-before.png",
     "runtimeAfter": [

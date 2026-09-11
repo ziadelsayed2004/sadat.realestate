@@ -97,12 +97,12 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-08, SEK-09, SEK-10' });
     testInfo.annotations.push({ type: 'design-source', description: 'SEK-08.png, SEK-09.png, SEK-10.png; Figma node 6027-3579' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Seeker dashboard is approved for desktop only.');
     await routeSession(page);
     await routeProfile(page);
   });
 
   test('renders localized screens, safe projections, keyboard focus, and visual baselines', async ({ page }) => {
+    test.skip(!test.info().project.name.includes('desktop'), 'Canonical visual baselines are desktop-only; responsive and save contracts run on every device.');
     const locale = localeForProject();
     const copy = getSeekerProfileCopy(locale);
     const query = `lang=${encodeURIComponent(locale)}`;
@@ -175,15 +175,25 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
   });
 });
 
-test.describe('SEK-08 profile responsive layout', () => {
+test.describe('SEK-08/09 profile responsive layout', () => {
   test.beforeEach(async ({ page }) => {
     await routeSession(page);
     await routeProfile(page);
   });
 
-  test('keeps localized headings and tabs inside the content surface', async ({ page }, testInfo) => {
+  for (const tab of ['preferences', 'personal']) test(`keeps ${tab} headings, tabs and save control inside the content surface`, async ({ page }, testInfo) => {
     const locale = localeForProject();
-    await page.goto(`/seeker/profile?tab=preferences&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+
+    const viewportWidth = await page.evaluate(() => window.innerWidth);
+    expect(viewportWidth).toBe(page.viewportSize()!.width);
+    const save = page.locator('.seeker-profile__form > button');
+    await save.scrollIntoViewIfNeeded();
+    await expect(save).toBeInViewport();
+    const saveBox = await save.boundingBox();
+    expect(saveBox).not.toBeNull();
+    expect(saveBox!.x).toBeGreaterThanOrEqual(0);
+    expect(saveBox!.x + saveBox!.width).toBeLessThanOrEqual(viewportWidth);
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
