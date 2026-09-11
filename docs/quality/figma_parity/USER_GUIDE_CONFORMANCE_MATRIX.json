@@ -2317,7 +2317,7 @@
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -2348,6 +2348,13 @@
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/saved-pagination-browser-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T19:58:56.101Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -2382,6 +2389,14 @@
           "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
           "scope": "Saved properties empty state; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with sessions removed and favorites unchanged",
           "verifiedAt": "2026-09-11T18:41:30.168Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_page_two_retry_real_api",
+          "path": "docs/quality/guide-runs/saved-pagination-browser-local-latest.json",
+          "scope": "AR/EN Desktop/Tablet/Pixel 5: offline page-two navigation, retry to real HTTP 200, remove final page item, return to 20 cards on page one; Mongo deletion and fixture/session cleanup verified.",
+          "verifiedAt": "2026-09-11T19:58:56.101Z"
         }
       ],
       "reviewedGuarantees": []
