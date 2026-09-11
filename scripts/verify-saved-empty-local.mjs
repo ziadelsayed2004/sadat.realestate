@@ -96,7 +96,7 @@ try {
         });
         await page.goto(`${base}/seeker/saved?lang=${locale}`, { waitUntil: 'networkidle' });
         await expect(page.locator('.seeker-saved')).toBeVisible();
-        await expect(page.locator('.seeker-saved__empty[data-state="empty"]')).toBeVisible();
+        await expect(page.locator('.seeker-dashboard__empty[data-state="empty"]')).toBeVisible();
         assert.ok(favoriteResponses.includes(200), 'Browser favorites request did not return HTTP 200');
         assert.equal(await page.locator('.seeker-saved-property-card').count(), 0);
         const geometry = await page.evaluate(() => ({ innerWidth, scrollWidth: document.documentElement.scrollWidth }));

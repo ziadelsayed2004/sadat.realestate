@@ -40,6 +40,7 @@ const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-re
 const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPublicRecovery = await readFile('docs/quality/guide-runs/community-public-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -70,6 +71,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/discovery-local-latest.json", discoveryEvidence],
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
+  ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -339,6 +341,21 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/registration-recovery-local-latest.json',
       scope: 'Seeker registration email OTP; browser offline fault and real MailHog/API recovery on Arabic and English Desktop, Tablet and Pixel 5',
       verifiedAt: registrationRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-08'
+    && savedEmptyRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && savedEmptyRecovery.mockedRoutes === false
+    && savedEmptyRecovery.sessionsRemoved === true
+    && savedEmptyRecovery.favoritesUnchanged === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => savedEmptyRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device
+      && run.apiHttpStatus === 200 && run.browserHttpStatus === 200
+      && run.savedCount === 0 && run.scrollWidth <= run.innerWidth)))) {
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API/MongoDB',
+      check: 'empty_saved_properties_truthful',
+      path: 'docs/quality/guide-runs/saved-empty-local-latest.json',
+      scope: 'Saved properties empty state; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with sessions removed and favorites unchanged',
+      verifiedAt: savedEmptyRecovery.finishedAt });
   }
   if (journey.id === "GUIDE-07" && guide04Evidence?.status === "PASS_LOCAL") {
     const viewing = guide04Evidence.viewingJourneyEvidence;

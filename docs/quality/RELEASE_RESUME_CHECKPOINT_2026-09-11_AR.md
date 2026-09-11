@@ -268,3 +268,9 @@
 - عُزلت عناصر `.auth-page` داخل `.route-shell--auth` من قاعدة الحالة العامة، مع الإبقاء على تنسيق حالات الرسائل الداخلية. أُضيف اختبار Playwright لمسارات login/forgot-password/verify-email/register/provider-type، يتحقق من عرض الصفحة الكامل، التموضع، وعدم وراثة بطاقة الحالة.
 - نجح الاختبار على AR وEN في Desktop/Tablet/Pixel 5 بإجمالي 6/6 تشغيلات، مع HTTP 200 وعدم overflow؛ بعد الإصلاح صار سطح المصادقة بعرض viewport والبطاقة في المنتصف. لم تُدخل أي بيانات دخول إلى الموقع الحي، ولم يُحسب الفحص الخارجي كدليل Production.
 - الديمو مستمر، والأرقام الرسمية لا تتغير: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119. يلزم نشر التغيير ثم إعادة الفحص الحي للتأكد من وصول الحزمة الجديدة.
+
+## حالة المحفوظات الفارغة — 11 سبتمبر
+
+- أصلح فاحص GUIDE-08 اسم selector لحالة القائمة الفارغة ليتطابق مع المكوّن الفعلي (`.seeker-dashboard__empty`). الفشل السابق كان في أداة التحقق فقط، ولم يكن كتابةً أو تغييرًا في بيانات المفضلة.
+- نجحت 6 تشغيلات real browser/API/MongoDB على AR/EN × Desktop/Tablet/Pixel 5: endpoint المحفوظات أعاد 200 وقائمة فارغة، ظهرت الحالة الفارغة بلا بطاقات، ولم يوجد overflow. أُزيلت الجلسات التي أنشأها الفحص وبقي عدد المفضلات صفرًا (`sessionsRemoved: true`, `favoritesUnchanged: true`). الدليل `guide-runs/saved-empty-local-latest.json`.
+- رُبطت حالة `empty_saved_properties_truthful` بـGUIDE-08 في `USER_GUIDE_CONFORMANCE_MATRIX.json`. تظل الرحلة PARTIAL لأن نجاح الحفظ/الإزالة وبقية حالات الصلاحيات والتعافي وProduction لم تُغلق؛ الأرقام الرسمية: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119.
