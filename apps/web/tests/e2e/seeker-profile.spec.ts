@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { getSeekerProfileCopy } from '../../src/features/seeker/profile-copy.ts';
+import { getAccountSessionCopy } from '../../src/features/seeker/session-copy.ts';
 
 const profileId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 
@@ -218,6 +219,51 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.getByText(copy.states.permission.title, { exact: true })).toBeVisible();
     await expect(page.locator('.seeker-profile__form')).toHaveCount(0);
   });
+});
+
+test('recovers session inventory and failed revocation without navigation', async ({ page }) => {
+  await routeSession(page);
+  await routeProfile(page);
+  const locale = localeForProject();
+  const copy = getAccountSessionCopy(locale);
+  const otherId = 'cccccccccccccccccccccccc';
+  let reads = 0;
+  let deletes = 0;
+  let revoked = false;
+  await page.route('**/api/v1/me/sessions**', async route => {
+    const request = route.request();
+    const fail = () => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE', messageKey: 'errors.serviceUnavailable', details: [], requestId: 'sessions-recovery' } }) });
+    if (request.method() === 'DELETE') {
+      expect(new URL(request.url()).pathname).toBe(`/api/v1/me/sessions/${otherId}`);
+      deletes += 1;
+      if (deletes === 1) return fail();
+      revoked = true;
+      return route.fulfill({ json: { data: { sessionId: otherId, revoked: true }, ...successMeta('sessions-revoked') } });
+    }
+    reads += 1;
+    if (reads === 1) return fail();
+    const item = (id: string, current: boolean) => ({ id, current, authenticationMethod: 'password', createdAt: '2026-09-10T08:00:00.000Z', lastUsedAt: null, expiresAt: '2026-10-10T08:00:00.000Z' });
+    return route.fulfill({ json: { data: { items: [item('bbbbbbbbbbbbbbbbbbbbbbbb', true), ...(revoked ? [] : [item(otherId, false)])] }, ...successMeta('sessions-read') } });
+  });
+  await page.goto(`/seeker/settings?lang=${locale}`, { waitUntil: 'domcontentloaded' });
+  const card = page.locator('[aria-labelledby="seeker-profile-sessions-title"]');
+  await expect(card).toHaveAttribute('data-state', 'error');
+  const origin = await page.evaluate(() => performance.timeOrigin);
+  await card.getByRole('button', { name: copy.retry, exact: true }).click();
+  await expect(card).toHaveAttribute('data-state', 'success');
+  await expect(card.locator('.seeker-profile__session')).toHaveCount(2);
+  await card.getByRole('button', { name: copy.revoke, exact: true }).click();
+  await expect(card.getByRole('status')).toHaveText(copy.error);
+  await expect(card.locator('.seeker-profile__session')).toHaveCount(2);
+  await card.getByRole('button', { name: copy.revoke, exact: true }).click();
+  await expect(card.getByRole('status')).toHaveText(copy.revoked);
+  await expect(card.locator('.seeker-profile__session')).toHaveCount(1);
+  await expect(card.locator('.seeker-profile__session')).toHaveAttribute('data-current', 'true');
+  await expect(card.getByRole('button', { name: copy.revokeOthers, exact: true })).toBeDisabled();
+  expect(deletes).toBe(2);
+  expect(await page.evaluate(() => performance.timeOrigin)).toBe(origin);
+  expect(await page.evaluate(() => innerWidth)).toBe(page.viewportSize()!.width);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
 });
 
 test.describe('SEK-08/09 profile responsive layout', () => {
