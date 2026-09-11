@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T16:42:15.289Z",
+  "generatedAt": "2026-09-11T16:51:23.115Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2410,6 +2410,13 @@
       ],
       "reviewedSubcases": [
         {
+          "case": "sessionRevocation",
+          "check": "browser_revocation_denies_target_token_preserves_current_session",
+          "path": "docs/quality/guide-runs/session-browser-local-latest.json",
+          "scope": "Six real browser/API/MongoDB seeker session revocations across device/locale combinations",
+          "verifiedAt": "2026-09-11T16:51:00.396Z"
+        },
+        {
           "case": "networkRetry",
           "check": "offline_save_keeps_draft_then_persists_without_navigation",
           "path": "docs/quality/guide-runs/seeker-save-recovery-local-latest.json",
@@ -4033,7 +4040,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T16:42:15.289Z",
+    "updatedAt": "2026-09-11T16:51:23.115Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

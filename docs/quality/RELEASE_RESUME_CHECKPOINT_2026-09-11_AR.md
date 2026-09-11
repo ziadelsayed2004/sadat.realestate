@@ -1,5 +1,12 @@
 # نقطة استكمال هدف الإطلاق — 11 سبتمبر 2026
 
+## رحلة متصفح حقيقية لسحب جلسة أخرى
+
+- نجحت 6 حالات AR/EN × Desktop/Tablet/Pixel 5 دون route mocks. جرى تسجيل دخول جلستين لحساب GUIDE-04 المحلي؛ حُددت الجلسة المستهدفة من قائمة API وربطها بصف الواجهة، ثم سُحبت بزرها عبر DELETE 200. اختفت من القائمة دون navigation وثبت revokedAt في MongoDB ورفض توكنها على /me بـ401.
+- ظلت الجلسة الحالية موجودة؛ إعادة تحميل الصفحة أكدت /me 200. تحقق innerWidth وعدم overflow. جلسات الفحص أُغلقت؛ مستندات الجلسات الملغاة وسجلات التدقيق المحلية تحتفظ بسياسة TTL الحالية، ولا يُدّعى حذفها الفوري.
+- الدليل `guide-runs/session-browser-local-latest.json` والأداة `scripts/verify-session-browser-local.mjs`، تتطلب LOCAL_GUIDE_SEEKER_PASSWORD وMongoDB محليًا. رُبطت الحالة بالمصفوفة كدليل متكامل لهذه العملية فقط؛ GUIDE-10 ما زالت جزئية.
+- تصحيح harness: logout للجلسة التي ثبت إلغاؤها يرجع 401؛ يُقبل هذا فقط بعد إثبات revokedAt. المحاولة التالية اصطدمت بـ429 بسبب تكرار logins، فأُعيد تشغيل خادم الاختبار المحلي المملوك للمهمة ثم نجحت الحالات الست دون تغيير rate limit في المنتج. syntax وdiff-check ناجحان؛ لا تغييرات في كود المنتج ولا إعادة لبوابات ناجحة.
+
 ## تحقق متصفح التعافي في إدارة الجلسات
 
 - أُضيف اختبار Playwright `recovers session inventory and failed revocation without navigation` في seeker-profile.spec.ts: 503 عند تحميل الجلسات ثم Retry ناجح؛ 503 عند إلغاء جلسة أخرى ثم إعادة سحب ناجحة. الجلسة الحالية تبقى وحدها وزر إنهاء الجلسات الأخرى يتعطل؛ لا navigation ولا horizontal overflow، وinnerWidth يطابق الجهاز.

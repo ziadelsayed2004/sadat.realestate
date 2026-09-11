@@ -25,6 +25,7 @@ const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]))
 const seekerSaveRecovery = await readFile('docs/quality/guide-runs/seeker-save-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerAccountState = await readFile('docs/quality/guide-runs/seeker-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const sessionRevocation = await readFile('docs/quality/guide-runs/session-revocation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const sessionBrowser = await readFile('docs/quality/guide-runs/session-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -171,6 +172,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
+    && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => sessionBrowser.runs?.some(run =>
+      run.locale === locale && run.device === device && run.browserRevocation === 200 && run.revokedToken === 401
+      && run.currentProfile === 200 && run.mongoRevoked === true)))) {
+    reviewedSubcases.push({ case: 'sessionRevocation', check: 'browser_revocation_denies_target_token_preserves_current_session',
+      path: 'docs/quality/guide-runs/session-browser-local-latest.json',
+      scope: 'Six real browser/API/MongoDB seeker session revocations across device/locale combinations', verifiedAt: sessionBrowser.finishedAt });
+  }
   if (journey.id === 'GUIDE-10' && seekerSaveRecovery?.status === 'PASS_LOCAL_SUBCASES'
     && seekerSaveRecovery.mockedRoutes === false && seekerSaveRecovery.restored === true
     && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => ['personal', 'preferences'].every(tab =>

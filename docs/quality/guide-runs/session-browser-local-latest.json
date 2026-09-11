@@ -1,0 +1,72 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-10"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "browserRevocation": 200,
+      "revokedToken": 401,
+      "currentProfile": 200,
+      "mongoRevoked": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "sessionsClosed": true,
+  "finishedAt": "2026-09-11T16:51:00.396Z"
+}
