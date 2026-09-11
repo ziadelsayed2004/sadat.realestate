@@ -4580,5 +4580,39 @@
       "area": "Area",
       "property": "Property"
     }
+  },
+  "seeker/profile-surface-copy#getPersonalSurfaceCopy": {
+    "role": "Property seeker",
+    "email": "Email address"
+  },
+  "seeker/profile-surface-copy#getSettingsSurfaceCopy": {
+    "emailHeading": "Email",
+    "currentEmail": "Current email",
+    "updateEmail": "Update email",
+    "passwordHeading": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "changePassword": "Change password",
+    "notificationsHeading": "Notification settings",
+    "requestUpdates": "Request updates",
+    "requestUpdatesBody": "Notify me when a request status changes.",
+    "viewingReminders": "Viewing reminders",
+    "viewingRemindersBody": "Remind me about every viewing appointment.",
+    "savedPropertyAlerts": "Saved properties",
+    "savedPropertyAlertsBody": "Notify me when a saved property changes price.",
+    "accountAlerts": "Account alerts",
+    "accountAlertsBody": "Security notices and account updates.",
+    "marketingMessages": "Marketing messages",
+    "marketingMessagesBody": "Offers and recommendations from the platform.",
+    "otherDevicesHeading": "Other devices",
+    "otherDevicesBody": "Sign out from all other devices where your account is currently signed in.",
+    "signOutOtherDevices": "Sign out from other devices",
+    "dangerHeading": "Danger zone",
+    "dangerBody": "Account deletion is final and cannot be undone. All of your data and requests will be permanently removed."
+  },
+  "seeker/profile-surface-copy#getProfileFeedbackCopy": {
+    "invalidPassword": "Make sure the new passwords match and meet the requirements.",
+    "passwordFailure": "Could not change the password. Check your current password and try again."
   }
 }

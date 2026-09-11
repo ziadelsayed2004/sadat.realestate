@@ -4580,5 +4580,39 @@
       "area": "منطقة",
       "property": "عقار"
     }
+  },
+  "seeker/profile-surface-copy#getPersonalSurfaceCopy": {
+    "role": "باحث عن عقار",
+    "email": "البريد الإلكتروني"
+  },
+  "seeker/profile-surface-copy#getSettingsSurfaceCopy": {
+    "emailHeading": "البريد الإلكتروني",
+    "currentEmail": "البريد الحالي",
+    "updateEmail": "تحديث البريد",
+    "passwordHeading": "تغيير كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "changePassword": "تغيير كلمة المرور",
+    "notificationsHeading": "إعدادات الإشعارات",
+    "requestUpdates": "تحديثات الطلبات",
+    "requestUpdatesBody": "إشعار عند تغيير حالة أي طلب.",
+    "viewingReminders": "مواعيد المعاينة",
+    "viewingRemindersBody": "تذكيرك بكل موعد معاينة.",
+    "savedPropertyAlerts": "العقارات المحفوظة",
+    "savedPropertyAlertsBody": "إشعار عند تغيير سعر عقار محفوظ.",
+    "accountAlerts": "إشعارات الحساب",
+    "accountAlertsBody": "تنبيهات الأمان وتحديثات الحساب.",
+    "marketingMessages": "الرسائل التسويقية",
+    "marketingMessagesBody": "عروض وتوصيات من المنصة.",
+    "otherDevicesHeading": "الأجهزة الأخرى",
+    "otherDevicesBody": "تسجيل الخروج من جميع الأجهزة الأخرى التي يكون حسابك مسجلاً عليها.",
+    "signOutOtherDevices": "تسجيل الخروج من الأجهزة الأخرى",
+    "dangerHeading": "منطقة الخطر",
+    "dangerBody": "حذف الحساب إجراء نهائي غير قابل للتراجع. ستُحذف جميع بياناتك وطلباتك نهائياً."
+  },
+  "seeker/profile-surface-copy#getProfileFeedbackCopy": {
+    "invalidPassword": "تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.",
+    "passwordFailure": "تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى."
   }
 }

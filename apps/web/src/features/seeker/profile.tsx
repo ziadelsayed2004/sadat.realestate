@@ -1,3 +1,4 @@
+import { getPersonalSurfaceCopy as personalSurfaceCopy, getSettingsSurfaceCopy as settingsSurfaceCopy, getProfileFeedbackCopy } from './profile-surface-copy.ts';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   passwordChangeRequestSchema,
@@ -158,96 +159,6 @@ function profileTabForLocation(tab: SeekerProfileTab): SeekerProfileTab {
   if (tab !== 'preferences' || typeof window === 'undefined') return tab;
   const url = new URL(window.location.href);
   return url.pathname === '/seeker/profile' && url.searchParams.get('tab') === 'personal' ? 'profile' : tab;
-}
-
-function personalSurfaceCopy(locale: SupportedLocale) {
-  return locale === 'ar'
-    ? { role: 'باحث عن عقار', email: 'البريد الإلكتروني' }
-    : { role: 'Property seeker', email: 'Email address' };
-}
-
-interface SettingsSurfaceCopy {
-  readonly emailHeading: string;
-  readonly currentEmail: string;
-  readonly updateEmail: string;
-  readonly passwordHeading: string;
-  readonly currentPassword: string;
-  readonly newPassword: string;
-  readonly confirmPassword: string;
-  readonly changePassword: string;
-  readonly notificationsHeading: string;
-  readonly requestUpdates: string;
-  readonly requestUpdatesBody: string;
-  readonly viewingReminders: string;
-  readonly viewingRemindersBody: string;
-  readonly savedPropertyAlerts: string;
-  readonly savedPropertyAlertsBody: string;
-  readonly accountAlerts: string;
-  readonly accountAlertsBody: string;
-  readonly marketingMessages: string;
-  readonly marketingMessagesBody: string;
-  readonly otherDevicesHeading: string;
-  readonly otherDevicesBody: string;
-  readonly signOutOtherDevices: string;
-  readonly dangerHeading: string;
-  readonly dangerBody: string;
-}
-
-function settingsSurfaceCopy(locale: SupportedLocale): SettingsSurfaceCopy {
-  if (locale === 'ar') {
-    return {
-      emailHeading: 'البريد الإلكتروني',
-      currentEmail: 'البريد الحالي',
-      updateEmail: 'تحديث البريد',
-      passwordHeading: 'تغيير كلمة المرور',
-      currentPassword: 'كلمة المرور الحالية',
-      newPassword: 'كلمة المرور الجديدة',
-      confirmPassword: 'تأكيد كلمة المرور الجديدة',
-      changePassword: 'تغيير كلمة المرور',
-      notificationsHeading: 'إعدادات الإشعارات',
-      requestUpdates: 'تحديثات الطلبات',
-      requestUpdatesBody: 'إشعار عند تغيير حالة أي طلب.',
-      viewingReminders: 'مواعيد المعاينة',
-      viewingRemindersBody: 'تذكيرك بكل موعد معاينة.',
-      savedPropertyAlerts: 'العقارات المحفوظة',
-      savedPropertyAlertsBody: 'إشعار عند تغيير سعر عقار محفوظ.',
-      accountAlerts: 'إشعارات الحساب',
-      accountAlertsBody: 'تنبيهات الأمان وتحديثات الحساب.',
-      marketingMessages: 'الرسائل التسويقية',
-      marketingMessagesBody: 'عروض وتوصيات من المنصة.',
-      otherDevicesHeading: 'الأجهزة الأخرى',
-      otherDevicesBody: 'تسجيل الخروج من جميع الأجهزة الأخرى التي يكون حسابك مسجلاً عليها.',
-      signOutOtherDevices: 'تسجيل الخروج من الأجهزة الأخرى',
-      dangerHeading: 'منطقة الخطر',
-      dangerBody: 'حذف الحساب إجراء نهائي غير قابل للتراجع. ستُحذف جميع بياناتك وطلباتك نهائياً.',
-    };
-  }
-  return {
-    emailHeading: 'Email',
-    currentEmail: 'Current email',
-    updateEmail: 'Update email',
-    passwordHeading: 'Change password',
-    currentPassword: 'Current password',
-    newPassword: 'New password',
-    confirmPassword: 'Confirm new password',
-    changePassword: 'Change password',
-    notificationsHeading: 'Notification settings',
-    requestUpdates: 'Request updates',
-    requestUpdatesBody: 'Notify me when a request status changes.',
-    viewingReminders: 'Viewing reminders',
-    viewingRemindersBody: 'Remind me about every viewing appointment.',
-    savedPropertyAlerts: 'Saved properties',
-    savedPropertyAlertsBody: 'Notify me when a saved property changes price.',
-    accountAlerts: 'Account alerts',
-    accountAlertsBody: 'Security notices and account updates.',
-    marketingMessages: 'Marketing messages',
-    marketingMessagesBody: 'Offers and recommendations from the platform.',
-    otherDevicesHeading: 'Other devices',
-    otherDevicesBody: 'Sign out from all other devices where your account is currently signed in.',
-    signOutOtherDevices: 'Sign out from other devices',
-    dangerHeading: 'Danger zone',
-    dangerBody: 'Account deletion is final and cannot be undone. All of your data and requests will be permanently removed.'
-  };
 }
 
 function numberValue(value: string): number | undefined {
@@ -521,14 +432,14 @@ function SettingsContent({
   const submitPassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (newPassword !== confirmPassword || !passwordChangeRequestSchema.safeParse({ currentPassword, newPassword }).success) {
-      setPasswordError(locale === 'ar' ? 'تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.' : 'Make sure the new passwords match and meet the requirements.');
+      setPasswordError(getProfileFeedbackCopy(locale).invalidPassword);
       return;
     }
     setPasswordError(undefined);
     void onChangePassword(currentPassword, newPassword).then(() => {
       setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
     }).catch(() => {
-      setPasswordError(locale === 'ar' ? 'تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى.' : 'Could not change the password. Check your current password and try again.');
+      setPasswordError(getProfileFeedbackCopy(locale).passwordFailure);
     });
   };
   return (
