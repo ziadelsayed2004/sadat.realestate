@@ -54,6 +54,14 @@ test('banner text remains fully visible and its action fits inside the banner', 
   const card = page.locator('.public-homepage__banner-card');
   await expect(card).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
+  const firstHeight = (await card.boundingBox())!.height;
+  const previousPath = await card.locator('.public-homepage__banner-control--previous path').getAttribute('d');
+  const nextPath = await card.locator('.public-homepage__banner-control--next path').getAttribute('d');
+  expect(previousPath).toBe('M12 15l-5-5 5-5');
+  expect(nextPath).toBe('M8 5l5 5-5 5');
+  await card.locator('.public-homepage__banner-control--next').click();
+  await expect(page.locator('.public-homepage__banner-dot').nth(1)).toHaveClass(/is-active/u);
+  expect((await card.boundingBox())!.height).toBeCloseTo(firstHeight, 0);
   await card.screenshot({ path: test.info().outputPath('banner.png') });
   const geometry = await card.evaluate(element => {
     const bounds = element.getBoundingClientRect();

@@ -255,7 +255,7 @@ function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   const saving = mutationState === 'saving';
   const updatePlanName = (value: string) => setForm({ ...form, planName: { ...form.planName, [locale]: value } });
   return (
-    <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+    <form className="provider-property-wizard__form" data-form-step="price-payment" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
       <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{advancedCopy.titles['price-payment']}</h1><p>{advancedCopy.descriptions['price-payment']}</p></div>
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-pricing-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-pricing-title">{advancedCopy.titles['price-payment']}</h2><span>{advancedCopy.steps['price-payment']}</span></div>
@@ -479,7 +479,7 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
   }
 
   return (
-    <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop">
+    <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop/tablet/mobile">
       <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />

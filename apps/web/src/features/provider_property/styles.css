@@ -552,11 +552,49 @@
 .provider-property-validation .provider-property-state__safe { margin-top: 20px; }
 
 @media (max-width: 900px) {
+  .provider-property-wizard__content {
+    max-width: none;
+  }
+
   .provider-property-wizard__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .provider-property-wizard__commission dl { grid-template-columns: minmax(0, 1fr); }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__card {
+    padding: 32px;
+    border-color: #f3f4f6;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgb(0 0 0 / 4%);
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission {
+    border-color: #17233d;
+    border-radius: 16px;
+    background: rgb(209 160 68 / 12%);
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission dl {
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission dl > div {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission dd {
+    margin: 0;
+    text-align: end;
+  }
 
   .provider-property-wizard__steps li:not(:last-child)::after {
     display: none;
@@ -578,31 +616,105 @@
 
 @media (max-width: 620px) {
   .provider-property-wizard__steps {
-    display: flex;
-    gap: 0.25rem;
-    margin-inline: -16px;
-    padding: 0.25rem 16px 0.75rem;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-snap-type: inline proximity;
-    scrollbar-width: thin;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 0;
+    margin: 0 0 16px;
+    padding: 12px;
+    overflow: visible;
+    border-radius: 12px;
+    background: #faf8f2;
   }
 
   .provider-property-wizard__steps li {
-    flex: 0 0 5.75rem;
-    padding-inline: 0.25rem;
-    scroll-snap-align: start;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .provider-property-wizard__steps li > span {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
   }
 
   .provider-property-wizard__steps strong {
-    max-inline-size: 5.5rem;
-    font-size: 0.6875rem;
-    line-height: 1.35;
-    text-wrap: balance;
+    max-inline-size: none;
+    font-size: 8px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
   }
 
   .provider-property-wizard__card {
     padding: 1.125rem;
     border-radius: 1rem;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__intro {
+    display: none;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__card {
+    margin-top: 0;
+    padding: 16px;
+    border-color: #e5e7eb;
+    border-radius: 12px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__card-heading {
+    margin-bottom: 20px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__card-heading > span {
+    display: none;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__field select,
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__field > input {
+    min-height: 48px;
+    border-color: #e5e7eb;
+    border-radius: 12px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission {
+    border-radius: 14px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission > h2 {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission dt {
+    font-size: 12px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__commission dd {
+    max-width: 58%;
+    font-size: 13px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__actions button[value='continue'] {
+    grid-row: 1;
+    border-color: #17233d;
+    background: #17233d;
+    color: #fff;
+  }
+
+  .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__actions button[value='save'] {
+    grid-row: 2;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
   }
 }

@@ -2840,3 +2840,27 @@
 .public-homepage__banner-copy > * { min-inline-size: 0; }
 .public-homepage__banner-title { line-height: 1.55; }
 .public-homepage__banner-provider > img, .public-homepage__banner-verified { flex-shrink: 0; }
+
+/* Keep every promotional slide at the height required by the richest desktop
+   payload. This prevents the following page section from jumping between ads
+   and gives both media and copy an identical clipping boundary. */
+@media (min-width: 56.3125rem) {
+  .public-homepage__section--banners .public-homepage__banner-card,
+  .public-homepage__section--banners .public-homepage__banner-link,
+  .public-homepage__section--banners .public-homepage__banner-media-wrapper,
+  .public-homepage__section--banners .public-homepage__banner-copy {
+    box-sizing: border-box;
+    block-size: 34rem;
+    min-block-size: 34rem;
+    max-block-size: 34rem;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-link {
+    align-items: stretch;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-media-wrapper,
+  .public-homepage__section--banners .public-homepage__banner-copy {
+    overflow: hidden;
+  }
+}

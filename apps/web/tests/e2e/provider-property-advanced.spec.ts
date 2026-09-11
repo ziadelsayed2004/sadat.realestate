@@ -182,3 +182,64 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await expect(page.locator('#provider-property-area')).toHaveCount(0);
   });
 });
+
+test.describe('PRV-06 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-06' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:119913 (1024x1340); mobile node 6017:118284 (402x1514)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 1340 } : { width: 402, height: 1514 });
+  });
+
+  test('keeps the pricing form, stepper, actions, and commission records inside the viewport', async ({ page }) => {
+    const locale = localeForProject();
+    await routeProviderSession(page);
+    await routeProviderProperty(page);
+    await page.route('**/api/v1/provider/commission', async route => {
+      expect(route.request().headers().authorization).toBe('Bearer provider.advanced.token');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: { accountId: providerId, source: 'policy', effectiveAt: '2026-08-01T00:00:00.000Z', policyVersion: 3, kind: 'percentage', percentageBps: 250, readOnly: true },
+          ...successMeta('responsive-provider-commission')
+        })
+      });
+    });
+
+    const response = await page.goto(`/provider/properties/${propertyId}/price-payment?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+    const screen = page.locator('[data-screen-id="PRV-06"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(page.locator('.provider-property-wizard__commission')).toHaveAttribute('data-state', 'success');
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await page.locator('.provider-property-wizard__steps, .provider-property-wizard__card, .provider-property-wizard__commission, .provider-property-wizard__actions').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width };
+    }));
+    for (const rect of geometry) {
+      expect(rect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(rect.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(rect.width).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    const records = await page.locator('.provider-property-wizard__commission dl > div').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { top: rect.top, bottom: rect.bottom, width: rect.width };
+    }));
+    expect(records).toHaveLength(5);
+    records.forEach(record => expect(record.width).toBeGreaterThan(0));
+    for (let index = 1; index < records.length; index += 1) expect(records[index]!.top).toBeGreaterThanOrEqual(records[index - 1]!.bottom);
+
+    if (viewportWidth <= 620) {
+      await expect(page.locator('.provider-property-wizard__steps')).toHaveCSS('grid-template-columns', /repeat\(8|[\d.]+px/);
+      const continueButton = page.locator('button[value="continue"]');
+      const saveButton = page.locator('button[value="save"]');
+      await expect(continueButton).toHaveCSS('background-color', 'rgb(23, 35, 61)');
+      expect((await continueButton.boundingBox())!.y).toBeLessThan((await saveButton.boundingBox())!.y);
+    }
+  });
+});

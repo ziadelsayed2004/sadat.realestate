@@ -1096,7 +1096,7 @@ function BannerGrid({
           onClick={() => setActiveIndex(index => (index - 1 + carouselBanners.length) % carouselBanners.length)}
           disabled={carouselBanners.length < 2}
         >
-          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d={locale === 'ar' ? 'M8 5l5 5-5 5' : 'M12 15l-5-5 5-5'} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M12 15l-5-5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
         <button
           className="public-homepage__banner-control public-homepage__banner-control--next"
@@ -1105,7 +1105,7 @@ function BannerGrid({
           onClick={() => setActiveIndex(index => (index + 1) % carouselBanners.length)}
           disabled={carouselBanners.length < 2}
         >
-          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d={locale === 'ar' ? 'M12 15l-5-5 5-5' : 'M8 5l5 5-5 5'} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
       </div>
       <div className="public-homepage__banner-dots" role="tablist" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
