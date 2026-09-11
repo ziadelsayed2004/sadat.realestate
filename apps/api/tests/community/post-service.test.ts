@@ -1,5 +1,25 @@
 import assert from 'node:assert/strict'; import test from 'node:test'; import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js'; import { createCommunityService, createMemoryCommunityRepository } from '../../src/modules/community/service.js';
 const seeker = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims; const admin = { ...seeker, role: 'admin' } as AccessTokenClaims;
+
+test('removing another author comment requires current moderation permission', async () => {
+  const repository = createMemoryCommunityRepository([], { record: async () => 'audit-id' });
+  let allowed = true;
+  const moderator = { ...admin, sub: '2123456789abcdef01234567' };
+  const service = createCommunityService([], repository, {
+    authorize: async (id, permission) => allowed && id === moderator.sub && permission === 'admin:community.moderate',
+  });
+  const post = await service.create(seeker, { title: 'Permission check', body: 'Published discussion' });
+  await service.moderate(moderator, post.id, { action: 'publish', reason: 'Reviewed post', expectedVersion: 0 }, { requestId: 'test', traceId: 'test' });
+  const first = await service.createComment(seeker, { postId: post.id, body: 'First comment' });
+  const second = await service.createComment(seeker, { postId: post.id, body: 'Second comment' });
+  await assert.rejects(() => createCommunityService([], repository).removeComment(moderator, first.id), /FORBIDDEN/);
+  assert.equal((await repository.getComment(first.id))?.status, 'visible');
+  assert.equal((await service.removeComment(moderator, first.id)).status, 'removed');
+  allowed = false;
+  await assert.rejects(() => service.removeComment(moderator, second.id), /FORBIDDEN/);
+  assert.equal((await repository.getComment(second.id))?.status, 'visible');
+  assert.equal((await service.removeComment(seeker, second.id)).status, 'removed');
+});
 test('community posts are owned, bounded, moderated, and removed without cross-user access', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Hello', body: 'A community post' }); assert.equal(post.status, 'draft'); await assert.rejects(() => service.update({ ...seeker, sub: '1123456789abcdef01234567' } as AccessTokenClaims, post.id, { body: 'IDOR' }), /NOT_FOUND/); const published = await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); assert.equal(published.status, 'published'); assert.equal(published.version, 1); assert.equal((await service.publicList()).length, 1); const removed = await service.remove(seeker, post.id); assert.equal(removed.status, 'removed'); assert.equal(removed.version, 2); assert.equal((await service.publicList()).length, 0); });
 
 test('comments enforce published-post state, bounded reply depth, and ownership', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Hello', body: 'A community post' }); await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); const comment = await service.createComment(seeker, { postId: post.id, body: 'Helpful reply' }); assert.equal(comment.depth, 0); const reply = await service.createComment(admin, { postId: post.id, body: 'Thanks', parentId: comment.id }); assert.equal(reply.depth, 1); assert.equal((await service.listComments(post.id)).length, 2); await assert.rejects(() => service.removeComment({ ...seeker, sub: '1123456789abcdef01234567' } as AccessTokenClaims, comment.id), /NOT_FOUND/); });

@@ -224,6 +224,9 @@ export function createCommunityService(
       await requireActive(claims);
       const comment = await repository.getComment(commentId);
       if (!comment || (comment.authorId !== claims.sub && claims.role !== 'admin')) throw new Error('NOT_FOUND');
+      if (comment.authorId !== claims.sub && (authorization === undefined || !(await authorization.authorize(claims.sub, 'admin:community.moderate')))) {
+        throw new Error('FORBIDDEN');
+      }
       const updated = { ...comment, status: 'removed' as const };
       await repository.saveComment(updated);
       return updated;
