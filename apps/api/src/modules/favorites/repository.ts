@@ -73,10 +73,21 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
       return result.deletedCount > 0;
     },
     async list(seekerId, page, limit) {
-      const rows = await favorites.find({ seekerId: new Types.ObjectId(seekerId) }, { projection: { _id: 0, seekerId: 1, propertyId: 1, savedAt: 1 } }).sort({ savedAt: -1, propertyId: 1 }).skip((page - 1) * limit).limit(limit).toArray();
-      const mapped = rows.flatMap(row => { const value = favorite(row as Row); return value ? [value] : []; });
-      if (!mapped.length) return [];
-      const propertyRows = await properties.find({ _id: { $in: mapped.map(value => new Types.ObjectId(value.propertyId)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection }).toArray();
+      const [result] = await favorites.aggregate<{ rows: Row[]; counts: { total: number }[] }>([
+        { $match: { seekerId: new Types.ObjectId(seekerId) } },
+        { $sort: { savedAt: -1, propertyId: 1 } },
+        { $lookup: { from: 'properties', localField: 'propertyId', foreignField: '_id', pipeline: [
+          { $match: { status: 'published', active: true, ...unexpiredPropertyFilter() } },
+          { $project: projection }
+        ], as: 'property' } },
+        { $unwind: '$property' },
+        { $facet: { counts: [{ $count: 'total' }], rows: [{ $skip: (page - 1) * limit }, { $limit: limit }] } }
+      ]).toArray();
+      const total = result?.counts[0]?.total ?? 0;
+      const rows = result?.rows ?? [];
+      const mapped = rows.flatMap(row => { const value = favorite(row); return value ? [value] : []; });
+      if (!mapped.length) return { rows: [], total };
+      const propertyRows = rows.map(row => row.property as Row);
       const locationIds = propertyRows.flatMap(row => { const value = id(row.locationId); return value ? [new Types.ObjectId(value)] : []; });
       const organizationIds = propertyRows.flatMap(row => { const value = id(row.organizationId); return value ? [new Types.ObjectId(value)] : []; });
       const [locationRows, organizationRows] = await Promise.all([
@@ -90,7 +101,7 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
         const value = property({ ...row, ...(locationId && locations.has(locationId) ? { locationName: locations.get(locationId) } : {}), ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceVerified: true } : {}), installmentAvailable: Array.isArray(row.paymentPlans) && row.paymentPlans.length > 0 });
         return value ? [[value.id, value] as const] : [];
       }));
-      return mapped.flatMap(value => { const source = propertiesById.get(value.propertyId); return source ? [{ favorite: value, property: source }] : []; });
+      return { rows: mapped.flatMap(value => { const source = propertiesById.get(value.propertyId); return source ? [{ favorite: value, property: source }] : []; }), total };
     }
   };
 }

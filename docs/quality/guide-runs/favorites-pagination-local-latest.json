@@ -1,0 +1,14 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-mongodb",
+  "mockedRoutes": false,
+  "checks": [
+    "25 available favorites paginate 20/5/0 with stable total; hidden, inactive, expired, missing and foreign favorites excluded",
+    "suspended: old-token list/save/remove denied without favorite writes",
+    "rejected: old-token list/save/remove denied without favorite writes",
+    "role_changed: old-token list/save/remove denied without favorite writes",
+    "deleted: old-token list/save/remove denied without favorite writes"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-11T18:50:54.994Z"
+}

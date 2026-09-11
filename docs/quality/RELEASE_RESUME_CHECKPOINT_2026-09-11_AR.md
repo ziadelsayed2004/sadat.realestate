@@ -271,6 +271,8 @@
 
 ## نقطة الاستئناف المعتمدة بعد إصلاح المصادقة
 
+- تحديث ترقيم المحفوظات: أُصلحت الفجوة المذكورة أدناه؛ يربط MongoDB العقارات المتاحة قبل pagination ويحسب العدد عبر facet في نفس الطلب. خدمة favorites تعيد total الفعلي. فاحص `scripts/verify-favorites-pagination-local.mjs` أثبت 25 محفوظة متاحة على صفحات 20/5/0، واستبعاد المفقود والمنتهي وغير المنشور وغير النشط ومحفوظات الغير. أثبت أيضًا رفض list/save/remove بالتوكن القديم بعد suspended/rejected/role_changed/deleted دون mutation. قاعدة الفحص المعزولة نُظفت؛ الدليل `guide-runs/favorites-pagination-local-latest.json` نطاقه service/MongoDB وليس HTTP أو browser. نجحت الاختبارات المتأثرة 6/6 وtypecheck وlint. التالي تحقق صفحات المحفوظات بالمتصفح، بما يشمل حذف آخر عنصر من الصفحة الثانية والتعافي من الشبكة؛ لم تتغير ملفات CSS.
+
 - استكمال أحدث: أضيف تحقق إلزامي من الحساب الحالي لخدمة favorites قبل list/save/remove؛ runtime يشترط مستخدمًا موجودًا بدور seeker وحالة verified. نجحت اختبارات favorites وpublic projections الستة، وAPI typecheck وlint. الإثبات الحالي service/router؛ يلزم فحص HTTP/MongoDB مع suspended/rejected/role_changed/deleted قبل رفع ضمان GUIDE-08 في المصفوفة. لا تعديل CSS في هذه الدفعة.
 - اكتُشفت أيضًا فجوة ترقيم تحتاج معالجة لاحقة: خدمة favorites تعيد `total: items.length` للصفحة الحالية، والمستودع يطبق pagination قبل استبعاد العقارات غير المتاحة؛ قد تختفي الصفحات اللاحقة. لم تُصلح هذه الفجوة بعد، وهي نقطة التنفيذ التالية مع اختبار أكثر من 20 محفوظة وعقارات غير متاحة.
 
