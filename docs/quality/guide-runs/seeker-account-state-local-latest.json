@@ -1,0 +1,36 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-10"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "checks": [
+    {
+      "state": "suspended",
+      "status": 403,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    },
+    {
+      "state": "rejected",
+      "status": 403,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    },
+    {
+      "state": "role_changed",
+      "status": 404,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    },
+    {
+      "state": "deleted",
+      "status": 404,
+      "operationsDenied": 4,
+      "profileUnchanged": true
+    }
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-11T16:26:26.372Z"
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T16:24:15.295Z",
+  "generatedAt": "2026-09-11T16:27:09.821Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2375,7 +2375,7 @@
           "seeker"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
         "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
@@ -2431,7 +2431,14 @@
           "verifiedAt": "2026-09-10T12:35:13.289Z"
         }
       ],
-      "reviewedGuarantees": [],
+      "reviewedGuarantees": [
+        {
+          "category": "currentSessionState",
+          "check": "current_account_state_denies_profile_and_preferences_operations",
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "verifiedAt": "2026-09-11T16:26:26.372Z"
+        }
+      ],
       "browserContractRegression": {
         "path": "docs/quality/guide-runs/seeker-profile-save-recovery-2026-09-11.json",
         "mockedRoutes": true,
@@ -4014,7 +4021,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T16:24:15.295Z",
+    "updatedAt": "2026-09-11T16:27:09.821Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

@@ -23,6 +23,7 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
 const seekerSaveRecovery = await readFile('docs/quality/guide-runs/seeker-save-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerAccountState = await readFile('docs/quality/guide-runs/seeker-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -140,6 +141,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
   });
   const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
     ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
+  if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
+    && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
+    && ['suspended', 'rejected', 'role_changed', 'deleted'].every(state => seekerAccountState.checks?.some(check =>
+      check.state === state && check.operationsDenied === 4 && check.profileUnchanged === true
+      && check.status === (['suspended', 'rejected'].includes(state) ? 403 : 404)))) {
+    reviewedGuarantees.push({ category: 'currentSessionState', check: 'current_account_state_denies_profile_and_preferences_operations',
+      path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json', verifiedAt: seekerAccountState.finishedAt });
+  }
   if (journey.id === 'GUIDE-03' && communityAccountState?.status === 'PASS_LOCAL'
     && communityAccountState.mockedRoutes === false && communityAccountState.cleanup === true
     && ['seeker', 'provider', 'admin'].every(roleType => ['suspended', 'rejected', 'role_changed', 'deleted'].every(state =>

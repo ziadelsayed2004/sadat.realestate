@@ -118,3 +118,20 @@ test('rejects invalid grants and preserves strict self ownership for profile/pre
     (error: unknown) => error instanceof SeekerServiceError && error.code === 'ACCOUNT_NOT_ACTIVE'
   );
 });
+
+for (const status of ['suspended', 'rejected'] as const) test(`current ${status} account overrides an earlier verified token`, async () => {
+  let readsOrWrites = 0;
+  const seeker = service(repository({
+    async findByUserId() { return { ...account, status }; },
+    async updateProfile() { readsOrWrites += 1; return account; },
+    async findPreferences() { readsOrWrites += 1; return { preferences: {}, updatedAt: new Date() }; },
+    async updatePreferences() { readsOrWrites += 1; return { preferences: {}, updatedAt: new Date() }; }
+  }));
+  for (const operation of [
+    () => seeker.getProfile(claims),
+    () => seeker.updateProfile(claims, { firstName: 'Denied' }),
+    () => seeker.getPreferences(claims),
+    () => seeker.updatePreferences(claims, { minPrice: 10 })
+  ]) await assert.rejects(operation, (error: unknown) => error instanceof SeekerServiceError && error.code === 'ACCOUNT_NOT_ACTIVE');
+  assert.equal(readsOrWrites, 0);
+});

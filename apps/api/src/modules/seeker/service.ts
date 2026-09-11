@@ -87,6 +87,9 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
     if (!active(claims)) throw new SeekerServiceError('ACCOUNT_NOT_ACTIVE');
     const account = await dependencies.repository.findByUserId(claims.sub);
     if (!account) throw new SeekerServiceError('SEEKER_NOT_FOUND');
+    if (account.status === 'suspended' || account.status === 'rejected') {
+      throw new SeekerServiceError('ACCOUNT_NOT_ACTIVE');
+    }
     return account;
   }
 
