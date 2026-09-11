@@ -1,0 +1,45 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-10"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "runs": [
+    {
+      "roleType": "seeker",
+      "foreignRevocation": 404,
+      "currentRevocation": 409,
+      "ownOtherRevocation": 200,
+      "revokedTokenRead": 401,
+      "revokedTokenWrite": 401,
+      "repeatRevocation": 404,
+      "remainingOwnSessions": 1,
+      "auditDelta": 1
+    },
+    {
+      "roleType": "provider",
+      "foreignRevocation": 404,
+      "currentRevocation": 409,
+      "ownOtherRevocation": 200,
+      "revokedTokenRead": 401,
+      "revokedTokenWrite": 401,
+      "repeatRevocation": 404,
+      "remainingOwnSessions": 1,
+      "auditDelta": 1
+    },
+    {
+      "roleType": "admin",
+      "foreignRevocation": 404,
+      "currentRevocation": 409,
+      "ownOtherRevocation": 200,
+      "revokedTokenRead": 401,
+      "revokedTokenWrite": 401,
+      "repeatRevocation": 404,
+      "remainingOwnSessions": 1,
+      "auditDelta": 1
+    }
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-11T16:41:46.921Z"
+}

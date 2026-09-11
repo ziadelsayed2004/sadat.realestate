@@ -24,6 +24,7 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
 const seekerSaveRecovery = await readFile('docs/quality/guide-runs/seeker-save-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerAccountState = await readFile('docs/quality/guide-runs/seeker-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const sessionRevocation = await readFile('docs/quality/guide-runs/session-revocation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -141,6 +142,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
   });
   const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
     ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
+  if (journey.id === 'GUIDE-10' && sessionRevocation?.status === 'PASS_LOCAL'
+    && sessionRevocation.mockedRoutes === false && sessionRevocation.cleanup === true
+    && ['seeker', 'provider', 'admin'].every(roleType => sessionRevocation.runs?.some(run => run.roleType === roleType
+      && run.foreignRevocation === 404 && run.revokedTokenRead === 401 && run.revokedTokenWrite === 401
+      && run.ownOtherRevocation === 200 && run.remainingOwnSessions === 1 && run.auditDelta === 1))) {
+    for (const category of ['currentSessionState', 'horizontalAccess']) reviewedGuarantees.push({ category,
+      check: 'owned_session_revocation_denies_old_token_and_preserves_foreign_sessions',
+      path: 'docs/quality/guide-runs/session-revocation-local-latest.json', verifiedAt: sessionRevocation.finishedAt });
+  }
   if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
     && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
     && ['suspended', 'rejected', 'role_changed', 'deleted'].every(state => seekerAccountState.checks?.some(check =>

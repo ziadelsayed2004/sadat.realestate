@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T16:27:09.821Z",
+  "generatedAt": "2026-09-11T16:42:15.289Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2374,7 +2374,7 @@
         "requiredRoles": [
           "seeker"
         ],
-        "horizontalAccess": "UNVERIFIED",
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
         "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
         "roleAuthorization": "UNVERIFIED"
       },
@@ -2432,6 +2432,18 @@
         }
       ],
       "reviewedGuarantees": [
+        {
+          "category": "currentSessionState",
+          "check": "owned_session_revocation_denies_old_token_and_preserves_foreign_sessions",
+          "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
+          "verifiedAt": "2026-09-11T16:41:46.921Z"
+        },
+        {
+          "category": "horizontalAccess",
+          "check": "owned_session_revocation_denies_old_token_and_preserves_foreign_sessions",
+          "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
+          "verifiedAt": "2026-09-11T16:41:46.921Z"
+        },
         {
           "category": "currentSessionState",
           "check": "current_account_state_denies_profile_and_preferences_operations",
@@ -4021,7 +4033,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T16:27:09.821Z",
+    "updatedAt": "2026-09-11T16:42:15.289Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
