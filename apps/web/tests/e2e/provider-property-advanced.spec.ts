@@ -228,11 +228,18 @@ test.describe('PRV-06 responsive Figma contract', () => {
 
     const records = await page.locator('.provider-property-wizard__commission dl > div').evaluateAll(elements => elements.map(element => {
       const rect = element.getBoundingClientRect();
-      return { top: rect.top, bottom: rect.bottom, width: rect.width };
+      return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width };
     }));
     expect(records).toHaveLength(5);
     records.forEach(record => expect(record.width).toBeGreaterThan(0));
-    for (let index = 1; index < records.length; index += 1) expect(records[index]!.top).toBeGreaterThanOrEqual(records[index - 1]!.bottom);
+    for (let first = 0; first < records.length; first += 1) {
+      for (let second = first + 1; second < records.length; second += 1) {
+        const a = records[first]!;
+        const b = records[second]!;
+        const overlaps = a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        expect(overlaps).toBe(false);
+      }
+    }
 
     if (viewportWidth <= 620) {
       await expect(page.locator('.provider-property-wizard__steps')).toHaveCSS('grid-template-columns', /repeat\(8|[\d.]+px/);
