@@ -4561,5 +4561,22 @@
     "website": "Website",
     "provider": "Provider",
     "administration": "Administration"
+  },
+  "community/presentation-copy#getCommunityPresentationCopy": {
+    "member": "Community member",
+    "post": "Post",
+    "report": "Report",
+    "composerTitle": "Create a new post",
+    "eyebrow": "Sadat community",
+    "categoryLabel": "Post category",
+    "categories": {
+      "all": "All",
+      "question": "Question",
+      "experience": "Experience",
+      "advice": "Advice",
+      "service": "Service",
+      "area": "Area",
+      "property": "Property"
+    }
   }
 }

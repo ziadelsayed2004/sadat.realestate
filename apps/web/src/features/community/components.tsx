@@ -27,6 +27,7 @@ import {
 import { getCommunityCopy, type CommunityCopy } from './copy.ts';
 import '../public/styles.css';
 import './styles.css';
+import { getCommunityPresentationCopy } from './presentation-copy.ts';
 
 export type PublicCommunityViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 type DetailViewState = PublicCommunityViewState | 'not_found';
@@ -103,62 +104,23 @@ type CommunityPresentation = {
   readonly image?: string;
 };
 
-const communityPresentation: Readonly<Record<string, CommunityPresentation>> = {
-  aaaaaaaaaaaaaaaaaaaaaaaa: {
-    author: '\u0645\u062d\u0645\u062f \u0627\u0644\u0633\u064a\u062f', time: '\u0645\u0646\u0630 \u064a\u0648\u0645\u064a\u0646', category: '\u0633\u0624\u0627\u0644', categoryKey: 'question', likes: 24, dislikes: 2, comments: 12,
-    avatar: '/assets/canonical/public/community-asset-1.png'
-  },
-  bbbbbbbbbbbbbbbbbbbbbbbb: {
-    author: '\u0647\u0646\u0627\u0621 \u0625\u0628\u0631\u0627\u0647\u064a\u0645', time: '\u0645\u0646\u0630 3 \u0623\u064a\u0627\u0645', category: '\u062a\u062c\u0631\u0628\u0629', categoryKey: 'experience', likes: 87, dislikes: 3, comments: 34,
-    avatar: '/assets/canonical/public/community-asset-2.png', image: '/assets/canonical/public/community-asset-3.png'
-  },
-  cccccccccccccccccccccccc: {
-    author: '\u0643\u0631\u064a\u0645 \u0639\u0628\u062f \u0627\u0644\u0644\u0647', time: '\u0645\u0646\u0630 \u0623\u0633\u0628\u0648\u0639', category: '\u0646\u0635\u064a\u062d\u0629', categoryKey: 'advice', likes: 156, dislikes: 4, comments: 45,
-    avatar: '/assets/canonical/public/community-asset-4.png'
-  },
-  dddddddddddddddddddddddd: {
-    author: '\u062f\u0627\u0644\u064a\u0627 \u0639\u0645\u0631', time: '\u0645\u0646\u0630 4 \u0623\u064a\u0627\u0645', category: '\u062e\u062f\u0645\u0629', categoryKey: 'service', likes: 43, dislikes: 1, comments: 18,
-    avatar: '/assets/canonical/public/community-asset-5.png'
-  }
-};
-
 function postPresentation(post: CommunityPublicPost, locale: SupportedLocale): CommunityPresentation {
-  const known = communityPresentation[post.id];
-  if (known !== undefined && locale === 'ar') return known;
-  if (known !== undefined) {
-    return {
-      ...known,
-      author: locale === 'ar' ? 'عضو مجتمع' : 'Community member',
-      time: formatDate(post.createdAt, locale),
-      category: locale === 'ar' ? 'منشور' : 'Post'
-    };
-  }
+  const copy = getCommunityPresentationCopy(locale);
   return {
-    author: locale === 'ar' ? 'عضو مجتمع' : 'Community member',
+    author: post.authorName?.[locale] || copy.member,
     time: formatDate(post.createdAt, locale),
-    category: locale === 'ar' ? 'منشور' : 'Post',
-    categoryKey: 'post', likes: 0, dislikes: 0, comments: post.commentCount
+    category: post.category === undefined ? copy.post : copy.categories[post.category],
+    categoryKey: post.category ?? 'post',
+    likes: post.likeCount ?? 0,
+    dislikes: post.dislikeCount ?? 0,
+    comments: post.commentCount,
+    ...(post.avatarUrl === undefined ? {} : { avatar: post.avatarUrl }),
+    ...(post.imageUrl === undefined ? {} : { image: post.imageUrl }),
   };
 }
 
 function communityFilters(locale: SupportedLocale): ReadonlyArray<{ readonly key: string; readonly label: string }> {
-  if (locale === 'ar') return [
-    { key: 'all', label: '\u0627\u0644\u0643\u0644' },
-    { key: 'question', label: '\u0633\u0624\u0627\u0644' },
-    { key: 'experience', label: '\u062a\u062c\u0631\u0628\u0629' },
-    { key: 'advice', label: '\u0646\u0635\u064a\u062d\u0629' },
-    { key: 'service', label: '\u062e\u062f\u0645\u0629' },
-    { key: 'area', label: '\u0645\u0646\u0637\u0642\u0629' },
-    { key: 'property', label: '\u0639\u0642\u0627\u0631' }
-  ];
-  if (locale === 'en') return [
-    { key: 'all', label: 'All' }, { key: 'question', label: 'Question' }, { key: 'experience', label: 'Experience' },
-    { key: 'advice', label: 'Advice' }, { key: 'service', label: 'Service' }, { key: 'area', label: 'Area' }, { key: 'property', label: 'Property' }
-  ];
-  return [
-    { key: 'all', label: '\u5168\u90e8' }, { key: 'question', label: '\u95ee\u9898' }, { key: 'experience', label: '\u7ecf\u9a8c' },
-    { key: 'advice', label: '\u5efa\u8bae' }, { key: 'service', label: '\u670d\u52a1' }, { key: 'area', label: '\u533a\u57df' }, { key: 'property', label: '\u623f\u4ea7' }
-  ];
+  return Object.entries(getCommunityPresentationCopy(locale).categories).map(([key, label]) => ({ key, label }));
 }
 
 function stateCopy(state: PublicCommunityViewState, copy: CommunityCopy): { readonly title: string; readonly body: string } {
@@ -224,7 +186,7 @@ function PostCard({
           <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5-5 1 1-2 2h6v3h-2.5l2.3 7.1a1.5 1.5 0 0 1-1.4 1.9H9.5A2.5 2.5 0 0 1 7 17.5V10Z" /></svg>{presentation.likes}</span>
           <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 14-5 5-1-1 2-2H7v-3h2.5l-2.3-7.1A1.5 1.5 0 0 1 8.6 4H14a2.5 2.5 0 0 1 2.5 2.5V14Z" /></svg>{presentation.dislikes}</span>
           <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H8l-3 3V5Z" /></svg>{presentation.comments}</span>
-          <span className="public-community__report-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11l2 2v14H6V4Zm2 2v12h9V7h-2V6H8Zm2 3h5v2h-5V9Zm0 4h5v2h-5v-2Z" /></svg>{locale === 'ar' ? '\u0625\u0628\u0644\u0627\u063a' : locale === 'en' ? 'Report' : '\u62a5\u544a'}</span>
+          <span className="public-community__report-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11l2 2v14H6V4Zm2 2v12h9V7h-2V6H8Zm2 3h5v2h-5V9Zm0 4h5v2h-5v-2Z" /></svg>{getCommunityPresentationCopy(locale).report}</span>
           <span className="public-community__legacy-comment-count">{copy.comments(post.commentCount)}</span>
           <Button className="public-community__card-open" variant="ghost" size="sm" onClick={onOpen}>{copy.openDiscussion}</Button>
         </div>
@@ -566,7 +528,7 @@ export function PublicCommunity({
   const modalOpen = composerState !== 'closed';
   const composerTitle = composerState === 'permission' || composerState === 'checking'
     ? copy.authenticationRequired
-    : locale === 'ar' ? 'انشر بوست جديد' : 'Create a new post';
+    : getCommunityPresentationCopy(locale).composerTitle;
 
   return (
     <div className="public-community" data-page="public-community">
@@ -574,7 +536,7 @@ export function PublicCommunity({
       <div className="public-community__main">
         <header className="public-community__intro">
           <div>
-            <p className="public-community__eyebrow">{locale === 'ar' ? 'مجتمع السادات' : 'Sadat community'}</p>
+            <p className="public-community__eyebrow">{getCommunityPresentationCopy(locale).eyebrow}</p>
             <h1>{copy.title}</h1>
           </div>
           <Button variant="accent" onClick={openComposer} startIcon={<span aria-hidden="true">+</span>}>{copy.createPost}</Button>
@@ -641,7 +603,7 @@ export function PublicCommunity({
                   name="category"
                   value={category}
                   onChange={value => setCategory(value as PostCategory)}
-                  ariaLabel={locale === 'ar' ? 'تصنيف البوست' : 'Post category'}
+                  ariaLabel={getCommunityPresentationCopy(locale).categoryLabel}
                   options={categoryOptions}
                 />
               </div>

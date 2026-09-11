@@ -4561,5 +4561,22 @@
     "website": "الموقع",
     "provider": "مقدم الخدمة",
     "administration": "الإدارة"
+  },
+  "community/presentation-copy#getCommunityPresentationCopy": {
+    "member": "عضو مجتمع",
+    "post": "منشور",
+    "report": "إبلاغ",
+    "composerTitle": "انشر بوست جديد",
+    "eyebrow": "مجتمع السادات",
+    "categoryLabel": "تصنيف البوست",
+    "categories": {
+      "all": "الكل",
+      "question": "سؤال",
+      "experience": "تجربة",
+      "advice": "نصيحة",
+      "service": "خدمة",
+      "area": "منطقة",
+      "property": "عقار"
+    }
   }
 }

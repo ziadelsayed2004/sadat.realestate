@@ -37,6 +37,25 @@ const detailData = communityPublicPostDetailDataSchema.parse({
 });
 
 describe('public community feed and post creation', () => {
+  it.each(['ar', 'en'] as const)('uses API presentation and category for real and legacy IDs in %s', locale => {
+    const items = ['1234567890abcdef12345678', 'aaaaaaaaaaaaaaaaaaaaaaaa'].map((id, index) => ({
+      ...post, id, title: `API post ${index}`, category: 'advice' as const,
+      authorName: { ar: 'كاتب من البيانات', en: 'API author' },
+      likeCount: 7, dislikeCount: 3, commentCount: 5,
+    }));
+    const result = renderWithLocale(<PublicCommunity locale={locale} initialData={{ items, total: 2, page: 1, limit: 20 }} />, { locale });
+    for (const card of result.container.querySelectorAll('.public-community__card')) {
+      expect(card).toHaveAttribute('data-category', 'advice');
+      expect(card.querySelector('.public-community__author strong')).toHaveTextContent(locale === 'ar' ? 'كاتب من البيانات' : 'API author');
+      expect(Array.from(card.querySelectorAll('.public-community__stat')).map(item => item.textContent)).toEqual(['7', '3', '5']);
+      expect(card.querySelector('time')).toHaveAttribute('dateTime', post.createdAt);
+    }
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'نصيحة' : 'Advice' }));
+    expect(result.container.querySelectorAll('.public-community__card')).toHaveLength(2);
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'سؤال' : 'Question' }));
+    expect(result.container.querySelectorAll('.public-community__card')).toHaveLength(0);
+  });
+
   it('loads the implemented versioned public route and keeps the safe projection', async () => {
     let requestInput = '';
     const client = new ApiClient({
