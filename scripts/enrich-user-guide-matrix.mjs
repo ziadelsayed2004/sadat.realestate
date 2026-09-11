@@ -28,6 +28,7 @@ const notificationRecovery = await readFile('docs/quality/guide-runs/notificatio
 const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityBrowserRecovery = await readFile('docs/quality/guide-runs/community-browser-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPresentation = await readFile('docs/quality/guide-runs/community-presentation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const communityAccountState = await readFile('docs/quality/guide-runs/community-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -44,6 +45,7 @@ function hasExecutedEvidence(journey) {
 }
 
 const supplementalRuns = [
+  ["docs/quality/guide-runs/community-account-state-local-latest.json", communityAccountState],
   ["docs/quality/guide-runs/community-presentation-local-latest.json", communityPresentation],
   ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],
   ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
@@ -131,6 +133,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
   });
   const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
     ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
+  if (journey.id === 'GUIDE-03' && communityAccountState?.status === 'PASS_LOCAL'
+    && communityAccountState.mockedRoutes === false && communityAccountState.cleanup === true
+    && ['seeker', 'provider', 'admin'].every(roleType => ['suspended', 'rejected', 'role_changed', 'deleted'].every(state =>
+      communityAccountState.checks?.some(check => check.roleType === roleType && check.state === state
+        && check.mutationsDenied === 3 && check.directServiceOperationsDenied === 4 && check.writes === 0)))) {
+    reviewedGuarantees.push({ category: 'currentSessionState', check: 'current_account_state_denies_public_community_mutations',
+      path: 'docs/quality/guide-runs/community-account-state-local-latest.json',
+      verifiedAt: communityAccountState.finishedAt });
+  }
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];

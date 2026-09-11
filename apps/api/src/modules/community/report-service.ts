@@ -15,6 +15,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { createCommunityAccountCheck } from './account-state.js';
 
 export interface CommunityReportContext {
   requestId: string;
@@ -148,6 +149,7 @@ export function createMongooseCommunityReportService(
   audit?: AuditWriter
 ): CommunityReportService {
   const reports = connection.collection('community_reports');
+  const accountCheck = createCommunityAccountCheck(connection);
   let indexesReady: Promise<unknown> | undefined;
   const projection = {
     _id: 0,
@@ -190,6 +192,7 @@ export function createMongooseCommunityReportService(
     async create(claims, input, context) {
       assertReporter(claims);
       const parsed: CommunityReportCreate = communityReportCreateSchema.parse(input);
+      if (!(await accountCheck(claims))) throw new Error('FORBIDDEN');
       await ensureIndexes();
       const stamp = now();
       const report = adminReportData({

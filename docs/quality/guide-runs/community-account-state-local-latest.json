@@ -1,0 +1,99 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "mockedRoutes": false,
+  "journeys": [
+    "GUIDE-03"
+  ],
+  "commit": "aa20c61b482d9e4cf866c211ae5fbd25f4bd1c6c",
+  "worktreeChanges": true,
+  "checks": [
+    {
+      "roleType": "seeker",
+      "state": "suspended",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "seeker",
+      "state": "rejected",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "seeker",
+      "state": "role_changed",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "seeker",
+      "state": "deleted",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "provider",
+      "state": "suspended",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "provider",
+      "state": "rejected",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "provider",
+      "state": "role_changed",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "provider",
+      "state": "deleted",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "admin",
+      "state": "suspended",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "admin",
+      "state": "rejected",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "admin",
+      "state": "role_changed",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    },
+    {
+      "roleType": "admin",
+      "state": "deleted",
+      "mutationsDenied": 3,
+      "directServiceOperationsDenied": 4,
+      "writes": 0
+    }
+  ],
+  "cleanup": true,
+  "publicReadAvailable": true,
+  "finishedAt": "2026-09-11T11:38:50.951Z"
+}

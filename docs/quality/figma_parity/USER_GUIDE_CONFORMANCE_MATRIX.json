@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T11:36:37.776Z",
+  "generatedAt": "2026-09-11T11:39:54.042Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1494,7 +1494,7 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-11T11:36:05.643Z",
+      "executionDate": "2026-09-11T11:38:50.951Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1578,9 +1578,22 @@
           "check": "current_admin_status_overrides_previously_issued_token",
           "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
           "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_state_denies_public_community_mutations",
+          "path": "docs/quality/guide-runs/community-account-state-local-latest.json",
+          "verifiedAt": "2026-09-11T11:38:50.951Z"
         }
       ],
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/community-account-state-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-11T11:38:50.951Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/community-presentation-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -3982,7 +3995,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T11:36:37.776Z",
+    "updatedAt": "2026-09-11T11:39:54.042Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

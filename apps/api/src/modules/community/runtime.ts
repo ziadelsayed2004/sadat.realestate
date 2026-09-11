@@ -7,12 +7,13 @@ import { createMongooseCommunityRepository } from './repository.js';
 import type { CommunityRouterDependencies } from './router.js';
 import { createCommunityService, type CommunityAuthorization } from './service.js';
 import { createMongooseCommunitySettingsReader } from '../settings/community-policy.js';
+import { createCommunityAccountCheck } from './account-state.js';
 
 export function createCommunityRuntime(connection: Connection, accessTokens: AccessTokenService, authorization?: CommunityAuthorization, audit?: AuditWriter): CommunityRouterDependencies {
   const models = createCommunityModels(connection);
   return {
     accessTokens,
-    service: createCommunityService([], createMongooseCommunityRepository(models, audit), authorization, createMongooseCommunitySettingsReader(connection)),
+    service: createCommunityService([], createMongooseCommunityRepository(models, audit), authorization, createMongooseCommunitySettingsReader(connection), createCommunityAccountCheck(connection)),
     reports: createMongooseCommunityReportService(connection, authorization, audit)
   };
 }

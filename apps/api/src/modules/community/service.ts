@@ -24,6 +24,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import type { CommunityAccountCheck } from './account-state.js';
 import { DEFAULT_COMMUNITY_RUNTIME_SETTINGS, type CommunityRuntimeSettings, type CommunitySettingsReader } from '../settings/community-policy.js';
 
 const id = () => randomBytes(12).toString('hex');
@@ -118,8 +119,12 @@ export function createCommunityService(
   seed: CommunityPost[] = [],
   repository: CommunityRepository = createMemoryCommunityRepository(seed),
   authorization?: CommunityAuthorization,
-  settingsReader?: CommunitySettingsReader
+  settingsReader?: CommunitySettingsReader,
+  accountCheck?: CommunityAccountCheck
 ): CommunityService {
+  async function requireActive(claims: AccessTokenClaims): Promise<void> {
+    if (!active(claims) || (accountCheck !== undefined && !(await accountCheck(claims)))) throw new Error('FORBIDDEN');
+  }
   const now = () => new Date().toISOString();
   const settings = async (): Promise<CommunityRuntimeSettings> => settingsReader ? settingsReader.read() : DEFAULT_COMMUNITY_RUNTIME_SETTINGS;
   const cairoDay = (value: string): string => new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value));
@@ -141,7 +146,7 @@ export function createCommunityService(
 
   return {
     async create(claims, input) {
-      if (!active(claims)) throw new Error('FORBIDDEN');
+      await requireActive(claims);
       const parsed: CommunityPostCreate = communityPostCreateSchema.parse(input);
       const stamp = now();
       const policy = await settings();
@@ -156,10 +161,11 @@ export function createCommunityService(
       return post;
     },
     async listOwned(claims) {
-      if (!active(claims)) throw new Error('FORBIDDEN');
+      await requireActive(claims);
       return (await repository.listPosts()).filter(post => post.authorId === claims.sub);
     },
     async update(claims, postId, input) {
+      await requireActive(claims);
       const post = await repository.getPost(postId);
       if (!post || post.authorId !== claims.sub) throw new Error('NOT_FOUND');
       const patch = communityPostPatchSchema.parse(input);
@@ -170,6 +176,7 @@ export function createCommunityService(
       return updated;
     },
     async remove(claims, postId) {
+      await requireActive(claims);
       const post = await repository.getPost(postId);
       if (!post || post.authorId !== claims.sub) throw new Error('NOT_FOUND');
       const updated = { ...post, status: 'removed' as const, version: post.version + 1, updatedAt: now() };
@@ -196,7 +203,7 @@ export function createCommunityService(
       return updated;
     },
     async createComment(claims, input) {
-      if (!active(claims)) throw new Error('FORBIDDEN');
+      await requireActive(claims);
       const parsed: CommunityCommentCreate = communityCommentCreateSchema.parse(input);
       const post = await repository.getPost(parsed.postId);
       if (!post || post.status !== 'published') throw new Error('INVALID_STATE');
@@ -214,6 +221,7 @@ export function createCommunityService(
         .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     },
     async removeComment(claims, commentId) {
+      await requireActive(claims);
       const comment = await repository.getComment(commentId);
       if (!comment || (comment.authorId !== claims.sub && claims.role !== 'admin')) throw new Error('NOT_FOUND');
       const updated = { ...comment, status: 'removed' as const };
