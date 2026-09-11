@@ -261,3 +261,10 @@
 - نجحت 6 تشغيلات على AR/EN × Desktop/Tablet/Pixel 5. بعد offline أثناء إرسال OTP ظهر Retry، ثم أعاد API الحقيقي 202 وظهر نموذج التحقق، وأعاد التحقق 200 دون document reload أو overflow.
 - في نموذج التسجيل، الإرسال الفارغ وكلمتا المرور غير المتطابقتين بقيا في حالة validation ولم يُرسلا أي POST إلى `/auth/register/seeker`. حُذفت تحديات OTP الستة المحددة بعد الفحص (`otpChallengesRemoved: true`). الدليل `guide-runs/registration-recovery-local-latest.json`.
 - رُبطت حالتا validation وnetworkRetry في GUIDE-04 بالمصفوفة. ما زالت الرحلة PARTIAL لأن دورة النجاح الكاملة وProduction وبقية المطابقة البصرية لم تُغلق؛ الأرقام الرسمية: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119.
+
+## إصلاح تشويه سطح تسجيل الدخول — 11 سبتمبر
+
+- فحصت الرابط الحي `/auth/login?lang=ar` ووجدت أن قاعدة `[data-state]` العامة كانت تطبق على صفحات المصادقة أيضًا، فتفرض `max-width: 48rem` وخلفية وبادينج لبطاقة الحالة. على Desktop 1440 ظهرت الصفحة كلوح أبيض بعرض 768px منحاز إلى اليمين، وتكرر الأثر في التسجيل والتحقق واستعادة كلمة المرور.
+- عُزلت عناصر `.auth-page` داخل `.route-shell--auth` من قاعدة الحالة العامة، مع الإبقاء على تنسيق حالات الرسائل الداخلية. أُضيف اختبار Playwright لمسارات login/forgot-password/verify-email/register/provider-type، يتحقق من عرض الصفحة الكامل، التموضع، وعدم وراثة بطاقة الحالة.
+- نجح الاختبار على AR وEN في Desktop/Tablet/Pixel 5 بإجمالي 6/6 تشغيلات، مع HTTP 200 وعدم overflow؛ بعد الإصلاح صار سطح المصادقة بعرض viewport والبطاقة في المنتصف. لم تُدخل أي بيانات دخول إلى الموقع الحي، ولم يُحسب الفحص الخارجي كدليل Production.
+- الديمو مستمر، والأرقام الرسمية لا تتغير: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119. يلزم نشر التغيير ثم إعادة الفحص الحي للتأكد من وصول الحزمة الجديدة.
