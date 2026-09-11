@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T11:29:28.458Z",
+  "generatedAt": "2026-09-11T11:32:00.320Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3453,9 +3453,9 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -3533,7 +3533,29 @@
           "Run the same journey on Production after deployment of this commit."
         ]
       },
-      "reviewedSubcases": [],
+      "reviewedSubcases": [
+        {
+          "case": "validation",
+          "check": "invalid_reason_blocks_browser_mutation",
+          "path": "docs/quality/guide-runs/community-browser-recovery-local-latest.json",
+          "scope": "Community post administration; Arabic and English; Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-11T11:31:20.434Z"
+        },
+        {
+          "case": "empty",
+          "check": "empty_search_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/community-browser-recovery-local-latest.json",
+          "scope": "Community post administration; Arabic and English; Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-11T11:31:20.434Z"
+        },
+        {
+          "case": "networkRetry",
+          "check": "offline_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/community-browser-recovery-local-latest.json",
+          "scope": "Community post administration; Arabic and English; Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-11T11:31:20.434Z"
+        }
+      ],
       "reviewedGuarantees": [
         {
           "category": "roleAuthorization",
@@ -3951,7 +3973,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T11:29:28.458Z",
+    "updatedAt": "2026-09-11T11:32:00.320Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

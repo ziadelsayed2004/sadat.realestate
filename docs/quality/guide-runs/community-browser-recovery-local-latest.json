@@ -1,0 +1,98 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "environment": "local-real-browser-api",
+  "mockedRoutes": false,
+  "journeys": [
+    "GUIDE-22"
+  ],
+  "faultInjection": "browser offline mode",
+  "runs": [
+    {
+      "device": "Desktop",
+      "locale": "ar",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    },
+    {
+      "device": "Desktop",
+      "locale": "en",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    },
+    {
+      "device": "Tablet",
+      "locale": "ar",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 768,
+        "scrollWidth": 768
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    },
+    {
+      "device": "Tablet",
+      "locale": "en",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 768,
+        "scrollWidth": 768
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    },
+    {
+      "device": "Pixel 5",
+      "locale": "ar",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    },
+    {
+      "device": "Pixel 5",
+      "locale": "en",
+      "status": "PASS",
+      "dimensions": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "checks": [
+        "invalid_reason_blocks_browser_mutation",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_retry_recovers_without_navigation"
+      ]
+    }
+  ],
+  "commit": "2b5d7352c96e13bd22159440ccceeae6c61e293f",
+  "startedAt": "2026-09-11T11:31:02.246Z",
+  "finishedAt": "2026-09-11T11:31:20.434Z"
+}

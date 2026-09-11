@@ -26,6 +26,7 @@ const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-reco
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const communityBrowserRecovery = await readFile('docs/quality/guide-runs/community-browser-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -131,6 +132,24 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-22' && communityBrowserRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && communityBrowserRecovery.mockedRoutes === false) {
+    for (const [category, check] of [
+      ['validation', 'invalid_reason_blocks_browser_mutation'],
+      ['empty', 'empty_search_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_retry_recovers_without_navigation'],
+    ]) {
+      if (['Desktop', 'Tablet', 'Pixel 5'].every(device => ['ar', 'en'].every(locale =>
+        communityBrowserRecovery.runs?.some(run => run.device === device && run.locale === locale
+          && run.status === 'PASS' && run.checks?.includes(check)
+          && run.dimensions?.innerWidth === run.dimensions?.scrollWidth)))) {
+        reviewedSubcases.push({ case: category, check,
+          path: 'docs/quality/guide-runs/community-browser-recovery-local-latest.json',
+          scope: 'Community post administration; Arabic and English; Desktop, Tablet and Pixel 5',
+          verifiedAt: communityBrowserRecovery.finishedAt });
+      }
+    }
+  }
   if (journey.id === 'GUIDE-09' && notificationRecovery?.status === 'PASS_LOCAL_SUBCASES'
     && notificationRecovery.mockedRoutes === false
     && ['ar', 'en'].every(locale => notificationRecovery.runs?.some(run => run.locale === locale && run.status === 'PASS'))) {
