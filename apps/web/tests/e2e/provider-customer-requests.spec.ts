@@ -63,9 +63,14 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
 
 test('PRV-16 responsive layout keeps filters and request actions usable', async ({ page }, testInfo) => {
   const locale = localeForRequests();
+  if (testInfo.project.name.startsWith('tablet-')) await page.setViewportSize({ width: 1024, height: 936 });
+  if (testInfo.project.name.startsWith('mobile-')) await page.setViewportSize({ width: 402, height: 1282 });
+  testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:120752 (1024x936); mobile node 6017:119345 (402x1282)' });
   await routeSession(page);
   await routeRequests(page);
   await page.goto(`/provider/customer-requests?lang=${locale}`);
+  const screen = page.locator('[data-screen-id="PRV-16"]');
+  await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
   await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
   const dimensions = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }));
   const viewingsLink = page.locator(`.provider-customer-requests__heading-actions a[href="/provider/viewings?lang=${locale}"]`);
@@ -75,7 +80,7 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
   await expect(viewingsLink).toHaveCSS('text-decoration-line', 'none');
   await expect(viewingsLink.locator('img')).toHaveJSProperty('naturalWidth', 15);
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.width + 1);
-  if (dimensions.width <= 900) {
+  if (dimensions.width <= 600) {
     await expect(page.locator('.provider-dashboard__brand')).toBeHidden();
     const navigation = await page.locator('.provider-dashboard__navigation').boundingBox();
     expect(navigation?.height).toBeLessThan(100);
@@ -83,13 +88,17 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
     const activeBounds = await active.boundingBox();
     expect(activeBounds?.x).toBeGreaterThanOrEqual(0);
     expect((activeBounds?.x ?? 0) + (activeBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width);
+    await page.locator('.provider-dashboard__menu-button').click();
+    await expect(page.locator('.provider-dashboard__navigation')).toHaveAttribute('data-mobile-open', 'true');
     const logout = page.locator('.provider-dashboard__mobile-logout button');
+    await expect(logout).toBeVisible();
     await logout.focus();
     await expect(logout).toBeFocused();
     const logoutBounds = await logout.boundingBox();
     expect(logoutBounds?.width).toBeGreaterThanOrEqual(44);
     expect(logoutBounds?.x).toBeGreaterThanOrEqual(0);
     expect((logoutBounds?.x ?? 0) + (logoutBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width);
+    await page.locator('.provider-dashboard__menu-button').click();
   }
   const filters = page.locator('.provider-customer-requests__filters');
   await expect(filters).toBeVisible();
@@ -99,6 +108,14 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
   const region = page.locator('.provider-customer-requests__table-wrap');
   await region.focus();
   await expect(region).toBeFocused();
+  const record = await page.getByTestId(`provider-customer-request-${REQUEST_ID}`).evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, display: getComputedStyle(element).display };
+  });
+  expect(record.left).toBeGreaterThanOrEqual(-0.5);
+  expect(record.right).toBeLessThanOrEqual(dimensions.width + 0.5);
+  if (dimensions.width <= 600) expect(record.display).toBe('grid');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath(`responsive-${locale}.png`), fullPage: true });
 });
 

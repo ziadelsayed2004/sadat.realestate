@@ -103,7 +103,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   const navigationList = useRef<HTMLUListElement>(null);
   useEffect(() => {
     const revealActive = () => {
-      if (window.matchMedia?.('(min-width: 621px) and (max-width: 900px)').matches) {
+      if (window.matchMedia?.('(min-width: 621px) and (max-width: 1100px)').matches) {
         navigationList.current?.querySelector('[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
       }
     };

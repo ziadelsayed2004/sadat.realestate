@@ -451,6 +451,7 @@
   position: relative;
   width: min(100% - clamp(2rem, 6vw, 6rem), 80rem);
   max-width: 1280px;
+  min-height: max-content;
   margin-inline: auto;
   padding-block: clamp(2rem, 4vw, 3.25rem);
 }

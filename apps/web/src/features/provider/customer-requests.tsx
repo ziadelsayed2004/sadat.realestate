@@ -426,7 +426,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
   }
 
   return (
-    <section className="provider-dashboard provider-customer-requests" data-screen-id="PRV-16" data-route="/provider/customer-requests" data-device-scope="desktop">
+    <section className="provider-dashboard provider-customer-requests" data-screen-id="PRV-16" data-route="/provider/customer-requests" data-device-scope="desktop/tablet/mobile">
       <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
