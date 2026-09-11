@@ -173,6 +173,51 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="SEK-10"]')).toHaveCount(0);
   });
+
+  for (const tab of ['personal', 'preferences']) test(`preserves ${tab} draft after failed save and retries without reload`, async ({ page }) => {
+    const locale = localeForProject();
+    const copy = getSeekerProfileCopy(locale);
+    const endpoint = tab === 'personal' ? '/api/v1/me' : '/api/v1/me/preferences';
+    let attempts = 0;
+    const bodies: unknown[] = [];
+    await page.route(`**${endpoint}`, async route => {
+      if (route.request().method() !== 'PATCH') return route.fallback();
+      attempts += 1;
+      bodies.push(route.request().postDataJSON());
+      if (attempts === 1) return route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE', messageKey: 'errors.serviceUnavailable', details: [], requestId: 'save-retry' } }) });
+      return route.fallback();
+    });
+    await page.goto(`/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+    const field = page.locator(tab === 'personal' ? '#seeker-profile-first-name' : '#seeker-preferences-max-price');
+    const value = tab === 'personal' ? 'Mariam' : '2500000';
+    await field.fill(value);
+    const origin = await page.evaluate(() => performance.timeOrigin);
+    const save = page.locator('.seeker-profile__form > button');
+    await save.click();
+    await expect(page.getByRole('alert')).toContainText(copy.states.retry.body);
+    await expect(field).toHaveValue(value);
+    await expect(save).toBeEnabled();
+    await save.click();
+    await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toBeVisible();
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    expect(attempts).toBe(2);
+    expect(bodies[1]).toEqual(bodies[0]);
+    expect(await page.evaluate(() => performance.timeOrigin)).toBe(origin);
+  });
+
+  for (const tab of ['personal', 'preferences']) test(`hides ${tab} form when save permission is denied`, async ({ page }) => {
+    const locale = localeForProject();
+    const copy = getSeekerProfileCopy(locale);
+    const endpoint = tab === 'personal' ? '/api/v1/me' : '/api/v1/me/preferences';
+    await page.route(`**${endpoint}`, async route => {
+      if (route.request().method() !== 'PATCH') return route.fallback();
+      return route.fulfill({ status: 403, contentType: 'application/json', body: JSON.stringify({ error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', details: [], requestId: 'save-denied' } }) });
+    });
+    await page.goto(`/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+    await page.locator('.seeker-profile__form > button').click();
+    await expect(page.getByText(copy.states.permission.title, { exact: true })).toBeVisible();
+    await expect(page.locator('.seeker-profile__form')).toHaveCount(0);
+  });
 });
 
 test.describe('SEK-08/09 profile responsive layout', () => {

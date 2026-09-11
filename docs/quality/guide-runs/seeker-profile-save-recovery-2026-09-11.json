@@ -1,0 +1,19 @@
+{
+  "journeys": ["GUIDE-10"],
+  "status": "PASS_BROWSER_CONTRACT_REGRESSION",
+  "testedAt": "2026-09-11",
+  "environment": "local-production-web-build-intercepted-api",
+  "mockedRoutes": true,
+  "testFile": "apps/web/tests/e2e/seeker-profile.spec.ts",
+  "command": "playwright test tests/e2e/seeker-profile.spec.ts --grep 'preserves|permission is denied' --workers=1",
+  "passed": 24,
+  "projects": ["desktop-ar", "desktop-en", "tablet-ar", "tablet-en", "mobile-ar", "mobile-en"],
+  "routes": ["/seeker/profile?tab=personal", "/seeker/profile?tab=preferences"],
+  "checks": [
+    "503 keeps the edited draft and enables Save",
+    "second Save sends the same payload and shows success without document reload",
+    "403 hides the form and shows permission state"
+  ],
+  "limitations": ["Not real backend or MongoDB evidence", "No Production verification", "Does not close GUIDE-10"],
+  "otherValidation": {"profileUnitTests": "12/12", "typecheck": "PASS", "lint": "PASS", "build": "PASS", "bundleBudget": "PASS"}
+}

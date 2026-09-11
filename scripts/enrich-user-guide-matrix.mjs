@@ -126,6 +126,10 @@ matrix.journeys = matrix.journeys.map((journey) => {
     remaining: communityEvidence.remaining,
   } : journey.executionEvidence;
   const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }), ...(evidenceAttachments.length === 0 ? {} : { evidenceAttachments }) };
+  if (journey.id === 'GUIDE-10') hydratedJourney.browserContractRegression = {
+    path: 'docs/quality/guide-runs/seeker-profile-save-recovery-2026-09-11.json',
+    mockedRoutes: true, scope: 'Save draft preservation and permission failure on six device/locale projects; does not establish live journey closure',
+  };
   const routeRows = journey.screenIds.map((screenId) => rowsByScreen.get(screenId)).filter(Boolean);
   const legacyStatus = journey.verificationStatus;
   const executed = hasExecutedEvidence(hydratedJourney);

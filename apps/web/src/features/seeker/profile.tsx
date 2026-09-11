@@ -637,6 +637,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<MutationFeedback | undefined>();
   const [validationError, setValidationError] = useState(false);
+  const [mutationError, setMutationError] = useState(false);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {
@@ -646,6 +647,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
       return undefined;
     }
     const controller = new AbortController();
+    setMutationError(false);
     setProfileState('loading');
     if (activeTab === 'preferences') setPreferencesState('loading');
     void profileSource(controller.signal).then(nextProfile => {
@@ -678,6 +680,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
         : 'success';
 
   const saveProfile = async (input: SeekerProfilePatch, success: MutationFeedback = 'profileSaved') => {
+    setMutationError(false);
     const parsed = seekerProfilePatchSchema.safeParse(input);
     if (!parsed.success) {
       setValidationError(true);
@@ -694,7 +697,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
     } catch (error) {
       const nextState = stateForError(error);
       if (nextState === 'permission') setProfileState('permission');
-      else setProfileState(nextState);
+      else setMutationError(true);
     } finally {
       setSaving(false);
     }
@@ -708,6 +711,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
 
   const submitPreferences = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setMutationError(false);
     const parsed = seekerPreferencesPatchSchema.safeParse(preferencesPatchFor(preferencesDraft));
     if (!parsed.success) {
       setValidationError(true);
@@ -723,7 +727,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
     }).catch(error => {
       const nextState = stateForError(error);
       if (nextState === 'permission') setPreferencesState('permission');
-      else setPreferencesState(nextState);
+      else setMutationError(true);
     }).finally(() => setSaving(false));
   };
 
@@ -779,6 +783,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
             {activeTab === 'settings' ? null : <ProfileTabs locale={locale} tab={activeTab} copy={copy} />}
             {feedbackText ? <p className="seeker-profile__feedback" data-state="success" role="status">{feedbackText}</p> : null}
             {validationError ? <p className="seeker-profile__feedback" data-state="error" role="alert">{copy.validation}</p> : null}
+            {mutationError ? <p className="seeker-profile__feedback" data-state="error" role="alert">{copy.states.retry.body}</p> : null}
             {activeTab === 'preferences' ? (
               <section className="seeker-profile__panel" aria-labelledby="seeker-profile-preferences-panel-title">
                 <h2 id="seeker-profile-preferences-panel-title">{copy.preferences.heading}</h2>
