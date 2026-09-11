@@ -21,6 +21,8 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
+const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -119,6 +121,47 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const legacyStatus = journey.verificationStatus;
   const executed = hasExecutedEvidence(hydratedJourney);
   const authorizationEvidence = communityRunApplies || privacyRunApplies || Boolean(journey.backendGuaranteesEvidence);
+  // Record exactly what the reviewed runs demonstrate without promoting a
+  // subcase to complete journey or Production closure.
+  const reviewedSubcases = [];
+  if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
+    && discoveryValidation?.status === 'PASS_LOCAL_API_SUBCASES' && discoveryValidation.mockedRoutes === false
+    && discoveryValidation.checks?.length === 7 && discoveryValidation.checks.every(check => check.status === 400)
+    && discoveryValidation.validQueryAfterRejections === 200) {
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'API', check: 'invalid_public_property_queries_rejected',
+      path: 'docs/quality/guide-runs/discovery-validation-local-latest.json',
+      scope: discoveryValidation.scope, verifiedAt: discoveryValidation.finishedAt });
+  }
+  if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
+    && discoveryRecovery?.status === 'PASS_LOCAL_SUBCASES' && discoveryRecovery.mockedRoutes === false
+    && ['ar', 'en'].every(locale => discoveryRecovery.runs?.some(run => run.locale === locale && run.status === 'PASS' && run.check === 'offline_filter_retry_recovers_without_navigation'))) {
+    reviewedSubcases.push({ case: 'networkRetry', check: 'offline_filter_retry_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/discovery-recovery-local-latest.json',
+      scope: 'Property listing; Arabic and English on Pixel 5; browser offline fault and real API recovery',
+      verifiedAt: discoveryRecovery.finishedAt });
+  }
+  if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
+    && discoveryEvidence?.status === "PASS_LOCAL_PARTIAL"
+    && discoveryEvidence.mockedRoutes === false
+    && discoveryEvidence.transitions?.includes("empty_results_reset_without_document_navigation")) {
+    reviewedSubcases.push({
+      case: "empty", check: "empty_results_reset_without_document_navigation",
+      path: "docs/quality/guide-runs/discovery-local-latest.json",
+      scope: "Property listing empty search and reset without document navigation",
+      verifiedAt: discoveryEvidence.finishedAt,
+    });
+  }
+  if (journey.id === "GUIDE-07" && guide04Evidence?.status === "PASS_LOCAL") {
+    const viewing = guide04Evidence.viewingJourneyEvidence;
+    for (const [category, check] of [["empty", "empty_tabs_recover_without_refresh"], ["validation", "provider_browser_cancel_requires_reason"]]) {
+      if (viewing?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" && viewing.checks?.includes(check)) {
+        reviewedSubcases.push({ case: category, check,
+          path: "docs/quality/guide-runs/guide-04-local-latest.json",
+          scope: "Viewing browser subcase; complete journey remains open",
+          verifiedAt: guide04Evidence.finishedAt });
+      }
+    }
+  }
   return {
     ...hydratedJourney,
     actor: source.audience,
@@ -134,11 +177,12 @@ matrix.journeys = matrix.journeys.map((journey) => {
     },
     cases: {
       success: executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      validation: "UNVERIFIED_COMPLETE_JOURNEY",
-      empty: "UNVERIFIED_COMPLETE_JOURNEY",
-      networkRetry: "UNVERIFIED_COMPLETE_JOURNEY",
+      validation: reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      empty: reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
       duplicateMutation: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
     },
+    reviewedSubcases,
     permissions: {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
       horizontalAccess: authorizationEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",

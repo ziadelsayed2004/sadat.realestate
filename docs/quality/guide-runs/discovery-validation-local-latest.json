@@ -1,0 +1,43 @@
+{
+  "status": "PASS_LOCAL_API_SUBCASES",
+  "environment": "local",
+  "mockedRoutes": false,
+  "journeys": [
+    "GUIDE-01",
+    "GUIDE-02"
+  ],
+  "commit": "36b69c134b39c4987e295b90f4f508a29dfe5f53",
+  "checks": [
+    {
+      "query": "page=0",
+      "status": 400
+    },
+    {
+      "query": "limit=101",
+      "status": 400
+    },
+    {
+      "query": "minPrice=20&maxPrice=10",
+      "status": 400
+    },
+    {
+      "query": "locationId=invalid",
+      "status": 400
+    },
+    {
+      "query": "sort=invalid",
+      "status": 400
+    },
+    {
+      "query": "search=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": 400
+    },
+    {
+      "query": "unexpected=true",
+      "status": 400
+    }
+  ],
+  "validQueryAfterRejections": 200,
+  "finishedAt": "2026-09-11T11:19:31.752Z",
+  "scope": "Public property API query validation only; browser validation and complete journey closure are not claimed"
+}

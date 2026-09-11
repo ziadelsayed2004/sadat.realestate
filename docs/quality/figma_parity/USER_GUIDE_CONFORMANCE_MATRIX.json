@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T12:55:22.700Z",
+  "generatedAt": "2026-09-11T11:19:51.275Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1229,9 +1229,9 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -1270,6 +1270,30 @@
             "Authenticated favorites must be exercised before GUIDE-02 closure.",
             "Production verification remains pending."
           ]
+        }
+      ],
+      "reviewedSubcases": [
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "invalid_public_property_queries_rejected",
+          "path": "docs/quality/guide-runs/discovery-validation-local-latest.json",
+          "scope": "Public property API query validation only; browser validation and complete journey closure are not claimed",
+          "verifiedAt": "2026-09-11T11:19:31.752Z"
+        },
+        {
+          "case": "networkRetry",
+          "check": "offline_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/discovery-recovery-local-latest.json",
+          "scope": "Property listing; Arabic and English on Pixel 5; browser offline fault and real API recovery",
+          "verifiedAt": "2026-09-11T11:14:13.004Z"
+        },
+        {
+          "case": "empty",
+          "check": "empty_results_reset_without_document_navigation",
+          "path": "docs/quality/guide-runs/discovery-local-latest.json",
+          "scope": "Property listing empty search and reset without document navigation",
+          "verifiedAt": "2026-09-10T12:40:54.793Z"
         }
       ]
     },
@@ -1316,9 +1340,9 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -1375,6 +1399,30 @@
             ],
             "remaining": "Production verification pending."
           }
+        }
+      ],
+      "reviewedSubcases": [
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "invalid_public_property_queries_rejected",
+          "path": "docs/quality/guide-runs/discovery-validation-local-latest.json",
+          "scope": "Public property API query validation only; browser validation and complete journey closure are not claimed",
+          "verifiedAt": "2026-09-11T11:19:31.752Z"
+        },
+        {
+          "case": "networkRetry",
+          "check": "offline_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/discovery-recovery-local-latest.json",
+          "scope": "Property listing; Arabic and English on Pixel 5; browser offline fault and real API recovery",
+          "verifiedAt": "2026-09-11T11:14:13.004Z"
+        },
+        {
+          "case": "empty",
+          "check": "empty_results_reset_without_document_navigation",
+          "path": "docs/quality/guide-runs/discovery-local-latest.json",
+          "scope": "Property listing empty search and reset without document navigation",
+          "verifiedAt": "2026-09-10T12:40:54.793Z"
         }
       ]
     },
@@ -1493,7 +1541,8 @@
         "remaining": [
           "Run the same journey on Production after deployment of this commit."
         ]
-      }
+      },
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-04",
@@ -1592,7 +1641,8 @@
             ]
           }
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-05",
@@ -1664,7 +1714,8 @@
             ]
           }
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-06",
@@ -1810,7 +1861,8 @@
             "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-07",
@@ -1851,8 +1903,8 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
         "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
@@ -1942,6 +1994,22 @@
             "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
           ]
         }
+      ],
+      "reviewedSubcases": [
+        {
+          "case": "empty",
+          "check": "empty_tabs_recover_without_refresh",
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "scope": "Viewing browser subcase; complete journey remains open",
+          "verifiedAt": "2026-09-10T12:40:22.743Z"
+        },
+        {
+          "case": "validation",
+          "check": "provider_browser_cancel_requires_reason",
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "scope": "Viewing browser subcase; complete journey remains open",
+          "verifiedAt": "2026-09-10T12:40:22.743Z"
+        }
       ]
     },
     {
@@ -2023,7 +2091,8 @@
             "remaining": "Production verification pending."
           }
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-09",
@@ -2091,7 +2160,8 @@
             "Run GUIDE-09 and GUIDE-10 on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-10",
@@ -2163,7 +2233,8 @@
             "Run GUIDE-09 and GUIDE-10 on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-11",
@@ -2240,7 +2311,8 @@
             "Run the same provider registration and review lifecycle on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-12",
@@ -2314,7 +2386,8 @@
             "Run the same provider registration and review lifecycle on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-13",
@@ -2388,7 +2461,8 @@
             "Run the same provider registration and review lifecycle on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-14",
@@ -2476,7 +2550,8 @@
             "Run GUIDE-14 and GUIDE-15 on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-15",
@@ -2552,7 +2627,8 @@
             "Run GUIDE-14 and GUIDE-15 on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-16",
@@ -2640,7 +2716,8 @@
             ]
           }
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-17",
@@ -2713,7 +2790,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-18",
@@ -2788,7 +2866,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-19",
@@ -2873,7 +2952,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-20",
@@ -2960,7 +3040,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-21",
@@ -3095,7 +3176,8 @@
             "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-22",
@@ -3216,7 +3298,8 @@
         "remaining": [
           "Run the same journey on Production after deployment of this commit."
         ]
-      }
+      },
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-23",
@@ -3297,7 +3380,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-24",
@@ -3380,7 +3464,8 @@
             "Repeat these six journeys on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-25",
@@ -3472,7 +3557,8 @@
             "Run the same browser, API and MongoDB verification on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     },
     {
       "id": "GUIDE-26",
@@ -3560,11 +3646,12 @@
             "Run the same browser, API and MongoDB verification on Production after deployment."
           ]
         }
-      ]
+      ],
+      "reviewedSubcases": []
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-10T12:55:22.700Z",
+    "updatedAt": "2026-09-11T11:19:51.275Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

@@ -1,0 +1,35 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "environment": "local",
+  "mockedRoutes": false,
+  "faultInjection": "browser offline mode only; recovery uses real HTTP API",
+  "commit": "36b69c134b39c4987e295b90f4f508a29dfe5f53",
+  "journeys": [
+    "GUIDE-01",
+    "GUIDE-02"
+  ],
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "Pixel 5",
+      "dimensions": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "check": "offline_filter_retry_recovers_without_navigation",
+      "status": "PASS"
+    },
+    {
+      "locale": "en",
+      "device": "Pixel 5",
+      "dimensions": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "check": "offline_filter_retry_recovers_without_navigation",
+      "status": "PASS"
+    }
+  ],
+  "startedAt": "2026-09-11T11:14:06.663Z",
+  "finishedAt": "2026-09-11T11:14:13.004Z"
+}
