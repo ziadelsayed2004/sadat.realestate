@@ -10,8 +10,19 @@ import {
   PRODUCTION_LAUNCH_CONFIRMATION,
   purgeFilter,
   purgeProductionDatabase,
+  runProductionLaunchCommand,
   verifyProductionBackup
 } from '../../src/modules/database/production-launch.js';
+
+test('command guards fail before opening a database connection', async () => {
+  let connections = 0;
+  const factory = () => { connections += 1; throw new Error('UNEXPECTED_CONNECTION'); };
+  const source = { ...environment(), MONGODB_URI: 'mongodb://127.0.0.1:27017/isolated_test' };
+  await assert.rejects(runProductionLaunchCommand('apply', { ...source, PRODUCTION_LAUNCH_CONFIRM: 'wrong' }, factory), /CONFIRMATION_REQUIRED/);
+  await assert.rejects(runProductionLaunchCommand('apply', source, factory, async () => { throw new Error('INVALID_BACKUP'); }), /INVALID_BACKUP/);
+  await assert.rejects(runProductionLaunchCommand('apply', { ...source, KEEP_ADMIN_EMAIL: '' }, factory), /EMAIL_INVALID/);
+  assert.equal(connections, 0);
+});
 
 function environment(overrides: Record<string, string | undefined> = {}) {
   return {
@@ -30,6 +41,8 @@ function equalValue(left: unknown, right: unknown): boolean {
 
 function matches(document: Record<string, unknown>, filter: Record<string, unknown>): boolean {
   return Object.entries(filter).every(([key, expected]) => {
+    if (key === '$or') return (expected as Record<string, unknown>[]).some(item => matches(document, item));
+    if (expected && typeof expected === 'object' && '$exists' in expected) return (key in document) === (expected as { $exists: boolean }).$exists;
     if (expected && typeof expected === 'object' && '$ne' in expected) {
       return !equalValue(document[key], (expected as { $ne: unknown }).$ne);
     }
@@ -49,7 +62,7 @@ function fakeConnection(seed: Record<string, Array<Record<string, unknown>>>) {
       return {
         find(filter: Record<string, unknown>) {
           const found = rows.filter(row => matches(row, filter));
-          return { limit() { return { async toArray() { return found; } }; } };
+          return { async toArray() { return found; }, limit() { return { async toArray() { return found; } }; } };
         },
         async countDocuments(filter: Record<string, unknown>) { return rows.filter(row => matches(row, filter)).length; },
         async deleteMany(filter: Record<string, unknown>) {
@@ -86,12 +99,13 @@ test('launch parsing defaults to a non-destructive plan and guards apply', () =>
   );
 });
 
-test('purge plan preserves only the launch administrator identity and migration ledger', () => {
+test('purge policy preserves administrator identity, real reference records and migrations', () => {
   const adminId = new Types.ObjectId();
   assert.deepEqual(purgeFilter('users', adminId), { _id: { $ne: adminId } });
   assert.deepEqual(purgeFilter('admin_credentials', adminId), { userId: { $ne: adminId } });
   assert.equal(purgeFilter('database_migrations', adminId), null);
   assert.deepEqual(purgeFilter('properties', adminId), {});
+  assert.throws(() => purgeFilter('unreviewed_records', adminId), /UNREVIEWED_COLLECTION/);
 });
 
 test('apply removes every business record and other account while preserving the verified bootstrap admin', async () => {
@@ -111,7 +125,8 @@ test('apply removes every business record and other account while preserving the
     database_migrations: [{ id: 'migration-1' }],
     sessions: [{ userId: rootId }, { userId: seekerId }],
     properties: [{ _id: new Types.ObjectId(), status: 'published' }],
-    roles: [{ _id: new Types.ObjectId(), synthetic: true }]
+    roles: [{ _id: new Types.ObjectId(), synthetic: true }, { _id: new Types.ObjectId(), name: 'Real role' }],
+    admin_settings: [{ namespace: 'platform', values: { enabled: true } }, { namespace: 'demo', seedKey: 'old-demo' }]
   });
 
   const result = await purgeProductionDatabase(connection, {
@@ -129,7 +144,14 @@ test('apply removes every business record and other account while preserving the
   assert.equal(data.get('database_migrations')?.length, 1);
   assert.equal(data.get('sessions')?.length, 0);
   assert.equal(data.get('properties')?.length, 0);
-  assert.equal(data.get('roles')?.length, 0);
+  assert.equal(data.get('roles')?.length, 1);
+  assert.equal(data.get('admin_settings')?.length, 1);
+  assert.deepEqual(data.get('admin_settings')?.[0]?.values, { enabled: true });
+  assert.deepEqual(result.collections.find(row => row.collection === 'users'), { collection: 'users', before: 3, candidates: 2, deleted: 2, after: 1 });
+  assert.equal(result.collections.find(row => row.collection === 'database_migrations')?.after, 1);
+  const again = await purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: 'root@example.com', backupDirectory: '/verified' });
+  assert.equal(again.usersAfter, 1);
+  assert.equal(again.collections.reduce((sum, row) => sum + row.deleted, 0), 0);
 });
 
 test('plan and failed eligibility checks never delete data', async () => {

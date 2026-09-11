@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { installProductionDemo } from '../../src/modules/database/run-production-demo.js';
+import { runProductionShowcase } from '../../src/modules/database/run-production-showcase.js';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 
@@ -44,6 +45,7 @@ test('real launch is backup-gated and production demo installation is disabled',
   assert.doesNotMatch(manage, /production:demo:seed/);
   assert.ok(manage.indexOf('PRODUCTION_LAUNCH_CONFIRMATION_REQUIRED') < manage.indexOf('git -C'));
   await assert.rejects(installProductionDemo(), /PRODUCTION_DEMO_DISABLED/);
+  await assert.rejects(runProductionShowcase(), /PRODUCTION_SHOWCASE_DISABLED/);
   const packageFile = JSON.parse(await fs.readFile(path.join(repositoryRoot, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
   assert.equal(packageFile.scripts['production:demo:seed'], 'node apps/api/dist/modules/database/run-production-demo.js install');
   assert.match(legacyDemo, /PRODUCTION_DEMO_DISABLED/);

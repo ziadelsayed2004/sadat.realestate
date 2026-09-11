@@ -66,7 +66,7 @@
     "production:demo:seed": "node apps/api/dist/modules/database/run-production-demo.js install",
     "production:demo:reset": "node apps/api/dist/modules/database/run-production-demo.js reset",
     "production:launch:plan": "node apps/api/dist/modules/database/production-launch.js plan",
-    "production:launch:purge": "node apps/api/dist/modules/database/production-launch.js apply",
+    "production:launch:purge": "node apps/api/dist/modules/database/production-launch.js",
     "production:smoke": "node scripts/runtime-smoke.mjs",
     "smtp:check": "node scripts/smtp-smoke.mjs",
     "smtp:smoke": "node scripts/smtp-smoke.mjs --send",

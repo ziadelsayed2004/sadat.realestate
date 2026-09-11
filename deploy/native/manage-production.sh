@@ -120,7 +120,7 @@ case "$MODE" in
       KEEP_ADMIN_EMAIL="$KEEP_ADMIN_EMAIL" \
       PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
       PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
-      npm --prefix /opt/elsadatrealestate/current run production:launch:purge
+      npm --prefix /opt/elsadatrealestate/current run production:launch:purge -- --apply
     PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
       PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
       bash /opt/elsadatrealestate/current/deploy/native/purge-private-files.sh

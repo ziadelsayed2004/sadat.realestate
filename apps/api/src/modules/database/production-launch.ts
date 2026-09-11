@@ -4,21 +4,13 @@ import { lstat, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Types, type ClientSession, type Connection } from 'mongoose';
+import { LAUNCH_IDENTITY_COLLECTIONS, LAUNCH_REFERENCE_COLLECTIONS, LAUNCH_PURGED_COLLECTIONS, launchSyntheticFilter } from './production-launch-policy.js';
 import { parseRuntimeEnvironment } from '../config/environment.js';
 import { createDatabaseConnection, type DatabaseConnection } from './connection.js';
 import { parseDatabaseEnvironment } from './environment.js';
 
 export const PRODUCTION_LAUNCH_CONFIRMATION = 'PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN';
 export const PRODUCTION_BACKUP_ROOT = '/var/backups/elsadatrealestate';
-
-const preservedCollections = new Map<string, string | null>([
-  ['users', '_id'],
-  ['admin_profiles', 'userId'],
-  ['admin_credentials', 'userId'],
-  ['admin_bootstrap', 'userId'],
-  ['admin_accounts', 'userId'],
-  ['database_migrations', null]
-]);
 
 export type ProductionLaunchMode = 'plan' | 'apply';
 
@@ -31,6 +23,7 @@ export interface ProductionLaunchEnvironment {
 export interface ProductionLaunchCollectionCount {
   collection: string;
   before: number;
+  candidates: number;
   deleted: number;
   after: number;
 }
@@ -83,10 +76,12 @@ function safeCollectionName(name: string): boolean {
 }
 
 export function purgeFilter(collection: string, adminId: Types.ObjectId): Record<string, unknown> | null {
-  const reference = preservedCollections.get(collection);
-  if (reference === null) return null;
+  const reference = LAUNCH_IDENTITY_COLLECTIONS.get(collection);
   if (reference) return { [reference]: { $ne: adminId } };
-  return {};
+  if (collection === 'database_migrations') return null;
+  if (LAUNCH_REFERENCE_COLLECTIONS.has(collection)) return launchSyntheticFilter();
+  if (LAUNCH_PURGED_COLLECTIONS.has(collection)) return {};
+  throw new ProductionLaunchError('PRODUCTION_LAUNCH_UNREVIEWED_COLLECTION');
 }
 
 async function sha256(file: string): Promise<string> {
@@ -144,14 +139,12 @@ async function findKeptAdmin(db: NativeDatabase, email: string, session?: Client
     throw new ProductionLaunchError('PRODUCTION_LAUNCH_ADMIN_NOT_ELIGIBLE');
   }
   const adminId = new Types.ObjectId(String(admin._id));
-  const [profiles, credentials, bootstraps] = await Promise.all([
-    db.collection('admin_profiles').countDocuments({ userId: adminId }, { ...sessionOptions, limit: 2 }),
-    db.collection('admin_credentials').countDocuments({ userId: adminId }, { ...sessionOptions, limit: 2 }),
-    db.collection('admin_bootstrap').countDocuments(
-      { userId: adminId, accessLevel: 'super_admin' },
-      { ...sessionOptions, limit: 2 }
-    )
-  ]);
+  // A MongoDB transaction session must not execute parallel operations.
+  const profiles = await db.collection('admin_profiles').countDocuments({ userId: adminId }, { ...sessionOptions, limit: 2 });
+  const credentials = await db.collection('admin_credentials').countDocuments({ userId: adminId }, { ...sessionOptions, limit: 2 });
+  const bootstraps = await db.collection('admin_bootstrap').countDocuments(
+    { userId: adminId, accessLevel: 'super_admin' }, { ...sessionOptions, limit: 2 }
+  );
   if (profiles !== 1 || credentials !== 1 || bootstraps !== 1) {
     throw new ProductionLaunchError('PRODUCTION_LAUNCH_ADMIN_GUARANTEES_MISSING');
   }
@@ -164,18 +157,36 @@ async function collectionNames(db: NativeDatabase): Promise<string[]> {
     .filter(safeCollectionName).sort((a, b) => a.localeCompare(b, 'en'));
 }
 
+async function assertReferenceParents(db: NativeDatabase, names: readonly string[], session?: ClientSession) {
+  const sessionOptions = session ? { session } : {};
+  for (const [collection, parentField] of [['locations', 'parentLocationId'], ['property_taxonomy', 'categoryId']] as const) {
+    if (!names.includes(collection)) continue;
+    const rows = await db.collection(collection).find(
+      { $nor: [launchSyntheticFilter()], [parentField]: { $exists: true, $ne: null } },
+      { ...sessionOptions, projection: { [parentField]: 1 } }
+    ).toArray();
+    for (const row of rows) {
+      const parent = await db.collection(collection).countDocuments(
+        { _id: row[parentField], $nor: [launchSyntheticFilter()] }, { ...sessionOptions, limit: 1 }
+      );
+      if (parent !== 1) throw new ProductionLaunchError('PRODUCTION_LAUNCH_REFERENCE_PARENT_MISSING');
+    }
+  }
+}
+
 async function inventory(
   db: NativeDatabase,
   names: readonly string[],
   adminId: Types.ObjectId,
   session?: ClientSession
-): Promise<Array<{ collection: string; before: number }>> {
+): Promise<Array<{ collection: string; before: number; candidates: number }>> {
   const sessionOptions = session ? { session } : {};
   return Promise.all(names.map(async collection => {
     const filter = purgeFilter(collection, adminId);
     return {
       collection,
-      before: filter === null ? 0 : await db.collection(collection).countDocuments(filter, sessionOptions)
+      before: await db.collection(collection).countDocuments({}, sessionOptions),
+      candidates: filter === null ? 0 : await db.collection(collection).countDocuments(filter, sessionOptions)
     };
   }));
 }
@@ -190,11 +201,11 @@ async function assertResidue(db: NativeDatabase, names: readonly string[], admin
       throw new ProductionLaunchError('PRODUCTION_LAUNCH_COLLECTION_RESIDUE');
     }
   }
-  const synthetic = await Promise.all(names.map(name => db.collection(name).countDocuments(
-    { synthetic: true },
-    { session, limit: 1 }
-  )));
-  if (synthetic.some(count => count > 0)) throw new ProductionLaunchError('PRODUCTION_LAUNCH_SYNTHETIC_RESIDUE');
+  for (const name of names) {
+    if (await db.collection(name).countDocuments(launchSyntheticFilter(), { session, limit: 1 })) {
+      throw new ProductionLaunchError('PRODUCTION_LAUNCH_SYNTHETIC_RESIDUE');
+    }
+  }
 }
 
 export async function purgeProductionDatabase(
@@ -207,9 +218,10 @@ export async function purgeProductionDatabase(
   const names = await collectionNames(db);
   const usersBefore = await db.collection('users').countDocuments({});
   const before = await inventory(db, names, adminId);
+  await assertReferenceParents(db, names);
   const syntheticBefore = (await Promise.all(names.map(name => db.collection(name).countDocuments(
-    { synthetic: true },
-    { limit: 1 }
+    launchSyntheticFilter(),
+    {}
   )))).reduce((a, b) => a + b, 0);
   if (environment.mode === 'plan') {
     return {
@@ -225,22 +237,23 @@ export async function purgeProductionDatabase(
     if (!transactionAdminId.equals(adminId)) {
       throw new ProductionLaunchError('PRODUCTION_LAUNCH_ADMIN_CHANGED');
     }
+    await assertReferenceParents(db, names, session);
     const rows: ProductionLaunchCollectionCount[] = [];
     for (const row of before) {
       const filter = purgeFilter(row.collection, adminId);
       if (filter === null) {
-        rows.push({ ...row, deleted: 0, after: 0 });
+        rows.push({ ...row, deleted: 0, after: row.before });
         continue;
       }
       const result = await db.collection(row.collection).deleteMany(filter, { session });
-      rows.push({ ...row, deleted: result.deletedCount, after: row.before - result.deletedCount });
+      rows.push({ ...row, deleted: result.deletedCount, after: await db.collection(row.collection).countDocuments({}, { session }) });
     }
     await assertResidue(db, names, adminId, session);
     report = rows;
   });
   if (!report) throw new ProductionLaunchError('PRODUCTION_LAUNCH_TRANSACTION_INCOMPLETE');
   const usersAfter = await db.collection('users').countDocuments({});
-  const syntheticAfter = (await Promise.all(names.map(name => db.collection(name).countDocuments({ synthetic: true })))).reduce((a, b) => a + b, 0);
+  const syntheticAfter = (await Promise.all(names.map(name => db.collection(name).countDocuments(launchSyntheticFilter())))).reduce((a, b) => a + b, 0);
   return { status: 'applied', keptAdminId: adminId.toHexString(), usersBefore, usersAfter, syntheticAfter, collections: report };
 }
 
@@ -262,7 +275,7 @@ function parseEnvironmentFile(contents: string): Record<string, string> {
 async function resolvedSource(source: Record<string, string | undefined>) {
   if (source.MONGODB_URI) return source;
   const file = source.PRODUCTION_ENV_FILE?.trim() || '/etc/elsadatrealestate/production.env';
-  return { ...source, ...parseEnvironmentFile(await readFile(file, 'utf8')) };
+  return { ...parseEnvironmentFile(await readFile(file, 'utf8')), ...Object.fromEntries(Object.entries(source).filter(([, value]) => value !== undefined)) };
 }
 
 export async function runProductionLaunchCommand(
@@ -290,14 +303,14 @@ function isEntrypoint(): boolean {
 }
 
 if (isEntrypoint()) {
-  const mode = process.argv[2] === 'apply' ? 'apply' : process.argv[2] === 'plan' ? 'plan' : undefined;
+  const mode = process.argv[2] === 'apply' || process.argv[2] === '--apply' ? 'apply' : !process.argv[2] || process.argv[2] === 'plan' ? 'plan' : undefined;
   if (!mode) {
     process.stderr.write('Usage: production-launch.js <plan|apply>\n');
     process.exitCode = 2;
   } else {
     runProductionLaunchCommand(mode).then(result => {
       const deleted = result.collections.reduce((sum, row) => sum + row.deleted, 0);
-      const candidates = result.collections.reduce((sum, row) => sum + row.before, 0);
+      const candidates = result.collections.reduce((sum, row) => sum + row.candidates, 0);
       process.stdout.write(`PRODUCTION_LAUNCH_${result.status.toUpperCase()} users_before=${result.usersBefore} users_after=${result.usersAfter} candidates=${candidates} deleted=${deleted} synthetic_after=${result.syntheticAfter} collections=${result.collections.length}\n`);
     }).catch(error => {
       const code = error instanceof ProductionLaunchError ? error.code : 'PRODUCTION_LAUNCH_FAILED';
