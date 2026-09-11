@@ -1,0 +1,20 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-03",
+    "GUIDE-22"
+  ],
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "mockedRoutes": false,
+  "faultInjection": "durable audit writer throws after insert within transaction",
+  "commit": "96b934928db614a97e106f5158e1f28aa10932ab",
+  "worktreeChanges": true,
+  "checks": [
+    "all_moderation_actions_missing_empty_whitespace_reason_400_without_write",
+    "audit_failure_rolls_back_post_and_inserted_audit",
+    "same_version_retry_after_rollback_publishes_once",
+    "current_admin_status_overrides_previously_issued_token"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-11T11:28:40.434Z"
+}

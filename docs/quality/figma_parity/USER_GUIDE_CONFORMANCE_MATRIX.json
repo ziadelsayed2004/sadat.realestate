@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T11:22:47.677Z",
+  "generatedAt": "2026-09-11T11:29:28.458Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1239,7 +1239,8 @@
           "public"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -1295,7 +1296,8 @@
           "scope": "Property listing empty search and reset without document navigation",
           "verifiedAt": "2026-09-10T12:40:54.793Z"
         }
-      ]
+      ],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-02",
@@ -1350,7 +1352,8 @@
           "public"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -1424,7 +1427,8 @@
           "scope": "Property listing empty search and reset without document navigation",
           "verifiedAt": "2026-09-10T12:40:54.793Z"
         }
-      ]
+      ],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-03",
@@ -1466,14 +1470,15 @@
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
         "requiredRoles": [
           "public"
         ],
-        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
@@ -1542,7 +1547,39 @@
           "Run the same journey on Production after deployment of this commit."
         ]
       },
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "roleAuthorization",
+          "check": "limited_admin_moderation_denied_403",
+          "path": "docs/quality/guide-runs/community-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:34.122Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "concurrent_hide_one_200_one_409_v2",
+          "path": "docs/quality/guide-runs/community-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:34.122Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "all_moderation_actions_missing_empty_whitespace_reason_400_without_write",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_post_and_inserted_audit",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_admin_status_overrides_previously_issued_token",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-04",
@@ -1600,7 +1637,8 @@
           "anonymous"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -1642,7 +1680,8 @@
           }
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-05",
@@ -1679,7 +1718,8 @@
           "seeker"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -1715,7 +1755,8 @@
           }
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-06",
@@ -1778,7 +1819,8 @@
           "seeker"
         ],
         "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
@@ -1862,7 +1904,51 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_request_read_and_cancel_404",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_status_overrides_previously_issued_tokens",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "live_RBAC_revocation_denies_write_keeps_authorized_read",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "concurrent_identical_creation_one_201_one_409_one_record",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "concurrent_decisions_one_success_one_409_one_audit",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "missing_reason_400",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-07",
@@ -1913,11 +1999,12 @@
           "seeker"
         ],
         "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "UNVERIFIED",
         "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
@@ -2010,6 +2097,44 @@
           "scope": "Viewing browser subcase; complete journey remains open",
           "verifiedAt": "2026-09-10T12:40:22.743Z"
         }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "viewing_admin_requires_own_permission_and_current_active_account",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "viewing_admin_requires_own_permission_and_current_active_account",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "two_customers_same_slot_one_201_one_409",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "viewing_concurrent_confirmation_one_200_one_409",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "viewing_audit_failure_rolls_back_mutation_and_audit",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        }
       ]
     },
     {
@@ -2052,7 +2177,8 @@
           "public"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2092,7 +2218,8 @@
           }
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-09",
@@ -2128,8 +2255,9 @@
         "requiredRoles": [
           "seeker"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2176,6 +2304,14 @@
           "scope": "Reviewed seeker browser subcase",
           "verifiedAt": "2026-09-10T12:35:13.289Z"
         }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "cross_account_notification_hidden_as_404",
+          "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:13.289Z"
+        }
       ]
     },
     {
@@ -2217,7 +2353,8 @@
           "seeker"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2264,7 +2401,8 @@
           "scope": "Reviewed seeker browser subcase",
           "verifiedAt": "2026-09-10T12:35:13.289Z"
         }
-      ]
+      ],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-11",
@@ -2310,7 +2448,8 @@
           "anonymous"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2342,7 +2481,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-12",
@@ -2385,7 +2525,8 @@
           "anonymous"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2417,7 +2558,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-13",
@@ -2460,7 +2602,8 @@
           "anonymous"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2492,7 +2635,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-14",
@@ -2549,7 +2693,8 @@
           "provider"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2581,7 +2726,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-15",
@@ -2626,7 +2772,8 @@
           "provider"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2658,7 +2805,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-16",
@@ -2703,7 +2851,8 @@
           "provider"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2747,7 +2896,8 @@
           }
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-17",
@@ -2788,7 +2938,8 @@
           "provider"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2821,7 +2972,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-18",
@@ -2864,7 +3016,8 @@
           "provider"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2897,7 +3050,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-19",
@@ -2950,7 +3104,8 @@
           "administrator"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2983,7 +3138,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-20",
@@ -3038,7 +3194,8 @@
           "administrator"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -3071,7 +3228,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-21",
@@ -3143,7 +3301,8 @@
           "administrator"
         ],
         "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
@@ -3207,7 +3366,51 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_request_read_and_cancel_404",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_status_overrides_previously_issued_tokens",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "live_RBAC_revocation_denies_write_keeps_authorized_read",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "concurrent_identical_creation_one_201_one_409_one_record",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "concurrent_decisions_one_success_one_409_one_audit",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "missing_reason_400",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_both_mutation_and_inserted_audit",
+          "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-10T12:41:39.149Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-22",
@@ -3253,14 +3456,15 @@
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
@@ -3329,7 +3533,39 @@
           "Run the same journey on Production after deployment of this commit."
         ]
       },
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "roleAuthorization",
+          "check": "limited_admin_moderation_denied_403",
+          "path": "docs/quality/guide-runs/community-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:34.122Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "concurrent_hide_one_200_one_409_v2",
+          "path": "docs/quality/guide-runs/community-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:34.122Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "all_moderation_actions_missing_empty_whitespace_reason_400_without_write",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_post_and_inserted_audit",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_admin_status_overrides_previously_issued_token",
+          "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-11T11:28:40.434Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-23",
@@ -3378,7 +3614,8 @@
           "administrator"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -3411,7 +3648,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-24",
@@ -3462,7 +3700,8 @@
           "administrator"
         ],
         "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED"
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -3495,7 +3734,8 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": []
     },
     {
       "id": "GUIDE-25",
@@ -3555,11 +3795,12 @@
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
         "decisionReason": "UNVERIFIED",
         "atomicAuditRollback": "UNVERIFIED"
       },
@@ -3588,7 +3829,21 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "expectedVersion409",
+          "check": "stale_settings_version_rejected_409",
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "verifiedAt": "2026-09-10T12:54:32.553Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "limited_admin_settings_mutation_denied_403",
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "verifiedAt": "2026-09-10T12:54:32.553Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-26",
@@ -3638,19 +3893,20 @@
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -3677,11 +3933,25 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [],
+      "reviewedGuarantees": [
+        {
+          "category": "expectedVersion409",
+          "check": "stale_settings_version_rejected_409",
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "verifiedAt": "2026-09-10T12:54:32.553Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "limited_admin_settings_mutation_denied_403",
+          "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
+          "verifiedAt": "2026-09-10T12:54:32.553Z"
+        }
+      ]
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T11:22:47.677Z",
+    "updatedAt": "2026-09-11T11:29:28.458Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

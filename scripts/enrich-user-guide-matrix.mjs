@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { reviewedJourneyGuarantees } from "./journey-guarantee-evidence.mjs";
 
 const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
@@ -24,6 +25,7 @@ const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]))
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -63,7 +65,6 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const source = journeySource.get(journey.id);
   if (!source) throw new Error(`Missing structured guide source for ${journey.id}`);
   const communityRunApplies = communityEvidence?.status === "PASS_LOCAL" && communityEvidence.journeys?.includes(journey.id);
-  const privacyRunApplies = privacySecurityEvidence?.status?.startsWith("PASS_LOCAL") && privacySecurityEvidence.journeys?.includes(journey.id);
   const evidenceAttachments = supplementalRuns.flatMap(([path, evidence]) => evidence.journeys?.includes(journey.id) ? [{
     path,
     status: evidence.status,
@@ -121,7 +122,12 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const routeRows = journey.screenIds.map((screenId) => rowsByScreen.get(screenId)).filter(Boolean);
   const legacyStatus = journey.verificationStatus;
   const executed = hasExecutedEvidence(hydratedJourney);
-  const authorizationEvidence = communityRunApplies || privacyRunApplies || Boolean(journey.backendGuaranteesEvidence);
+  const reviewedGuarantees = reviewedJourneyGuarantees(journey.id, {
+    requests: requestGuaranteesEvidence, community: communityEvidence, communityGuarantees,
+    privacy: privacySecurityEvidence, seeker: seekerAccountEvidence,
+  });
+  const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
+    ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
@@ -197,18 +203,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
       validation: reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       empty: reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
-      duplicateMutation: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      duplicateMutation: guaranteeStatus('duplicateMutation'),
     },
     reviewedSubcases,
+    reviewedGuarantees,
     permissions: {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
-      horizontalAccess: authorizationEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      currentSessionState: authorizationEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      horizontalAccess: guaranteeStatus('horizontalAccess'),
+      currentSessionState: guaranteeStatus('currentSessionState'),
+      roleAuthorization: guaranteeStatus('roleAuthorization'),
     },
     versionAndAudit: {
-      expectedVersion409: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      decisionReason: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      atomicAuditRollback: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      expectedVersion409: guaranteeStatus('expectedVersion409'),
+      decisionReason: guaranteeStatus('decisionReason'),
+      atomicAuditRollback: guaranteeStatus('atomicAuditRollback'),
     },
     environment: {
       local: executed ? "PARTIAL" : "NOT_EXECUTED",
