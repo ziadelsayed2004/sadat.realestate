@@ -127,6 +127,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/database/migrations.test.ts',
     'tests/database/locale-migration.test.ts',
     'tests/database/backup-restore.test.ts',
+    'tests/database/production-launch.test.ts',
     'tests/database/index-rollout.test.ts',
     'tests/deployment/runtime.test.ts',
     'tests/deployment/artifacts.test.ts',

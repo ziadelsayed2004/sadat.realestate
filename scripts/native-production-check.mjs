@@ -16,7 +16,9 @@ const requiredFiles = [
   'deploy/native/bootstrap-super-admin.sh',
   'deploy/native/healthcheck.sh',
   'deploy/native/backup.sh',
-  'deploy/native/restore.sh'
+  'deploy/native/restore.sh',
+  'deploy/native/manage-production.sh',
+  'deploy/native/purge-private-files.sh'
 ];
 
 function runPreflight() {

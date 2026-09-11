@@ -11,10 +11,10 @@ PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://elsadatrealestate.com}
 
 usage() {
   cat <<'EOF'
-Usage: sudo bash deploy/native/manage-production.sh <demo|update|empty>
-  demo   Deploy the latest release and install the complete synthetic client demo.
+Usage: sudo bash deploy/native/manage-production.sh <update|empty|launch>
   update Deploy the latest release without changing any database records.
   empty  Deploy the latest release and remove synthetic demo records only.
+  launch Deploy, back up, then purge all business data and accounts except KEEP_ADMIN_EMAIL.
 EOF
 }
 
@@ -22,7 +22,7 @@ if [[ $(id -u) -ne 0 ]]; then
   echo 'Run this command as root with sudo.' >&2
   exit 1
 fi
-if [[ "$MODE" != demo && "$MODE" != update && "$MODE" != empty ]]; then
+if [[ "$MODE" != update && "$MODE" != empty && "$MODE" != launch ]]; then
   usage >&2
   exit 2
 fi
@@ -60,25 +60,64 @@ sudo -u elsadat env \
   EXTERNAL_SMOKE_BASE_URL="$PUBLIC_ORIGIN" \
   bash "$STAGED_SOURCE/deploy/native/deploy-from-github.sh"
 
+services_stopped=false
+restart_on_failure() {
+  if [[ "$services_stopped" == true ]]; then
+    systemctl restart elsadat-api.service elsadat-web.service || true
+  fi
+}
+trap restart_on_failure EXIT
+
 case "$MODE" in
-  demo)
-    sudo -u elsadat env \
-      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
-      PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO \
-      npm --prefix /opt/elsadatrealestate/current run production:demo:seed
-    ;;
   empty)
     sudo -u elsadat env \
       PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
       PRODUCTION_DEMO_RESET_CONFIRM=DELETE_SYNTHETIC_DEMO_DATA \
       npm --prefix /opt/elsadatrealestate/current run production:demo:reset
     ;;
+  launch)
+    if [[ -z ${KEEP_ADMIN_EMAIL:-} ]]; then
+      echo 'KEEP_ADMIN_EMAIL_REQUIRED' >&2
+      exit 2
+    fi
+    launch_admin_email=$KEEP_ADMIN_EMAIL
+    systemctl stop elsadat-api.service elsadat-web.service
+    services_stopped=true
+    # shellcheck disable=SC1090
+    set -a
+    source "$PRODUCTION_ENV_FILE"
+    set +a
+    KEEP_ADMIN_EMAIL=$launch_admin_email
+    export KEEP_ADMIN_EMAIL
+    backup_output=$(runuser -u elsadat --preserve-environment -- \
+      bash /opt/elsadatrealestate/current/deploy/native/backup.sh)
+    printf '%s\n' "$backup_output"
+    backup_dir=$(sed -n 's/^NATIVE_BACKUP_OK path=\([^ ]*\) .*/\1/p' <<<"$backup_output")
+    if [[ -z "$backup_dir" ]]; then
+      echo 'PRODUCTION_LAUNCH_BACKUP_PATH_MISSING' >&2
+      exit 1
+    fi
+    sudo -u elsadat env \
+      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
+      KEEP_ADMIN_EMAIL="$KEEP_ADMIN_EMAIL" \
+      npm --prefix /opt/elsadatrealestate/current run production:launch:plan
+    sudo -u elsadat env \
+      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
+      KEEP_ADMIN_EMAIL="$KEEP_ADMIN_EMAIL" \
+      PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
+      PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
+      npm --prefix /opt/elsadatrealestate/current run production:launch:purge
+    PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
+      PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
+      bash /opt/elsadatrealestate/current/deploy/native/purge-private-files.sh
+    ;;
   update) ;;
 esac
 
 systemctl restart elsadat-api.service elsadat-web.service
+services_stopped=false
 bash /opt/elsadatrealestate/current/deploy/native/healthcheck.sh
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_ORIGIN/" >/dev/null
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_ORIGIN/api/v1/public/home" >/dev/null
 
-echo "PRODUCTION_MANAGE_OK mode=$MODE data=$([[ $MODE == demo ]] && echo synthetic_demo_installed || ([[ $MODE == empty ]] && echo synthetic_demo_removed_real_data_preserved || echo preserved))"
+echo "PRODUCTION_MANAGE_OK mode=$MODE data=$([[ $MODE == launch ]] && echo real_launch_admin_only || ([[ $MODE == empty ]] && echo synthetic_demo_removed_real_data_preserved || echo preserved))"

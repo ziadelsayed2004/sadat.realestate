@@ -115,51 +115,33 @@ Production جاهزة أو منشورة.
 عملاء Production يسجلون ببريد حقيقي وكلمة مرور يختارونها، ثم يؤكدون البريد
 بالـOTP المرسل من `info@elsadatrealestate.com`. لا تشغّل `db:seed` في Production.
 
-## تركيب نسخة الديمو الكاملة مؤقتًا على Production
+## الانتقال النهائي إلى Production الحقيقي
 
-### أمر الإدارة الموحد
-
-بعد أول إعداد للخادم، يكفي تشغيل أمر واحد من نسخة المشغّل في `/root/sadat-release`:
+توقّف تركيب بيانات الديمو على Production. يستخدم الإطلاق النهائي وضع `launch` مرة واحدة؛
+فهو ينشر الإصدار، يوقف الكتابة، ينشئ نسخة MongoDB وملفات خاصة موقعة بـSHA-256، يعرض
+خطة الحذف، ثم يمسح بيانات التشغيل والحسابات مع الإبقاء على Super Admin الحقيقي فقط.
 
 ```bash
-# نشر آخر تحديث وتركيب الديمو الكامل
-sudo bash /root/sadat-release/deploy/native/manage-production.sh demo
+cd /root/sadat-release
+git pull --ff-only origin main
+sudo env KEEP_ADMIN_EMAIL='admin@example.com' \
+  bash /root/sadat-release/deploy/native/manage-production.sh launch
+```
 
-# نشر أي تحديث لاحق مع الحفاظ على جميع بيانات العملاء والحسابات
+بدّل البريد بالبريد الحقيقي لحساب Super Admin. تتوقف العملية قبل الحذف إذا لم يكن الحساب
+وحيدًا ومؤكدًا وله credential وAdmin profile وسجل `admin_bootstrap` بصلاحية
+`super_admin`، أو إذا فشلت النسخة الاحتياطية أو checksum. يُحفظ `database_migrations`
+وتبقى المجموعات والفهارس، بينما تُمسح الجلسات وملفات الرفع الخاصة ويُطلب تسجيل دخول جديد.
+
+استخدم `update` لكل إصدار لاحق؛ لا يكتب في قاعدة البيانات ولا يعيد أي Seed:
+
+```bash
 sudo bash /root/sadat-release/deploy/native/manage-production.sh update
-
-# نشر آخر إصدار وحذف بيانات الديمو فقط، مع إبقاء الكود والصور الأساسية وأي بيانات حقيقية
-sudo bash /root/sadat-release/deploy/native/manage-production.sh empty
 ```
 
-كل وضع يسحب `main`، يصلح رابط MongoDB من بيانات الاعتماد دون طباعتها، يشغّل
-preflight، ويبني ويختبر الإصدار، ثم يتحقق من API وWeb وHTTPS. وضع `update` لا ينفذ
-أي كتابة أو حذف في قاعدة البيانات. وضع `empty` لا يستخدم drop ولا يحذف إلا السجلات
-ذات `synthetic: true`.
-
-عندما يطلب العميل نسخة مطابقة لبيانات المعاينة المحلية، استخدم الأمر المحمي التالي
-بعد اكتمال النشر. ينشئ سجلات MongoDB فعلية ومترابطة ويستخدم الصور المنشورة مع الإصدار؛
-ولا ينشئ بيانات عشوائية في كل تشغيل:
-
-```bash
-cd /opt/elsadatrealestate/current
-PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
-PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO npm run production:demo:seed
-```
-
-الأمر idempotent ويمكن تكراره بأمان. حسابات Admin في الجدول أعلاه تعمل بكلمة المرور
-المذكورة، أما حسابات `.invalid` الخاصة بالباحث والمزوّد فهي بيانات workflow ولا يمكنها
-استلام بريد حقيقي. لاختبار تسجيل عميل فعلي استخدم بريدًا حقيقيًا؛ سيذهب OTP إلى البريد
-الذي أدخله المستخدم، وليس إلى صندوق `SMTP_USER`.
-
-بعد انتهاء العرض، يحذف الأمر التالي سجلات الديمو الموسومة فقط بـ`synthetic: true` ولا
-يحذف المستخدمين أو المحتوى الحقيقي الذي أُنشئ من الواجهات:
-
-```bash
-cd /opt/elsadatrealestate/current
-PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
-PRODUCTION_DEMO_RESET_CONFIRM=DELETE_SYNTHETIC_DEMO_DATA npm run production:demo:reset
-```
+وضع `empty` موجود فقط لتنظيف سجلات `synthetic: true` من بيئة قديمة دون لمس بيانات حقيقية.
+التعليمات الكاملة للنسخ والفحص والاستعادة في
+[`REAL_PRODUCTION_LAUNCH_AR.md`](REAL_PRODUCTION_LAUNCH_AR.md).
 
 ## تحقق Auth الحقيقي على قاعدة البيانات
 

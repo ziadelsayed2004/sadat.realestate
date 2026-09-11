@@ -155,9 +155,9 @@ The bootstrap is one-time and fail-closed. `ADMIN_BOOTSTRAP_ALREADY_COMPLETED` m
 the original Super Admin remains unchanged and the newly entered password was not
 saved. `ADMINISTRATOR_ALREADY_EXISTS` means a non-demo administrator exists without
 the bootstrap guard and requires database investigation instead of bypassing it.
-Synthetic administrators installed by `manage-production.sh demo` do not block the
-first real Super Admin, and `manage-production.sh empty` will not delete the real
-bootstrap account.
+Legacy synthetic administrators do not block the first real Super Admin, and
+`manage-production.sh empty` will not delete the real bootstrap account. Production
+demo installation is disabled for the real launch.
 
 ## 9. Backup, restore, and monitoring
 
@@ -179,22 +179,21 @@ Replace the example timestamp with an existing backup directory. Always restore 
 
 Monitor uptime, `/ready`, certificate renewal, disk/RAM/CPU, MongoDB state, ClamAV signatures, backup age, and off-server copy success. Record a successful isolated restore before DNS cutover.
 
-## 10. Production demo accounts
+## 10. Real production launch
 
-Do not run `db:seed` in Production. Create Seeker and Provider demo accounts through the
-real OTP and registration APIs with the guarded interactive helper:
+Production demo installation is disabled. After the real bootstrap Super Admin is verified,
+run the one-time guarded launch with its normalized email:
 
 ```bash
-cd /opt/elsadatrealestate/current
-export DEMO_ACCOUNT_CONFIRM=CREATE_PRODUCTION_DEMO_ACCOUNT
-sudo -u elsadat --preserve-env=DEMO_ACCOUNT_CONFIRM \
-  bash deploy/native/create-demo-account.sh seeker
-sudo -u elsadat --preserve-env=DEMO_ACCOUNT_CONFIRM \
-  bash deploy/native/create-demo-account.sh provider
-unset DEMO_ACCOUNT_CONFIRM
+cd /root/sadat-release
+git pull --ff-only origin main
+sudo env KEEP_ADMIN_EMAIL='admin@example.com' \
+  bash /root/sadat-release/deploy/native/manage-production.sh launch
 ```
 
-Use mailboxes or forwarders controlled by the demo team. The helper never commits or logs
-the password. A newly created Provider remains in the normal application workflow and must
-be completed/submitted/approved through the product when an approved Provider is required.
-The Arabic handoff is in `docs/deployment/PRODUCTION_DEMO_ACCOUNTS_AR.md`.
+The command deploys first, stops application writers, creates and verifies a checksummed
+database/private-file backup, prints the deletion plan, preserves only the bootstrap Super
+Admin identity and the migration ledger, purges private uploads, restarts services, and runs
+health checks. It fails closed before mutation if any identity or backup invariant is missing.
+Use `manage-production.sh update` for every later release. See the Arabic operational runbook
+at `docs/deployment/REAL_PRODUCTION_LAUNCH_AR.md`.
