@@ -2105,6 +2105,14 @@
   }
 
   .seeker-profile__panel { text-align: start; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__panel { position: relative; margin-block-end: 3.75rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__form { margin-block-start: 0; gap: 1.25rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__identity { padding-block-end: 1rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__identity strong { font-size: .875rem; line-height: 1.25rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__identity small { font-size: .75rem; line-height: 1rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__form-grid { gap: 1rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__form-grid .ui-field__control { min-block-size: 2.625rem; padding-block: .5rem; }
+  .seeker-profile[data-screen-id="SEK-09"] .seeker-profile__panel .seeker-profile__form > .ui-button { position: absolute; inset-block-end: -3.75rem; left: 0; }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__panel { position: relative; }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__form { gap: .6875rem; margin-block-start: 0; }
   .seeker-profile[data-screen-id="SEK-08"] .seeker-profile__form-grid .ui-field__control {
