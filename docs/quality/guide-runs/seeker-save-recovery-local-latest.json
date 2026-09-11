@@ -5,7 +5,7 @@
   ],
   "mockedRoutes": false,
   "environment": "local-real-browser-api-mongodb",
-  "commit": "ce5d57bdd1ba79cea1445e61a8575ad505ee14ad",
+  "commit": "4de63cfca853bda63ce7e4c1c0656f8af2fc6277",
   "runs": [
     {
       "locale": "ar",
@@ -24,6 +24,9 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 1280,
       "scrollWidth": 1280
     },
@@ -44,6 +47,9 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 712,
       "scrollWidth": 712
     },
@@ -64,6 +70,9 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 393,
       "scrollWidth": 393
     },
@@ -84,6 +93,9 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 1280,
       "scrollWidth": 1280
     },
@@ -104,6 +116,9 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 712,
       "scrollWidth": 712
     },
@@ -124,10 +139,13 @@
       "check": "offline_save_keeps_draft_then_persists_without_navigation",
       "httpStatus": 200,
       "mongoVerified": true,
+      "emptyHttpStatus": 200,
+      "emptyMongoUnchanged": true,
+      "emptyStateVisible": true,
       "innerWidth": 393,
       "scrollWidth": 393
     }
   ],
   "restored": true,
-  "finishedAt": "2026-09-11T16:23:08.134Z"
+  "finishedAt": "2026-09-11T17:15:47.504Z"
 }

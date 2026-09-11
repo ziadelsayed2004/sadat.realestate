@@ -198,6 +198,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       scope: 'Personal profile and preferences; AR/EN on Desktop, Tablet and Pixel 5; real API and MongoDB with restored fixture',
       verifiedAt: seekerSaveRecovery.finishedAt });
   }
+  if (journey.id === 'GUIDE-10' && seekerSaveRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && seekerSaveRecovery.mockedRoutes === false && seekerSaveRecovery.restored === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => seekerSaveRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device && run.tab === 'preferences'
+      && run.emptyHttpStatus === 200 && run.emptyStateVisible === true && run.emptyMongoUnchanged === true
+      && run.innerWidth === run.scrollWidth)))) {
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API/MongoDB',
+      check: 'empty_preferences_render_editable_without_write',
+      path: 'docs/quality/guide-runs/seeker-save-recovery-local-latest.json',
+      scope: 'Preferences; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with restored fixture',
+      verifiedAt: seekerSaveRecovery.finishedAt });
+  }
   if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
     && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
     && seekerAccountState.emptyPreferences?.status === 200
@@ -296,7 +308,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
     cases: {
       success: executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
       validation: reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
-      empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'Browser/API/MongoDB') ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
       duplicateMutation: guaranteeStatus('duplicateMutation'),
     },

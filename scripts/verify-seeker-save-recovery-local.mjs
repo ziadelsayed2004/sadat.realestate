@@ -3,13 +3,21 @@ import { execFileSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
 import mongoose from 'mongoose';
 import { chromium, devices, expect } from '@playwright/test';
+import { readEnvironmentFile } from './environment-file.mjs';
 
-const base = 'http://127.0.0.1:4174';
-assert.ok(process.env.LOCAL_GUIDE_SEEKER_PASSWORD, 'LOCAL_GUIDE_SEEKER_PASSWORD is required');
-assert.equal(new URL(process.env.MONGODB_URI).hostname, '127.0.0.1', 'Local MongoDB required');
+const localEnvironment = await readEnvironmentFile('.env.local');
+const mongoUri = process.env.MONGODB_URI ?? localEnvironment.MONGODB_URI;
+const base = process.env.LOCAL_GUIDE_BASE_URL ?? `http://127.0.0.1:${localEnvironment.WEB_PORT ?? '4173'}`;
+const passwordCandidates = [...new Set([
+  process.env.LOCAL_GUIDE_SEEKER_PASSWORD,
+  'LocalGuide04-Only!2026',
+  'LocalGuide10-Only!2026',
+].filter(Boolean))];
+assert.ok(mongoUri, 'Local MongoDB configuration required');
+assert.equal(new URL(mongoUri).hostname, '127.0.0.1', 'Local MongoDB required');
 const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false,
   environment: 'local-real-browser-api-mongodb', commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), runs: [], restored: false };
-const connection = await mongoose.createConnection(process.env.MONGODB_URI).asPromise();
+const connection = await mongoose.createConnection(mongoUri).asPromise();
 const browser = await chromium.launch();
 let original;
 try {
@@ -17,16 +25,53 @@ try {
   assert.ok(user, 'Existing local GUIDE-04 fixture required');
   original = await connection.collection('seeker_profiles').findOne({ userId: user._id });
   assert.ok(original);
+  let localPassword;
+  const credentialContext = await browser.newContext();
+  try {
+    for (const password of passwordCandidates) {
+      const response = await credentialContext.request.post(`${base}/api/v1/auth/login`, { data: { email: user.normalizedEmail, password } });
+      if (response.status() === 200) {
+        localPassword = password;
+        const logout = await credentialContext.request.post(`${base}/api/v1/auth/logout`, { data: {} });
+        assert.ok([200, 204].includes(logout.status()), 'Credential check logout failed');
+        break;
+      }
+      assert.equal(response.status(), 401, 'Unexpected fixture login response');
+    }
+  } finally {
+    await credentialContext.close();
+  }
+  assert.ok(localPassword, 'No known local GUIDE-04 fixture password worked');
   for (const locale of ['ar', 'en']) for (const [device, preset] of [['desktop', 'Desktop Chrome'], ['tablet', 'Galaxy Tab S4'], ['mobile', 'Pixel 5']]) {
     const context = await browser.newContext({ ...devices[preset] });
     let loggedIn = false;
     try {
-      const response = await context.request.post(`${base}/api/v1/auth/login`, { data: { email: user.normalizedEmail, password: process.env.LOCAL_GUIDE_SEEKER_PASSWORD } });
+      const response = await context.request.post(`${base}/api/v1/auth/login`, { data: { email: user.normalizedEmail, password: localPassword } });
       loggedIn = response.status() === 200;
       assert.ok(loggedIn, 'Local fixture login failed');
       const page = await context.newPage();
       for (const tab of ['personal', 'preferences']) {
-        await page.goto(`${base}/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'networkidle' });
+        let emptyHttpStatus;
+        let emptyMongoUnchanged;
+        let emptyStateVisible;
+        if (tab === 'preferences') {
+          await connection.collection('seeker_profiles').updateOne({ _id: original._id }, { $set: { preferences: {} } });
+          const beforeRead = await connection.collection('seeker_profiles').findOne({ _id: original._id });
+          assert.deepEqual(beforeRead.preferences, {});
+          const preferencesRead = page.waitForResponse(response => response.request().method() === 'GET'
+            && new URL(response.url()).pathname === '/api/v1/me/preferences');
+          await page.goto(`${base}/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'networkidle' });
+          emptyHttpStatus = (await preferencesRead).status();
+          assert.equal(emptyHttpStatus, 200);
+          const emptyNote = page.locator('.seeker-profile__empty-note[data-state="empty"]');
+          await expect(emptyNote).toBeVisible();
+          emptyStateVisible = true;
+          const afterRead = await connection.collection('seeker_profiles').findOne({ _id: original._id });
+          emptyMongoUnchanged = Object.keys(afterRead.preferences ?? {}).length === 0;
+          assert.ok(emptyMongoUnchanged, 'Browser preferences read wrote defaults to MongoDB');
+        } else {
+          await page.goto(`${base}/seeker/profile?tab=${tab}&lang=${locale}`, { waitUntil: 'networkidle' });
+        }
         const field = page.locator(tab === 'personal' ? '#seeker-profile-first-name' : '#seeker-preferences-max-price');
         const value = tab === 'personal' ? `Recovery ${locale} ${device}` : '2500000';
         await field.fill(value);
@@ -50,7 +95,10 @@ try {
         const geometry = await page.evaluate(() => ({ innerWidth, scrollWidth: document.documentElement.scrollWidth }));
         assert.equal(geometry.innerWidth, page.viewportSize().width);
         assert.ok(geometry.scrollWidth <= geometry.innerWidth);
-        report.runs.push({ locale, device, tab, check: 'offline_save_keeps_draft_then_persists_without_navigation', httpStatus: 200, mongoVerified: true, ...geometry });
+        report.runs.push({ locale, device, tab, check: 'offline_save_keeps_draft_then_persists_without_navigation',
+          httpStatus: 200, mongoVerified: true,
+          ...(tab === 'preferences' ? { emptyHttpStatus, emptyMongoUnchanged, emptyStateVisible } : {}),
+          ...geometry });
       }
     } finally {
       await context.setOffline(false);
