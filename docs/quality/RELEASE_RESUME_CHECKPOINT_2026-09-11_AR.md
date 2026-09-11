@@ -336,3 +336,9 @@
 - `scripts/verify-favorites-logout-local.mjs` passed six AR/EN desktop/tablet/mobile runs on the full local runtime. Login access reads 200; logout succeeds; the same old token receives 401 for GET/PUT/DELETE favorites. Browser displays the existing permission state without cards. Sessions created by the check were removed; favorites unchanged.
 - Initial verifier expected a login redirect; source inspection confirmed the implemented permission page. Corrected that assertion, not application behavior. No CSS changes.
 - GUIDE-08 incompleteReason now lists concrete remaining local subcases: failed remove mutation recovery and a saved property becoming unavailable during interaction. Production and Figma remain separate incomplete requirements. Next: implement and run the failed-remove browser recovery check on the currently running matching local build (supervisor last checked ready, pid 10704; revalidate before reuse).
+
+## 12 September: saved remove failure and availability change
+
+- `scripts/verify-saved-remove-recovery-local.mjs` passed all six AR/EN Desktop/Tablet/Pixel 5 runs. Offline delete retains card and database record with actionable error; retry returns HTTP 200 and empty list, clearing the error. A property deactivated after rendering disappears from API availability but can still be removed from its stale saved card.
+- Temporary property/favorite records and new sessions cleaned; favorites returned to original empty state. First attempt used an obsolete pre-refresh token for a read check; verifier now uses the browser's current request authorization in memory, never persisted.
+- Evidence attached to GUIDE-08. No product/CSS edits. Next: consolidated local acceptance audit of this journey (scope, source versions, omitted applicable cases) rather than adding speculative subcases; then prioritize other journey/Figma gaps. Production, launch and demo purge remain deferred by owner.

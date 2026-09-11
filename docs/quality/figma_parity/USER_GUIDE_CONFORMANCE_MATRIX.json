@@ -2346,8 +2346,15 @@
       "executionDate": "2026-09-11T18:41:30.168Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Local evidence covers save/remove, duplicate save, empty list, pagination/delete recovery, offline retry, navigation to detail/comparison, account/role/ownership validation, and logout revocation. Still unverified: browser recovery from a failed remove mutation, browser behavior when a saved property becomes unavailable during interaction, and Production execution. Figma approval remains separate.",
+      "incompleteReason": "Named local saved-property subcases now have attached evidence, including failed remove recovery and unavailable stale-card removal. A consolidated local acceptance audit and Production execution remain outstanding; Figma approval is separate. Do not infer complete journey verification from individual subcases.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/saved-remove-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T21:50:40.896Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/favorites-logout-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -2426,6 +2433,14 @@
           "evidenceType": "Browser/API/MongoDB",
           "scope": "AR/EN Desktop/Tablet/Pixel 5: two saved cards, click detail with HTTP 200, back to listing, select two properties, comparison success; locale and no overflow verified, temporary favorites and sessions removed.",
           "verifiedAt": "2026-09-11T21:46:35.935Z"
+        },
+        {
+          "case": "networkRetry",
+          "check": "remove_failure_and_unavailable_stale_card",
+          "path": "docs/quality/guide-runs/saved-remove-recovery-local-latest.json",
+          "evidenceType": "Browser/API/MongoDB",
+          "scope": "AR/EN desktop/tablet/mobile: offline removal preserves card and Mongo record; retry deletes with HTTP 200 and truthful empty state; newly inactive property excluded by real API yet stale card remains removable; fixtures/sessions cleaned.",
+          "verifiedAt": "2026-09-11T21:50:40.896Z"
         }
       ],
       "reviewedGuarantees": [

@@ -1,0 +1,112 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-08"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "1e7a61c0de707564aeaad871bdc8a2a4bb7ed41b",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "offline_remove_preserves_card_and_record",
+        "retry_remove_real_http_200_and_empty",
+        "unavailable_property_excluded_from_api",
+        "stale_card_remove_succeeds",
+        "no_horizontal_overflow"
+      ],
+      "apiHttpStatus": 200,
+      "browserHttpStatus": 200,
+      "savedCount": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "startedAt": "2026-09-11T21:50:25.946Z",
+  "sessionsRemoved": true,
+  "favoritesUnchanged": true,
+  "fixturesRemoved": true,
+  "finishedAt": "2026-09-11T21:50:40.896Z"
+}
