@@ -300,6 +300,10 @@
 }
 
 @media (max-width: 1100px) {
+  .provider-customer-requests__request-modal {
+    width: min(100%, 32rem);
+  }
+
   .provider-customer-requests__heading {
     gap: 16px;
   }
@@ -370,6 +374,61 @@
 }
 
 @media (max-width: 600px) {
+  .provider-customer-requests:has(.provider-customer-requests__request-modal) .ui-modal-backdrop {
+    inset: 56px 0 64px;
+    z-index: 35;
+    padding: 16px;
+  }
+
+  .provider-customer-requests__request-modal {
+    max-height: calc(100dvh - 152px);
+    border-radius: 14px;
+  }
+
+  .provider-customer-requests__request-modal .ui-modal__header,
+  .provider-customer-requests__request-modal .ui-modal__body,
+  .provider-customer-requests__request-modal .ui-modal__footer {
+    padding: 12px;
+  }
+
+  .provider-customer-requests__request-modal .ui-modal__header h2 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .provider-customer-requests__request-modal .ui-modal__header p {
+    display: none;
+  }
+
+  .provider-customer-requests__request-modal .provider-customer-requests__form {
+    gap: 12px;
+  }
+
+  .provider-customer-requests__request-modal .provider-customer-requests__form fieldset {
+    gap: 10px;
+    padding: 0;
+    border: 0;
+  }
+
+  .provider-customer-requests__request-modal .provider-customer-requests__form-grid {
+    gap: 10px;
+  }
+
+  .provider-customer-requests__request-modal .provider-customer-requests__form textarea {
+    min-height: 72px;
+  }
+
+  .provider-customer-requests__request-modal .ui-modal__footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .provider-customer-requests__request-modal .ui-modal__footer .ui-button {
+    width: 100%;
+    justify-content: center;
+  }
+
   .provider-customer-requests__heading {
     align-items: stretch;
     gap: 16px;

@@ -119,6 +119,31 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
   await page.screenshot({ path: testInfo.outputPath(`responsive-${locale}.png`), fullPage: true });
 });
 
+test('PRV-17 request form stays inside the mapped tablet and mobile frames', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive modal contract uses the mapped tablet and mobile frames.');
+  const locale = localeForRequests();
+  const viewport = testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 936 } : { width: 402, height: 1282 };
+  await page.setViewportSize(viewport);
+  await routeSession(page);
+  await routeRequests(page);
+  await page.goto(`/provider/customer-requests?lang=${locale}`);
+  await page.getByRole('button', { name: /Add customer request|إضافة طلب يدوي|添加客户请求/u }).click();
+  const modal = page.locator('[data-screen-id="PRV-17"] .provider-customer-requests__request-modal');
+  await expect(modal).toBeVisible();
+  await expect(page.locator('[data-screen-id="PRV-17"]')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+  const bounds = await modal.boundingBox();
+  expect(bounds?.x).toBeGreaterThanOrEqual(0);
+  expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(viewport.width);
+  expect(bounds?.y).toBeGreaterThanOrEqual(testInfo.project.name.startsWith('mobile-') ? 56 : 0);
+  expect((bounds?.y ?? 0) + (bounds?.height ?? 0)).toBeLessThanOrEqual(testInfo.project.name.startsWith('mobile-') ? viewport.height - 64 : viewport.height);
+  await expect(page.getByLabel(/First name|الاسم الأول|名字/u)).toBeVisible();
+  await expect(page.getByLabel(/Phone number|رقم الهاتف|电话号码/u)).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath(`prv-17-${locale}.png`), fullPage: true });
+  await page.getByRole('button', { name: /Save request|حفظ الطلب|保存客户请求/u }).click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+});
+
 test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-16, PRV-17' });

@@ -147,7 +147,7 @@ function RequestFormModal({ copy, saving, error, onClose, onSave }: {
   }
 
   return (
-    <Modal open title={copy.form.title} description={copy.form.description} closeLabel={copy.form.close} onClose={onClose} footer={(
+    <Modal open className="provider-customer-requests__request-modal" title={copy.form.title} description={copy.form.description} closeLabel={copy.form.close} onClose={onClose} footer={(
       <>
         <Button type="button" variant="secondary" onClick={onClose} disabled={saving}>{copy.form.cancel}</Button>
         <Button type="submit" form={formId} loading={saving}>{copy.form.save}</Button>
@@ -433,7 +433,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
         {(state === 'success' || state === 'empty') && data !== undefined ? <RequestsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onApply={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onTransition={(request, action) => { setMutationError(undefined); setFeedback(undefined); setTransitionTarget({ request, action }); }} /> : null}
         {feedback ? <p className="provider-customer-requests__feedback" role="status">{feedback}</p> : null}
       </div>
-      {requestFormOpen && session.status === 'authenticated' && sessionRole === 'provider' ? <div data-screen-id="PRV-17"><RequestFormModal copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveRequest} /></div> : null}
+      {requestFormOpen && session.status === 'authenticated' && sessionRole === 'provider' ? <div data-screen-id="PRV-17" data-device-scope="desktop/tablet/mobile"><RequestFormModal copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveRequest} /></div> : null}
       {transitionTarget !== undefined ? <TransitionModal request={transitionTarget.request} action={transitionTarget.action} copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onConfirm={transitionRequest} /> : null}
       {state === 'permission' ? <span className="a11y-visually-hidden">{providerCopy.states.permission.title}</span> : null}
     </section>
