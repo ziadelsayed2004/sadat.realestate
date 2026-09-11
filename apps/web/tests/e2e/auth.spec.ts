@@ -187,6 +187,41 @@ test('login screen renders approved locale, direction, responsive shell, and saf
   await expect(page.locator('body')).not.toContainText('header.payload.signature');
 });
 
+test('auth routes keep their full-width shell instead of inheriting the generic state card', async ({ page }) => {
+  const locale = localeForProject();
+  const routes = [
+    `/auth/login?lang=${encodeURIComponent(locale)}`,
+    `/auth/forgot-password?lang=${encodeURIComponent(locale)}`,
+    `/auth/verify-email?lang=${encodeURIComponent(locale)}&purpose=login&roleType=seeker`,
+    `/auth/register?lang=${encodeURIComponent(locale)}`,
+    `/auth/register/provider/type?lang=${encodeURIComponent(locale)}`
+  ];
+
+  for (const route of routes) {
+    const response = await page.goto(route);
+    expect(response?.ok()).toBeTruthy();
+    await expect(page.locator('.auth-page')).toBeVisible();
+    const layout = await page.locator('.auth-page').evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const styles = getComputedStyle(element);
+      return {
+        x: rect.x,
+        width: rect.width,
+        viewportWidth: window.innerWidth,
+        maxWidth: styles.maxWidth,
+        marginBlockStart: styles.marginBlockStart,
+        backgroundColor: styles.backgroundColor
+      };
+    });
+
+    expect(layout.x).toBe(0);
+    expect(layout.width).toBe(layout.viewportWidth);
+    expect(layout.maxWidth).toBe('none');
+    expect(layout.marginBlockStart).toBe('0px');
+    expect(layout.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  }
+});
+
 test('email verification sends, cools down, focuses digits, and verifies without exposing authority', async ({ page }) => {
   const locale = localeForProject();
   await routeAuthApi(page);
