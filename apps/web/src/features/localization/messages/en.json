@@ -4560,7 +4560,9 @@
     "unavailable": "Unavailable",
     "website": "Website",
     "provider": "Provider",
-    "administration": "Administration"
+    "administration": "Administration",
+    "exportCsv": "Export CSV",
+    "exportFailed": "Export could not finish. Retry to download the current results."
   },
   "community/presentation-copy#getCommunityPresentationCopy": {
     "member": "Community member",

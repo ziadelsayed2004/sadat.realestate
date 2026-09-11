@@ -28,6 +28,7 @@ const notificationRecovery = await readFile('docs/quality/guide-runs/notificatio
 const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityBrowserRecovery = await readFile('docs/quality/guide-runs/community-browser-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPresentation = await readFile('docs/quality/guide-runs/community-presentation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const requestExport = await readFile('docs/quality/guide-runs/request-export-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityAccountState = await readFile('docs/quality/guide-runs/community-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
@@ -45,6 +46,7 @@ function hasExecutedEvidence(journey) {
 }
 
 const supplementalRuns = [
+  ["docs/quality/guide-runs/request-export-local-latest.json", requestExport],
   ["docs/quality/guide-runs/community-account-state-local-latest.json", communityAccountState],
   ["docs/quality/guide-runs/community-presentation-local-latest.json", communityPresentation],
   ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],

@@ -1,0 +1,115 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "environment": "local-built-web-real-API",
+  "mockedRoutes": false,
+  "journeys": [
+    "GUIDE-21"
+  ],
+  "commit": "6af7484e6dfdbbec40ddb5f44473bc283917434b",
+  "worktreeChanges": true,
+  "runs": [
+    {
+      "device": "Desktop",
+      "locale": "ar",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 1577,
+        "scrollWidth": 1577
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    },
+    {
+      "device": "Desktop",
+      "locale": "en",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 1577,
+        "scrollWidth": 1577
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    },
+    {
+      "device": "Tablet",
+      "locale": "ar",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 768,
+        "scrollWidth": 768
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    },
+    {
+      "device": "Tablet",
+      "locale": "en",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 768,
+        "scrollWidth": 768
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    },
+    {
+      "device": "Pixel5",
+      "locale": "ar",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    },
+    {
+      "device": "Pixel5",
+      "locale": "en",
+      "status": "PASS",
+      "width": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      },
+      "exportedRows": 18,
+      "filteredRows": 17,
+      "checks": [
+        "all_matching_rows_downloaded",
+        "status_filter_preserved",
+        "offline_failure_no_partial_download_then_retry",
+        "empty_export_headers_only"
+      ]
+    }
+  ],
+  "finishedAt": "2026-09-11T11:57:05.889Z"
+}

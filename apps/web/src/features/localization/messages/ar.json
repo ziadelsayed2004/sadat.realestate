@@ -4560,7 +4560,9 @@
     "unavailable": "غير متاح",
     "website": "الموقع",
     "provider": "مقدم الخدمة",
-    "administration": "الإدارة"
+    "administration": "الإدارة",
+    "exportCsv": "تصدير CSV",
+    "exportFailed": "تعذر إكمال التصدير. أعد المحاولة لتحميل النتائج الحالية."
   },
   "community/presentation-copy#getCommunityPresentationCopy": {
     "member": "عضو مجتمع",

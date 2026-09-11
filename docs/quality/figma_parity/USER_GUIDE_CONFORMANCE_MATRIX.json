@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T11:39:54.042Z",
+  "generatedAt": "2026-09-11T11:57:29.553Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3340,11 +3340,18 @@
         "section": "#admin",
         "journeyId": "GUIDE-21"
       },
-      "executionDate": "2026-09-10T12:41:39.149Z",
+      "executionDate": "2026-09-11T11:57:05.889Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/request-export-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T11:57:05.889Z",
+          "environment": "local-built-web-real-API",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/admin-requests-local-latest.json",
           "status": "PASS_LOCAL_ADMIN_REQUESTS_SUBCASES",
@@ -3995,7 +4002,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T11:39:54.042Z",
+    "updatedAt": "2026-09-11T11:57:29.553Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
