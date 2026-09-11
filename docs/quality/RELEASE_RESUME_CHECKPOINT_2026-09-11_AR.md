@@ -342,3 +342,9 @@
 - `scripts/verify-saved-remove-recovery-local.mjs` passed all six AR/EN Desktop/Tablet/Pixel 5 runs. Offline delete retains card and database record with actionable error; retry returns HTTP 200 and empty list, clearing the error. A property deactivated after rendering disappears from API availability but can still be removed from its stale saved card.
 - Temporary property/favorite records and new sessions cleaned; favorites returned to original empty state. First attempt used an obsolete pre-refresh token for a read check; verifier now uses the browser's current request authorization in memory, never persisted.
 - Evidence attached to GUIDE-08. No product/CSS edits. Next: consolidated local acceptance audit of this journey (scope, source versions, omitted applicable cases) rather than adding speculative subcases; then prioritize other journey/Figma gaps. Production, launch and demo purge remain deferred by owner.
+
+## 12 September: consolidated saved journey acceptance
+
+- Added `GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md`, mapping actual requirements to scoped evidence and distinguishing generic moderation-only matrix fields from applicable favorite operations.
+- Strengthened navigation verifier: creates both favorites through the real detail Save button, asserts HTTP 200/new save/disabled confirmation and Mongo record before onward navigation. Six runs passed, temporary favorites/sessions cleaned. API-only fixture login first visits protected saved page to establish browser session hint; no application code changed.
+- GUIDE-08 records LOCAL_FUNCTIONAL_SCOPE_REVIEWED, while global status remains PARTIAL because Production and independent Figma acceptance are incomplete. Next: prioritize another journey's concrete gaps from the matrix; do not keep adding speculative saved subcases. Review Figma SEK-06 in its own design lane. Local runtime remains available; revalidate status before reuse.

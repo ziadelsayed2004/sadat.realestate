@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
 import mongoose, { Types } from 'mongoose';
 import { chromium, devices, expect } from '@playwright/test';
+import { getPublicPropertyDetailsCopy } from '../apps/web/src/features/public/details-copy.ts';
 import { readEnvironmentFile } from './environment-file.mjs';
 
 const localEnvironment = await readEnvironmentFile('.env.local');
@@ -79,7 +80,7 @@ try {
   const properties = (await catalog.json()).data.items;
   assert.equal(properties.length, 2);
   propertyIds = properties.map(p => new Types.ObjectId(p.id));
-  await mongo.collection('favorites').insertMany(propertyIds.map(propertyId => ({ seekerId: seeker._id, propertyId, savedAt: new Date() })));
+
 
   originalSessionIds = (await mongo.collection('sessions').find({ userId: seeker._id }, { projection: { _id: 1 } }).toArray())
     .map(session => session._id.toHexString());
@@ -90,7 +91,23 @@ try {
       const context = await browser.newContext({ ...devices[preset] });
       try {
         const session = await login(context, seeker.normalizedEmail);
+        await mongo.collection('favorites').deleteMany({ seekerId: seeker._id, propertyId: { $in: propertyIds } });
         const page = await context.newPage();
+        await page.goto(`${base}/seeker/saved?lang=${locale}`, { waitUntil: 'networkidle' });
+        await expect(page.locator('.seeker-dashboard__empty[data-state="empty"]')).toBeVisible();
+        for (const property of properties) {
+          await page.goto(`${base}/properties/${property.slug}?lang=${locale}`, { waitUntil: 'networkidle' });
+          await expect(page.locator('[data-details-state="success"]')).toBeVisible();
+          const saved = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname === `/api/v1/seeker/favorites/${property.id}`);
+          const copy = getPublicPropertyDetailsCopy(locale);
+          await page.getByRole('button', { name: copy.saveProperty, exact: true }).click();
+          const savedResponse = await saved;
+          assert.equal(savedResponse.status(), 200);
+          assert.equal((await savedResponse.json()).data.alreadySaved, false);
+          await expect(page.getByRole('button', { name: copy.propertySaved, exact: true })).toBeDisabled();
+          assert.equal(await mongo.collection('favorites').countDocuments({ seekerId: seeker._id, propertyId: new Types.ObjectId(property.id) }), 1);
+        }
+
         await page.goto(`${base}/seeker/saved?lang=${locale}`, { waitUntil: 'networkidle' });
         const cards = page.locator('.seeker-saved-property-card');
         await expect(cards).toHaveCount(2);
@@ -114,7 +131,7 @@ try {
         report.runs.push({
           locale,
           device,
-          checks: ['saved_card_to_real_detail', 'detail_back_to_listing', 'listing_to_two_property_comparison', 'locale_preserved', 'no_horizontal_overflow'],
+          checks: ['detail_save_real_http_and_mongo', 'saved_card_to_real_detail', 'detail_back_to_listing', 'listing_to_two_property_comparison', 'locale_preserved', 'no_horizontal_overflow'],
           detailHttpStatus: 200,
           savedCount: 2,
           ...geometry,

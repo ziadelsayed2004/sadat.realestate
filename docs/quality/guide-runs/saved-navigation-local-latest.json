@@ -5,101 +5,107 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "commit": "2812e18279d648157e98c1f5e7c4f9f1e584e9e7",
+  "commit": "66e8aee87bffdda77bf169ef13e3e75c71270940",
   "runs": [
     {
       "locale": "ar",
       "device": "desktop",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 1280,
-      "scrollWidth": 1280,
-      "detailHttpStatus": 200
+      "scrollWidth": 1280
     },
     {
       "locale": "ar",
       "device": "tablet",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 712,
-      "scrollWidth": 712,
-      "detailHttpStatus": 200
+      "scrollWidth": 712
     },
     {
       "locale": "ar",
       "device": "mobile",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 393,
-      "scrollWidth": 393,
-      "detailHttpStatus": 200
+      "scrollWidth": 393
     },
     {
       "locale": "en",
       "device": "desktop",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 1280,
-      "scrollWidth": 1280,
-      "detailHttpStatus": 200
+      "scrollWidth": 1280
     },
     {
       "locale": "en",
       "device": "tablet",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 712,
-      "scrollWidth": 712,
-      "detailHttpStatus": 200
+      "scrollWidth": 712
     },
     {
       "locale": "en",
       "device": "mobile",
       "checks": [
+        "detail_save_real_http_and_mongo",
         "saved_card_to_real_detail",
         "detail_back_to_listing",
         "listing_to_two_property_comparison",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
+      "detailHttpStatus": 200,
       "savedCount": 2,
       "innerWidth": 393,
-      "scrollWidth": 393,
-      "detailHttpStatus": 200
+      "scrollWidth": 393
     }
   ],
-  "startedAt": "2026-09-11T21:46:16.198Z",
+  "startedAt": "2026-09-11T21:52:35.934Z",
   "sessionsRemoved": true,
   "favoritesUnchanged": true,
-  "finishedAt": "2026-09-11T21:46:35.935Z"
+  "finishedAt": "2026-09-11T21:53:08.807Z"
 }

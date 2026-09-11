@@ -2346,7 +2346,7 @@
       "executionDate": "2026-09-11T18:41:30.168Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Named local saved-property subcases now have attached evidence, including failed remove recovery and unavailable stale-card removal. A consolidated local acceptance audit and Production execution remain outstanding; Figma approval is separate. Do not infer complete journey verification from individual subcases.",
+      "incompleteReason": "Local functional acceptance reviewed with fresh browser save and accumulated recovery/authorization evidence. Production execution and independent Figma acceptance remain outstanding; project-wide final quality gate is not claimed.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/saved-remove-recovery-local-latest.json",
@@ -2365,7 +2365,7 @@
         {
           "path": "docs/quality/guide-runs/saved-navigation-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-11T21:46:35.935Z",
+          "verifiedAt": "2026-09-11T21:53:08.807Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         },
@@ -2456,7 +2456,14 @@
           "scope": "Full local runtime: authenticated read 200, logout 200, old-token GET/PUT/DELETE each 401; browser permission state without cards; six AR/EN desktop/tablet/mobile runs, no favorite writes, created sessions removed.",
           "verifiedAt": "2026-09-11T21:48:42.961Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "path": "docs/quality/GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "reviewedAt": "2026-09-11T21:53:08.807Z",
+        "productionVerified": false,
+        "figmaAccepted": false
+      }
     },
     {
       "id": "GUIDE-09",
