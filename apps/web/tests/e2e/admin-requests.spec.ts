@@ -71,6 +71,18 @@ test.describe('ADM-18 through ADM-24 request administration', () => {
     await expect(page.getByText(/Transition saved|تم حفظ الانتقال|转换已保存/u)).toBeVisible();
   });
 
+  test('applies an empty status and restores all requests without a page refresh', async ({ page }) => {
+    const locale = localeForAdminRequests(test.info().project.name);
+    await page.goto(`/admin/requests?lang=${encodeURIComponent(locale)}`);
+    await expect(page.locator('[data-testid^="admin-request-"]')).toHaveCount(6);
+    const navigationCount = await page.evaluate(() => performance.getEntriesByType('navigation').length);
+    await page.locator('[role="tab"][data-filter-value="closed"]').click();
+    await expect(page.locator('[data-state="empty"]')).toBeVisible();
+    await page.locator('[role="tab"][data-filter-value="all"]').click();
+    await expect(page.locator('[data-testid^="admin-request-"]')).toHaveCount(6);
+    await expect.poll(() => page.evaluate(() => performance.getEntriesByType('navigation').length)).toBe(navigationCount);
+  });
+
   test('fails closed when the administrator session cannot refresh', async ({ page }) => {
     await routeAdminRequestApis(page, false);
     await page.goto('/admin/requests?lang=en');
