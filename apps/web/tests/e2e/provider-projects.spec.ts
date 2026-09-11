@@ -88,6 +88,7 @@ test.describe('PRV-15 Provider Projects', () => {
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.getByTestId('provider-projects-count')).toContainText(/2|٢|二/u);
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`)).toBeVisible();
+    await expect(page.getByRole('button', { name: /Open navigation menu|فتح قائمة التنقل/u }).locator('.a11y-visually-hidden')).toBeHidden();
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('.provider-projects__identity strong')).not.toHaveText('');
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('code')).toHaveText('provider-project');
     await expect(page.locator('[data-screen-id="PRV-15"] .ui-button--primary').first()).toHaveCSS('background-color', 'rgb(15, 74, 59)');
@@ -142,5 +143,49 @@ test.describe('PRV-15 Provider Projects', () => {
     await page.goto(`/provider/projects?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-15"]')).toHaveCount(0);
+  });
+});
+
+test.describe('PRV-15 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-15' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:120496 (1024x916); mobile node 6017:119219 (402x1327)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 916 } : { width: 402, height: 1327 });
+  });
+
+  test('renders usable project records without viewport overflow and keeps filtering live', async ({ page }, testInfo) => {
+    const locale = localeForProject();
+    await routeSession(page);
+    await routeProjects(page);
+    const response = await page.goto(`/provider/projects?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+
+    const screen = page.locator('[data-screen-id="PRV-15"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`)).toBeVisible();
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const records = await page.locator('[data-testid^="provider-project-"]').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width, display: getComputedStyle(element).display };
+    }));
+    records.forEach(record => {
+      expect(record.left).toBeGreaterThanOrEqual(-0.5);
+      expect(record.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(record.width).toBeGreaterThan(0);
+      if (viewportWidth <= 620) expect(record.display).toBe('grid');
+    });
+
+    await page.screenshot({ path: testInfo.outputPath('provider-projects-responsive.png'), fullPage: true });
+
+    await page.getByRole('searchbox').fill('published');
+    await page.getByRole('button', { name: /Apply|تطبيق|应用/u }).click();
+    await expect(page.getByTestId(`provider-project-${PUBLISHED_PROJECT_ID}`)).toBeVisible();
+    await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`)).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   });
 });

@@ -103,7 +103,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   const navigationList = useRef<HTMLUListElement>(null);
   useEffect(() => {
     const revealActive = () => {
-      if (window.matchMedia?.('(max-width: 900px)').matches) {
+      if (window.matchMedia?.('(min-width: 621px) and (max-width: 900px)').matches) {
         navigationList.current?.querySelector('[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
       }
     };
@@ -125,7 +125,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
       <header className="provider-dashboard__topbar">
         <button className="provider-dashboard__menu-button" type="button" aria-expanded={mobileMenuOpen} aria-controls="provider-navigation-list" onClick={() => setMobileMenuOpen(open => !open)}>
           <img src={`${providerNavigationAssetRoot}/menu.svg`} alt="" width="20" height="20" />
-          <span className="sr-only">{locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu'}</span>
+          <span className="a11y-visually-hidden">{locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu'}</span>
         </button>
         <span className="provider-dashboard__mobile-brand"><strong>{copy.overview.eyebrow}</strong><img src="/assets/sadat-real-estate-logo.png" alt="" width="24" height="24" /></span>
         <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
