@@ -311,3 +311,10 @@
 - ثبت عزل قراءة/إزالة محفوظات الغير، رفض provider/admin والمجهول، ورفض التوكن القديم بعد suspended/rejected/role_changed/deleted دون تغيير السجلات. ثبت الحفظ المكرر بسجل واحد ورفض 5 طلبات غير صالحة و4 محاولات حفظ لعقار غير متاح واستبعاده من القائمة.
 - ربطت الأدلة بـGUIDE-08 دون إعلان إغلاق الرحلة. نطاق الفحص لا يشمل login/refresh أو إبطال الجلسة أو Production. لا تغيير في CSS.
 - التالي: مراجعة أدلة GUIDE-08 المجمعة مقابل تفاصيل الرحلة وروابط التفاصيل/المقارنة، ثم استكمال الفجوات الفعلية في المصفوفة. البناء السابق ناجح وغير متأثر؛ الخدمات المحلية متوقفة ولا حاجة لإعادة بنائها لمجرد فحص HTTP المعزول. الديمو مستمر، وpurge/launch مؤجلان.
+
+## 12 September: user guide accuracy review
+
+- Corrected GUIDE-04 in the structured Arabic source and regenerated HTML: email OTP precedes account details; registration does not require an existing authenticated account. Replaced unrelated filter/admin troubleshooting with registration recovery instructions.
+- Replaced generic GUIDE-08 states and troubleshooting with verified saved pagination, offline retry, removal, availability, and the public-listing comparison route.
+- Added corrupted-text detection to guide validation after catching a shell encoding conversion during editing; the corrected UTF-8 source passes validation. No application styles changed.
+- Next: runtime verification of saved-card detail navigation and onward public-listing comparison, then audit remaining journey-specific guide instructions (provider registration still has generic existing-account prerequisites). Existing evidence does not close the complete journey or Production requirements.

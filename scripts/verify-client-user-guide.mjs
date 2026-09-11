@@ -8,6 +8,7 @@ const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json
 const [source, html, template, matrix] = await Promise.all([readFile(sourcePath, "utf8").then(JSON.parse), readFile(guidePath, "utf8"), readFile(templatePath, "utf8"), readFile(matrixPath, "utf8").then(JSON.parse)]);
 const requiredAccounts = ["visitor", "seeker", "individual_provider", "broker", "developer_company", "full_admin", "limited_admin"];
 const failures = [];
+if (/\?{4,}/u.test(JSON.stringify(source))) failures.push('guide source contains corrupted text (repeated question marks)');
 if (renderGuide(source, template) !== html) failures.push("rendered HTML is stale; run npm run guide:sync");
 if (source.journeys.length !== 26) failures.push(`expected 26 journeys, found ${source.journeys.length}`);
 for (const account of requiredAccounts) if (!source.accountTypes.includes(account)) failures.push(`missing account type ${account}`);
