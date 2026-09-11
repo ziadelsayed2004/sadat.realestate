@@ -1,0 +1,104 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-04"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "e4130cc9ce3e74e313669cce4cb00794bef0b6e9",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "offline_registration_otp_retry_recovers_without_navigation",
+        "empty_registration_blocks_mutation",
+        "mismatched_password_blocks_mutation"
+      ],
+      "otpSendStatus": 202,
+      "otpVerifyStatus": 200,
+      "registrationMutations": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "startedAt": "2026-09-11T18:23:52.312Z",
+  "otpChallengesRemoved": true,
+  "finishedAt": "2026-09-11T18:24:06.293Z"
+}

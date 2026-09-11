@@ -254,3 +254,10 @@
 - أُضيف اختبار واجهة مركز في `public-listing.vitest.test.tsx`؛ نجحت الاختبارات 11/11، ونجح Web typecheck وlint وبناء الإنتاج وميزانية الحزم.
 - نجح `scripts/verify-discovery-pagination-local.mjs` في 6 تشغيلات real browser/API على AR/EN × Desktop/Tablet/Pixel 5. أعاد الطلب الأول HTTP 200 بحالة empty، ثم أعاد طلب الصفحة الأولى HTTP 200 وظهرت البطاقات دون تغيير `performance.timeOrigin` أو navigation entry أو overflow. الدليل `guide-runs/discovery-pagination-local-latest.json`.
 - رُبطت الحالة الجديدة كـempty subcase لـGUIDE-01 وGUIDE-02 في `USER_GUIDE_CONFORMANCE_MATRIX.json`. الأرقام الرسمية لم تتغير: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119؛ الديمو باقٍ ولا يُنفذ purge.
+
+## استعادة تسجيل الحساب — 11 سبتمبر
+
+- أُضيف `scripts/verify-registration-recovery-local.mjs` لتغطية GUIDE-04 دون إنشاء حساب تجريبي: كل تشغيل استخدم بريدًا مؤقتًا، OTP حقيقيًا من MailHog، وMongoDB محليًا.
+- نجحت 6 تشغيلات على AR/EN × Desktop/Tablet/Pixel 5. بعد offline أثناء إرسال OTP ظهر Retry، ثم أعاد API الحقيقي 202 وظهر نموذج التحقق، وأعاد التحقق 200 دون document reload أو overflow.
+- في نموذج التسجيل، الإرسال الفارغ وكلمتا المرور غير المتطابقتين بقيا في حالة validation ولم يُرسلا أي POST إلى `/auth/register/seeker`. حُذفت تحديات OTP الستة المحددة بعد الفحص (`otpChallengesRemoved: true`). الدليل `guide-runs/registration-recovery-local-latest.json`.
+- رُبطت حالتا validation وnetworkRetry في GUIDE-04 بالمصفوفة. ما زالت الرحلة PARTIAL لأن دورة النجاح الكاملة وProduction وبقية المطابقة البصرية لم تُغلق؛ الأرقام الرسمية: 26 رحلة جزئية، 0 Production verified، 0 fully closed، وFigma 90/119.

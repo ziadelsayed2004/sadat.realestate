@@ -39,6 +39,7 @@ const seekerViewingsRecovery = await readFile('docs/quality/guide-runs/seeker-vi
 const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPublicRecovery = await readFile('docs/quality/guide-runs/community-public-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -68,6 +69,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
   ["docs/quality/guide-runs/discovery-local-latest.json", discoveryEvidence],
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
+  ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -314,6 +316,29 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/discovery-pagination-local-latest.json',
       scope: 'Property listing out-of-range pagination; Arabic and English on Desktop, Tablet and Pixel 5; real API recovery without document navigation',
       verifiedAt: discoveryPagination.finishedAt });
+  }
+  if (journey.id === 'GUIDE-04'
+    && registrationRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && registrationRecovery.mockedRoutes === false
+    && registrationRecovery.otpChallengesRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => registrationRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device
+      && run.checks?.includes('offline_registration_otp_retry_recovers_without_navigation')
+      && run.checks?.includes('empty_registration_blocks_mutation')
+      && run.checks?.includes('mismatched_password_blocks_mutation')
+      && run.otpSendStatus === 202 && run.otpVerifyStatus === 200
+      && run.registrationMutations === 0 && run.documentReloaded === false
+      && run.scrollWidth <= run.innerWidth)))) {
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'Browser/API/MongoDB',
+      check: 'invalid_registration_blocks_mutation',
+      path: 'docs/quality/guide-runs/registration-recovery-local-latest.json',
+      scope: 'Seeker registration; empty and mismatched password validation after real email OTP on Arabic and English Desktop, Tablet and Pixel 5',
+      verifiedAt: registrationRecovery.finishedAt });
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API/MongoDB',
+      check: 'offline_registration_otp_retry_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/registration-recovery-local-latest.json',
+      scope: 'Seeker registration email OTP; browser offline fault and real MailHog/API recovery on Arabic and English Desktop, Tablet and Pixel 5',
+      verifiedAt: registrationRecovery.finishedAt });
   }
   if (journey.id === "GUIDE-07" && guide04Evidence?.status === "PASS_LOCAL") {
     const viewing = guide04Evidence.viewingJourneyEvidence;

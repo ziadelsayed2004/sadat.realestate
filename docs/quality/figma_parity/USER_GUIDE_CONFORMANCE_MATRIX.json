@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T18:16:50.059Z",
+  "generatedAt": "2026-09-11T18:24:14.687Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1711,9 +1711,9 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -1738,11 +1738,18 @@
         "section": "#seeker",
         "journeyId": "GUIDE-04"
       },
-      "executionDate": "2026-09-10T12:40:22.743Z",
+      "executionDate": "2026-09-11T18:24:06.293Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/registration-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T18:24:06.293Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL",
@@ -1764,7 +1771,24 @@
           }
         }
       ],
-      "reviewedSubcases": [],
+      "reviewedSubcases": [
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "invalid_registration_blocks_mutation",
+          "path": "docs/quality/guide-runs/registration-recovery-local-latest.json",
+          "scope": "Seeker registration; empty and mismatched password validation after real email OTP on Arabic and English Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-11T18:24:06.293Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_registration_otp_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/registration-recovery-local-latest.json",
+          "scope": "Seeker registration email OTP; browser offline fault and real MailHog/API recovery on Arabic and English Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-11T18:24:06.293Z"
+        }
+      ],
       "reviewedGuarantees": []
     },
     {
@@ -4204,7 +4228,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T18:16:50.059Z",
+    "updatedAt": "2026-09-11T18:24:14.687Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
