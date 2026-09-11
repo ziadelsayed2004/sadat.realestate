@@ -36,6 +36,7 @@ const requestExport = await readFile('docs/quality/guide-runs/request-export-loc
 const communityAccountState = await readFile('docs/quality/guide-runs/community-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerViewingsRecovery = await readFile('docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -52,6 +53,7 @@ function hasExecutedEvidence(journey) {
 }
 
 const supplementalRuns = [
+  ["docs/quality/guide-runs/admin-requests-recovery-local-latest.json", adminRequestsRecovery],
   ["docs/quality/guide-runs/request-export-local-latest.json", requestExport],
   ["docs/quality/guide-runs/community-account-state-local-latest.json", communityAccountState],
   ["docs/quality/guide-runs/community-presentation-local-latest.json", communityPresentation],
@@ -338,6 +340,29 @@ matrix.journeys = matrix.journeys.map((journey) => {
         path: 'docs/quality/guide-runs/seeker-requests-recovery-local-latest.json',
         scope: 'Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed',
         verifiedAt: seekerRequestsRecovery.finishedAt,
+      });
+    }
+  }
+  if (journey.id === 'GUIDE-21' && adminRequestsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && adminRequestsRecovery.mockedRoutes === false && adminRequestsRecovery.cleanup === true
+    && adminRequestsRecovery.temporaryRequestRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => adminRequestsRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device && run.routeChecks?.length === 6
+      && run.routeChecks.every(route => route.httpStatus === 200 && ['success', 'empty'].includes(route.state)
+        && route.scrollWidth <= route.innerWidth)
+      && run.httpStatuses?.contact === 200 && run.httpStatuses?.empty === 200 && run.httpStatuses?.reset === 200
+      && run.httpStatuses?.recovered === 200 && run.transitionRequests === 0 && run.requestUnchanged === true
+      && run.auditWrites === 0 && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))) {
+    for (const [category, check] of [
+      ['empty', 'empty_search_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
+      ['validation', 'invalid_transition_reason_blocks_mutation'],
+    ]) {
+      if (adminRequestsRecovery.runs.every(run => run.checks?.includes(check))) reviewedSubcases.push({
+        case: category, evidenceType: 'Browser/API/MongoDB', check,
+        path: 'docs/quality/guide-runs/admin-requests-recovery-local-latest.json',
+        scope: 'Six request administration screens; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed',
+        verifiedAt: adminRequestsRecovery.finishedAt,
       });
     }
   }

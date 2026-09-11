@@ -1,0 +1,472 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-21"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "309106581ede154f1f712ea3403ba7ca491264b6",
+  "routes": [
+    {
+      "route": "/admin/customer-requests",
+      "screenId": "ADM-19"
+    },
+    {
+      "route": "/admin/overdue-requests",
+      "screenId": "ADM-20"
+    },
+    {
+      "route": "/admin/viewing-requests",
+      "screenId": "ADM-22"
+    },
+    {
+      "route": "/admin/search-requests",
+      "screenId": "ADM-23"
+    },
+    {
+      "route": "/admin/request-issues",
+      "screenId": "ADM-24"
+    },
+    {
+      "route": "/admin/contact-requests",
+      "screenId": "ADM-21"
+    }
+  ],
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 200,
+          "state": "empty",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "state": "success",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "six_admin_request_routes_real_api",
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_transition_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "contact": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "auditWrites": 0,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "temporaryRequestRemoved": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-11T17:41:21.263Z"
+}
