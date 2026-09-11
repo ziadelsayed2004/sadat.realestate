@@ -1,0 +1,80 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-07"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "14d2a5332d91193daa487398fa538cdaf170ee84",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "check": "offline_tab_load_retry_recovers_without_navigation",
+      "initialHttpStatus": 200,
+      "recoveredHttpStatus": 200,
+      "retryVisible": true,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "viewingsUnchanged": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-11T17:27:10.523Z"
+}

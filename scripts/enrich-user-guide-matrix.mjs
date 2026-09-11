@@ -34,6 +34,7 @@ const communityBrowserRecovery = await readFile('docs/quality/guide-runs/communi
 const communityPresentation = await readFile('docs/quality/guide-runs/community-presentation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const requestExport = await readFile('docs/quality/guide-runs/request-export-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityAccountState = await readFile('docs/quality/guide-runs/community-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerViewingsRecovery = await readFile('docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -303,6 +304,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
           verifiedAt: guide04Evidence.finishedAt });
       }
     }
+  }
+  if (journey.id === 'GUIDE-07' && seekerViewingsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && seekerViewingsRecovery.mockedRoutes === false && seekerViewingsRecovery.cleanup === true
+    && seekerViewingsRecovery.viewingsUnchanged === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => seekerViewingsRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device
+      && run.check === 'offline_tab_load_retry_recovers_without_navigation'
+      && run.initialHttpStatus === 200 && run.recoveredHttpStatus === 200 && run.retryVisible === true
+      && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))) {
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API/MongoDB',
+      check: 'offline_tab_load_retry_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json',
+      scope: 'Seeker viewings; AR/EN on Desktop, Tablet and Pixel 5; browser offline fault and real API recovery without database mutation',
+      verifiedAt: seekerViewingsRecovery.finishedAt });
   }
   return {
     ...hydratedJourney,

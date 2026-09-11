@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T17:23:04.855Z",
+  "generatedAt": "2026-09-11T17:27:17.455Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2014,7 +2014,7 @@
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
@@ -2120,6 +2120,14 @@
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "scope": "Viewing browser subcase; complete journey remains open",
           "verifiedAt": "2026-09-10T12:40:22.743Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_tab_load_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json",
+          "scope": "Seeker viewings; AR/EN on Desktop, Tablet and Pixel 5; browser offline fault and real API recovery without database mutation",
+          "verifiedAt": "2026-09-11T17:27:10.523Z"
         }
       ],
       "reviewedGuarantees": [
@@ -4077,7 +4085,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T17:23:04.855Z",
+    "updatedAt": "2026-09-11T17:27:17.455Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
