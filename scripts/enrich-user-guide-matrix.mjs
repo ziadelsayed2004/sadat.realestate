@@ -23,6 +23,7 @@ const [guide, matrix, routeMatrix, communityEvidence, adminRequestsEvidence, pri
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
 const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -124,6 +125,22 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-09' && notificationRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && notificationRecovery.mockedRoutes === false
+    && ['ar', 'en'].every(locale => notificationRecovery.runs?.some(run => run.locale === locale && run.status === 'PASS'))) {
+    reviewedSubcases.push({ case: 'networkRetry', check: 'notification_filter_offline_retry_without_reload',
+      path: 'docs/quality/guide-runs/notification-recovery-local-latest.json',
+      scope: 'Authenticated notifications; Arabic and English on Pixel 5', verifiedAt: notificationRecovery.finishedAt });
+  }
+  if (seekerAccountEvidence?.status === 'PASS_LOCAL' && seekerAccountEvidence.mockedRoutes === false) {
+    const checks = journey.id === 'GUIDE-09' ? [['empty', 'mark_all_reached_empty_without_reload']]
+      : journey.id === 'GUIDE-10' ? [['validation', 'invalid_preferences_blocked_before_api'], ['validation', 'invalid_password_confirmation_blocked']] : [];
+    for (const [category, check] of checks) {
+      if (seekerAccountEvidence.transitions?.includes(check)) reviewedSubcases.push({ case: category, check,
+        path: 'docs/quality/guide-runs/seeker-account-local-latest.json',
+        scope: 'Reviewed seeker browser subcase', verifiedAt: seekerAccountEvidence.finishedAt });
+    }
+  }
   if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
     && discoveryValidation?.status === 'PASS_LOCAL_API_SUBCASES' && discoveryValidation.mockedRoutes === false
     && discoveryValidation.checks?.length === 7 && discoveryValidation.checks.every(check => check.status === 400)

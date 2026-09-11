@@ -1,0 +1,31 @@
+{
+  "journeys": [
+    "GUIDE-09"
+  ],
+  "environment": "local",
+  "mockedRoutes": false,
+  "commit": "adb18a22c55ece0ec69e997d8bbe2a837826bee1",
+  "faultInjection": "browser offline mode",
+  "runs": [
+    {
+      "locale": "ar",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      }
+    },
+    {
+      "locale": "en",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 393,
+        "scrollWidth": 393
+      }
+    }
+  ],
+  "status": "PASS_LOCAL_SUBCASES",
+  "finishedAt": "2026-09-11T11:22:27.894Z"
+}

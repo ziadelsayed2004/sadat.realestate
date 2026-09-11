@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T11:19:51.275Z",
+  "generatedAt": "2026-09-11T11:22:47.677Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2120,8 +2120,8 @@
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -2161,7 +2161,22 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [
+        {
+          "case": "networkRetry",
+          "check": "notification_filter_offline_retry_without_reload",
+          "path": "docs/quality/guide-runs/notification-recovery-local-latest.json",
+          "scope": "Authenticated notifications; Arabic and English on Pixel 5",
+          "verifiedAt": "2026-09-11T11:22:27.894Z"
+        },
+        {
+          "case": "empty",
+          "check": "mark_all_reached_empty_without_reload",
+          "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
+          "scope": "Reviewed seeker browser subcase",
+          "verifiedAt": "2026-09-10T12:35:13.289Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-10",
@@ -2192,7 +2207,7 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
         "duplicateMutation": "UNVERIFIED"
@@ -2234,7 +2249,22 @@
           ]
         }
       ],
-      "reviewedSubcases": []
+      "reviewedSubcases": [
+        {
+          "case": "validation",
+          "check": "invalid_preferences_blocked_before_api",
+          "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
+          "scope": "Reviewed seeker browser subcase",
+          "verifiedAt": "2026-09-10T12:35:13.289Z"
+        },
+        {
+          "case": "validation",
+          "check": "invalid_password_confirmation_blocked",
+          "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
+          "scope": "Reviewed seeker browser subcase",
+          "verifiedAt": "2026-09-10T12:35:13.289Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-11",
@@ -3651,7 +3681,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T11:19:51.275Z",
+    "updatedAt": "2026-09-11T11:22:47.677Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

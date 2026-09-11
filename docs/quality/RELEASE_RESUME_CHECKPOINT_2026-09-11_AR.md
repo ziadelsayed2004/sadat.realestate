@@ -2,6 +2,10 @@
 
 ## تحديث بعد الاستئناف
 
+- أضيف اختبار `scripts/verify-notification-recovery-local.mjs`: نجاح انقطاع الشبكة عند فلتر إشعارات الباحث ثم Retry عبر API حقيقي بالعربية والإنجليزية على Pixel 5، و393px دون overflow أو reload. يستخدم حساب QA محليًا موجودًا ويغلق جلساته بعد الاختبار. الدليل `guide-runs/notification-recovery-local-latest.json`.
+- رُبطت حالات empty للإشعارات وvalidation للتفضيلات وتأكيد كلمة المرور في GUIDE-09/10 بأدلة المتصفح السابقة بعد مراجعة السكربت الذي أنتجها. لم تُكرر تلك الرحلات الناجحة.
+- اكتمل نقل تسميات مصدر الطلب و«غير متاح» من views إلى ملفات الترجمة. اختبارات طلبات الإدارة 6/6، وفحص الترجمة وTypecheck وLint ناجحة. لا يوجد تغيير بصري مقصود.
+
 - استؤنف العمل بعد التوقف المحفوظ عند `36b69c1`. صُححت المصفوفة لتربط فحوص empty السابقة لـGUIDE-01/02 وempty/سبب الإلغاء لـGUIDE-07 بأدلتها بدل وصفها كغير مثبتة تمامًا.
 - اختبار جديد `scripts/verify-discovery-recovery-local.mjs`: نجح التعافي من انقطاع الشبكة أثناء تغيير فلتر العقارات بالعربية والإنجليزية على Pixel 5. استُخدم offline mode للمتصفح ثم API حقيقي أعاد 200؛ لم يتغير timeOrigin، وinnerWidth/scrollWidth كلاهما 393. الدليل `guide-runs/discovery-recovery-local-latest.json`.
 - اختبار جديد `scripts/verify-discovery-validation-local.mjs`: رفض API بسبع استجابات 400 المدخلات غير الصالحة للصفحة والحد وترتيب الأسعار ومعرف الموقع والترتيب وطول البحث والمفتاح غير المعروف، ثم نجح الطلب الصحيح بـ200. الدليل `guide-runs/discovery-validation-local-latest.json`؛ هذا إثبات API فقط.
