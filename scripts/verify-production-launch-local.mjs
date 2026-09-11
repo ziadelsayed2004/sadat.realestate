@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import mongoose, { Types } from 'mongoose';
@@ -26,7 +27,7 @@ const otherId = new Types.ObjectId();
 const email = 'launch-admin@example.invalid';
 const password = randomUUID();
 const hasher = createArgon2PasswordHasher();
-const evidence = { environment: 'isolated-local-mongodb', mockedDatabase: false, checks: [], status: 'RUNNING' };
+const evidence = { environment: 'isolated-local-mongodb', mockedDatabase: false, commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), startedAt: new Date().toISOString(), checks: [], status: 'RUNNING' };
 try {
   assert.equal(connection.name, dbName);
   assert.ok((await connection.db.admin().command({ hello: 1 })).setName, 'REPLICA_SET_REQUIRED');
@@ -51,6 +52,7 @@ try {
   await connection.collection('properties').insertOne({ ownerId: otherId, synthetic: true });
   await connection.collection('database_migrations').insertOne({ id: 'preserved' });
   const beforeLogin = await auth.loginAdmin({ email, password });
+  const indexesBefore = await connection.collection('users').listIndexes().toArray();
   assert.ok('refreshToken' in beforeLogin);
   const planned = await purgeProductionDatabase(connection, { mode: 'plan', keepAdminEmail: email });
   assert.equal(planned.usersAfter, 2);
@@ -76,6 +78,8 @@ try {
   const applied = await purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email });
   assert.equal(applied.usersAfter, 1);
   assert.equal(applied.syntheticAfter, 0);
+  assert.deepEqual(await connection.collection('users').listIndexes().toArray(), indexesBefore);
+  evidence.checks.push('identity indexes are unchanged');
   assert.equal(await connection.collection('sessions').countDocuments({}), 0);
   assert.equal(await connection.collection('roles').countDocuments({}), 1);
   assert.equal(await connection.collection('admin_settings').countDocuments({}), 1);

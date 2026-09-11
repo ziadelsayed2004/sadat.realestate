@@ -1,11 +1,14 @@
 {
   "environment": "isolated-local-mongodb",
   "mockedDatabase": false,
+  "commit": "ffdd7900142a6a9ace26b7d87c68d7fb05aa9470",
+  "startedAt": "2026-09-11T10:22:42.181Z",
   "checks": [
     "dry-run retains all records",
     "unknown collection aborts before deletion",
     "retained location cannot lose its parent",
     "residue failure rolls back the complete MongoDB transaction",
+    "identity indexes are unchanged",
     "purge retains real references and administrator only",
     "all old admin sessions revoked",
     "real password login succeeds after purge",

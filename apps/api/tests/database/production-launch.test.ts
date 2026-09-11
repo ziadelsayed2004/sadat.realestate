@@ -181,6 +181,15 @@ test('plan and failed eligibility checks never delete data', async () => {
     /PRODUCTION_LAUNCH_ADMIN_NOT_UNIQUE/
   );
   assert.equal(wrongEmail.data.get('properties')?.length, 1);
+
+  for (const overrides of [{ roleType: 'provider' }, { status: 'suspended' }, { synthetic: true }]) {
+    const ineligible = fakeConnection({ ...seed, users: [{ ...seed.users[0], ...overrides }] });
+    await assert.rejects(purgeProductionDatabase(ineligible.connection, { mode: 'apply', keepAdminEmail: 'root@example.com' }), /ADMIN_NOT_ELIGIBLE/);
+    assert.equal(ineligible.data.get('properties')?.length, 1);
+  }
+  const duplicate = fakeConnection({ ...seed, users: [seed.users[0]!, { ...seed.users[0], _id: new Types.ObjectId() }] });
+  await assert.rejects(purgeProductionDatabase(duplicate.connection, { mode: 'apply', keepAdminEmail: 'root@example.com' }), /ADMIN_NOT_UNIQUE/);
+  assert.equal(duplicate.data.get('properties')?.length, 1);
 });
 
 test('backup verification requires non-empty artifacts with matching checksums inside the backup root', async () => {
