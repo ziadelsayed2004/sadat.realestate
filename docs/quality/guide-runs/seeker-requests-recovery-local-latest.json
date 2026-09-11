@@ -1,0 +1,134 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-06"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "a81f259e95838cf8b38c5840461aa5631c6ceeb5",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_cancel_reason_blocks_mutation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "detail": 200
+      },
+      "transitionRequests": 0,
+      "requestUnchanged": true,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "temporaryRequestRemoved": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-11T17:31:39.607Z"
+}

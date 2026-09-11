@@ -35,6 +35,7 @@ const communityPresentation = await readFile('docs/quality/guide-runs/community-
 const requestExport = await readFile('docs/quality/guide-runs/request-export-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityAccountState = await readFile('docs/quality/guide-runs/community-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerViewingsRecovery = await readFile('docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -318,6 +319,27 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/seeker-viewings-recovery-local-latest.json',
       scope: 'Seeker viewings; AR/EN on Desktop, Tablet and Pixel 5; browser offline fault and real API recovery without database mutation',
       verifiedAt: seekerViewingsRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-06' && seekerRequestsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && seekerRequestsRecovery.mockedRoutes === false && seekerRequestsRecovery.cleanup === true
+    && seekerRequestsRecovery.temporaryRequestRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => seekerRequestsRecovery.runs?.some(run =>
+      run.locale === locale && run.device === device && run.transitionRequests === 0 && run.requestUnchanged === true
+      && run.httpStatuses?.initial === 200 && run.httpStatuses?.empty === 200 && run.httpStatuses?.reset === 200
+      && run.httpStatuses?.recovered === 200 && run.httpStatuses?.detail === 200
+      && run.scrollWidth <= run.innerWidth)))) {
+    for (const [category, check] of [
+      ['empty', 'empty_search_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
+      ['validation', 'empty_cancel_reason_blocks_mutation'],
+    ]) {
+      if (seekerRequestsRecovery.runs.every(run => run.checks?.includes(check))) reviewedSubcases.push({
+        case: category, evidenceType: 'Browser/API/MongoDB', check,
+        path: 'docs/quality/guide-runs/seeker-requests-recovery-local-latest.json',
+        scope: 'Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed',
+        verifiedAt: seekerRequestsRecovery.finishedAt,
+      });
+    }
   }
   return {
     ...hydratedJourney,

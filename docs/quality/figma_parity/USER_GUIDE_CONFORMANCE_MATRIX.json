@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T17:27:17.455Z",
+  "generatedAt": "2026-09-11T17:31:47.044Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1831,9 +1831,9 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
@@ -1927,7 +1927,32 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
+      "reviewedSubcases": [
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_search_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
+          "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
+          "verifiedAt": "2026-09-11T17:31:39.607Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
+          "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
+          "verifiedAt": "2026-09-11T17:31:39.607Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_cancel_reason_blocks_mutation",
+          "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
+          "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
+          "verifiedAt": "2026-09-11T17:31:39.607Z"
+        }
+      ],
       "reviewedGuarantees": [
         {
           "category": "horizontalAccess",
@@ -4085,7 +4110,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T17:27:17.455Z",
+    "updatedAt": "2026-09-11T17:31:47.044Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
