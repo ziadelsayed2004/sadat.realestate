@@ -348,3 +348,9 @@
 - Added `GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md`, mapping actual requirements to scoped evidence and distinguishing generic moderation-only matrix fields from applicable favorite operations.
 - Strengthened navigation verifier: creates both favorites through the real detail Save button, asserts HTTP 200/new save/disabled confirmation and Mongo record before onward navigation. Six runs passed, temporary favorites/sessions cleaned. API-only fixture login first visits protected saved page to establish browser session hint; no application code changed.
 - GUIDE-08 records LOCAL_FUNCTIONAL_SCOPE_REVIEWED, while global status remains PARTIAL because Production and independent Figma acceptance are incomplete. Next: prioritize another journey's concrete gaps from the matrix; do not keep adding speculative saved subcases. Review Figma SEK-06 in its own design lane. Local runtime remains available; revalidate status before reuse.
+
+## 12 September: GUIDE-05 overview retry
+
+- Added and executed `scripts/verify-seeker-overview-recovery-local.mjs`: six AR/EN Desktop/Tablet/Pixel 5 runs passed. Initial overview request deliberately aborted (no response mocking); retry returns real HTTP 200 without document reload. No summary cards during failure; four recovered values match the API; no overflow.
+- Evidence `guide-runs/seeker-overview-recovery-local-latest.json` attached to GUIDE-05. Sessions created by test removed and favorites unchanged. Count equality proves UI/API agreement, not independent business-collection aggregation correctness.
+- Next: GUIDE-05 actual empty-account overview and aggregation correctness against owned requests/viewings/favorites, including foreign records and unavailable properties; inspect existing overview service tests before executing new checks. No CSS/application changes. Preserve Demo and reuse matching local runtime only after status check.

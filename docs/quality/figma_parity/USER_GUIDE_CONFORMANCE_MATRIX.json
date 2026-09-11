@@ -1818,7 +1818,7 @@
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "PARTIAL_BROWSER_API_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -1849,6 +1849,14 @@
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
         {
+          "path": "docs/quality/guide-runs/seeker-overview-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T21:55:00.559Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "faultInjection": "abort initial overview request; no fabricated responses"
+        },
+        {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL_DASHBOARD_ENTRY",
           "verifiedAt": "2026-09-10T12:40:22.743Z",
@@ -1863,7 +1871,16 @@
           }
         }
       ],
-      "reviewedSubcases": [],
+      "reviewedSubcases": [
+        {
+          "case": "networkRetry",
+          "check": "overview_retry_and_truthful_summary",
+          "path": "docs/quality/guide-runs/seeker-overview-recovery-local-latest.json",
+          "evidenceType": "Browser/API",
+          "scope": "Six AR/EN desktop/tablet/mobile runs; aborted initial request, no fake counts, real HTTP 200 retry without document navigation, four displayed counts match API; no fabricated response. Does not independently recompute counts from business collections.",
+          "verifiedAt": "2026-09-11T21:55:00.559Z"
+        }
+      ],
       "reviewedGuarantees": []
     },
     {
