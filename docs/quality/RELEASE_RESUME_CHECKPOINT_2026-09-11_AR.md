@@ -330,3 +330,9 @@
 - `scripts/verify-saved-navigation-local.mjs` passed six real browser/API/MongoDB runs: AR/EN on Desktop/Tablet/Pixel 5. Saved card opens a real detail (HTTP 200), back opens listing, two selections open successful comparison. Locale preserved; no overflow.
 - Reused matching existing build (no application changes since build). Added only temporary favorites for an empty local test account, then removed them and new sessions. Existing public properties were not replaced or deleted.
 - Attached `guide-runs/saved-navigation-local-latest.json` to GUIDE-08. This closes the previously missing navigation subcase, not the overall production journey. Next: audit the accumulated GUIDE-08 evidence against the complete journey and identify actual outstanding requirements; continue remaining journeys/Figma without rerunning unaffected successes. Demo/launch constraints remain unchanged.
+
+## 12 September: logout protection for saved properties
+
+- `scripts/verify-favorites-logout-local.mjs` passed six AR/EN desktop/tablet/mobile runs on the full local runtime. Login access reads 200; logout succeeds; the same old token receives 401 for GET/PUT/DELETE favorites. Browser displays the existing permission state without cards. Sessions created by the check were removed; favorites unchanged.
+- Initial verifier expected a login redirect; source inspection confirmed the implemented permission page. Corrected that assertion, not application behavior. No CSS changes.
+- GUIDE-08 incompleteReason now lists concrete remaining local subcases: failed remove mutation recovery and a saved property becoming unavailable during interaction. Production and Figma remain separate incomplete requirements. Next: implement and run the failed-remove browser recovery check on the currently running matching local build (supervisor last checked ready, pid 10704; revalidate before reuse).

@@ -1,0 +1,147 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-08"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "f218b3b77dff1c16e55176fe1839bd98038cf3e9",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        },
+        {
+          "method": "PUT",
+          "httpStatus": 401
+        },
+        {
+          "method": "DELETE",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    }
+  ],
+  "startedAt": "2026-09-11T21:48:33.820Z",
+  "sessionsRemoved": true,
+  "favoritesUnchanged": true,
+  "finishedAt": "2026-09-11T21:48:42.961Z"
+}

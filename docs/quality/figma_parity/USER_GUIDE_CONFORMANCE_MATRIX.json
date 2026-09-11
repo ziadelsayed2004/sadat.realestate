@@ -2346,8 +2346,15 @@
       "executionDate": "2026-09-11T18:41:30.168Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local evidence covers save/remove, duplicate save, empty list, pagination/delete recovery, offline retry, navigation to detail/comparison, account/role/ownership validation, and logout revocation. Still unverified: browser recovery from a failed remove mutation, browser behavior when a saved property becomes unavailable during interaction, and Production execution. Figma approval remains separate.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/favorites-logout-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T21:48:42.961Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/saved-navigation-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -2427,6 +2434,12 @@
           "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
           "scope": "Real HTTP with isolated MongoDB and locally signed tokens: other-account list/delete isolation; provider/admin and anonymous denied; old seeker token denied after suspended/rejected/role_changed/deleted; malformed requests rejected; unavailable properties excluded; duplicate save preserves one record. Does not exercise login/refresh/session revocation or production.",
           "verifiedAt": "2026-09-11T20:02:33.400Z"
+        },
+        {
+          "check": "logout_revokes_favorites_access",
+          "path": "docs/quality/guide-runs/favorites-logout-local-latest.json",
+          "scope": "Full local runtime: authenticated read 200, logout 200, old-token GET/PUT/DELETE each 401; browser permission state without cards; six AR/EN desktop/tablet/mobile runs, no favorite writes, created sessions removed.",
+          "verifiedAt": "2026-09-11T21:48:42.961Z"
         }
       ]
     },
