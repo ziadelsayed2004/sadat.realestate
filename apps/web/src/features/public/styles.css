@@ -1988,7 +1988,6 @@
   }
 
   .public-homepage__section--banners {
-    block-size: 30.875rem !important;
     padding-block: 1.9375rem 1.4375rem;
   }
 
@@ -2577,6 +2576,7 @@
 
 .public-homepage__section--banners .public-homepage__banner-card {
   overflow: visible;
+  min-height: max-content;
 }
 
 .public-homepage__section--banners .public-homepage__banner-link {
