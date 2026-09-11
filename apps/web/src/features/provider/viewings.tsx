@@ -162,7 +162,7 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
   }
 
   return (
-    <Modal open title={title} description={description} closeLabel={copy.dialog.close} onClose={onClose} footer={(
+    <Modal open className="provider-viewings__transition-modal" title={title} description={description} closeLabel={copy.dialog.close} onClose={onClose} footer={(
       <>
         <Button type="button" variant="secondary" onClick={onClose} disabled={saving}>{copy.dialog.cancel}</Button>
         <Button type="submit" form={formId} loading={saving}>{copy.dialog.confirm}</Button>
@@ -329,7 +329,7 @@ export function ProviderViewings({ locale, session, authClient, apiOrigin, load,
   }
 
   return (
-    <section className="provider-dashboard provider-viewings" data-screen-id="PRV-18" data-route="/provider/viewings" data-device-scope="desktop" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <section className="provider-dashboard provider-viewings" data-screen-id="PRV-18" data-route="/provider/viewings" data-device-scope="desktop/tablet/mobile" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {feedback ? <p className="provider-viewings__feedback" role="status" aria-live="polite">{feedback}</p> : null}

@@ -1,6 +1,6 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import arMessages from './messages/ar.json';
-import enMessages from './messages/en.json';
+import arMessages from './messages/ar.json' with { type: 'json' };
+import enMessages from './messages/en.json' with { type: 'json' };
 
 type TranslationBranch = string | readonly TranslationBranch[] | { readonly [key: string]: TranslationBranch };
 

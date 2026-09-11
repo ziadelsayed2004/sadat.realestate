@@ -16,3 +16,5 @@ apps/web/playwright-report/
 .tmp/
 .tmp-*
 /playwright-report/
+.playwright-*/
+**/.playwright-*/

@@ -291,7 +291,21 @@
   font-weight: 700;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .provider-viewings__heading {
+    align-items: stretch;
+    margin-bottom: 24px;
+  }
+
+  .provider-viewings__heading h1 {
+    font-size: 1.5rem;
+    line-height: 1.35;
+  }
+
+  .provider-viewings__panel {
+    margin-top: 0;
+  }
+
   .provider-viewings__filters,
   .provider-viewings__form-grid {
     grid-template-columns: 1fr;
@@ -301,5 +315,191 @@
 
   .provider-viewings__field {
     min-width: 0;
+  }
+
+  .provider-viewings__filter-actions .ui-button {
+    min-height: 44px;
+  }
+
+  .provider-viewings__card {
+    min-width: 0;
+    padding: 18px;
+    border-color: #e8ecf2;
+  }
+
+  .provider-viewings__card-heading strong,
+  .provider-viewings__card-heading span,
+  .provider-viewings__note {
+    overflow-wrap: anywhere;
+  }
+
+  .provider-viewings__card > .provider-viewings__actions .ui-button {
+    min-height: 40px;
+  }
+
+  .provider-viewings__transition-modal {
+    width: min(100%, 32rem);
+  }
+}
+
+@media (max-width: 620px) {
+  .provider-viewings__heading {
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  .provider-viewings__heading h1 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .provider-viewings__heading p:last-child {
+    color: #99a1af;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .provider-viewings__filter-disclosure {
+    margin-bottom: 18px;
+  }
+
+  .provider-viewings__filter-disclosure summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .provider-viewings__filters {
+    gap: 12px;
+    margin: 8px 0 18px;
+    padding: 12px;
+  }
+
+  .provider-viewings__filter-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .provider-viewings__filter-actions .ui-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .provider-viewings__groups {
+    gap: 18px;
+  }
+
+  .provider-viewings__group {
+    gap: 10px;
+  }
+
+  .provider-viewings__group h3 {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 0;
+    border-radius: 0;
+    border-bottom: 1px solid #eef1f5;
+    background: transparent;
+  }
+
+  .provider-viewings__card {
+    gap: 14px;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .provider-viewings__card-heading {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .provider-viewings__card-heading > div {
+    gap: 6px;
+  }
+
+  .provider-viewings__card-heading strong {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .provider-viewings__card-heading span {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .provider-viewings__clock {
+    grid-column: 1;
+    grid-row: 1;
+    width: 48px;
+  }
+
+  .provider-viewings__card-heading > .ui-badge {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: start;
+    max-width: 92px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .provider-viewings__note {
+    padding-top: 12px;
+    border-top: 1px solid #f3f4f6;
+    line-height: 20px;
+  }
+
+  .provider-viewings__card > .provider-viewings__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .provider-viewings__card > .provider-viewings__actions .ui-button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    white-space: normal;
+  }
+
+  .provider-viewings:has(.provider-viewings__transition-modal) .ui-modal-backdrop {
+    inset: 56px 0 64px;
+    z-index: 35;
+    padding: 16px;
+  }
+
+  .provider-viewings__transition-modal {
+    max-height: calc(100dvh - 152px);
+    border-radius: 14px;
+  }
+
+  .provider-viewings__transition-modal .ui-modal__header,
+  .provider-viewings__transition-modal .ui-modal__body,
+  .provider-viewings__transition-modal .ui-modal__footer {
+    padding: 12px;
+  }
+
+  .provider-viewings__transition-modal .ui-modal__header h2 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .provider-viewings__transition-modal .ui-modal__header p {
+    display: none;
+  }
+
+  .provider-viewings__transition-modal .ui-modal__footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .provider-viewings__transition-modal .ui-modal__footer .ui-button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
   }
 }

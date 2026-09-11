@@ -4,10 +4,14 @@ import { getProviderViewingsCopy } from '../../src/features/provider/viewings-co
 test('PRV-18 enriched appointments fit every device and open reschedule', async ({ page }, testInfo) => {
   const locale = localeForViewings();
   const copy = getProviderViewingsCopy(locale);
+  if (testInfo.project.name.startsWith('tablet-')) await page.setViewportSize({ width: 1024, height: 944 });
+  if (testInfo.project.name.startsWith('mobile-')) await page.setViewportSize({ width: 402, height: 1042 });
+  testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:121591 (1024x944); mobile node 6017:119785 (402x1042)' });
   const property = { id: PROPERTY_ID, slug: 'viewing-apartment', kind: 'property', transactionType: 'sale', name: { ar: 'شقة واسعة في الحي الأول بالقرب من الخدمات', en: 'Spacious first district apartment near local services' }, locationName: { ar: 'الحي الأول، مدينة السادات', en: 'First district, Sadat City' } };
   await routeSession(page);
   await page.route('**/api/v1/provider/viewings**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(), property, customerName: 'Local Customer' }], page: 1, limit: 5, total: 1 }, 'responsive-viewings') }));
   await page.goto(`/provider/viewings?lang=${locale}`);
+  await expect(page.locator('[data-screen-id="PRV-18"]')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
   const card = page.getByTestId('provider-viewing-row');
   await expect(card.getByText(property.name[locale])).toBeVisible();
   await expect(card.getByText(property.locationName[locale])).toBeVisible();
@@ -25,11 +29,27 @@ test('PRV-18 enriched appointments fit every device and open reschedule', async 
   expect(box).not.toBeNull();
   expect(box!.x).toBeGreaterThanOrEqual(0);
   expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  if (page.viewportSize()!.width <= 620) {
+    const bottomNavigation = await page.locator('.provider-dashboard__navigation').boundingBox();
+    expect(bottomNavigation?.height).toBeLessThanOrEqual(64);
+    await page.locator('.provider-dashboard__menu-button').click();
+    await expect(page.locator('.provider-dashboard__navigation')).toHaveAttribute('data-mobile-open', 'true');
+    await page.locator('.provider-dashboard__navigation-backdrop').click({ position: { x: 2, y: 2 } });
+    await expect(page.locator('.provider-dashboard__navigation')).not.toHaveAttribute('data-mobile-open', 'true');
+    for (const button of await card.getByRole('button').all()) {
+      const bounds = await button.boundingBox();
+      expect(bounds?.height).toBeGreaterThanOrEqual(44);
+    }
+  }
   await page.screenshot({ path: testInfo.outputPath('appointments.png'), fullPage: true });
   await card.getByRole('button', { name: `${copy.actions.reschedule}: ${property.name[locale]}`, exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByLabel(copy.dialog.date, { exact: true })).toBeVisible();
   expect(await fits()).toBeTruthy();
+  const dialogBounds = await page.getByRole('dialog').boundingBox();
+  expect(dialogBounds?.x).toBeGreaterThanOrEqual(0);
+  expect((dialogBounds?.x ?? 0) + (dialogBounds?.width ?? 0)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  expect(dialogBounds?.height).toBeLessThanOrEqual(page.viewportSize()!.height);
   await page.screenshot({ path: testInfo.outputPath('reschedule.png'), fullPage: true });
 });
 
