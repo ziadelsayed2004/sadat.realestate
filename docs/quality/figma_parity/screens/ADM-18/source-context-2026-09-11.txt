@@ -1,0 +1,310 @@
+const imgIcon = "https://www.figma.com/api/mcp/asset/1724ce98-6e35-4d28-a884-6665b4a732d4.svg";
+const imgIcon1 = "https://www.figma.com/api/mcp/asset/af5335a2-3950-4821-94c8-f4230ad3a757.svg";
+
+export default function Container() {
+  return (
+    <div className="content-stretch flex flex-col items-start relative size-full" data-node-id="6017:69859" data-name="Container">
+      <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="6017:69860" data-name="Container">
+        <div className="content-stretch flex flex-col items-start relative shrink-0 w-[134.234px]" data-node-id="6017:69861" data-name="Container">
+          <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="6017:69862" data-name="Heading 1">
+            <p className="[word-break:break-word] font-['Cairo:Bold'] font-bold leading-[32px] not-italic relative shrink-0 text-[#17233d] text-[24px] whitespace-nowrap" dir="auto" data-node-id="6017:69863">
+              إدارة الطلبات
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col h-[24px] items-start pt-[4px] relative shrink-0 w-[134.234px]" data-node-id="6017:69864" data-name="Paragraph">
+            <p className="[word-break:break-word] font-['Cairo:Regular'] font-normal leading-[20px] not-italic relative shrink-0 text-[#6b7280] text-[14px] whitespace-nowrap" dir="auto" data-node-id="6017:69865">
+              6 طلب
+            </p>
+          </div>
+        </div>
+        <div className="border border-[rgba(23,35,61,0.15)] border-solid content-stretch flex gap-[8px] items-center justify-center px-[16px] py-[8px] relative rounded-[18px] shrink-0" data-node-id="6017:69866" data-name="Button">
+          <div className="relative shrink-0 size-[14px]" data-node-id="6017:69867" data-name="Icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon} />
+          </div>
+          <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[#17233d] text-[14px] text-center whitespace-nowrap" dir="auto" data-node-id="6017:69871">
+            تصدير CSV
+          </p>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col items-center pt-[20px] relative shrink-0 w-full" data-node-id="6017:69872" data-name="Container:margin">
+        <div className="bg-white border border-[rgba(23,35,61,0.07)] border-solid content-stretch drop-shadow-[0px_1px_1.5px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.1)] flex gap-[12px] items-center p-[16px] relative rounded-[16px] shrink-0 w-full" data-node-id="6017:69873" data-name="Container">
+          <div className="content-stretch flex gap-[8px] items-start relative shrink-0" data-node-id="6017:69874" data-name="Container">
+            <div className="bg-[#17233d] content-stretch flex flex-col items-center justify-center px-[12px] py-[6px] relative rounded-[14px] shrink-0" data-node-id="6017:69875" data-name="Button">
+              <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[14px] text-center text-white whitespace-nowrap" dir="auto" data-node-id="6017:69876">
+                الكل
+              </p>
+            </div>
+            <div className="bg-[#f3e8d0] content-stretch flex flex-col items-center justify-center px-[12px] py-[6px] relative rounded-[14px] shrink-0" data-node-id="6017:69877" data-name="Button">
+              <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[#17233d] text-[14px] text-center whitespace-nowrap" dir="auto" data-node-id="6017:69878">
+                جديد
+              </p>
+            </div>
+            <div className="bg-[#f3e8d0] content-stretch flex flex-col items-center justify-center px-[12px] py-[6px] relative rounded-[14px] shrink-0" data-node-id="6017:69879" data-name="Button">
+              <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[#17233d] text-[14px] text-center whitespace-nowrap" dir="auto" data-node-id="6017:69880">
+                قيد المتابعة
+              </p>
+            </div>
+            <div className="bg-[#f3e8d0] content-stretch flex flex-col items-center justify-center px-[12px] py-[6px] relative rounded-[14px] shrink-0" data-node-id="6017:69881" data-name="Button">
+              <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[#17233d] text-[14px] text-center whitespace-nowrap" dir="auto" data-node-id="6017:69882">
+                تم التواصل
+              </p>
+            </div>
+            <div className="bg-[#f3e8d0] content-stretch flex flex-col items-center justify-center px-[12px] py-[6px] relative rounded-[14px] shrink-0" data-node-id="6017:69883" data-name="Button">
+              <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[20px] not-italic relative shrink-0 text-[#17233d] text-[14px] text-center whitespace-nowrap" dir="auto" data-node-id="6017:69884">
+                مغلق
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-[1_0_0] items-start min-w-px relative" data-node-id="6017:69885" data-name="Container:align">
+            <div className="h-[38px] relative shrink-0 w-[208px]" data-node-id="6017:69886" data-name="Container">
+              <div className="absolute left-[12px] size-[14px] top-[12px]" data-node-id="6017:69887" data-name="Icon">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon1} />
+              </div>
+              <div className="absolute bg-[#f3e8d0] border border-[rgba(23,35,61,0.12)] border-solid content-stretch flex flex-col h-[38px] items-start justify-center left-0 overflow-clip pl-[36px] pr-[12px] py-[8px] rounded-[18px] top-0 w-[208px]" data-node-id="6017:69890" data-name="Text Input">
+                <p className="[word-break:break-word] font-['Cairo:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[14px] text-[rgba(23,35,61,0.5)] w-full" dir="auto" data-node-id="6017:69891">
+                  بحث بالاسم أو الهاتف...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col items-start pt-[20px] relative shrink-0 w-full" data-node-id="6017:69892" data-name="Container:margin">
+        <div className="bg-white border border-[rgba(23,35,61,0.07)] border-solid content-stretch flex flex-col h-[364px] items-start overflow-clip relative rounded-[16px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] shrink-0 w-full" data-node-id="6017:69893" data-name="Container">
+          <div className="h-[362px] overflow-clip relative shrink-0 w-full" data-node-id="6017:69894" data-name="Table">
+            <div className="[word-break:break-word] absolute bg-[#f3e8d0] border-[rgba(23,35,61,0.08)] border-b border-solid font-['Cairo:SemiBold'] font-semibold h-[44.5px] leading-[20px] left-0 not-italic text-[#17233d] text-[14px] top-0 w-[1271px] whitespace-nowrap" data-node-id="6017:69895" data-name="Table Header">
+              <p className="absolute left-[1213.95px] top-[12px]" dir="auto" data-node-id="6017:69896">
+                العميل
+              </p>
+              <p className="absolute left-[1018.77px] top-[12px]" dir="auto" data-node-id="6017:69897">
+                رقم الهاتف
+              </p>
+              <p className="absolute left-[888.44px] top-[12px]" dir="auto" data-node-id="6017:69898">
+                العقار
+              </p>
+              <p className="absolute left-[663.02px] top-[12px]" dir="auto" data-node-id="6017:69899">
+                المصدر
+              </p>
+              <p className="absolute left-[569.19px] top-[12px]" dir="auto" data-node-id="6017:69900">
+                الحالة
+              </p>
+              <p className="absolute left-[389.52px] top-[12px]" dir="auto" data-node-id="6017:69901">
+                المسؤول
+              </p>
+              <p className="absolute left-[268.39px] top-[12px]" dir="auto" data-node-id="6017:69902">
+                التاريخ
+              </p>
+              <p className="absolute left-[122.42px] top-[12px]" dir="auto" data-node-id="6017:69903">
+                الإجراء
+              </p>
+            </div>
+            <div className="absolute border-[rgba(23,35,61,0.05)] border-b border-solid h-[53px] left-0 top-[44.5px] w-[1271px]" data-node-id="6017:69904" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1168.39px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69905">
+                محمود إبراهيم
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69906">
+                01012345678
+              </p>
+              <div className="absolute h-[53px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69907" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[52.67px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69908">
+                  شقة فاخرة في الحي الأول
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[661.53px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69909">
+                الموقع
+              </p>
+              <div className="absolute bg-[#dbeafe] border border-[#bedbff] border-solid content-stretch flex items-center left-[557px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69910" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#1447e6] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69911">
+                  جديد
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[385.72px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69912">
+                سارة أحمد
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69913">
+                15 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69914" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69915">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+            <div className="absolute border-[rgba(23,35,61,0.05)] border-b border-solid h-[53px] left-0 top-[97.5px] w-[1271px]" data-node-id="6017:69916" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1162.06px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69917">
+                نهال عبد الرحمن
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69918">
+                01198765432
+              </p>
+              <div className="absolute h-[53px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69919" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[35.81px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69920">
+                  فيلا مستقلة بالمنطقة الراقية
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[661.66px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69921">
+                واتساب
+              </p>
+              <div className="absolute bg-[#fef3c6] border border-[#fee685] border-solid content-stretch flex items-center left-[519.06px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69922" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#bb4d00] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69923">
+                  قيد المتابعة
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[373.22px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69924">
+                كريم عبد الله
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69925">
+                14 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69926" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69927">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+            <div className="absolute border-[rgba(23,35,61,0.05)] border-b border-solid h-[53px] left-0 top-[150.5px] w-[1271px]" data-node-id="6017:69928" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1186.34px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69929">
+                طارق حسين
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69930">
+                01234567890
+              </p>
+              <div className="absolute h-[53px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69931" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[23.47px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69932">
+                  دوبلكس فاخر في الحي الخامس
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[661.53px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69933">
+                الموقع
+              </p>
+              <div className="absolute bg-[#dcfce7] border border-[#b9f8cf] border-solid content-stretch flex items-center left-[526.41px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69934" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#008236] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69935">
+                  تم التواصل
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[385.72px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69936">
+                سارة أحمد
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69937">
+                13 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69938" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69939">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+            <div className="absolute border-[rgba(23,35,61,0.05)] border-b border-solid h-[53px] left-0 top-[203.5px] w-[1271px]" data-node-id="6017:69940" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1177.86px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69941">
+                رانيا مصطفى
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69942">
+                01567890123
+              </p>
+              <div className="absolute h-[53px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69943" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[50.78px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69944">
+                  شقة للإيجار في الحي الثالث
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[673.25px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69945">
+                إعلان
+              </p>
+              <div className="absolute bg-[#f3f4f6] border border-[#e5e7eb] border-solid content-stretch flex items-center left-[549.97px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69946" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#6a7282] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69947">
+                  مغلق
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[373.22px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69948">
+                كريم عبد الله
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69949">
+                10 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69950" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69951">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+            <div className="absolute border-[rgba(23,35,61,0.05)] border-b border-solid h-[53px] left-0 top-[256.5px] w-[1271px]" data-node-id="6017:69952" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1188.73px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69953">
+                أسامة فريد
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69954">
+                01011122334
+              </p>
+              <div className="absolute h-[53px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69955" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[46.2px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69956">
+                  أرض سكنية في الحي السابع
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[661.53px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69957">
+                الموقع
+              </p>
+              <div className="absolute bg-[#dbeafe] border border-[#bedbff] border-solid content-stretch flex items-center left-[557px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69958" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#1447e6] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69959">
+                  جديد
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[16px] left-[399.98px] not-italic text-[#e17100] text-[12px] top-[18.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69960">
+                غير مسند
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69961">
+                15 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69962" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69963">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+            <div className="absolute h-[52.5px] left-0 top-[309.5px] w-[1271px]" data-node-id="6017:69964" data-name="Table Row">
+              <p className="[word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[20px] left-[1199.02px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69965">
+                مايا جمال
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[954.67px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" data-node-id="6017:69966">
+                01099887766
+              </p>
+              <div className="absolute h-[52.5px] left-[720.03px] overflow-clip top-0 w-[218.641px]" data-node-id="6017:69967" data-name="Table Cell">
+                <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[8.92px] not-italic text-[#17233d] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69968">
+                  مكتب تجاري في المنطقة الصناعية
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[676.42px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69969">
+                إحالة
+              </p>
+              <div className="absolute bg-[#fef3c6] border border-[#fee685] border-solid content-stretch flex items-center left-[519.06px] px-[10px] py-[2px] rounded-[33554400px] top-[15.5px]" data-node-id="6017:69970" data-name="Text">
+                <p className="[word-break:break-word] font-['Cairo:SemiBold'] font-semibold leading-[16px] not-italic relative shrink-0 text-[#bb4d00] text-[12px] whitespace-nowrap" dir="auto" data-node-id="6017:69971">
+                  قيد المتابعة
+                </p>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[385.72px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69972">
+                سارة أحمد
+              </p>
+              <p className="[word-break:break-word] absolute font-['Cairo:Regular'] font-normal leading-[20px] left-[230.08px] not-italic text-[#6b7280] text-[14px] top-[16.5px] whitespace-nowrap" dir="auto" data-node-id="6017:69973">
+                12 يناير 2024
+              </p>
+              <div className="absolute bg-[#f3e8d0] h-[28px] left-[63.11px] rounded-[14px] top-[12.5px] w-[96.422px]" data-node-id="6017:69974" data-name="Button">
+                <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Cairo:SemiBold'] font-semibold leading-[16px] left-[48px] not-italic text-[#17233d] text-[12px] text-center top-[5px] whitespace-nowrap" dir="auto" data-node-id="6017:69975">
+                  عرض التفاصيل
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.
