@@ -169,5 +169,20 @@
     "authority": "SUPPLIED_PRODUCTION_EXAMPLES_AND_CURRENT_RTL_CONVENTION",
     "decision": "Arabic Admin navigation remains on the right; English remains on the left.",
     "effect": "The recovered node is still used for exact dimensions, shell sizing and content review. Its left-side Arabic navigation is an explicit historical direction exception."
+  },
+  "densityReview20260911": {
+    "review": "docs/quality/figma_parity/screens/ADM-18/density-review-2026-09-11.md",
+    "before": "docs/quality/figma_parity/screens/ADM-18/density-before-2026-09-11.json",
+    "after": "docs/quality/figma_parity/screens/ADM-18/density-after-2026-09-11.json",
+    "officialClosureEligible": false,
+    "realBrowserApiRuns": 6,
+    "componentTestsPassed": 6,
+    "fixtureE2ETestsPassed": 10,
+    "remaining": [
+      "CSV action",
+      "exact toolbar geometry and styling",
+      "date presentation",
+      "equivalent source/runtime populated state"
+    ]
   }
 }

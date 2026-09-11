@@ -1,0 +1,501 @@
+{
+  "phase": "after",
+  "environment": "local-real-browser-API",
+  "mockedRoutes": false,
+  "sourceNode": "6017:69859",
+  "runs": [
+    {
+      "device": "Desktop",
+      "locale": "ar",
+      "metrics": {
+        "innerWidth": 1577,
+        "scrollWidth": 1577,
+        "heading": {
+          "x": 1124.03125,
+          "y": 88,
+          "width": 172.96875,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 24,
+          "y": 167,
+          "width": 1273,
+          "height": 76,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": 25,
+          "y": 264,
+          "width": 1271,
+          "height": 998.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": 25,
+          "y": 308,
+          "width": 1271,
+          "height": 53,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": 25,
+          "y": 264,
+          "width": 1271,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 0,
+          "y": 64,
+          "width": 1321,
+          "height": 1291.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Desktop-ar.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    },
+    {
+      "device": "Desktop",
+      "locale": "en",
+      "metrics": {
+        "innerWidth": 1577,
+        "scrollWidth": 1577,
+        "heading": {
+          "x": 280,
+          "y": 88,
+          "width": 123.078125,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 280,
+          "y": 167,
+          "width": 1273,
+          "height": 76,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": 281,
+          "y": 264,
+          "width": 1271,
+          "height": 1254.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": 281,
+          "y": 308,
+          "width": 1271,
+          "height": 53,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": 281,
+          "y": 264,
+          "width": 1271,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 256,
+          "y": 64,
+          "width": 1321,
+          "height": 1547.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Desktop-en.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    },
+    {
+      "device": "Tablet",
+      "locale": "ar",
+      "metrics": {
+        "innerWidth": 768,
+        "scrollWidth": 768,
+        "heading": {
+          "x": 571.03125,
+          "y": 89,
+          "width": 172.96875,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 24,
+          "y": 168,
+          "width": 720,
+          "height": 132,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": -197,
+          "y": 321,
+          "width": 940,
+          "height": 1286.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": -197,
+          "y": 365,
+          "width": 940,
+          "height": 69,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": -197,
+          "y": 321,
+          "width": 940,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 0,
+          "y": 65,
+          "width": 768,
+          "height": 1635.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Tablet-ar.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    },
+    {
+      "device": "Tablet",
+      "locale": "en",
+      "metrics": {
+        "innerWidth": 768,
+        "scrollWidth": 768,
+        "heading": {
+          "x": 24,
+          "y": 89,
+          "width": 123.078125,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 24,
+          "y": 168,
+          "width": 720,
+          "height": 132,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": 25,
+          "y": 321,
+          "width": 940,
+          "height": 1286.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": 25,
+          "y": 365,
+          "width": 940,
+          "height": 69,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": 25,
+          "y": 321,
+          "width": 940,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 0,
+          "y": 65,
+          "width": 768,
+          "height": 1635.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Tablet-en.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    },
+    {
+      "device": "Pixel5",
+      "locale": "ar",
+      "metrics": {
+        "innerWidth": 393,
+        "scrollWidth": 393,
+        "heading": {
+          "x": 196.03125,
+          "y": 89,
+          "width": 172.96875,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 24,
+          "y": 168,
+          "width": 345,
+          "height": 240,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": -572,
+          "y": 429,
+          "width": 940,
+          "height": 1286.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": -572,
+          "y": 473,
+          "width": 940,
+          "height": 69,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": -572,
+          "y": 429,
+          "width": 940,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 0,
+          "y": 65,
+          "width": 393,
+          "height": 1777.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Pixel5-ar.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    },
+    {
+      "device": "Pixel5",
+      "locale": "en",
+      "metrics": {
+        "innerWidth": 393,
+        "scrollWidth": 393,
+        "heading": {
+          "x": 24,
+          "y": 89,
+          "width": 123.078125,
+          "height": 32,
+          "fontSize": "24px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "filters": {
+          "x": 24,
+          "y": 168,
+          "width": 345,
+          "height": 240,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px"
+        },
+        "table": {
+          "x": 25,
+          "y": 429,
+          "width": 940,
+          "height": 1286.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "row": {
+          "x": 25,
+          "y": 473,
+          "width": 940,
+          "height": 69,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "header": {
+          "x": 25,
+          "y": 429,
+          "width": 940,
+          "height": 44,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "0px"
+        },
+        "content": {
+          "x": 0,
+          "y": 65,
+          "width": 393,
+          "height": 1777.5,
+          "fontSize": "16px",
+          "fontFamily": "Cairo, \"Noto Sans SC\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "color": "rgb(27, 41, 66)",
+          "background": "rgba(0, 0, 0, 0)",
+          "padding": "24px"
+        }
+      },
+      "screenshot": "docs/quality/figma_parity/screens/ADM-18/density-after-Pixel5-en.png",
+      "checks": [
+        "quick_status_real_API",
+        "advanced_status_and_type_real_API",
+        "clear_restores_results",
+        "search_enter_empty_without_navigation"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "finishedAt": "2026-09-11T11:48:25.420Z"
+}

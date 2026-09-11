@@ -76,9 +76,9 @@ test.describe('ADM-18 through ADM-24 request administration', () => {
     await page.goto(`/admin/requests?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-testid^="admin-request-"]')).toHaveCount(6);
     const navigationCount = await page.evaluate(() => performance.getEntriesByType('navigation').length);
-    await page.locator('[role="tab"][data-filter-value="closed"]').click();
+    await page.locator('.admin-requests__quick-status').getByRole('button', { name: locale === 'ar' ? 'مغلق' : 'Closed', exact: true }).click();
     await expect(page.locator('[data-state="empty"]')).toBeVisible();
-    await page.locator('[role="tab"][data-filter-value="all"]').click();
+    await page.locator('.admin-requests__quick-status').getByRole('button', { name: locale === 'ar' ? 'الكل' : 'All', exact: true }).click();
     await expect(page.locator('[data-testid^="admin-request-"]')).toHaveCount(6);
     await expect.poll(() => page.evaluate(() => performance.getEntriesByType('navigation').length)).toBe(navigationCount);
   });
