@@ -1075,7 +1075,7 @@
     align-items: start;
     gap: 1.5rem;
     min-block-size: 11rem;
-    padding-block: 1.5rem 1.25rem;
+    padding: 1.5rem;
     direction: ltr;
   }
 
