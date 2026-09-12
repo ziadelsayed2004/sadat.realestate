@@ -16,3 +16,14 @@ test('admin request operations support filtered visibility, assignment, and RBAC
   const reviewed = await service.transition(admin, row.id, { transition: 'start_review', reason: 'Review request', expectedVersion: 1 });
   assert.equal(reviewed.status, 'under_review');
 });
+
+test('admin request projection exposes only currently authorized controls', async () => {
+  const granted = new Set(['admin:requests.view']);
+  const service = createRequestService({
+    authorization: { authorize: async (_adminId, permission) => granted.has(permission) },
+    repository: createInMemoryRequestRepository([row]),
+  });
+  const projected = (await service.list(admin, { page: 1, limit: 20 })).items[0];
+  assert.deepEqual(projected?.availableActions, []);
+  assert.deepEqual(projected?.capabilities, { assign: false, note: false });
+});

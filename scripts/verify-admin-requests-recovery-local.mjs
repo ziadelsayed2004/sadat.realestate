@@ -32,12 +32,13 @@ const report = {
   environment: 'local-real-browser-api-mongodb',
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   routes: routes.map(([route, screenId]) => ({ route, screenId })),
-  runs: [], temporaryRequestRemoved: false, cleanup: false,
+  runs: [], limitedAdmin: [], temporaryRequestRemoved: false, cleanup: false,
 };
 const mongo = await mongoose.createConnection(mongoUri).asPromise();
 const browser = await chromium.launch();
 let seeker;
 let admin;
+let viewer;
 let temporaryRequestId;
 const originalSessions = new Map();
 let stage = 'setup';
@@ -67,10 +68,13 @@ try {
     { sort: { _id: -1 } },
   );
   admin = await mongo.collection('users').findOne({ roleType: 'admin', normalizedEmail: adminEmail, status: 'verified' });
+  viewer = await mongo.collection('users').findOne({ roleType: 'admin', normalizedEmail: 'admin.viewer@example.invalid', status: 'verified' });
   assert.ok(seeker, 'Existing local GUIDE-04 fixture required');
   assert.ok(admin, 'Existing local demo Super Admin required');
+  assert.ok(viewer, 'Existing local read-only Admin fixture required');
   await rememberSessions(seeker);
   await rememberSessions(admin);
+  await rememberSessions(viewer);
 
   const setupContext = await browser.newContext();
   try {
@@ -96,17 +100,26 @@ try {
   }
   assert.ok(temporaryRequestId, 'Temporary contact request was not created');
 
+  async function authenticatedStorageState(email) {
+    const context = await browser.newContext();
+    try {
+      const login = await context.request.post(`${base}/api/v1/auth/login`, {
+        data: { email, password: adminPassword },
+      });
+      assert.equal(login.status(), 200, `Local admin login failed for ${email}`);
+      return context.storageState();
+    } finally {
+      await context.close();
+    }
+  }
+  let adminStorageState = await authenticatedStorageState(adminEmail);
+  let viewerStorageState = await authenticatedStorageState(viewer.normalizedEmail);
+
   for (const locale of ['ar', 'en']) {
     for (const [device, preset] of [['desktop', 'Desktop Chrome'], ['tablet', 'Galaxy Tab S4'], ['mobile', 'Pixel 5']]) {
       stage = `${locale}/${device}/login`;
-      const context = await browser.newContext({ ...devices[preset] });
-      let loggedIn = false;
+      const context = await browser.newContext({ ...devices[preset], storageState: adminStorageState });
       try {
-        const login = await context.request.post(`${base}/api/v1/auth/login`, {
-          data: { email: adminEmail, password: adminPassword },
-        });
-        loggedIn = login.status() === 200;
-        assert.ok(loggedIn, 'Local demo Super Admin login failed');
         const page = await context.newPage();
         const routeChecks = [];
         let transitionRequests = 0;
@@ -193,8 +206,68 @@ try {
         });
       } finally {
         await context.setOffline(false);
+        adminStorageState = await context.storageState();
         await context.close();
       }
+    }
+  }
+
+  for (const locale of ['ar', 'en']) {
+    stage = `${locale}/limited-admin`;
+    const context = await browser.newContext({ ...devices['Desktop Chrome'], storageState: viewerStorageState });
+    try {
+      const page = await context.newPage();
+      const routeChecks = [];
+      const allowedScreens = new Set(['ADM-19', 'ADM-20', 'ADM-21', 'ADM-23']);
+      for (const [route, screenId, apiPath] of routes) {
+        stage = `${locale}/limited-admin/${screenId}`;
+        const expectedStatus = allowedScreens.has(screenId) ? 200 : 403;
+        const matchingStatuses = [];
+        const recordResponse = response => {
+          if (response.request().method() === 'GET' && new URL(response.url()).pathname === apiPath) {
+            matchingStatuses.push(response.status());
+          }
+        };
+        page.on('response', recordResponse);
+        await page.goto(`${base}${route}?lang=${locale}`, { waitUntil: 'networkidle' });
+        const screen = page.locator(`[data-screen-id="${screenId}"]`);
+        await expect(screen).toBeVisible();
+        await expect(screen).toHaveAttribute('data-admin-requests-state', expectedStatus === 200 ? /success|empty/u : 'permission');
+        page.off('response', recordResponse);
+        assert.equal(matchingStatuses.at(-1), expectedStatus);
+        routeChecks.push({ route, screenId, httpStatus: expectedStatus,
+          state: await screen.getAttribute('data-admin-requests-state') });
+      }
+
+      await page.goto(`${base}/admin/contact-requests?lang=${locale}`, { waitUntil: 'networkidle' });
+      const row = page.getByTestId(`admin-request-${temporaryRequestId}`);
+      await expect(row).toBeVisible();
+      await row.getByRole('button').click();
+      const detail = page.getByTestId('admin-request-detail');
+      await expect(detail).toBeVisible();
+      await expect(detail.locator('#admin-request-transition')).toHaveCount(0);
+      await expect(detail.locator('#admin-request-assignee')).toHaveCount(0);
+      await expect(detail.locator('#admin-request-note')).toHaveCount(0);
+
+      const directStatuses = [];
+      for (const [suffix, data] of [
+        ['transitions', { transition: 'start_review', expectedVersion: 0, reason: 'Forbidden viewer transition' }],
+        ['assign', { assigneeId: admin._id.toHexString(), expectedVersion: 0, reason: 'Forbidden viewer assignment' }],
+        ['notes', { body: 'Forbidden viewer note', expectedVersion: 0 }],
+      ]) {
+        const response = await context.request.post(`${base}/api/v1/admin/requests/${temporaryRequestId}/${suffix}`, { data });
+        directStatuses.push(response.status());
+      }
+      assert.deepEqual(directStatuses, [403, 403, 403]);
+      const stored = await mongo.collection('requests').findOne({ _id: new Types.ObjectId(temporaryRequestId) });
+      assert.equal(stored?.status, 'new');
+      assert.equal(stored?.version, 0);
+      assert.equal(await mongo.collection('audit_logs').countDocuments({ targetType: 'request', targetId: temporaryRequestId }), 0);
+      report.limitedAdmin.push({ locale, routeChecks, directMutationStatuses: directStatuses,
+        mutationControlsHidden: true, requestUnchanged: true, auditWrites: 0 });
+    } finally {
+      viewerStorageState = await context.storageState();
+      await context.close();
     }
   }
   report.status = 'PASS_LOCAL_SUBCASES';
@@ -212,7 +285,7 @@ try {
       await mongo.collection('requests').deleteOne({ _id: id, seekerId: seeker?._id });
       report.temporaryRequestRemoved = (await mongo.collection('requests').countDocuments({ _id: id })) === 0;
     }
-    const remainingSessions = (await Promise.all([seeker, admin].filter(Boolean).map(removeNewSessions))).reduce((sum, count) => sum + count, 0);
+    const remainingSessions = (await Promise.all([seeker, admin, viewer].filter(Boolean).map(removeNewSessions))).reduce((sum, count) => sum + count, 0);
     report.cleanup = remainingSessions === 0 && (temporaryRequestId === undefined || report.temporaryRequestRemoved);
     assert.ok(report.cleanup, 'Temporary request or browser sessions were not cleaned up');
   } catch (error) {

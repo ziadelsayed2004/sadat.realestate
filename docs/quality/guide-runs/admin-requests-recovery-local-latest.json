@@ -1,11 +1,11 @@
 {
-  "status": "PASS_LOCAL_SUBCASES",
+  "status": "FAIL_LOCAL",
   "journeys": [
     "GUIDE-21"
   ],
   "mockedRoutes": false,
   "environment": "local-real-browser-api-mongodb",
-  "commit": "309106581ede154f1f712ea3403ba7ca491264b6",
+  "commit": "5beb256a8a8635a2f3c8ca476ac802e4fbc2728d",
   "routes": [
     {
       "route": "/admin/customer-requests",
@@ -466,7 +466,9 @@
       "scrollWidth": 393
     }
   ],
+  "limitedAdmin": [],
   "temporaryRequestRemoved": true,
   "cleanup": true,
-  "finishedAt": "2026-09-11T17:41:21.263Z"
+  "failure": "ar/limited-admin/ADM-23: page.waitForResponse: Timeout 30000ms exceeded while waiting for event \"response\"",
+  "finishedAt": "2026-09-12T11:19:01.410Z"
 }

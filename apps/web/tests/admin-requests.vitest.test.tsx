@@ -26,6 +26,7 @@ const request = requestDataSchema.parse({
   dueAt: '2026-08-20T10:00:00.000Z',
   version: 2,
   availableActions: ['start_review', 'contact'],
+  capabilities: { assign: true, note: true },
   createdAt: '2026-08-18T10:00:00.000Z',
   updatedAt: '2026-08-18T10:00:00.000Z'
 });
@@ -135,6 +136,18 @@ describe('Admin request administration contracts and views', () => {
     renderWithLocale(<AdminRequests locale="en" session={{ status: 'anonymous' }} loadRequests={load} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: getAdminRequestsCopy('en').states.permission.title })).toBeInTheDocument());
     expect(load).not.toHaveBeenCalled();
+  });
+
+  it('hides request mutation controls omitted by the server permission projection', () => {
+    window.history.pushState({}, '', '/admin/requests');
+    const viewOnlyRequest = requestDataSchema.parse({ ...request, availableActions: [], capabilities: { assign: false, note: false } });
+    const viewOnlyList = requestListDataSchema.parse({ items: [viewOnlyRequest], page: 1, limit: 20, total: 1 });
+    renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={viewOnlyList} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').view }));
+    expect(screen.getByText(getAdminRequestsCopy('en').noActions)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: getAdminRequestsCopy('en').saveTransition })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: getAdminRequestsCopy('en').saveAssignment })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: getAdminRequestsCopy('en').addNote })).not.toBeInTheDocument();
   });
 
   it('renders and resolves an issue projection without exposing internal fields', async () => {

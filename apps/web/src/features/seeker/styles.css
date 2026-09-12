@@ -1927,10 +1927,10 @@
     grid-column: 2;
     grid-row: 2;
     box-sizing: border-box;
-    width: min(calc(100% - 3rem), 64rem);
-    max-width: 64rem;
+    /* width: min(calc(100% - 3rem), 64rem);
+    max-width: 64rem; */
     margin-inline: auto;
-    padding: 1.5rem 0;
+    padding: 1.5rem;
   }
 
   .seeker-dashboard > .seeker-dashboard__content > .seeker-dashboard__heading-row .seeker-dashboard__eyebrow,
