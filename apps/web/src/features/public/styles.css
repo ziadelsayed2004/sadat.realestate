@@ -2434,12 +2434,15 @@
 
   .public-homepage__property-grid,
   .public-homepage__content-grid,
-  .public-homepage__about-grid,
   .public-homepage__footer,
   .public-homepage__platform-callout,
   .public-homepage__search-row,
   .public-homepage__section--banners .public-homepage__banner-card {
     grid-template-columns: 1fr;
+  }
+
+  .public-homepage__about-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
   .public-homepage__summary {
