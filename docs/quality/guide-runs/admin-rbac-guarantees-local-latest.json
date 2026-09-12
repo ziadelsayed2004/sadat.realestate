@@ -1,0 +1,24 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-26",
+  "journeys": [
+    "GUIDE-26"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside administrator, role, and assignment transactions",
+  "commit": "11daf9ef950569baa43edf8ca81d6148343719a9",
+  "startedAt": "2026-09-12T22:00:08.782Z",
+  "checks": [
+    "audit_failure_rolls_back_administrator_identity_account_and_audit",
+    "administrator_create_retry_commits_once",
+    "audit_failure_rolls_back_administrator_values_version_and_update_audit",
+    "audit_failure_rolls_back_role_creation_and_audit",
+    "role_create_retry_commits_once",
+    "audit_failure_rolls_back_role_values_version_and_update_audit",
+    "audit_failure_rolls_back_role_assignment_and_audit",
+    "role_assignment_retry_commits_once"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T22:00:09.289Z"
+}

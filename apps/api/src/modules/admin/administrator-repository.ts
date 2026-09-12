@@ -98,11 +98,17 @@ async function readAdministrators(
     accountQuery.session(session);
     bootstrapQuery.session(session);
   }
-  const [users, accounts, bootstraps] = await Promise.all([
-    userQuery.lean<LeanUser[]>(),
-    accountQuery.lean<LeanAdminAccount[]>(),
-    bootstrapQuery.lean<LeanBootstrap[]>()
-  ]);
+  const [users, accounts, bootstraps] = session
+    ? [
+        await userQuery.lean<LeanUser[]>(),
+        await accountQuery.lean<LeanAdminAccount[]>(),
+        await bootstrapQuery.lean<LeanBootstrap[]>()
+      ]
+    : await Promise.all([
+        userQuery.lean<LeanUser[]>(),
+        accountQuery.lean<LeanAdminAccount[]>(),
+        bootstrapQuery.lean<LeanBootstrap[]>()
+      ]);
   return users.flatMap((user) => {
     const related = accountFor(user._id, accounts, bootstraps);
     const value = administratorData(user, related.account, related.bootstrap);
@@ -128,11 +134,17 @@ async function readAdministrator(
     accountQuery.session(session);
     bootstrapQuery.session(session);
   }
-  const [user, account, bootstrap] = await Promise.all([
-    userQuery.lean<LeanUser | null>(),
-    accountQuery.lean<LeanAdminAccount | null>(),
-    bootstrapQuery.lean<LeanBootstrap | null>()
-  ]);
+  const [user, account, bootstrap] = session
+    ? [
+        await userQuery.lean<LeanUser | null>(),
+        await accountQuery.lean<LeanAdminAccount | null>(),
+        await bootstrapQuery.lean<LeanBootstrap | null>()
+      ]
+    : await Promise.all([
+        userQuery.lean<LeanUser | null>(),
+        accountQuery.lean<LeanAdminAccount | null>(),
+        bootstrapQuery.lean<LeanBootstrap | null>()
+      ]);
   return user ? administratorData(user, account ?? undefined, bootstrap ?? undefined) : undefined;
 }
 

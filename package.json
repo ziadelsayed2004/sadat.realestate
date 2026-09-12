@@ -55,6 +55,7 @@
     "guide:admin-settings-guarantees:local": "node --import tsx scripts/verify-admin-settings-guarantees-local.mjs",
     "guide:admin-banner-guarantees:local": "node --import tsx scripts/verify-admin-banner-guarantees-local.mjs",
     "guide:admin-home-settings:local": "node scripts/verify-guide25-admin-home-settings-local.mjs",
+    "guide:admin-rbac-guarantees:local": "node --import tsx scripts/verify-admin-rbac-guarantees-local.mjs",
     "guide:seeker-property-search:local": "node --import tsx scripts/verify-seeker-property-search-local.mjs",
     "guide:seeker-notifications-guarantees:local": "node --import tsx scripts/verify-seeker-notifications-guarantees-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
