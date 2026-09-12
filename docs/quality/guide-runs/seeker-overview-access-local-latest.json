@@ -1,0 +1,53 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-05"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "runs": [
+    {
+      "state": "suspended",
+      "httpStatus": 401,
+      "summaryExposed": false
+    },
+    {
+      "state": "rejected",
+      "httpStatus": 401,
+      "summaryExposed": false
+    },
+    {
+      "state": "restricted",
+      "httpStatus": 401,
+      "summaryExposed": false
+    },
+    {
+      "state": "role_changed",
+      "httpStatus": 401,
+      "summaryExposed": false
+    },
+    {
+      "state": "deleted",
+      "httpStatus": 401,
+      "summaryExposed": false
+    },
+    {
+      "roleType": "provider",
+      "httpStatus": 403
+    },
+    {
+      "roleType": "admin",
+      "httpStatus": 403
+    },
+    {
+      "state": "expired_session",
+      "httpStatus": 401
+    },
+    {
+      "state": "anonymous",
+      "httpStatus": 401
+    }
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T05:36:05.316Z"
+}

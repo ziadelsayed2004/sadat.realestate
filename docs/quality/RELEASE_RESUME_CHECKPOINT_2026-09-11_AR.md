@@ -410,3 +410,10 @@
 - During account/session authorization review, found `sendError` recognizes SeekerOverviewServiceError but dereferences `seekerError!.code`, which is undefined for that error. Fixed by selecting the actual domain error before constructing the contract response.
 - Added HTTP router regression proving `SEEKER_OVERVIEW_FORBIDDEN` returns structured 403. Focused router/overview tests 5/5, API typecheck and targeted lint passed. Test uses a deliberately throwing overview service; this is not full Mongo current-account coverage.
 - Next remains current-account status/role denial with real account guard and overview runtime. Compile changed API before full-runtime checks. Temporary-file cleanup still outstanding after automatic approval rejection; do not bypass or claim it completed. No CSS changes, Demo retained.
+
+## 12 September: overview account/session guard evidence
+
+- `verify-seeker-overview-access-local.mjs` passed nine cases with real HTTP, account access guard + seeker runtime and isolated Mongo. Current account suspended/rejected/restricted/role-changed/deleted -> 401 without data; provider/admin -> 403; expired session/anonymous -> 401. Valid controls return 200. Temporary DB collections removed.
+- Tokens are locally issued against real stored sessions; registration/login dependencies are unused throwing stubs. This verifies runtime integration, not the full deployed server or account-transition APIs.
+- Role mutation via Mongoose was initially ignored because roleType is immutable. Corrected fixture mutation at raw collection boundary in the isolated DB and explicitly verified stored role before checking rejection. No production role-change behavior altered.
+- Next: incorporate this and full-runtime logout evidence into GUIDE-05 acceptance review, preserving explicit limits, then prioritize another journey/design gap. Cleanup request remains pending after policy rejection; Demo preserved. No CSS changes.

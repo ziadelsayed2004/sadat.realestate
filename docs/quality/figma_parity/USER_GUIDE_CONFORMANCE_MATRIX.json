@@ -1909,6 +1909,13 @@
           "verifiedAt": "2026-09-12T01:33:27.198Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-overview-access-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T05:36:05.316Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
         }
       ],
       "reviewedSubcases": [
@@ -1965,6 +1972,12 @@
           "path": "docs/quality/guide-runs/seeker-overview-logout-local-latest.json",
           "scope": "Six real login/logout browser runs: overview initially 200, old token after logout 401, permission page without summary cards. New sessions removed. Current-account status/role changes are not tested here.",
           "verifiedAt": "2026-09-12T01:33:27.198Z"
+        },
+        {
+          "check": "overview_current_account_and_session_guard",
+          "path": "docs/quality/guide-runs/seeker-overview-access-local-latest.json",
+          "scope": "Real HTTP with account runtime guard, seeker runtime and isolated Mongo; locally issued tokens and stored sessions. Suspended/rejected/restricted/changed-role/deleted accounts denied 401, provider/admin 403, expired session/anonymous 401. No login or account-transition API exercised.",
+          "verifiedAt": "2026-09-12T05:36:05.316Z"
         }
       ],
       "localEvidenceReview": "docs/quality/GUIDE_05_LOCAL_REVIEW_2026-09-12.md"
