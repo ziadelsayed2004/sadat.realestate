@@ -597,3 +597,10 @@
 - نُفذ محليًا بلاغ حساب مؤقت: validation للسبب بلا request، حل البلاغ مع version/reason/audit، ثم إجراء القيد المتاح على الحساب مع state-transition/audit. ثبتت 401 و403 للمدير المحدود ولمنع self-transition، و409 للتكرار والنسخة القديمة، وحالة المدير المعلق الحالية.
 - أثبت MongoDB المعزول أن فشل audit يعيد تغيير الحساب والبلاغ وسجلات الانتقال والـaudit كلها، وأن التزامن يكتب مرة واحدة فقط. حذفت كل fixtures والجلسات والـaudits وقاعدة الاختبار؛ `cleanup=true`.
 - تسجل المصفوفة GUIDE-19 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 21/26 (80.8%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## GUIDE-20 local functional acceptance — 2026-09-12
+
+- ADM-09 through ADM-17 retain the shared real-browser AR/EN Desktop/Tablet/Pixel 5 evidence with HTTP 200, zero page errors, and no horizontal overflow. ADM-09 additionally passed offline Retry without document navigation in all six configurations, and a unique taxonomy query proved the truthful empty state.
+- Real HTTP/MongoDB checks completed category, location, and feature create/update/stale-409/delete lifecycles, project approval and publication, and property-report resolution. Short reasons produced 400 without writes; anonymous, limited-administrator, and current suspended-administrator boundaries produced the expected denials.
+- Taxonomy and feature writes now include mandatory audit persistence in the same transaction. Feature creation no longer leaks the audit-only reason into its strict record schema. Location deletion now performs session reads sequentially. The isolated MongoDB verifier proved rollback on five mutation families, exact retry audits, stale conflicts, and database cleanup.
+- The matrix records GUIDE-20 as `LOCAL_FUNCTIONAL_SCOPE_REVIEWED`, raising locally reviewed journeys to 22/26 (84.6%). Global status remains 26 `PARTIAL`, 0 Production verified, and 0 fully closed; Figma remains 90/119. Demo data was preserved and no launch or purge ran.

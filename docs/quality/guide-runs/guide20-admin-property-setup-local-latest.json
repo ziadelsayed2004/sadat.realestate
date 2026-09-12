@@ -1,0 +1,112 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-20",
+  "journeys": [
+    "GUIDE-20"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-HTTP-MongoDB",
+  "responsiveEvidence": "remaining-surfaces-local-latest.json covers ADM-09..ADM-17 in AR/EN on Desktop/Tablet/Pixel 5",
+  "commit": "4a7022ec870b5145e85d4d83bc63913394ec0108",
+  "startedAt": "2026-09-12T17:46:28.340Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "checks": [
+        "offline_retry_without_navigation"
+      ]
+    }
+  ],
+  "checks": [
+    "admin_master_data_offline_retry_ar_en_all_devices",
+    "admin_master_data_true_empty_query",
+    "short_reason_validation_returns_400_without_write",
+    "taxonomy_create_update_stale_409_delete",
+    "location_create_update_stale_409_delete",
+    "feature_create_update_stale_409_delete",
+    "project_approve_stale_409_publish_with_versioned_audits",
+    "property_report_resolve_and_stale_409",
+    "all_successful_mutations_have_reasoned_audits"
+  ],
+  "authorization": [
+    "anonymous_401",
+    "limited_admin_mutations_403",
+    "current_suspended_admin_401_and_restored"
+  ],
+  "auditActions": [
+    "feature.create",
+    "feature.delete",
+    "feature.update",
+    "location.create",
+    "location.delete",
+    "location.update",
+    "project.review",
+    "project.review",
+    "property_report.resolve",
+    "taxonomy.create",
+    "taxonomy.delete",
+    "taxonomy.update"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T17:46:46.507Z"
+}

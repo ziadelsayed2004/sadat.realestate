@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T17:30:28.554Z",
+  "generatedAt": "2026-09-12T17:49:54.537Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -4941,24 +4941,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "NOT_APPLICABLE",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -4969,11 +4969,25 @@
         "section": "#admin",
         "journeyId": "GUIDE-20"
       },
-      "executionDate": "2026-09-12T16:45:41.230Z",
+      "executionDate": "2026-09-12T17:46:46.507Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:46:46.507Z",
+          "environment": "local-real-HTTP-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/admin-property-setup-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:43:54.943Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
@@ -4986,8 +5000,87 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_master_data_project_property_and_report_lifecycles",
+          "path": "docs/quality/GUIDE_20_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "ADM-09 through ADM-17 in Arabic and English across Desktop, Tablet and Pixel 5 plus real versioned master-data, project-review, property-review and report mutations.",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "short_reason_validation_returns_400_without_write",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "scope": "A short decision reason is rejected before any master-data record is written.",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_master_data_true_empty_query",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "scope": "A unique absent taxonomy search returns a truthful empty collection through real HTTP.",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_master_data_offline_retry_ar_en_all_devices",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "scope": "The ADM-09 screen recovers from browser offline mode through its explicit Retry control without document navigation in six configurations.",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_and_limited_admin_mutations_are_denied",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_admin_is_denied_and_restored",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "stale_master_data_project_and_report_mutations_do_not_write",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_taxonomy_location_feature_project_and_report_versions_conflict",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "all_successful_admin_mutations_have_persisted_reasons",
+          "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+          "verifiedAt": "2026-09-12T17:46:46.507Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_master_data_project_and_report_mutations",
+          "path": "docs/quality/guide-runs/admin-property-setup-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:43:54.943Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_20_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "applicabilityReview": {
+        "horizontalAccess": "NOT_APPLICABLE",
+        "rationale": "The administrator manages global taxonomy, location, feature, project-review, property-review and report records. These resources have no administrator-owned tenant boundary; access is governed by administrator permissions and current account state."
+      }
     },
     {
       "id": "GUIDE-21",
@@ -5884,7 +5977,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T17:30:28.554Z",
+    "updatedAt": "2026-09-12T17:49:54.537Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
@@ -6088,6 +6181,11 @@
       {
         "scope": "administrator account, report, restriction and audit lifecycle",
         "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "administrator property setup, project review, property review and report lifecycle",
+        "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
         "status": "PASS_LOCAL"
       },
       {

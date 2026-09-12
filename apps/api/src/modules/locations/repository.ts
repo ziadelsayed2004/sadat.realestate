@@ -196,12 +196,10 @@ export function createMongooseLocationRepository(
     async delete(input) {
       return transaction(async (session) => {
         const id = new Types.ObjectId(input.id);
-        const [childCount, providerCount] = await Promise.all([
-          models.Location.countDocuments({ parentLocationId: id }).session(session),
-          connection.collection('provider_applications').countDocuments({
-            $or: [{ primaryLocationId: id }, { serviceAreaIds: id }]
-          }, { session })
-        ]);
+        const childCount = await models.Location.countDocuments({ parentLocationId: id }).session(session);
+        const providerCount = await connection.collection('provider_applications').countDocuments({
+          $or: [{ primaryLocationId: id }, { serviceAreaIds: id }]
+        }, { session });
         if (childCount + providerCount > 0) return { kind: 'in_use' as const };
         const removed = await models.Location.findOneAndDelete(
           { _id: id, version: input.expectedVersion }, { session }
