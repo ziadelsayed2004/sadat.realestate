@@ -483,3 +483,10 @@
 - راجعت أدلة المعاينات الحالية requirement-by-requirement في `GUIDE_07_LOCAL_ACCEPTANCE_2026-09-12.md`: إنشاء/إعادة جدولة/إلغاء الباحث، confirm/reschedule/complete/cancel للمقدم، انعكاس الحالات للباحث، validation، ملكية السجل، صلاحية الحساب، تعارض المواعيد، 409 والـaudit rollback.
 - دليل recovery يغطي AR/EN × Desktop/Tablet/Pixel 5 مع offline/retry بلا reload أو overflow، ويؤكد عدم تغيير المعاينات وتنظيف الجلسات الجديدة. لم تُحذف أي fixtures قديمة أو بيانات Demo/QA.
 - سجلت المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء GUIDE-07 `PARTIAL`: Production وقبول Figma لـSEK-05 والشاشات المرتبطة وبوابة الجودة النهائية ما زالت مفتوحة. لم ينفذ purge أو launch.
+
+## 12 September: GUIDE-10 local functional acceptance
+
+- Made seeker profile updates across `users.locale` and `seeker_profiles` atomic with a MongoDB transaction. The isolated real-HTTP verifier forced the second collection write to fail and confirmed a 500 response with both documents unchanged and full cleanup.
+- Extended owned-session revocation evidence with a forced audit failure. The transaction returned 500, kept the target session and token active, and created no audit row; ordinary seeker/provider/admin ownership, current-session, repeated-revocation, and revoked-token checks still pass.
+- Added `GUIDE_10_LOCAL_ACCEPTANCE_2026-09-12.md` and taught the matrix generator to retain the review, attach both fresh evidence files, and mark version 409 and user decision reason as `NOT_APPLICABLE` for idempotent self-service field edits. Atomic session audit rollback is now evidenced.
+- Targeted ESLint, API typecheck, both real MongoDB/HTTP verifiers, `guide:matrix`, `guide:check`, and `git diff --check` passed. The matrix remains truthful at 26 PARTIAL, 0 fully closed, and 0 Production verified. Figma remains 90/119. No launch or Demo purge was executed.

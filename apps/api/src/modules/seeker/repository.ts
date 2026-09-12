@@ -148,17 +148,25 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
       if (!/^[a-f0-9]{24}$/.test(userId)) return undefined;
       const objectId = new Types.ObjectId(userId);
       const userPatch = patch.locale === undefined ? undefined : { locale: patch.locale };
-      if (userPatch) {
-        await User.updateOne({ _id: objectId, roleType: 'seeker' }, { $set: userPatch }).exec();
-      }
       const profilePatch: Record<string, string> = {};
       if (patch.firstName !== undefined) profilePatch.firstName = patch.firstName;
       if (patch.lastName !== undefined) profilePatch.lastName = patch.lastName;
-      if (Object.keys(profilePatch).length > 0) {
-        await SeekerProfile.updateOne(
-          { userId: objectId },
-          { $set: profilePatch }
-        ).exec();
+      const session = await User.db.startSession();
+      try {
+        await session.withTransaction(async () => {
+          if (userPatch) {
+            await User.updateOne({ _id: objectId, roleType: 'seeker' }, { $set: userPatch }, { session }).exec();
+          }
+          if (Object.keys(profilePatch).length > 0) {
+            await SeekerProfile.updateOne(
+              { userId: objectId },
+              { $set: profilePatch },
+              { session }
+            ).exec();
+          }
+        });
+      } finally {
+        await session.endSession();
       }
       return findByUserId(userId);
     },

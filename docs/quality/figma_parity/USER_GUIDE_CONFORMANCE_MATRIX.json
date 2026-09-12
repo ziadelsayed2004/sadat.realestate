@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T10:24:20.234Z",
+  "generatedAt": "2026-09-12T10:30:22.707Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2809,9 +2809,9 @@
         "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -2822,10 +2822,10 @@
         "section": "#seeker",
         "journeyId": "GUIDE-10"
       },
-      "executionDate": "2026-09-10T12:35:13.289Z",
+      "executionDate": "2026-09-12T10:29:11.564Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
@@ -2836,6 +2836,20 @@
           "remaining": [
             "Run GUIDE-09 and GUIDE-10 on Production after deployment."
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T10:29:11.564Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T10:26:47.674Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
         }
       ],
       "reviewedSubcases": [
@@ -2867,7 +2881,7 @@
           "check": "empty_preferences_return_empty_object_without_write",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
           "scope": "Fresh seeker profile preferences through real HTTP and isolated MongoDB; component empty-state rendering is covered separately",
-          "verifiedAt": "2026-09-11T17:19:02.572Z"
+          "verifiedAt": "2026-09-12T10:29:11.564Z"
         },
         {
           "case": "validation",
@@ -2889,37 +2903,59 @@
           "category": "currentSessionState",
           "check": "owned_session_revocation_denies_old_token_and_preserves_foreign_sessions",
           "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
-          "verifiedAt": "2026-09-11T16:41:46.921Z"
+          "verifiedAt": "2026-09-12T10:26:47.674Z"
         },
         {
           "category": "horizontalAccess",
           "check": "owned_session_revocation_denies_old_token_and_preserves_foreign_sessions",
           "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
-          "verifiedAt": "2026-09-11T16:41:46.921Z"
+          "verifiedAt": "2026-09-12T10:26:47.674Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "failed_session_audit_rolls_back_revocation_and_preserves_active_token",
+          "path": "docs/quality/guide-runs/session-revocation-local-latest.json",
+          "verifiedAt": "2026-09-12T10:26:47.674Z"
         },
         {
           "category": "currentSessionState",
           "check": "current_account_state_denies_profile_and_preferences_operations",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T17:19:02.572Z"
+          "verifiedAt": "2026-09-12T10:29:11.564Z"
         },
         {
           "category": "roleAuthorization",
           "check": "provider_and_admin_tokens_denied_on_seeker_profile_operations",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T17:19:02.572Z"
+          "verifiedAt": "2026-09-12T10:29:11.564Z"
         },
         {
           "category": "duplicateMutation",
           "check": "concurrent_disjoint_patches_preserved_and_identical_replay_keeps_one_profile",
           "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T17:19:02.572Z"
+          "verifiedAt": "2026-09-12T10:29:11.564Z"
+        },
+        {
+          "category": "atomicProfileRollback",
+          "check": "failed_profile_write_rolls_back_cross_collection_locale_update",
+          "path": "docs/quality/guide-runs/seeker-account-state-local-latest.json",
+          "verifiedAt": "2026-09-12T10:29:11.564Z"
         }
       ],
       "browserContractRegression": {
         "path": "docs/quality/guide-runs/seeker-profile-save-recovery-2026-09-11.json",
         "mockedRoutes": true,
         "scope": "Save draft preservation and permission failure on six device/locale projects; does not establish live journey closure"
+      },
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_10_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "applicabilityReview": {
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "rationale": "Profile and preference PATCH operations are idempotent self-service field updates without a versioned workflow decision contract; session revocation uses a server-managed audit reason."
       }
     },
     {
@@ -4602,7 +4638,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T10:24:20.234Z",
+    "updatedAt": "2026-09-12T10:30:22.707Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

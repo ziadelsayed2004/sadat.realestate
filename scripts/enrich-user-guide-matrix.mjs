@@ -177,6 +177,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       checks: providerCustomerRequest.checks,
     });
   }
+  if (journey.id === 'GUIDE-10') {
+    for (const [path, evidence] of [
+      ['docs/quality/guide-runs/seeker-account-state-local-latest.json', seekerAccountState],
+      ['docs/quality/guide-runs/session-revocation-local-latest.json', sessionRevocation],
+    ]) if (evidence?.status === 'PASS_LOCAL' && evidence.mockedRoutes === false && evidence.cleanup === true) {
+      evidenceAttachments.push({ path, status: evidence.status, verifiedAt: evidence.finishedAt,
+        environment: evidence.environment, mockedRoutes: false });
+    }
+  }
   appendMissingEvidence(evidenceAttachments, journey.evidenceAttachments, item => item.path);
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
@@ -190,6 +199,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
     remaining: communityEvidence.remaining,
   } : journey.executionEvidence;
   const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }), ...(evidenceAttachments.length === 0 ? {} : { evidenceAttachments }) };
+  if (journey.id === 'GUIDE-10') {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_10_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE',
+      rationale: 'Profile and preference PATCH operations are idempotent self-service field updates without a versioned workflow decision contract; session revocation uses a server-managed audit reason.',
+    };
+  }
   if (journey.id === 'GUIDE-10') hydratedJourney.browserContractRegression = {
     path: 'docs/quality/guide-runs/seeker-profile-save-recovery-2026-09-11.json',
     mockedRoutes: true, scope: 'Save draft preservation and permission failure on six device/locale projects; does not establish live journey closure',
@@ -210,6 +231,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       && run.ownOtherRevocation === 200 && run.remainingOwnSessions === 1 && run.auditDelta === 1))) {
     for (const category of ['currentSessionState', 'horizontalAccess']) reviewedGuarantees.push({ category,
       check: 'owned_session_revocation_denies_old_token_and_preserves_foreign_sessions',
+      path: 'docs/quality/guide-runs/session-revocation-local-latest.json', verifiedAt: sessionRevocation.finishedAt });
+  }
+  if (journey.id === 'GUIDE-10' && sessionRevocation?.atomicAuditRollback?.status === 500
+    && sessionRevocation.atomicAuditRollback.sessionStillActive === true
+    && sessionRevocation.atomicAuditRollback.auditDelta === 0) {
+    reviewedGuarantees.push({ category: 'atomicAuditRollback',
+      check: 'failed_session_audit_rolls_back_revocation_and_preserves_active_token',
       path: 'docs/quality/guide-runs/session-revocation-local-latest.json', verifiedAt: sessionRevocation.finishedAt });
   }
   if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
@@ -262,6 +290,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
     && seekerAccountState.concurrentMutations?.profileDocuments === 1) {
     reviewedGuarantees.push({ category: 'duplicateMutation',
       check: 'concurrent_disjoint_patches_preserved_and_identical_replay_keeps_one_profile',
+      path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json',
+      verifiedAt: seekerAccountState.finishedAt });
+  }
+  if (journey.id === 'GUIDE-10' && seekerAccountState?.atomicProfileRollback?.status === 500
+    && seekerAccountState.atomicProfileRollback.userUnchanged === true
+    && seekerAccountState.atomicProfileRollback.profileUnchanged === true) {
+    reviewedGuarantees.push({ category: 'atomicProfileRollback',
+      check: 'failed_profile_write_rolls_back_cross_collection_locale_update',
       path: 'docs/quality/guide-runs/seeker-account-state-local-latest.json',
       verifiedAt: seekerAccountState.finishedAt });
   }
@@ -592,8 +628,10 @@ matrix.journeys = matrix.journeys.map((journey) => {
       roleAuthorization: guaranteeStatus('roleAuthorization'),
     },
     versionAndAudit: {
-      expectedVersion409: guaranteeStatus('expectedVersion409'),
-      decisionReason: guaranteeStatus('decisionReason'),
+      expectedVersion409: hydratedJourney.applicabilityReview?.expectedVersion409 === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('expectedVersion409'),
+      decisionReason: hydratedJourney.applicabilityReview?.decisionReason === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('decisionReason'),
       atomicAuditRollback: guaranteeStatus('atomicAuditRollback'),
     },
     environment: {
@@ -609,7 +647,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
     commit: guide.release.baselineCommit,
     legacyStatus,
     verificationStatus: "PARTIAL",
-    incompleteReason: journey.localAcceptanceReview?.status === 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED'
+    incompleteReason: hydratedJourney.localAcceptanceReview?.status === 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED'
       ? "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open."
       : executed
       ? "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."

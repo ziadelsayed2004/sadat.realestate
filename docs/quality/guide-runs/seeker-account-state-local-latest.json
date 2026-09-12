@@ -63,6 +63,11 @@
     "identicalFinalStateStable": true,
     "profileDocuments": 1
   },
+  "atomicProfileRollback": {
+    "status": 500,
+    "userUnchanged": true,
+    "profileUnchanged": true
+  },
   "cleanup": true,
-  "finishedAt": "2026-09-11T17:19:02.572Z"
+  "finishedAt": "2026-09-12T10:29:11.564Z"
 }

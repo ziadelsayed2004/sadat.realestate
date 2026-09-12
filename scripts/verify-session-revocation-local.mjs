@@ -12,16 +12,23 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 
 const database = `session_check_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
-const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', runs: [], cleanup: false };
+const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', runs: [], atomicAuditRollback: undefined, cleanup: false };
 let server;
 try {
   const models = createIdentityModels(connection);
   const auditModels = createAuditModels(connection);
   const audit = createMongooseAuditWriter(auditModels);
+  let forceAuditFailure = false;
+  const controlledAudit = {
+    async record(entry, session) {
+      await audit.record(entry, session);
+      if (forceAuditFailure) throw new Error('FORCED_SESSION_AUDIT_FAILURE');
+    }
+  };
   const tokens = createHmacAccessTokenService(randomBytes(32), 3600);
   server = createApiServer({ database: { isReady: async () => true },
     accounts: createAccountRuntime(connection, tokens, audit, { async authorize() { return false; } }),
-    sessionManagement: createSessionManagementRuntime(connection, tokens, audit) });
+    sessionManagement: createSessionManagementRuntime(connection, tokens, controlledAudit) });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   const base = `http://127.0.0.1:${address.port}/api/v1/me/sessions`;
   const makeSession = user => models.Session.create({ userId: user._id, tokenHash: randomBytes(32).toString('base64url'), expiresAt: new Date(Date.now() + 3600000), authenticationMethod: 'password' });
@@ -55,6 +62,19 @@ try {
     assert.ok((await models.Session.findById(target._id).lean()).revokedAt instanceof Date);
     report.runs.push({ roleType, foreignRevocation: 404, currentRevocation: 409, ownOtherRevocation: 200, revokedTokenRead: 401, revokedTokenWrite: 401, repeatRevocation: 404, remainingOwnSessions: 1, auditDelta: 1 });
   }
+  const rollbackUser = await models.User.create({ normalizedEmail: 'rollback-seeker@example.invalid', roleType: 'seeker', status: 'verified', locale: 'en' });
+  const rollbackCurrent = await makeSession(rollbackUser);
+  const rollbackTarget = await makeSession(rollbackUser);
+  const rollbackToken = issue(rollbackUser, rollbackCurrent);
+  const auditBeforeFailure = await auditModels.AuditLog.countDocuments();
+  forceAuditFailure = true;
+  const failedRevocation = await call(rollbackToken, 'DELETE', `/${rollbackTarget._id}`);
+  forceAuditFailure = false;
+  assert.equal(failedRevocation.status, 500);
+  assert.equal((await models.Session.findById(rollbackTarget._id).lean()).revokedAt, undefined);
+  assert.equal(await auditModels.AuditLog.countDocuments(), auditBeforeFailure);
+  assert.equal((await call(issue(rollbackUser, rollbackTarget))).status, 200);
+  report.atomicAuditRollback = { status: 500, sessionStillActive: true, auditDelta: 0 };
   report.status = 'PASS_LOCAL';
 } finally {
   if (server) await stopApiServer(server);

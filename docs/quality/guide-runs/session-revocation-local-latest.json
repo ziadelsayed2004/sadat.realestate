@@ -40,6 +40,11 @@
       "auditDelta": 1
     }
   ],
+  "atomicAuditRollback": {
+    "status": 500,
+    "sessionStillActive": true,
+    "auditDelta": 0
+  },
   "cleanup": true,
-  "finishedAt": "2026-09-11T16:41:46.921Z"
+  "finishedAt": "2026-09-12T10:26:47.674Z"
 }

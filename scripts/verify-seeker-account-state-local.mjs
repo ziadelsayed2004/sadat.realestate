@@ -10,7 +10,7 @@ import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/
 
 const database = `seeker_state_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
-const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], roleAuthorization: [], emptyPreferences: undefined, concurrentMutations: undefined, cleanup: false };
+const report = { status: 'RUNNING', journeys: ['GUIDE-10'], mockedRoutes: false, environment: 'isolated-local-MongoDB-real-HTTP', checks: [], roleAuthorization: [], emptyPreferences: undefined, concurrentMutations: undefined, atomicProfileRollback: undefined, cleanup: false };
 let server;
 try {
   const tokens = createHmacAccessTokenService(randomBytes(32), 3600);
@@ -36,6 +36,16 @@ try {
   const initialProfile = await connection.collection('seeker_profiles').findOne({ userId });
   assert.deepEqual(initialProfile, profileBeforeEmptyRead);
   report.emptyPreferences = { status: 200, preferencesDeepEmpty: true, readDidNotWrite: true };
+
+  await connection.collection('seeker_profiles').createIndex({ firstName: 1 }, { unique: true, name: 'forced_first_name_collision' });
+  await connection.collection('seeker_profiles').insertOne({ userId: new Types.ObjectId(), firstName: 'Collision', lastName: 'Fixture', preferences: {} });
+  const userBeforeAtomicFailure = await connection.collection('users').findOne({ _id: userId });
+  const profileBeforeAtomicFailure = await connection.collection('seeker_profiles').findOne({ userId });
+  const failedAtomicUpdate = await invoke(['PATCH', '/me', { firstName: 'Collision', locale: 'ar' }]);
+  assert.equal(failedAtomicUpdate.status, 500);
+  assert.deepEqual(await connection.collection('users').findOne({ _id: userId }), userBeforeAtomicFailure);
+  assert.deepEqual(await connection.collection('seeker_profiles').findOne({ userId }), profileBeforeAtomicFailure);
+  report.atomicProfileRollback = { status: 500, userUnchanged: true, profileUnchanged: true };
 
   for (const roleType of ['provider', 'admin']) {
     const wrongRoleToken = tokens.issue({ id: account.id, roleType, status: 'verified' }, new Types.ObjectId().toHexString(), new Date());
