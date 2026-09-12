@@ -59,6 +59,8 @@ const commissionAuditGuarantees = await readFile('docs/quality/guide-runs/commis
 const guide25AdminHomeSettings = await readFile('docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const adminSettingsGuarantees = await readFile('docs/quality/guide-runs/admin-settings-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const adminBannerGuarantees = await readFile('docs/quality/guide-runs/admin-banner-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide26AdminRbac = await readFile('docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const adminRbacGuarantees = await readFile('docs/quality/guide-runs/admin-rbac-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -132,6 +134,8 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json", guide25AdminHomeSettings],
   ["docs/quality/guide-runs/admin-settings-guarantees-local-latest.json", adminSettingsGuarantees],
   ["docs/quality/guide-runs/admin-banner-guarantees-local-latest.json", adminBannerGuarantees],
+  ["docs/quality/guide-runs/guide26-admin-rbac-local-latest.json", guide26AdminRbac],
+  ["docs/quality/guide-runs/admin-rbac-guarantees-local-latest.json", adminRbacGuarantees],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -448,6 +452,26 @@ const guide25LocalAcceptanceReady = guide25AdminHomeSettings?.status === 'PASS_L
   && guide22ContentMutations?.status === 'PASS_LOCAL' && guide22ContentMutations.mockedRoutes === false
   && guide22ContentMutations.cleanup === true;
 
+const guide26LocalAcceptanceReady = guide26AdminRbac?.status === 'PASS_LOCAL'
+  && guide26AdminRbac.mockedRoutes === false && guide26AdminRbac.cleanup === true
+  && guide26AdminRbac.runs?.length === 6
+  && guide26AdminRbac.runs.every(run => run.status === 'PASS' && run.documentReloaded === false
+    && run.screens?.length === 8 && run.screens.every(screen => screen.scrollWidth <= screen.innerWidth + 1)
+    && run.checks?.includes('offline_retry_without_navigation'))
+  && ['eight_admin_rbac_screens_ar_en_all_devices_with_retry',
+    'all_reads_200_true_empty_and_invalid_inputs_400_without_write',
+    'administrator_create_update_duplicate_stale_and_exact_audits',
+    'role_create_update_duplicate_stale_and_exact_audits',
+    'notification_read_and_read_all_plus_redacted_audit_list_detail',
+    'authorization_and_current_account_state_enforced',
+    'horizontal_object_scope_not_applicable_global_admin_resources'
+  ].every(check => guide26AdminRbac.checks?.includes(check))
+  && ['anonymous_401', 'limited_staff_roles_audit_403', 'permission_scoped_notification_hidden']
+    .every(check => guide26AdminRbac.authorization?.includes(check))
+  && guide26AdminRbac.authorization?.some(check => /^current_suspended_admin_(401|403)$/u.test(check))
+  && adminRbacGuarantees?.status === 'PASS_LOCAL' && adminRbacGuarantees.mockedRoutes === false
+  && adminRbacGuarantees.cleanup === true && adminRbacGuarantees.checks?.length === 8;
+
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
   && providerCustomerRecovery?.status === 'PASS_LOCAL_SUBCASES'
@@ -736,6 +760,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'Banner, CMS and platform settings are global permission-gated administration records without an administrator-owned tenant boundary. Current account state, role authorization, concurrency and atomic audit guarantees are tested directly.',
     };
   }
+  if (journey.id === 'GUIDE-26' && guide26LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = { status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED', path: 'docs/quality/GUIDE_26_LOCAL_ACCEPTANCE_2026-09-13.md', reviewedAt: '2026-09-13' };
+    hydratedJourney.applicabilityReview = {
+      horizontalAccess: 'NOT_APPLICABLE',
+      rationale: 'Administrator users, roles, notifications and audit logs are global permission-gated administration resources without an administrator-owned tenant boundary. Role authorization, current account state, notification permission projection, concurrency and atomic audit guarantees are tested directly.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -909,6 +940,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['atomicAuditRollback', 'audit_failure_rolls_back_settings_and_inserted_audit', 'docs/quality/guide-runs/admin-settings-guarantees-local-latest.json', adminSettingsGuarantees.finishedAt],
       ['atomicAuditRollback', 'audit_failure_rolls_back_banner_create_update_and_inserted_audit', 'docs/quality/guide-runs/admin-banner-guarantees-local-latest.json', adminBannerGuarantees.finishedAt],
       ['atomicAuditRollback', 'audit_failure_rolls_back_tip_and_homepage_cms_mutations', 'docs/quality/guide-runs/guide22-content-mutations-local-latest.json', guide22ContentMutations.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-26' && guide26LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['roleAuthorization', 'anonymous_and_limited_admin_users_roles_and_audit_are_denied_and_notifications_are_permission_filtered', 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', guide26AdminRbac.finishedAt],
+      ['currentSessionState', 'current_suspended_admin_is_denied_and_restored', 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', guide26AdminRbac.finishedAt],
+      ['duplicateMutation', 'duplicate_administrator_email_and_role_name_return_409_without_duplicate_audits', 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', guide26AdminRbac.finishedAt],
+      ['expectedVersion409', 'stale_administrator_and_role_updates_conflict_without_write', 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', guide26AdminRbac.finishedAt],
+      ['decisionReason', 'administrator_and_role_updates_persist_reasoned_request_trace_audits', 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', guide26AdminRbac.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_administrator_role_and_assignment_mutations', 'docs/quality/guide-runs/admin-rbac-guarantees-local-latest.json', adminRbacGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
@@ -1251,6 +1292,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['empty', 'all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write', 'A unique missing banner placement returns a truthful empty collection; unconfigured settings render truthful empty forms.'],
       ['networkRetry', 'twelve_admin_home_settings_screens_ar_en_all_devices_with_retry', 'ADM-50 recovers from browser offline mode through Retry without document navigation in all six configurations.'],
     ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check, path: 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', scope, verifiedAt: guide25AdminHomeSettings.finishedAt });
+  }
+  if (journey.id === 'GUIDE-26' && guide26LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB', check: 'admin_users_roles_notifications_and_audit_surfaces_and_mutations',
+      path: 'docs/quality/GUIDE_26_LOCAL_ACCEPTANCE_2026-09-13.md', scope: 'ADM-59 through ADM-66 in Arabic and English across Desktop, Tablet and Pixel 5 plus real administrator, role, notification and audit flows.', verifiedAt: guide26AdminRbac.finishedAt });
+    for (const [category, check, scope] of [
+      ['validation', 'all_reads_200_true_empty_and_invalid_inputs_400_without_write', 'Invalid administrator and role inputs return 400 without writes.'],
+      ['empty', 'all_reads_200_true_empty_and_invalid_inputs_400_without_write', 'A valid combined administrator filter returns a truthful empty collection.'],
+      ['networkRetry', 'eight_admin_rbac_screens_ar_en_all_devices_with_retry', 'ADM-59 recovers from browser offline mode through Retry without document navigation in all six configurations.'],
+    ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check, path: 'docs/quality/guide-runs/guide26-admin-rbac-local-latest.json', scope, verifiedAt: guide26AdminRbac.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',

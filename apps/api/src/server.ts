@@ -200,7 +200,7 @@ async function runEntrypoint(): Promise<void> {
   const publicCompare = createPublicCompareRuntime(database.nativeConnection);
   const publicOrganizations = createPublicOrganizationRuntime(database.nativeConnection);
   const favorites = createFavoriteRuntime(database.nativeConnection, auth.accessTokens);
-  const notifications = createNotificationRuntime(database.nativeConnection, auth.accessTokens);
+  const notifications = createNotificationRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
   const settings = createSettingsRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const requests = createRequestRuntime(database.nativeConnection, auth.accessTokens, rbac.service, audit.writer);
   const viewings = createViewingRuntime(database.nativeConnection, auth.accessTokens, rbac.service, audit.writer);

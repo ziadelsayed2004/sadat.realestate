@@ -1,13 +1,26 @@
 import { Types, type Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
+import type { RbacService } from '../rbac/service.js';
 import type { NotificationRouterDependencies } from './router.js';
 import { createMongooseNotificationRepository } from './repository.js';
 import { createNotificationService } from './service.js';
 
-export function createNotificationRuntime(connection: Connection, accessTokens: AccessTokenService): NotificationRouterDependencies {
+export function createNotificationRuntime(
+  connection: Connection,
+  accessTokens: AccessTokenService,
+  authorization?: Pick<RbacService, 'authorize' | 'authorizationFor'>
+): NotificationRouterDependencies {
   return {
     service: createNotificationService({
       repository: createMongooseNotificationRepository(connection),
+      ...(authorization ? {
+        authorization: {
+          authorize: authorization.authorize,
+          async permissions(adminId: string) {
+            return (await authorization.authorizationFor(adminId)).permissions;
+          }
+        }
+      } : {}),
       async isActiveAccount(claims) {
         if (!Types.ObjectId.isValid(claims.sub) || !Types.ObjectId.isValid(claims.sid)) return false;
         const now = new Date();

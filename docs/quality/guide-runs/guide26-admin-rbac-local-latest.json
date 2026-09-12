@@ -1,0 +1,355 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-26",
+  "journeys": [
+    "GUIDE-26"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-HTTP-MongoDB",
+  "responsiveEvidence": "ADM-59..ADM-66 visited in AR/EN on Desktop/Tablet/Pixel 5",
+  "commit": "4d80a26f838be8294db9cca23b9614d7563e6732",
+  "startedAt": "2026-09-12T22:17:10.967Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-59",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-60",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-61",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-62",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-63",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-64",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-65",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-66",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    }
+  ],
+  "checks": [
+    "eight_admin_rbac_screens_ar_en_all_devices_with_retry",
+    "all_reads_200_true_empty_and_invalid_inputs_400_without_write",
+    "administrator_create_update_duplicate_stale_and_exact_audits",
+    "role_create_update_duplicate_stale_and_exact_audits",
+    "notification_read_and_read_all_plus_redacted_audit_list_detail",
+    "authorization_and_current_account_state_enforced",
+    "horizontal_object_scope_not_applicable_global_admin_resources"
+  ],
+  "authorization": [
+    "anonymous_401",
+    "limited_staff_roles_audit_403",
+    "permission_scoped_notification_hidden",
+    "current_suspended_admin_401"
+  ],
+  "auditActions": [
+    "admin.administrator_created",
+    "admin.administrator_updated",
+    "rbac.role_created",
+    "rbac.role_updated"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T22:17:12.328Z"
+}

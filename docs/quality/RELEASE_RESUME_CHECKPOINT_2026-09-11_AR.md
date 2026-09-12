@@ -626,3 +626,11 @@
 - أصبحت عمليات settings update وbanner create/update تكتب السجل والـaudit داخل MongoDB transaction واحدة. أثبتت اختبارات الحقن rollback كاملًا عند فشل audit، وretry واحدًا، وعدم كتابة audit لمحاولات stale/duplicate. تحتفظ أدلة GUIDE-22 بتغطية tips/homepage CMS الذرية.
 - ثبتت validation وtrue empty و401 و403 وحالة المدير المعلق الحالية ثم استعادته. حُذفت كل fixtures والجلسات والـaudits، وأعيد مستند privacy/security الأصلي حرفيًا (`cleanup=true`) مع بقاء المشروع Demo.
 - تسجل المصفوفة GUIDE-25 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 25/26 (96.2%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## GUIDE-26 local functional acceptance — 2026-09-13
+
+- راجعت شاشات ADM-59 حتى ADM-66 على API وMongoDB الحقيقيين محليًا بالعربية والإنجليزية وعلى Desktop وTablet وPixel 5: ست تشغيلات و48 فحص شاشة بلا page errors أو horizontal overflow، مع استعادة ADM-59 من offline عبر Retry دون إعادة تحميل المستند.
+- ثبتت دورة إنشاء وتعديل مستخدم إداري ودور مؤقتين، وحالتي duplicate وstale 409، وإشعارات الإدارة المقيدة بالصلاحيات، وقراءة سجل التدقيق بتجريد الحقول الحساسة. أزيلت كل البيانات المؤقتة والجلسات وسجلات التدقيق بعد الفحص.
+- كشف fault injection أن قراءات المستخدم الإداري المتوازية داخل جلسة transaction تتعارض في MongoDB؛ أصبحت القراءات متتابعة داخل المعاملة فقط، وبقيت متوازية خارجها. نجحت 8 ضمانات rollback/retry للمستخدم والدور وربط الأدوار.
+- وصل runtime الإشعارات بخدمة RBAC؛ أصبح Super Admin يرى الإشعار المقيد بالصلاحية، ولا يظهر للمستخدم المحدود غير الحاصل عليها، مع اتساق العدد والقائمة.
+- تسجل المصفوفة GUIDE-26 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي المحلي 26/26 (100%). تبقى الحالات العالمية `PARTIAL` حتى إكمال المصدر الخارجي لـFigma وبوابة الجودة النهائية وProduction verification. لم ينفذ launch أو Demo purge.
