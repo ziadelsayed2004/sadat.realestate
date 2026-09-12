@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T17:49:54.537Z",
+  "generatedAt": "2026-09-12T18:06:23.888Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -5629,24 +5629,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "NOT_APPLICABLE",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -5657,11 +5657,25 @@
         "section": "#admin",
         "journeyId": "GUIDE-23"
       },
-      "executionDate": "2026-09-12T16:45:41.230Z",
+      "executionDate": "2026-09-12T18:06:06.807Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T18:02:56.101Z",
+          "environment": "local-real-HTTP-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T18:06:06.807Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
@@ -5674,8 +5688,87 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_ad_request_payment_calendar_and_financial_review_lifecycles",
+          "path": "docs/quality/GUIDE_23_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "ADM-33 through ADM-38 in Arabic and English across Desktop, Tablet and Pixel 5 plus real versioned advertising-request and payment-proof reviews.",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "all_admin_ads_reads_200_true_empty_and_invalid_inputs_400_without_write",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "scope": "Invalid list filters and short review reasons return 400 without changing advertising or payment records.",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_ads_empty_and_offline_retry_ar_en_all_devices",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "scope": "A unique absent provider returns a truthful empty advertising-request result.",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_ads_empty_and_offline_retry_ar_en_all_devices",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "scope": "ADM-33 recovers from browser offline mode through Retry without document navigation in all six locale/device configurations.",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_and_limited_admin_ad_review_mutations_are_denied",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_admin_is_denied_and_restored",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "payment_approval_replay_is_idempotent_without_duplicate_audit",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_competing_ad_and_payment_reviews_conflict",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "ad_and_payment_reviews_require_and_persist_reason",
+          "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
+          "verifiedAt": "2026-09-12T18:02:56.101Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_ad_and_payment_reviews",
+          "path": "docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T18:06:06.807Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_23_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "applicabilityReview": {
+        "horizontalAccess": "NOT_APPLICABLE",
+        "rationale": "The administrator reviews global advertising requests, payment proofs, calendar entries and financial records. These resources are permission-gated administrative queues rather than administrator-owned tenant records."
+      }
     },
     {
       "id": "GUIDE-24",
@@ -5977,7 +6070,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T17:49:54.537Z",
+    "updatedAt": "2026-09-12T18:06:23.888Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
@@ -6186,6 +6279,11 @@
       {
         "scope": "administrator property setup, project review, property review and report lifecycle",
         "path": "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "administrator advertising requests, payment proofs, calendar and financial review",
+        "path": "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json",
         "status": "PASS_LOCAL"
       },
       {

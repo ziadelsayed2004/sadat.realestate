@@ -1,0 +1,104 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-23",
+  "journeys": [
+    "GUIDE-23"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-HTTP-MongoDB",
+  "responsiveEvidence": "remaining-surfaces-local-latest.json covers ADM-33..ADM-38 in AR/EN on Desktop/Tablet/Pixel 5",
+  "commit": "6a236c775df388448c54f3bdd175ca1054937b63",
+  "startedAt": "2026-09-12T18:02:37.037Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "checks": [
+        "true_empty",
+        "offline_retry_without_navigation"
+      ]
+    }
+  ],
+  "checks": [
+    "admin_ads_empty_and_offline_retry_ar_en_all_devices",
+    "all_admin_ads_reads_200_true_empty_and_invalid_inputs_400_without_write",
+    "ad_request_review_success_and_stale_409",
+    "payment_proof_review_idempotent_replay_and_stale_409",
+    "reasoned_request_trace_audits_and_no_duplicate_replay_audit"
+  ],
+  "authorization": [
+    "anonymous_401",
+    "limited_admin_mutations_403",
+    "current_suspended_admin_401_and_restored"
+  ],
+  "auditActions": [
+    "ad_request.review",
+    "payment_proof.approve"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T18:02:56.101Z"
+}

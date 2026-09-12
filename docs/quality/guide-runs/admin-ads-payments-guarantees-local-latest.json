@@ -1,0 +1,20 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-23",
+  "journeys": [
+    "GUIDE-23"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside each review transaction",
+  "commit": "6a236c775df388448c54f3bdd175ca1054937b63",
+  "startedAt": "2026-09-12T18:06:06.351Z",
+  "checks": [
+    "ad_request_audit_failure_rolls_back_state_version_history_and_inserted_audit",
+    "payment_proof_audit_failure_rolls_back_state_version_history_and_inserted_audit",
+    "retries_commit_each_review_with_exactly_one_audit",
+    "stale_competing_reviews_write_neither_state_nor_audit"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T18:06:06.807Z"
+}

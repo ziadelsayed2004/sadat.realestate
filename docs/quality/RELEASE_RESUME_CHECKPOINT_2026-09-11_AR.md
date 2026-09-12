@@ -604,3 +604,10 @@
 - Real HTTP/MongoDB checks completed category, location, and feature create/update/stale-409/delete lifecycles, project approval and publication, and property-report resolution. Short reasons produced 400 without writes; anonymous, limited-administrator, and current suspended-administrator boundaries produced the expected denials.
 - Taxonomy and feature writes now include mandatory audit persistence in the same transaction. Feature creation no longer leaks the audit-only reason into its strict record schema. Location deletion now performs session reads sequentially. The isolated MongoDB verifier proved rollback on five mutation families, exact retry audits, stale conflicts, and database cleanup.
 - The matrix records GUIDE-20 as `LOCAL_FUNCTIONAL_SCOPE_REVIEWED`, raising locally reviewed journeys to 22/26 (84.6%). Global status remains 26 `PARTIAL`, 0 Production verified, and 0 fully closed; Figma remains 90/119. Demo data was preserved and no launch or purge ran.
+
+## GUIDE-23 local functional acceptance — 2026-09-12
+
+- احتفظت ADM-33 حتى ADM-38 بدليل المتصفح الحقيقي المشترك للعربية والإنجليزية على Desktop وTablet وPixel 5 مع HTTP 200 ومن دون أخطاء صفحة أو overflow أفقي. كما نجحت ADM-33 في true empty وoffline Retry بلا إعادة تحميل في الست حالات.
+- أثبت HTTP وMongoDB الحقيقيان مراجعة طلب إعلان ومراجعة إثبات دفع مع version/history/reason/audit، و409 للقرار المنافس القديم، وidempotent replay لموافقة الدفع من دون audit مكرر. رفضت validation القصيرة بلا كتابة، وثبتت 401 و403 وحالة المدير المعلق الحالية ثم استعادته.
+- أثبت MongoDB المعزول أن فشل audit يعيد status/version/history والـaudit معًا في التدفقين، وأن إعادة المحاولة تكتب audit واحدًا فقط، ثم حذف قاعدة الاختبار وكل fixtures والجلسات والـaudits (`cleanup=true`).
+- تسجل المصفوفة GUIDE-23 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 23/26 (88.5%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
