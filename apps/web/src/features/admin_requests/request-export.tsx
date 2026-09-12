@@ -73,7 +73,7 @@ export function RequestExport({ locale, query, load, headings, row }: {
     }
   }
   return <div className="admin-requests__export">
-    <Button type="button" size="sm" variant="secondary" disabled={busy} loading={busy} onClick={() => { void download(); }}>{requestMetricLabel(locale, 'exportCsv')}</Button>
+    <Button type="button" size="sm" variant="secondary" disabled={busy} loading={busy} onClick={() => { void download(); }}><img src="/assets/canonical/admin/export-csv.svg" alt="" />{requestMetricLabel(locale, 'exportCsv')}</Button>
     {error ? <p role="alert">{requestMetricLabel(locale, 'exportFailed')}</p> : null}
   </div>;
 }
