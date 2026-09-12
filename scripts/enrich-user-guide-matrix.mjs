@@ -50,6 +50,7 @@ const providerProjectsRecovery = await readFile('docs/quality/guide-runs/provide
 const providerViewingsRecovery = await readFile('docs/quality/guide-runs/provider-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide03ContentBrowser = await readFile('docs/quality/guide-runs/guide03-content-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide22AdminContentBrowser = await readFile('docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide22ContentMutations = await readFile('docs/quality/guide-runs/guide22-content-mutations-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -99,6 +100,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json", notificationGuarantees],
   ["docs/quality/guide-runs/guide03-content-browser-local-latest.json", guide03ContentBrowser],
   ["docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json", guide22AdminContentBrowser],
+  ["docs/quality/guide-runs/guide22-content-mutations-local-latest.json", guide22ContentMutations],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 const guide03LocalAcceptanceReady = guide03ContentBrowser?.status === 'PASS_LOCAL'
@@ -166,6 +168,20 @@ const guide21LocalAcceptanceReady = adminRequestsRecovery?.status === 'PASS_LOCA
       && run.mutationControlsHidden === true && run.requestUnchanged === true && run.auditWrites === 0))
   && requestGuaranteesEvidence?.status === 'PASS_LOCAL'
   && requestGuaranteesEvidence.mockedRoutes === false;
+
+const guide22LocalAcceptanceReady = guide22AdminContentBrowser?.status === 'PASS_LOCAL'
+  && guide22AdminContentBrowser.mockedRoutes === false && guide22AdminContentBrowser.cleanup === true
+  && guide22AdminContentBrowser.runs?.length === 6
+  && guide22AdminContentBrowser.runs.every(run => run.status === 'PASS' && run.pageErrors === 0
+    && run.screens?.length === 8 && run.screens.every(screen => screen.documentStatus === 200
+      && screen.apiStatuses?.every(status => status === 200) && screen.scrollWidth === screen.innerWidth))
+  && guide22ContentMutations?.status === 'PASS_LOCAL' && guide22ContentMutations.mockedRoutes === false
+  && guide22ContentMutations.cleanup === true && guide22ContentMutations.populationRestored === true
+  && guide22ContentMutations.checks?.length === 6
+  && guide22ContentMutations.atomicAuditRollback?.articleMutationRolledBack === true
+  && guide22ContentMutations.atomicAuditRollback?.cmsMutationRolledBack === true
+  && communityEvidence?.status === 'PASS_LOCAL' && communityGuarantees?.status === 'PASS_LOCAL'
+  && communityBrowserRecovery?.status === 'PASS_LOCAL_SUBCASES' && communityBrowserRecovery.mockedRoutes === false;
 
 matrix.schemaVersion = 2;
 matrix.generatedAt = new Date().toISOString();
@@ -296,6 +312,11 @@ matrix.journeys = matrix.journeys.map((journey) => {
       horizontalAccess: 'NOT_APPLICABLE',
       rationale: 'These global CMS and moderation records are governed by admin permissions and have no recipient, owner, or tenant scope.',
     };
+    if (guide22LocalAcceptanceReady) hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_22_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
   }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
@@ -358,6 +379,19 @@ matrix.journeys = matrix.journeys.map((journey) => {
     && communityEvidence.transitions?.includes('concurrent_hide_one_200_one_409_v2')) {
     reviewedGuarantees.push({ category: 'duplicateMutation', check: 'concurrent_hide_one_200_one_409_v2',
       path: 'docs/quality/guide-runs/community-local-latest.json', verifiedAt: communityEvidence.finishedAt });
+  }
+  if (journey.id === 'GUIDE-22' && guide22ContentMutations?.status === 'PASS_LOCAL'
+    && guide22ContentMutations.mockedRoutes === false && guide22ContentMutations.cleanup === true) {
+    for (const [category, check] of [
+      ['roleAuthorization', 'authentication_401_and_limited_admin_403'],
+      ['currentSessionState', 'current_admin_account_state_enforced'],
+      ['expectedVersion409', 'article_category_and_cms_concurrent_versions'],
+      ['duplicateMutation', 'category_report_and_concurrent_mutation_duplicates'],
+      ['decisionReason', 'article_cms_and_report_reason_validation'],
+      ['atomicAuditRollback', 'article_cms_and_report_audit_failure_roll_back_mutations'],
+    ]) reviewedGuarantees.push({ category, check,
+      path: 'docs/quality/guide-runs/guide22-content-mutations-local-latest.json',
+      verifiedAt: guide22ContentMutations.finishedAt });
   }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     for (const [category, check] of [
@@ -470,6 +504,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'all_admin_content_surfaces_and_mutation_lifecycles',
+      path: 'docs/quality/GUIDE_22_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'ADM-25 through ADM-32 in AR/EN across Desktop, Tablet and Pixel 5 plus real HTTP/MongoDB mutation lifecycles',
+      verifiedAt: guide22ContentMutations.finishedAt });
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'API',
+      check: 'invalid_article_cms_and_report_inputs_leave_state_consistent',
+      path: 'docs/quality/guide-runs/guide22-content-mutations-local-latest.json',
+      scope: 'Article transition, CMS reason/source and report validation through real local HTTP and MongoDB',
+      verifiedAt: guide22ContentMutations.finishedAt });
+  }
   if (journey.id === 'GUIDE-22' && guide22AdminContentBrowser?.status === 'PASS_LOCAL'
     && guide22AdminContentBrowser.mockedRoutes === false && guide22AdminContentBrowser.cleanup === true
     && guide22AdminContentBrowser.runs?.length === 6) {

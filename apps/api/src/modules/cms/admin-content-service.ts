@@ -138,6 +138,7 @@ export function createCmsAdminContentService(dependencies: {
   authorization: CmsAdminAuthorization;
   audit: Pick<AuditWriter, 'record'>;
   now?: () => Date;
+  transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
 }): CmsAdminContentService {
   const now = dependencies.now ?? (() => new Date());
   const allowed = (userId: string, permission: RbacPermission) => dependencies.authorization.authorize(userId, permission);
@@ -244,7 +245,7 @@ export function createCmsAdminContentService(dependencies: {
     return cmsAdminContentDataSchema.parse({ namespace, items: row ? [populationData(row, authorization.manage, authorization.publish)] : [] });
   }
 
-  return {
+  const service: CmsAdminContentService = {
     async get(principal, namespace) {
       return read(principal, cmsAdminContentNamespaceSchema.parse(namespace));
     },
@@ -399,5 +400,10 @@ export function createCmsAdminContentService(dependencies: {
       await audit('cms.population.write', 'cms_population_value', row.id, principal, input.reason, null, { id: row.id, status: row.status, version: row.version }, context, at);
       return read(principal, namespace);
     }
+  };
+  if (!dependencies.transaction) return service;
+  return {
+    ...service,
+    put: (...args) => dependencies.transaction!(() => service.put(...args))
   };
 }

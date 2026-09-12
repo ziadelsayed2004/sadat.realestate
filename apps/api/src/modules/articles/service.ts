@@ -224,6 +224,7 @@ export function createArticleService(dependencies: {
   audit: Pick<AuditWriter, 'record'>;
   resolveAuthorName?: (authorId: string) => Promise<string | undefined>;
   now?: () => Date;
+  transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
 }): ArticleService {
   const now = dependencies.now ?? (() => new Date());
   const allowed = (userId: string, permission: RbacPermission) => dependencies.authorization.authorize(userId, permission);
@@ -260,7 +261,7 @@ export function createArticleService(dependencies: {
     occurredAt: at
   });
 
-  return {
+  const service: ArticleService = {
     async listCategories(principal, unparsedQuery) {
       const query = articleCategoryListQuerySchema.parse(unparsedQuery);
       await requirePermission(principal.userId, 'admin:content.view');
@@ -440,5 +441,15 @@ export function createArticleService(dependencies: {
       if (!stored) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
       return publicArticle(stored, selectedLocale, await dependencies.resolveAuthorName?.(stored.article.authorId));
     }
+  };
+  if (!dependencies.transaction) return service;
+  return {
+    ...service,
+    createCategory: (...args) => dependencies.transaction!(() => service.createCategory(...args)),
+    updateCategory: (...args) => dependencies.transaction!(() => service.updateCategory(...args)),
+    deleteCategory: (...args) => dependencies.transaction!(() => service.deleteCategory(...args)),
+    createArticle: (...args) => dependencies.transaction!(() => service.createArticle(...args)),
+    updateArticle: (...args) => dependencies.transaction!(() => service.updateArticle(...args)),
+    transitionArticle: (...args) => dependencies.transaction!(() => service.transitionArticle(...args))
   };
 }

@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import type { Connection } from 'mongoose';
+import type { ClientSession, Connection } from 'mongoose';
 import {
   communityAdminReportListDataSchema,
   communityAdminReportListQuerySchema,
@@ -66,7 +66,8 @@ async function recordAudit(
   action: string,
   reason: string,
   before: unknown,
-  after: unknown
+  after: unknown,
+  session?: ClientSession
 ): Promise<void> {
   if (audit === undefined || context === undefined) return;
   await audit.record({
@@ -81,7 +82,7 @@ async function recordAudit(
     requestId: context.requestId,
     traceId: context.traceId,
     occurredAt: new Date()
-  });
+  }, session);
 }
 
 export function createMemoryCommunityReportService(
@@ -205,12 +206,14 @@ export function createMongooseCommunityReportService(
         updatedAt: stamp
       });
       try {
-        await reports.insertOne(report);
+        await connection.transaction(async session => {
+          await reports.insertOne(report, { session });
+          await recordAudit(audit, claims, context, report.id, 'community_report.create', 'Community report submitted', {}, { status: report.status, version: report.version }, session);
+        });
       } catch (error) {
         if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) throw new Error('DUPLICATE', { cause: error });
         throw error;
       }
-      await recordAudit(audit, claims, context, report.id, 'community_report.create', 'Community report submitted', {}, { status: report.status, version: report.version });
       return { id: report.id, status: 'open', createdAt: report.createdAt };
     },
     async adminList(claims, input) {
@@ -238,24 +241,27 @@ export function createMongooseCommunityReportService(
       await requireModeration(claims, authorization);
       const parsed: CommunityReportResolve = communityReportResolveSchema.parse(input);
       const targetStatus = parsed.action === 'resolve' ? 'resolved' : 'dismissed';
-      const before = await reports.findOne({ id: reportId }, { projection: { status: 1, version: 1 } });
-      if (before === null) throw new Error('NOT_FOUND');
-      if (before.version !== parsed.version) throw new Error('VERSION_CONFLICT');
-      if (!['open', 'in_review'].includes(before.status)) throw new Error('INVALID_STATE');
-      const updated = await reports.findOneAndUpdate(
-        { id: reportId, version: parsed.version, status: { $in: ['open', 'in_review'] } },
-        { $set: { status: targetStatus, resolutionReason: parsed.reason, updatedAt: now() }, $inc: { version: 1 } },
-        { returnDocument: 'after', projection }
-      );
-      const result = parseRow(updated);
-      if (result === undefined) {
-        const current = await reports.findOne({ id: reportId }, { projection: { version: 1, status: 1 } });
-        if (current === null) throw new Error('NOT_FOUND');
-        if (current.version !== parsed.version) throw new Error('VERSION_CONFLICT');
-        throw new Error('INVALID_STATE');
-      }
-      await recordAudit(audit, claims, context, reportId, `community_report.${parsed.action}`, parsed.reason, { status: before.status, version: parsed.version }, { status: result.status, version: result.version });
-      return result;
+      return connection.transaction(async session => {
+        const options = { session, projection: { status: 1, version: 1 } };
+        const before = await reports.findOne({ id: reportId }, options);
+        if (before === null) throw new Error('NOT_FOUND');
+        if (before.version !== parsed.version) throw new Error('VERSION_CONFLICT');
+        if (!['open', 'in_review'].includes(before.status)) throw new Error('INVALID_STATE');
+        const updated = await reports.findOneAndUpdate(
+          { id: reportId, version: parsed.version, status: { $in: ['open', 'in_review'] } },
+          { $set: { status: targetStatus, resolutionReason: parsed.reason, updatedAt: now() }, $inc: { version: 1 } },
+          { returnDocument: 'after', projection, session }
+        );
+        const result = parseRow(updated);
+        if (result === undefined) {
+          const current = await reports.findOne({ id: reportId }, options);
+          if (current === null) throw new Error('NOT_FOUND');
+          if (current.version !== parsed.version) throw new Error('VERSION_CONFLICT');
+          throw new Error('INVALID_STATE');
+        }
+        await recordAudit(audit, claims, context, reportId, `community_report.${parsed.action}`, parsed.reason, { status: before.status, version: parsed.version }, { status: result.status, version: result.version }, session);
+        return result;
+      });
     }
   };
 }

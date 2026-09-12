@@ -1,0 +1,222 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-22",
+  "journeys": [
+    "GUIDE-22"
+  ],
+  "environment": "local-real-http-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "fa72fad4069b0130e35bccd575548600bb6439b0",
+  "startedAt": "2026-09-12T15:05:37.949Z",
+  "checks": [
+    "authentication_401_and_limited_admin_403",
+    "article_category_duplicate_and_ordered_publication_with_concurrent_409",
+    "cms_about_team_population_validation_publish_and_concurrent_409",
+    "community_report_duplicate_rbac_resolve_and_concurrent_409",
+    "current_admin_account_state_enforced",
+    "article_cms_and_report_audit_failure_roll_back_mutations"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/articles",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/article-categories",
+      "status": 403
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/about",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/article-categories",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/article-categories",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/articles",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/articles/guide22-1789225537884-92c1987f?locale=en",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/articles/:id/transitions",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/articles/:id/transitions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/articles/:id/transitions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/articles/:id/transitions",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/articles/guide22-1789225537884-92c1987f?locale=en",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/about",
+      "status": 400
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/about",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/about",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/about",
+      "status": 409
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/team",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/team",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/content/population",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/population",
+      "status": 400
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/population",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/admin/content/population",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/public/community/posts/:id/reports",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/public/community/posts/:id/reports",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/community/reports?postId=:id&page=1&limit=20",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/reports/:id/resolve",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/community/reports/:id/resolve",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/articles?page=1&limit=1",
+      "status": 401
+    }
+  ],
+  "mongo": {
+    "collections": [
+      "article_categories",
+      "articles",
+      "cms_about_blocks",
+      "cms_team_members",
+      "cms_population_values",
+      "community_reports",
+      "audit_logs"
+    ],
+    "articleStatus": "published",
+    "articleVersion": 2,
+    "reportStatus": "resolved",
+    "reportVersion": 1,
+    "auditCount": 11,
+    "auditActions": [
+      "article_category.create",
+      "article.create",
+      "article.transition",
+      "article.transition",
+      "cms.about.write",
+      "cms.about.write",
+      "cms.team.write",
+      "cms.team.write",
+      "cms.population.write",
+      "community_report.create",
+      "community_report.resolve"
+    ]
+  },
+  "cleanup": true,
+  "currentAccountDenialStatus": 401,
+  "atomicAuditRollback": {
+    "articleMutationRolledBack": true,
+    "cmsMutationRolledBack": true,
+    "communityReportMutationRolledBack": true,
+    "auditFailureInjected": true
+  },
+  "remaining": [
+    "Production verification remains intentionally deferred while the project stays in Demo mode."
+  ],
+  "cleanupResidue": {
+    "articles": 0,
+    "categories": 0,
+    "about": 0,
+    "team": 0,
+    "reports": 0,
+    "audits": 0,
+    "sessions": 0
+  },
+  "populationRestored": true,
+  "finishedAt": "2026-09-12T15:05:39.703Z"
+}

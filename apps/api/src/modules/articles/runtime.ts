@@ -13,6 +13,7 @@ export function createArticleRuntime(
   audit: AuditWriter,
   authorization: Pick<RbacService, 'authorize'>
 ): ArticleRouterDependencies {
+  connection.base.set('transactionAsyncLocalStorage', true);
   const models = createArticleModels(connection);
   return {
     accessTokens,
@@ -20,6 +21,7 @@ export function createArticleRuntime(
       repository: createMongooseArticleRepository(models),
       authorization,
       audit,
+      transaction: operation => connection.transaction(operation),
       async resolveAuthorName(authorId) {
         if (!Types.ObjectId.isValid(authorId)) return undefined;
         const account = await connection.collection<{ displayName?: string }>('admin_accounts').findOne(

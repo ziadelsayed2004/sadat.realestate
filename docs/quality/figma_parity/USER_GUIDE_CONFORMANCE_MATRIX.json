@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T14:50:26.109Z",
+  "generatedAt": "2026-09-12T15:05:47.102Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -4368,8 +4368,8 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
@@ -4396,10 +4396,10 @@
         "section": "#admin",
         "journeyId": "GUIDE-22"
       },
-      "executionDate": "2026-09-12T14:48:55.056Z",
+      "executionDate": "2026-09-12T15:05:39.703Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/community-local-latest.json",
         "status": "PASS_LOCAL",
@@ -4450,6 +4450,22 @@
         ]
       },
       "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "all_admin_content_surfaces_and_mutation_lifecycles",
+          "path": "docs/quality/GUIDE_22_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "ADM-25 through ADM-32 in AR/EN across Desktop, Tablet and Pixel 5 plus real HTTP/MongoDB mutation lifecycles",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "invalid_article_cms_and_report_inputs_leave_state_consistent",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "scope": "Article transition, CMS reason/source and report validation through real local HTTP and MongoDB",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
         {
           "case": "success",
           "evidenceType": "Browser/API",
@@ -4516,6 +4532,48 @@
           "check": "concurrent_hide_one_200_one_409_v2",
           "path": "docs/quality/guide-runs/community-local-latest.json",
           "verifiedAt": "2026-09-10T12:35:34.122Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "authentication_401_and_limited_admin_403",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_admin_account_state_enforced",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "article_category_and_cms_concurrent_versions",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "category_report_and_concurrent_mutation_duplicates",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "article_cms_and_report_reason_validation",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "article_cms_and_report_audit_failure_roll_back_mutations",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "article_and_cms_audit_failure_roll_back_mutations",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:01:37.847Z"
         }
       ],
       "evidenceAttachments": [
@@ -4525,11 +4583,26 @@
           "verifiedAt": "2026-09-12T14:48:55.056Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T15:05:39.703Z",
+          "environment": "local-real-http-api-mongodb",
+          "mockedRoutes": false,
+          "remaining": [
+            "Production verification remains intentionally deferred while the project stays in Demo mode."
+          ]
         }
       ],
       "applicabilityReview": {
         "horizontalAccess": "NOT_APPLICABLE",
         "rationale": "These global CMS and moderation records are governed by admin permissions and have no recipient, owner, or tenant scope."
+      },
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_22_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
       }
     },
     {
@@ -4916,7 +4989,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T14:50:26.109Z",
+    "updatedAt": "2026-09-12T15:05:47.102Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

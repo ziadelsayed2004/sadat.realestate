@@ -15,6 +15,7 @@ export function createCmsAdminContentRuntime(
   audit: AuditWriter,
   authorization: Pick<RbacService, 'authorize'>
 ): CmsAdminContentRouterDependencies {
+  connection.base.set('transactionAsyncLocalStorage', true);
   const aboutTeam = registerAboutTeamModels(connection);
   const populationTips = registerPopulationTipsModels(connection);
   const homepageDisplay = registerHomepageDisplayModels(connection);
@@ -30,7 +31,8 @@ export function createCmsAdminContentRuntime(
         settings: homepageDisplay.settings
       }),
       authorization,
-      audit
+      audit,
+      transaction: operation => connection.transaction(operation)
     })
   };
 }
