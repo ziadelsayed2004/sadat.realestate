@@ -184,5 +184,27 @@
       "date presentation",
       "equivalent source/runtime populated state"
     ]
+  },
+  "actionColumnReview20260912": {
+    "sourceNode": "6017:69859",
+    "sourceButtonGeometry": {
+      "width": 96,
+      "height": 28,
+      "radius": 14,
+      "fontSize": 12,
+      "lineHeight": 16
+    },
+    "runtimeAssertion": "The first row action is exactly 96 × 28 CSS pixels and remains within the table wrapper in desktop AR and EN.",
+    "componentTestsPassed": 6,
+    "fixtureAndVisualTestsPassed": 12,
+    "buildAndBundleBudgetPassed": true,
+    "officialClosureEligible": false,
+    "remaining": [
+      "exact CSV placement and styling",
+      "exact toolbar geometry and styling",
+      "badge styling",
+      "date presentation",
+      "directly comparable source/runtime populated state"
+    ]
   }
 }

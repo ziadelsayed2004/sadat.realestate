@@ -456,3 +456,10 @@
 - Read official Figma context for SEK-02 `6027:4046`. Completed five-column row layout using existing property projection and fixed compressed status/detail text through wrapping whole outcome elements.
 - AR/EN geometry tests passed at 393/768/1280/1551 viewport widths; no page overflow or outcome intersection. List/pagination visual tests passed 2/2 after reviewed list baseline updates. Rich fixture now affects lists only. Component tests 5/5 and build/translations/budgets passed.
 - Four SEK-03/04 visual failures remain against old shell/detail baselines even with original detail fixtures. Review those against their source next; do not blindly regenerate. ADM-18 button CSS remains uncommitted and unverified. SEK-02 review is in `figma_parity/screens/SEK-02/row-layout-review-2026-09-12.md`. No closure count changed.
+
+## 12 September: ADM-18 action containment verified
+
+- روجع تعديل زر الإجراء المعلق مقابل عقدة المصدر المحفوظة `6017:69859`. أصبح الزر `96×28px` بنصف قطر `14px` وخط `12/16px`، وعدلت نسب أعمدة ADM-18 فقط كي يبقى الزر وعنوان عمود الإجراءات داخل الحاوية في AR وEN.
+- أضيف assertion هندسي يثبت أبعاد أول زر واحتواءه داخل table wrapper. نجحت اختبارات المكوّن 6/6، واختبارات الطلبات والصور على Desktop AR/EN نجحت 12/12 دون وضع تحديث الصور، ونجح Web build وbundle budget وESLint و`git diff --check`.
+- روجعت صور ADM-18 الجديدة بدل اعتماد الفشل آليًا. صور ADM-22/24 التي أعيد توليدها تسجل بقاء عنصر التنقل النشط ظاهرًا داخل الشريط الجانبي؛ لم يتغير كود هاتين الشاشتين في هذه الدفعة.
+- تبقى ADM-18 غير مغلقة رسميًا: يلزم حسم تموضع/تنسيق CSV والـtoolbar والـbadges والتاريخ، وحالة populated قابلة للمقارنة المباشرة مع المصدر. عداد Figma يبقى 90/119، والرحلات تبقى 26 PARTIAL. Demo مستمر ولم ينفذ purge أو launch.
