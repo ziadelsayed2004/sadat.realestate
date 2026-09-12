@@ -7,13 +7,13 @@
   "mockedRoutes": false,
   "environment": "isolated-local-MongoDB",
   "faultInjection": "durable audit throws after insert inside settings transaction",
-  "commit": "090e9684d1463884a287f271197763555334ff4b",
-  "startedAt": "2026-09-12T21:34:19.241Z",
+  "commit": "33a8fed6ca3466a87d52ccc1e3962b6d516b2830",
+  "startedAt": "2026-09-12T21:55:37.944Z",
   "checks": [
     "audit_failure_rolls_back_settings_values_version_and_inserted_audit",
     "retry_commits_settings_and_exactly_one_audit",
     "stale_settings_version_writes_no_state_or_audit"
   ],
   "cleanup": true,
-  "finishedAt": "2026-09-12T21:34:19.618Z"
+  "finishedAt": "2026-09-12T21:55:38.264Z"
 }

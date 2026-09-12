@@ -618,3 +618,11 @@
 - أصلح مسار إنشاء سياسة العمولة والاستثناء وتخصيص الحساب ليكتب السجل والـaudit داخل transaction واحدة. أثبت HTTP/MongoDB إنشاء الأنواع الثلاثة وظهورها في change log، و409 للتكرار من دون سجل أو audit إضافي، مع validation و401 و403 وحالة المدير المعلق ثم استعادته.
 - أثبت MongoDB المعزول rollback للسجل والـaudit عند فشل التدقيق، ونجاح retry مرة واحدة، وعدم إضافة audit عند duplicate. حذف كل fixtures والجلسات والـaudits وقاعدة الاختبار (`cleanup=true`).
 - تسجل المصفوفة GUIDE-24 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 24/26 (92.3%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## GUIDE-25 local functional acceptance — 2026-09-13
+
+- اجتازت ADM-46 حتى ADM-53 وADM-55 حتى ADM-58 عدد 72 تحقق شاشة: 12 شاشة بالعربية والإنجليزية على Desktop وTablet وPixel 5، بالـAPI المحلي الحقيقي، ومن دون page errors أو horizontal overflow. وتعافت ADM-50 من offline عبر Retry بلا إعادة تحميل مستند في الحالات الست.
+- اختُبرت دورة البنر بإنشاء وتعديل حقيقيين، و409 للتكرار ولنسخة التعديل القديمة، مع audit واحد للإنشاء وآخر للتعديل. واختُبرت namespaces الإعدادات الثمانية؛ حُدث الموجود وأُنشئت الفارغة مؤقتًا، مع 409 لنسخة قديمة وaudit مستقل لكل تغيير.
+- أصبحت عمليات settings update وbanner create/update تكتب السجل والـaudit داخل MongoDB transaction واحدة. أثبتت اختبارات الحقن rollback كاملًا عند فشل audit، وretry واحدًا، وعدم كتابة audit لمحاولات stale/duplicate. تحتفظ أدلة GUIDE-22 بتغطية tips/homepage CMS الذرية.
+- ثبتت validation وtrue empty و401 و403 وحالة المدير المعلق الحالية ثم استعادته. حُذفت كل fixtures والجلسات والـaudits، وأعيد مستند privacy/security الأصلي حرفيًا (`cleanup=true`) مع بقاء المشروع Demo.
+- تسجل المصفوفة GUIDE-25 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 25/26 (96.2%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.

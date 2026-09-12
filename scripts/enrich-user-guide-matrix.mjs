@@ -56,6 +56,9 @@ const guide23AdminAdsPayments = await readFile('docs/quality/guide-runs/guide23-
 const adminAdsPaymentsGuarantees = await readFile('docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide24AdminCommissions = await readFile('docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const commissionAuditGuarantees = await readFile('docs/quality/guide-runs/commission-audit-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide25AdminHomeSettings = await readFile('docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const adminSettingsGuarantees = await readFile('docs/quality/guide-runs/admin-settings-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const adminBannerGuarantees = await readFile('docs/quality/guide-runs/admin-banner-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -126,6 +129,9 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json", adminAdsPaymentsGuarantees],
   ["docs/quality/guide-runs/guide24-admin-commissions-local-latest.json", guide24AdminCommissions],
   ["docs/quality/guide-runs/commission-audit-guarantees-local-latest.json", commissionAuditGuarantees],
+  ["docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json", guide25AdminHomeSettings],
+  ["docs/quality/guide-runs/admin-settings-guarantees-local-latest.json", adminSettingsGuarantees],
+  ["docs/quality/guide-runs/admin-banner-guarantees-local-latest.json", adminBannerGuarantees],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -421,6 +427,27 @@ const guide24LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_
   && commissionAuditGuarantees?.status === 'PASS_LOCAL' && commissionAuditGuarantees.mockedRoutes === false
   && commissionAuditGuarantees.cleanup === true && commissionAuditGuarantees.checks?.length === 3;
 
+const guide25LocalAcceptanceReady = guide25AdminHomeSettings?.status === 'PASS_LOCAL'
+  && guide25AdminHomeSettings.mockedRoutes === false && guide25AdminHomeSettings.cleanup === true
+  && guide25AdminHomeSettings.runs?.length === 6
+  && guide25AdminHomeSettings.runs.every(run => run.status === 'PASS' && run.documentReloaded === false
+    && run.screens?.length === 12 && run.screens.every(screen => screen.scrollWidth <= screen.innerWidth + 1)
+    && run.checks?.includes('offline_retry_without_navigation'))
+  && ['twelve_admin_home_settings_screens_ar_en_all_devices_with_retry',
+    'all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write',
+    'eight_settings_updates_stale_409_and_exact_reasoned_audits',
+    'banner_create_update_duplicate_and_stale_409_with_exactly_two_audits'
+  ].every(check => guide25AdminHomeSettings.checks?.includes(check))
+  && ['anonymous_settings_and_banners_401', 'limited_admin_settings_and_banners_mutations_403']
+    .every(check => guide25AdminHomeSettings.authorization?.includes(check))
+  && guide25AdminHomeSettings.authorization?.some(check => /^current_suspended_admin_(401|403)_and_restored$/u.test(check))
+  && adminSettingsGuarantees?.status === 'PASS_LOCAL' && adminSettingsGuarantees.mockedRoutes === false
+  && adminSettingsGuarantees.cleanup === true && adminSettingsGuarantees.checks?.length === 3
+  && adminBannerGuarantees?.status === 'PASS_LOCAL' && adminBannerGuarantees.mockedRoutes === false
+  && adminBannerGuarantees.cleanup === true && adminBannerGuarantees.checks?.length === 5
+  && guide22ContentMutations?.status === 'PASS_LOCAL' && guide22ContentMutations.mockedRoutes === false
+  && guide22ContentMutations.cleanup === true;
+
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
   && providerCustomerRecovery?.status === 'PASS_LOCAL_SUBCASES'
@@ -702,6 +729,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'Commission administration is a global permission-gated queue. The current UI exposes creation and read flows only; it has no update/delete mutation accepting expectedVersion. Duplicate create conflicts are tested separately.',
     };
   }
+  if (journey.id === 'GUIDE-25' && guide25LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = { status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED', path: 'docs/quality/GUIDE_25_LOCAL_ACCEPTANCE_2026-09-13.md', reviewedAt: '2026-09-13' };
+    hydratedJourney.applicabilityReview = {
+      horizontalAccess: 'NOT_APPLICABLE',
+      rationale: 'Banner, CMS and platform settings are global permission-gated administration records without an administrator-owned tenant boundary. Current account state, role authorization, concurrency and atomic audit guarantees are tested directly.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -863,6 +897,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['duplicateMutation', 'duplicate_policy_exception_and_override_return_409_without_duplicate_audits', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
       ['decisionReason', 'commission_creations_persist_reasoned_request_trace_audits', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
       ['atomicAuditRollback', 'audit_failure_rolls_back_policy_exception_and_override_creation', 'docs/quality/guide-runs/commission-audit-guarantees-local-latest.json', commissionAuditGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-25' && guide25LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['roleAuthorization', 'anonymous_and_limited_admin_settings_and_banner_mutations_are_denied', 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', guide25AdminHomeSettings.finishedAt],
+      ['currentSessionState', 'current_suspended_admin_is_denied_and_restored', 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', guide25AdminHomeSettings.finishedAt],
+      ['duplicateMutation', 'duplicate_banner_create_returns_409_without_duplicate_audit', 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', guide25AdminHomeSettings.finishedAt],
+      ['expectedVersion409', 'stale_settings_and_banner_updates_conflict_without_write', 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', guide25AdminHomeSettings.finishedAt],
+      ['decisionReason', 'settings_banner_and_cms_mutations_persist_reasoned_audits', 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', guide25AdminHomeSettings.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_settings_and_inserted_audit', 'docs/quality/guide-runs/admin-settings-guarantees-local-latest.json', adminSettingsGuarantees.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_banner_create_update_and_inserted_audit', 'docs/quality/guide-runs/admin-banner-guarantees-local-latest.json', adminBannerGuarantees.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_tip_and_homepage_cms_mutations', 'docs/quality/guide-runs/guide22-content-mutations-local-latest.json', guide22ContentMutations.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
@@ -1196,6 +1242,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['empty', 'commission_policy_empty_and_offline_retry_ar_en_all_devices', 'An archived-policy query with no records renders a truthful empty state.'],
       ['networkRetry', 'commission_policy_empty_and_offline_retry_ar_en_all_devices', 'ADM-39 recovers from browser offline mode through Retry without document navigation in all six configurations.'],
     ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check, path: 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', scope, verifiedAt: guide24AdminCommissions.finishedAt });
+  }
+  if (journey.id === 'GUIDE-25' && guide25LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB', check: 'admin_banner_home_content_and_settings_surfaces_and_mutations',
+      path: 'docs/quality/GUIDE_25_LOCAL_ACCEPTANCE_2026-09-13.md', scope: 'ADM-46 through ADM-53 and ADM-55 through ADM-58 in Arabic and English across Desktop, Tablet and Pixel 5 plus real banner, CMS and settings mutations.', verifiedAt: guide25AdminHomeSettings.finishedAt });
+    for (const [category, check, scope] of [
+      ['validation', 'all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write', 'Invalid banner and settings inputs return 400 without writes.'],
+      ['empty', 'all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write', 'A unique missing banner placement returns a truthful empty collection; unconfigured settings render truthful empty forms.'],
+      ['networkRetry', 'twelve_admin_home_settings_screens_ar_en_all_devices_with_retry', 'ADM-50 recovers from browser offline mode through Retry without document navigation in all six configurations.'],
+    ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check, path: 'docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json', scope, verifiedAt: guide25AdminHomeSettings.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',

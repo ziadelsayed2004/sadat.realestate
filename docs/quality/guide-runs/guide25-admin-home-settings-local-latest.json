@@ -1,0 +1,477 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-25",
+  "journeys": [
+    "GUIDE-25"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-HTTP-MongoDB",
+  "responsiveEvidence": "ADM-46..ADM-53 and ADM-55..ADM-58 visited in AR/EN on Desktop/Tablet/Pixel 5",
+  "commit": "33a8fed6ca3466a87d52ccc1e3962b6d516b2830",
+  "startedAt": "2026-09-12T21:52:08.990Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 1280,
+          "scrollWidth": 1280
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 712,
+          "scrollWidth": 712
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "documentReloaded": false,
+      "screens": [
+        {
+          "screenId": "ADM-46",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-47",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-48",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-49",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-50",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-51",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-52",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-53",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-55",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-56",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-57",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-58",
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "checks": [
+        "all_screen_ids",
+        "no_horizontal_overflow",
+        "offline_retry_without_navigation"
+      ]
+    }
+  ],
+  "checks": [
+    "twelve_admin_home_settings_screens_ar_en_all_devices_with_retry",
+    "all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write",
+    "eight_settings_updates_stale_409_and_exact_reasoned_audits",
+    "banner_create_update_duplicate_and_stale_409_with_exactly_two_audits"
+  ],
+  "authorization": [
+    "anonymous_settings_and_banners_401",
+    "limited_admin_settings_and_banners_mutations_403",
+    "current_suspended_admin_401_and_restored"
+  ],
+  "auditActions": [
+    "settings.create:advertising",
+    "settings.create:contact",
+    "settings.create:display",
+    "settings.create:platform",
+    "settings.create:properties",
+    "settings.create:seo",
+    "settings.create:social",
+    "settings.update:privacy-security",
+    "ad_banner.create",
+    "ad_banner.update"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T21:52:09.790Z"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-25",
+  "journeys": [
+    "GUIDE-25"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside banner create and update transactions",
+  "commit": "33a8fed6ca3466a87d52ccc1e3962b6d516b2830",
+  "startedAt": "2026-09-12T21:55:37.950Z",
+  "checks": [
+    "audit_failure_rolls_back_banner_creation_and_inserted_audit",
+    "create_retry_commits_banner_with_exactly_one_audit",
+    "audit_failure_rolls_back_banner_values_version_and_update_audit",
+    "update_retry_commits_values_version_and_exactly_one_audit",
+    "stale_update_and_duplicate_create_write_no_state_or_audit"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T21:55:38.373Z"
+}

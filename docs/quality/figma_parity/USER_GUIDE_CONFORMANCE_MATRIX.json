@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T21:30:20.254Z",
+  "generatedAt": "2026-09-12T21:55:44.295Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -5992,24 +5992,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
+        "horizontalAccess": "NOT_APPLICABLE",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
         "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
         "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -6020,10 +6020,10 @@
         "section": "#admin",
         "journeyId": "GUIDE-25"
       },
-      "executionDate": "2026-09-10T12:54:32.553Z",
+      "executionDate": "2026-09-12T21:55:38.373Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
@@ -6034,9 +6034,63 @@
           "remaining": [
             "Run the same browser, API and MongoDB verification on Production after deployment."
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T21:52:09.790Z",
+          "environment": "local-real-HTTP-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/admin-settings-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T21:55:38.264Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/admin-banner-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T21:55:38.373Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
         }
       ],
-      "reviewedSubcases": [],
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_banner_home_content_and_settings_surfaces_and_mutations",
+          "path": "docs/quality/GUIDE_25_LOCAL_ACCEPTANCE_2026-09-13.md",
+          "scope": "ADM-46 through ADM-53 and ADM-55 through ADM-58 in Arabic and English across Desktop, Tablet and Pixel 5 plus real banner, CMS and settings mutations.",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "scope": "Invalid banner and settings inputs return 400 without writes.",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "all_reads_200_true_banner_empty_and_invalid_inputs_400_without_write",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "scope": "A unique missing banner placement returns a truthful empty collection; unconfigured settings render truthful empty forms.",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "twelve_admin_home_settings_screens_ar_en_all_devices_with_retry",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "scope": "ADM-50 recovers from browser offline mode through Retry without document navigation in all six configurations.",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        }
+      ],
       "reviewedGuarantees": [
         {
           "category": "expectedVersion409",
@@ -6049,8 +6103,65 @@
           "check": "limited_admin_settings_mutation_denied_403",
           "path": "docs/quality/guide-runs/privacy-security-local-latest.json",
           "verifiedAt": "2026-09-10T12:54:32.553Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_and_limited_admin_settings_and_banner_mutations_are_denied",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_admin_is_denied_and_restored",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_banner_create_returns_409_without_duplicate_audit",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_settings_and_banner_updates_conflict_without_write",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "settings_banner_and_cms_mutations_persist_reasoned_audits",
+          "path": "docs/quality/guide-runs/guide25-admin-home-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T21:52:09.790Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_settings_and_inserted_audit",
+          "path": "docs/quality/guide-runs/admin-settings-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T21:55:38.264Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_banner_create_update_and_inserted_audit",
+          "path": "docs/quality/guide-runs/admin-banner-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T21:55:38.373Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_tip_and_homepage_cms_mutations",
+          "path": "docs/quality/guide-runs/guide22-content-mutations-local-latest.json",
+          "verifiedAt": "2026-09-12T15:05:39.703Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_25_LOCAL_ACCEPTANCE_2026-09-13.md",
+        "reviewedAt": "2026-09-13"
+      },
+      "applicabilityReview": {
+        "horizontalAccess": "NOT_APPLICABLE",
+        "rationale": "Banner, CMS and platform settings are global permission-gated administration records without an administrator-owned tenant boundary. Current account state, role authorization, concurrency and atomic audit guarantees are tested directly."
+      }
     },
     {
       "id": "GUIDE-26",
@@ -6158,7 +6269,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T21:30:20.254Z",
+    "updatedAt": "2026-09-12T21:55:44.295Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
