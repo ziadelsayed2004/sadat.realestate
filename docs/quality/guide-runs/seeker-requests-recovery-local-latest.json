@@ -5,7 +5,7 @@
   ],
   "mockedRoutes": false,
   "environment": "local-real-browser-api-mongodb",
-  "commit": "a81f259e95838cf8b38c5840461aa5631c6ceeb5",
+  "commit": "5c5adda445b7258238099a7e7794bfbffb21200f",
   "runs": [
     {
       "locale": "ar",
@@ -13,14 +13,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -33,14 +35,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -53,14 +57,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -73,14 +79,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -93,14 +101,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -113,14 +123,16 @@
       "checks": [
         "empty_search_clear_recovers_without_navigation",
         "offline_filter_retry_recovers_without_navigation",
-        "empty_cancel_reason_blocks_mutation"
+        "empty_cancel_reason_blocks_mutation",
+        "property_search_list_and_detail_render_safe_persisted_payload"
       ],
       "httpStatuses": {
         "initial": 200,
         "empty": 200,
         "reset": 200,
         "recovered": 200,
-        "detail": 200
+        "detail": 200,
+        "propertySearchDetail": 200
       },
       "transitionRequests": 0,
       "requestUnchanged": true,
@@ -130,5 +142,5 @@
   ],
   "temporaryRequestRemoved": true,
   "cleanup": true,
-  "finishedAt": "2026-09-11T17:31:39.607Z"
+  "finishedAt": "2026-09-12T10:20:56.153Z"
 }

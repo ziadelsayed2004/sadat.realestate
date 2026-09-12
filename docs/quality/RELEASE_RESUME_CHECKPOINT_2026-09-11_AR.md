@@ -470,3 +470,10 @@
 - روجعت صور AR/EN للحالتين under-review وcontacted ثم حدثت baselines الأربع فقط. أضيف فحص هندسي للحالتين على `393/768/1280/1551px`؛ يثبت عدم وجود horizontal overflow أو تداخل بين timeline وsummary وصحة ترتيب reflow.
 - نجحت الحزمة النهائية 6/6 بدون وضع تحديث الصور، ونجح ESLint للملف المتأثر. لم يتغير كود المنتج في هذه الدفعة.
 - يبقى `SEK-03/04` بتصنيف `PARTIAL_EXTERNAL`: بيانات العقار والمزود/avatar/contact الغنية الظاهرة في المصدر غير موجودة في projection المعتمد، ولا يجوز اختراعها. لذلك عداد Figma يبقى 90/119، وDemo مستمر بلا purge أو launch.
+
+## 12 September: GUIDE-06 local functional acceptance
+
+- وسع `verify-seeker-requests-recovery-local.mjs` الفحص الحقيقي ليُنشئ contact وproperty-search عبر API المحلي، ويثبت ظهورهما في قائمة الباحث وفتح تفاصيل property-search المحفوظة ببياناتها الآمنة على AR/EN × Desktop/Tablet/Pixel 5.
+- نجحت 6/6 حالات مع empty/reset وoffline/retry وcancel validation وعدم وجود overflow. حُذف الطلبان المؤقتان وكل الجلسات الجديدة، وأكد التقرير `temporaryRequestRemoved: true` و`cleanup: true`.
+- أضيف `GUIDE_06_LOCAL_ACCEPTANCE_2026-09-12.md` لربط أدلة contact وproperty-search والصلاحيات والـconcurrency/409/audit، وتوضيح أن viewing وprovider_customer لهما رحلات مستقلة. مولد المصفوفة يحفظ مراجعات القبول المحلية ويضيف دليل success الجديد بدل إسقاطه عند التجديد.
+- تبقى GUIDE-06 `PARTIAL`: Production، قبول Figma المستقل لـSEK-02/03/04، وبوابة الجودة النهائية للمشروع ما زالت مفتوحة. Demo محفوظ ولم ينفذ purge أو launch.

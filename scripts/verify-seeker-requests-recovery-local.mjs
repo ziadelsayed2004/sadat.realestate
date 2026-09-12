@@ -26,7 +26,9 @@ const report = {
 const mongo = await mongoose.createConnection(mongoUri).asPromise();
 const browser = await chromium.launch();
 let user;
-let temporaryRequestId;
+const temporaryRequestIds = [];
+let contactRequestId;
+let propertySearchRequestId;
 let originalSessionIds = [];
 
 try {
@@ -35,6 +37,8 @@ try {
     { sort: { _id: -1 } }
   );
   assert.ok(user, 'Existing local GUIDE-04 fixture required');
+  const location = await mongo.collection('locations').findOne({}, { projection: { _id: 1 } });
+  assert.ok(location?._id, 'Existing local location fixture required');
   originalSessionIds = (await mongo.collection('sessions').find({ userId: user._id }, { projection: { _id: 1 } }).toArray())
     .map(session => session._id.toHexString());
 
@@ -53,8 +57,22 @@ try {
           data: { message: `Local GUIDE-06 recovery ${randomUUID()}`, locale: 'en' },
         });
         assert.equal(created.status(), 201);
-        temporaryRequestId = (await created.json()).data.id;
-        assert.ok(Types.ObjectId.isValid(temporaryRequestId));
+        contactRequestId = (await created.json()).data.id;
+        assert.ok(Types.ObjectId.isValid(contactRequestId));
+        temporaryRequestIds.push(contactRequestId);
+        const searchCreated = await setupContext.request.post(`${base}/api/v1/seeker/search-requests`, {
+          headers: { authorization: `Bearer ${session.accessToken}` },
+          data: {
+            locations: [location._id.toHexString()], propertyTypes: ['apartment'],
+            minBudget: 1_500_000, maxBudget: 3_500_000,
+            minBedrooms: 2, maxBedrooms: 4,
+            note: 'Local GUIDE-06 browser property search', locale: 'en',
+          },
+        });
+        assert.equal(searchCreated.status(), 201);
+        propertySearchRequestId = (await searchCreated.json()).data.id;
+        assert.ok(Types.ObjectId.isValid(propertySearchRequestId));
+        temporaryRequestIds.push(propertySearchRequestId);
         const logout = await setupContext.request.post(`${base}/api/v1/auth/logout`, { data: {} });
         assert.ok([200, 204].includes(logout.status()), 'Setup logout failed');
         break;
@@ -65,7 +83,8 @@ try {
     await setupContext.close();
   }
   assert.ok(localPassword, 'No known local GUIDE-04 fixture password worked');
-  assert.ok(temporaryRequestId, 'Temporary request was not created');
+  assert.ok(contactRequestId, 'Temporary contact request was not created');
+  assert.ok(propertySearchRequestId, 'Temporary property-search request was not created');
 
   for (const locale of ['ar', 'en']) {
     for (const [device, preset] of [['desktop', 'Desktop Chrome'], ['tablet', 'Galaxy Tab S4'], ['mobile', 'Pixel 5']]) {
@@ -80,15 +99,17 @@ try {
         const page = await context.newPage();
         let transitionRequests = 0;
         page.on('request', request => {
-          if (request.method() === 'POST' && new URL(request.url()).pathname === `/api/v1/seeker/requests/${temporaryRequestId}/transitions`) transitionRequests += 1;
+          if (request.method() === 'POST' && new URL(request.url()).pathname === `/api/v1/seeker/requests/${contactRequestId}/transitions`) transitionRequests += 1;
         });
 
         const initialRead = page.waitForResponse(response => response.request().method() === 'GET'
           && new URL(response.url()).pathname === '/api/v1/seeker/requests');
         await page.goto(`${base}/seeker/requests?lang=${locale}`, { waitUntil: 'networkidle' });
         assert.equal((await initialRead).status(), 200);
-        const requestLink = page.locator(`a[href*="/seeker/requests/${temporaryRequestId}"]`);
+        const requestLink = page.locator(`a[href*="/seeker/requests/${contactRequestId}"]`);
+        const propertySearchLink = page.locator(`a[href*="/seeker/requests/${propertySearchRequestId}"]`);
         await expect(requestLink).toBeVisible();
+        await expect(propertySearchLink).toBeVisible();
         const listTimeOrigin = await page.evaluate(() => performance.timeOrigin);
 
         const noMatch = `no-match-${randomUUID()}`;
@@ -105,6 +126,7 @@ try {
         await page.locator('#seeker-requests-search').fill('');
         assert.equal((await resetRead).status(), 200);
         await expect(requestLink).toBeVisible();
+        await expect(propertySearchLink).toBeVisible();
         assert.equal(await page.evaluate(() => performance.timeOrigin), listTimeOrigin);
 
         await context.setOffline(true);
@@ -119,11 +141,12 @@ try {
         assert.equal((await recoveredRead).status(), 200);
         await expect(retryState).toHaveCount(0);
         await expect(requestLink).toBeVisible();
+        await expect(propertySearchLink).toBeVisible();
         assert.equal(await page.evaluate(() => performance.timeOrigin), listTimeOrigin);
 
         const detailRead = page.waitForResponse(response => response.request().method() === 'GET'
-          && new URL(response.url()).pathname === `/api/v1/seeker/requests/${temporaryRequestId}`);
-        await page.goto(`${base}/seeker/requests/${temporaryRequestId}?lang=${locale}`, { waitUntil: 'networkidle' });
+          && new URL(response.url()).pathname === `/api/v1/seeker/requests/${contactRequestId}`);
+        await page.goto(`${base}/seeker/requests/${contactRequestId}?lang=${locale}`, { waitUntil: 'networkidle' });
         assert.equal((await detailRead).status(), 200);
         const detailTimeOrigin = await page.evaluate(() => performance.timeOrigin);
         await page.locator('.seeker-request-detail__cancel > button').click();
@@ -136,16 +159,24 @@ try {
         assert.equal(transitionRequests, 0);
         assert.equal(await page.evaluate(() => performance.timeOrigin), detailTimeOrigin);
 
-        const stored = await mongo.collection('requests').findOne({ _id: new Types.ObjectId(temporaryRequestId) });
+        const stored = await mongo.collection('requests').findOne({ _id: new Types.ObjectId(contactRequestId) });
         assert.equal(stored?.status, 'new');
         assert.equal(stored?.version, 0);
+        const searchDetailRead = page.waitForResponse(response => response.request().method() === 'GET'
+          && new URL(response.url()).pathname === `/api/v1/seeker/requests/${propertySearchRequestId}`);
+        await page.goto(`${base}/seeker/requests/${propertySearchRequestId}?lang=${locale}`, { waitUntil: 'networkidle' });
+        assert.equal((await searchDetailRead).status(), 200);
+        await expect(page.getByText(locale === 'ar' ? 'بحث عن عقار' : 'Property search', { exact: true }).first()).toBeVisible();
+        await expect(page.getByText('Local GUIDE-06 browser property search', { exact: true })).toBeVisible();
+        await expect(page.locator('.seeker-request-detail__card--advanced')).toBeVisible();
+        await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|providerId|seekerId|accessToken|refreshToken/u);
         const geometry = await page.evaluate(() => ({ innerWidth, scrollWidth: document.documentElement.scrollWidth }));
         assert.equal(geometry.innerWidth, page.viewportSize().width);
         assert.ok(geometry.scrollWidth <= geometry.innerWidth);
         report.runs.push({
           locale, device,
-          checks: ['empty_search_clear_recovers_without_navigation', 'offline_filter_retry_recovers_without_navigation', 'empty_cancel_reason_blocks_mutation'],
-          httpStatuses: { initial: 200, empty: 200, reset: 200, recovered: 200, detail: 200 },
+          checks: ['empty_search_clear_recovers_without_navigation', 'offline_filter_retry_recovers_without_navigation', 'empty_cancel_reason_blocks_mutation', 'property_search_list_and_detail_render_safe_persisted_payload'],
+          httpStatuses: { initial: 200, empty: 200, reset: 200, recovered: 200, detail: 200, propertySearchDetail: 200 },
           transitionRequests: 0, requestUnchanged: true, ...geometry,
         });
       } finally {
@@ -165,13 +196,13 @@ try {
   process.exitCode = 1;
 } finally {
   try {
-    if (temporaryRequestId && Types.ObjectId.isValid(temporaryRequestId)) {
-      const id = new Types.ObjectId(temporaryRequestId);
-      await mongo.collection('request_events').deleteMany({ requestId: { $in: [id, temporaryRequestId] } });
-      await mongo.collection('request_issues').deleteMany({ requestId: { $in: [id, temporaryRequestId] } });
-      await mongo.collection('audit_logs').deleteMany({ targetType: 'request', targetId: temporaryRequestId });
-      await mongo.collection('requests').deleteOne({ _id: id, seekerId: user?._id });
-      report.temporaryRequestRemoved = (await mongo.collection('requests').countDocuments({ _id: id })) === 0;
+    if (temporaryRequestIds.length > 0) {
+      const ids = temporaryRequestIds.filter(Types.ObjectId.isValid).map(id => new Types.ObjectId(id));
+      await mongo.collection('request_events').deleteMany({ requestId: { $in: [...ids, ...temporaryRequestIds] } });
+      await mongo.collection('request_issues').deleteMany({ requestId: { $in: [...ids, ...temporaryRequestIds] } });
+      await mongo.collection('audit_logs').deleteMany({ targetType: 'request', targetId: { $in: temporaryRequestIds } });
+      await mongo.collection('requests').deleteMany({ _id: { $in: ids }, seekerId: user?._id });
+      report.temporaryRequestRemoved = (await mongo.collection('requests').countDocuments({ _id: { $in: ids } })) === 0;
     }
     if (user) {
       const newSessions = await mongo.collection('sessions').find({

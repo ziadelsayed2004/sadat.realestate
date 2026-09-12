@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T09:47:08.695Z",
+  "generatedAt": "2026-09-12T10:22:35.891Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2098,7 +2098,7 @@
       "executionDate": "2026-09-12T09:23:05.503Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
@@ -2189,12 +2189,20 @@
           "verifiedAt": "2026-09-12T09:23:05.503Z"
         },
         {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "property_search_list_and_detail_render_safe_persisted_payload",
+          "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
+          "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
+          "verifiedAt": "2026-09-12T10:20:56.153Z"
+        },
+        {
           "case": "empty",
           "evidenceType": "Browser/API/MongoDB",
           "check": "empty_search_clear_recovers_without_navigation",
           "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
           "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
-          "verifiedAt": "2026-09-11T17:31:39.607Z"
+          "verifiedAt": "2026-09-12T10:20:56.153Z"
         },
         {
           "case": "networkRetry",
@@ -2202,7 +2210,7 @@
           "check": "offline_filter_retry_recovers_without_navigation",
           "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
           "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
-          "verifiedAt": "2026-09-11T17:31:39.607Z"
+          "verifiedAt": "2026-09-12T10:20:56.153Z"
         },
         {
           "case": "validation",
@@ -2210,7 +2218,7 @@
           "check": "empty_cancel_reason_blocks_mutation",
           "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
           "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
-          "verifiedAt": "2026-09-11T17:31:39.607Z"
+          "verifiedAt": "2026-09-12T10:20:56.153Z"
         }
       ],
       "reviewedGuarantees": [
@@ -2268,7 +2276,14 @@
           "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
           "verifiedAt": "2026-09-12T09:23:05.503Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "path": "docs/quality/GUIDE_06_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "reviewedAt": "2026-09-12T10:21:56.896Z",
+        "productionVerified": false,
+        "figmaAccepted": false
+      }
     },
     {
       "id": "GUIDE-07",
@@ -2532,7 +2547,7 @@
       "executionDate": "2026-09-11T21:53:08.807Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
@@ -4580,7 +4595,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T09:47:08.695Z",
+    "updatedAt": "2026-09-12T10:22:35.891Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

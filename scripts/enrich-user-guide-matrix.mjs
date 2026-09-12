@@ -500,9 +500,10 @@ matrix.journeys = matrix.journeys.map((journey) => {
     && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => seekerRequestsRecovery.runs?.some(run =>
       run.locale === locale && run.device === device && run.transitionRequests === 0 && run.requestUnchanged === true
       && run.httpStatuses?.initial === 200 && run.httpStatuses?.empty === 200 && run.httpStatuses?.reset === 200
-      && run.httpStatuses?.recovered === 200 && run.httpStatuses?.detail === 200
+      && run.httpStatuses?.recovered === 200 && run.httpStatuses?.detail === 200 && run.httpStatuses?.propertySearchDetail === 200
       && run.scrollWidth <= run.innerWidth)))) {
     for (const [category, check] of [
+      ['success', 'property_search_list_and_detail_render_safe_persisted_payload'],
       ['empty', 'empty_search_clear_recovers_without_navigation'],
       ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
       ['validation', 'empty_cancel_reason_blocks_mutation'],
@@ -608,7 +609,9 @@ matrix.journeys = matrix.journeys.map((journey) => {
     commit: guide.release.baselineCommit,
     legacyStatus,
     verificationStatus: "PARTIAL",
-    incompleteReason: executed
+    incompleteReason: journey.localAcceptanceReview?.status === 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED'
+      ? "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open."
+      : executed
       ? "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
       : "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached.",
   };
