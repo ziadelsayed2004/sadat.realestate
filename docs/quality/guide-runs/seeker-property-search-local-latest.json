@@ -1,0 +1,30 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-06"
+  ],
+  "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+  "database": "seeker_property_search_1789204861192",
+  "mockedRoutes": false,
+  "testedAt": "2026-09-12T09:21:01.243Z",
+  "commit": "d3771d8177cea4093347e7eab841be2342cb8a35",
+  "worktreeChanges": true,
+  "checks": [
+    "invalid_budget_range_rejected_without_write",
+    "property_search_created_with_exact_public_payload",
+    "duplicate_active_property_search_rejected_without_second_record",
+    "owned_list_and_detail_return_persisted_search_request",
+    "foreign_seeker_detail_hidden",
+    "seeker_cancellation_persisted_with_reason_version_and_audit"
+  ],
+  "httpStatuses": {
+    "invalidRange": 400,
+    "create": 201,
+    "duplicate": 409,
+    "list": 200,
+    "detail": 200,
+    "cancel": 200
+  },
+  "cleanup": true,
+  "finishedAt": "2026-09-12T09:21:02.122Z"
+}

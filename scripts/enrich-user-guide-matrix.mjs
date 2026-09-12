@@ -41,6 +41,8 @@ const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requ
 const communityPublicRecovery = await readFile('docs/quality/guide-runs/community-public-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -72,6 +74,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
+  ["docs/quality/guide-runs/seeker-property-search-local-latest.json", seekerPropertySearch],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -130,6 +133,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
       checks: requestGuaranteesEvidence.checks,
     });
   }
+  if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
+    && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true) {
+    evidenceAttachments.push({
+      path: 'docs/quality/guide-runs/community-interactions-local-latest.json',
+      status: communityInteractions.status,
+      verifiedAt: communityInteractions.finishedAt,
+      environment: communityInteractions.environment,
+      mockedRoutes: false,
+      checks: communityInteractions.checks,
+    });
+  }
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
     status: communityEvidence.status,
@@ -163,6 +177,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
     for (const category of ['currentSessionState', 'horizontalAccess']) reviewedGuarantees.push({ category,
       check: 'owned_session_revocation_denies_old_token_and_preserves_foreign_sessions',
       path: 'docs/quality/guide-runs/session-revocation-local-latest.json', verifiedAt: sessionRevocation.finishedAt });
+  }
+  if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
+    && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true
+    && communityInteractions.checks?.some(check => check.name === 'current_account_state_blocks_interactions' && check.pass === true)) {
+    reviewedGuarantees.push({ category: 'currentSessionState', check: 'current_account_state_blocks_interactions',
+      path: 'docs/quality/guide-runs/community-interactions-local-latest.json', verifiedAt: communityInteractions.finishedAt });
+  }
+  if (journey.id === 'GUIDE-06' && seekerPropertySearch?.status === 'PASS_LOCAL'
+    && seekerPropertySearch.mockedRoutes === false && seekerPropertySearch.cleanup === true) {
+    for (const [category, check] of [
+      ['duplicateMutation', 'duplicate_active_property_search_rejected_without_second_record'],
+      ['horizontalAccess', 'foreign_seeker_detail_hidden'],
+    ]) if (seekerPropertySearch.checks?.includes(check)) reviewedGuarantees.push({ category, check,
+      path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json', verifiedAt: seekerPropertySearch.testedAt });
   }
   if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
     && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
@@ -203,6 +231,26 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
+    && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true
+    && ['reaction_toggle_switch_and_remove', 'comment_persists_and_returns_in_public_detail'].every(name =>
+      communityInteractions.checks?.some(check => check.name === name && check.pass === true))) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'API/MongoDB',
+      check: 'comment_and_reaction_interactions_persist',
+      path: 'docs/quality/guide-runs/community-interactions-local-latest.json',
+      scope: 'Authenticated comment persistence and reaction add/switch/remove through real local HTTP and isolated MongoDB; not browser or Production evidence.',
+      verifiedAt: communityInteractions.finishedAt });
+  }
+  if (journey.id === 'GUIDE-06' && seekerPropertySearch?.status === 'PASS_LOCAL'
+    && seekerPropertySearch.mockedRoutes === false && seekerPropertySearch.cleanup === true
+    && ['property_search_created_with_exact_public_payload', 'owned_list_and_detail_return_persisted_search_request',
+      'seeker_cancellation_persisted_with_reason_version_and_audit'].every(check => seekerPropertySearch.checks?.includes(check))) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'API/MongoDB',
+      check: 'property_search_create_list_detail_cancel',
+      path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json',
+      scope: 'Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.',
+      verifiedAt: seekerPropertySearch.testedAt });
+  }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
     && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device => sessionBrowser.runs?.some(run =>

@@ -1601,6 +1601,14 @@
           "path": "docs/quality/guide-runs/community-public-recovery-local-latest.json",
           "scope": "Public community feed; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary draft and sessions removed",
           "verifiedAt": "2026-09-11T18:07:33.647Z"
+        },
+        {
+          "case": "success",
+          "evidenceType": "API/MongoDB",
+          "check": "comment_and_reaction_interactions_persist",
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "scope": "Authenticated comment persistence and reaction add/switch/remove through real local HTTP and isolated MongoDB; not browser or Production evidence.",
+          "verifiedAt": "2026-09-12T08:55:50.358Z"
         }
       ],
       "reviewedGuarantees": [
@@ -1639,6 +1647,12 @@
           "check": "current_account_state_denies_public_community_mutations",
           "path": "docs/quality/guide-runs/community-account-state-local-latest.json",
           "verifiedAt": "2026-09-11T11:38:50.951Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_state_blocks_interactions",
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "verifiedAt": "2026-09-12T08:55:50.358Z"
         }
       ],
       "evidenceAttachments": [
@@ -1662,6 +1676,27 @@
           "verifiedAt": "2026-09-11T11:36:05.643Z",
           "environment": "local-built-web-real-API",
           "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T08:55:50.358Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            {
+              "name": "reaction_toggle_switch_and_remove",
+              "pass": true
+            },
+            {
+              "name": "comment_persists_and_returns_in_public_detail",
+              "pass": true
+            },
+            {
+              "name": "current_account_state_blocks_interactions",
+              "pass": true
+            }
+          ]
         }
       ]
     },
@@ -2127,6 +2162,21 @@
             "legacy_active_viewing_reserves_slot_without_migration",
             "legacy_profile_owned_viewing_visible_and_actionable_only_to_linked_account"
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T09:21:02.122Z",
+          "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            "invalid_budget_range_rejected_without_write",
+            "property_search_created_with_exact_public_payload",
+            "duplicate_active_property_search_rejected_without_second_record",
+            "owned_list_and_detail_return_persisted_search_request",
+            "foreign_seeker_detail_hidden",
+            "seeker_cancellation_persisted_with_reason_version_and_audit"
+          ]
         }
       ],
       "reviewedSubcases": [
@@ -2153,6 +2203,14 @@
           "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
           "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
           "verifiedAt": "2026-09-11T17:31:39.607Z"
+        },
+        {
+          "case": "success",
+          "evidenceType": "API/MongoDB",
+          "check": "property_search_create_list_detail_cancel",
+          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
+          "scope": "Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.",
+          "verifiedAt": "2026-09-12T09:21:02.122Z"
         }
       ],
       "reviewedGuarantees": [
@@ -2197,6 +2255,18 @@
           "check": "audit_failure_rolls_back_both_mutation_and_inserted_audit",
           "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
           "verifiedAt": "2026-09-11T17:23:02.463Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_active_property_search_rejected_without_second_record",
+          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
+          "verifiedAt": "2026-09-12T09:21:02.122Z"
+        },
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_seeker_detail_hidden",
+          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
+          "verifiedAt": "2026-09-12T09:21:02.122Z"
         }
       ]
     },

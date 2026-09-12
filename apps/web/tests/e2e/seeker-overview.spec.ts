@@ -38,6 +38,26 @@ async function routeSeekerSession(page: import('@playwright/test').Page, allowed
 }
 
 async function routeOverview(page: import('@playwright/test').Page): Promise<void> {
+  await page.route('**/api/v1/me', async route => {
+    expect(route.request().method()).toBe('GET');
+    expect(route.request().headers().authorization).toBe('Bearer seeker.access.token');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+          roleType: 'seeker',
+          status: 'verified',
+          email: 'seeker@example.com',
+          firstName: 'Mohamed',
+          lastName: 'Ahmed',
+          locale: 'ar'
+        },
+        ...successMeta('seeker-profile')
+      })
+    });
+  });
   await page.route('**/api/v1/seeker/overview', async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer seeker.access.token');
@@ -45,7 +65,37 @@ async function routeOverview(page: import('@playwright/test').Page): Promise<voi
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        data: { requests: 2, activeRequests: 2, viewings: 1, savedProperties: 7, notifications: 3, unreadNotifications: 2 },
+        data: {
+          requests: 2,
+          activeRequests: 2,
+          viewings: 1,
+          savedProperties: 7,
+          notifications: 3,
+          unreadNotifications: 2,
+          recentRequests: [{
+            id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+            type: 'property_search',
+            status: 'under_review',
+            payload: { locations: ['First District'] },
+            createdAt: '2026-08-01T10:00:00.000Z',
+            updatedAt: '2026-08-02T10:00:00.000Z'
+          }],
+          upcomingViewings: [{
+            id: 'cccccccccccccccccccccccc',
+            propertyId: 'dddddddddddddddddddddddd',
+            status: 'confirmed',
+            requestedAt: '2026-08-11T14:00:00.000Z',
+            timezone: 'Africa/Cairo'
+          }],
+          recentNotifications: [{
+            id: 'eeeeeeeeeeeeeeeeeeeeeeee',
+            type: 'request.updated',
+            title: { ar: 'تم تحديث طلبك', en: 'Your request was updated' },
+            message: { ar: 'سيتواصل معك الفريق قريبًا.', en: 'The team will contact you soon.' },
+            readAt: null,
+            createdAt: '2026-08-03T10:00:00.000Z'
+          }]
+        },
         ...successMeta('seeker-overview')
       })
     });
@@ -75,6 +125,10 @@ test.describe('SEK-01 Seeker Overview', () => {
     await expect(page.getByTestId('seeker-summary-active-requests')).toContainText('2');
     await expect(page.getByTestId('seeker-summary-viewings')).toContainText('1');
     await expect(page.getByTestId('seeker-summary-saved')).toContainText('7');
+    await expect(page.locator('[data-activity-state="projected"]')).toBeVisible();
+    await expect(page.locator('.seeker-overview__activity-panel')).toHaveCount(3);
+    await expect(page.locator('.seeker-overview__search-cta')).toBeVisible();
+    await expect(page.locator('.seeker-dashboard__topbar-profile')).toContainText('Mohamed Ahmed');
     await expect(page.locator('.seeker-dashboard__nav a[data-active="true"]')).toHaveAttribute('href', `/seeker?lang=${locale}`);
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|accessToken|refreshToken/u);
 
