@@ -81,7 +81,7 @@ try {
       stage = `${locale}/${device}`;
       const context = await browser.newContext({ ...devices[preset] });
       try {
-        const session = await login(context, seeker.normalizedEmail);
+        await login(context, seeker.normalizedEmail);
         const page = await context.newPage();
         let failed = 0;
         await page.route('**/api/v1/seeker/overview', async route => {

@@ -97,7 +97,7 @@ try {
       stage = `${locale}/${device}`;
       const context = await browser.newContext({ ...devices[preset] });
       try {
-        const session = await login(context, seeker.normalizedEmail);
+        await login(context, seeker.normalizedEmail);
         const page = await context.newPage();
         const transitions = [];
         for (const [panel, expectedPath, target] of [

@@ -4,7 +4,6 @@ import { writeFile } from 'node:fs/promises';
 import mongoose, { Types } from 'mongoose';
 import { readEnvironmentFile } from './environment-file.mjs';
 import { createMongooseSeekerOverviewRepository } from '../apps/api/src/modules/seeker/overview.ts';
-import { createMongooseFavoriteRepository } from '../apps/api/src/modules/favorites/repository.ts';
 const env = await readEnvironmentFile('.env.local');
 assert.equal(new URL(env.MONGODB_URI).hostname, '127.0.0.1');
 const database = `overview_projection_${randomUUID().replaceAll('-', '')}`;

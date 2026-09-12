@@ -80,7 +80,7 @@ try {
       stage = `${locale}/${device}`;
       const context = await browser.newContext({ ...devices[preset] });
       try {
-        const session = await login(context, seeker.normalizedEmail);
+        await login(context, seeker.normalizedEmail);
         const page = await context.newPage();
         const loaded = page.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/seeker/overview');
         await page.goto(`${base}/seeker?lang=${locale}`, { waitUntil: 'networkidle' });

@@ -90,7 +90,7 @@ try {
       stage = `${locale}/${device}`;
       const context = await browser.newContext({ ...devices[preset] });
       try {
-        const session = await login(context, seeker.normalizedEmail);
+        await login(context, seeker.normalizedEmail);
         await mongo.collection('favorites').deleteMany({ seekerId: seeker._id, propertyId: { $in: propertyIds } });
         const page = await context.newPage();
         await page.goto(`${base}/seeker/saved?lang=${locale}`, { waitUntil: 'networkidle' });

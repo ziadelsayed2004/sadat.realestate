@@ -89,7 +89,7 @@ try {
       stage = `${locale}/${device}`;
       const context = await browser.newContext({ ...devices[preset] });
       try {
-        const session = await login(context, seeker.normalizedEmail);
+        await login(context, seeker.normalizedEmail);
         await mongo.collection('favorites').deleteMany({ seekerId: seeker._id, propertyId: { $in: fixtureProperties.map(p => p._id) } });
         await mongo.collection('favorites').insertMany(fixtureProperties.map((property, index) => ({
           seekerId: seeker._id, propertyId: property._id, savedAt: new Date(1000 * index),
