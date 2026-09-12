@@ -14,6 +14,7 @@ export function createSettingsRuntime(
   audit: AuditWriter,
   authorization: Pick<RbacService, 'authorize'>
 ): SettingsRouterDependencies {
+  connection.base.set('transactionAsyncLocalStorage', true);
   return {
     accessTokens,
     service: createSettingsService({
@@ -22,7 +23,13 @@ export function createSettingsRuntime(
       audit
     }),
     provider: createProviderSettingsService({
-      repository: createMongooseProviderSettingsRepository(connection)
+      repository: createMongooseProviderSettingsRepository(connection),
+      audit,
+      transaction: async operation => {
+        const session = await connection.startSession();
+        try { return await session.withTransaction(() => operation(session)); }
+        finally { await session.endSession(); }
+      }
     })
   };
 }

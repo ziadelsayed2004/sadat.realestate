@@ -583,3 +583,10 @@
 - نجح PRV-19/PRV-20 في AR/EN × Desktop/Tablet/Pixel 5 مع owned advertising projection آمن وسياسة العمولة الفعلية. جُرب status فارغ حقيقي، مسح الفلتر، offline Retry للإعلانات، وفشل شبكي محقون لقراءة العمولة ثم استعادة HTTP 200 دون reload.
 - رفضت API pagination غير الصالحة بـ400، والطلب المملوك لمقدم آخر بـ404، والضيف بـ401، ودور admin من مسارات provider، كما رفضت token صادرة سابقًا بعد تعليق الحساب ثم أعيدت حالة fixture فورًا. لم تتغير `ad_requests` أو `commission_confirmations`، وحُذفت الجلسات وأي fixture مؤقت.
 - تسجل المصفوفة GUIDE-17 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 19/26 (73.1%). لأن نص الرحلة قرائي، سُجلت duplicate mutation وexpectedVersion وdecision reason وatomic audit rollback كغير منطبقة على هذه الرحلة؛ تدفقات التعديل تبقى ضمن رحلات إدارة الإعلانات والمدفوعات والعمولات. الحالة العالمية تبقى `PARTIAL` وFigma 90/119 وProduction صفر، ولم ينفذ launch أو purge.
+
+## إغلاق النطاق المحلي لـGUIDE-18 — 2026-09-12
+
+- اكتمل تدفق إشعارات وإعدادات المزود الحقيقي في العربية والإنجليزية وعلى Desktop/Tablet/Pixel 5: قراءة إشعار مملوك، تعليم الكل كمقروء، empty حقيقي، تعافي notifications من offline وتعافي settings من طلب aborted، validation بلا PATCH، حفظ contact settings، وظهور security actions كغير متاحة دون overflow.
+- أضيف audit ذري لـ`provider.settings.update` داخل transaction. يثبت اختبار MongoDB المعزول أن فشل audit يعيد الإعدادات والـaudit معًا، وأن retry يكتب مرة واحدة، وأن تحديثين متزامنين بنفس النسخة ينتجان نجاحًا واحدًا و409 واحدًا.
+- ثبتت حدود 400/401/403/404/409، ملكية الإشعارات، current suspended account state، وثبات repeated mark-read. أعيدت الإعدادات وread markers الأصلية وحذفت الإشعارات والجلسات والـaudits المؤقتة؛ `cleanup=true` في التقريرين.
+- تسجل المصفوفة GUIDE-18 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 20/26 (76.9%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.

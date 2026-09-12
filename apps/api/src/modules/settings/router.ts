@@ -32,7 +32,7 @@ export interface SettingsRouterDependencies {
   };
   provider?: {
     get(claims: AccessTokenClaims): Promise<ProviderSettingsData>;
-    update(claims: AccessTokenClaims, input: unknown): Promise<ProviderSettingsData>;
+    update(claims: AccessTokenClaims, input: unknown, context: { requestId: string; traceId: string }): Promise<ProviderSettingsData>;
   };
   accessTokens: AccessTokenService;
 }
@@ -101,7 +101,7 @@ export function createSettingsRouter(dependencies: SettingsRouterDependencies): 
     router.patch('/provider/settings', async (request, response) => {
       try {
         const input = providerSettingsPatchSchema.parse(request.body ?? {});
-        response.status(200).json(toSuccessResponse(await dependencies.provider!.update(providerClaims(response), input), requestId(request)));
+        response.status(200).json(toSuccessResponse(await dependencies.provider!.update(providerClaims(response), input, { requestId: requestId(request), traceId: traceId() }), requestId(request)));
       } catch (error) { sendError(request, response, error); }
     });
   }

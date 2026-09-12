@@ -1,4 +1,4 @@
-import { Types, type Connection } from 'mongoose';
+import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   providerSettingsDataSchema,
   providerSettingsPatchSchema,
@@ -59,22 +59,23 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
     return indexesReady;
   }
 
-  async function source(userId: string): Promise<{
+  async function source(userId: string, session?: ClientSession): Promise<{
     id: Types.ObjectId;
     fallback: ProviderApplicationBase;
   } | undefined> {
     const id = objectId(userId);
     if (!id) return undefined;
-    const [user, application] = await Promise.all([
-      users.findOne(
-        { _id: id, roleType: 'provider', status: 'verified' },
-        { projection: { normalizedEmail: 1 } }
-      ),
-      applications.findOne(
-        { userId: id },
-        { projection: { email: 1, whatsappNumber: 1, businessAddress: 1, headOfficeAddress: 1, website: 1 } }
-      )
-    ]);
+    const readUser = () => users.findOne(
+      { _id: id, roleType: 'provider', status: 'verified' },
+      { projection: { normalizedEmail: 1 }, ...(session ? { session } : {}) }
+    );
+    const readApplication = () => applications.findOne(
+      { userId: id },
+      { projection: { email: 1, whatsappNumber: 1, businessAddress: 1, headOfficeAddress: 1, website: 1 }, ...(session ? { session } : {}) }
+    );
+    const [user, application] = session
+      ? [await readUser(), await readApplication()]
+      : await Promise.all([readUser(), readApplication()]);
     const email = stringValue(user?.normalizedEmail) ?? stringValue(application?.email);
     if (!email || !application) return undefined;
     const whatsappNumber = stringValue(application.whatsappNumber);
@@ -92,25 +93,25 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
   }
 
   return {
-    async find(userId) {
-      const owner = await source(userId);
+    async find(userId, session) {
+      const owner = await source(userId, session);
       if (!owner) return undefined;
       await ensureIndexes();
       const row = await settings.findOne(
         { userId: owner.id },
-        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 } }
+        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 }, ...(session ? { session } : {}) }
       );
       return providerSettingsData(row as Row | undefined, owner.fallback);
     },
 
     async update(input): Promise<ProviderSettingsWriteResult> {
-      const owner = await source(input.userId);
+      const owner = await source(input.userId, input.session);
       if (!owner) return { kind: 'not_found' };
       await ensureIndexes();
       const patch = providerSettingsPatchSchema.parse(input.patch);
       const current = await settings.findOne(
         { userId: owner.id },
-        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 } }
+        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 }, ...(input.session ? { session: input.session } : {}) }
       ) as Row | null;
       if (!current) {
         if (input.expectedVersion !== 0) return { kind: 'version_conflict' };
@@ -119,7 +120,7 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
           if (Object.prototype.hasOwnProperty.call(patch, key)) values[key] = patch[key];
         }
         try {
-          await settings.insertOne(values);
+          await settings.insertOne(values, input.session ? { session: input.session } : {});
         } catch (error) {
           if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) {
             return { kind: 'version_conflict' };
@@ -135,13 +136,13 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
         const updated = await settings.findOneAndUpdate(
           { userId: owner.id, version: input.expectedVersion },
           { $set: values, $inc: { version: 1 } },
-          { returnDocument: 'after' }
+          { returnDocument: 'after', ...(input.session ? { session: input.session } : {}) }
         );
         if (!updated) return { kind: 'version_conflict' };
       }
       const result = await settings.findOne(
         { userId: owner.id },
-        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 } }
+        { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 }, ...(input.session ? { session: input.session } : {}) }
       );
       return {
         kind: 'updated',

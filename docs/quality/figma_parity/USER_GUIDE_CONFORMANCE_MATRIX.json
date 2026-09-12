@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T17:00:13.521Z",
+  "generatedAt": "2026-09-12T17:18:39.941Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -4566,24 +4566,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "provider"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -4594,11 +4594,25 @@
         "section": "#provider",
         "journeyId": "GUIDE-18"
       },
-      "executionDate": "2026-09-12T16:45:41.230Z",
+      "executionDate": "2026-09-12T17:16:52.673Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:16:52.673Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/provider-settings-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:04:55.096Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
@@ -4611,8 +4625,96 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "provider_notifications_read_and_settings_save_with_audit",
+          "path": "docs/quality/GUIDE_18_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "PRV-21 and PRV-22-1/2/3 in Arabic and English across Desktop, Tablet and Pixel 5 with owned notification mutations, versioned settings persistence and audit.",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "invalid_provider_contact_blocks_patch",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "scope": "Invalid contact data is rejected in the browser with zero PATCH requests and by the API with HTTP 400.",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "mark_all_then_unread_filter_renders_empty",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "scope": "All owned notifications are marked read before the unread tab renders a true empty state in six browser configurations.",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "notifications_and_settings_retry_without_navigation",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "scope": "Offline notifications and an aborted settings read recover through explicit Retry controls and real HTTP 200 responses.",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_provider_notification_hidden_404_and_unchanged",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_401_and_admin_role_403",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_provider_denied_for_notifications_and_settings",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "repeated_notification_read_preserves_single_timestamp",
+          "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+          "verifiedAt": "2026-09-12T17:16:52.673Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_and_concurrent_provider_settings_updates_conflict",
+          "path": "docs/quality/guide-runs/provider-settings-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:04:55.096Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_provider_settings_and_inserted_audit",
+          "path": "docs/quality/guide-runs/provider-settings-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:04:55.096Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_18_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "applicabilityReview": {
+        "decisionReason": "NOT_APPLICABLE",
+        "rationale": "Notification read markers and provider-owned contact settings are self-service operations, not administrative approval decisions. Notification reads are idempotent; settings use expectedVersion, a transactional audit, and rollback guarantees."
+      },
+      "accountSubtypeReview": {
+        "status": "SHARED_PROVIDER_ROLE_CONTRACT",
+        "accountTypes": [
+          "individual_provider",
+          "broker",
+          "developer_company"
+        ],
+        "rationale": "All provider account subtypes use the same provider authorization, notification ownership, and settings contracts."
+      }
     },
     {
       "id": "GUIDE-19",
@@ -5687,7 +5789,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T17:00:13.521Z",
+    "updatedAt": "2026-09-12T17:18:39.941Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
@@ -5881,6 +5983,11 @@
       {
         "scope": "provider and administrator remaining screen surfaces",
         "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "provider notifications and versioned audited settings",
+        "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
         "status": "PASS_LOCAL"
       },
       {

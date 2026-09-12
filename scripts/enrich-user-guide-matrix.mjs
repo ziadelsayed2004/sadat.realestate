@@ -46,6 +46,8 @@ const providerRegistrationGuarantees = await readFile('docs/quality/guide-runs/p
 const propertyGuarantees = await readFile('docs/quality/guide-runs/property-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerPropertiesRecovery = await readFile('docs/quality/guide-runs/provider-properties-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide17ProviderAdsCommission = await readFile('docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide18ProviderNotificationsSettings = await readFile('docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerSettingsGuarantees = await readFile('docs/quality/guide-runs/provider-settings-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -106,6 +108,8 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/property-guarantees-local-latest.json", propertyGuarantees],
   ["docs/quality/guide-runs/provider-properties-recovery-local-latest.json", providerPropertiesRecovery],
   ["docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json", guide17ProviderAdsCommission],
+  ["docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json", guide18ProviderNotificationsSettings],
+  ["docs/quality/guide-runs/provider-settings-guarantees-local-latest.json", providerSettingsGuarantees],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -289,6 +293,34 @@ const guide17LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_
     guide17ProviderAdsCommission.runs?.some(run => run.locale === locale && run.device === device && run.status === 'PASS'
       && run.httpStatuses?.empty === 200 && run.httpStatuses?.adsRecovered === 200
       && run.httpStatuses?.commissionRecovered === 200 && run.scrollWidth <= run.innerWidth)));
+
+const guide18LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_LOCAL'
+  && remainingSurfacesEvidence.mockedRoutes === false && remainingSurfacesEvidence.cleanup === true
+  && ['PRV-21', 'PRV-22-1', 'PRV-22-2', 'PRV-22-3'].every(screen =>
+    ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      remainingSurfacesEvidence.browser?.some(run => run.screen === screen && run.locale === locale && run.device === device
+        && run.status === 'PASS' && run.documentStatus === 200 && run.pageErrors === 0 && run.scrollWidth <= run.innerWidth))))
+  && guide18ProviderNotificationsSettings?.status === 'PASS_LOCAL'
+  && guide18ProviderNotificationsSettings.mockedRoutes === false && guide18ProviderNotificationsSettings.cleanup === true
+  && guide18ProviderNotificationsSettings.runs?.length === 6
+  && guide18ProviderNotificationsSettings.runs.every(run => run.status === 'PASS' && run.documentReloaded === false
+    && run.scrollWidth <= run.innerWidth && run.patchRequests === 1
+    && ['notification_mark_read', 'notification_mark_all_and_empty', 'notification_offline_retry_without_navigation',
+      'settings_network_retry', 'settings_invalid_phone_blocks_patch', 'settings_save_audit_and_stale_409',
+      'security_actions_truthfully_unavailable'].every(check => run.checks?.includes(check)))
+  && guide18ProviderNotificationsSettings.api?.invalidSettingsStatus === 400
+  && guide18ProviderNotificationsSettings.api?.staleSettingsStatus === 409
+  && guide18ProviderNotificationsSettings.api?.foreignNotificationStatus === 404
+  && guide18ProviderNotificationsSettings.api?.duplicateNotificationReadStable === true
+  && guide18ProviderNotificationsSettings.mongo?.providerSettingsAudited === true
+  && ['foreign_provider_notification_hidden_404_and_unchanged', 'anonymous_401_and_admin_role_403']
+    .every(check => guide18ProviderNotificationsSettings.authorization?.includes(check))
+  && guide18ProviderNotificationsSettings.authorization?.some(check =>
+    /^current_suspended_provider_denied_notifications_(401|403)_settings_(401|403)_and_restored$/u.test(check))
+  && providerSettingsGuarantees?.status === 'PASS_LOCAL' && providerSettingsGuarantees.mockedRoutes === false
+  && providerSettingsGuarantees.cleanup === true && providerSettingsGuarantees.checks?.length === 3
+  && providerSettingsGuarantees.mongo?.rollbackResidue === 0
+  && providerSettingsGuarantees.mongo?.finalAuditCount === 2;
 
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
@@ -518,6 +550,22 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'The documented GUIDE-17 action follows owned advertising requests and reads the effective commission policy without changing either record. Mutation, optimistic-write version, decision reason, and audit rollback contracts belong to separate advertising and commission administration journeys.',
     };
   }
+  if (journey.id === 'GUIDE-18' && guide18LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_18_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      decisionReason: 'NOT_APPLICABLE',
+      rationale: 'Notification read markers and provider-owned contact settings are self-service operations, not administrative approval decisions. Notification reads are idempotent; settings use expectedVersion, a transactional audit, and rollback guarantees.',
+    };
+    hydratedJourney.accountSubtypeReview = {
+      status: 'SHARED_PROVIDER_ROLE_CONTRACT',
+      accountTypes: ['individual_provider', 'broker', 'developer_company'],
+      rationale: 'All provider account subtypes use the same provider authorization, notification ownership, and settings contracts.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -681,6 +729,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
     ]) reviewedGuarantees.push({ category, check,
       path: 'docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json',
       verifiedAt: guide17ProviderAdsCommission.finishedAt });
+  }
+  if (journey.id === 'GUIDE-18' && guide18LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['horizontalAccess', 'foreign_provider_notification_hidden_404_and_unchanged', 'docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', guide18ProviderNotificationsSettings.finishedAt],
+      ['roleAuthorization', 'anonymous_401_and_admin_role_403', 'docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', guide18ProviderNotificationsSettings.finishedAt],
+      ['currentSessionState', 'current_suspended_provider_denied_for_notifications_and_settings', 'docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', guide18ProviderNotificationsSettings.finishedAt],
+      ['duplicateMutation', 'repeated_notification_read_preserves_single_timestamp', 'docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', guide18ProviderNotificationsSettings.finishedAt],
+      ['expectedVersion409', 'stale_and_concurrent_provider_settings_updates_conflict', 'docs/quality/guide-runs/provider-settings-guarantees-local-latest.json', providerSettingsGuarantees.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_provider_settings_and_inserted_audit', 'docs/quality/guide-runs/provider-settings-guarantees-local-latest.json', providerSettingsGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     for (const [category, check, path, verifiedAt] of [
@@ -897,6 +955,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
     ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check,
       path: 'docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json', scope,
       verifiedAt: guide17ProviderAdsCommission.finishedAt });
+  }
+  if (journey.id === 'GUIDE-18' && guide18LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'provider_notifications_read_and_settings_save_with_audit',
+      path: 'docs/quality/GUIDE_18_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'PRV-21 and PRV-22-1/2/3 in Arabic and English across Desktop, Tablet and Pixel 5 with owned notification mutations, versioned settings persistence and audit.',
+      verifiedAt: guide18ProviderNotificationsSettings.finishedAt });
+    for (const [category, check, scope] of [
+      ['validation', 'invalid_provider_contact_blocks_patch', 'Invalid contact data is rejected in the browser with zero PATCH requests and by the API with HTTP 400.'],
+      ['empty', 'mark_all_then_unread_filter_renders_empty', 'All owned notifications are marked read before the unread tab renders a true empty state in six browser configurations.'],
+      ['networkRetry', 'notifications_and_settings_retry_without_navigation', 'Offline notifications and an aborted settings read recover through explicit Retry controls and real HTTP 200 responses.'],
+    ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check,
+      path: 'docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json', scope,
+      verifiedAt: guide18ProviderNotificationsSettings.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
@@ -1388,6 +1460,7 @@ matrix.operationalEvidenceCoverage = {
     { scope: "community creation, moderation, conflict handling and audit", path: "docs/quality/guide-runs/community-local-latest.json", status: communityEvidence?.status ?? "MISSING" },
     { scope: "request authorization, concurrency, rollback, audit and viewing slots", path: "docs/quality/guide-runs/request-guarantees-local-latest.json", status: requestGuaranteesEvidence?.status ?? "MISSING" },
     { scope: "provider and administrator remaining screen surfaces", path: "docs/quality/guide-runs/remaining-surfaces-local-latest.json", status: remainingSurfacesEvidence?.status ?? "MISSING" },
+    { scope: "provider notifications and versioned audited settings", path: "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json", status: guide18ProviderNotificationsSettings?.status ?? "MISSING" },
     { scope: "privacy settings consumers and authorization boundaries", path: "docs/quality/guide-runs/privacy-security-local-latest.json", status: privacySecurityEvidence?.status ?? "MISSING" },
   ],
 };

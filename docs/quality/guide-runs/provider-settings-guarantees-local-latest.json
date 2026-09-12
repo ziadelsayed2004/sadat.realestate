@@ -1,0 +1,26 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-18",
+  "journeys": [
+    "GUIDE-18"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside provider settings transaction",
+  "commit": "5528ff1738f3c20075cf1534dcbeba4ef1822b21",
+  "startedAt": "2026-09-12T17:04:54.508Z",
+  "checks": [
+    "audit_failure_rolls_back_provider_settings_and_inserted_audit",
+    "same_expected_version_retry_after_rollback_writes_once",
+    "concurrent_same_version_one_write_one_conflict_with_two_total_audits"
+  ],
+  "cleanup": true,
+  "mongo": {
+    "rollbackResidue": 0,
+    "recoveredVersion": 1,
+    "finalVersion": 2,
+    "finalAuditCount": 2,
+    "auditAction": "provider.settings.update"
+  },
+  "finishedAt": "2026-09-12T17:04:55.096Z"
+}

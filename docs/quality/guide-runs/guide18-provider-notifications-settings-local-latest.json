@@ -1,0 +1,201 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-18",
+  "journeys": [
+    "GUIDE-18"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "5528ff1738f3c20075cf1534dcbeba4ef1822b21",
+  "startedAt": "2026-09-12T17:15:50.486Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "checks": [
+        "notification_mark_read",
+        "notification_mark_all_and_empty",
+        "notification_offline_retry_without_navigation",
+        "settings_network_retry",
+        "settings_invalid_phone_blocks_patch",
+        "settings_save_audit_and_stale_409",
+        "security_actions_truthfully_unavailable"
+      ],
+      "httpStatuses": {
+        "notificationList": 200,
+        "markRead": 200,
+        "markAll": 200,
+        "unreadEmpty": 200,
+        "notificationRecovered": 200,
+        "settingsRecovered": 200,
+        "settingsSave": 200,
+        "staleSettings": 409
+      },
+      "patchRequests": 1,
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "authorization": [
+    "foreign_provider_notification_hidden_404_and_unchanged",
+    "anonymous_401_and_admin_role_403",
+    "current_suspended_provider_denied_notifications_401_settings_401_and_restored"
+  ],
+  "api": {
+    "invalidSettingsStatus": 400,
+    "staleSettingsStatus": 409,
+    "foreignNotificationStatus": 404,
+    "duplicateNotificationReadStable": true,
+    "safeOwnedNotificationProjection": true
+  },
+  "mongo": {
+    "providerSettingsAudited": true,
+    "invalidAndStaleWritesPreservedState": true,
+    "foreignNotificationUnchanged": true,
+    "notificationReadIdempotent": true
+  },
+  "cleanup": true,
+  "finishedAt": "2026-09-12T17:16:52.673Z"
+}
