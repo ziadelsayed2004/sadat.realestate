@@ -1,0 +1,116 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-16"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "3725d936b362af42d50733f08cc834dd525b18d4",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "emptyStatus": "completed",
+      "checks": [
+        "empty_status_filter_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "viewingsUnchanged": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-12T10:58:10.094Z"
+}

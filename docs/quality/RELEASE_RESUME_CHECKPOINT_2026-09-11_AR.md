@@ -503,3 +503,10 @@
 - Added a provider-scoped modal layer rule so every provider modal sits above the fixed mobile navigation. This closes the same pointer interception class for PRV-15 and future provider dialogs, while the three explicit customer/viewing/advertising layers remain aligned at 50.
 - Added `verify-provider-projects-recovery-local.mjs`. Real browser/API/MongoDB runs passed 6/6 across Arabic and English on Desktop, Tablet and Pixel 5: no-result search and clear, offline filter and retry without navigation, invalid form without POST, browser project creation, owned MongoDB persistence, no horizontal overflow, and complete temporary project/session cleanup.
 - Attached the project evidence to GUIDE-16 and expanded the scoped review. The remaining local journey gap is the provider viewing queue recovery breadth; independent Figma and Production also remain open. No launch or Demo purge was executed.
+
+## 12 September: GUIDE-16 local functional acceptance
+
+- أُضيف `verify-provider-viewings-recovery-local.mjs` وأُغلق نطاق empty/retry لطابور المعاينات عبر المتصفح وAPI وMongoDB الحقيقيين. نجحت 6/6 حالات بالعربية والإنجليزية على Desktop وTablet وPixel 5، مع مسح الفلتر، انقطاع الشبكة ثم Retry بلا navigation، واستجابات 200 بعد الاستعادة، ومن دون horizontal overflow.
+- أكد التقرير أن مجموعة المعاينات لم تتغير وأن تنظيف الجلسات الجديدة نجح. لم تُحذف fixtures قديمة أو بيانات Demo/QA.
+- جُمعت أدلة المشاريع وطلبات العملاء وإنشاء الطلب وانتقالات المعاينات واستعادتها في `GUIDE_16_LOCAL_ACCEPTANCE_2026-09-12.md`. يسجل مولد المصفوفة الآن `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` فقط عند نجاح كل الأدلة المطلوبة، ويوضح أن أنواع مقدم العقار الثلاثة تستخدم عقد صلاحية `provider` المشترك بلا مسارات تنفيذ متفرعة حسب النوع.
+- تبقى GUIDE-16 `PARTIAL` عالميًا حتى قبول Figma المستقل لشاشات PRV-15/16/17/18، وبوابة الجودة النهائية، والتحقق على Production بعد موافقة صريحة. إجمالي الرحلات ما زال 26 PARTIAL و0 Production verified، وFigma ما زال 90/119. لم يُنفذ launch أو purge.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T10:51:31.158Z",
+  "generatedAt": "2026-09-12T11:01:53.206Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3422,10 +3422,10 @@
         "section": "#provider",
         "journeyId": "GUIDE-16"
       },
-      "executionDate": "2026-09-12T10:50:36.887Z",
+      "executionDate": "2026-09-12T10:58:10.094Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/provider-customer-recovery-local-latest.json",
@@ -3440,6 +3440,34 @@
           "verifiedAt": "2026-09-12T10:50:36.887Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/provider-viewings-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-12T10:58:10.094Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
+            "checks": [
+              "provider_browser_confirm_200",
+              "provider_browser_reschedule_200",
+              "provider_browser_confirm_200",
+              "provider_browser_complete_200",
+              "provider_browser_cancel_requires_reason",
+              "provider_browser_cancel_200"
+            ],
+            "remaining": [
+              "Production verification"
+            ]
+          }
         },
         {
           "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
@@ -3458,28 +3486,6 @@
             "failed_audit_rolls_back_request_transition_and_audit",
             "provider_contact_transition_persists_version_reason_and_audit"
           ]
-        },
-        {
-          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
-          "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
-          "verifiedAt": "2026-09-10T10:06:46.846Z",
-          "environment": "local",
-          "mockedRoutes": false,
-          "scope": {
-            "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
-            "checks": [
-              "provider_browser_confirm_200",
-              "provider_browser_reschedule_200",
-              "provider_browser_confirm_200",
-              "provider_browser_complete_200",
-              "provider_browser_cancel_requires_reason",
-              "provider_browser_cancel_200"
-            ],
-            "remaining": [
-              "Provider dashboard and non-viewing work queues",
-              "Production verification"
-            ]
-          }
         }
       ],
       "reviewedSubcases": [
@@ -3562,6 +3568,38 @@
           "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
           "scope": "Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.",
           "verifiedAt": "2026-09-12T10:50:36.887Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_status_filter_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-viewings-recovery-local-latest.json",
+          "scope": "Provider viewing queue; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB snapshot with no viewing mutation and new-session cleanup.",
+          "verifiedAt": "2026-09-12T10:58:10.094Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-viewings-recovery-local-latest.json",
+          "scope": "Provider viewing queue; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB snapshot with no viewing mutation and new-session cleanup.",
+          "verifiedAt": "2026-09-12T10:58:10.094Z"
+        },
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "provider_viewing_confirm_reschedule_complete_cancel",
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "scope": "Provider viewing transitions through the real local browser/API/MongoDB journey.",
+          "verifiedAt": "2026-09-10T12:40:22.743Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "provider_browser_cancel_requires_reason",
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "scope": "Provider viewing cancellation requires a reason before mutation.",
+          "verifiedAt": "2026-09-10T12:40:22.743Z"
         }
       ],
       "reviewedGuarantees": [
@@ -3607,7 +3645,21 @@
           "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
           "verifiedAt": "2026-09-12T10:32:53.356Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_16_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "accountSubtypeReview": {
+        "status": "SHARED_PROVIDER_ROLE_CONTRACT",
+        "accountTypes": [
+          "individual_provider",
+          "broker",
+          "developer_company"
+        ],
+        "rationale": "All three guide audiences authenticate and authorize these four routes through the same provider role contract; no subtype branch exists in the route or service implementation."
+      }
     },
     {
       "id": "GUIDE-17",
@@ -4723,7 +4775,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T10:51:31.158Z",
+    "updatedAt": "2026-09-12T11:01:53.206Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

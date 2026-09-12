@@ -46,6 +46,7 @@ const communityInteractions = await readFile('docs/quality/guide-runs/community-
 const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider-customer-request-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerCustomerRecovery = await readFile('docs/quality/guide-runs/provider-customer-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerProjectsRecovery = await readFile('docs/quality/guide-runs/provider-projects-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerViewingsRecovery = await readFile('docs/quality/guide-runs/provider-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -90,7 +91,26 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
   ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
   ["docs/quality/guide-runs/provider-projects-recovery-local-latest.json", providerProjectsRecovery],
+  ["docs/quality/guide-runs/provider-viewings-recovery-local-latest.json", providerViewingsRecovery],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
+
+const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
+  && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
+  && providerCustomerRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && providerCustomerRecovery.mockedRoutes === false && providerCustomerRecovery.cleanup === true
+  && providerCustomerRecovery.temporaryRequestRemoved === true
+  && providerProjectsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && providerProjectsRecovery.mockedRoutes === false && providerProjectsRecovery.cleanup === true
+  && providerProjectsRecovery.temporaryProjectsRemoved === true
+  && providerViewingsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && providerViewingsRecovery.mockedRoutes === false && providerViewingsRecovery.cleanup === true
+  && providerViewingsRecovery.viewingsUnchanged === true
+  && ['provider_browser_confirm_200', 'provider_browser_reschedule_200', 'provider_browser_complete_200',
+    'provider_browser_cancel_requires_reason', 'provider_browser_cancel_200'].every(check =>
+    guide04Evidence?.viewingJourneyEvidence?.checks?.includes(check))
+  && [providerCustomerRecovery, providerProjectsRecovery, providerViewingsRecovery].every(evidence =>
+    ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      evidence.runs?.some(run => run.locale === locale && run.device === device && run.scrollWidth <= run.innerWidth))));
 
 matrix.schemaVersion = 2;
 matrix.generatedAt = new Date().toISOString();
@@ -128,6 +148,11 @@ matrix.journeys = matrix.journeys.map((journey) => {
       "GUIDE-06": guide04Evidence.contactJourneyEvidence?.status === "PASS_LOCAL_CONTACT_PARTIAL_GUIDES" ? guide04Evidence.contactJourneyEvidence : null,
       "GUIDE-07": guide04Evidence.viewingJourneyEvidence?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" ? guide04Evidence.viewingJourneyEvidence : null,
       "GUIDE-08": guide04Evidence.relatedJourneyEvidence?.status === "PASS_LOCAL_FAVORITES" ? guide04Evidence.relatedJourneyEvidence : null,
+      "GUIDE-16": guide04Evidence.viewingJourneyEvidence?.status === "PASS_LOCAL_VIEWING_PARTIAL_GUIDE" ? {
+        status: 'PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW',
+        checks: guide04Evidence.viewingJourneyEvidence.checks.filter(check => check.startsWith('provider_browser_')),
+        remaining: ['Production verification'],
+      } : null,
     }[journey.id];
     if (scopedGuide04Evidence) evidenceAttachments.push({
       path: "docs/quality/guide-runs/guide-04-local-latest.json",
@@ -213,6 +238,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       expectedVersion409: 'NOT_APPLICABLE',
       decisionReason: 'NOT_APPLICABLE',
       rationale: 'Profile and preference PATCH operations are idempotent self-service field updates without a versioned workflow decision contract; session revocation uses a server-managed audit reason.',
+    };
+  }
+  if (journey.id === 'GUIDE-16' && guide16LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_16_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.accountSubtypeReview = {
+      status: 'SHARED_PROVIDER_ROLE_CONTRACT',
+      accountTypes: ['individual_provider', 'broker', 'developer_company'],
+      rationale: 'All three guide audiences authenticate and authorize these four routes through the same provider role contract; no subtype branch exists in the route or service implementation.',
     };
   }
   if (journey.id === 'GUIDE-10') hydratedJourney.browserContractRegression = {
@@ -395,6 +432,40 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/provider-projects-recovery-local-latest.json',
       scope: 'Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.',
       verifiedAt: providerProjectsRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-16' && providerViewingsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && providerViewingsRecovery.mockedRoutes === false && providerViewingsRecovery.cleanup === true
+    && providerViewingsRecovery.viewingsUnchanged === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      providerViewingsRecovery.runs?.some(run => run.locale === locale && run.device === device
+        && run.checks?.includes('empty_status_filter_clear_recovers_without_navigation')
+        && run.checks?.includes('offline_filter_retry_recovers_without_navigation')
+        && Object.values(run.httpStatuses ?? {}).every(status => status === 200)
+        && run.scrollWidth <= run.innerWidth)))) {
+    for (const [caseName, check] of [
+      ['empty', 'empty_status_filter_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
+    ]) reviewedSubcases.push({ case: caseName, evidenceType: 'Browser/API/MongoDB', check,
+      path: 'docs/quality/guide-runs/provider-viewings-recovery-local-latest.json',
+      scope: 'Provider viewing queue; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB snapshot with no viewing mutation and new-session cleanup.',
+      verifiedAt: providerViewingsRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-16' && guide04Evidence?.status === 'PASS_LOCAL'
+    && guide04Evidence.mockedRoutes === false
+    && ['provider_browser_confirm_200', 'provider_browser_reschedule_200', 'provider_browser_complete_200',
+      'provider_browser_cancel_200'].every(check => guide04Evidence.viewingJourneyEvidence?.checks?.includes(check))) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'provider_viewing_confirm_reschedule_complete_cancel',
+      path: 'docs/quality/guide-runs/guide-04-local-latest.json',
+      scope: 'Provider viewing transitions through the real local browser/API/MongoDB journey.',
+      verifiedAt: guide04Evidence.finishedAt });
+    if (guide04Evidence.viewingJourneyEvidence?.checks?.includes('provider_browser_cancel_requires_reason')) {
+      reviewedSubcases.push({ case: 'validation', evidenceType: 'Browser/API/MongoDB',
+        check: 'provider_browser_cancel_requires_reason',
+        path: 'docs/quality/guide-runs/guide-04-local-latest.json',
+        scope: 'Provider viewing cancellation requires a reason before mutation.',
+        verifiedAt: guide04Evidence.finishedAt });
+    }
   }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
