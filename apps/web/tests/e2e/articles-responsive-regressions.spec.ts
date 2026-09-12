@@ -1,10 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-test.beforeEach(({}, testInfo) => {
-  test.skip(!['mobile-ar', 'mobile-en'].includes(testInfo.project.name), 'Article narrow-layout regression runs on both supported copy directions.');
-});
-
 test('article category stays inside media and clear of card content at 360px', async ({ page }) => {
+  test.skip(!['mobile-ar', 'mobile-en'].includes(test.info().project.name), 'Article narrow-layout regression runs on both supported copy directions.');
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
   const category = {
     id: '67000000000000000000000a', slug: 'buying-tips',
@@ -31,7 +28,7 @@ test('article category stays inside media and clear of card content at 360px', a
 
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto(`/articles?lang=${locale}`, { waitUntil: 'domcontentloaded' });
-  const card = page.locator('[data-article-card]');
+  const card = page.locator('[data-article-card]').first();
   await expect(card).toBeVisible();
 
   const geometry = await page.evaluate(() => {

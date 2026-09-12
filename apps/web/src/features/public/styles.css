@@ -2467,6 +2467,7 @@
 
   .public-homepage__summary-item,
   .public-homepage__summary-item:first-child {
+    align-content: start;
     min-inline-size: 0;
     gap: 0.5rem;
     padding-inline: 0.25rem;
