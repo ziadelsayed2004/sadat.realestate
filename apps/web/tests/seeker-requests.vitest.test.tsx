@@ -71,7 +71,8 @@ describe('Seeker requests', () => {
     expect(screen.getByRole('heading', { name: copy.list.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByText('REQ-4567')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: locale === 'ar' ? 'عقار الباحث' : 'Seeker property' })).toHaveAttribute('href', `/properties/seeker-property?lang=${locale}`);
-    expect(screen.getByText(locale === 'ar' ? 'مزود العقار · المنطقة الأولى' : 'Property provider · First district')).toBeInTheDocument();
+    expect(screen.getByText(locale === 'ar' ? 'مزود العقار' : 'Property provider')).toBeInTheDocument();
+    expect(screen.getByText(locale === 'ar' ? 'المنطقة الأولى · P-2042' : 'First district · P-2042')).toBeInTheDocument();
     expect(screen.getAllByText(copy.statuses.under_review).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-screen-id="SEK-02"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('assignedTo');

@@ -450,3 +450,9 @@
 - Three subagents terminated at the usage limit. Their unfinished UI changes remain in the working tree: ADM-18 action-button CSS and SEK-02 five-column requests layout, copy, fixtures and tests. Do not treat these as reviewed or finished.
 - Current seeker component test passed 5/5; Web build, translations and bundle budgets passed. Playwright seeker-requests desktop AR/EN completed: 2 access-denial tests passed, 6 visual comparisons failed. Actual screenshots are in apps/web/test-results. Arabic list inspection shows cramped outcome/status/detail cells. Rich property fixture also changes SEK-03/04 screenshots, which must be isolated or explicitly reviewed before baseline updates.
 - Next: resolve SEK-02 outcome spacing and fixture scope, verify source alignment and AR/EN responsive behavior, then assess ADM-18 against its preserved source. Do not rerun the successful local GUIDE-16 verifier unless its logic changes. No Figma closure increase or final quality gate is claimed.
+
+## 12 September: SEK-02 row containment verified
+
+- Read official Figma context for SEK-02 `6027:4046`. Completed five-column row layout using existing property projection and fixed compressed status/detail text through wrapping whole outcome elements.
+- AR/EN geometry tests passed at 393/768/1280/1551 viewport widths; no page overflow or outcome intersection. List/pagination visual tests passed 2/2 after reviewed list baseline updates. Rich fixture now affects lists only. Component tests 5/5 and build/translations/budgets passed.
+- Four SEK-03/04 visual failures remain against old shell/detail baselines even with original detail fixtures. Review those against their source next; do not blindly regenerate. ADM-18 button CSS remains uncommitted and unverified. SEK-02 review is in `figma_parity/screens/SEK-02/row-layout-review-2026-09-12.md`. No closure count changed.

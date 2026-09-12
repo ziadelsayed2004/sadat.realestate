@@ -16,7 +16,7 @@ import {
   ,type SeekerRequestTransition
 } from './data.ts';
 import { getSeekerRequestsCopy } from './requests-copy.ts';
-import { SeekerIcon, SeekerNavigation } from './overview.tsx';
+import { SeekerNavigation } from './overview.tsx';
 import './styles.css';
 
 export type SeekerRequestsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission' | 'not_found';
@@ -117,22 +117,21 @@ function RequestRow({ request, locale }: { readonly request: RequestData; readon
   const propertyName = localizedText(request.property?.name, locale);
   const propertySource = localizedText(request.property?.sourceName, locale);
   const propertyLocation = localizedText(request.property?.locationName, locale);
-  const propertyMeta = [propertySource, propertyLocation].filter((value): value is string => value !== undefined).join(' · ');
+  const propertyMeta = [propertyLocation, request.property?.publicCode].filter((value): value is string => value !== undefined).join(' · ');
   const propertyHref = request.property?.slug === undefined ? undefined : localeForSeekerPath(locale, `/properties/${request.property.slug}`);
   return (
     <article className="seeker-request-row" data-testid={`seeker-request-${request.id}`}>
-      <div className="seeker-request-row__identity">
-        <span className="seeker-request-row__icon" aria-hidden="true"><SeekerIcon name="requests" /></span>
+      <strong className="seeker-request-row__id">{shortRequestId(request.id)}</strong>
+      <div className="seeker-request-row__subject">
+        <span className="seeker-request-row__type">{copy.types[request.type]}</span>
         <div>
-          {propertyHref === undefined ? <strong>{propertyName ?? shortRequestId(request.id)}</strong> : <a className="seeker-request-row__property" href={propertyHref}>{propertyName}</a>}
-          <span>{propertyMeta || copy.types[request.type]}</span>
-          <span>{shortRequestId(request.id)}</span>
-          {request.property?.publicCode ? <><span aria-hidden="true">·</span><span>{request.property.publicCode}</span></> : null}
+          {propertyHref === undefined ? <strong>{propertyName ?? copy.types[request.type]}</strong> : <a className="seeker-request-row__property" href={propertyHref}>{propertyName}</a>}
+          {propertyMeta ? <span>{propertyMeta}</span> : null}
         </div>
       </div>
-      <div className="seeker-request-row__status"><RequestStatusBadge status={request.status} locale={locale} /></div>
+      <span className="seeker-request-row__provider">{propertySource ?? '—'}</span>
       <time dateTime={request.createdAt}>{dateLabel(request.createdAt, locale)}</time>
-      <a className="seeker-request-row__details" href={localeForSeekerPath(locale, `/seeker/requests/${request.id}`)}>{copy.list.details}<span aria-hidden="true">‹</span></a>
+      <div className="seeker-request-row__outcome"><RequestStatusBadge status={request.status} locale={locale} /><a className="seeker-request-row__details" href={localeForSeekerPath(locale, `/seeker/requests/${request.id}`)}>{copy.list.details}<span aria-hidden="true">‹</span></a></div>
     </article>
   );
 }
@@ -146,7 +145,7 @@ function RequestListContent({ data, locale, onPageChange }: { readonly data: Req
         <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.list.emptyTitle}</h3><p>{copy.list.emptyBody}</p></div>
       ) : (
         <div className="seeker-requests__list" role="list" aria-label={copy.list.title}>
-          <div className="seeker-requests__columns" aria-hidden="true"><span>{copy.list.requestId}</span><span>{copy.list.status}</span><span>{copy.list.submitted}</span><span>{copy.list.details}</span></div>
+          <div className="seeker-requests__columns" aria-hidden="true"><span>{copy.list.requestId}</span><span>{copy.list.type}</span><span>{copy.list.provider}</span><span>{copy.list.submitted}</span><span>{copy.list.status}</span></div>
           {data.items.map(request => <RequestRow key={request.id} request={request} locale={locale} />)}
         </div>
       )}

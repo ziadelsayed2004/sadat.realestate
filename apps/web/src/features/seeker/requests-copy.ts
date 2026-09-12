@@ -11,6 +11,7 @@ export interface SeekerRequestsCopy {
     readonly emptyBody: string;
     readonly requestId: string;
     readonly type: string;
+    readonly provider: string;
     readonly status: string;
     readonly submitted: string;
     readonly details: string;
@@ -64,7 +65,8 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       emptyTitle: 'لا توجد طلبات بعد',
       emptyBody: 'ستظهر طلباتك هنا عند إرسال طلب بحث أو تواصل من حسابك.',
       requestId: 'رقم الطلب',
-      type: 'نوع الطلب',
+      type: 'نوع الطلب / العقار',
+      provider: 'المزود',
       status: 'الحالة',
       submitted: 'تاريخ الإرسال',
       details: 'عرض التفاصيل',
@@ -115,7 +117,8 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       emptyTitle: 'No requests yet',
       emptyBody: 'Your requests will appear here after you send a search or contact request.',
       requestId: 'Request ID',
-      type: 'Request type',
+      type: 'Request type / property',
+      provider: 'Provider',
       status: 'Status',
       submitted: 'Submitted',
       details: 'View details',

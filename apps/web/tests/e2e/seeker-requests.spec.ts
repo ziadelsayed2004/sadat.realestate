@@ -14,13 +14,24 @@ function successMeta(requestId: string) {
   return { meta: { requestId } };
 }
 
-function requestData(id: string, status: 'under_review' | 'contacted') {
+function requestData(id: string, status: 'under_review' | 'contacted', withProperty = false) {
   return {
     id,
     type: 'contact',
     source: 'seeker',
     seekerId: '0123456789abcdef01234567',
     propertyId: '2123456789abcdef01234567',
+    ...(withProperty ? { property: {
+      id: '2123456789abcdef01234567',
+      slug: 'seeker-property',
+      kind: 'property',
+      name: { ar: 'شقة في مدينة السادات', en: 'Sadat City apartment' },
+      transactionType: 'sale',
+      locationName: { ar: 'الحي الثالث', en: 'Third District' },
+      sourceName: { ar: 'شركة السادات للتطوير', en: 'Sadat Development Company' },
+      sourceType: 'developer_company',
+      publicCode: 'SDT-2103'
+    } } : {}),
     status,
     payload: { message: status === 'contacted' ? 'Please call after 5 PM' : 'Please call me' },
     version: 0,
@@ -70,16 +81,46 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
       return;
     }
     const pageNumber = Number(url.searchParams.get('page') ?? '1');
-    const items = pageNumber === 2 ? [requestData(contactedRequestId, 'contacted')] : [requestData(ownRequestId, 'under_review')];
+    const items = pageNumber === 2 ? [requestData(contactedRequestId, 'contacted', true)] : [requestData(ownRequestId, 'under_review', true)];
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items, page: pageNumber, limit: 1, total: 2 }, ...successMeta(`request-list-${pageNumber}`) }) });
   });
 }
+
+test('request rows keep status and detail links contained across viewport widths', async ({ page }) => {
+  test.skip(!test.info().project.name.includes('desktop'));
+  const locale = localeForProject();
+  await routeSession(page);
+  await routeRequests(page);
+  for (const width of [393, 768, 1280, 1551]) {
+    await page.setViewportSize({ width, height: 863 });
+    await page.goto(`/seeker/requests?lang=${locale}`);
+    const row = page.getByTestId(`seeker-request-${ownRequestId}`);
+    await expect(row).toBeVisible();
+    const geometry = await row.evaluate(element => {
+      const bounds = element.getBoundingClientRect();
+      const children = [...element.querySelectorAll('.seeker-request-row__outcome > *')].map(child => {
+        const rect = child.getBoundingClientRect();
+        return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+      });
+      return { left: bounds.left, right: bounds.right, children, viewport: innerWidth, document: document.documentElement.scrollWidth };
+    });
+    expect(geometry.document).toBeLessThanOrEqual(geometry.viewport);
+    for (const child of geometry.children) {
+      expect(child.left).toBeGreaterThanOrEqual(geometry.left);
+      expect(child.right).toBeLessThanOrEqual(geometry.right);
+    }
+    const [badge, link] = geometry.children;
+    if (!badge || !link) throw new Error('Request row is missing its status or detail link');
+    expect(badge.right <= link.left || link.right <= badge.left || badge.bottom <= link.top || link.bottom <= badge.top).toBe(true);
+    await expect(row.locator('.seeker-request-row__details')).toHaveAttribute('href', `/seeker/requests/${ownRequestId}?lang=${locale}`);
+  }
+});
 
 test.describe('SEK-02/03/04 Seeker Requests', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     void page;
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-02, SEK-03, SEK-04' });
-    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/seeker/SEK-02.png; SEK-03.png; SEK-04.png; Figma node 6027-3579' });
+    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/seeker/SEK-02.png; SEK-03.png; SEK-04.png; Figma node 6027-4046' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Seeker dashboard is approved for desktop only.');
   });
 
@@ -94,15 +135,17 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.getByTestId(`seeker-request-${ownRequestId}`)).toBeVisible();
     await expect(page.getByText('REQ-4567')).toBeVisible();
+    await expect(page.getByText(locale === 'ar' ? 'شركة السادات للتطوير' : 'Sadat Development Company')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|providerId|seekerId|accessToken|refreshToken/u);
-    await page.getByRole('button', { name: '2' }).click();
-    await expect(page.getByTestId(`seeker-request-${contactedRequestId}`)).toBeVisible();
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.locator('.seeker-request-row__details').first().focus();
     await expect(page.locator('.seeker-request-row__details').first()).toBeFocused();
+    await page.locator('.seeker-request-row__details').first().evaluate(element => { (element as HTMLElement).blur(); });
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
     await expect(page).toHaveScreenshot(`seeker-requests-list-${locale}.png`, { fullPage: true });
+    await page.getByRole('button', { name: '2' }).click();
+    await expect(page.getByTestId(`seeker-request-${contactedRequestId}`)).toBeVisible();
   });
 
   test('renders the under-review detail projection without internal data', async ({ page }) => {
