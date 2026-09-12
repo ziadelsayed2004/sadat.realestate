@@ -378,3 +378,10 @@
 
 - `verify-seeker-overview-projection-local.mjs` passed on isolated Mongo with five valid rows per owned collection plus foreign rows. Verified newest three requests/notifications, earliest three active viewings, totals independent of limit, ownership isolation, omission of internalNotes/assignedTo/permission and owner identifiers at top level. Temporary collections removed.
 - Attached scoped evidence to GUIDE-05. Request payload is currently a free-form contract record; this check does not claim arbitrary nested payload filtering. Next inspect request payload write authority and projection policy to determine whether a concrete disclosure exists, and verify activity-link destinations before local acceptance review. No CSS or application code changed.
+
+## 12 September: request payload write-authority review
+
+- Inspected request creation: `requestCreateSchema` uses strict per-type payload objects, and service creation parses it before storing payload. Admin notes are appended to the separate top-level `internalNotes` array in repository `appendNote`; not merged into payload.
+- Added regression coverage for contact/viewing/property_search: valid payload accepted, internalNotes/assignedTo/dueAt/creatorId injected into payload rejected. Focused projection tests 2/2 and targeted lint passed.
+- This proves the supported write boundary and existing top-level projection, not arbitrary legacy database sanitization. No concrete nested administrative disclosure found; no application filtering or CSS changed.
+- Next remains actual browser activity-link navigation from GUIDE-05 to request detail/viewings/notifications. Do not repeat completed overview aggregation/empty/retry checks.

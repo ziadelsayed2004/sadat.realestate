@@ -1,11 +1,26 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { requestCreateSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createInMemoryRequestRepository, createRequestService, type RequestRecord } from '../../src/modules/requests/service.js';
 
 const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const otherSeeker = { ...seeker, sub: '1123456789abcdef01234567' } as AccessTokenClaims;
 const base = { source: 'seeker' as const, type: 'contact' as const, payload: { message: 'Please call me' }, version: 0, createdAt: new Date('2026-08-13T10:00:00.000Z'), updatedAt: new Date('2026-08-13T10:00:00.000Z') };
+
+test('seeker request payloads reject administrative metadata at the write boundary', () => {
+  const requests = [
+    { type: 'contact', payload: { message: 'Please call me' } },
+    { type: 'viewing', payload: { propertyId: '4123456789abcdef01234567', requestedAt: '2026-09-12T10:00:00Z', timezone: 'Africa/Cairo' } },
+    { type: 'property_search', payload: { locations: [], propertyTypes: [], note: 'Looking for a home' } }
+  ];
+  for (const request of requests) {
+    assert.equal(requestCreateSchema.safeParse(request).success, true);
+    for (const field of ['internalNotes', 'assignedTo', 'dueAt', 'creatorId']) {
+      assert.equal(requestCreateSchema.safeParse({ ...request, payload: { ...request.payload, [field]: 'private' } }).success, false);
+    }
+  }
+});
 
 test('seeker request projections include lifecycle state but exclude assignments and internal SLA data', async () => {
   const own = { ...base, id: '4123456789abcdef01234567', seekerId: seeker.sub, creatorId: seeker.sub, status: 'under_review' as const, assignedTo: '2123456789abcdef01234567', dueAt: new Date('2026-08-15T10:00:00.000Z') } satisfies RequestRecord;
