@@ -40,6 +40,18 @@ export type SettingsWriteResult =
   | { kind: 'updated'; setting: AdminSettingsData }
   | { kind: 'version_conflict' };
 
+export interface SettingsAuditInput {
+  actorType: 'admin';
+  actorId: string;
+  targetType: 'admin_settings';
+  targetId: string;
+  reason: string;
+  before: unknown;
+  requestId: string;
+  traceId: string;
+  occurredAt: Date;
+}
+
 export interface SettingsRepository {
   find(namespace: AdminSettingsNamespace): Promise<AdminSettingsData | undefined>;
   upsert(input: {
@@ -49,6 +61,13 @@ export interface SettingsRepository {
     data: AdminSettingsUpdate;
     now: string;
   }): Promise<SettingsWriteResult>;
+  upsertWithAudit?(input: {
+    namespace: AdminSettingsNamespace;
+    actorId: string;
+    expectedVersion: number;
+    data: AdminSettingsUpdate;
+    now: string;
+  }, audit: SettingsAuditInput): Promise<SettingsWriteResult>;
 }
 
 export interface SettingsServiceDependencies {
@@ -158,28 +177,23 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     if (!before && data.expectedVersion !== 0) {
       throw new SettingsServiceError('SETTINGS_VERSION_CONFLICT');
     }
-    const result = await dependencies.repository.upsert({
+    const occurredAt = clock();
+    const write = {
       namespace: target,
       actorId: claims.sub,
       expectedVersion: data.expectedVersion,
       data,
-      now: clock().toISOString()
-    });
+      now: occurredAt.toISOString()
+    };
+    const auditInput: SettingsAuditInput = { actorType: 'admin', actorId: claims.sub, targetType: 'admin_settings', targetId: target,
+      reason: data.reason, before: before ?? null, requestId: context.requestId, traceId: context.traceId, occurredAt };
+    const result = dependencies.repository.upsertWithAudit
+      ? await dependencies.repository.upsertWithAudit(write, auditInput)
+      : await dependencies.repository.upsert(write);
     if (result.kind === 'version_conflict') throw new SettingsServiceError('SETTINGS_VERSION_CONFLICT');
     const setting = output(result.setting);
-    await dependencies.audit.record({
-      actorType: 'admin',
-      actorId: claims.sub,
-      targetType: 'admin_settings',
-      targetId: target,
-      action: result.kind === 'created' ? 'settings.create' : 'settings.update',
-      reason: data.reason,
-      before: before ?? null,
-      after: setting,
-      requestId: context.requestId,
-      traceId: context.traceId,
-      occurredAt: clock()
-    });
+    if (!dependencies.repository.upsertWithAudit) await dependencies.audit.record({ ...auditInput,
+      action: result.kind === 'created' ? 'settings.create' : 'settings.update', after: setting });
     return setting;
   };
 

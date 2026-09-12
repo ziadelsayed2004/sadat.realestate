@@ -1,4 +1,4 @@
-import { Types, type Connection } from 'mongoose';
+import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   adminSettingsDataSchema,
   adminSettingsNamespaceSchema,
@@ -6,7 +6,8 @@ import {
   type AdminSettingsData,
   type AdminSettingsNamespace
 } from '@sadat-real-estate/contracts';
-import type { SettingsRepository, SettingsWriteResult } from './service.js';
+import type { AuditWriter } from '../audit/writer.js';
+import type { SettingsAuditInput, SettingsRepository, SettingsWriteResult } from './service.js';
 
 type Row = Record<string, unknown>;
 
@@ -35,12 +36,40 @@ function output(row: Row): AdminSettingsData | undefined {
   return parsed.success ? parsed.data : undefined;
 }
 
-export function createMongooseSettingsRepository(connection: Connection): SettingsRepository {
+export function createMongooseSettingsRepository(connection: Connection, audit?: AuditWriter): SettingsRepository {
   const settings = connection.collection('admin_settings');
   let indexesReady: Promise<unknown> | undefined;
   function ensureIndexes(): Promise<unknown> {
     indexesReady ??= settings.createIndex({ namespace: 1 }, { name: 'admin_settings_namespace', unique: true });
     return indexesReady;
+  }
+
+  async function upsert(input: Parameters<SettingsRepository['upsert']>[0], session?: ClientSession): Promise<SettingsWriteResult> {
+    await ensureIndexes();
+    const before = await settings.findOne({ namespace: input.namespace }, session ? { session } : {});
+    if (!before) {
+      if (input.expectedVersion !== 0) return { kind: 'version_conflict' };
+      try {
+        await settings.insertOne({ namespace: input.namespace, schemaVersion: input.data.schemaVersion, values: input.data.values,
+          version: 0, updatedBy: new Types.ObjectId(input.actorId), updatedAt: new Date(input.now) }, session ? { session } : {});
+      } catch (error) {
+        if (!session && typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) return { kind: 'version_conflict' };
+        throw error;
+      }
+      const created = await settings.findOne({ namespace: input.namespace }, session ? { session } : {});
+      const setting = created ? output(created as Row) : undefined;
+      if (!setting) throw new Error('SETTINGS_RECORD_INVALID');
+      return { kind: 'created', setting };
+    }
+    const result = await settings.findOneAndUpdate(
+      { namespace: input.namespace, version: input.expectedVersion },
+      { $set: { schemaVersion: input.data.schemaVersion, values: input.data.values, updatedBy: new Types.ObjectId(input.actorId), updatedAt: new Date(input.now) }, $inc: { version: 1 } },
+      { returnDocument: 'after', ...(session ? { session } : {}) }
+    );
+    if (!result) return { kind: 'version_conflict' };
+    const setting = output(result as Row);
+    if (!setting) throw new Error('SETTINGS_RECORD_INVALID');
+    return { kind: 'updated', setting };
   }
 
   return {
@@ -50,39 +79,22 @@ export function createMongooseSettingsRepository(connection: Connection): Settin
       return row ? output(row as Row) : undefined;
     },
 
-    async upsert(input): Promise<SettingsWriteResult> {
-      await ensureIndexes();
-      const before = await settings.findOne({ namespace: input.namespace });
-      if (!before) {
-        if (input.expectedVersion !== 0) return { kind: 'version_conflict' };
-        try {
-          await settings.insertOne({
-            namespace: input.namespace,
-            schemaVersion: input.data.schemaVersion,
-            values: input.data.values,
-            version: 0,
-            updatedBy: new Types.ObjectId(input.actorId),
-            updatedAt: new Date(input.now)
-          });
-        } catch (error) {
-          if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) return { kind: 'version_conflict' };
-          throw error;
-        }
-        const created = await settings.findOne({ namespace: input.namespace });
-        const setting = created ? output(created as Row) : undefined;
-        if (!setting) throw new Error('SETTINGS_RECORD_INVALID');
-        return { kind: 'created', setting };
-      }
-      const updatedAt = new Date(input.now);
-      const result = await settings.findOneAndUpdate(
-        { namespace: input.namespace, version: input.expectedVersion },
-        { $set: { schemaVersion: input.data.schemaVersion, values: input.data.values, updatedBy: new Types.ObjectId(input.actorId), updatedAt }, $inc: { version: 1 } },
-        { returnDocument: 'after' }
-      );
-      if (!result) return { kind: 'version_conflict' };
-      const setting = output(result as Row);
-      if (!setting) throw new Error('SETTINGS_RECORD_INVALID');
-      return { kind: 'updated', setting };
+    upsert,
+
+    async upsertWithAudit(input, auditInput: SettingsAuditInput) {
+      if (!audit) throw new Error('SETTINGS_AUDIT_UNAVAILABLE');
+      const session = await connection.startSession();
+      try {
+        return await session.withTransaction(async () => {
+          const result = await upsert(input, session);
+          if (result.kind !== 'version_conflict') await audit.record({ ...auditInput,
+            action: result.kind === 'created' ? 'settings.create' : 'settings.update', after: result.setting }, session);
+          return result;
+        });
+      } catch (error) {
+        if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) return { kind: 'version_conflict' };
+        throw error;
+      } finally { await session.endSession(); }
     }
   };
 }

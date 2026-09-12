@@ -18,7 +18,7 @@ export function createSettingsRuntime(
   return {
     accessTokens,
     service: createSettingsService({
-      repository: createMongooseSettingsRepository(connection),
+      repository: createMongooseSettingsRepository(connection, audit),
       authorization,
       audit
     }),
