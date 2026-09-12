@@ -45,6 +45,7 @@ const registrationGuarantees = await readFile('docs/quality/guide-runs/registrat
 const providerRegistrationGuarantees = await readFile('docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const propertyGuarantees = await readFile('docs/quality/guide-runs/property-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerPropertiesRecovery = await readFile('docs/quality/guide-runs/provider-properties-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide17ProviderAdsCommission = await readFile('docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -104,6 +105,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/provider-registration-guarantees-local-latest.json", providerRegistrationGuarantees],
   ["docs/quality/guide-runs/property-guarantees-local-latest.json", propertyGuarantees],
   ["docs/quality/guide-runs/provider-properties-recovery-local-latest.json", providerPropertiesRecovery],
+  ["docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json", guide17ProviderAdsCommission],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -267,6 +269,26 @@ const propertyLifecycleLocalAcceptanceReady = propertyLifecycleEvidence?.status 
     providerPropertiesRecovery.runs?.some(run => run.locale === locale && run.device === device
       && run.status === 'PASS' && run.httpStatuses?.empty === 200 && run.httpStatuses?.recovered === 200
       && run.scrollWidth <= run.innerWidth)));
+
+const guide17LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_LOCAL'
+  && remainingSurfacesEvidence.mockedRoutes === false && remainingSurfacesEvidence.cleanup === true
+  && ['PRV-19', 'PRV-20'].every(screen => ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    remainingSurfacesEvidence.browser?.some(run => run.screen === screen && run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.documentStatus === 200 && run.pageErrors === 0 && run.scrollWidth <= run.innerWidth))))
+  && guide17ProviderAdsCommission?.status === 'PASS_LOCAL'
+  && guide17ProviderAdsCommission.mockedRoutes === false && guide17ProviderAdsCommission.cleanup === true
+  && guide17ProviderAdsCommission.api?.safeAdvertisingProjection === true
+  && guide17ProviderAdsCommission.api?.invalidListQueryStatus === 400
+  && guide17ProviderAdsCommission.api?.foreignDetailStatus === 404
+  && guide17ProviderAdsCommission.api?.requestsUnchanged === true
+  && guide17ProviderAdsCommission.api?.confirmationsUnchanged === true
+  && ['foreign_provider_ad_request_hidden_404', 'anonymous_401_and_admin_role_403']
+    .every(check => guide17ProviderAdsCommission.authorization?.includes(check))
+  && guide17ProviderAdsCommission.authorization?.some(check => /^current_suspended_provider_denied_(401|403)_and_restored$/u.test(check))
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    guide17ProviderAdsCommission.runs?.some(run => run.locale === locale && run.device === device && run.status === 'PASS'
+      && run.httpStatuses?.empty === 200 && run.httpStatuses?.adsRecovered === 200
+      && run.httpStatuses?.commissionRecovered === 200 && run.scrollWidth <= run.innerWidth)));
 
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
@@ -484,6 +506,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       reviewedAt: '2026-09-12',
     };
   }
+  if (journey.id === 'GUIDE-17' && guide17LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_17_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      duplicateMutation: 'NOT_APPLICABLE', expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE', atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'The documented GUIDE-17 action follows owned advertising requests and reads the effective commission policy without changing either record. Mutation, optimistic-write version, decision reason, and audit rollback contracts belong to separate advertising and commission administration journeys.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -638,6 +672,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['decisionReason', 'provider_submit_and_admin_review_reason_validation', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
       ['atomicAuditRollback', 'audit_failure_rolls_back_property_review_and_inserted_audit', 'docs/quality/guide-runs/property-guarantees-local-latest.json', propertyGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-17' && guide17LocalAcceptanceReady) {
+    for (const [category, check] of [
+      ['horizontalAccess', 'foreign_provider_ad_request_hidden_404'],
+      ['roleAuthorization', 'anonymous_401_and_admin_role_403'],
+      ['currentSessionState', 'current_suspended_provider_denied_and_restored'],
+    ]) reviewedGuarantees.push({ category, check,
+      path: 'docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json',
+      verifiedAt: guide17ProviderAdsCommission.finishedAt });
   }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     for (const [category, check, path, verifiedAt] of [
@@ -840,6 +883,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/provider-properties-recovery-local-latest.json',
       scope: 'Owned property list offline failure and explicit retry to real HTTP 200 in six locale/device runs without reload or mutation.',
       verifiedAt: providerPropertiesRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-17' && guide17LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'owned_advertising_requests_and_effective_commission_read_safely',
+      path: 'docs/quality/GUIDE_17_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'PRV-19 and PRV-20 in Arabic and English across Desktop, Tablet and Pixel 5 with real owned API and MongoDB observations.',
+      verifiedAt: guide17ProviderAdsCommission.finishedAt });
+    for (const [category, check, scope] of [
+      ['validation', 'invalid_advertising_list_query_returns_400_without_mutation', 'Invalid pagination query is rejected and advertising/confirmation collections remain unchanged.'],
+      ['empty', 'empty_status_filter_clear_without_navigation', 'A genuinely unused owned status renders empty and clears without navigation in six browser configurations.'],
+      ['networkRetry', 'ads_and_commission_network_retry', 'Advertising offline retry and an aborted commission read recover through real HTTP 200 without document reload.'],
+    ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check,
+      path: 'docs/quality/guide-runs/guide17-provider-ads-commission-local-latest.json', scope,
+      verifiedAt: guide17ProviderAdsCommission.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',

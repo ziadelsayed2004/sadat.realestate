@@ -577,3 +577,9 @@
 
 - أعيد تشغيل PRV-19..PRV-22-3 وADM-01..ADM-17 وADM-33..ADM-45 على AR/EN × Desktop/Tablet/Pixel 5: نجحت 216/216 زيارة، و442 استجابة API، و0 horizontal overflow. احترم الفاحص أربع استجابات 429 فعلية عبر `RateLimit-Reset` وأعاد الصفحات بعد انتهاء النافذة.
 - أصبح `verify-guide-remaining-surfaces-local.mjs` يحذف الجلسات الجديدة وأي account-report مؤقت أنشأه، وأثبت `cleanup=true`. هذا دليل responsive/success مشترك للرحلات GUIDE-17/18/19/20/23/24، لكنه لا يرفع أي رحلة جديدة إلى `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` قبل استكمال validation/empty/retry/RBAC/current-state/concurrency/audit الخاصة بها.
+
+## إغلاق النطاق المحلي لـGUIDE-17 — 2026-09-12
+
+- نجح PRV-19/PRV-20 في AR/EN × Desktop/Tablet/Pixel 5 مع owned advertising projection آمن وسياسة العمولة الفعلية. جُرب status فارغ حقيقي، مسح الفلتر، offline Retry للإعلانات، وفشل شبكي محقون لقراءة العمولة ثم استعادة HTTP 200 دون reload.
+- رفضت API pagination غير الصالحة بـ400، والطلب المملوك لمقدم آخر بـ404، والضيف بـ401، ودور admin من مسارات provider، كما رفضت token صادرة سابقًا بعد تعليق الحساب ثم أعيدت حالة fixture فورًا. لم تتغير `ad_requests` أو `commission_confirmations`، وحُذفت الجلسات وأي fixture مؤقت.
+- تسجل المصفوفة GUIDE-17 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 19/26 (73.1%). لأن نص الرحلة قرائي، سُجلت duplicate mutation وexpectedVersion وdecision reason وatomic audit rollback كغير منطبقة على هذه الرحلة؛ تدفقات التعديل تبقى ضمن رحلات إدارة الإعلانات والمدفوعات والعمولات. الحالة العالمية تبقى `PARTIAL` وFigma 90/119 وProduction صفر، ولم ينفذ launch أو purge.
