@@ -477,3 +477,9 @@
 - نجحت 6/6 حالات مع empty/reset وoffline/retry وcancel validation وعدم وجود overflow. حُذف الطلبان المؤقتان وكل الجلسات الجديدة، وأكد التقرير `temporaryRequestRemoved: true` و`cleanup: true`.
 - أضيف `GUIDE_06_LOCAL_ACCEPTANCE_2026-09-12.md` لربط أدلة contact وproperty-search والصلاحيات والـconcurrency/409/audit، وتوضيح أن viewing وprovider_customer لهما رحلات مستقلة. مولد المصفوفة يحفظ مراجعات القبول المحلية ويضيف دليل success الجديد بدل إسقاطه عند التجديد.
 - تبقى GUIDE-06 `PARTIAL`: Production، قبول Figma المستقل لـSEK-02/03/04، وبوابة الجودة النهائية للمشروع ما زالت مفتوحة. Demo محفوظ ولم ينفذ purge أو launch.
+
+## 12 September: GUIDE-07 local functional acceptance
+
+- راجعت أدلة المعاينات الحالية requirement-by-requirement في `GUIDE_07_LOCAL_ACCEPTANCE_2026-09-12.md`: إنشاء/إعادة جدولة/إلغاء الباحث، confirm/reschedule/complete/cancel للمقدم، انعكاس الحالات للباحث، validation، ملكية السجل، صلاحية الحساب، تعارض المواعيد، 409 والـaudit rollback.
+- دليل recovery يغطي AR/EN × Desktop/Tablet/Pixel 5 مع offline/retry بلا reload أو overflow، ويؤكد عدم تغيير المعاينات وتنظيف الجلسات الجديدة. لم تُحذف أي fixtures قديمة أو بيانات Demo/QA.
+- سجلت المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء GUIDE-07 `PARTIAL`: Production وقبول Figma لـSEK-05 والشاشات المرتبطة وبوابة الجودة النهائية ما زالت مفتوحة. لم ينفذ purge أو launch.

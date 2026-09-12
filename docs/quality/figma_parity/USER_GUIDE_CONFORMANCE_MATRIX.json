@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T10:22:35.891Z",
+  "generatedAt": "2026-09-12T10:24:20.234Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2354,7 +2354,7 @@
       "executionDate": "2026-09-11T17:23:02.463Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
@@ -2485,7 +2485,14 @@
           "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
           "verifiedAt": "2026-09-11T17:23:02.463Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "path": "docs/quality/GUIDE_07_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "reviewedAt": "2026-09-12T10:24:19.679Z",
+        "productionVerified": false,
+        "figmaAccepted": false
+      }
     },
     {
       "id": "GUIDE-08",
@@ -4595,7 +4602,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T10:22:35.891Z",
+    "updatedAt": "2026-09-12T10:24:20.234Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
