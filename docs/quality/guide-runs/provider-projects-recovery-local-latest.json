@@ -1,0 +1,134 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-16"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "34b7deec199e98aa80a0fc08e1328702bf4e2cbc",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "empty_search_clear_recovers_without_navigation",
+        "offline_filter_retry_recovers_without_navigation",
+        "invalid_form_blocks_request",
+        "browser_create_persists_owned_project"
+      ],
+      "httpStatuses": {
+        "initial": 200,
+        "empty": 200,
+        "reset": 200,
+        "recovered": 200,
+        "clear": 200,
+        "create": 201
+      },
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "temporaryProjectsRemoved": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-12T10:50:36.887Z"
+}

@@ -514,6 +514,10 @@
     box-shadow: 0 -4px 18px rgb(23 35 61 / 8%);
   }
 
+  .provider-dashboard .ui-modal-backdrop {
+    z-index: 50;
+  }
+
   .provider-dashboard__navigation .provider-dashboard__brand,
   .provider-dashboard__navigation-title,
   .provider-dashboard__navigation-footer,

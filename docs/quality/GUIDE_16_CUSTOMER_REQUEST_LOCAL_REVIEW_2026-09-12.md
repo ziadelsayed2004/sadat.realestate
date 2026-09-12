@@ -2,7 +2,7 @@
 
 ## Reviewed scope
 
-The provider customer-request subflow is covered through real local browser, API, and MongoDB execution. This review does not mark all of GUIDE-16 locally accepted because the journey also includes the provider projects and viewing work queues.
+The provider customer-request and project-list subflows are covered through real local browser, API, and MongoDB execution. This review does not mark all of GUIDE-16 locally accepted because the journey also includes the provider viewing work queue.
 
 | Requirement | Evidence | Result |
 | --- | --- | --- |
@@ -12,6 +12,7 @@ The provider customer-request subflow is covered through real local browser, API
 | Versioned transition and audit | `guide-runs/provider-customer-request-local-latest.json` | A valid contact transition persists status, version, reason, and actor audit data. A stale version returns 409 without mutation. |
 | Atomic audit rollback | `guide-runs/provider-customer-request-local-latest.json` | A forced audit failure returns 500 and rolls back both the request transition and audit insert. |
 | Cleanup | Both evidence runs | Isolated database and all temporary local browser requests/sessions are removed. Demo/QA data is preserved. |
+| Project list, form, empty state, and recovery | `guide-runs/provider-projects-recovery-local-latest.json` | Six AR/EN device runs block invalid submission, create and render an owned MongoDB project, clear an empty search, recover an offline filter, avoid overflow, and remove all temporary projects/sessions. |
 
 ## Responsive defect fixed
 
@@ -19,7 +20,6 @@ On Pixel 5, the fixed provider navigation was above the PRV-17 modal footer and 
 
 ## Remaining GUIDE-16 work
 
-- Review the project-list path as part of the combined operational journey.
 - Reconcile any remaining viewing queue empty/retry evidence required at journey level.
 - Complete independent Figma acceptance for PRV-15/16/17/18 and verify Production after explicit approval.
 

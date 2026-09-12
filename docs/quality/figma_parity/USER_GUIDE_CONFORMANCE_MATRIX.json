@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T10:46:28.600Z",
+  "generatedAt": "2026-09-12T10:51:31.158Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3422,7 +3422,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-16"
       },
-      "executionDate": "2026-09-12T10:44:23.947Z",
+      "executionDate": "2026-09-12T10:50:36.887Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -3431,6 +3431,13 @@
           "path": "docs/quality/guide-runs/provider-customer-recovery-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
           "verifiedAt": "2026-09-12T10:44:23.947Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-12T10:50:36.887Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         },
@@ -3523,6 +3530,38 @@
           "path": "docs/quality/guide-runs/provider-customer-recovery-local-latest.json",
           "scope": "Provider customer request list; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary request/session cleanup.",
           "verifiedAt": "2026-09-12T10:44:23.947Z"
+        },
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "browser_create_persists_owned_project",
+          "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
+          "scope": "Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.",
+          "verifiedAt": "2026-09-12T10:50:36.887Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "invalid_form_blocks_request",
+          "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
+          "scope": "Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.",
+          "verifiedAt": "2026-09-12T10:50:36.887Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_search_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
+          "scope": "Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.",
+          "verifiedAt": "2026-09-12T10:50:36.887Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-projects-recovery-local-latest.json",
+          "scope": "Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.",
+          "verifiedAt": "2026-09-12T10:50:36.887Z"
         }
       ],
       "reviewedGuarantees": [
@@ -4684,7 +4723,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T10:46:28.600Z",
+    "updatedAt": "2026-09-12T10:51:31.158Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

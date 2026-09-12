@@ -45,6 +45,7 @@ const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-prop
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider-customer-request-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerCustomerRecovery = await readFile('docs/quality/guide-runs/provider-customer-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerProjectsRecovery = await readFile('docs/quality/guide-runs/provider-projects-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -88,6 +89,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
   ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
+  ["docs/quality/guide-runs/provider-projects-recovery-local-latest.json", providerProjectsRecovery],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -373,6 +375,26 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/provider-customer-recovery-local-latest.json',
       scope: 'Provider customer request list; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary request/session cleanup.',
       verifiedAt: providerCustomerRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-16' && providerProjectsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && providerProjectsRecovery.mockedRoutes === false && providerProjectsRecovery.cleanup === true
+    && providerProjectsRecovery.temporaryProjectsRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      providerProjectsRecovery.runs?.some(run => run.locale === locale && run.device === device
+        && run.checks?.includes('empty_search_clear_recovers_without_navigation')
+        && run.checks?.includes('offline_filter_retry_recovers_without_navigation')
+        && run.checks?.includes('invalid_form_blocks_request')
+        && run.checks?.includes('browser_create_persists_owned_project')
+        && run.scrollWidth <= run.innerWidth)))) {
+    for (const [caseName, check] of [
+      ['success', 'browser_create_persists_owned_project'],
+      ['validation', 'invalid_form_blocks_request'],
+      ['empty', 'empty_search_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
+    ]) reviewedSubcases.push({ case: caseName, evidenceType: 'Browser/API/MongoDB', check,
+      path: 'docs/quality/guide-runs/provider-projects-recovery-local-latest.json',
+      scope: 'Provider projects; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary project/session cleanup.',
+      verifiedAt: providerProjectsRecovery.finishedAt });
   }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
