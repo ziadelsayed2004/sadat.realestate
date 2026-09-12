@@ -517,6 +517,14 @@
 - أصلح فحص المدير المحدود عيبًا فعليًا كان يُظهر حقول الإسناد والملاحظات لمستخدم العرض فقط. أصبحت قدرات الإسناد والملاحظة والانتقال محسوبة من صلاحيات RBAC الحالية، وتخفي الواجهة العمليات غير المسموحة. أثبت المتصفح حالة المنع، وأثبت API أن الشاشات الأربع المسموحة تعيد 200 والشاشتين غير المسموحتين تعيدان 403، وأن محاولات transition/assign/note المباشرة تعيد 403 بلا تغيير للطلب أو كتابة audit.
 - حُذف الطلب المؤقت وكل الجلسات الجديدة. يجمع `GUIDE_21_LOCAL_ACCEPTANCE_2026-09-12.md` أدلة Browser/API/MongoDB وضمانات الصلاحية والتزامن والـ409 والـaudit. تسجل المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء GUIDE-21 `PARTIAL` عالميًا حتى قبول Figma المستقل وبوابة الجودة النهائية وProduction بعد موافقة صريحة. لم ينفذ purge أو launch.
 
+## تحديث 2026-09-12 — إغلاق النطاق المحلي لـ GUIDE-09
+
+- أصلح مسار الإشعارات الاعتماد على claims قديمة: أصبح يفحص الدور والحالة الحاليين في `users` والجلسة الحالية في `sessions`، ويرفض الجلسة الملغاة أو المنتهية أو المحذوفة.
+- أصبح تعليم الإشعار كمقروء idempotent؛ إعادة الطلب أو طلبان متزامنان يحافظان على أول `readAt` بدل إعادة كتابته.
+- نجح `verify-seeker-notifications-guarantees-local.mjs` على HTTP وMongoDB حقيقيين في قاعدة معزولة: validation، projection آمن، audience/recipient isolation، 403 للأدوار الخاطئة، 404 للمعرّف الأجنبي، read/read-all/empty، current account/session state، والتكرار المتزامن. تم حذف قاعدة الاختبار بالكامل.
+- نجح `verify-notification-recovery-local.mjs` في 6/6 (AR/EN × Desktop/Tablet/Pixel 5) دون reload أو horizontal overflow، وحذف كل الجلسات التي أنشأها.
+- يجمع `GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md` الأدلة، وتسجل المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء الحالة العالمية `PARTIAL` حتى Figma المستقل والبوابة النهائية وProduction المصرح به. لم ينفذ purge أو launch.
+
 ## 12 September: homepage and articles narrow-layout recovery
 
 - أُصلحت أبعاد قسم إحصاءات المدينة على 360px: القيم الثلاثة وتسمياتها أصبحت في صفوف ثابتة بلا shift أو overflow في العربية والإنجليزية، مع تقليل المسافات والحجم الرأسي على الهاتف.

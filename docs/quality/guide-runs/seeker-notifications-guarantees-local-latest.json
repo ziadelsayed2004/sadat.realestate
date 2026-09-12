@@ -1,0 +1,61 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-09"
+  ],
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "mockedRoutes": false,
+  "checks": {
+    "validation": {
+      "anonymous": 401,
+      "unknownQuery": 400,
+      "invalidId": 400
+    },
+    "safeOrderedProjection": {
+      "status": 200,
+      "seekerItems": 3,
+      "audienceBoundaryApplied": true,
+      "internalFieldsLeaked": false
+    },
+    "idempotentRead": {
+      "firstStatus": 200,
+      "replayStatus": 200,
+      "readAtStable": true
+    },
+    "concurrentDuplicate": {
+      "statuses": [
+        200,
+        200
+      ],
+      "singleStableReadAt": true
+    },
+    "authorization": {
+      "foreignMutation": 404,
+      "foreignUnchanged": true,
+      "providerDenied": 403,
+      "adminDenied": 403,
+      "deniedMutationUnchanged": true
+    },
+    "readAllAndEmpty": {
+      "firstUpdatedCount": 1,
+      "replayUpdatedCount": 0,
+      "otherAudienceUnchanged": true,
+      "otherRecipientUnchanged": true,
+      "emptyState": true
+    },
+    "currentState": {
+      "suspendedAccount": 403,
+      "changedRole": 403,
+      "revokedSession": 403,
+      "expiredSession": 403,
+      "deletedSession": 403,
+      "notificationsUnchanged": true
+    },
+    "auditAndVersion": {
+      "applicability": "NOT_APPLICABLE",
+      "rationale": "Recipient-owned read markers are idempotent state flags; they do not use approval transitions, optimistic versions, or an administrative audit contract."
+    }
+  },
+  "cleanup": true,
+  "finishedAt": "2026-09-12T14:33:09.746Z"
+}

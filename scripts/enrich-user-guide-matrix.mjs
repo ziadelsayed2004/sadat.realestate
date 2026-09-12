@@ -30,6 +30,7 @@ const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-reco
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryPagination = await readFile('docs/quality/guide-runs/discovery-pagination-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const notificationGuarantees = await readFile('docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityGuarantees = await readFile('docs/quality/guide-runs/community-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityBrowserRecovery = await readFile('docs/quality/guide-runs/community-browser-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPresentation = await readFile('docs/quality/guide-runs/community-presentation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -92,7 +93,23 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
   ["docs/quality/guide-runs/provider-projects-recovery-local-latest.json", providerProjectsRecovery],
   ["docs/quality/guide-runs/provider-viewings-recovery-local-latest.json", providerViewingsRecovery],
+  ["docs/quality/guide-runs/notification-recovery-local-latest.json", notificationRecovery],
+  ["docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json", notificationGuarantees],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
+
+const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
+  && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(profile =>
+    notificationRecovery.runs?.some(run => run.locale === locale && run.profile === profile
+      && run.status === 'PASS' && run.width?.scrollWidth === run.width?.innerWidth)))
+  && notificationGuarantees?.status === 'PASS_LOCAL'
+  && notificationGuarantees.mockedRoutes === false && notificationGuarantees.cleanup === true
+  && notificationGuarantees.checks?.safeOrderedProjection?.internalFieldsLeaked === false
+  && notificationGuarantees.checks?.idempotentRead?.readAtStable === true
+  && notificationGuarantees.checks?.concurrentDuplicate?.singleStableReadAt === true
+  && notificationGuarantees.checks?.authorization?.foreignUnchanged === true
+  && notificationGuarantees.checks?.readAllAndEmpty?.emptyState === true
+  && notificationGuarantees.checks?.currentState?.notificationsUnchanged === true;
 
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
@@ -249,6 +266,19 @@ matrix.journeys = matrix.journeys.map((journey) => {
     remaining: communityEvidence.remaining,
   } : journey.executionEvidence;
   const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }), ...(evidenceAttachments.length === 0 ? {} : { evidenceAttachments }) };
+  if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE',
+      atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'Recipient-owned notification read markers are idempotent state flags without an approval workflow or optimistic-version contract.',
+    };
+  }
   if (journey.id === 'GUIDE-10') {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -293,6 +323,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
   });
   const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
     ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
+  if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
+    for (const [category, check] of [
+      ['horizontalAccess', 'foreign_notification_hidden_and_unchanged'],
+      ['roleAuthorization', 'provider_and_admin_denied_seeker_notifications'],
+      ['currentSessionState', 'current_account_role_and_session_state_enforced'],
+      ['duplicateMutation', 'repeat_and_concurrent_mark_read_preserve_single_timestamp'],
+    ]) reviewedGuarantees.push({ category, check,
+      path: 'docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json',
+      verifiedAt: notificationGuarantees.finishedAt });
+  }
   if (journey.id === 'GUIDE-10' && sessionRevocation?.status === 'PASS_LOCAL'
     && sessionRevocation.mockedRoutes === false && sessionRevocation.cleanup === true
     && ['seeker', 'provider', 'admin'].every(roleType => sessionRevocation.runs?.some(run => run.roleType === roleType
@@ -554,12 +594,19 @@ matrix.journeys = matrix.journeys.map((journey) => {
       }
     }
   }
-  if (journey.id === 'GUIDE-09' && notificationRecovery?.status === 'PASS_LOCAL_SUBCASES'
-    && notificationRecovery.mockedRoutes === false
-    && ['ar', 'en'].every(locale => notificationRecovery.runs?.some(run => run.locale === locale && run.status === 'PASS'))) {
+  if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'networkRetry', check: 'notification_filter_offline_retry_without_reload',
       path: 'docs/quality/guide-runs/notification-recovery-local-latest.json',
-      scope: 'Authenticated notifications; Arabic and English on Pixel 5', verifiedAt: notificationRecovery.finishedAt });
+      scope: 'Authenticated notifications; Arabic and English on Desktop, Tablet and Pixel 5', verifiedAt: notificationRecovery.finishedAt });
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB', check: 'list_mark_read_and_read_all',
+      path: 'docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Aggregated real browser/API/MongoDB notification journey', verifiedAt: notificationGuarantees.finishedAt });
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'API', check: 'anonymous_unknown_query_and_invalid_id_rejected',
+      path: 'docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json',
+      scope: 'Real HTTP with isolated MongoDB', verifiedAt: notificationGuarantees.finishedAt });
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API/MongoDB', check: 'read_all_reaches_empty_and_replay_is_stable',
+      path: 'docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Real browser plus isolated API/MongoDB state verification', verifiedAt: notificationGuarantees.finishedAt });
   }
   if (seekerAccountEvidence?.status === 'PASS_LOCAL' && seekerAccountEvidence.mockedRoutes === false) {
     const checks = journey.id === 'GUIDE-09' ? [['empty', 'mark_all_reached_empty_without_reload']]
@@ -780,7 +827,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
         ? 'NOT_APPLICABLE' : guaranteeStatus('expectedVersion409'),
       decisionReason: hydratedJourney.applicabilityReview?.decisionReason === 'NOT_APPLICABLE'
         ? 'NOT_APPLICABLE' : guaranteeStatus('decisionReason'),
-      atomicAuditRollback: guaranteeStatus('atomicAuditRollback'),
+      atomicAuditRollback: hydratedJourney.applicabilityReview?.atomicAuditRollback === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('atomicAuditRollback'),
     },
     environment: {
       local: executed ? "PARTIAL" : "NOT_EXECUTED",

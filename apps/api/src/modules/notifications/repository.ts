@@ -90,12 +90,15 @@ export function createMongooseNotificationRepository(connection: Connection): No
 
     async markRead(recipientId, notificationId, now, audience, permittedPermissions) {
       await ensureIndexes();
+      const identity = { _id: new Types.ObjectId(notificationId), recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions) };
       const row = await notifications.findOneAndUpdate(
-        { _id: new Types.ObjectId(notificationId), recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions) },
+        { ...identity, ...unreadFilter() },
         { $set: { readAt: now } },
         { returnDocument: 'after', projection }
       );
-      return row ? source(row as Row) : undefined;
+      if (row) return source(row as Row);
+      const existing = await notifications.findOne(identity, { projection });
+      return existing ? source(existing as Row) : undefined;
     },
 
     async markAllRead(recipientId, now, audience, permittedPermissions) {

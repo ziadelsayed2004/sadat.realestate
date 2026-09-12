@@ -2,12 +2,53 @@
   "journeys": [
     "GUIDE-09"
   ],
-  "environment": "local",
+  "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "commit": "adb18a22c55ece0ec69e997d8bbe2a837826bee1",
+  "commit": "01c3db38125bf358eafda36bf03da060a6e3adc3",
   "faultInjection": "browser offline mode",
   "runs": [
     {
+      "profile": "desktop",
+      "locale": "ar",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "profile": "desktop",
+      "locale": "en",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 1440,
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "profile": "tablet",
+      "locale": "ar",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 834,
+        "scrollWidth": 834
+      }
+    },
+    {
+      "profile": "tablet",
+      "locale": "en",
+      "status": "PASS",
+      "check": "notification_filter_offline_retry_without_reload",
+      "width": {
+        "innerWidth": 834,
+        "scrollWidth": 834
+      }
+    },
+    {
+      "profile": "mobile",
       "locale": "ar",
       "status": "PASS",
       "check": "notification_filter_offline_retry_without_reload",
@@ -17,6 +58,7 @@
       }
     },
     {
+      "profile": "mobile",
       "locale": "en",
       "status": "PASS",
       "check": "notification_filter_offline_retry_without_reload",
@@ -26,6 +68,7 @@
       }
     }
   ],
-  "status": "PASS_LOCAL_SUBCASES",
-  "finishedAt": "2026-09-11T11:22:27.894Z"
+  "status": "PASS_LOCAL",
+  "cleanup": true,
+  "finishedAt": "2026-09-12T14:34:04.488Z"
 }

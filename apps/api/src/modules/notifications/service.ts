@@ -45,6 +45,7 @@ export interface NotificationAuthorization {
 
 export interface NotificationServiceDependencies {
   repository: NotificationRepository;
+  isActiveAccount: (claims: AccessTokenClaims) => Promise<boolean>;
   authorization?: NotificationAuthorization;
   now?: () => Date;
 }
@@ -83,18 +84,18 @@ function project(source: NotificationSource): NotificationData | undefined {
   return parsed.success ? parsed.data : undefined;
 }
 
-function authorize(claims: AccessTokenClaims): void {
-  if (!activeSeeker(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
+async function authorize(claims: AccessTokenClaims, dependencies: NotificationServiceDependencies): Promise<void> {
+  if (!activeSeeker(claims) || !await dependencies.isActiveAccount(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
 }
 
-function authorizeProvider(claims: AccessTokenClaims): void {
-  if (!activeProvider(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
+async function authorizeProvider(claims: AccessTokenClaims, dependencies: NotificationServiceDependencies): Promise<void> {
+  if (!activeProvider(claims) || !await dependencies.isActiveAccount(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
 }
 
 export function createNotificationService(dependencies: NotificationServiceDependencies) {
   const now = dependencies.now ?? (() => new Date());
   const authorizeAdmin = async (claims: AccessTokenClaims): Promise<void> => {
-    if (!activeAdmin(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
+    if (!activeAdmin(claims) || !await dependencies.isActiveAccount(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
   };
   const projectAdmin = async (
     claims: AccessTokenClaims,
@@ -108,7 +109,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
   };
   return {
     async list(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<NotificationListData> {
-      authorize(claims);
+      await authorize(claims, dependencies);
       const query = notificationListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.list(claims.sub, query, 'seeker');
       const items = result.items.flatMap(item => {
@@ -119,7 +120,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
     },
 
     async markRead(claims: AccessTokenClaims, unparsedId: unknown): Promise<NotificationReadData> {
-      authorize(claims);
+      await authorize(claims, dependencies);
       const id = notificationIdSchema.parse(unparsedId);
       const changedAt = now();
       const source = await dependencies.repository.markRead(claims.sub, id, changedAt, 'seeker');
@@ -128,12 +129,12 @@ export function createNotificationService(dependencies: NotificationServiceDepen
     },
 
     async markAllRead(claims: AccessTokenClaims): Promise<NotificationReadAllData> {
-      authorize(claims);
+      await authorize(claims, dependencies);
       return notificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'seeker') });
     },
 
     async listProvider(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<NotificationListData> {
-      authorizeProvider(claims);
+      await authorizeProvider(claims, dependencies);
       const query = notificationListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.list(claims.sub, query, 'provider');
       const items = result.items.flatMap(item => {
@@ -144,7 +145,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
     },
 
     async markProviderRead(claims: AccessTokenClaims, unparsedId: unknown): Promise<NotificationReadData> {
-      authorizeProvider(claims);
+      await authorizeProvider(claims, dependencies);
       const id = notificationIdSchema.parse(unparsedId);
       const changedAt = now();
       const source = await dependencies.repository.markRead(claims.sub, id, changedAt, 'provider');
@@ -153,7 +154,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
     },
 
     async markAllProviderRead(claims: AccessTokenClaims): Promise<NotificationReadAllData> {
-      authorizeProvider(claims);
+      await authorizeProvider(claims, dependencies);
       return notificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'provider') });
     },
 

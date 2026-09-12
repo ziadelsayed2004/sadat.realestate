@@ -14,6 +14,7 @@ const providerClaims: AccessTokenClaims = {
   ...claims, sub: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified'
 };
 const createdAt = new Date('2026-08-01T00:00:00.000Z');
+const isActiveAccount = async () => true;
 const source: NotificationSource = {
   id: 'abcdefabcdefabcdefabcdef', type: 'request.updated', title: { ar: 'تحديث الطلب', en: 'Request updated' },
   message: { ar: 'تم تحديث طلبك', en: 'Your request was updated' }, link: '/seeker/requests/abcdefabcdefabcdefabcdef',
@@ -31,7 +32,7 @@ function repository(overrides: Partial<NotificationRepository> = {}): Notificati
 }
 
 test('lists bounded localized notifications with unread count and safe links', async () => {
-  const service = createNotificationService({ repository: repository() });
+  const service = createNotificationService({ isActiveAccount, repository: repository() });
   const result = await service.list(claims, { page: '1', limit: '20', unreadOnly: 'true' });
   assert.equal(result.total, 1);
   assert.equal(result.unreadCount, 1);
@@ -44,6 +45,7 @@ test('lists bounded localized notifications with unread count and safe links', a
 test('marks only owned notifications and supports idempotent read-all', async () => {
   let recipient = '';
   const service = createNotificationService({
+    isActiveAccount,
     repository: repository({
       async markRead(recipientId, _id, now) { recipient = recipientId; return { ...source, readAt: now }; },
       async markAllRead(recipientId) { recipient = recipientId; return 0; }
@@ -60,18 +62,32 @@ test('marks only owned notifications and supports idempotent read-all', async ()
 
 test('rejects non-seeker and suspended access without touching the repository', async () => {
   let called = false;
-  const service = createNotificationService({ repository: repository({ async list() { called = true; return { items: [], total: 0, unreadCount: 0 }; } }) });
+  const service = createNotificationService({ isActiveAccount, repository: repository({ async list() { called = true; return { items: [], total: 0, unreadCount: 0 }; } }) });
   await assert.rejects(() => service.list({ ...claims, role: 'provider' } as AccessTokenClaims), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN');
   await assert.rejects(() => service.list({ ...claims, status: 'suspended' } as AccessTokenClaims), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN');
   assert.equal(called, false);
-  const missing = createNotificationService({ repository: repository({ async markRead() { return undefined; } }) });
+  const missing = createNotificationService({ isActiveAccount, repository: repository({ async markRead() { return undefined; } }) });
   await assert.rejects(() => missing.markRead(claims, source.id), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_NOT_FOUND');
+});
+
+test('rejects stale claims when the current account state or role no longer matches', async () => {
+  let called = false;
+  const service = createNotificationService({
+    repository: repository({ async list() { called = true; return { items: [], total: 0, unreadCount: 0 }; } }),
+    isActiveAccount: async () => false
+  });
+  await assert.rejects(
+    () => service.list(claims, { page: '1', limit: '20' }),
+    (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN'
+  );
+  assert.equal(called, false);
 });
 
 test('lists and updates only the verified provider audience', async () => {
   let listAudience = '';
   let mutationAudience = '';
   const service = createNotificationService({
+    isActiveAccount,
     repository: repository({
       async list(_recipientId, _query, audience) { listAudience = audience ?? ''; return { items: [{ ...source, audience: 'provider', link: '/provider/notifications' }], total: 1, unreadCount: 1 }; },
       async markRead(_recipientId, _id, now, audience) { mutationAudience = audience ?? ''; return { ...source, audience: 'provider', readAt: now }; },
@@ -97,6 +113,7 @@ test('lists an admin-owned inbox with permission-aware projections and bounded d
   };
   let listAudience = '';
   const service = createNotificationService({
+    isActiveAccount,
     authorization: {
       async authorize(_adminId, permission) { return permission === 'admin:requests.view'; },
       async permissions() { return ['admin:requests.view']; }
@@ -122,6 +139,7 @@ test('filters admin notifications when the source permission is not granted and 
   let called = false;
   let mutated = false;
   const service = createNotificationService({
+    isActiveAccount,
     authorization: { async authorize() { return false; } },
     repository: repository({
       async list() { called = true; return { items: [restricted], total: 1, unreadCount: 1 }; },

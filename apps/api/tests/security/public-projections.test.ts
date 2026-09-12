@@ -64,6 +64,7 @@ test('seeker favorites and notifications expose only explicit recipient/public f
   assertNoForbiddenKeys(favoriteData);
 
   const notifications = createNotificationService({
+    isActiveAccount: async () => true,
     repository: {
       async list() {
         return { items: [{ id, type: 'system', title: localized, readAt: null, createdAt: new Date('2026-08-01T00:00:00.000Z'), internalNotes: 'private', auditLog: { id }, providerDocuments: ['private'], storageKey: 'secret' } as never], total: 1, unreadCount: 1 };

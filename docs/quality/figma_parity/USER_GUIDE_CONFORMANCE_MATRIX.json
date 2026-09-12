@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T11:44:04.718Z",
+  "generatedAt": "2026-09-12T14:37:32.262Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2697,24 +2697,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "seeker"
         ],
         "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "NOT_APPLICABLE"
       },
       "environment": {
         "local": "PARTIAL",
@@ -2725,10 +2725,10 @@
         "section": "#seeker",
         "journeyId": "GUIDE-09"
       },
-      "executionDate": "2026-09-10T12:35:13.289Z",
+      "executionDate": "2026-09-12T14:34:04.488Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
@@ -2739,6 +2739,20 @@
           "remaining": [
             "Run GUIDE-09 and GUIDE-10 on Production after deployment."
           ]
+        },
+        {
+          "path": "docs/quality/guide-runs/notification-recovery-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T14:34:04.488Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T14:33:09.746Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
         }
       ],
       "reviewedSubcases": [
@@ -2746,8 +2760,32 @@
           "case": "networkRetry",
           "check": "notification_filter_offline_retry_without_reload",
           "path": "docs/quality/guide-runs/notification-recovery-local-latest.json",
-          "scope": "Authenticated notifications; Arabic and English on Pixel 5",
-          "verifiedAt": "2026-09-11T11:22:27.894Z"
+          "scope": "Authenticated notifications; Arabic and English on Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-12T14:34:04.488Z"
+        },
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "list_mark_read_and_read_all",
+          "path": "docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "Aggregated real browser/API/MongoDB notification journey",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "anonymous_unknown_query_and_invalid_id_rejected",
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "scope": "Real HTTP with isolated MongoDB",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "read_all_reaches_empty_and_replay_is_stable",
+          "path": "docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "Real browser plus isolated API/MongoDB state verification",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
         },
         {
           "case": "empty",
@@ -2763,8 +2801,43 @@
           "check": "cross_account_notification_hidden_as_404",
           "path": "docs/quality/guide-runs/seeker-account-local-latest.json",
           "verifiedAt": "2026-09-10T12:35:13.289Z"
+        },
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_notification_hidden_and_unchanged",
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "provider_and_admin_denied_seeker_notifications",
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_role_and_session_state_enforced",
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "repeat_and_concurrent_mark_read_preserve_single_timestamp",
+          "path": "docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T14:33:09.746Z"
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      },
+      "applicabilityReview": {
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "NOT_APPLICABLE",
+        "rationale": "Recipient-owned notification read markers are idempotent state flags without an approval workflow or optimistic-version contract."
+      }
     },
     {
       "id": "GUIDE-10",
@@ -4788,7 +4861,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T11:44:04.718Z",
+    "updatedAt": "2026-09-12T14:37:32.262Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
