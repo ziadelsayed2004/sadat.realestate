@@ -98,3 +98,38 @@ test('community controls are labeled and keyboard-accessible across approved loc
   await page.keyboard.press('Tab');
   await expect(page.locator('.a11y-skip-link')).toBeFocused();
 });
+
+test('anonymous community login modal stays inside a full viewport overlay', async ({ page }) => {
+  await page.route('**/api/v1/public/community/posts**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(communityListFixture()) }));
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired' } }) }));
+  await page.goto(`/community?lang=${localeForProject()}`);
+  const opener = page.locator('.public-community__intro button');
+  await opener.click();
+  const dialog = page.locator('.public-community__composer-modal--permission');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('a[href="/auth/login"]')).toBeVisible();
+  const overlay = page.locator('.ui-modal-backdrop');
+  await expect(overlay).toHaveCSS('position', 'fixed');
+  await expect(overlay).toHaveCSS('max-width', 'none');
+  await expect(overlay).toHaveCSS('margin-top', '0px');
+  const viewport = page.viewportSize()!;
+  const bounds = (await overlay.boundingBox())!;
+  expect(Math.abs(bounds.x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(bounds.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(bounds.width - viewport.width)).toBeLessThanOrEqual(1);
+  expect(Math.abs(bounds.height - viewport.height)).toBeLessThanOrEqual(1);
+  const modal = (await dialog.boundingBox())!;
+  expect(modal.y).toBeGreaterThanOrEqual(0);
+  expect(modal.y + modal.height).toBeLessThanOrEqual(viewport.height);
+  expect(Math.abs(modal.x + modal.width / 2 - viewport.width / 2)).toBeLessThanOrEqual(2);
+  await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+  await page.screenshot({ path: test.info().outputPath('community-login-modal.png') });
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+  await opener.click();
+  await dialog.locator('.ui-modal__close').click();
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+});

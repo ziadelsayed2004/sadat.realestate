@@ -538,6 +538,12 @@ export function PublicCommunity({
     setAttempt(value => value + 1);
   };
   const modalOpen = composerState !== 'closed';
+  useEffect(() => {
+    if (!modalOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [modalOpen]);
   const composerTitle = composerState === 'permission' || composerState === 'checking'
     ? copy.authenticationRequired
     : getCommunityPresentationCopy(locale).composerTitle;
