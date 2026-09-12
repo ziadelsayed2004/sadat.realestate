@@ -1,5 +1,5 @@
 {
-  "commit": "e0f88c5f09dbd6b05ed4f71e0d650a9720ff8b5d",
+  "commit": "d2f237946e9ca45e7f9cfb8b1e2d1f5da707694c",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-17",
@@ -11,224 +11,2384 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T12:38:30.071Z",
+  "startedAt": "2026-09-12T16:39:42.376Z",
   "status": "PASS_LOCAL",
   "browser": [
     {
       "screen": "PRV-19",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/ads",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "PRV-20",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/commission",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "PRV-21",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/notifications",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "PRV-22-1",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/settings?tab=account",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "PRV-22-2",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/settings?tab=contact",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "PRV-22-3",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/provider/settings?tab=security",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-01",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-02",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/users",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-03",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/property-seekers",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-04",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/providers",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-05",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/verification",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-06",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/account-reports",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-07",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/account-reports?reportId=:id",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-08",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/account-restrictions",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-09",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/property-categories",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-10",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/locations",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-11",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/features",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-12",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/projects",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-13",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/projects/review",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-14",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/properties",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-15",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/properties/review?propertyId=:id",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-16",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/properties/possible-duplicates?propertyId=:id",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-17",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/property-reports",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-33",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/requests",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-34",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/payment-proofs/pending",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-35",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/payment-proofs/approved",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-36",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/calendar",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-37",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/payments/pending-review",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-38",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/ads/financial-review",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-39",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-40",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/new",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-41",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/history",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-42",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/account?accountId=:id",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-43",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/exceptions",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-44",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/exceptions/new",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
     },
     {
       "screen": "ADM-45",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
       "route": "/admin/commissions/confirmations",
-      "innerWidth": 402,
-      "scrollWidth": 402
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-19",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/ads",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-20",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/commission",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-21",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/notifications",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-1",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=account",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-2",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=contact",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-3",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=security",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-01",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-02",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/users",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-03",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-seekers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-04",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/providers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-05",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/verification",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-06",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-07",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-reports?reportId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-08",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-restrictions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-09",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-categories",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-10",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/locations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-11",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/features",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-12",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/projects",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-13",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/projects/review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-14",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-15",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties/review?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-16",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-17",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-33",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/requests",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-34",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/pending",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-35",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/approved",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-36",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/calendar",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-37",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payments/pending-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-38",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/financial-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-39",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-40",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-41",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/history",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-42",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/account?accountId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-43",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-44",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-45",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/confirmations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-19",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/ads",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-20",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/commission",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-21",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/notifications",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-1",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=account",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-2",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=contact",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-3",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=security",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-01",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-02",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/users",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-03",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-seekers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-04",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/providers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-05",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/verification",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-06",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-07",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-reports?reportId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-08",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-restrictions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-09",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-categories",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-10",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/locations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-11",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/features",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-12",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/projects",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-13",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/projects/review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-14",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-15",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties/review?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-16",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-17",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-33",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/requests",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-34",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/pending",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-35",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/approved",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-36",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/calendar",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-37",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payments/pending-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-38",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/financial-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-39",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-40",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-41",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/history",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-42",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/account?accountId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-43",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-44",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-45",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/confirmations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-19",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/ads",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-20",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/commission",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-21",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/notifications",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-22-1",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/settings?tab=account",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-22-2",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/settings?tab=contact",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-22-3",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/provider/settings?tab=security",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-01",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-02",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/users",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-03",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/property-seekers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-04",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/providers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-05",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/verification",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-06",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/account-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-07",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/account-reports?reportId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-08",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/account-restrictions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-09",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/property-categories",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-10",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/locations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-11",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/features",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-12",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/projects",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-13",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/projects/review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-14",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/properties",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-15",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/properties/review?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-16",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-17",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/property-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-33",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/requests",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-34",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/pending",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-35",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/approved",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-36",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/calendar",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-37",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/payments/pending-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-38",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/ads/financial-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-39",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-40",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-41",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/history",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-42",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/account?accountId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-43",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-44",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "ADM-45",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "route": "/admin/commissions/confirmations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "screen": "PRV-19",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/ads",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-20",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/commission",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-21",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/notifications",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-1",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=account",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-2",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=contact",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-22-3",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/provider/settings?tab=security",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-01",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-02",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/users",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-03",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-seekers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-04",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/providers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-05",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/verification",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-06",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-07",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-reports?reportId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-08",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/account-restrictions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-09",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-categories",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-10",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/locations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-11",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/features",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-12",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/projects",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-13",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/projects/review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-14",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-15",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties/review?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-16",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-17",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/property-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-33",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/requests",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-34",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/pending",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-35",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/approved",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-36",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/calendar",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-37",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/payments/pending-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-38",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/ads/financial-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-39",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-40",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-41",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/history",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-42",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/account?accountId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-43",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-44",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "ADM-45",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "route": "/admin/commissions/confirmations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "screen": "PRV-19",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/ads",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-20",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/commission",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-21",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/notifications",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-1",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=account",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-2",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=contact",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "PRV-22-3",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/provider/settings?tab=security",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-01",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-02",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/users",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-03",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-seekers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-04",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/providers",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-05",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/verification",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-06",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-07",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-reports?reportId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-08",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/account-restrictions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-09",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-categories",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-10",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/locations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-11",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/features",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-12",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/projects",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-13",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/projects/review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-14",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-15",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties/review?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-16",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/properties/possible-duplicates?propertyId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-17",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/property-reports",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-33",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/requests",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-34",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/pending",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-35",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payment-proofs/approved",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-36",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/calendar",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-37",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/payments/pending-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-38",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/ads/financial-review",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-39",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-40",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-41",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/history",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-42",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/account?accountId=:id",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-43",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-44",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/exceptions/new",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "screen": "ADM-45",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "route": "/admin/commissions/confirmations",
+      "documentStatus": 200,
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393
     }
   ],
   "http": [
@@ -596,8 +2756,1858 @@
       "method": "GET",
       "path": "/api/v1/admin/commission-confirmations",
       "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 429,
+      "retryAfter": 8
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 429,
+      "retryAfter": 11
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 429,
+      "retryAfter": 11
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/ads",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/commission",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/notifications",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/settings",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 429,
+      "retryAfter": 10
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/overview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/providers",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/users/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-categories",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/locations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/features",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/projects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/properties/possible-duplicates",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/property-reports",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-requests",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-calendar",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payment-proofs",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-financial-review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/ad-ledger",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-policies",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-change-log",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/account-commissions/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-exceptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/commission-confirmations",
+      "status": 200
     }
   ],
+  "cleanup": true,
   "mongo": {
     "collectionsRead": [
       "users",
@@ -612,5 +4622,5 @@
     "Mutation-specific proofs remain in the dedicated API suites.",
     "Repeat these six journeys on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T12:38:59.230Z"
+  "finishedAt": "2026-09-12T16:45:41.230Z"
 }

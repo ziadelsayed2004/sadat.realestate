@@ -572,3 +572,8 @@
 - غطت PRV-01..PRV-14 المطلوبة العربية والإنجليزية على Desktop/Tablet/Mobile؛ كل document status يساوي 200، بلا page errors أو horizontal overflow. نجحت كذلك حدود 401/403/404/409/422، وعزل ملكية مقدم آخر، وحالة الحساب الحالية، وسبب القرار، وثبات الحالة بعد الإرسال المكرر.
 - أثبت `property-guarantees-local-latest.json` أن فشل كتابة الـaudit داخل المعاملة يرجع مراجعة العقار وسجل التدقيق معًا، ثم تنجح إعادة المحاولة بنفس النسخة مرة واحدة. وأثبت `provider-properties-recovery-local-latest.json` empty/filter وoffline/Retry الحقيقيين في 6 تشغيلات مع تنظيف الجلسات.
 - تسجل المصفوفة GUIDE-14 وGUIDE-15 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، ليرتفع الإجمالي المحلي المراجع إلى 18/26 (69.2%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## تحديث الشاشات المتبقية المشتركة — 2026-09-12
+
+- أعيد تشغيل PRV-19..PRV-22-3 وADM-01..ADM-17 وADM-33..ADM-45 على AR/EN × Desktop/Tablet/Pixel 5: نجحت 216/216 زيارة، و442 استجابة API، و0 horizontal overflow. احترم الفاحص أربع استجابات 429 فعلية عبر `RateLimit-Reset` وأعاد الصفحات بعد انتهاء النافذة.
+- أصبح `verify-guide-remaining-surfaces-local.mjs` يحذف الجلسات الجديدة وأي account-report مؤقت أنشأه، وأثبت `cleanup=true`. هذا دليل responsive/success مشترك للرحلات GUIDE-17/18/19/20/23/24، لكنه لا يرفع أي رحلة جديدة إلى `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` قبل استكمال validation/empty/retry/RBAC/current-state/concurrency/audit الخاصة بها.
