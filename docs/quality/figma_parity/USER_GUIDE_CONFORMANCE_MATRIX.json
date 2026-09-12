@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T18:42:32.940Z",
+  "generatedAt": "2026-09-12T09:30:30.909Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1524,7 +1524,7 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-11T18:07:33.647Z",
+      "executionDate": "2026-09-12T08:55:50.358Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1579,6 +1579,14 @@
       },
       "reviewedSubcases": [
         {
+          "case": "success",
+          "evidenceType": "API/MongoDB",
+          "check": "comment_and_reaction_interactions_persist",
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "scope": "Authenticated comment persistence and reaction add/switch/remove through real local HTTP and isolated MongoDB; not browser or Production evidence.",
+          "verifiedAt": "2026-09-12T08:55:50.358Z"
+        },
+        {
           "case": "validation",
           "evidenceType": "Browser/API/MongoDB",
           "check": "invalid_post_blocks_mutation",
@@ -1601,14 +1609,6 @@
           "path": "docs/quality/guide-runs/community-public-recovery-local-latest.json",
           "scope": "Public community feed; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary draft and sessions removed",
           "verifiedAt": "2026-09-11T18:07:33.647Z"
-        },
-        {
-          "case": "success",
-          "evidenceType": "API/MongoDB",
-          "check": "comment_and_reaction_interactions_persist",
-          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
-          "scope": "Authenticated comment persistence and reaction add/switch/remove through real local HTTP and isolated MongoDB; not browser or Production evidence.",
-          "verifiedAt": "2026-09-12T08:55:50.358Z"
         }
       ],
       "reviewedGuarantees": [
@@ -1644,15 +1644,15 @@
         },
         {
           "category": "currentSessionState",
-          "check": "current_account_state_denies_public_community_mutations",
-          "path": "docs/quality/guide-runs/community-account-state-local-latest.json",
-          "verifiedAt": "2026-09-11T11:38:50.951Z"
-        },
-        {
-          "category": "currentSessionState",
           "check": "current_account_state_blocks_interactions",
           "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
           "verifiedAt": "2026-09-12T08:55:50.358Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_state_denies_public_community_mutations",
+          "path": "docs/quality/guide-runs/community-account-state-local-latest.json",
+          "verifiedAt": "2026-09-11T11:38:50.951Z"
         }
       ],
       "evidenceAttachments": [
@@ -1730,8 +1730,8 @@
         "seeker"
       ],
       "preconditions": [
-        "حساب باحث نشط ومسجل الدخول",
-        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+        "بريد إلكتروني يمكنك استقبال رسائل التحقق عليه",
+        "لا تحتاج إلى حساب مسجل مسبقًا لبدء التسجيل"
       ],
       "uiRoutes": [
         "/auth/register/seeker",
@@ -1853,7 +1853,7 @@
         "success": "PARTIAL_EVIDENCE_ATTACHED",
         "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "networkRetry": "PARTIAL_BROWSER_API_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
@@ -1878,19 +1878,11 @@
         "section": "#seeker",
         "journeyId": "GUIDE-05"
       },
-      "executionDate": "2026-09-10T12:40:22.743Z",
+      "executionDate": "2026-09-12T05:36:05.316Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Local counts, empty/retry states, projections and activity navigation reviewed. Full-runtime dashboard account/session authorization still pending, plus Production and separate Figma acceptance.",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
-        {
-          "path": "docs/quality/guide-runs/seeker-overview-recovery-local-latest.json",
-          "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-11T21:55:00.559Z",
-          "environment": "local-real-browser-api-mongodb",
-          "mockedRoutes": false,
-          "faultInjection": "abort initial overview request; no fabricated responses"
-        },
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL_DASHBOARD_ENTRY",
@@ -1904,6 +1896,14 @@
               "mobile_width_without_overflow"
             ]
           }
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-overview-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T21:55:00.559Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false,
+          "faultInjection": "abort initial overview request; no fabricated responses"
         },
         {
           "path": "docs/quality/guide-runs/seeker-overview-counts-local-latest.json",
@@ -2095,7 +2095,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-06"
       },
-      "executionDate": "2026-09-11T17:23:02.463Z",
+      "executionDate": "2026-09-12T09:23:05.503Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -2166,7 +2166,7 @@
         {
           "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-12T09:21:02.122Z",
+          "verifiedAt": "2026-09-12T09:23:05.503Z",
           "environment": "isolated-local-MongoDB-rs0-real-HTTP",
           "mockedRoutes": false,
           "checks": [
@@ -2180,6 +2180,14 @@
         }
       ],
       "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "API/MongoDB",
+          "check": "property_search_create_list_detail_cancel",
+          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
+          "scope": "Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.",
+          "verifiedAt": "2026-09-12T09:23:05.503Z"
+        },
         {
           "case": "empty",
           "evidenceType": "Browser/API/MongoDB",
@@ -2203,14 +2211,6 @@
           "path": "docs/quality/guide-runs/seeker-requests-recovery-local-latest.json",
           "scope": "Seeker requests; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with temporary request and sessions removed",
           "verifiedAt": "2026-09-11T17:31:39.607Z"
-        },
-        {
-          "case": "success",
-          "evidenceType": "API/MongoDB",
-          "check": "property_search_create_list_detail_cancel",
-          "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
-          "scope": "Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.",
-          "verifiedAt": "2026-09-12T09:21:02.122Z"
         }
       ],
       "reviewedGuarantees": [
@@ -2260,13 +2260,13 @@
           "category": "duplicateMutation",
           "check": "duplicate_active_property_search_rejected_without_second_record",
           "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
-          "verifiedAt": "2026-09-12T09:21:02.122Z"
+          "verifiedAt": "2026-09-12T09:23:05.503Z"
         },
         {
           "category": "horizontalAccess",
           "check": "foreign_seeker_detail_hidden",
           "path": "docs/quality/guide-runs/seeker-property-search-local-latest.json",
-          "verifiedAt": "2026-09-12T09:21:02.122Z"
+          "verifiedAt": "2026-09-12T09:23:05.503Z"
         }
       ]
     },
@@ -2501,19 +2501,19 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "duplicateMutation": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED"
+        "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
+        "duplicateMutation": "UNVERIFIED"
       },
       "permissions": {
         "requiredRoles": [
           "seeker",
           "public"
         ],
-        "horizontalAccess": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
-        "currentSessionState": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED",
-        "roleAuthorization": "PARTIAL_HTTP_MONGODB_EVIDENCE_ATTACHED"
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED",
+        "roleAuthorization": "UNVERIFIED"
       },
       "versionAndAudit": {
         "expectedVersion409": "UNVERIFIED",
@@ -2529,11 +2529,36 @@
         "section": "#seeker",
         "journeyId": "GUIDE-08"
       },
-      "executionDate": "2026-09-11T18:41:30.168Z",
+      "executionDate": "2026-09-11T21:53:08.807Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Local functional acceptance reviewed with fresh browser save and accumulated recovery/authorization evidence. Production execution and independent Figma acceptance remain outstanding; project-wide final quality gate is not claimed.",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-11T18:41:30.168Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+          "status": "PASS_LOCAL_FAVORITES",
+          "verifiedAt": "2026-09-10T12:40:22.743Z",
+          "environment": "local",
+          "mockedRoutes": false,
+          "scope": {
+            "journey": "GUIDE-02",
+            "status": "PASS_LOCAL_FAVORITES",
+            "passed": [
+              "browser detail save",
+              "idempotent repeat save",
+              "browser saved-property projection",
+              "browser remove"
+            ],
+            "remaining": "Production verification pending."
+          }
+        },
         {
           "path": "docs/quality/guide-runs/saved-remove-recovery-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
@@ -2568,31 +2593,6 @@
           "verifiedAt": "2026-09-11T19:58:56.101Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
-        },
-        {
-          "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
-          "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-11T18:41:30.168Z",
-          "environment": "local-real-browser-api-mongodb",
-          "mockedRoutes": false
-        },
-        {
-          "path": "docs/quality/guide-runs/guide-04-local-latest.json",
-          "status": "PASS_LOCAL_FAVORITES",
-          "verifiedAt": "2026-09-10T12:40:22.743Z",
-          "environment": "local",
-          "mockedRoutes": false,
-          "scope": {
-            "journey": "GUIDE-02",
-            "status": "PASS_LOCAL_FAVORITES",
-            "passed": [
-              "browser detail save",
-              "idempotent repeat save",
-              "browser saved-property projection",
-              "browser remove"
-            ],
-            "remaining": "Production verification pending."
-          }
         }
       ],
       "reviewedSubcases": [
@@ -2917,8 +2917,8 @@
         "developer_company"
       ],
       "preconditions": [
-        "حساب مقدم عقار نشط ومسجل الدخول",
-        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+        "بريد إلكتروني متاح لاستقبال رمز التحقق",
+        "لا يلزم حساب موجود مسبقًا لبدء التسجيل"
       ],
       "uiRoutes": [
         "/auth/register/provider/type",
@@ -2995,8 +2995,8 @@
         "developer_company"
       ],
       "preconditions": [
-        "حساب مقدم عقار نشط ومسجل الدخول",
-        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+        "تسجيل الدخول إلى حساب مقدم العقار صاحب الطلب",
+        "طلب قابل للاستكمال مع بيانات ومستندات مطلوبة حسب نوع مقدم العقار"
       ],
       "uiRoutes": [
         "/auth/register/provider/documents",
@@ -3072,8 +3072,8 @@
         "developer_company"
       ],
       "preconditions": [
-        "حساب مقدم عقار نشط ومسجل الدخول",
-        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+        "تسجيل الدخول إلى الحساب الذي أرسل الطلب",
+        "وجود طلب تسجيل لمقدم العقار"
       ],
       "uiRoutes": [
         "/provider-application/status",
@@ -4509,7 +4509,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-11T18:42:32.940Z",
+    "updatedAt": "2026-09-12T09:30:30.909Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

@@ -125,6 +125,7 @@ test('apply removes every business record and other account while preserving the
     database_migrations: [{ id: 'migration-1' }],
     sessions: [{ userId: rootId }, { userId: seekerId }],
     properties: [{ _id: new Types.ObjectId(), status: 'published' }],
+    community_reactions: [{ _id: new Types.ObjectId(), userId: seekerId, reaction: 'like' }],
     roles: [{ _id: new Types.ObjectId(), synthetic: true }, { _id: new Types.ObjectId(), name: 'Real role' }],
     admin_settings: [{ namespace: 'platform', values: { enabled: true } }, { namespace: 'demo', seedKey: 'old-demo' }]
   });
@@ -144,6 +145,7 @@ test('apply removes every business record and other account while preserving the
   assert.equal(data.get('database_migrations')?.length, 1);
   assert.equal(data.get('sessions')?.length, 0);
   assert.equal(data.get('properties')?.length, 0);
+  assert.equal(data.get('community_reactions')?.length, 0);
   assert.equal(data.get('roles')?.length, 1);
   assert.equal(data.get('admin_settings')?.length, 1);
   assert.deepEqual(data.get('admin_settings')?.[0]?.values, { enabled: true });

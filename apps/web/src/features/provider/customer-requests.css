@@ -376,6 +376,8 @@
 @media (max-width: 600px) {
   .provider-customer-requests:has(.provider-customer-requests__request-modal) .ui-modal-backdrop {
     inset: 56px 0 64px;
+    inline-size: auto;
+    block-size: auto;
     z-index: 35;
     padding: 16px;
   }

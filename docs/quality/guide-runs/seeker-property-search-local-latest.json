@@ -4,10 +4,10 @@
     "GUIDE-06"
   ],
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "seeker_property_search_1789204861192",
+  "database": "seeker_property_search_1789204984535",
   "mockedRoutes": false,
-  "testedAt": "2026-09-12T09:21:01.243Z",
-  "commit": "d3771d8177cea4093347e7eab841be2342cb8a35",
+  "testedAt": "2026-09-12T09:23:04.591Z",
+  "commit": "f6b25d6fc8bb959d4c51f966faeb1e306f18ec24",
   "worktreeChanges": true,
   "checks": [
     "invalid_budget_range_rejected_without_write",
@@ -26,5 +26,5 @@
     "cancel": 200
   },
   "cleanup": true,
-  "finishedAt": "2026-09-12T09:21:02.122Z"
+  "finishedAt": "2026-09-12T09:23:05.503Z"
 }

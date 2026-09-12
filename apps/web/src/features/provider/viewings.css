@@ -467,6 +467,8 @@
 
   .provider-viewings:has(.provider-viewings__transition-modal) .ui-modal-backdrop {
     inset: 56px 0 64px;
+    inline-size: auto;
+    block-size: auto;
     z-index: 35;
     padding: 16px;
   }

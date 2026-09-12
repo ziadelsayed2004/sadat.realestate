@@ -622,6 +622,8 @@
 
   .provider-advertising:has(.provider-advertising__create-modal) .ui-modal-backdrop {
     inset: 56px 0 64px;
+    inline-size: auto;
+    block-size: auto;
     z-index: 35;
     padding: 16px;
   }

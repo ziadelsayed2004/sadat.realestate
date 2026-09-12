@@ -37,7 +37,7 @@ async function routeSeekerSession(page: import('@playwright/test').Page, allowed
   });
 }
 
-async function routeOverview(page: import('@playwright/test').Page): Promise<void> {
+async function routeOverview(page: import('@playwright/test').Page, locale: 'ar' | 'en'): Promise<void> {
   await page.route('**/api/v1/me', async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer seeker.access.token');
@@ -50,9 +50,9 @@ async function routeOverview(page: import('@playwright/test').Page): Promise<voi
           roleType: 'seeker',
           status: 'verified',
           email: 'seeker@example.com',
-          firstName: 'Mohamed',
-          lastName: 'Ahmed',
-          locale: 'ar'
+          firstName: locale === 'ar' ? 'محمد' : 'Mohamed',
+          lastName: locale === 'ar' ? 'أحمد' : 'Ahmed',
+          locale
         },
         ...successMeta('seeker-profile')
       })
@@ -66,10 +66,10 @@ async function routeOverview(page: import('@playwright/test').Page): Promise<voi
       contentType: 'application/json',
       body: JSON.stringify({
         data: {
-          requests: 2,
+          requests: 7,
           activeRequests: 2,
-          viewings: 1,
-          savedProperties: 7,
+          viewings: 2,
+          savedProperties: 14,
           notifications: 3,
           unreadNotifications: 2,
           recentRequests: [{
@@ -113,7 +113,7 @@ test.describe('SEK-01 Seeker Overview', () => {
   test('loads real summary data through the authenticated API and preserves the protected shell', async ({ page }) => {
     const locale = localeForProject();
     await routeSeekerSession(page);
-    await routeOverview(page);
+    await routeOverview(page, locale);
     const response = await page.goto(`/seeker?lang=${encodeURIComponent(locale)}`);
 
     expect(response?.ok()).toBeTruthy();
@@ -121,14 +121,14 @@ test.describe('SEK-01 Seeker Overview', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('[data-screen-id="SEK-01"]')).toBeVisible();
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
-    await expect(page.getByTestId('seeker-summary-requests')).toContainText('2');
+    await expect(page.getByTestId('seeker-summary-requests')).toContainText('7');
     await expect(page.getByTestId('seeker-summary-active-requests')).toContainText('2');
-    await expect(page.getByTestId('seeker-summary-viewings')).toContainText('1');
-    await expect(page.getByTestId('seeker-summary-saved')).toContainText('7');
+    await expect(page.getByTestId('seeker-summary-viewings')).toContainText('2');
+    await expect(page.getByTestId('seeker-summary-saved')).toContainText('14');
     await expect(page.locator('[data-activity-state="projected"]')).toBeVisible();
     await expect(page.locator('.seeker-overview__activity-panel')).toHaveCount(3);
     await expect(page.locator('.seeker-overview__search-cta')).toBeVisible();
-    await expect(page.locator('.seeker-dashboard__topbar-profile')).toContainText('Mohamed Ahmed');
+    await expect(page.locator('.seeker-dashboard__topbar-profile')).toContainText(locale === 'ar' ? 'محمد أحمد' : 'Mohamed Ahmed');
     await expect(page.locator('.seeker-dashboard__nav a[data-active="true"]')).toHaveAttribute('href', `/seeker?lang=${locale}`);
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|accessToken|refreshToken/u);
 
@@ -137,6 +137,7 @@ test.describe('SEK-01 Seeker Overview', () => {
     await page.locator('.seeker-dashboard__nav a').nth(1).focus();
     await expect(page.locator('.seeker-dashboard__nav a').nth(1)).toBeFocused();
 
+    await page.locator('.seeker-dashboard__nav a').nth(1).evaluate(element => { (element as HTMLElement).blur(); });
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
     await expect(page).toHaveScreenshot(`seeker-overview-${locale}.png`, { fullPage: true });
   });

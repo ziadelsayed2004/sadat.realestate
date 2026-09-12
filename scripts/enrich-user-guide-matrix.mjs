@@ -58,6 +58,17 @@ function hasExecutedEvidence(journey) {
   return Boolean(journey.executionEvidence?.path || journey.executionEvidence?.paths?.length || journey.backendGuaranteesEvidence?.path || journey.evidenceAttachments?.length);
 }
 
+function appendMissingEvidence(generated, existing, identity) {
+  const known = new Set(generated.map(identity));
+  for (const item of existing ?? []) {
+    const key = identity(item);
+    if (!known.has(key)) {
+      generated.push(item);
+      known.add(key);
+    }
+  }
+}
+
 const supplementalRuns = [
   ["docs/quality/guide-runs/admin-requests-recovery-local-latest.json", adminRequestsRecovery],
   ["docs/quality/guide-runs/community-public-recovery-local-latest.json", communityPublicRecovery],
@@ -74,7 +85,6 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
-  ["docs/quality/guide-runs/seeker-property-search-local-latest.json", seekerPropertySearch],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -144,6 +154,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       checks: communityInteractions.checks,
     });
   }
+  if (journey.id === 'GUIDE-06' && seekerPropertySearch?.status === 'PASS_LOCAL'
+    && seekerPropertySearch.mockedRoutes === false && seekerPropertySearch.cleanup === true) {
+    evidenceAttachments.push({
+      path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json',
+      status: seekerPropertySearch.status,
+      verifiedAt: seekerPropertySearch.finishedAt,
+      environment: seekerPropertySearch.environment,
+      mockedRoutes: false,
+      checks: seekerPropertySearch.checks,
+    });
+  }
+  appendMissingEvidence(evidenceAttachments, journey.evidenceAttachments, item => item.path);
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
     status: communityEvidence.status,
@@ -190,7 +212,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['duplicateMutation', 'duplicate_active_property_search_rejected_without_second_record'],
       ['horizontalAccess', 'foreign_seeker_detail_hidden'],
     ]) if (seekerPropertySearch.checks?.includes(check)) reviewedGuarantees.push({ category, check,
-      path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json', verifiedAt: seekerPropertySearch.testedAt });
+      path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json', verifiedAt: seekerPropertySearch.finishedAt });
   }
   if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
     && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
@@ -249,7 +271,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       check: 'property_search_create_list_detail_cancel',
       path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json',
       scope: 'Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.',
-      verifiedAt: seekerPropertySearch.testedAt });
+      verifiedAt: seekerPropertySearch.finishedAt });
   }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
@@ -494,6 +516,10 @@ matrix.journeys = matrix.journeys.map((journey) => {
       });
     }
   }
+  appendMissingEvidence(reviewedSubcases, journey.reviewedSubcases,
+    item => `${item.case ?? ''}|${item.check ?? ''}|${item.path ?? ''}`);
+  appendMissingEvidence(reviewedGuarantees, journey.reviewedGuarantees,
+    item => `${item.category ?? ''}|${item.check ?? ''}|${item.path ?? ''}`);
   return {
     ...hydratedJourney,
     actor: source.audience,
