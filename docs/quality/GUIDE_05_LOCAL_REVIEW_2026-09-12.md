@@ -1,4 +1,4 @@
-﻿# GUIDE-05 local functional evidence review — 2026-09-12
+# GUIDE-05 local functional evidence review — 2026-09-12
 
 Scope: seeker dashboard counts, recent activity, failure/empty presentation, and onward navigation. Global journey status remains PARTIAL; this review does not cover Production or Figma acceptance.
 
@@ -15,6 +15,6 @@ Write authority: request creation uses strict per-type payload schemas. Admin no
 
 Revision relevance: `b684b46` changes overview saved count. Count/browser-empty/projection/navigation evidence thereafter applies to that revision. Earlier retry evidence still proves Web behavior (unchanged); its old nonempty API values are not used to prove new aggregation semantics.
 
-Applicability: overview is read-only. Duplicate mutation, moderator reason and optimistic write-version rollback are not requirements of GET overview; they belong to underlying write journeys. Existing common authentication guard precedes protected APIs; a dashboard-specific old-session/role acceptance check remains unverified by this set.
+Applicability: overview is read-only. Duplicate mutation, moderator reason and optimistic write-version rollback are not requirements of GET overview; they belong to underlying write journeys. Existing common authentication guard precedes protected APIs; dashboard-specific logout is covered by seeker-overview-logout-local-latest.json (full local login/logout/browser); current account/role and expired sessions by seeker-overview-access-local-latest.json (isolated Mongo with real HTTP/runtime guards and locally issued tokens).
 
-Outstanding: dashboard authorization through the full runtime (current account and session); Production deployment verification; Figma SEK-01 approval; final global gates. Do not count this review as a fully closed journey or a complete goal.
+Outstanding: deployed-environment authorization verification; Production deployment verification; Figma SEK-01 approval; final global gates. Do not count this review as a fully closed journey or a complete goal.

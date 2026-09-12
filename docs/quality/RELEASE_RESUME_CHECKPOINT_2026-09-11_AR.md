@@ -417,3 +417,10 @@
 - Tokens are locally issued against real stored sessions; registration/login dependencies are unused throwing stubs. This verifies runtime integration, not the full deployed server or account-transition APIs.
 - Role mutation via Mongoose was initially ignored because roleType is immutable. Corrected fixture mutation at raw collection boundary in the isolated DB and explicitly verified stored role before checking rejection. No production role-change behavior altered.
 - Next: incorporate this and full-runtime logout evidence into GUIDE-05 acceptance review, preserving explicit limits, then prioritize another journey/design gap. Cleanup request remains pending after policy rejection; Demo preserved. No CSS changes.
+
+## 12 September: transition to SEK-01 design lane
+
+- Incorporated logout and current-account guard evidence into GUIDE-05 local review with explicit full-runtime versus isolated-runtime scope.
+- Direct Figma screenshot tool is now available and succeeded for canonical SEK-01 node 6027:3579; persisted and visually reviewed `figma-refresh-2026-09-12.png` with source-review document.
+- Found concrete parity gap beyond historical avatar prerequisite: reference request/viewing cards expose rich property identity/location/price/features, current overview cards use abbreviated IDs/type/timezone. Functional success does not resolve this.
+- Next: load Figma design-to-code skill before get_design_context, inspect matching source and current runtime; implement only supported property data with scoped styles and auth regression safeguards. No invented demo identity, no parity-count inflation. Cleanup still blocked by prior automatic approval review; Demo retained.
