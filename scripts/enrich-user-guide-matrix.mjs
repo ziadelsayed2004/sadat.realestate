@@ -43,6 +43,14 @@ const communityPublicRecovery = await readFile('docs/quality/guide-runs/communit
 const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationBrowser = await readFile('docs/quality/guide-runs/registration-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationGuarantees = await readFile('docs/quality/guide-runs/registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewEmpty = await readFile('docs/quality/guide-runs/seeker-overview-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewProjection = await readFile('docs/quality/guide-runs/seeker-overview-projection-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewNavigation = await readFile('docs/quality/guide-runs/seeker-overview-navigation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewLogout = await readFile('docs/quality/guide-runs/seeker-overview-logout-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const seekerOverviewAccess = await readFile('docs/quality/guide-runs/seeker-overview-access-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -96,6 +104,12 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
   ["docs/quality/guide-runs/registration-browser-local-latest.json", registrationBrowser],
   ["docs/quality/guide-runs/registration-guarantees-local-latest.json", registrationGuarantees],
+  ["docs/quality/guide-runs/seeker-overview-recovery-local-latest.json", seekerOverviewRecovery],
+  ["docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json", seekerOverviewCountBrowser],
+  ["docs/quality/guide-runs/seeker-overview-empty-local-latest.json", seekerOverviewEmpty],
+  ["docs/quality/guide-runs/seeker-overview-navigation-local-latest.json", seekerOverviewNavigation],
+  ["docs/quality/guide-runs/seeker-overview-logout-local-latest.json", seekerOverviewLogout],
+  ["docs/quality/guide-runs/seeker-overview-access-local-latest.json", seekerOverviewAccess],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
   ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
   ["docs/quality/guide-runs/provider-projects-recovery-local-latest.json", providerProjectsRecovery],
@@ -134,6 +148,27 @@ const guide04LocalAcceptanceReady = registrationBrowser?.status === 'PASS_LOCAL'
   && registrationGuarantees.checks?.length === 5
   && registrationGuarantees.mongo?.duplicateGrantRestored === true
   && registrationGuarantees.mongo?.failedRegistrationResidue === 0;
+
+const guide05LocalAcceptanceReady = seekerOverviewRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && seekerOverviewRecovery.mockedRoutes === false && seekerOverviewRecovery.sessionsRemoved === true
+  && seekerOverviewCounts?.status === 'PASS_LOCAL' && seekerOverviewCounts.cleanup === true
+  && seekerOverviewCountBrowser?.status === 'PASS_LOCAL_SUBCASES'
+  && seekerOverviewCountBrowser.mockedRoutes === false && seekerOverviewCountBrowser.sessionsRemoved === true
+  && seekerOverviewCountBrowser.fixturesRemoved === true
+  && seekerOverviewEmpty?.status === 'PASS_LOCAL_SUBCASES'
+  && seekerOverviewEmpty.mockedRoutes === false && seekerOverviewEmpty.sessionsRemoved === true
+  && seekerOverviewProjection?.status === 'PASS_LOCAL' && seekerOverviewProjection.cleanup === true
+  && seekerOverviewNavigation?.status === 'PASS_LOCAL_SUBCASES'
+  && seekerOverviewNavigation.mockedRoutes === false && seekerOverviewNavigation.sessionsRemoved === true
+  && seekerOverviewNavigation.temporaryViewingRemoved === true && seekerOverviewNavigation.temporaryNotificationRemoved === true
+  && seekerOverviewLogout?.status === 'PASS_LOCAL_SUBCASES'
+  && seekerOverviewLogout.mockedRoutes === false && seekerOverviewLogout.sessionsRemoved === true
+  && seekerOverviewAccess?.status === 'PASS_LOCAL' && seekerOverviewAccess.mockedRoutes === false
+  && seekerOverviewAccess.cleanup === true
+  && [seekerOverviewRecovery, seekerOverviewCountBrowser, seekerOverviewEmpty, seekerOverviewNavigation, seekerOverviewLogout]
+    .every(evidence => ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      evidence.runs?.some(run => run.locale === locale && run.device === device
+        && (run.scrollWidth === undefined || run.scrollWidth <= run.innerWidth)))));
 
 const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
   && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
@@ -339,6 +374,21 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'Registration creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
     };
   }
+  if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_05_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      duplicateMutation: 'NOT_APPLICABLE',
+      validation: 'NOT_APPLICABLE',
+      expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE',
+      atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'The seeker overview is an owned read-only aggregate. It has no mutation, decision reason, optimistic-write version, or audit write contract.',
+    };
+  }
   if (journey.id === 'GUIDE-22') {
     hydratedJourney.applicabilityReview = {
       ...(hydratedJourney.applicabilityReview ?? {}),
@@ -432,6 +482,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['currentSessionState', 'logout_invalidates_refresh_session', 'docs/quality/guide-runs/registration-browser-local-latest.json', registrationBrowser.finishedAt],
       ['duplicateMutation', 'grant_replay_and_duplicate_email_rejected_without_duplicate_account', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
       ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_and_profile', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['horizontalAccess', 'foreign_records_excluded_from_owned_counts_and_projections', 'docs/quality/guide-runs/seeker-overview-projection-local-latest.json', seekerOverviewProjection.finishedAt],
+      ['roleAuthorization', 'provider_and_admin_denied_seeker_overview', 'docs/quality/guide-runs/seeker-overview-access-local-latest.json', seekerOverviewAccess.finishedAt],
+      ['currentSessionState', 'current_account_and_session_guard_plus_logout_revocation', 'docs/quality/guide-runs/seeker-overview-access-local-latest.json', seekerOverviewAccess.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
@@ -545,6 +602,23 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'owned_counts_activity_projection_and_navigation',
+      path: 'docs/quality/GUIDE_05_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Real owned summary counts, safe activity projections and onward navigation in Arabic and English on Desktop, Tablet and Pixel 5.',
+      verifiedAt: seekerOverviewNavigation.finishedAt });
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API/MongoDB',
+      check: 'genuinely_empty_account_overview',
+      path: 'docs/quality/guide-runs/seeker-overview-empty-local-latest.json',
+      scope: 'Six zero counters and empty activity panels through real browser/API/MongoDB in both locales and all three viewports.',
+      verifiedAt: seekerOverviewEmpty.finishedAt });
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API/MongoDB',
+      check: 'overview_retry_and_truthful_summary',
+      path: 'docs/quality/guide-runs/seeker-overview-recovery-local-latest.json',
+      scope: 'Aborted initial overview request, explicit retry and real HTTP 200 recovery without navigation or false counts in six locale/device runs.',
+      verifiedAt: seekerOverviewRecovery.finishedAt });
+  }
   if (journey.id === 'GUIDE-04' && guide04LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
       check: 'email_otp_registration_dashboard_rbac_logout_and_cleanup',
@@ -966,12 +1040,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
     cases: {
       success: reviewedSubcases.some(item => item.case === 'success' && item.evidenceType === 'Browser/API/MongoDB')
         ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      validation: reviewedSubcases.some(item => item.case === 'validation' && item.evidenceType === 'Browser/API/MongoDB')
+      validation: hydratedJourney.applicabilityReview?.validation === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : reviewedSubcases.some(item => item.case === 'validation' && item.evidenceType === 'Browser/API/MongoDB')
         ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'Browser/API/MongoDB') ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry' && item.evidenceType === 'Browser/API/MongoDB')
         ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
-      duplicateMutation: guaranteeStatus('duplicateMutation'),
+      duplicateMutation: hydratedJourney.applicabilityReview?.duplicateMutation === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('duplicateMutation'),
     },
     reviewedSubcases,
     reviewedGuarantees,
