@@ -19,7 +19,7 @@ const evidence = {
   scope: 'Request runtime with locally signed tokens and real account-state checks; no browser, login, stored-session revocation, provider subtype lifecycle, projects, viewings or Production coverage.',
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0,
-  checks: [], httpStatuses: {}, cleanup: false
+  checks: [], httpStatuses: {}, atomicAuditRollback: undefined, cleanup: false
 };
 
 let server;
@@ -28,8 +28,15 @@ try {
   const auditModels = createAuditModels(connection);
   await auditModels.AuditLog.init();
   const audit = createMongooseAuditWriter(auditModels);
+  let forceAuditFailure = false;
+  const controlledAudit = {
+    async record(entry, session) {
+      await audit.record(entry, session);
+      if (forceAuditFailure) throw new Error('FORCED_REQUEST_AUDIT_FAILURE');
+    }
+  };
   const rbac = createRbacRuntime(connection, accessTokens, audit);
-  const requests = createRequestRuntime(connection, accessTokens, rbac.service, audit);
+  const requests = createRequestRuntime(connection, accessTokens, rbac.service, controlledAudit);
   const ids = { provider: new Types.ObjectId(), foreignProvider: new Types.ObjectId(), seeker: new Types.ObjectId() };
   await connection.collection('users').insertMany([
     { _id: ids.provider, roleType: 'provider', status: 'verified' },
@@ -114,6 +121,20 @@ try {
     assert.equal(await auditModels.AuditLog.countDocuments({ targetId: requestId }), auditBefore);
   }
   evidence.checks.push('invalid_reason_and_stale_version_leave_request_and_audit_unchanged');
+
+  forceAuditFailure = true;
+  const failedAudit = await call('provider', `/provider/customer-requests/${requestId}/transitions`, {
+    transition: 'contact', reason: 'Forced audit rollback', expectedVersion: 0
+  });
+  forceAuditFailure = false;
+  evidence.httpStatuses.forcedAuditFailure = failedAudit.status;
+  assert.equal(failedAudit.status, 500);
+  const afterAuditFailure = await connection.collection('requests').findOne({ _id: new Types.ObjectId(requestId) });
+  assert.equal(afterAuditFailure.status, 'new');
+  assert.equal(afterAuditFailure.version, 0);
+  assert.equal(await auditModels.AuditLog.countDocuments({ targetId: requestId }), auditBefore);
+  evidence.atomicAuditRollback = { status: 500, requestUnchanged: true, auditDelta: 0 };
+  evidence.checks.push('failed_audit_rolls_back_request_transition_and_audit');
 
   const transitioned = await call('provider', `/provider/customer-requests/${requestId}/transitions`, {
     transition: 'contact', reason: 'Customer contacted successfully', expectedVersion: 0

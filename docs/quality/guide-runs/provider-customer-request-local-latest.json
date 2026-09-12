@@ -4,11 +4,11 @@
     "GUIDE-16"
   ],
   "environment": "isolated-local-MongoDB-rs0-real-HTTP",
-  "database": "provider_customer_request_1789206415971",
+  "database": "provider_customer_request_1789209172648",
   "mockedRoutes": false,
+  "testedAt": "2026-09-12T10:32:52.678Z",
   "scope": "Request runtime with locally signed tokens and real account-state checks; no browser, login, stored-session revocation, provider subtype lifecycle, projects, viewings or Production coverage.",
-  "testedAt": "2026-09-12T09:46:56.003Z",
-  "commit": "877089da8907baf720589b23675fb8eb2609aad2",
+  "commit": "ab11f75f999179a355de0d3ed0e172d9da30f5cb",
   "worktreeChanges": true,
   "checks": [
     "invalid_customer_request_rejected_without_write",
@@ -18,6 +18,7 @@
     "owner_list_and_foreign_provider_isolation",
     "current_provider_account_state_overrides_issued_token",
     "invalid_reason_and_stale_version_leave_request_and_audit_unchanged",
+    "failed_audit_rolls_back_request_transition_and_audit",
     "provider_contact_transition_persists_version_reason_and_audit"
   ],
   "httpStatuses": {
@@ -29,8 +30,14 @@
     "suspended": 403,
     "invalidReason": 400,
     "staleVersion": 409,
+    "forcedAuditFailure": 500,
     "transition": 200
   },
+  "atomicAuditRollback": {
+    "status": 500,
+    "requestUnchanged": true,
+    "auditDelta": 0
+  },
   "cleanup": true,
-  "finishedAt": "2026-09-12T09:46:56.735Z"
+  "finishedAt": "2026-09-12T10:32:53.356Z"
 }

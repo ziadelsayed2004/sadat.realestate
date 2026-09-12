@@ -44,6 +44,7 @@ const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-l
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider-customer-request-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerCustomerRecovery = await readFile('docs/quality/guide-runs/provider-customer-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -86,6 +87,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
+  ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 matrix.schemaVersion = 2;
@@ -263,6 +265,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['roleAuthorization', 'seeker_token_denied_provider_customer_creation'],
       ['decisionReason', 'provider_contact_transition_persists_version_reason_and_audit'],
       ['expectedVersion409', 'invalid_reason_and_stale_version_leave_request_and_audit_unchanged'],
+      ['atomicAuditRollback', 'failed_audit_rolls_back_request_transition_and_audit'],
     ]) if (providerCustomerRequest.checks?.includes(check)) reviewedGuarantees.push({ category, check,
       path: 'docs/quality/guide-runs/provider-customer-request-local-latest.json', verifiedAt: providerCustomerRequest.finishedAt });
   }
@@ -350,6 +353,26 @@ matrix.journeys = matrix.journeys.map((journey) => {
         scope: 'Strict payload validation returned HTTP 400 and left the isolated requests collection empty.',
         verifiedAt: providerCustomerRequest.finishedAt });
     }
+  }
+  if (journey.id === 'GUIDE-16' && providerCustomerRecovery?.status === 'PASS_LOCAL_SUBCASES'
+    && providerCustomerRecovery.mockedRoutes === false && providerCustomerRecovery.cleanup === true
+    && providerCustomerRecovery.temporaryRequestRemoved === true
+    && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      providerCustomerRecovery.runs?.some(run => run.locale === locale && run.device === device
+        && run.checks?.includes('empty_search_clear_recovers_without_navigation')
+        && run.checks?.includes('offline_filter_retry_recovers_without_navigation')
+        && run.checks?.includes('invalid_form_blocks_request')
+        && run.checks?.includes('browser_create_persists_owned_request')
+        && run.scrollWidth <= run.innerWidth)))) {
+    for (const [caseName, check] of [
+      ['success', 'browser_create_persists_owned_request'],
+      ['validation', 'invalid_form_blocks_request'],
+      ['empty', 'empty_search_clear_recovers_without_navigation'],
+      ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
+    ]) reviewedSubcases.push({ case: caseName, evidenceType: 'Browser/API/MongoDB', check,
+      path: 'docs/quality/guide-runs/provider-customer-recovery-local-latest.json',
+      scope: 'Provider customer request list; Arabic and English on Desktop, Tablet and Pixel 5; real API and MongoDB with temporary request/session cleanup.',
+      verifiedAt: providerCustomerRecovery.finishedAt });
   }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true
@@ -613,10 +636,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
         : "No real MongoDB before/after evidence is attached for this complete journey yet.",
     },
     cases: {
-      success: executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      validation: reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      success: reviewedSubcases.some(item => item.case === 'success' && item.evidenceType === 'Browser/API/MongoDB')
+        ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : executed ? "PARTIAL_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      validation: reviewedSubcases.some(item => item.case === 'validation' && item.evidenceType === 'Browser/API/MongoDB')
+        ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'Browser/API/MongoDB') ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
-      networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
+      networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry' && item.evidenceType === 'Browser/API/MongoDB')
+        ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
       duplicateMutation: guaranteeStatus('duplicateMutation'),
     },
     reviewedSubcases,
