@@ -3,35 +3,148 @@
     "GUIDE-01",
     "GUIDE-02"
   ],
-  "environment": "local",
+  "environment": "local-real-browser-api",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T12:40:49.287Z",
-  "status": "PASS_LOCAL_PARTIAL",
-  "transitions": [
-    "homepage_search_to_listing",
-    "rent_filter_applied",
-    "empty_results_reset_without_document_navigation",
-    "two_properties_selected_for_comparison",
-    "published_property_detail",
-    "developer_directory_to_public_profile"
-  ],
-  "http": [
+  "commit": "45f85370367c74b84d8587f13978d11ef220123d",
+  "startedAt": "2026-09-12T15:29:12.364Z",
+  "status": "PASS_LOCAL",
+  "runs": [
     {
-      "path": "/api/v1/public/properties",
-      "status": 200
+      "locale": "ar",
+      "device": "desktop",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "status": "PASS"
     },
     {
-      "path": "/api/v1/public/properties",
-      "status": 200
+      "locale": "ar",
+      "device": "tablet",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "status": "PASS"
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "status": "PASS"
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "status": "PASS"
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 712,
+      "scrollWidth": 712,
+      "status": "PASS"
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "checks": [
+        "homepage_search_to_listing",
+        "filter_updates_results",
+        "offline_filter_retry_recovers_without_navigation",
+        "empty_results_reset_without_navigation",
+        "two_properties_selected_for_comparison",
+        "published_property_detail",
+        "developer_directory_to_public_profile"
+      ],
+      "publicHttpStatuses": [
+        200,
+        200,
+        200
+      ],
+      "pageErrors": 0,
+      "innerWidth": 393,
+      "scrollWidth": 393,
+      "status": "PASS"
     }
   ],
-  "width": {
-    "innerWidth": 402,
-    "scrollWidth": 402
-  },
+  "cleanup": true,
   "remaining": [
-    "Authenticated favorites must be exercised before GUIDE-02 closure.",
-    "Production verification remains pending."
+    "Production verification remains pending while the project stays in Demo mode."
   ],
-  "finishedAt": "2026-09-10T12:40:54.793Z"
+  "finishedAt": "2026-09-12T15:29:45.963Z"
 }

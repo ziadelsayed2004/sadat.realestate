@@ -26,7 +26,6 @@ const seekerSaveRecovery = await readFile('docs/quality/guide-runs/seeker-save-r
 const seekerAccountState = await readFile('docs/quality/guide-runs/seeker-account-state-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const sessionRevocation = await readFile('docs/quality/guide-runs/session-revocation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const sessionBrowser = await readFile('docs/quality/guide-runs/session-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
-const discoveryRecovery = await readFile('docs/quality/guide-runs/discovery-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryValidation = await readFile('docs/quality/guide-runs/discovery-validation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const discoveryPagination = await readFile('docs/quality/guide-runs/discovery-pagination-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const notificationRecovery = await readFile('docs/quality/guide-runs/notification-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -51,6 +50,9 @@ const seekerOverviewProjection = await readFile('docs/quality/guide-runs/seeker-
 const seekerOverviewNavigation = await readFile('docs/quality/guide-runs/seeker-overview-navigation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewLogout = await readFile('docs/quality/guide-runs/seeker-overview-logout-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewAccess = await readFile('docs/quality/guide-runs/seeker-overview-access-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const favoritesAccess = await readFile('docs/quality/guide-runs/favorites-access-http-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const favoritesRemoveRecovery = await readFile('docs/quality/guide-runs/saved-remove-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const favoritesLogout = await readFile('docs/quality/guide-runs/favorites-logout-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -170,6 +172,32 @@ const guide05LocalAcceptanceReady = seekerOverviewRecovery?.status === 'PASS_LOC
       evidence.runs?.some(run => run.locale === locale && run.device === device
         && (run.scrollWidth === undefined || run.scrollWidth <= run.innerWidth)))));
 
+const discoveryLocalAcceptanceReady = discoveryEvidence?.status === 'PASS_LOCAL'
+  && discoveryEvidence.mockedRoutes === false && discoveryEvidence.cleanup === true
+  && discoveryEvidence.runs?.length === 6
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    discoveryEvidence.runs.some(run => run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.pageErrors === 0 && run.scrollWidth <= run.innerWidth
+      && ['homepage_search_to_listing', 'filter_updates_results', 'offline_filter_retry_recovers_without_navigation',
+        'empty_results_reset_without_navigation', 'two_properties_selected_for_comparison', 'published_property_detail',
+        'developer_directory_to_public_profile'].every(check => run.checks?.includes(check)))))
+  && discoveryValidation?.status === 'PASS_LOCAL_API_SUBCASES'
+  && discoveryValidation.mockedRoutes === false && discoveryValidation.checks?.length === 7
+  && discoveryValidation.checks.every(check => check.status === 400)
+  && discoveryValidation.validQueryAfterRejections === 200
+  && discoveryPagination?.status === 'PASS_LOCAL_SUBCASES' && discoveryPagination.mockedRoutes === false
+  && discoveryPagination.runs?.length === 6;
+
+const guide02LocalAcceptanceReady = discoveryLocalAcceptanceReady
+  && guide04Evidence?.status === 'PASS_LOCAL'
+  && guide04Evidence.relatedJourneyEvidence?.status === 'PASS_LOCAL_FAVORITES'
+  && favoritesAccess?.status === 'PASS_LOCAL' && favoritesAccess.mockedRoutes === false && favoritesAccess.cleanup === true
+  && favoritesRemoveRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && favoritesRemoveRecovery.mockedRoutes === false && favoritesRemoveRecovery.sessionsRemoved === true
+  && favoritesRemoveRecovery.fixturesRemoved === true
+  && favoritesLogout?.status === 'PASS_LOCAL_SUBCASES'
+  && favoritesLogout.mockedRoutes === false && favoritesLogout.sessionsRemoved === true;
+
 const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
   && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
   && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(profile =>
@@ -288,6 +316,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
       scope: scopedGuide04Evidence,
     });
   }
+  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+    for (const [path, evidence] of [
+      ['docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess],
+      ['docs/quality/guide-runs/saved-remove-recovery-local-latest.json', favoritesRemoveRecovery],
+      ['docs/quality/guide-runs/favorites-logout-local-latest.json', favoritesLogout],
+    ]) evidenceAttachments.push({ path, status: evidence.status, verifiedAt: evidence.finishedAt,
+      environment: evidence.environment, mockedRoutes: evidence.mockedRoutes });
+  }
   if (["GUIDE-06", "GUIDE-07", "GUIDE-21"].includes(journey.id) && requestGuaranteesEvidence?.status === "PASS_LOCAL") {
     evidenceAttachments.push({
       path: "docs/quality/guide-runs/request-guarantees-local-latest.json",
@@ -387,6 +423,30 @@ matrix.journeys = matrix.journeys.map((journey) => {
       decisionReason: 'NOT_APPLICABLE',
       atomicAuditRollback: 'NOT_APPLICABLE',
       rationale: 'The seeker overview is an owned read-only aggregate. It has no mutation, decision reason, optimistic-write version, or audit write contract.',
+    };
+  }
+  if (journey.id === 'GUIDE-01' && discoveryLocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_01_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      duplicateMutation: 'NOT_APPLICABLE', horizontalAccess: 'NOT_APPLICABLE',
+      currentSessionState: 'NOT_APPLICABLE', roleAuthorization: 'NOT_APPLICABLE',
+      expectedVersion409: 'NOT_APPLICABLE', decisionReason: 'NOT_APPLICABLE', atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'Public discovery reads are intentionally anonymous and do not mutate owned or versioned records.',
+    };
+  }
+  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_02_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      expectedVersion409: 'NOT_APPLICABLE', decisionReason: 'NOT_APPLICABLE', atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'Public property discovery and comparison are reads; saving is an idempotent seeker-owned set operation without a versioned workflow or audit mutation.',
     };
   }
   if (journey.id === 'GUIDE-22') {
@@ -489,6 +549,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['horizontalAccess', 'foreign_records_excluded_from_owned_counts_and_projections', 'docs/quality/guide-runs/seeker-overview-projection-local-latest.json', seekerOverviewProjection.finishedAt],
       ['roleAuthorization', 'provider_and_admin_denied_seeker_overview', 'docs/quality/guide-runs/seeker-overview-access-local-latest.json', seekerOverviewAccess.finishedAt],
       ['currentSessionState', 'current_account_and_session_guard_plus_logout_revocation', 'docs/quality/guide-runs/seeker-overview-access-local-latest.json', seekerOverviewAccess.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['horizontalAccess', 'favorite_records_are_isolated_by_seeker', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
+      ['roleAuthorization', 'provider_admin_and_anonymous_denied_favorite_mutations', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
+      ['currentSessionState', 'logout_revokes_favorite_operations', 'docs/quality/guide-runs/favorites-logout-local-latest.json', favoritesLogout.finishedAt],
+      ['currentSessionState', 'current_account_state_denies_favorite_operations', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
+      ['duplicateMutation', 'duplicate_save_keeps_single_favorite', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
@@ -602,6 +671,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-01' && discoveryLocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API',
+      check: 'homepage_search_filter_and_developer_discovery', path: 'docs/quality/GUIDE_01_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Homepage to property listing, live filtering, and developer directory to profile in both locales across Desktop, Tablet and Pixel 5.',
+      verifiedAt: discoveryEvidence.finishedAt });
+  }
+  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'listing_detail_compare_developer_and_owned_favorite', path: 'docs/quality/GUIDE_02_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Public listing, property detail, two-property comparison and developer profile in six browser configurations plus owned favorite persistence and removal.',
+      verifiedAt: discoveryEvidence.finishedAt });
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
       check: 'owned_counts_activity_projection_and_navigation',
@@ -855,21 +936,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       scope: discoveryValidation.scope, verifiedAt: discoveryValidation.finishedAt });
   }
   if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
-    && discoveryRecovery?.status === 'PASS_LOCAL_SUBCASES' && discoveryRecovery.mockedRoutes === false
-    && ['ar', 'en'].every(locale => discoveryRecovery.runs?.some(run => run.locale === locale && run.status === 'PASS' && run.check === 'offline_filter_retry_recovers_without_navigation'))) {
-    reviewedSubcases.push({ case: 'networkRetry', check: 'offline_filter_retry_recovers_without_navigation',
-      path: 'docs/quality/guide-runs/discovery-recovery-local-latest.json',
-      scope: 'Property listing; Arabic and English on Pixel 5; browser offline fault and real API recovery',
-      verifiedAt: discoveryRecovery.finishedAt });
+    && discoveryLocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API', check: 'offline_filter_retry_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/discovery-local-latest.json',
+      scope: 'Property listing; Arabic and English on Desktop, Tablet and Pixel 5; browser offline fault and real API recovery without navigation',
+      verifiedAt: discoveryEvidence.finishedAt });
   }
   if (["GUIDE-01", "GUIDE-02"].includes(journey.id)
-    && discoveryEvidence?.status === "PASS_LOCAL_PARTIAL"
-    && discoveryEvidence.mockedRoutes === false
-    && discoveryEvidence.transitions?.includes("empty_results_reset_without_document_navigation")) {
+    && discoveryLocalAcceptanceReady) {
     reviewedSubcases.push({
-      case: "empty", check: "empty_results_reset_without_document_navigation",
+      case: "empty", evidenceType: 'Browser/API', check: "empty_results_reset_without_document_navigation",
       path: "docs/quality/guide-runs/discovery-local-latest.json",
-      scope: "Property listing empty search and reset without document navigation",
+      scope: "Property listing empty search and reset without document navigation in both locales on Desktop, Tablet and Pixel 5",
       verifiedAt: discoveryEvidence.finishedAt,
     });
   }
@@ -1055,8 +1133,10 @@ matrix.journeys = matrix.journeys.map((journey) => {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
       horizontalAccess: hydratedJourney.applicabilityReview?.horizontalAccess === 'NOT_APPLICABLE'
         ? 'NOT_APPLICABLE' : guaranteeStatus('horizontalAccess'),
-      currentSessionState: guaranteeStatus('currentSessionState'),
-      roleAuthorization: guaranteeStatus('roleAuthorization'),
+      currentSessionState: hydratedJourney.applicabilityReview?.currentSessionState === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('currentSessionState'),
+      roleAuthorization: hydratedJourney.applicabilityReview?.roleAuthorization === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('roleAuthorization'),
     },
     versionAndAudit: {
       expectedVersion409: hydratedJourney.applicabilityReview?.expectedVersion409 === 'NOT_APPLICABLE'
