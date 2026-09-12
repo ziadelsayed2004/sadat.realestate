@@ -60,7 +60,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
     list: {
       eyebrow: 'مساحة الباحث عن عقار',
       title: 'طلباتي',
-      description: 'تابع طلبات البحث والتواصل والمعاينة التي تخص حسابك فقط.',
+      description: 'سجل طلباتك — الاستفسارات، طلبات التواصل، المعاينات، وطلبات البحث',
       count: 'طلب',
       emptyTitle: 'لا توجد طلبات بعد',
       emptyBody: 'ستظهر طلباتك هنا عند إرسال طلب بحث أو تواصل من حسابك.',
@@ -112,7 +112,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
     list: {
       eyebrow: 'Seeker workspace',
       title: 'My requests',
-      description: 'Track only the property-search, contact, and viewing requests owned by your account.',
+      description: 'Your inquiries, contact requests, viewings, and property-search requests',
       count: 'requests',
       emptyTitle: 'No requests yet',
       emptyBody: 'Your requests will appear here after you send a search or contact request.',

@@ -47,14 +47,29 @@ function dateLabel(value: string, locale: SupportedLocale): string {
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
 }
 
+function requestListDateLabel(value: string, locale: SupportedLocale): string {
+  const intlLocale = locale === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US';
+  return new Intl.DateTimeFormat(intlLocale, { dateStyle: 'medium' }).format(new Date(value));
+}
+
 function shortRequestId(value: string): string {
   return `REQ-${value.slice(-4).toUpperCase()}`;
 }
 
-const requestFilterStatuses: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress', 'resolved', 'cancelled', 'closed'];
+const requestFilterStatuses: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved', 'closed'];
+
+function requestStatusLabel(status: RequestStatus, locale: SupportedLocale): string {
+  if (status === 'scheduled') return locale === 'ar' ? 'معاينة' : 'Viewing';
+  if (status === 'resolved') return locale === 'ar' ? 'مكتمل' : 'Completed';
+  return getSeekerRequestsCopy(locale).statuses[status];
+}
 
 function requestSearchLabel(locale: SupportedLocale): string {
   return locale === 'ar' ? 'البحث في الطلبات' : 'Search requests';
+}
+
+function requestSearchPlaceholder(locale: SupportedLocale): string {
+  return locale === 'ar' ? 'ابحث برقم الطلب أو العقار…' : 'Search by request number or property…';
 }
 
 function requestFilterLabel(locale: SupportedLocale): string {
@@ -107,9 +122,8 @@ function StatePanel({ state, locale, onRetry, detail }: { readonly state: Exclud
 }
 
 function RequestStatusBadge({ status, locale }: { readonly status: RequestStatus; readonly locale: SupportedLocale }) {
-  const copy = getSeekerRequestsCopy(locale);
   const tone = status === 'contacted' || status === 'resolved' ? 'success' : status === 'under_review' || status === 'scheduled' ? 'warning' : status === 'cancelled' || status === 'closed' ? 'neutral' : 'info';
-  return <Badge tone={tone}>{copy.statuses[status]}</Badge>;
+  return <Badge tone={tone}>{requestStatusLabel(status, locale)}</Badge>;
 }
 
 function RequestRow({ request, locale }: { readonly request: RequestData; readonly locale: SupportedLocale }) {
@@ -130,7 +144,7 @@ function RequestRow({ request, locale }: { readonly request: RequestData; readon
         </div>
       </div>
       <span className="seeker-request-row__provider">{propertySource ?? '—'}</span>
-      <time dateTime={request.createdAt}>{dateLabel(request.createdAt, locale)}</time>
+      <time dateTime={request.createdAt}>{requestListDateLabel(request.createdAt, locale)}</time>
       <div className="seeker-request-row__outcome"><RequestStatusBadge status={request.status} locale={locale} /><a className="seeker-request-row__details" href={localeForSeekerPath(locale, `/seeker/requests/${request.id}`)}>{copy.list.details}<span aria-hidden="true">‹</span></a></div>
     </article>
   );
@@ -149,7 +163,7 @@ function RequestListContent({ data, locale, onPageChange }: { readonly data: Req
           {data.items.map(request => <RequestRow key={request.id} request={request} locale={locale} />)}
         </div>
       )}
-      <Pagination page={data.page} pageCount={pageCount} onPageChange={onPageChange} previousLabel={copy.list.previous} nextLabel={copy.list.next} ariaLabel={copy.list.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} />
+      {pageCount > 1 ? <Pagination page={data.page} pageCount={pageCount} onPageChange={onPageChange} previousLabel={copy.list.previous} nextLabel={copy.list.next} ariaLabel={copy.list.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /> : null}
     </>
   );
 }
@@ -299,12 +313,15 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}
         {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1 id="seeker-requests-list-title">{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel">
           <div className="seeker-requests__toolbar">
-            <Input id="seeker-requests-search" type="search" label={requestSearchLabel(locale)} value={search} placeholder={requestSearchLabel(locale)} onChange={event => { setSearch(event.target.value); setPage(1); }} />
+            <Input id="seeker-requests-search" type="search" label={requestSearchLabel(locale)} value={search} placeholder={requestSearchPlaceholder(locale)} onChange={event => { setSearch(event.target.value); setPage(1); }} />
             <span className="seeker-requests__count">{listData.total} {copy.list.count}</span>
           </div>
           <div className="seeker-requests__filters" role="group" aria-label={requestFilterLabel(locale)}>
             <button type="button" className="seeker-requests__filter" data-active={statusFilter === undefined || undefined} aria-pressed={statusFilter === undefined} onClick={() => { setStatusFilter(undefined); setPage(1); }}>{requestAllLabel(locale)}</button>
-            {requestFilterStatuses.map(status => <button key={status} type="button" className="seeker-requests__filter" data-active={statusFilter === status || undefined} aria-pressed={statusFilter === status} onClick={() => { setStatusFilter(current => current === status ? undefined : status); setPage(1); }}>{copy.statuses[status]}</button>)}
+            {requestFilterStatuses.map(status => {
+              const count = statusFilter === undefined && listData.items.length === listData.total ? listData.items.filter(request => request.status === status).length : undefined;
+              return <button key={status} type="button" className="seeker-requests__filter" data-active={statusFilter === status || undefined} aria-pressed={statusFilter === status} onClick={() => { setStatusFilter(current => current === status ? undefined : status); setPage(1); }}>{requestStatusLabel(status, locale)}{count === undefined ? null : <span aria-hidden="true"> ({count})</span>}</button>;
+            })}
           </div>
           <RequestListContent data={listData} locale={locale} onPageChange={setPage} />
         </section></main> : null}

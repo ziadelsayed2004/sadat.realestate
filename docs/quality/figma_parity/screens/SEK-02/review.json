@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "SEK-02",
   "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; the richer canonical row inventory remains externally unavailable and no screenshot masking was used.",
+  "classificationReason": "The official node is directly accessible and its complete seven-row request inventory is now implemented and verified in Arabic and English. Repository-owned layout, responsive behavior, safe projection, filtering, and single-page pagination behavior pass; strict closure still requires an approved seeker avatar/media field in the /me projection.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -57,15 +57,16 @@
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-27",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "observations": [
-      "The request title, search control, status filters, table columns, rows, and pagination are aligned to the canonical desktop content canvas.",
-      "Search interaction emitted the contract-shaped search query and no sensitive serialized field was exposed."
+      "Official node 6027:4046 was read directly through Figma get_design_context; the seven exact request rows, visible statuses, dates, labels, search prompt, and one-page table were reconciled.",
+      "Arabic and English browser captures use the same safe public RequestData projection and expose no internal ownership or authorization fields.",
+      "The single-page pagination control is omitted when pageCount is one, matching the canonical frame."
     ],
     "maskingUsed": false,
     "approvedExternalDifferences": [
-      "The protected fixture exposes three visible rows with total=7; the canonical export contains a richer row inventory that is not available from the approved fixture contract."
+      "The canonical photographic seeker avatar is not represented by an approved avatar/media field in the safe /me profile projection; initials remain the deterministic accessible fallback."
     ]
   },
   "structuredVisualComparison": {
@@ -124,7 +125,7 @@
   "defects": {
     "repository": [],
     "approvedExternal": [
-      "The protected fixture exposes three visible rows with total=7; the canonical export contains a richer row inventory that is not available from the approved fixture contract."
+      "The canonical photographic seeker avatar is not represented by an approved avatar/media field in the safe /me profile projection; initials remain the deterministic accessible fallback."
     ]
   },
   "filesRepaired": [
@@ -140,12 +141,12 @@
   ],
   "coordinatorExternalReconciliation": {
     "status": "BLOCKED_EXTERNAL",
-    "reviewedAt": "2026-08-28T18:36:24.741Z",
-    "owner": "Backend/API contract owner and Product",
-    "missingApprovedPrerequisite": "Approved request-list fixture with the canonical row inventory and totals",
-    "whyNotDerivable": "The writable contract intentionally exposes only safe fixture-shaped rows; additional canonical rows and metadata cannot be inferred without inventing data.",
-    "prerequisite": "Provide an approved contract fixture or API response containing the canonical request inventory and totals.",
-    "nextAction": "Owner supplies the approved fixture/contract, then recapture AR/EN and re-review.",
+    "reviewedAt": "2026-09-13T00:00:00.000Z",
+    "owner": "Profile/API contract owner and Product",
+    "missingApprovedPrerequisite": "Approved seeker avatar/media URL field in the safe /me projection",
+    "whyNotDerivable": "A user identity image cannot be inferred or hard-coded into a live account projection.",
+    "prerequisite": "Approve and expose an optional sanitized avatar URL on /me, or explicitly approve the initials fallback as the product design.",
+    "nextAction": "After the profile media decision, recapture the shell and perform the final strict visual comparison.",
     "repositoryOwnedDefects": []
   },
   "evidencePaths": {
@@ -164,5 +165,13 @@
       "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-en-2026-08-27.json"
     ],
     "interactionA11y": "docs/quality/figma_parity/screens/SEK-02/interaction-a11y-verified-2026-08-27.json"
+  },
+  "sourceAlignedRefresh": {
+    "reviewedAt": "2026-09-13",
+    "sourceNode": "6027:4046",
+    "runtimeAr": "docs/quality/figma_parity/screens/SEK-02/runtime-source-aligned-ar-2026-09-13.png",
+    "runtimeEn": "docs/quality/figma_parity/screens/SEK-02/runtime-source-aligned-en-2026-09-13.png",
+    "focusedTests": "12/12 passed across desktop-ar and desktop-en",
+    "build": "PASS including translations and bundle budgets"
   }
 }

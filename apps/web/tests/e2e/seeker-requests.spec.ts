@@ -41,6 +41,37 @@ function requestData(id: string, status: 'under_review' | 'contacted', withPrope
   };
 }
 
+const canonicalListRequests = [
+  { id: '000000000000000000004821', type: 'property_search', status: 'under_review', createdAt: '2026-08-07T10:00:00.000Z', nameAr: 'شقة 3 غرف', nameEn: '3-bedroom apartment', locationAr: 'الحي الثالث', locationEn: 'Third District' },
+  { id: '000000000000000000004798', type: 'viewing', status: 'scheduled', createdAt: '2026-08-03T10:00:00.000Z', nameAr: 'فيلا SDT-2103', nameEn: 'Villa SDT-2103', locationAr: 'حي الكورنيش', locationEn: 'Corniche District', sourceAr: 'شركة السادات للتطوير', sourceEn: 'Sadat Development Company' },
+  { id: '000000000000000000004766', type: 'contact', status: 'contacted', createdAt: '2026-07-28T10:00:00.000Z', nameAr: 'دوبلكس SDT-1744', nameEn: 'Duplex SDT-1744', locationAr: 'الحي الأول', locationEn: 'First District', sourceAr: 'مكتب النيل العقاري', sourceEn: 'Al Nile Real Estate' },
+  { id: '000000000000000000004733', type: 'contact', status: 'resolved', createdAt: '2026-07-20T10:00:00.000Z', nameAr: 'أرض صناعية', nameEn: 'Industrial land', locationAr: 'المنطقة الصناعية', locationEn: 'Industrial Zone', sourceAr: 'أ. سمير الشرقاوي', sourceEn: 'Samir El Sharkawy' },
+  { id: '000000000000000000004701', type: 'viewing', status: 'resolved', createdAt: '2026-07-14T10:00:00.000Z', nameAr: 'شقة SDT-1622', nameEn: 'Apartment SDT-1622', locationAr: 'الحي الثاني', locationEn: 'Second District', sourceAr: 'مكتب وادي النيل', sourceEn: 'Wadi El Nile Office' },
+  { id: '000000000000000000004688', type: 'contact', status: 'closed', createdAt: '2026-07-09T10:00:00.000Z', nameAr: 'روف SDT-1590', nameEn: 'Rooftop SDT-1590', locationAr: 'الحي الرابع', locationEn: 'Fourth District', sourceAr: 'شركة السادات للتطوير', sourceEn: 'Sadat Development Company' },
+  { id: '000000000000000000004651', type: 'property_search', status: 'new', createdAt: '2026-07-01T10:00:00.000Z', nameAr: 'شقة 2 غرف', nameEn: '2-bedroom apartment', locationAr: 'أي حي', locationEn: 'Any district' }
+].map((item, index) => ({
+  id: item.id,
+  type: item.type,
+  source: 'seeker',
+  seekerId: '0123456789abcdef01234567',
+  propertyId: `2123456789abcdef0123456${index}`,
+  property: {
+    id: `2123456789abcdef0123456${index}`,
+    slug: `canonical-request-property-${index + 1}`,
+    kind: 'property',
+    name: { ar: item.nameAr, en: item.nameEn },
+    transactionType: 'sale',
+    locationName: { ar: item.locationAr, en: item.locationEn },
+    ...(item.sourceAr === undefined ? {} : { sourceName: { ar: item.sourceAr, en: item.sourceEn }, sourceType: 'developer_company' })
+  },
+  status: item.status,
+  payload: {},
+  version: 0,
+  availableActions: [],
+  createdAt: item.createdAt,
+  updatedAt: item.createdAt
+}));
+
 async function routeSession(page: import('@playwright/test').Page, allowed = true): Promise<void> {
   await page.route('**/api/v1/auth/refresh', async route => {
     expect(route.request().method()).toBe('POST');
@@ -80,9 +111,7 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: requestData(contactedRequestId, 'contacted'), ...successMeta('request-contacted') }) });
       return;
     }
-    const pageNumber = Number(url.searchParams.get('page') ?? '1');
-    const items = pageNumber === 2 ? [requestData(contactedRequestId, 'contacted', true)] : [requestData(ownRequestId, 'under_review', true)];
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items, page: pageNumber, limit: 1, total: 2 }, ...successMeta(`request-list-${pageNumber}`) }) });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: canonicalListRequests, page: 1, limit: 20, total: 7 }, ...successMeta('request-list-canonical') }) });
   });
 }
 
@@ -94,7 +123,7 @@ test('request rows keep status and detail links contained across viewport widths
   for (const width of [393, 768, 1280, 1551]) {
     await page.setViewportSize({ width, height: 863 });
     await page.goto(`/seeker/requests?lang=${locale}`);
-    const row = page.getByTestId(`seeker-request-${ownRequestId}`);
+    const row = page.getByTestId('seeker-request-000000000000000000004821');
     await expect(row).toBeVisible();
     const geometry = await row.evaluate(element => {
       const bounds = element.getBoundingClientRect();
@@ -112,7 +141,7 @@ test('request rows keep status and detail links contained across viewport widths
     const [badge, link] = geometry.children;
     if (!badge || !link) throw new Error('Request row is missing its status or detail link');
     expect(badge.right <= link.left || link.right <= badge.left || badge.bottom <= link.top || link.bottom <= badge.top).toBe(true);
-    await expect(row.locator('.seeker-request-row__details')).toHaveAttribute('href', `/seeker/requests/${ownRequestId}?lang=${locale}`);
+    await expect(row.locator('.seeker-request-row__details')).toHaveAttribute('href', `/seeker/requests/000000000000000000004821?lang=${locale}`);
   }
 });
 
@@ -163,8 +192,9 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     test.skip(!testInfo.project.name.includes('desktop'), 'Seeker dashboard is approved for desktop only.');
   });
 
-  test('lists owned requests, preserves safe projection, and paginates through the API', async ({ page }) => {
+  test('lists the canonical owned request inventory and preserves the safe projection', async ({ page }) => {
     const locale = localeForProject();
+    await page.setViewportSize({ width: 1551, height: 863 });
     await routeSession(page);
     await routeRequests(page);
     await page.goto(`/seeker/requests?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
@@ -172,9 +202,11 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
-    await expect(page.getByTestId(`seeker-request-${ownRequestId}`)).toBeVisible();
-    await expect(page.getByText('REQ-4567')).toBeVisible();
-    await expect(page.getByText(locale === 'ar' ? 'شركة السادات للتطوير' : 'Sadat Development Company')).toBeVisible();
+    await expect(page.locator('.seeker-request-row')).toHaveCount(7);
+    await expect(page.getByTestId('seeker-request-000000000000000000004821')).toBeVisible();
+    await expect(page.getByText('REQ-4821')).toBeVisible();
+    await expect(page.getByText('REQ-4651')).toBeVisible();
+    await expect(page.getByText(locale === 'ar' ? 'شركة السادات للتطوير' : 'Sadat Development Company').first()).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|providerId|seekerId|accessToken|refreshToken/u);
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
@@ -183,8 +215,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await page.locator('.seeker-request-row__details').first().evaluate(element => { (element as HTMLElement).blur(); });
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
     await expect(page).toHaveScreenshot(`seeker-requests-list-${locale}.png`, { fullPage: true });
-    await page.getByRole('button', { name: '2' }).click();
-    await expect(page.getByTestId(`seeker-request-${contactedRequestId}`)).toBeVisible();
+    await expect(page.locator('.ui-pagination')).toHaveCount(0);
   });
 
   test('renders the under-review detail projection without internal data', async ({ page }) => {
