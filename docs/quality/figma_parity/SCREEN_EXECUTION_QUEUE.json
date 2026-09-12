@@ -13170,12 +13170,23 @@
           "focusedCheck": "Admin AR/EN accessibility suite and route keyboard assertions",
           "result": "passed",
           "exitCode": 0
+        },
+        "closure20260913": {
+          "reviewPath": "docs/quality/figma_parity/screens/ADM-18/review.json",
+          "review": "docs/quality/figma_parity/screens/ADM-18/source-aligned-review-2026-09-13.md",
+          "runtimeAr": "docs/quality/figma_parity/screens/ADM-18/runtime-source-aligned-ar-2026-09-13.png",
+          "runtimeEn": "docs/quality/figma_parity/screens/ADM-18/runtime-source-aligned-en-2026-09-13.png",
+          "officialClosureEligible": true,
+          "componentTests": "11/11",
+          "functionalBrowser": "10/10",
+          "geometry": "2/2",
+          "visual": "2/2"
         }
       },
-      "classification": "MATERIAL_VISUAL_DIVERGENCE",
-      "processedAt": "2026-08-29T14:38:21.798Z",
+      "classification": "REPAIRED_VERIFIED",
+      "processedAt": "2026-09-13T00:00:00.000Z",
       "notes": [
-        "The exact ADM-18 frame was recovered as 6017:69276 and compared directly at 1577 × 944. Material divergence remains open pending a product decision on the conflicting sidebar authority."
+        "Official nodes 6017:69276 and 6017:69859 were re-read directly. Source-aligned content and geometry pass in rebuilt Desktop AR/EN; Arabic sidebar placement remains the recorded product-authority exception."
       ]
     },
     {

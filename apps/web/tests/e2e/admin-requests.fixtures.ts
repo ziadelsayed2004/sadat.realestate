@@ -31,6 +31,18 @@ export function adminRequestFixtures() {
   ];
 }
 
+function adminRequestSourceFixtures() {
+  const base = adminRequestFixture();
+  return [
+    { ...base, payload: { ...base.payload, customerNameAr: 'محمود إبراهيم', customerNameEn: 'Mahmoud Ibrahim', phone: '01012345678', propertyNameAr: 'شقة فاخرة في الحي الأول', propertyNameEn: 'First district luxury apartment', sourceLabelAr: 'الموقع', sourceLabelEn: 'Website', assigneeNameAr: 'سارة أحمد', assigneeNameEn: 'Sara Ahmed' }, createdAt: '2024-01-15T10:00:00.000Z' },
+    { ...base, id: 'aaaaaaaaaaaaaaaaaaaaaaa1', status: 'under_review', source: 'public', payload: { ...base.payload, customerNameAr: 'نهال عبد الرحمن', customerNameEn: 'Nehal Abdelrahman', phone: '01198765432', propertyNameAr: 'فيلا مستقلة بالمنطقة الراقية', propertyNameEn: 'Detached villa in the premium district', sourceLabelAr: 'واتساب', sourceLabelEn: 'WhatsApp', assigneeNameAr: 'كريم عبد الله', assigneeNameEn: 'Karim Abdallah' }, version: 3, createdAt: '2024-01-14T09:30:00.000Z' },
+    { ...base, id: 'aaaaaaaaaaaaaaaaaaaaaaa2', status: 'contacted', source: 'seeker', payload: { ...base.payload, customerNameAr: 'طارق حسين', customerNameEn: 'Tarek Hussein', phone: '01234567890', propertyNameAr: 'دوبلكس فاخر في الحي الخامس', propertyNameEn: 'Luxury duplex in the fifth district', sourceLabelAr: 'الموقع', sourceLabelEn: 'Website', assigneeNameAr: 'سارة أحمد', assigneeNameEn: 'Sara Ahmed' }, version: 4, createdAt: '2024-01-13T12:15:00.000Z' },
+    { ...base, id: 'aaaaaaaaaaaaaaaaaaaaaaa3', status: 'closed', source: 'provider', payload: { ...base.payload, customerNameAr: 'رانيا مصطفى', customerNameEn: 'Rania Mostafa', phone: '01567890123', propertyNameAr: 'شقة للإيجار في الحي الثالث', propertyNameEn: 'Apartment for rent in the third district', sourceLabelAr: 'إعلان', sourceLabelEn: 'Advertisement', assigneeNameAr: 'كريم عبد الله', assigneeNameEn: 'Karim Abdallah' }, version: 3, createdAt: '2024-01-10T14:45:00.000Z' },
+    { ...base, id: 'aaaaaaaaaaaaaaaaaaaaaaa4', status: 'new', source: 'admin', payload: { ...base.payload, customerNameAr: 'أسامة فريد', customerNameEn: 'Osama Farid', phone: '01011122334', propertyNameAr: 'أرض سكنية في الحي السابع', propertyNameEn: 'Residential land in the seventh district', sourceLabelAr: 'الموقع', sourceLabelEn: 'Website', assigneeName: undefined, assigneeNameAr: undefined, assigneeNameEn: undefined }, version: 5, createdAt: '2024-01-15T08:20:00.000Z' },
+    { ...base, id: 'aaaaaaaaaaaaaaaaaaaaaaa5', status: 'under_review', source: 'seeker', payload: { ...base.payload, customerNameAr: 'مايا جمال', customerNameEn: 'Maya Gamal', phone: '01099887766', propertyNameAr: 'مكتب تجاري في المنطقة الصناعية', propertyNameEn: 'Commercial office in the industrial zone', sourceLabelAr: 'إحالة', sourceLabelEn: 'Referral', assigneeNameAr: 'سارة أحمد', assigneeNameEn: 'Sara Ahmed' }, version: 4, createdAt: '2024-01-12T16:10:00.000Z' }
+  ];
+}
+
 export function adminIssueFixture() {
   return {
     id: adminIssueId,
@@ -97,7 +109,8 @@ export async function routeAdminRequestApis(page: import('@playwright/test').Pag
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { ...adminRequestFixture(), status: 'contacted', version: 3, availableActions: [] }, meta: { requestId: 'admin-request-mutation' } }) });
       return;
     }
-    const items = url.searchParams.get('status') === 'closed' ? [] : adminRequestFixtures();
+    const sourceItems = url.searchParams.get('type') === null ? adminRequestSourceFixtures() : adminRequestFixtures();
+    const items = url.searchParams.get('status') === 'closed' ? [] : sourceItems;
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items, page: 1, limit: 20, total: items.length }, meta: { requestId: 'admin-request-list' } }) });
   });
 }

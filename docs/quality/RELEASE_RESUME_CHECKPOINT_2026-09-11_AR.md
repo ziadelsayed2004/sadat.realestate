@@ -641,4 +641,5 @@
 - كشف `api:audit` نقص مسار تفاعلات المجتمع المنفذ من `API_ENDPOINT_BLUEPRINT.json`. أضيف المسار، ثم نجح التدقيق المتأثر وما يليه: 196/196 blueprint/runtime/policy، OpenAPI، Postman، guide:check، فحص الاعتماديات بصفر ثغرات، وagent pack بصفر أخطاء.
 - نجح Playwright المتأثر لـADM-65/66 بنتيجة 6/6 على Desktop AR/EN، ونجح فحص MongoDB الحي على replica set محلي معزول. حُفظت أدلة Playwright المتتبعة ولم تستخدم إعدادات الجذر التي تحذفها.
 - التقرير الكامل: `docs/quality/RELEASE_FINAL_QUALITY_2026-09-13_AR.md`.
-- بوابة Figma الصارمة أعيد فحصها وتبقى 90/119؛ المفتوح 29: Seeker 10، Provider 17، Admin 2. هذا هو المتبقي المحلي الوحيد الذي يحتاج المصدر الرسمي المباشر. Production verification مؤجل صراحةً، ولم ينفذ launch أو purge.
+- بعد فتح العقدتين الرسميتين `6017:69276` و`6017:69859`، أغلقت ADM-18 كـ`REPAIRED_VERIFIED`: تمت محاذاة العنوان وشريط الفلاتر وزر CSV وأيقونته والشارات والتاريخ وبيانات الصفوف الستة وكثافة الجدول، مع إبقاء الشريط الجانبي العربي يمينًا وفق قرار المنتج المسجل. نجحت 11/11 اختبارات مكونات، و10/10 تدفق متصفح، و2/2 قياس هندسي، و2/2 visual baselines على النسخة المبنية.
+- بوابة Figma الصارمة أصبحت 91/119؛ المفتوح 28: Seeker 10، Provider 17، Admin 1 (ADM-54 بلا owning frame رسمي). Production verification مؤجل صراحةً، ولم ينفذ launch أو purge.

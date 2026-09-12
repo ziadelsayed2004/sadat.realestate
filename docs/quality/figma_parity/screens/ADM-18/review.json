@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "ADM-18",
-  "classification": "MATERIAL_VISUAL_DIVERGENCE",
-  "classificationReason": "The exact source is recovered as Figma node 6017:69276. A fresh 1577 × 944 runtime capture differs materially in shell placement, heading hierarchy, filter density, table density, and populated-state coverage.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Official frame 6017:69276 and content node 6017:69859 were re-read directly; source-aligned content, geometry, deterministic rows, AR/EN visual baselines, and functional flows now pass with the approved Arabic sidebar-direction exception.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4356",
@@ -121,11 +121,13 @@
     "responseProjection": "deterministic Admin request list fixture",
     "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed. Direct visual comparison remains open because the runtime materially diverges from the recovered source."
   },
-  "defects": [
-    "The current RTL shell places navigation on the opposite side from the recovered Arabic source.",
-    "Heading, filter, table, and populated-state density differ materially from the recovered source."
+  "defects": [],
+  "filesRepaired": [
+    "apps/web/src/features/admin_requests/request-export.tsx",
+    "apps/web/src/features/admin_requests/views.tsx",
+    "apps/web/src/features/admin_requests/styles.css",
+    "apps/web/public/assets/canonical/admin/export-csv.svg"
   ],
-  "filesRepaired": [],
   "focusedTests": [
     {
       "name": "Admin filter, page layout and sidebar responsive matrix",
@@ -155,14 +157,14 @@
     "diff": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
     "review": "docs/quality/figma_parity/screens/ADM-18/review.json"
   },
-  "reviewedAt": "2026-09-10T02:17:01.767Z",
+  "reviewedAt": "2026-09-13T00:00:00.000Z",
   "externalBlocker": null,
   "latestRuntimeVerification": {
-    "source": "Fresh Playwright capture, exact geometry assertions, and direct recovered Figma review",
-    "phase": "after",
+    "source": "Direct Figma context plus rebuilt Desktop AR/EN browser verification",
+    "phase": "source-aligned",
     "apiResponseStatus": 200,
-    "officialClosureEligible": false,
-    "reason": "Material heading, filter, table and populated-state density differences remain."
+    "officialClosureEligible": true,
+    "reason": "Source content density, toolbar, CSV action, badges, dates, six-row state, and action geometry are aligned; the Arabic sidebar side is an approved product-authority exception."
   },
   "productAuthorityDecision": {
     "decidedAt": "2026-09-10",
@@ -206,5 +208,17 @@
       "date presentation",
       "directly comparable source/runtime populated state"
     ]
+  },
+  "sourceAlignedReview20260913": {
+    "review": "docs/quality/figma_parity/screens/ADM-18/source-aligned-review-2026-09-13.md",
+    "runtimeAr": "docs/quality/figma_parity/screens/ADM-18/runtime-source-aligned-ar-2026-09-13.png",
+    "runtimeEn": "docs/quality/figma_parity/screens/ADM-18/runtime-source-aligned-en-2026-09-13.png",
+    "sourceNode": "6017:69859",
+    "componentTestsPassed": 11,
+    "functionalBrowserTestsPassed": 10,
+    "geometryTestsPassed": 2,
+    "visualRunsPassed": 2,
+    "buildAndBudgetPassed": true,
+    "officialClosureEligible": true
   }
 }

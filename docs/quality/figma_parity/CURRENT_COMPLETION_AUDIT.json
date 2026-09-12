@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-10T12:55:51.956Z",
+  "generatedAt": "2026-09-12T22:56:16.774Z",
   "authority": {
     "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "inventory": "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
@@ -8,8 +8,8 @@
   },
   "summary": {
     "total": 119,
-    "closed": 90,
-    "open": 29,
+    "closed": 91,
+    "open": 28,
     "bySurface": {
       "auth": {
         "total": 19,
@@ -28,8 +28,8 @@
       },
       "admin": {
         "total": 66,
-        "closed": 64,
-        "open": 2
+        "closed": 65,
+        "open": 1
       }
     }
   },
@@ -1007,11 +1007,9 @@
       "figmaFrameNodeId": "6017:69276",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "MATERIAL_VISUAL_DIVERGENCE",
-      "closureProven": false,
-      "blockers": [
-        "MATERIAL_VISUAL_DIVERGENCE"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "ADM-19",

@@ -48,6 +48,9 @@ test.describe('ADM-18 through ADM-24 request administration', () => {
         viewport: { width: window.innerWidth, scrollWidth: document.documentElement.scrollWidth },
         header: rectangle('.route-shell__header'),
         sidebar: rectangle('.admin-dashboard__navigation'),
+        filters: rectangle('.admin-requests__filters--compact'),
+        exportButton: rectangle('.admin-requests__export .ui-button'),
+        firstBadge: rectangle('.admin-requests__table--requests tbody .admin-requests__badge'),
         tableWrap: rectangle('.admin-requests__table-wrap'),
         actionButton: rectangle('.admin-requests__table--requests tbody td:last-child .ui-button')
       };
@@ -55,9 +58,15 @@ test.describe('ADM-18 through ADM-24 request administration', () => {
     expect(geometry.viewport).toEqual({ width: 1577, scrollWidth: 1577 });
     expect(geometry.header).toMatchObject({ x: 0, y: 0, width: 1577, height: 64 });
     expect(geometry.sidebar).toMatchObject({ x: locale === 'ar' ? 1321 : 0, y: 64, width: 256, height: 880 });
-    expect(geometry.actionButton).toMatchObject({ width: 96, height: 28 });
+    expect(geometry.filters.height).toBe(72);
+    expect(geometry.exportButton).toMatchObject({ width: 117, height: 38 });
+    expect(geometry.firstBadge.height).toBe(22);
+    expect(geometry.actionButton.height).toBe(28);
+    expect(geometry.actionButton.width).toBeCloseTo(locale === 'ar' ? 96.421875 : 96, 2);
     expect(geometry.actionButton.x).toBeGreaterThanOrEqual(geometry.tableWrap.x);
     expect(geometry.actionButton.x + geometry.actionButton.width).toBeLessThanOrEqual(geometry.tableWrap.x + geometry.tableWrap.width);
+    await expect(page.locator('.admin-requests__table--requests tbody tr').first().locator('td').nth(6)).toContainText(locale === 'ar' ? '15 يناير 2024' : 'January 15, 2024');
+    await expect(page.locator('.admin-requests__pagination')).toHaveCount(0);
   });
 
   test('requires an audit reason before submitting an available action', async ({ page }) => {

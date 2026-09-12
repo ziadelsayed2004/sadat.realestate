@@ -110,7 +110,7 @@ describe('Admin request administration contracts and views', () => {
     expect(result.container.querySelector('[data-device-scope="desktop"]')).not.toBeNull();
     expect(screen.getByTestId(`admin-request-${request.id}`)).toBeInTheDocument();
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);
-    fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy(locale).view }));
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'عرض التفاصيل' : getAdminRequestsCopy(locale).view }));
     expect(screen.getByTestId('admin-request-detail')).toBeInTheDocument();
     result.unmount();
   });
