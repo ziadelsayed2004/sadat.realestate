@@ -46,14 +46,15 @@ function requestId(request: Request): string {
 function sendError(request: Request, response: Response, error: unknown): void {
   const seekerError = error instanceof SeekerServiceError ? error : undefined;
   const overviewError = error instanceof SeekerOverviewServiceError ? error : undefined;
+  const domainError = seekerError ?? overviewError;
   const mapped = seekerError
     ? SEEKER_ERROR_MAP[seekerError.code]
     : overviewError
       ? SEEKER_ERROR_MAP[overviewError.code]
       : undefined;
   const body = toApiErrorResponse(
-    mapped
-      ? new ApiContractError(seekerError!.code, mapped.messageKey, mapped.statusCode)
+    mapped && domainError
+      ? new ApiContractError(domainError.code, mapped.messageKey, mapped.statusCode)
       : error,
     requestId(request)
   );

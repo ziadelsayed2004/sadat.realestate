@@ -3,9 +3,21 @@ import test from 'node:test';
 import type { AccessTokenService } from '../../src/modules/auth/crypto.js';
 import type { AuthCookiePolicy } from '../../src/modules/auth/environment.js';
 import type { SeekerService } from '../../src/modules/seeker/service.js';
+import { SeekerOverviewServiceError } from '../../src/modules/seeker/overview.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const token = 'header.payload.signature';
+
+test('returns the overview domain denial as a structured 403', async () => {
+  const server = createApiServer({ database: { isReady: async () => true },
+    seeker: { service, accessTokens, cookie, overview: { async get() { throw new SeekerOverviewServiceError(); } } } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  try {
+    const response = await fetch(`http://127.0.0.1:${address.port}/api/v1/seeker/overview`, { headers: { Authorization: `Bearer ${token}` } });
+    assert.equal(response.status, 403);
+    assert.equal((await response.json() as { error: { code: string } }).error.code, 'SEEKER_OVERVIEW_FORBIDDEN');
+  } finally { await stopApiServer(server); }
+});
 const accessTokens: AccessTokenService = {
   issue: () => token,
   verify(value) {

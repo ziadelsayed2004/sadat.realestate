@@ -404,3 +404,9 @@
 - User requested temporary-file cleanup. Runtime shutdown returned LOCAL_ALREADY_STOPPED. Inventoried generated Playwright reports, temporary browser output, local QA logs and stale status temporary file. Protected Demo Mongo data, uploads, design references, durable evidence and builds from cleanup scope.
 - Automatic approval review rejected the deletion command with `blocked by policy`, without a detailed reason. No deletion executed. Cleanup remains outstanding; do not claim it completed or bypass the rejection.
 - Next functional task: full-runtime overview denial after current-account status/role changes. Logout/session subcase now proven. Runtime stopped; preserve Demo; no CSS changes.
+
+## 12 September: overview error mapping correction
+
+- During account/session authorization review, found `sendError` recognizes SeekerOverviewServiceError but dereferences `seekerError!.code`, which is undefined for that error. Fixed by selecting the actual domain error before constructing the contract response.
+- Added HTTP router regression proving `SEEKER_OVERVIEW_FORBIDDEN` returns structured 403. Focused router/overview tests 5/5, API typecheck and targeted lint passed. Test uses a deliberately throwing overview service; this is not full Mongo current-account coverage.
+- Next remains current-account status/role denial with real account guard and overview runtime. Compile changed API before full-runtime checks. Temporary-file cleanup still outstanding after automatic approval rejection; do not bypass or claim it completed. No CSS changes, Demo retained.
