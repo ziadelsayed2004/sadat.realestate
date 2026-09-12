@@ -116,6 +116,45 @@ test('request rows keep status and detail links contained across viewport widths
   }
 });
 
+test('request details keep cards contained and reflow across viewport widths', async ({ page }) => {
+  test.skip(!test.info().project.name.includes('desktop'));
+  const locale = localeForProject();
+  await routeSession(page);
+  await routeRequests(page);
+  for (const requestId of [ownRequestId, contactedRequestId]) {
+    for (const width of [393, 768, 1280, 1551]) {
+      await page.setViewportSize({ width, height: 863 });
+      await page.goto(`/seeker/requests/${requestId}?lang=${locale}`);
+      const detail = page.locator('.seeker-request-detail');
+      await expect(detail).toBeVisible();
+      const geometry = await detail.evaluate(element => {
+        const rectangle = (selector: string) => {
+          const target = element.querySelector(selector);
+          if (!(target instanceof HTMLElement)) throw new Error(`Missing ${selector}`);
+          const { left, right, top, bottom } = target.getBoundingClientRect();
+          return { left, right, top, bottom };
+        };
+        return {
+          viewport: innerWidth,
+          document: document.documentElement.scrollWidth,
+          detail: rectangle('.seeker-request-detail__grid'),
+          timeline: rectangle('.seeker-request-detail__card--timeline'),
+          summary: rectangle('.seeker-request-detail__card--summary')
+        };
+      });
+      expect(geometry.document).toBeLessThanOrEqual(geometry.viewport);
+      for (const card of [geometry.timeline, geometry.summary]) {
+        expect(card.left).toBeGreaterThanOrEqual(geometry.detail.left);
+        expect(card.right).toBeLessThanOrEqual(geometry.detail.right);
+      }
+      const cardsOverlap = !(geometry.timeline.right <= geometry.summary.left || geometry.summary.right <= geometry.timeline.left || geometry.timeline.bottom <= geometry.summary.top || geometry.summary.bottom <= geometry.timeline.top);
+      expect(cardsOverlap).toBe(false);
+      if (width <= 1100) expect(geometry.summary.top).toBeLessThanOrEqual(geometry.timeline.top);
+      else expect(Math.abs(geometry.summary.top - geometry.timeline.top)).toBeLessThanOrEqual(1);
+    }
+  }
+});
+
 test.describe('SEK-02/03/04 Seeker Requests', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     void page;

@@ -164,5 +164,17 @@
       "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json"
     ],
     "interactionA11y": "docs/quality/figma_parity/screens/SEK-04/interaction-a11y-verified-2026-08-27.json"
+  },
+  "latestRuntimeReview20260912": {
+    "sourceNode": "6027:7928",
+    "reviewed": true,
+    "baseline": "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-ar-desktop-ar-win32.png",
+    "result": "Current compact contacted timeline/summary composition is visually consistent with the recovered source structure; the superseded tall baseline was replaced after direct review.",
+    "responsiveWidths": [393, 768, 1280, 1551],
+    "locales": ["ar", "en"],
+    "focusedTestsPassed": 6,
+    "overflowOrCardIntersection": false,
+    "officialClosureEligible": false,
+    "remainingExternal": "Approved rich property/provider/contact projection"
   }
 }

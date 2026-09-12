@@ -164,5 +164,17 @@
       "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-en-2026-08-27.json"
     ],
     "interactionA11y": "docs/quality/figma_parity/screens/SEK-03/interaction-a11y-verified-2026-08-27.json"
+  },
+  "latestRuntimeReview20260912": {
+    "sourceNode": "6027:7187",
+    "reviewed": true,
+    "baseline": "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-ar-desktop-ar-win32.png",
+    "result": "Current compact timeline/summary composition is visually consistent with the recovered source structure; the superseded tall baseline was replaced after direct review.",
+    "responsiveWidths": [393, 768, 1280, 1551],
+    "locales": ["ar", "en"],
+    "focusedTestsPassed": 6,
+    "overflowOrCardIntersection": false,
+    "officialClosureEligible": false,
+    "remainingExternal": "Approved rich property/provider/avatar/media projection"
   }
 }
