@@ -397,3 +397,10 @@
 - Strengthened activity verifier with a temporary notification linking to an owned request; all six runs now cover notification row -> request detail as well as panel header -> notifications. Temporary notification/viewing and sessions removed.
 - Initial run reached four cases before login rate limit 429. Verifier now retains its successful local password and waits on retry-after within bounded retries; subsequent run passed six cases. Product limiter unchanged.
 - Added GUIDE_05_LOCAL_REVIEW_2026-09-12.md mapping evidence and applicability. Next concrete gap: full-runtime dashboard current-account/session authorization; then Production/Figma remain separate. No CSS changes. Demo remains active.
+
+## Resume after overview logout and requested cleanup
+
+- `verify-seeker-overview-logout-local.mjs` passed six AR/EN desktop/tablet/mobile cases: authenticated overview 200, logout 200, old-token overview 401, browser permission state without summary cards. Sessions cleaned; evidence attached to GUIDE-05.
+- User requested temporary-file cleanup. Runtime shutdown returned LOCAL_ALREADY_STOPPED. Inventoried generated Playwright reports, temporary browser output, local QA logs and stale status temporary file. Protected Demo Mongo data, uploads, design references, durable evidence and builds from cleanup scope.
+- Automatic approval review rejected the deletion command with `blocked by policy`, without a detailed reason. No deletion executed. Cleanup remains outstanding; do not claim it completed or bypass the rejection.
+- Next functional task: full-runtime overview denial after current-account status/role changes. Logout/session subcase now proven. Runtime stopped; preserve Demo; no CSS changes.

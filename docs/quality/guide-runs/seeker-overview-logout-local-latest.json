@@ -1,0 +1,99 @@
+{
+  "status": "PASS_LOCAL_SUBCASES",
+  "journeys": [
+    "GUIDE-05"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "82614499c72cb285b2909c573504a33428f5e5f6",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "authenticatedRead": 200,
+      "logout": 200,
+      "revokedToken": [
+        {
+          "method": "GET",
+          "httpStatus": 401
+        }
+      ],
+      "browserPermissionState": true,
+      "favoriteWrites": 0
+    }
+  ],
+  "startedAt": "2026-09-12T01:33:18.421Z",
+  "sessionsRemoved": true,
+  "favoritesUnchanged": true,
+  "finishedAt": "2026-09-12T01:33:27.198Z"
+}
