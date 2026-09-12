@@ -634,3 +634,11 @@
 - كشف fault injection أن قراءات المستخدم الإداري المتوازية داخل جلسة transaction تتعارض في MongoDB؛ أصبحت القراءات متتابعة داخل المعاملة فقط، وبقيت متوازية خارجها. نجحت 8 ضمانات rollback/retry للمستخدم والدور وربط الأدوار.
 - وصل runtime الإشعارات بخدمة RBAC؛ أصبح Super Admin يرى الإشعار المقيد بالصلاحية، ولا يظهر للمستخدم المحدود غير الحاصل عليها، مع اتساق العدد والقائمة.
 - تسجل المصفوفة GUIDE-26 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي المحلي 26/26 (100%). تبقى الحالات العالمية `PARTIAL` حتى إكمال المصدر الخارجي لـFigma وبوابة الجودة النهائية وProduction verification. لم ينفذ launch أو Demo purge.
+
+## بوابة الجودة النهائية المحلية — 2026-09-13
+
+- نجحت lint وtypecheck واختبارات workspace وAPI بالتغطية واختبارات Web والبناء والترجمات وميزانيات الحزم.
+- كشف `api:audit` نقص مسار تفاعلات المجتمع المنفذ من `API_ENDPOINT_BLUEPRINT.json`. أضيف المسار، ثم نجح التدقيق المتأثر وما يليه: 196/196 blueprint/runtime/policy، OpenAPI، Postman، guide:check، فحص الاعتماديات بصفر ثغرات، وagent pack بصفر أخطاء.
+- نجح Playwright المتأثر لـADM-65/66 بنتيجة 6/6 على Desktop AR/EN، ونجح فحص MongoDB الحي على replica set محلي معزول. حُفظت أدلة Playwright المتتبعة ولم تستخدم إعدادات الجذر التي تحذفها.
+- التقرير الكامل: `docs/quality/RELEASE_FINAL_QUALITY_2026-09-13_AR.md`.
+- بوابة Figma الصارمة أعيد فحصها وتبقى 90/119؛ المفتوح 29: Seeker 10، Provider 17، Admin 2. هذا هو المتبقي المحلي الوحيد الذي يحتاج المصدر الرسمي المباشر. Production verification مؤجل صراحةً، ولم ينفذ launch أو purge.

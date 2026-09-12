@@ -537,6 +537,20 @@
   },
   {
     "method": "POST",
+    "path": "/api/v1/public/community/posts/:postId/reactions",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "verified seeker",
+      "verified provider",
+      "verified admin"
+    ],
+    "purpose": "Set, switch, or remove the authenticated account reaction on a published post",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
     "path": "/api/v1/public/community/posts/:postId/reports",
     "module": "moderation",
     "auth": "access-token",
