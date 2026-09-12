@@ -5,7 +5,7 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "commit": "2c6d9ce1defc265e092fd8645e6cfcadb0ab0179",
+  "commit": "a820b7a245b5328014a2ff6d754e123bbb66f031",
   "runs": [
     {
       "locale": "ar",
@@ -14,6 +14,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -22,7 +23,8 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 1280,
       "scrollWidth": 1280
@@ -34,6 +36,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -42,7 +45,8 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 712,
       "scrollWidth": 712
@@ -54,6 +58,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -62,7 +67,8 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 393,
       "scrollWidth": 393
@@ -74,6 +80,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -82,7 +89,8 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 1280,
       "scrollWidth": 1280
@@ -94,6 +102,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -102,7 +111,8 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 712,
       "scrollWidth": 712
@@ -114,6 +124,7 @@
         "request_activity_to_detail",
         "viewing_activity_to_list",
         "notification_panel_to_list",
+        "notification_row_to_request_detail",
         "locale_preserved",
         "no_horizontal_overflow"
       ],
@@ -122,15 +133,17 @@
       "transitions": [
         "requests",
         "viewings",
-        "notifications"
+        "notifications",
+        "notification-row"
       ],
       "innerWidth": 393,
       "scrollWidth": 393
     }
   ],
-  "startedAt": "2026-09-12T01:28:30.817Z",
+  "startedAt": "2026-09-12T01:30:53.555Z",
   "sessionsRemoved": true,
   "favoritesUnchanged": true,
   "temporaryViewingRemoved": true,
-  "finishedAt": "2026-09-12T01:29:04.390Z"
+  "temporaryNotificationRemoved": true,
+  "finishedAt": "2026-09-12T01:32:16.770Z"
 }

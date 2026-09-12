@@ -1846,7 +1846,7 @@
       "executionDate": "2026-09-10T12:40:22.743Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local counts, empty/retry states, projections and activity navigation reviewed. Full-runtime dashboard account/session authorization still pending, plus Production and separate Figma acceptance.",
       "evidenceAttachments": [
         {
           "path": "docs/quality/guide-runs/seeker-overview-recovery-local-latest.json",
@@ -1899,7 +1899,7 @@
         {
           "path": "docs/quality/guide-runs/seeker-overview-navigation-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-12T01:29:04.390Z",
+          "verifiedAt": "2026-09-12T01:32:16.770Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         }
@@ -1953,7 +1953,8 @@
           "scope": "Valid isolated Mongo rows: newest three requests/notifications, earliest three active viewings, five-record totals, foreign records excluded and top-level internal fields omitted. Does not claim payload allowlisting or browser activity-link navigation.",
           "verifiedAt": "2026-09-12T01:25:37.751Z"
         }
-      ]
+      ],
+      "localEvidenceReview": "docs/quality/GUIDE_05_LOCAL_REVIEW_2026-09-12.md"
     },
     {
       "id": "GUIDE-06",

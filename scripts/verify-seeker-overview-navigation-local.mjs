@@ -31,13 +31,21 @@ const mongo = await mongoose.createConnection(mongoUri).asPromise();
 const browser = await chromium.launch();
 let seeker;
 let temporaryViewingId;
+let temporaryNotificationId;
 let originalSessionIds = [];
 let stage = 'setup';
 
+let acceptedPassword;
 async function login(context, email) {
-  for (const password of passwordCandidates) {
-    const response = await context.request.post(`${base}/api/v1/auth/login`, { data: { email, password } });
-    if (response.status() === 200) return (await response.json()).data;
+  for (const password of acceptedPassword ? [acceptedPassword] : passwordCandidates) {
+    let response;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      response = await context.request.post(`${base}/api/v1/auth/login`, { data: { email, password } });
+      if (response.status() !== 429) break;
+      const seconds = Math.min(60, Math.max(1, Number(response.headers()['retry-after']) || 60));
+      await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    }
+    if (response.status() === 200) { acceptedPassword = password; return (await response.json()).data; }
     assert.equal(response.status(), 401, 'Unexpected local fixture login response');
   }
   throw new Error('No known local seeker password accepted');
@@ -75,6 +83,10 @@ try {
   assert.ok(template);
   temporaryViewingId = new Types.ObjectId();
   await mongo.collection('viewings').insertOne({ ...template, _id: temporaryViewingId, status: 'requested', requestedAt: new Date(Date.now() + 86400000), createdAt: new Date(), updatedAt: new Date() });
+  const request = await mongo.collection('requests').findOne({ seekerId: seeker._id });
+  assert.ok(request);
+  temporaryNotificationId = new Types.ObjectId();
+  await mongo.collection('notifications').insertOne({ _id: temporaryNotificationId, recipientId: seeker._id, type: 'request.updated', title: { ar: 'Navigation check', en: 'Navigation check' }, link: `/seeker/requests/${request._id}`, createdAt: new Date(), readAt: null });
   const initialFavoriteCount = await mongo.collection('favorites').countDocuments({ seekerId: seeker._id });
 
   originalSessionIds = (await mongo.collection('sessions').find({ userId: seeker._id }, { projection: { _id: 1 } }).toArray())
@@ -91,10 +103,11 @@ try {
         for (const [panel, expectedPath, target] of [
           ['requests', /^\/seeker\/requests\/[a-f0-9]{24}$/, '.seeker-request-detail'],
           ['viewings', /^\/seeker\/viewings$/, '.seeker-viewings'],
-          ['notifications', /^\/seeker\/notifications$/, '.seeker-notifications']
+          ['notifications', /^\/seeker\/notifications$/, '.seeker-notifications'],
+          ['notification-row', /^\/seeker\/requests\/[a-f0-9]{24}$/, '.seeker-request-detail']
         ]) {
           await page.goto(`${base}/seeker?lang=${locale}`, { waitUntil: 'networkidle' });
-          const section = page.locator(`.seeker-overview__activity-panel--${panel}`);
+          const section = page.locator(`.seeker-overview__activity-panel--${panel === 'notification-row' ? 'notifications' : panel}`);
           const link = panel === 'notifications' ? section.locator('a').first() : section.locator('.seeker-overview__activity-row').first();
           await expect(link).toBeVisible();
           const href = new URL(await link.getAttribute('href'), base);
@@ -118,7 +131,7 @@ try {
         report.runs.push({
           locale,
           device,
-          checks: ['request_activity_to_detail', 'viewing_activity_to_list', 'notification_panel_to_list', 'locale_preserved', 'no_horizontal_overflow'],
+          checks: ['request_activity_to_detail', 'viewing_activity_to_list', 'notification_panel_to_list', 'notification_row_to_request_detail', 'locale_preserved', 'no_horizontal_overflow'],
           apiHttpStatus: 200,
           browserHttpStatus: 200,
           transitions,
@@ -142,6 +155,11 @@ try {
       await mongo.collection('viewings').deleteOne({ _id: temporaryViewingId, seekerId: seeker._id });
       report.temporaryViewingRemoved = await mongo.collection('viewings').countDocuments({ _id: temporaryViewingId }) === 0;
       assert.ok(report.temporaryViewingRemoved);
+    }
+    if (temporaryNotificationId) {
+      await mongo.collection('notifications').deleteOne({ _id: temporaryNotificationId, recipientId: seeker._id });
+      report.temporaryNotificationRemoved = await mongo.collection('notifications').countDocuments({ _id: temporaryNotificationId }) === 0;
+      assert.ok(report.temporaryNotificationRemoved);
     }
     await removeNewSessions();
   } catch (error) {

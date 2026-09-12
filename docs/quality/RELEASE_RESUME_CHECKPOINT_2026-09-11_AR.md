@@ -391,3 +391,9 @@
 - `verify-seeker-overview-navigation-local.mjs` passed six AR/EN Desktop/Tablet/Pixel 5 runs for request activity -> detail, viewing activity -> viewing list, notification panel header -> notification list. Language preserved; no failed API requests during transitions. Notification row destinations are not claimed by this check.
 - Existing fixture viewings were cancelled/completed, so verifier adds one temporary requested viewing based on an existing local record; it is removed in finally, as are new sessions. Existing favorites unchanged. Initial fixture-selection failures were corrected and are not product failures.
 - Next: review GUIDE-05 accumulated acceptance scope and remaining notification-row target coverage, then move to the next substantive matrix gap. No CSS/product modifications. Demo remains active; local runtime last observed ready, revalidate before reuse.
+
+## 12 September: overview notification row and evidence review
+
+- Strengthened activity verifier with a temporary notification linking to an owned request; all six runs now cover notification row -> request detail as well as panel header -> notifications. Temporary notification/viewing and sessions removed.
+- Initial run reached four cases before login rate limit 429. Verifier now retains its successful local password and waits on retry-after within bounded retries; subsequent run passed six cases. Product limiter unchanged.
+- Added GUIDE_05_LOCAL_REVIEW_2026-09-12.md mapping evidence and applicability. Next concrete gap: full-runtime dashboard current-account/session authorization; then Production/Figma remain separate. No CSS changes. Demo remains active.
