@@ -385,3 +385,9 @@
 - Added regression coverage for contact/viewing/property_search: valid payload accepted, internalNotes/assignedTo/dueAt/creatorId injected into payload rejected. Focused projection tests 2/2 and targeted lint passed.
 - This proves the supported write boundary and existing top-level projection, not arbitrary legacy database sanitization. No concrete nested administrative disclosure found; no application filtering or CSS changed.
 - Next remains actual browser activity-link navigation from GUIDE-05 to request detail/viewings/notifications. Do not repeat completed overview aggregation/empty/retry checks.
+
+## 12 September: overview activity navigation
+
+- `verify-seeker-overview-navigation-local.mjs` passed six AR/EN Desktop/Tablet/Pixel 5 runs for request activity -> detail, viewing activity -> viewing list, notification panel header -> notification list. Language preserved; no failed API requests during transitions. Notification row destinations are not claimed by this check.
+- Existing fixture viewings were cancelled/completed, so verifier adds one temporary requested viewing based on an existing local record; it is removed in finally, as are new sessions. Existing favorites unchanged. Initial fixture-selection failures were corrected and are not product failures.
+- Next: review GUIDE-05 accumulated acceptance scope and remaining notification-row target coverage, then move to the next substantive matrix gap. No CSS/product modifications. Demo remains active; local runtime last observed ready, revalidate before reuse.
