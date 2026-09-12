@@ -1,0 +1,10 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-mongodb",
+  "checks": [
+    "three newest owned requests/notifications; three earliest active owned viewings; foreign records excluded",
+    "five-record counts preserved despite three-row projections; internal top-level fields excluded"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T01:25:37.751Z"
+}

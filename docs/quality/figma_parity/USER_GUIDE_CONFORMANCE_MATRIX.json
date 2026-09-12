@@ -1889,6 +1889,12 @@
           "verifiedAt": "2026-09-12T01:24:13.705Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-overview-projection-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T01:25:37.751Z",
+          "environment": "isolated-local-mongodb"
         }
       ],
       "reviewedSubcases": [
@@ -1925,7 +1931,14 @@
           "verifiedAt": "2026-09-12T01:24:13.705Z"
         }
       ],
-      "reviewedGuarantees": []
+      "reviewedGuarantees": [
+        {
+          "check": "overview_projection_order_limit_ownership",
+          "path": "docs/quality/guide-runs/seeker-overview-projection-local-latest.json",
+          "scope": "Valid isolated Mongo rows: newest three requests/notifications, earliest three active viewings, five-record totals, foreign records excluded and top-level internal fields omitted. Does not claim payload allowlisting or browser activity-link navigation.",
+          "verifiedAt": "2026-09-12T01:25:37.751Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-06",

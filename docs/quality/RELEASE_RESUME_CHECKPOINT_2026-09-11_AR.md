@@ -373,3 +373,8 @@
 - `verify-seeker-overview-empty-local.mjs` passed six real browser/API/MongoDB runs using an existing test account confirmed empty in requests, viewings, favorites and notifications. No existing records were removed to manufacture emptiness.
 - Six API counters zero, three projection arrays empty, four UI summary cards zero and three empty activity panels; no business writes and no overflow. New sessions cleaned. Evidence attached to GUIDE-05.
 - Next: inspect the nonempty overview projection with valid owned request/viewing/notification records, including projection ordering/limits and safe fields. Existing count verifier uses minimal rows and therefore does not prove valid activity projection. Reuse existing matching runtime after checking status; no CSS changes. Demo and launch constraints unchanged.
+
+## 12 September: nonempty overview projection
+
+- `verify-seeker-overview-projection-local.mjs` passed on isolated Mongo with five valid rows per owned collection plus foreign rows. Verified newest three requests/notifications, earliest three active viewings, totals independent of limit, ownership isolation, omission of internalNotes/assignedTo/permission and owner identifiers at top level. Temporary collections removed.
+- Attached scoped evidence to GUIDE-05. Request payload is currently a free-form contract record; this check does not claim arbitrary nested payload filtering. Next inspect request payload write authority and projection policy to determine whether a concrete disclosure exists, and verify activity-link destinations before local acceptance review. No CSS or application code changed.
