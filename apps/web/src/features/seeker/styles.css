@@ -1927,8 +1927,6 @@
     grid-column: 2;
     grid-row: 2;
     box-sizing: border-box;
-    /* width: min(calc(100% - 3rem), 64rem);
-    max-width: 64rem; */
     margin-inline: auto;
     padding: 1.5rem;
   }

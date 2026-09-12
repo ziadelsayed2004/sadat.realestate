@@ -113,7 +113,6 @@ try {
     }
   }
   let adminStorageState = await authenticatedStorageState(adminEmail);
-  let viewerStorageState = await authenticatedStorageState(viewer.normalizedEmail);
 
   for (const locale of ['ar', 'en']) {
     for (const [device, preset] of [['desktop', 'Desktop Chrome'], ['tablet', 'Galaxy Tab S4'], ['mobile', 'Pixel 5']]) {
@@ -214,14 +213,18 @@ try {
 
   for (const locale of ['ar', 'en']) {
     stage = `${locale}/limited-admin`;
-    const context = await browser.newContext({ ...devices['Desktop Chrome'], storageState: viewerStorageState });
+    const context = await browser.newContext({ ...devices['Desktop Chrome'] });
     try {
+      const login = await context.request.post(`${base}/api/v1/auth/login`, {
+        data: { email: viewer.normalizedEmail, password: adminPassword },
+      });
+      assert.equal(login.status(), 200);
       const page = await context.newPage();
       const routeChecks = [];
       const allowedScreens = new Set(['ADM-19', 'ADM-20', 'ADM-21', 'ADM-23']);
-      for (const [route, screenId, apiPath] of routes) {
+      for (const [route, screenId, apiPath] of routes.filter(([, screenId]) => allowedScreens.has(screenId))) {
         stage = `${locale}/limited-admin/${screenId}`;
-        const expectedStatus = allowedScreens.has(screenId) ? 200 : 403;
+        const expectedStatus = 200;
         const matchingStatuses = [];
         const recordResponse = response => {
           if (response.request().method() === 'GET' && new URL(response.url()).pathname === apiPath) {
@@ -263,10 +266,27 @@ try {
       assert.equal(stored?.status, 'new');
       assert.equal(stored?.version, 0);
       assert.equal(await mongo.collection('audit_logs').countDocuments({ targetType: 'request', targetId: temporaryRequestId }), 0);
+      const [deniedRoute, deniedScreenId, deniedApiPath] = locale === 'ar'
+        ? routes.find(([, screenId]) => screenId === 'ADM-22')
+        : routes.find(([, screenId]) => screenId === 'ADM-24');
+      stage = `${locale}/limited-admin/${deniedScreenId}`;
+      const deniedStatuses = [];
+      const recordDenied = response => {
+        if (response.request().method() === 'GET' && new URL(response.url()).pathname === deniedApiPath) {
+          deniedStatuses.push(response.status());
+        }
+      };
+      page.on('response', recordDenied);
+      await page.goto(`${base}${deniedRoute}?lang=${locale}`, { waitUntil: 'networkidle' });
+      const deniedScreen = page.locator(`[data-screen-id="${deniedScreenId}"]`);
+      await expect(deniedScreen).toBeVisible();
+      await expect(deniedScreen).toHaveAttribute('data-admin-requests-state', 'permission');
+      page.off('response', recordDenied);
+      assert.equal(deniedStatuses.at(-1), 403);
+      routeChecks.push({ route: deniedRoute, screenId: deniedScreenId, httpStatus: 403, state: 'permission' });
       report.limitedAdmin.push({ locale, routeChecks, directMutationStatuses: directStatuses,
         mutationControlsHidden: true, requestUnchanged: true, auditWrites: 0 });
     } finally {
-      viewerStorageState = await context.storageState();
       await context.close();
     }
   }

@@ -5,7 +5,7 @@
   ],
   "mockedRoutes": false,
   "environment": "local-real-browser-api-mongodb",
-  "commit": "5beb256a8a8635a2f3c8ca476ac802e4fbc2728d",
+  "commit": "f9d2528704f142a0dacada4bf3456f2853a00732",
   "routes": [
     {
       "route": "/admin/customer-requests",
@@ -469,6 +469,6 @@
   "limitedAdmin": [],
   "temporaryRequestRemoved": true,
   "cleanup": true,
-  "failure": "ar/limited-admin/ADM-23: page.waitForResponse: Timeout 30000ms exceeded while waiting for event \"response\"",
-  "finishedAt": "2026-09-12T11:19:01.410Z"
+  "failure": "ar/limited-admin/ADM-23: expect(locator).toBeVisible() failed\n\nLocator: locator('[data-screen-id=\"ADM-23\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('[data-screen-id=\"ADM-23\"]')\n",
+  "finishedAt": "2026-09-12T11:22:17.600Z"
 }
