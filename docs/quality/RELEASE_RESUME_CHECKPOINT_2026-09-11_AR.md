@@ -524,6 +524,7 @@
 - نجح `verify-seeker-notifications-guarantees-local.mjs` على HTTP وMongoDB حقيقيين في قاعدة معزولة: validation، projection آمن، audience/recipient isolation، 403 للأدوار الخاطئة، 404 للمعرّف الأجنبي، read/read-all/empty، current account/session state، والتكرار المتزامن. تم حذف قاعدة الاختبار بالكامل.
 - نجح `verify-notification-recovery-local.mjs` في 6/6 (AR/EN × Desktop/Tablet/Pixel 5) دون reload أو horizontal overflow، وحذف كل الجلسات التي أنشأها.
 - يجمع `GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md` الأدلة، وتسجل المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء الحالة العالمية `PARTIAL` حتى Figma المستقل والبوابة النهائية وProduction المصرح به. لم ينفذ purge أو launch.
+- بدأت مراجعة فجوة GUIDE-03 التالية دون إعلان إغلاقها: أثبت `community-interactions-local-latest.json` أن reaction واحد فقط يُحفظ لكل حساب أثناء add/switch/remove، وأن تفاعل مستخدم ثانٍ لا يغيّر سجل المستخدم الأول. رُبط ذلك بضماني duplicate mutation وhorizontal access، مع cleanup كامل لقاعدة MongoDB المعزولة. تبقى مراجعة نطاق صفحات المقالات والنبذة والفريق قبل منح الرحلة اعتمادًا محليًا كاملًا.
 
 ## 12 September: homepage and articles narrow-layout recovery
 

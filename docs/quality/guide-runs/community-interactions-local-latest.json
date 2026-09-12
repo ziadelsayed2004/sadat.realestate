@@ -2,11 +2,15 @@
   "status": "PASS_LOCAL",
   "environment": "isolated-local-MongoDB-real-HTTP",
   "mockedRoutes": false,
-  "commit": "7a92354d3bda675d905d3bd89e0a0e773f72833c",
+  "commit": "bb27a6a4643a4d9cb06c0ac9398d1add381ba302",
   "worktreeChanges": true,
   "checks": [
     {
-      "name": "reaction_toggle_switch_and_remove",
+      "name": "reaction_toggle_switch_and_remove_without_duplicate_record",
+      "pass": true
+    },
+    {
+      "name": "reaction_records_are_isolated_by_authenticated_account",
       "pass": true
     },
     {
@@ -19,5 +23,5 @@
     }
   ],
   "cleanup": true,
-  "finishedAt": "2026-09-12T08:55:50.358Z"
+  "finishedAt": "2026-09-12T14:39:31.538Z"
 }

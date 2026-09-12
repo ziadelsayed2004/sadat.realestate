@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T14:37:32.262Z",
+  "generatedAt": "2026-09-12T14:39:56.948Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1500,13 +1500,13 @@
         "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "public"
         ],
-        "horizontalAccess": "UNVERIFIED",
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
         "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
         "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
@@ -1524,7 +1524,7 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-12T08:55:50.358Z",
+      "executionDate": "2026-09-12T14:39:31.538Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -1584,7 +1584,7 @@
           "check": "comment_and_reaction_interactions_persist",
           "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
           "scope": "Authenticated comment persistence and reaction add/switch/remove through real local HTTP and isolated MongoDB; not browser or Production evidence.",
-          "verifiedAt": "2026-09-12T08:55:50.358Z"
+          "verifiedAt": "2026-09-12T14:39:31.538Z"
         },
         {
           "case": "validation",
@@ -1646,7 +1646,19 @@
           "category": "currentSessionState",
           "check": "current_account_state_blocks_interactions",
           "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
-          "verifiedAt": "2026-09-12T08:55:50.358Z"
+          "verifiedAt": "2026-09-12T14:39:31.538Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "reaction_toggle_switch_and_remove_without_duplicate_record",
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "verifiedAt": "2026-09-12T14:39:31.538Z"
+        },
+        {
+          "category": "horizontalAccess",
+          "check": "reaction_records_are_isolated_by_authenticated_account",
+          "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
+          "verifiedAt": "2026-09-12T14:39:31.538Z"
         },
         {
           "category": "currentSessionState",
@@ -1680,12 +1692,16 @@
         {
           "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-12T08:55:50.358Z",
+          "verifiedAt": "2026-09-12T14:39:31.538Z",
           "environment": "isolated-local-MongoDB-real-HTTP",
           "mockedRoutes": false,
           "checks": [
             {
-              "name": "reaction_toggle_switch_and_remove",
+              "name": "reaction_toggle_switch_and_remove_without_duplicate_record",
+              "pass": true
+            },
+            {
+              "name": "reaction_records_are_isolated_by_authenticated_account",
               "pass": true
             },
             {
@@ -4861,7 +4877,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T14:37:32.262Z",
+    "updatedAt": "2026-09-12T14:39:56.948Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

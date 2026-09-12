@@ -24,10 +24,13 @@ try {
   const postId = new Types.ObjectId().toHexString();
   const authorId = new Types.ObjectId().toHexString();
   const userId = new Types.ObjectId();
+  const otherUserId = new Types.ObjectId();
   const stamp = new Date().toISOString();
   await connection.collection('community_posts').insertOne({ id: postId, authorId, title: 'Interaction verification', body: 'Isolated local post', status: 'published', version: 0, likeCount: 0, dislikeCount: 0, createdAt: stamp, updatedAt: stamp });
   await connection.collection('users').insertOne({ _id: userId, roleType: 'seeker', status: 'verified' });
+  await connection.collection('users').insertOne({ _id: otherUserId, roleType: 'seeker', status: 'verified' });
   const token = accessTokens.issue({ id: userId.toHexString(), roleType: 'seeker', status: 'verified' }, new Types.ObjectId().toHexString(), new Date());
+  const otherToken = accessTokens.issue({ id: otherUserId.toHexString(), roleType: 'seeker', status: 'verified' }, new Types.ObjectId().toHexString(), new Date());
   const mutate = (suffix, body, authorization = token) => fetch(`${origin}/api/v1/public/community/posts/${postId}${suffix}`, {
     method: 'POST', headers: { ...(authorization === null ? {} : { authorization: `Bearer ${authorization}` }), 'content-type': 'application/json' }, body: JSON.stringify(body)
   });
@@ -38,12 +41,22 @@ try {
   assert.equal(liked.status, 200, JSON.stringify(likedPayload));
   assert.deepEqual(likedPayload.data, { postId, reaction: 'like', likeCount: 1, dislikeCount: 0 });
   assert.equal(await connection.collection('community_reactions').countDocuments({ postId, userId: userId.toHexString() }), 1);
+  assert.equal(await connection.collection('community_reactions').countDocuments({ postId }), 1);
   const switched = await mutate('/reactions', { reaction: 'dislike' });
   assert.deepEqual((await switched.json()).data, { postId, reaction: 'dislike', likeCount: 0, dislikeCount: 1 });
   const removed = await mutate('/reactions', { reaction: 'dislike' });
   assert.deepEqual((await removed.json()).data, { postId, reaction: null, likeCount: 0, dislikeCount: 0 });
   assert.equal(await connection.collection('community_reactions').countDocuments({ postId, userId: userId.toHexString() }), 0);
-  report.checks.push({ name: 'reaction_toggle_switch_and_remove', pass: true });
+  report.checks.push({ name: 'reaction_toggle_switch_and_remove_without_duplicate_record', pass: true });
+
+  await mutate('/reactions', { reaction: 'like' });
+  await mutate('/reactions', { reaction: 'like' }, otherToken);
+  assert.equal(await connection.collection('community_reactions').countDocuments({ postId }), 2);
+  assert.equal((await connection.collection('community_reactions').findOne({ postId, userId: userId.toHexString() })).reaction, 'like');
+  await mutate('/reactions', { reaction: 'like' }, otherToken);
+  assert.equal(await connection.collection('community_reactions').countDocuments({ postId }), 1);
+  assert.equal((await connection.collection('community_reactions').findOne({ postId, userId: userId.toHexString() })).reaction, 'like');
+  report.checks.push({ name: 'reaction_records_are_isolated_by_authenticated_account', pass: true });
 
   const commentText = 'Persisted isolated community comment';
   const comment = await mutate('/comments', { body: commentText });

@@ -355,6 +355,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
     reviewedGuarantees.push({ category: 'currentSessionState', check: 'current_account_state_blocks_interactions',
       path: 'docs/quality/guide-runs/community-interactions-local-latest.json', verifiedAt: communityInteractions.finishedAt });
   }
+  if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
+    && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true) {
+    for (const [category, check] of [
+      ['duplicateMutation', 'reaction_toggle_switch_and_remove_without_duplicate_record'],
+      ['horizontalAccess', 'reaction_records_are_isolated_by_authenticated_account'],
+    ]) if (communityInteractions.checks?.some(item => item.name === check && item.pass === true)) {
+      reviewedGuarantees.push({ category, check,
+        path: 'docs/quality/guide-runs/community-interactions-local-latest.json',
+        verifiedAt: communityInteractions.finishedAt });
+    }
+  }
   if (journey.id === 'GUIDE-06' && seekerPropertySearch?.status === 'PASS_LOCAL'
     && seekerPropertySearch.mockedRoutes === false && seekerPropertySearch.cleanup === true) {
     for (const [category, check] of [
@@ -425,7 +436,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
   const reviewedSubcases = [];
   if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
     && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true
-    && ['reaction_toggle_switch_and_remove', 'comment_persists_and_returns_in_public_detail'].every(name =>
+    && ['reaction_toggle_switch_and_remove_without_duplicate_record', 'comment_persists_and_returns_in_public_detail'].every(name =>
       communityInteractions.checks?.some(check => check.name === name && check.pass === true))) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'API/MongoDB',
       check: 'comment_and_reaction_interactions_persist',
