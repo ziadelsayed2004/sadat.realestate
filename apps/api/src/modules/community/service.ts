@@ -7,6 +7,8 @@ import {
   communityPostCreateSchema,
   communityPostModerationSchema,
   communityPostPatchSchema,
+  communityReactionRequestSchema,
+  communityReactionSchema,
   communityPostSchema,
   type CommunityComment,
   type CommunityAdminPostListData,
@@ -20,7 +22,9 @@ import {
   type CommunityPublicPost,
   type CommunityPublicPostDetailData,
   type CommunityPublicPostListData,
-  type CommunityPublicListQuery
+  type CommunityPublicListQuery,
+  type CommunityReactionData,
+  type CommunityReactionType
 } from '@sadat-real-estate/contracts';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
@@ -38,6 +42,7 @@ export interface CommunityRepository {
   listComments(postId?: string): Promise<CommunityComment[]>;
   getComment(commentId: string): Promise<CommunityComment | undefined>;
   saveComment(comment: CommunityComment): Promise<void>;
+  setReaction(postId: string, userId: string, reaction: CommunityReactionType, updatedAt: string): Promise<CommunityReactionData>;
 }
 
 export interface CommunityAuthorization {
@@ -53,6 +58,7 @@ export interface CommunityService {
   createComment(claims: AccessTokenClaims, input: unknown): Promise<CommunityComment>;
   listComments(postId: string): Promise<CommunityComment[]>;
   removeComment(claims: AccessTokenClaims, commentId: string): Promise<CommunityComment>;
+  react(claims: AccessTokenClaims, postId: string, input: unknown): Promise<CommunityReactionData>;
   publicList(): Promise<CommunityPost[]>;
   publicFeed(): Promise<Array<{ post: CommunityPost; comments: CommunityComment[] }>>;
   publicPage(query: CommunityPublicListQuery): Promise<CommunityPublicPostListData>;
@@ -64,6 +70,7 @@ export interface CommunityService {
 export function createMemoryCommunityRepository(seed: CommunityPost[] = [], audit?: AuditWriter): CommunityRepository {
   const posts = new Map(seed.map(post => [post.id, post]));
   const comments = new Map<string, CommunityComment>();
+  const reactions = new Map<string, ReturnType<typeof communityReactionSchema.parse>>();
   let mutationQueue: Promise<void> = Promise.resolve();
   return {
     async listPosts() { return [...posts.values()]; },
@@ -84,7 +91,27 @@ export function createMemoryCommunityRepository(seed: CommunityPost[] = [], audi
       return postId === undefined ? values : values.filter(comment => comment.postId === postId);
     },
     async getComment(commentId) { return comments.get(commentId); },
-    async saveComment(comment) { comments.set(comment.id, comment); }
+    async saveComment(comment) { comments.set(comment.id, comment); },
+    async setReaction(postId, userId, reaction, updatedAt) {
+      const currentPost = posts.get(postId);
+      if (!currentPost || currentPost.status !== 'published') throw new Error('INVALID_STATE');
+      const key = `${postId}:${userId}`;
+      const previous = reactions.get(key);
+      const nextReaction = previous?.reaction === reaction ? null : reaction;
+      let likeCount = currentPost.likeCount ?? 0;
+      let dislikeCount = currentPost.dislikeCount ?? 0;
+      if (previous?.reaction === 'like') likeCount = Math.max(0, likeCount - 1);
+      if (previous?.reaction === 'dislike') dislikeCount = Math.max(0, dislikeCount - 1);
+      if (nextReaction === 'like') likeCount += 1;
+      if (nextReaction === 'dislike') dislikeCount += 1;
+      posts.set(postId, communityPostSchema.parse({ ...currentPost, likeCount, dislikeCount }));
+      if (nextReaction === null) reactions.delete(key);
+      else reactions.set(key, communityReactionSchema.parse({
+        id: previous?.id ?? id(), postId, userId, reaction: nextReaction,
+        createdAt: previous?.createdAt ?? updatedAt, updatedAt
+      }));
+      return { postId, reaction: nextReaction, likeCount, dislikeCount };
+    }
   };
 }
 
@@ -230,6 +257,13 @@ export function createCommunityService(
       const updated = { ...comment, status: 'removed' as const };
       await repository.saveComment(updated);
       return updated;
+    },
+    async react(claims, postId, input) {
+      await requireActive(claims);
+      const parsed = communityReactionRequestSchema.parse(input);
+      const post = await repository.getPost(postId);
+      if (!post || post.status !== 'published') throw new Error('NOT_FOUND');
+      return repository.setReaction(postId, claims.sub, parsed.reaction, now());
     },
     async publicList() {
       return (await repository.listPosts())

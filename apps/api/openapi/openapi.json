@@ -8444,6 +8444,61 @@
         }
       }
     },
+    "/api/v1/public/community/posts/{postId}/reactions": {
+      "post": {
+        "operationId": "setCommunityReaction",
+        "summary": "Toggle or switch the authenticated account reaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CommunityObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunityReactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reaction persisted and current aggregate counts returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityReactionSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
+    },
     "/api/v1/public/community/posts/{postId}/reports": {
       "post": {
         "operationId": "createCommunityReport",
@@ -19695,6 +19750,7 @@
         "required": [
           "id",
           "postId",
+          "body",
           "depth",
           "createdAt"
         ],
@@ -19705,6 +19761,14 @@
           "postId": {
             "$ref": "#/components/schemas/CommunityObjectId"
           },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "parentId": {
+            "$ref": "#/components/schemas/CommunityObjectId"
+          },
           "depth": {
             "type": "integer",
             "minimum": 0,
@@ -19713,6 +19777,49 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "CommunityReactionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reaction"
+        ],
+        "properties": {
+          "reaction": {
+            "type": "string",
+            "enum": [
+              "like",
+              "dislike"
+            ]
+          }
+        }
+      },
+      "CommunityReactionData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "postId",
+          "reaction",
+          "likeCount",
+          "dislikeCount"
+        ],
+        "properties": {
+          "postId": {
+            "$ref": "#/components/schemas/CommunityObjectId"
+          },
+          "reaction": {
+            "type": ["string", "null"],
+            "enum": ["like", "dislike", null]
+          },
+          "likeCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "dislikeCount": {
+            "type": "integer",
+            "minimum": 0
           }
         }
       },
@@ -19983,6 +20090,21 @@
             "properties": {
               "data": {
                 "$ref": "#/components/schemas/CommunityCommentMutationData"
+              }
+            }
+          }
+        ]
+      },
+      "CommunityReactionSuccessEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/CommunityReactionData"
               }
             }
           }

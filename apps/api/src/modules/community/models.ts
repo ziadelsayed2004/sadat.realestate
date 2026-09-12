@@ -1,12 +1,14 @@
 import { Schema, type Connection, type Model } from 'mongoose';
-import type { CommunityComment, CommunityPost } from '@sadat-real-estate/contracts';
+import type { CommunityComment, CommunityPost, CommunityReaction } from '@sadat-real-estate/contracts';
 
 export type CommunityPostRecord = CommunityPost;
 export type CommunityCommentRecord = CommunityComment;
+export type CommunityReactionRecord = CommunityReaction;
 
 export interface CommunityModels {
   CommunityPost: Model<CommunityPostRecord>;
   CommunityComment: Model<CommunityCommentRecord>;
+  CommunityReaction: Model<CommunityReactionRecord>;
 }
 
 const postSchema = new Schema<CommunityPostRecord>({
@@ -44,10 +46,24 @@ const commentSchema = new Schema<CommunityCommentRecord>({
 commentSchema.index({ postId: 1, status: 1, createdAt: 1, id: 1 }, { name: 'community_comments_post_visible_order' });
 commentSchema.index({ id: 1 }, { unique: true, name: 'community_comments_id_unique' });
 
+const reactionSchema = new Schema<CommunityReactionRecord>({
+  id: { type: String, required: true, immutable: true, match: /^[a-f0-9]{24}$/ },
+  postId: { type: String, required: true, immutable: true, match: /^[a-f0-9]{24}$/ },
+  userId: { type: String, required: true, immutable: true, match: /^[a-f0-9]{24}$/ },
+  reaction: { type: String, required: true, enum: ['like', 'dislike'] },
+  createdAt: { type: String, required: true, immutable: true },
+  updatedAt: { type: String, required: true }
+}, { collection: 'community_reactions', strict: 'throw', versionKey: false });
+
+reactionSchema.index({ postId: 1, userId: 1 }, { unique: true, name: 'community_reactions_post_user_unique' });
+reactionSchema.index({ id: 1 }, { unique: true, name: 'community_reactions_id_unique' });
+
 export function createCommunityModels(connection: Connection): CommunityModels {
   const CommunityPost = (connection.models.CommunityPost as Model<CommunityPostRecord> | undefined)
     ?? connection.model<CommunityPostRecord>('CommunityPost', postSchema);
   const CommunityComment = (connection.models.CommunityComment as Model<CommunityCommentRecord> | undefined)
     ?? connection.model<CommunityCommentRecord>('CommunityComment', commentSchema);
-  return { CommunityPost, CommunityComment };
+  const CommunityReaction = (connection.models.CommunityReaction as Model<CommunityReactionRecord> | undefined)
+    ?? connection.model<CommunityReactionRecord>('CommunityReaction', reactionSchema);
+  return { CommunityPost, CommunityComment, CommunityReaction };
 }

@@ -40,6 +40,7 @@
     "guide:sync": "npm run guide:generate && npm run guide:matrix",
     "guide:check": "node scripts/verify-client-user-guide.mjs",
     "guide:community:local": "node scripts/verify-guide-community-local.mjs",
+    "guide:community-interactions:local": "node --import tsx scripts/verify-community-interactions-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
     "guide:seeker-account:local": "node scripts/verify-guide-seeker-account-local.mjs",
     "guide:property-lifecycle:local": "node scripts/verify-guide-property-lifecycle-local.mjs",

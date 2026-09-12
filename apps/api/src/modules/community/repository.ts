@@ -1,11 +1,13 @@
 import type { AuditWriter } from '../audit/writer.js';
+import { Types } from 'mongoose';
 import type { CommunityComment, CommunityPost } from '@sadat-real-estate/contracts';
-import { communityCommentSchema, communityPostSchema } from '@sadat-real-estate/contracts';
-import type { CommunityModels, CommunityPostRecord, CommunityCommentRecord } from './models.js';
+import { communityCommentSchema, communityPostSchema, communityReactionSchema } from '@sadat-real-estate/contracts';
+import type { CommunityModels, CommunityPostRecord, CommunityCommentRecord, CommunityReactionRecord } from './models.js';
 import type { CommunityRepository } from './service.js';
 
 const postProjection = { _id: 0, id: 1, authorId: 1, title: 1, body: 1, category: 1, authorName: 1, avatarUrl: 1, imageUrl: 1, likeCount: 1, dislikeCount: 1, status: 1, version: 1, createdAt: 1, updatedAt: 1 } as const;
 const commentProjection = { _id: 0, id: 1, postId: 1, authorId: 1, body: 1, parentId: 1, depth: 1, status: 1, createdAt: 1 } as const;
+const reactionProjection = { _id: 0, id: 1, postId: 1, userId: 1, reaction: 1, createdAt: 1, updatedAt: 1 } as const;
 
 function post(row: CommunityPostRecord): CommunityPost {
   return communityPostSchema.parse(row);
@@ -54,6 +56,43 @@ export function createMongooseCommunityRepository(models: CommunityModels, audit
     },
     async saveComment(value) {
       await models.CommunityComment.replaceOne({ id: value.id }, value, { upsert: true });
+    },
+    async setReaction(postId, userId, reaction, updatedAt) {
+      let outcome: { postId: string; reaction: 'like' | 'dislike' | null; likeCount: number; dislikeCount: number } | undefined;
+      await models.CommunityPost.db.transaction(async session => {
+        const currentPost = await models.CommunityPost.findOne({ id: postId, status: 'published' }, postProjection, { session }).lean();
+        if (currentPost === null) throw new Error('INVALID_STATE');
+        const previousRow = await models.CommunityReaction.findOne({ postId, userId }, reactionProjection, { session }).lean();
+        const previous = previousRow === null ? undefined : communityReactionSchema.parse(previousRow as CommunityReactionRecord);
+        const nextReaction = previous?.reaction === reaction ? null : reaction;
+        const increments = {
+          likeCount: (nextReaction === 'like' ? 1 : 0) - (previous?.reaction === 'like' ? 1 : 0),
+          dislikeCount: (nextReaction === 'dislike' ? 1 : 0) - (previous?.reaction === 'dislike' ? 1 : 0)
+        };
+        if (nextReaction === null) {
+          await models.CommunityReaction.deleteOne({ postId, userId }, { session });
+        } else if (previous === undefined) {
+          await models.CommunityReaction.create([communityReactionSchema.parse({
+            id: new Types.ObjectId().toHexString(), postId, userId,
+            reaction: nextReaction, createdAt: updatedAt, updatedAt
+          })], { session });
+        } else {
+          await models.CommunityReaction.updateOne({ postId, userId }, { $set: { reaction: nextReaction, updatedAt } }, { session });
+        }
+        const updated = await models.CommunityPost.findOneAndUpdate(
+          { id: postId, status: 'published' }, { $inc: increments }, { returnDocument: 'after', session }
+        ).select(postProjection).lean();
+        if (updated === null) throw new Error('INVALID_STATE');
+        const parsedPost = communityPostSchema.parse(updated);
+        outcome = {
+          postId,
+          reaction: nextReaction,
+          likeCount: parsedPost.likeCount ?? 0,
+          dislikeCount: parsedPost.dislikeCount ?? 0
+        };
+      });
+      if (outcome === undefined) throw new Error('INVALID_STATE');
+      return outcome;
     }
   };
 }

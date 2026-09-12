@@ -41,6 +41,27 @@ export const communityCommentCreateRequestSchema = communityCommentCreateSchema.
 export type CommunityComment = z.infer<typeof communityCommentSchema>;
 export type CommunityCommentCreate = z.infer<typeof communityCommentCreateSchema>;
 
+export const communityReactionTypeSchema = z.enum(['like', 'dislike']);
+export const communityReactionSchema = z.object({
+  id,
+  postId: id,
+  userId: id,
+  reaction: communityReactionTypeSchema,
+  createdAt: z.string().datetime({ offset: true }),
+  updatedAt: z.string().datetime({ offset: true })
+}).strict();
+export const communityReactionRequestSchema = z.object({ reaction: communityReactionTypeSchema }).strict();
+export const communityReactionDataSchema = z.object({
+  postId: id,
+  reaction: communityReactionTypeSchema.nullable(),
+  likeCount: z.number().int().nonnegative(),
+  dislikeCount: z.number().int().nonnegative()
+}).strict();
+export const communityReactionSuccessEnvelopeSchema = successEnvelopeSchema(communityReactionDataSchema);
+export type CommunityReactionType = z.infer<typeof communityReactionTypeSchema>;
+export type CommunityReaction = z.infer<typeof communityReactionSchema>;
+export type CommunityReactionData = z.infer<typeof communityReactionDataSchema>;
+
 export const communityPostIdParamsSchema = z.object({ postId: id }).strict();
 export const communityCommentIdParamsSchema = z.object({ commentId: id }).strict();
 export const communityPublicListQuerySchema = z.object({ page, limit }).strict();
@@ -126,7 +147,7 @@ export type CommunityAdminCommentListData = z.infer<typeof communityAdminComment
 
 export const communityPostMutationDataSchema = communityPostSchema.pick({ id: true, status: true, version: true, createdAt: true, updatedAt: true }).strict();
 export const communityPostMutationSuccessEnvelopeSchema = successEnvelopeSchema(communityPostMutationDataSchema);
-export const communityCommentMutationDataSchema = communityCommentSchema.pick({ id: true, postId: true, depth: true, createdAt: true }).strict();
+export const communityCommentMutationDataSchema = communityCommentSchema.pick({ id: true, postId: true, body: true, parentId: true, depth: true, createdAt: true }).strict();
 export const communityCommentMutationSuccessEnvelopeSchema = successEnvelopeSchema(communityCommentMutationDataSchema);
 
 export const communityReportReasonSchema = z.enum(['spam', 'abuse', 'misinformation', 'other']);

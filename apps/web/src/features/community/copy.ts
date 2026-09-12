@@ -11,6 +11,8 @@ export interface CommunityCopy {
   readonly allPosts: string;
   readonly publishedCount: (count: number) => string;
   readonly comments: (count: number) => string;
+  readonly like: string;
+  readonly dislike: string;
   readonly openDiscussion: string;
   readonly closeDiscussion: string;
   readonly postTitle: string;
@@ -20,6 +22,7 @@ export interface CommunityCopy {
   readonly composerPostBodyPlaceholder: string;
   readonly commentLabel: string;
   readonly commentPlaceholder: string;
+  readonly noComments: string;
   readonly submitComment: string;
   readonly reportPost: string;
   readonly reportReason: string;
@@ -47,6 +50,7 @@ export interface CommunityCopy {
   readonly successTitle: string;
   readonly postCreated: string;
   readonly commentCreated: string;
+  readonly reactionUpdated: string;
   readonly reportCreated: string;
   readonly validationTitle: string;
   readonly validationBody: string;
@@ -66,6 +70,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     allPosts: 'الكل',
     publishedCount: count => `${count} مشاركة منشورة`,
     comments: count => `${count} تعليق`,
+    like: 'إعجاب',
+    dislike: 'عدم إعجاب',
     openDiscussion: 'عرض النقاش',
     closeDiscussion: 'إغلاق النقاش',
     postTitle: 'عنوان البوست',
@@ -75,6 +81,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     composerPostBodyPlaceholder: 'محتوى البوست...',
     commentLabel: 'أضف تعليقاً',
     commentPlaceholder: 'اكتب تعليقك',
+    noComments: 'لا توجد تعليقات بعد. كن أول من يشارك في النقاش.',
     submitComment: 'نشر التعليق',
     reportPost: 'الإبلاغ عن المشاركة',
     reportReason: 'سبب البلاغ',
@@ -101,7 +108,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     notFoundBody: 'ربما لم تعد المشاركة منشورة أو أن الرابط غير صحيح.',
     successTitle: 'تم بنجاح',
     postCreated: 'تم إرسال مشاركتك للمراجعة.',
-    commentCreated: 'تم إرسال تعليقك للمراجعة.',
+    commentCreated: 'تم نشر تعليقك بنجاح.',
+    reactionUpdated: 'تم تحديث تفاعلك.',
     reportCreated: 'تم إرسال البلاغ للمراجعة.',
     validationTitle: 'راجع البيانات المدخلة',
     validationBody: 'أكمل الحقول المطلوبة قبل الإرسال.',
@@ -112,13 +120,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
   en: {
     title: 'Sadat Real Estate community',
     subtitle: 'Share published property questions and experiences safely with the platform community.',
-    moderationNotice: 'Posts and comments are reviewed before they become public.',
+    moderationNotice: 'Posts are reviewed before they become public.',
     composerModerationNotice: 'Posts are reviewed before they become public.',
     createPost: 'Create a post',
     publishPost: 'Publish post',
     allPosts: 'All posts',
     publishedCount: count => `${count} published ${count === 1 ? 'post' : 'posts'}`,
     comments: count => `${count} ${count === 1 ? 'comment' : 'comments'}`,
+    like: 'Like',
+    dislike: 'Dislike',
     openDiscussion: 'Open discussion',
     closeDiscussion: 'Close discussion',
     postTitle: 'Post title',
@@ -128,6 +138,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     composerPostBodyPlaceholder: 'Post content...',
     commentLabel: 'Add a comment',
     commentPlaceholder: 'Write your comment',
+    noComments: 'No comments yet. Start the discussion.',
     submitComment: 'Post comment',
     reportPost: 'Report post',
     reportReason: 'Report reason',
@@ -154,7 +165,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     notFoundBody: 'The post may no longer be published or the link may be incorrect.',
     successTitle: 'Done',
     postCreated: 'Your post was sent for moderation.',
-    commentCreated: 'Your comment was sent for moderation.',
+    commentCreated: 'Your comment was posted successfully.',
+    reactionUpdated: 'Your reaction was updated.',
     reportCreated: 'Your report was sent for review.',
     validationTitle: 'Check the entered details',
     validationBody: 'Complete the required fields before submitting.',

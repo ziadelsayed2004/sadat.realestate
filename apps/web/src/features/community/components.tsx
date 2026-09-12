@@ -7,6 +7,7 @@ import {
   type CommunityPublicPostDetailData,
   type CommunityPublicPostListData,
   type CommunityPublicListQuery,
+  type CommunityReactionType,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import type { AuthSnapshot } from '../auth/index.ts';
@@ -156,12 +157,18 @@ function PostCard({
   post,
   locale,
   copy,
-  onOpen
+  onOpen,
+  onReact,
+  currentReaction,
+  reacting
 }: {
   readonly post: CommunityPublicPost;
   readonly locale: SupportedLocale;
   readonly copy: CommunityCopy;
   readonly onOpen: () => void;
+  readonly onReact: (reaction: CommunityReactionType) => void;
+  readonly currentReaction: CommunityReactionType | undefined;
+  readonly reacting: boolean;
 }) {
   const presentation = postPresentation(post, locale);
   const imageFallback = <div className="public-community__card-image-fallback" aria-hidden="true" />;
@@ -183,9 +190,17 @@ function PostCard({
         <p className="public-community__card-text">{post.body}</p>
         {presentation.image === undefined ? null : <PublicMediaImage src={presentation.image} alt="" fallback={imageFallback} className="public-community__card-image" loading="lazy" />}
         <div className="public-community__card-footer">
-          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5-5 1 1-2 2h6v3h-2.5l2.3 7.1a1.5 1.5 0 0 1-1.4 1.9H9.5A2.5 2.5 0 0 1 7 17.5V10Z" /></svg>{presentation.likes}</span>
-          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 14-5 5-1-1 2-2H7v-3h2.5l-2.3-7.1A1.5 1.5 0 0 1 8.6 4H14a2.5 2.5 0 0 1 2.5 2.5V14Z" /></svg>{presentation.dislikes}</span>
-          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H8l-3 3V5Z" /></svg>{presentation.comments}</span>
+          <button className="public-community__stat public-community__reaction" type="button" aria-label={`${copy.like} (${presentation.likes})`} aria-pressed={currentReaction === 'like'} disabled={reacting} onClick={() => onReact('like')}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3Zm0 0 4-7a2 2 0 0 1 2 2v3h5.2a2 2 0 0 1 1.96 2.4l-1.6 8A2 2 0 0 1 16.6 20H7" /></svg>
+            <span>{presentation.likes}</span>
+          </button>
+          <button className="public-community__stat public-community__reaction public-community__reaction--dislike" type="button" aria-label={`${copy.dislike} (${presentation.dislikes})`} aria-pressed={currentReaction === 'dislike'} disabled={reacting} onClick={() => onReact('dislike')}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3Zm0 0 4-7a2 2 0 0 1 2 2v3h5.2a2 2 0 0 1 1.96 2.4l-1.6 8A2 2 0 0 1 16.6 20H7" /></svg>
+            <span>{presentation.dislikes}</span>
+          </button>
+          <button className="public-community__stat public-community__comment-action" type="button" aria-label={copy.comments(presentation.comments)} onClick={onOpen}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H9l-4 4V5Z" /></svg><span>{presentation.comments}</span>
+          </button>
           <span className="public-community__report-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11l2 2v14H6V4Zm2 2v12h9V7h-2V6H8Zm2 3h5v2h-5V9Zm0 4h5v2h-5v-2Z" /></svg>{getCommunityPresentationCopy(locale).report}</span>
           <span className="public-community__legacy-comment-count">{copy.comments(post.commentCount)}</span>
           <Button className="public-community__card-open" variant="ghost" size="sm" onClick={onOpen}>{copy.openDiscussion}</Button>
@@ -264,7 +279,7 @@ function DetailPanel({
       <p className="public-community__detail-body">{detail.post.body}</p>
       <div className="public-community__comments">
         <h3>{copy.comments(detail.comments.length)}</h3>
-        {detail.comments.length === 0 ? <p className="public-community__inline-empty">{copy.emptyBody}</p> : (
+        {detail.comments.length === 0 ? <p className="public-community__inline-empty">{copy.noComments}</p> : (
           <ol className="public-community__comment-list">
             {detail.comments.map(item => (
               <li key={item.id}>
@@ -346,6 +361,8 @@ export function PublicCommunity({
   const [notice, setNotice] = useState<string | undefined>();
   const [validationError, setValidationError] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [reactions, setReactions] = useState<Readonly<Record<string, CommunityReactionType | undefined>>>({});
+  const [reactingPostId, setReactingPostId] = useState<string | undefined>();
   const mutationApi = useMemo(
     () => mutations ?? createCommunityMutationApi({
       apiOrigin,
@@ -472,11 +489,19 @@ export function PublicCommunity({
     setMutationState('commenting');
     setMutationError(undefined);
     void mutationApi.createComment(selectedPostId, parsed.data)
-      .then(() => {
+      .then(createdComment => {
         setMutationState('idle');
         setComment('');
         setNotice(copy.commentCreated);
-        setDetailAttempt(value => value + 1);
+        setDetail(current => current === undefined ? current : {
+          ...current,
+          post: { ...current.post, commentCount: current.post.commentCount + 1 },
+          comments: [...current.comments, createdComment]
+        });
+        setData(current => current === undefined ? current : {
+          ...current,
+          items: current.items.map(item => item.id === selectedPostId ? { ...item, commentCount: item.commentCount + 1 } : item)
+        });
       })
       .catch(error => {
         setMutationState('idle');
@@ -537,13 +562,36 @@ export function PublicCommunity({
     }
     setAttempt(value => value + 1);
   };
+
+  const reactToPost = (postId: string, reaction: CommunityReactionType) => {
+    setMutationError(undefined);
+    setNotice(undefined);
+    if (!isAuthenticated) {
+      openComposer();
+      return;
+    }
+    setReactingPostId(postId);
+    void mutationApi.react(postId, reaction)
+      .then(result => {
+        setReactingPostId(undefined);
+        setReactions(current => ({ ...current, [postId]: result.reaction ?? undefined }));
+        setData(current => current === undefined ? current : {
+          ...current,
+          items: current.items.map(item => item.id === postId ? { ...item, likeCount: result.likeCount, dislikeCount: result.dislikeCount } : item)
+        });
+        setDetail(current => current?.post.id === postId ? {
+          ...current,
+          post: { ...current.post, likeCount: result.likeCount, dislikeCount: result.dislikeCount }
+        } : current);
+        setNotice(copy.reactionUpdated);
+      })
+      .catch(error => {
+        setReactingPostId(undefined);
+        if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) setComposerState('permission');
+        else setMutationError(copy.mutationErrorBody);
+      });
+  };
   const modalOpen = composerState !== 'closed';
-  useEffect(() => {
-    if (!modalOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previousOverflow; };
-  }, [modalOpen]);
   const composerTitle = composerState === 'permission' || composerState === 'checking'
     ? copy.authenticationRequired
     : getCommunityPresentationCopy(locale).composerTitle;
@@ -564,9 +612,10 @@ export function PublicCommunity({
         </div>
         <p className="public-community__notice" role="note">{copy.moderationNotice}</p>
         {notice === undefined ? null : <p className="public-community__success" role="status"><strong>{copy.successTitle}:</strong> {notice}</p>}
+        {mutationError === undefined || selectedPostId !== undefined || modalOpen ? null : <p className="public-community__mutation-error" role="alert">{mutationError}</p>}
         {view === 'success' && data !== undefined && !filteredEmpty ? (
           <div className="public-community__grid">
-            {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} />)}
+            {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} onReact={reaction => reactToPost(post.id, reaction)} currentReaction={reactions[post.id]} reacting={reactingPostId === post.id} />)}
           </div>
         ) : <CommunityState state={view === 'success' ? 'empty' : view} copy={copy} onRetry={recoverList} />}
         {pageCount > 1 ? (

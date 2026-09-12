@@ -125,7 +125,18 @@ test('community mutations require verified authentication and keep strict safe r
   assert.equal(comment.status, 201);
   const commentBody = await comment.json() as { data: Record<string, unknown> };
   assert.equal(commentBody.data.postId, postId);
+  assert.equal(commentBody.data.body, 'A visible comment');
   assert.equal('authorId' in commentBody.data, false);
+
+  const liked = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reactions`, 'seeker', { reaction: 'like' });
+  assert.equal(liked.status, 200);
+  const likedBody = await liked.json() as { data: { postId: string; reaction: string | null; likeCount: number; dislikeCount: number } };
+  assert.deepEqual(likedBody.data, { postId, reaction: 'like', likeCount: 1, dislikeCount: 0 });
+  const switched = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reactions`, 'seeker', { reaction: 'dislike' });
+  assert.equal(switched.status, 200);
+  assert.deepEqual((await switched.json() as { data: unknown }).data, { postId, reaction: 'dislike', likeCount: 0, dislikeCount: 1 });
+  assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reactions`, undefined, { reaction: 'like' })).status, 401);
+  assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reactions`, 'seeker', { reaction: 'love' })).status, 400);
 
   const report = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reports`, 'seeker', { reason: 'spam', details: 'Repeated promotional content' });
   assert.equal(report.status, 201);

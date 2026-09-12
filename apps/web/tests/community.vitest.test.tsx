@@ -116,7 +116,8 @@ describe('public community feed and post creation', () => {
   it('keeps create-post access behind authentication and submits the real mutation contract', async () => {
     const mutations: CommunityMutationApi = {
       createPost: vi.fn().mockResolvedValue(undefined),
-      createComment: vi.fn().mockResolvedValue(undefined),
+      createComment: vi.fn().mockResolvedValue({ ...detailData.comments[0]!, id: 'cccccccccccccccccccccccc', body: 'A useful reply' }),
+      react: vi.fn().mockResolvedValue({ postId: post.id, reaction: 'like', likeCount: 25, dislikeCount: 2 }),
       reportPost: vi.fn().mockResolvedValue(undefined)
     };
     const copy = getCommunityCopy('en');
@@ -143,7 +144,8 @@ describe('public community feed and post creation', () => {
   it('loads details and submits comment and report mutations without exposing private fields', async () => {
     const mutations: CommunityMutationApi = {
       createPost: vi.fn().mockResolvedValue(undefined),
-      createComment: vi.fn().mockResolvedValue(undefined),
+      createComment: vi.fn().mockResolvedValue({ ...detailData.comments[0]!, id: 'cccccccccccccccccccccccc', body: 'A useful reply' }),
+      react: vi.fn().mockResolvedValue({ postId: post.id, reaction: 'like', likeCount: 25, dislikeCount: 2 }),
       reportPost: vi.fn().mockResolvedValue(undefined)
     };
     const copy = getCommunityCopy('en');
@@ -170,5 +172,26 @@ describe('public community feed and post creation', () => {
     await waitFor(() => expect(mutations.reportPost).toHaveBeenCalledWith(post.id, { reason: 'other', details: 'This needs review' }));
     expect(screen.getByText('A visible public comment.')).toBeInTheDocument();
     expect(screen.queryByText('authorId')).not.toBeInTheDocument();
+  });
+
+  it('opens comments from their visible control and updates a persisted reaction result', async () => {
+    const copy = getCommunityCopy('en');
+    const mutations: CommunityMutationApi = {
+      createPost: vi.fn().mockResolvedValue(undefined),
+      createComment: vi.fn().mockResolvedValue({ ...detailData.comments[0]!, id: 'cccccccccccccccccccccccc' }),
+      react: vi.fn().mockResolvedValue({ postId: post.id, reaction: 'like', likeCount: 25, dislikeCount: 2 }),
+      reportPost: vi.fn().mockResolvedValue(undefined)
+    };
+    renderWithLocale(
+      <PublicCommunity locale="en" session={{ status: 'authenticated', role: 'seeker' }} initialData={listData} loadDetail={vi.fn().mockResolvedValue(detailData)} mutations={mutations} />,
+      { locale: 'en' }
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: copy.comments(1) }));
+    await waitFor(() => expect(screen.getByText('A visible public comment.')).toBeInTheDocument());
+    const like = screen.getByRole('button', { name: `${copy.like} (24)` });
+    fireEvent.click(like);
+    await waitFor(() => expect(mutations.react).toHaveBeenCalledWith(post.id, 'like'));
+    expect(screen.getByRole('button', { name: `${copy.like} (25)` })).toHaveAttribute('aria-pressed', 'true');
   });
 });

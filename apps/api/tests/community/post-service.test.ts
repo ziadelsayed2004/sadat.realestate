@@ -26,6 +26,18 @@ test('comments enforce published-post state, bounded reply depth, and ownership'
 
 test('public community feed returns published posts, visible comments, and truthful counts only', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Feed', body: 'Visible' }); await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); const comment = await service.createComment(seeker, { postId: post.id, body: 'Visible comment' }); const feed = await service.publicFeed(); assert.equal(feed.length, 1); assert.equal(feed[0].comments.length, 1); await service.removeComment(seeker, comment.id); assert.equal((await service.publicFeed())[0].comments.length, 0); await service.remove(seeker, post.id); assert.equal((await service.publicFeed()).length, 0); });
 
+test('community reactions toggle and switch once per authenticated account', async () => {
+  const repository = createMemoryCommunityRepository([], { record: async () => 'audit-id' });
+  const service = createCommunityService([], repository, { authorize: async () => true });
+  const post = await service.create(seeker, { title: 'Reaction test', body: 'Published post' });
+  await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved post' }, { requestId: 'test', traceId: 'test' });
+  assert.deepEqual(await service.react(seeker, post.id, { reaction: 'like' }), { postId: post.id, reaction: 'like', likeCount: 1, dislikeCount: 0 });
+  assert.deepEqual(await service.react(seeker, post.id, { reaction: 'dislike' }), { postId: post.id, reaction: 'dislike', likeCount: 0, dislikeCount: 1 });
+  assert.deepEqual(await service.react(seeker, post.id, { reaction: 'dislike' }), { postId: post.id, reaction: null, likeCount: 0, dislikeCount: 0 });
+  await assert.rejects(() => service.react({ ...seeker, status: 'suspended' } as AccessTokenClaims, post.id, { reaction: 'like' }), /FORBIDDEN/);
+  await assert.rejects(() => service.react(seeker, post.id, { reaction: 'invalid' }));
+});
+
 
 test('moderation requires permission and reason, audits decisions, and rejects concurrent/stale updates', async () => {
   const entries: unknown[] = [];

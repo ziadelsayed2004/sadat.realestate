@@ -6551,6 +6551,50 @@
           }
         },
         {
+          "name": "Set community reaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reaction\": \"like\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts/:postId/reactions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts",
+                ":postId",
+                "reactions"
+              ],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Report community post",
           "request": {
             "method": "POST",

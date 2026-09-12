@@ -424,3 +424,12 @@
 - Direct Figma screenshot tool is now available and succeeded for canonical SEK-01 node 6027:3579; persisted and visually reviewed `figma-refresh-2026-09-12.png` with source-review document.
 - Found concrete parity gap beyond historical avatar prerequisite: reference request/viewing cards expose rich property identity/location/price/features, current overview cards use abbreviated IDs/type/timezone. Functional success does not resolve this.
 - Next: load Figma design-to-code skill before get_design_context, inspect matching source and current runtime; implement only supported property data with scoped styles and auth regression safeguards. No invented demo identity, no parity-count inflation. Cleanup still blocked by prior automatic approval review; Demo retained.
+
+## 12 September: community interaction and modal repair
+
+- أُوقف مسار Figma مؤقتًا بناءً على طلب المستخدم، وأُصلح تعارض CSS العام الذي كان يمدد خلفية مودالات المجتمع داخل التخطيط بدل تغطية نافذة العرض. المودال المشترك أصبح يغطي الشاشة ويقفل تمرير الصفحة ويستعيده عند الإغلاق، مع حدود ارتفاع وحشو مناسبة للشاشات القصيرة والمحمولة.
+- أصبح فتح التعليقات متاحًا من زر ظاهر، ونشر التعليق يضيف الرد المحفوظ فعليًا ويحدّث العداد مباشرة. أضيف تدفق حقيقي للايك والديسلايك يدعم الاختيار والتبديل والإلغاء، مع أزرار وأيقونات وحالات تركيز وتعطيل واضحة، ويعيد الضيف إلى مودال تسجيل الدخول الصحيح.
+- أضيف مسار التفاعل إلى العقود وOpenAPI وPostman، مع حفظ ذري في MongoDB وفهرس فريد للمستخدم والمنشور. أُضيفت مجموعة `community_reactions` إلى سياسة تنظيف إطلاق الإنتاج المؤجل؛ لم تُنفذ عملية purge، وبيانات Demo محفوظة.
+- تحقق المتصفح نجح 24/24 بالعربية والإنجليزية على Desktop وTablet وPixel 5، ويغطي العرض، المودالات، Escape والتركيز وscroll lock، التعليقات، التفاعلات وعدم وجود horizontal overflow. Vitest الخاص بالمجتمع نجح 10/10، واختبارات API المركزة نجحت، وبناء Web وtypecheck وOpenAPI/Postman validation نجحت.
+- `verify-community-interactions-local.mjs` نجح ضد MongoDB وHTTP حقيقيين: إضافة وتبديل وإلغاء التفاعل، حفظ التعليق وظهوره في القراءة العامة، رفض الحساب الموقوف دون كتابة، وتنظيف قاعدة الاختبار المعزولة بالكامل. الدليل: `guide-runs/community-interactions-local-latest.json`.
+- الخطوة التالية بعد تثبيت هذه الحزمة ورفعها: استئناف هدف الإطلاق من checkpoint الحالي، مع بقاء Figma مؤجلًا حتى يطلب المستخدم الرجوع إليه.

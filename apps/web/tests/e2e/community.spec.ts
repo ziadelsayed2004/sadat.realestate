@@ -133,3 +133,53 @@ test('anonymous community login modal stays inside a full viewport overlay', asy
   await expect(opener).toBeFocused();
   await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
+
+test('community comments and reactions work responsively after authentication', async ({ page }) => {
+  const locale = localeForProject();
+  let likeCount = 0;
+  let dislikeCount = 0;
+  let commentCount = 0;
+  await page.route('**/api/v1/public/community/posts**', async route => {
+    const request = route.request();
+    const pathname = new URL(request.url()).pathname;
+    if (request.method() === 'POST' && pathname.endsWith('/reactions')) {
+      const requestBody = request.postDataJSON() as { reaction: 'like' | 'dislike' };
+      if (requestBody.reaction === 'like') likeCount += 1;
+      else dislikeCount += 1;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { postId: 'aaaaaaaaaaaaaaaaaaaaaaaa', reaction: requestBody.reaction, likeCount, dislikeCount }, meta: { requestId: 'e2e-reaction' } }) });
+      return;
+    }
+    if (request.method() === 'POST' && pathname.endsWith('/comments')) {
+      commentCount += 1;
+      const requestBody = request.postDataJSON() as { body: string };
+      await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: { id: 'cccccccccccccccccccccccc', postId: 'aaaaaaaaaaaaaaaaaaaaaaaa', body: requestBody.body, depth: 0, createdAt: '2026-09-12T10:00:00+00:00' }, meta: { requestId: 'e2e-comment' } }) });
+      return;
+    }
+    if (request.method() === 'GET' && pathname.endsWith('/aaaaaaaaaaaaaaaaaaaaaaaa')) {
+      const fixture = communityListFixture().data.items[0]!;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { post: { ...fixture, commentCount }, comments: [] }, meta: { requestId: 'e2e-detail' } }) });
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(communityListFixture()) });
+  });
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(authRefreshFixture()) }));
+  await page.goto(`/community?lang=${locale}`);
+
+  await page.locator('.public-community__intro button').click();
+  await expect(page.locator('#community-create-form')).toBeVisible();
+  await page.locator('.ui-modal__close').click();
+
+  const like = page.locator('.public-community__reaction').first();
+  await like.click();
+  await expect(like).toHaveAttribute('aria-pressed', 'true');
+  await expect(like.locator('span')).toHaveText('1');
+
+  await page.locator('.public-community__comment-action').click();
+  const comment = page.locator('#community-comment');
+  await expect(comment).toBeVisible();
+  await comment.fill(locale === 'ar' ? 'تعليق مفيد للاختبار' : 'A useful test comment');
+  await page.locator('.public-community__comment-form button[type="submit"]').click();
+  await expect(page.locator('.public-community__comment-list')).toContainText(locale === 'ar' ? 'تعليق مفيد للاختبار' : 'A useful test comment');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: test.info().outputPath('community-comments-and-reactions.png'), fullPage: true });
+});

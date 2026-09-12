@@ -19,7 +19,7 @@ export const LAUNCH_PURGED_COLLECTIONS = new Set([
   'audit_logs', 'cms_about_blocks', 'cms_homepage_sections', 'cms_population_values',
   'cms_real_estate_tips', 'cms_setting_history', 'cms_team_members',
   'commission_account_overrides', 'commission_confirmations', 'commission_exceptions',
-  'community_comments', 'community_posts', 'community_reports', 'favorites',
+  'community_comments', 'community_posts', 'community_reactions', 'community_reports', 'favorites',
   'notifications', 'organizations', 'otp_challenges', 'outbox_events', 'payment_proofs',
   'projects', 'properties', 'property_media', 'property_reports', 'provider_applications',
   'provider_documents', 'provider_profiles', 'provider_settings', 'request_issues',

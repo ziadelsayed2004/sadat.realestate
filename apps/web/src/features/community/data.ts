@@ -9,12 +9,17 @@ import {
   communityPublicPostListSuccessEnvelopeSchema,
   communityReportCreateRequestSchema,
   communityReportSuccessEnvelopeSchema,
+  communityReactionRequestSchema,
+  communityReactionSuccessEnvelopeSchema,
   type CommunityCommentCreate,
+  type CommunityPublicComment,
   type CommunityPublicPostDetailData,
   type CommunityPublicPostListData,
   type CommunityPublicListQuery,
   type CommunityPostCreate,
-  type CommunityReportCreate
+  type CommunityReportCreate,
+  type CommunityReactionData,
+  type CommunityReactionType
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 
@@ -55,7 +60,8 @@ export type CommunityDetailLoader = (
 
 export interface CommunityMutationApi {
   readonly createPost: (input: CommunityPostCreate) => Promise<void>;
-  readonly createComment: (postId: string, input: Omit<CommunityCommentCreate, 'postId'>) => Promise<void>;
+  readonly createComment: (postId: string, input: Omit<CommunityCommentCreate, 'postId'>) => Promise<CommunityPublicComment>;
+  readonly react: (postId: string, reaction: CommunityReactionType) => Promise<CommunityReactionData>;
   readonly reportPost: (postId: string, input: Omit<CommunityReportCreate, 'postId'>) => Promise<void>;
 }
 
@@ -147,12 +153,25 @@ export function createCommunityMutationApi(options: CommunityMutationOptions = {
       communityPostIdParamsSchema.parse({ postId });
       const request = communityCommentCreateRequestSchema.parse(input);
       const requestHeaders = headers();
-      await client.request(`${PUBLIC_COMMUNITY_ROUTE}/${encodeURIComponent(postId)}/comments`, {
+      const response = await client.request(`${PUBLIC_COMMUNITY_ROUTE}/${encodeURIComponent(postId)}/comments`, {
         method: 'POST',
         json: request,
         ...(requestHeaders === undefined ? {} : { headers: requestHeaders }),
         responseSchema: communityCommentMutationSuccessEnvelopeSchema
       });
+      return response.data.data;
+    },
+    async react(postId, reaction) {
+      communityPostIdParamsSchema.parse({ postId });
+      const request = communityReactionRequestSchema.parse({ reaction });
+      const requestHeaders = headers();
+      const response = await client.request(`${PUBLIC_COMMUNITY_ROUTE}/${encodeURIComponent(postId)}/reactions`, {
+        method: 'POST',
+        json: request,
+        ...(requestHeaders === undefined ? {} : { headers: requestHeaders }),
+        responseSchema: communityReactionSuccessEnvelopeSchema
+      });
+      return response.data.data;
     },
     async reportPost(postId, input) {
       const request = communityReportCreateRequestSchema.parse(input);

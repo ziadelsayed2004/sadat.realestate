@@ -18,6 +18,8 @@ import {
   communityPublicListQuerySchema,
   communityPublicPostDetailSuccessEnvelopeSchema,
   communityPublicPostListSuccessEnvelopeSchema,
+  communityReactionRequestSchema,
+  communityReactionSuccessEnvelopeSchema,
   communityReportCreateRequestSchema,
   communityReportDataSchema,
   communityReportIdParamsSchema,
@@ -37,6 +39,7 @@ export const COMMUNITY_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/public/community/posts/:postId', operationId: 'getPublicCommunityPost' },
   { method: 'POST', path: '/api/v1/public/community/posts', operationId: 'createCommunityPost' },
   { method: 'POST', path: '/api/v1/public/community/posts/:postId/comments', operationId: 'createCommunityComment' },
+  { method: 'POST', path: '/api/v1/public/community/posts/:postId/reactions', operationId: 'setCommunityReaction' },
   { method: 'POST', path: '/api/v1/public/community/posts/:postId/reports', operationId: 'createCommunityReport' },
   { method: 'POST', path: '/api/v1/admin/community/posts/:postId/moderate', operationId: 'moderateAdminCommunityPost' },
   { method: 'GET', path: '/api/v1/admin/community/posts', operationId: 'listAdminCommunityPosts' },
@@ -123,6 +126,8 @@ function commentMutationData(comment: Awaited<ReturnType<CommunityService['creat
   return {
     id: comment.id,
     postId: comment.postId,
+    body: comment.body,
+    ...(comment.parentId === undefined ? {} : { parentId: comment.parentId }),
     depth: comment.depth,
     createdAt: comment.createdAt
   };
@@ -178,6 +183,17 @@ export function createCommunityRouter(dependencies: CommunityRouterDependencies)
       communityCommentMutationSuccessEnvelopeSchema.parse(toSuccessResponse(data, requestId(request)));
       response.setHeader('Cache-Control', 'no-store');
       response.status(201).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+
+  router.post('/public/community/posts/:postId/reactions', auth, async (request, response) => {
+    try {
+      const { postId } = communityPostIdParamsSchema.parse(request.params);
+      const input = communityReactionRequestSchema.parse(request.body ?? {});
+      const data = await dependencies.service.react(claims(response), postId, input);
+      const body = communityReactionSuccessEnvelopeSchema.parse(toSuccessResponse(data, requestId(request)));
+      response.setHeader('Cache-Control', 'no-store');
+      response.status(200).json(body);
     } catch (error) { sendError(request, response, error); }
   });
 

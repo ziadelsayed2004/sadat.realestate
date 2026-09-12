@@ -1,0 +1,23 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB-real-HTTP",
+  "mockedRoutes": false,
+  "commit": "7a92354d3bda675d905d3bd89e0a0e773f72833c",
+  "worktreeChanges": true,
+  "checks": [
+    {
+      "name": "reaction_toggle_switch_and_remove",
+      "pass": true
+    },
+    {
+      "name": "comment_persists_and_returns_in_public_detail",
+      "pass": true
+    },
+    {
+      "name": "current_account_state_blocks_interactions",
+      "pass": true
+    }
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T08:55:50.358Z"
+}

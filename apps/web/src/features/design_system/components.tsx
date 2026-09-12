@@ -358,6 +358,8 @@ export function Modal({ open, className, title, description, children, closeLabe
 
   useEffect(() => {
     if (!open) return undefined;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const dialog = dialogRef.current;
 
@@ -399,6 +401,7 @@ export function Modal({ open, className, title, description, children, closeLabe
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousBodyOverflow;
       const previousFocus = previousFocusRef.current;
       previousFocusRef.current = null;
       if (previousFocus?.isConnected === true) previousFocus.focus();
