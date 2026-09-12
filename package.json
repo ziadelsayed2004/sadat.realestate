@@ -40,6 +40,8 @@
     "guide:sync": "npm run guide:generate && npm run guide:matrix",
     "guide:check": "node scripts/verify-client-user-guide.mjs",
     "guide:community:local": "node scripts/verify-guide-community-local.mjs",
+    "guide:registration-guarantees:local": "node --import tsx scripts/verify-registration-guarantees-local.mjs",
+    "guide:registration-browser:local": "node scripts/verify-registration-browser-local.mjs",
     "guide:community-interactions:local": "node --import tsx scripts/verify-community-interactions-local.mjs",
     "guide:content-browser:local": "node scripts/verify-guide03-content-browser-local.mjs",
     "guide:admin-content-browser:local": "node scripts/verify-guide22-admin-content-browser-local.mjs",

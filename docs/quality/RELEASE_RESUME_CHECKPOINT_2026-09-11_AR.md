@@ -540,3 +540,9 @@
 - أثبت التشغيل 401 للضيف، و403 للأدمن المحدود، وإبطال التوكن عند تعليق الحساب الحالي، وvalidation 400، وتعارضات 409 للنسخ والطلبات المتزامنة، و11 سجل audit مرتبًا قبل التنظيف.
 - أُصلحت ذرية طفرات Articles وCMS: يعمل mutation وaudit في معاملة MongoDB واحدة. أثبت fault injection أن فشل audit يرجع كتابة التصنيف وAbout بالكامل. انتهى التشغيل بست مجموعات تحقق وcleanup صفر بقايا، مع استعادة Population الأصلية والحفاظ على Demo.
 - أصبحت الرحلات المحلية المراجعة 9/26: GUIDE-03 و06 و07 و08 و09 و10 و16 و21 و22. تظل الرحلة PARTIAL عالميًا حتى Figma والبوابة النهائية وProduction، ولم ينفذ launch أو purge.
+
+## 12 September: GUIDE-04 local functional acceptance
+
+- Seeker registration is now atomic in the real runtime: OTP grant consumption, user/profile creation, credential storage, and session issuance execute in one MongoDB transaction. A forced credential failure rolled back the grant, user, and profile with zero residue.
+- Fresh real-browser registration passed through MailHog OTP, HTTP 201 account creation, the success screen, and the authenticated seeker dashboard on Pixel 5 without horizontal overflow. Seeker-to-admin access returned 403; logout returned 200 and refresh then returned 401. The created account, profile, credential, session, and OTP records were removed.
+- Existing AR/EN Desktop/Tablet/Pixel 5 validation and offline-retry evidence remains valid because its UI files were unaffected. The matrix now records GUIDE-04 as `LOCAL_FUNCTIONAL_SCOPE_REVIEWED`, bringing reviewed local journeys to 10/26. Global status remains 26 PARTIAL, 0 Production verified, and 0 fully closed; Figma remains 90/119. Demo data was preserved and no launch or purge ran.

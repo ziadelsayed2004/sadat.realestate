@@ -46,6 +46,7 @@ export interface SeekerServiceDependencies {
   } | undefined>;
   authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>;
   now?: () => Date;
+  transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
 }
 
 export interface SeekerService {
@@ -93,7 +94,7 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
     return account;
   }
 
-  return {
+  const service: SeekerService = {
     async register(input) {
       const issuedAt = now();
       const grant = await dependencies.redeemRegistrationGrant(
@@ -155,5 +156,11 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
       if (!preferences) throw new SeekerServiceError('SEEKER_NOT_FOUND');
       return preferencesData(preferences);
     }
+  };
+
+  if (!dependencies.transaction) return service;
+  return {
+    ...service,
+    register: (...args) => dependencies.transaction!(() => service.register(...args))
   };
 }

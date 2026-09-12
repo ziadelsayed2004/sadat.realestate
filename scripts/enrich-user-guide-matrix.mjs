@@ -41,6 +41,8 @@ const seekerRequestsRecovery = await readFile('docs/quality/guide-runs/seeker-re
 const adminRequestsRecovery = await readFile('docs/quality/guide-runs/admin-requests-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityPublicRecovery = await readFile('docs/quality/guide-runs/community-public-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const registrationBrowser = await readFile('docs/quality/guide-runs/registration-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const registrationGuarantees = await readFile('docs/quality/guide-runs/registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -92,6 +94,8 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/discovery-local-latest.json", discoveryEvidence],
   ["docs/quality/guide-runs/discovery-pagination-local-latest.json", discoveryPagination],
   ["docs/quality/guide-runs/registration-recovery-local-latest.json", registrationRecovery],
+  ["docs/quality/guide-runs/registration-browser-local-latest.json", registrationBrowser],
+  ["docs/quality/guide-runs/registration-guarantees-local-latest.json", registrationGuarantees],
   ["docs/quality/guide-runs/saved-empty-local-latest.json", savedEmptyRecovery],
   ["docs/quality/guide-runs/provider-customer-recovery-local-latest.json", providerCustomerRecovery],
   ["docs/quality/guide-runs/provider-projects-recovery-local-latest.json", providerProjectsRecovery],
@@ -115,6 +119,21 @@ const guide03LocalAcceptanceReady = guide03ContentBrowser?.status === 'PASS_LOCA
   && communityInteractions?.status === 'PASS_LOCAL' && communityInteractions.mockedRoutes === false
   && communityInteractions.cleanup === true && communityInteractions.checks?.length === 4
   && communityEvidence?.status === 'PASS_LOCAL' && communityGuarantees?.status === 'PASS_LOCAL';
+
+const guide04LocalAcceptanceReady = registrationBrowser?.status === 'PASS_LOCAL'
+  && registrationBrowser.mockedRoutes === false && registrationBrowser.cleanup === true
+  && registrationBrowser.authorizationStatus === 403
+  && registrationBrowser.logoutStatuses?.logout === 200
+  && registrationBrowser.logoutStatuses?.refreshAfterLogout === 401
+  && registrationBrowser.width?.innerWidth === registrationBrowser.width?.scrollWidth
+  && registrationRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && registrationRecovery.mockedRoutes === false && registrationRecovery.otpChallengesRemoved === true
+  && registrationRecovery.runs?.length === 6
+  && registrationGuarantees?.status === 'PASS_LOCAL'
+  && registrationGuarantees.mockedRoutes === false && registrationGuarantees.cleanup === true
+  && registrationGuarantees.checks?.length === 5
+  && registrationGuarantees.mongo?.duplicateGrantRestored === true
+  && registrationGuarantees.mongo?.failedRegistrationResidue === 0;
 
 const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
   && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
@@ -306,6 +325,20 @@ matrix.journeys = matrix.journeys.map((journey) => {
       reviewedAt: '2026-09-12',
     };
   }
+  if (journey.id === 'GUIDE-04' && guide04LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_04_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      horizontalAccess: 'NOT_APPLICABLE',
+      expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE',
+      atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'Registration creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
+    };
+  }
   if (journey.id === 'GUIDE-22') {
     hydratedJourney.applicabilityReview = {
       ...(hydratedJourney.applicabilityReview ?? {}),
@@ -392,6 +425,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
     ]) reviewedGuarantees.push({ category, check,
       path: 'docs/quality/guide-runs/guide22-content-mutations-local-latest.json',
       verifiedAt: guide22ContentMutations.finishedAt });
+  }
+  if (journey.id === 'GUIDE-04' && guide04LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['roleAuthorization', 'seeker_role_denied_admin_api', 'docs/quality/guide-runs/registration-browser-local-latest.json', registrationBrowser.finishedAt],
+      ['currentSessionState', 'logout_invalidates_refresh_session', 'docs/quality/guide-runs/registration-browser-local-latest.json', registrationBrowser.finishedAt],
+      ['duplicateMutation', 'grant_replay_and_duplicate_email_rejected_without_duplicate_account', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
+      ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_and_profile', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     for (const [category, check] of [
@@ -504,6 +545,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-04' && guide04LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'email_otp_registration_dashboard_rbac_logout_and_cleanup',
+      path: 'docs/quality/GUIDE_04_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Real email OTP and account creation in a Pixel 5 browser, authenticated dashboard, role denial, logout, persistence checks and zero residue.',
+      verifiedAt: registrationBrowser.finishedAt });
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'Browser/API/MongoDB',
+      check: 'registration_validation_and_duplicate_email_preserve_state',
+      path: 'docs/quality/GUIDE_04_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Empty and mismatched-password browser validation in both locales and all viewports, plus duplicate-email rollback in isolated MongoDB.',
+      verifiedAt: registrationGuarantees.finishedAt });
+  }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
       check: 'all_admin_content_surfaces_and_mutation_lifecycles',
@@ -891,7 +944,11 @@ matrix.journeys = matrix.journeys.map((journey) => {
   }
   appendMissingEvidence(reviewedSubcases, journey.reviewedSubcases,
     item => `${item.case ?? ''}|${item.check ?? ''}|${item.path ?? ''}`);
-  appendMissingEvidence(reviewedGuarantees, journey.reviewedGuarantees,
+  const priorReviewedGuarantees = journey.id === 'GUIDE-04'
+    ? journey.reviewedGuarantees?.filter(item => !(item.category === 'atomicAuditRollback'
+      && item.check === 'credential_failure_rolls_back_grant_user_and_profile'))
+    : journey.reviewedGuarantees;
+  appendMissingEvidence(reviewedGuarantees, priorReviewedGuarantees,
     item => `${item.category ?? ''}|${item.check ?? ''}|${item.path ?? ''}`);
   return {
     ...hydratedJourney,

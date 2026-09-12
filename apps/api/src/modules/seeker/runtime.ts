@@ -17,6 +17,7 @@ export function createSeekerRuntime(
   accessTokens: AccessTokenService,
   cookie: AuthCookiePolicy
 ): SeekerRouterDependencies {
+  connection.base.set('transactionAsyncLocalStorage', true);
   const identityModels = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
   const otpRepository = createMongooseOtpRepository(identityModels, authModels);
@@ -36,7 +37,8 @@ export function createSeekerRuntime(
           purpose: 'registration' as const
         } : undefined;
       },
-      authService
+      authService,
+      transaction: operation => connection.transaction(operation)
     }),
     accessTokens,
     cookie,

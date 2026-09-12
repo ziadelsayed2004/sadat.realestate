@@ -1,0 +1,36 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-04"
+  ],
+  "environment": "isolated-local-MongoDB-rs0-real-services",
+  "mockedRoutes": false,
+  "commit": "dfa5325d27884fc24530b0a81fecce812682e384",
+  "startedAt": "2026-09-12T15:11:44.323Z",
+  "checks": [
+    "registration_atomically_creates_user_profile_credential_and_session",
+    "verification_grant_replay_rejected_without_duplicate_account",
+    "duplicate_email_rolls_back_grant_consumption_and_account_write",
+    "credential_failure_rolls_back_grant_user_and_profile",
+    "logout_revokes_current_refresh_session"
+  ],
+  "cleanup": true,
+  "mongo": {
+    "collections": [
+      "otp_challenges",
+      "users",
+      "seeker_profiles",
+      "admin_credentials",
+      "sessions"
+    ],
+    "successAccountCount": 1,
+    "replayAccountCount": 1,
+    "duplicateGrantRestored": true,
+    "failedRegistrationResidue": 0,
+    "activeSessionsAfterLogout": 0
+  },
+  "remaining": [
+    "Production verification remains deferred while the project stays in Demo mode."
+  ],
+  "finishedAt": "2026-09-12T15:11:44.803Z"
+}

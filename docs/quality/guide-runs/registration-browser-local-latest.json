@@ -1,0 +1,68 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-04"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "dfa5325d27884fc24530b0a81fecce812682e384",
+  "startedAt": "2026-09-12T15:16:14.174Z",
+  "locale": "en",
+  "device": "Pixel 5",
+  "checks": [
+    "email_otp_and_browser_registration_success",
+    "authenticated_dashboard_and_pixel5_no_overflow",
+    "seeker_role_denied_admin_api",
+    "logout_invalidates_refresh_session"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/send",
+      "status": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/otp/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register/seeker",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/overview",
+      "status": 200
+    }
+  ],
+  "cleanup": true,
+  "width": {
+    "innerWidth": 393,
+    "scrollWidth": 393
+  },
+  "authorizationStatus": 403,
+  "logoutStatuses": {
+    "logout": 200,
+    "refreshAfterLogout": 401
+  },
+  "residue": {
+    "user": 0,
+    "otp": 0,
+    "session": 0,
+    "credential": 0,
+    "profile": 0
+  },
+  "finishedAt": "2026-09-12T15:16:26.867Z"
+}
