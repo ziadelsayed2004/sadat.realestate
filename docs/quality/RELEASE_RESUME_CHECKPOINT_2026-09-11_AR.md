@@ -590,3 +590,10 @@
 - أضيف audit ذري لـ`provider.settings.update` داخل transaction. يثبت اختبار MongoDB المعزول أن فشل audit يعيد الإعدادات والـaudit معًا، وأن retry يكتب مرة واحدة، وأن تحديثين متزامنين بنفس النسخة ينتجان نجاحًا واحدًا و409 واحدًا.
 - ثبتت حدود 400/401/403/404/409، ملكية الإشعارات، current suspended account state، وثبات repeated mark-read. أعيدت الإعدادات وread markers الأصلية وحذفت الإشعارات والجلسات والـaudits المؤقتة؛ `cleanup=true` في التقريرين.
 - تسجل المصفوفة GUIDE-18 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 20/26 (76.9%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## إغلاق النطاق المحلي لـGUIDE-19 — 2026-09-12
+
+- اكتملت أسطح إدارة الحسابات ADM-01..ADM-08 بالعربية والإنجليزية وعلى Desktop/Tablet/Pixel 5، مع empty حقيقي للبحث وتعافٍ من offline عبر Retry بلا reload أو overflow.
+- نُفذ محليًا بلاغ حساب مؤقت: validation للسبب بلا request، حل البلاغ مع version/reason/audit، ثم إجراء القيد المتاح على الحساب مع state-transition/audit. ثبتت 401 و403 للمدير المحدود ولمنع self-transition، و409 للتكرار والنسخة القديمة، وحالة المدير المعلق الحالية.
+- أثبت MongoDB المعزول أن فشل audit يعيد تغيير الحساب والبلاغ وسجلات الانتقال والـaudit كلها، وأن التزامن يكتب مرة واحدة فقط. حذفت كل fixtures والجلسات والـaudits وقاعدة الاختبار؛ `cleanup=true`.
+- تسجل المصفوفة GUIDE-19 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 21/26 (80.8%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.

@@ -1,0 +1,135 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-19",
+  "journeys": [
+    "GUIDE-19"
+  ],
+  "mockedRoutes": false,
+  "environment": "local-real-browser-api-mongodb",
+  "commit": "afc79132d6095c9442d58d0838366aa9b243a589",
+  "startedAt": "2026-09-12T17:27:54.866Z",
+  "runs": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 712,
+      "scrollWidth": 712
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "checks": [
+        "empty_search_clear_without_navigation",
+        "offline_filter_retry_without_navigation"
+      ],
+      "httpStatuses": {
+        "search": 200,
+        "clear": 200,
+        "recovered": 200
+      },
+      "documentReloaded": false,
+      "innerWidth": 393,
+      "scrollWidth": 393
+    }
+  ],
+  "checks": [
+    "browser_report_reason_validation_resolve_and_account_transition",
+    "stale_report_and_repeated_account_transition_return_409"
+  ],
+  "authorization": [
+    "anonymous_401_limited_admin_mutations_403_admin_self_transition_403",
+    "current_suspended_admin_denied_401_and_restored"
+  ],
+  "mongo": {
+    "reportResolvedVersion": 1,
+    "accountTransitionPersisted": true,
+    "decisionReasonsPersisted": true,
+    "auditActions": [
+      "account_report.resolve",
+      "account.suspend"
+    ],
+    "invalidAndConflictWritesPreservedState": true
+  },
+  "cleanup": true,
+  "finishedAt": "2026-09-12T17:28:13.326Z"
+}

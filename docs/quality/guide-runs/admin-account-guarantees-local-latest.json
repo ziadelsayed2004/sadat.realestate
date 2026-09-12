@@ -1,0 +1,30 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-19",
+  "journeys": [
+    "GUIDE-19"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside account and report transactions",
+  "commit": "afc79132d6095c9442d58d0838366aa9b243a589",
+  "startedAt": "2026-09-12T17:29:23.412Z",
+  "checks": [
+    "audit_failure_rolls_back_account_status_transition_and_inserted_audit",
+    "concurrent_same_account_version_one_write_one_conflict_with_single_audit",
+    "audit_failure_rolls_back_account_report_resolution_and_inserted_audit",
+    "report_retry_writes_once_and_stale_version_conflicts"
+  ],
+  "cleanup": true,
+  "mongo": {
+    "failedAccountResidue": 0,
+    "accountStatus": "restricted",
+    "accountTransitionCount": 1,
+    "accountAuditCount": 1,
+    "failedReportStatus": "open",
+    "reportStatus": "resolved",
+    "reportVersion": 1,
+    "reportAuditCount": 1
+  },
+  "finishedAt": "2026-09-12T17:29:24.049Z"
+}

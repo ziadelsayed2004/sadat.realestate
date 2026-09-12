@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T17:18:39.941Z",
+  "generatedAt": "2026-09-12T17:30:28.554Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -4756,24 +4756,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -4784,11 +4784,25 @@
         "section": "#admin",
         "journeyId": "GUIDE-19"
       },
-      "executionDate": "2026-09-12T16:45:41.230Z",
+      "executionDate": "2026-09-12T17:29:24.049Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:28:13.326Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/admin-account-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T17:29:24.049Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/remaining-surfaces-local-latest.json",
           "status": "PASS_LOCAL",
@@ -4801,8 +4815,89 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "admin_account_report_resolution_and_account_restriction",
+          "path": "docs/quality/GUIDE_19_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "ADM-01 through ADM-08 in Arabic and English across Desktop, Tablet and Pixel 5 plus real report resolution and account transition persistence.",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "decision_reason_validation_blocks_mutation",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "scope": "A short report decision reason is rejected in the browser with zero mutation requests.",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_account_search_clear_without_navigation",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "scope": "A genuinely absent account search renders empty and clears through real HTTP 200 without document navigation.",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_account_filter_retry_without_navigation",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "scope": "The admin account list recovers from browser offline mode through an explicit Retry and real HTTP 200.",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "account_report_and_account_targets_resolve_by_exact_identifier",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_limited_admin_and_admin_self_transition_boundaries",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_admin_denied_and_restored",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "repeated_and_concurrent_account_transitions_write_once",
+          "path": "docs/quality/guide-runs/admin-account-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:29:24.049Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_report_and_concurrent_account_versions_conflict",
+          "path": "docs/quality/guide-runs/admin-account-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:29:24.049Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "report_and_account_decision_reasons_required_and_persisted",
+          "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
+          "verifiedAt": "2026-09-12T17:28:13.326Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_account_and_report_mutations",
+          "path": "docs/quality/guide-runs/admin-account-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T17:29:24.049Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_19_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      }
     },
     {
       "id": "GUIDE-20",
@@ -5789,7 +5884,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T17:18:39.941Z",
+    "updatedAt": "2026-09-12T17:30:28.554Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
@@ -5988,6 +6083,11 @@
       {
         "scope": "provider notifications and versioned audited settings",
         "path": "docs/quality/guide-runs/guide18-provider-notifications-settings-local-latest.json",
+        "status": "PASS_LOCAL"
+      },
+      {
+        "scope": "administrator account, report, restriction and audit lifecycle",
+        "path": "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json",
         "status": "PASS_LOCAL"
       },
       {
