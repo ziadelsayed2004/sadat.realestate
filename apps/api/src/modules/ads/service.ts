@@ -126,9 +126,9 @@ export interface AdCalendarService {
 }
 
 export interface AdBannerRepository {
-  createBanner(actorId: string, input: AdBannerCreate, now: Date): Promise<AdBanner>;
+  createBanner(actorId: string, input: AdBannerCreate, now: Date, metadata?: { requestId: string; traceId: string }): Promise<AdBanner>;
   listBanners(query: AdBannerListQuery): Promise<AdBannerListData>;
-  updateBanner(actorId: string, bannerId: string, input: AdBannerPatch, now: Date): Promise<AdBanner>;
+  updateBanner(actorId: string, bannerId: string, input: AdBannerPatch, now: Date, metadata?: { requestId: string; traceId: string }): Promise<AdBanner>;
   previewBanner(bannerId: string): Promise<AdBannerPreview>;
   createBannerMedia(actorId: string, bannerId: string, input: AdBannerMediaCreate, now: Date): Promise<AdBannerMedia>;
   listBannerMedia(bannerId: string): Promise<AdBannerMedia[]>;
@@ -138,9 +138,9 @@ export interface AdBannerRepository {
 }
 
 export interface AdBannerService {
-  createBanner(claims: AccessTokenClaims, input: unknown): Promise<AdBanner>;
+  createBanner(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }): Promise<AdBanner>;
   listBanners(claims: AccessTokenClaims, input: unknown): Promise<AdBannerListData>;
-  updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown): Promise<AdBanner>;
+  updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown, context?: { requestId: string; traceId: string }): Promise<AdBanner>;
   previewBanner(claims: AccessTokenClaims, bannerId: string): Promise<AdBannerPreview>;
   createBannerMedia(claims: AccessTokenClaims, bannerId: string, input: unknown): Promise<AdBannerMedia>;
   listBannerMedia(claims: AccessTokenClaims, bannerId: string): Promise<AdBannerMedia[]>;
@@ -486,10 +486,10 @@ export function createAdSettingsService(seed: {
     async decideQuote(claims: AccessTokenClaims, quoteId: string, input: unknown) {
       return decideQuote(claims, quoteId, input);
     },
-    async createBanner(claims: AccessTokenClaims, input: unknown) {
+    async createBanner(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }) {
       const parsed = adBannerCreateSchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.manage');
-      if (seed.bannerRepository) return seed.bannerRepository.createBanner(claims.sub, parsed, clock());
+      if (seed.bannerRepository) return seed.bannerRepository.createBanner(claims.sub, parsed, clock(), context);
       placementByKey(parsed.placementKey);
       if ([...banners.values()].some(item => item.placementKey === parsed.placementKey && item.sortOrder === parsed.sortOrder && item.status !== 'archived')) throw new AdBannerServiceError('DUPLICATE');
       const stamp = now();
@@ -504,10 +504,10 @@ export function createAdSettingsService(seed: {
       const values = [...banners.values()].filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.status || item.status === query.status)).sort((a, b) => a.placementKey.localeCompare(b.placementKey) || a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
-    async updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown) {
+    async updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       const parsed = adBannerPatchSchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.manage');
-      if (seed.bannerRepository) return seed.bannerRepository.updateBanner(claims.sub, bannerId, parsed, clock());
+      if (seed.bannerRepository) return seed.bannerRepository.updateBanner(claims.sub, bannerId, parsed, clock(), context);
       const current = bannerById(bannerId);
       if (parsed.expectedVersion !== current.version) throw new AdBannerServiceError('VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: _reason, ...changes } = parsed;

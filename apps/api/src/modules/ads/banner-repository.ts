@@ -1,4 +1,4 @@
-import { Types, type Connection } from 'mongoose';
+import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   adBannerMediaSchema,
   adBannerPreviewSchema,
@@ -8,6 +8,7 @@ import {
   type AdPlacement
 } from '@sadat-real-estate/contracts';
 import { AdBannerServiceError, type AdBannerRepository } from './service.js';
+import type { AuditWriter } from '../audit/writer.js';
 
 type BannerStatus = AdBanner['status'];
 
@@ -115,7 +116,7 @@ function isLive(status: BannerStatus): boolean {
   return LIVE_STATUSES.includes(status);
 }
 
-export function createMongooseAdBannerRepository(connection: Connection): AdBannerRepository {
+export function createMongooseAdBannerRepository(connection: Connection, audit?: AuditWriter): AdBannerRepository {
   const banners = connection.collection<BannerRow>('ad_banners');
   const media = connection.collection<BannerMediaRow>('ad_banner_media');
   const placements = connection.collection<PlacementRow>('ad_placements');
@@ -132,32 +133,41 @@ export function createMongooseAdBannerRepository(connection: Connection): AdBann
     return indexesReady;
   }
 
-  async function findPlacement(key: AdBanner['placementKey']): Promise<PlacementRow> {
+  async function findPlacement(key: AdBanner['placementKey'], session?: ClientSession): Promise<PlacementRow> {
     await ensureIndexes();
-    const placement = await placements.findOne({ key });
+    const placement = await placements.findOne({ key }, session ? { session } : {});
     if (!placement) throw new AdBannerServiceError('NOT_FOUND');
     return placement;
   }
 
-  async function findBanner(bannerId: string): Promise<BannerRow> {
+  async function findBanner(bannerId: string, session?: ClientSession): Promise<BannerRow> {
     await ensureIndexes();
-    const banner = await banners.findOne({ _id: objectId(bannerId) });
+    const banner = await banners.findOne({ _id: objectId(bannerId) }, session ? { session } : {});
     if (!banner) throw new AdBannerServiceError('NOT_FOUND');
     return banner;
   }
 
-  async function validateLiveBanner(next: AdBanner, placement: PlacementRow, currentAt: Date): Promise<void> {
+  async function transaction<T>(run: (session: ClientSession) => Promise<T>): Promise<T> {
+    const session = await connection.startSession();
+    try {
+      return await session.withTransaction(() => run(session));
+    } finally {
+      await session.endSession();
+    }
+  }
+
+  async function validateLiveBanner(next: AdBanner, placement: PlacementRow, currentAt: Date, session?: ClientSession): Promise<void> {
     const end = new Date(next.endAt).getTime();
     if (next.status === 'ended' && currentAt.getTime() < end) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (!isLive(next.status)) return;
     const linkedMedia = next.mediaId === undefined
       ? undefined
-      : await media.findOne({ _id: objectId(next.mediaId), bannerId: objectId(next.id), active: true });
+      : await media.findOne({ _id: objectId(next.mediaId), bannerId: objectId(next.id), active: true }, session ? { session } : {});
     if (!linkedMedia) throw new AdBannerServiceError('BANNER_MEDIA_REQUIRED');
     if (!placement.active || (placement.targetUrlRequired && next.targetUrl === undefined)) {
       throw new AdBannerServiceError(placement.targetUrlRequired && next.targetUrl === undefined ? 'BANNER_TARGET_REQUIRED' : 'BANNER_INVALID_STATE');
     }
-    const currentSettings = await settings.findOne({});
+    const currentSettings = await settings.findOne({}, session ? { session } : {});
     if (!currentSettings?.enabled || !currentSettings.allowedSurfaces.includes(placement.surface)) {
       throw new AdBannerServiceError('BANNER_INVALID_STATE');
     }
@@ -170,10 +180,10 @@ export function createMongooseAdBannerRepository(connection: Connection): AdBann
       status: { $in: LIVE_STATUSES },
       startAt: { $lt: new Date(next.endAt) },
       endAt: { $gt: new Date(next.startAt) }
-    });
+    }, session ? { session } : {});
     if (overlap) throw new AdBannerServiceError('PLACEMENT_CONFLICT');
     if (next.status === 'active') {
-      const activeCount = await banners.countDocuments({ status: 'active', _id: { $ne: objectId(next.id) } });
+      const activeCount = await banners.countDocuments({ status: 'active', _id: { $ne: objectId(next.id) } }, session ? { session } : {});
       if (activeCount >= (currentSettings.maxActiveBanners ?? 100)) throw new AdBannerServiceError('BANNER_CAPACITY');
     }
   }
@@ -197,10 +207,8 @@ export function createMongooseAdBannerRepository(connection: Connection): AdBann
   }
 
   return {
-    async createBanner(actorId, input, now) {
-      await findPlacement(input.placementKey);
-      const existing = await banners.findOne({ placementKey: input.placementKey, sortOrder: input.sortOrder, status: { $ne: 'archived' } });
-      if (existing) throw new AdBannerServiceError('DUPLICATE');
+    async createBanner(actorId, input, now, metadata) {
+      if (audit && !metadata) throw new AdBannerServiceError('FORBIDDEN');
       const banner = adBannerSchema.parse({
         id: new Types.ObjectId().toHexString(),
         ...input,
@@ -228,13 +236,29 @@ export function createMongooseAdBannerRepository(connection: Connection): AdBann
         createdAt: now,
         updatedAt: now
       };
+      const write = async (session?: ClientSession): Promise<AdBanner> => {
+        await findPlacement(input.placementKey, session);
+        const existing = await banners.findOne(
+          { placementKey: input.placementKey, sortOrder: input.sortOrder, status: { $ne: 'archived' } },
+          session ? { session } : {}
+        );
+        if (existing) throw new AdBannerServiceError('DUPLICATE');
+        await banners.insertOne(row, session ? { session } : {});
+        if (audit && metadata) {
+          await audit.record({
+            actorType: 'admin', actorId, targetType: 'ad_banner', targetId: banner.id,
+            action: 'ad_banner.create', reason: `Create banner for ${banner.placementKey}`,
+            before: {}, after: banner, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: now
+          }, session);
+        }
+        return toBanner(row);
+      };
       try {
-        await banners.insertOne(row);
+        return audit ? await transaction(session => write(session)) : await write();
       } catch (error) {
         if (duplicate(error)) throw new AdBannerServiceError('DUPLICATE');
         throw error;
       }
-      return toBanner(row);
     },
 
     async listBanners(query) {
@@ -249,29 +273,45 @@ export function createMongooseAdBannerRepository(connection: Connection): AdBann
       return { items: rows.map(toBanner), page: query.page, limit: query.limit, total };
     },
 
-    async updateBanner(actorId, bannerId, input, now) {
-      const current = await findBanner(bannerId);
-      if (current.version !== input.expectedVersion) throw new AdBannerServiceError('VERSION_CONFLICT');
-      const currentValue = toBanner(current);
-      const nextValue = adBannerSchema.parse({
-        ...currentValue,
-        ...(input.altText === null ? {} : input.altText === undefined ? {} : { altText: input.altText }),
-        ...(input.mediaId === null ? {} : input.mediaId === undefined ? {} : { mediaId: input.mediaId }),
-        ...(input.targetUrl === null ? {} : input.targetUrl === undefined ? {} : { targetUrl: input.targetUrl }),
-        ...Object.fromEntries(Object.entries(input).filter(([key]) => !['expectedVersion', 'reason', 'altText', 'mediaId', 'targetUrl'].includes(key))),
-        ...(input.altText === null ? { altText: undefined } : {}),
-        ...(input.mediaId === null ? { mediaId: undefined } : {}),
-        ...(input.targetUrl === null ? { targetUrl: undefined } : {}),
-        updatedBy: actorId,
-        updatedAt: now.toISOString(),
-        version: current.version + 1
-      });
-      if (nextValue.status !== current.status && !TRANSITIONS[current.status].includes(nextValue.status)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
-      const placement = await findPlacement(nextValue.placementKey);
-      await validateLiveBanner(nextValue, placement, now);
-      const result = await banners.updateOne({ _id: current._id, version: input.expectedVersion }, changesFor(nextValue, actorId, now));
-      if (result.matchedCount !== 1) throw new AdBannerServiceError('VERSION_CONFLICT');
-      return toBanner(await findBanner(bannerId));
+    async updateBanner(actorId, bannerId, input, now, metadata) {
+      if (audit && !metadata) throw new AdBannerServiceError('FORBIDDEN');
+      const write = async (session?: ClientSession): Promise<AdBanner> => {
+        const current = await findBanner(bannerId, session);
+        if (current.version !== input.expectedVersion) throw new AdBannerServiceError('VERSION_CONFLICT');
+        const currentValue = toBanner(current);
+        const nextValue = adBannerSchema.parse({
+          ...currentValue,
+          ...(input.altText === null ? {} : input.altText === undefined ? {} : { altText: input.altText }),
+          ...(input.mediaId === null ? {} : input.mediaId === undefined ? {} : { mediaId: input.mediaId }),
+          ...(input.targetUrl === null ? {} : input.targetUrl === undefined ? {} : { targetUrl: input.targetUrl }),
+          ...Object.fromEntries(Object.entries(input).filter(([key]) => !['expectedVersion', 'reason', 'altText', 'mediaId', 'targetUrl'].includes(key))),
+          ...(input.altText === null ? { altText: undefined } : {}),
+          ...(input.mediaId === null ? { mediaId: undefined } : {}),
+          ...(input.targetUrl === null ? { targetUrl: undefined } : {}),
+          updatedBy: actorId,
+          updatedAt: now.toISOString(),
+          version: current.version + 1
+        });
+        if (nextValue.status !== current.status && !TRANSITIONS[current.status].includes(nextValue.status)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+        const placement = await findPlacement(nextValue.placementKey, session);
+        await validateLiveBanner(nextValue, placement, now, session);
+        const result = await banners.updateOne(
+          { _id: current._id, version: input.expectedVersion },
+          changesFor(nextValue, actorId, now),
+          session ? { session } : {}
+        );
+        if (result.matchedCount !== 1) throw new AdBannerServiceError('VERSION_CONFLICT');
+        const updated = toBanner(await findBanner(bannerId, session));
+        if (audit && metadata) {
+          await audit.record({
+            actorType: 'admin', actorId, targetType: 'ad_banner', targetId: updated.id,
+            action: 'ad_banner.update', reason: input.reason,
+            before: currentValue, after: updated, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: now
+          }, session);
+        }
+        return updated;
+      };
+      return audit ? await transaction(session => write(session)) : await write();
     },
 
     async previewBanner(bannerId) {

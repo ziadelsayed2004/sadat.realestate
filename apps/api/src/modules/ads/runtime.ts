@@ -32,12 +32,13 @@ export function createAdminAdsRuntime(
 export function createAdminBannersRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
-  authorization: Pick<RbacService, 'authorize'>
+  authorization: Pick<RbacService, 'authorize'>,
+  audit: AuditWriter
 ): AdminBannerRouterDependencies {
   return {
     accessTokens,
     service: createAdSettingsService({
-      bannerRepository: createMongooseAdBannerRepository(connection),
+      bannerRepository: createMongooseAdBannerRepository(connection, audit),
       bannerAuthorization: authorization,
       runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
     })

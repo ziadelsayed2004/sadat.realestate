@@ -45,6 +45,11 @@ function requestId(request: Request): string {
   return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request';
 }
 
+function mutationContext(request: Request): { requestId: string; traceId: string } {
+  const current = getRequestContext();
+  return { requestId: current?.requestId ?? requestId(request), traceId: current?.traceId ?? '0'.repeat(32) };
+}
+
 function claims(response: Response): AccessTokenClaims {
   return response.locals.adminRbacClaims as AccessTokenClaims;
 }
@@ -82,7 +87,7 @@ export function createAdminBannerRouter(dependencies: AdminBannerRouterDependenc
 
   router.post('/admin/banners', async (request, response) => {
     try {
-      const data = await dependencies.service.createBanner(claims(response), request.body ?? {});
+      const data = await dependencies.service.createBanner(claims(response), request.body ?? {}, mutationContext(request));
       response.status(201).json(toSuccessResponse(data, requestId(request)));
     } catch (error) {
       sendError(request, response, error);
@@ -92,7 +97,7 @@ export function createAdminBannerRouter(dependencies: AdminBannerRouterDependenc
   router.patch('/admin/banners/:bannerId', async (request, response) => {
     try {
       const { bannerId } = adBannerIdParamsSchema.parse(request.params);
-      const data = await dependencies.service.updateBanner(claims(response), bannerId, request.body ?? {});
+      const data = await dependencies.service.updateBanner(claims(response), bannerId, request.body ?? {}, mutationContext(request));
       response.status(200).json(toSuccessResponse(data, requestId(request)));
     } catch (error) {
       sendError(request, response, error);
