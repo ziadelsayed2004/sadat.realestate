@@ -35,6 +35,7 @@ export function createProviderRuntime(
   authorization?: Pick<RbacService, 'authorize'>,
   dashboardDependencies?: Omit<ProviderDashboardDependencies, 'application'>
 ): ProviderRouterDependencies {
+  connection.base.set('transactionAsyncLocalStorage', true);
   const identityModels = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
   const otpRepository = createMongooseOtpRepository(identityModels, authModels);
@@ -74,7 +75,8 @@ export function createProviderRuntime(
           }
         : undefined;
     },
-    authService
+    authService,
+    transaction: operation => connection.transaction(operation)
   });
   return {
     service,

@@ -188,29 +188,29 @@ export function createMongooseProviderRepository(
   return {
     async createDraft(input) {
       try {
-        const userId = await connection.transaction(async (session) => {
-          const [user] = await User.create([{
+        // Registration owns the transaction boundary so OTP redemption,
+        // identity/profile/application creation, credentials, and the first
+        // session either commit together or roll back together.
+        const [user] = await User.create([{
             normalizedEmail: input.email,
             roleType: 'provider',
             status: 'draft',
             locale: 'ar'
-          }], { session });
-          if (!user) throw new Error('PROVIDER_USER_CREATE_FAILED');
-          await ProviderProfile.create([{
+          }]);
+        if (!user) throw new Error('PROVIDER_USER_CREATE_FAILED');
+        await ProviderProfile.create([{
             userId: user._id,
             providerType: input.providerType,
             status: 'draft'
-          }], { session });
-          await ProviderApplication.create([{
+          }]);
+        await ProviderApplication.create([{
             userId: user._id,
             providerType: input.providerType,
             status: 'draft',
             requirementVersion: input.requirementVersion,
             email: input.email
-          }], { session });
-          return user._id.toHexString();
-        });
-        const application = await load(userId);
+          }]);
+        const application = await load(user._id.toHexString());
         if (!application) throw new Error('PROVIDER_CREATE_FAILED');
         return application;
       } catch (error) {

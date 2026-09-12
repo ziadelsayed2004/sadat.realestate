@@ -63,6 +63,7 @@ export interface ProviderServiceDependencies {
   } | undefined>;
   authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>;
   now?: () => Date;
+  transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
 }
 
 export interface ProviderService {
@@ -232,7 +233,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
     return withCompleteness(result.application);
   }
 
-  return {
+  const service: ProviderService = {
     async registerDraft(input) {
       const createdAt = now();
       const grant = await dependencies.redeemRegistrationGrant(
@@ -321,5 +322,11 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
     async getStatus(claims) {
       return statusData(await owned(claims));
     }
+  };
+
+  if (!dependencies.transaction) return service;
+  return {
+    ...service,
+    registerDraft: (...args) => dependencies.transaction!(() => service.registerDraft(...args))
   };
 }

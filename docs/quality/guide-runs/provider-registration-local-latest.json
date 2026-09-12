@@ -1,5 +1,5 @@
 {
-  "commit": "5577099e3818b7a470719670880ca2b1ba5f259c",
+  "commit": "6a0c46d03f6b201f9b028fcd30da694c6a56b487",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-11",
@@ -8,7 +8,7 @@
   ],
   "environment": "local-real-browser-api-mailhog-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T12:34:20.171Z",
+  "startedAt": "2026-09-12T16:02:00.093Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "browser_provider_type_password_and_email_otp",
@@ -133,6 +133,11 @@
     },
     {
       "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
       "path": "/api/v1/provider/application/submit",
       "status": 200
     },
@@ -158,7 +163,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa2a3cf89e2bdcc15e7abcb/review",
+      "path": "/api/v1/admin/providers/6aa5777a6cc0ae40c22b8a95/review",
       "status": 403
     },
     {
@@ -168,17 +173,17 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa2a3cf89e2bdcc15e7abcb/review",
+      "path": "/api/v1/admin/providers/6aa5777a6cc0ae40c22b8a95/review",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/login",
+      "path": "/api/v1/auth/refresh",
       "status": 200
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa2a3cf89e2bdcc15e7abcb/review",
+      "path": "/api/v1/admin/providers/6aa5777a6cc0ae40c22b8a95/review",
       "status": 409
     },
     {
@@ -188,7 +193,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/auth/login",
+      "path": "/api/v1/auth/refresh",
       "status": 200
     },
     {
@@ -208,7 +213,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa2a3cf89e2bdcc15e7abcb/review",
+      "path": "/api/v1/admin/providers/6aa5777a6cc0ae40c22b8a95/review",
       "status": 200
     },
     {
@@ -234,9 +239,423 @@
   ],
   "browser": [
     {
+      "stage": "draft_ready",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "draft_ready",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "draft_ready",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "draft_ready",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "draft_ready",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "draft_ready",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/auth/register/provider/account?providerType=developer_company",
+          "finalPath": "/auth/register/provider/account",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/company?providerType=developer_company",
+          "finalPath": "/auth/register/provider/company",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/documents?providerType=developer_company",
+          "finalPath": "/auth/register/provider/documents",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/auth/register/provider/review?providerType=developer_company",
+          "finalPath": "/auth/register/provider/review",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
       "stage": "pending_review",
       "width": 402,
       "overflow": false
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "pending_review_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/status",
+          "finalPath": "/provider-application/status",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "needs_information_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/needs-information",
+          "finalPath": "/provider-application/needs-information",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
     },
     {
       "stage": "needs_information",
@@ -247,8 +666,105 @@
       "stage": "approved",
       "width": 390,
       "overflow": false
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "approved_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider-application/approved",
+          "finalPath": "/provider-application/approved",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
     }
   ],
+  "cleanup": true,
   "mongo": {
     "collections": [
       "users",
@@ -277,5 +793,16 @@
   "remaining": [
     "Run the same provider registration and review lifecycle on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T12:34:35.554Z"
+  "cleanupCollections": [
+    "users",
+    "provider_profiles",
+    "provider_applications",
+    "provider_documents",
+    "admin_credentials",
+    "sessions",
+    "otp_challenges",
+    "account_state_transitions",
+    "audit_logs"
+  ],
+  "finishedAt": "2026-09-12T16:02:25.589Z"
 }

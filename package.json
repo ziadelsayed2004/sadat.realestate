@@ -49,6 +49,7 @@
     "guide:seeker-property-search:local": "node --import tsx scripts/verify-seeker-property-search-local.mjs",
     "guide:seeker-notifications-guarantees:local": "node --import tsx scripts/verify-seeker-notifications-guarantees-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
+    "guide:provider-registration-guarantees:local": "node --import tsx scripts/verify-provider-registration-guarantees-local.mjs",
     "guide:seeker-account:local": "node scripts/verify-guide-seeker-account-local.mjs",
     "guide:property-lifecycle:local": "node scripts/verify-guide-property-lifecycle-local.mjs",
     "guide:remaining-surfaces:local": "node scripts/verify-guide-remaining-surfaces-local.mjs",

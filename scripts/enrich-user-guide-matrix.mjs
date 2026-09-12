@@ -42,6 +42,7 @@ const communityPublicRecovery = await readFile('docs/quality/guide-runs/communit
 const registrationRecovery = await readFile('docs/quality/guide-runs/registration-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationBrowser = await readFile('docs/quality/guide-runs/registration-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationGuarantees = await readFile('docs/quality/guide-runs/registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerRegistrationGuarantees = await readFile('docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -98,6 +99,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/admin-requests-local-latest.json", adminRequestsEvidence],
   ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
   ["docs/quality/guide-runs/provider-registration-local-latest.json", providerRegistrationEvidence],
+  ["docs/quality/guide-runs/provider-registration-guarantees-local-latest.json", providerRegistrationGuarantees],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -211,6 +213,28 @@ const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL
   && notificationGuarantees.checks?.authorization?.foreignUnchanged === true
   && notificationGuarantees.checks?.readAllAndEmpty?.emptyState === true
   && notificationGuarantees.checks?.currentState?.notificationsUnchanged === true;
+
+const providerRegistrationLocalAcceptanceReady = providerRegistrationEvidence?.status === 'PASS_LOCAL'
+  && providerRegistrationEvidence.mockedRoutes === false && providerRegistrationEvidence.cleanup === true
+  && providerRegistrationEvidence.mongo?.atomicStateCoherence === true
+  && providerRegistrationEvidence.mongo?.activeDocumentCount === 4
+  && ['provider.needs_information', 'provider.verify'].every(action => providerRegistrationEvidence.mongo?.auditActions?.includes(action))
+  && ['draft_provider_denied_admin_projection_403', 'limited_admin_provider_review_denied_403',
+    'admin_review_reason_required_in_browser', 'repeated_stale_review_rejected_409',
+    'provider_sessions_revoked_after_each_admin_decision', 'provider_reauthentication_reflects_authoritative_status']
+    .every(check => providerRegistrationEvidence.authorization?.includes(check))
+  && [
+    ['draft_ready', 4], ['pending_review_responsive', 1],
+    ['needs_information_responsive', 1], ['approved_responsive', 1]
+  ].every(([stage, routeCount]) => ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    providerRegistrationEvidence.browser?.some(run => run.stage === stage && run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.pageErrors === 0 && run.routeChecks?.length === routeCount
+      && run.routeChecks.every(route => route.documentStatus === 200 && route.scrollWidth <= route.innerWidth + 1)))))
+  && providerRegistrationGuarantees?.status === 'PASS_LOCAL'
+  && providerRegistrationGuarantees.mockedRoutes === false && providerRegistrationGuarantees.cleanup === true
+  && providerRegistrationGuarantees.checks?.length === 4
+  && providerRegistrationGuarantees.mongo?.failedRegistrationResidue === 0
+  && providerRegistrationGuarantees.mongo?.duplicateGrantRestored === true;
 
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
@@ -410,6 +434,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'Registration creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
     };
   }
+  if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+    hydratedJourney.applicabilityReview = {
+      horizontalAccess: 'NOT_APPLICABLE',
+      rationale: 'Provider draft routes are self-scoped from the current provider session; administrative review uses a global provider application identifier protected by the provider-review permission and current account/session guards.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -542,6 +577,16 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['currentSessionState', 'logout_invalidates_refresh_session', 'docs/quality/guide-runs/registration-browser-local-latest.json', registrationBrowser.finishedAt],
       ['duplicateMutation', 'grant_replay_and_duplicate_email_rejected_without_duplicate_account', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
       ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_and_profile', 'docs/quality/guide-runs/registration-guarantees-local-latest.json', registrationGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['roleAuthorization', 'draft_provider_and_limited_admin_forbidden_from_admin_review_capabilities', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
+      ['currentSessionState', 'review_decisions_revoke_provider_sessions_and_reauthentication_reads_authoritative_state', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
+      ['duplicateMutation', 'document_replay_is_idempotent_and_registration_grant_replay_is_rejected', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
+      ['expectedVersion409', 'incomplete_submit_and_repeated_stale_review_are_rejected_with_409', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
+      ['decisionReason', 'review_reason_is_required_and_persisted_with_both_review_audits', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
+      ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_profile_application_credential_and_session', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
@@ -711,6 +756,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/GUIDE_04_LOCAL_ACCEPTANCE_2026-09-12.md',
       scope: 'Empty and mismatched-password browser validation in both locales and all viewports, plus duplicate-email rollback in isolated MongoDB.',
       verifiedAt: registrationGuarantees.finishedAt });
+  }
+  if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'provider_registration_documents_review_revision_approval_and_cleanup',
+      path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Real provider registration and review lifecycle in Arabic and English across Desktop, Tablet and Mobile with authoritative state, audit and cleanup checks.',
+      verifiedAt: providerRegistrationEvidence.finishedAt });
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'Browser/API/MongoDB',
+      check: 'incomplete_submit_reason_replay_duplicate_and_registration_rollback_validation',
+      path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Incomplete submission, review reason, stale action, duplicate document, grant replay, duplicate email and forced credential failure preserve the expected state.',
+      verifiedAt: providerRegistrationGuarantees.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
