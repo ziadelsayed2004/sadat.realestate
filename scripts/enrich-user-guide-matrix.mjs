@@ -43,6 +43,7 @@ const registrationRecovery = await readFile('docs/quality/guide-runs/registratio
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider-customer-request-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -165,6 +166,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
       checks: seekerPropertySearch.checks,
     });
   }
+  if (journey.id === 'GUIDE-16' && providerCustomerRequest?.status === 'PASS_LOCAL'
+    && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true) {
+    evidenceAttachments.push({
+      path: 'docs/quality/guide-runs/provider-customer-request-local-latest.json',
+      status: providerCustomerRequest.status,
+      verifiedAt: providerCustomerRequest.finishedAt,
+      environment: providerCustomerRequest.environment,
+      mockedRoutes: false,
+      checks: providerCustomerRequest.checks,
+    });
+  }
   appendMissingEvidence(evidenceAttachments, journey.evidenceAttachments, item => item.path);
   const executionEvidence = communityRunApplies ? {
     path: "docs/quality/guide-runs/community-local-latest.json",
@@ -213,6 +225,18 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['horizontalAccess', 'foreign_seeker_detail_hidden'],
     ]) if (seekerPropertySearch.checks?.includes(check)) reviewedGuarantees.push({ category, check,
       path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json', verifiedAt: seekerPropertySearch.finishedAt });
+  }
+  if (journey.id === 'GUIDE-16' && providerCustomerRequest?.status === 'PASS_LOCAL'
+    && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true) {
+    for (const [category, check] of [
+      ['duplicateMutation', 'duplicate_active_customer_request_rejected_without_second_record'],
+      ['horizontalAccess', 'owner_list_and_foreign_provider_isolation'],
+      ['currentSessionState', 'current_provider_account_state_overrides_issued_token'],
+      ['roleAuthorization', 'seeker_token_denied_provider_customer_creation'],
+      ['decisionReason', 'provider_contact_transition_persists_version_reason_and_audit'],
+      ['expectedVersion409', 'invalid_reason_and_stale_version_leave_request_and_audit_unchanged'],
+    ]) if (providerCustomerRequest.checks?.includes(check)) reviewedGuarantees.push({ category, check,
+      path: 'docs/quality/guide-runs/provider-customer-request-local-latest.json', verifiedAt: providerCustomerRequest.finishedAt });
   }
   if (journey.id === 'GUIDE-10' && seekerAccountState?.status === 'PASS_LOCAL'
     && seekerAccountState.mockedRoutes === false && seekerAccountState.cleanup === true
@@ -272,6 +296,24 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/seeker-property-search-local-latest.json',
       scope: 'Property-search request creation, owned list/detail and cancellation through real local HTTP and isolated MongoDB; browser and Production remain open.',
       verifiedAt: seekerPropertySearch.finishedAt });
+  }
+  if (journey.id === 'GUIDE-16' && providerCustomerRequest?.status === 'PASS_LOCAL'
+    && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true) {
+    if (['provider_customer_request_created_with_exact_payload', 'owner_list_and_foreign_provider_isolation',
+      'provider_contact_transition_persists_version_reason_and_audit'].every(check => providerCustomerRequest.checks?.includes(check))) {
+      reviewedSubcases.push({ case: 'success', evidenceType: 'API/MongoDB',
+        check: 'provider_customer_create_list_contact_transition',
+        path: 'docs/quality/guide-runs/provider-customer-request-local-latest.json',
+        scope: 'Provider customer request creation, owned list and contacted transition through real local HTTP and isolated MongoDB; browser and Production remain open.',
+        verifiedAt: providerCustomerRequest.finishedAt });
+    }
+    if (providerCustomerRequest.checks?.includes('invalid_customer_request_rejected_without_write')) {
+      reviewedSubcases.push({ case: 'validation', evidenceType: 'API',
+        check: 'invalid_customer_request_rejected_without_write',
+        path: 'docs/quality/guide-runs/provider-customer-request-local-latest.json',
+        scope: 'Strict payload validation returned HTTP 400 and left the isolated requests collection empty.',
+        verifiedAt: providerCustomerRequest.finishedAt });
+    }
   }
   if (journey.id === 'GUIDE-10' && sessionBrowser?.status === 'PASS_LOCAL_SUBCASES'
     && sessionBrowser.mockedRoutes === false && sessionBrowser.sessionsClosed === true

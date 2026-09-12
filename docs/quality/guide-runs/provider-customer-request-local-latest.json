@@ -1,0 +1,36 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-16"
+  ],
+  "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+  "database": "provider_customer_request_1789206415971",
+  "mockedRoutes": false,
+  "scope": "Request runtime with locally signed tokens and real account-state checks; no browser, login, stored-session revocation, provider subtype lifecycle, projects, viewings or Production coverage.",
+  "testedAt": "2026-09-12T09:46:56.003Z",
+  "commit": "877089da8907baf720589b23675fb8eb2609aad2",
+  "worktreeChanges": true,
+  "checks": [
+    "invalid_customer_request_rejected_without_write",
+    "seeker_token_denied_provider_customer_creation",
+    "provider_customer_request_created_with_exact_payload",
+    "duplicate_active_customer_request_rejected_without_second_record",
+    "owner_list_and_foreign_provider_isolation",
+    "current_provider_account_state_overrides_issued_token",
+    "invalid_reason_and_stale_version_leave_request_and_audit_unchanged",
+    "provider_contact_transition_persists_version_reason_and_audit"
+  ],
+  "httpStatuses": {
+    "invalid": 400,
+    "wrongRole": 403,
+    "create": 201,
+    "duplicate": 409,
+    "list": 200,
+    "suspended": 403,
+    "invalidReason": 400,
+    "staleVersion": 409,
+    "transition": 200
+  },
+  "cleanup": true,
+  "finishedAt": "2026-09-12T09:46:56.735Z"
+}

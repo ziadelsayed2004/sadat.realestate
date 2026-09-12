@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T09:30:30.909Z",
+  "generatedAt": "2026-09-12T09:47:08.695Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3337,22 +3337,22 @@
       },
       "cases": {
         "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
         "empty": "UNVERIFIED_COMPLETE_JOURNEY",
         "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "provider"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
         "atomicAuditRollback": "UNVERIFIED"
       },
       "environment": {
@@ -3364,11 +3364,28 @@
         "section": "#provider",
         "journeyId": "GUIDE-16"
       },
-      "executionDate": "2026-09-10T10:06:46.846Z",
+      "executionDate": "2026-09-12T09:46:56.735Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T09:46:56.735Z",
+          "environment": "isolated-local-MongoDB-rs0-real-HTTP",
+          "mockedRoutes": false,
+          "checks": [
+            "invalid_customer_request_rejected_without_write",
+            "seeker_token_denied_provider_customer_creation",
+            "provider_customer_request_created_with_exact_payload",
+            "duplicate_active_customer_request_rejected_without_second_record",
+            "owner_list_and_foreign_provider_isolation",
+            "current_provider_account_state_overrides_issued_token",
+            "invalid_reason_and_stale_version_leave_request_and_audit_unchanged",
+            "provider_contact_transition_persists_version_reason_and_audit"
+          ]
+        },
         {
           "path": "docs/quality/guide-runs/guide-04-local-latest.json",
           "status": "PASS_LOCAL_PROVIDER_VIEWING_SUBFLOW",
@@ -3392,8 +3409,62 @@
           }
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "API/MongoDB",
+          "check": "provider_customer_create_list_contact_transition",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "scope": "Provider customer request creation, owned list and contacted transition through real local HTTP and isolated MongoDB; browser and Production remain open.",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "invalid_customer_request_rejected_without_write",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "scope": "Strict payload validation returned HTTP 400 and left the isolated requests collection empty.",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_active_customer_request_rejected_without_second_record",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "category": "horizontalAccess",
+          "check": "owner_list_and_foreign_provider_isolation",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_provider_account_state_overrides_issued_token",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "seeker_token_denied_provider_customer_creation",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "provider_contact_transition_persists_version_reason_and_audit",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "invalid_reason_and_stale_version_leave_request_and_audit_unchanged",
+          "path": "docs/quality/guide-runs/provider-customer-request-local-latest.json",
+          "verifiedAt": "2026-09-12T09:46:56.735Z"
+        }
+      ]
     },
     {
       "id": "GUIDE-17",
@@ -4509,7 +4580,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T09:30:30.909Z",
+    "updatedAt": "2026-09-12T09:47:08.695Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
