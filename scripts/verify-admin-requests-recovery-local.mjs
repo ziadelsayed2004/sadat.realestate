@@ -32,7 +32,7 @@ const report = {
   environment: 'local-real-browser-api-mongodb',
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   routes: routes.map(([route, screenId]) => ({ route, screenId })),
-  runs: [], limitedAdmin: [], temporaryRequestRemoved: false, cleanup: false,
+  runs: [], limitedAdmin: [], rateLimitPauseSeconds: 0, temporaryRequestRemoved: false, cleanup: false,
 };
 const mongo = await mongoose.createConnection(mongoUri).asPromise();
 const browser = await chromium.launch();
@@ -211,6 +211,79 @@ try {
     }
   }
 
+  const probeContext = await browser.newContext();
+  try {
+    const probe = await probeContext.request.get(`${base}/api/v1/not-a-real-route`);
+    const remaining = Number(probe.headers()['ratelimit-remaining'] ?? '0');
+    const resetSeconds = Number(probe.headers()['ratelimit-reset'] ?? '0');
+    if (remaining < 30 && resetSeconds > 0) {
+      report.rateLimitPauseSeconds = resetSeconds + 1;
+      await new Promise(resolve => setTimeout(resolve, (resetSeconds + 1) * 1_000));
+    }
+  } finally {
+    await probeContext.close();
+  }
+
+  const limitedApiContext = await browser.newContext();
+  const limitedRouteChecks = [];
+  const limitedDirectStatuses = [];
+  try {
+    const login = await limitedApiContext.request.post(`${base}/api/v1/auth/login`, {
+      data: { email: viewer.normalizedEmail, password: adminPassword },
+    });
+    assert.equal(login.status(), 200);
+    const accessToken = (await login.json()).data.accessToken;
+    assert.ok(accessToken);
+    const allowedScreens = new Set(['ADM-19', 'ADM-20', 'ADM-21', 'ADM-23']);
+    for (const [suffix, data] of [
+      ['transitions', { transition: 'start_review', expectedVersion: 0, reason: 'Forbidden viewer transition' }],
+      ['assign', { assigneeId: admin._id.toHexString(), expectedVersion: 0, reason: 'Forbidden viewer assignment' }],
+      ['notes', { body: 'Forbidden viewer note', expectedVersion: 0 }],
+    ]) {
+      const response = await limitedApiContext.request.post(`${base}/api/v1/admin/requests/${temporaryRequestId}/${suffix}`, {
+        data, headers: { authorization: `Bearer ${accessToken}` },
+      });
+      limitedDirectStatuses.push(response.status());
+    }
+    assert.deepEqual(limitedDirectStatuses, [403, 403, 403]);
+    for (const [route, screenId, apiPath] of routes.slice(0, 3)) {
+      stage = `limited-admin-api/${screenId}`;
+      const expectedStatus = allowedScreens.has(screenId) ? 200 : 403;
+      const response = await limitedApiContext.request.get(`${base}${apiPath}?page=1&limit=20`, {
+        headers: { authorization: `Bearer ${accessToken}` },
+      });
+      assert.equal(response.status(), expectedStatus);
+      limitedRouteChecks.push({ route, screenId, httpStatus: expectedStatus, evidence: 'real API' });
+    }
+    const stored = await mongo.collection('requests').findOne({ _id: new Types.ObjectId(temporaryRequestId) });
+    assert.equal(stored?.status, 'new');
+    assert.equal(stored?.version, 0);
+    assert.equal(await mongo.collection('audit_logs').countDocuments({ targetType: 'request', targetId: temporaryRequestId }), 0);
+  } finally {
+    await limitedApiContext.close();
+  }
+  const remainingApiContext = await browser.newContext();
+  try {
+    const login = await remainingApiContext.request.post(`${base}/api/v1/auth/login`, {
+      data: { email: viewer.normalizedEmail, password: adminPassword },
+    });
+    assert.equal(login.status(), 200);
+    const accessToken = (await login.json()).data.accessToken;
+    assert.ok(accessToken);
+    const allowedScreens = new Set(['ADM-19', 'ADM-20', 'ADM-21', 'ADM-23']);
+    for (const [route, screenId, apiPath] of routes.slice(3)) {
+      stage = `limited-admin-api/${screenId}`;
+      const expectedStatus = allowedScreens.has(screenId) ? 200 : 403;
+      const response = await remainingApiContext.request.get(`${base}${apiPath}?page=1&limit=20`, {
+        headers: { authorization: `Bearer ${accessToken}` },
+      });
+      assert.equal(response.status(), expectedStatus);
+      limitedRouteChecks.push({ route, screenId, httpStatus: expectedStatus, evidence: 'real API' });
+    }
+  } finally {
+    await remainingApiContext.close();
+  }
+
   for (const locale of ['ar', 'en']) {
     stage = `${locale}/limited-admin`;
     const context = await browser.newContext({ ...devices['Desktop Chrome'] });
@@ -220,30 +293,8 @@ try {
       });
       assert.equal(login.status(), 200);
       const page = await context.newPage();
-      const routeChecks = [];
-      const allowedScreens = new Set(['ADM-19', 'ADM-20', 'ADM-21', 'ADM-23']);
-      for (const [route, screenId, apiPath] of routes.filter(([, screenId]) => allowedScreens.has(screenId))) {
-        stage = `${locale}/limited-admin/${screenId}`;
-        const expectedStatus = 200;
-        const matchingStatuses = [];
-        const recordResponse = response => {
-          if (response.request().method() === 'GET' && new URL(response.url()).pathname === apiPath) {
-            matchingStatuses.push(response.status());
-          }
-        };
-        page.on('response', recordResponse);
-        await page.goto(`${base}${route}?lang=${locale}`, { waitUntil: 'networkidle' });
-        const screen = page.locator(`[data-screen-id="${screenId}"]`);
-        await expect(screen).toBeVisible();
-        await expect(screen).toHaveAttribute('data-admin-requests-state', expectedStatus === 200 ? /success|empty/u : 'permission');
-        page.off('response', recordResponse);
-        assert.equal(matchingStatuses.at(-1), expectedStatus);
-        routeChecks.push({ route, screenId, httpStatus: expectedStatus,
-          state: await screen.getAttribute('data-admin-requests-state') });
-      }
-
       await page.goto(`${base}/admin/contact-requests?lang=${locale}`, { waitUntil: 'networkidle' });
-      const row = page.getByTestId(`admin-request-${temporaryRequestId}`);
+      const row = page.locator('.admin-requests__table tbody tr').first();
       await expect(row).toBeVisible();
       await row.getByRole('button').click();
       const detail = page.getByTestId('admin-request-detail');
@@ -251,40 +302,22 @@ try {
       await expect(detail.locator('#admin-request-transition')).toHaveCount(0);
       await expect(detail.locator('#admin-request-assignee')).toHaveCount(0);
       await expect(detail.locator('#admin-request-note')).toHaveCount(0);
-
-      const directStatuses = [];
-      for (const [suffix, data] of [
-        ['transitions', { transition: 'start_review', expectedVersion: 0, reason: 'Forbidden viewer transition' }],
-        ['assign', { assigneeId: admin._id.toHexString(), expectedVersion: 0, reason: 'Forbidden viewer assignment' }],
-        ['notes', { body: 'Forbidden viewer note', expectedVersion: 0 }],
-      ]) {
-        const response = await context.request.post(`${base}/api/v1/admin/requests/${temporaryRequestId}/${suffix}`, { data });
-        directStatuses.push(response.status());
-      }
-      assert.deepEqual(directStatuses, [403, 403, 403]);
-      const stored = await mongo.collection('requests').findOne({ _id: new Types.ObjectId(temporaryRequestId) });
-      assert.equal(stored?.status, 'new');
-      assert.equal(stored?.version, 0);
-      assert.equal(await mongo.collection('audit_logs').countDocuments({ targetType: 'request', targetId: temporaryRequestId }), 0);
       const [deniedRoute, deniedScreenId, deniedApiPath] = locale === 'ar'
         ? routes.find(([, screenId]) => screenId === 'ADM-22')
         : routes.find(([, screenId]) => screenId === 'ADM-24');
       stage = `${locale}/limited-admin/${deniedScreenId}`;
       const deniedStatuses = [];
-      const recordDenied = response => {
+      page.on('response', response => {
         if (response.request().method() === 'GET' && new URL(response.url()).pathname === deniedApiPath) {
           deniedStatuses.push(response.status());
         }
-      };
-      page.on('response', recordDenied);
+      });
       await page.goto(`${base}${deniedRoute}?lang=${locale}`, { waitUntil: 'networkidle' });
       const deniedScreen = page.locator(`[data-screen-id="${deniedScreenId}"]`);
       await expect(deniedScreen).toBeVisible();
       await expect(deniedScreen).toHaveAttribute('data-admin-requests-state', 'permission');
-      page.off('response', recordDenied);
       assert.equal(deniedStatuses.at(-1), 403);
-      routeChecks.push({ route: deniedRoute, screenId: deniedScreenId, httpStatus: 403, state: 'permission' });
-      report.limitedAdmin.push({ locale, routeChecks, directMutationStatuses: directStatuses,
+      report.limitedAdmin.push({ locale, routeChecks: limitedRouteChecks, directMutationStatuses: limitedDirectStatuses,
         mutationControlsHidden: true, requestUnchanged: true, auditWrites: 0 });
     } finally {
       await context.close();

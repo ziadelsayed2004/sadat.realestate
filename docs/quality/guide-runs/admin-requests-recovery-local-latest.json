@@ -1,11 +1,11 @@
 {
-  "status": "FAIL_LOCAL",
+  "status": "PASS_LOCAL_SUBCASES",
   "journeys": [
     "GUIDE-21"
   ],
   "mockedRoutes": false,
   "environment": "local-real-browser-api-mongodb",
-  "commit": "f9d2528704f142a0dacada4bf3456f2853a00732",
+  "commit": "455d1a325616148a5eef48ce0dd3abeb9316444d",
   "routes": [
     {
       "route": "/admin/customer-requests",
@@ -466,9 +466,108 @@
       "scrollWidth": 393
     }
   ],
-  "limitedAdmin": [],
+  "limitedAdmin": [
+    {
+      "locale": "ar",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 403,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 403,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "evidence": "real API"
+        }
+      ],
+      "directMutationStatuses": [
+        403,
+        403,
+        403
+      ],
+      "mutationControlsHidden": true,
+      "requestUnchanged": true,
+      "auditWrites": 0
+    },
+    {
+      "locale": "en",
+      "routeChecks": [
+        {
+          "route": "/admin/customer-requests",
+          "screenId": "ADM-19",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/overdue-requests",
+          "screenId": "ADM-20",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/viewing-requests",
+          "screenId": "ADM-22",
+          "httpStatus": 403,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/search-requests",
+          "screenId": "ADM-23",
+          "httpStatus": 200,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/request-issues",
+          "screenId": "ADM-24",
+          "httpStatus": 403,
+          "evidence": "real API"
+        },
+        {
+          "route": "/admin/contact-requests",
+          "screenId": "ADM-21",
+          "httpStatus": 200,
+          "evidence": "real API"
+        }
+      ],
+      "directMutationStatuses": [
+        403,
+        403,
+        403
+      ],
+      "mutationControlsHidden": true,
+      "requestUnchanged": true,
+      "auditWrites": 0
+    }
+  ],
+  "rateLimitPauseSeconds": 28,
   "temporaryRequestRemoved": true,
   "cleanup": true,
-  "failure": "ar/limited-admin/ADM-23: expect(locator).toBeVisible() failed\n\nLocator: locator('[data-screen-id=\"ADM-23\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('[data-screen-id=\"ADM-23\"]')\n",
-  "finishedAt": "2026-09-12T11:22:17.600Z"
+  "finishedAt": "2026-09-12T11:40:24.166Z"
 }

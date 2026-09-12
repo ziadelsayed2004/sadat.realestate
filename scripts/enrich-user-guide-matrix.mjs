@@ -112,6 +112,27 @@ const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LO
     ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
       evidence.runs?.some(run => run.locale === locale && run.device === device && run.scrollWidth <= run.innerWidth))));
 
+const guide21LocalAcceptanceReady = adminRequestsRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && adminRequestsRecovery.mockedRoutes === false && adminRequestsRecovery.cleanup === true
+  && adminRequestsRecovery.temporaryRequestRemoved === true
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    adminRequestsRecovery.runs?.some(run => run.locale === locale && run.device === device
+      && run.routeChecks?.length === 6
+      && run.routeChecks.every(route => route.httpStatus === 200 && route.scrollWidth <= route.innerWidth)
+      && ['six_admin_request_routes_real_api', 'empty_search_clear_recovers_without_navigation',
+        'offline_filter_retry_recovers_without_navigation', 'invalid_transition_reason_blocks_mutation']
+        .every(check => run.checks?.includes(check))
+      && run.transitionRequests === 0 && run.requestUnchanged === true && run.auditWrites === 0
+      && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))
+  && ['ar', 'en'].every(locale => adminRequestsRecovery.limitedAdmin?.some(run =>
+    run.locale === locale && run.routeChecks?.length === 6
+      && run.routeChecks.every(route => [200, 403].includes(route.httpStatus))
+      && run.directMutationStatuses?.length === 3
+      && run.directMutationStatuses.every(status => status === 403)
+      && run.mutationControlsHidden === true && run.requestUnchanged === true && run.auditWrites === 0))
+  && requestGuaranteesEvidence?.status === 'PASS_LOCAL'
+  && requestGuaranteesEvidence.mockedRoutes === false;
+
 matrix.schemaVersion = 2;
 matrix.generatedAt = new Date().toISOString();
 matrix.status = "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION";
@@ -250,6 +271,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       status: 'SHARED_PROVIDER_ROLE_CONTRACT',
       accountTypes: ['individual_provider', 'broker', 'developer_company'],
       rationale: 'All three guide audiences authenticate and authorize these four routes through the same provider role contract; no subtype branch exists in the route or service implementation.',
+    };
+  }
+  if (journey.id === 'GUIDE-21' && guide21LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_21_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
     };
   }
   if (journey.id === 'GUIDE-10') hydratedJourney.browserContractRegression = {
@@ -679,6 +707,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       && run.httpStatuses?.recovered === 200 && run.transitionRequests === 0 && run.requestUnchanged === true
       && run.auditWrites === 0 && run.documentReloaded === false && run.scrollWidth <= run.innerWidth)))) {
     for (const [category, check] of [
+      ['success', 'six_admin_request_routes_real_api'],
       ['empty', 'empty_search_clear_recovers_without_navigation'],
       ['networkRetry', 'offline_filter_retry_recovers_without_navigation'],
       ['validation', 'invalid_transition_reason_blocks_mutation'],
