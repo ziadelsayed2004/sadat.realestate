@@ -48,6 +48,7 @@ const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider
 const providerCustomerRecovery = await readFile('docs/quality/guide-runs/provider-customer-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerProjectsRecovery = await readFile('docs/quality/guide-runs/provider-projects-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerViewingsRecovery = await readFile('docs/quality/guide-runs/provider-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide03ContentBrowser = await readFile('docs/quality/guide-runs/guide03-content-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -95,7 +96,21 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/provider-viewings-recovery-local-latest.json", providerViewingsRecovery],
   ["docs/quality/guide-runs/notification-recovery-local-latest.json", notificationRecovery],
   ["docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json", notificationGuarantees],
+  ["docs/quality/guide-runs/guide03-content-browser-local-latest.json", guide03ContentBrowser],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
+
+const guide03LocalAcceptanceReady = guide03ContentBrowser?.status === 'PASS_LOCAL'
+  && guide03ContentBrowser.mockedRoutes === false
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    guide03ContentBrowser.runs?.some(run => run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.consoleErrors === 0 && run.screens?.length === 4
+      && run.screens.every(screen => screen.documentStatus === 200 && screen.scrollWidth === screen.innerWidth))))
+  && communityPresentation?.status === 'PASS_LOCAL_SUBCASES' && communityPresentation.mockedRoutes === false
+  && communityPublicRecovery?.status === 'PASS_LOCAL_SUBCASES' && communityPublicRecovery.mockedRoutes === false
+  && communityPublicRecovery.cleanup === true
+  && communityInteractions?.status === 'PASS_LOCAL' && communityInteractions.mockedRoutes === false
+  && communityInteractions.cleanup === true && communityInteractions.checks?.length === 4
+  && communityEvidence?.status === 'PASS_LOCAL' && communityGuarantees?.status === 'PASS_LOCAL';
 
 const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
   && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
@@ -266,6 +281,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
     remaining: communityEvidence.remaining,
   } : journey.executionEvidence;
   const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }), ...(evidenceAttachments.length === 0 ? {} : { evidenceAttachments }) };
+  if (journey.id === 'GUIDE-03' && guide03LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_03_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+  }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',

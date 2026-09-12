@@ -525,6 +525,7 @@
 - نجح `verify-notification-recovery-local.mjs` في 6/6 (AR/EN × Desktop/Tablet/Pixel 5) دون reload أو horizontal overflow، وحذف كل الجلسات التي أنشأها.
 - يجمع `GUIDE_09_LOCAL_ACCEPTANCE_2026-09-12.md` الأدلة، وتسجل المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED` مع بقاء الحالة العالمية `PARTIAL` حتى Figma المستقل والبوابة النهائية وProduction المصرح به. لم ينفذ purge أو launch.
 - بدأت مراجعة فجوة GUIDE-03 التالية دون إعلان إغلاقها: أثبت `community-interactions-local-latest.json` أن reaction واحد فقط يُحفظ لكل حساب أثناء add/switch/remove، وأن تفاعل مستخدم ثانٍ لا يغيّر سجل المستخدم الأول. رُبط ذلك بضماني duplicate mutation وhorizontal access، مع cleanup كامل لقاعدة MongoDB المعزولة. تبقى مراجعة نطاق صفحات المقالات والنبذة والفريق قبل منح الرحلة اعتمادًا محليًا كاملًا.
+- اكتملت مراجعة نطاق GUIDE-03 المحلي بعد تشغيل 24 فحص صفحة حديثًا (AR/EN × Desktop/Tablet/Pixel 5 × المقالات/تفاصيل مقال منشور/النبذة/الفريق): كلها 200، success state، main landmark، بلا console errors أو horizontal overflow. يجمع `GUIDE_03_LOCAL_ACCEPTANCE_2026-09-12.md` ذلك مع أدلة المجتمع والتفاعلات والـRBAC/409/audit، وتسجل المصفوفة `LOCAL_FUNCTIONAL_SCOPE_REVIEWED`. الحالة العالمية تبقى `PARTIAL` حتى البوابة النهائية وProduction المصرح به؛ لم ينفذ launch أو purge.
 
 ## 12 September: homepage and articles narrow-layout recovery
 

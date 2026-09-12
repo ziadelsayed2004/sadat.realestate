@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T14:39:56.948Z",
+  "generatedAt": "2026-09-12T14:42:53.288Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1524,10 +1524,10 @@
         "section": "#public",
         "journeyId": "GUIDE-03"
       },
-      "executionDate": "2026-09-12T14:39:31.538Z",
+      "executionDate": "2026-09-12T14:41:51.726Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/community-local-latest.json",
         "status": "PASS_LOCAL",
@@ -1690,6 +1690,13 @@
           "mockedRoutes": false
         },
         {
+          "path": "docs/quality/guide-runs/guide03-content-browser-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T14:41:51.726Z",
+          "environment": "local-built-web-real-API",
+          "mockedRoutes": false
+        },
+        {
           "path": "docs/quality/guide-runs/community-interactions-local-latest.json",
           "status": "PASS_LOCAL",
           "verifiedAt": "2026-09-12T14:39:31.538Z",
@@ -1714,7 +1721,12 @@
             }
           ]
         }
-      ]
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_03_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      }
     },
     {
       "id": "GUIDE-04",
@@ -4877,7 +4889,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T14:39:56.948Z",
+    "updatedAt": "2026-09-12T14:42:53.288Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

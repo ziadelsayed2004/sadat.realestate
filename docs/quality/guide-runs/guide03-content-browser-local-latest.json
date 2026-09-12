@@ -1,0 +1,204 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-03"
+  ],
+  "environment": "local-built-web-real-API",
+  "mockedRoutes": false,
+  "commit": "469ada983e38e5b73f9017468e401d1549c799fe",
+  "runs": [
+    {
+      "device": "desktop",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ],
+      "consoleErrors": 0
+    },
+    {
+      "device": "desktop",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ],
+      "consoleErrors": 0
+    },
+    {
+      "device": "tablet",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        }
+      ],
+      "consoleErrors": 0
+    },
+    {
+      "device": "tablet",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 834,
+          "scrollWidth": 834
+        }
+      ],
+      "consoleErrors": 0
+    },
+    {
+      "device": "mobile",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "consoleErrors": 0
+    },
+    {
+      "device": "mobile",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "PUB-07",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-08",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-11",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "PUB-12",
+          "documentStatus": 200,
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "consoleErrors": 0
+    }
+  ],
+  "finishedAt": "2026-09-12T14:41:51.726Z"
+}
