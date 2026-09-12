@@ -27,7 +27,7 @@ const otherId = new Types.ObjectId();
 const email = 'launch-admin@example.invalid';
 const password = randomUUID();
 const hasher = createArgon2PasswordHasher();
-const evidence = { environment: 'isolated-local-mongodb', mockedDatabase: false, commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), startedAt: new Date().toISOString(), checks: [], status: 'RUNNING' };
+const evidence = { environment: 'isolated-local-mongodb', mockedDatabase: false, commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), startedAt: new Date().toISOString(), checks: [], cleanup: false, status: 'RUNNING' };
 try {
   assert.equal(connection.name, dbName);
   assert.ok((await connection.db.admin().command({ hello: 1 })).setName, 'REPLICA_SET_REQUIRED');
@@ -50,6 +50,7 @@ try {
   await connection.collection('roles').insertMany([{ name: 'Real role' }, { name: 'QA role', synthetic: true }]);
   await connection.collection('admin_settings').insertMany([{ namespace: 'privacy-security', schemaVersion: 1, version: 0, updatedBy: rootId, updatedAt: new Date(), values: { two_factor_authentication: true } }, { namespace: 'demo', seedKey: 'legacy-demo' }]);
   await connection.collection('properties').insertOne({ ownerId: otherId, synthetic: true });
+  await connection.collection('community_reactions').insertOne({ userId: otherId, postId: new Types.ObjectId(), reaction: 'like' });
   await connection.collection('database_migrations').insertOne({ id: 'preserved' });
   const beforeLogin = await auth.loginAdmin({ email, password });
   const indexesBefore = await connection.collection('users').listIndexes().toArray();
@@ -85,7 +86,8 @@ try {
   assert.equal(await connection.collection('admin_settings').countDocuments({}), 1);
   assert.equal(await connection.collection('database_migrations').countDocuments({}), 1);
   assert.equal(await connection.collection('properties').countDocuments({}), 0);
-  evidence.checks.push('purge retains real references and administrator only', 'all old admin sessions revoked');
+  assert.equal(await connection.collection('community_reactions').countDocuments({}), 0);
+  evidence.checks.push('purge retains real references and administrator only', 'community reactions are removed', 'all old admin sessions revoked');
   await assert.rejects(auth.refresh(beforeLogin.refreshToken), /INVALID_REFRESH_TOKEN/);
   const newLogin = await auth.loginAdmin({ email, password });
   assert.equal(newLogin.data.user.id, rootId.toHexString());
@@ -103,6 +105,8 @@ try {
   // Cleanup is confined to the unique database created by this invocation.
   assert.equal(connection.name, dbName);
   for (const { name } of await connection.db.listCollections().toArray()) await connection.collection(name).drop();
+  evidence.cleanup = (await connection.db.listCollections().toArray()).length === 0;
+  assert.equal(evidence.cleanup, true);
   await connection.close();
 }
 await mkdir('docs/quality/guide-runs', { recursive: true });

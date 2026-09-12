@@ -1,8 +1,8 @@
 {
   "environment": "isolated-local-mongodb",
   "mockedDatabase": false,
-  "commit": "ffdd7900142a6a9ace26b7d87c68d7fb05aa9470",
-  "startedAt": "2026-09-11T10:22:42.181Z",
+  "commit": "872c65d14ef728de865b314a6f78c82bd95d3454",
+  "startedAt": "2026-09-12T09:38:42.180Z",
   "checks": [
     "dry-run retains all records",
     "unknown collection aborts before deletion",
@@ -10,6 +10,7 @@
     "residue failure rolls back the complete MongoDB transaction",
     "identity indexes are unchanged",
     "purge retains real references and administrator only",
+    "community reactions are removed",
     "all old admin sessions revoked",
     "real password login succeeds after purge",
     "old refresh token fails",
@@ -17,5 +18,6 @@
     "runtime privacy reader retains configured 2FA",
     "repeated purge is idempotent"
   ],
+  "cleanup": true,
   "status": "PASS"
 }
