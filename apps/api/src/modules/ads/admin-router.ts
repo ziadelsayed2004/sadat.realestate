@@ -32,6 +32,11 @@ function requestId(request: Request): string {
   return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request';
 }
 
+function mutationContext(request: Request): { requestId: string; traceId: string } {
+  const current = getRequestContext();
+  return { requestId: requestId(request), traceId: current?.traceId ?? 'f'.repeat(32) };
+}
+
 function claims(response: Response): AccessTokenClaims {
   return response.locals.adminRbacClaims as AccessTokenClaims;
 }
@@ -82,7 +87,7 @@ export function createAdminAdsRouter(dependencies: AdminAdsRouterDependencies): 
     try {
       const { adRequestId } = adRequestIdParamsSchema.parse(request.params);
       response.status(200).json(toSuccessResponse(
-        await dependencies.service.review(claims(response), adRequestId, adAdminRequestReviewSchema.parse(request.body ?? {})),
+        await dependencies.service.review(claims(response), adRequestId, adAdminRequestReviewSchema.parse(request.body ?? {}), mutationContext(request)),
         requestId(request)
       ));
     } catch (error) {

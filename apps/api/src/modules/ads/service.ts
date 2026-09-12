@@ -98,7 +98,7 @@ export interface AdRequestRepository {
 export interface AdAdminRequestRepository {
   listAdminRequests(query: AdAdminRequestListQuery): Promise<{ items: AdAdminRequest[]; total: number }>;
   getAdminRequest(requestId: string): Promise<AdAdminRequest | undefined>;
-  reviewAdminRequest(requestId: string, expectedVersion: number, status: 'waiting_pricing' | 'rejected', reason: string, now: Date): Promise<AdAdminRequest | undefined>;
+  reviewAdminRequest(requestId: string, expectedVersion: number, status: 'waiting_pricing' | 'rejected', reason: string, now: Date, metadata: { actorId: string; requestId: string; traceId: string }): Promise<AdAdminRequest | undefined>;
 }
 
 export interface AdAdminRequestAuthorization {
@@ -108,7 +108,7 @@ export interface AdAdminRequestAuthorization {
 export interface AdAdminRequestService {
   list(claims: AccessTokenClaims, input: unknown): Promise<AdAdminRequestListData>;
   get(claims: AccessTokenClaims, requestId: string): Promise<AdAdminRequest>;
-  review(claims: AccessTokenClaims, requestId: string, input: unknown): Promise<AdAdminRequest>;
+  review(claims: AccessTokenClaims, requestId: string, input: unknown, context: { requestId: string; traceId: string }): Promise<AdAdminRequest>;
 }
 
 export interface AdCalendarRepository {
@@ -183,11 +183,11 @@ export function createAdAdminRequestService(dependencies: {
       if (!result) throw new AdSettingsServiceError('NOT_FOUND');
       return result;
     },
-    async review(claims, requestId, input) {
+    async review(claims, requestId, input, context) {
       await requirePermission(claims, 'admin:ads.price');
       const parsed: AdAdminRequestReview = adAdminRequestReviewSchema.parse(input);
       const status = parsed.action === 'approve' ? 'waiting_pricing' : 'rejected';
-      const result = await dependencies.repository.reviewAdminRequest(requestId, parsed.expectedVersion, status, parsed.reason, new Date());
+      const result = await dependencies.repository.reviewAdminRequest(requestId, parsed.expectedVersion, status, parsed.reason, new Date(), { actorId: claims.sub, ...context });
       if (!result) throw new AdSettingsServiceError('VERSION_CONFLICT');
       return result;
     }

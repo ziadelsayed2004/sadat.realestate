@@ -43,7 +43,8 @@ export function createPaymentProofRuntime(
     service: createPaymentProofService({
       repository: createMongoosePaymentProofRepository(
         connection,
-        createProviderAdvertisingModels(connection)
+        createProviderAdvertisingModels(connection),
+        auditWriter
       ),
       ...(authorization ? { authorization: authorization as PaymentProofAuthorization } : {}),
       ...(auditWriter

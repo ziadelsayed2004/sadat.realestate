@@ -88,6 +88,15 @@ export interface PaymentProofRepository {
       reviewHistoryEntry: PaymentProofData['reviewHistory'][number];
     }
   ): Promise<StoredPaymentProof | undefined>;
+  reviewWithAudit?(
+    id: string,
+    expectedVersion: number,
+    update: {
+      status: Extract<PaymentProofData['status'], 'approved' | 'rejected'>;
+      reviewHistoryEntry: PaymentProofData['reviewHistory'][number];
+    },
+    event: PaymentProofAuditEvent
+  ): Promise<StoredPaymentProof | undefined>;
 }
 
 export interface PaymentProofServiceDependencies {
@@ -106,8 +115,7 @@ export interface PaymentProofAuthorization {
   authorize(adminId: string, permission: 'admin:payments.review'): Promise<boolean>;
 }
 
-export interface PaymentProofAuditWriter {
-  record(event: {
+export interface PaymentProofAuditEvent {
     actorType: 'admin';
     actorId: string;
     targetType: 'payment_proof';
@@ -119,7 +127,10 @@ export interface PaymentProofAuditWriter {
     requestId: string;
     traceId: string;
     occurredAt: Date;
-  }): Promise<void> | void;
+}
+
+export interface PaymentProofAuditWriter {
+  record(event: PaymentProofAuditEvent): Promise<void> | void;
 }
 
 export interface PaymentProofReviewContext {
@@ -347,8 +358,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
       });
       const before = project(record, false);
       const after = paymentProofDataSchema.parse(updated);
-      try {
-        await dependencies.audit.record({
+      const auditEvent: PaymentProofAuditEvent = {
           actorType: 'admin',
           actorId: claims.sub,
           targetType: 'payment_proof',
@@ -360,11 +370,23 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
           requestId: context.requestId,
           traceId: context.traceId,
           occurredAt: stamp
-        });
-      } catch {
-        throw new PaymentProofServiceError('PAYMENT_PROOF_AUDIT_FAILED');
-      }
+      };
       if (dependencies.repository) {
+        if (dependencies.repository.reviewWithAudit) {
+          try {
+            const persisted = await dependencies.repository.reviewWithAudit(
+              record.id, parsed.expectedVersion,
+              { status: targetStatus, reviewHistoryEntry: updated.reviewHistory.at(-1)! }, auditEvent
+            );
+            if (!persisted) throw new PaymentProofServiceError('VERSION_CONFLICT');
+            return project(persisted, false);
+          } catch (error) {
+            if (error instanceof PaymentProofServiceError) throw error;
+            throw new PaymentProofServiceError('PAYMENT_PROOF_AUDIT_FAILED');
+          }
+        }
+        try { await dependencies.audit.record(auditEvent); }
+        catch { throw new PaymentProofServiceError('PAYMENT_PROOF_AUDIT_FAILED'); }
         const persisted = await dependencies.repository.review(
           record.id,
           parsed.expectedVersion,
@@ -376,6 +398,8 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         if (!persisted) throw new PaymentProofServiceError('VERSION_CONFLICT');
         return project(persisted, false);
       }
+      try { await dependencies.audit.record(auditEvent); }
+      catch { throw new PaymentProofServiceError('PAYMENT_PROOF_AUDIT_FAILED'); }
       records.set(record.id, { ...updated, storageKey });
       return after;
     },

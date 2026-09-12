@@ -153,7 +153,7 @@ async function runEntrypoint(): Promise<void> {
     rbac.service,
     auditInfrastructure.writer
   );
-  const adminAds = createAdminAdsRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const adminAds = createAdminAdsRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
   const adminBanners = createAdminBannersRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
   const advertisingLedger = createAdvertisingLedgerRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
   const commissionPolicies = createCommissionPolicyRuntime(database.nativeConnection, auth.accessTokens, rbac.service);

@@ -1,7 +1,8 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import { paymentProofDataSchema, type PaymentProofData } from '@sadat-real-estate/contracts';
 import { createProviderAdvertisingModels, type AdRequestRecord, type PaymentProofRecord, type ProviderAdvertisingModels } from '../provider/advertising-models.js';
-import { PaymentProofServiceError, type PayableAdRequest, type PaymentProofRegistrationInput, type PaymentProofRepository, type StoredPaymentProof } from './service.js';
+import type { AuditWriter } from '../audit/writer.js';
+import { PaymentProofServiceError, type PayableAdRequest, type PaymentProofAuditEvent, type PaymentProofRegistrationInput, type PaymentProofRepository, type StoredPaymentProof } from './service.js';
 
 type AdRequestRow = AdRequestRecord & { _id: Types.ObjectId };
 type PaymentProofRow = PaymentProofRecord & { _id: Types.ObjectId };
@@ -59,7 +60,8 @@ async function transaction<T>(connection: Connection, run: (session: ClientSessi
 
 export function createMongoosePaymentProofRepository(
   connection: Connection,
-  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection)
+  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection),
+  audit?: AuditWriter
 ): PaymentProofRepository {
   return {
     async findPayableAdRequest(providerId, adRequestId) {
@@ -182,6 +184,21 @@ export function createMongoosePaymentProofRepository(
         { new: true, runValidators: true }
       ).select('+storageKey').lean<PaymentProofRow>().exec();
       return row ? toStoredPaymentProof(row) : undefined;
+    },
+
+    async reviewWithAudit(id, expectedVersion, update, event: PaymentProofAuditEvent) {
+      if (!Types.ObjectId.isValid(id)) return undefined;
+      if (!audit) throw new PaymentProofServiceError('PAYMENT_PROOF_AUDIT_UNAVAILABLE');
+      return transaction(connection, async session => {
+        const row = await models.PaymentProof.findOneAndUpdate(
+          { _id: new Types.ObjectId(id), status: 'pending_review', version: expectedVersion },
+          { $set: { status: update.status }, $inc: { version: 1 }, $push: { reviewHistory: update.reviewHistoryEntry } },
+          { new: true, runValidators: true, session }
+        ).select('+storageKey').lean<PaymentProofRow>().exec();
+        if (!row) return undefined;
+        await audit.record(event, session);
+        return toStoredPaymentProof(row);
+      });
     }
   };
 }

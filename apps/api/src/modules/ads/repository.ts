@@ -17,6 +17,7 @@ import {
   type AdQuoteDecision,
   type AdQuoteIssue
 } from '@sadat-real-estate/contracts';
+import type { AuditWriter } from '../audit/writer.js';
 import {
   AdSettingsServiceError,
   type AdAdminRequestRepository,
@@ -235,7 +236,8 @@ export function createMongooseAdRequestRepository(
 
 export function createMongooseAdAdminRequestRepository(
   connection: Connection,
-  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection)
+  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection),
+  audit?: AuditWriter
 ): AdAdminRequestRepository {
   return {
     async listAdminRequests(query: AdAdminRequestListQuery): Promise<{ items: AdAdminRequest[]; total: number }> {
@@ -258,13 +260,23 @@ export function createMongooseAdAdminRequestRepository(
       const values = await hydrateAdminRequests(models, [row as AdRequestRow]);
       return values[0];
     },
-    async reviewAdminRequest(requestId, expectedVersion, status, reason, now) {
+    async reviewAdminRequest(requestId, expectedVersion, status, reason, now, metadata) {
       const id = requestObjectId(requestId);
-      const row = await models.AdRequest.findOneAndUpdate(
-        { _id: id, status: 'review', version: expectedVersion },
-        { $set: { status, updatedAt: now }, $inc: { version: 1 }, $push: { history: { status, version: expectedVersion + 1, reason, changedAt: now } } },
-        { new: true, runValidators: true, lean: true }
-      ).lean<AdRequestRow>().exec();
+      const row = await transaction(connection, async session => {
+        const before = await models.AdRequest.findOne({ _id: id, status: 'review', version: expectedVersion }).session(session).lean<AdRequestRow>().exec();
+        if (!before) return undefined;
+        const updated = await models.AdRequest.findOneAndUpdate(
+          { _id: id, status: 'review', version: expectedVersion },
+          { $set: { status, updatedAt: now }, $inc: { version: 1 }, $push: { history: { status, version: expectedVersion + 1, reason, changedAt: now } } },
+          { new: true, runValidators: true, lean: true, session }
+        ).lean<AdRequestRow>().exec();
+        if (!updated) return undefined;
+        if (!audit) throw new AdSettingsServiceError('FORBIDDEN');
+        await audit.record({ actorType: 'admin', actorId: metadata.actorId, targetType: 'ad_request', targetId: requestId,
+          action: 'ad_request.review', reason, before: toAdRequest(before), after: toAdRequest(updated),
+          requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: now }, session);
+        return updated;
+      });
       if (!row) return undefined;
       const values = await hydrateAdminRequests(models, [row]);
       return values[0];

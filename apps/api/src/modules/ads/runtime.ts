@@ -1,6 +1,7 @@
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { RbacService } from '../rbac/service.js';
+import type { AuditWriter } from '../audit/writer.js';
 import { createMongooseAdAdminRequestRepository, createMongooseAdCalendarRepository } from './repository.js';
 import { createMongooseAdBannerRepository } from './banner-repository.js';
 import { createAdSettingsService } from './service.js';
@@ -12,12 +13,13 @@ import { createMongooseAdvertisingSettingsReader } from '../settings/advertising
 export function createAdminAdsRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
-  authorization: Pick<RbacService, 'authorize'>
+  authorization: Pick<RbacService, 'authorize'>,
+  audit: AuditWriter
 ): AdminAdsRouterDependencies {
   return {
     accessTokens,
     service: createAdAdminRequestService({
-      repository: createMongooseAdAdminRequestRepository(connection),
+      repository: createMongooseAdAdminRequestRepository(connection, undefined, audit),
       authorization
     }),
     calendar: createAdCalendarService({
