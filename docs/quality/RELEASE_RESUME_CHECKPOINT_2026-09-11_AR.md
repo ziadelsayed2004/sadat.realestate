@@ -611,3 +611,10 @@
 - أثبت HTTP وMongoDB الحقيقيان مراجعة طلب إعلان ومراجعة إثبات دفع مع version/history/reason/audit، و409 للقرار المنافس القديم، وidempotent replay لموافقة الدفع من دون audit مكرر. رفضت validation القصيرة بلا كتابة، وثبتت 401 و403 وحالة المدير المعلق الحالية ثم استعادته.
 - أثبت MongoDB المعزول أن فشل audit يعيد status/version/history والـaudit معًا في التدفقين، وأن إعادة المحاولة تكتب audit واحدًا فقط، ثم حذف قاعدة الاختبار وكل fixtures والجلسات والـaudits (`cleanup=true`).
 - تسجل المصفوفة GUIDE-23 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 23/26 (88.5%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.
+
+## GUIDE-24 local functional acceptance — 2026-09-13
+
+- احتفظت ADM-39 حتى ADM-45 بدليل المتصفح الحقيقي المشترك للعربية والإنجليزية على Desktop وTablet وPixel 5 من دون أخطاء أو overflow. ونجحت ADM-39 في true empty وoffline Retry بلا تنقل مستند في الست حالات.
+- أصلح مسار إنشاء سياسة العمولة والاستثناء وتخصيص الحساب ليكتب السجل والـaudit داخل transaction واحدة. أثبت HTTP/MongoDB إنشاء الأنواع الثلاثة وظهورها في change log، و409 للتكرار من دون سجل أو audit إضافي، مع validation و401 و403 وحالة المدير المعلق ثم استعادته.
+- أثبت MongoDB المعزول rollback للسجل والـaudit عند فشل التدقيق، ونجاح retry مرة واحدة، وعدم إضافة audit عند duplicate. حذف كل fixtures والجلسات والـaudits وقاعدة الاختبار (`cleanup=true`).
+- تسجل المصفوفة GUIDE-24 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، فيصبح الإجمالي 24/26 (92.3%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.

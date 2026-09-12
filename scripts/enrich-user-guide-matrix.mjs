@@ -54,6 +54,8 @@ const guide20AdminPropertySetup = await readFile('docs/quality/guide-runs/guide2
 const adminPropertySetupGuarantees = await readFile('docs/quality/guide-runs/admin-property-setup-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide23AdminAdsPayments = await readFile('docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const adminAdsPaymentsGuarantees = await readFile('docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide24AdminCommissions = await readFile('docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const commissionAuditGuarantees = await readFile('docs/quality/guide-runs/commission-audit-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -122,6 +124,8 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/admin-property-setup-guarantees-local-latest.json", adminPropertySetupGuarantees],
   ["docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json", guide23AdminAdsPayments],
   ["docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json", adminAdsPaymentsGuarantees],
+  ["docs/quality/guide-runs/guide24-admin-commissions-local-latest.json", guide24AdminCommissions],
+  ["docs/quality/guide-runs/commission-audit-guarantees-local-latest.json", commissionAuditGuarantees],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -400,6 +404,23 @@ const guide23LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_
   && adminAdsPaymentsGuarantees?.status === 'PASS_LOCAL' && adminAdsPaymentsGuarantees.mockedRoutes === false
   && adminAdsPaymentsGuarantees.cleanup === true && adminAdsPaymentsGuarantees.checks?.length === 4;
 
+const guide24LocalAcceptanceReady = remainingSurfacesEvidence?.status === 'PASS_LOCAL'
+  && remainingSurfacesEvidence.mockedRoutes === false && remainingSurfacesEvidence.cleanup === true
+  && ['ADM-39', 'ADM-40', 'ADM-41', 'ADM-42', 'ADM-43', 'ADM-44', 'ADM-45'].every(screen =>
+    ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+      remainingSurfacesEvidence.browser?.some(run => run.screen === screen && run.locale === locale && run.device === device
+        && run.status === 'PASS' && run.documentStatus === 200 && run.pageErrors === 0 && run.scrollWidth <= run.innerWidth))))
+  && guide24AdminCommissions?.status === 'PASS_LOCAL' && guide24AdminCommissions.mockedRoutes === false
+  && guide24AdminCommissions.cleanup === true && guide24AdminCommissions.runs?.length === 6
+  && guide24AdminCommissions.runs.every(run => run.status === 'PASS' && run.documentReloaded === false
+    && run.scrollWidth <= run.innerWidth && run.checks?.includes('true_empty') && run.checks?.includes('offline_retry_without_navigation'))
+  && ['all_commission_reads_200_and_invalid_inputs_400_without_write', 'policy_exception_override_create_and_duplicate_409',
+    'change_log_exposes_three_reasoned_request_trace_audits'].every(check => guide24AdminCommissions.checks?.includes(check))
+  && ['anonymous_401', 'limited_admin_mutations_403'].every(check => guide24AdminCommissions.authorization?.includes(check))
+  && guide24AdminCommissions.authorization?.some(check => /^current_suspended_admin_(401|403)_and_restored$/u.test(check))
+  && commissionAuditGuarantees?.status === 'PASS_LOCAL' && commissionAuditGuarantees.mockedRoutes === false
+  && commissionAuditGuarantees.cleanup === true && commissionAuditGuarantees.checks?.length === 3;
+
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
   && providerCustomerRecovery?.status === 'PASS_LOCAL_SUBCASES'
@@ -673,6 +694,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'The administrator reviews global advertising requests, payment proofs, calendar entries and financial records. These resources are permission-gated administrative queues rather than administrator-owned tenant records.',
     };
   }
+  if (journey.id === 'GUIDE-24' && guide24LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = { status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED', path: 'docs/quality/GUIDE_24_LOCAL_ACCEPTANCE_2026-09-13.md', reviewedAt: '2026-09-13' };
+    hydratedJourney.applicabilityReview = {
+      horizontalAccess: 'NOT_APPLICABLE',
+      expectedVersion409: 'NOT_APPLICABLE',
+      rationale: 'Commission administration is a global permission-gated queue. The current UI exposes creation and read flows only; it has no update/delete mutation accepting expectedVersion. Duplicate create conflicts are tested separately.',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -825,6 +854,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['expectedVersion409', 'stale_competing_ad_and_payment_reviews_conflict', 'docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json', guide23AdminAdsPayments.finishedAt],
       ['decisionReason', 'ad_and_payment_reviews_require_and_persist_reason', 'docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json', guide23AdminAdsPayments.finishedAt],
       ['atomicAuditRollback', 'audit_failure_rolls_back_ad_and_payment_reviews', 'docs/quality/guide-runs/admin-ads-payments-guarantees-local-latest.json', adminAdsPaymentsGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (journey.id === 'GUIDE-24' && guide24LocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['roleAuthorization', 'anonymous_and_limited_admin_commission_mutations_are_denied', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
+      ['currentSessionState', 'current_suspended_admin_is_denied_and_restored', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
+      ['duplicateMutation', 'duplicate_policy_exception_and_override_return_409_without_duplicate_audits', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
+      ['decisionReason', 'commission_creations_persist_reasoned_request_trace_audits', 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', guide24AdminCommissions.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_policy_exception_and_override_creation', 'docs/quality/guide-runs/commission-audit-guarantees-local-latest.json', commissionAuditGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
@@ -1149,6 +1187,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
     ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check,
       path: 'docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json', scope,
       verifiedAt: guide23AdminAdsPayments.finishedAt });
+  }
+  if (journey.id === 'GUIDE-24' && guide24LocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB', check: 'commission_policy_exception_override_history_and_confirmation_surfaces',
+      path: 'docs/quality/GUIDE_24_LOCAL_ACCEPTANCE_2026-09-13.md', scope: 'ADM-39 through ADM-45 in Arabic and English across Desktop, Tablet and Pixel 5 plus real policy, exception and account-override creation and history.', verifiedAt: guide24AdminCommissions.finishedAt });
+    for (const [category, check, scope] of [
+      ['validation', 'all_commission_reads_200_and_invalid_inputs_400_without_write', 'Invalid commission filters and short exception reasons return 400 without writes.'],
+      ['empty', 'commission_policy_empty_and_offline_retry_ar_en_all_devices', 'An archived-policy query with no records renders a truthful empty state.'],
+      ['networkRetry', 'commission_policy_empty_and_offline_retry_ar_en_all_devices', 'ADM-39 recovers from browser offline mode through Retry without document navigation in all six configurations.'],
+    ]) reviewedSubcases.push({ case: category, evidenceType: 'Browser/API/MongoDB', check, path: 'docs/quality/guide-runs/guide24-admin-commissions-local-latest.json', scope, verifiedAt: guide24AdminCommissions.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
@@ -1644,6 +1691,7 @@ matrix.operationalEvidenceCoverage = {
     { scope: "administrator account, report, restriction and audit lifecycle", path: "docs/quality/guide-runs/guide19-admin-accounts-local-latest.json", status: guide19AdminAccounts?.status ?? "MISSING" },
     { scope: "administrator property setup, project review, property review and report lifecycle", path: "docs/quality/guide-runs/guide20-admin-property-setup-local-latest.json", status: guide20AdminPropertySetup?.status ?? "MISSING" },
     { scope: "administrator advertising requests, payment proofs, calendar and financial review", path: "docs/quality/guide-runs/guide23-admin-ads-payments-local-latest.json", status: guide23AdminAdsPayments?.status ?? "MISSING" },
+    { scope: "administrator commission policies, account overrides, exceptions, confirmations and history", path: "docs/quality/guide-runs/guide24-admin-commissions-local-latest.json", status: guide24AdminCommissions?.status ?? "MISSING" },
     { scope: "privacy settings consumers and authorization boundaries", path: "docs/quality/guide-runs/privacy-security-local-latest.json", status: privacySecurityEvidence?.status ?? "MISSING" },
   ],
 };
