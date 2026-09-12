@@ -43,6 +43,8 @@ const registrationRecovery = await readFile('docs/quality/guide-runs/registratio
 const registrationBrowser = await readFile('docs/quality/guide-runs/registration-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const registrationGuarantees = await readFile('docs/quality/guide-runs/registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerRegistrationGuarantees = await readFile('docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const propertyGuarantees = await readFile('docs/quality/guide-runs/property-guarantees-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const providerPropertiesRecovery = await readFile('docs/quality/guide-runs/provider-properties-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewRecovery = await readFile('docs/quality/guide-runs/seeker-overview-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCounts = await readFile('docs/quality/guide-runs/seeker-overview-counts-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerOverviewCountBrowser = await readFile('docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -100,6 +102,8 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/privacy-security-local-latest.json", privacySecurityEvidence],
   ["docs/quality/guide-runs/provider-registration-local-latest.json", providerRegistrationEvidence],
   ["docs/quality/guide-runs/provider-registration-guarantees-local-latest.json", providerRegistrationGuarantees],
+  ["docs/quality/guide-runs/property-guarantees-local-latest.json", propertyGuarantees],
+  ["docs/quality/guide-runs/provider-properties-recovery-local-latest.json", providerPropertiesRecovery],
   ["docs/quality/guide-runs/seeker-account-local-latest.json", seekerAccountEvidence],
   ["docs/quality/guide-runs/property-lifecycle-local-latest.json", propertyLifecycleEvidence],
   ["docs/quality/guide-runs/remaining-surfaces-local-latest.json", remainingSurfacesEvidence],
@@ -235,6 +239,34 @@ const providerRegistrationLocalAcceptanceReady = providerRegistrationEvidence?.s
   && providerRegistrationGuarantees.checks?.length === 4
   && providerRegistrationGuarantees.mongo?.failedRegistrationResidue === 0
   && providerRegistrationGuarantees.mongo?.duplicateGrantRestored === true;
+
+const propertyLifecycleLocalAcceptanceReady = propertyLifecycleEvidence?.status === 'PASS_LOCAL'
+  && propertyLifecycleEvidence.mockedRoutes === false && propertyLifecycleEvidence.cleanup === true
+  && ['stale_provider_update_rejected_409', 'view_only_admin_review_denied_403',
+    'anonymous_and_admin_denied_provider_property_route', 'foreign_provider_property_hidden_404',
+    'current_suspended_provider_token_rejected_401_and_restored']
+    .every(check => propertyLifecycleEvidence.authorization?.includes(check))
+  && [
+    ['incomplete_review_responsive', 1], ['draft_complete_responsive', 10],
+    ['submitted_responsive', 1], ['needs_changes_responsive', 1],
+    ['published_responsive', 1], ['rejected_responsive', 1]
+  ].every(([stage, routeCount]) => ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    propertyLifecycleEvidence.browser?.some(run => run.stage === stage && run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.pageErrors === 0 && run.routeChecks?.length === routeCount
+      && run.routeChecks.every(route => route.documentStatus === 200 && route.scrollWidth <= route.innerWidth + 1)))))
+  && ['property.create', 'property.update', 'property.submit', 'property.review', 'property.visibility']
+    .every(action => propertyLifecycleEvidence.mongo?.auditActions?.includes(action))
+  && propertyGuarantees?.status === 'PASS_LOCAL' && propertyGuarantees.mockedRoutes === false
+  && propertyGuarantees.cleanup === true && propertyGuarantees.checks?.length === 2
+  && propertyGuarantees.mongo?.failedReviewStatus === 'pending_review'
+  && propertyGuarantees.mongo?.failedReviewVersion === 0
+  && propertyGuarantees.mongo?.failedReviewAuditCount === 0
+  && providerPropertiesRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && providerPropertiesRecovery.mockedRoutes === false && providerPropertiesRecovery.cleanup === true
+  && ['ar', 'en'].every(locale => ['desktop', 'tablet', 'mobile'].every(device =>
+    providerPropertiesRecovery.runs?.some(run => run.locale === locale && run.device === device
+      && run.status === 'PASS' && run.httpStatuses?.empty === 200 && run.httpStatuses?.recovered === 200
+      && run.scrollWidth <= run.innerWidth)));
 
 const guide16LocalAcceptanceReady = providerCustomerRequest?.status === 'PASS_LOCAL'
   && providerCustomerRequest.mockedRoutes === false && providerCustomerRequest.cleanup === true
@@ -445,6 +477,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       rationale: 'Provider draft routes are self-scoped from the current provider session; administrative review uses a global provider application identifier protected by the provider-review permission and current account/session guards.',
     };
   }
+  if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: '2026-09-12',
+    };
+  }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -587,6 +626,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['expectedVersion409', 'incomplete_submit_and_repeated_stale_review_are_rejected_with_409', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['decisionReason', 'review_reason_is_required_and_persisted_with_both_review_audits', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_profile_application_credential_and_session', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
+    ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
+  }
+  if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
+    for (const [category, check, path, verifiedAt] of [
+      ['horizontalAccess', 'foreign_provider_property_hidden_404', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['roleAuthorization', 'anonymous_admin_and_limited_admin_property_capabilities_denied', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['currentSessionState', 'current_suspended_provider_token_rejected_401_and_restored', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['duplicateMutation', 'duplicate_submit_rejected_422_without_state_change', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['expectedVersion409', 'stale_provider_update_rejected_409', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['decisionReason', 'provider_submit_and_admin_review_reason_validation', 'docs/quality/guide-runs/property-lifecycle-local-latest.json', propertyLifecycleEvidence.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_property_review_and_inserted_audit', 'docs/quality/guide-runs/property-guarantees-local-latest.json', propertyGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (journey.id === 'GUIDE-05' && guide05LocalAcceptanceReady) {
@@ -768,6 +818,28 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
       scope: 'Incomplete submission, review reason, stale action, duplicate document, grant replay, duplicate email and forced credential failure preserve the expected state.',
       verifiedAt: providerRegistrationGuarantees.finishedAt });
+  }
+  if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
+      check: 'property_draft_submission_review_revision_publication_rejection_visibility_and_cleanup',
+      path: 'docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md',
+      scope: 'Real property creation and review lifecycle in Arabic and English across Desktop, Tablet and Mobile with safe public projection, audit and cleanup.',
+      verifiedAt: propertyLifecycleEvidence.finishedAt });
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'Browser/API/MongoDB',
+      check: 'incomplete_steps_reason_duplicate_submit_and_stale_version_preserve_state',
+      path: 'docs/quality/guide-runs/property-lifecycle-local-latest.json',
+      scope: 'Client validation and real HTTP 401/403/404/409/422 boundaries with MongoDB state checks.',
+      verifiedAt: propertyLifecycleEvidence.finishedAt });
+    reviewedSubcases.push({ case: 'empty', evidenceType: 'Browser/API/MongoDB',
+      check: 'empty_property_search_clear_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/provider-properties-recovery-local-latest.json',
+      scope: 'Owned property list empty filter state in Arabic and English on Desktop, Tablet and Pixel 5 without mutation.',
+      verifiedAt: providerPropertiesRecovery.finishedAt });
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API/MongoDB',
+      check: 'offline_property_filter_retry_recovers_without_navigation',
+      path: 'docs/quality/guide-runs/provider-properties-recovery-local-latest.json',
+      scope: 'Owned property list offline failure and explicit retry to real HTTP 200 in six locale/device runs without reload or mutation.',
+      verifiedAt: providerPropertiesRecovery.finishedAt });
   }
   if (journey.id === 'GUIDE-22' && guide22LocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import mongoose from 'mongoose';
 import { chromium, expect } from '@playwright/test';
 
@@ -11,8 +13,16 @@ const evidence = {
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   worktreeChanges: execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim().length > 0,
   journeys: ['GUIDE-14', 'GUIDE-15'], environment: 'local-real-browser-api-mongodb-storage', mockedRoutes: false,
-  startedAt: new Date().toISOString(), status: 'RUNNING', transitions: [], authorization: [], http: [], browser: [], rateLimitRetries: []
+  startedAt: new Date().toISOString(), status: 'RUNNING', transitions: [], authorization: [], http: [], browser: [], rateLimitRetries: [], cleanup: false
 };
+const sessionIds = new Set();
+let organizationId;
+let propertyId;
+let uploadedMedia;
+let rejectedPropertyId;
+let providerUser;
+let adminUser;
+let providerStatusRestored = true;
 
 function parseEnvironment(source) {
   const values = {};
@@ -39,12 +49,18 @@ function watchApi(page) {
     if (url.pathname.startsWith('/api/v1/')) record(response.request().method(), url.pathname, response.status());
   });
 }
+function trackSession(accessToken) {
+  const claims = JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64url').toString('utf8'));
+  assert.match(claims.sid, /^[a-f0-9]{24}$/u);
+  sessionIds.add(claims.sid);
+}
 async function login(context, email, password, role) {
   const response = await context.request.post(`${base}/api/v1/auth/login`, { data: { email, password } });
   record('POST', '/api/v1/auth/login', response.status());
   assert.equal(response.status(), 200);
   const session = (await response.json()).data;
   assert.equal(session.user.roleType, role);
+  trackSession(session.accessToken);
   return session;
 }
 async function loginApi(email, password, role) {
@@ -58,6 +74,7 @@ async function loginApi(email, password, role) {
   const session = (await response.json()).data;
   assert.equal(session.user.roleType, role);
   assert.equal(typeof session.accessToken, 'string');
+  trackSession(session.accessToken);
   return session;
 }
 async function api(path, { method = 'GET', token, body, expected = 200, retryRateLimit = false } = {}) {
@@ -81,12 +98,54 @@ async function api(path, { method = 'GET', token, body, expected = 200, retryRat
   }
   throw new Error(`Rate-limit retry exhausted for ${path}`);
 }
+async function clickMutationWithRateLimit(page, locator, responsePredicate) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const pending = page.waitForResponse(responsePredicate);
+    await locator.click();
+    const response = await pending;
+    if (response.status() !== 429) return response;
+    const retryAfterSeconds = Number.parseInt(await response.headerValue('retry-after') ?? '1', 10);
+    const waitMs = Math.min(Math.max(Number.isFinite(retryAfterSeconds) ? retryAfterSeconds : 1, 1), 60) * 1_000 + 250;
+    evidence.rateLimitRetries.push({ method: response.request().method(), path: safePath(new URL(response.url()).pathname), retryAfterSeconds, waitMs });
+    await page.waitForTimeout(waitMs);
+  }
+  throw new Error('Browser mutation rate-limit retry exhausted');
+}
 async function screen(page, id) {
   await expect(page.locator(`[data-screen-id="${id}"]`).first()).toBeVisible();
   const geometry = await page.evaluate(() => ({ innerWidth, scrollWidth: document.documentElement.scrollWidth }));
   assert.equal(geometry.innerWidth, 402);
   assert.ok(geometry.scrollWidth <= 402, `${id} has horizontal overflow`);
   evidence.browser.push({ screen: id, ...geometry });
+}
+const browserProfiles = [
+  { device: 'desktop', viewport: { width: 1440, height: 1000 } },
+  { device: 'tablet', viewport: { width: 768, height: 900 } },
+  { device: 'mobile', viewport: { width: 390, height: 844 } }
+];
+async function captureResponsive(context, stage, routeScreens) {
+  const capturePage = await context.newPage();
+  const pageErrors = [];
+  capturePage.on('pageerror', error => pageErrors.push(error.message));
+  for (const locale of ['ar', 'en']) {
+    const errorsBefore = pageErrors.length;
+    const runs = browserProfiles.map(profile => ({ stage, locale, device: profile.device, status: 'PASS', pageErrors: 0, routeChecks: [] }));
+    for (const item of routeScreens) {
+      const response = await capturePage.goto(`${base}${item.route}${item.route.includes('?') ? '&' : '?'}lang=${locale}`, { waitUntil: 'networkidle' });
+      assert.equal(response?.status(), 200);
+      await expect(capturePage.locator(`[data-screen-id="${item.screen}"]`).first()).toBeVisible();
+      for (const [profileIndex, profile] of browserProfiles.entries()) {
+        await capturePage.setViewportSize(profile.viewport);
+        await capturePage.waitForTimeout(100);
+        const geometry = await capturePage.evaluate(() => ({ innerWidth, scrollWidth: document.documentElement.scrollWidth }));
+        assert.ok(geometry.scrollWidth <= geometry.innerWidth + 1, `${stage}/${locale}/${profile.device}/${item.screen} overflow`);
+        runs[profileIndex].routeChecks.push({ route: item.route, screen: item.screen, documentStatus: 200, ...geometry });
+      }
+    }
+    assert.equal(pageErrors.length, errorsBefore);
+    evidence.browser.push(...runs);
+  }
+  await capturePage.close();
 }
 async function continueForm(page, path, method = 'PATCH') {
   const pending = page.waitForResponse(response => response.request().method() === method && new URL(response.url()).pathname === path);
@@ -104,12 +163,13 @@ async function firstNonEmptyOption(select) {
 }
 
 let mongo;
+let env;
 const browser = await chromium.launch({ headless: true });
 try {
-  const env = parseEnvironment(await readFile('.env.local', 'utf8'));
+  env = parseEnvironment(await readFile('.env.local', 'utf8'));
   assert.ok(env.MONGODB_URI);
   mongo = await mongoose.createConnection(env.MONGODB_URI).asPromise();
-  const providerUser = await mongo.collection('users').findOne(
+  providerUser = await mongo.collection('users').findOne(
     { roleType: 'provider', status: 'verified', normalizedEmail: /^guide-provider-/u },
     { sort: { _id: -1 }, projection: { _id: 1, normalizedEmail: 1 } }
   );
@@ -117,7 +177,7 @@ try {
   assert.equal(typeof providerUser.normalizedEmail, 'string');
   const providerProfile = await mongo.collection('provider_profiles').findOne({ userId: providerUser._id, status: 'approved' });
   assert.ok(providerProfile?._id instanceof mongoose.Types.ObjectId);
-  const organizationId = new mongoose.Types.ObjectId();
+  organizationId = new mongoose.Types.ObjectId();
   const organizationSlug = `delivery-developer-${Date.now()}`;
   await mongo.collection('organizations').insertOne({
     _id: organizationId,
@@ -157,13 +217,18 @@ try {
   await page.locator('#provider-property-slug').fill(slug);
   await continueForm(page, '/api/v1/provider/properties', 'POST');
   await page.waitForURL(/\/provider\/properties\/[a-f0-9]{24}\/location/u);
-  const propertyId = new URL(page.url()).pathname.match(/\/provider\/properties\/([a-f0-9]{24})\/location/u)?.[1];
+  propertyId = new URL(page.url()).pathname.match(/\/provider\/properties\/([a-f0-9]{24})\/location/u)?.[1];
   assert.match(propertyId, /^[a-f0-9]{24}$/u);
   const providerToken = (await loginApi(providerUser.normalizedEmail, providerPassword, 'provider')).accessToken;
   const created = await api(`/provider/properties/${propertyId}`, { token: providerToken });
   assert.equal(created.status, 'draft');
   const createdVersion = created.version;
   evidence.transitions.push('invalid_basic_blocked_before_api', 'draft_created_from_browser');
+
+  await captureResponsive(providerContext, 'incomplete_review_responsive', [
+    { route: `/provider/properties/${propertyId}/review`, screen: 'PRV-11' }
+  ]);
+  await page.goto(`${base}/provider/properties/${propertyId}/location?lang=en`, { waitUntil: 'networkidle' });
 
   await screen(page, 'PRV-04');
   const locationId = await firstNonEmptyOption(page.locator('#provider-property-location-id'));
@@ -218,7 +283,6 @@ try {
   await page.locator('#provider-property-media-image').setInputFiles('apps/web/public/assets/sadat-real-estate-logo.png');
   const uploadResponse = await uploadPending;
   assert.equal(uploadResponse.status(), 201);
-  let uploadedMedia;
   await expect.poll(async () => {
     uploadedMedia = await mongo.collection('property_media').findOne({ propertyId: new mongoose.Types.ObjectId(propertyId), active: true });
     return uploadedMedia?.processingState;
@@ -261,6 +325,20 @@ try {
   evidence.transitions.push('contact_saved_from_browser');
 
   await screen(page, 'PRV-10');
+  await captureResponsive(providerContext, 'draft_complete_responsive', [
+    { route: '/provider', screen: 'PRV-01' },
+    { route: '/provider/properties', screen: 'PRV-02' },
+    { route: '/provider/properties/new/basic', screen: 'PRV-03' },
+    { route: `/provider/properties/${propertyId}/location`, screen: 'PRV-04' },
+    { route: `/provider/properties/${propertyId}/details`, screen: 'PRV-05' },
+    { route: `/provider/properties/${propertyId}/price-payment`, screen: 'PRV-06' },
+    { route: `/provider/properties/${propertyId}/features`, screen: 'PRV-07' },
+    { route: `/provider/properties/${propertyId}/media`, screen: 'PRV-08' },
+    { route: `/provider/properties/${propertyId}/contact`, screen: 'PRV-09' },
+    { route: `/provider/properties/${propertyId}/review`, screen: 'PRV-10' }
+  ]);
+  await page.reload({ waitUntil: 'networkidle' });
+  await screen(page, 'PRV-10');
   const confirmations = page.locator('.provider-property-completion__checks input[type="checkbox"]');
   await expect(confirmations).toHaveCount(3);
   for (let index = 0; index < 3; index += 1) {
@@ -280,11 +358,23 @@ try {
   await submitButton.click();
   const submitted = (await (await submitPending).json()).data;
   assert.equal(submitted.status, 'pending_review');
+  const replayedSubmission = await api(`/provider/properties/${propertyId}/submit`, {
+    method: 'POST', token: providerToken,
+    body: { version: submitted.version, reason: 'Reject a duplicate submit of the same pending property' },
+    expected: 422
+  });
+  assert.equal(replayedSubmission, undefined);
+  const stateAfterDuplicateSubmit = await mongo.collection('properties').findOne({ _id: new mongoose.Types.ObjectId(propertyId) }, { projection: { status: 1, version: 1 } });
+  assert.equal(stateAfterDuplicateSubmit?.status, 'pending_review');
+  assert.equal(stateAfterDuplicateSubmit?.version, submitted.version);
   await expect(page.locator('.provider-property-completion__submitted')).toBeVisible();
   await page.goto(`${base}/provider/properties/${propertyId}/submitted?lang=en`, { waitUntil: 'networkidle' });
   await screen(page, 'PRV-12');
+  await captureResponsive(providerContext, 'submitted_responsive', [
+    { route: `/provider/properties/${propertyId}/submitted`, screen: 'PRV-12' }
+  ]);
   await expect(page.locator('[data-property-status="pending_review"]')).toBeVisible();
-  evidence.transitions.push('short_submit_reason_blocked_before_api', 'submitted_for_review_from_browser', 'submitted_state_rendered');
+  evidence.transitions.push('short_submit_reason_blocked_before_api', 'submitted_for_review_from_browser', 'duplicate_submit_rejected_422_without_state_change', 'submitted_state_rendered');
 
   const limitedContext = await browser.newContext();
   const limitedSession = await login(limitedContext, 'admin.viewer@example.invalid', adminPassword, 'admin');
@@ -305,11 +395,18 @@ try {
   await adminPage.locator('.admin-properties__action-card button[type="submit"]').click();
   await expect(adminPage.locator('.admin-properties__feedback')).toContainText('reason');
   await adminPage.locator('#admin-property-reason').fill('Please confirm the delivery contact before publication');
-  const needsChangesPending = adminPage.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`));
-  await adminPage.locator('.admin-properties__action-card button[type="submit"]').click();
-  const needsChanges = (await (await needsChangesPending).json()).data;
+  const needsChangesResponse = await clickMutationWithRateLimit(
+    adminPage,
+    adminPage.locator('.admin-properties__action-card button[type="submit"]'),
+    response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`)
+  );
+  const needsChanges = (await needsChangesResponse.json()).data;
   assert.equal(needsChanges.status, 'needs_changes');
   evidence.transitions.push('admin_reason_required_before_review', 'admin_requested_changes_from_browser');
+
+  await captureResponsive(providerContext, 'needs_changes_responsive', [
+    { route: '/provider/properties', screen: 'PRV-02' }
+  ]);
 
   await page.goto(`${base}/provider/properties?lang=en`, { waitUntil: 'networkidle' });
   await screen(page, 'PRV-02');
@@ -331,18 +428,24 @@ try {
   await screen(adminPage, 'ADM-15');
   await adminPage.locator('#admin-property-action').selectOption('approve');
   await adminPage.locator('#admin-property-reason').fill('Property data and source have been verified');
-  const approvePending = adminPage.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`));
-  await adminPage.locator('.admin-properties__action-card button[type="submit"]').click();
-  let reviewed = (await (await approvePending).json()).data;
+  const approveResponse = await clickMutationWithRateLimit(
+    adminPage,
+    adminPage.locator('.admin-properties__action-card button[type="submit"]'),
+    response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`)
+  );
+  let reviewed = (await approveResponse.json()).data;
   assert.ok(['approved', 'published'].includes(reviewed.status));
   evidence.transitions.push('admin_approved_property_from_browser');
   if (reviewed.status === 'approved') {
     await adminPage.goto(`${base}/admin/properties/review?propertyId=${propertyId}&lang=en`, { waitUntil: 'networkidle' });
     await adminPage.locator('#admin-property-action').selectOption('publish');
     await adminPage.locator('#admin-property-reason').fill('Publish the approved property to the public catalog');
-    const publishPending = adminPage.waitForResponse(response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`));
-    await adminPage.locator('.admin-properties__action-card button[type="submit"]').click();
-    reviewed = (await (await publishPending).json()).data;
+    const publishResponse = await clickMutationWithRateLimit(
+      adminPage,
+      adminPage.locator('.admin-properties__action-card button[type="submit"]'),
+      response => response.request().method() === 'POST' && new URL(response.url()).pathname.endsWith(`/${propertyId}/review`)
+    );
+    reviewed = (await publishResponse.json()).data;
     assert.equal(reviewed.status, 'published');
     evidence.transitions.push('admin_published_approved_property_from_browser');
   }
@@ -350,12 +453,50 @@ try {
   await page.goto(`${base}/provider/properties/${propertyId}/published?lang=en`, { waitUntil: 'networkidle' });
   await screen(page, 'PRV-14');
   await expect(page.locator('[data-property-status="published"]')).toBeVisible();
+  await captureResponsive(providerContext, 'published_responsive', [
+    { route: `/provider/properties/${propertyId}/published`, screen: 'PRV-14' }
+  ]);
   const publicProperty = await api(`/public/properties/${slug}`);
   assert.equal(publicProperty.slug, slug);
   assert.equal(publicProperty.installmentAvailable, true);
   evidence.transitions.push('published_state_rendered', 'public_projection_200_after_compatible_payment_plan_persistence');
 
   const adminToken = (await loginApi('admin.demo@example.invalid', adminPassword, 'admin')).accessToken;
+  adminUser = await mongo.collection('users').findOne({ normalizedEmail: 'admin.demo@example.invalid', roleType: 'admin' }, { projection: { _id: 1 } });
+  await api(`/provider/properties/${propertyId}`, { expected: 401 });
+  await api(`/provider/properties/${propertyId}`, { token: adminToken, expected: 403 });
+  const foreignProperty = await mongo.collection('properties').findOne({ providerId: { $ne: providerUser._id } }, { projection: { _id: 1 } });
+  assert.ok(foreignProperty?._id instanceof mongoose.Types.ObjectId);
+  await api(`/provider/properties/${foreignProperty._id.toHexString()}`, { token: providerToken, expected: 404 });
+  await mongo.collection('users').updateOne({ _id: providerUser._id, status: 'verified' }, { $set: { status: 'suspended', statusChangedAt: new Date() } });
+  providerStatusRestored = false;
+  await api(`/provider/properties/${propertyId}`, { token: providerToken, expected: 401 });
+  await mongo.collection('users').updateOne({ _id: providerUser._id, status: 'suspended' }, { $set: { status: 'verified', statusChangedAt: new Date() } });
+  providerStatusRestored = true;
+  evidence.authorization.push('anonymous_and_admin_denied_provider_property_route', 'foreign_provider_property_hidden_404', 'current_suspended_provider_token_rejected_401_and_restored');
+  const publishedFixture = await mongo.collection('properties').findOne({ _id: new mongoose.Types.ObjectId(propertyId) });
+  assert.ok(publishedFixture);
+  rejectedPropertyId = new mongoose.Types.ObjectId();
+  const rejectedFixture = {
+    ...publishedFixture,
+    _id: rejectedPropertyId,
+    slug: `rejected-property-${Date.now()}`,
+    name: { ar: 'عقار مرفوض للاختبار المحلي', en: 'Rejected local journey property' },
+    status: 'pending_review', active: false, version: 0,
+    submittedAt: new Date(), createdAt: new Date(), updatedAt: new Date()
+  };
+  for (const field of ['reviewedBy', 'reviewedAt', 'reviewReason', 'publishedAt', 'expiresAt']) delete rejectedFixture[field];
+  await mongo.collection('properties').insertOne(rejectedFixture);
+  const rejected = await api(`/admin/properties/${rejectedPropertyId.toHexString()}/review`, {
+    method: 'POST', token: adminToken,
+    body: { version: 0, action: 'reject', reason: 'Synthetic property rejected to verify the complete review outcome' },
+    retryRateLimit: true
+  });
+  assert.equal(rejected.status, 'rejected');
+  await captureResponsive(providerContext, 'rejected_responsive', [
+    { route: `/provider/properties/${rejectedPropertyId.toHexString()}/rejected`, screen: 'PRV-13' }
+  ]);
+  evidence.transitions.push('admin_rejected_fixture_via_protected_api', 'provider_rejected_state_rendered');
   const hidden = await api(`/admin/properties/${propertyId}/visibility`, {
     method: 'POST', token: adminToken,
     body: { version: reviewed.version, action: 'hide', reason: 'Temporarily hide property for visibility lifecycle verification' }
@@ -399,8 +540,51 @@ try {
   evidence.failure = error instanceof Error ? error.message.slice(0, 900) : 'Unknown failure';
   process.exitCode = 1;
 } finally {
-  if (mongo) await mongo.close();
   await browser.close();
+  try {
+    if (mongo && providerUser?._id && !providerStatusRestored) {
+      await mongo.collection('users').updateOne({ _id: providerUser._id }, { $set: { status: 'verified', statusChangedAt: new Date() } });
+      providerStatusRestored = true;
+    }
+    if (mongo && organizationId && propertyId) {
+      const propertyObjectId = new mongoose.Types.ObjectId(propertyId);
+      const mediaRows = await mongo.collection('property_media').find({ propertyId: propertyObjectId }, { projection: { _id: 1, storageKey: 1 } }).toArray();
+      const storageRoot = path.resolve(env.PRIVATE_STORAGE_LOCAL_ROOT?.trim() || path.join(os.tmpdir(), 'sadat-real-estate-private-storage'));
+      for (const media of mediaRows) {
+        assert.match(media.storageKey, /^quarantine\/[a-f0-9]{32}$/u);
+        const target = path.resolve(storageRoot, media.storageKey);
+        assert.ok(target.startsWith(`${storageRoot}${path.sep}`));
+        await rm(target, { force: true });
+      }
+      const mediaIds = mediaRows.map(row => row._id.toHexString());
+      const propertyIds = [propertyId, ...(rejectedPropertyId ? [rejectedPropertyId.toHexString()] : [])];
+      const propertyObjectIds = propertyIds.map(id => new mongoose.Types.ObjectId(id));
+      const actorIds = [providerUser?._id, adminUser?._id].filter(Boolean);
+      await Promise.all([
+        mongo.collection('audit_logs').deleteMany({ targetType: { $in: ['property', 'property_media'] }, targetId: { $in: [...propertyIds, ...mediaIds] } }),
+        mongo.collection('property_media').deleteMany({ propertyId: propertyObjectId }),
+        mongo.collection('properties').deleteMany({ _id: { $in: propertyObjectIds } }),
+        mongo.collection('organizations').deleteMany({ _id: organizationId, seedKey: 'guide-property-lifecycle-local' }),
+        mongo.collection('sessions').deleteMany({ _id: { $in: [...sessionIds].map(id => new mongoose.Types.ObjectId(id)) } }),
+        ...(actorIds.length ? [mongo.collection('sessions').deleteMany({ userId: { $in: actorIds }, createdAt: { $gte: new Date(evidence.startedAt) } })] : [])
+      ]);
+      const residue = await Promise.all([
+        mongo.collection('properties').countDocuments({ _id: { $in: propertyObjectIds } }),
+        mongo.collection('property_media').countDocuments({ propertyId: propertyObjectId }),
+        mongo.collection('organizations').countDocuments({ _id: organizationId }),
+        mongo.collection('audit_logs').countDocuments({ targetId: { $in: [...propertyIds, ...mediaIds] } })
+      ]);
+      assert.ok(residue.every(count => count === 0), `Property journey cleanup residue: ${residue.join(',')}`);
+      evidence.cleanup = true;
+      evidence.cleanupCollections = ['properties', 'property_media', 'organizations', 'audit_logs', 'sessions'];
+    }
+    await rm('.local/contact-role-mobile.png', { force: true });
+  } catch (error) {
+    evidence.status = 'FAIL_LOCAL';
+    evidence.cleanupFailure = error instanceof Error ? error.message.slice(0, 900) : String(error).slice(0, 900);
+    process.exitCode = 1;
+  }
+  if (mongo) await mongo.close();
   evidence.finishedAt = new Date().toISOString();
   await mkdir('docs/quality/guide-runs', { recursive: true });
   await writeFile('docs/quality/guide-runs/property-lifecycle-local-latest.json', `${JSON.stringify(evidence, null, 2)}\n`);

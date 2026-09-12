@@ -1,0 +1,26 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-14",
+    "GUIDE-15"
+  ],
+  "environment": "isolated-local-MongoDB",
+  "mockedRoutes": false,
+  "faultInjection": "durable audit writer throws after insert within the property transaction",
+  "commit": "2fba8363ee43dd6a4b54cd4f07cd448ff45b600a",
+  "startedAt": "2026-09-12T16:25:35.502Z",
+  "checks": [
+    "audit_failure_rolls_back_property_review_and_inserted_audit",
+    "same_expected_version_retry_after_rollback_writes_once"
+  ],
+  "cleanup": true,
+  "mongo": {
+    "failedReviewStatus": "pending_review",
+    "failedReviewVersion": 0,
+    "failedReviewAuditCount": 0,
+    "recoveredStatus": "approved",
+    "recoveredVersion": 1,
+    "recoveredAuditCount": 1
+  },
+  "finishedAt": "2026-09-12T16:25:36.045Z"
+}

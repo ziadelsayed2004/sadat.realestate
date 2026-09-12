@@ -565,3 +565,10 @@
 - The fresh real-browser lifecycle passed provider registration, four required document uploads and idempotent replay, incomplete-submit 409, pending review, required information reason, stale-review 409, provider revision/resubmission, Super Admin approval, authoritative reauthentication, synchronized MongoDB states, ordered audits, and permission denials.
 - Draft, pending, needs-information, and approved surfaces passed Arabic/English on Desktop/Tablet/Mobile with HTTP 200, zero page errors, and no horizontal overflow. The run deleted its unique account, sessions, OTP, documents, transitions, audits, and validated private files; Demo fixtures remain intact.
 - The matrix records GUIDE-11, GUIDE-12, and GUIDE-13 as `LOCAL_FUNCTIONAL_SCOPE_REVIEWED`, raising reviewed local journeys to 16/26. Global status remains 26 PARTIAL, 0 Production verified, and 0 fully closed; Figma remains 90/119. No launch or Demo purge ran.
+
+## تحديث GUIDE-14/15 المحلي — 2026-09-12
+
+- نجحت دورة العقار الحقيقية من المسودة عبر كل خطوات الإدخال والوسائط والإرسال وطلب التعديل وإعادة الإرسال والموافقة والنشر، مع فرع رفض مستقل وإخفاء/استعادة الإسقاط العام. تحقق MongoDB من الحالة والنسخة وخطة الدفع والوسيط وسجلات `property.create/update/submit/review/visibility`، ثم حُذفت كل التركيبات والجلسات والملفات الخاصة المؤقتة بأمان.
+- غطت PRV-01..PRV-14 المطلوبة العربية والإنجليزية على Desktop/Tablet/Mobile؛ كل document status يساوي 200، بلا page errors أو horizontal overflow. نجحت كذلك حدود 401/403/404/409/422، وعزل ملكية مقدم آخر، وحالة الحساب الحالية، وسبب القرار، وثبات الحالة بعد الإرسال المكرر.
+- أثبت `property-guarantees-local-latest.json` أن فشل كتابة الـaudit داخل المعاملة يرجع مراجعة العقار وسجل التدقيق معًا، ثم تنجح إعادة المحاولة بنفس النسخة مرة واحدة. وأثبت `provider-properties-recovery-local-latest.json` empty/filter وoffline/Retry الحقيقيين في 6 تشغيلات مع تنظيف الجلسات.
+- تسجل المصفوفة GUIDE-14 وGUIDE-15 كـ`LOCAL_FUNCTIONAL_SCOPE_REVIEWED`، ليرتفع الإجمالي المحلي المراجع إلى 18/26 (69.2%). تبقى الحالات العالمية 26 `PARTIAL`، وProduction verified صفر، وfully closed صفر، وFigma عند 90/119. لم ينفذ launch أو Demo purge.

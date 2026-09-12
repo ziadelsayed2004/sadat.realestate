@@ -1,13 +1,13 @@
 {
-  "commit": "3aabf4e271702f0edeecf9f807e3fb8060540088",
-  "worktreeChanges": false,
+  "commit": "2fba8363ee43dd6a4b54cd4f07cd448ff45b600a",
+  "worktreeChanges": true,
   "journeys": [
     "GUIDE-14",
     "GUIDE-15"
   ],
   "environment": "local-real-browser-api-mongodb-storage",
   "mockedRoutes": false,
-  "startedAt": "2026-09-10T12:33:09.858Z",
+  "startedAt": "2026-09-12T16:21:13.946Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "approved_provider_organization_fixture_inserted",
@@ -21,6 +21,7 @@
     "contact_saved_from_browser",
     "short_submit_reason_blocked_before_api",
     "submitted_for_review_from_browser",
+    "duplicate_submit_rejected_422_without_state_change",
     "submitted_state_rendered",
     "admin_reason_required_before_review",
     "admin_requested_changes_from_browser",
@@ -30,12 +31,17 @@
     "admin_published_approved_property_from_browser",
     "published_state_rendered",
     "public_projection_200_after_compatible_payment_plan_persistence",
+    "admin_rejected_fixture_via_protected_api",
+    "provider_rejected_state_rendered",
     "admin_hid_property_via_protected_api_and_public_returned_404",
     "admin_restored_property_via_protected_api_and_public_returned_200"
   ],
   "authorization": [
     "stale_provider_update_rejected_409",
-    "view_only_admin_review_denied_403"
+    "view_only_admin_review_denied_403",
+    "anonymous_and_admin_denied_provider_property_route",
+    "foreign_provider_property_hidden_404",
+    "current_suspended_provider_token_rejected_401_and_restored"
   ],
   "http": [
     {
@@ -66,6 +72,21 @@
     {
       "method": "GET",
       "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
       "status": 200
     },
     {
@@ -190,8 +211,23 @@
     },
     {
       "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 200
+    },
+    {
+      "method": "POST",
       "path": "/api/v1/provider/properties/:id/submit",
       "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider/properties/:id/submit",
+      "status": 422
     },
     {
       "method": "POST",
@@ -295,12 +331,37 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789043590359",
+      "path": "/api/v1/public/properties/delivery-property-1789230074993",
       "status": 200
     },
     {
       "method": "POST",
       "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/provider/properties/:id",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/properties/:id/review",
       "status": 200
     },
     {
@@ -310,7 +371,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789043590359",
+      "path": "/api/v1/public/properties/delivery-property-1789230074993",
       "status": 404
     },
     {
@@ -320,7 +381,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/v1/public/properties/delivery-property-1789043590359",
+      "path": "/api/v1/public/properties/delivery-property-1789230074993",
       "status": 200
     }
   ],
@@ -329,6 +390,102 @@
       "screen": "PRV-03",
       "innerWidth": 402,
       "scrollWidth": 402
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "incomplete_review_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-11",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
     },
     {
       "screen": "PRV-04",
@@ -366,14 +523,685 @@
       "scrollWidth": 402
     },
     {
+      "stage": "draft_complete_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "draft_complete_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "draft_complete_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "draft_complete_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "draft_complete_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "draft_complete_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider",
+          "screen": "PRV-01",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/new/basic",
+          "screen": "PRV-03",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/location",
+          "screen": "PRV-04",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/details",
+          "screen": "PRV-05",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/price-payment",
+          "screen": "PRV-06",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/features",
+          "screen": "PRV-07",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/media",
+          "screen": "PRV-08",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/contact",
+          "screen": "PRV-09",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        },
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/review",
+          "screen": "PRV-10",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "screen": "PRV-10",
+      "innerWidth": 402,
+      "scrollWidth": 402
+    },
+    {
       "screen": "PRV-12",
       "innerWidth": 402,
       "scrollWidth": 402
     },
     {
+      "stage": "submitted_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "submitted_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "submitted_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "submitted_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "submitted_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "submitted_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/submitted",
+          "screen": "PRV-12",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
       "screen": "ADM-15",
       "innerWidth": 402,
       "scrollWidth": 402
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "needs_changes_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties",
+          "screen": "PRV-02",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
     },
     {
       "screen": "PRV-02",
@@ -389,9 +1217,202 @@
       "screen": "PRV-14",
       "innerWidth": 402,
       "scrollWidth": 402
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "published_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57bfd1b8d0e58e12a78f0/published",
+          "screen": "PRV-14",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "ar",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "ar",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "ar",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "en",
+      "device": "desktop",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "en",
+      "device": "tablet",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 768,
+          "scrollWidth": 768
+        }
+      ]
+    },
+    {
+      "stage": "rejected_responsive",
+      "locale": "en",
+      "device": "mobile",
+      "status": "PASS",
+      "pageErrors": 0,
+      "routeChecks": [
+        {
+          "route": "/provider/properties/6aa57c42c6de8ced248c3ed5/rejected",
+          "screen": "PRV-13",
+          "documentStatus": 200,
+          "innerWidth": 390,
+          "scrollWidth": 390
+        }
+      ]
     }
   ],
   "rateLimitRetries": [],
+  "cleanup": true,
   "contactLayout": {
     "stepRows": 1,
     "fieldPadding": "0px",
@@ -421,5 +1442,12 @@
   "remaining": [
     "Run GUIDE-14 and GUIDE-15 on Production after deployment."
   ],
-  "finishedAt": "2026-09-10T12:33:22.297Z"
+  "cleanupCollections": [
+    "properties",
+    "property_media",
+    "organizations",
+    "audit_logs",
+    "sessions"
+  ],
+  "finishedAt": "2026-09-12T16:22:31.614Z"
 }

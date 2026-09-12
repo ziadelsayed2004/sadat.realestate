@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T16:05:59.331Z",
+  "generatedAt": "2026-09-12T16:30:09.888Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -3774,24 +3774,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "provider"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -3802,15 +3802,29 @@
         "section": "#provider",
         "journeyId": "GUIDE-14"
       },
-      "executionDate": "2026-09-10T12:33:22.297Z",
+      "executionDate": "2026-09-12T16:29:07.476Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/property-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T16:25:36.045Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-12T16:29:07.476Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T12:33:22.297Z",
+          "verifiedAt": "2026-09-12T16:22:31.614Z",
           "environment": "local-real-browser-api-mongodb-storage",
           "mockedRoutes": false,
           "remaining": [
@@ -3818,8 +3832,89 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "property_draft_submission_review_revision_publication_rejection_visibility_and_cleanup",
+          "path": "docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "Real property creation and review lifecycle in Arabic and English across Desktop, Tablet and Mobile with safe public projection, audit and cleanup.",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "incomplete_steps_reason_duplicate_submit_and_stale_version_preserve_state",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "scope": "Client validation and real HTTP 401/403/404/409/422 boundaries with MongoDB state checks.",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_property_search_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "scope": "Owned property list empty filter state in Arabic and English on Desktop, Tablet and Pixel 5 without mutation.",
+          "verifiedAt": "2026-09-12T16:29:07.476Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_property_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "scope": "Owned property list offline failure and explicit retry to real HTTP 200 in six locale/device runs without reload or mutation.",
+          "verifiedAt": "2026-09-12T16:29:07.476Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_provider_property_hidden_404",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_admin_and_limited_admin_property_capabilities_denied",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_provider_token_rejected_401_and_restored",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_submit_rejected_422_without_state_change",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_provider_update_rejected_409",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "provider_submit_and_admin_review_reason_validation",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_property_review_and_inserted_audit",
+          "path": "docs/quality/guide-runs/property-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T16:25:36.045Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      }
     },
     {
       "id": "GUIDE-15",
@@ -3853,24 +3948,24 @@
         "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
       },
       "cases": {
-        "success": "PARTIAL_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
-        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
-        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
-        "duplicateMutation": "UNVERIFIED"
+        "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "validation": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "provider"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "environment": {
         "local": "PARTIAL",
@@ -3881,15 +3976,29 @@
         "section": "#provider",
         "journeyId": "GUIDE-15"
       },
-      "executionDate": "2026-09-10T12:33:22.297Z",
+      "executionDate": "2026-09-12T16:29:07.476Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
-      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
+      "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
       "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/property-guarantees-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T16:25:36.045Z",
+          "environment": "isolated-local-MongoDB",
+          "mockedRoutes": false
+        },
+        {
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-12T16:29:07.476Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        },
         {
           "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-10T12:33:22.297Z",
+          "verifiedAt": "2026-09-12T16:22:31.614Z",
           "environment": "local-real-browser-api-mongodb-storage",
           "mockedRoutes": false,
           "remaining": [
@@ -3897,8 +4006,89 @@
           ]
         }
       ],
-      "reviewedSubcases": [],
-      "reviewedGuarantees": []
+      "reviewedSubcases": [
+        {
+          "case": "success",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "property_draft_submission_review_revision_publication_rejection_visibility_and_cleanup",
+          "path": "docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md",
+          "scope": "Real property creation and review lifecycle in Arabic and English across Desktop, Tablet and Mobile with safe public projection, audit and cleanup.",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "incomplete_steps_reason_duplicate_submit_and_stale_version_preserve_state",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "scope": "Client validation and real HTTP 401/403/404/409/422 boundaries with MongoDB state checks.",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "case": "empty",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "empty_property_search_clear_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "scope": "Owned property list empty filter state in Arabic and English on Desktop, Tablet and Pixel 5 without mutation.",
+          "verifiedAt": "2026-09-12T16:29:07.476Z"
+        },
+        {
+          "case": "networkRetry",
+          "evidenceType": "Browser/API/MongoDB",
+          "check": "offline_property_filter_retry_recovers_without_navigation",
+          "path": "docs/quality/guide-runs/provider-properties-recovery-local-latest.json",
+          "scope": "Owned property list offline failure and explicit retry to real HTTP 200 in six locale/device runs without reload or mutation.",
+          "verifiedAt": "2026-09-12T16:29:07.476Z"
+        }
+      ],
+      "reviewedGuarantees": [
+        {
+          "category": "horizontalAccess",
+          "check": "foreign_provider_property_hidden_404",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "anonymous_admin_and_limited_admin_property_capabilities_denied",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_suspended_provider_token_rejected_401_and_restored",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_submit_rejected_422_without_state_change",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "expectedVersion409",
+          "check": "stale_provider_update_rejected_409",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "decisionReason",
+          "check": "provider_submit_and_admin_review_reason_validation",
+          "path": "docs/quality/guide-runs/property-lifecycle-local-latest.json",
+          "verifiedAt": "2026-09-12T16:22:31.614Z"
+        },
+        {
+          "category": "atomicAuditRollback",
+          "check": "audit_failure_rolls_back_property_review_and_inserted_audit",
+          "path": "docs/quality/guide-runs/property-guarantees-local-latest.json",
+          "verifiedAt": "2026-09-12T16:25:36.045Z"
+        }
+      ],
+      "localAcceptanceReview": {
+        "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_14_15_LOCAL_ACCEPTANCE_2026-09-12.md",
+        "reviewedAt": "2026-09-12"
+      }
     },
     {
       "id": "GUIDE-16",
@@ -5426,7 +5616,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T16:05:59.331Z",
+    "updatedAt": "2026-09-12T16:30:09.888Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
