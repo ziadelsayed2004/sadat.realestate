@@ -367,3 +367,9 @@
 - Recompiled changed API only and restarted local supervisor; existing Web build reused. `verify-seeker-overview-count-browser-local.mjs` passed six AR/EN Desktop/Tablet/Pixel 5 runs with real HTTP/MongoDB.
 - Available property: overview and saved list both show 1. After deactivation: both show 0 while the favorite record remains. Temporary properties/favorites and sessions cleaned. Attached evidence to GUIDE-05.
 - Next: genuinely empty-account overview UI/projection validation (this run only proves saved-counter emptiness, not all dashboard sections empty), then continue actual matrix gaps. Runtime last verified ready pid 15704; revalidate before reuse. No CSS changes, Demo remains active, launch/purge deferred.
+
+## Resume: genuinely empty overview verified
+
+- `verify-seeker-overview-empty-local.mjs` passed six real browser/API/MongoDB runs using an existing test account confirmed empty in requests, viewings, favorites and notifications. No existing records were removed to manufacture emptiness.
+- Six API counters zero, three projection arrays empty, four UI summary cards zero and three empty activity panels; no business writes and no overflow. New sessions cleaned. Evidence attached to GUIDE-05.
+- Next: inspect the nonempty overview projection with valid owned request/viewing/notification records, including projection ordering/limits and safe fields. Existing count verifier uses minimal rows and therefore does not prove valid activity projection. Reuse existing matching runtime after checking status; no CSS changes. Demo and launch constraints unchanged.
