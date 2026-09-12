@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T14:42:53.288Z",
+  "generatedAt": "2026-09-12T14:50:26.109Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -4372,13 +4372,13 @@
         "validation": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "administrator"
         ],
-        "horizontalAccess": "UNVERIFIED",
+        "horizontalAccess": "NOT_APPLICABLE",
         "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
         "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
@@ -4396,7 +4396,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-22"
       },
-      "executionDate": "2026-09-10T12:35:34.122Z",
+      "executionDate": "2026-09-12T14:48:55.056Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open.",
@@ -4451,6 +4451,14 @@
       },
       "reviewedSubcases": [
         {
+          "case": "success",
+          "evidenceType": "Browser/API",
+          "check": "all_eight_admin_content_screens_render_real_api_without_overflow",
+          "path": "docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json",
+          "scope": "ADM-25 through ADM-32; Arabic and English on Desktop, Tablet and Pixel 5",
+          "verifiedAt": "2026-09-12T14:48:55.056Z"
+        },
+        {
           "case": "validation",
           "check": "invalid_reason_blocks_browser_mutation",
           "path": "docs/quality/guide-runs/community-browser-recovery-local-latest.json",
@@ -4502,8 +4510,27 @@
           "check": "current_admin_status_overrides_previously_issued_token",
           "path": "docs/quality/guide-runs/community-guarantees-local-latest.json",
           "verifiedAt": "2026-09-11T11:28:40.434Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "concurrent_hide_one_200_one_409_v2",
+          "path": "docs/quality/guide-runs/community-local-latest.json",
+          "verifiedAt": "2026-09-10T12:35:34.122Z"
         }
-      ]
+      ],
+      "evidenceAttachments": [
+        {
+          "path": "docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-12T14:48:55.056Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
+        }
+      ],
+      "applicabilityReview": {
+        "horizontalAccess": "NOT_APPLICABLE",
+        "rationale": "These global CMS and moderation records are governed by admin permissions and have no recipient, owner, or tenant scope."
+      }
     },
     {
       "id": "GUIDE-23",
@@ -4889,7 +4916,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T14:42:53.288Z",
+    "updatedAt": "2026-09-12T14:50:26.109Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

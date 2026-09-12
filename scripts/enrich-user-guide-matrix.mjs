@@ -49,6 +49,7 @@ const providerCustomerRecovery = await readFile('docs/quality/guide-runs/provide
 const providerProjectsRecovery = await readFile('docs/quality/guide-runs/provider-projects-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerViewingsRecovery = await readFile('docs/quality/guide-runs/provider-viewings-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const guide03ContentBrowser = await readFile('docs/quality/guide-runs/guide03-content-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const guide22AdminContentBrowser = await readFile('docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const journeySource = new Map(guide.journeys.map((journey) => [journey.id, journey]));
 
 function evidenceDate(journey) {
@@ -97,6 +98,7 @@ const supplementalRuns = [
   ["docs/quality/guide-runs/notification-recovery-local-latest.json", notificationRecovery],
   ["docs/quality/guide-runs/seeker-notifications-guarantees-local-latest.json", notificationGuarantees],
   ["docs/quality/guide-runs/guide03-content-browser-local-latest.json", guide03ContentBrowser],
+  ["docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json", guide22AdminContentBrowser],
 ].filter(([, evidence]) => evidence?.status?.startsWith("PASS_LOCAL"));
 
 const guide03LocalAcceptanceReady = guide03ContentBrowser?.status === 'PASS_LOCAL'
@@ -288,6 +290,13 @@ matrix.journeys = matrix.journeys.map((journey) => {
       reviewedAt: '2026-09-12',
     };
   }
+  if (journey.id === 'GUIDE-22') {
+    hydratedJourney.applicabilityReview = {
+      ...(hydratedJourney.applicabilityReview ?? {}),
+      horizontalAccess: 'NOT_APPLICABLE',
+      rationale: 'These global CMS and moderation records are governed by admin permissions and have no recipient, owner, or tenant scope.',
+    };
+  }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
@@ -345,6 +354,11 @@ matrix.journeys = matrix.journeys.map((journey) => {
   });
   const guaranteeStatus = category => reviewedGuarantees.some(item => item.category === category)
     ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED";
+  if (journey.id === 'GUIDE-22' && communityEvidence?.status === 'PASS_LOCAL'
+    && communityEvidence.transitions?.includes('concurrent_hide_one_200_one_409_v2')) {
+    reviewedGuarantees.push({ category: 'duplicateMutation', check: 'concurrent_hide_one_200_one_409_v2',
+      path: 'docs/quality/guide-runs/community-local-latest.json', verifiedAt: communityEvidence.finishedAt });
+  }
   if (journey.id === 'GUIDE-09' && guide09LocalAcceptanceReady) {
     for (const [category, check] of [
       ['horizontalAccess', 'foreign_notification_hidden_and_unchanged'],
@@ -456,6 +470,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
   // Record exactly what the reviewed runs demonstrate without promoting a
   // subcase to complete journey or Production closure.
   const reviewedSubcases = [];
+  if (journey.id === 'GUIDE-22' && guide22AdminContentBrowser?.status === 'PASS_LOCAL'
+    && guide22AdminContentBrowser.mockedRoutes === false && guide22AdminContentBrowser.cleanup === true
+    && guide22AdminContentBrowser.runs?.length === 6) {
+    reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API',
+      check: 'all_eight_admin_content_screens_render_real_api_without_overflow',
+      path: 'docs/quality/guide-runs/guide22-admin-content-browser-local-latest.json',
+      scope: 'ADM-25 through ADM-32; Arabic and English on Desktop, Tablet and Pixel 5',
+      verifiedAt: guide22AdminContentBrowser.finishedAt });
+  }
   if (journey.id === 'GUIDE-03' && communityInteractions?.status === 'PASS_LOCAL'
     && communityInteractions.mockedRoutes === false && communityInteractions.cleanup === true
     && ['reaction_toggle_switch_and_remove_without_duplicate_record', 'comment_persists_and_returns_in_public_detail'].every(name =>
@@ -851,7 +874,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
     reviewedGuarantees,
     permissions: {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
-      horizontalAccess: guaranteeStatus('horizontalAccess'),
+      horizontalAccess: hydratedJourney.applicabilityReview?.horizontalAccess === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : guaranteeStatus('horizontalAccess'),
       currentSessionState: guaranteeStatus('currentSessionState'),
       roleAuthorization: guaranteeStatus('roleAuthorization'),
     },

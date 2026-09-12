@@ -1,0 +1,534 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "GUIDE-22"
+  ],
+  "environment": "local-real-browser-api-mongodb",
+  "mockedRoutes": false,
+  "commit": "b353aaafb8417cfd68062606f5f60a2b2a87501c",
+  "routes": [
+    {
+      "screenId": "ADM-25",
+      "route": "/admin/articles"
+    },
+    {
+      "screenId": "ADM-26",
+      "route": "/admin/article-categories"
+    },
+    {
+      "screenId": "ADM-27",
+      "route": "/admin/community"
+    },
+    {
+      "screenId": "ADM-28",
+      "route": "/admin/community/comments"
+    },
+    {
+      "screenId": "ADM-29",
+      "route": "/admin/community/moderation"
+    },
+    {
+      "screenId": "ADM-30",
+      "route": "/admin/content/about"
+    },
+    {
+      "screenId": "ADM-31",
+      "route": "/admin/content/team"
+    },
+    {
+      "screenId": "ADM-32",
+      "route": "/admin/content/population-counter"
+    }
+  ],
+  "runs": [
+    {
+      "device": "desktop",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ],
+      "pageErrors": 0
+    },
+    {
+      "device": "desktop",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 1440,
+          "scrollWidth": 1440
+        }
+      ],
+      "pageErrors": 0
+    },
+    {
+      "device": "tablet",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        }
+      ],
+      "pageErrors": 0
+    },
+    {
+      "device": "tablet",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 834,
+          "scrollWidth": 834
+        }
+      ],
+      "pageErrors": 0
+    },
+    {
+      "device": "mobile",
+      "locale": "ar",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "pageErrors": 0
+    },
+    {
+      "device": "mobile",
+      "locale": "en",
+      "status": "PASS",
+      "screens": [
+        {
+          "screenId": "ADM-25",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200,
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-26",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-27",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-28",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-29",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-30",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-31",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        },
+        {
+          "screenId": "ADM-32",
+          "documentStatus": 200,
+          "apiStatuses": [
+            200
+          ],
+          "innerWidth": 393,
+          "scrollWidth": 393
+        }
+      ],
+      "pageErrors": 0
+    }
+  ],
+  "sessionsRemoved": true,
+  "cleanup": true,
+  "finishedAt": "2026-09-12T14:48:55.056Z"
+}

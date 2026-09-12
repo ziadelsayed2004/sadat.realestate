@@ -42,6 +42,7 @@
     "guide:community:local": "node scripts/verify-guide-community-local.mjs",
     "guide:community-interactions:local": "node --import tsx scripts/verify-community-interactions-local.mjs",
     "guide:content-browser:local": "node scripts/verify-guide03-content-browser-local.mjs",
+    "guide:admin-content-browser:local": "node scripts/verify-guide22-admin-content-browser-local.mjs",
     "guide:seeker-property-search:local": "node --import tsx scripts/verify-seeker-property-search-local.mjs",
     "guide:seeker-notifications-guarantees:local": "node --import tsx scripts/verify-seeker-notifications-guarantees-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",
