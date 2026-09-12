@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import { commissionPolicyCreateSchema, commissionPolicyListQuerySchema, commissionPolicySchema, commissionPolicyPatchSchema, type CommissionPolicy, type CommissionPolicyListData, type CommissionPolicyListQuery } from '@sadat-real-estate/contracts';
+import type { AuditRecordInput } from '../audit/writer.js';
 import type { CommissionPolicyRepository } from './policy-repository.js';
 
 type CommissionPolicyErrorCode = 'COMMISSION_FORBIDDEN' | 'COMMISSION_NOT_FOUND' | 'COMMISSION_DUPLICATE' | 'COMMISSION_VERSION_CONFLICT' | 'COMMISSION_INVALID_STATE' | 'COMMISSION_OVERLAP';
@@ -31,14 +32,17 @@ export function createCommissionPolicyService(seed: { policies?: CommissionPolic
     if (existing.some(item => item.id !== policy.id && activeStatus(item.status) && item.scope.kind === policy.scope.kind && item.scope.key === policy.scope.key && overlaps(item, policy))) throw new CommissionPolicyServiceError('COMMISSION_OVERLAP');
   };
   return {
-    async createPolicy(claims: AccessTokenClaims, input: unknown) {
+    async createPolicy(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const parsed = commissionPolicyCreateSchema.parse(input);
       if ((await all()).some(item => item.key === parsed.key && item.effectiveFrom === parsed.effectiveFrom)) throw new CommissionPolicyServiceError('COMMISSION_DUPLICATE');
       const stamp = now();
       const policy = commissionPolicySchema.parse({ id: id(), ...parsed, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
       if (repository) {
-        const result = await repository.insert(policy);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_policy', targetId: policy.id,
+          action: 'commission_policy.create', reason: `Create commission policy ${policy.key}`, before: {}, after: policy,
+          requestId: context?.requestId ?? 'commission-policy-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(stamp) };
+        const result = repository.insertWithAudit ? await repository.insertWithAudit(policy, event) : await repository.insert(policy);
         if (result.kind === 'duplicate') throw new CommissionPolicyServiceError('COMMISSION_DUPLICATE');
       } else {
         policies.set(policy.id, policy);

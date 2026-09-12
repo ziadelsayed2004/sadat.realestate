@@ -1,8 +1,9 @@
-import type { Connection } from 'mongoose';
+import type { ClientSession, Connection } from 'mongoose';
 import {
   commissionPolicySchema,
   type CommissionPolicy
 } from '@sadat-real-estate/contracts';
+import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 
 export type CommissionPolicyWriteResult =
   | { kind: 'written' }
@@ -17,6 +18,7 @@ export interface CommissionPolicyRepository {
   list(): Promise<CommissionPolicy[]>;
   findById(policyId: string): Promise<CommissionPolicy | undefined>;
   insert(policy: CommissionPolicy): Promise<CommissionPolicyWriteResult>;
+  insertWithAudit?(policy: CommissionPolicy, event: AuditRecordInput): Promise<CommissionPolicyWriteResult>;
   replace(policy: CommissionPolicy, expectedVersion: number): Promise<CommissionPolicyReplaceResult>;
 }
 
@@ -34,7 +36,8 @@ function parsePolicy(value: unknown): CommissionPolicy {
 }
 
 export function createMongooseCommissionPolicyRepository(
-  connection: Connection
+  connection: Connection,
+  audit?: AuditWriter
 ): CommissionPolicyRepository {
   const collection = connection.collection('commission_policies');
   let indexes: Promise<unknown> | undefined;
@@ -56,6 +59,17 @@ export function createMongooseCommissionPolicyRepository(
     ]);
     return indexes;
   };
+
+  async function insert(policy: CommissionPolicy, session?: ClientSession): Promise<CommissionPolicyWriteResult> {
+    await ensureIndexes();
+    try {
+      await collection.insertOne(policy, session ? { session } : {});
+      return { kind: 'written' };
+    } catch (error) {
+      if (!session && error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
+      throw error;
+    }
+  }
 
   return {
     async list() {
@@ -116,21 +130,22 @@ export function createMongooseCommissionPolicyRepository(
       return row ? parsePolicy(row) : undefined;
     },
 
-    async insert(policy) {
-      await ensureIndexes();
+    insert,
+
+    async insertWithAudit(policy, event) {
+      if (!audit) throw new Error('COMMISSION_POLICY_AUDIT_UNAVAILABLE');
+      const session = await connection.startSession();
       try {
-        await collection.insertOne(policy);
-        return { kind: 'written' };
+        return await session.withTransaction(async () => {
+          const result = await insert(policy, session);
+          if (result.kind === 'written') await audit.record(event, session);
+          return result;
+        });
       } catch (error) {
-        if (
-          error &&
-          typeof error === 'object' &&
-          'code' in error &&
-          error.code === 11000
-        ) {
-          return { kind: 'duplicate' };
-        }
+        if (error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
         throw error;
+      } finally {
+        await session.endSession();
       }
     },
 

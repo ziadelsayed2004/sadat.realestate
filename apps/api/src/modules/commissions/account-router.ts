@@ -35,6 +35,11 @@ function requestId(request: Request): string {
   return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request';
 }
 
+function mutationContext(request: Request): { requestId: string; traceId: string } {
+  const current = getRequestContext();
+  return { requestId: current?.requestId ?? requestId(request), traceId: current?.traceId ?? '0'.repeat(32) };
+}
+
 function claims(response: Response): AccessTokenClaims {
   return response.locals.adminRbacClaims as AccessTokenClaims;
 }
@@ -100,7 +105,8 @@ export function createCommissionAccountRouter(
       const data = await dependencies.service.createOverride(
         claims(response),
         accountId(request.params.accountId),
-        request.body ?? {}
+        request.body ?? {},
+        mutationContext(request)
       );
       response.status(201).json(toSuccessResponse(data, requestId(request)));
     } catch (error) {

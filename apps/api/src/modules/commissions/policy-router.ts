@@ -35,6 +35,11 @@ function requestId(request: Request): string {
   return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request';
 }
 
+function mutationContext(request: Request): { requestId: string; traceId: string } {
+  const current = getRequestContext();
+  return { requestId: current?.requestId ?? requestId(request), traceId: current?.traceId ?? '0'.repeat(32) };
+}
+
 function claims(response: Response): AccessTokenClaims {
   return response.locals.adminRbacClaims as AccessTokenClaims;
 }
@@ -92,7 +97,7 @@ export function createCommissionPolicyRouter(
   router.post('/admin/commission-policies', async (request, response) => {
     try {
       await requirePermission(dependencies, response, 'admin:commissions.manage');
-      const data = await dependencies.service.createPolicy(claims(response), request.body ?? {});
+      const data = await dependencies.service.createPolicy(claims(response), request.body ?? {}, mutationContext(request));
       response.status(201).json(toSuccessResponse(data, requestId(request)));
     } catch (error) {
       sendError(request, response, error);

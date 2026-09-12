@@ -3,6 +3,7 @@ import type { AccessTokenClaims } from '../auth/crypto.js';
 import { commissionAccountCommissionSchema, commissionAccountOverrideCreateSchema, commissionAccountOverrideListQuerySchema, commissionAccountOverridePatchSchema, commissionAccountOverrideSchema, type CommissionAccountCommission, type CommissionAccountOverride, type CommissionAccountOverrideListData, type CommissionAccountOverrideListQuery, type CommissionPolicy } from '@sadat-real-estate/contracts';
 import type { CommissionAccountOverrideRepository } from './account-repository.js';
 import type { CommissionPolicyRepository } from './policy-repository.js';
+import type { AuditRecordInput } from '../audit/writer.js';
 
 type CommissionAccountErrorCode = 'COMMISSION_FORBIDDEN' | 'COMMISSION_ACCOUNT_NOT_FOUND' | 'COMMISSION_ACCOUNT_DUPLICATE' | 'COMMISSION_ACCOUNT_VERSION_CONFLICT' | 'COMMISSION_ACCOUNT_INVALID_STATE' | 'COMMISSION_ACCOUNT_OVERLAP';
 export class CommissionAccountServiceError extends Error {
@@ -38,7 +39,7 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
     return commissionAccountCommissionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), policyId: policy.id, policyVersion: policy.version, kind: policy.kind, ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
   };
   return {
-    async createOverride(claims: AccessTokenClaims, accountId: string, input: unknown) {
+    async createOverride(claims: AccessTokenClaims, accountId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       if (!/^[a-f0-9]{24}$/.test(accountId)) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_NOT_FOUND');
       const parsed = commissionAccountOverrideCreateSchema.parse(input);
@@ -46,7 +47,10 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
       const stamp = now();
       const override = commissionAccountOverrideSchema.parse({ id: id(), accountId, ...parsed, status: 'draft', version: 0, source: 'account_override', createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
       if (repository) {
-        const result = await repository.insert(override);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_account_override', targetId: override.id,
+          action: 'commission_account_override.create', reason: `Create commission override for account ${accountId}`, before: {}, after: override,
+          requestId: context?.requestId ?? 'commission-account-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(stamp) };
+        const result = repository.insertWithAudit ? await repository.insertWithAudit(override, event) : await repository.insert(override);
         if (result.kind === 'duplicate') throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_DUPLICATE');
       } else {
         overrides.set(override.id, override);

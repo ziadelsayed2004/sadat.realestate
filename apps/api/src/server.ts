@@ -156,9 +156,9 @@ async function runEntrypoint(): Promise<void> {
   const adminAds = createAdminAdsRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
   const adminBanners = createAdminBannersRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
   const advertisingLedger = createAdvertisingLedgerRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
-  const commissionPolicies = createCommissionPolicyRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
-  const commissionAccounts = createCommissionAccountRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
-  const commissionExceptions = createCommissionExceptionRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionPolicies = createCommissionPolicyRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
+  const commissionAccounts = createCommissionAccountRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
+  const commissionExceptions = createCommissionExceptionRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
   const commissionConfirmations = createCommissionConfirmationRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
   const commissionChangeLog = createCommissionChangeLogRuntime(auditInfrastructure.repository, auth.accessTokens, rbac.service);
   const audit = createAuditRuntime(auth.accessTokens, rbac.service, auditInfrastructure);

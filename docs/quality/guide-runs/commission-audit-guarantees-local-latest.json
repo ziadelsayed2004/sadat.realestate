@@ -1,0 +1,19 @@
+{
+  "status": "PASS_LOCAL",
+  "journey": "GUIDE-24",
+  "journeys": [
+    "GUIDE-24"
+  ],
+  "mockedRoutes": false,
+  "environment": "isolated-local-MongoDB",
+  "faultInjection": "durable audit throws after insert inside each commission transaction",
+  "commit": "95289ec8baabfeb784127ceec32c083e7499af1f",
+  "startedAt": "2026-09-12T18:13:59.072Z",
+  "checks": [
+    "audit_failure_rolls_back_policy_exception_override_and_inserted_audits",
+    "retry_commits_three_records_with_exactly_three_reasoned_audits",
+    "duplicate_records_write_no_duplicate_audits"
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-09-12T18:13:59.810Z"
+}

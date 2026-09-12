@@ -50,6 +50,7 @@
     "guide:admin-property-setup-guarantees:local": "node --import tsx scripts/verify-admin-property-setup-guarantees-local.mjs",
     "guide:admin-ads-payments:local": "node scripts/verify-guide23-admin-ads-payments-local.mjs",
     "guide:admin-ads-payments-guarantees:local": "node --import tsx scripts/verify-admin-ads-payments-guarantees-local.mjs",
+    "guide:commission-audit-guarantees:local": "node --import tsx scripts/verify-commission-audit-guarantees-local.mjs",
     "guide:seeker-property-search:local": "node --import tsx scripts/verify-seeker-property-search-local.mjs",
     "guide:seeker-notifications-guarantees:local": "node --import tsx scripts/verify-seeker-notifications-guarantees-local.mjs",
     "guide:provider-registration:local": "node scripts/verify-guide-provider-registration-local.mjs",

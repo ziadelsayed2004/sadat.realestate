@@ -1,8 +1,9 @@
-import type { Connection } from 'mongoose';
+import type { ClientSession, Connection } from 'mongoose';
 import {
   commissionExceptionSchema,
   type CommissionException
 } from '@sadat-real-estate/contracts';
+import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 
 export type CommissionExceptionWriteResult =
   | { kind: 'written' }
@@ -17,6 +18,7 @@ export interface CommissionExceptionRepository {
   list(): Promise<CommissionException[]>;
   findById(exceptionId: string): Promise<CommissionException | undefined>;
   insert(exception: CommissionException): Promise<CommissionExceptionWriteResult>;
+  insertWithAudit?(exception: CommissionException, event: AuditRecordInput): Promise<CommissionExceptionWriteResult>;
   replace(
     exception: CommissionException,
     expectedVersion: number
@@ -61,7 +63,8 @@ const projection = {
 } as const;
 
 export function createMongooseCommissionExceptionRepository(
-  connection: Connection
+  connection: Connection,
+  audit?: AuditWriter
 ): CommissionExceptionRepository {
   const collection = connection.collection('commission_exceptions');
   let indexes: Promise<unknown> | undefined;
@@ -84,6 +87,17 @@ export function createMongooseCommissionExceptionRepository(
     return indexes;
   };
 
+  async function insert(exception: CommissionException, session?: ClientSession): Promise<CommissionExceptionWriteResult> {
+    await ensureIndexes();
+    try {
+      await collection.insertOne(exception, session ? { session } : {});
+      return { kind: 'written' };
+    } catch (error) {
+      if (!session && error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
+      throw error;
+    }
+  }
+
   return {
     async list() {
       await ensureIndexes();
@@ -97,21 +111,22 @@ export function createMongooseCommissionExceptionRepository(
       return row ? parseException(row) : undefined;
     },
 
-    async insert(exception) {
-      await ensureIndexes();
+    insert,
+
+    async insertWithAudit(exception, event) {
+      if (!audit) throw new Error('COMMISSION_EXCEPTION_AUDIT_UNAVAILABLE');
+      const session = await connection.startSession();
       try {
-        await collection.insertOne(exception);
-        return { kind: 'written' };
+        return await session.withTransaction(async () => {
+          const result = await insert(exception, session);
+          if (result.kind === 'written') await audit.record(event, session);
+          return result;
+        });
       } catch (error) {
-        if (
-          error &&
-          typeof error === 'object' &&
-          'code' in error &&
-          error.code === 11000
-        ) {
-          return { kind: 'duplicate' };
-        }
+        if (error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
         throw error;
+      } finally {
+        await session.endSession();
       }
     },
 

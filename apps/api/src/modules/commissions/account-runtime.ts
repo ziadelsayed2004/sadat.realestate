@@ -5,17 +5,19 @@ import { createMongooseCommissionAccountOverrideRepository } from './account-rep
 import { createCommissionAccountService } from './account-service.js';
 import type { CommissionAccountRouterDependencies } from './account-router.js';
 import { createMongooseCommissionPolicyRepository } from './policy-repository.js';
+import type { AuditWriter } from '../audit/writer.js';
 
 export function createCommissionAccountRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
-  authorization: Pick<RbacService, 'authorize'>
+  authorization: Pick<RbacService, 'authorize'>,
+  audit: AuditWriter
 ): CommissionAccountRouterDependencies {
   return {
     accessTokens,
     authorization,
     service: createCommissionAccountService({
-      repository: createMongooseCommissionAccountOverrideRepository(connection),
+      repository: createMongooseCommissionAccountOverrideRepository(connection, audit),
       policyRepository: createMongooseCommissionPolicyRepository(connection)
     })
   };

@@ -1,8 +1,9 @@
-import type { Connection } from 'mongoose';
+import type { ClientSession, Connection } from 'mongoose';
 import {
   commissionAccountOverrideSchema,
   type CommissionAccountOverride
 } from '@sadat-real-estate/contracts';
+import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 
 export type CommissionAccountOverrideWriteResult =
   | { kind: 'written' }
@@ -17,6 +18,7 @@ export interface CommissionAccountOverrideRepository {
   list(): Promise<CommissionAccountOverride[]>;
   findById(overrideId: string): Promise<CommissionAccountOverride | undefined>;
   insert(override: CommissionAccountOverride): Promise<CommissionAccountOverrideWriteResult>;
+  insertWithAudit?(override: CommissionAccountOverride, event: AuditRecordInput): Promise<CommissionAccountOverrideWriteResult>;
   replace(
     override: CommissionAccountOverride,
     expectedVersion: number
@@ -56,7 +58,8 @@ const projection = {
 } as const;
 
 export function createMongooseCommissionAccountOverrideRepository(
-  connection: Connection
+  connection: Connection,
+  audit?: AuditWriter
 ): CommissionAccountOverrideRepository {
   const collection = connection.collection('commission_account_overrides');
   let indexes: Promise<unknown> | undefined;
@@ -79,6 +82,17 @@ export function createMongooseCommissionAccountOverrideRepository(
     return indexes;
   };
 
+  async function insert(override: CommissionAccountOverride, session?: ClientSession): Promise<CommissionAccountOverrideWriteResult> {
+    await ensureIndexes();
+    try {
+      await collection.insertOne(override, session ? { session } : {});
+      return { kind: 'written' };
+    } catch (error) {
+      if (!session && error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
+      throw error;
+    }
+  }
+
   return {
     async list() {
       await ensureIndexes();
@@ -92,21 +106,22 @@ export function createMongooseCommissionAccountOverrideRepository(
       return row ? parseOverride(row) : undefined;
     },
 
-    async insert(override) {
-      await ensureIndexes();
+    insert,
+
+    async insertWithAudit(override, event) {
+      if (!audit) throw new Error('COMMISSION_ACCOUNT_AUDIT_UNAVAILABLE');
+      const session = await connection.startSession();
       try {
-        await collection.insertOne(override);
-        return { kind: 'written' };
+        return await session.withTransaction(async () => {
+          const result = await insert(override, session);
+          if (result.kind === 'written') await audit.record(event, session);
+          return result;
+        });
       } catch (error) {
-        if (
-          error &&
-          typeof error === 'object' &&
-          'code' in error &&
-          error.code === 11000
-        ) {
-          return { kind: 'duplicate' };
-        }
+        if (error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
         throw error;
+      } finally {
+        await session.endSession();
       }
     },
 

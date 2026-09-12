@@ -10,6 +10,7 @@ import {
   type CommissionExceptionListQuery
 } from '@sadat-real-estate/contracts';
 import type { CommissionExceptionRepository } from './exception-repository.js';
+import type { AuditRecordInput } from '../audit/writer.js';
 
 type CommissionExceptionErrorCode =
   | 'COMMISSION_EXCEPTION_FORBIDDEN'
@@ -86,7 +87,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
   };
 
   return {
-    async createException(claims: AccessTokenClaims, input: unknown) {
+    async createException(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const parsed = commissionExceptionCreateSchema.parse(input);
       if (!validAccountId(parsed.accountId)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
@@ -105,7 +106,10 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
         lastMutationReason: parsed.reason
       });
       if (repository) {
-        const result = await repository.insert(exception);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_exception', targetId: exception.id,
+          action: 'commission_exception.create', reason: parsed.reason, before: {}, after: exception,
+          requestId: context?.requestId ?? 'commission-exception-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(stamp) };
+        const result = repository.insertWithAudit ? await repository.insertWithAudit(exception, event) : await repository.insert(exception);
         if (result.kind === 'duplicate') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
       } else {
         exceptions.set(exception.id, exception);
