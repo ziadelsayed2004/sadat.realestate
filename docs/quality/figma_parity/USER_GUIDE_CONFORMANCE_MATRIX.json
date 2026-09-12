@@ -1875,6 +1875,13 @@
           "status": "PASS_LOCAL",
           "verifiedAt": "2026-09-11T21:56:34.973Z",
           "environment": "isolated-local-mongodb"
+        },
+        {
+          "path": "docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json",
+          "status": "PASS_LOCAL_SUBCASES",
+          "verifiedAt": "2026-09-12T01:22:59.096Z",
+          "environment": "local-real-browser-api-mongodb",
+          "mockedRoutes": false
         }
       ],
       "reviewedSubcases": [
@@ -1893,6 +1900,14 @@
           "evidenceType": "Repository/MongoDB",
           "scope": "Isolated Mongo: empty counts/projections; owned request/viewing/notification counts exclude foreign records; available favorites count matches list and responds to deactivation. Not browser empty-state evidence.",
           "verifiedAt": "2026-09-11T21:56:34.973Z"
+        },
+        {
+          "case": "success",
+          "check": "available_saved_counter_tracks_listing",
+          "path": "docs/quality/guide-runs/seeker-overview-count-browser-local-latest.json",
+          "evidenceType": "Browser/API/MongoDB",
+          "scope": "Six AR/EN desktop/tablet/mobile runs on rebuilt API: active property yields count/list 1, inactive yields 0, saved record retained. Fixture properties/favorites and new sessions cleaned. Not a completely empty-account overview.",
+          "verifiedAt": "2026-09-12T01:22:59.096Z"
         }
       ],
       "reviewedGuarantees": []

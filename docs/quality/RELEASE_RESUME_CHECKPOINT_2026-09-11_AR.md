@@ -361,3 +361,9 @@
 - `verify-seeker-overview-counts-local.mjs` passed on isolated MongoDB: zero-count/empty projection account, owned counts 2/1/1/1/2/1 excluding foreign records, count agrees with favorite listing, then drops to zero on deactivation. Temporary collections removed.
 - Focused overview/request-projection tests 2/2, API typecheck and targeted lint passed. No CSS changes. Evidence scope repository/MongoDB, not browser empty state.
 - Next: rebuild/restart API for the changed overview implementation before any full-runtime confirmation; currently running process still has previous compiled API. Verify actual empty-account browser overview and count change there. Do not rerun unaffected Web build or auth style checks.
+
+## Resume checkpoint: overview counter browser confirmation
+
+- Recompiled changed API only and restarted local supervisor; existing Web build reused. `verify-seeker-overview-count-browser-local.mjs` passed six AR/EN Desktop/Tablet/Pixel 5 runs with real HTTP/MongoDB.
+- Available property: overview and saved list both show 1. After deactivation: both show 0 while the favorite record remains. Temporary properties/favorites and sessions cleaned. Attached evidence to GUIDE-05.
+- Next: genuinely empty-account overview UI/projection validation (this run only proves saved-counter emptiness, not all dashboard sections empty), then continue actual matrix gaps. Runtime last verified ready pid 15704; revalidate before reuse. No CSS changes, Demo remains active, launch/purge deferred.
