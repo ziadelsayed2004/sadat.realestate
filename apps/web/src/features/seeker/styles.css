@@ -2349,7 +2349,8 @@
   .seeker-saved-property-card__view { min-block-size: 2.25rem; padding: .375rem .875rem; }
 
   .seeker-notifications__panel {
-    width: min(100%, 48rem);
+    width: 100%;
+    max-width: none;
     margin-inline: auto;
     gap: 1.25rem;
     margin-block-start: 1.25rem;
@@ -2360,8 +2361,15 @@
   .seeker-notifications__tab { min-block-size: 2.375rem; padding: .5rem 1rem; border-radius: 1.125rem; }
 
   .seeker-notifications > .seeker-dashboard__content > .seeker-dashboard__heading-row {
-    width: min(100%, 48rem);
+    width: 100%;
+    max-width: none;
     margin-inline: auto;
+  }
+
+  .seeker-notifications .seeker-dashboard__empty[data-state] {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
   }
 
   .seeker-notifications .seeker-notifications__item[data-state][data-state] {
@@ -2386,7 +2394,8 @@
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__panel,
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__settings,
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__feedback {
-    width: min(100%, 42rem);
+    width: 100%;
+    max-width: none;
     margin-inline: auto;
   }
 
@@ -2404,14 +2413,15 @@
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs {
     width: max-content;
     margin-block-start: 1.25rem;
-    margin-inline-start: max(0px, calc((100% - 42rem) / 2));
-    margin-inline-end: auto;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
     padding: .25rem;
     gap: .25rem;
   }
 
   .seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row {
-    width: min(100%, 42rem);
+    width: 100%;
+    max-width: none;
     margin-inline: auto;
   }
 
@@ -2473,6 +2483,11 @@
   .seeker-profile__settings { gap: 1rem; text-align: start; }
   .seeker-profile__settings-card {
     margin: 0 !important;
+  }
+  .seeker-profile__settings-card[data-state] {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
   }
   .seeker-profile__settings-card .ui-field[data-state][data-state] {
     max-width: none;

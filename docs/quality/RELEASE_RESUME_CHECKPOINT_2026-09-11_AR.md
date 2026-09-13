@@ -773,3 +773,10 @@
 - Added the source-shaped success mark, centered copy, compact reference/date/status card, active Add property navigation, and responsive action order. Removed the generic detail, reason, safe-data, and unavailable-review-date blocks from this state only.
 - Preserved server-owned `pending_review` validation and the owner-scoped route. The canonical SDT public reference is absent from the provider projection, so the approved property id remains visible and no code was invented.
 - Component tests passed 9/9. Baseline update passed 2/2 and final AR/EN no-update verification passed 2/2 with exact 402×858 and 1024×720 containment checks. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-12 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: seeker profile, settings, and notifications canvas repair
+
+- Aligned SEK-07, SEK-08, SEK-09, and SEK-10 desktop headings and panels with the same 86rem content canvas used by the seeker overview while preserving the existing tablet and mobile layout.
+- Removed the generic `[data-state]` presentation from seeker settings cards so unavailable and success cards no longer collapse to 48rem or pick up state-panel spacing. Every settings card now follows the shared page canvas.
+- AR/EN geometry passed across 1551, 768, and 393 pixel widths, including explicit heading/panel/card edge alignment and horizontal containment. Reviewed visual baselines were updated and verified; build/bundle budgets, typecheck, focused lint, and diff checks passed.
+- This responsive repair does not change screen classification. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen remains PRV-13.

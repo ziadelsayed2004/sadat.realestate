@@ -183,6 +183,8 @@ test.describe('SEK-07 Seeker Notifications', () => {
         const iconRect = icon?.getBoundingClientRect();
         const dotRect = dot?.getBoundingClientRect();
         const list = document.querySelector<HTMLElement>('.seeker-notifications__list');
+        const headingRect = document.querySelector<HTMLElement>('.seeker-notifications > .seeker-dashboard__content > .seeker-dashboard__heading-row')?.getBoundingClientRect();
+        const panelRect = document.querySelector<HTMLElement>('.seeker-notifications__panel')?.getBoundingClientRect();
         const firstStyle = first === null || first === undefined ? undefined : getComputedStyle(first);
         const listStyle = list === null ? undefined : getComputedStyle(list);
         return {
@@ -194,7 +196,9 @@ test.describe('SEK-07 Seeker Notifications', () => {
           dotLeft: dotRect?.left ?? -1,
           rowGap: listStyle?.rowGap,
           rowRadius: firstStyle?.borderTopLeftRadius,
-          rowMargin: firstStyle?.marginBlockStart
+          rowMargin: firstStyle?.marginBlockStart,
+          desktopCanvasAligned: window.innerWidth < 1101 || (headingRect !== undefined && panelRect !== undefined && Math.abs(headingRect.left - panelRect.left) <= 1 && Math.abs(headingRect.right - panelRect.right) <= 1),
+          panelWidth: panelRect?.width ?? 0
         };
       });
       expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
@@ -204,6 +208,8 @@ test.describe('SEK-07 Seeker Notifications', () => {
       expect(geometry.rowGap, `${locale} at ${viewport.width}px`).toBe('0px');
       expect(geometry.rowMargin, `${locale} at ${viewport.width}px`).toBe('0px');
       expect(geometry.rowRadius, `${locale} at ${viewport.width}px`).toBe('0px');
+      expect(geometry.desktopCanvasAligned, `${locale} at ${viewport.width}px`).toBe(true);
+      if (viewport.width === 1551) expect(geometry.panelWidth, `${locale} desktop canvas width`).toBeGreaterThan(900);
     }
   });
 

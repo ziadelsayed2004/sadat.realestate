@@ -331,13 +331,16 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       const geometry = await page.evaluate(() => {
         const panel = document.querySelector<HTMLElement>('.seeker-profile__panel')?.getBoundingClientRect();
         const save = document.querySelector<HTMLElement>('.seeker-profile__form > button')?.getBoundingClientRect();
+        const heading = document.querySelector<HTMLElement>('.seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row')?.getBoundingClientRect();
         return {
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           panelLeft: panel?.left ?? -1,
           panelRight: panel?.right ?? innerWidth + 1,
           saveLeft: save?.left ?? -1,
-          saveRight: save?.right ?? innerWidth + 1
+          saveRight: save?.right ?? innerWidth + 1,
+          desktopCanvasAligned: innerWidth < 1101 || (heading !== undefined && panel !== undefined && Math.abs(heading.left - panel.left) <= 1 && Math.abs(heading.right - panel.right) <= 1),
+          panelWidth: panel?.width ?? 0
         };
       });
       expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
@@ -345,6 +348,8 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       expect(geometry.panelRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
       expect(geometry.saveLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
       expect(geometry.saveRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.desktopCanvasAligned, `${locale} at ${viewport.width}px`).toBe(true);
+      if (viewport.width === 1551) expect(geometry.panelWidth, `${locale} desktop canvas width`).toBeGreaterThan(900);
     }
   });
 
@@ -358,13 +363,16 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       const geometry = await page.evaluate(() => {
         const panel = document.querySelector<HTMLElement>('.seeker-profile__panel')?.getBoundingClientRect();
         const save = document.querySelector<HTMLElement>('.seeker-profile__form > button')?.getBoundingClientRect();
+        const heading = document.querySelector<HTMLElement>('.seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row')?.getBoundingClientRect();
         return {
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           panelLeft: panel?.left ?? -1,
           panelRight: panel?.right ?? innerWidth + 1,
           saveLeft: save?.left ?? -1,
-          saveRight: save?.right ?? innerWidth + 1
+          saveRight: save?.right ?? innerWidth + 1,
+          desktopCanvasAligned: innerWidth < 1101 || (heading !== undefined && panel !== undefined && Math.abs(heading.left - panel.left) <= 1 && Math.abs(heading.right - panel.right) <= 1),
+          panelWidth: panel?.width ?? 0
         };
       });
       expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
@@ -372,6 +380,8 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       expect(geometry.panelRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
       expect(geometry.saveLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
       expect(geometry.saveRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.desktopCanvasAligned, `${locale} at ${viewport.width}px`).toBe(true);
+      if (viewport.width === 1551) expect(geometry.panelWidth, `${locale} desktop canvas width`).toBeGreaterThan(900);
     }
   });
 
@@ -385,16 +395,24 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       const geometry = await page.evaluate(() => {
         const cards = [...document.querySelectorAll<HTMLElement>('.seeker-profile__settings-card')].map(card => card.getBoundingClientRect());
         const dates = [...document.querySelectorAll<HTMLElement>('.seeker-profile__session dd')].map(value => value.getBoundingClientRect());
+        const heading = document.querySelector<HTMLElement>('.seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row')?.getBoundingClientRect();
+        const settings = document.querySelector<HTMLElement>('.seeker-profile__settings')?.getBoundingClientRect();
         return {
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           cardsContained: cards.every(card => card.left >= -1 && card.right <= innerWidth + 1),
-          datesContained: dates.every(date => date.left >= -1 && date.right <= innerWidth + 1)
+          datesContained: dates.every(date => date.left >= -1 && date.right <= innerWidth + 1),
+          desktopCanvasAligned: innerWidth < 1101 || (heading !== undefined && settings !== undefined && Math.abs(heading.left - settings.left) <= 1 && Math.abs(heading.right - settings.right) <= 1),
+          desktopCardsAligned: innerWidth < 1101 || (settings !== undefined && cards.every(card => Math.abs(card.left - settings.left) <= 1 && Math.abs(card.right - settings.right) <= 1)),
+          settingsWidth: settings?.width ?? 0
         };
       });
       expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
       expect(geometry.cardsContained, `${locale} at ${viewport.width}px`).toBe(true);
       expect(geometry.datesContained, `${locale} at ${viewport.width}px`).toBe(true);
+      expect(geometry.desktopCanvasAligned, `${locale} at ${viewport.width}px`).toBe(true);
+      expect(geometry.desktopCardsAligned, `${locale} at ${viewport.width}px`).toBe(true);
+      if (viewport.width === 1551) expect(geometry.settingsWidth, `${locale} desktop canvas width`).toBeGreaterThan(900);
     }
   });
 });
