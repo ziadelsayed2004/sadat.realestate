@@ -19,7 +19,7 @@ function requestFixture(status = 'new', availableActions: string[] = ['contact',
     type: 'provider_customer',
     source: 'provider',
     providerId: PROVIDER_ID,
-    payload: { firstName: 'Mona', lastName: 'Hassan', phone: '01012345678', email: 'mona@example.com', message: 'Interested in a property' },
+    payload: { firstName: 'Mona', lastName: 'Hassan', phone: '01012345678', email: 'mona@example.com', message: 'Interested in a property', sourceNote: 'WhatsApp' },
     status,
     version: status === 'contacted' ? 3 : 2,
     availableActions,
@@ -164,6 +164,8 @@ test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
     await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`).locator('.provider-customer-requests__identity strong')).toHaveText('Mona Hassan');
+    await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toContainText('WhatsApp');
+    await expect(page.locator('#provider-customer-requests-title + p')).toHaveText(locale === 'ar' ? 'تابع استفسارات العملاء وطلبات المعاينة وحدّث حالة التواصل من مكان واحد.' : 'Track customer inquiries and viewing requests, and update contact status in one place.');
     await expect(page.getByRole('button', { name: /Mark contacted|تم التواصل|标记为已联系/u })).toBeEnabled();
     await expect(page.locator('body')).not.toContainText(new RegExp(PROVIDER_ID));
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|storageKey|accessToken|refreshToken/u);

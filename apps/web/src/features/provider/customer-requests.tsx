@@ -54,7 +54,7 @@ function stateForError(error: unknown): Exclude<ProviderCustomerRequestsViewStat
   return 'error';
 }
 
-function payloadText(request: RequestData, key: 'firstName' | 'lastName' | 'phone' | 'email' | 'message' | 'propertyId' | 'projectId'): string | undefined {
+function payloadText(request: RequestData, key: 'firstName' | 'lastName' | 'phone' | 'email' | 'message' | 'propertyId' | 'projectId' | 'sourceNote'): string | undefined {
   const value = request.payload[key];
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
@@ -235,7 +235,7 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
           {email ? <span>{maskEmail(email)}</span> : null}
         </div>
       </td>
-      <td><span>{copy.requestType}</span><small>{copy.source}: {copy.providerSource}</small></td>
+      <td><span>{copy.requestType}</span><small>{copy.source}: {payloadText(request, 'sourceNote') ?? copy.providerSource}</small></td>
       <td><RequestStatusBadge status={request.status} copy={copy} /></td>
       <td>{relatedLabel(request, copy, locale)}</td>
       <td><time dateTime={request.createdAt}>{dateLabel(request.createdAt, locale)}</time></td>

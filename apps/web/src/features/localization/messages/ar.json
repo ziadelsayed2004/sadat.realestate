@@ -2641,7 +2641,7 @@
   "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
     "eyebrow": "إدارة طلبات العملاء",
     "title": "طلبات العملاء",
-    "description": "تابع طلبات العملاء التي أنشأها حسابك باستخدام البيانات والإجراءات التي يعيدها النظام.",
+    "description": "تابع استفسارات العملاء وطلبات المعاينة وحدّث حالة التواصل من مكان واحد.",
     "add": "إضافة طلب يدوي",
     "viewings": "مواعيد المعاينات",
     "countSuffix": "طلب",

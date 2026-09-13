@@ -73,7 +73,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
   ar: {
     eyebrow: 'إدارة طلبات العملاء',
     title: 'طلبات العملاء',
-    description: 'تابع طلبات العملاء التي أنشأها حسابك باستخدام البيانات والإجراءات التي يعيدها النظام.',
+    description: 'تابع استفسارات العملاء وطلبات المعاينة وحدّث حالة التواصل من مكان واحد.',
     add: 'إضافة طلب يدوي',
     viewings: 'مواعيد المعاينات',
     countSuffix: 'طلب',
@@ -107,7 +107,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
   en: {
     eyebrow: 'Customer request management',
     title: 'Customer requests',
-    description: 'Track customer requests created by your provider account using the data and actions returned by the system.',
+    description: 'Track customer inquiries and viewing requests, and update contact status in one place.',
     add: 'Add customer request',
     viewings: 'Viewing appointments',
     countSuffix: 'requests',
