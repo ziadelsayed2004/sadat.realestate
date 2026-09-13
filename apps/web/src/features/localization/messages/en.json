@@ -2891,7 +2891,7 @@
   "provider/settings-copy#getProviderSettingsCopy": {
     "eyebrow": "Provider workspace",
     "title": "Settings",
-    "description": "Review account details and update the contact fields available to your account.",
+    "description": "Manage your account settings, contact details, and security.",
     "tabs": {
       "account": "Account data",
       "contact": "Contact data",
@@ -2917,7 +2917,7 @@
       "next": "New password",
       "confirm": "Confirm password",
       "update": "Update password",
-      "deleteHeading": "Account deletion request",
+      "deleteHeading": "Danger zone",
       "deleteBody": "Account deletion requests are not available from this interface yet.",
       "deleteAction": "Request account deletion",
       "unavailable": "Currently unavailable"

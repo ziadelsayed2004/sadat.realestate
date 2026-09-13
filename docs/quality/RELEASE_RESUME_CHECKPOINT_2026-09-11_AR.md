@@ -836,3 +836,11 @@
 - Aligned the heading and policy card to the source 672px canvas, removed the extra eyebrow, restored the canonical description and gold acknowledgement action, and made the confirmation wording explicit in AR/EN.
 - Preserved the authenticated read-only policy projection and real confirmation mutation. Scope chips, richer confirmation data, policy history, and activation metadata are absent from the approved contract and were not fabricated.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2; the Arabic result was visually reviewed. Translation check, build/budgets, typecheck, focused lint, and protected-field checks passed. PRV-20 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next open goal screen is PRV-22-2.
+
+## 13 September: PRV-22-2 and PRV-22-3 canonical-source reconciliation
+
+- Reconciled contact settings against node `6028:11875` and security settings against node `6028:12067`, both at 1577×1035. No separate responsive owning frames are recorded for either screen.
+- Unified the heading, tab rail, contact card, and security cards on the canonical 672px canvas; removed the extra eyebrow, restored the source description and tab treatment, centered settings actions, and restored the Danger zone treatment.
+- Removed provider unavailable cards from the global `[data-state]` presentation that widened and restyled them. Contact fields retain only the safe WhatsApp/address/website projection, and the versioned contact mutation was exercised successfully.
+- The source phone field is absent from the contact contract, while password-change and account-deletion mutations are absent from the security contract. No unsupported field or action was invented, so PRV-22-2 and PRV-22-3 remain `PARTIAL_EXTERNAL`.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Tablet/Pixel 5 AR/EN containment passed 4/4. Translation check, client build/budgets, typecheck, focused lint, and diff checks passed. Strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

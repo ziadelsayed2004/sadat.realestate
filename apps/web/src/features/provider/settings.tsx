@@ -146,7 +146,7 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
         {state === 'empty' ? <div className="provider-settings__empty" data-state="empty"><h1>{copy.states.empty.title}</h1><p>{copy.states.empty.body}</p></div> : null}
         {state === 'success' && data !== undefined ? (
           <>
-            <div className="provider-dashboard__heading-row"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.description}</p></div></div>
+            <div className="provider-dashboard__heading-row provider-settings__heading"><div><h1>{copy.title}</h1><p>{copy.description}</p></div></div>
             <SettingsTabs locale={locale} active={tab} />
             {feedbackMessage ? <p className="provider-settings__feedback" data-state={feedback === 'saved' ? 'success' : feedback} role={feedback === 'saved' ? 'status' : 'alert'}>{feedbackMessage}</p> : null}
             {tab === 'account' ? (
@@ -160,9 +160,9 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
             {tab === 'contact' ? (
               <form className="provider-settings__panel provider-settings__panel--contact" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-contact-heading">
                 <h2 id="provider-settings-contact-heading">{copy.contact.heading}</h2>
-                <Input id="provider-settings-whatsapp" type="tel" label={copy.contact.whatsapp} value={form.whatsappNumber} onChange={updateField('whatsappNumber')} disabled={saving || !canSave} />
-                <Input id="provider-settings-address" type="text" label={copy.contact.address} value={form.officeAddress} onChange={updateField('officeAddress')} disabled={saving || !canSave} />
-                <Input id="provider-settings-website" type="url" label={copy.contact.website} value={form.website} onChange={updateField('website')} disabled={saving || !canSave} />
+                <Input className="provider-settings__contact-field--whatsapp" id="provider-settings-whatsapp" type="tel" label={copy.contact.whatsapp} value={form.whatsappNumber} onChange={updateField('whatsappNumber')} disabled={saving || !canSave} />
+                <Input className="provider-settings__contact-field--address" id="provider-settings-address" type="text" label={copy.contact.address} value={form.officeAddress} onChange={updateField('officeAddress')} disabled={saving || !canSave} />
+                <Input className="provider-settings__contact-field--website" id="provider-settings-website" type="url" label={copy.contact.website} value={form.website} onChange={updateField('website')} disabled={saving || !canSave} />
                 <Button type="submit" loading={saving} disabled={!canSave}>{copy.contact.save}</Button>
               </form>
             ) : null}

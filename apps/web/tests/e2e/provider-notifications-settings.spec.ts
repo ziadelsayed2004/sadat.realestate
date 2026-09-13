@@ -80,14 +80,52 @@ test.describe('PRV-21 and PRV-22 Provider notifications and settings', () => {
 
     await page.goto(`/provider/settings?tab=contact&lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-22-2"]')).toBeVisible();
-    await expect(page.getByRole('button', { name: /Save contact data|حفظ بيانات التواصل|保存联系资料/u })).toBeVisible();
+    await expect(page.locator('.provider-settings__heading')).toHaveCSS('max-width', '672px');
+    await expect(page.locator('.provider-settings__tabs')).toHaveCSS('max-width', '672px');
+    await expect(page.locator('.provider-settings__panel--contact')).toHaveCSS('max-width', '672px');
+    await expect(page.locator('.provider-settings__heading .provider-dashboard__eyebrow')).toHaveCount(0);
+    const saveContact = page.getByRole('button', { name: /Save contact data|حفظ بيانات التواصل|保存联系资料/u });
+    await expect(saveContact).toBeVisible();
     await expect(page).toHaveScreenshot(`provider-settings-contact-${locale}.png`, { fullPage: true });
+    await saveContact.click();
+    await expect(page.locator('.provider-settings__feedback[data-state="success"]')).toBeVisible();
 
     await page.goto(`/provider/settings?tab=security&lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-22-3"]')).toBeVisible();
+    await expect(page.locator('.provider-settings__security-grid')).toHaveCSS('max-width', '672px');
+    await expect(page.locator('.provider-settings__security-grid .provider-settings__panel').first()).toHaveCSS('max-width', '672px');
     await expect(page.getByRole('button', { name: /Update password|تحديث كلمة المرور|更新密码/u })).toBeDisabled();
     await expect(page.getByRole('button', { name: /Request account deletion|طلب حذف الحساب|请求删除账户/u })).toBeDisabled();
     await expect(page.locator('main#main-content')).toBeVisible();
     await expect(page).toHaveScreenshot(`provider-settings-security-${locale}.png`, { fullPage: true });
+  });
+});
+
+test.describe('PRV-22 responsive settings containment', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name.startsWith('desktop-') || testInfo.project.name.endsWith('-zh-CN'), 'This check covers the approved AR/EN responsive adaptation.');
+    await routeProviderSession(page);
+    await routeProviderData(page);
+  });
+
+  test('keeps contact and security controls inside tablet and mobile viewports', async ({ page }) => {
+    const locale = localeForProject();
+    for (const tab of ['contact', 'security'] as const) {
+      await page.goto(`/provider/settings?tab=${tab}&lang=${encodeURIComponent(locale)}`);
+      await expect(page.locator(`[data-screen-id="${tab === 'contact' ? 'PRV-22-2' : 'PRV-22-3'}"]`)).toBeVisible();
+      const geometry = await page.evaluate(() => ({
+        viewportWidth: document.documentElement.clientWidth,
+        documentWidth: document.documentElement.scrollWidth,
+        panelRight: Math.max(...Array.from(document.querySelectorAll('.provider-settings__panel')).map(element => element.getBoundingClientRect().right)),
+        panelLeft: Math.min(...Array.from(document.querySelectorAll('.provider-settings__panel')).map(element => element.getBoundingClientRect().left))
+      }));
+      expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewportWidth);
+      expect(geometry.panelLeft).toBeGreaterThanOrEqual(0);
+      expect(geometry.panelRight).toBeLessThanOrEqual(geometry.viewportWidth);
+      if (tab === 'contact' && geometry.viewportWidth <= 700) {
+        const columnCount = await page.locator('.provider-settings__panel--contact').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+        expect(columnCount).toBe(1);
+      }
+    }
   });
 });

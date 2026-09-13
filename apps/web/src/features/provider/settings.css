@@ -28,12 +28,17 @@
 .provider-settings__tabs {
   display: flex;
   gap: 8px;
-  margin: 0 0 24px;
-  padding: 0 0 10px;
-  border-bottom: 1px solid #dfe6f1;
+  width: 100%;
+  max-width: 672px;
+  margin: 0 auto 24px;
+  padding: 4px;
+  border-radius: 14px;
+  background: #fbf7ef;
 }
 
 .provider-settings__tabs a {
+  flex: 1 1 0;
+  text-align: center;
   padding: 10px 16px;
   border-radius: 10px;
   color: #63718b;
@@ -44,8 +49,9 @@
 .provider-settings__tabs a:hover,
 .provider-settings__tabs a:focus-visible,
 .provider-settings__tabs a[data-active='true'] {
-  background: #eef4ff;
-  color: #2555aa;
+  background: #fff;
+  color: #1b2942;
+  box-shadow: 0 1px 3px rgb(23 35 61 / 16%);
 }
 
 .provider-settings__tabs a:focus-visible {
@@ -55,8 +61,10 @@
 
 .provider-settings__panel {
   display: grid;
-  max-width: 760px;
+  width: 100%;
+  max-width: 672px;
   gap: 18px;
+  margin-inline: auto;
   padding: 26px;
   border: 1px solid #e2e8f2;
   border-radius: 18px;
@@ -70,6 +78,37 @@
 .provider-settings__panel--contact h2,
 .provider-settings__panel--contact button {
   grid-column: 1 / -1;
+}
+
+.provider-settings__contact-field--whatsapp,
+.provider-settings__contact-field--address {
+  grid-column: 1;
+}
+
+.provider-settings__contact-field--whatsapp {
+  grid-row: 2;
+}
+
+.provider-settings__contact-field--address,
+.provider-settings__contact-field--website {
+  grid-row: 3;
+}
+
+.provider-settings__contact-field--website {
+  grid-column: 2;
+}
+
+.provider-settings__panel > .ui-button {
+  width: auto;
+  min-width: 184px;
+  justify-self: center;
+}
+
+.provider-settings__heading {
+  width: 100%;
+  max-width: 672px;
+  margin-inline: auto;
+  text-align: start;
 }
 
 .provider-settings__panel h2 {
@@ -104,21 +143,49 @@
 
 .provider-settings__security-grid {
   display: grid;
+  width: 100%;
+  max-width: 672px;
   grid-template-columns: minmax(0, 1fr);
   gap: 18px;
+  margin-inline: auto;
 }
 
 .provider-settings__panel[data-state='unavailable'] {
-  border-style: dashed;
-  background: #fbfcfe;
+  background: #fff;
 }
 
 .provider-settings__panel--danger {
   border-color: #f0c8cc;
 }
 
+.provider-settings__panel--danger h2 {
+  color: #dc2626;
+}
+
 @media (max-width: 900px) {
   .provider-settings__security-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .provider-settings__tabs a {
+    padding-inline: 8px;
+    font-size: 0.86rem;
+  }
+
+  .provider-settings__panel--contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .provider-settings__contact-field--whatsapp,
+  .provider-settings__contact-field--address,
+  .provider-settings__contact-field--website {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .provider-settings__panel > .ui-button {
+    width: 100%;
   }
 }
