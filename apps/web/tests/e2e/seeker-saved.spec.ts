@@ -77,8 +77,12 @@ async function routeFavorites(page: import('@playwright/test').Page): Promise<vo
     expect(route.request().headers().authorization).toBe('Bearer seeker.access.token');
     const request = route.request();
     if (request.method() === 'GET') {
-      const emptyState = new URL(page.url()).searchParams.get('state') === 'empty';
-      const data = emptyState ? [] : [favoriteData(firstId), favoriteData(secondId), favoriteData(thirdId), favoriteData(fourthId)];
+      const requestedState = new URL(page.url()).searchParams.get('state');
+      const data = requestedState === 'empty'
+        ? []
+        : requestedState === 'single'
+          ? [favoriteData(firstId)]
+          : [favoriteData(firstId), favoriteData(secondId), favoriteData(thirdId), favoriteData(fourthId)];
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: data, page: 1, limit: 20, total: data.length }, ...successMeta('saved-list') }) });
       return;
     }
@@ -157,6 +161,38 @@ test.describe('SEK-06 Seeker Saved Properties', () => {
     }
   });
 
+  test('centers one saved property and turns list view into a horizontal card on desktop', async ({ page }) => {
+    const locale = localeForProject();
+    await page.setViewportSize({ width: 1551, height: 1000 });
+    await page.goto(`/seeker/saved?lang=${encodeURIComponent(locale)}&state=single`);
+    await expect(page.getByTestId(`seeker-saved-property-${firstId}`)).toBeVisible();
+
+    const gridGeometry = await page.locator('.seeker-saved__grid').evaluate(element => {
+      const grid = element.getBoundingClientRect();
+      const entry = element.querySelector<HTMLElement>('.seeker-saved-property-entry')!.getBoundingClientRect();
+      return {
+        centeredDelta: Math.abs((entry.left + entry.width / 2) - (grid.left + grid.width / 2)),
+        entryWidth: entry.width,
+        gridWidth: grid.width
+      };
+    });
+    expect(gridGeometry.centeredDelta).toBeLessThanOrEqual(1);
+    expect(gridGeometry.entryWidth).toBeLessThan(gridGeometry.gridWidth);
+    expect(gridGeometry.entryWidth).toBeGreaterThanOrEqual(400);
+
+    await page.getByRole('button', { name: savedViewLabelForTest(locale, 'list') }).click();
+    const listGeometry = await page.getByTestId(`seeker-saved-property-${firstId}`).evaluate(element => {
+      const card = element.getBoundingClientRect();
+      const media = element.querySelector<HTMLElement>('.ui-property-card__media')!.getBoundingClientRect();
+      const body = element.querySelector<HTMLElement>('.ui-property-card__body')!.getBoundingClientRect();
+      return { cardWidth: card.width, mediaWidth: media.width, bodyWidth: body.width, mediaTop: media.top, bodyTop: body.top };
+    });
+    expect(listGeometry.cardWidth).toBeGreaterThan(800);
+    expect(listGeometry.mediaWidth).toBeGreaterThan(250);
+    expect(listGeometry.bodyWidth).toBeGreaterThan(400);
+    expect(Math.abs(listGeometry.mediaTop - listGeometry.bodyTop)).toBeLessThanOrEqual(1);
+  });
+
   test('removes saved properties and renders unavailable responses safely', async ({ page }) => {
     const locale = localeForProject();
     const copy = getSeekerSavedCopy(locale);
@@ -183,3 +219,8 @@ test.describe('SEK-06 Seeker Saved Properties', () => {
     await expect(page.locator('[data-screen-id="SEK-06"]')).toHaveCount(0);
   });
 });
+
+function savedViewLabelForTest(locale: 'ar' | 'en', view: 'grid' | 'list'): string {
+  if (locale === 'ar') return view === 'grid' ? 'عرض شبكي' : 'عرض قائمة';
+  return view === 'grid' ? 'Grid view' : 'List view';
+}
