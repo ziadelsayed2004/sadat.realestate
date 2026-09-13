@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { viewingDataSchema, viewingListDataSchema, type ViewingData } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
@@ -109,14 +109,17 @@ describe('Seeker viewing appointments', () => {
     expect(actions.create).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Reschedule' })[0]!);
+    const requestedCard = screen.getByTestId(`seeker-viewing-${requested.id}`);
+    fireEvent.click(within(requestedCard).getByRole('button', { name: 'View details' }));
+    fireEvent.click(within(requestedCard).getByRole('button', { name: 'Reschedule' }));
     const rescheduleInput = screen.getByLabelText('Viewing time', { selector: 'input' });
     fireEvent.change(rescheduleInput, { target: { value: '2030-08-27T11:00' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save appointment' }));
     await waitFor(() => expect(actions.reschedule).toHaveBeenCalledWith(requested.id, expect.objectContaining({ expectedVersion: 0, timezone: 'Africa/Cairo' })));
     await waitFor(() => expect(screen.getByTestId(`seeker-viewing-${requested.id}`)).toBeInTheDocument());
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Cancel appointment' })[0]!);
+    const refreshedRequestedCard = screen.getByTestId(`seeker-viewing-${requested.id}`);
+    fireEvent.click(within(refreshedRequestedCard).getByRole('button', { name: 'Cancel appointment' }));
     expect(screen.getByRole('group', { name: 'Cancel this appointment?' })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: 'Cancel appointment' })[1]!);
     await waitFor(() => expect(actions.cancel).toHaveBeenCalledWith(requested.id, 0));

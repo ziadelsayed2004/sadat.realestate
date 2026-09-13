@@ -93,7 +93,7 @@ describe('Seeker profile, preferences, and settings', () => {
       <SeekerProfile locale={locale} session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={emptyActions()} />,
       { locale }
     );
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('region', { name: copy.tabs.preferences })).toBeInTheDocument());
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(result.container.querySelector('[data-screen-id="SEK-08"]')).not.toBeNull();
     expect(screen.getByDisplayValue('500000')).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = emptyActions();
     const copy = getSeekerProfileCopy('en');
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('region', { name: copy.tabs.preferences })).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText(`${copy.preferences.budgetRange} — ${copy.preferences.minPrice}`), { target: { value: '2000000' } });
     fireEvent.change(screen.getByLabelText(`${copy.preferences.budgetRange} — ${copy.preferences.maxPrice}`), { target: { value: '1000000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
@@ -150,7 +150,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = emptyActions();
     const copy = getSeekerProfileCopy('en');
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('region', { name: copy.tabs.preferences })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Duplex' }));
     fireEvent.click(screen.getByRole('button', { name: '3' }));
     fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — Minimum`), { target: { value: '120' } });

@@ -844,3 +844,12 @@
 - Removed provider unavailable cards from the global `[data-state]` presentation that widened and restyled them. Contact fields retain only the safe WhatsApp/address/website projection, and the versioned contact mutation was exercised successfully.
 - The source phone field is absent from the contact contract, while password-change and account-deletion mutations are absent from the security contract. No unsupported field or action was invented, so PRV-22-2 and PRV-22-3 remain `PARTIAL_EXTERNAL`.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Tablet/Pixel 5 AR/EN containment passed 4/4. Translation check, client build/budgets, typecheck, focused lint, and diff checks passed. Strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: final local quality resume after provider settings
+
+- Resumed the full gate at the failed Web stage without repeating the already-passed API coverage run. API coverage had completed 626/626.
+- Updated stale component assertions to the current semantic structure: provider wizard section headings are level 2 under the page heading, seeker notification titles are the safe links, preferences expose their labelled region, and viewing mutations remain gated behind expanded details.
+- Corrected the frontend_093 SEK-04 evidence entry from removed `contacted` baselines to the existing reviewed `scheduled` evidence.
+- Web Vitest passed 447/447 across 67 files; the remaining Web node suite passed 85/85. Web lint/typecheck and the complete repository build passed.
+- API audit passed 196/196 with zero errors; OpenAPI, Postman, guide check, dependency audit, and Agent Pack audit all passed. The guide remains truthfully 26 local `PARTIAL`, with zero Production verification and zero globally closed journeys.
+- Demo remains enabled. No Production launch or purge ran. Strict Figma totals remain 91/119 with 28 open.

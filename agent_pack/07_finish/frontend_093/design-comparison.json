@@ -132,7 +132,7 @@
     {
       "screenId": "SEK-04",
       "surface": "seeker",
-      "route": "/seeker/requests/:requestId (contacted)",
+      "route": "/seeker/requests/:requestId (scheduled)",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-04.png",
       "approvedSourceSha256": "5adb0a6d0cdca1c0512077bacb46e7b81f7c0dde2d6a824fcf1bce662f6d511f",
       "sourceDimensions": {
@@ -157,14 +157,14 @@
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
-        "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-ar-desktop-ar-win32.png",
-        "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-en-desktop-en-win32.png",
-        "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-zh-CN-desktop-zh-win32.png"
+        "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-scheduled-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-scheduled-en-desktop-en-win32.png",
+        "docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png"
       ],
-      "comparisonMethod": "Structured direct comparison of the contacted lifecycle timeline, summary, safe seeker note, and shell.",
+      "comparisonMethod": "Structured direct comparison of the scheduled lifecycle timeline, appointment summary, safe seeker note, and shell.",
       "materialDifferences": [],
       "repairs": [
-        "Aligned the contacted detail hierarchy and timeline with the approved request-detail pattern without exposing private operational fields."
+        "Aligned the scheduled detail hierarchy and timeline with the approved request-detail pattern without exposing private operational fields."
       ],
       "remainingGaps": []
     },

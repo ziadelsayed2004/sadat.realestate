@@ -86,7 +86,7 @@ describe('Provider property wizard', () => {
     const result = renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" />, { locale });
     const copy = getProviderPropertyCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
-    expect(screen.getByRole('heading', { name: copy.wizard.basicTitle, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.wizard.basicTitle, level: 2 })).toBeInTheDocument();
     expect(screen.getByLabelText(copy.wizard.labels.name)).toBeInTheDocument();
     expect(screen.getByText(copy.wizard.contractBoundaryTitle)).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-03"]')).not.toBeNull();

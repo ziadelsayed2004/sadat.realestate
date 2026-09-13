@@ -65,7 +65,8 @@ describe('Seeker notifications', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByTestId('seeker-notifications-unread-count')).toHaveTextContent(`1 ${copy.unreadCount}`);
-    expect(screen.getAllByRole('link', { name: copy.openLink })[0]).toHaveAttribute('href', `/seeker/viewings?viewing=${reminder.id}&lang=${locale}`);
+    const reminderTitle = (locale === 'ar' ? reminder.title.ar : reminder.title.en) ?? reminder.type;
+    expect(screen.getByRole('link', { name: reminderTitle })).toHaveAttribute('href', `/seeker/viewings?viewing=${reminder.id}&lang=${locale}`);
     expect(result.container.querySelector('[data-screen-id="SEK-07"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('recipientId');
     expect(result.container.textContent).not.toContain('internalNote');

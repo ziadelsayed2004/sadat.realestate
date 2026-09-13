@@ -73,7 +73,7 @@ describe('Provider property advanced wizard steps', () => {
     const result = renderWithLocale(<ProviderPropertyAdvancedWizard locale={locale} session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={current} loadPropertyTypes={vi.fn(async () => [])} />, { locale });
     const copy = getProviderPropertyAdvancedCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
-    expect(screen.getByRole('heading', { name: copy.titles.details, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.titles.details, level: 2 })).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText(copy.propertyTypeCatalogEmptyTitle)).toBeInTheDocument());
     expect(result.container.querySelector('[data-screen-id="PRV-05"]')).not.toBeNull();
     expect(result.container.textContent).not.toMatch(/accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
