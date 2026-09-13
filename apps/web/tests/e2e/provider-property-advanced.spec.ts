@@ -115,6 +115,17 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
+    await page.route('**/api/v1/provider/commission', async route => {
+      expect(route.request().headers().authorization).toBe('Bearer provider.advanced.token');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: { accountId: providerId, source: 'policy', effectiveAt: '2026-08-01T00:00:00.000Z', policyVersion: 3, kind: 'percentage', percentageBps: 250, readOnly: true },
+          ...successMeta('advanced-price-commission')
+        })
+      });
+    });
     await page.route(`**/api/v1/provider/properties/${propertyId}/steps/price-payment`, async route => {
       expect(route.request().method()).toBe('PATCH');
       expect(route.request().headers().authorization).toBe('Bearer provider.advanced.token');
@@ -135,7 +146,7 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await page.locator('button[value="save"]').click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toBeVisible();
     await expect(page.locator('button[value="save"]')).toHaveText(/\S/u);
-    await expect(page.locator('.provider-property-wizard__commission')).toHaveAttribute('data-state', 'error');
+    await expect(page.locator('.provider-property-wizard__commission')).toHaveAttribute('data-state', 'success');
     await expect(page.locator('[aria-label*="commission" i], [aria-label*="عمولة"], [aria-label*="佣金"]').first()).toBeVisible();
     await expect(page).toHaveScreenshot(`provider-property-price-${locale}.png`, { fullPage: true });
   });

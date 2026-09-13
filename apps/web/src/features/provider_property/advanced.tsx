@@ -257,7 +257,8 @@ function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   const updatePlanName = (value: string) => setForm({ ...form, planName: { ...form.planName, [locale]: value } });
   return (
     <form className="provider-property-wizard__form" data-form-step="price-payment" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
-      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{advancedCopy.titles['price-payment']}</h1><p>{advancedCopy.descriptions['price-payment']}</p></div>
+      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{copy.wizard.createTitle}</h1><p>{copy.wizard.createDescription}</p></div>
+      <WizardSteps step="price-payment" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-pricing-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-pricing-title">{advancedCopy.titles['price-payment']}</h2><span>{advancedCopy.steps['price-payment']}</span></div>
         <div className="provider-property-wizard__grid">
@@ -481,9 +482,9 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
 
   return (
     <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop/tablet/mobile">
-      <ProviderNavigation locale={locale} activePath={step === 'details' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath={step === 'features-services' ? '/provider/properties' : '/provider/properties/new/basic'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        {step === 'details' ? null : <WizardSteps step={step} locale={locale} copy={copy} />}
+        {step === 'features-services' ? <WizardSteps step={step} locale={locale} copy={copy} /> : null}
         {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} propertyTypes={propertyTypes} propertyTypesState={propertyTypesState} onRetryPropertyTypes={() => setPropertyTypesAttempt(value => value + 1)} /> : null}
         {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} commission={commission} commissionState={commissionState} onRetryCommission={() => setCommissionAttempt(value => value + 1)} /> : null}
         {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
