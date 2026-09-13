@@ -195,14 +195,17 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
   const currentIndex = lifecycle.indexOf(request.status);
   return (
     <div className="seeker-request-detail" {...(screenId === undefined ? {} : { 'data-screen-id': screenId })} data-request-status={request.status}>
-      <div className="seeker-dashboard__heading-row">
-        <div>
-          <p className="seeker-dashboard__eyebrow">{copy.detail.eyebrow}</p>
-          <h1>{copy.detail.title} <span className="seeker-request-detail__id">{shortRequestId(request.id)}</span></h1>
+      <div className="seeker-request-detail__breadcrumb"><a href={localeForSeekerPath(locale, '/seeker/requests')}>{copy.list.title}</a><span>/</span><strong>{shortRequestId(request.id)}</strong></div>
+      <div className="seeker-request-detail__header">
+        <div className="seeker-request-detail__title">
+          <div><h1>{copy.detail.title}</h1><RequestStatusBadge status={request.status} locale={locale} /></div>
+          <p>{locale === 'ar' ? 'رقم الطلب:' : 'Request number:'} <strong>{shortRequestId(request.id)}</strong> · {requestListDateLabel(request.createdAt, locale)}</p>
         </div>
-        <RequestStatusBadge status={request.status} locale={locale} />
+        <div className="seeker-request-detail__actions">
+          <a className="seeker-request-detail__top-back" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a>
+          {request.availableActions.includes('cancel') && onCancel !== undefined ? <CancelRequestAction locale={locale} onCancel={onCancel} /> : null}
+        </div>
       </div>
-      {request.availableActions.includes('cancel') && onCancel !== undefined ? <CancelRequestAction locale={locale} onCancel={onCancel} /> : null}
       <div className="seeker-request-detail__grid">
         <section className="seeker-request-detail__card seeker-request-detail__card--timeline" aria-labelledby="seeker-request-timeline-title">
           <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
@@ -214,16 +217,22 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
             })}
           </ol>
         </section>
-        <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
-          <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
-          <dl className="seeker-request-detail__values">
-            <DetailValue label={copy.detail.type} value={copy.types[request.type]} />
-            <DetailValue label={copy.detail.status} value={copy.statuses[request.status]} />
-            <DetailValue label={copy.detail.submitted} value={dateLabel(request.createdAt, locale)} />
-            <RequestPropertyValue request={request} locale={locale} label={copy.detail.property} />
-          </dl>
-          {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
-        </section>
+        <div className="seeker-request-detail__side">
+          <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
+            <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
+            <dl className="seeker-request-detail__values">
+              <DetailValue label={copy.detail.type} value={copy.types[request.type]} />
+              <DetailValue label={copy.detail.submitted} value={requestListDateLabel(request.createdAt, locale)} />
+              <DetailValue label={copy.detail.status} value={requestStatusLabel(request.status, locale)} />
+            </dl>
+            {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
+          </section>
+          {request.propertyId === undefined ? null : <section className="seeker-request-detail__card seeker-request-detail__card--property" aria-labelledby="seeker-request-property-title">
+            <h2 id="seeker-request-property-title">{copy.detail.property}</h2>
+            <dl className="seeker-request-detail__values"><RequestPropertyValue request={request} locale={locale} label={copy.detail.property} /></dl>
+          </section>}
+          {request.status === 'under_review' ? <p className="seeker-request-detail__provider-note">{locale === 'ar' ? 'سيتم تحديد المزود بعد مراجعة الطلب' : 'A provider will be assigned after the request is reviewed'}</p> : null}
+        </div>
         {hasAdvanced ? <section className="seeker-request-detail__card seeker-request-detail__card--advanced" aria-labelledby="seeker-request-advanced-title">
           <h2 id="seeker-request-advanced-title">{copy.detail.advanced}</h2>
           <dl className="seeker-request-detail__values">

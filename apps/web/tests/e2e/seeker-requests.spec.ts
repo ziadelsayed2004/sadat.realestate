@@ -254,7 +254,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await page.goto(`/seeker/requests/${ownRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-03"]')).toHaveAttribute('data-request-status', 'under_review');
     await expect(page.locator('.seeker-request-detail h1')).toBeVisible();
-    await expect(page.getByText('REQ-4821', { exact: true })).toBeVisible();
+    await expect(page.locator('.seeker-request-detail__breadcrumb strong')).toHaveText('REQ-4821');
     await expect(page.getByText(locale === 'ar' ? 'شقة 3 غرف — الحي الثالث' : '3-bedroom apartment — Third District')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|dueAt|providerId|seekerId/u);
     await expect(page).toHaveScreenshot(`seeker-request-under-review-${locale}.png`, { fullPage: true });
