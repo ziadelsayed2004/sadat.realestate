@@ -11,6 +11,10 @@ import { createArgon2PasswordHasher, createHmacAccessTokenService, createOpaqueT
 import { createProviderModels } from '../apps/api/src/modules/provider/models.ts';
 import { createMongooseProviderRepository } from '../apps/api/src/modules/provider/repository.ts';
 import { createProviderService, ProviderServiceError } from '../apps/api/src/modules/provider/service.ts';
+import { createAccountModels } from '../apps/api/src/modules/accounts/models.ts';
+import { createMongooseAccountRepository } from '../apps/api/src/modules/accounts/repository.ts';
+import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
+import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
 
 function parseEnvironment(source) {
   return Object.fromEntries(source.split(/\r?\n/u).flatMap(raw => {
@@ -42,9 +46,12 @@ try {
   const identity = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
   const providerModels = createProviderModels(connection);
+  const accountModels = createAccountModels(connection);
+  const auditModels = createAuditModels(connection);
   await Promise.all([
     identity.User.init(), identity.ProviderProfile.init(), identity.Session.init(),
-    authModels.AdminCredential.init(), authModels.OtpChallenge.init(), providerModels.ProviderApplication.init()
+    authModels.AdminCredential.init(), authModels.OtpChallenge.init(), providerModels.ProviderApplication.init(),
+    accountModels.AccountStateTransition.init(), auditModels.AuditLog.init()
   ]);
   const authRepository = createMongooseAuthRepository(identity, authModels);
   const otpRepository = createMongooseOtpRepository(identity, authModels);
@@ -117,8 +124,82 @@ try {
   assert.equal(failedGrant?.consumedAt, undefined);
   report.checks.push('credential_failure_rolls_back_grant_and_all_provider_registration_records');
 
+  const durableAudit = createMongooseAuditWriter(auditModels);
+  let failReviewAudit = true;
+  const reviewAudit = {
+    async record(entry, session) {
+      const id = await durableAudit.record(entry, session);
+      if (failReviewAudit) throw new Error('INJECTED_PROVIDER_REVIEW_AUDIT_FAILURE');
+      return id;
+    }
+  };
+  const accountRepository = createMongooseAccountRepository(
+    connection, identity, providerModels, accountModels, reviewAudit
+  );
+  await Promise.all([
+    identity.User.updateOne({ _id: objectId }, { $set: { status: 'pending_review' } }),
+    identity.ProviderProfile.updateOne({ userId: objectId }, { $set: { status: 'pending_review' } }),
+    providerModels.ProviderApplication.updateOne(
+      { _id: new mongoose.Types.ObjectId(registered.data.application.id) },
+      { $set: { status: 'pending_review' } }
+    )
+  ]);
+  const reviewTarget = await accountRepository.findProviderReviewTarget(
+    registered.data.application.id
+  );
+  assert.ok(reviewTarget);
+  const reviewAt = new Date('2026-09-13T10:00:00.000Z');
+  const reviewInput = {
+    target: reviewTarget,
+    actorAdminId: new mongoose.Types.ObjectId().toHexString(),
+    action: 'needs_information',
+    reason: 'Verify atomic provider review rollback',
+    requestId: 'provider-review-guarantee',
+    traceId: 'b'.repeat(32),
+    changedAt: reviewAt,
+    toAccountStatus: 'needs_information',
+    toProviderStatus: 'needs_information'
+  };
+  await assert.rejects(
+    accountRepository.reviewProvider(reviewInput),
+    /INJECTED_PROVIDER_REVIEW_AUDIT_FAILURE/u
+  );
+  const failedReviewTarget = await accountRepository.findProviderReviewTarget(
+    registered.data.application.id
+  );
+  assert.deepEqual(failedReviewTarget, reviewTarget);
+  assert.equal(await accountModels.AccountStateTransition.countDocuments({
+    providerApplicationId: new mongoose.Types.ObjectId(registered.data.application.id)
+  }), 0);
+  assert.equal(await auditModels.AuditLog.countDocuments({
+    targetId: registered.data.application.id
+  }), 0);
+  assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 1);
+  report.checks.push('audit_failure_rolls_back_provider_review_session_revocation_transition_and_inserted_audit');
+
+  failReviewAudit = false;
+  const retriedReview = await accountRepository.reviewProvider(reviewInput);
+  assert.equal(retriedReview.kind, 'written');
+  assert.equal(await accountModels.AccountStateTransition.countDocuments({
+    providerApplicationId: new mongoose.Types.ObjectId(registered.data.application.id)
+  }), 1);
+  assert.equal(await auditModels.AuditLog.countDocuments({
+    targetId: registered.data.application.id
+  }), 1);
+  assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 0);
+  report.checks.push('same_provider_review_retry_after_rollback_writes_once');
+
   report.mongo = { collections: ['otp_challenges', 'users', 'provider_profiles', 'provider_applications', 'admin_credentials', 'sessions'],
-    successRecords: 5, failedRegistrationResidue: 0, duplicateGrantRestored: true };
+    successRecords: 5, failedRegistrationResidue: 0, duplicateGrantRestored: true,
+    reviewAuditRollback: {
+      failedReviewUnchanged: true,
+      failedTransitionCount: 0,
+      failedAuditCount: 0,
+      failedReviewSessionStillActive: true,
+      recoveredTransitionCount: 1,
+      recoveredAuditCount: 1,
+      recoveredSessionRevoked: true
+    } };
   report.status = 'PASS_LOCAL';
   report.remaining = ['Production verification remains deferred while the project stays in Demo mode.'];
 } catch (error) {

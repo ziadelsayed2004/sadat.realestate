@@ -286,11 +286,23 @@ const providerRegistrationLocalAcceptanceReady = providerRegistrationEvidence?.s
     providerRegistrationEvidence.browser?.some(run => run.stage === stage && run.locale === locale && run.device === device
       && run.status === 'PASS' && run.pageErrors === 0 && run.routeChecks?.length === routeCount
       && run.routeChecks.every(route => route.documentStatus === 200 && route.scrollWidth <= route.innerWidth + 1)))))
+  && [
+    ['GUIDE-11', 201], ['GUIDE-12', 200], ['GUIDE-13', 200]
+  ].every(([journey, recoveredStatus]) => providerRegistrationEvidence.recovery?.some(item =>
+    item.journey === journey && item.abortedRequests === 1
+    && item.recoveredStatus === recoveredStatus && item.documentRequestsDuringRetry === 0))
   && providerRegistrationGuarantees?.status === 'PASS_LOCAL'
   && providerRegistrationGuarantees.mockedRoutes === false && providerRegistrationGuarantees.cleanup === true
-  && providerRegistrationGuarantees.checks?.length === 4
+  && providerRegistrationGuarantees.checks?.length === 6
   && providerRegistrationGuarantees.mongo?.failedRegistrationResidue === 0
-  && providerRegistrationGuarantees.mongo?.duplicateGrantRestored === true;
+  && providerRegistrationGuarantees.mongo?.duplicateGrantRestored === true
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.failedReviewUnchanged === true
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.failedTransitionCount === 0
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.failedAuditCount === 0
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.failedReviewSessionStillActive === true
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredTransitionCount === 1
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredAuditCount === 1
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredSessionRevoked === true;
 
 const propertyLifecycleLocalAcceptanceReady = propertyLifecycleEvidence?.status === 'PASS_LOCAL'
   && propertyLifecycleEvidence.mockedRoutes === false && propertyLifecycleEvidence.cleanup === true
@@ -684,11 +696,12 @@ matrix.journeys = matrix.journeys.map((journey) => {
       reviewedAt: '2026-09-12',
     };
     hydratedJourney.applicabilityReview = {
+      empty: 'NOT_APPLICABLE',
       horizontalAccess: 'NOT_APPLICABLE',
       expectedVersion409: 'NOT_APPLICABLE',
       decisionReason: 'NOT_APPLICABLE',
       atomicAuditRollback: 'NOT_APPLICABLE',
-      rationale: 'Registration creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
+      rationale: 'Registration is a form workflow and has no collection-style empty state. It creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
     };
   }
   if (journey.id === 'GUIDE-08' && guide08LocalAcceptanceReady) {
@@ -710,11 +723,14 @@ matrix.journeys = matrix.journeys.map((journey) => {
     hydratedJourney.localAcceptanceReview = {
       status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
       path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
-      reviewedAt: '2026-09-12',
+      reviewedAt: providerRegistrationGuarantees.finishedAt,
+      productionVerified: false,
+      figmaAccepted: false,
     };
     hydratedJourney.applicabilityReview = {
+      empty: 'NOT_APPLICABLE',
       horizontalAccess: 'NOT_APPLICABLE',
-      rationale: 'Provider draft routes are self-scoped from the current provider session; administrative review uses a global provider application identifier protected by the provider-review permission and current account/session guards.',
+      rationale: 'Provider registration, document submission and application status require an application as a precondition and have no collection-style empty result. Provider draft routes are self-scoped from the current provider session; administrative review uses a global provider application identifier protected by the provider-review permission and current account/session guards.',
     };
   }
   if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
@@ -996,6 +1012,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['expectedVersion409', 'incomplete_submit_and_repeated_stale_review_are_rejected_with_409', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['decisionReason', 'review_reason_is_required_and_persisted_with_both_review_audits', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['atomicRegistrationRollback', 'credential_failure_rolls_back_grant_user_profile_application_credential_and_session', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
+      ['atomicAuditRollback', 'audit_failure_rolls_back_provider_review_session_revocation_transition_and_inserted_audit', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
   if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
@@ -1219,6 +1236,12 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/GUIDE_11_12_13_LOCAL_ACCEPTANCE_2026-09-12.md',
       scope: 'Incomplete submission, review reason, stale action, duplicate document, grant replay, duplicate email and forced credential failure preserve the expected state.',
       verifiedAt: providerRegistrationGuarantees.finishedAt });
+    const recovery = providerRegistrationEvidence.recovery.find(item => item.journey === journey.id);
+    reviewedSubcases.push({ case: 'networkRetry', evidenceType: 'Browser/API/MongoDB',
+      check: recovery.check,
+      path: 'docs/quality/guide-runs/provider-registration-local-latest.json',
+      scope: `The browser aborted the journey request once, rendered its Retry control, recovered through real HTTP ${recovery.recoveredStatus}, issued zero document navigation requests, and the lifecycle MongoDB state remained coherent.`,
+      verifiedAt: providerRegistrationEvidence.finishedAt });
   }
   if (['GUIDE-14', 'GUIDE-15'].includes(journey.id) && propertyLifecycleLocalAcceptanceReady) {
     reviewedSubcases.push({ case: 'success', evidenceType: 'Browser/API/MongoDB',
@@ -1757,7 +1780,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
       validation: hydratedJourney.applicabilityReview?.validation === 'NOT_APPLICABLE'
         ? 'NOT_APPLICABLE' : reviewedSubcases.some(item => item.case === 'validation' && item.evidenceType === 'Browser/API/MongoDB')
         ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "validation") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
-      empty: reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'Browser/API/MongoDB') ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
+      empty: hydratedJourney.applicabilityReview?.empty === 'NOT_APPLICABLE'
+        ? 'NOT_APPLICABLE' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'Browser/API/MongoDB') ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty" && item.evidenceType === 'API') ? 'PARTIAL_API_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === "empty") ? "PARTIAL_BROWSER_EVIDENCE_ATTACHED" : "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: reviewedSubcases.some(item => item.case === 'networkRetry' && item.evidenceType === 'Browser/API/MongoDB')
         ? 'PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED' : reviewedSubcases.some(item => item.case === 'networkRetry') ? 'PARTIAL_BROWSER_EVIDENCE_ATTACHED' : "UNVERIFIED_COMPLETE_JOURNEY",
       duplicateMutation: hydratedJourney.applicabilityReview?.duplicateMutation === 'NOT_APPLICABLE'

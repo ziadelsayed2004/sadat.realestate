@@ -28,6 +28,7 @@ const evidence = {
   authorization: [],
   http: [],
   browser: [],
+  recovery: [],
   cleanup: false
 };
 let applicationId;
@@ -185,15 +186,40 @@ try {
   const digits = providerPage.locator('.auth-otp__digit');
   await expect(digits).toHaveCount(6);
   for (let index = 0; index < 6; index += 1) await digits.nth(index).fill(otp[index]);
-  const registrationPending = providerPage.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/provider/application' && response.request().method() === 'POST');
+  let registrationAbortCount = 0;
+  const registrationAbort = async route => {
+    const request = route.request();
+    if (new URL(request.url()).pathname === '/api/v1/provider/application'
+      && request.method() === 'POST' && registrationAbortCount === 0) {
+      registrationAbortCount += 1;
+      await route.abort('failed');
+      return;
+    }
+    await route.continue();
+  };
+  await providerPage.route('**/api/v1/provider/application', registrationAbort);
   await providerPage.getByRole('button', { name: 'Verify code', exact: true }).click();
+  await expect(providerPage.getByTestId('provider-registration-state')).toHaveAttribute('data-state', 'retry');
+  assert.equal(registrationAbortCount, 1);
+  await providerPage.unroute('**/api/v1/provider/application', registrationAbort);
+  let registrationDocumentRequests = 0;
+  const countRegistrationDocuments = request => {
+    if (request.isNavigationRequest()) registrationDocumentRequests += 1;
+  };
+  providerPage.on('request', countRegistrationDocuments);
+  const registrationPending = providerPage.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/provider/application' && response.request().method() === 'POST');
+  await providerPage.getByRole('button', { name: 'Retry', exact: true }).click();
   const registration = await responseData(await registrationPending, 201, '/api/v1/provider/application');
+  providerPage.off('request', countRegistrationDocuments);
   assert.equal(registration.session.user.roleType, 'provider');
   assert.equal(registration.session.user.status, 'draft');
   assert.equal(registration.application.providerType, 'developer_company');
   applicationId = registration.application.id;
   userId = registration.session.user.id;
   trackSession(registration.session.accessToken);
+  evidence.recovery.push({ journey: 'GUIDE-11', check: 'provider_registration_network_retry_without_navigation',
+    abortedRequests: registrationAbortCount, recoveredStatus: 201,
+    documentRequestsDuringRetry: registrationDocumentRequests });
   let providerToken = registration.session.accessToken;
   await expect(providerPage.locator('[data-screen-id="AUTH-09"]')).toBeVisible();
   evidence.transitions.push('browser_provider_type_password_and_email_otp', 'provider_draft_created', 'browser_account_step_visible');
@@ -272,14 +298,83 @@ try {
   ]);
   providerToken = (await refresh(providerContext, 'provider')).accessToken;
 
-  application = await api('/provider/application/submit', { method: 'POST', token: providerToken, body: { version: application.version } });
-  assert.equal(application.status, 'pending_review');
   await providerPage.goto(`${base}/auth/register/provider/review?providerType=developer_company&lang=en`, { waitUntil: 'networkidle' });
+  await expect(providerPage.getByTestId('provider-review')).toHaveAttribute('data-state', 'ready');
+  let submitAbortCount = 0;
+  const submitAbort = async route => {
+    const request = route.request();
+    if (new URL(request.url()).pathname === '/api/v1/provider/application/submit'
+      && request.method() === 'POST' && submitAbortCount === 0) {
+      submitAbortCount += 1;
+      await route.abort('failed');
+      return;
+    }
+    await route.continue();
+  };
+  await providerPage.route('**/api/v1/provider/application/submit', submitAbort);
+  await providerPage.getByTestId('provider-review-submit').click();
+  await expect(providerPage.getByRole('status').getByRole('button', { name: 'Retry', exact: true })).toBeVisible();
+  assert.equal(submitAbortCount, 1);
+  await providerPage.unroute('**/api/v1/provider/application/submit', submitAbort);
+  let submitDocumentRequests = 0;
+  const countSubmitDocuments = request => {
+    if (request.isNavigationRequest()) submitDocumentRequests += 1;
+  };
+  providerPage.on('request', countSubmitDocuments);
+  const submitPending = providerPage.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/provider/application/submit' && response.request().method() === 'POST');
+  await providerPage.getByRole('status').getByRole('button', { name: 'Retry', exact: true }).click();
+  application = await responseData(await submitPending, 200, '/api/v1/provider/application/submit');
+  providerPage.off('request', countSubmitDocuments);
+  assert.equal(application.status, 'pending_review');
+  evidence.recovery.push({ journey: 'GUIDE-12', check: 'provider_application_submit_network_retry_without_navigation',
+    abortedRequests: submitAbortCount, recoveredStatus: 200,
+    documentRequestsDuringRetry: submitDocumentRequests });
   await expect(providerPage.getByRole('heading', { name: 'Your application is under review', exact: true })).toBeVisible();
   await expect(providerPage.getByTestId('provider-review-track')).toBeVisible();
   evidence.browser.push({ stage: 'pending_review', width: await providerPage.evaluate(() => innerWidth), overflow: await providerPage.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1) });
   evidence.transitions.push('application_submitted', 'browser_pending_review_visible');
   await captureBrowserStage(providerContext, 'pending_review_responsive', ['/provider-application/status']);
+
+  const trackingContext = await browser.newContext({ viewport: { width: 402, height: 874 }, isMobile: true });
+  const trackingSession = await login(trackingContext, email, password, 'provider');
+  assert.equal(trackingSession.user.status, 'pending_review');
+  const trackingPage = await trackingContext.newPage();
+  trackingPage.on('response', (response) => {
+    const path = new URL(response.url()).pathname;
+    if (path.startsWith('/api/v1/')) record(response.request().method(), path, response.status());
+  });
+  await trackingPage.goto(`${base}/provider-application/status?lang=en`, { waitUntil: 'networkidle' });
+  await expect(trackingPage.getByTestId('provider-review')).toHaveAttribute('data-state', 'ready');
+  await trackingPage.getByTestId('provider-review-track').click();
+  let statusAbortCount = 0;
+  const statusAbort = async route => {
+    const request = route.request();
+    if (new URL(request.url()).pathname === '/api/v1/provider/application/status'
+      && request.method() === 'GET' && statusAbortCount === 0) {
+      statusAbortCount += 1;
+      await route.abort('failed');
+      return;
+    }
+    await route.continue();
+  };
+  await trackingPage.route('**/api/v1/provider/application/status', statusAbort);
+  await trackingPage.getByTestId('provider-review-refresh').click();
+  await expect(trackingPage.getByRole('status').getByRole('button', { name: 'Retry', exact: true })).toBeVisible();
+  assert.equal(statusAbortCount, 1);
+  await trackingPage.unroute('**/api/v1/provider/application/status', statusAbort);
+  let statusDocumentRequests = 0;
+  const countStatusDocuments = request => {
+    if (request.isNavigationRequest()) statusDocumentRequests += 1;
+  };
+  trackingPage.on('request', countStatusDocuments);
+  const statusPending = trackingPage.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/provider/application/status' && response.request().method() === 'GET');
+  await trackingPage.getByRole('status').getByRole('button', { name: 'Retry', exact: true }).click();
+  await responseData(await statusPending, 200, '/api/v1/provider/application/status');
+  trackingPage.off('request', countStatusDocuments);
+  evidence.recovery.push({ journey: 'GUIDE-13', check: 'provider_application_status_network_retry_without_navigation',
+    abortedRequests: statusAbortCount, recoveredStatus: 200,
+    documentRequestsDuringRetry: statusDocumentRequests });
+  await trackingContext.close();
 
   const limitedAdminContext = await browser.newContext();
   const limitedAdminSession = await login(limitedAdminContext, 'admin.operations@example.invalid', 'LocalPreview-Admin-Only-2026!', 'admin');
