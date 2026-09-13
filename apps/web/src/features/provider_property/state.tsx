@@ -123,6 +123,29 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
     );
   }
 
+  if (status === 'published') {
+    return (
+      <main className="provider-property-state__main provider-property-state__main--published" data-state-layout="published" aria-labelledby="provider-property-state-title">
+        <span className="provider-property-state__published-icon" aria-hidden="true">✓</span>
+        <div className="provider-property-state__intro">
+          <h1 id="provider-property-state-title">{statusCopy.title}</h1>
+          <p>{statusCopy.body}</p>
+        </div>
+        <section className="provider-property-state__published-card" aria-label={statusCopy.title}>
+          <dl>
+            <div><dt>{copy.labels.status}</dt><dd data-property-status={property.status}>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
+            <div><dt>{copy.labels.views}</dt><dd data-value="unavailable">{copy.labels.unavailable}</dd></div>
+          </dl>
+        </section>
+        <p className="provider-property-state__published-warning">{copy.labels.publishedWarning}</p>
+        <div className="provider-property-state__actions provider-property-state__published-actions">
+          <a className="provider-dashboard__primary-action" data-action="view-public" href={publicHref}>{copy.actions.viewPublic}<span aria-hidden="true">↗</span></a>
+          <a className="provider-dashboard__secondary-action" data-action="properties" href={localePath(locale, '/provider/properties')}>{copy.actions.myProperties}</a>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="provider-property-state__main" aria-labelledby="provider-property-state-title">
       <div className="provider-property-state__intro">
@@ -200,8 +223,8 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
   }, [attempt, initialData, loadAction, propertyId, route, sessionRole, session.status]);
 
   return (
-    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope={route === 'submitted' || route === 'rejected' ? 'desktop/tablet/mobile' : 'desktop'}>
-      <ProviderNavigation locale={locale} activePath={route === 'submitted' || route === 'rejected' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop/tablet/mobile">
+      <ProviderNavigation locale={locale} activePath="/provider/properties/new/basic" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} loadingVariant="cards" /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

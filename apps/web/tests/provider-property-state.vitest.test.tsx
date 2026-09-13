@@ -70,7 +70,10 @@ describe('provider property submission and state screens', () => {
     renderWithLocale(<ProviderPropertyStatePage locale="en" session={session} authClient={authClient} route="published" propertyId={propertyId} initialData={property({ status: 'published', availableActions: [] })} />, { locale: 'en' });
 
     expect(screen.getByRole('link', { name: copy.actions.viewPublic })).toHaveAttribute('href', expect.stringContaining('/properties/provider-property'));
+    expect(screen.getByRole('link', { name: copy.actions.myProperties })).toHaveAttribute('href', expect.stringContaining('/provider/properties'));
     expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
+    expect(screen.getByText(copy.labels.publishedWarning)).toBeInTheDocument();
+    expect(document.querySelector('.provider-property-state__card, .provider-property-state__safe, .provider-property-state__notice')).toBeNull();
   });
 
   it('fails closed when the server status does not match the state route', () => {

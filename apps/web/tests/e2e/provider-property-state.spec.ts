@@ -164,10 +164,30 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
     await routeProperty(page, { status: 'published', availableActions: [], publishedAt: '2026-08-18T11:00:00.000Z' });
     await page.goto(`/provider/properties/${PROPERTY_ID}/published?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-14"]')).toBeVisible();
+    await expect(page.locator('[data-screen-id="PRV-14"]')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
     await expect(page.getByRole('heading', { name: copy.statuses.published.title, level: 1 })).toBeVisible();
     await expect(page.getByRole('link', { name: copy.actions.viewPublic })).toHaveAttribute('href', /\/properties\/provider-property/);
     await expect(page.locator('[data-value="unavailable"]')).toHaveText(copy.labels.unavailable);
+    await expect(page.getByText(copy.labels.publishedWarning)).toBeVisible();
+    await expect(page.locator('[data-provider-nav="addProperty"] a')).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('.provider-property-state__card, .provider-property-state__safe, .provider-property-state__notice')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-property-published-${locale}.png`, { fullPage: true });
+    for (const viewport of [{ width: 402, height: 760 }, { width: 1024, height: 720 }]) {
+      await page.setViewportSize(viewport);
+      await expect.poll(() => page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        contained: ['.provider-property-state__main--published', '.provider-property-state__published-card', '.provider-property-state__published-warning', '.provider-property-state__published-actions'].every(selector => {
+          const bounds = document.querySelector(selector)?.getBoundingClientRect();
+          return bounds !== undefined && bounds.left >= -0.5 && bounds.right <= document.documentElement.clientWidth + 0.5;
+        })
+      }))).toEqual({ documentWidth: viewport.width, viewportWidth: viewport.width, contained: true });
+      if (viewport.width === 402) {
+        const publicLink = page.locator('[data-action="view-public"]');
+        const properties = page.locator('[data-action="properties"]');
+        await expect.poll(async () => (await publicLink.boundingBox())?.y ?? 0).toBeLessThan((await properties.boundingBox())?.y ?? 0);
+      }
+    }
   });
 
   test('keeps state actions keyboard reachable and fails closed for permission denial', async ({ page }) => {
@@ -176,11 +196,11 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
     await routeSession(page);
     await routeProperty(page, { status: 'published', availableActions: [] });
     await page.goto(`/provider/properties/${PROPERTY_ID}/published?lang=${encodeURIComponent(locale)}`);
-    const back = page.getByRole('link', { name: copy.actions.back });
-    await back.focus();
-    await expect(back).toBeFocused();
+    const publicLink = page.getByRole('link', { name: copy.actions.viewPublic });
+    await publicLink.focus();
+    await expect(publicLink).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: copy.actions.viewPublic })).toBeFocused();
+    await expect(page.getByRole('link', { name: copy.actions.myProperties })).toBeFocused();
 
     await routeSession(page, false);
     await page.goto(`/provider/properties/${PROPERTY_ID}/submitted?lang=${encodeURIComponent(locale)}`);
