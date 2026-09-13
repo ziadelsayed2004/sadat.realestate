@@ -227,6 +227,33 @@
   gap: 18px;
 }
 
+.provider-customer-requests__request-modal {
+  width: min(100%, 34rem);
+}
+
+.provider-customer-requests__request-modal .ui-modal__header,
+.provider-customer-requests__request-modal .ui-modal__body,
+.provider-customer-requests__request-modal .ui-modal__footer {
+  padding: 16px 20px;
+}
+
+.provider-customer-requests__request-modal .provider-customer-requests__form {
+  gap: 12px;
+}
+
+.provider-customer-requests__request-modal .provider-customer-requests__form fieldset {
+  gap: 10px;
+  padding: 12px;
+}
+
+.provider-customer-requests__request-modal .provider-customer-requests__form textarea {
+  min-height: 72px;
+}
+
+.provider-customer-requests__request-modal #provider-customer-source-note {
+  min-height: 56px;
+}
+
 .provider-customer-requests__form fieldset {
   display: grid;
   gap: 12px;

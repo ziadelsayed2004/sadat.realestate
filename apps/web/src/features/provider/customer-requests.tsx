@@ -147,7 +147,7 @@ function RequestFormModal({ copy, saving, error, onClose, onSave }: {
   }
 
   return (
-    <Modal open className="provider-customer-requests__request-modal" title={copy.form.title} description={copy.form.description} closeLabel={copy.form.close} onClose={onClose} footer={(
+    <Modal open className="provider-customer-requests__request-modal" title={copy.form.title} closeLabel={copy.form.close} onClose={onClose} footer={(
       <>
         <Button type="button" variant="secondary" onClick={onClose} disabled={saving}>{copy.form.cancel}</Button>
         <Button type="submit" form={formId} loading={saving}>{copy.form.save}</Button>

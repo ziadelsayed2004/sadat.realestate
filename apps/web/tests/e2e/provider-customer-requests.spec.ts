@@ -122,7 +122,8 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
 test('PRV-17 request form stays inside the mapped tablet and mobile frames', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive modal contract uses the mapped tablet and mobile frames.');
   const locale = localeForRequests();
-  const viewport = testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 936 } : { width: 402, height: 1282 };
+  const viewport = testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 936 } : { width: 402, height: 1560 };
+  testInfo.annotations.push({ type: 'design-source', description: 'PRV-17 tablet node 6017:121002 (1024x936); mobile node 6017:119479 (402x1560)' });
   await page.setViewportSize(viewport);
   await routeSession(page);
   await routeRequests(page);
@@ -182,14 +183,22 @@ test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
     await expect(page.getByRole('button', { name: /Schedule|تحديد موعد|安排时间/u })).toBeFocused();
   });
 
-  test('creates a customer request and transitions it through server-owned actions', async ({ page }) => {
+  test('creates a customer request and transitions it through server-owned actions', async ({ page }, testInfo) => {
     const locale = localeForRequests();
+    await page.setViewportSize({ width: 1577, height: 944 });
+    testInfo.annotations.push({ type: 'viewport', description: 'PRV-17 canonical desktop frame: 1577x944' });
     await routeSession(page);
     await routeRequests(page);
     await page.goto(`/provider/customer-requests?lang=${encodeURIComponent(locale)}`);
     await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
     await page.getByRole('button', { name: /Add customer request|إضافة طلب يدوي|添加客户请求/u }).click();
-    await expect(page.locator('[data-screen-id="PRV-17"] .ui-modal')).toBeVisible();
+    const createModal = page.locator('[data-screen-id="PRV-17"] .ui-modal');
+    await expect(createModal).toBeVisible();
+    const modalBounds = await createModal.boundingBox();
+    expect(modalBounds?.x).toBeGreaterThanOrEqual(0);
+    expect((modalBounds?.x ?? 0) + (modalBounds?.width ?? 0)).toBeLessThanOrEqual(1577);
+    expect(modalBounds?.y).toBeGreaterThanOrEqual(0);
+    expect((modalBounds?.y ?? 0) + (modalBounds?.height ?? 0)).toBeLessThanOrEqual(944);
     await expect(page).toHaveScreenshot(`provider-customer-request-modal-${locale}.png`, { fullPage: true, maxDiffPixels: 600 });
     await page.getByLabel(/First name|الاسم الأول|名字/u).fill('New');
     await page.getByLabel(/Last name|اسم العائلة|姓氏/u).fill('Customer');

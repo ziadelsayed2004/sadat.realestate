@@ -808,3 +808,10 @@
 - Aligned the heading description with the source and rendered the contract-approved `sourceNote` in the source column with a provider-account fallback. Phone and email stay masked; list filtering, pagination, creation, transitions, conflicts, and fail-closed access remain functional.
 - The source aggregate cards plus priority, responsible agent, follow-up, and richer request metadata are absent from the provider-safe projection. Admin-only assignment and due-date fields were not leaked, and page-local counts were not presented as global aggregates.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Responsive AR/EN verification passed 4/4 at 1024×936 and 402×1282. Translation check, build/budgets, typecheck, focused lint, and diff checks passed. PRV-16 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-17.
+
+## 13 September: PRV-17 canonical-source reconciliation
+
+- Reconciled the add-customer-request modal against approved node `6017:21747`, canonical desktop frame 1577×944, tablet node `6017:121002` at 1024×936, and mobile node `6017:119479` at 402×1560.
+- Removed the non-source header description and compacted scoped modal spacing so the complete contract-backed form and footer actions remain inside the canonical desktop frame. Tablet/mobile containment, validation, authenticated creation, feedback, and server-owned transitions remain functional.
+- Separate WhatsApp, request type, preferred contact, priority, follow-up date, responsible agent, and consent controls are absent from `providerCustomerPayload`. No decorative inputs or non-persisting values were invented.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update creation/transition verification passed 2/2. Responsive AR/EN verification passed at 1024×936 and the corrected 402×1560 mapped frame. Client build/budget, typecheck, focused lint, and diff checks passed. PRV-17 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-18.
