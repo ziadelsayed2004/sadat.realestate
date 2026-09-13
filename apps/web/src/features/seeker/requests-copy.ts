@@ -76,7 +76,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
     },
     detail: {
       eyebrow: 'تفاصيل الطلب',
-      title: 'تفاصيل طلبك',
+      title: 'تفاصيل الطلب',
       summary: 'ملخص الطلب',
       timeline: 'مسار الطلب',
       type: 'نوع الطلب',
@@ -128,7 +128,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
     },
     detail: {
       eyebrow: 'Request details',
-      title: 'Your request details',
+      title: 'Request details',
       summary: 'Request summary',
       timeline: 'Request timeline',
       type: 'Request type',

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const ownRequestId = '4123456789abcdef01234567';
+const ownRequestId = '000000000000000000004821';
 const contactedRequestId = '5123456789abcdef01234567';
 const forbiddenRequestId = '6123456789abcdef01234567';
 
@@ -72,6 +72,35 @@ const canonicalListRequests = [
   updatedAt: item.createdAt
 }));
 
+const canonicalUnderReviewRequest = {
+  id: ownRequestId,
+  type: 'property_search',
+  source: 'seeker',
+  seekerId: '0123456789abcdef01234567',
+  propertyId: '2123456789abcdef01234567',
+  property: {
+    id: '2123456789abcdef01234567',
+    slug: 'three-bedroom-third-district',
+    kind: 'property',
+    name: { ar: 'شقة 3 غرف — الحي الثالث', en: '3-bedroom apartment — Third District' },
+    transactionType: 'sale',
+    locationName: { ar: 'الحي الثالث، مدينة السادات', en: 'Third District, Sadat City' },
+    publicCode: 'REQ-4821'
+  },
+  status: 'under_review',
+  payload: {
+    maxBudget: 1_200_000,
+    minBedrooms: 3,
+    maxBedrooms: 3,
+    propertyTypes: ['شقة', 'تشطيب كامل'],
+    note: 'دور أول أو ثاني مفضل، لا يوجد اعتراض على بدروم'
+  },
+  version: 0,
+  availableActions: ['cancel'],
+  createdAt: '2026-08-07T09:05:00.000Z',
+  updatedAt: '2026-08-07T09:05:00.000Z'
+};
+
 async function routeSession(page: import('@playwright/test').Page, allowed = true): Promise<void> {
   await page.route('**/api/v1/auth/refresh', async route => {
     expect(route.request().method()).toBe('POST');
@@ -104,7 +133,7 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
       return;
     }
     if (requestId === ownRequestId) {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: requestData(ownRequestId, 'under_review'), ...successMeta('request-under-review') }) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: canonicalUnderReviewRequest, ...successMeta('request-under-review') }) });
       return;
     }
     if (requestId === contactedRequestId) {
@@ -204,7 +233,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.locator('.seeker-request-row')).toHaveCount(7);
     await expect(page.getByTestId('seeker-request-000000000000000000004821')).toBeVisible();
-    await expect(page.getByText('REQ-4821')).toBeVisible();
+    await expect(page.getByText('REQ-4821', { exact: true })).toBeVisible();
     await expect(page.getByText('REQ-4651')).toBeVisible();
     await expect(page.getByText(locale === 'ar' ? 'شركة السادات للتطوير' : 'Sadat Development Company').first()).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|providerId|seekerId|accessToken|refreshToken/u);
@@ -225,7 +254,8 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await page.goto(`/seeker/requests/${ownRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-03"]')).toHaveAttribute('data-request-status', 'under_review');
     await expect(page.locator('.seeker-request-detail h1')).toBeVisible();
-    await expect(page.getByText('Please call me')).toBeVisible();
+    await expect(page.getByText('REQ-4821', { exact: true })).toBeVisible();
+    await expect(page.getByText(locale === 'ar' ? 'شقة 3 غرف — الحي الثالث' : '3-bedroom apartment — Third District')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|dueAt|providerId|seekerId/u);
     await expect(page).toHaveScreenshot(`seeker-request-under-review-${locale}.png`, { fullPage: true });
   });
