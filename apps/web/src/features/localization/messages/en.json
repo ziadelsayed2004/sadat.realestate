@@ -3601,11 +3601,13 @@
       "views": "Views",
       "unavailable": "Unavailable",
       "safeTitle": "Safe data",
-      "safeBody": "This view contains only provider-permitted property contract data."
+      "safeBody": "This view contains only provider-permitted property contract data.",
+      "publishedWarning": "Editing a published property’s core data (price, description, or location) may return it to review."
     },
     "actions": {
       "back": "Back to my properties",
       "contactSupport": "Contact support",
+      "myProperties": "My properties",
       "viewProperty": "View property",
       "viewPublic": "View public page",
       "supportUnavailable": "A support route is not available in the current contract.",

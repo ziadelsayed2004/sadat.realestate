@@ -787,3 +787,10 @@
 - Replaced the generic property summary with the source failure mark, concise heading/body, server-owned rejection reason card, Back to my properties action, disabled Contact support control, and active Add property navigation. Removed unavailable dates, the safe-data block, and the trailing contract message from this state.
 - Component tests passed 9/9. Intentional AR/EN baseline update passed 2/2 and final no-update verification passed 2/2 with containment at 1024×900 and 402×780. Build/budgets, translations, typecheck, focused lint, and diff checks passed.
 - PRV-13 remains `PARTIAL_EXTERNAL` because the source support action has no approved route or mutation contract. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-14.
+
+## 13 September: PRV-14 canonical-source reconciliation
+
+- Reconciled the published state against the approved desktop export for node `6017:20973` and stored direct metadata for tablet `6017:120389` and mobile `6017:119163`.
+- Replaced the generic property summary with the source success mark, concise heading/body, status/views card, published-edit warning, View public page and My properties actions, and active Add property navigation. Removed submission/review dates, generic review reason, and safe-data blocks from this state.
+- Component tests passed 9/9. Intentional AR/EN baseline update passed 2/2 and final no-update visual verification passed 2/2 with containment at 1024×720 and 402×760. AR/EN keyboard and fail-closed permission checks passed 2/2; build/budgets, translations, typecheck, focused lint, and diff checks passed.
+- PRV-14 remains `PARTIAL_EXTERNAL` because the provider projection has no view count; the runtime displays localized unavailable data instead of inventing the source sample value. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.

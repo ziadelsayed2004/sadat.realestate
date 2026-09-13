@@ -200,7 +200,7 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
     await publicLink.focus();
     await expect(publicLink).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: copy.actions.myProperties })).toBeFocused();
+    await expect(page.locator('[data-action="properties"]')).toBeFocused();
 
     await routeSession(page, false);
     await page.goto(`/provider/properties/${PROPERTY_ID}/submitted?lang=${encodeURIComponent(locale)}`);

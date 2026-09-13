@@ -160,7 +160,6 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
           <div><dt>{copy.labels.status}</dt><dd data-property-status={property.status}>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
           <div><dt>{copy.labels.submittedAt}</dt><dd>{dateLabel(property.submittedAt, locale)}</dd></div>
           <div><dt>{copy.labels.reviewedAt}</dt><dd>{dateLabel(reviewDate, locale)}</dd></div>
-          {status === 'published' ? <div><dt>{copy.labels.views}</dt><dd data-value="unavailable">{copy.labels.unavailable}</dd></div> : null}
         </dl>
       </section>
       <section className={`provider-property-state__notice provider-property-state__notice--${status}`} aria-labelledby="provider-property-state-reason">
@@ -173,7 +172,6 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
       </section>
       <div className="provider-property-state__actions">
         <a className="provider-dashboard__secondary-action" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
-        {status === 'published' ? <a className="provider-dashboard__primary-action" href={publicHref}>{copy.actions.viewPublic}</a> : null}
       </div>
     </main>
   );
