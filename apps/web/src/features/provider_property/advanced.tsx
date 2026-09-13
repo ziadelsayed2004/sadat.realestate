@@ -298,7 +298,8 @@ function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   );
 }
 
-function FeaturesFormView({ copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError }: {
+function FeaturesFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError }: {
+  readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
   readonly advancedCopy: ProviderPropertyAdvancedCopy;
   readonly form: FeaturesForm;
@@ -310,8 +311,9 @@ function FeaturesFormView({ copy, advancedCopy, form, setForm, onSubmit, mutatio
 }) {
   const saving = mutationState === 'saving';
   return (
-    <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
-      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{advancedCopy.titles['features-services']}</h1><p>{advancedCopy.descriptions['features-services']}</p></div>
+    <form className="provider-property-wizard__form" data-form-step="features-services" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{copy.wizard.createTitle}</h1><p>{copy.wizard.createDescription}</p></div>
+      <WizardSteps step="features-services" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-features-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-features-title">{advancedCopy.titles['features-services']}</h2><span>{advancedCopy.steps['features-services']}</span></div>
         <div className="provider-property-wizard__grid">
@@ -482,12 +484,11 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
 
   return (
     <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop/tablet/mobile">
-      <ProviderNavigation locale={locale} activePath={step === 'features-services' ? '/provider/properties' : '/provider/properties/new/basic'} authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath="/provider/properties/new/basic" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        {step === 'features-services' ? <WizardSteps step={step} locale={locale} copy={copy} /> : null}
         {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} propertyTypes={propertyTypes} propertyTypesState={propertyTypesState} onRetryPropertyTypes={() => setPropertyTypesAttempt(value => value + 1)} /> : null}
         {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} commission={commission} commissionState={commissionState} onRetryCommission={() => setCommissionAttempt(value => value + 1)} /> : null}
-        {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
+        {step === 'features-services' ? <FeaturesFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         <div className="provider-property-wizard__back-row"><Button type="button" variant="secondary" disabled={mutationState === 'saving'} onClick={goBack}>{copy.wizard.back}</Button></div>
       </div>
     </section>
