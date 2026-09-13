@@ -7,7 +7,7 @@ test('PRV-18 enriched appointments fit every device and open reschedule', async 
   if (testInfo.project.name.startsWith('tablet-')) await page.setViewportSize({ width: 1024, height: 944 });
   if (testInfo.project.name.startsWith('mobile-')) await page.setViewportSize({ width: 402, height: 1042 });
   testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:121591 (1024x944); mobile node 6017:119785 (402x1042)' });
-  const property = { id: PROPERTY_ID, slug: 'viewing-apartment', kind: 'property', transactionType: 'sale', name: { ar: 'شقة واسعة في الحي الأول بالقرب من الخدمات', en: 'Spacious first district apartment near local services' }, locationName: { ar: 'الحي الأول، مدينة السادات', en: 'First district, Sadat City' } };
+  const property = propertyFixture();
   await routeSession(page);
   await page.route('**/api/v1/provider/viewings**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(), property, customerName: 'Local Customer' }], page: 1, limit: 5, total: 1 }, 'responsive-viewings') }));
   await page.goto(`/provider/viewings?lang=${locale}`);
@@ -84,6 +84,17 @@ function viewingFixture(status = 'requested', version = 2) {
   };
 }
 
+function propertyFixture() {
+  return {
+    id: PROPERTY_ID,
+    slug: 'viewing-apartment',
+    kind: 'property',
+    transactionType: 'sale',
+    name: { ar: 'شقة واسعة في الحي الأول بالقرب من الخدمات', en: 'Spacious first district apartment near local services' },
+    locationName: { ar: 'الحي الأول، مدينة السادات', en: 'First district, Sadat City' }
+  };
+}
+
 async function routeSession(page: import('@playwright/test').Page, allowed = true): Promise<void> {
   await page.route('**/api/v1/auth/refresh', async route => {
     if (!allowed) {
@@ -100,7 +111,7 @@ async function routeViewings(page: import('@playwright/test').Page): Promise<voi
     const url = new URL(route.request().url());
     if (route.request().method() === 'GET') {
       const status = url.searchParams.get('status') ?? 'requested';
-      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [viewingFixture(status)], page: 1, limit: 5, total: 1 }, 'viewings-list', { page: 1, limit: 5, total: 1 }) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(status), property: propertyFixture(), customerName: 'Local Customer' }], page: 1, limit: 5, total: 1 }, 'viewings-list', { page: 1, limit: 5, total: 1 }) });
       return;
     }
     expect(url.pathname).toBe(`/api/v1/provider/viewings/${VIEWING_ID}/transitions`);
@@ -136,6 +147,9 @@ test.describe('PRV-18 Provider Viewing Appointments', () => {
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.getByTestId('provider-viewings-count')).toContainText(/1|Ù¡|一/u);
     await expect(page.getByTestId('provider-viewing-row')).toBeVisible();
+    await expect(page.getByTestId('provider-viewing-row')).toContainText('Local Customer');
+    await expect(page.getByTestId('provider-viewing-row')).toContainText(propertyFixture().name[locale]);
+    await expect(page.getByTestId('provider-viewing-row')).toContainText(propertyFixture().locationName[locale]);
     await expect(page.getByRole('button', { name: /Confirm|تأكيد|确认/u })).toBeEnabled();
     await expect(page.locator('body')).not.toContainText(new RegExp(PROVIDER_ID));
     await expect(page.locator('body')).not.toContainText(new RegExp(SEEKER_ID));

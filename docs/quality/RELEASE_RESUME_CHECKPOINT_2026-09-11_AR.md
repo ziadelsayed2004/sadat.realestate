@@ -815,3 +815,10 @@
 - Removed the non-source header description and compacted scoped modal spacing so the complete contract-backed form and footer actions remain inside the canonical desktop frame. Tablet/mobile containment, validation, authenticated creation, feedback, and server-owned transitions remain functional.
 - Separate WhatsApp, request type, preferred contact, priority, follow-up date, responsible agent, and consent controls are absent from `providerCustomerPayload`. No decorative inputs or non-persisting values were invented.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update creation/transition verification passed 2/2. Responsive AR/EN verification passed at 1024×936 and the corrected 402×1560 mapped frame. Client build/budget, typecheck, focused lint, and diff checks passed. PRV-17 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-18.
+
+## 13 September: PRV-18 canonical-source reconciliation
+
+- Reconciled viewing appointments against approved node `6017:21613` and the stored responsive mappings `6017:121591` at 1024×944 and `6017:119785` at 402×1042.
+- The runtime already had source-shaped date groups, time tiles, localized customer/property/location data, statuses, and versioned actions. Updated the stale Desktop fixture and reviewed baselines so they now prove that enriched safe projection instead of rendering fallback object references.
+- Assigned-agent display remains unavailable: the provider viewing projection has no safe employee assignment, and `providerId` was not misrepresented as an agent. Pagination and the optional filter disclosure remain functional adaptations.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2, including filtering, keyboard focus, safe projection, and containment. Focused lint and diff checks passed; no runtime bundle changed. PRV-18 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-19.
