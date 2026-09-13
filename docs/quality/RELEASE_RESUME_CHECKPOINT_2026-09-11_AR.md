@@ -801,3 +801,10 @@
 - Removed the duplicate visible Projects heading while retaining an accessible list-region label, and aligned the Add new project action to the canonical navy treatment. Search, status filtering, pagination, owner-scoped actions, and safe list data remain functional.
 - The source aggregate cards and its image, area, type, execution, total-unit, and available-unit columns are absent from `projectDataSchema` and the provider list response. No sample counts or inventory data were invented.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Responsive AR/EN verification passed 4/4 at the mapped tablet and mobile widths. Build/budgets, typecheck, focused lint, and diff checks passed. PRV-15 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-16.
+
+## 13 September: PRV-16 canonical-source reconciliation
+
+- Reconciled customer requests against the approved desktop export for node `6017:21368` and stored responsive metadata for tablet `6017:120752` and mobile `6017:119345`.
+- Aligned the heading description with the source and rendered the contract-approved `sourceNote` in the source column with a provider-account fallback. Phone and email stay masked; list filtering, pagination, creation, transitions, conflicts, and fail-closed access remain functional.
+- The source aggregate cards plus priority, responsible agent, follow-up, and richer request metadata are absent from the provider-safe projection. Admin-only assignment and due-date fields were not leaked, and page-local counts were not presented as global aggregates.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Responsive AR/EN verification passed 4/4 at 1024×936 and 402×1282. Translation check, build/budgets, typecheck, focused lint, and diff checks passed. PRV-16 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-17.
