@@ -2,6 +2,11 @@
   align-items: center;
 }
 
+.provider-projects .provider-projects__heading > .ui-button[data-state].ui-button--primary {
+  color: #fff;
+  background: #17233d;
+}
+
 /* The foundation state container rule also sees Button's data-state attribute. */
 .provider-projects .ui-button[data-state] {
   max-width: none;

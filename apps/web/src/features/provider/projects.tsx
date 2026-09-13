@@ -352,7 +352,7 @@ function ProjectsContent({ data, locale, copy, status, searchInput, query, onSta
       </div>
       <section className="provider-projects__panel" aria-labelledby="provider-projects-list-title">
         <div className="provider-dashboard__section-heading">
-          <h2 id="provider-projects-list-title">{copy.title}</h2>
+          <h2 id="provider-projects-list-title" className="a11y-visually-hidden">{copy.title}</h2>
           <span className="provider-projects__count" data-testid="provider-projects-count">{numberFormat.format(data.total)} {copy.countSuffix}</span>
         </div>
         <FilterBar locale={locale} copy={copy} status={status} searchInput={searchInput} onStatusChange={onStatusChange} onSearchInputChange={onSearchInputChange} onSubmit={onSubmit} onClear={onClear} />
