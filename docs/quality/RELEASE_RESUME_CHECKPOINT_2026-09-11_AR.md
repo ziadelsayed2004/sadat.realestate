@@ -853,3 +853,10 @@
 - Web Vitest passed 447/447 across 67 files; the remaining Web node suite passed 85/85. Web lint/typecheck and the complete repository build passed.
 - API audit passed 196/196 with zero errors; OpenAPI, Postman, guide check, dependency audit, and Agent Pack audit all passed. The guide remains truthfully 26 local `PARTIAL`, with zero Production verification and zero globally closed journeys.
 - Demo remains enabled. No Production launch or purge ran. Strict Figma totals remain 91/119 with 28 open.
+
+## 13 سبتمبر: ضبط تخطيط المحفوظات وتصحيح تصنيف GUIDE-08
+
+- اتسعت مساحة `/seeker/saved` لتتبع canvas السييكر الحالي بدل قيد `64rem`. عند وجود عقار واحد تتمركز بطاقة الشبكة بعرض مقروء، ووضع القائمة يعرض بطاقة أفقية حقيقية على سطح المكتب. أضيف لصفحات المحفوظات صف Pagination مستقل أسفل الشبكة بمسافة لا تقل عن `24px` ومحاذاة وسط الحاوية، مع بقاء الموبايل عمودًا واحدًا دون overflow.
+- نجحت اختبارات الصفحة على Desktop AR/EN، وتحقق إضافي لحالة العقار الواحد وللهندسة الأفقية في وضع القائمة. نجح build وtypecheck وESLint، وحُدثت صور baseline المتأثرة فقط.
+- صُحح مولد `USER_GUIDE_CONFORMANCE_MATRIX.json` ليقرأ أدلة GUIDE-08 القائمة بدل ترك خاناتها `UNVERIFIED`: validation وتكرار الحفظ وعزل الحساب والصلاحيات وحالة الحساب/الجلسة أصبحت مرتبطة بفحص HTTP/MongoDB الحقيقي، وأصبحت version 409 وdecision reason وatomic audit rollback `NOT_APPLICABLE` لأن favorites عمليات idempotent لا تحمل version أو قرار moderation أو كتابة audit مزدوجة.
+- `guide:check` ناجح مع 26/26 رحلة لها أدلة محلية. GUIDE-08 لا تحتوي الآن أي خانة `UNVERIFIED`، لكنها تبقى `PARTIAL` عالميًا لأن Production لم تُنفذ ولأن قبول Figma المستقل ما زال خارجيًا. وضع Demo مستمر ولم تُشغّل أي عملية launch أو purge.

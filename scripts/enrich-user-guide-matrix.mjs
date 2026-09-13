@@ -73,6 +73,8 @@ const favoritesAccess = await readFile('docs/quality/guide-runs/favorites-access
 const favoritesRemoveRecovery = await readFile('docs/quality/guide-runs/saved-remove-recovery-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const favoritesLogout = await readFile('docs/quality/guide-runs/favorites-logout-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const savedEmptyRecovery = await readFile('docs/quality/guide-runs/saved-empty-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const savedPagination = await readFile('docs/quality/guide-runs/saved-pagination-browser-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
+const savedNavigation = await readFile('docs/quality/guide-runs/saved-navigation-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const seekerPropertySearch = await readFile('docs/quality/guide-runs/seeker-property-search-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const communityInteractions = await readFile('docs/quality/guide-runs/community-interactions-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
 const providerCustomerRequest = await readFile('docs/quality/guide-runs/provider-customer-request-local-latest.json', 'utf8').then(JSON.parse).catch(() => null);
@@ -235,6 +237,24 @@ const guide02LocalAcceptanceReady = discoveryLocalAcceptanceReady
   && favoritesRemoveRecovery.fixturesRemoved === true
   && favoritesLogout?.status === 'PASS_LOCAL_SUBCASES'
   && favoritesLogout.mockedRoutes === false && favoritesLogout.sessionsRemoved === true;
+
+const guide08LocalAcceptanceReady = favoritesAccess?.status === 'PASS_LOCAL'
+  && favoritesAccess.mockedRoutes === false && favoritesAccess.cleanup === true
+  && favoritesRemoveRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && favoritesRemoveRecovery.mockedRoutes === false && favoritesRemoveRecovery.sessionsRemoved === true
+  && favoritesRemoveRecovery.fixturesRemoved === true && favoritesRemoveRecovery.favoritesUnchanged === true
+  && favoritesLogout?.status === 'PASS_LOCAL_SUBCASES'
+  && favoritesLogout.mockedRoutes === false && favoritesLogout.sessionsRemoved === true
+  && savedEmptyRecovery?.status === 'PASS_LOCAL_SUBCASES'
+  && savedEmptyRecovery.mockedRoutes === false && savedEmptyRecovery.sessionsRemoved === true
+  && savedPagination?.status === 'PASS_LOCAL_SUBCASES'
+  && savedPagination.mockedRoutes === false && savedPagination.sessionsRemoved === true
+  && savedPagination.fixturesRemoved === true && savedPagination.favoritesUnchanged === true
+  && savedNavigation?.status === 'PASS_LOCAL_SUBCASES'
+  && savedNavigation.mockedRoutes === false && savedNavigation.sessionsRemoved === true
+  && savedNavigation.favoritesUnchanged === true
+  && [favoritesRemoveRecovery, favoritesLogout, savedEmptyRecovery, savedPagination, savedNavigation]
+    .every(evidence => evidence.runs?.length === 6);
 
 const guide09LocalAcceptanceReady = notificationRecovery?.status === 'PASS_LOCAL'
   && notificationRecovery.mockedRoutes === false && notificationRecovery.cleanup === true
@@ -576,7 +596,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
       scope: scopedGuide04Evidence,
     });
   }
-  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+  if ((journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady)
+    || (journey.id === 'GUIDE-08' && guide08LocalAcceptanceReady)) {
     for (const [path, evidence] of [
       ['docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess],
       ['docs/quality/guide-runs/saved-remove-recovery-local-latest.json', favoritesRemoveRecovery],
@@ -668,6 +689,21 @@ matrix.journeys = matrix.journeys.map((journey) => {
       decisionReason: 'NOT_APPLICABLE',
       atomicAuditRollback: 'NOT_APPLICABLE',
       rationale: 'Registration creates a new self account from a one-time grant bound to one email and role; there is no pre-existing owned object, approval/version transition, or administrative audit mutation. Cross-collection registration rollback is reviewed separately.',
+    };
+  }
+  if (journey.id === 'GUIDE-08' && guide08LocalAcceptanceReady) {
+    hydratedJourney.localAcceptanceReview = {
+      status: 'LOCAL_FUNCTIONAL_SCOPE_REVIEWED',
+      path: 'docs/quality/GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md',
+      reviewedAt: savedNavigation.finishedAt,
+      productionVerified: false,
+      figmaAccepted: false,
+    };
+    hydratedJourney.applicabilityReview = {
+      expectedVersion409: 'NOT_APPLICABLE',
+      decisionReason: 'NOT_APPLICABLE',
+      atomicAuditRollback: 'NOT_APPLICABLE',
+      rationale: 'Favorite save and remove are seeker-scoped idempotent operations without a client-supplied version, moderation decision reason, or paired audit write. Duplicate save, ownership, role and current-session behavior are reviewed directly.',
     };
   }
   if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
@@ -1010,7 +1046,8 @@ matrix.journeys = matrix.journeys.map((journey) => {
       ['currentSessionState', 'current_account_and_session_guard_plus_logout_revocation', 'docs/quality/guide-runs/seeker-overview-access-local-latest.json', seekerOverviewAccess.finishedAt],
     ]) reviewedGuarantees.push({ category, check, path, verifiedAt });
   }
-  if (journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady) {
+  if ((journey.id === 'GUIDE-02' && guide02LocalAcceptanceReady)
+    || (journey.id === 'GUIDE-08' && guide08LocalAcceptanceReady)) {
     for (const [category, check, path, verifiedAt] of [
       ['horizontalAccess', 'favorite_records_are_isolated_by_seeker', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
       ['roleAuthorization', 'provider_admin_and_anonymous_denied_favorite_mutations', 'docs/quality/guide-runs/favorites-access-http-local-latest.json', favoritesAccess.finishedAt],
@@ -1592,6 +1629,15 @@ matrix.journeys = matrix.journeys.map((journey) => {
       path: 'docs/quality/guide-runs/saved-empty-local-latest.json',
       scope: 'Saved properties empty state; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with sessions removed and favorites unchanged',
       verifiedAt: savedEmptyRecovery.finishedAt });
+  }
+  if (journey.id === 'GUIDE-08' && guide08LocalAcceptanceReady
+    && favoritesAccess.checks?.some(item => item.check === 'validation_and_unavailable'
+      && item.malformedRequests === 5 && item.writes === 0)) {
+    reviewedSubcases.push({ case: 'validation', evidenceType: 'API',
+      check: 'malformed_and_unavailable_favorite_requests_rejected_without_write',
+      path: 'docs/quality/guide-runs/favorites-access-http-local-latest.json',
+      scope: 'Real HTTP and isolated MongoDB rejected five malformed requests and unavailable property saves without a favorite write.',
+      verifiedAt: favoritesAccess.finishedAt });
   }
   if (journey.id === "GUIDE-07" && guide04Evidence?.status === "PASS_LOCAL") {
     const viewing = guide04Evidence.viewingJourneyEvidence;

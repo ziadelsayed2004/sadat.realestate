@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-12T22:18:34.667Z",
+  "generatedAt": "2026-09-13T15:02:22.053Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -2769,24 +2769,24 @@
       },
       "cases": {
         "success": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "validation": "PARTIAL_API_EVIDENCE_ATTACHED",
         "empty": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
         "networkRetry": "PARTIAL_BROWSER_API_MONGODB_EVIDENCE_ATTACHED",
-        "duplicateMutation": "UNVERIFIED"
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "permissions": {
         "requiredRoles": [
           "seeker",
           "public"
         ],
-        "horizontalAccess": "UNVERIFIED",
-        "currentSessionState": "UNVERIFIED",
-        "roleAuthorization": "UNVERIFIED"
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "roleAuthorization": "PARTIAL_API_EVIDENCE_ATTACHED"
       },
       "versionAndAudit": {
-        "expectedVersion409": "UNVERIFIED",
-        "decisionReason": "UNVERIFIED",
-        "atomicAuditRollback": "UNVERIFIED"
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "NOT_APPLICABLE"
       },
       "environment": {
         "local": "PARTIAL",
@@ -2828,6 +2828,13 @@
           }
         },
         {
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "status": "PASS_LOCAL",
+          "verifiedAt": "2026-09-11T20:02:33.400Z",
+          "environment": "isolated-local-MongoDB-real-HTTP",
+          "mockedRoutes": false
+        },
+        {
           "path": "docs/quality/guide-runs/saved-remove-recovery-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
           "verifiedAt": "2026-09-11T21:50:40.896Z",
@@ -2842,23 +2849,16 @@
           "mockedRoutes": false
         },
         {
-          "path": "docs/quality/guide-runs/saved-navigation-local-latest.json",
+          "path": "docs/quality/guide-runs/saved-pagination-browser-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-11T21:53:08.807Z",
+          "verifiedAt": "2026-09-11T19:58:56.101Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         },
         {
-          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
-          "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-11T20:02:33.400Z",
-          "environment": "isolated-local-MongoDB-real-HTTP",
-          "mockedRoutes": false
-        },
-        {
-          "path": "docs/quality/guide-runs/saved-pagination-browser-local-latest.json",
+          "path": "docs/quality/guide-runs/saved-navigation-local-latest.json",
           "status": "PASS_LOCAL_SUBCASES",
-          "verifiedAt": "2026-09-11T19:58:56.101Z",
+          "verifiedAt": "2026-09-11T21:53:08.807Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         }
@@ -2871,6 +2871,14 @@
           "path": "docs/quality/guide-runs/saved-empty-local-latest.json",
           "scope": "Saved properties empty state; AR/EN on Desktop, Tablet and Pixel 5; real browser/API/MongoDB with sessions removed and favorites unchanged",
           "verifiedAt": "2026-09-11T18:41:30.168Z"
+        },
+        {
+          "case": "validation",
+          "evidenceType": "API",
+          "check": "malformed_and_unavailable_favorite_requests_rejected_without_write",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "scope": "Real HTTP and isolated MongoDB rejected five malformed requests and unavailable property saves without a favorite write.",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
         },
         {
           "case": "networkRetry",
@@ -2899,6 +2907,36 @@
       ],
       "reviewedGuarantees": [
         {
+          "category": "horizontalAccess",
+          "check": "favorite_records_are_isolated_by_seeker",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
+        },
+        {
+          "category": "roleAuthorization",
+          "check": "provider_admin_and_anonymous_denied_favorite_mutations",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "logout_revokes_favorite_operations",
+          "path": "docs/quality/guide-runs/favorites-logout-local-latest.json",
+          "verifiedAt": "2026-09-11T21:48:42.961Z"
+        },
+        {
+          "category": "currentSessionState",
+          "check": "current_account_state_denies_favorite_operations",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
+        },
+        {
+          "category": "duplicateMutation",
+          "check": "duplicate_save_keeps_single_favorite",
+          "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
+          "verifiedAt": "2026-09-11T20:02:33.400Z"
+        },
+        {
           "check": "favorites_access_validation",
           "path": "docs/quality/guide-runs/favorites-access-http-local-latest.json",
           "scope": "Real HTTP with isolated MongoDB and locally signed tokens: other-account list/delete isolation; provider/admin and anonymous denied; old seeker token denied after suspended/rejected/role_changed/deleted; malformed requests rejected; unavailable properties excluded; duplicate save preserves one record. Does not exercise login/refresh/session revocation or production.",
@@ -2912,11 +2950,17 @@
         }
       ],
       "localAcceptanceReview": {
-        "path": "docs/quality/GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md",
         "status": "LOCAL_FUNCTIONAL_SCOPE_REVIEWED",
+        "path": "docs/quality/GUIDE_08_LOCAL_ACCEPTANCE_2026-09-12.md",
         "reviewedAt": "2026-09-11T21:53:08.807Z",
         "productionVerified": false,
         "figmaAccepted": false
+      },
+      "applicabilityReview": {
+        "expectedVersion409": "NOT_APPLICABLE",
+        "decisionReason": "NOT_APPLICABLE",
+        "atomicAuditRollback": "NOT_APPLICABLE",
+        "rationale": "Favorite save and remove are seeker-scoped idempotent operations without a client-supplied version, moderation decision reason, or paired audit write. Duplicate save, ownership, role and current-session behavior are reviewed directly."
       }
     },
     {
@@ -6361,7 +6405,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-12T22:18:34.667Z",
+    "updatedAt": "2026-09-13T15:02:22.053Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,
