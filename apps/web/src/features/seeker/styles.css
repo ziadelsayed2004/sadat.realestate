@@ -1283,29 +1283,52 @@
 
 .seeker-notifications__list {
   display: grid;
-  gap: var(--space-md);
+  gap: 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid #ebe6dc;
+  border-radius: 1rem;
 }
 
 .seeker-notifications__item {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr);
-  gap: var(--space-lg);
-  padding: var(--space-lg);
+  grid-template-columns: 2.5rem minmax(0, 1fr) .5rem;
+  align-items: center;
+  gap: 1rem;
+  min-block-size: 6rem;
+  padding: 1rem 1.25rem;
+  direction: ltr;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 0;
+  border-block-end: 1px solid #ebe6dc;
+  border-radius: 0;
 }
 
-.seeker-notifications__item[data-state="unread"] {
-  background: color-mix(in srgb, var(--color-brand-soft) 42%, var(--color-surface));
-  border-color: #9ca99d;
+.seeker-notifications__item:last-child { border-block-end: 0; }
+.seeker-notifications__item[data-state="unread"] { background: var(--color-surface); }
+
+/* Notification rows are list records, so they must not inherit the global
+   standalone state-card surface from frontend_foundation/styles.css. */
+.seeker-notifications .seeker-notifications__item[data-state] {
+  max-width: none !important;
+  margin-block-start: 0 !important;
+  padding: 1rem 1.25rem !important;
+  background: var(--color-surface) !important;
+  border: 0 !important;
+  border-block-end: 1px solid #ebe6dc !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.seeker-notifications .seeker-notifications__item[data-state]:last-child {
+  border-block-end: 0 !important;
 }
 
 .seeker-notifications__icon {
   display: grid;
   place-items: center;
-  inline-size: 3rem;
-  block-size: 3rem;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
   color: var(--color-brand-primary);
   background: var(--color-brand-soft);
   border-radius: 50%;
@@ -1314,6 +1337,11 @@
 
 .seeker-notifications__body {
   min-width: 0;
+}
+
+[dir="rtl"] .seeker-notifications__body {
+  direction: rtl;
+  text-align: left;
 }
 
 .seeker-notifications__meta,
@@ -1325,13 +1353,62 @@
 }
 
 .seeker-notifications__meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  justify-content: space-between;
+  direction: ltr;
   color: var(--color-text-secondary);
   font-size: var(--font-size-small);
 }
 
 .seeker-notifications__meta time {
-  margin-inline-start: auto;
+  white-space: nowrap;
 }
+
+.seeker-notifications__meta h2 {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.35;
+}
+
+[dir="rtl"] .seeker-notifications__meta h2 { direction: rtl; }
+
+.seeker-notifications__meta h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.seeker-notifications__reference {
+  display: inline-flex;
+  margin-block-start: .375rem;
+  padding: .125rem .5rem;
+  color: var(--color-brand-primary);
+  background: rgb(15 74 59 / 8%);
+  border-radius: .75rem;
+  font-size: .6875rem;
+}
+
+.seeker-notifications__unread-dot {
+  inline-size: .5rem;
+  block-size: .5rem;
+  margin: 0;
+  padding: 0;
+  background: var(--color-accent);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.seeker-notifications__unread-dot:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: .25rem;
+}
+
+.seeker-notifications__icon[data-type="viewing"] { color: #287560; background: #edf5f1; }
+.seeker-notifications__icon[data-type="request"] { color: #4f46e5; background: #eef2ff; }
+.seeker-notifications__icon[data-type="community"] { color: #0284c7; background: #eff8ff; }
+.seeker-notifications__icon[data-type="property"] { color: #f59e0b; background: #fffbeb; }
+.seeker-notifications__icon[data-type="profile"] { color: #64748b; background: #f3f4f6; }
 
 .seeker-notifications__type {
   color: var(--color-brand-primary);
@@ -1348,15 +1425,16 @@
 }
 
 .seeker-notifications__item h2 {
-  margin: var(--space-sm) 0 0;
+  margin: 0;
   color: var(--color-text-strong);
-  font-size: var(--font-size-heading-three);
+  font-size: .9375rem;
 }
 
 .seeker-notifications__item p {
-  margin: var(--space-sm) 0 0;
+  margin: .25rem 0 0;
   color: var(--color-text-secondary);
-  line-height: var(--line-height-body);
+  font-size: .8125rem;
+  line-height: 1.45;
 }
 
 .seeker-notifications__actions {
@@ -1911,9 +1989,6 @@
 .seeker-saved-property-card .ui-property-card__source { order: 5; }
 .seeker-saved-property-card .ui-property-card__action { order: 6; }
 
-.seeker-notifications__list { gap: 0; overflow: hidden; border: 1px solid #ebe6dc; border-radius: 1rem; }
-.seeker-notifications__item { border: 0; border-radius: 0; border-block-end: 1px solid #ebe6dc; }
-
 .seeker-profile__tabs { width: min(100%, 52rem); box-shadow: none; }
 .seeker-profile__tabs a { flex: 1 1 0; text-align: center; }
 .seeker-profile__panel,
@@ -2272,10 +2347,10 @@
   .seeker-notifications .seeker-notifications__item[data-state][data-state] {
     max-width: none;
     margin-block-start: 0;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: .75rem;
-    min-block-size: 4.25rem;
-    padding: .75rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) .5rem;
+    gap: 1rem;
+    min-block-size: 6rem;
+    padding: 1rem 1.25rem;
     background: var(--color-surface);
     border: 0;
     border-block-end: 1px solid #ebe6dc;
@@ -2283,10 +2358,9 @@
     box-shadow: none;
     text-align: start;
   }
-  .seeker-notifications__icon { inline-size: 2rem; block-size: 2rem; font-size: 1rem; }
-  .seeker-notifications__item h2 { margin-block-start: .125rem; font-size: .875rem; }
-  .seeker-notifications__item p { margin-block-start: .125rem; font-size: .75rem; line-height: 1.35; }
-  .seeker-notifications__actions { margin-block-start: .25rem; font-size: .75rem; }
+  .seeker-notifications__icon { inline-size: 2.5rem; block-size: 2.5rem; font-size: 1rem; }
+  .seeker-notifications__item h2 { font-size: .9375rem; }
+  .seeker-notifications__item p { font-size: .8125rem; line-height: 1.45; }
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs,
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__panel,

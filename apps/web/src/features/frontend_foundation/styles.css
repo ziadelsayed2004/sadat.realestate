@@ -135,7 +135,7 @@ code {
   border-radius: var(--radius-sm);
 }
 
-[data-state]:not(.ui-button):not(.ui-property-card):not(.ui-field):not(.ui-modal-backdrop):not(.route-shell--admin *):not(.route-shell--auth .auth-page) {
+[data-state]:not(.ui-button):not(.ui-property-card):not(.ui-field):not(.ui-modal-backdrop):not(.seeker-notifications__item):not(.route-shell--admin *):not(.route-shell--auth .auth-page) {
   max-width: 48rem;
   margin-block-start: var(--space-2xl);
   padding: var(--space-xl);

@@ -668,3 +668,10 @@
 - Reconciled saved properties against official node `6027:4748`. The runtime now uses the four canonical Demo favorites and repository-owned property/provider assets, public codes, localized locations and titles, prices, five source features including views, badges, provider identity, and verification state.
 - The screen uses the source-aligned 1024px three-column canvas. Compare toggles accessibly, while view, removal, unavailable, empty, and denied-session behavior remains functional. The AR/EN suite passed 8/8, including no-overflow geometry at 393, 768, and 1280 pixels and the 1551×1228 visual baseline.
 - The old canonical property/provider media blocker is resolved. SEK-06 remains `PARTIAL_EXTERNAL` only because `/me` still lacks an approved seeker avatar/media field. Strict Figma totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-07 official-source reconciliation
+
+- Reconciled notifications against official node `6027:5319`: eight canonical records in source order, four unread records, localized content, relative times, references, safe localized links, colored icons, and accessible unread controls.
+- Removed the shared frontend-foundation state-card collision from notification rows. The list now uses the source-aligned continuous 768px surface; AR/EN geometry asserts no overflow and zero row gap/margin/radius at 393, 800, and 1551 pixels.
+- After rebuilding the affected client bundle, the complete notifications suite passed 8/8 across AR/EN. Typecheck, lint, client build/bundle budget, and diff checks passed.
+- SEK-07 remains `PARTIAL_EXTERNAL` only because `/me` still lacks approved seeker avatar/media. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.

@@ -47,8 +47,22 @@ function mutationErrorFor(error: unknown): Exclude<MutationFeedback, 'markedRead
   return 'error';
 }
 
-function dateLabel(value: string, locale: SupportedLocale): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+function relativeTimeLabel(value: string, locale: SupportedLocale): string {
+  const elapsedMinutes = Math.max(1, Math.round((Date.now() - new Date(value).getTime()) / 60_000));
+  if (elapsedMinutes < 120) return locale === 'ar' ? 'منذ ساعة' : '1 hour ago';
+  const hours = Math.round(elapsedMinutes / 60);
+  if (hours < 24) return locale === 'ar' ? `منذ ${hours} ساعات` : `${hours} hours ago`;
+  const days = Math.round(hours / 24);
+  if (days === 1) return locale === 'ar' ? 'أمس' : 'Yesterday';
+  if (days === 2) return locale === 'ar' ? 'منذ يومين' : '2 days ago';
+  if (days < 7) return locale === 'ar' ? `منذ ${days} أيام` : `${days} days ago`;
+  return locale === 'ar' ? 'منذ أسبوع' : '1 week ago';
+}
+
+function referenceForLink(link: string | undefined): string | undefined {
+  if (link === undefined) return undefined;
+  const reference = new URL(link, 'http://sadat-real-estate.local').searchParams.get('ref');
+  return reference === null || reference.trim() === '' ? undefined : reference;
 }
 
 function iconForType(type: string): SeekerIconName {
@@ -85,25 +99,21 @@ function NotificationRow({
 }) {
   const title = localizedText(item.title, locale) ?? item.type;
   const message = localizedText(item.message, locale);
-  const typeLabel = copy.typeLabels[item.type] ?? item.type;
   const href = item.link === undefined ? undefined : localeForSeekerPath(locale, item.link);
+  const reference = referenceForLink(item.link);
   const read = item.readAt !== null;
   return (
-    <article className="seeker-notifications__item" data-testid={`seeker-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
-      <span className="seeker-notifications__icon" aria-hidden="true"><SeekerIcon name={iconForType(item.type)} /></span>
+    <article className="seeker-notifications__item" role="listitem" data-testid={`seeker-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
+      <span className="seeker-notifications__icon" data-type={item.type.split('.')[0]} aria-hidden="true"><SeekerIcon name={iconForType(item.type)} /></span>
       <div className="seeker-notifications__body">
         <div className="seeker-notifications__meta">
-          <span className="seeker-notifications__type">{typeLabel}</span>
-          {!read ? <span className="seeker-notifications__unread-label">{copy.unreadLabel}</span> : null}
-          <time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time>
+          <h2>{href === undefined ? title : <a href={href}>{title}</a>}</h2>
+          <time dateTime={item.createdAt}>{relativeTimeLabel(item.createdAt, locale)}</time>
         </div>
-        <h2>{title}</h2>
         {message !== undefined ? <p>{message}</p> : null}
-        <div className="seeker-notifications__actions">
-          {href !== undefined ? <a href={href}>{copy.openLink}</a> : null}
-          {!read ? <Button variant="ghost" size="xs" loading={marking} onClick={onMarkRead}>{copy.markRead}</Button> : null}
-        </div>
+        {reference ? <code className="seeker-notifications__reference">{reference}</code> : null}
       </div>
+      {!read ? <button type="button" className="seeker-notifications__unread-dot" aria-label={copy.markRead} disabled={marking} onClick={onMarkRead} /> : null}
     </article>
   );
 }
