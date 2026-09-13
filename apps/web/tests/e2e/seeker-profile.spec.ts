@@ -29,13 +29,16 @@ function profileData(locale: 'ar' | 'en', firstName = 'Mohamed') {
 function preferencesData() {
   return {
     preferences: {
-      propertyTypes: ['apartment'],
-      locations: ['new-cairo'],
+      propertyTypes: ['apartment', 'duplex'],
+      locations: ['district-1', 'district-3'],
       purpose: 'buy',
       minPrice: 500000,
       maxPrice: 1500000,
-      bedroomsMin: 2,
-      bedroomsMax: 4
+      minArea: 100,
+      maxArea: 200,
+      bedroomsMin: 3,
+      bedroomsMax: 3,
+      paymentMethod: 'any'
     },
     updatedAt: '2026-08-18T10:00:00.000Z'
   };
@@ -97,7 +100,7 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
 test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-08, SEK-09, SEK-10' });
-    testInfo.annotations.push({ type: 'design-source', description: 'SEK-08.png, SEK-09.png, SEK-10.png; Figma node 6027-3579' });
+    testInfo.annotations.push({ type: 'design-source', description: 'SEK-08.png (Figma node 6027:6850), SEK-09.png, SEK-10.png' });
     await routeSession(page);
     await routeProfile(page);
   });
@@ -114,6 +117,11 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.locator('#seeker-preferences-min-price')).toHaveValue('500000');
+    await expect(page.locator('#seeker-preferences-max-price')).toHaveValue('1500000');
+    await expect(page.locator('#seeker-preferences-min-area')).toHaveValue('100');
+    await expect(page.locator('#seeker-preferences-max-area')).toHaveValue('200');
+    await expect(page.locator('.seeker-profile__choice--chip[data-selected="true"]')).toHaveCount(4);
+    await expect(page.locator('.seeker-profile__choice--bedroom[data-selected="true"]')).toHaveText('3');
     const tabsBox = await page.locator('.seeker-profile__tabs').boundingBox();
     const panelBox = await page.locator('.seeker-profile__panel').boundingBox();
     expect(tabsBox).not.toBeNull();
@@ -127,6 +135,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.getByRole('link', { name: copy.tabs.profile }).focus();
     await expect(page.getByRole('link', { name: copy.tabs.profile })).toBeFocused();
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
     await page.evaluate(async () => {
       await document.fonts.ready;
     });
@@ -310,6 +319,32 @@ test.describe('SEK-08/09 profile responsive layout', () => {
         const panelEdge = locale === 'ar' ? panel.x + panel.width : panel.x;
         expect(Math.abs(tabsEdge - panelEdge)).toBeLessThanOrEqual(2);
       }
+    }
+  });
+
+  test('keeps SEK-08 source controls contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+    const locale = localeForProject();
+    for (const viewport of [{ width: 1551, height: 862 }, { width: 768, height: 900 }, { width: 393, height: 851 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/seeker/profile?tab=preferences&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('.seeker-profile__choice--chip[data-selected="true"]')).toHaveCount(4);
+      const geometry = await page.evaluate(() => {
+        const panel = document.querySelector<HTMLElement>('.seeker-profile__panel')?.getBoundingClientRect();
+        const save = document.querySelector<HTMLElement>('.seeker-profile__form > button')?.getBoundingClientRect();
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          panelLeft: panel?.left ?? -1,
+          panelRight: panel?.right ?? innerWidth + 1,
+          saveLeft: save?.left ?? -1,
+          saveRight: save?.right ?? innerWidth + 1
+        };
+      });
+      expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.panelLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
+      expect(geometry.panelRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.saveLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
+      expect(geometry.saveRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
     }
   });
 });

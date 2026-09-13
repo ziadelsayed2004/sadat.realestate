@@ -695,8 +695,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
             {validationError ? <p className="seeker-profile__feedback" data-state="error" role="alert">{copy.validation}</p> : null}
             {mutationError ? <p className="seeker-profile__feedback" data-state="error" role="alert">{copy.states.retry.body}</p> : null}
             {activeTab === 'preferences' ? (
-              <section className="seeker-profile__panel" aria-labelledby="seeker-profile-preferences-panel-title">
-                <h2 id="seeker-profile-preferences-panel-title">{copy.preferences.heading}</h2>
+              <section className="seeker-profile__panel" aria-label={copy.tabs.preferences}>
                 {preferences !== undefined && Object.keys(preferences.preferences).length === 0 ? <p className="seeker-profile__empty-note" data-state="empty">{copy.preferences.noSavedPreferences}</p> : null}
                 <PreferencesForm locale={locale} draft={preferencesDraft} copy={copy} saving={saving} onChange={patch => { setPreferencesDraft(current => ({ ...current, ...patch })); setValidationError(false); }} onSubmit={submitPreferences} />
               </section>

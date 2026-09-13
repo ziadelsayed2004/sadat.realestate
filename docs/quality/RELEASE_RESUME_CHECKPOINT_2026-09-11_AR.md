@@ -675,3 +675,10 @@
 - Removed the shared frontend-foundation state-card collision from notification rows. The list now uses the source-aligned continuous 768px surface; AR/EN geometry asserts no overflow and zero row gap/margin/radius at 393, 800, and 1551 pixels.
 - After rebuilding the affected client bundle, the complete notifications suite passed 8/8 across AR/EN. Typecheck, lint, client build/bundle budget, and diff checks passed.
 - SEK-07 remains `PARTIAL_EXTERNAL` only because `/me` still lacks approved seeker avatar/media. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-08 official-source reconciliation
+
+- Reconciled search preferences against official node `6027:6850`: buy; apartment and duplex; First and Third Districts; EGP 500,000–1,500,000; 100–200 m²; three bedrooms; and either payment method. Removed the invented mixed-language location value from the Arabic fixture.
+- Removed the redundant panel heading and aligned the active desktop tab to the source white raised treatment while preserving all functional controls and the 672px form card.
+- The shared profile suite passed 20/20 across AR/EN after the client build. A focused AR/EN responsive run passed 2/2 at 393, 768, and 1551 pixels; reviewed visual baselines, lint, bundle budget, and diff checks passed.
+- SEK-08 remains `PARTIAL_EXTERNAL` only because `/me` lacks approved seeker avatar/media. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
