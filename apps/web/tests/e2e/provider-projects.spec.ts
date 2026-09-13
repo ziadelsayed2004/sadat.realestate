@@ -92,7 +92,7 @@ test.describe('PRV-15 Provider Projects', () => {
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('.provider-projects__identity strong')).not.toHaveText('');
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('code')).toHaveText('provider-project');
     await expect(page.locator('.provider-projects__heading > .ui-button')).toHaveCSS('background-color', 'rgb(23, 35, 61)');
-    await expect(page.getByRole('heading', { name: locale === 'ar' ? 'المشاريع' : 'Projects', level: 2 })).toBeHidden();
+    await expect(page.getByRole('heading', { name: locale === 'ar' ? 'المشاريع' : 'Projects', level: 2 })).toHaveClass(/a11y-visually-hidden/u);
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).getByRole('button', { name: /Edit|تعديل|编辑/u })).toBeEnabled();
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).getByRole('button', { name: /Submit for review|إرسال للمراجعة|提交审核/u })).toBeEnabled();
     await expect(page.locator('body')).not.toContainText(/aaaaaaaaaaaaaaaaaaaaaaaa|reviewedBy|assignedTo|auditData|storageKey|accessToken|refreshToken/u);

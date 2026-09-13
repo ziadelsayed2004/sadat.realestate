@@ -794,3 +794,10 @@
 - Replaced the generic property summary with the source success mark, concise heading/body, status/views card, published-edit warning, View public page and My properties actions, and active Add property navigation. Removed submission/review dates, generic review reason, and safe-data blocks from this state.
 - Component tests passed 9/9. Intentional AR/EN baseline update passed 2/2 and final no-update visual verification passed 2/2 with containment at 1024×720 and 402×760. AR/EN keyboard and fail-closed permission checks passed 2/2; build/budgets, translations, typecheck, focused lint, and diff checks passed.
 - PRV-14 remains `PARTIAL_EXTERNAL` because the provider projection has no view count; the runtime displays localized unavailable data instead of inventing the source sample value. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-15 canonical-source reconciliation
+
+- Reconciled the projects listing against the approved desktop export for node `6017:21162` and stored responsive metadata for tablet `6017:120496` and mobile `6017:119219`.
+- Removed the duplicate visible Projects heading while retaining an accessible list-region label, and aligned the Add new project action to the canonical navy treatment. Search, status filtering, pagination, owner-scoped actions, and safe list data remain functional.
+- The source aggregate cards and its image, area, type, execution, total-unit, and available-unit columns are absent from `projectDataSchema` and the provider list response. No sample counts or inventory data were invented.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Responsive AR/EN verification passed 4/4 at the mapped tablet and mobile widths. Build/budgets, typecheck, focused lint, and diff checks passed. PRV-15 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-16.
