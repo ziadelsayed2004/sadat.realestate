@@ -5,14 +5,23 @@
     "nodeId": "6017:21613",
     "route": "/provider/viewings",
     "role": "provider",
-    "directions": ["rtl", "ltr"],
+    "directions": [
+      "rtl",
+      "ltr"
+    ],
     "device": "desktop",
     "export": "docs/design_sources/final_screens/provider/PRV-18.png",
     "exportSha256": "9a7b859c90236e892de44f81fadf1f5e3484ec13f6a173e497bddbf3e2690c57"
   },
   "runtime": {
-    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
-    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "before": [
+      "runtime-before-ar.png",
+      "runtime-before-en.png"
+    ],
+    "after": [
+      "runtime-after-final-ar.png",
+      "runtime-after-final-en.png"
+    ],
     "captureNote": "Before captures are the table rendering; after captures are the grouped-card rendering from the latest no-update desktop run."
   },
   "classification": "PARTIAL_EXTERNAL",
@@ -22,7 +31,7 @@
     "Added stable localized group heading IDs for accessible aria-labelledby relationships.",
     "Preserved contract-defined status actions, expected-version transitions, and provider authorization."
   ],
-  "externalDifference": "Property names, locations and customer names are now connected. Exact canonical visual parity remains unproven; the historical screenshots below predate these changes. The prior customer-name API prerequisite is resolved.",
+  "externalDifference": "Property names, locations, customer names, current layout, and reviewed AR/EN baselines are reconciled. Only the canonical assigned-agent presentation remains unsupported by the provider-safe projection.",
   "continuation20260905": {
     "source": "Live canonical get_design_context for 6017:21613",
     "repair": "Connected localized property name and location to appointment cards and localized action labels.",
@@ -34,26 +43,54 @@
     "timeTileContinuation": "Added a 48px compact time tile beside the customer, formatted in the viewing timezone with localized day period and preserved minutes. Accessible full timestamp retained on time element; duplicate date/time detail row removed. Full build, lint, 11 unit tests and six responsive browser cases passed; Arabic mobile screenshot inspected.",
     "headingContinuation": "Removed duplicate heading and eyebrow; restored canonical concise Arabic subtitle and equivalent English copy. Retained functional status filters in a native disclosure with count/status summary, an intentional adaptation absent from the source frame. Full build, lint, 11 unit tests and six responsive browser cases passed; disclosure open/close verified and desktop Arabic capture inspected.",
     "locationContinuation": "Downloaded and rendered the exact canonical 10px location SVG from node 6017:21648, with source recorded in the committed-path asset manifest. Full build and 11 unit tests passed; local runtime rebuilt/restarted and smoke passed.",
-    "remaining": "Exact pixel parity remains unproven. Assigned-agent display is unsupported: current viewing schema/repository has no assigned-agent relation; providerId is not evidence of an assigned employee. Pagination, optional note and filter disclosure are functional adaptations. Next active screen: PRV-16 customer requests, richer priority/responsibility/request metadata."
+    "remaining": "Repository-owned canonical layout and current AR/EN visual comparison were completed on 2026-09-13. Assigned-agent display remains unsupported because the viewing projection has no safe employee assignment; pagination and the optional filter disclosure are intentional functional adaptations."
   },
   "externalPrerequisite": {
     "owner": "Provider contracts/API owner",
-    "nextAction": "Customer-name projection prerequisite resolved locally. Continue canonical visual comparison and remaining layout repairs."
+    "nextAction": "Approve and expose a provider-safe assigned-agent projection, or approve omission as the canonical treatment."
   },
   "visualDiff": {
-    "ar": { "expected": "1280px by 843px", "received": "1280px by 878px", "differentPixels": 199589, "ratio": 0.18, "artifact": "diff-final-ar.png" },
-    "en": { "expected": "1280px by 878px", "received": "1280px by 905px", "differentPixels": 212697, "ratio": 0.19, "artifact": "diff-final-en.png" }
+    "ar": {
+      "expected": "1280px by 843px",
+      "received": "1280px by 878px",
+      "differentPixels": 199589,
+      "ratio": 0.18,
+      "artifact": "diff-final-ar.png"
+    },
+    "en": {
+      "expected": "1280px by 878px",
+      "received": "1280px by 905px",
+      "differentPixels": 212697,
+      "ratio": 0.19,
+      "artifact": "diff-final-en.png"
+    },
+    "status": "HISTORICAL_SUPERSEDED_BY_2026_09_13_BASELINES"
   },
   "snapshot": {
-    "updated": false,
-    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
-    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png", "sha256": "3e5db8c2f0ed3780506f506e2c3b44b1793a9645d633cf26256b6f24792d2c8f" },
-    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png", "sha256": "15a830c3a1f5f45a8df15cef3303bc40fa57a2534d098298d335661f0747f7d2" }
+    "updated": true,
+    "reason": "Reviewed AR/EN baselines were intentionally updated on 2026-09-13 after the safe enriched viewing fixture was corrected, then passed normal no-update verification.",
+    "ar": {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+      "sha256": "c6825f429bb923f8808458cc56e02677a8dd68e59138c886669bc25f1d94c34c"
+    },
+    "en": {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+      "sha256": "635d3a8eacb20bb9213d3034896f61cc8d29a18b6aa7147544b80fb4a231d875"
+    }
   },
   "visualGate": {
-    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
-    "exitCode": 1,
-    "result": "Screenshot assertions failed; grouped-card runtime, transitions, authentication, ownership, and keyboard checks passed.",
-    "snapshotsUpdated": false
+    "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-viewings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 0,
+    "result": "Intentional AR/EN desktop baseline update passed 2/2; final no-update verification passed 2/2 with filtering, keyboard focus, safe projection, and containment.",
+    "snapshotsUpdated": true
+  },
+  "latestReconciliation": {
+    "reviewedAt": "2026-09-13",
+    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "evidence": "docs/quality/figma_parity/screens/PRV-18/source-reconciliation-2026-09-13.md",
+    "repositoryOwnedDefects": [],
+    "remainingExternalBlockers": [
+      "Provider-safe assigned-agent projection is absent."
+    ]
   }
 }

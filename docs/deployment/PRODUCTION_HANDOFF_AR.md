@@ -215,3 +215,11 @@ sudo -u elsadat env RELEASE_REF=main \
 
 السكريبت يشغّل التحقق والاختبارات والبناء، يبدل الإصدار atomically، ويعيد الإصدار
 السابق إذا فشل readiness.
+
+## تحديث حالة التسليم — 2026-09-13
+
+- بوابة الجودة المحلية الكاملة ناجحة: API coverage ‏626/626، وWeb Vitest ‏447/447، وWeb Node ‏85/85، مع نجاح lint وtypecheck وbuild وbudgets وتدقيق API/OpenAPI/Postman ودليل المستخدم والاعتماديات وAgent Pack.
+- رحلات دليل المستخدم 26/26 لها أدلة Browser/API/MongoDB محلية. لا يُعد ذلك تحقق Production.
+- جرد Figma الصارم الحالي 91/119 (76.5%). المفتوح 28 شاشة: Seeker 10، Provider 17، وADM-54 فقط من Admin. ADM-18 مغلقة بالفعل.
+- لا توجد حاليًا مشكلة معروفة مملوكة للمستودع دون إصلاح أو اختبار ضمن الشاشات المفتوحة. المتبقي مجمع في ست حزم قرار خارجية داخل `docs/quality/figma_parity/EXTERNAL_BLOCKER_REGISTRY_2026-09-13.json`، ويتحقق منها الأمر `npm run figma:blockers:check`.
+- المشروع باقٍ Demo. خطوات Production والنسخ والاستعادة أدناه جاهزة للتنفيذ بعد قرار صريح، ولم تُنفذ عملية launch أو purge.

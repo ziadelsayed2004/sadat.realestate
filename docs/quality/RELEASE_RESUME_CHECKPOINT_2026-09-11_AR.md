@@ -867,3 +867,12 @@
 - صُنفت حالة `empty` في التسجيل ورفع المستندات ومتابعة الطلب كـ `NOT_APPLICABLE` لأن وجود الطلب شرط مسبق وهذه ليست شاشات قوائم. أُثبت `networkRetry` بعد قطع طلب التسجيل وطلب الإرسال وطلب حالة الطلب مرة لكل رحلة؛ أظهرت الواجهات زر Retry وتعافت عبر HTTP الحقيقي `201/200/200` دون أي document navigation، ثم اكتملت حالة MongoDB المتماسكة والتنظيف.
 - بعد إعادة توليد المصفوفة لا توجد أي قيمة `UNVERIFIED` في الرحلات الـ26. تظل الرحلات `PARTIAL` عالميًا لأن Production مؤجلة وقبول Figma المستقل غير مكتمل، وليس بسبب فجوة وظيفية محلية مجهولة.
 - لم تُمس بيانات Demo ولم تُنفذ أي عملية Production أو purge.
+
+## 13 September: true goal-progress reconciliation
+
+- Re-audited all 28 strict Figma-open screens against their screen reviews and the latest checkpoint evidence. Five screens still referenced obsolete August failures even though their repository repairs and current verification had already passed: PRV-01, SEK-09, PRV-18, PRV-22-2, and PRV-22-3.
+- Reconciled those reviews and coordinator records with the 13 September source evidence. The repository revalidation queue is now zero; no known repository-owned visual or functional defect remains unimplemented in the 28-screen open set.
+- Added `figma_parity/EXTERNAL_BLOCKER_REGISTRY_2026-09-13.json`, grouping all 28 open screens under six shared external decision families. Added `npm run figma:blockers:check` to prove that the registry exactly covers the current audit and never references a closed or unknown screen.
+- Current strict result remains honestly 91/119 (76.5%): Seeker 0/10 closed, Provider 7/24 closed, Admin 65/66 closed, Auth 19/19 closed. Documentation reconciliation did not claim visual closure.
+- The 26/26 guide journeys retain local Browser/API/MongoDB evidence and the last complete quality gate remains green. It was not rerun because this change only reconciles quality evidence and adds its validator.
+- Remaining work requires one of six explicit owner decisions: safe account avatar/media, safe domain fields and aggregates, media URL/assets, missing mutations/routes, replacement of legacy phone-era frames, or the owning frame/approval for ADM-54. Demo remains enabled; no Production launch or purge ran.

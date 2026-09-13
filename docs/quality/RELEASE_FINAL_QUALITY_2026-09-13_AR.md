@@ -32,3 +32,11 @@
 - اختبارات صفحات SEK-07/08/09/10 المصاحبة لإصلاح canvas: AR/EN على 1551 و768 و393 بكسل، مع محاذاة العنوان والبانلز واحتواء أفقي كامل.
 
 وضع Demo بقي مفعّلًا، ولم تُنفذ أي عملية Production أو purge. حالة Figma الصارمة لم تتغير: 91/119، والمتبقي 28 شاشة تعتمد على عقود أو أصول أو قرارات خارجية معتمدة.
+
+## Goal-state reconciliation — 2026-09-13
+
+The strict design audit remains 91/119 (76.5%), with 28 screens open. A direct re-audit found that five screen records still cited superseded August failures; their 13 September repository repairs and AR/EN verification were already complete. Those records are now reconciled, and the repository revalidation queue is zero.
+
+All 28 open screens are covered by six shared external decision families in `docs/quality/figma_parity/EXTERNAL_BLOCKER_REGISTRY_2026-09-13.json`. The machine check `npm run figma:blockers:check` proves exact coverage against `CURRENT_COMPLETION_AUDIT.json`. The open screens remain `PARTIAL_EXTERNAL`; no documentation-only closure was claimed.
+
+The last complete local quality gate remains the release gate recorded above: API coverage 626/626, Web Vitest 447/447, Web Node 85/85, and passing lint, typecheck, build, budgets, API/OpenAPI/Postman, guide, dependency, and Agent Pack audits. No runtime code changed in this reconciliation, so the complete gate was not repeated.

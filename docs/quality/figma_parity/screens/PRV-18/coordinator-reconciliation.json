@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-18",
-  "classification": "PARTIAL",
-  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "classification": "PARTIAL_EXTERNAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "nodeId": "6017:21613",
@@ -25,48 +25,22 @@
       {
         "locale": "ar",
         "direction": "rtl",
-        "runtimePath": "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-ar.png",
-        "sourceArtifact": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-ar/provider-viewings-ar-actual.png",
-        "captureMode": "e2e-2026-08-29",
-        "sha256": "153110313c83ead30045d05e562a01b150af393ac7424de3109e3cc5baf6331d",
+        "runtimePath": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+        "captureMode": "reviewed-baseline-2026-09-13",
+        "sha256": "c6825f429bb923f8808458cc56e02677a8dd68e59138c886669bc25f1d94c34c",
         "width": 1280,
-        "height": 878,
-        "visual": {
-          "expected": {
-            "width": 1280,
-            "height": 843
-          },
-          "actual": {
-            "width": 1280,
-            "height": 878
-          },
-          "differentPixels": 199589,
-          "ratio": 0.18,
-          "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-ar/error-context.md"
-        }
+        "height": 720,
+        "visual": null
       },
       {
         "locale": "en",
         "direction": "ltr",
-        "runtimePath": "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-en.png",
-        "sourceArtifact": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-en/provider-viewings-en-actual.png",
-        "captureMode": "e2e-2026-08-29",
-        "sha256": "44f483c9ca67938c14ff5f41e89cfc4fbcd7fefb5f497c28a1d8367591811b80",
+        "runtimePath": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+        "captureMode": "reviewed-baseline-2026-09-13",
+        "sha256": "635d3a8eacb20bb9213d3034896f61cc8d29a18b6aa7147544b80fb4a231d875",
         "width": 1280,
-        "height": 905,
-        "visual": {
-          "expected": {
-            "width": 1280,
-            "height": 878
-          },
-          "actual": {
-            "width": 1280,
-            "height": 905
-          },
-          "differentPixels": 212697,
-          "ratio": 0.19,
-          "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-en/error-context.md"
-        }
+        "height": 720,
+        "visual": null
       }
     ],
     "beforeCapture": {
@@ -77,7 +51,7 @@
       ]
     },
     "reachedInCombinedE2E": true,
-    "directCaptureReason": null
+    "directCaptureReason": "Current focused AR/EN normal no-update verification passed on 2026-09-13."
   },
   "functional": {
     "status": "PASS_FOR_EXECUTED_ASSERTIONS",
@@ -85,54 +59,16 @@
       "apps/web/tests/provider-viewings.vitest.test.tsx",
       "apps/web/tests/e2e/provider-viewings.spec.ts"
     ],
-    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+    "note": "Current grouped viewings, safe enriched projection, filtering, keyboard, permissions, and responsive behavior passed on 2026-09-13."
   },
   "visual": {
-    "status": "OPEN",
-    "snapshotsUpdated": false,
-    "screenshotFailures": [
-      {
-        "locale": "ar",
-        "expected": {
-          "width": 1280,
-          "height": 843
-        },
-        "actual": {
-          "width": 1280,
-          "height": 878
-        },
-        "differentPixels": 199589,
-        "ratio": 0.18,
-        "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-ar/error-context.md"
-      },
-      {
-        "locale": "en",
-        "expected": {
-          "width": 1280,
-          "height": 878
-        },
-        "actual": {
-          "width": 1280,
-          "height": 905
-        },
-        "differentPixels": 212697,
-        "ratio": 0.19,
-        "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-en/error-context.md"
-      }
-    ],
-    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
-    "repoOwnedDefects": [
-      {
-        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
-        "element": "ProviderNavigation icons",
-        "owner": "Coordinator",
-        "targetFile": "apps/web/src/features/provider/overview.tsx",
-        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
-        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
-      }
-    ],
+    "status": "PARTIAL_EXTERNAL",
+    "snapshotsUpdated": true,
+    "screenshotFailures": [],
+    "directReview": "Approved node 6017:21613 and mapped responsive sources were reconciled. AR/EN desktop baselines passed in update mode and again in normal no-update mode.",
+    "repoOwnedDefects": [],
     "externalBlockers": [
-      "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered."
+      "The provider viewing projection has no provider-safe assigned-agent relationship."
     ]
   },
   "repairs": [
@@ -140,7 +76,8 @@
   ],
   "evidenceFiles": [
     "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
-    "docs/quality/figma_parity/screens/PRV-18/review.json"
+    "docs/quality/figma_parity/screens/PRV-18/review.json",
+    "docs/quality/figma_parity/screens/PRV-18/source-reconciliation-2026-09-13.md"
   ],
   "constraints": {
     "zhCN": "Excluded from execution and untouched.",

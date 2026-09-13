@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-13T16:00:00.000Z",
+  "baselineCommit": "6bc8dee7fc526cf454554c0561c2673380a148ef",
+  "authority": {
+    "completionAudit": "docs/quality/figma_parity/CURRENT_COMPLETION_AUDIT.json",
+    "screenReviews": "docs/quality/figma_parity/screens/<SCREEN_ID>/review.json",
+    "checkpoint": "docs/quality/RELEASE_RESUME_CHECKPOINT_2026-09-11_AR.md"
+  },
+  "auditSnapshot": {
+    "totalScreens": 119,
+    "closedScreens": 91,
+    "openScreens": [
+      "SEK-01",
+      "SEK-02",
+      "SEK-03",
+      "SEK-04",
+      "SEK-05",
+      "SEK-06",
+      "SEK-07",
+      "SEK-08",
+      "SEK-09",
+      "SEK-10",
+      "PRV-01",
+      "PRV-03",
+      "PRV-04",
+      "PRV-05",
+      "PRV-06",
+      "PRV-07",
+      "PRV-08",
+      "PRV-09",
+      "PRV-10",
+      "PRV-15",
+      "PRV-16",
+      "PRV-17",
+      "PRV-18",
+      "PRV-19",
+      "PRV-20",
+      "PRV-22-2",
+      "PRV-22-3",
+      "ADM-54"
+    ]
+  },
+  "rootCauses": [
+    {
+      "id": "EXT-IDENTITY-AVATAR",
+      "category": "SAFE_PROJECTION_AND_ASSET",
+      "affectedScreens": [
+        "SEK-01",
+        "SEK-02",
+        "SEK-03",
+        "SEK-06",
+        "SEK-09"
+      ],
+      "owner": "Profile/API contract owner and Product/Design",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Approve an optional sanitized avatar/media URL in the safe /me projection and provide the approved account avatar asset mapping, or approve initials as the canonical identity treatment.",
+      "recommendedOption": "Approve the optional sanitized avatar field with an initials fallback; do not hard-code identity artwork.",
+      "postDecisionFiles": [
+        "packages/contracts/src/auth/index.ts",
+        "apps/api/src/modules/identity",
+        "apps/web/src/features/seeker",
+        "docs/quality/figma_parity/screens/SEK-*"
+      ]
+    },
+    {
+      "id": "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "category": "SAFE_PROJECTION_FIELDS",
+      "affectedScreens": [
+        "PRV-01",
+        "PRV-03",
+        "PRV-04",
+        "PRV-05",
+        "PRV-06",
+        "PRV-07",
+        "PRV-09",
+        "PRV-10",
+        "PRV-15",
+        "PRV-16",
+        "PRV-17",
+        "PRV-18",
+        "PRV-19",
+        "PRV-20",
+        "PRV-22-2",
+        "SEK-03",
+        "SEK-04",
+        "SEK-05",
+        "SEK-07",
+        "SEK-08"
+      ],
+      "owner": "Product and domain contract/API owners",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Approve the exact provider, request, viewing, notification, preference, property, project, advertising, commission and contact fields that are safe and authoritative for each affected response.",
+      "recommendedOption": "Approve a minimal field matrix by domain and expose only fields backed by stored authoritative data; retire Figma-only sample values.",
+      "postDecisionFiles": [
+        "packages/contracts/src",
+        "apps/api/src/modules",
+        "apps/web/src/features/seeker",
+        "apps/web/src/features/provider",
+        "docs/quality/figma_parity/screens"
+      ]
+    },
+    {
+      "id": "EXT-MEDIA-PROJECTIONS",
+      "category": "MEDIA_ASSET_AND_URL_CONTRACT",
+      "affectedScreens": [
+        "SEK-03",
+        "SEK-05",
+        "SEK-06",
+        "PRV-08",
+        "PRV-10",
+        "PRV-15"
+      ],
+      "owner": "Media/API contract owner and Product/Design",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Provide approved property/provider/project media assets and sanitized public URL fields, including the intended fallback behavior.",
+      "recommendedOption": "Use the existing media storage/public URL boundary and approve optional URLs with the current truthful missing-media fallback.",
+      "postDecisionFiles": [
+        "packages/contracts/src",
+        "apps/api/src/modules/media",
+        "apps/web/src/features/seeker",
+        "apps/web/src/features/provider"
+      ]
+    },
+    {
+      "id": "EXT-MISSING-MUTATIONS",
+      "category": "MUTATION_OR_ROUTE_CONTRACT",
+      "affectedScreens": [
+        "SEK-05",
+        "SEK-10",
+        "PRV-22-3"
+      ],
+      "owner": "Product, Security and account/provider API owners",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Approve state transitions and security policy for viewing cancellation, richer account settings actions, password change and account deletion before enabling the controls.",
+      "recommendedOption": "Keep controls fail-closed until versioned mutations, authorization, audit, session revocation and rollback rules are approved together.",
+      "postDecisionFiles": [
+        "packages/contracts/src",
+        "apps/api/src/modules/auth",
+        "apps/api/src/modules/viewings",
+        "apps/web/src/features/seeker",
+        "apps/web/src/features/provider"
+      ]
+    },
+    {
+      "id": "EXT-LEGACY-IDENTITY-DESIGN",
+      "category": "CANONICAL_SOURCE_DECISION",
+      "affectedScreens": [
+        "SEK-09",
+        "SEK-10",
+        "PRV-22-2"
+      ],
+      "owner": "Product/Design and identity contract owner",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Provide current email-only canonical profile/settings frames or formally retire the historical phone fields.",
+      "recommendedOption": "Publish email-only replacement frames and retain the current contract prohibition on inferred phone identity.",
+      "postDecisionFiles": [
+        "docs/quality/figma_parity/source-metadata",
+        "docs/quality/figma_parity/screens/SEK-09",
+        "docs/quality/figma_parity/screens/SEK-10",
+        "docs/quality/figma_parity/screens/PRV-22-2"
+      ]
+    },
+    {
+      "id": "EXT-ADM54-OWNING-FRAME",
+      "category": "FIGMA_OWNING_FRAME_MISSING",
+      "affectedScreens": [
+        "ADM-54"
+      ],
+      "owner": "Project Owner and Product/Design",
+      "repositoryResolvableWithoutDecision": false,
+      "requiredInput": "Approve the owner-authored ADM-54 source and intended geometry, or recover an exact canonical owning frame.",
+      "recommendedOption": "Approve or replace the source before any bounded geometry repair or strict closure claim.",
+      "postDecisionFiles": [
+        "docs/quality/figma_parity/screens/ADM-54",
+        "apps/web/src/features/admin_settings"
+      ]
+    }
+  ],
+  "repositoryRevalidation": [],
+  "completionRule": "Repository revalidation is complete. Keep external root causes PARTIAL_EXTERNAL until their requiredInput is approved and implemented; documentation alone cannot close a screen.",
+  "repositoryRevalidationCompleted": [
+    {
+      "id": "REPO-PRV01-SHARED-NAV",
+      "affectedScreens": [
+        "PRV-01"
+      ],
+      "reason": "The screen review classifies the shared ProviderNavigation/dashboard shell difference as repository-owned while the aggregate audit labels the screen PARTIAL_EXTERNAL.",
+      "nextAction": "Recompare the current shared provider shell against node 6017:19032 and either repair it or record direct evidence that the defect is obsolete.",
+      "status": "COMPLETE",
+      "evidence": [
+        "docs/quality/figma_parity/screens/PRV-01/source-reconciliation-2026-09-13.md"
+      ]
+    },
+    {
+      "id": "REPO-SEK09-GEOMETRY",
+      "affectedScreens": [
+        "SEK-09"
+      ],
+      "reason": "The review still lists heading, identity, card and save-button geometry as current repository defects despite its external-only coordinator summary.",
+      "nextAction": "Run one current AR/EN comparison against node 6027:5677 and reconcile the conflicting review fields.",
+      "status": "COMPLETE",
+      "evidence": [
+        "docs/quality/figma_parity/screens/SEK-09/source-reconciliation-2026-09-13.md"
+      ]
+    },
+    {
+      "id": "REPO-PRV18-STALE-CLOSURE",
+      "affectedScreens": [
+        "PRV-18"
+      ],
+      "reason": "The review states that the customer-name prerequisite is resolved locally and asks for remaining canonical visual comparison/layout repair.",
+      "nextAction": "Perform the current AR/EN visual comparison and close or precisely reclassify the remaining layout delta.",
+      "status": "COMPLETE",
+      "evidence": [
+        "docs/quality/figma_parity/screens/PRV-18/source-reconciliation-2026-09-13.md"
+      ]
+    },
+    {
+      "id": "REPO-PRV22-REVIEW-STALE",
+      "affectedScreens": [
+        "PRV-22-2",
+        "PRV-22-3"
+      ],
+      "reason": "The review files say their visual assertions were never reached, while the later checkpoint records successful AR/EN desktop baselines and responsive containment after repairs.",
+      "nextAction": "Reconcile the review JSON with the newer evidence, then retain only the actual phone/password/deletion contract blockers.",
+      "status": "COMPLETE",
+      "evidence": [
+        "docs/quality/figma_parity/screens/PRV-22-2/source-reconciliation-2026-09-13.md",
+        "docs/quality/figma_parity/screens/PRV-22-3/source-reconciliation-2026-09-13.md"
+      ]
+    }
+  ]
+}

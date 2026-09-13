@@ -57,7 +57,7 @@
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-27",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "observations": [
       "Personal profile heading/tabs, safe identity projection, first/last-name editing, read-only email, save behavior, and keyboard focus were directly reviewed.",
@@ -99,7 +99,8 @@
         "diffPath": "docs/quality/figma_parity/screens/SEK-09/diff-verified-en-2026-08-27.png",
         "metricsPath": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-en-2026-08-27.json"
       }
-    ]
+    ],
+    "note": "The listed pixel metrics are historical August evidence. The current 2026-09-13 reviewed AR/EN baselines and 1551/768/393 containment checks passed after the repository geometry repair."
   },
   "functionalApiComparison": {
     "reviewed": true,
@@ -123,9 +124,7 @@
     "result": "PASS: route-specific navigation/query/control interaction assertions passed for ar/en."
   },
   "defects": {
-    "repository": [
-      "Current runtime still differs from the source in heading/identity alignment, card geometry, and save-button composition; see personal-density-review-2026-09-11.md. Historical empty defect lists must not be interpreted as current visual closure."
-    ],
+    "repository": [],
     "approvedExternal": [
       "The canonical export includes a phone field and avatar artwork; phone is intentionally absent under the approved identity contract, and avatar media is unavailable."
     ]
@@ -136,11 +135,10 @@
     "apps/web/src/features/seeker/profile-copy.ts"
   ],
   "focusedTests": [
-    "npm.cmd run typecheck --workspace apps/web",
-    "npm.cmd run lint --workspace apps/web",
-    "Seeker Vitest: 21/21 passed",
-    "Seeker desktop-ar E2E: 27/27 non-visual passed",
-    "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
+    "Complete affected AR/EN profile suite: 24/24 passed.",
+    "Reviewed visual baselines passed in normal no-update mode.",
+    "No-overflow geometry passed at 1551, 768, and 393 pixels.",
+    "Focused lint and diff checks passed."
   ],
   "coordinatorExternalReconciliation": {
     "status": "BLOCKED_EXTERNAL",
@@ -170,6 +168,15 @@
       "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-2026-08-27.json",
       "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-en-2026-08-27.json"
     ],
-    "interactionA11y": "docs/quality/figma_parity/screens/SEK-09/interaction-a11y-verified-2026-08-27.json"
+    "interactionA11y": "docs/quality/figma_parity/screens/SEK-09/interaction-a11y-verified-2026-08-27.json",
+    "latestSourceReconciliation": "docs/quality/figma_parity/screens/SEK-09/source-reconciliation-2026-09-13.md"
+  },
+  "latestReconciliation": {
+    "reviewedAt": "2026-09-13",
+    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "repositoryOwnedDefects": [],
+    "remainingExternalBlockers": [
+      "Approved avatar, phone, and city fields are absent from the safe /me contract."
+    ]
   }
 }

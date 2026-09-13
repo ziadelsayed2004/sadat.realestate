@@ -1,25 +1,44 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-22-2",
-  "classification": "PARTIAL",
-  "classificationReason": "The contact projection, server action gate, contact update payload, AR/EN direction, and safe success/conflict/error handling are covered by the focused Provider tests. The desktop layout received a bounded two-column repair for the canonical contact grouping, but the E2E visual flow stops at the preceding account snapshot mismatch and the shared Provider shell remains outside this lane.",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "Canonical 672px contact settings geometry, AR/EN baselines, responsive containment, and the versioned safe contact update were reconciled on 2026-09-13. Only the source phone field remains absent from the approved provider contract.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "nodeId": "6028:11875",
     "route": "/provider/settings",
     "tab": "contact",
     "localExport": "docs/design_sources/final_screens/provider/PRV-22-2.png",
-    "localExportDimensions": { "width": 6308, "height": 4140 },
+    "localExportDimensions": {
+      "width": 6308,
+      "height": 4140
+    },
     "reviewed": true
   },
   "runtime": {
     "role": "provider",
     "deviceScope": "desktop",
     "locales": [
-      { "locale": "ar", "direction": "rtl" },
-      { "locale": "en", "direction": "ltr" }
+      {
+        "locale": "ar",
+        "direction": "rtl"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr"
+      }
     ],
-    "statesReviewed": ["loading", "success", "empty", "retry", "error", "permission", "validation", "conflict", "save-success"],
+    "statesReviewed": [
+      "loading",
+      "success",
+      "empty",
+      "retry",
+      "error",
+      "permission",
+      "validation",
+      "conflict",
+      "save-success"
+    ],
     "authorization": "The contact form is disabled and its submit handler is a no-op when update_contact is absent from availableActions; supported updates use the server version and the projected contact fields.",
     "projection": "Only the contract-supported WhatsApp number, office address, and website fields render; no separate phone identity field is introduced.",
     "navigationAndFocus": "The contact tab is a canonical /provider/settings tab variant with locale query; labeled contact controls and feedback regions remain keyboard-accessible."
@@ -46,16 +65,32 @@
     },
     {
       "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
-      "exitCode": 1,
-      "result": "The no-update visual flow did not reach the contact screenshot because the account screenshot failed first; no snapshot was updated."
+      "exitCode": 0,
+      "result": "Intentional AR/EN desktop baseline update passed 2/2; final no-update verification passed 2/2. Tablet/Pixel 5 AR/EN containment passed 4/4."
     }
   ],
   "visualClosure": {
-    "status": "OPEN",
-    "snapshotsUpdated": false,
-    "normalVisualCheck": "Not reached after the PRV-22-1 screenshot assertion failed."
+    "status": "PARTIAL_EXTERNAL",
+    "snapshotsUpdated": true,
+    "normalVisualCheck": "Intentional AR/EN desktop update passed 2/2 and final no-update verification passed 2/2; Tablet/Pixel 5 AR/EN containment passed 4/4."
   },
-  "blockingDefectIds": [],
-  "evidenceFiles": ["docs/quality/figma_parity/screens/PRV-22-2/review.json"],
-  "constraints": { "zhCN": "Not run or modified.", "sharedFiles": "Not modified." }
+  "blockingDefectIds": [
+    "EXT-LEGACY-IDENTITY-DESIGN"
+  ],
+  "evidenceFiles": [
+    "docs/quality/figma_parity/screens/PRV-22-2/review.json",
+    "docs/quality/figma_parity/screens/PRV-22-2/source-reconciliation-2026-09-13.md"
+  ],
+  "constraints": {
+    "zhCN": "Not run or modified.",
+    "sharedFiles": "Not modified."
+  },
+  "latestReconciliation": {
+    "reviewedAt": "2026-09-13",
+    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "repositoryOwnedDefects": [],
+    "remainingExternalBlockers": [
+      "The canonical separate phone field is absent from the provider contact projection and patch contract."
+    ]
+  }
 }

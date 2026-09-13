@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-01",
-  "classification": "PARTIAL",
-  "classificationReason": "AR/EN desktop runtime and local canonical export were reviewed. ProviderNavigation and the dashboard shell remain a shared repository-owned parity defect and are outside this lane's writable scope.",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "Official node 6017:19032 was reconciled on 2026-09-13. Repository-owned shell, dashboard geometry, copy, semantic statuses, AR/EN visual baselines, and responsive containment passed; only aggregate views, per-property views, and six-month chart data remain absent from the safe provider contract.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -33,13 +33,16 @@
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-29",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "maskingUsed": false,
     "observations": [
-      "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
+      "Official node 6017:19032 was compared directly with the repaired Demo dashboard across AR/EN desktop, tablet, and mobile.",
+      "The shared navigation and dashboard geometry defects recorded in August are obsolete; unsupported aggregate view and chart values remain visibly unavailable."
     ],
-    "approvedExternalDifferences": []
+    "approvedExternalDifferences": [
+      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
+    ]
   },
   "structuredVisualComparison": {
     "reviewed": true,
@@ -74,27 +77,36 @@
   },
   "accessibility": {
     "reviewed": true,
-    "result": "Focused Provider AR/EN tests and desktop E2E accessibility/keyboard assertions passed where reached; visual closure remains partial."
+    "result": "PASS: current AR/EN desktop accessibility and keyboard assertions passed, with responsive containment verified on Tablet and Mobile."
   },
   "interactions": {
     "reviewed": true,
-    "result": "Focused Provider interaction and permission tests passed; normal no-update visual assertions remain failing."
+    "result": "PASS: current interaction, authentication failure, navigation, permission, and normal no-update visual assertions passed."
   },
   "defects": {
-    "repository": [
-      "PRV-01-SHARED-NAV"
-    ],
-    "approvedExternal": []
+    "repository": [],
+    "approvedExternal": [
+      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
+    ]
   },
   "filesRepaired": [],
   "focusedTests": [
-    "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
-    "npm.cmd run typecheck --workspace apps/web: exit 0.",
-    "Scoped Provider ESLint: exit 0.",
-    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+    "Provider overview Desktop AR/EN baseline update: 6/6 passed.",
+    "Provider overview Desktop AR/EN normal no-update verification: 6/6 passed.",
+    "Provider overview Tablet/Mobile AR/EN verification: 8/8 passed.",
+    "Client build/budgets, typecheck, focused lint, and diff checks passed."
   ],
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-01.png",
-    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated.",
+    "latestSourceReconciliation": "docs/quality/figma_parity/screens/PRV-01/source-reconciliation-2026-09-13.md"
+  },
+  "latestReconciliation": {
+    "reviewedAt": "2026-09-13",
+    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "repositoryOwnedDefects": [],
+    "remainingExternalBlockers": [
+      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
+    ]
   }
 }

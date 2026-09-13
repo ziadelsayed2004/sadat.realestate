@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-22-2",
-  "classification": "PARTIAL",
-  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "classification": "PARTIAL_EXTERNAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "nodeId": "6028:11875",
@@ -25,23 +25,21 @@
       {
         "locale": "ar",
         "direction": "rtl",
-        "runtimePath": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png",
-        "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png",
-        "captureMode": "direct-2026-08-29",
-        "sha256": "b527828d4e944fd06f981350d7e045565f6cf0b9c797afd566ba2a719a853f6e",
+        "runtimePath": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+        "captureMode": "reviewed-baseline-2026-09-13",
+        "sha256": "a937854706f0c512526fa7c61c771f3d63d6205511a6ce684694a5e9445b48a0",
         "width": 1280,
-        "height": 951,
+        "height": 720,
         "visual": null
       },
       {
         "locale": "en",
         "direction": "ltr",
-        "runtimePath": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png",
-        "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png",
-        "captureMode": "direct-2026-08-29",
-        "sha256": "ce1bf0deafb7b80d56b36ac4384070b0194f0faa9a83e011785408f4ca9944ea",
+        "runtimePath": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+        "captureMode": "reviewed-baseline-2026-09-13",
+        "sha256": "ae727e41b148616f69b717a373357f23232c6ced9f074d412916734ef2af6dca",
         "width": 1280,
-        "height": 951,
+        "height": 720,
         "visual": null
       }
     ],
@@ -49,8 +47,8 @@
       "status": "NOT_AVAILABLE",
       "reason": "No pre-Provider-lane capture was available; no before claim is made."
     },
-    "reachedInCombinedE2E": false,
-    "directCaptureReason": "PRV-22-2 and PRV-22-3 are captured by a separate deterministic settings-tab harness because the sequential account screenshot aborts first."
+    "reachedInCombinedE2E": true,
+    "directCaptureReason": "Current focused AR/EN normal no-update verification passed on 2026-09-13."
   },
   "functional": {
     "status": "PASS_FOR_EXECUTED_ASSERTIONS",
@@ -58,25 +56,16 @@
       "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
       "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
     ],
-    "note": "Focused AR/EN settings assertions and direct deterministic tab capture completed; the combined E2E sequence did not reach this tab after the PRV-22-1 screenshot failure."
+    "note": "AR/EN versioned contact-save behavior and fail-closed authorization passed with current baselines on 2026-09-13."
   },
   "visual": {
-    "status": "OPEN",
-    "snapshotsUpdated": false,
+    "status": "PARTIAL_EXTERNAL",
+    "snapshotsUpdated": true,
     "screenshotFailures": [],
-    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
-    "repoOwnedDefects": [
-      {
-        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
-        "element": "ProviderNavigation icons",
-        "owner": "Coordinator",
-        "targetFile": "apps/web/src/features/provider/overview.tsx",
-        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
-        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
-      }
-    ],
+    "directReview": "Canonical 672px settings geometry was reconciled; AR/EN desktop normal verification and Tablet/Pixel 5 containment passed.",
+    "repoOwnedDefects": [],
     "externalBlockers": [
-      "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field."
+      "The canonical separate phone field is absent from the provider contact projection and patch contract."
     ]
   },
   "repairs": [
@@ -84,7 +73,8 @@
     "apps/web/src/features/provider/settings.css"
   ],
   "evidenceFiles": [
-    "docs/quality/figma_parity/screens/PRV-22-2/review.json"
+    "docs/quality/figma_parity/screens/PRV-22-2/review.json",
+    "docs/quality/figma_parity/screens/PRV-22-2/source-reconciliation-2026-09-13.md"
   ],
   "constraints": {
     "zhCN": "Excluded from execution and untouched.",

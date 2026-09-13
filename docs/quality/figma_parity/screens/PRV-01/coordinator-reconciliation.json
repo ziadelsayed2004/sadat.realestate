@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-01",
-  "classification": "PARTIAL",
-  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "classification": "PARTIAL_EXTERNAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "nodeId": "6017:19032",
@@ -82,62 +82,16 @@
       "apps/web/tests/provider-overview.vitest.test.tsx",
       "apps/web/tests/e2e/provider-overview.spec.ts"
     ],
-    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+    "note": "Current AR/EN provider overview assertions, authentication failure, navigation, permission boundaries, and responsive containment passed on 2026-09-13."
   },
   "visual": {
-    "status": "OPEN",
-    "snapshotsUpdated": false,
-    "screenshotFailures": [
-      {
-        "locale": "ar",
-        "expected": {
-          "width": 1280,
-          "height": 810
-        },
-        "actual": {
-          "width": 1280,
-          "height": 1357
-        },
-        "differentPixels": 188884,
-        "ratio": 0.11,
-        "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/error-context.md"
-      },
-      {
-        "locale": "en",
-        "expected": {
-          "width": 1280,
-          "height": 810
-        },
-        "actual": {
-          "width": 1280,
-          "height": 1357
-        },
-        "differentPixels": 193594,
-        "ratio": 0.12,
-        "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/error-context.md"
-      }
-    ],
-    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
-    "repoOwnedDefects": [
-      {
-        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
-        "element": "ProviderNavigation icons",
-        "owner": "Coordinator",
-        "targetFile": "apps/web/src/features/provider/overview.tsx",
-        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
-        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
-      },
-      {
-        "id": "PRV-01-SAFE-DATA-BOUNDARY",
-        "element": "Dashboard metric/chart data",
-        "owner": "External contract/API boundary",
-        "targetFile": "apps/web/src/features/provider/overview.tsx",
-        "description": "The canonical export contains customer-request, views, booked, history, and chart values that are absent from the current safe Provider contract.",
-        "requiredRepair": "Obtain an approved safe contract projection before rendering those values; do not fabricate dashboard statistics."
-      }
-    ],
+    "status": "PARTIAL_EXTERNAL",
+    "snapshotsUpdated": true,
+    "screenshotFailures": [],
+    "directReview": "Official node 6017:19032 was reconciled with the repaired 1577px dashboard and current reviewed AR/EN baselines. Normal no-update desktop verification and tablet/mobile containment passed.",
+    "repoOwnedDefects": [],
     "externalBlockers": [
-      "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable."
+      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
     ]
   },
   "repairs": [
@@ -147,7 +101,8 @@
   ],
   "evidenceFiles": [
     "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
-    "docs/quality/figma_parity/screens/PRV-01/review.json"
+    "docs/quality/figma_parity/screens/PRV-01/review.json",
+    "docs/quality/figma_parity/screens/PRV-01/source-reconciliation-2026-09-13.md"
   ],
   "constraints": {
     "zhCN": "Excluded from execution and untouched.",
