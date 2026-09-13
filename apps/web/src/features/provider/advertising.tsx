@@ -373,7 +373,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
       <ProviderNavigation locale={locale} activePath={selectedRequestId === undefined ? '/provider/ads' : `/provider/ads/${selectedRequestId}`} authClient={authClient} />
       <div className="provider-dashboard__content">
         {!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : selectedRequestId === undefined ? <>
-          <div className="provider-dashboard__heading-row provider-advertising__heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.description}</p></div><Button onClick={() => { setMutationError(undefined); setCreateOpen(true); }}>{copy.create}</Button></div>
+          <div className="provider-dashboard__heading-row provider-advertising__heading"><div><h1>{copy.title}</h1><p>{copy.description}</p></div><Button onClick={() => { setMutationError(undefined); setCreateOpen(true); }}>{copy.create}</Button></div>
           <FilterBar copy={copy} draftStatus={draftStatus} onDraftStatus={setDraftStatus} onApply={() => { setAppliedStatus(draftStatus === 'all' ? undefined : draftStatus); setPage(1); }} onClear={() => { setDraftStatus('all'); setAppliedStatus(undefined); setPage(1); }} />
           {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
           {state === 'loading' || state === 'error' || state === 'retry' || state === 'permission' ? <StatePanel state={state} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}

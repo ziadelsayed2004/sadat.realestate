@@ -32,6 +32,10 @@
   background: var(--color-brand-primary);
 }
 
+.provider-advertising .provider-advertising__heading > .ui-button[data-state].ui-button--primary {
+  background: #17233d;
+}
+
 .provider-advertising .ui-button[data-state].ui-button--secondary,
 .provider-commission .ui-button[data-state].ui-button--secondary {
   color: var(--color-brand-secondary);

@@ -2325,8 +2325,8 @@
   },
   "provider/advertising-copy#getProviderAdvertisingCopy": {
     "eyebrow": "الإعلانات",
-    "title": "طلبات الإعلان",
-    "description": "تابع طلبات الإعلان والأسعار الإدارية وحالة إثبات الدفع من حسابك.",
+    "title": "طلبات الإعلانات",
+    "description": "اطلب الترويج لعقارك أو مشروعك وتابع التسعير والجدولة وحالة الإعلان.",
     "create": "طلب إعلان جديد",
     "refresh": "تحديث",
     "filtersLabel": "تصفية الطلبات",

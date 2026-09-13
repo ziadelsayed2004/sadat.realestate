@@ -2326,7 +2326,7 @@
   "provider/advertising-copy#getProviderAdvertisingCopy": {
     "eyebrow": "Advertising",
     "title": "Advertising requests",
-    "description": "Track advertising requests, administrative quotes, and payment-proof review from your account.",
+    "description": "Request promotion for your property or project and track pricing, scheduling, and advertising status.",
     "create": "New advertising request",
     "refresh": "Refresh",
     "filtersLabel": "Filter requests",

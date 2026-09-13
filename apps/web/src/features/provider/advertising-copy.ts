@@ -90,8 +90,8 @@ export interface ProviderAdvertisingCopy {
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> = {
   ar: {
     eyebrow: 'الإعلانات',
-    title: 'طلبات الإعلان',
-    description: 'تابع طلبات الإعلان والأسعار الإدارية وحالة إثبات الدفع من حسابك.',
+    title: 'طلبات الإعلانات',
+    description: 'اطلب الترويج لعقارك أو مشروعك وتابع التسعير والجدولة وحالة الإعلان.',
     create: 'طلب إعلان جديد',
     refresh: 'تحديث',
     filtersLabel: 'تصفية الطلبات',
@@ -138,7 +138,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
   en: {
     eyebrow: 'Advertising',
     title: 'Advertising requests',
-    description: 'Track advertising requests, administrative quotes, and payment-proof review from your account.',
+    description: 'Request promotion for your property or project and track pricing, scheduling, and advertising status.',
     create: 'New advertising request',
     refresh: 'Refresh',
     filtersLabel: 'Filter requests',

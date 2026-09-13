@@ -131,6 +131,9 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.locator('[data-screen-id="PRV-19"]')).toHaveAttribute('data-advertising-state', 'success');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(locale === 'ar' ? 'طلبات الإعلانات' : 'Advertising requests');
+    await expect(page.locator('.provider-advertising__heading h1 + p')).toHaveText(locale === 'ar' ? 'اطلب الترويج لعقارك أو مشروعك وتابع التسعير والجدولة وحالة الإعلان.' : 'Request promotion for your property or project and track pricing, scheduling, and advertising status.');
+    await expect(page.locator('.provider-advertising__heading > .ui-button')).toHaveCSS('background-color', 'rgb(23, 35, 61)');
     await expect(page.getByTestId('provider-advertising-row')).toBeVisible();
     await expect(page.getByRole('combobox', { name: /Status|الحالة|状态/u })).toBeVisible();
     const action = page.getByRole('link', { name: /View details|عرض التفاصيل|查看详情/u }).first();
