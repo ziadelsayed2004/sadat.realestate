@@ -682,3 +682,10 @@
 - Removed the redundant panel heading and aligned the active desktop tab to the source white raised treatment while preserving all functional controls and the 672px form card.
 - The shared profile suite passed 20/20 across AR/EN after the client build. A focused AR/EN responsive run passed 2/2 at 393, 768, and 1551 pixels; reviewed visual baselines, lint, bundle budget, and diff checks passed.
 - SEK-08 remains `PARTIAL_EXTERNAL` only because `/me` lacks approved seeker avatar/media. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-09 official-source reconciliation
+
+- Read official node `6027:5677` directly and aligned the safe fixture identity to `محمد أحمد سالم` / `Mohamed Ahmed Salem` and `m.salem@email.com`. The 672px card, active personal tab, editable first/last names, disabled email, validation, retry, permission, and save flows remain contract-shaped.
+- The source portrait, phone, and city are absent from `/me`; they were not invented. The source full-name control remains represented by independent first/last inputs because those are the only approved patch fields.
+- The complete affected AR/EN profile suite passed 24/24, including reviewed visual baselines and explicit no-overflow geometry at 393, 768, and 1551 pixels. Lint and diff checks passed.
+- SEK-09 remains `PARTIAL_EXTERNAL` for the missing approved avatar/phone/city contract. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.

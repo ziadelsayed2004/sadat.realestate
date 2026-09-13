@@ -14,14 +14,14 @@ function successMeta(requestId: string) {
   return { meta: { requestId } };
 }
 
-function profileData(locale: 'ar' | 'en', firstName = 'Mohamed') {
+function profileData(locale: 'ar' | 'en', firstName = locale === 'ar' ? 'محمد أحمد' : 'Mohamed Ahmed') {
   return {
     id: profileId,
     roleType: 'seeker',
     status: 'verified',
-    email: 'seeker@example.com',
+    email: 'm.salem@email.com',
     firstName,
-    lastName: 'Salem',
+    lastName: locale === 'ar' ? 'سالم' : 'Salem',
     locale
   };
 }
@@ -63,11 +63,12 @@ async function routeSession(page: import('@playwright/test').Page, allowed = tru
 }
 
 async function routeProfile(page: import('@playwright/test').Page): Promise<void> {
-  let firstName = 'Mohamed';
+  let firstName: string | undefined;
   await page.route('**/api/v1/me**', async route => {
     expect(route.request().headers().authorization).toBe('Bearer seeker.profile.token');
     const request = route.request();
     const url = new URL(request.url());
+    const locale = (url.searchParams.get('lang') ?? new URL(page.url()).searchParams.get('lang') ?? 'ar') as 'ar' | 'en';
     if (url.pathname.endsWith('/sessions')) {
       await route.fulfill({
         status: 200,
@@ -78,7 +79,6 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
     }
     const isPreferences = url.pathname.endsWith('/preferences');
     if (request.method() === 'GET') {
-      const locale = (url.searchParams.get('lang') ?? 'ar') as 'ar' | 'en';
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -92,7 +92,7 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ data: isPreferences ? preferencesData() : profileData('en', firstName), ...successMeta(isPreferences ? 'profile-preferences-update' : 'profile-update') })
+      body: JSON.stringify({ data: isPreferences ? preferencesData() : profileData(locale, firstName), ...successMeta(isPreferences ? 'profile-preferences-update' : 'profile-update') })
     });
   });
 }
@@ -100,7 +100,7 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
 test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-08, SEK-09, SEK-10' });
-    testInfo.annotations.push({ type: 'design-source', description: 'SEK-08.png (Figma node 6027:6850), SEK-09.png, SEK-10.png' });
+    testInfo.annotations.push({ type: 'design-source', description: 'SEK-08.png (Figma node 6027:6850), SEK-09.png (Figma node 6027:5677), SEK-10.png (Figma node 6027:6531)' });
     await routeSession(page);
     await routeProfile(page);
   });
@@ -328,6 +328,33 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       await page.setViewportSize(viewport);
       await page.goto(`/seeker/profile?tab=preferences&lang=${locale}`, { waitUntil: 'domcontentloaded' });
       await expect(page.locator('.seeker-profile__choice--chip[data-selected="true"]')).toHaveCount(4);
+      const geometry = await page.evaluate(() => {
+        const panel = document.querySelector<HTMLElement>('.seeker-profile__panel')?.getBoundingClientRect();
+        const save = document.querySelector<HTMLElement>('.seeker-profile__form > button')?.getBoundingClientRect();
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          panelLeft: panel?.left ?? -1,
+          panelRight: panel?.right ?? innerWidth + 1,
+          saveLeft: save?.left ?? -1,
+          saveRight: save?.right ?? innerWidth + 1
+        };
+      });
+      expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.panelLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
+      expect(geometry.panelRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.saveLeft, `${locale} at ${viewport.width}px`).toBeGreaterThanOrEqual(-1);
+      expect(geometry.saveRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+    }
+  });
+
+  test('keeps SEK-09 identity fields contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+    const locale = localeForProject();
+    for (const viewport of [{ width: 1551, height: 862 }, { width: 768, height: 900 }, { width: 393, height: 851 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/seeker/profile?tab=personal&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('#seeker-profile-first-name')).toHaveValue(locale === 'ar' ? 'محمد أحمد' : 'Mohamed Ahmed');
+      await expect(page.locator('#seeker-profile-email')).toHaveValue('m.salem@email.com');
       const geometry = await page.evaluate(() => {
         const panel = document.querySelector<HTMLElement>('.seeker-profile__panel')?.getBoundingClientRect();
         const save = document.querySelector<HTMLElement>('.seeker-profile__form > button')?.getBoundingClientRect();
