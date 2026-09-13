@@ -172,13 +172,13 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   );
 }
 
-function MetricCard({ label, value, tone, unavailable, unavailableBody }: { readonly label: string; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string }) {
+function MetricCard({ label, detail, value, tone, unavailable, unavailableBody }: { readonly label: string; readonly detail?: string | undefined; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string }) {
   return (
     <article className={`provider-dashboard__metric provider-dashboard__metric--${tone}`} data-testid={`provider-summary-${tone}`}>
       <span className="provider-dashboard__metric-icon" aria-hidden="true">{unavailable ? '—' : '•'}</span>
       <strong>{value}</strong>
       <span>{label}</span>
-      {unavailableBody ? <small title={unavailableBody}>{unavailableBody}</small> : null}
+      {detail ? <small title={unavailableBody}>{detail}</small> : unavailableBody ? <small title={unavailableBody}>{unavailableBody}</small> : null}
     </article>
   );
 }
@@ -252,6 +252,13 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
     views: copy.overview.unavailableMetric,
     updated: copy.overview.recentTitle
   };
+  const toneForStatus = (status: PropertyData['status']): 'success' | 'info' | 'warning' | 'error' | 'neutral' => {
+    if (status === 'published' || status === 'approved') return 'success';
+    if (status === 'pending_review') return 'info';
+    if (status === 'needs_changes') return 'warning';
+    if (status === 'rejected') return 'error';
+    return 'neutral';
+  };
   return (
     <div className="provider-dashboard__recent-table-wrap provider-properties__table-wrap">
       <table className="provider-dashboard__recent-table provider-properties__table" aria-label={copy.overview.recentTitle}>
@@ -261,9 +268,9 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
         <tbody>
           {data.properties.recent.map(property => (
             <tr key={property.id}>
-              <td><code>{property.slug}</code></td>
+              <td><code>{/^p-\d+$/iu.test(property.slug) ? property.slug.toUpperCase() : property.slug}</code></td>
               <td><strong>{localizedValue(property.name, locale)}</strong></td>
-              <td><Badge tone="success">{copy.propertyStatuses[property.status]}</Badge></td>
+              <td><Badge tone={toneForStatus(property.status)}>{copy.propertyStatuses[property.status]}</Badge></td>
               <td><span className="provider-dashboard__unavailable-value">{copy.unavailable}</span></td>
               <td><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
             </tr>
@@ -277,6 +284,7 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
 function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData; readonly locale: SupportedLocale }) {
   const copy = getProviderCopy(locale);
   const numberFormat = new Intl.NumberFormat(locale);
+  const details = copy.overview.cardDetails;
   const dashboardTitle = locale === 'ar' ? 'لوحة التحكم' : 'Dashboard';
   const dashboardWelcome = locale === 'ar' ? 'مرحباً، شركة عقارات النيل' : 'Welcome, Nile Real Estate';
   return (
@@ -292,14 +300,14 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
       <section className="provider-dashboard__summary" aria-labelledby="provider-summary-title">
         <div className="provider-dashboard__section-heading"><h2 id="provider-summary-title">{copy.overview.summaryTitle}</h2></div>
         <div className="provider-dashboard__metric-grid">
-          <MetricCard label={copy.overview.cards.total} value={numberFormat.format(data.properties.total)} tone="total" />
-          <MetricCard label={copy.overview.cards.published} value={numberFormat.format(data.properties.published)} tone="published" />
-          <MetricCard label={copy.overview.cards.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
-          <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
-          <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
-          <MetricCard label={copy.overview.cards.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
-          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
-          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
+          <MetricCard label={copy.overview.cards.total} detail={details?.total} value={numberFormat.format(data.properties.total)} tone="total" />
+          <MetricCard label={copy.overview.cards.published} detail={details?.published} value={numberFormat.format(data.properties.published)} tone="published" />
+          <MetricCard label={copy.overview.cards.pending} detail={details?.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
+          <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} detail={details?.needsChanges} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
+          <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} detail={details?.booked} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
+          <MetricCard label={copy.overview.cards.drafts} detail={details?.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
+          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} detail={details?.views} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} detail={details?.customerRequests} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
         </div>
       </section>
       <DashboardInsights locale={locale} />

@@ -2482,10 +2482,20 @@
       "addProperty": "Add property",
       "summaryTitle": "Property summary",
       "cards": {
-        "total": "All properties",
+        "total": "Total properties",
         "published": "Published",
         "pending": "Pending review",
         "drafts": "Drafts"
+      },
+      "cardDetails": {
+        "total": "Registered properties",
+        "published": "Active now",
+        "pending": "Awaiting approval",
+        "drafts": "Incomplete",
+        "needsChanges": "Awaiting changes",
+        "customerRequests": "This month",
+        "views": "During the month",
+        "booked": "Booked"
       },
       "additionalCards": {
         "needsChanges": "Needs changes",
@@ -2513,7 +2523,7 @@
         "views": "Views",
         "updated": "Added"
       },
-      "recentTitle": "Recently updated properties",
+      "recentTitle": "Recently added properties",
       "recentEmptyTitle": "No properties yet",
       "recentEmptyBody": "Start adding a property when your provider account is eligible.",
       "recentUnavailableTitle": "Properties are not available",

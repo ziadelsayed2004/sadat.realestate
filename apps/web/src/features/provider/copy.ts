@@ -13,6 +13,7 @@ export interface ProviderCopy {
     readonly addProperty: string;
     readonly summaryTitle: string;
     readonly cards: Readonly<Record<'total' | 'published' | 'pending' | 'drafts', string>>;
+    readonly cardDetails?: Readonly<Record<'total' | 'published' | 'pending' | 'drafts' | 'needsChanges' | 'customerRequests' | 'views' | 'booked', string>>;
     readonly additionalCards?: Readonly<Record<'needsChanges' | 'customerRequests' | 'views' | 'booked', string>>;
     readonly unavailableMetric: string;
     readonly unavailableMetricBody: string;
@@ -82,14 +83,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
       description: 'تابع حالة حسابك وعقاراتك من خلال بيانات الحساب الفعلية.',
       addProperty: 'إضافة عقار',
       summaryTitle: 'ملخص العقارات',
-      cards: { total: 'كل العقارات', published: 'منشورة', pending: 'قيد المراجعة', drafts: 'مسودات' },
+      cards: { total: 'إجمالي العقارات', published: 'المنشورة', pending: 'قيد المراجعة', drafts: 'المسودات' },
+      cardDetails: { total: 'عقار مسجل', published: 'نشطة الآن', pending: 'بانتظار الموافقة', drafts: 'غير مكتملة', needsChanges: 'بانتظار التعديل', customerRequests: 'هذا الشهر', views: 'خلال الشهر', booked: 'تم حجزها' },
       additionalCards: { needsChanges: 'تحتاج تعديل', customerRequests: 'طلبات العملاء', views: 'المشاهدات', booked: 'المحجوزة' },
       unavailableMetric: 'غير متاح',
       unavailableMetricBody: 'لا يقدم النظام الحالي هذا المؤشر في لوحة المزود.',
       chart: { title: 'المشاهدات والطلبات — آخر 6 أشهر', unavailable: 'لا توجد بيانات تاريخية في عقد المزود الحالي.' },
       quickActions: { title: 'إجراءات سريعة', properties: 'عقاراتي', addProperty: 'إضافة عقار', requests: 'طلبات العملاء', settings: 'الإعدادات' },
       recentColumns: { code: 'كود العقار', property: 'العنوان', status: 'الحالة', views: 'المشاهدات', updated: 'تاريخ الإضافة' },
-      recentTitle: 'آخر العقارات تحديثاً',
+      recentTitle: 'آخر العقارات المضافة',
       recentEmptyTitle: 'لا توجد عقارات بعد',
       recentEmptyBody: 'يمكنك بدء إضافة عقار عندما تكون حالة حساب المزود مؤهلة.',
       recentUnavailableTitle: 'لا يمكن عرض العقارات الآن',
@@ -173,14 +175,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
       description: 'Track your account and properties using the data available to your provider session.',
       addProperty: 'Add property',
       summaryTitle: 'Property summary',
-      cards: { total: 'All properties', published: 'Published', pending: 'Pending review', drafts: 'Drafts' },
+      cards: { total: 'Total properties', published: 'Published', pending: 'Pending review', drafts: 'Drafts' },
+      cardDetails: { total: 'Registered properties', published: 'Active now', pending: 'Awaiting approval', drafts: 'Incomplete', needsChanges: 'Awaiting changes', customerRequests: 'This month', views: 'During the month', booked: 'Booked' },
       additionalCards: { needsChanges: 'Needs changes', customerRequests: 'Customer requests', views: 'Views', booked: 'Booked' },
       unavailableMetric: 'Unavailable',
       unavailableMetricBody: 'This metric is not provided by the current provider contract.',
       chart: { title: 'Views and requests — last 6 months', unavailable: 'Historical dashboard data is not provided by the current provider contract.' },
       quickActions: { title: 'Quick actions', properties: 'My properties', addProperty: 'Add property', requests: 'Customer requests', settings: 'Settings' },
       recentColumns: { code: 'Property code', property: 'Property', status: 'Status', views: 'Views', updated: 'Added' },
-      recentTitle: 'Recently updated properties',
+      recentTitle: 'Recently added properties',
       recentEmptyTitle: 'No properties yet',
       recentEmptyBody: 'Start adding a property when your provider account is eligible.',
       recentUnavailableTitle: 'Properties are not available',

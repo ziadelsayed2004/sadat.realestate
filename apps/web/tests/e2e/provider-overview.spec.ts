@@ -47,8 +47,13 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
       body: JSON.stringify({
         data: {
           application: { applicationId: 'bbbbbbbbbbbbbbbbbbbbbbbb', providerType: 'individual_broker', status: 'approved', version: 2, availableActions: ['open_dashboard'] },
-          properties: { total: 3, published: 1, pendingReview: 1, needsChanges: 0, drafts: 1, recent: [{ id: 'cccccccccccccccccccccccc', kind: 'property', name: { ar: 'عقار المزود', en: 'Provider property' }, slug: 'provider-property', transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'published', active: true, version: 1, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-18T09:00:00.000Z', availableActions: [] }] },
-          activity: { customerRequests: 0, bookedViewings: 0 }
+          properties: { total: 14, published: 8, pendingReview: 2, needsChanges: 1, drafts: 2, recent: [
+            { id: 'ccccccccccccccccccccccc1', kind: 'property', name: { ar: 'شقة 3 غرف — الحي الأول', en: '3-bedroom apartment — First District' }, slug: 'p-1041', transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'published', active: true, version: 1, createdAt: '2025-07-15T08:00:00.000Z', updatedAt: '2025-07-15T09:00:00.000Z', availableActions: [] },
+            { id: 'ccccccccccccccccccccccc2', kind: 'property', name: { ar: 'فيلا مستقلة — المنطقة الراقية', en: 'Standalone villa — Premium District' }, slug: 'p-1038', transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'pending_review', active: true, version: 1, createdAt: '2025-07-12T08:00:00.000Z', updatedAt: '2025-07-12T09:00:00.000Z', availableActions: [] },
+            { id: 'ccccccccccccccccccccccc3', kind: 'property', name: { ar: 'مكتب إداري P200 — المنطقة الصناعية', en: 'P200 office — Industrial District' }, slug: 'p-1035', transactionType: 'rent', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'needs_changes', active: true, version: 1, createdAt: '2025-07-10T08:00:00.000Z', updatedAt: '2025-07-10T09:00:00.000Z', availableActions: [] },
+            { id: 'ccccccccccccccccccccccc4', kind: 'property', name: { ar: 'أرض 400م — الحي السابع', en: '400m land — Seventh District' }, slug: 'p-1030', transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' }, status: 'published', active: true, version: 1, createdAt: '2025-07-05T08:00:00.000Z', updatedAt: '2025-07-05T09:00:00.000Z', availableActions: [] }
+          ] },
+          activity: { customerRequests: 23, bookedViewings: 1 }
         },
         ...successMeta('provider-dashboard')
       })
@@ -75,10 +80,12 @@ test.describe('PRV-01 Provider Overview', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('[data-screen-id="PRV-01"]')).toBeVisible();
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
-    await expect(page.getByTestId('provider-summary-total')).toContainText('3');
-    await expect(page.getByTestId('provider-summary-published')).toContainText('1');
-    await expect(page.getByTestId('provider-summary-pending')).toContainText('1');
-    await expect(page.getByTestId('provider-summary-drafts')).toContainText('1');
+    await expect(page.getByTestId('provider-summary-total')).toContainText('14');
+    await expect(page.getByTestId('provider-summary-published')).toContainText('8');
+    await expect(page.getByTestId('provider-summary-pending')).toContainText('2');
+    await expect(page.getByTestId('provider-summary-drafts')).toContainText('2');
+    await expect(page.getByTestId('provider-summary-customer-requests')).toContainText('23');
+    await expect(page.locator('.provider-dashboard__recent-table tbody tr')).toHaveCount(4);
     await expect(page.locator('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider?lang=${locale}`);
     await expect(page.locator('.provider-dashboard__navigation a[data-active="true"]')).toContainText(locale === 'ar' ? 'لوحة التحكم' : 'Dashboard');
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|storageKey|accessToken|refreshToken/u);
@@ -158,7 +165,13 @@ test.describe('PRV-01 Provider Overview', () => {
       await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '56px');
       await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('position', 'fixed');
       await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(4);
-      await expect(page.locator('.provider-dashboard__metric-grid')).toHaveCSS('grid-template-columns', '181px 181px');
+      const metricColumns = await page.locator('.provider-dashboard__metric-grid').evaluate(element =>
+        getComputedStyle(element).gridTemplateColumns.split(' ').map(value => Number.parseFloat(value))
+      );
+      const expectedColumnWidth = (viewportWidth - 40) / 2;
+      expect(metricColumns).toHaveLength(2);
+      expect(metricColumns[0]).toBeCloseTo(expectedColumnWidth, 1);
+      expect(metricColumns[1]).toBeCloseTo(expectedColumnWidth, 1);
       const menu = page.locator('.provider-dashboard__menu-button');
       await menu.click();
       await expect(menu).toHaveAttribute('aria-expanded', 'true');

@@ -696,3 +696,10 @@
 - Email update, phone update, notification preferences, and account deletion have no approved mutation contracts. The runtime keeps supported projections honest and visibly marks unavailable controls instead of inventing writes.
 - Fixed Arabic and English session-date containment. Focused responsive checks passed 2/2 at 393, 768, and 1551 pixels, and both visual baselines passed normal verification after update. Translation sync, client build/bundle budget, typecheck, lint, and diff checks passed.
 - SEK-10 remains `PARTIAL_EXTERNAL` for missing seeker avatar/media and settings mutation contracts. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-01 official-source reconciliation
+
+- Read official node `6017:19032` directly and aligned the Demo dashboard to the eight source cards, the safe canonical totals, 23 customer requests, one booked viewing, four recent properties, their dates and statuses, and semantic status badge tones.
+- Removed the shared `[data-state]` collision from the dashboard chart. The 1577px frame now keeps its 240px rail, 56px top bar, 313.25px four-column metrics, and aligned 277px insight panels. Responsive columns derive from the actual viewport and remain contained on Tablet and Pixel 5.
+- Desktop AR/EN passed 6/6 during the intentional baseline update and 6/6 again in normal verification. Tablet/Mobile AR/EN passed 8/8; build/bundle budgets, typecheck, lint, and diff checks passed.
+- Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract and remain visibly unavailable. PRV-01 therefore stays `PARTIAL_EXTERNAL`; strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
