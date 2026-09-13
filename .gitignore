@@ -12,6 +12,7 @@ coverage/
 !/.env.production.example
 apps/web/test-results/
 apps/web/playwright-report/
+/test-results/
 .local/
 .tmp/
 .tmp-*
