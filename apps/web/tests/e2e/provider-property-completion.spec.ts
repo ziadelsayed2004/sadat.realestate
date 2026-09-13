@@ -39,7 +39,7 @@ function propertyFixture(overrides: Record<string, unknown> = {}) {
   return {
     id: PROPERTY_ID,
     kind: 'property',
-    name: { ar: 'Ø¹Ù‚Ø§Ø± Ø§Ù„Ù…Ø²ÙˆÙ‘Ø¯', en: 'Provider property',},
+    name: { ar: '\u0639\u0642\u0627\u0631 \u0627\u0644\u0645\u0632\u0648\u0651\u062f', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId: PROVIDER_ID, sourceType: 'individual_broker' },
@@ -174,21 +174,23 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await routeProperty(page);
     await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/submit`, async route => {
       expect(route.request().method()).toBe('POST');
-      expect(route.request().postDataJSON()).toEqual({ version: 2, reason: 'Provider submitted property for review' });
+      expect(route.request().postDataJSON()).toEqual({ version: 2, reason: locale === 'ar' ? 'إرسال العقار للمراجعة' : 'Provider submitted property for review' });
       await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(propertyFixture({ status: 'pending_review', availableActions: [] }), 'completion-submit') });
     });
     await page.goto(`/provider/properties/${PROPERTY_ID}/review?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-10"]')).toBeVisible();
+    await expect(page.getByText(locale === 'ar' ? 'عقار المزوّد' : 'Provider property')).toBeVisible();
     const submit = page.getByRole('button', { name: copy.submit });
     await expect(submit).toBeDisabled();
     await page.getByLabel(copy.data).check();
     await page.getByLabel(copy.authority).check();
     await page.getByLabel(copy.review).check();
     await expect(submit).toBeEnabled();
+    await hideSkipLink(page);
+    await expect(page).toHaveScreenshot(`provider-property-review-${locale}.png`, { fullPage: true });
     await submit.click();
     await expect(page.getByText(getProviderPropertyCompletionCopy(locale).review.submittedTitle)).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/internalNote|assignedTo|auditData|storageKey|refreshToken|accessToken/u);
-    await expect(page).toHaveScreenshot(`provider-property-review-${locale}.png`, { fullPage: true });
   });
 
   test('fails closed for session and property permission denial', async ({ page }) => {
@@ -301,6 +303,56 @@ test.describe('PRV-09 responsive Figma contract', () => {
 
     const viewportWidth = page.viewportSize()?.width ?? 0;
     const geometry = await screen.locator('.provider-property-completion__steps, .provider-property-completion__card, .provider-property-completion__contact-roles, .provider-property-completion__visibility, .provider-property-wizard__actions').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width };
+    }));
+    for (const rect of geometry) {
+      expect(rect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(rect.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(rect.width).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    if (viewportWidth === 402) {
+      await expect(screen.locator('.provider-property-wizard__intro')).toBeHidden();
+      const actions = screen.locator('.provider-property-wizard__actions button:visible');
+      const actionRects = await actions.evaluateAll(elements => elements.map(element => {
+        const rect = element.getBoundingClientRect();
+        return { width: rect.width, top: rect.top };
+      }));
+      expect(actionRects).toHaveLength(2);
+      actionRects.forEach(rect => expect(rect.width).toBeGreaterThan(300));
+      expect(actionRects[1]!.top).toBeLessThan(actionRects[0]!.top);
+    } else {
+      await expect(screen.locator('#provider-property-completion-title')).toBeVisible();
+    }
+  });
+});
+
+test.describe('PRV-10 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-10' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:116846 (1024px); mobile node 6017:118851 (402px)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 1492 } : { width: 402, height: 1500 });
+  });
+
+  test('keeps the safe review sections, confirmations, and submission actions inside the viewport', async ({ page }) => {
+    const locale = localeForProject();
+    await routeSession(page);
+    await routeProperty(page);
+
+    const response = await page.goto(`/provider/properties/${PROPERTY_ID}/review?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+    const screen = page.locator('[data-screen-id="PRV-10"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(screen.locator('.provider-property-completion__steps li[aria-current="step"]')).toContainText('8');
+    await expect(screen.locator('.provider-property-completion__review-section')).toHaveCount(4);
+    await expect(screen.locator('.provider-property-completion__checks input')).toHaveCount(3);
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await screen.locator('.provider-property-completion__steps, .provider-property-completion__card, .provider-property-completion__review-section, .provider-property-completion__checks, .provider-property-wizard__actions').evaluateAll(elements => elements.map(element => {
       const rect = element.getBoundingClientRect();
       return { left: rect.left, right: rect.right, width: rect.width };
     }));

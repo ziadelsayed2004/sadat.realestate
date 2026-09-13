@@ -427,20 +427,43 @@ function ReviewView({
   const serverCanSubmit = property.availableActions.includes('submit');
   const canSubmit = serverCanSubmit && missing.length === 0 && checks.data && checks.authority && checks.review;
   const submittedView = submitted || property.status === 'pending_review';
+  const propertyCopy = getProviderPropertyCopy(locale);
+  const propertyName = property.name[locale] ?? property.name.en ?? property.name.ar ?? property.slug;
+  const unavailable = propertyCopy.wizard.unavailable;
+  const locationValue = property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : unavailable);
+  const priceValue = property.price === undefined ? unavailable : `${property.price.amount} ${property.price.currency}`;
   return (
-    <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
+    <form className="provider-property-completion__form" data-form-step="review" onSubmit={onSubmit} noValidate>
       <CompletionPageIntro copy={copy} />
+      <StepRail step="review" locale={locale} />
       {submittedView ? <section className="provider-property-completion__submitted" role="status"><h2>{review.submittedTitle}</h2><p>{review.submittedBody}</p><strong>{review.submittedStatus}</strong></section> : null}
       <section className="provider-property-completion__card" aria-labelledby="provider-property-review-summary">
         <h2 id="provider-property-review-summary">{review.safeProjectionTitle}</h2>
         <p>{review.safeProjectionBody}</p>
-        <dl className="provider-property-completion__summary">
-          <div><dt>{review.status}</dt><dd>{getProviderPropertyCopy(locale).wizard.statusLabels[property.status]}</dd></div>
-          <div><dt>{review.location}</dt><dd>{property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : '—')}</dd></div>
-          <div><dt>{review.price}</dt><dd>{property.price === undefined ? '—' : `${property.price.amount} ${property.price.currency}`}</dd></div>
-          <div><dt>{review.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? '—'}</dd></div>
-          <div><dt>{review.media}</dt><dd>{media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
-        </dl>
+        <section className="provider-property-completion__review-section" aria-labelledby="provider-property-review-basic">
+          <h3 id="provider-property-review-basic">{propertyCopy.wizard.basicTitle}</h3>
+          <dl className="provider-property-completion__summary">
+            <div><dt>{propertyCopy.wizard.labels.name}</dt><dd>{propertyName}</dd></div>
+            <div><dt>{propertyCopy.wizard.labels.transaction}</dt><dd>{propertyCopy.wizard.transactionLabels[property.transactionType]}</dd></div>
+            <div><dt>{propertyCopy.wizard.labels.kind}</dt><dd>{propertyCopy.wizard.kindLabels[property.kind]}</dd></div>
+            <div><dt>{review.status}</dt><dd>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
+          </dl>
+        </section>
+        <section className="provider-property-completion__review-section" aria-labelledby="provider-property-review-location">
+          <h3 id="provider-property-review-location">{review.location}</h3>
+          <dl className="provider-property-completion__summary"><div><dt>{review.location}</dt><dd>{locationValue}</dd></div></dl>
+        </section>
+        <section className="provider-property-completion__review-section" aria-labelledby="provider-property-review-price">
+          <h3 id="provider-property-review-price">{review.price}</h3>
+          <dl className="provider-property-completion__summary"><div><dt>{review.price}</dt><dd>{priceValue}</dd></div></dl>
+        </section>
+        <section className="provider-property-completion__review-section" aria-labelledby="provider-property-review-contact">
+          <h3 id="provider-property-review-contact">{review.contact}</h3>
+          <dl className="provider-property-completion__summary">
+            <div><dt>{review.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? unavailable}</dd></div>
+            <div><dt>{review.media}</dt><dd>{media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
+          </dl>
+        </section>
       </section>
       {!submittedView && missing.length > 0 ? <section className="provider-property-completion__missing" role="alert"><h2>{review.missingTitle}</h2><p>{review.missingBody}</p><ul>{missing.map(item => <li key={item}>{item}</li>)}</ul></section> : null}
       {!submittedView && !serverCanSubmit ? <section className="provider-property-completion__notice" role="status"><strong>{review.notSubmittableTitle}</strong><p>{review.notSubmittableBody}</p></section> : null}
@@ -454,7 +477,7 @@ function ReviewView({
         {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{review.missingTitle}</strong> {review.missingBody}</p> : null}
       </> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
-      <div className="provider-property-wizard__actions"><Button type="button" variant="secondary" onClick={onBack} disabled={mutationState === 'saving'}>{copy.back}</Button>{!submittedView && serverCanSubmit ? <Button type="submit" loading={mutationState === 'saving'} disabled={!canSubmit}>{mutationState === 'saving' ? review.submitting : review.submit}</Button> : null}</div>
+      <div className="provider-property-wizard__actions"><Button type="button" variant="secondary" data-action="back" onClick={onBack} disabled={mutationState === 'saving'}>{copy.back}</Button>{!submittedView && serverCanSubmit ? <Button type="submit" data-action="submit" loading={mutationState === 'saving'} disabled={!canSubmit}>{mutationState === 'saving' ? review.submitting : review.submit}</Button> : null}</div>
     </form>
   );
 }
@@ -467,7 +490,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const [media, setMedia] = useState<readonly PropertyMediaData[]>([]);
   const [contact, setContact] = useState<ContactForm>(() => contactFromProperty(initialData, locale));
   const [checks, setChecks] = useState<Checks>({ data: false, authority: false, review: false });
-  const [reason, setReason] = useState('Provider submitted property for review');
+  const [reason, setReason] = useState(locale === 'ar' ? 'إرسال العقار للمراجعة' : 'Provider submitted property for review');
   const [attempt, setAttempt] = useState(0);
   const [mutationState, setMutationState] = useState<MutationState>('idle');
   const [mutationMessage, setMutationMessage] = useState<string | undefined>();
@@ -640,10 +663,10 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   ) : null;
 
   return (
-    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={step === 'media' || step === 'contact' ? 'desktop/tablet/mobile' : 'desktop'}>
-      <ProviderNavigation locale={locale} activePath={step === 'media' || step === 'contact' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={!validationState ? 'desktop/tablet/mobile' : 'desktop'}>
+      <ProviderNavigation locale={locale} activePath={!validationState ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
-        {step === 'media' || step === 'contact' ? null : <StepRail step={step} locale={locale} />}
+        {validationState ? <StepRail step={step} locale={locale} /> : null}
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}
       </div>

@@ -439,7 +439,7 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 .public-site-footer__main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-inline-size:80rem;margin-inline:auto;padding:2.5rem 2rem}
 .public-site-footer__desktop-description,.public-site-footer__desktop-legal{display:inline}
 .public-site-footer__mobile-description,.public-site-footer__mobile-policy{display:none}
-.public-site-footer__contact-links a:nth-child(2),.public-site-footer__social a:nth-child(n+4){display:inline-grid}
+.public-site-footer__contact-links a:nth-child(2),.public-site-footer__social a:nth-child(n+4){display:inline-grid;grid-auto-flow: column}
 .public-site-footer__mobile-social{display:none!important}
 .public-site-footer__contact-links img{display:block}
 .public-site-footer__follow{margin:0;border-block-start:1px solid rgb(255 255 255/.1)}
