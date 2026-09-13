@@ -3569,9 +3569,9 @@
         "reasonUnavailable": "The server did not provide an additional reason."
       },
       "rejected": {
-        "title": "Property was not approved",
-        "body": "This property did not meet the administration criteria in the current review.",
-        "reasonLabel": "Rejection reason",
+        "title": "Property approval failed",
+        "body": "Unfortunately, this property did not meet the platform listing criteria.",
+        "reasonLabel": "Rejection reason:",
         "reasonUnavailable": "The server did not provide a decision reason."
       },
       "approved": {
@@ -3605,6 +3605,7 @@
     },
     "actions": {
       "back": "Back to my properties",
+      "contactSupport": "Contact support",
       "viewProperty": "View property",
       "viewPublic": "View public page",
       "supportUnavailable": "A support route is not available in the current contract.",

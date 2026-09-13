@@ -122,17 +122,39 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
     }
   });
 
-  test('renders the rejected state with its safe reason and no unsupported action', async ({ page }) => {
+  test('renders the rejected state with its server reason and unavailable support control', async ({ page }) => {
     const locale = localeForProject();
     const copy = getProviderPropertyStateCopy(locale);
+    const reviewReason = locale === 'ar'
+      ? 'العقار لا يستوفي معايير الجودة المطلوبة لإدراجه في المنصة. الصور المرفوعة غير واضحة والبيانات المُدخلة غير مكتملة. لإعادة التقديم، يرجى مراجعة المتطلبات والتواصل مع فريق الدعم إذا احتجت مساعدة.'
+      : 'The property does not meet the quality standards required for listing. The uploaded images are unclear and the entered data is incomplete. Review the requirements before resubmitting and contact support if you need help.';
     await routeSession(page);
-    await routeProperty(page, { status: 'rejected', availableActions: [], reviewReason: 'Missing approved media.' });
+    await routeProperty(page, { status: 'rejected', availableActions: [], reviewReason });
     await page.goto(`/provider/properties/${PROPERTY_ID}/rejected?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-13"]')).toBeVisible();
+    await expect(page.locator('[data-screen-id="PRV-13"]')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
     await expect(page.getByRole('heading', { name: copy.statuses.rejected.title, level: 1 })).toBeVisible();
-    await expect(page.getByText('Missing approved media.')).toBeVisible();
-    await expect(page.getByText(copy.actions.supportUnavailable)).toBeVisible();
+    await expect(page.getByText(reviewReason)).toBeVisible();
+    await expect(page.locator('[data-provider-nav="addProperty"] a')).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('button', { name: copy.actions.contactSupport })).toBeDisabled();
+    await expect(page.locator('.provider-property-state__card, .provider-property-state__safe, .provider-property-state__unavailable')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-property-rejected-${locale}.png`, { fullPage: true });
+    for (const viewport of [{ width: 402, height: 780 }, { width: 1024, height: 900 }]) {
+      await page.setViewportSize(viewport);
+      await expect.poll(() => page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        contained: ['.provider-property-state__main--rejected', '.provider-property-state__rejected-card', '.provider-property-state__rejected-actions'].every(selector => {
+          const bounds = document.querySelector(selector)?.getBoundingClientRect();
+          return bounds !== undefined && bounds.left >= -0.5 && bounds.right <= document.documentElement.clientWidth + 0.5;
+        })
+      }))).toEqual({ documentWidth: viewport.width, viewportWidth: viewport.width, contained: true });
+      if (viewport.width === 402) {
+        const back = page.locator('[data-action="back"]');
+        const support = page.locator('[data-action="support"]');
+        await expect.poll(async () => (await back.boundingBox())?.y ?? 0).toBeLessThan((await support.boundingBox())?.y ?? 0);
+      }
+    }
   });
 
   test('renders the published state without fabricating views and exposes the public route', async ({ page }) => {

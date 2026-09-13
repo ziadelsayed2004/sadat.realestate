@@ -106,6 +106,26 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
     );
   }
 
+  if (status === 'rejected') {
+    return (
+      <main className="provider-property-state__main provider-property-state__main--rejected" data-state-layout="rejected" aria-labelledby="provider-property-state-title">
+        <span className="provider-property-state__rejected-icon" aria-hidden="true">×</span>
+        <div className="provider-property-state__intro">
+          <h1 id="provider-property-state-title">{statusCopy.title}</h1>
+          <p>{statusCopy.body}</p>
+        </div>
+        <section className="provider-property-state__rejected-card" aria-labelledby="provider-property-state-reason">
+          <h2 id="provider-property-state-reason">{statusCopy.reasonLabel}</h2>
+          <p>{property.reviewReason ?? statusCopy.reasonUnavailable}</p>
+        </section>
+        <div className="provider-property-state__actions provider-property-state__rejected-actions">
+          <a className="provider-dashboard__primary-action" data-action="back" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
+          <Button type="button" variant="secondary" data-action="support" title={copy.actions.supportUnavailable} disabled>{copy.actions.contactSupport}</Button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="provider-property-state__main" aria-labelledby="provider-property-state-title">
       <div className="provider-property-state__intro">
@@ -185,8 +205,8 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
   }, [attempt, initialData, loadAction, propertyId, route, sessionRole, session.status]);
 
   return (
-    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope={route === 'submitted' ? 'desktop/tablet/mobile' : 'desktop'}>
-      <ProviderNavigation locale={locale} activePath={route === 'submitted' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope={route === 'submitted' || route === 'rejected' ? 'desktop/tablet/mobile' : 'desktop'}>
+      <ProviderNavigation locale={locale} activePath={route === 'submitted' || route === 'rejected' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} loadingVariant="cards" /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

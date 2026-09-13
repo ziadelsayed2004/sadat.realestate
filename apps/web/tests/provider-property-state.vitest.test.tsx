@@ -49,18 +49,20 @@ describe('provider property submission and state screens', () => {
 
     expect(document.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull();
     expect(screen.getByRole('heading', { name: copy.statuses[status].title, level: 1 })).toBeInTheDocument();
-    if (route === 'submitted') expect(screen.queryByText(copy.labels.unavailable)).not.toBeInTheDocument();
-    else expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
+    if (route === 'published') expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
+    else expect(screen.queryByText(copy.labels.unavailable)).not.toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/reviewedBy|assignedTo|auditData|storageKey|refreshToken|accessToken/u);
   });
 
-  it('renders a rejection reason and does not invent a support or edit action', () => {
+  it('renders the rejection reason and exposes support only as an unavailable control', () => {
     const copy = getProviderPropertyStateCopy('en');
     renderWithLocale(<ProviderPropertyStatePage locale="en" session={session} authClient={authClient} route="rejected" propertyId={propertyId} initialData={property({ status: 'rejected', reviewReason: 'Missing approved media.', availableActions: [] })} />, { locale: 'en' });
 
     expect(screen.getByText('Missing approved media.')).toBeInTheDocument();
-    expect(screen.getByText(copy.actions.supportUnavailable)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: copy.actions.contactSupport })).toBeDisabled();
+    expect(screen.getByRole('button', { name: copy.actions.contactSupport })).toHaveAttribute('title', copy.actions.supportUnavailable);
     expect(screen.queryByRole('link', { name: getProviderCopy('en').properties.edit })).not.toBeInTheDocument();
+    expect(document.querySelector('.provider-property-state__card, .provider-property-state__safe')).toBeNull();
   });
 
   it('renders the published public-page action only for published server state', () => {

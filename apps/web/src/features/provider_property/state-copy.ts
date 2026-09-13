@@ -36,6 +36,7 @@ export interface ProviderPropertyStateCopy {
   };
   readonly actions: {
     readonly back: string;
+    readonly contactSupport: string;
     readonly viewProperty: string;
     readonly viewPublic: string;
     readonly supportUnavailable: string;
@@ -60,13 +61,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
     },
     statuses: {
       pending_review: { title: 'تم إرسال العقار للمراجعة', body: 'سيراجع فريق عقارات السادات بيانات العقار في أقرب وقت ممكن، وسيتم إشعارك بالنتيجة.', reasonLabel: 'سبب الإرسال', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' },
-      rejected: { title: 'لم يتم اعتماد العقار', body: 'لم يستوف هذا العقار معايير الإدارة في المراجعة الحالية.', reasonLabel: 'سبب الرفض', reasonUnavailable: 'لم يرسل الخادم سببًا للقرار.' },
+      rejected: { title: 'تعذر اعتماد العقار', body: 'للأسف، لم يستوفِ هذا العقار معايير الإدراج في المنصة.', reasonLabel: 'سبب الرفض:', reasonUnavailable: 'لم يرسل الخادم سببًا للقرار.' },
       approved: { title: 'تم اعتماد العقار', body: 'تم اعتماد العقار من فريق المراجعة، ولم يقدّم الخادم إجراء نشر لمقدم الخدمة.', reasonLabel: 'سبب الاعتماد', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' },
       published: { title: 'تم نشر العقار', body: 'العقار متاح للعرض العام على منصة عقارات السادات.', reasonLabel: 'آخر سبب للمراجعة', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' },
       hidden: { title: 'العقار غير ظاهر حاليًا', body: 'العقار محفوظ في حسابك لكنه غير متاح للعرض العام وفق حالته الحالية.', reasonLabel: 'سبب الحالة', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' }
     },
     labels: { reference: 'المرجع', submittedAt: 'تاريخ الإرسال', reviewedAt: 'تاريخ المراجعة', status: 'الحالة', views: 'المشاهدات', unavailable: 'غير متاح', safeTitle: 'بيانات آمنة', safeBody: 'يظهر هذا العرض فقط بيانات عقد العقار المسموح بها لمقدم الخدمة.' },
-    actions: { back: 'العودة إلى عقاراتي', viewProperty: 'عرض العقار', viewPublic: 'عرض الصفحة العامة', supportUnavailable: 'لا يتوفر مسار دعم في العقد الحالي.', retry: 'إعادة المحاولة' }
+    actions: { back: 'العودة إلى عقاراتي', contactSupport: 'التواصل مع الدعم', viewProperty: 'عرض العقار', viewPublic: 'عرض الصفحة العامة', supportUnavailable: 'لا يتوفر مسار دعم في العقد الحالي.', retry: 'إعادة المحاولة' }
   },
   en: {
     validation: {
@@ -84,13 +85,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
     },
     statuses: {
       pending_review: { title: 'Property submitted for review', body: 'The Sadat Real Estate review team will review the property data as soon as possible and notify you of the result.', reasonLabel: 'Submission reason', reasonUnavailable: 'The server did not provide an additional reason.' },
-      rejected: { title: 'Property was not approved', body: 'This property did not meet the administration criteria in the current review.', reasonLabel: 'Rejection reason', reasonUnavailable: 'The server did not provide a decision reason.' },
+      rejected: { title: 'Property approval failed', body: 'Unfortunately, this property did not meet the platform listing criteria.', reasonLabel: 'Rejection reason:', reasonUnavailable: 'The server did not provide a decision reason.' },
       approved: { title: 'Property approved', body: 'The review team approved the property, but the provider contract does not expose a publish action.', reasonLabel: 'Approval reason', reasonUnavailable: 'The server did not provide an additional reason.' },
       published: { title: 'Property published', body: 'The property is available for public viewing on the Sadat Real Estate platform.', reasonLabel: 'Latest review reason', reasonUnavailable: 'The server did not provide an additional reason.' },
       hidden: { title: 'Property is currently hidden', body: 'The property remains in your account but is not available for public viewing in its current state.', reasonLabel: 'State reason', reasonUnavailable: 'The server did not provide an additional reason.' }
     },
     labels: { reference: 'Reference', submittedAt: 'Submitted at', reviewedAt: 'Reviewed at', status: 'Status', views: 'Views', unavailable: 'Unavailable', safeTitle: 'Safe data', safeBody: 'This view contains only provider-permitted property contract data.' },
-    actions: { back: 'Back to my properties', viewProperty: 'View property', viewPublic: 'View public page', supportUnavailable: 'A support route is not available in the current contract.', retry: 'Retry' }
+    actions: { back: 'Back to my properties', contactSupport: 'Contact support', viewProperty: 'View property', viewPublic: 'View public page', supportUnavailable: 'A support route is not available in the current contract.', retry: 'Retry' }
   },};
 
 export function getProviderPropertyStateCopy(locale: SupportedLocale): ProviderPropertyStateCopy {
