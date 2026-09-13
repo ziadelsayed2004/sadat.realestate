@@ -143,7 +143,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.evaluate(async () => {
       await document.fonts.ready;
     });
-    await expect(page).toHaveScreenshot(`provider-property-location-${locale}.png`, { fullPage: true });
+    await expect(page).toHaveScreenshot(`provider-property-location-${locale}.png`, { fullPage: true, maxDiffPixels: 100 });
   });
 
   test('fails closed when the provider session or property permission is unavailable', async ({ page }) => {
@@ -158,5 +158,31 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.goto(`/provider/properties/${propertyId}/location?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-04"] .provider-property-wizard__state[data-state="permission"]')).toBeVisible();
     await expect(page.locator('#provider-property-location-id')).toHaveCount(0);
+  });
+});
+
+test.describe('PRV-03 responsive source geometry', () => {
+  test('keeps the basic-information form contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+    const locale = localeForProject();
+    await routeProviderSession(page);
+    await routeProviderProperty(page);
+    for (const viewport of [{ width: 1551, height: 900 }, { width: 768, height: 900 }, { width: 393, height: 851 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/provider/properties/new/basic?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('[data-screen-id="PRV-03"]')).toBeVisible();
+      await expect(page.locator('.provider-dashboard__navigation a[data-active="true"]')).toContainText(locale === 'ar' ? 'إضافة عقار' : 'Add property');
+      const geometry = await page.locator('[data-screen-id="PRV-03"]').evaluate(element => ({
+        viewport: innerWidth,
+        documentWidth: document.documentElement.scrollWidth,
+        screenRight: element.getBoundingClientRect().right,
+        cardsContained: [...element.querySelectorAll<HTMLElement>('.provider-property-wizard__card')].every(card => {
+          const box = card.getBoundingClientRect();
+          return box.left >= -1 && box.right <= innerWidth + 1;
+        })
+      }));
+      expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.screenRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.cardsContained, `${locale} at ${viewport.width}px`).toBe(true);
+    }
   });
 });

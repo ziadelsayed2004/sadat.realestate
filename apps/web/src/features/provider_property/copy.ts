@@ -8,6 +8,8 @@ export interface ProviderPropertyCopy {
   readonly navLabel: string;
   readonly wizard: {
     readonly eyebrow: string;
+    readonly createTitle: string;
+    readonly createDescription: string;
     readonly basicTitle: string;
     readonly basicDescription: string;
     readonly locationTitle: string;
@@ -52,6 +54,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
     navLabel: 'إدارة العقارات',
     wizard: {
       eyebrow: 'إضافة عقار',
+      createTitle: 'إضافة عقار جديد',
+      createDescription: 'أكمل الخطوات التالية لإضافة عقارك للمنصة',
       basicTitle: 'البيانات الأساسية',
       basicDescription: 'أدخل البيانات التي يدعمها عقد إنشاء مسودة العقار الحالي.',
       locationTitle: 'الموقع',
@@ -100,6 +104,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
     navLabel: 'Property management',
     wizard: {
       eyebrow: 'Add property',
+      createTitle: 'Add a new property',
+      createDescription: 'Complete the following steps to add your property to the platform.',
       basicTitle: 'Basic information',
       basicDescription: 'Enter the fields supported by the current property-draft contract.',
       locationTitle: 'Location',

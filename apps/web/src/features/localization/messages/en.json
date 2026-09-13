@@ -3430,6 +3430,8 @@
     "navLabel": "Property management",
     "wizard": {
       "eyebrow": "Add property",
+      "createTitle": "Add a new property",
+      "createDescription": "Complete the following steps to add your property to the platform.",
       "basicTitle": "Basic information",
       "basicDescription": "Enter the fields supported by the current property-draft contract.",
       "locationTitle": "Location",

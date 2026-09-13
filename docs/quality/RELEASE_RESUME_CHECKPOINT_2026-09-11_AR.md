@@ -703,3 +703,10 @@
 - Removed the shared `[data-state]` collision from the dashboard chart. The 1577px frame now keeps its 240px rail, 56px top bar, 313.25px four-column metrics, and aligned 277px insight panels. Responsive columns derive from the actual viewport and remain contained on Tablet and Pixel 5.
 - Desktop AR/EN passed 6/6 during the intentional baseline update and 6/6 again in normal verification. Tablet/Mobile AR/EN passed 8/8; build/bundle budgets, typecheck, lint, and diff checks passed.
 - Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract and remain visibly unavailable. PRV-01 therefore stays `PARTIAL_EXTERNAL`; strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-03 official-source reconciliation
+
+- Read official node `6017:19499` directly. The add-property route now uses the source title/description, places the eight-step rail after the heading, keeps the 768px canvas and flat 16px card, and activates Add property in the provider rail.
+- Preserved the schema-shaped localized name, slug, kind, transaction, source ownership, optional relationships, and audit reason flow. Source descriptions, external reference, category/type, active, and featured fields are absent from `propertyCreateSchema`; no non-persisting controls or invented defaults were introduced.
+- The affected AR/EN suite passed 8/8 during the intentional baseline update and 8/8 again in normal verification, including create, location save, permission boundaries, and no-overflow geometry at 393, 768, and 1551 pixels. Build/budgets, translation sync, typecheck, lint, and diff checks passed.
+- PRV-03 stays `PARTIAL_EXTERNAL` for the missing create-contract fields. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
