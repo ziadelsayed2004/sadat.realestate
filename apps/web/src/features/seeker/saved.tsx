@@ -46,10 +46,6 @@ function mutationErrorFor(error: unknown): MutationError {
   return 'error';
 }
 
-function dateLabel(value: string, locale: SupportedLocale): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(value));
-}
-
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<SeekerSavedViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getSeekerSavedCopy(locale);
   const message = copy.states[state];
@@ -62,39 +58,43 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 }
 
 function SavedPropertyCard({ property, locale, copy, removing, onRemove }: { readonly property: FavoriteProperty; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getSeekerSavedCopy>; readonly removing: boolean; readonly onRemove: () => void }) {
+  const [compared, setCompared] = useState(false);
   const title = localizedText(property.name, locale) ?? property.slug;
   const transaction = property.transactionType === 'sale' ? copy.sale : copy.rent;
   const kind = property.kind === 'property' ? copy.property : copy.unit;
   const href = localeForSeekerPath(locale, `/properties/${property.slug}`);
-  const features = propertyFeatures(property, locale, { area: copy.area, bedrooms: copy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm });
+  const features = [
+    ...propertyFeatures(property, locale, { area: copy.area, bedrooms: copy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }),
+    ...(property.viewCount === undefined ? [] : [{ label: locale === 'ar' ? 'مشاهدات' : 'Views', value: property.viewCount }])
+  ];
   const location = property.locationName === undefined ? undefined : localizedText(property.locationName, locale);
   const sourceName = property.sourceName === undefined ? undefined : localizedText(property.sourceName, locale);
   const badges = [
-    ...(property.featured ? [locale === 'ar' ? 'مميز' : 'Featured'] : []),
+    ...(property.featured ? [locale === 'ar' ? 'مميز ⭐' : 'Featured ★'] : []),
     ...(property.installmentAvailable ? [locale === 'ar' ? 'تقسيط' : 'Installments'] : []),
     transaction
   ];
   return (
-    <PropertyCard
-      className="seeker-saved-property-card"
-      data-testid={`seeker-saved-property-${property.id}`}
-      title={title}
-      href={href}
-      price={formatMoney(property.price, locale)}
-      location={location}
-      badges={badges}
-      features={features}
-      image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
-      imageAlt={title}
-      mediaOverlay={property.publicCode ? <span className="seeker-saved-property-card__code">{property.publicCode}</span> : undefined}
-      source={<>{sourceName ? <span>{property.sourceVerified ? '✓ ' : ''}{sourceName}</span> : <span>{kind}</span>}<time dateTime={property.savedAt}>{copy.savedAt}: {dateLabel(property.savedAt, locale)}</time></>}
-      action={(
-        <div className="seeker-saved-property-card__actions">
-          <a className="seeker-saved-property-card__view" href={href}>{copy.view}</a>
-          <Button variant="danger" size="sm" loading={removing} onClick={onRemove}>{removing ? copy.removing : copy.remove}</Button>
-        </div>
-      )}
-    />
+    <div className="seeker-saved-property-entry" role="listitem">
+      <PropertyCard
+        className="seeker-saved-property-card"
+        data-testid={`seeker-saved-property-${property.id}`}
+        title={title}
+        href={href}
+        price={formatMoney(property.price, locale)}
+        location={location}
+        features={features}
+        image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
+        imageAlt={title}
+        mediaOverlay={<><span className="seeker-saved-property-card__badges">{badges.map(badge => <span key={badge}>{badge}</span>)}</span>{property.publicCode ? <span className="seeker-saved-property-card__code">{property.publicCode}</span> : null}</>}
+        source={sourceName ? <span className="seeker-saved-property-card__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{property.sourceVerified ? '✓ ' : ''}{sourceName}</span><small>{property.sourceType === 'developer_company' ? (locale === 'ar' ? 'المطور العقاري' : 'Property developer') : (locale === 'ar' ? 'مقدم العقار' : 'Property provider')}</small></span> : <span>{kind}</span>}
+        action={<button type="button" className="seeker-saved-property-card__compare" aria-pressed={compared} onClick={() => setCompared(value => !value)}>{compared ? (locale === 'ar' ? 'تمت الإضافة للمقارنة' : 'Added to compare') : (locale === 'ar' ? 'أضف للمقارنة' : 'Add to compare')}</button>}
+      />
+      <div className="seeker-saved-property-card__actions">
+        <a className="seeker-saved-property-card__view" href={href}>{copy.view}</a>
+        <Button variant="danger" size="sm" loading={removing} onClick={onRemove}>{removing ? copy.removing : copy.remove}</Button>
+      </div>
+    </div>
   );
 }
 

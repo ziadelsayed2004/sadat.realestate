@@ -662,3 +662,9 @@
 - The desktop runtime now uses the source-aligned 1024px three-track grid. Responsive geometry proves no horizontal overflow at 393, 768, and 1280 pixels, while the AR/EN visual baseline uses 1551×863.
 - The affected suite passed 8/8 across AR/EN and covers create, validation, reschedule, cancellation, focus, safe projection, and fail-closed authentication. Client build and bundle budget, localization consistency, lint, and diff checks passed.
 - SEK-05 remains `PARTIAL_EXTERNAL`: `/me` has no approved avatar/media field and the current safe list contract does not expose aggregate counts for all status tabs. No source counts or identity assets were invented, so the strict total remains 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-06 official-source reconciliation
+
+- Reconciled saved properties against official node `6027:4748`. The runtime now uses the four canonical Demo favorites and repository-owned property/provider assets, public codes, localized locations and titles, prices, five source features including views, badges, provider identity, and verification state.
+- The screen uses the source-aligned 1024px three-column canvas. Compare toggles accessibly, while view, removal, unavailable, empty, and denied-session behavior remains functional. The AR/EN suite passed 8/8, including no-overflow geometry at 393, 768, and 1280 pixels and the 1551×1228 visual baseline.
+- The old canonical property/provider media blocker is resolved. SEK-06 remains `PARTIAL_EXTERNAL` only because `/me` still lacks an approved seeker avatar/media field. Strict Figma totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
