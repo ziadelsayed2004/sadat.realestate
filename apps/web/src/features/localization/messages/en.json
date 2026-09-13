@@ -2410,7 +2410,7 @@
     "commission": {
       "eyebrow": "Commission",
       "title": "Commission",
-      "description": "The effective commission policy returned for your account.",
+      "description": "The commission policy applied to your account on Sadat Real Estate.",
       "appliedPolicy": "Current policy",
       "source": "Source",
       "effectiveAt": "Effective from",
