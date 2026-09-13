@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PRV-09",
   "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Business contact fields save through the active Provider contract and remain separate from identity; canonical roles, hours, and visibility fields are not represented.",
+  "classificationReason": "Contact roles, hours, visibility, draft save, and review advance use the active Provider contract; the canonical account/staff identity projection is not available.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -16,7 +16,7 @@
     "role": "provider",
     "requiredRole": "provider",
     "ownership": "provider-owned",
-    "approvedDevice": "desktop",
+    "approvedDevice": "desktop/tablet/mobile",
     "locales": [
       {
         "locale": "ar",
@@ -28,19 +28,22 @@
       }
     ],
     "beforeCapture": null,
-    "afterCaptures": [],
-    "captureNote": "No runtime image was copied into the evidence directory; the normal no-update Playwright run produced retained test-results artifacts."
+    "afterCaptures": [
+      "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-09-13-ar.png",
+      "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-09-13-en.png"
+    ],
+    "captureNote": "Reviewed AR/EN desktop baselines were copied after the successful normal verification run."
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-29",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "maskingUsed": false,
     "observations": [
       "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
     ],
     "approvedExternalDifferences": [
-      "Canonical contact roles, office hours, and visibility controls are absent from the active contact contract."
+      "The canonical named account/staff identities cannot be selected or auto-filled because the active provider projection has no account/staff directory."
     ]
   },
   "structuredVisualComparison": {
@@ -85,20 +88,23 @@
   "defects": {
     "repository": [],
     "approvedExternal": [
-      "Canonical contact roles, office hours, and visibility controls are absent from the active contact contract."
+      "The canonical named account/staff identities cannot be selected or auto-filled because the active provider projection has no account/staff directory."
     ]
   },
   "filesRepaired": [
-    "apps/web/src/features/provider_property/completion.tsx"
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/tests/e2e/provider-property-completion.spec.ts"
   ],
   "focusedTests": [
     "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
     "npm.cmd run typecheck --workspace apps/web: exit 0.",
     "Scoped Provider ESLint: exit 0.",
-    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+    "Provider contact desktop AR/EN baseline update: 2/2 passed; final Continue and Save draft verification: 4/4 passed.",
+    "Provider contact responsive AR/EN verification: 4/4 passed at 1024px and 402px."
   ],
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-09.png",
-    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+    "runtimeCheck": "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-09-13-{ar,en}.png"
   }
 }

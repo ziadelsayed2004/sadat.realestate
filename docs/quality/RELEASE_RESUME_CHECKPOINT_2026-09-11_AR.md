@@ -745,3 +745,10 @@
 - Preserved authenticated JPG/PNG upload, PDF floor-plan upload, MIME/extension and 10 MB validation, session-private ordering/removal, optimistic conflicts, owner permissions, storage-unavailable handling, and storage-identifier privacy.
 - The source variants disagree on minimum/maximum image counts and show virtual-tour, YouTube, and brochure fields absent from the provider media contract. No unsupported limits, URL controls, or existing-media records were fabricated.
 - Desktop baseline update passed 2/2 and normal verification passed 2/2. Responsive AR/EN verification passed 4/4 at 1024x1042 and 402x1209 with no horizontal overflow. Build/budgets, translation check, typecheck, focused lint, and diff checks passed. PRV-08 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-09 official-source reconciliation
+
+- Read official desktop node `6017:20561`, tablet mapping `6017:116610`, and mobile node `6017:118695` directly. The contact route now places the shared add-property heading before step 7 on desktop/tablet, highlights Add property, and uses compact mobile geometry.
+- Preserved contract-shaped roles, contact fields, preferred time and locale, internal notes, visibility switches, validation, optimistic versioning, and owner permissions. Restored Save draft through the approved contact mutation; it stays on the route while Continue saves and advances.
+- Corrected the stale payload assertion to cover `contactRole` and the three visibility flags, and added a browser proof for draft saving without navigation. Named account/staff identities remain unavailable because the provider projection has no account/staff directory; none were invented.
+- Desktop baseline update passed 2/2 and the final Continue/Save draft run passed 4/4. Responsive AR/EN verification passed 4/4 at 1024px and 402px with no horizontal overflow. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-09 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

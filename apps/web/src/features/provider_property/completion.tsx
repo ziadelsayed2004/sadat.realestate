@@ -204,6 +204,7 @@ function ContactView({
   form,
   onChange,
   onSubmit,
+  onSaveDraft,
   onBack,
   mutationState,
   mutationMessage,
@@ -214,6 +215,7 @@ function ContactView({
   readonly form: ContactForm;
   readonly onChange: (field: keyof ContactForm, value: string | boolean) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  readonly onSaveDraft: () => void;
   readonly onBack: () => void;
   readonly mutationState: MutationState;
   readonly mutationMessage: string | undefined;
@@ -222,8 +224,9 @@ function ContactView({
   const fields = copy.contact;
   const saving = mutationState === 'saving';
   return (
-    <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
+    <form className="provider-property-completion__form" data-form-step="contact" onSubmit={onSubmit} noValidate>
       <CompletionPageIntro copy={copy} />
+      <StepRail step="contact" locale={locale} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-contact-fields">
         <h2 id="provider-property-contact-fields">{copy.titles.contact}</h2>
         <p>{fields.supportedFieldsBody}</p>
@@ -262,8 +265,9 @@ function ContactView({
       {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{copy.validationTitle}</strong> {copy.validationBody}</p> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
       <div className="provider-property-wizard__actions">
-        <Button type="button" variant="secondary" onClick={onBack} disabled={saving}>{copy.back}</Button>
-        <Button type="submit" loading={saving}>{saving ? copy.saving : copy.continue}</Button>
+        <Button type="button" variant="secondary" data-action="back" onClick={onBack} disabled={saving}>{copy.back}</Button>
+        <Button type="button" variant="secondary" data-action="save" onClick={onSaveDraft} disabled={saving}>{copy.saveDraft}</Button>
+        <Button type="submit" data-action="continue" loading={saving}>{saving ? copy.saving : copy.continue}</Button>
       </div>
       <input type="hidden" value={locale} readOnly aria-hidden="true" />
     </form>
@@ -510,8 +514,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const goForward = () => { if (step === 'media') navigate(locale, propertyId, 'contact'); else if (step === 'contact') navigate(locale, propertyId, 'review'); };
 
   const handleContactChange = (field: keyof ContactForm, value: string | boolean) => setContact(current => ({ ...current, [field]: value }));
-  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const saveContact = async (advance: boolean) => {
     if (property === undefined) return;
     setValidationError(false);
     setMutationMessage(undefined);
@@ -537,11 +540,15 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
       setContact(contactFromProperty(next, locale));
       setMutationState('success');
       setMutationMessage(copy.saved);
-      navigate(locale, propertyId, 'review');
+      if (advance) navigate(locale, propertyId, 'review');
     } catch (error) {
       setMutationState(mutationError(error));
       setMutationMessage(error instanceof ApiClientError && error.status === 409 ? copy.versionConflict : mutationError(error) === 'permission' ? copy.permissionBody : copy.mutationError);
     }
+  };
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await saveContact(true);
   };
 
   const handleFile = async (kind: PropertyMediaKind, event: ChangeEvent<HTMLInputElement>) => {
@@ -628,15 +635,15 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const validationState = step === 'review' && property !== undefined && (property.status === 'draft' || property.status === 'needs_changes') && validationIssues.length > 0;
   const content = state === 'success' && property !== undefined ? (
     step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving'} message={mediaMessage} onBack={goBack} onContinue={goForward} />
-      : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
+      : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onSaveDraft={() => { void saveContact(false); }} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
         : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
   ) : null;
 
   return (
-    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={step === 'media' ? 'desktop/tablet/mobile' : 'desktop'}>
-      <ProviderNavigation locale={locale} activePath={step === 'media' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={step === 'media' || step === 'contact' ? 'desktop/tablet/mobile' : 'desktop'}>
+      <ProviderNavigation locale={locale} activePath={step === 'media' || step === 'contact' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
-        {step === 'media' ? null : <StepRail step={step} locale={locale} />}
+        {step === 'media' || step === 'contact' ? null : <StepRail step={step} locale={locale} />}
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}
       </div>

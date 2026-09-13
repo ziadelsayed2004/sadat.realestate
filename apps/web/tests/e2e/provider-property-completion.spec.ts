@@ -130,14 +130,14 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await expect(page).toHaveScreenshot(`provider-property-media-${locale}.png`, { fullPage: true });
   });
 
-  test('saves only supported contact fields and identifies unavailable internal notes', async ({ page }) => {
+  test('saves only supported contact fields and advances to review', async ({ page }) => {
     const locale = localeForProject();
     const copy = copyFor(locale);
     await routeSession(page);
     await routeProperty(page);
     await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/steps/contact`, async route => {
       expect(route.request().method()).toBe('PATCH');
-      expect(route.request().postDataJSON()).toEqual({ version: 2, contact: { contactName: 'Mona Hassan', phone: '+201000000000', whatsappNumber: '+201000000001', email: 'mona@example.com', preferredLocale: locale }, reason: 'Provider updated contact details' });
+      expect(route.request().postDataJSON()).toEqual({ version: 2, contact: { contactRole: 'custom', contactName: 'Mona Hassan', phone: '+201000000000', whatsappNumber: '+201000000001', email: 'mona@example.com', preferredLocale: locale, showPhone: true, showWhatsapp: true, showEmail: true }, reason: 'Provider updated contact details' });
       await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(propertyFixture({ version: 3, contact: { contactName: 'Mona Hassan', phone: '+201000000000', whatsappNumber: '+201000000001', email: 'mona@example.com', preferredLocale: locale } }), 'completion-contact') });
     });
     await page.goto(`/provider/properties/${PROPERTY_ID}/contact?lang=${encodeURIComponent(locale)}`);
@@ -145,10 +145,26 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await page.locator('#provider-property-contact-whatsapp').fill('+201000000001');
     await page.locator('#provider-property-contact-email').fill('mona@example.com');
     await page.locator('#provider-property-contact-locale').selectOption(locale);
-    await expect(page.locator('.provider-property-completion__notice')).toBeVisible();
+    await hideSkipLink(page);
+    await expect(page).toHaveScreenshot(`provider-property-contact-${locale}.png`, { fullPage: true });
     await page.getByRole('button', { name: copy.continue }).click();
     await expect(page).toHaveURL(new RegExp(`/provider/properties/${PROPERTY_ID}/review`));
-    await expect(page).toHaveScreenshot(`provider-property-contact-${locale}.png`, { fullPage: true });
+  });
+
+  test('saves contact data as a draft without leaving the contact step', async ({ page }) => {
+    const locale = localeForProject();
+    const completionCopy = getProviderPropertyCompletionCopy(locale);
+    await routeSession(page);
+    await routeProperty(page);
+    await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/steps/contact`, async route => {
+      expect(route.request().method()).toBe('PATCH');
+      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(propertyFixture({ version: 3 }), 'completion-contact-draft') });
+    });
+
+    await page.goto(`/provider/properties/${PROPERTY_ID}/contact?lang=${encodeURIComponent(locale)}`);
+    await page.getByRole('button', { name: completionCopy.saveDraft }).click();
+    await expect(page).toHaveURL(new RegExp(`/provider/properties/${PROPERTY_ID}/contact`));
+    await expect(page.getByText(completionCopy.saved)).toBeVisible();
   });
 
   test('submits only when availableActions and all confirmations permit it', async ({ page }) => {
@@ -247,7 +263,7 @@ test.describe('PRV-08 responsive Figma contract', () => {
 
     if (viewportWidth === 402) {
       await expect(screen.locator('.provider-property-wizard__intro')).toBeHidden();
-      const actions = screen.locator('.provider-property-wizard__actions button');
+      const actions = screen.locator('.provider-property-wizard__actions button:visible');
       await expect(actions).toHaveCount(2);
       const actionRects = await actions.evaluateAll(elements => elements.map(element => {
         const rect = element.getBoundingClientRect();
@@ -259,6 +275,54 @@ test.describe('PRV-08 responsive Figma contract', () => {
       await expect(screen.locator('#provider-property-completion-title')).toBeVisible();
       const order = await screen.locator('.provider-property-wizard__intro, .provider-property-completion__steps').evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top));
       expect(order[0]!).toBeLessThan(order[1]!);
+    }
+  });
+});
+
+test.describe('PRV-09 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-09' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:116610; mobile node 6017:118695 (402px)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 1200 } : { width: 402, height: 1570 });
+  });
+
+  test('keeps contact fields, visibility switches, and actions inside the viewport', async ({ page }) => {
+    const locale = localeForProject();
+    await routeSession(page);
+    await routeProperty(page);
+
+    const response = await page.goto(`/provider/properties/${PROPERTY_ID}/contact?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+    const screen = page.locator('[data-screen-id="PRV-09"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(screen.locator('.provider-property-completion__steps li[aria-current="step"]')).toContainText('7');
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await screen.locator('.provider-property-completion__steps, .provider-property-completion__card, .provider-property-completion__contact-roles, .provider-property-completion__visibility, .provider-property-wizard__actions').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width };
+    }));
+    for (const rect of geometry) {
+      expect(rect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(rect.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(rect.width).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    if (viewportWidth === 402) {
+      await expect(screen.locator('.provider-property-wizard__intro')).toBeHidden();
+      const actions = screen.locator('.provider-property-wizard__actions button:visible');
+      const actionRects = await actions.evaluateAll(elements => elements.map(element => {
+        const rect = element.getBoundingClientRect();
+        return { width: rect.width, top: rect.top };
+      }));
+      expect(actionRects).toHaveLength(2);
+      actionRects.forEach(rect => expect(rect.width).toBeGreaterThan(300));
+      expect(actionRects[1]!.top).toBeLessThan(actionRects[0]!.top);
+    } else {
+      await expect(screen.locator('#provider-property-completion-title')).toBeVisible();
     }
   });
 });
