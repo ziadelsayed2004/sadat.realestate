@@ -183,6 +183,53 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
   });
 });
 
+test.describe('PRV-05 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-05' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:116166 (1024x900); mobile node 6017:118128 (402x969)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 900 } : { width: 402, height: 969 });
+  });
+
+  test('keeps the details stepper, supported fields, and actions inside the viewport', async ({ page }) => {
+    const locale = localeForProject();
+    await routeProviderSession(page);
+    await routeProviderProperty(page);
+    await page.route('**/api/v1/public/properties**', async route => {
+      await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'CATALOG_UNAVAILABLE', messageKey: 'errors.catalogUnavailable', details: [], requestId: 'responsive-details-catalog-unavailable' } }) });
+    });
+
+    const response = await page.goto(`/provider/properties/${propertyId}/details?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+    const screen = page.locator('[data-screen-id="PRV-05"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(page.locator('.provider-property-wizard__steps li[aria-current="step"]')).toContainText('3');
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await page.locator('.provider-property-wizard__steps, .provider-property-wizard__card, .provider-property-wizard__reason, .provider-property-wizard__actions, .provider-property-wizard__back-row').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width };
+    }));
+    for (const rect of geometry) {
+      expect(rect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(rect.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(rect.width).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    if (page.viewportSize()?.width === 402) {
+      await expect(page.locator('.provider-property-wizard__intro')).toBeHidden();
+      const actions = page.locator('.provider-property-wizard__actions button');
+      await expect(actions).toHaveCount(2);
+      const actionRects = await actions.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().width));
+      actionRects.forEach(width => expect(width).toBeGreaterThan(300));
+    } else {
+      await expect(page.locator('#provider-property-wizard-title')).toBeVisible();
+    }
+  });
+});
+
 test.describe('PRV-06 responsive Figma contract', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-06' });

@@ -564,6 +564,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__card {
+    border-color: #e5e7eb;
+    border-radius: 16px;
+  }
+
   .provider-property-wizard__commission dl { grid-template-columns: minmax(0, 1fr); }
 
   .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__card {
@@ -651,6 +656,60 @@
   .provider-property-wizard__card {
     padding: 1.125rem;
     border-radius: 1rem;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__intro {
+    display: none;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__steps {
+    margin-bottom: 16px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__card {
+    margin-top: 0;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__card-heading {
+    margin-bottom: 18px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__card-heading > span {
+    display: none;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__field select,
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__field textarea,
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__field > input {
+    border-color: #e5e7eb;
+    border-radius: 8px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__actions button[value='continue'] {
+    grid-row: 1;
+    border-color: #17233d;
+    background: #17233d;
+    color: #fff;
+  }
+
+  .provider-property-wizard__form[data-form-step='details'] .provider-property-wizard__actions button[value='save'] {
+    grid-row: 2;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
   }
 
   .provider-property-wizard__form[data-form-step='price-payment'] .provider-property-wizard__intro {

@@ -215,8 +215,9 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   const saving = mutationState === 'saving';
   const updateDescription = (value: string) => setForm({ ...form, description: { ...form.description, [locale]: value } });
   return (
-    <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
-      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{advancedCopy.titles.details}</h1><p>{advancedCopy.descriptions.details}</p></div>
+    <form className="provider-property-wizard__form" data-form-step="details" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{copy.wizard.createTitle}</h1><p>{copy.wizard.createDescription}</p></div>
+      <WizardSteps step="details" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-details-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-details-title">{advancedCopy.titles.details}</h2><span>{advancedCopy.steps.details}</span></div>
         <div className="provider-property-wizard__field"><label htmlFor="provider-property-description">{advancedCopy.labels.description}</label><textarea id="provider-property-description" rows={5} value={form.description[locale]} placeholder={advancedCopy.placeholders.description} onChange={event => updateDescription(event.target.value)} aria-invalid={validationError || undefined} /></div>
@@ -480,9 +481,9 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
 
   return (
     <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop/tablet/mobile">
-      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath={step === 'details' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        <WizardSteps step={step} locale={locale} copy={copy} />
+        {step === 'details' ? null : <WizardSteps step={step} locale={locale} copy={copy} />}
         {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} propertyTypes={propertyTypes} propertyTypesState={propertyTypesState} onRetryPropertyTypes={() => setPropertyTypesAttempt(value => value + 1)} /> : null}
         {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} commission={commission} commissionState={commissionState} onRetryCommission={() => setCommissionAttempt(value => value + 1)} /> : null}
         {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}

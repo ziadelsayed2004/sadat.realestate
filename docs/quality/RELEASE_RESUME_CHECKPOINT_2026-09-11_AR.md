@@ -717,3 +717,10 @@
 - Preserved the real `locationId`, safe `mapUrl`, latitude/longitude, catalog fallback/retry, validation, and owner-scoped save flow. Structured city/district/neighborhood/street/building/landmark fields, the map picker, and approximate-location visibility are absent from `propertyLocationStepSchema`; no non-persisting inputs were invented.
 - Focused AR/EN baseline update passed 2/2, then the complete affected suite passed 10/10 in normal verification, including no-overflow geometry at 393, 768, and 1551 pixels. Build/budgets, typecheck, lint, and diff checks passed.
 - PRV-04 stays `PARTIAL_EXTERNAL` for the missing location-contract fields. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-05 official-source reconciliation
+
+- Read official desktop node `6017:19858` and mobile node `6017:118128` directly. The details route now uses the shared add-property heading, places the eight-step rail after it with step 3 active, and highlights Add property in the desktop provider rail.
+- The mobile route follows the compact source composition: the redundant desktop introduction is hidden, the card uses 12px geometry, and the two actions stack at full width with Continue first. Explicit geometry checks prove no horizontal overflow at 1024×900 and 402×969 in AR/EN.
+- Preserved the exact `propertyDetailsStepSchema` fields, catalog fallback/retry, validation, owner-scoped save, draft reason, and optimistic version. Extended source fields such as land/building/display/storage areas, construction year, frontage, ceiling height, entrances, and amenity chips remain unavailable in the active contract and were not invented.
+- Desktop baseline update passed 2/2 and normal verification passed 2/2; responsive verification passed 4/4. Build/budgets, translation check, typecheck, focused lint, and diff checks passed. PRV-05 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
