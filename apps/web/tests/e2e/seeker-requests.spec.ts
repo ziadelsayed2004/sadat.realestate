@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const ownRequestId = '000000000000000000004821';
-const contactedRequestId = '5123456789abcdef01234567';
+const scheduledRequestId = '000000000000000000004798';
 const forbiddenRequestId = '6123456789abcdef01234567';
 
 function localeForProject(): 'ar' | 'en' {
@@ -12,33 +12,6 @@ function localeForProject(): 'ar' | 'en' {
 
 function successMeta(requestId: string) {
   return { meta: { requestId } };
-}
-
-function requestData(id: string, status: 'under_review' | 'contacted', withProperty = false) {
-  return {
-    id,
-    type: 'contact',
-    source: 'seeker',
-    seekerId: '0123456789abcdef01234567',
-    propertyId: '2123456789abcdef01234567',
-    ...(withProperty ? { property: {
-      id: '2123456789abcdef01234567',
-      slug: 'seeker-property',
-      kind: 'property',
-      name: { ar: 'شقة في مدينة السادات', en: 'Sadat City apartment' },
-      transactionType: 'sale',
-      locationName: { ar: 'الحي الثالث', en: 'Third District' },
-      sourceName: { ar: 'شركة السادات للتطوير', en: 'Sadat Development Company' },
-      sourceType: 'developer_company',
-      publicCode: 'SDT-2103'
-    } } : {}),
-    status,
-    payload: { message: status === 'contacted' ? 'Please call after 5 PM' : 'Please call me' },
-    version: 0,
-    availableActions: status === 'contacted' ? ['cancel'] : ['cancel'],
-    createdAt: '2026-08-13T10:00:00.000Z',
-    updatedAt: '2026-08-13T10:00:00.000Z'
-  };
 }
 
 const canonicalListRequests = [
@@ -101,6 +74,34 @@ const canonicalUnderReviewRequest = {
   updatedAt: '2026-08-07T09:05:00.000Z'
 };
 
+const canonicalScheduledRequest = {
+  id: scheduledRequestId,
+  type: 'viewing',
+  source: 'seeker',
+  seekerId: '0123456789abcdef01234567',
+  propertyId: '2123456789abcdef01234568',
+  property: {
+    id: '2123456789abcdef01234568',
+    slug: 'villa-sdt-2103',
+    kind: 'property',
+    name: { ar: 'فيلا SDT-2103', en: 'Villa SDT-2103' },
+    transactionType: 'sale',
+    locationName: { ar: 'حي الكورنيش، مدينة السادات', en: 'Corniche District, Sadat City' },
+    sourceName: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+    sourceType: 'developer_company',
+    publicCode: 'SDT-2103'
+  },
+  status: 'scheduled',
+  payload: {
+    maxBudget: 2_500_000,
+    note: 'أفضل المعاينة في عطلة نهاية الأسبوع الصباح'
+  },
+  version: 0,
+  availableActions: [],
+  createdAt: '2026-08-03T10:14:00.000Z',
+  updatedAt: '2026-08-11T16:00:00.000Z'
+};
+
 async function routeSession(page: import('@playwright/test').Page, allowed = true): Promise<void> {
   await page.route('**/api/v1/auth/refresh', async route => {
     expect(route.request().method()).toBe('POST');
@@ -136,8 +137,8 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: canonicalUnderReviewRequest, ...successMeta('request-under-review') }) });
       return;
     }
-    if (requestId === contactedRequestId) {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: requestData(contactedRequestId, 'contacted'), ...successMeta('request-contacted') }) });
+    if (requestId === scheduledRequestId) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: canonicalScheduledRequest, ...successMeta('request-scheduled') }) });
       return;
     }
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: canonicalListRequests, page: 1, limit: 20, total: 7 }, ...successMeta('request-list-canonical') }) });
@@ -179,7 +180,7 @@ test('request details keep cards contained and reflow across viewport widths', a
   const locale = localeForProject();
   await routeSession(page);
   await routeRequests(page);
-  for (const requestId of [ownRequestId, contactedRequestId]) {
+  for (const requestId of [ownRequestId, scheduledRequestId]) {
     for (const width of [393, 768, 1280, 1551]) {
       await page.setViewportSize({ width, height: 863 });
       await page.goto(`/seeker/requests/${requestId}?lang=${locale}`);
@@ -249,6 +250,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
 
   test('renders the under-review detail projection without internal data', async ({ page }) => {
     const locale = localeForProject();
+    await page.setViewportSize({ width: 1551, height: 863 });
     await routeSession(page);
     await routeRequests(page);
     await page.goto(`/seeker/requests/${ownRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
@@ -260,16 +262,18 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     await expect(page).toHaveScreenshot(`seeker-request-under-review-${locale}.png`, { fullPage: true });
   });
 
-  test('renders the contacted detail projection', async ({ page }) => {
+  test('renders the scheduled viewing detail projection', async ({ page }) => {
     const locale = localeForProject();
+    await page.setViewportSize({ width: 1551, height: 863 });
     await routeSession(page);
     await routeRequests(page);
-    await page.goto(`/seeker/requests/${contactedRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('[data-screen-id="SEK-04"]')).toHaveAttribute('data-request-status', 'contacted');
+    await page.goto(`/seeker/requests/${scheduledRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('[data-screen-id="SEK-04"]')).toHaveAttribute('data-request-status', 'scheduled');
     await expect(page.locator('.seeker-request-detail h1')).toBeVisible();
-    await expect(page.getByText('Please call after 5 PM')).toBeVisible();
+    await expect(page.locator('.seeker-request-detail__breadcrumb strong')).toHaveText('REQ-4798');
+    await expect(page.getByText(locale === 'ar' ? 'فيلا SDT-2103' : 'Villa SDT-2103')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|dueAt|providerId|seekerId/u);
-    await expect(page).toHaveScreenshot(`seeker-request-contacted-${locale}.png`, { fullPage: true });
+    await expect(page).toHaveScreenshot(`seeker-request-scheduled-${locale}.png`, { fullPage: true });
   });
 
   test('fails closed for an IDOR response and for an unavailable session', async ({ page }) => {

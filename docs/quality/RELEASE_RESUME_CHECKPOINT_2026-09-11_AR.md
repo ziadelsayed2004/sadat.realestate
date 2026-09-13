@@ -648,3 +648,10 @@
 - قُرئت عقدة Figma الرسمية `6027:4046` مباشرة، وبذلك أُلغي عائق جرد الصفوف القديم. طابقت fixture التشغيلية السجلات السبعة `REQ-4821` إلى `REQ-4651` وحالاتها وتواريخها ونصوص البحث والفلاتر، وأزيل pagination عندما تكون النتيجة صفحة واحدة.
 - نجح Web build مع translations/bundle budgets، ونجحت حزمة `seeker-requests.spec.ts` المتأثرة `12/12` عبر `desktop-ar` و`desktop-en`، مع تحديث صور المصدر في `screens/SEK-02`.
 - بقيت `SEK-02` بحالة `PARTIAL_EXTERNAL` لأن عقد `/me` الآمن لا يحتوي حقل avatar/media معتمدًا؛ لم تُثبت صورة هوية Figma داخل حساب حي. لذلك يظل الإجمالي الصارم `91/119` والمفتوح `28`.
+
+## 13 September: SEK-03/04 official-source detail reconciliation
+
+- Rebuilt the shared request-detail composition against official nodes `6027:7187` and `6027:7928`, including the breadcrumb/header actions, summary/property/provider rail, compact lifecycle, and advanced information.
+- Corrected SEK-04 to the visible canonical scheduled-viewing state (`REQ-4798`, `Villa SDT-2103`, Corniche District, provider, EGP 2,500,000 maximum budget, and the approved viewing note). The Figma frame name still says “Contacted”; the implementation follows the visible frame content and records that source inconsistency.
+- AR/EN visual captures now use the source-aligned 1551×863 viewport. Lint and Web build passed, followed by the complete affected requests suite at 12/12 across AR/EN, including 393/768/1280/1551 responsive geometry, IDOR, and unavailable-session checks.
+- SEK-03 and SEK-04 remain `PARTIAL_EXTERNAL` because the live `/me` projection has no approved avatar/media field. Strict Figma totals remain 91/119 with 28 open. No Production launch or Demo purge ran.

@@ -585,6 +585,23 @@
 .seeker-request-detail__card--property .seeker-request-detail__value dt { display: none; }
 .seeker-request-detail__card--property .seeker-request-detail__value dd { display: grid; gap: .25rem; }
 
+.seeker-request-detail__card--provider {
+  display: grid;
+  gap: .2rem;
+  padding-block: .875rem;
+}
+
+.seeker-request-detail__card--provider span,
+.seeker-request-detail__card--provider small {
+  color: var(--color-text-secondary);
+  font-size: .75rem;
+}
+
+.seeker-request-detail__card--provider strong {
+  color: var(--color-text-strong);
+  font-size: .875rem;
+}
+
 .seeker-request-detail__card h2 {
   margin-block-start: 0;
   color: var(--color-text-strong);

@@ -81,7 +81,7 @@ function requestAllLabel(locale: SupportedLocale): string {
 }
 
 function requestScreenId(request: RequestData): 'SEK-03' | 'SEK-04' | undefined {
-  if (request.status === 'contacted') return 'SEK-04';
+  if (request.status === 'scheduled') return 'SEK-04';
   if (request.status === 'under_review') return 'SEK-03';
   return undefined;
 }
@@ -213,7 +213,7 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
             {lifecycle.map((status, index) => {
               const stepState = currentIndex < 0 ? 'pending' : index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'pending';
               const timestamp = index === 0 ? request.createdAt : stepState === 'current' ? request.updatedAt : undefined;
-              return <li key={status} data-state={stepState} data-current={stepState === 'current' || undefined}><span aria-hidden="true">{stepState === 'complete' ? '✓' : stepState === 'current' ? '•' : ''}</span><div><strong>{copy.statuses[status]}</strong>{timestamp === undefined ? null : <time dateTime={timestamp}>{dateLabel(timestamp, locale)}</time>}</div></li>;
+              return <li key={status} data-state={stepState} data-current={stepState === 'current' || undefined}><span aria-hidden="true">{stepState === 'complete' ? '✓' : stepState === 'current' ? '•' : ''}</span><div><strong>{requestStatusLabel(status, locale)}</strong>{timestamp === undefined ? null : <time dateTime={timestamp}>{dateLabel(timestamp, locale)}</time>}</div></li>;
             })}
           </ol>
         </section>
@@ -230,6 +230,11 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
           {request.propertyId === undefined ? null : <section className="seeker-request-detail__card seeker-request-detail__card--property" aria-labelledby="seeker-request-property-title">
             <h2 id="seeker-request-property-title">{copy.detail.property}</h2>
             <dl className="seeker-request-detail__values"><RequestPropertyValue request={request} locale={locale} label={copy.detail.property} /></dl>
+          </section>}
+          {request.property?.sourceName === undefined ? null : <section className="seeker-request-detail__card seeker-request-detail__card--provider" aria-label={copy.list.provider}>
+            <span>{copy.list.provider}</span>
+            <strong>{localizedText(request.property.sourceName, locale)}</strong>
+            <small>{locale === 'ar' ? 'شركة تطوير' : 'Development company'}</small>
           </section>}
           {request.status === 'under_review' ? <p className="seeker-request-detail__provider-note">{locale === 'ar' ? 'سيتم تحديد المزود بعد مراجعة الطلب' : 'A provider will be assigned after the request is reviewed'}</p> : null}
         </div>
