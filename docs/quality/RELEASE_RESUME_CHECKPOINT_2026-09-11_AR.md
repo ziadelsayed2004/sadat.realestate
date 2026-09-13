@@ -752,3 +752,10 @@
 - Preserved contract-shaped roles, contact fields, preferred time and locale, internal notes, visibility switches, validation, optimistic versioning, and owner permissions. Restored Save draft through the approved contact mutation; it stays on the route while Continue saves and advances.
 - Corrected the stale payload assertion to cover `contactRole` and the three visibility flags, and added a browser proof for draft saving without navigation. Named account/staff identities remain unavailable because the provider projection has no account/staff directory; none were invented.
 - Desktop baseline update passed 2/2 and the final Continue/Save draft run passed 4/4. Responsive AR/EN verification passed 4/4 at 1024px and 402px with no horizontal overflow. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-09 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-10 official-source reconciliation
+
+- Read official desktop node `6017:20737`, tablet node `6017:116846`, and mobile node `6017:118851` directly. The review route now places the shared heading before step 8, highlights Add property on desktop, and uses compact sections with full-width Submit and Back actions on mobile.
+- Split the review into four safe sections for basic, location, pricing, and contact/media availability data. The richer canonical details remain absent from the active provider projection and were not fabricated.
+- The three confirmations gate the owner-scoped submit mutation. The visual proof now captures the pre-submit PRV-10 state, while the mutation-required reason is localized in AR/EN and tested in the submitted payload.
+- Desktop baseline update passed 2/2, final desktop submission/accessibility verification passed 4/4, and responsive AR/EN verification passed 4/4 at 1024px and 402px. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-10 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

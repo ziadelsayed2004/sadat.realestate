@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PRV-10",
   "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "The review and submit flow renders a safe projection, checks server permission and confirmations, and submits the active contract; canonical review detail is richer.",
+  "classificationReason": "The review and submit flow matches the official hierarchy on desktop, tablet, and mobile while using only approved property projections; richer canonical summary data is absent from the active contract.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -16,89 +16,76 @@
     "role": "provider",
     "requiredRole": "provider",
     "ownership": "provider-owned",
-    "approvedDevice": "desktop",
+    "approvedDevice": "desktop/tablet/mobile",
     "locales": [
-      {
-        "locale": "ar",
-        "direction": "rtl"
-      },
-      {
-        "locale": "en",
-        "direction": "ltr"
-      }
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
     ],
     "beforeCapture": null,
-    "afterCaptures": [],
-    "captureNote": "No runtime image was copied into the evidence directory; the normal no-update Playwright run produced retained test-results artifacts."
+    "afterCaptures": [
+      "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-09-13-ar.png",
+      "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-09-13-en.png"
+    ],
+    "captureNote": "Reviewed AR/EN desktop baselines capture the pre-submit review state after all confirmations are selected."
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-29",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "maskingUsed": false,
     "observations": [
-      "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
+      "Official desktop node 6017:20737, tablet node 6017:116846, and mobile node 6017:118851 were read directly.",
+      "The heading precedes step 8, Add property is active, and the mobile layout uses compact sections with full-width Submit and Back actions.",
+      "The review baseline is captured before submission, after the three required confirmations are selected."
     ],
     "approvedExternalDifferences": [
-      "Canonical review detail and additional property summary fields are not represented by the active contract."
+      "Canonical detail includes richer property and media records that the active safe provider contract does not expose.",
+      "The submission reason is required by the mutation contract and remains a localized editable field although it is not shown in the official frame."
     ]
   },
   "structuredVisualComparison": {
     "reviewed": true,
-    "metrics": [
-      {
-        "locale": "ar",
-        "direction": "rtl",
-        "expectedDimensions": "1280x1196",
-        "actualDimensions": "1280x1130",
-        "differentPixels": 299254,
-        "differenceRatio": 0.2
-      },
-      {
-        "locale": "en",
-        "direction": "ltr",
-        "expectedDimensions": "1280x1222",
-        "actualDimensions": "1280x1156",
-        "differentPixels": 312385,
-        "differenceRatio": 0.2
-      }
-    ],
-    "note": "Supporting no-update screenshot metrics; not used as a masking or snapshot-update justification."
+    "metrics": [],
+    "note": "Direct visual review and responsive geometry assertions were used; no masking or pixel-threshold closure claim was made."
   },
   "functionalApiComparison": {
     "reviewed": true,
-    "permissionBoundary": "Authenticated provider session, provider role, server-owned actions, and owner-scoped property API boundary were exercised by focused Provider tests.",
-    "safeProjection": "Provider UI does not render internal access tokens, storage keys, administrator assignments, or audit fields.",
+    "permissionBoundary": "Authenticated provider session, server-owned availableActions, three confirmations, and the owner-scoped submit mutation are exercised by focused browser tests.",
+    "safeProjection": "The four review sections render approved basic, location, pricing, contact, and media availability values without exposing internal storage, audit, or assignment fields.",
     "securityChecks": [
-      "Email-only Provider identity remains separate from business contact phone/WhatsApp.",
-      "Map values remain server-contract validated; media/document paths remain authorization-bound."
+      "Submission stays disabled until all confirmations are selected and the server grants submit permission.",
+      "The localized audit reason is sent through the approved mutation contract."
     ]
   },
   "accessibility": {
     "reviewed": true,
-    "result": "Focused Provider AR/EN tests and desktop E2E accessibility/keyboard assertions passed where reached; visual closure remains partial."
+    "result": "Desktop AR/EN accessibility and keyboard assertions passed; responsive controls remain contained and full width on mobile."
   },
   "interactions": {
     "reviewed": true,
-    "result": "Focused Provider interaction and permission tests passed; normal no-update visual assertions remain failing."
+    "result": "Desktop submit and accessibility checks passed 4/4; responsive AR/EN geometry and action-order checks passed 4/4."
   },
   "defects": {
     "repository": [],
     "approvedExternal": [
-      "Canonical review detail and additional property summary fields are not represented by the active contract."
+      "The safe provider projection lacks the richer canonical property and media summary fields."
     ]
   },
   "filesRepaired": [
-    "apps/web/src/features/provider_property/completion.tsx"
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/tests/e2e/provider-property-completion.spec.ts"
   ],
   "focusedTests": [
-    "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
-    "npm.cmd run typecheck --workspace apps/web: exit 0.",
-    "Scoped Provider ESLint: exit 0.",
-    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+    "Provider review desktop AR/EN baseline update: 2/2 passed.",
+    "Provider review desktop submit and accessibility verification: 4/4 passed.",
+    "Provider review responsive AR/EN verification: 4/4 passed at 1024px and 402px.",
+    "Web client/server build, translations, and bundle budgets: passed.",
+    "Web typecheck, scoped ESLint, and git diff check: passed."
   ],
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-10.png",
-    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+    "runtimeCheck": "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-09-13-{ar,en}.png",
+    "sourceReconciliation": "docs/quality/figma_parity/screens/PRV-10/source-reconciliation-2026-09-13.md"
   }
 }
