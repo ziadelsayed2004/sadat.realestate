@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-02",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "The official node is directly accessible and its complete seven-row request inventory is now implemented and verified in Arabic and English. Repository-owned layout, responsive behavior, safe projection, filtering, and single-page pagination behavior pass; strict closure still requires an approved seeker avatar/media field in the /me projection.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-IDENTITY-AVATAR by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -124,8 +124,9 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "The canonical photographic seeker avatar is not represented by an approved avatar/media field in the safe /me profile projection; initials remain the deterministic accessible fallback."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-IDENTITY-AVATAR"
     ]
   },
   "filesRepaired": [
@@ -140,14 +141,17 @@
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
   "coordinatorExternalReconciliation": {
-    "status": "BLOCKED_EXTERNAL",
+    "status": "RESOLVED_BY_OWNER_DECISION",
     "reviewedAt": "2026-09-13T00:00:00.000Z",
     "owner": "Profile/API contract owner and Product",
     "missingApprovedPrerequisite": "Approved seeker avatar/media URL field in the safe /me projection",
     "whyNotDerivable": "A user identity image cannot be inferred or hard-coded into a live account projection.",
     "prerequisite": "Approve and expose an optional sanitized avatar URL on /me, or explicitly approve the initials fallback as the product design.",
     "nextAction": "After the profile media decision, recapture the shell and perform the final strict visual comparison.",
-    "repositoryOwnedDefects": []
+    "repositoryOwnedDefects": [],
+    "historicalStatus": "BLOCKED_EXTERNAL",
+    "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "resolvedAt": "2026-09-13"
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-02/figma.png",
@@ -173,5 +177,13 @@
     "runtimeEn": "docs/quality/figma_parity/screens/SEK-02/runtime-source-aligned-en-2026-09-13.png",
     "focusedTests": "12/12 passed across desktop-ar and desktop-en",
     "build": "PASS including translations and bundle budgets"
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-IDENTITY-AVATAR"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

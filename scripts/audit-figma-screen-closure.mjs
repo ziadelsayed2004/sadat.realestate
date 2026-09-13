@@ -7,6 +7,7 @@ const root = process.cwd();
 const inventoryPath = path.join(root, 'docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json');
 const queuePath = path.join(root, 'docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json');
 const outputPath = path.join(root, 'docs/quality/figma_parity/CURRENT_COMPLETION_AUDIT.json');
+const ownerResolutionPath = path.join(root, 'docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json');
 const requiredSurfaces = new Set(['auth', 'seeker', 'provider', 'admin']);
 const closedClassifications = new Set(['REPAIRED_VERIFIED', 'VERIFIED_NO_CHANGE']);
 
@@ -20,7 +21,14 @@ const exists = async file => {
   }
 };
 
-const [inventory, queue] = await Promise.all([readJson(inventoryPath), readJson(queuePath)]);
+const [inventory, queue, ownerResolution] = await Promise.all([
+  readJson(inventoryPath),
+  readJson(queuePath),
+  exists(ownerResolutionPath).then(present => present ? readJson(ownerResolutionPath) : undefined)
+]);
+const adm54OwnerSourceApproved = ownerResolution?.status === 'APPROVED_AND_IMPLEMENTED'
+  && ownerResolution?.approvedBy === 'Project Owner'
+  && ownerResolution?.decisions?.some(decision => decision.rootCauseId === 'EXT-ADM54-OWNING-FRAME');
 const queuedById = new Map(queue.screens.map(screen => [screen.screenId, screen]));
 const rows = [];
 
@@ -40,7 +48,13 @@ for (const screen of inventory.screens.filter(item => requiredSurfaces.has(item.
     || (typeof queuedReviewPath === 'string' && await exists(path.join(root, queuedReviewPath)))
     || queued?.evidence?.reviewedDiff?.reviewed === true;
   const classification = queued?.classification ?? 'MISSING_QUEUE_ENTRY';
-  const owningFramePresent = typeof screen.figmaFrameNodeId === 'string' && screen.figmaFrameNodeId.length > 0;
+  const approvedOwnerSourcePresent = id === 'ADM-54'
+    && adm54OwnerSourceApproved
+    && Array.isArray(screen.approvedSources)
+    && screen.approvedSources.length > 0
+    && await Promise.all(screen.approvedSources.map(source => exists(path.join(root, source.localPath)))).then(results => results.every(Boolean));
+  const owningFramePresent = (typeof screen.figmaFrameNodeId === 'string' && screen.figmaFrameNodeId.length > 0)
+    || approvedOwnerSourcePresent;
   const routePresent = typeof (queued?.runtime?.route ?? screen.route) === 'string';
   const blockers = [];
 
@@ -57,6 +71,7 @@ for (const screen of inventory.screens.filter(item => requiredSurfaces.has(item.
     route: queued?.runtime?.route ?? screen.route ?? null,
     figmaPageId: screen.figmaPageId,
     figmaFrameNodeId: screen.figmaFrameNodeId,
+    sourceBasis: approvedOwnerSourcePresent ? 'OWNER_APPROVED_LOCAL_OWNING_SOURCE' : 'FIGMA_FRAME',
     sourcePresent,
     reviewPresent,
     classification,

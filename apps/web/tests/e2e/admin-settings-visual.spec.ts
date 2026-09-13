@@ -39,7 +39,7 @@ test('ADM-50 through ADM-58 render the Admin Desktop settings visual regression 
       const bounds = tabs.getBoundingClientRect();
       return active.left >= bounds.left && active.right <= bounds.right;
     })).toBe(true);
-    if (screenId !== 'ADM-54') await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, {
+    await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, {
       fullPage: true,
       maxDiffPixelRatio: 0.012
     });

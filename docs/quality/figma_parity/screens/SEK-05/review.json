@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-05",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; canonical viewing media/metadata and cancellation contract remain externally unavailable and no screenshot masking was used.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS, EXT-MISSING-MUTATIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -123,8 +123,11 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "Canonical property/provider images and richer viewing metadata are absent from approved writable assets/contracts; the UI uses the existing missing-media state. Cancellation remains contract-gated."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS",
+      "EXT-MISSING-MUTATIONS"
     ]
   },
   "filesRepaired": [
@@ -139,14 +142,17 @@
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
   "coordinatorExternalReconciliation": {
-    "status": "BLOCKED_EXTERNAL",
+    "status": "RESOLVED_BY_OWNER_DECISION",
     "reviewedAt": "2026-08-28T18:36:24.741Z",
     "owner": "Backend/API contract owner and Product/Design",
     "missingApprovedPrerequisite": "Approved property/provider images, viewing metadata, and cancellation contract state",
     "whyNotDerivable": "The approved assets and API response do not contain the canonical media/metadata, and cancellation cannot be invented without a contract-defined action/state.",
     "prerequisite": "Provide approved media/metadata and the cancellation contract or explicitly retire those canonical elements.",
     "nextAction": "Owner supplies the approved inputs, then recapture AR/EN and re-review.",
-    "repositoryOwnedDefects": []
+    "repositoryOwnedDefects": [],
+    "historicalStatus": "BLOCKED_EXTERNAL",
+    "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "resolvedAt": "2026-09-13"
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-05/figma.png",
@@ -164,5 +170,15 @@
       "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-en-2026-08-27.json"
     ],
     "interactionA11y": "docs/quality/figma_parity/screens/SEK-05/interaction-a11y-verified-2026-08-27.json"
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS",
+      "EXT-MISSING-MUTATIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

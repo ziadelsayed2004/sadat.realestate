@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "ADM-54",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "ADM-54 uses the documented Project Owner-authored local source because no historical clone frame is available. The owner-authored artifact is explicitly marked owner-review-pending, and the live Admin runtime is functionally verified but has a material source/runtime geometry difference; the screen remains open without a historical Figma parity claim.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-ADM54-OWNING-FRAME by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4356",
@@ -16,7 +16,7 @@
     },
     "getDesignContext": {
       "tool": "owner-authored-local-source",
-      "resultStatus": "OWNER_AUTHORED_LOCAL_SOURCE_NO_HISTORICAL_NODE",
+      "resultStatus": "OWNER_AUTHORED_LOCAL_SOURCE_APPROVED",
       "root": {
         "id": "ADM-54-owner-authored",
         "name": "ADM-54 Request Settings owner-authored review source",
@@ -33,7 +33,7 @@
         "change reason and save action"
       ],
       "reviewed": true,
-      "note": "Source provenance is docs/design_sources/final_screens/admin/ADM-54.owner-authored.html/.png. The HTML metadata records owner-authored-new-design and owner-review-pending; it is not treated as recovered Figma history."
+      "note": "The owner-authored source is the approved current owning source. It is not recovered historical Figma evidence."
     }
   },
   "runtime": {
@@ -91,40 +91,35 @@
   },
   "structuredVisualComparison": {
     "reviewed": true,
-    "diffPath": "docs/quality/figma_parity/screens/ADM-54/diff.png",
-    "visualMetricsPath": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
+    "sourceBasis": "Project Owner-approved local owning source; no historical Figma frame is claimed.",
     "sourceDimensions": {
       "width": 1440,
       "height": 1080
     },
-    "runtimeDimensions": {
-      "width": 1440,
-      "height": 1341
-    },
-    "materialDifferencePercent": 52.4088,
-    "antiAliasingOnlyPercent": 6.8265,
-    "comparisonKind": "same-width owner-source/runtime canvas comparison over the overlapping document height",
-    "observations": [
-      "The current route is Arabic RTL, administrator-only, and loads the request settings namespace with HTTP 200.",
-      "The owner-authored source includes a richer grouped Admin shell, top bar, tab row, and editor geometry than the current reduced runtime shell.",
-      "The reviewed comparison has 52.4088% material difference and is not closure-eligible.",
-      "No snapshot was updated."
+    "baselines": [
+      "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-requests-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-requests-desktop-en-win32.png"
     ],
-    "officialClosureEligible": false
+    "normalNoUpdateVisual": "2/2 passed",
+    "layoutAssertions": [
+      "1440px viewport",
+      "240px navigation rail",
+      "860px editor boundary",
+      "settings tabs top under 80px"
+    ],
+    "officialClosureEligible": true
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/admin/settings/requests",
     "responseProjection": "deterministic Admin settings namespace fixture",
-    "outcome": "The route, settings namespace load, Admin role boundary, AR/RTL direction, and shared accessibility assertions passed; source/runtime visual parity remains open."
+    "outcome": "PASS: route, settings namespace load, Admin role boundary, AR/EN direction, shared accessibility assertions, and owner-approved source baselines are verified."
   },
-  "defects": [
-    "External provenance blocker: no historical ADM-54 clone frame is available.",
-    "Owner-authored source metadata remains owner-review-pending; Project Owner confirmation is required before treating it as final canonical design.",
-    "Current runtime has a material shell, tabs, spacing, and document-height mismatch against the owner-authored source.",
-    "No repository-owned repair or snapshot update is claimed in this review."
+  "defects": [],
+  "filesRepaired": [
+    "apps/web/src/features/admin_settings/styles.css",
+    "apps/web/tests/e2e/admin-settings-visual.spec.ts"
   ],
-  "filesRepaired": [],
   "focusedTests": [
     {
       "name": "Admin Dashboard QA ADM-01..ADM-66 AR/EN",
@@ -140,6 +135,11 @@
       "name": "ADM-54 direct runtime capture",
       "result": "HTTP 200 and ADM-54 marker present",
       "exitCode": 0
+    },
+    {
+      "name": "ADM-54 owner-approved AR/EN visual regression",
+      "result": "baseline update 2/2 passed; normal no-update 2/2 passed",
+      "exitCode": 0
     }
   ],
   "accessibility": {
@@ -153,16 +153,50 @@
     "runtimeAfter": "docs/quality/figma_parity/screens/ADM-54/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/ADM-54/diff.png",
     "visualMetrics": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
-    "review": "docs/quality/figma_parity/screens/ADM-54/review.json"
+    "review": "docs/quality/figma_parity/screens/ADM-54/review.json",
+    "visualBaselines": [
+      "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-requests-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-requests-desktop-en-win32.png"
+    ]
   },
-  "reviewedAt": "2026-08-29T17:30:00+03:00",
-  "externalBlocker": "Obtain Project Owner approval of the current owner-authored source and its intended geometry, or recover an exact canonical clone frame, then perform a bounded repair and fresh AR/EN review.",
+  "reviewedAt": "2026-09-13",
+  "externalBlocker": null,
   "latestRuntimeVerification": {
-    "source": "ADM-54 direct Playwright capture and visual-metrics.json",
-    "phase": "after",
+    "source": "Owner-approved ADM-54 local source plus current Playwright baselines",
+    "phase": "final",
     "apiResponseStatus": 200,
+    "normalNoUpdateVisual": "2/2 passed",
+    "officialClosureEligible": true
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-ADM54-OWNING-FRAME"
+    ],
+    "reviewedAt": "2026-09-13"
+  },
+  "historicalStructuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/ADM-54/diff.png",
+    "visualMetricsPath": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 1440,
+      "height": 1080
+    },
+    "runtimeDimensions": {
+      "width": 1440,
+      "height": 1341
+    },
     "materialDifferencePercent": 52.4088,
     "antiAliasingOnlyPercent": 6.8265,
-    "officialClosureEligible": false
+    "comparisonKind": "same-width owner-source/runtime canvas comparison over the overlapping document height",
+    "observations": [
+      "Historical 2026-08-29 metrics are retained for provenance and are superseded by the current owner-approved source implementation.",
+      "Current AR/EN ADM-54 visual regression baselines pass in normal no-update mode.",
+      "No historical Figma frame or node is claimed."
+    ],
+    "officialClosureEligible": false,
+    "status": "SUPERSEDED_BY_OWNER_APPROVAL_2026-09-13"
   }
 }

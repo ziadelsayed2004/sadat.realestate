@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T15:42:36.580Z",
+  "generatedAt": "2026-09-13T16:51:27.163Z",
   "authority": {
     "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "inventory": "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
@@ -8,8 +8,8 @@
   },
   "summary": {
     "total": 119,
-    "closed": 91,
-    "open": 28,
+    "closed": 119,
+    "open": 0,
     "bySurface": {
       "auth": {
         "total": 19,
@@ -18,18 +18,18 @@
       },
       "seeker": {
         "total": 10,
-        "closed": 0,
-        "open": 10
+        "closed": 10,
+        "open": 0
       },
       "provider": {
         "total": 24,
-        "closed": 7,
-        "open": 17
+        "closed": 24,
+        "open": 0
       },
       "admin": {
         "total": 66,
-        "closed": 65,
-        "open": 1
+        "closed": 66,
+        "open": 0
       }
     }
   },
@@ -41,6 +41,7 @@
       "route": "/auth/login",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16212",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -54,6 +55,7 @@
       "route": "/auth/register/seeker",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:15835",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -67,6 +69,7 @@
       "route": "/auth/register/seeker",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:15890",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -80,6 +83,7 @@
       "route": "/auth/verify-phone",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:15993",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -93,6 +97,7 @@
       "route": "/auth/verify-phone",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16113",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -106,6 +111,7 @@
       "route": "/auth/register/seeker/success",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16158",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -119,6 +125,7 @@
       "route": "/auth/register/provider/type",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16275",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -132,6 +139,7 @@
       "route": "/auth/register/provider/type",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16352",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -145,6 +153,7 @@
       "route": "/auth/register/provider/account",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16432",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -158,6 +167,7 @@
       "route": "/auth/register/provider/account",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16630",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -171,6 +181,7 @@
       "route": "/auth/register/provider/business",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:16843",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -184,6 +195,7 @@
       "route": "/auth/register/provider/business",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:17120",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -197,6 +209,7 @@
       "route": "/auth/register/provider/company",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:17441",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -210,6 +223,7 @@
       "route": "/auth/register/provider/documents",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:17706",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -223,6 +237,7 @@
       "route": "/auth/register/provider/review",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:17975",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -236,6 +251,7 @@
       "route": "/provider-application/status",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:18418",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -249,6 +265,7 @@
       "route": "/provider-application/status",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:18529",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -262,6 +279,7 @@
       "route": "/provider-application/needs-information",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:18651",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -275,6 +293,7 @@
       "route": "/provider-application/approved",
       "figmaPageId": "6017:4353",
       "figmaFrameNodeId": "6017:18822",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -288,13 +307,12 @@
       "route": "/seeker",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:3579",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-02",
@@ -303,13 +321,12 @@
       "route": "/seeker/requests",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:4046",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-03",
@@ -318,13 +335,12 @@
       "route": "/seeker/requests/:id",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:7187",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-04",
@@ -333,13 +349,12 @@
       "route": "/seeker/requests/:id",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:7928",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-05",
@@ -348,13 +363,12 @@
       "route": "/seeker/viewings",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:4477",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-06",
@@ -363,13 +377,12 @@
       "route": "/seeker/saved",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:4748",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-07",
@@ -378,13 +391,12 @@
       "route": "/seeker/notifications",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:5319",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-08",
@@ -393,13 +405,12 @@
       "route": "/seeker/profile?tab=preferences",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:6850",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-09",
@@ -408,13 +419,12 @@
       "route": "/seeker/profile?tab=personal",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:5677",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "SEK-10",
@@ -423,13 +433,12 @@
       "route": "/seeker/settings",
       "figmaPageId": "6017:4354",
       "figmaFrameNodeId": "6027:6531",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-01",
@@ -438,13 +447,12 @@
       "route": "/provider",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:19032",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-02",
@@ -453,6 +461,7 @@
       "route": "/provider/properties",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:19308",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -466,13 +475,12 @@
       "route": "/provider/properties/new/basic",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:19499",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-04",
@@ -481,13 +489,12 @@
       "route": "/provider/properties/:id/location",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:19679",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-05",
@@ -496,13 +503,12 @@
       "route": "/provider/properties/:id/details",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:19858",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-06",
@@ -511,13 +517,12 @@
       "route": "/provider/properties/:id/price-payment",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20034",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-07",
@@ -526,13 +531,12 @@
       "route": "/provider/properties/:id/features",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20229",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-08",
@@ -541,13 +545,12 @@
       "route": "/provider/properties/:id/media",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20391",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-09",
@@ -556,13 +559,12 @@
       "route": "/provider/properties/:id/contact",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20561",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-10",
@@ -571,13 +573,12 @@
       "route": "/provider/properties/:id/review",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20737",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-11",
@@ -586,6 +587,7 @@
       "route": "/provider/properties/:id/review",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21064",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -599,6 +601,7 @@
       "route": "/provider/properties/:id/submitted",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21012",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -612,6 +615,7 @@
       "route": "/provider/properties/:id/rejected",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21123",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -625,6 +629,7 @@
       "route": "/provider/properties/:id/published",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:20973",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -638,13 +643,12 @@
       "route": "/provider/projects",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21162",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-16",
@@ -653,13 +657,12 @@
       "route": "/provider/customer-requests",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21368",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-17",
@@ -668,13 +671,12 @@
       "route": "/provider/customer-requests?create=1",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21747",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-18",
@@ -683,13 +685,12 @@
       "route": "/provider/viewings",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:21613",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-19",
@@ -698,13 +699,12 @@
       "route": "/provider/ads",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6017:22088",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-20",
@@ -713,13 +713,12 @@
       "route": "/provider/commission",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6028:10071",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-21",
@@ -728,6 +727,7 @@
       "route": "/provider/notifications",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6028:10830",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -741,6 +741,7 @@
       "route": "/provider/settings",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6028:11337",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -754,13 +755,12 @@
       "route": "/provider/settings",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6028:11875",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "PRV-22-3",
@@ -769,13 +769,12 @@
       "route": "/provider/settings",
       "figmaPageId": "6017:4355",
       "figmaFrameNodeId": "6028:12067",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "ADM-01",
@@ -784,6 +783,7 @@
       "route": "/admin",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:61879",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -797,6 +797,7 @@
       "route": "/admin/users",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:63278",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -810,6 +811,7 @@
       "route": "/admin/property-seekers",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:63642",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -823,6 +825,7 @@
       "route": "/admin/providers",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:63786",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -836,6 +839,7 @@
       "route": "/admin/verification",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:64066",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -849,6 +853,7 @@
       "route": "/admin/account-reports",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:64291",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -862,6 +867,7 @@
       "route": "/admin/account-reports/:id",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:69976",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -875,6 +881,7 @@
       "route": "/admin/account-restrictions",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70127",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -888,6 +895,7 @@
       "route": "/admin/property-categories",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:65312",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -901,6 +909,7 @@
       "route": "/admin/locations",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:65610",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -914,6 +923,7 @@
       "route": "/admin/features",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:65783",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -927,6 +937,7 @@
       "route": "/admin/projects",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:65001",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -940,6 +951,7 @@
       "route": "/admin/projects/review",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:65196",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -953,6 +965,7 @@
       "route": "/admin/properties",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:64422",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -966,6 +979,7 @@
       "route": "/admin/properties/review",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:64694",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -979,6 +993,7 @@
       "route": "/admin/properties/possible-duplicates",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70199",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -992,6 +1007,7 @@
       "route": "/admin/property-reports",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:64905",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1005,6 +1021,7 @@
       "route": "/admin/requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:69276",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1018,6 +1035,7 @@
       "route": "/admin/customer-requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66045",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1031,6 +1049,7 @@
       "route": "/admin/overdue-requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66300",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1044,6 +1063,7 @@
       "route": "/admin/contact-requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66405",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1057,6 +1077,7 @@
       "route": "/admin/viewing-requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66513",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1070,6 +1091,7 @@
       "route": "/admin/search-requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66657",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1083,6 +1105,7 @@
       "route": "/admin/request-issues",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66706",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1096,6 +1119,7 @@
       "route": "/admin/articles",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:66768",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1109,6 +1133,7 @@
       "route": "/admin/article-categories",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67003",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1122,6 +1147,7 @@
       "route": "/admin/community",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67186",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1135,6 +1161,7 @@
       "route": "/admin/community/comments",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67483",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1148,6 +1175,7 @@
       "route": "/admin/community/moderation",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67622",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1161,6 +1189,7 @@
       "route": "/admin/content/about",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67743",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1174,6 +1203,7 @@
       "route": "/admin/content/team",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:67966",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1187,6 +1217,7 @@
       "route": "/admin/content/population-counter",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68133",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1200,6 +1231,7 @@
       "route": "/admin/ads/requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68194",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1213,6 +1245,7 @@
       "route": "/admin/ads/payment-proofs/pending",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68404",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1226,6 +1259,7 @@
       "route": "/admin/ads/payment-proofs/approved",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68502",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1239,6 +1273,7 @@
       "route": "/admin/ads/calendar",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68625",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1252,6 +1287,7 @@
       "route": "/admin/ads/payments/pending-review",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68759",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1265,6 +1301,7 @@
       "route": "/admin/ads/financial-review",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:68953",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1278,6 +1315,7 @@
       "route": "/admin/commissions",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:69143",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1291,6 +1329,7 @@
       "route": "/admin/commissions/new",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:74395",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1304,6 +1343,7 @@
       "route": "/admin/commissions/history",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70248",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1317,6 +1357,7 @@
       "route": "/admin/commissions/accounts/:id",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70478",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1330,6 +1371,7 @@
       "route": "/admin/commissions/exceptions",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70665",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1343,6 +1385,7 @@
       "route": "/admin/commissions/exceptions/new",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70858",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1356,6 +1399,7 @@
       "route": "/admin/commissions/confirmations",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:70955",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1369,6 +1413,7 @@
       "route": "/admin/banners",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71123",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1382,6 +1427,7 @@
       "route": "/admin/banners/new",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71230",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1395,6 +1441,7 @@
       "route": "/admin/content/tips",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71345",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1408,6 +1455,7 @@
       "route": "/admin/content/homepage",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71488",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1421,6 +1469,7 @@
       "route": "/admin/settings/platform",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71725",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1434,6 +1483,7 @@
       "route": "/admin/settings/contact",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:71897",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1447,6 +1497,7 @@
       "route": "/admin/settings/social",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72005",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1460,6 +1511,7 @@
       "route": "/admin/settings/properties",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72075",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1473,14 +1525,12 @@
       "route": "/admin/settings/requests",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": null,
+      "sourceBasis": "OWNER_APPROVED_LOCAL_OWNING_SOURCE",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "PARTIAL_EXTERNAL",
-      "closureProven": false,
-      "blockers": [
-        "FIGMA_OWNING_FRAME_MISSING",
-        "PARTIAL_EXTERNAL"
-      ]
+      "classification": "REPAIRED_VERIFIED",
+      "closureProven": true,
+      "blockers": []
     },
     {
       "screenId": "ADM-55",
@@ -1489,6 +1539,7 @@
       "route": "/admin/settings/advertising",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72206",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1502,6 +1553,7 @@
       "route": "/admin/settings/seo",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72311",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1515,6 +1567,7 @@
       "route": "/admin/settings/privacy-security",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72413",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1528,6 +1581,7 @@
       "route": "/admin/settings/display",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72503",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "VERIFIED_NO_CHANGE",
@@ -1541,6 +1595,7 @@
       "route": "/admin/admin-users",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72653",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1554,6 +1609,7 @@
       "route": "/admin/admin-users/new",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72874",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1567,6 +1623,7 @@
       "route": "/admin/admin-users/:id",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:72978",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1580,6 +1637,7 @@
       "route": "/admin/admin-users/:id",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:73122",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1593,6 +1651,7 @@
       "route": "/admin/roles",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:73268",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1606,6 +1665,7 @@
       "route": "/admin/roles/:id",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:73435",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1619,6 +1679,7 @@
       "route": "/admin/notifications",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:74029",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",
@@ -1632,6 +1693,7 @@
       "route": "/admin/audit-logs",
       "figmaPageId": "6017:4356",
       "figmaFrameNodeId": "6017:74241",
+      "sourceBasis": "FIGMA_FRAME",
       "sourcePresent": true,
       "reviewPresent": true,
       "classification": "REPAIRED_VERIFIED",

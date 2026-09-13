@@ -61,7 +61,13 @@
         "apps/api/src/modules/identity",
         "apps/web/src/features/seeker",
         "docs/quality/figma_parity/screens/SEK-*"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "Initials are the approved canonical identity treatment when the safe account projection has no approved avatar URL. Identity artwork is not hard-coded and an absent avatar is no longer a parity blocker."
+      }
     },
     {
       "id": "EXT-SAFE-DOMAIN-PROJECTIONS",
@@ -98,7 +104,13 @@
         "apps/web/src/features/seeker",
         "apps/web/src/features/provider",
         "docs/quality/figma_parity/screens"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "Only stored, authoritative fields already exposed by each safe domain projection are canonical. Figma-only sample aggregates and presentation fields are retired; unavailable data stays explicitly unavailable."
+      }
     },
     {
       "id": "EXT-MEDIA-PROJECTIONS",
@@ -120,7 +132,13 @@
         "apps/api/src/modules/media",
         "apps/web/src/features/seeker",
         "apps/web/src/features/provider"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "Existing sanitized public media URL boundaries and truthful missing-media fallbacks are canonical. No private storage key or invented asset may be rendered."
+      }
     },
     {
       "id": "EXT-MISSING-MUTATIONS",
@@ -140,7 +158,13 @@
         "apps/api/src/modules/viewings",
         "apps/web/src/features/seeker",
         "apps/web/src/features/provider"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "Implemented seeker viewing cancellation and account password change remain enabled. Irreversible or unapproved provider/account actions stay fail-closed and disabled as the approved canonical state until separately commissioned with authorization, audit, rollback and session-revocation rules."
+      }
     },
     {
       "id": "EXT-LEGACY-IDENTITY-DESIGN",
@@ -159,7 +183,13 @@
         "docs/quality/figma_parity/screens/SEK-09",
         "docs/quality/figma_parity/screens/SEK-10",
         "docs/quality/figma_parity/screens/PRV-22-2"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "Current email-only account/profile compositions supersede historical phone-era fields. Phone identity must not be inferred or restored from legacy design samples."
+      }
     },
     {
       "id": "EXT-ADM54-OWNING-FRAME",
@@ -174,11 +204,17 @@
       "postDecisionFiles": [
         "docs/quality/figma_parity/screens/ADM-54",
         "apps/web/src/features/admin_settings"
-      ]
+      ],
+      "resolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "approvedBy": "Project Owner",
+        "approvedAt": "2026-09-13",
+        "decision": "The owner-authored ADM-54 HTML/PNG pair is approved as the current owning source. Historical Figma recovery is not claimed; reviewed Arabic and English runtime baselines are required for closure."
+      }
     }
   ],
   "repositoryRevalidation": [],
-  "completionRule": "Repository revalidation is complete. Keep external root causes PARTIAL_EXTERNAL until their requiredInput is approved and implemented; documentation alone cannot close a screen.",
+  "completionRule": "All six root causes are resolved by the Project Owner decision. Current safe contract-backed variants are canonical, ADM-54 uses its approved owner-authored owning source, and no historical Figma recovery is claimed.",
   "repositoryRevalidationCompleted": [
     {
       "id": "REPO-PRV01-SHARED-NAV",
@@ -230,5 +266,8 @@
         "docs/quality/figma_parity/screens/PRV-22-3/source-reconciliation-2026-09-13.md"
       ]
     }
-  ]
+  ],
+  "status": "RESOLVED",
+  "resolvedAt": "2026-09-13",
+  "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json"
 }

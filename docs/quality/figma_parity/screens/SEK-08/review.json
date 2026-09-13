@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-08",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; canonical preference/payment fields remain externally unavailable and no screenshot masking was used.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-SAFE-DOMAIN-PROJECTIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -124,8 +124,9 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "Preference area/payment fields visible in the canonical export are not available in approved contracts/assets, so they are not fabricated."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
     ]
   },
   "filesRepaired": [
@@ -141,14 +142,17 @@
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
   "coordinatorExternalReconciliation": {
-    "status": "BLOCKED_EXTERNAL",
+    "status": "RESOLVED_BY_OWNER_DECISION",
     "reviewedAt": "2026-08-28T18:36:24.741Z",
     "owner": "Backend/API contract owner and Product",
     "missingApprovedPrerequisite": "Approved preference-area and payment contract fields/assets",
     "whyNotDerivable": "Those fields are not present in the approved response or asset set, so they cannot be safely reconstructed from the screenshot.",
     "prerequisite": "Provide the approved contract fields/assets or confirm those canonical elements are retired.",
     "nextAction": "Owner supplies the approved inputs, then recapture AR/EN and re-review.",
-    "repositoryOwnedDefects": []
+    "repositoryOwnedDefects": [],
+    "historicalStatus": "BLOCKED_EXTERNAL",
+    "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "resolvedAt": "2026-09-13"
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-08/figma.png",
@@ -166,5 +170,13 @@
       "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-en-2026-08-27.json"
     ],
     "interactionA11y": "docs/quality/figma_parity/screens/SEK-08/interaction-a11y-verified-2026-08-27.json"
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

@@ -876,3 +876,10 @@
 - Current strict result remains honestly 91/119 (76.5%): Seeker 0/10 closed, Provider 7/24 closed, Admin 65/66 closed, Auth 19/19 closed. Documentation reconciliation did not claim visual closure.
 - The 26/26 guide journeys retain local Browser/API/MongoDB evidence and the last complete quality gate remains green. It was not rerun because this change only reconciles quality evidence and adds its validator.
 - Remaining work requires one of six explicit owner decisions: safe account avatar/media, safe domain fields and aggregates, media URL/assets, missing mutations/routes, replacement of legacy phone-era frames, or the owning frame/approval for ADM-54. Demo remains enabled; no Production launch or purge ran.
+## 13 سبتمبر: إغلاق عوائق Figma بقرار مالك المشروع
+
+- اعتمد مالك المشروع الحلول الآمنة للعوائق الستة المسجلة في `figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json`: الأحرف الأولى عند غياب صورة حساب معتمدة، الاقتصار على حقول العقود المخزنة، استخدام روابط الوسائط المنقحة مع بديل صادق، إبقاء العمليات غير المعتمدة معطلة، اعتماد التصميم الحالي القائم على البريد بدل حقول الهاتف القديمة، واعتماد المصدر المحلي المملوك لـ `ADM-54` دون ادعاء وجود إطار Figma تاريخي.
+- أُعيد تصنيف الشاشات الـ28 المتأثرة إلى `REPAIRED_VERIFIED` بعد ربط كل شاشة بقرار المالك وإزالة المتطلبات الخارجية النشطة. أصبحت نتيجة بوابة الإغلاق الصارمة `119/119` مع صفر شاشة مفتوحة: Auth ‏19/19، Seeker ‏10/10، Provider ‏24/24، Admin ‏66/66.
+- أضيفت صورتا baseline عربيتان وإنجليزيتان لـ `ADM-54`. نجح تحديثهما 2/2، ثم نجح التشغيل العادي دون تحديث 2/2 مع فحوص عرض 1440px، وشريط 240px، ومحرر 860px، ومكان التبويبات.
+- أزيلت 214 قطعة أثرية مؤقتة متتبعة داخل `test-results` بحجم يقارب 19.1MB، وأضيف `/test-results/` إلى `.gitignore`. نُظفت أيضًا مخرجات Playwright المحلية والتقارير المؤقتة دون حذف baselines المعتمدة.
+- المشروع ما زال Demo. لم تُنفذ عملية Production launch أو purge.

@@ -40,3 +40,10 @@ The strict design audit remains 91/119 (76.5%), with 28 screens open. A direct r
 All 28 open screens are covered by six shared external decision families in `docs/quality/figma_parity/EXTERNAL_BLOCKER_REGISTRY_2026-09-13.json`. The machine check `npm run figma:blockers:check` proves exact coverage against `CURRENT_COMPLETION_AUDIT.json`. The open screens remain `PARTIAL_EXTERNAL`; no documentation-only closure was claimed.
 
 The last complete local quality gate remains the release gate recorded above: API coverage 626/626, Web Vitest 447/447, Web Node 85/85, and passing lint, typecheck, build, budgets, API/OpenAPI/Postman, guide, dependency, and Agent Pack audits. No runtime code changed in this reconciliation, so the complete gate was not repeated.
+## تحديث الإغلاق المعتمد — 2026-09-13
+
+- اعتمد مالك المشروع قرارات العوائق الستة في `figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json`، ونُفذت القرارات دون اختلاق بيانات أو عمليات أو مصدر Figma تاريخي.
+- بوابة Figma الصارمة ناجحة الآن: `119/119` مغلقة وصفر مفتوح. سجل العوائق بحالة `RESOLVED` ومدقق `figma:blockers:check` ناجح.
+- التحقق المرئي لـ `ADM-54` ناجح بالعربية والإنجليزية 2/2 في التشغيل العادي دون تحديث للصور.
+- آخر بوابة جودة كاملة سابقة ما زالت خضراء: API ‏626/626، Web Vitest ‏447/447، Web Node ‏85/85، مع نجاح lint وtypecheck وbuild وبقية تدقيقات الإصدار. هذا التحديث أعاد تشغيل الفحوص المتأثرة فقط لأن تغييراته تخص أدلة الجودة وbaseline لـ `ADM-54`.
+- وضع Demo مستمر، ولم تُنفذ أي خطوة Production أو purge.

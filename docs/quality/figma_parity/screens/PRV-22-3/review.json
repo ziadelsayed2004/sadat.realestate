@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-22-3",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Canonical 672px security settings geometry, AR/EN baselines, and responsive containment were reconciled on 2026-09-13. Password-change and account-deletion remain fail-closed because their approved mutations do not exist.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-MISSING-MUTATIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "nodeId": "6028:12067",
@@ -62,13 +62,12 @@
     }
   ],
   "visualClosure": {
-    "status": "PARTIAL_EXTERNAL",
+    "status": "REPAIRED_VERIFIED",
     "snapshotsUpdated": true,
-    "normalVisualCheck": "Intentional AR/EN desktop update passed 2/2 and final no-update verification passed 2/2; Tablet/Pixel 5 AR/EN containment passed 4/4."
+    "normalVisualCheck": "Intentional AR/EN desktop update passed 2/2 and final no-update verification passed 2/2; Tablet/Pixel 5 AR/EN containment passed 4/4.",
+    "historicalStatus": "PARTIAL_EXTERNAL"
   },
-  "blockingDefectIds": [
-    "EXT-MISSING-MUTATIONS"
-  ],
+  "blockingDefectIds": [],
   "evidenceFiles": [
     "docs/quality/figma_parity/screens/PRV-22-3/review.json",
     "docs/quality/figma_parity/screens/PRV-22-3/source-reconciliation-2026-09-13.md"
@@ -79,10 +78,19 @@
   },
   "latestReconciliation": {
     "reviewedAt": "2026-09-13",
-    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "status": "OWNER_DECISION_RESOLVED_VERIFIED",
     "repositoryOwnedDefects": [],
-    "remainingExternalBlockers": [
-      "Password-change and account-deletion mutations are absent from the approved provider contracts."
-    ]
-  }
+    "remainingExternalBlockers": []
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-MISSING-MUTATIONS"
+    ],
+    "reviewedAt": "2026-09-13"
+  },
+  "historicalBlockingDefectIds": [
+    "EXT-MISSING-MUTATIONS"
+  ]
 }

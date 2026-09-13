@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-03",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; provider/avatar/media metadata remains externally unavailable and no screenshot masking was used.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-IDENTITY-AVATAR, EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -123,8 +123,11 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "The writable request contract exposes safe payload fields only; canonical provider/avatar/media and richer status metadata are unavailable."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-IDENTITY-AVATAR",
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS"
     ]
   },
   "filesRepaired": [
@@ -139,14 +142,17 @@
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
   "coordinatorExternalReconciliation": {
-    "status": "BLOCKED_EXTERNAL",
+    "status": "RESOLVED_BY_OWNER_DECISION",
     "reviewedAt": "2026-08-28T18:36:24.741Z",
     "owner": "Backend/API contract owner and Product/Design",
     "missingApprovedPrerequisite": "Approved provider/avatar/media projection and richer request status metadata",
     "whyNotDerivable": "Those fields are absent from the approved writable response shape; reconstructing them from the canonical screenshot would fabricate provider identity and status data.",
     "prerequisite": "Provide the approved safe response fields and any canonical media assets.",
     "nextAction": "Owner supplies the contract/assets, then recapture AR/EN and re-review.",
-    "repositoryOwnedDefects": []
+    "repositoryOwnedDefects": [],
+    "historicalStatus": "BLOCKED_EXTERNAL",
+    "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "resolvedAt": "2026-09-13"
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-03/figma.png",
@@ -170,11 +176,29 @@
     "reviewed": true,
     "baseline": "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-ar-desktop-ar-win32.png",
     "result": "Current compact timeline/summary composition is visually consistent with the recovered source structure; the superseded tall baseline was replaced after direct review.",
-    "responsiveWidths": [393, 768, 1280, 1551],
-    "locales": ["ar", "en"],
+    "responsiveWidths": [
+      393,
+      768,
+      1280,
+      1551
+    ],
+    "locales": [
+      "ar",
+      "en"
+    ],
     "focusedTestsPassed": 6,
     "overflowOrCardIntersection": false,
     "officialClosureEligible": false,
     "remainingExternal": "Approved rich property/provider/avatar/media projection"
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-IDENTITY-AVATAR",
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-10",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "The review and submit flow matches the official hierarchy on desktop, tablet, and mobile while using only approved property projections; richer canonical summary data is absent from the active contract.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -18,8 +18,14 @@
     "ownership": "provider-owned",
     "approvedDevice": "desktop/tablet/mobile",
     "locales": [
-      { "locale": "ar", "direction": "rtl" },
-      { "locale": "en", "direction": "ltr" }
+      {
+        "locale": "ar",
+        "direction": "rtl"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr"
+      }
     ],
     "beforeCapture": null,
     "afterCaptures": [
@@ -67,8 +73,10 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "The safe provider projection lacks the richer canonical property and media summary fields."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS"
     ]
   },
   "filesRepaired": [
@@ -87,5 +95,14 @@
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-10.png",
     "runtimeCheck": "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-09-13-{ar,en}.png",
     "sourceReconciliation": "docs/quality/figma_parity/screens/PRV-10/source-reconciliation-2026-09-13.md"
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "EXT-MEDIA-PROJECTIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

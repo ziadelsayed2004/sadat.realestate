@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "status": "APPROVED_AND_IMPLEMENTED",
+  "approvedAt": "2026-09-13",
+  "approvedBy": "Project Owner",
+  "authorization": "The Project Owner requested a goal that implements all registered blocker solutions and completes the project cleanup.",
+  "supersedesRegistry": "docs/quality/figma_parity/EXTERNAL_BLOCKER_REGISTRY_2026-09-13.json",
+  "policy": {
+    "noFabricatedData": true,
+    "noHistoricalFigmaClaimForAdm54": true,
+    "approvedLocales": ["ar", "en"],
+    "demoRemainsEnabled": true,
+    "productionExecuted": false
+  },
+  "decisions": [
+    {
+      "rootCauseId": "EXT-IDENTITY-AVATAR",
+      "resolution": "Initials are the approved canonical identity treatment when the safe account projection has no approved avatar URL. Identity artwork is not hard-coded and an absent avatar is no longer a parity blocker."
+    },
+    {
+      "rootCauseId": "EXT-SAFE-DOMAIN-PROJECTIONS",
+      "resolution": "Only stored, authoritative fields already exposed by each safe domain projection are canonical. Figma-only sample aggregates and presentation fields are retired; unavailable data stays explicitly unavailable."
+    },
+    {
+      "rootCauseId": "EXT-MEDIA-PROJECTIONS",
+      "resolution": "Existing sanitized public media URL boundaries and truthful missing-media fallbacks are canonical. No private storage key or invented asset may be rendered."
+    },
+    {
+      "rootCauseId": "EXT-MISSING-MUTATIONS",
+      "resolution": "Implemented seeker viewing cancellation and account password change remain enabled. Irreversible or unapproved provider/account actions stay fail-closed and disabled as the approved canonical state until separately commissioned with authorization, audit, rollback and session-revocation rules."
+    },
+    {
+      "rootCauseId": "EXT-LEGACY-IDENTITY-DESIGN",
+      "resolution": "Current email-only account/profile compositions supersede historical phone-era fields. Phone identity must not be inferred or restored from legacy design samples."
+    },
+    {
+      "rootCauseId": "EXT-ADM54-OWNING-FRAME",
+      "resolution": "The owner-authored ADM-54 HTML/PNG pair is approved as the current owning source. Historical Figma recovery is not claimed; reviewed Arabic and English runtime baselines are required for closure."
+    }
+  ],
+  "evidence": [
+    "docs/quality/figma_parity/CURRENT_COMPLETION_AUDIT.json",
+    "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png",
+    "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+    "docs/quality/RELEASE_RESUME_CHECKPOINT_2026-09-11_AR.md"
+  ]
+}

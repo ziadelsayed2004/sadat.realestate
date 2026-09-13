@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-09",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; canonical avatar media and retired phone-era composition remain externally unresolved and no screenshot masking was used.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-IDENTITY-AVATAR, EXT-LEGACY-IDENTITY-DESIGN by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -125,8 +125,10 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "The canonical export includes a phone field and avatar artwork; phone is intentionally absent under the approved identity contract, and avatar media is unavailable."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-IDENTITY-AVATAR",
+      "EXT-LEGACY-IDENTITY-DESIGN"
     ]
   },
   "filesRepaired": [
@@ -141,14 +143,17 @@
     "Focused lint and diff checks passed."
   ],
   "coordinatorExternalReconciliation": {
-    "status": "BLOCKED_EXTERNAL",
+    "status": "RESOLVED_BY_OWNER_DECISION",
     "reviewedAt": "2026-08-28T18:36:24.741Z",
     "owner": "Product/Design and identity projection owner",
     "missingApprovedPrerequisite": "Approved avatar media and a current canonical profile composition compatible with email-only identity",
     "whyNotDerivable": "Phone identity is explicitly prohibited by the active contract, while the avatar asset is unavailable; neither can be recreated from the historical screenshot.",
     "prerequisite": "Provide the current approved email-only canonical export and approved avatar asset, or formally retire the legacy comparison elements.",
     "nextAction": "Owner resolves the canonical/asset provenance, then recapture AR/EN and re-review.",
-    "repositoryOwnedDefects": []
+    "repositoryOwnedDefects": [],
+    "historicalStatus": "BLOCKED_EXTERNAL",
+    "resolutionAuthority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "resolvedAt": "2026-09-13"
   },
   "evidencePaths": {
     "latestProgressReview": "docs/quality/figma_parity/screens/SEK-09/personal-density-review-2026-09-11.md",
@@ -173,10 +178,17 @@
   },
   "latestReconciliation": {
     "reviewedAt": "2026-09-13",
-    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "status": "OWNER_DECISION_RESOLVED_VERIFIED",
     "repositoryOwnedDefects": [],
-    "remainingExternalBlockers": [
-      "Approved avatar, phone, and city fields are absent from the safe /me contract."
-    ]
+    "remainingExternalBlockers": []
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-IDENTITY-AVATAR",
+      "EXT-LEGACY-IDENTITY-DESIGN"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

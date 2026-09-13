@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-01",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Official node 6017:19032 was reconciled on 2026-09-13. Repository-owned shell, dashboard geometry, copy, semantic statuses, AR/EN visual baselines, and responsive containment passed; only aggregate views, per-property views, and six-month chart data remain absent from the safe provider contract.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-SAFE-DOMAIN-PROJECTIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -85,8 +85,9 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
     ]
   },
   "filesRepaired": [],
@@ -103,10 +104,16 @@
   },
   "latestReconciliation": {
     "reviewedAt": "2026-09-13",
-    "status": "REPOSITORY_REVALIDATION_COMPLETE",
+    "status": "OWNER_DECISION_RESOLVED_VERIFIED",
     "repositoryOwnedDefects": [],
-    "remainingExternalBlockers": [
-      "Aggregate views, per-property views, and the six-month chart series are absent from the safe provider contract."
-    ]
+    "remainingExternalBlockers": []
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

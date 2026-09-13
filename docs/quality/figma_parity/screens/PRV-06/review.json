@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PRV-06",
-  "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "The pricing wizard validates real price and payment-plan fields, but canonical fee, deposit, negotiability, and commission content is not represented by the active contract.",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Repository-owned behavior and reviewed AR/EN presentation were already verified. Project Owner decision on 2026-09-13 resolved EXT-SAFE-DOMAIN-PROJECTIONS by approving the current safe contract-backed canonical variant; no missing data, action, asset, or historical Figma node was invented.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -84,8 +84,9 @@
   },
   "defects": {
     "repository": [],
-    "approvedExternal": [
-      "Canonical fee/deposit/negotiability/commission fields are absent from the active pricing contract."
+    "approvedExternal": [],
+    "resolvedByOwnerDecision": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
     ]
   },
   "filesRepaired": [
@@ -100,5 +101,13 @@
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-06.png",
     "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+  },
+  "ownerDecisionResolution": {
+    "status": "APPROVED_AND_IMPLEMENTED",
+    "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+    "rootCauseIds": [
+      "EXT-SAFE-DOMAIN-PROJECTIONS"
+    ],
+    "reviewedAt": "2026-09-13"
   }
 }

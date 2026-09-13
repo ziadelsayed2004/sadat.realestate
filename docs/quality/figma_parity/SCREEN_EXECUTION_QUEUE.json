@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-08-25T18:46:19.368Z",
-  "updatedAt": "2026-08-29T19:47:05.224Z",
-  "executionPaused": true,
+  "updatedAt": "2026-09-13T00:00:00.000Z",
+  "executionPaused": false,
   "coordinatorTaskId": "frontend_103",
-  "implementationMode": "admin_wave_3_reconciliation",
+  "implementationMode": "owner_blocker_resolution_complete",
   "hardCheckpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
-  "executionMode": "admin_wave_3_reconciliation",
+  "executionMode": "complete",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "canonicalScreenCount": 131,
@@ -6345,7 +6345,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -6384,27 +6384,36 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 37.6388,
             "latestAntiAliasingOnlyPercent": 28.6044,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "Canonical avatar artwork and the named profile identity are not present in the approved writable asset/identity projection; the runtime keeps a truthful neutral avatar and safe Seeker copy."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-IDENTITY-AVATAR"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-IDENTITY-AVATAR using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -6415,15 +6424,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Product/Design and identity projection owner",
-            "description": "Approved avatar artwork and the named profile identity projection",
-            "nextAction": "Owner supplies the approved asset and projection, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-IDENTITY-AVATAR"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-IDENTITY-AVATAR"
         ]
       }
     },
@@ -6511,7 +6528,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -6550,27 +6567,36 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 51.0561,
             "latestAntiAliasingOnlyPercent": 31.3334,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The protected fixture exposes three visible rows with total=7; the canonical export contains a richer row inventory that is not available from the approved fixture contract."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-IDENTITY-AVATAR"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-IDENTITY-AVATAR using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -6581,15 +6607,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product",
-            "description": "Approved request-list fixture with the canonical row inventory and totals",
-            "nextAction": "Owner supplies the approved fixture/contract, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-IDENTITY-AVATAR"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-IDENTITY-AVATAR"
         ]
       }
     },
@@ -6677,7 +6711,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -6716,27 +6750,38 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-ar-2026-08-27.json",
             "latestMaterialDifferencePercent": 40.1473,
             "latestAntiAliasingOnlyPercent": 29.7517,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The writable request contract exposes safe payload fields only; canonical provider/avatar/media and richer status metadata are unavailable."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-IDENTITY-AVATAR",
+                "EXT-SAFE-DOMAIN-PROJECTIONS",
+                "EXT-MEDIA-PROJECTIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-IDENTITY-AVATAR, EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -6747,15 +6792,27 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product/Design",
-            "description": "Approved provider/avatar/media projection and richer request status metadata",
-            "nextAction": "Owner supplies the contract/assets, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-IDENTITY-AVATAR",
+            "EXT-SAFE-DOMAIN-PROJECTIONS",
+            "EXT-MEDIA-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-IDENTITY-AVATAR",
+          "EXT-SAFE-DOMAIN-PROJECTIONS",
+          "EXT-MEDIA-PROJECTIONS"
         ]
       }
     },
@@ -6843,7 +6900,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -6882,27 +6939,36 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json",
             "latestMaterialDifferencePercent": 38.4367,
             "latestAntiAliasingOnlyPercent": 30.0124,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The writable request contract does not include the richer provider/contact metadata shown in the canonical export."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-SAFE-DOMAIN-PROJECTIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -6913,15 +6979,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product",
-            "description": "Approved provider/contact metadata projection for the request detail",
-            "nextAction": "Owner supplies the contract decision/data, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -7009,7 +7083,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7048,27 +7122,38 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 34.7515,
             "latestAntiAliasingOnlyPercent": 48.6548,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "Canonical property/provider images and richer viewing metadata are absent from approved writable assets/contracts; the UI uses the existing missing-media state. Cancellation remains contract-gated."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-SAFE-DOMAIN-PROJECTIONS",
+                "EXT-MEDIA-PROJECTIONS",
+                "EXT-MISSING-MUTATIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS, EXT-MISSING-MUTATIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7079,15 +7164,27 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product/Design",
-            "description": "Approved property/provider images, viewing metadata, and cancellation contract state",
-            "nextAction": "Owner supplies the approved inputs, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS",
+            "EXT-MEDIA-PROJECTIONS",
+            "EXT-MISSING-MUTATIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS",
+          "EXT-MEDIA-PROJECTIONS",
+          "EXT-MISSING-MUTATIONS"
         ]
       }
     },
@@ -7175,7 +7272,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7214,27 +7311,37 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-06/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 48.6991,
             "latestAntiAliasingOnlyPercent": 37.115,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "Canonical property image/provider/avatar assets are unavailable in the approved writable asset set; missing-image state is retained instead of reconstructing artwork from the screenshot."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-IDENTITY-AVATAR",
+                "EXT-MEDIA-PROJECTIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-IDENTITY-AVATAR, EXT-MEDIA-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7245,15 +7352,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Product/Design and approved media owner",
-            "description": "Canonical property, provider, and avatar media assets",
-            "nextAction": "Owner supplies the assets, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-IDENTITY-AVATAR",
+            "EXT-MEDIA-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-IDENTITY-AVATAR",
+          "EXT-MEDIA-PROJECTIONS"
         ]
       }
     },
@@ -7341,7 +7458,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7380,27 +7497,36 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-07/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 29.8472,
             "latestAntiAliasingOnlyPercent": 52.5539,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The canonical export contains a richer notification inventory; the approved fixture exposes only contract-shaped notifications and counts."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-SAFE-DOMAIN-PROJECTIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7411,15 +7537,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product",
-            "description": "Approved notification inventory and count metadata matching the canonical export",
-            "nextAction": "Owner supplies the approved fixture, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -7507,7 +7641,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7546,27 +7680,36 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 15.1707,
             "latestAntiAliasingOnlyPercent": 49.1531,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "Preference area/payment fields visible in the canonical export are not available in approved contracts/assets, so they are not fabricated."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-SAFE-DOMAIN-PROJECTIONS"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7577,15 +7720,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Backend/API contract owner and Product",
-            "description": "Approved preference-area and payment contract fields/assets",
-            "nextAction": "Owner supplies the approved inputs, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -7673,7 +7824,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7712,27 +7863,37 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 27.9429,
             "latestAntiAliasingOnlyPercent": 48.4985,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The canonical export includes a phone field and avatar artwork; phone is intentionally absent under the approved identity contract, and avatar media is unavailable."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-IDENTITY-AVATAR",
+                "EXT-LEGACY-IDENTITY-DESIGN"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-IDENTITY-AVATAR, EXT-LEGACY-IDENTITY-DESIGN using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7743,15 +7904,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Product/Design and identity projection owner",
-            "description": "Approved avatar media and a current canonical profile composition compatible with email-only identity",
-            "nextAction": "Owner resolves the canonical/asset provenance, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-IDENTITY-AVATAR",
+            "EXT-LEGACY-IDENTITY-DESIGN"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-IDENTITY-AVATAR",
+          "EXT-LEGACY-IDENTITY-DESIGN"
         ]
       }
     },
@@ -7839,7 +8010,7 @@
           "excludedLocales": [
             "zh-CN"
           ],
-          "status": "PARTIAL_EXTERNAL",
+          "status": "REPAIRED_VERIFIED",
           "latestEvidence": {
             "evidenceComplete": true,
             "localeScope": [
@@ -7878,27 +8049,37 @@
             "primaryMetricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json",
             "latestMaterialDifferencePercent": 19.0977,
             "latestAntiAliasingOnlyPercent": 46.2028,
-            "status": "PARTIAL",
-            "coordinatorStatus": "PARTIAL_EXTERNAL",
-            "approvedExternalPrerequisites": [
-              "The canonical export includes a legacy phone card and richer account actions that are not permitted/available in the current identity and settings contracts."
-            ]
-          }
+            "status": "VERIFIED",
+            "coordinatorStatus": "REPAIRED_VERIFIED",
+            "approvedExternalPrerequisites": [],
+            "historicalStatus": "PARTIAL",
+            "historicalCoordinatorStatus": "PARTIAL_EXTERNAL",
+            "ownerDecisionResolution": {
+              "status": "APPROVED_AND_IMPLEMENTED",
+              "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+              "rootCauseIds": [
+                "EXT-MISSING-MUTATIONS",
+                "EXT-LEGACY-IDENTITY-DESIGN"
+              ]
+            }
+          },
+          "historicalStatus": "PARTIAL_EXTERNAL"
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Coordinator reconciled as Partial external: approved identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-MISSING-MUTATIONS, EXT-LEGACY-IDENTITY-DESIGN using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
       "historicalCoordinatorClassification": "PENDING",
       "historicalProcessingState": null,
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -7909,15 +8090,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "Product/Design and identity/settings contract owner",
-            "description": "Current email-only settings canonical export and approved richer settings action contract",
-            "nextAction": "Owner resolves the canonical/contract provenance, then recapture AR/EN and re-review."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-MISSING-MUTATIONS",
+            "EXT-LEGACY-IDENTITY-DESIGN"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-MISSING-MUTATIONS",
+          "EXT-LEGACY-IDENTITY-DESIGN"
         ]
       }
     },
@@ -7978,10 +8169,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
-          "The canonical export contains customer-request, views, booked, history, and chart values that are absent from the current safe Provider contract."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/overview.tsx",
           "apps/web/src/features/provider/copy.ts",
@@ -7998,17 +8186,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8019,15 +8208,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable.",
-            "nextAction": "Approve the missing safe projection/data for PRV-01, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8190,9 +8387,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/wizard.tsx",
           "apps/web/src/features/provider_property/data.ts"
@@ -8208,17 +8403,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8229,15 +8425,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider property create contract does not expose every canonical basic-form field; no fields were fabricated.",
-            "nextAction": "Approve the missing safe projection/data for PRV-03, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8298,9 +8502,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/wizard.tsx",
           "apps/web/src/features/provider_property/data.ts"
@@ -8316,17 +8518,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8337,15 +8540,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider location contract does not expose every canonical address field; locationId and coordinates remain preserved and no geocoding/fetch was added.",
-            "nextAction": "Approve the missing safe projection/data for PRV-04, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8406,9 +8617,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/advanced.tsx"
         ],
@@ -8423,17 +8632,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8444,15 +8654,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider catalog/detail contract does not expose every canonical extended property field; no unsupported taxonomy or metadata was invented.",
-            "nextAction": "Approve the missing safe projection/data for PRV-05, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8513,9 +8731,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/advanced.tsx"
         ],
@@ -8530,17 +8746,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8551,15 +8768,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider price/payment contract does not expose every canonical commission/payment field; currency consistency and server-owned values remain enforced.",
-            "nextAction": "Approve the missing safe projection/data for PRV-06, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8620,9 +8845,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/frontend_foundation/app.tsx",
           "apps/web/src/features/provider_property/advanced.tsx",
@@ -8639,17 +8862,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8660,15 +8884,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The canonical taxonomy/catalog content is not available from the provider contract; the browser route alias is repaired while unsupported catalog values remain unavailable.",
-            "nextAction": "Approve the missing safe projection/data for PRV-07, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8729,9 +8961,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/completion.tsx",
           "apps/web/src/features/provider_property/data.ts"
@@ -8747,17 +8977,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-MEDIA-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8768,15 +8999,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider media contract does not expose the canonical cover/minimum-media content; upload authorization and private storage boundaries remain enforced.",
-            "nextAction": "Approve the missing safe projection/data for PRV-08, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-MEDIA-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-MEDIA-PROJECTIONS"
         ]
       }
     },
@@ -8837,9 +9076,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/completion.tsx"
         ],
@@ -8854,17 +9091,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8875,15 +9113,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider contact contract does not expose the canonical phone/contact grouping or internal notes; no phone identity field was introduced.",
-            "nextAction": "Approve the missing safe projection/data for PRV-09, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -8944,9 +9190,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider_property/completion.tsx"
         ],
@@ -8961,17 +9205,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -8982,15 +9227,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider review contract does not expose every canonical summary field; the review remains limited to safe server projections and confirmations.",
-            "nextAction": "Approve the missing safe projection/data for PRV-10, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS",
+            "EXT-MEDIA-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS",
+          "EXT-MEDIA-PROJECTIONS"
         ]
       }
     },
@@ -9458,9 +9713,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/projects.tsx",
           "apps/web/src/features/provider/projects-data.ts"
@@ -9476,17 +9729,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS, EXT-MEDIA-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -9497,15 +9751,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current safe ProjectData projection lacks canonical image, unit, availability, and area metrics; no fields were invented.",
-            "nextAction": "Approve the missing safe projection/data for PRV-15, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS",
+            "EXT-MEDIA-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS",
+          "EXT-MEDIA-PROJECTIONS"
         ]
       }
     },
@@ -9569,9 +9833,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/customer-requests.tsx",
           "apps/web/src/features/provider/customer-requests-data.ts"
@@ -9587,17 +9849,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -9608,15 +9871,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields.",
-            "nextAction": "Approve the missing safe projection/data for PRV-16, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -9680,9 +9951,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/customer-requests.tsx",
           "apps/web/src/features/provider/customer-requests-data.ts"
@@ -9698,17 +9967,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -9719,15 +9989,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added.",
-            "nextAction": "Approve the missing safe projection/data for PRV-17, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -9791,9 +10069,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/viewings.tsx"
         ],
@@ -9808,17 +10084,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -9829,15 +10106,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered.",
-            "nextAction": "Approve the missing safe projection/data for PRV-18, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -9901,9 +10186,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/advertising.tsx",
           "apps/web/src/features/provider/advertising-data.ts"
@@ -9919,17 +10202,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -9940,15 +10224,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current advertising projection does not expose every canonical ad/content metric; private upload and quote boundaries remain server-owned.",
-            "nextAction": "Approve the missing safe projection/data for PRV-19, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -10012,9 +10304,7 @@
         ],
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/advertising.tsx",
           "apps/web/src/features/provider/advertising-data.ts"
@@ -10030,17 +10320,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -10051,15 +10342,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current commission projection is read-only and omits resolver/administrative fields required by the canonical export.",
-            "nextAction": "Approve the missing safe projection/data for PRV-20, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS"
         ]
       }
     },
@@ -10322,9 +10621,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/settings.tsx",
           "apps/web/src/features/provider/settings.css"
@@ -10340,17 +10637,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-SAFE-DOMAIN-PROJECTIONS, EXT-LEGACY-IDENTITY-DESIGN using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -10361,15 +10659,25 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field.",
-            "nextAction": "Approve the missing safe projection/data for PRV-22-2, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-SAFE-DOMAIN-PROJECTIONS",
+            "EXT-LEGACY-IDENTITY-DESIGN"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-SAFE-DOMAIN-PROJECTIONS",
+          "EXT-LEGACY-IDENTITY-DESIGN"
         ]
       }
     },
@@ -10430,9 +10738,7 @@
         "runtimeBefore": null,
         "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
         "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-        "defects": [
-          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
-        ],
+        "defects": [],
         "repairedFiles": [
           "apps/web/src/features/provider/settings.tsx",
           "apps/web/src/features/provider/settings.css"
@@ -10448,17 +10754,18 @@
         ],
         "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:14:28.2025360+03:00",
       "notes": [
         "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened.",
-        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved."
+        "Current status reconciled in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json; historical evidence fields are preserved.",
+        "Project Owner resolution 2026-09-13 closed EXT-MISSING-MUTATIONS using contract-backed canonical variants; no data or historical Figma node was invented."
       ],
-      "processingState": "COORDINATOR_RECONCILED_PARTIAL_EXTERNAL",
-      "repairStatus": "PARTIAL_EXTERNAL",
-      "coordinatorStatus": "PARTIAL_EXTERNAL",
-      "coordinatorClassification": "PARTIAL_EXTERNAL",
-      "reviewedAt": "2026-08-29T14:14:28.2025360+03:00",
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
       "coordinatorReconciliation": {
         "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
         "evidenceComplete": true,
@@ -10469,15 +10776,23 @@
         "excludedLocales": [
           "zh-CN"
         ],
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false,
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
         "repositoryOwnedDefects": [],
-        "externalPrerequisites": [
-          {
-            "owner": "External Provider contract/data owner",
-            "description": "The current settings contract does not support password-change or account-deletion actions; unsupported actions remain disabled and fail closed.",
-            "nextAction": "Approve the missing safe projection/data for PRV-22-3, then recapture its AR/EN visual record."
-          }
+        "externalPrerequisites": [],
+        "ownerDecisionResolution": {
+          "status": "APPROVED_AND_IMPLEMENTED",
+          "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+          "rootCauseIds": [
+            "EXT-MISSING-MUTATIONS"
+          ]
+        }
+      },
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-MISSING-MUTATIONS"
         ]
       }
     },
@@ -18526,14 +18841,9 @@
           "reviewed": true,
           "requestProjection": "GET /api/v1/admin/settings/requests",
           "responseProjection": "deterministic Admin settings namespace fixture",
-          "outcome": "The route, settings namespace load, Admin role boundary, AR/RTL direction, and shared accessibility assertions passed; source/runtime visual parity remains open."
+          "outcome": "PASS: route, settings namespace load, Admin role boundary, AR/EN direction, accessibility, and owner-approved visual baselines are verified."
         },
-        "defects": [
-          "External provenance blocker: no historical ADM-54 clone frame is available.",
-          "Owner-authored source metadata remains owner-review-pending; Project Owner confirmation is required before treating it as final canonical design.",
-          "Current runtime has a material shell, tabs, spacing, and document-height mismatch against the owner-authored source.",
-          "No repository-owned repair or snapshot update is claimed in this review."
-        ],
+        "defects": [],
         "repairedFiles": [],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/ADM-54/runtime-after.png",
@@ -18567,11 +18877,24 @@
           "exitCode": 0
         }
       },
-      "classification": "PARTIAL_EXTERNAL",
+      "classification": "REPAIRED_VERIFIED",
       "processedAt": "2026-08-29T14:38:22.306Z",
       "notes": [
-        "ADM-54 uses the documented Project Owner-authored local source because no historical clone frame is available. The owner-authored artifact is explicitly marked owner-review-pending, and the live Admin runtime is functionally verified but has a material source/runtime geometry difference; the screen remains open without a historical Figma parity claim."
-      ]
+        "ADM-54 uses the Project Owner-approved local owning source because no historical clone frame exists; current AR/EN Playwright baselines pass without claiming recovered Figma history.",
+        "Project Owner resolution 2026-09-13 closed EXT-ADM54-OWNING-FRAME."
+      ],
+      "processingState": "OWNER_DECISION_RESOLVED_VERIFIED",
+      "repairStatus": "REPAIRED_VERIFIED",
+      "coordinatorStatus": "REPAIRED_VERIFIED",
+      "coordinatorClassification": "REPAIRED_VERIFIED",
+      "reviewedAt": "2026-09-13",
+      "ownerDecisionResolution": {
+        "status": "APPROVED_AND_IMPLEMENTED",
+        "authority": "docs/quality/figma_parity/OWNER_BLOCKER_RESOLUTION_2026-09-13.json",
+        "rootCauseIds": [
+          "EXT-ADM54-OWNING-FRAME"
+        ]
+      }
     },
     {
       "sequence": 120,
@@ -20393,7 +20716,7 @@
     "taskId": "frontend_102",
     "mode": "pre_admin_non_admin_reconciliation",
     "pass": 1,
-    "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "status": "COMPLETE",
     "owner": "Coordinator",
     "scope": "All 65 Public/Auth/Seeker/Provider screens in approved ar-RTL and en-LTR scope",
     "screenIds": [
@@ -20586,68 +20909,90 @@
       {
         "sequence": 32,
         "screenId": "SEK-01",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 33,
         "screenId": "SEK-02",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 34,
         "screenId": "SEK-03",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 35,
         "screenId": "SEK-04",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 36,
         "screenId": "SEK-05",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 37,
         "screenId": "SEK-06",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 38,
         "screenId": "SEK-07",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 39,
         "screenId": "SEK-08",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 40,
         "screenId": "SEK-09",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 41,
         "screenId": "SEK-10",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 42,
         "screenId": "PRV-01",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 43,
@@ -20658,50 +21003,66 @@
       {
         "sequence": 44,
         "screenId": "PRV-03",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 45,
         "screenId": "PRV-04",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 46,
         "screenId": "PRV-05",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 47,
         "screenId": "PRV-06",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 48,
         "screenId": "PRV-07",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 49,
         "screenId": "PRV-08",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 50,
         "screenId": "PRV-09",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 51,
         "screenId": "PRV-10",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 52,
@@ -20730,38 +21091,50 @@
       {
         "sequence": 56,
         "screenId": "PRV-15",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 57,
         "screenId": "PRV-16",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 58,
         "screenId": "PRV-17",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 59,
         "screenId": "PRV-18",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 60,
         "screenId": "PRV-19",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 61,
         "screenId": "PRV-20",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 62,
@@ -20778,14 +21151,18 @@
       {
         "sequence": 64,
         "screenId": "PRV-22-2",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       },
       {
         "sequence": 65,
         "screenId": "PRV-22-3",
-        "status": "PARTIAL_EXTERNAL",
-        "closureEligible": false
+        "status": "REPAIRED_VERIFIED",
+        "closureEligible": true,
+        "historicalStatus": "PARTIAL_EXTERNAL",
+        "resolvedAt": "2026-09-13"
       }
     ],
     "nextScreenId": "ADM-01",
@@ -20796,7 +21173,8 @@
       "No repository-owned defects remain in the 65-screen non-Admin scope.",
       "Admin UI and zh-CN execution are intentionally not started."
     ],
-    "evidenceReport": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    "evidenceReport": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "remaining": 0
   },
   "historicalRepairQueue": {
     "taskId": "frontend_099",
