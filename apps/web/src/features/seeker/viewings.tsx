@@ -224,6 +224,8 @@ function ViewingCard({
   const propertyLocation = property?.locationName === undefined ? undefined : localizedText(property.locationName, locale);
   const providerName = property?.sourceName === undefined ? undefined : localizedText(property.sourceName, locale);
   const propertyHref = property === undefined ? undefined : localeForSeekerPath(locale, `/properties/${property.slug}`);
+  const propertyCode = property?.publicCode;
+  const showPropertyCode = propertyCode !== undefined && !propertyTitle.includes(propertyCode);
   return (
     <article className={`seeker-viewing-card${property === undefined ? '' : ' seeker-viewing-card--rich'}`} data-testid={`seeker-viewing-${viewing.id}`} data-viewing-status={viewing.status}>
       <div className="seeker-viewing-card__image">
@@ -234,25 +236,24 @@ function ViewingCard({
           <div>
             <p className="seeker-dashboard__eyebrow">{copy.property}</p>
             <h2>{propertyHref === undefined ? propertyTitle : <a href={propertyHref} aria-label={`${copy.openProperty}: ${propertyTitle}`}>{propertyTitle}</a>}</h2>
-            {property?.publicCode ? <small className="seeker-viewing-card__code">{property.publicCode}</small> : null}
+            {showPropertyCode ? <small className="seeker-viewing-card__code">{propertyCode}</small> : null}
           </div>
           <Badge tone={statusTone(viewing.status)}>{copy.statuses[viewing.status]}</Badge>
         </div>
-        {propertyLocation || providerName ? <div className="seeker-viewing-card__property-meta">
-          {propertyLocation ? <span><strong>{copy.location}:</strong> {propertyLocation}</span> : null}
-          {providerName ? <span><strong>{copy.source}:</strong> {providerName}</span> : null}
+        {propertyLocation ? <div className="seeker-viewing-card__property-meta">
+          {propertyLocation ? <span className="seeker-viewing-card__location"><strong>{copy.location}:</strong> {propertyLocation}</span> : null}
         </div> : null}
         <dl className="seeker-viewing-card__summary">
           <div><dt>{copy.date}</dt><dd>{dateLabel(viewing.requestedAt, locale)}</dd></div>
           <div><dt>{copy.time}</dt><dd>{timeLabel(viewing.requestedAt, locale)}</dd></div>
-          <div><dt>{copy.timezone}</dt><dd>{viewing.timezone}</dd></div>
         </dl>
-        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
+        {providerName ? <div className="seeker-viewing-card__property-meta"><span className="seeker-viewing-card__provider"><strong>{providerName}</strong><small>{property?.sourceType === 'brokerage_office' ? (locale === 'ar' ? 'مكتب سمسرة' : 'Brokerage office') : (locale === 'ar' ? 'شركة تطوير' : 'Development company')}</small></span></div> : null}
+        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p><p><strong>{copy.timezone}:</strong> {viewing.timezone}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
         {editing ? <ViewingForm locale={locale} mode="reschedule" viewing={viewing} onClose={onCloseForm} onSubmit={input => onReschedule(input as ViewingPatch)} /> : (
           <div className="seeker-viewing-card__actions">
             <Button variant="ghost" size="sm" aria-expanded={expanded} onClick={onToggleDetails}>{expanded ? copy.hideDetails : copy.details}</Button>
-            {canReschedule ? <Button variant="secondary" size="sm" onClick={onCloseForm}>{copy.reschedule}</Button> : null}
-            {canCancel ? <Button variant="danger" size="sm" onClick={onCancel}>{copy.cancel}</Button> : null}
+            {expanded && canReschedule ? <Button variant="secondary" size="sm" onClick={onCloseForm}>{copy.reschedule}</Button> : null}
+            {expanded && canCancel ? <Button variant="danger" size="sm" onClick={onCancel}>{copy.cancel}</Button> : null}
           </div>
         )}
         {confirmingCancel ? <div className="seeker-viewing-card__confirm" role="group" aria-label={copy.cancelConfirm}><p>{copy.cancelConfirm}</p><div><Button variant="danger" size="sm" onClick={onConfirmCancel}>{copy.cancel}</Button><Button variant="ghost" size="sm" onClick={onCancel}>{copy.close}</Button></div></div> : null}

@@ -59,8 +59,8 @@ export interface SeekerViewingsCopy {
 const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
   ar: {
     eyebrow: 'مساحة الباحث عن عقار',
-    title: 'مواعيد المعاينة',
-    description: 'تابع مواعيد معاينة العقارات المرتبطة بحسابك فقط.',
+    title: 'طلبات المعاينة',
+    description: 'مواعيد المعاينة الخاصة بك — القادمة، السابقة، والملغاة',
     count: 'مواعيد',
     tabs: { upcoming: 'القادمة', past: 'السابقة', cancelled: 'الملغاة' },
     property: 'العقار',
@@ -115,8 +115,8 @@ const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
   },
   en: {
     eyebrow: 'Seeker workspace',
-    title: 'Viewing appointments',
-    description: 'Track only the property viewing appointments connected to your account.',
+    title: 'Viewing requests',
+    description: 'Your viewing appointments — upcoming, past, and cancelled',
     count: 'appointments',
     tabs: { upcoming: 'Upcoming', past: 'Past', cancelled: 'Cancelled' },
     property: 'Property',

@@ -655,3 +655,10 @@
 - Corrected SEK-04 to the visible canonical scheduled-viewing state (`REQ-4798`, `Villa SDT-2103`, Corniche District, provider, EGP 2,500,000 maximum budget, and the approved viewing note). The Figma frame name still says “Contacted”; the implementation follows the visible frame content and records that source inconsistency.
 - AR/EN visual captures now use the source-aligned 1551×863 viewport. Lint and Web build passed, followed by the complete affected requests suite at 12/12 across AR/EN, including 393/768/1280/1551 responsive geometry, IDOR, and unavailable-session checks.
 - SEK-03 and SEK-04 remain `PARTIAL_EXTERNAL` because the live `/me` projection has no approved avatar/media field. Strict Figma totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-05 official-source reconciliation
+
+- Reconciled the viewing requests route against official node `6027:4477`, including the canonical apartment and villa records, approved property images, status overlays, locations, dates, times, providers, and the three-tab composition.
+- The desktop runtime now uses the source-aligned 1024px three-track grid. Responsive geometry proves no horizontal overflow at 393, 768, and 1280 pixels, while the AR/EN visual baseline uses 1551×863.
+- The affected suite passed 8/8 across AR/EN and covers create, validation, reschedule, cancellation, focus, safe projection, and fail-closed authentication. Client build and bundle budget, localization consistency, lint, and diff checks passed.
+- SEK-05 remains `PARTIAL_EXTERNAL`: `/me` has no approved avatar/media field and the current safe list contract does not expose aggregate counts for all status tabs. No source counts or identity assets were invented, so the strict total remains 91/119 with 28 open. No Production launch or Demo purge ran.

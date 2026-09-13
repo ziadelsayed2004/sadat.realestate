@@ -4387,8 +4387,8 @@
   },
   "seeker/viewings-copy#getSeekerViewingsCopy": {
     "eyebrow": "Seeker workspace",
-    "title": "Viewing appointments",
-    "description": "Track only the property viewing appointments connected to your account.",
+    "title": "Viewing requests",
+    "description": "Your viewing appointments — upcoming, past, and cancelled",
     "count": "appointments",
     "tabs": {
       "upcoming": "Upcoming",
