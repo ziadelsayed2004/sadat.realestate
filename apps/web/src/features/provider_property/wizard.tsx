@@ -271,7 +271,8 @@ function LocationFormView({
   });
   return (
     <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
-      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{wizard.locationTitle}</h1><p>{wizard.locationDescription}</p></div>
+      <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{wizard.createTitle}</h1><p>{wizard.createDescription}</p></div>
+      <WizardSteps step="location" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-location-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-location-title">{wizard.locationTitle}</h2><span>{wizard.steps.location}</span></div>
         <div className="provider-property-wizard__grid">
@@ -461,7 +462,6 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     <section className="provider-dashboard provider-property-wizard" data-screen-id={step === 'basic' ? 'PRV-03' : 'PRV-04'} data-route={step === 'basic' ? '/provider/properties/new/basic' : `/provider/properties/${propertyId === undefined ? '' : encodeURIComponent(propertyId)}/location`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        {step === 'location' ? <WizardSteps step={step} locale={locale} copy={copy} /> : null}
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
           step === 'basic' ? <BasicFormView locale={locale} copy={copy} form={basic} setForm={setBasic} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />

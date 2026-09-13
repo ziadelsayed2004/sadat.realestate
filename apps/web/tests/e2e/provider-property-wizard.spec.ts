@@ -185,4 +185,28 @@ test.describe('PRV-03 responsive source geometry', () => {
       expect(geometry.cardsContained, `${locale} at ${viewport.width}px`).toBe(true);
     }
   });
+
+  test('keeps the PRV-04 location form contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+    const locale = localeForProject();
+    await routeProviderSession(page);
+    await routeProviderProperty(page);
+    await page.route('**/api/v1/public/properties**', async route => {
+      await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'CATALOG_UNAVAILABLE', messageKey: 'errors.catalogUnavailable', details: [], requestId: 'wizard-responsive-catalog-unavailable' } }) });
+    });
+    for (const viewport of [{ width: 1551, height: 900 }, { width: 768, height: 900 }, { width: 393, height: 851 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/provider/properties/${propertyId}/location?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('[data-screen-id="PRV-04"]')).toBeVisible();
+      const geometry = await page.locator('[data-screen-id="PRV-04"]').evaluate(element => ({
+        viewport: innerWidth,
+        documentWidth: document.documentElement.scrollWidth,
+        cardContained: (() => {
+          const box = element.querySelector<HTMLElement>('.provider-property-wizard__card')?.getBoundingClientRect();
+          return box !== undefined && box.left >= -1 && box.right <= innerWidth + 1;
+        })()
+      }));
+      expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.cardContained, `${locale} at ${viewport.width}px`).toBe(true);
+    }
+  });
 });

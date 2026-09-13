@@ -710,3 +710,10 @@
 - Preserved the schema-shaped localized name, slug, kind, transaction, source ownership, optional relationships, and audit reason flow. Source descriptions, external reference, category/type, active, and featured fields are absent from `propertyCreateSchema`; no non-persisting controls or invented defaults were introduced.
 - The affected AR/EN suite passed 8/8 during the intentional baseline update and 8/8 again in normal verification, including create, location save, permission boundaries, and no-overflow geometry at 393, 768, and 1551 pixels. Build/budgets, translation sync, typecheck, lint, and diff checks passed.
 - PRV-03 stays `PARTIAL_EXTERNAL` for the missing create-contract fields. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-04 official-source reconciliation
+
+- Read official node `6017:19679` directly. The location route now uses the shared source heading/instruction, places the eight-step rail after it with step 2 active, retains the 768px canvas, and highlights Add property in the provider rail.
+- Preserved the real `locationId`, safe `mapUrl`, latitude/longitude, catalog fallback/retry, validation, and owner-scoped save flow. Structured city/district/neighborhood/street/building/landmark fields, the map picker, and approximate-location visibility are absent from `propertyLocationStepSchema`; no non-persisting inputs were invented.
+- Focused AR/EN baseline update passed 2/2, then the complete affected suite passed 10/10 in normal verification, including no-overflow geometry at 393, 768, and 1551 pixels. Build/budgets, typecheck, lint, and diff checks passed.
+- PRV-04 stays `PARTIAL_EXTERNAL` for the missing location-contract fields. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
