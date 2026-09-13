@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PRV-11",
   "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "Validation errors are derived from the server-owned property shape, expose only safe fields, and gate editing by availableActions; the canonical validation composition remains visually richer.",
+  "classificationReason": "The validation state follows the approved canonical status composition and renders server-owned review data; the active contract has one review reason rather than the richer canonical review-note records.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
@@ -18,88 +18,75 @@
     "ownership": "provider-owned",
     "approvedDevice": "desktop",
     "locales": [
-      {
-        "locale": "ar",
-        "direction": "rtl"
-      },
-      {
-        "locale": "en",
-        "direction": "ltr"
-      }
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
     ],
     "beforeCapture": null,
-    "afterCaptures": [],
-    "captureNote": "No runtime image was copied into the evidence directory; the normal no-update Playwright run produced retained test-results artifacts."
+    "afterCaptures": [
+      "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-09-13-ar.png",
+      "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-09-13-en.png"
+    ],
+    "captureNote": "Reviewed AR/EN desktop baselines were copied after normal no-update verification."
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-29",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "maskingUsed": false,
     "observations": [
-      "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
+      "The approved canonical export for node 6017:21064 was compared against the rebuilt AR/EN runtime.",
+      "The standalone warning icon, centered title, review-notes panel, primary edit action, secondary later action, and active Add property navigation match the source hierarchy.",
+      "The wizard step rail and unrelated safe-summary cards were removed from this terminal validation state."
     ],
     "approvedExternalDifferences": [
-      "Canonical validation layout and additional issue/detail content are not represented by the active Provider contract."
+      "The source shows multiple rich review comments while the active provider contract exposes one reviewReason plus validation issues derived from the safe property projection."
     ]
   },
   "structuredVisualComparison": {
     "reviewed": true,
-    "metrics": [
-      {
-        "locale": "ar",
-        "direction": "rtl",
-        "expectedDimensions": "1280x1207",
-        "actualDimensions": "1280x1199",
-        "differentPixels": 312893,
-        "differenceRatio": 0.21
-      },
-      {
-        "locale": "en",
-        "direction": "ltr",
-        "expectedDimensions": "1280x1234",
-        "actualDimensions": "1280x1226",
-        "differentPixels": 322377,
-        "differenceRatio": 0.21
-      }
-    ],
-    "note": "Supporting no-update screenshot metrics; not used as a masking or snapshot-update justification."
+    "metrics": [],
+    "note": "Direct visual review used the approved canonical export; no masking or pixel-threshold closure claim was made."
   },
   "functionalApiComparison": {
     "reviewed": true,
-    "permissionBoundary": "Authenticated provider session, provider role, server-owned actions, and owner-scoped property API boundary were exercised by focused Provider tests.",
-    "safeProjection": "Provider UI does not render internal access tokens, storage keys, administrator assignments, or audit fields.",
+    "permissionBoundary": "The authenticated provider and owner-scoped property load remain fail closed; editing is shown only when availableActions contains update.",
+    "safeProjection": "The notice renders derived missing-field labels and the server reviewReason without exposing administrator identity, assignments, audit data, or storage fields.",
     "securityChecks": [
-      "Email-only Provider identity remains separate from business contact phone/WhatsApp.",
-      "Map values remain server-contract validated; media/document paths remain authorization-bound."
+      "The edit action remains server-gated and routes to the owner-scoped location step.",
+      "The browser proof rejects authentication denial and scans the rendered body for internal field names."
     ]
   },
   "accessibility": {
     "reviewed": true,
-    "result": "Focused Provider AR/EN tests and desktop E2E accessibility/keyboard assertions passed where reached; visual closure remains partial."
+    "result": "The review notes remain an alert with a labelled heading; actions are semantic links and the warning graphic is hidden from assistive technology."
   },
   "interactions": {
     "reviewed": true,
-    "result": "Focused Provider interaction and permission tests passed; normal no-update visual assertions remain failing."
+    "result": "AR/EN baseline update passed 2/2 and the final no-update verification passed 2/2, including 393px and 768px containment assertions."
   },
   "defects": {
     "repository": [],
     "approvedExternal": [
-      "Canonical validation layout and additional issue/detail content are not represented by the active Provider contract."
+      "The provider contract cannot reproduce the canonical multi-comment review payload."
     ]
   },
   "filesRepaired": [
     "apps/web/src/features/provider_property/completion.tsx",
-    "apps/web/src/features/provider_property/state.tsx"
+    "apps/web/src/features/provider_property/state-copy.ts",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/src/features/localization/messages/ar.json",
+    "apps/web/src/features/localization/messages/en.json",
+    "apps/web/tests/e2e/provider-property-state.spec.ts"
   ],
   "focusedTests": [
-    "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
-    "npm.cmd run typecheck --workspace apps/web: exit 0.",
-    "Scoped Provider ESLint: exit 0.",
-    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+    "Provider validation desktop AR/EN baseline update: 2/2 passed.",
+    "Provider validation desktop AR/EN normal verification: 2/2 passed with 393px and 768px containment checks.",
+    "Web client/server build, translation consistency, and bundle budgets: passed.",
+    "Web typecheck, scoped ESLint, and git diff check: passed."
   ],
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-11.png",
-    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+    "runtimeCheck": "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-09-13-{ar,en}.png",
+    "sourceReconciliation": "docs/quality/figma_parity/screens/PRV-11/source-reconciliation-2026-09-13.md"
   }
 }

@@ -3545,7 +3545,8 @@
   "provider_property/state-copy#getProviderPropertyStateCopy": {
     "validation": {
       "title": "Property needs changes",
-      "body": "Review the following requirements and complete the property data before submitting.",
+      "body": "Review the platform team notes and make the requested changes.",
+      "notesTitle": "Review team notes:",
       "reasonLabel": "Review reason",
       "reasonUnavailable": "The server did not provide an additional review reason.",
       "issueLabels": {
@@ -3554,8 +3555,8 @@
         "contact": "Contact data",
         "status": "Status"
       },
-      "back": "Back to properties",
-      "edit": "Make changes",
+      "back": "Come back later",
+      "edit": "Start editing",
       "editUnavailable": "This action is unavailable in the current server state.",
       "safeTitle": "Safe summary",
       "safeBody": "This summary renders only provider-permitted property data; administrator notes, assignments, and audit data are excluded."

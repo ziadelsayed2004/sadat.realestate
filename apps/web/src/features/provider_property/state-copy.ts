@@ -8,6 +8,7 @@ export interface ProviderPropertyStateCopy {
   readonly validation: {
     readonly title: string;
     readonly body: string;
+    readonly notesTitle: string;
     readonly reasonLabel: string;
     readonly reasonUnavailable: string;
     readonly issueLabels: Readonly<Record<ProviderPropertyValidationIssue, string>>;
@@ -45,13 +46,14 @@ export interface ProviderPropertyStateCopy {
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>> = {
   ar: {
     validation: {
-      title: 'العقار بحاجة إلى إجراء تعديلات',
-      body: 'راجع المتطلبات التالية وأكمل بيانات العقار قبل الإرسال.',
+      title: 'العقار يحتاج إلى تعديل',
+      body: 'راجع ملاحظات فريق المنصة وقم بإجراء التعديلات المطلوبة.',
+      notesTitle: 'ملاحظات فريق المراجعة:',
       reasonLabel: 'سبب المراجعة',
       reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا للمراجعة.',
       issueLabels: { location: 'الموقع', price: 'السعر', contact: 'بيانات التواصل', status: 'الحالة' },
-      back: 'العودة إلى العقارات',
-      edit: 'إجراء التعديل',
+      back: 'العودة لاحقًا',
+      edit: 'بدء التعديل',
       editUnavailable: 'الإجراء غير متاح من حالة الخادم الحالية.',
       safeTitle: 'ملخص آمن',
       safeBody: 'يعرض هذا الملخص بيانات العقار المسموح بها لمقدم الخدمة فقط، ولا يعرض ملاحظات الإدارة أو التعيينات أو بيانات التدقيق.'
@@ -69,12 +71,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
   en: {
     validation: {
       title: 'Property needs changes',
-      body: 'Review the following requirements and complete the property data before submitting.',
+      body: 'Review the platform team notes and make the requested changes.',
+      notesTitle: 'Review team notes:',
       reasonLabel: 'Review reason',
       reasonUnavailable: 'The server did not provide an additional review reason.',
       issueLabels: { location: 'Location', price: 'Price', contact: 'Contact data', status: 'Status' },
-      back: 'Back to properties',
-      edit: 'Make changes',
+      back: 'Come back later',
+      edit: 'Start editing',
       editUnavailable: 'This action is unavailable in the current server state.',
       safeTitle: 'Safe summary',
       safeBody: 'This summary renders only provider-permitted property data; administrator notes, assignments, and audit data are excluded.'

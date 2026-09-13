@@ -346,43 +346,29 @@ function MediaView({
 
 function ValidationView({ locale, property, issues }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly issues: readonly ProviderPropertyValidationIssue[] }) {
   const copy = getProviderPropertyStateCopy(locale).validation;
-  const propertyCopy = getProviderPropertyCopy(locale);
   const editAvailable = property.availableActions.includes('update');
   const editUrl = new URL(`/provider/properties/${encodeURIComponent(property.id)}/location`, 'http://sadat-real-estate.local');
   editUrl.searchParams.set('lang', locale);
   const backUrl = new URL('/provider/properties', 'http://sadat-real-estate.local');
   backUrl.searchParams.set('lang', locale);
-  const propertyName = property.name[locale] ?? property.name.en ?? property.name.ar ?? property.slug;
+  const reviewReason = property.reviewReason?.trim();
   return (
     <main className="provider-property-state__main provider-property-validation" aria-labelledby="provider-property-validation-title">
+      <span className="provider-property-validation__icon" aria-hidden="true">!</span>
       <div className="provider-property-state__intro">
-        <p className="provider-dashboard__eyebrow">{propertyCopy.navLabel}</p>
         <h1 id="provider-property-validation-title">{copy.title}</h1>
         <p>{copy.body}</p>
       </div>
       <section className="provider-property-state__notice provider-property-state__notice--validation" role="alert" aria-labelledby="provider-property-validation-issues">
-        <h2 id="provider-property-validation-issues">{copy.title}</h2>
+        <h2 id="provider-property-validation-issues">{copy.notesTitle}</h2>
         <ul>
           {issues.map(issue => <li key={issue}>{copy.issueLabels[issue]}</li>)}
+          {reviewReason === undefined || reviewReason.length === 0 ? null : <li>{reviewReason}</li>}
         </ul>
-        <p><strong>{copy.reasonLabel}:</strong> {property.reviewReason ?? copy.reasonUnavailable}</p>
-      </section>
-      <section className="provider-property-state__card" aria-labelledby="provider-property-validation-summary">
-        <h2 id="provider-property-validation-summary">{propertyName}</h2>
-        <dl className="provider-property-state__summary">
-          <div><dt>{copy.issueLabels.status}</dt><dd>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
-          <div><dt>{copy.issueLabels.location}</dt><dd>{property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : propertyCopy.wizard.unavailable)}</dd></div>
-          <div><dt>{copy.issueLabels.price}</dt><dd>{property.price === undefined ? propertyCopy.wizard.unavailable : `${property.price.amount} ${property.price.currency}`}</dd></div>
-          <div><dt>{copy.issueLabels.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? propertyCopy.wizard.unavailable}</dd></div>
-        </dl>
-      </section>
-      <section className="provider-property-state__safe" aria-labelledby="provider-property-validation-safe-title">
-        <h2 id="provider-property-validation-safe-title">{copy.safeTitle}</h2>
-        <p>{copy.safeBody}</p>
       </section>
       <div className="provider-property-state__actions">
-        <a className="provider-dashboard__secondary-action" href={backUrl.pathname + backUrl.search}>{copy.back}</a>
         {editAvailable ? <a className="provider-dashboard__primary-action" href={editUrl.pathname + editUrl.search}>{copy.edit}</a> : <Button type="button" disabled>{copy.editUnavailable}</Button>}
+        <a className="provider-dashboard__secondary-action" href={backUrl.pathname + backUrl.search}>{copy.back}</a>
       </div>
     </main>
   );
@@ -664,9 +650,8 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
 
   return (
     <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={!validationState ? 'desktop/tablet/mobile' : 'desktop'}>
-      <ProviderNavigation locale={locale} activePath={!validationState ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath="/provider/properties/new/basic" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
-        {validationState ? <StepRail step={step} locale={locale} /> : null}
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}
       </div>

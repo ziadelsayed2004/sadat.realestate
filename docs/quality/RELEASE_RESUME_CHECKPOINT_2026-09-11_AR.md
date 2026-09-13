@@ -759,3 +759,10 @@
 - Split the review into four safe sections for basic, location, pricing, and contact/media availability data. The richer canonical details remain absent from the active provider projection and were not fabricated.
 - The three confirmations gate the owner-scoped submit mutation. The visual proof now captures the pre-submit PRV-10 state, while the mutation-required reason is localized in AR/EN and tested in the submitted payload.
 - Desktop baseline update passed 2/2, final desktop submission/accessibility verification passed 4/4, and responsive AR/EN verification passed 4/4 at 1024px and 402px. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-10 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-11 canonical-source reconciliation
+
+- Reconciled the validation state against the approved canonical export for node `6017:21064`. Live Figma browser access was unavailable, so no new direct-node retrieval is claimed.
+- Replaced the wizard-like composition with the source status layout: centered warning, concise title/body, review-notes panel, primary Start editing action, secondary Come back later action, and active Add property navigation. Removed the step rail and unrelated summary cards.
+- Kept review content contract-shaped: missing-field issues come from the safe property projection and the additional note comes from server `reviewReason`; structured canonical review comments were not fabricated. Editing remains gated by `availableActions`.
+- Corrected the Arabic fixture and localized reason. Baseline update passed 2/2 and final AR/EN no-update verification passed 2/2 with containment checks at 393px and 768px. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-11 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

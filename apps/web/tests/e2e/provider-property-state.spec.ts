@@ -18,7 +18,7 @@ function propertyFixture(overrides: Record<string, unknown> = {}) {
   return {
     id: PROPERTY_ID,
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property',},
+    name: { ar: '\u0639\u0642\u0627\u0631 \u0627\u0644\u0645\u0632\u0648\u0651\u062f', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId: PROVIDER_ID, sourceType: 'individual_broker' },
@@ -64,15 +64,29 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
   test('renders validation errors from the server-owned draft shape', async ({ page }) => {
     const locale = localeForProject();
     const copy = getProviderPropertyStateCopy(locale);
+    const reviewReason = locale === 'ar' ? '\u064a\u0631\u062c\u0649 \u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0639\u0642\u0627\u0631 \u0627\u0644\u0646\u0627\u0642\u0635\u0629.' : 'Complete the missing property data.';
     await routeSession(page);
-    await routeProperty(page, { locationId: undefined, price: undefined, contact: undefined, status: 'draft', availableActions: ['update', 'submit'], reviewReason: 'Complete the missing property data.' });
+    await routeProperty(page, { locationId: undefined, price: undefined, contact: undefined, status: 'draft', availableActions: ['update', 'submit'], reviewReason });
     await page.goto(`/provider/properties/${PROPERTY_ID}/review?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-11"]')).toBeVisible();
     await expect(page.getByRole('heading', { name: copy.validation.title, level: 1 })).toBeVisible();
     await expect(page.getByText(copy.validation.issueLabels.location).first()).toBeVisible();
-    await expect(page.getByText('Complete the missing property data.')).toBeVisible();
+    await expect(page.getByText(reviewReason)).toBeVisible();
+    await expect(page.locator('.provider-property-completion__steps')).toHaveCount(0);
+    await expect(page.locator('[data-provider-nav="addProperty"] a')).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('body')).not.toContainText(/reviewedBy|assignedTo|auditData|storageKey|refreshToken|accessToken/u);
     await expect(page).toHaveScreenshot(`provider-property-validation-${locale}.png`, { fullPage: true });
+    for (const width of [393, 768]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => page.evaluate(() => ({
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        contained: ['.provider-property-validation', '.provider-property-state__actions'].every(selector => {
+          const bounds = document.querySelector(selector)?.getBoundingClientRect();
+          return bounds !== undefined && bounds.left >= -0.5 && bounds.right <= document.documentElement.clientWidth + 0.5;
+        })
+      }))).toEqual({ documentWidth: width, viewportWidth: width, contained: true });
+    }
   });
 
   test('renders the submitted state and read-only next action', async ({ page }) => {
