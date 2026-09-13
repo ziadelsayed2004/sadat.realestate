@@ -3,7 +3,7 @@ import type { SupportedLocale, PropertyData } from '@sadat-real-estate/contracts
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
-import { getProviderCopy, ProviderNavigation } from '../provider/index.ts';
+import { ProviderNavigation } from '../provider/index.ts';
 import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction } from './wizard.tsx';
 import { loadProviderProperty } from './data.ts';
 import { getProviderPropertyCopy } from './copy.ts';
@@ -71,16 +71,13 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ViewSt
 
 function StatusContent({ locale, property, route }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly route: ProviderPropertyStateRoute }) {
   const propertyCopy = getProviderPropertyCopy(locale);
-  const providerCopy = getProviderCopy(locale);
   const copy = getProviderPropertyStateCopy(locale);
   const status = stateStatus(property, route);
   if (status === undefined) return null;
   const statusCopy = copy.statuses[status];
   const propertyName = property.name[locale] ?? property.name.en ?? property.name.ar ?? property.slug;
   const reviewDate = property.reviewedAt ?? property.publishedAt;
-  const editAvailable = property.availableActions.includes('update');
   const viewPropertyHref = localePath(locale, `/provider/properties/${encodeURIComponent(property.id)}/review`);
-  const editHref = localePath(locale, `/provider/properties/${encodeURIComponent(property.id)}/location`);
   const publicHref = localePath(locale, `/properties/${encodeURIComponent(property.slug)}`);
 
   if (status === 'pending_review') {
@@ -154,9 +151,7 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
       <div className="provider-property-state__actions">
         <a className="provider-dashboard__secondary-action" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
         {status === 'published' ? <a className="provider-dashboard__primary-action" href={publicHref}>{copy.actions.viewPublic}</a> : null}
-        {status === 'rejected' && editAvailable ? <a className="provider-dashboard__primary-action" href={editHref}>{providerCopy.properties.edit}</a> : null}
       </div>
-      {status === 'rejected' && !editAvailable ? <p className="provider-property-state__unavailable" role="status">{copy.actions.supportUnavailable}</p> : null}
     </main>
   );
 }

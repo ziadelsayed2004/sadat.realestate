@@ -780,3 +780,10 @@
 - Removed the generic `[data-state]` presentation from seeker settings cards so unavailable and success cards no longer collapse to 48rem or pick up state-panel spacing. Every settings card now follows the shared page canvas.
 - AR/EN geometry passed across 1551, 768, and 393 pixel widths, including explicit heading/panel/card edge alignment and horizontal containment. Reviewed visual baselines were updated and verified; build/bundle budgets, typecheck, focused lint, and diff checks passed.
 - This responsive repair does not change screen classification. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen remains PRV-13.
+
+## 13 September: PRV-13 canonical-source reconciliation
+
+- Reconciled the rejected state against the approved desktop export for node `6017:21123` and stored direct metadata for tablet `6017:117183` and mobile `6017:119117`.
+- Replaced the generic property summary with the source failure mark, concise heading/body, server-owned rejection reason card, Back to my properties action, disabled Contact support control, and active Add property navigation. Removed unavailable dates, the safe-data block, and the trailing contract message from this state.
+- Component tests passed 9/9. Intentional AR/EN baseline update passed 2/2 and final no-update verification passed 2/2 with containment at 1024×900 and 402×780. Build/budgets, translations, typecheck, focused lint, and diff checks passed.
+- PRV-13 remains `PARTIAL_EXTERNAL` because the source support action has no approved route or mutation contract. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-14.
