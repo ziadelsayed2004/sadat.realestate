@@ -296,20 +296,21 @@ function MediaView({
   const labels = copy.media;
   const dropzoneTitle = locale === 'ar' ? 'اسحب الصور هنا أو انقر للرفع' : locale === 'en' ? 'Drag images here or click to upload' : labels.emptyTitle;
   return (
-    <div className="provider-property-completion__form">
+    <div className="provider-property-completion__form" data-form-step="media">
       <CompletionPageIntro copy={copy} />
+      <StepRail step="media" locale={locale} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-media-upload">
         <h2 id="provider-property-media-upload">{copy.titles.media}</h2>
         <p>{labels.acceptedTypes}</p>
-        <div className="provider-property-completion__empty" role="status" style={{ minHeight: 220, display: 'grid', alignContent: 'center', justifyItems: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
-          <img src={providerMediaUploadIcon} alt="" width={22} height={22} style={{ display: 'block', width: 22, height: 22, objectFit: 'contain' }} />
+        <div className="provider-property-completion__empty provider-property-completion__media-dropzone" role="status">
+          <img src={providerMediaUploadIcon} alt="" width={22} height={22} />
           <strong>{dropzoneTitle}</strong>
           <p>{labels.emptyBody}</p>
-          <label className="provider-property-completion__file-button" htmlFor="provider-property-media-image" style={{ minHeight: 36, alignItems: 'center', justifyContent: 'center', padding: '8px 16px', borderColor: '#17233d', borderRadius: 18, background: '#17233d', color: '#fff' }}>{labels.chooseImage}</label>
+          <label className="provider-property-completion__file-button provider-property-completion__file-button--primary" htmlFor="provider-property-media-image">{labels.chooseImage}</label>
           <input id="provider-property-media-image" type="file" accept="image/jpeg,image/png" onChange={event => onFile('image', event)} disabled={busy} />
         </div>
-        <div className="provider-property-completion__upload-actions" style={{ justifyContent: 'center' }}>
-          <span style={{ display: 'inline-flex', minHeight: 28, alignItems: 'center', padding: '6px 12px', borderRadius: 18, background: '#f3f4f6', color: '#586981', fontSize: '0.82rem', fontWeight: 700 }}>{labels.count}: {media.length}</span>
+        <div className="provider-property-completion__upload-actions">
+          <span className="provider-property-completion__media-count">{labels.count}: {media.length}</span>
           <label className="provider-property-completion__file-button" htmlFor="provider-property-media-floor-plan">{labels.chooseFloorPlan}</label>
           <input id="provider-property-media-floor-plan" type="file" accept="application/pdf" onChange={event => onFile('floor_plan', event)} disabled={busy} />
         </div>
@@ -332,8 +333,8 @@ function MediaView({
         {message !== undefined ? <p className="provider-property-wizard__form-message provider-property-wizard__form-message--error" role="alert">{message}</p> : null}
       </section>
       <div className="provider-property-wizard__actions">
-        <Button type="button" variant="secondary" onClick={onBack} disabled={busy}>{copy.back}</Button>
-        <Button type="button" onClick={onContinue} disabled={busy}>{copy.continue}</Button>
+        <Button type="button" variant="secondary" data-action="back" onClick={onBack} disabled={busy}>{copy.back}</Button>
+        <Button type="button" data-action="continue" onClick={onContinue} disabled={busy}>{copy.continue}</Button>
       </div>
     </div>
   );
@@ -632,10 +633,10 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   ) : null;
 
   return (
-    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
+    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope={step === 'media' ? 'desktop/tablet/mobile' : 'desktop'}>
+      <ProviderNavigation locale={locale} activePath={step === 'media' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
-        <StepRail step={step} locale={locale} />
+        {step === 'media' ? null : <StepRail step={step} locale={locale} />}
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}
       </div>

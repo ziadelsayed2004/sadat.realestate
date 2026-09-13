@@ -738,3 +738,10 @@
 - Preserved the exact `propertyFeaturesServicesStepSchema`: unique non-overlapping feature/service references, optimistic version, audit reason, owner-scoped save, validation, and fail-closed authentication. The browser proof also asserts that this provider screen never calls admin taxonomy routes.
 - Named feature chips, platform advice, surrounding-place records and creation, and private notes appear in Figma but are absent from the provider contract. They were not fabricated; the screen retains an explicit catalog boundary and accepts approved IDs only.
 - Desktop baseline update passed 2/2 and normal verification passed 2/2. Responsive AR/EN verification passed 4/4 at 1024×1340 and 402×950 with no horizontal overflow. Build/budgets, translation check, typecheck, focused lint, and diff checks passed. PRV-07 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-08 official-source reconciliation
+
+- Read official desktop node `6017:20391`, tablet node `6017:116402`, and mobile node `6017:118561` directly. The media route now places the shared add-property heading before step 6 on desktop/tablet, highlights Add property, and follows the compact mobile card and full-width action order.
+- Preserved authenticated JPG/PNG upload, PDF floor-plan upload, MIME/extension and 10 MB validation, session-private ordering/removal, optimistic conflicts, owner permissions, storage-unavailable handling, and storage-identifier privacy.
+- The source variants disagree on minimum/maximum image counts and show virtual-tour, YouTube, and brochure fields absent from the provider media contract. No unsupported limits, URL controls, or existing-media records were fabricated.
+- Desktop baseline update passed 2/2 and normal verification passed 2/2. Responsive AR/EN verification passed 4/4 at 1024x1042 and 402x1209 with no horizontal overflow. Build/budgets, translation check, typecheck, focused lint, and diff checks passed. PRV-08 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

@@ -212,3 +212,53 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await expect(secondCheck).toBeFocused();
   });
 });
+
+test.describe('PRV-08 responsive Figma contract', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    testInfo.annotations.push({ type: 'screen-id', description: 'PRV-08' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Figma tablet node 6017:116402 (1024x1042); mobile node 6017:118561 (402x1209)' });
+    test.skip(testInfo.project.name.startsWith('desktop-'), 'Responsive contract runs against the mapped tablet and mobile frames.');
+    await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 1042 } : { width: 402, height: 1209 });
+  });
+
+  test('keeps the media stepper, upload controls, records, and actions inside the viewport', async ({ page }) => {
+    const locale = localeForProject();
+    await routeSession(page);
+    await routeProperty(page);
+
+    const response = await page.goto(`/provider/properties/${PROPERTY_ID}/media?lang=${encodeURIComponent(locale)}`);
+    expect(response?.ok()).toBeTruthy();
+    const screen = page.locator('[data-screen-id="PRV-08"]');
+    await expect(screen).toBeVisible();
+    await expect(screen).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
+    await expect(screen.locator('.provider-property-completion__steps li[aria-current="step"]')).toContainText('6');
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const geometry = await screen.locator('.provider-property-completion__steps, .provider-property-completion__card, .provider-property-completion__media-dropzone, .provider-property-completion__upload-actions, .provider-property-wizard__actions').evaluateAll(elements => elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, width: rect.width };
+    }));
+    for (const rect of geometry) {
+      expect(rect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(rect.right).toBeLessThanOrEqual(viewportWidth + 0.5);
+      expect(rect.width).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+
+    if (viewportWidth === 402) {
+      await expect(screen.locator('.provider-property-wizard__intro')).toBeHidden();
+      const actions = screen.locator('.provider-property-wizard__actions button');
+      await expect(actions).toHaveCount(2);
+      const actionRects = await actions.evaluateAll(elements => elements.map(element => {
+        const rect = element.getBoundingClientRect();
+        return { width: rect.width, top: rect.top };
+      }));
+      actionRects.forEach(rect => expect(rect.width).toBeGreaterThan(300));
+      expect(actionRects[1]!.top).toBeLessThan(actionRects[0]!.top);
+    } else {
+      await expect(screen.locator('#provider-property-completion-title')).toBeVisible();
+      const order = await screen.locator('.provider-property-wizard__intro, .provider-property-completion__steps').evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top));
+      expect(order[0]!).toBeLessThan(order[1]!);
+    }
+  });
+});
