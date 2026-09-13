@@ -558,6 +558,70 @@
 .provider-property-state__actions > button { min-width: 210px; justify-content: center; text-align: center; }
 .provider-property-state__unavailable { margin: 18px 0 0; color: #71809a; font-size: 0.9rem; text-align: center; }
 
+.provider-property-state__main--submitted {
+  display: grid;
+  justify-items: center;
+  max-width: 500px;
+  padding-top: clamp(72px, 12vh, 112px);
+  text-align: center;
+}
+
+.provider-property-state__submitted-icon {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  margin-bottom: 24px;
+  border-radius: 22px;
+  background: #ecfdf5;
+  color: #10b981;
+  font-size: 0;
+}
+
+.provider-property-state__submitted-icon::before {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 3px solid currentcolor;
+  border-radius: 50%;
+  content: '✓';
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.provider-property-state__main--submitted .provider-property-state__intro h1 {
+  margin-top: 0;
+  font-size: clamp(1.7rem, 2.5vw, 2.25rem);
+}
+
+.provider-property-state__submitted-card {
+  width: min(100%, 384px);
+  box-sizing: border-box;
+  margin-top: 28px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  text-align: start;
+}
+
+.provider-property-state__submitted-card dl { margin: 0; }
+
+.provider-property-state__submitted-card dl > div {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.provider-property-state__submitted-card dl > div + div { border-top: 1px solid #dbe3ee; }
+.provider-property-state__submitted-card dt { color: #71809a; }
+.provider-property-state__submitted-card dd { margin: 0; color: #17233f; font-weight: 800; overflow-wrap: anywhere; }
+.provider-property-state__submitted-card dd[data-property-status='pending_review'] { color: #2563eb; }
+.provider-property-state__submitted-actions { margin-top: 24px; }
+
 .provider-property-validation {
   display: grid;
   justify-items: center;
@@ -619,6 +683,37 @@
 }
 
 @media (max-width: 620px) {
+  .provider-property-state__main--submitted {
+    padding-top: 94px;
+  }
+
+  .provider-property-state__submitted-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+  }
+
+  .provider-property-state__submitted-card {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .provider-property-state__submitted-card dl > div {
+    min-height: 36px;
+    gap: 12px;
+  }
+
+  .provider-property-state__submitted-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .provider-property-state__submitted-actions [data-action='view-property'] { grid-row: 1; }
+  .provider-property-state__submitted-actions [data-action='back'] { grid-row: 2; }
+
   .provider-property-validation {
     padding-top: 32px;
   }

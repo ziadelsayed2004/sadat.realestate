@@ -14,7 +14,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: propertyId,
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property',},
+    name: { ar: '\u0639\u0642\u0627\u0631 \u0627\u0644\u0645\u0632\u0648\u0651\u062f', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -49,7 +49,8 @@ describe('provider property submission and state screens', () => {
 
     expect(document.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull();
     expect(screen.getByRole('heading', { name: copy.statuses[status].title, level: 1 })).toBeInTheDocument();
-    expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
+    if (route === 'submitted') expect(screen.queryByText(copy.labels.unavailable)).not.toBeInTheDocument();
+    else expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toMatch(/reviewedBy|assignedTo|auditData|storageKey|refreshToken|accessToken/u);
   });
 

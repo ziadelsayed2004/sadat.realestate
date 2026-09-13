@@ -766,3 +766,10 @@
 - Replaced the wizard-like composition with the source status layout: centered warning, concise title/body, review-notes panel, primary Start editing action, secondary Come back later action, and active Add property navigation. Removed the step rail and unrelated summary cards.
 - Kept review content contract-shaped: missing-field issues come from the safe property projection and the additional note comes from server `reviewReason`; structured canonical review comments were not fabricated. Editing remains gated by `availableActions`.
 - Corrected the Arabic fixture and localized reason. Baseline update passed 2/2 and final AR/EN no-update verification passed 2/2 with containment checks at 393px and 768px. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-11 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: PRV-12 canonical-source reconciliation
+
+- Reconciled the submitted state against the approved desktop export for node `6017:21012` and stored tablet/mobile metadata for `6017:121763` and `6017:119003`. Live Figma access remained unavailable, so no new direct-node retrieval is claimed.
+- Added the source-shaped success mark, centered copy, compact reference/date/status card, active Add property navigation, and responsive action order. Removed the generic detail, reason, safe-data, and unavailable-review-date blocks from this state only.
+- Preserved server-owned `pending_review` validation and the owner-scoped route. The canonical SDT public reference is absent from the provider projection, so the approved property id remains visible and no code was invented.
+- Component tests passed 9/9. Baseline update passed 2/2 and final AR/EN no-update verification passed 2/2 with exact 402×858 and 1024×720 containment checks. Build/budgets, translations, typecheck, focused lint, and diff checks passed. PRV-12 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran.

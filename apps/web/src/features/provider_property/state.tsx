@@ -83,6 +83,29 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
   const editHref = localePath(locale, `/provider/properties/${encodeURIComponent(property.id)}/location`);
   const publicHref = localePath(locale, `/properties/${encodeURIComponent(property.slug)}`);
 
+  if (status === 'pending_review') {
+    return (
+      <main className="provider-property-state__main provider-property-state__main--submitted" data-state-layout="submitted" aria-labelledby="provider-property-state-title">
+        <span className="provider-property-state__submitted-icon" aria-hidden="true">✓</span>
+        <div className="provider-property-state__intro">
+          <h1 id="provider-property-state-title">{statusCopy.title}</h1>
+          <p>{statusCopy.body}</p>
+        </div>
+        <section className="provider-property-state__submitted-card" aria-label={statusCopy.title}>
+          <dl>
+            <div><dt>{copy.labels.reference}</dt><dd>{property.id}</dd></div>
+            <div><dt>{copy.labels.submittedAt}</dt><dd>{dateLabel(property.submittedAt, locale)}</dd></div>
+            <div><dt>{copy.labels.status}</dt><dd data-property-status={property.status}>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
+          </dl>
+        </section>
+        <div className="provider-property-state__actions provider-property-state__submitted-actions">
+          <a className="provider-dashboard__primary-action" data-action="view-property" href={viewPropertyHref}>{copy.actions.viewProperty}</a>
+          <a className="provider-dashboard__secondary-action" data-action="back" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="provider-property-state__main" aria-labelledby="provider-property-state-title">
       <div className="provider-property-state__intro">
@@ -111,7 +134,6 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
       <div className="provider-property-state__actions">
         <a className="provider-dashboard__secondary-action" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
         {status === 'published' ? <a className="provider-dashboard__primary-action" href={publicHref}>{copy.actions.viewPublic}</a> : null}
-        {status === 'pending_review' ? <a className="provider-dashboard__primary-action" href={viewPropertyHref}>{copy.actions.viewProperty}</a> : null}
         {status === 'rejected' && editAvailable ? <a className="provider-dashboard__primary-action" href={editHref}>{providerCopy.properties.edit}</a> : null}
       </div>
       {status === 'rejected' && !editAvailable ? <p className="provider-property-state__unavailable" role="status">{copy.actions.supportUnavailable}</p> : null}
@@ -163,8 +185,8 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
   }, [attempt, initialData, loadAction, propertyId, route, sessionRole, session.status]);
 
   return (
-    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
+    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope={route === 'submitted' ? 'desktop/tablet/mobile' : 'desktop'}>
+      <ProviderNavigation locale={locale} activePath={route === 'submitted' ? '/provider/properties/new/basic' : '/provider/properties'} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} loadingVariant="cards" /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

@@ -2,12 +2,13 @@
   "schemaVersion": 1,
   "screenId": "PRV-12",
   "classification": "PARTIAL_EXTERNAL",
-  "classificationReason": "The submitted state uses server-owned status, timestamps, safe reason data, and action gating; the canonical success presentation differs from the available state contract.",
+  "classificationReason": "The submitted state matches the approved desktop, tablet, and mobile composition and uses server-owned status and timestamp data; the provider projection has no canonical public reference code.",
   "source": {
     "sourceAuthority": "local_approved_canonical_export",
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4355",
     "nodeId": "6017:21012",
+    "responsiveNodeIds": ["6017:121763", "6017:119003"],
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-12.png",
     "reviewed": true
   },
@@ -16,89 +17,76 @@
     "role": "provider",
     "requiredRole": "provider",
     "ownership": "provider-owned",
-    "approvedDevice": "desktop",
+    "approvedDevice": "desktop/tablet/mobile",
     "locales": [
-      {
-        "locale": "ar",
-        "direction": "rtl"
-      },
-      {
-        "locale": "en",
-        "direction": "ltr"
-      }
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
     ],
     "beforeCapture": null,
-    "afterCaptures": [],
-    "captureNote": "No runtime image was copied into the evidence directory; the normal no-update Playwright run produced retained test-results artifacts."
+    "afterCaptures": [
+      "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-09-13-ar.png",
+      "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-09-13-en.png"
+    ],
+    "captureNote": "Reviewed AR/EN desktop baselines were copied after normal no-update verification; responsive geometry uses the stored tablet and mobile node metadata."
   },
   "directReview": {
     "reviewed": true,
-    "reviewedAt": "2026-08-29",
+    "reviewedAt": "2026-09-13",
     "reviewer": "Codex",
     "maskingUsed": false,
     "observations": [
-      "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
+      "The approved desktop export and stored metadata for tablet node 6017:121763 and mobile node 6017:119003 were compared with the rebuilt runtime.",
+      "The success icon, centered copy, three-row reference card, active Add property navigation, and primary/secondary action order follow the source.",
+      "Mobile actions stack with View property before Back to my properties and all content remains inside 402px."
     ],
     "approvedExternalDifferences": [
-      "Canonical submitted-state illustration and richer success content are not represented by the active state contract."
+      "The canonical SDT public reference is absent from the active provider projection, so the runtime displays the approved property id rather than inventing a code."
     ]
   },
   "structuredVisualComparison": {
     "reviewed": true,
-    "metrics": [
-      {
-        "locale": "ar",
-        "direction": "rtl",
-        "expectedDimensions": "1280x1012",
-        "actualDimensions": "1280x1004",
-        "differentPixels": 254048,
-        "differenceRatio": 0.2
-      },
-      {
-        "locale": "en",
-        "direction": "ltr",
-        "expectedDimensions": "1280x1039",
-        "actualDimensions": "1280x1031",
-        "differentPixels": 264509,
-        "differenceRatio": 0.2
-      }
-    ],
-    "note": "Supporting no-update screenshot metrics; not used as a masking or snapshot-update justification."
+    "metrics": [],
+    "note": "Direct visual review used the approved desktop export and stored responsive node geometry; no masking or pixel-threshold closure claim was made."
   },
   "functionalApiComparison": {
     "reviewed": true,
-    "permissionBoundary": "Authenticated provider session, provider role, server-owned actions, and owner-scoped property API boundary were exercised by focused Provider tests.",
-    "safeProjection": "Provider UI does not render internal access tokens, storage keys, administrator assignments, or audit fields.",
+    "permissionBoundary": "The route accepts only an authenticated provider and a property whose server status is pending_review; mismatched status fails closed.",
+    "safeProjection": "The card renders only property id, submittedAt, and server status and omits review assignments, audit data, storage fields, and unsupported metrics.",
     "securityChecks": [
-      "Email-only Provider identity remains separate from business contact phone/WhatsApp.",
-      "Map values remain server-contract validated; media/document paths remain authorization-bound."
+      "The state is derived from the owner-scoped property response and never inferred from the URL alone.",
+      "The read-only next action returns to the owner-scoped property review route."
     ]
   },
   "accessibility": {
     "reviewed": true,
-    "result": "Focused Provider AR/EN tests and desktop E2E accessibility/keyboard assertions passed where reached; visual closure remains partial."
+    "result": "The status heading and labelled summary are semantic, the success mark is decorative, and both actions remain keyboard-reachable links."
   },
   "interactions": {
     "reviewed": true,
-    "result": "Focused Provider interaction and permission tests passed; normal no-update visual assertions remain failing."
+    "result": "Affected Vitest passed 9/9; AR/EN baseline update and final no-update run each passed 2/2 with 402px and 1024px containment checks."
   },
   "defects": {
     "repository": [],
     "approvedExternal": [
-      "Canonical submitted-state illustration and richer success content are not represented by the active state contract."
+      "The canonical public reference code is unavailable in the provider property contract."
     ]
   },
   "filesRepaired": [
-    "apps/web/src/features/provider_property/state.tsx"
+    "apps/web/src/features/provider_property/state.tsx",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/tests/provider-property-state.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-property-state.spec.ts"
   ],
   "focusedTests": [
-    "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
-    "npm.cmd run typecheck --workspace apps/web: exit 0.",
-    "Scoped Provider ESLint: exit 0.",
-    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+    "Provider property state Vitest: 9/9 passed.",
+    "Provider submitted desktop AR/EN baseline update: 2/2 passed.",
+    "Provider submitted desktop AR/EN normal verification: 2/2 passed with 402px and 1024px containment checks.",
+    "Web client/server build, translation consistency, bundle budgets, typecheck, scoped ESLint, and git diff check: passed."
   ],
   "evidencePaths": {
     "canonicalExport": "docs/design_sources/final_screens/provider/PRV-12.png",
-    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+    "responsiveMetadata": "docs/quality/figma_parity/source-metadata/6017-{121763,119003}.xml",
+    "runtimeCheck": "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-09-13-{ar,en}.png",
+    "sourceReconciliation": "docs/quality/figma_parity/screens/PRV-12/source-reconciliation-2026-09-13.md"
   }
 }
