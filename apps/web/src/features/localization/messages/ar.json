@@ -1898,6 +1898,35 @@
       }
     }
   },
+  "admin_requests/metrics-copy#getRequestMetricsCopy": {
+    "totalRequests": "إجمالي الطلبات",
+    "loadedRecords": "السجلات المحملة",
+    "new": "جديد",
+    "underReview": "قيد المراجعة",
+    "contacted": "تم التواصل",
+    "scheduled": "مجدول",
+    "inProgress": "قيد التنفيذ",
+    "resolved": "تم الحل",
+    "totalOverdue": "إجمالي المتأخر",
+    "requestMetrics": "مؤشرات الطلبات",
+    "all": "الكل",
+    "requestStatus": "حالة الطلب",
+    "totalViewings": "إجمالي المعاينات",
+    "requested": "مطلوب",
+    "confirmed": "مؤكد",
+    "rescheduled": "أعيدت جدولته",
+    "cancelled": "ملغى",
+    "completed": "مكتمل",
+    "assigned": "مسند",
+    "viewingMetrics": "مؤشرات المعاينات",
+    "viewingStatus": "حالة المعاينة",
+    "unavailable": "غير متاح",
+    "website": "الموقع",
+    "provider": "مقدم الخدمة",
+    "administration": "الإدارة",
+    "exportCsv": "تصدير CSV",
+    "exportFailed": "تعذر إكمال التصدير. أعد المحاولة لتحميل النتائج الحالية."
+  },
   "admin_settings/copy#getAdminSettingsCopy": {
     "eyebrow": "إعدادات المنصة",
     "platform": "معلومات المنصة",
@@ -2209,6 +2238,23 @@
       "abuse": "إساءة",
       "misinformation": "معلومات مضللة",
       "other": "سبب آخر"
+    }
+  },
+  "community/presentation-copy#getCommunityPresentationCopy": {
+    "member": "عضو مجتمع",
+    "post": "منشور",
+    "report": "إبلاغ",
+    "composerTitle": "انشر بوست جديد",
+    "eyebrow": "مجتمع السادات",
+    "categoryLabel": "تصنيف البوست",
+    "categories": {
+      "all": "الكل",
+      "question": "سؤال",
+      "experience": "تجربة",
+      "advice": "نصيحة",
+      "service": "خدمة",
+      "area": "منطقة",
+      "property": "عقار"
     }
   },
   "content/about-team-copy#getPublicAboutTeamCopy": {
@@ -4211,6 +4257,7 @@
     },
     "settings": {
       "heading": "إعدادات الحساب",
+      "description": "أدِر بريدك الإلكتروني وكلمة المرور وإعدادات أمان حسابك",
       "languageHeading": "لغة الحساب",
       "languageBody": "تُحفظ اللغة على حسابك وتُستخدم في الواجهات التالية.",
       "securityHeading": "الأمان والوصول",
@@ -4248,6 +4295,66 @@
     "validation": "راجع الحقول المطلوبة والقيم غير الصحيحة.",
     "unavailable": "غير متاح",
     "saving": "جارٍ الحفظ..."
+  },
+  "seeker/profile-surface-copy#getPersonalSurfaceCopy": {
+    "role": "باحث عن عقار",
+    "email": "البريد الإلكتروني"
+  },
+  "seeker/profile-surface-copy#getPreferenceOptionsCopy": {
+    "propertyTypes": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "duplex": "دوبلكس",
+      "roof": "رووف",
+      "land": "أرض",
+      "office": "مكتب",
+      "commercial": "محل تجاري",
+      "factory": "مصنع"
+    },
+    "locations": {
+      "district-1": "الحي الأول",
+      "district-2": "الحي الثاني",
+      "district-3": "الحي الثالث",
+      "district-4": "الحي الرابع",
+      "district-5": "الحي الخامس",
+      "district-6": "الحي السادس",
+      "district-7": "الحي السابع",
+      "industrial-zone": "المنطقة الصناعية",
+      "upscale-zone": "المنطقة الراقية",
+      "new-cairo": "القاهرة الجديدة"
+    },
+    "minimum": "الحد الأدنى",
+    "maximum": "الحد الأقصى"
+  },
+  "seeker/profile-surface-copy#getProfileFeedbackCopy": {
+    "invalidPassword": "تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.",
+    "passwordFailure": "تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى."
+  },
+  "seeker/profile-surface-copy#getSettingsSurfaceCopy": {
+    "emailHeading": "البريد الإلكتروني",
+    "currentEmail": "البريد الحالي",
+    "updateEmail": "تحديث البريد",
+    "passwordHeading": "تغيير كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "changePassword": "تغيير كلمة المرور",
+    "notificationsHeading": "إعدادات الإشعارات",
+    "requestUpdates": "تحديثات الطلبات",
+    "requestUpdatesBody": "إشعار عند تغيير حالة أي طلب.",
+    "viewingReminders": "مواعيد المعاينة",
+    "viewingRemindersBody": "تذكيرك بكل موعد معاينة.",
+    "savedPropertyAlerts": "العقارات المحفوظة",
+    "savedPropertyAlertsBody": "إشعار عند تغيير سعر عقار محفوظ.",
+    "accountAlerts": "إشعارات الحساب",
+    "accountAlertsBody": "تنبيهات الأمان وتحديثات الحساب.",
+    "marketingMessages": "الرسائل التسويقية",
+    "marketingMessagesBody": "عروض وتوصيات من المنصة.",
+    "otherDevicesHeading": "الأجهزة الأخرى",
+    "otherDevicesBody": "تسجيل الخروج من جميع الأجهزة الأخرى التي يكون حسابك مسجلاً عليها.",
+    "signOutOtherDevices": "تسجيل الخروج من الأجهزة الأخرى",
+    "dangerHeading": "منطقة الخطر",
+    "dangerBody": "حذف الحساب إجراء نهائي غير قابل للتراجع. ستُحذف جميع بياناتك وطلباتك نهائياً."
   },
   "seeker/requests-copy#getSeekerRequestsCopy": {
     "list": {
@@ -4385,6 +4492,25 @@
     },
     "retry": "إعادة المحاولة"
   },
+  "seeker/session-copy#getAccountSessionCopy": {
+    "heading": "الأجهزة والجلسات",
+    "body": "راجع الجلسات النشطة وألغِ أي جلسة لا تعرفها.",
+    "loading": "جارٍ تحميل الجلسات النشطة…",
+    "empty": "لا توجد جلسات نشطة.",
+    "error": "تعذر تحميل الجلسات. حاول مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "current": "الجلسة الحالية",
+    "other": "جلسة أخرى",
+    "revoke": "تسجيل خروج هذه الجلسة",
+    "revokeOthers": "تسجيل الخروج من كل الجلسات الأخرى",
+    "revoked": "تم إلغاء الجلسة بنجاح.",
+    "started": "بدأت",
+    "lastUsed": "آخر استخدام",
+    "expires": "تنتهي",
+    "password": "كلمة المرور",
+    "otp": "رمز البريد",
+    "mfa": "تحقق بخطوتين"
+  },
   "seeker/viewings-copy#getSeekerViewingsCopy": {
     "eyebrow": "مساحة الباحث عن عقار",
     "title": "طلبات المعاينة",
@@ -4520,130 +4646,5 @@
         "body": "لا يتم عرض بيانات محمية داخل هذه البنية الأساسية."
       }
     }
-  },
-  "seeker/session-copy#getAccountSessionCopy": {
-    "heading": "الأجهزة والجلسات",
-    "body": "راجع الجلسات النشطة وألغِ أي جلسة لا تعرفها.",
-    "loading": "جارٍ تحميل الجلسات النشطة…",
-    "empty": "لا توجد جلسات نشطة.",
-    "error": "تعذر تحميل الجلسات. حاول مرة أخرى.",
-    "retry": "إعادة المحاولة",
-    "current": "الجلسة الحالية",
-    "other": "جلسة أخرى",
-    "revoke": "تسجيل خروج هذه الجلسة",
-    "revokeOthers": "تسجيل الخروج من كل الجلسات الأخرى",
-    "revoked": "تم إلغاء الجلسة بنجاح.",
-    "started": "بدأت",
-    "lastUsed": "آخر استخدام",
-    "expires": "تنتهي",
-    "password": "كلمة المرور",
-    "otp": "رمز البريد",
-    "mfa": "تحقق بخطوتين"
-  },
-  "admin_requests/metrics-copy#getRequestMetricsCopy": {
-    "totalRequests": "إجمالي الطلبات",
-    "loadedRecords": "السجلات المحملة",
-    "new": "جديد",
-    "underReview": "قيد المراجعة",
-    "contacted": "تم التواصل",
-    "scheduled": "مجدول",
-    "inProgress": "قيد التنفيذ",
-    "resolved": "تم الحل",
-    "totalOverdue": "إجمالي المتأخر",
-    "requestMetrics": "مؤشرات الطلبات",
-    "all": "الكل",
-    "requestStatus": "حالة الطلب",
-    "totalViewings": "إجمالي المعاينات",
-    "requested": "مطلوب",
-    "confirmed": "مؤكد",
-    "rescheduled": "أعيدت جدولته",
-    "cancelled": "ملغى",
-    "completed": "مكتمل",
-    "assigned": "مسند",
-    "viewingMetrics": "مؤشرات المعاينات",
-    "viewingStatus": "حالة المعاينة",
-    "unavailable": "غير متاح",
-    "website": "الموقع",
-    "provider": "مقدم الخدمة",
-    "administration": "الإدارة",
-    "exportCsv": "تصدير CSV",
-    "exportFailed": "تعذر إكمال التصدير. أعد المحاولة لتحميل النتائج الحالية."
-  },
-  "community/presentation-copy#getCommunityPresentationCopy": {
-    "member": "عضو مجتمع",
-    "post": "منشور",
-    "report": "إبلاغ",
-    "composerTitle": "انشر بوست جديد",
-    "eyebrow": "مجتمع السادات",
-    "categoryLabel": "تصنيف البوست",
-    "categories": {
-      "all": "الكل",
-      "question": "سؤال",
-      "experience": "تجربة",
-      "advice": "نصيحة",
-      "service": "خدمة",
-      "area": "منطقة",
-      "property": "عقار"
-    }
-  },
-  "seeker/profile-surface-copy#getPersonalSurfaceCopy": {
-    "role": "باحث عن عقار",
-    "email": "البريد الإلكتروني"
-  },
-  "seeker/profile-surface-copy#getSettingsSurfaceCopy": {
-    "emailHeading": "البريد الإلكتروني",
-    "currentEmail": "البريد الحالي",
-    "updateEmail": "تحديث البريد",
-    "passwordHeading": "تغيير كلمة المرور",
-    "currentPassword": "كلمة المرور الحالية",
-    "newPassword": "كلمة المرور الجديدة",
-    "confirmPassword": "تأكيد كلمة المرور الجديدة",
-    "changePassword": "تغيير كلمة المرور",
-    "notificationsHeading": "إعدادات الإشعارات",
-    "requestUpdates": "تحديثات الطلبات",
-    "requestUpdatesBody": "إشعار عند تغيير حالة أي طلب.",
-    "viewingReminders": "مواعيد المعاينة",
-    "viewingRemindersBody": "تذكيرك بكل موعد معاينة.",
-    "savedPropertyAlerts": "العقارات المحفوظة",
-    "savedPropertyAlertsBody": "إشعار عند تغيير سعر عقار محفوظ.",
-    "accountAlerts": "إشعارات الحساب",
-    "accountAlertsBody": "تنبيهات الأمان وتحديثات الحساب.",
-    "marketingMessages": "الرسائل التسويقية",
-    "marketingMessagesBody": "عروض وتوصيات من المنصة.",
-    "otherDevicesHeading": "الأجهزة الأخرى",
-    "otherDevicesBody": "تسجيل الخروج من جميع الأجهزة الأخرى التي يكون حسابك مسجلاً عليها.",
-    "signOutOtherDevices": "تسجيل الخروج من الأجهزة الأخرى",
-    "dangerHeading": "منطقة الخطر",
-    "dangerBody": "حذف الحساب إجراء نهائي غير قابل للتراجع. ستُحذف جميع بياناتك وطلباتك نهائياً."
-  },
-  "seeker/profile-surface-copy#getPreferenceOptionsCopy": {
-    "propertyTypes": {
-      "apartment": "شقة",
-      "villa": "فيلا",
-      "duplex": "دوبلكس",
-      "roof": "رووف",
-      "land": "أرض",
-      "office": "مكتب",
-      "commercial": "محل تجاري",
-      "factory": "مصنع"
-    },
-    "locations": {
-      "district-1": "الحي الأول",
-      "district-2": "الحي الثاني",
-      "district-3": "الحي الثالث",
-      "district-4": "الحي الرابع",
-      "district-5": "الحي الخامس",
-      "district-6": "الحي السادس",
-      "district-7": "الحي السابع",
-      "industrial-zone": "المنطقة الصناعية",
-      "upscale-zone": "المنطقة الراقية",
-      "new-cairo": "القاهرة الجديدة"
-    },
-    "minimum": "الحد الأدنى",
-    "maximum": "الحد الأقصى"
-  },
-  "seeker/profile-surface-copy#getProfileFeedbackCopy": {
-    "invalidPassword": "تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.",
-    "passwordFailure": "تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى."
   }
 }

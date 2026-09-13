@@ -374,4 +374,27 @@ test.describe('SEK-08/09 profile responsive layout', () => {
       expect(geometry.saveRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
     }
   });
+
+  test('keeps SEK-10 settings and session dates contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+    const locale = localeForProject();
+    for (const viewport of [{ width: 1551, height: 862 }, { width: 768, height: 900 }, { width: 393, height: 851 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/seeker/settings?lang=${locale}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(3);
+      await expect(page.locator('.seeker-profile__settings-card--password')).toBeVisible();
+      const geometry = await page.evaluate(() => {
+        const cards = [...document.querySelectorAll<HTMLElement>('.seeker-profile__settings-card')].map(card => card.getBoundingClientRect());
+        const dates = [...document.querySelectorAll<HTMLElement>('.seeker-profile__session dd')].map(value => value.getBoundingClientRect());
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          cardsContained: cards.every(card => card.left >= -1 && card.right <= innerWidth + 1),
+          datesContained: dates.every(date => date.left >= -1 && date.right <= innerWidth + 1)
+        };
+      });
+      expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
+      expect(geometry.cardsContained, `${locale} at ${viewport.width}px`).toBe(true);
+      expect(geometry.datesContained, `${locale} at ${viewport.width}px`).toBe(true);
+    }
+  });
 });

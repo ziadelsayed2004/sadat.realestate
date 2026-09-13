@@ -687,7 +687,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
               <div>
                 <p className="seeker-dashboard__eyebrow">{copy.eyebrow}</p>
                 <h1>{activeTab === 'settings' ? copy.settings.heading : copy.title}</h1>
-                <p>{copy.description}</p>
+                <p>{activeTab === 'settings' ? copy.settings.description : copy.description}</p>
               </div>
             </div>
             {activeTab === 'settings' ? null : <ProfileTabs locale={locale} tab={activeTab} copy={copy} />}

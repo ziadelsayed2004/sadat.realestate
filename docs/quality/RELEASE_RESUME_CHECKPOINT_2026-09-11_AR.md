@@ -689,3 +689,10 @@
 - The source portrait, phone, and city are absent from `/me`; they were not invented. The source full-name control remains represented by independent first/last inputs because those are the only approved patch fields.
 - The complete affected AR/EN profile suite passed 24/24, including reviewed visual baselines and explicit no-overflow geometry at 393, 768, and 1551 pixels. Lint and diff checks passed.
 - SEK-09 remains `PARTIAL_EXTERNAL` for the missing approved avatar/phone/city contract. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
+
+## 13 September: SEK-10 official-source reconciliation
+
+- Read official node `6027:6531` directly and aligned the settings heading, source description, 672px stacked-card composition, supported password form, and real session inventory/revocation controls. The real locale selector remains available.
+- Email update, phone update, notification preferences, and account deletion have no approved mutation contracts. The runtime keeps supported projections honest and visibly marks unavailable controls instead of inventing writes.
+- Fixed Arabic and English session-date containment. Focused responsive checks passed 2/2 at 393, 768, and 1551 pixels, and both visual baselines passed normal verification after update. Translation sync, client build/bundle budget, typecheck, lint, and diff checks passed.
+- SEK-10 remains `PARTIAL_EXTERNAL` for missing seeker avatar/media and settings mutation contracts. Strict totals remain 91/119 with 28 open. No Production launch or Demo purge ran.
