@@ -1072,6 +1072,12 @@
   grid-template-columns: 1fr;
 }
 
+.seeker-saved > .seeker-dashboard__content > .ui-pagination {
+  inline-size: 100%;
+  margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+  padding-block-end: .5rem;
+}
+
 .seeker-saved-property-card {
   min-width: 0;
 }

@@ -180,6 +180,17 @@ test.describe('SEK-06 Seeker Saved Properties', () => {
     expect(gridGeometry.entryWidth).toBeLessThan(gridGeometry.gridWidth);
     expect(gridGeometry.entryWidth).toBeGreaterThanOrEqual(400);
 
+    const paginationGeometry = await page.locator('.ui-pagination').evaluate(element => {
+      const pagination = element.getBoundingClientRect();
+      const grid = document.querySelector<HTMLElement>('.seeker-saved__grid')!.getBoundingClientRect();
+      return {
+        gap: pagination.top - grid.bottom,
+        centeredDelta: Math.abs((pagination.left + pagination.width / 2) - (grid.left + grid.width / 2))
+      };
+    });
+    expect(paginationGeometry.gap).toBeGreaterThanOrEqual(24);
+    expect(paginationGeometry.centeredDelta).toBeLessThanOrEqual(1);
+
     await page.getByRole('button', { name: savedViewLabelForTest(locale, 'list') }).click();
     const listGeometry = await page.getByTestId(`seeker-saved-property-${firstId}`).evaluate(element => {
       const card = element.getBoundingClientRect();
