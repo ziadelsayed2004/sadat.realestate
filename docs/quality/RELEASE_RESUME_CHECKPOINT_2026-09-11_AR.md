@@ -829,3 +829,10 @@
 - Corrected the Arabic plural title and source description, removed the extra heading eyebrow, and changed the New advertising request action to the canonical navy treatment. Filtering, creation, quote/payment state, upload boundaries, and provider ownership remain contract-shaped.
 - Status aggregate cards plus richer linked property/project identity, friendly request codes, placement labels, display duration, and presentation metadata are absent from the safe advertising projection. No page-local or sample values were presented as global data.
 - Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2. Responsive AR/EN verification passed 4/4 at the mapped tablet/mobile dimensions. Translation check, build/budgets, typecheck, focused lint, and diff checks passed. PRV-19 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next goal screen is PRV-20.
+
+## 13 September: PRV-20 canonical-source reconciliation
+
+- Reconciled the commission screen against approved node `6028:10071` at the canonical 1577×944 desktop frame. No separate responsive owning frame is recorded for this screen.
+- Aligned the heading and policy card to the source 672px canvas, removed the extra eyebrow, restored the canonical description and gold acknowledgement action, and made the confirmation wording explicit in AR/EN.
+- Preserved the authenticated read-only policy projection and real confirmation mutation. Scope chips, richer confirmation data, policy history, and activation metadata are absent from the approved contract and were not fabricated.
+- Intentional AR/EN desktop baseline update passed 2/2 and final no-update verification passed 2/2; the Arabic result was visually reviewed. Translation check, build/budgets, typecheck, focused lint, and protected-field checks passed. PRV-20 remains `PARTIAL_EXTERNAL`; strict totals stay 91/119 with 28 open. No Production launch or Demo purge ran. The next open goal screen is PRV-22-2.

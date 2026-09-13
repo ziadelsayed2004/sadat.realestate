@@ -154,6 +154,7 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page.locator('.provider-commission__card')).toHaveCSS('max-width', '672px');
     await expect(page.locator('.provider-commission__card > .ui-button')).toHaveCSS('background-color', 'rgb(217, 164, 59)');
     await expect(page.locator('.provider-commission__heading .provider-dashboard__eyebrow')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: locale === 'ar' ? 'تأكيد الاطلاع على سياسة العمولة' : 'Confirm review of the commission policy' })).toBeVisible();
     await expect(page.getByText(/read-only|للعرض فقط|仅供查看/u)).toBeVisible();
     await expect(page.locator('main#main-content')).toBeVisible();
     await expect(page.getByRole('navigation', { name: /Provider dashboard|لوحة مزود العقار|房产提供方工作台/u })).toBeVisible();
