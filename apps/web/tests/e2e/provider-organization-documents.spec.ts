@@ -14,7 +14,7 @@ test('individual broker repairs locations inline before reviewing documents', as
       { key: 'brokerage_license', labelKey: 'provider.documents.brokerageLicense', classification: 'optional', applies: true }
     ] }
   });
-  await page.route('**/api/v1/provider/application', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
+  await page.route(/\/api\/v1\/provider\/application(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
   await page.route('**/api/v1/provider/application/account', async route => {
     expect(route.request().method()).toBe('PATCH');
     const patch = route.request().postDataJSON();
@@ -187,6 +187,51 @@ test('business and developer organization variants render their approved respons
   await expect(page).toHaveScreenshot(`provider-organization-company-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
   await expect(page.locator('form')).toHaveCount(1);
   await expect(page.locator('input, select, button').first()).toBeVisible();
+});
+
+test('office save refreshes an expired session and continues to documents', async ({ page }) => {
+  const locale = localeForProject();
+  let refreshCount = 0;
+  let businessAttempts = 0;
+  const authorizationHeaders: Array<string | undefined> = [];
+  let current = application('brokerage_office');
+  await page.route('**/api/v1/auth/refresh', route => {
+    refreshCount += 1;
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: envelope({ accessToken: refreshCount === 1 ? 'initial.provider.token' : 'fresh.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'draft' } })
+    });
+  });
+  await page.route(/\/api\/v1\/provider\/application(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
+  await page.route(/\/api\/v1\/provider\/application\/business(?:\?.*)?$/u, async route => {
+    businessAttempts += 1;
+    authorizationHeaders.push(route.request().headers().authorization);
+    if (businessAttempts === 1) {
+      await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.auth.authenticationRequired', details: [], requestId: 'expired-provider-save' } }) });
+      return;
+    }
+    const body = route.request().postDataJSON() as Record<string, unknown>;
+    current = application('brokerage_office', { ...body, version: 1, missingFields: [] });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
+  });
+  await page.route(/\/api\/v1\/provider\/application\/documents(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [] }) }));
+
+  await page.goto(`/auth/register/provider/account?providerType=brokerage_office&step=organization&lang=${encodeURIComponent(locale)}`);
+  await page.locator('#provider-business-legal-name').fill('Nile Brokerage');
+  await page.locator('#provider-business-trade-name').fill('Nile Homes');
+  await page.locator('#provider-business-address').fill('Cairo');
+  await page.locator('#provider-organization-commercial-registration').fill('011030040');
+  await page.locator('#provider-organization-tax-registration').fill('010003424');
+  await page.locator('#provider-organization-representative').fill('Ziad Elsayed');
+  await page.locator('#provider-organization-representative-title').fill('Authorized representative');
+  await page.locator('#provider-organization-authority').selectOption('true');
+  await page.locator('.provider-account-actions button').last().click();
+
+  await expect.poll(() => businessAttempts).toBe(2);
+  await expect(page.locator('[data-testid="provider-documents"]')).toHaveAttribute('data-state', 'ready');
+  expect(refreshCount).toBe(1);
+  expect(authorizationHeaders).toEqual([undefined, 'Bearer initial.provider.token']);
 });
 
 test('private document cards validate raw uploads, show server review state, and remain accessible', async ({ page }) => {

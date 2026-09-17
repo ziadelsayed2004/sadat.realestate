@@ -248,80 +248,94 @@ export class AuthClient {
   }
 
   async getProviderApplication(): Promise<ProviderApplicationData> {
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application', {
-      method: 'GET',
-      ...(headers === undefined ? {} : { headers }),
-      responseSchema: providerApplicationSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application', {
+        method: 'GET',
+        ...(headers === undefined ? {} : { headers }),
+        responseSchema: providerApplicationSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async updateProviderAccount(input: ProviderAccountPatch): Promise<ProviderApplicationData> {
     const request = providerAccountPatchSchema.parse(input);
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/account', {
-      method: 'PATCH',
-      ...(headers === undefined ? {} : { headers }),
-      json: request,
-      responseSchema: providerApplicationSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/account', {
+        method: 'PATCH',
+        ...(headers === undefined ? {} : { headers }),
+        json: request,
+        responseSchema: providerApplicationSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async updateProviderBusiness(input: ProviderBusinessPatch): Promise<ProviderApplicationData> {
     const request = providerBusinessPatchSchema.parse(input);
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/business', {
-      method: 'PATCH',
-      ...(headers === undefined ? {} : { headers }),
-      json: request,
-      responseSchema: providerApplicationSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/business', {
+        method: 'PATCH',
+        ...(headers === undefined ? {} : { headers }),
+        json: request,
+        responseSchema: providerApplicationSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async updateProviderCompany(input: ProviderCompanyPatch): Promise<ProviderApplicationData> {
     const request = providerCompanyPatchSchema.parse(input);
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/company', {
-      method: 'PATCH',
-      ...(headers === undefined ? {} : { headers }),
-      json: request,
-      responseSchema: providerApplicationSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/company', {
+        method: 'PATCH',
+        ...(headers === undefined ? {} : { headers }),
+        json: request,
+        responseSchema: providerApplicationSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async submitProviderApplication(input: ProviderSubmitRequest): Promise<ProviderApplicationData> {
     const request = providerSubmitRequestSchema.parse(input);
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/submit', {
-      method: 'POST',
-      ...(headers === undefined ? {} : { headers }),
-      json: request,
-      responseSchema: providerApplicationSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/submit', {
+        method: 'POST',
+        ...(headers === undefined ? {} : { headers }),
+        json: request,
+        responseSchema: providerApplicationSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async getProviderApplicationStatus(): Promise<ProviderApplicationStatusData> {
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/status', {
-      method: 'GET',
-      ...(headers === undefined ? {} : { headers }),
-      responseSchema: providerApplicationStatusSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/status', {
+        method: 'GET',
+        ...(headers === undefined ? {} : { headers }),
+        responseSchema: providerApplicationStatusSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async listProviderDocuments(): Promise<readonly ProviderDocumentData[]> {
-    const headers = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/documents', {
-      method: 'GET', ...(headers === undefined ? {} : { headers }),
-      responseSchema: providerDocumentListSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const headers = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/documents', {
+        method: 'GET', ...(headers === undefined ? {} : { headers }),
+        responseSchema: providerDocumentListSuccessEnvelopeSchema
+      });
+      return response.data.data.items;
     });
-    return response.data.data.items;
   }
 
   async uploadProviderDocument(category: ProviderDocumentCategory, file: File): Promise<ProviderDocumentData> {
@@ -332,29 +346,33 @@ export class AuthClient {
       contentType,
       contentLength: file.size
     });
-    const authorization = this.authorizationHeaders();
-    const response = await this.apiClient.request('/provider/application/documents', {
-      method: 'POST',
-      headers: {
-        ...(authorization ?? {}),
-        'content-type': contentType,
-        'x-document-category': category,
-        'x-file-name': file.name
-      },
-      body: file,
-      responseSchema: providerDocumentSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const authorization = this.authorizationHeaders();
+      const response = await this.apiClient.request('/provider/application/documents', {
+        method: 'POST',
+        headers: {
+          ...(authorization ?? {}),
+          'content-type': contentType,
+          'x-document-category': category,
+          'x-file-name': file.name
+        },
+        body: file,
+        responseSchema: providerDocumentSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   async deleteProviderDocument(documentId: string): Promise<ProviderDocumentDeleteData> {
-    const authorization = this.authorizationHeaders();
-    const response = await this.apiClient.request(`/provider/application/documents/${encodeURIComponent(documentId)}`, {
-      method: 'DELETE',
-      ...(authorization === undefined ? {} : { headers: authorization }),
-      responseSchema: providerDocumentDeleteSuccessEnvelopeSchema
+    return this.withProviderSession(async () => {
+      const authorization = this.authorizationHeaders();
+      const response = await this.apiClient.request(`/provider/application/documents/${encodeURIComponent(documentId)}`, {
+        method: 'DELETE',
+        ...(authorization === undefined ? {} : { headers: authorization }),
+        responseSchema: providerDocumentDeleteSuccessEnvelopeSchema
+      });
+      return response.data.data;
     });
-    return response.data.data;
   }
 
   refresh(): Promise<AuthSnapshot> {
@@ -419,6 +437,17 @@ export class AuthClient {
   private authorizationHeaders(): HeadersInit | undefined {
     const authorization = this.getAuthorizationHeader();
     return authorization === undefined ? undefined : { authorization };
+  }
+
+  private async withProviderSession<T>(request: () => Promise<T>): Promise<T> {
+    try {
+      return await request();
+    } catch (error: unknown) {
+      if (!(error instanceof ApiClientError) || error.status !== 401) throw error;
+      const snapshot = await this.refresh();
+      if (snapshot.status !== 'authenticated' || snapshot.user?.roleType !== 'provider') throw error;
+      return request();
+    }
   }
 
   private setSession(session: unknown, availableActions?: unknown): AuthSnapshot {

@@ -236,8 +236,8 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
       setError({ state: 'error', title: copy.invalidFormTitle, message: copy.invalidFormBody });
       return;
     }
-    const update = variant === 'business' ? client.updateProviderBusiness : client.updateProviderCompany;
-    if (update === undefined) {
+    const canUpdate = variant === 'business' ? client.updateProviderBusiness !== undefined : client.updateProviderCompany !== undefined;
+    if (!canUpdate) {
       setSaveState('error');
       setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
       return;
@@ -246,7 +246,9 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
     setSaveState('loading');
     setError(undefined);
     try {
-      const updated = await update(patchPreview.data);
+      const updated = variant === 'business'
+        ? await client.updateProviderBusiness!(patchPreview.data as ProviderBusinessPatch)
+        : await client.updateProviderCompany!(patchPreview.data as ProviderCompanyPatch);
       setApplication(updated);
       setForm(formFromApplication(updated));
       setSaveState('success');

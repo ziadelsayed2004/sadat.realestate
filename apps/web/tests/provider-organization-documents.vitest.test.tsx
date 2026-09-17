@@ -3,6 +3,7 @@ import type { ProviderApplicationData, ProviderDocumentData, ProviderRequirement
 import { describe, expect, it, vi } from 'vitest';
 import { AuthPage, type AuthFlowClient } from '../src/features/auth/pages.tsx';
 import { AuthClient } from '../src/features/auth/client.ts';
+import { ApiClientError } from '../src/features/contracts/index.ts';
 import { getProviderAccountCopy } from '../src/features/provider_auth/account-copy.ts';
 import { getProviderDocumentsCopy } from '../src/features/provider_auth/documents-copy.ts';
 import { ProviderDocumentsPage, validateFile } from '../src/features/provider_auth/documents.tsx';
@@ -373,6 +374,37 @@ describe('provider private documents', () => {
     expect(uploadOptions.body).toBe(file);
     expect(uploadOptions.headers).toMatchObject({ 'content-type': 'application/pdf', 'x-document-category': 'commercial_registration', 'x-file-name': 'registration.pdf' });
     expect(apiClient.request).toHaveBeenNthCalledWith(4, `/provider/application/documents/${documentId}`, expect.objectContaining({ method: 'DELETE' }));
+  });
+
+  it('refreshes an expired provider session once and retries the office save with the new token', async () => {
+    let businessAttempts = 0;
+    const apiClient = { request: vi.fn().mockImplementation(async (path: string, options: { headers?: Record<string, string> }) => {
+      if (path === '/auth/refresh') {
+        return {
+          data: { data: { accessToken: 'fresh.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'draft' } }, meta: { requestId: 'provider-refresh' } },
+          requestId: 'provider-refresh', status: 200, headers: new Headers()
+        };
+      }
+      expect(path).toBe('/provider/application/business');
+      businessAttempts += 1;
+      if (businessAttempts === 1) {
+        expect(options.headers).toEqual({ authorization: 'Bearer expired.provider.token' });
+        throw new ApiClientError('expired access token', { code: 'HTTP_ERROR', status: 401 });
+      }
+      expect(options.headers).toEqual({ authorization: 'Bearer fresh.provider.token' });
+      return {
+        data: { data: application('brokerage_office', { version: 2, legalBusinessName: 'Nile Brokerage' }), meta: { requestId: 'provider-business-retry' } },
+        requestId: 'provider-business-retry', status: 200, headers: new Headers()
+      };
+    }) };
+    const client = new AuthClient({ apiClient });
+    client.store.setSession({ accessToken: 'expired.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'draft' } });
+
+    const updated = await client.updateProviderBusiness({ version: 1, legalBusinessName: 'Nile Brokerage' });
+
+    expect(updated.version).toBe(2);
+    expect(businessAttempts).toBe(2);
+    expect(apiClient.request).toHaveBeenCalledTimes(3);
   });
 
   it('uploads an allowed raw file, renders server states, and deletes without exposing private URLs', async () => {
