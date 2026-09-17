@@ -163,6 +163,35 @@ test('provider account details saves a strict patch and resumes with the server 
   await expect(page.locator('[data-screen-id="AUTH-11"]')).toBeVisible();
 });
 
+test('provider application entry resumes the authenticated brokerage-office draft', async ({ page }) => {
+  const locale = localeForProject();
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: envelope({
+      accessToken: ACCESS_TOKEN,
+      tokenType: 'Bearer',
+      expiresInSeconds: 900,
+      user: { id: USER_ID, roleType: 'provider', status: 'draft' }
+    })
+  }));
+  await page.route('**/api/v1/provider/application', async route => {
+    expect(route.request().method()).toBe('GET');
+    expect(route.request().headers().authorization).toBe(`Bearer ${ACCESS_TOKEN}`);
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: envelope(application({ providerType: 'brokerage_office', availableActions: ['edit_account', 'edit_business', 'submit', 'view_status'] }))
+    });
+  });
+
+  await page.goto(`/provider-application?lang=${encodeURIComponent(locale)}`);
+
+  await expect(page.locator('[data-testid="provider-account-details"]')).toHaveAttribute('data-state', 'idle');
+  await expect(page).toHaveURL(/\/auth\/register\/provider\/account\?.*providerType=brokerage_office.*step=account/iu);
+  await expect(page.getByText(/route is unavailable|المسار غير متاح/iu)).toHaveCount(0);
+});
+
 test('provider account default and filled variants have responsive visual baselines', async ({ page }) => {
   const locale = localeForProject();
   await mockProviderApplicationApi(page);

@@ -246,4 +246,22 @@ describe('provider account details', () => {
     expect(document.body.textContent).not.toContain(verificationToken);
     expect(document.body.textContent).not.toContain('accessToken');
   });
+
+  it('resumes an authenticated brokerage-office draft from the provider application entry route', async () => {
+    const draft = application({ providerType: 'brokerage_office' });
+    const getProviderApplication = vi.fn().mockResolvedValue(draft);
+    const client = createAuthClient({ getProviderApplication });
+
+    renderWithLocale(
+      <AuthPage url="/provider-application?lang=ar" locale="ar" client={client} onAuthenticated={vi.fn()} />,
+      { locale: 'ar' }
+    );
+
+    await waitFor(() => expect(screen.getByTestId('provider-account-details')).toHaveAttribute('data-state', 'idle'));
+    expect(getProviderApplication).toHaveBeenCalled();
+    expect(window.location.pathname).toBe('/auth/register/provider/account');
+    expect(window.location.search).toContain('providerType=brokerage_office');
+    expect(window.location.search).toContain('step=account');
+    expect(screen.queryByText(getAuthCopy('ar').unknownRouteTitle)).not.toBeInTheDocument();
+  });
 });

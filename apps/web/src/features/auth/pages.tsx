@@ -1016,7 +1016,7 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   return <RegistrationRolePage copy={copy} locale={locale} restartRequired onSelectSeeker={startSeekerRegistration} />;
 }
 
-type ProviderRegistrationStep = 'type' | 'otp' | 'registering' | 'account' | 'organization' | 'documents' | 'review' | 'registration-error';
+type ProviderRegistrationStep = 'type' | 'otp' | 'registering' | 'resuming' | 'account' | 'organization' | 'documents' | 'review' | 'registration-error' | 'resume-error';
 
 interface ProviderRegistrationFlowProps {
   readonly client: AuthFlowClient;
@@ -1131,6 +1131,38 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
     setError(undefined);
     replaceAuthUrl(providerTypePath(providerType, locale));
   }, [locale, providerType]);
+
+  const backToProviderDashboard = useCallback(() => {
+    if (typeof window !== 'undefined') window.location.assign(`/provider?lang=${encodeURIComponent(locale)}`);
+  }, [locale]);
+
+  const resumeApplication = useCallback(async () => {
+    const copy = getProviderAccountCopy(locale);
+    if (client.getProviderApplication === undefined) {
+      setError({ state: 'error', title: copy.unavailableTitle, message: copy.unavailableBody });
+      setStep('resume-error');
+      return;
+    }
+    setError(undefined);
+    setStep('resuming');
+    try {
+      const currentApplication = await client.getProviderApplication();
+      const nextStep: ProviderRegistrationStep = currentApplication.status === 'draft' || currentApplication.status === 'needs_information'
+        ? 'account'
+        : 'review';
+      setApplication(currentApplication);
+      setProviderType(currentApplication.providerType);
+      setStep(nextStep);
+      replaceAuthUrl(providerProgressPath(currentApplication.providerType, locale, nextStep));
+    } catch (requestError: unknown) {
+      setError(providerRegistrationError(requestError, locale));
+      setStep('resume-error');
+    }
+  }, [client, locale]);
+
+  useEffect(() => {
+    if (initialStep === 'resuming') void resumeApplication();
+  }, [initialStep, resumeApplication]);
 
   const createDraft = useCallback(async (nextProviderType: ProviderType, token: string) => {
     if (client.registerProvider === undefined) {
@@ -1263,6 +1295,12 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
   if (step === 'registering') {
     return <ProviderRegistrationState locale={locale} onBack={backToType} />;
   }
+  if (step === 'resuming') {
+    return <ProviderRegistrationState locale={locale} onBack={backToProviderDashboard} />;
+  }
+  if (step === 'resume-error') {
+    return <ProviderRegistrationState locale={locale} error={error} onRetry={() => void resumeApplication()} onBack={backToProviderDashboard} />;
+  }
   if (step === 'registration-error') {
     return <ProviderRegistrationState locale={locale} error={error} onRetry={verificationToken !== undefined && providerType !== undefined ? () => void createDraft(providerType, verificationToken) : undefined} onBack={restart} />;
   }
@@ -1348,6 +1386,9 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
   }
   if (location.pathname === '/auth/register/provider/account') {
     return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep={providerRegistrationStepFromUrl(url)} onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/provider-application') {
+    return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="resuming" onAuthenticated={onAuthenticated} />;
   }
   if (location.pathname === '/auth/register/provider/review' || location.pathname === '/provider-application/status' || location.pathname === '/provider-application/needs-information' || location.pathname === '/provider-application/approved') {
     return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="review" onAuthenticated={onAuthenticated} />;
