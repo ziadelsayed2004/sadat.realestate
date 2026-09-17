@@ -14,6 +14,7 @@ export const PROVIDER_PROPERTIES_ROUTE = '/provider/properties' as const;
 
 export interface ProviderAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly getProviderApplicationStatus?: (() => Promise<ProviderApplicationStatusData>) | undefined;
   readonly logout?: () => Promise<unknown>;
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { PropertyData, SupportedLocale } from '@sadat-real-estate/contracts';
+import type { PropertyData, ProviderType, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { Badge, StateMessage } from '../design_system/index.ts';
@@ -100,6 +100,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   const copy = getProviderCopy(locale);
   const [signingOut, setSigningOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [providerType, setProviderType] = useState<ProviderType | undefined>();
   const navigationList = useRef<HTMLUListElement>(null);
   useEffect(() => {
     const revealActive = () => {
@@ -111,6 +112,14 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
     window.addEventListener('resize', revealActive);
     return () => window.removeEventListener('resize', revealActive);
   }, [activePath]);
+  useEffect(() => {
+    let active = true;
+    if (authClient?.getProviderApplicationStatus === undefined) return undefined;
+    void authClient.getProviderApplicationStatus().then(application => {
+      if (active) setProviderType(application.providerType);
+    }, () => undefined);
+    return () => { active = false; };
+  }, [authClient]);
   const providerLabel = locale === 'ar' ? 'مزود عقار' : 'Property provider';
   const logoutLabel = signingOut ? (locale === 'ar' ? 'جاري تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out');
   const signOut = () => {
@@ -143,7 +152,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
         </a>
         <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
         <ul ref={navigationList} id="provider-navigation-list">
-          {navigationItems.map(([id, path]) => {
+          {navigationItems.filter(([id]) => id !== 'projects' || providerType !== 'brokerage_office').map(([id, path]) => {
             const active = navigationItemIsActive(id, path, activePath);
             const icon = navigationIcons[id];
             return (

@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { projectDataSchema, type ProjectData } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClient } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   createProviderProjectMutationApi,
   getProviderProjectsCopy,
@@ -175,5 +175,13 @@ describe('Provider projects', () => {
     renderWithLocale(<ProviderProjects locale="en" session={session} load={load} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: getProviderProjectsCopy('en').emptyTitle, level: 3 })).toBeInTheDocument());
     expect(screen.getByText(getProviderProjectsCopy('en').emptyBody)).toBeInTheDocument();
+  });
+
+  it('explains that project management is restricted when a brokerage office opens the route directly', async () => {
+    const load = vi.fn().mockRejectedValue(new ApiClientError('forbidden', { code: 'HTTP_ERROR', status: 403 }));
+    renderWithLocale(<ProviderProjects locale="ar" session={session} load={load} />, { locale: 'ar' });
+
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'المشاريع غير متاحة لهذا الحساب' })).toBeInTheDocument());
+    expect(screen.getByText('إدارة المشاريع متاحة لحسابات شركات التطوير العقاري المعتمدة فقط.')).toBeInTheDocument();
   });
 });

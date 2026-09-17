@@ -29,7 +29,7 @@ import { getProviderProjectsCopy, type ProviderProjectsCopy } from './projects-c
 import './projects.css';
 import './styles.css';
 
-export type ProviderProjectsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
+export type ProviderProjectsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission' | 'forbidden';
 export type ProviderProjectStatusFilter = ProjectStatus | 'all';
 
 export interface ProviderProjectsProps {
@@ -98,7 +98,8 @@ function statusTone(status: ProjectStatus): BadgeTone {
 }
 
 function stateForError(error: unknown): Exclude<ProviderProjectsViewState, 'loading' | 'empty' | 'success'> {
-  if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return 'permission';
+  if (error instanceof ApiClientError && error.status === 401) return 'permission';
+  if (error instanceof ApiClientError && error.status === 403) return 'forbidden';
   if (error instanceof ApiClientError && (error.code === 'NETWORK_ERROR' || error.code === 'ABORTED')) return 'retry';
   return 'error';
 }
@@ -110,10 +111,14 @@ function errorCopy(error: unknown, copy: ProviderProjectsCopy): string {
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ProviderProjectsViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const providerCopy = getProviderCopy(locale);
-  const message = providerCopy.states[state];
+  const message = state === 'forbidden'
+    ? (locale === 'ar'
+        ? { title: 'المشاريع غير متاحة لهذا الحساب', body: 'إدارة المشاريع متاحة لحسابات شركات التطوير العقاري المعتمدة فقط.' }
+        : { title: 'Projects are unavailable for this account', body: 'Project management is available only to approved developer company accounts.' })
+    : providerCopy.states[state];
   return (
     <section className="provider-projects__state" data-state={state} aria-label={message.title}>
-      <StateMessage state={state} title={message.title} message={message.body} loadingVariant="table" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={providerCopy.retry} />
+      <StateMessage state={state === 'forbidden' ? 'permission' : state} title={message.title} message={message.body} loadingVariant="table" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={providerCopy.retry} />
       {state === 'error' ? <Button variant="secondary" size="sm" onClick={onRetry}>{providerCopy.retry}</Button> : null}
     </section>
   );
@@ -494,7 +499,7 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
     <section className="provider-dashboard provider-projects" data-screen-id="PRV-15" data-route="/provider/projects" data-device-scope="desktop/tablet/mobile">
       <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
-        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
+        {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' || state === 'forbidden' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? <ProjectsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onSubmit={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onEdit={openEdit} onSubmitProject={project => { setMutationError(undefined); setFeedback(undefined); setSubmitProject(project); }} /> : null}
         {feedback ? <p className="provider-projects__feedback" role="status">{feedback}</p> : null}
       </div>

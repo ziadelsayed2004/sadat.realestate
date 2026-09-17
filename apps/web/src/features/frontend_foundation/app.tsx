@@ -379,7 +379,7 @@ export function App({
             <p className="route-label">{copy.routeLabel}: <code>{route.pattern ?? url}</code></p>
           </div>
         )}
-        <PublicAuthRoleContext.Provider value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>
+        <PublicAuthRoleContext.Provider key={protectedRoute ? (authSnapshot?.status ?? 'server') : 'public'} value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>
           {content}
         </PublicAuthRoleContext.Provider>
       </RouteShell>

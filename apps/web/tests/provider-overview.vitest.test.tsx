@@ -106,6 +106,27 @@ describe('Provider overview', () => {
     result.unmount();
   });
 
+  it('hides project management for an approved brokerage office', async () => {
+    const brokerageApplication = providerApplicationStatusDataSchema.parse({
+      ...application,
+      providerType: 'brokerage_office'
+    });
+    const result = renderWithLocale(
+      <ProviderNavigation
+        locale="ar"
+        activePath="/provider"
+        authClient={{
+          getAuthorizationHeader: () => 'Bearer provider-token',
+          getProviderApplicationStatus: vi.fn().mockResolvedValue(brokerageApplication)
+        }}
+      />,
+      { locale: 'ar' }
+    );
+
+    await waitFor(() => expect(result.container.querySelector('[data-provider-nav="projects"]')).toBeNull());
+    expect(result.container.querySelectorAll('.provider-dashboard__navigation ul a')).toHaveLength(8);
+  });
+
   it('fails closed for an anonymous session and exposes retry without fallback values', async () => {
     const copy = getProviderCopy('en');
     const load = vi.fn().mockRejectedValueOnce(new ApiClientError('offline', { code: 'NETWORK_ERROR' }));
