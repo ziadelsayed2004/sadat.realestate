@@ -189,18 +189,20 @@ test('business and developer organization variants render their approved respons
   await expect(page.locator('input, select, button').first()).toBeVisible();
 });
 
-test('office save refreshes an expired session and continues to documents', async ({ page }) => {
+test('office and developer company saves recover an expired session and continue to documents', async ({ page }) => {
   const locale = localeForProject();
   let refreshCount = 0;
   let businessAttempts = 0;
+  let companyAttempts = 0;
   const authorizationHeaders: Array<string | undefined> = [];
+  const companyAuthorizationHeaders: Array<string | undefined> = [];
   let current = application('brokerage_office');
   await page.route('**/api/v1/auth/refresh', route => {
     refreshCount += 1;
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: envelope({ accessToken: refreshCount === 1 ? 'initial.provider.token' : 'fresh.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'draft' } })
+      body: envelope({ accessToken: `provider.token.${refreshCount}`, tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'draft' } })
     });
   });
   await page.route(/\/api\/v1\/provider\/application(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
@@ -213,6 +215,17 @@ test('office save refreshes an expired session and continues to documents', asyn
     }
     const body = route.request().postDataJSON() as Record<string, unknown>;
     current = application('brokerage_office', { ...body, version: 1, missingFields: [] });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
+  });
+  await page.route(/\/api\/v1\/provider\/application\/company(?:\?.*)?$/u, async route => {
+    companyAttempts += 1;
+    companyAuthorizationHeaders.push(route.request().headers().authorization);
+    if (companyAttempts === 1) {
+      await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.auth.authenticationRequired', details: [], requestId: 'expired-company-save' } }) });
+      return;
+    }
+    const body = route.request().postDataJSON() as Record<string, unknown>;
+    current = application('developer_company', { ...body, version: 1, missingFields: [] });
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
   });
   await page.route(/\/api\/v1\/provider\/application\/documents(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [] }) }));
@@ -231,7 +244,24 @@ test('office save refreshes an expired session and continues to documents', asyn
   await expect.poll(() => businessAttempts).toBe(2);
   await expect(page.locator('[data-testid="provider-documents"]')).toHaveAttribute('data-state', 'ready');
   expect(refreshCount).toBe(1);
-  expect(authorizationHeaders).toEqual([undefined, 'Bearer initial.provider.token']);
+  expect(authorizationHeaders).toEqual([undefined, 'Bearer provider.token.1']);
+
+  current = application('developer_company');
+  await page.goto(`/auth/register/provider/account?providerType=developer_company&step=organization&lang=${encodeURIComponent(locale)}`);
+  await page.locator('#provider-company-legal-name').fill('Nile Developments');
+  await page.locator('#provider-company-brand-name').fill('Nile Communities');
+  await page.locator('#provider-company-address').fill('New Cairo');
+  await page.locator('#provider-organization-commercial-registration').fill('011030041');
+  await page.locator('#provider-organization-tax-registration').fill('010003425');
+  await page.locator('#provider-organization-representative').fill('Mona Hassan');
+  await page.locator('#provider-organization-representative-title').fill('Managing Director');
+  await page.locator('#provider-organization-authority').selectOption('true');
+  await page.locator('.provider-account-actions button').last().click();
+
+  await expect.poll(() => companyAttempts).toBe(2);
+  await expect(page.locator('[data-testid="provider-documents"]')).toHaveAttribute('data-state', 'ready');
+  expect(refreshCount).toBe(3);
+  expect(companyAuthorizationHeaders).toEqual(['Bearer provider.token.2', 'Bearer provider.token.3']);
 });
 
 test('private document cards validate raw uploads, show server review state, and remain accessible', async ({ page }) => {
