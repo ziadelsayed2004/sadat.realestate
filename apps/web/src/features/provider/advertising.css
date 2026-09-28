@@ -396,30 +396,50 @@
 }
 
 .provider-commission__card {
-  max-width: 672px;
+  display: grid;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 0;
+  margin-top: 0;
   margin-inline: auto;
+  padding: clamp(20px, 2.5vw, 32px);
 }
 
 .provider-commission__heading {
   width: 100%;
-  max-width: 672px;
+  max-width: 1200px;
   margin-inline: auto;
+}
+
+.provider-commission__heading h1 { margin-bottom: 8px; }
+.provider-commission__heading > div { min-width: 0; }
+
+.provider-commission .provider-advertising__definition-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .provider-commission__card > .ui-button[data-state].ui-button--primary {
   background: #d9a43b;
+  justify-self: start;
+  max-width: 100%;
+  min-height: 44px;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .provider-commission__card-heading {
   align-items: start;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
 }
 
 .provider-commission__hero {
   display: grid;
   gap: 8px;
-  margin-bottom: 20px;
-  padding: 28px;
+  margin-bottom: 0;
+  padding: 24px;
   border-radius: 18px;
   background: #f6e9c9;
   color: #7f5d16;
@@ -433,8 +453,9 @@
 
 .provider-commission__hero strong {
   color: #1b2942;
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  line-height: 1;
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .provider-commission__none {
@@ -451,11 +472,25 @@
 }
 
 .provider-commission__readonly {
-  margin: 22px 0 0;
+  margin: 0;
   padding: 14px 16px;
   border: 1px solid #f1dfb3;
   border-radius: 12px;
   background: #fffaf0;
+}
+
+.provider-commission__card > .provider-advertising__feedback { margin: 0; }
+
+@media (max-width: 900px) {
+  .provider-commission .provider-advertising__definition-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .provider-commission .provider-advertising__definition-list > div:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 620px) {
+  .provider-commission__card { gap: 20px; padding: 20px; }
+  .provider-commission__hero { padding: 20px; }
+  .provider-commission .provider-advertising__definition-list { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .provider-commission__card > .ui-button[data-state].ui-button--primary { width: 100%; }
 }
 
 @media (max-width: 1100px) {

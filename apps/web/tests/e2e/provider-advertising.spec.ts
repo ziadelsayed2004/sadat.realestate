@@ -118,7 +118,7 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-19, PRV-20' });
     testInfo.annotations.push({ type: 'design-source', description: 'PRV-19 docs/design_sources/final_screens/provider/PRV-19.png; Figma node 6017:22088; PRV-20 docs/design_sources/final_screens/provider/PRV-20.png; Figma node 6028:10071; Drive folders 1KCTXCjiPpyefVI2qnLBwQB1pI87MuCw3 and 1FyRkPx1NM9yneEO-rbVV1hzunmUgjTmb' });
-    test.skip(!testInfo.project.name.startsWith('desktop-'), 'Provider Dashboard approved device scope is desktop only.');
+    test.skip(!testInfo.project.name.startsWith('desktop-') && !testInfo.title.includes('read-only commission'), 'Advertising visual evidence is scoped to desktop.');
     await routeSession(page);
     await routeAdvertisingApi(page);
   });
@@ -145,13 +145,13 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page).toHaveScreenshot(`provider-advertising-${locale}.png`, { fullPage: true });
   });
 
-  test('renders read-only commission and exposes labeled protected content', async ({ page }) => {
+  test('renders read-only commission and exposes labeled protected content', async ({ page }, testInfo) => {
     const locale = localeForProject();
     await page.goto(`/provider/commission?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="PRV-20"]')).toHaveAttribute('data-commission-state', 'success');
     await expect(page.getByText('2.5%')).toBeVisible();
-    await expect(page.locator('.provider-commission__heading')).toHaveCSS('max-width', '672px');
-    await expect(page.locator('.provider-commission__card')).toHaveCSS('max-width', '672px');
+    await expect(page.locator('.provider-commission__heading')).toHaveCSS('max-width', '1200px');
+    await expect(page.locator('.provider-commission__card')).toHaveCSS('max-width', '1200px');
     await expect(page.locator('.provider-commission__card > .ui-button')).toHaveCSS('background-color', 'rgb(217, 164, 59)');
     await expect(page.locator('.provider-commission__heading .provider-dashboard__eyebrow')).toHaveCount(0);
     await expect(page.getByRole('button', { name: locale === 'ar' ? 'تأكيد الاطلاع على سياسة العمولة' : 'Confirm review of the commission policy' })).toBeVisible();
@@ -159,6 +159,16 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page.locator('main#main-content')).toBeVisible();
     await expect(page.getByRole('navigation', { name: /Provider dashboard|لوحة مزود العقار|房产提供方工作台/u })).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/sourceRecordId|policyId|assignedTo|internalNotes|auditData/u);
-    await expect(page).toHaveScreenshot(`provider-commission-${locale}.png`, { fullPage: true });
+    const card = await page.locator('.provider-commission__card').boundingBox();
+    const heading = await page.locator('.provider-commission__heading').boundingBox();
+    const notice = await page.locator('.provider-commission__readonly').boundingBox();
+    const action = await page.locator('.provider-commission__card > .ui-button').boundingBox();
+    expect(card!.width).toBeCloseTo(heading!.width, 0);
+    expect(card!.x).toBeCloseTo(heading!.x, 0);
+    expect(action!.y - notice!.y - notice!.height).toBeGreaterThanOrEqual(19);
+    expect(action!.height).toBeGreaterThanOrEqual(44);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    if (testInfo.project.name.startsWith('desktop-')) await expect(page).toHaveScreenshot(`provider-commission-${locale}.png`, { fullPage: true });
+    else await page.screenshot({ path: testInfo.outputPath(`provider-commission-${locale}.png`), fullPage: true });
   });
 });
