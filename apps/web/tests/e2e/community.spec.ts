@@ -174,7 +174,7 @@ test('community comments and reactions work responsively after authentication', 
   await expect(like).toHaveAttribute('aria-pressed', 'true');
   await expect(like.locator('span')).toHaveText('1');
 
-  await page.locator('.public-community__comment-action').click();
+  await page.locator('.public-community__comment-action').first().click();
   const comment = page.locator('#community-comment');
   await expect(comment).toBeVisible();
   await comment.fill(locale === 'ar' ? 'تعليق مفيد للاختبار' : 'A useful test comment');

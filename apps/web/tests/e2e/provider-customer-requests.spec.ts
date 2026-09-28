@@ -39,6 +39,11 @@ async function routeSession(page: import('@playwright/test').Page, allowed = tru
 }
 
 async function routeRequests(page: import('@playwright/test').Page): Promise<void> {
+  await page.route('**/api/v1/provider/application/status', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: envelope({ applicationId: PROVIDER_ID, providerType: 'brokerage_office', status: 'approved', version: 1, availableActions: ['open_dashboard'] }, 'customer-requests-application')
+  }));
   await page.route('**/api/v1/provider/customer-requests**', async route => {
     expect(route.request().headers().authorization).toBe('Bearer provider.customer.token');
     const url = new URL(route.request().url());
@@ -216,5 +221,24 @@ test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
     await page.goto(`/provider/customer-requests?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-16"]')).toHaveCount(0);
+  });
+
+  test('does not refresh indefinitely when a fresh provider token is rejected', async ({ page }) => {
+    let refreshes = 0;
+    let statusRequests = 0;
+    await page.route('**/api/v1/auth/refresh', route => {
+      refreshes += 1;
+      return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ accessToken: 'provider.customer.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: PROVIDER_ID, roleType: 'provider', status: 'verified' } }, 'provider-refresh') });
+    });
+    await page.route('**/api/v1/provider/application/status', route => {
+      statusRequests += 1;
+      return route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'provider-status-denied' } }) });
+    });
+    await page.route('**/api/v1/provider/customer-requests**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [requestFixture()], page: 1, limit: 5, total: 1 }, 'customer-requests-list', { page: 1, limit: 5, total: 1 }) }));
+    await page.goto(`/provider/customer-requests?lang=${localeForRequests()}`);
+    await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
+    await page.waitForTimeout(300);
+    expect(statusRequests).toBe(2);
+    expect(refreshes).toBeLessThanOrEqual(2);
   });
 });

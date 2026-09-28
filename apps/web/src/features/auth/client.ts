@@ -377,7 +377,10 @@ export class AuthClient {
 
   refresh(): Promise<AuthSnapshot> {
     if (this.refreshPromise !== undefined) return this.refreshPromise;
-    this.store.beginRefresh();
+    // Keep an authenticated screen mounted while its expired token is renewed.
+    // Switching to `refreshing` here remounts provider navigation, which can
+    // repeatedly request a failing endpoint and start another refresh.
+    if (this.store.getSnapshot().status !== 'authenticated') this.store.beginRefresh();
     const pending = this.performRefresh();
     const settled = pending.then(
       (snapshot) => {
@@ -446,7 +449,15 @@ export class AuthClient {
       if (!(error instanceof ApiClientError) || error.status !== 401) throw error;
       const snapshot = await this.refresh();
       if (snapshot.status !== 'authenticated' || snapshot.user?.roleType !== 'provider') throw error;
-      return request();
+      try {
+        return await request();
+      } catch (retryError: unknown) {
+        if (retryError instanceof ApiClientError && retryError.status === 401) {
+          this.markSessionHint(false);
+          this.store.clear();
+        }
+        throw retryError;
+      }
     }
   }
 

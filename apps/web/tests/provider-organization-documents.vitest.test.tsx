@@ -407,6 +407,22 @@ describe('provider private documents', () => {
     expect(apiClient.request).toHaveBeenCalledTimes(3);
   });
 
+  it('ends a provider session when a fresh token is rejected again', async () => {
+    const apiClient = { request: vi.fn().mockImplementation(async (path: string) => {
+      if (path === '/auth/refresh') return {
+        data: { data: { accessToken: 'fresh.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'verified' } }, meta: { requestId: 'provider-refresh' } },
+        requestId: 'provider-refresh', status: 200, headers: new Headers()
+      };
+      throw new ApiClientError('unauthorized', { code: 'HTTP_ERROR', status: 401 });
+    }) };
+    const client = new AuthClient({ apiClient });
+    client.store.setSession({ accessToken: 'expired.provider.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'b'.repeat(24), roleType: 'provider', status: 'verified' } });
+
+    await expect(client.getProviderApplicationStatus()).rejects.toMatchObject({ status: 401 });
+    expect(client.getSnapshot().status).toBe('anonymous');
+    expect(apiClient.request).toHaveBeenCalledTimes(3);
+  });
+
   it('uploads an allowed raw file, renders server states, and deletes without exposing private URLs', async () => {
     const copy = getProviderDocumentsCopy('en');
     const uploadProviderDocument = vi.fn().mockResolvedValue(documentData('commercial_registration'));
