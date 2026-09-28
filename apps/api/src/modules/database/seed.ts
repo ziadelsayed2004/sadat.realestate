@@ -1954,6 +1954,57 @@ export const LOCAL_COMMUNITY_RBAC_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+export const LOCAL_PROVIDER_OWNERSHIP_SEED_STEP: DevelopmentSeedStep = {
+  id: 'local-provider-ownership-v23',
+  async run(connection) {
+    // Legacy showcase rows used profile IDs where the live services expect user IDs.
+    // Repair synthetic rows only; real accounts and their review decisions are untouched.
+    const profiles = await connection.collection('provider_profiles').find({ synthetic: true, status: 'approved' }).toArray();
+    for (const profile of profiles) {
+      const user = await connection.collection('users').findOne({ _id: profile.userId, synthetic: true, roleType: 'provider', status: 'verified' });
+      if (!user) continue;
+      for (const name of ['properties', 'projects']) {
+        await connection.collection(name).updateMany(
+          { synthetic: true, providerId: profile._id },
+          { $set: { providerId: user._id } }
+        );
+      }
+      const providerType = profile.providerType as 'individual_broker' | 'brokerage_office' | 'developer_company';
+      await connection.collection('provider_applications').updateOne(
+        { userId: user._id },
+        { $setOnInsert: {
+          synthetic: true, seedKey: 'local-provider-ownership-v23',
+          userId: user._id, providerType, status: 'approved', email: user.normalizedEmail,
+          accountOwnerFullName: 'Local Demo Provider', displayName: 'Local Demo Provider',
+          primaryLocationId: ids.location, serviceAreaIds: [ids.location], preferredLocale: 'ar',
+          whatsappNumber: '+201000000001', termsAcceptedAt: SEEDED_AT, privacyAcceptedAt: SEEDED_AT,
+          requirementVersion: PROVIDER_REQUIREMENT_VERSION,
+          requirementsSnapshot: providerRequirementSnapshot(providerType, true),
+          statusChangedAt: SEEDED_AT, submittedAt: SEEDED_AT,
+          createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+        } },
+        { upsert: true }
+      );
+    }
+  }
+};
+
+export const LOCAL_ORGANIZATION_PROFILE_LINK_SEED_STEP: DevelopmentSeedStep = {
+  id: 'local-organization-profile-link-v24',
+  async run(connection) {
+    // Organizations reference provider_profiles, unlike property/project ownership.
+    const profiles = await connection.collection('provider_profiles').find({ synthetic: true, status: 'approved' }).toArray();
+    for (const profile of profiles) {
+      const user = await connection.collection('users').findOne({ _id: profile.userId, synthetic: true, roleType: 'provider', status: 'verified' });
+      if (!user) continue;
+      await connection.collection('organizations').updateMany(
+        { synthetic: true, providerId: user._id },
+        { $set: { providerId: profile._id } }
+      );
+    }
+  }
+};
+
 export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
@@ -1976,7 +2027,9 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_TEAM_SEED_STEP,
   AUTH_BUYER_SEED_STEP,
   SYNTHETIC_BROKER_APPLICATION_SEED_STEP,
-  LOCAL_COMMUNITY_RBAC_SEED_STEP
+  LOCAL_COMMUNITY_RBAC_SEED_STEP,
+  LOCAL_PROVIDER_OWNERSHIP_SEED_STEP,
+  LOCAL_ORGANIZATION_PROFILE_LINK_SEED_STEP
 ];
 
 export function assertDevelopmentSeedAllowed(environment: AppEnvironment): void {

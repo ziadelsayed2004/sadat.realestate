@@ -2008,7 +2008,7 @@
   border-block-end: 1px solid #ebe6dc;
 }
 
-.seeker-profile__session {
+.seeker-profile__toggle-row.seeker-profile__session {
   display: grid;
   grid-template-columns: minmax(9rem, .7fr) minmax(0, 1.7fr) auto;
   align-items: start;
@@ -2033,13 +2033,14 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .5rem;
   min-width: 0;
+  width: 100%;
   margin: 0;
 }
 
 .seeker-profile__session dl > div { min-width: 0; }
 .seeker-profile__session dd {
   min-block-size: 2.8em;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   line-height: 1.4;
 }
 
@@ -3060,7 +3061,7 @@
 }
 
 @media (max-width: 640px) {
-  .seeker-profile__session {
+  .seeker-profile__toggle-row.seeker-profile__session {
     grid-template-columns: 1fr;
   }
 

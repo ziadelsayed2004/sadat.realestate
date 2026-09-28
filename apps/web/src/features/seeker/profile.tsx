@@ -9,9 +9,10 @@ import {
   type SeekerProfileData,
   type SeekerProfilePatch,
   type AuthManagedSession,
+  publicPropertyListSuccessEnvelopeSchema,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { ApiClientError } from '../contracts/index.ts';
+import { ApiClient, ApiClientError } from '../contracts/index.ts';
 import { Button, Input, Skeleton, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
@@ -205,7 +206,7 @@ function ProfileTabs({ locale, tab, copy }: { readonly locale: SupportedLocale; 
   );
 }
 
-function PreferenceChoiceField({ label, labels, value, choices, onChange }: { readonly label: string; readonly labels: Readonly<Record<string, string>>; readonly value: string; readonly choices: readonly PreferenceChoice[]; readonly onChange: (value: string) => void }) {
+function PreferenceChoiceField({ label, labels, value, choices, onChange, unknownLabel }: { readonly label: string; readonly labels: Readonly<Record<string, string>>; readonly value: string; readonly choices: readonly PreferenceChoice[]; readonly onChange: (value: string) => void; readonly unknownLabel?: string }) {
   const selected = listValue(value);
   const customChoices = selected
     .filter(item => !choices.some(choice => choice.value === item))
@@ -217,7 +218,7 @@ function PreferenceChoiceField({ label, labels, value, choices, onChange }: { re
       <div className="seeker-profile__choice-list seeker-profile__choice-list--chips" role="group" aria-label={label}>
         {visibleChoices.map(choice => (
           <button key={choice.value} type="button" className="seeker-profile__choice seeker-profile__choice--chip" data-selected={selected.includes(choice.value) || undefined} aria-pressed={selected.includes(choice.value)} onClick={() => onChange(toggleListValue(value, choice.value))}>
-            {labels[choice.value] ?? choice.value}{selected.includes(choice.value) ? <span aria-hidden="true"> ✓</span> : null}
+            {labels[choice.value] ?? (/^[a-f\d]{24}$/iu.test(choice.value) ? unknownLabel ?? choice.value : choice.value)}{selected.includes(choice.value) ? <span aria-hidden="true"> ✓</span> : null}
           </button>
         ))}
       </div>
@@ -274,6 +275,17 @@ function PreferencesForm({
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   const optionsCopy = getPreferenceOptionsCopy(locale);
+  const [locationNames, setLocationNames] = useState<Readonly<Record<string, string>>>({});
+  useEffect(() => {
+    let mounted = true;
+    void new ApiClient().request('/public/properties', {
+      query: { page: 1, limit: 1 },
+      responseSchema: publicPropertyListSuccessEnvelopeSchema
+    }).then(response => {
+      if (mounted) setLocationNames(Object.fromEntries((response.data.data.locations ?? []).map(location => [location.id, location.name[locale] ?? location.name.ar ?? location.name.en ?? ''])));
+    }).catch(() => { /* Keep saved choices editable while offline. */ });
+    return () => { mounted = false; };
+  }, [locale]);
   return (
     <form className="seeker-profile__form" onSubmit={onSubmit} noValidate>
       <fieldset className="seeker-profile__fieldset">
@@ -290,7 +302,7 @@ function PreferencesForm({
       </fieldset>
       <div className="seeker-profile__preference-stack">
         <PreferenceChoiceField label={copy.preferences.propertyTypes} labels={optionsCopy.propertyTypes} value={draft.propertyTypes} choices={propertyTypeChoices} onChange={propertyTypes => onChange({ propertyTypes })} />
-        <PreferenceChoiceField label={copy.preferences.locations} labels={optionsCopy.locations} value={draft.locations} choices={locationChoices} onChange={locations => onChange({ locations })} />
+        <PreferenceChoiceField label={copy.preferences.locations} labels={{ ...optionsCopy.locations, ...locationNames }} value={draft.locations} choices={locationChoices} unknownLabel={locale === 'ar' ? 'منطقة محفوظة' : 'Saved area'} onChange={locations => onChange({ locations })} />
       </div>
       <fieldset className="seeker-profile__fieldset">
         <legend>{copy.preferences.budgetRange}</legend>

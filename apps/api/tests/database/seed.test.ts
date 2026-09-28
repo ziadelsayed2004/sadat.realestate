@@ -11,7 +11,9 @@ import {
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
-  SYNTHETIC_BROKER_APPLICATION_SEED_STEP
+  SYNTHETIC_BROKER_APPLICATION_SEED_STEP,
+  LOCAL_PROVIDER_OWNERSHIP_SEED_STEP,
+  LOCAL_ORGANIZATION_PROFILE_LINK_SEED_STEP
 } from '../../src/modules/database/seed.js';
 
 test('visible directory company receives the complete canonical profile without replacing its identity', async () => {
@@ -37,6 +39,7 @@ test('every registered development fixture executes against insert-only syntheti
   const connection = {
     collection(name: string) {
       return {
+        find() { return { async toArray() { return []; } }; },
         async findOne(filter: Record<string, unknown>) { return filter; },
         async updateOne(filter: Record<string, unknown>, update: Record<string, unknown>) {
           writes.push({ collection: name, filter, update });
@@ -55,6 +58,65 @@ test('every registered development fixture executes against insert-only syntheti
   assert.ok(writes.every(write => write.filter.synthetic === true
     || (write.update.$setOnInsert as Record<string, unknown> | undefined)?.synthetic === true
     || typeof (write.update.$set as Record<string, unknown> | undefined)?.seedKey === 'string'));
+});
+
+test('legacy local ownership repairs require synthetic approved sources and preserve existing review decisions', async () => {
+  const updates: Array<{ name: string; filter: Record<string, unknown>; update: Record<string, Record<string, unknown>> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        find(filter: Record<string, unknown>) {
+          assert.deepEqual(filter, { synthetic: true, status: 'approved' });
+          return { async toArray() { return [
+            { _id: 'legacy-profile', userId: 'local-user', providerType: 'developer_company' },
+            { _id: 'orphan-profile', userId: 'missing-user', providerType: 'brokerage_office' }
+          ]; } };
+        },
+        async findOne(filter: Record<string, unknown>) {
+          assert.equal(filter.synthetic, true);
+          assert.equal(filter.roleType, 'provider');
+          return filter._id === 'local-user' ? { _id: 'local-user', normalizedEmail: 'local@example.invalid' } : null;
+        },
+        async updateMany(filter: Record<string, unknown>, update: Record<string, Record<string, unknown>>) { updates.push({ name, filter, update }); },
+        async updateOne(filter: Record<string, unknown>, update: Record<string, Record<string, unknown>>) { updates.push({ name, filter, update }); }
+      };
+    }
+  } as unknown as Connection;
+  await LOCAL_PROVIDER_OWNERSHIP_SEED_STEP.run(connection);
+  assert.equal(updates.length, 3);
+  for (const write of updates.filter(write => write.name !== 'provider_applications')) {
+    assert.deepEqual(write.filter, { synthetic: true, providerId: 'legacy-profile' });
+    assert.equal(write.update.$set?.providerId, 'local-user');
+  }
+  const application = updates.find(write => write.name === 'provider_applications')!;
+  assert.deepEqual(Object.keys(application.update), ['$setOnInsert']);
+  assert.equal(application.update.$setOnInsert?.synthetic, true);
+  assert.equal(application.update.$setOnInsert?.providerType, 'developer_company');
+});
+
+test('local organization link repair restores only synthetic approved profile references', async () => {
+  const writes: Array<{ name: string; filter: Record<string, unknown>; update: Record<string, Record<string, unknown>> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        find(filter: Record<string, unknown>) {
+          assert.deepEqual(filter, { synthetic: true, status: 'approved' });
+          return { async toArray() { return [
+            { _id: 'profile-1', userId: 'user-1' },
+            { _id: 'profile-2', userId: 'unverified-user' }
+          ]; } };
+        },
+        async findOne(filter: Record<string, unknown>) {
+          return filter._id === 'user-1' ? { _id: 'user-1', synthetic: true } : null;
+        },
+        async updateMany(filter: Record<string, unknown>, update: Record<string, Record<string, unknown>>) {
+          writes.push({ name, filter, update });
+        }
+      };
+    }
+  } as unknown as Connection;
+  await LOCAL_ORGANIZATION_PROFILE_LINK_SEED_STEP.run(connection);
+  assert.deepEqual(writes, [{ name: 'organizations', filter: { synthetic: true, providerId: 'user-1' }, update: { $set: { providerId: 'profile-1' } } }]);
 });
 
 test('broker application fixture is insert-only and requires both synthetic identity records', async () => {

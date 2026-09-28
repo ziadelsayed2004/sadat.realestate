@@ -105,6 +105,37 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await routeProfile(page);
   });
 
+  test('saved location IDs have human labels and mobile sessions use readable rows', async ({ page }) => {
+    const locale = localeForProject();
+    const locationId = '670000000000000000000004';
+    await page.route('**/api/v1/me/preferences', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { ...preferencesData(), preferences: { ...preferencesData().preferences, locations: [locationId] } }, ...successMeta('id-preferences') })
+    }));
+    await page.route('**/api/v1/public/properties**', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { items: [], categories: [], propertyTypes: [], locations: [{ id: locationId, kind: 'neighborhood', name: { ar: 'الحي الأول', en: 'First District' }, slug: 'first-district', order: 1 }], page: 1, limit: 1, total: 0 }, ...successMeta('locations') })
+    }));
+    await page.setViewportSize({ width: 360, height: 800 });
+    await page.goto(`/seeker/profile?tab=preferences&lang=${locale}`);
+    const selectedLocation = page.locator('.seeker-profile__choice-list--chips button[aria-pressed="true"]').filter({ hasText: locale === 'ar' ? 'الحي الأول' : 'First District' });
+    await expect(selectedLocation).toBeVisible();
+    await expect(selectedLocation).not.toContainText(locationId);
+
+    await page.goto(`/seeker/settings?lang=${locale}`);
+    await expect(page.locator('.seeker-profile__session')).toBeVisible();
+    const geometry = await page.locator('.seeker-profile__session').evaluate(element => {
+      const layout = getComputedStyle(element);
+      const dates = [...element.querySelectorAll('dd')].map(node => node.getBoundingClientRect().width);
+      return { display: layout.display, dateWidths: dates, documentWidth: document.documentElement.scrollWidth, viewport: innerWidth };
+    });
+    expect(geometry.display).toBe('grid');
+    expect(geometry.dateWidths.every(width => width >= 100)).toBe(true);
+    expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewport + 1);
+  });
+
   test('renders localized screens, safe projections, keyboard focus, and visual baselines', async ({ page }) => {
     test.skip(!test.info().project.name.includes('desktop'), 'Canonical visual baselines are desktop-only; responsive and save contracts run on every device.');
     const locale = localeForProject();
