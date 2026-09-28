@@ -96,6 +96,7 @@ function propertyFixture() {
 }
 
 async function routeSession(page: import('@playwright/test').Page, allowed = true): Promise<void> {
+  if (allowed) await page.route('**/api/v1/provider/application/status', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ applicationId: PROVIDER_ID, providerType: 'brokerage_office', status: 'approved', version: 1, availableActions: ['open_dashboard'] }, 'viewings-application') }));
   await page.route('**/api/v1/auth/refresh', async route => {
     if (!allowed) {
       await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'viewings-auth-denied' } }) });

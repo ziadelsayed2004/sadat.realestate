@@ -53,6 +53,7 @@ function advertisingRequest(status: 'quote_sent' | 'waiting_payment' = 'quote_se
 }
 
 async function routeSession(page: import('@playwright/test').Page): Promise<void> {
+  await page.route('**/api/v1/provider/application/status', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ applicationId: PROVIDER_ID, providerType: 'brokerage_office', status: 'approved', version: 1, availableActions: ['open_dashboard'] }, 'provider-advertising-application') }));
   await page.route('**/api/v1/auth/refresh', async route => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ accessToken: 'provider.advertising.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: PROVIDER_ID, roleType: 'provider', status: 'verified' } }, 'provider-advertising-refresh') });
   });
