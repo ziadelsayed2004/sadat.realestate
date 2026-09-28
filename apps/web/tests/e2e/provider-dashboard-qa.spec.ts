@@ -101,7 +101,7 @@ test.describe('F4 Provider Dashboard QA', () => {
       await expect(page.locator('.provider-dashboard__navigation'), routeCase.label).toHaveAttribute('aria-label', /.+/u);
       await expect(page.locator('.provider-dashboard__topbar'), routeCase.label).toBeVisible();
       await expect(page.locator('[data-screen-id]'), routeCase.label).toHaveCount(1);
-      await expect(page.locator('[data-screen-id][data-device-scope="desktop"]'), routeCase.label).toHaveCount(1);
+      await expect(page.locator('[data-screen-id]'), routeCase.label).toHaveAttribute('data-device-scope', /(?:^|\/)desktop(?:\/|$)/u);
       await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|providerId|storageKey|accessToken|refreshToken|password|secret/u);
 
       const shellGeometry = await page.evaluate(() => ({
@@ -121,16 +121,20 @@ test.describe('F4 Provider Dashboard QA', () => {
         viewportWidth: document.documentElement.clientWidth,
         documentWidth: document.documentElement.scrollWidth
       }));
-      const compactNavigation = shellGeometry.viewportWidth <= 900;
-      if (!compactNavigation) {
+      const { viewportWidth } = shellGeometry;
+      if (viewportWidth > 1100) {
         await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeVisible();
         await expect(page.locator('.provider-dashboard__navigation-footer button'), routeCase.label).toBeVisible();
         expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(240, 0);
+      } else if (viewportWidth > 620) {
+        await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeVisible();
+        await expect(page.locator('.provider-dashboard__navigation-footer'), routeCase.label).toBeHidden();
+        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(72, 0);
       } else {
         await expect(page.locator('.provider-dashboard__navigation-footer'), routeCase.label).toBeHidden();
-        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(shellGeometry.viewportWidth, 0);
+        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(viewportWidth, 0);
       }
-      expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(56, 0);
+      expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(viewportWidth > 620 && viewportWidth <= 1100 ? 64 : 56, 0);
       expect(shellGeometry.documentWidth, `${routeCase.label}: ${JSON.stringify(shellGeometry)}`).toBeLessThanOrEqual(shellGeometry.viewportWidth);
 
       const skipLink = page.locator('.a11y-skip-link');

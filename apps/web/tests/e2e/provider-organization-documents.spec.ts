@@ -14,7 +14,9 @@ test('individual broker repairs locations inline before reviewing documents', as
       { key: 'brokerage_license', labelKey: 'provider.documents.brokerageLicense', classification: 'optional', applies: true }
     ] }
   });
+  await page.route('**/api/v1/public/properties**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [], categories: [], propertyTypes: [], locations: [{ id: '670000000000000000000004', kind: 'neighborhood', name: { ar: 'الحي الأول', en: 'First District' }, slug: 'first-district', order: 1 }], page: 1, limit: 1, total: 0 }, meta: { requestId: 'provider-locations' } }) }));
   await page.route(/\/api\/v1\/provider\/application(?:\?.*)?$/u, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
+  await page.route('**/api/v1/provider/application/documents', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [] }) }));
   await page.route('**/api/v1/provider/application/account', async route => {
     expect(route.request().method()).toBe('PATCH');
     const patch = route.request().postDataJSON();
@@ -153,6 +155,21 @@ async function routeOrganizationApi(page: import('@playwright/test').Page): Prom
   return { setProviderType: providerType => { current = application(providerType); } };
 }
 
+test('legacy organization and document links open the corresponding provider step', async ({ page }) => {
+  const api = await routeOrganizationApi(page);
+  const locale = localeForProject();
+  for (const [path, providerType, screen] of [
+    ['business', 'brokerage_office', 'AUTH-10'],
+    ['company', 'developer_company', 'AUTH-11'],
+    ['documents', 'brokerage_office', 'AUTH-12']
+  ] as const) {
+    api.setProviderType(providerType);
+    await page.goto(`/auth/register/provider/${path}?lang=${locale}`);
+    await expect(page.locator(`[data-screen-id="${screen}"]`)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
 test('business and developer organization variants render their approved responsive states', async ({ page }) => {
   const locale = localeForProject();
   const copy = copyForLocale(locale);
@@ -274,6 +291,10 @@ test('private document cards validate raw uploads, show server review state, and
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
   });
   await page.route('**/api/v1/provider/application/documents', async route => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [] }) });
+      return;
+    }
     expect(route.request().method()).toBe('POST');
     expect(route.request().headers()['authorization']).toBeUndefined();
     expect(route.request().headers()['x-document-category']).toBe('commercial_registration');

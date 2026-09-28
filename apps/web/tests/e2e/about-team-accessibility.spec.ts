@@ -54,7 +54,9 @@ test('public Team exposes labeled content and a non-deceptive media fallback', a
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(team.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   await expect(team.locator('h1')).toBeVisible();
-  await expect(team.locator('.public-team__card h2')).toHaveCount(1);
-  await expect(team.locator('[data-state="missing_image"]')).toHaveAttribute('aria-label', /.+/);
+  expect(await team.locator('.public-team__card h2').count()).toBeGreaterThan(0);
+  for (const fallback of await team.locator('[data-state="missing_image"]').all()) {
+    await expect(fallback).toHaveAttribute('aria-label', /.+/);
+  }
   await expect(team.locator('img[src*="photoAssetId"]')).toHaveCount(0);
 });

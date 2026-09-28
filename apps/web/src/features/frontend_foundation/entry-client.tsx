@@ -251,6 +251,8 @@ function ClientApp(props: typeof appProps) {
   const [routeVersion, setRouteVersion] = useState(0);
   const [currentLocale, setCurrentLocale] = useState(props.locale);
 
+  useEffect(() => { document.dispatchEvent(new Event('sadat:app-ready')); }, []);
+
   const handleLocaleChange = (nextLocale: SupportedLocale) => {
     const snapshot = localeStore.setLocale(nextLocale);
     applyLocaleToDocument(snapshot.locale);

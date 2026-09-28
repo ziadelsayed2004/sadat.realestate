@@ -301,7 +301,7 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
   const numberFormat = new Intl.NumberFormat(locale);
   const details = copy.overview.cardDetails;
   const dashboardTitle = locale === 'ar' ? 'لوحة التحكم' : 'Dashboard';
-  const dashboardWelcome = locale === 'ar' ? 'مرحباً، شركة عقارات النيل' : 'Welcome, Nile Real Estate';
+  const dashboardWelcome = locale === 'ar' ? 'مرحباً بك' : 'Welcome';
   return (
     <>
       <div className="provider-dashboard__heading-row">

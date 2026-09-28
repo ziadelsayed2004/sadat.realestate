@@ -191,7 +191,7 @@ export function PublicDevelopers({
           <aside className="public-developer-directory__filters" aria-label={copy.searchLabel}>
             <h2>{copy.searchLabel}</h2>
             <form onSubmit={submitSearch} aria-label={copy.searchLabel}>
-              <label className="public-developer-directory__filter-field">{copy.searchLabel}<input type="search" value={search} placeholder={copy.searchPlaceholder} onChange={event => setSearch(event.target.value)} /></label>
+              <label className="public-developer-directory__filter-field" htmlFor="public-developer-search">{copy.searchLabel}<input id="public-developer-search" name="search" type="search" value={search} placeholder={copy.searchPlaceholder} onChange={event => setSearch(event.target.value)} /></label>
               <div className="public-developer-directory__filter-actions"><button type="submit">{copy.searchAction}</button><button type="button" className="public-developer-directory__reset" onClick={() => { setSearch(''); const reset = defaultPublicDeveloperDirectoryQuery(); setQuery(reset); syncBrowserUrl(reset); setAttempt(value => value + 1); }}>{copy.resetFilters}</button></div>
             </form>
           </aside>

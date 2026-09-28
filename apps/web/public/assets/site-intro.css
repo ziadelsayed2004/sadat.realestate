@@ -1,0 +1,37 @@
+#site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  background: #faf8f2;
+  pointer-events: none;
+  animation: intro-expire 2s steps(1, end) forwards;
+}
+#site-intro[hidden] { display: none; }
+.site-intro__logo {
+  position: relative;
+  inline-size: clamp(140px, 34vw, 210px);
+  aspect-ratio: 636 / 557;
+}
+.site-intro__logo::before,
+.site-intro__logo::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  mask: url('/assets/sadat-real-estate-logo.svg') center / contain no-repeat;
+  -webkit-mask: url('/assets/sadat-real-estate-logo.svg') center / contain no-repeat;
+}
+.site-intro__logo::before { background: #e8dfc9; }
+.site-intro__logo::after {
+  background: url('/assets/sadat-real-estate-logo.svg') center / contain no-repeat;
+  clip-path: inset(100% 0 0);
+  animation: intro-fill 850ms cubic-bezier(.22, .61, .36, 1) forwards;
+}
+#site-intro[data-leaving] {
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+@keyframes intro-fill { to { clip-path: inset(0); } }
+@keyframes intro-expire { to { visibility: hidden; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #site-intro { display: none; } }

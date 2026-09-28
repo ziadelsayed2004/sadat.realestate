@@ -47,3 +47,35 @@
   color: var(--color-brand-interactive);
   font-weight: var(--font-weight-strong);
 }
+
+/* Access failures use a complete page, without an empty dashboard sidebar. */
+.route-shell:has(.route-status-page) .route-shell__body { display: block; }
+.route-shell:has(.route-status-page) .route-shell__navigation { display: none; }
+.route-shell:has(.route-status-page) .app-main {
+  inline-size: min(100% - 2rem, 42rem);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 8vh, 5rem);
+}
+.route-shell .route-status-page {
+  inline-size: 100%;
+  max-inline-size: none;
+  margin-block: 0;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  text-align: center;
+  justify-items: center;
+}
+.route-status-page h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 2rem); }
+.route-status-page p { margin-block: .5rem; }
+.route-status-page .route-status-page__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: .65rem 1.5rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-interactive);
+  color: var(--color-on-brand);
+  text-decoration: none;
+  cursor: pointer;
+}

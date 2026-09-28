@@ -138,7 +138,8 @@ code {
   border-radius: var(--radius-sm);
 }
 
-[data-state]:not(.ui-button):not(.ui-property-card):not(.ui-field):not(.ui-modal-backdrop):not(.seeker-notifications__item):not(.seeker-profile__settings-card):not(.provider-settings__panel):not(.provider-dashboard__chart):not(.route-shell--admin *):not(.route-shell--auth .auth-page) {
+.route-state,
+.route-status-page {
   max-width: 48rem;
   margin-block-start: var(--space-2xl);
   padding: var(--space-xl);
@@ -148,21 +149,23 @@ code {
   box-shadow: var(--shadow-state);
 }
 
-[data-state] h2 {
+.route-state h2 {
   margin-block-start: 0;
   color: var(--color-text-strong);
 }
 
-[data-state="error"],
-[data-state="permission"] {
+.route-state[data-state="error"],
+.route-state[data-state="permission"],
+.route-status-page[data-state="error"],
+.route-status-page[data-state="permission"] {
   border-color: var(--color-border-critical);
 }
 
-[data-state="loading"] {
+.route-state[data-state="loading"] {
   border-color: var(--color-border-info);
 }
 
-[data-state="retry"] button {
+.route-state[data-state="retry"] button {
   padding: var(--space-sm) var(--space-lg);
   color: var(--color-on-brand);
   background: var(--color-brand-interactive);
@@ -171,7 +174,7 @@ code {
   cursor: pointer;
 }
 
-[data-state="retry"] button:disabled {
+.route-state[data-state="retry"] button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
 }
@@ -192,21 +195,32 @@ code {
     padding-block-start: var(--space-2-5xl);
   }
 }
-.route-auth-resolving {
+.session-loading {
   display: grid;
-  min-block-size: min(32rem, calc(100dvh - var(--header-height-min)));
+  min-block-size: 100dvh;
+  align-content: center;
   place-items: center;
+  gap: 1rem;
   padding: var(--space-2xl);
   color: var(--color-text-secondary);
   text-align: center;
 }
 
-.route-auth-resolving [data-state="loading"] {
-  width: min(100%, 30rem);
+.session-loading img {
+  inline-size: min(160px, 45vw);
+  block-size: auto;
+}
+.session-loading p {
   margin: 0;
-  padding: var(--space-2xl);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
+}
+.session-loading__progress {
+  inline-size: 120px;
+  block-size: 3px;
+  border-radius: 2px;
+  background: var(--color-brand);
+  animation: session-progress 1s ease-in-out infinite alternate;
+}
+@keyframes session-progress { from { opacity: .25; transform: scaleX(.4); } to { opacity: 1; transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .session-loading__progress { animation: none; }
 }

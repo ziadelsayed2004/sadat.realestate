@@ -34,7 +34,7 @@ import {
 } from '../routing/index.ts';
 import { type DesignAssetCatalog } from '../design_system/index.ts';
 import { getFoundationCopy } from './locale.js';
-import { RouteStateView } from './route-state.js';
+import { SessionLoading } from './session-loading.tsx';
 import './styles.css';
 
 export interface AppProps {
@@ -230,11 +230,7 @@ export function App({
   const seekerProfileTab = seekerProfileQueryTab === 'personal' || seekerProfileQueryTab === 'profile' ? 'profile' : 'preferences';
   const providerSettingsTab = seekerUrl.searchParams.get('tab') === 'contact' ? 'contact' : seekerUrl.searchParams.get('tab') === 'security' ? 'security' : 'account';
 
-  const content = protectedRoute && !authResolutionComplete ? (
-    <div className="route-auth-resolving" data-auth-resolution="pending">
-      <RouteStateView state="loading" copy={copy} />
-    </div>
-  ) : guard.allowed ? (
+  const content = guard.allowed ? (
     isPublicHomepage ? (
       <PublicHomepage locale={locale} authenticatedRole={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined} initialData={homepageData} initialState={homepageInitialState} />
     ) : isPublicPropertyListing ? (
@@ -359,26 +355,21 @@ export function App({
       <AdminCmsContent key={seekerPathname} path={seekerPathname} locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isAdminCommunity || isAdminCommunityComments || isAdminCommunityModeration ? (
       <AdminCommunity locale={locale} session={effectiveSession} authClient={authClient} />
-    ) : <RouteStateView state="empty" copy={copy} />
+    ) : <NotFoundPage copy={copy} url={url} />
   ) : guard.reason === 'not_found' ? (
     <NotFoundPage copy={copy} url={url} />
   ) : guard.reason === 'forbidden' ? (
     <ForbiddenPage copy={copy} />
   ) : (
-    <AuthenticationRequiredPage copy={copy} />
+    <AuthenticationRequiredPage copy={copy} url={url} />
   );
+
+  if (protectedRoute && !authResolutionComplete) return <SessionLoading locale={locale} />;
 
   return (
     <RouteErrorBoundary key={`${route.id}:${locale}`} copy={copy}>
       <RouteShell route={route} locale={locale} copy={copy} assets={assets} authClient={authClient} onLocaleChange={onLocaleChange}>
-        {((isPublicHomepage || isPublicPropertyListing || isPublicPropertyDetails || isPublicPropertyComparison || isPublicDevelopers || isPublicDeveloperProfile || isPublicArticles || isPublicArticleDetails || isPublicCommunity || isPublicAbout || isPublicTeam || isAuthRoute || isProviderOverview || isProviderProperties || isProviderProjects || isProviderCustomerRequests || isProviderViewings || isProviderAdvertising || isProviderCommission || isProviderNotifications || isProviderSettings || isProviderPropertyWizard || isSeekerOverview || isSeekerRequests || isSeekerRequestDetails || isSeekerViewings || isSeekerSaved || isSeekerNotifications || isSeekerProfile || isSeekerSettings || isAdminOverview || isAdminAccountReports || isAdminAccountRestrictions || isAdminPropertyCategories || isAdminLocations || isAdminFeatures || isAdminProjects || isAdminProjectReview || isAdminAds || isAdminHome || isAdminSettings || isAdminNotifications || isAdminAudit || isAdminRbac || isAdminCommissions || isAdminRequests || isAdminProperties || isAdminPropertyReview || isAdminPropertyDuplicates || isAdminPropertyReports || isAdminUsers || isAdminSeekers || isAdminProviders || isAdminVerification || isAdminContent || isAdminCmsContent || isAdminCommunity || isAdminCommunityComments || isAdminCommunityModeration || isAdminUserDetail || isAdminProviderDetail) && guard.allowed) ? null : (
-          <div className="route-heading">
-            <p className="surface-label">{copy.surfaceLabels[route.surface]}</p>
-            <h1>{copy.shellTitle}</h1>
-            <p>{copy.shellDescription}</p>
-            <p className="route-label">{copy.routeLabel}: <code>{route.pattern ?? url}</code></p>
-          </div>
-        )}
+
         <PublicAuthRoleContext.Provider key={protectedRoute ? (authSnapshot?.status ?? 'server') : 'public'} value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>
           {content}
         </PublicAuthRoleContext.Provider>

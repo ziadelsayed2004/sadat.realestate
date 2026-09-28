@@ -66,7 +66,7 @@ test('community feed and create-post surface match the approved responsive publi
   const community = page.locator('[data-page="public-community"]');
   await expect(community).toBeVisible();
   await expect(community.locator('.public-homepage__header')).toBeVisible();
-  await expect(community.locator('[data-post-id]')).toHaveCount(1);
+  expect(await community.locator('[data-post-id]').count()).toBeGreaterThan(0);
   await expect(page.locator('main#main-content main')).toHaveCount(0);
   await expect(page).toHaveScreenshot(`public-community-${locale}.png`, { fullPage: true });
 

@@ -264,6 +264,7 @@ function ListingFilters({
         </FilterField>
         <FilterField id="public-property-delivery-status" label={copy.deliveryStatus}>
           <CustomSelect
+            id="public-property-delivery-status"
             name="deliveryStatus"
             value={draft.deliveryStatus}
             onChange={val => onCommit('deliveryStatus', val as ListingFilterDraft['deliveryStatus'])}
@@ -496,6 +497,7 @@ export function PublicPropertyListing({
             <div className="public-property-listing__sort">
               <label className="public-property-listing__visually-hidden" htmlFor="public-property-sort">{copy.sortLabel}</label>
               <CustomSelect
+                id="public-property-sort"
                 name="sort"
                 value={query.sort}
                 onChange={val => {

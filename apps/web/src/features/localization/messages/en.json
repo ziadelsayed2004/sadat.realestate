@@ -2047,11 +2047,11 @@
     "states": {
       "loading": {
         "title": "Loading settings",
-        "body": "Fetching the safe administrative projection."
+        "body": "Just a moment while we prepare your settings."
       },
       "empty": {
-        "title": "Settings are not available yet",
-        "body": "This namespace has not been created. No unverified production values are added."
+        "title": "No settings saved yet",
+        "body": "Fill in the fields below and save to set up this section."
       },
       "error": {
         "title": "Settings could not load",
@@ -2063,7 +2063,7 @@
       },
       "permission": {
         "title": "Access is not permitted",
-        "body": "This screen requires an administrator session and the matching API permission."
+        "body": "Sign in with an administrator account that can manage settings."
       },
       "conflict": {
         "title": "Version conflict",
@@ -2071,7 +2071,7 @@
       },
       "success": {
         "title": "Settings ready",
-        "body": "Values are rendered from the approved administrative projection."
+        "body": "Review and update the saved values here."
       },
       "not_found": {
         "title": "Route not found",
@@ -4617,12 +4617,16 @@
   },
   "frontend_foundation/locale#getFoundationCopy": {
     "brand": "Sadat Real Estate",
-    "shellTitle": "Platform shell",
-    "shellDescription": "This is the frontend foundation. Real data appears only when its backend contract is available.",
+    "shellTitle": "Sadat Real Estate",
+    "shellDescription": "Discover properties, projects and articles in Sadat City.",
     "unavailable": "No screen data is available for this route yet.",
     "retryLabel": "Retry",
     "localeLabel": "Locale",
     "routeLabel": "Route",
+    "loginLabel": "Sign in",
+    "homeLabel": "Back to website",
+    "forbiddenTitle": "This section is unavailable for your account",
+    "forbiddenBody": "Return to the website or use an account with permission to access this section.",
     "adminHeader": {
       "search": "Search for a user, property, project, article or request",
       "searchLabel": "Admin search",

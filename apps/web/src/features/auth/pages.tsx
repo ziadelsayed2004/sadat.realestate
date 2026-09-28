@@ -1392,6 +1392,14 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
   if (location.pathname === '/auth/register/provider/account') {
     return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep={providerRegistrationStepFromUrl(url)} onAuthenticated={onAuthenticated} />;
   }
+  if (['/auth/register/provider/business', '/auth/register/provider/company', '/auth/register/provider/documents'].includes(location.pathname)) {
+    const legacy = new URL(url, 'http://sadat.local');
+    const documents = location.pathname.endsWith('/documents');
+    if (!legacy.searchParams.has('providerType')) legacy.searchParams.set('providerType', location.pathname.endsWith('/company') ? 'developer_company' : 'brokerage_office');
+    legacy.pathname = '/auth/register/provider/account';
+    legacy.searchParams.set('step', documents ? 'documents' : 'organization');
+    return <ProviderRegistrationFlow client={client} locale={locale} url={legacy.href} initialStep={documents ? 'documents' : 'organization'} onAuthenticated={onAuthenticated} />;
+  }
   if (location.pathname === '/provider-application') {
     return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="resuming" onAuthenticated={onAuthenticated} />;
   }

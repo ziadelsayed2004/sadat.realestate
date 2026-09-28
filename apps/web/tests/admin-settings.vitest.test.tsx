@@ -83,9 +83,9 @@ describe('Admin platform, contact, and social settings', () => {
 
   it('shows an unavailable namespace with an empty safe draft state', async () => {
     renderWithLocale(<AdminSettings path="/admin/settings/social" locale="en" session={session} load={async () => { throw new ApiClientError('missing', { code: 'HTTP_ERROR', status: 404 }); }} />, { locale: 'en' });
-    await waitFor(() => expect(screen.getByRole('heading', { name: 'Settings are not available yet' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'No settings saved yet' })).toBeInTheDocument());
     expect(screen.getByTestId('admin-settings-social-form')).toBeInTheDocument();
-    expect(screen.getByText(/No unverified production values are added/u)).toBeInTheDocument();
+    expect(screen.getByText(/Fill in the fields below and save/u)).toBeInTheDocument();
   });
 
   it('creates an unconfigured SEO namespace from the Figma-defined controls', async () => {

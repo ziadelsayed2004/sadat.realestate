@@ -97,6 +97,7 @@ export function CustomSelect({
         type="button"
         className="custom-select-trigger"
         aria-haspopup="listbox"
+        aria-label={ariaLabel || label || placeholder}
         aria-expanded={isOpen}
         disabled={disabled}
         onClick={() => setIsOpen(prev => !prev)}

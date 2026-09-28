@@ -90,13 +90,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, Omit<AdminSettingsCopy, 'se
     preservedValues: 'تُحفظ القيم المعتمدة الأخرى عند تحديث هذه الشاشة.',
     unavailableAction: 'إنشاء مسودة إعدادات',
     states: {
-      loading: { title: 'جارٍ تحميل الإعدادات', body: 'يتم جلب الإسقاط الإداري الآمن.' },
-      empty: { title: 'الإعدادات غير متاحة بعد', body: 'لم يتم إنشاء هذا النطاق بعد. لا تُضاف قيم إنتاجية غير موثقة.' },
+      loading: { title: 'جارٍ تحميل الإعدادات', body: 'لحظة واحدة، نجهز بيانات الإعدادات.' },
+      empty: { title: 'لا توجد إعدادات محفوظة بعد', body: 'املأ الحقول أدناه واحفظها لبدء إعداد هذا القسم.' },
       error: { title: 'تعذر تحميل الإعدادات', body: 'تحقق من الاتصال وحاول مرة أخرى.' },
       retry: { title: 'الاتصال غير متاح مؤقتًا', body: 'أعد المحاولة دون فقدان القيم الحالية.' },
-      permission: { title: 'الوصول غير مسموح', body: 'تتطلب هذه الشاشة جلسة مدير والصلاحية المطابقة من واجهة البرمجة.' },
+      permission: { title: 'الوصول غير مسموح', body: 'سجّل الدخول بحساب مدير لديه صلاحية إدارة الإعدادات.' },
       conflict: { title: 'تعارض في الإصدار', body: 'تغيرت الإعدادات منذ آخر تحميل. أعد تحميل الإسقاط وراجعه قبل الحفظ.' },
-      success: { title: 'الإعدادات جاهزة', body: 'تُعرض القيم من الإسقاط الإداري المعتمد.' },
+      success: { title: 'الإعدادات جاهزة', body: 'يمكنك مراجعة القيم وتحديثها من هنا.' },
       not_found: { title: 'المسار غير موجود', body: 'لا يوجد نطاق إعدادات مطابق.' }
     },
     directionNote: 'العربية RTL — إعدادات المنصة معتمدة لسطح المكتب.'
@@ -162,13 +162,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, Omit<AdminSettingsCopy, 'se
     preservedValues: 'Other approved values are preserved when this screen is saved.',
     unavailableAction: 'Create settings draft',
     states: {
-      loading: { title: 'Loading settings', body: 'Fetching the safe administrative projection.' },
-      empty: { title: 'Settings are not available yet', body: 'This namespace has not been created. No unverified production values are added.' },
+      loading: { title: 'Loading settings', body: 'Just a moment while we prepare your settings.' },
+      empty: { title: 'No settings saved yet', body: 'Fill in the fields below and save to set up this section.' },
       error: { title: 'Settings could not load', body: 'Check the connection and try again.' },
       retry: { title: 'Connection temporarily unavailable', body: 'Retry without losing the current values.' },
-      permission: { title: 'Access is not permitted', body: 'This screen requires an administrator session and the matching API permission.' },
+      permission: { title: 'Access is not permitted', body: 'Sign in with an administrator account that can manage settings.' },
       conflict: { title: 'Version conflict', body: 'The settings changed since the last load. Reload the projection and review it before saving.' },
-      success: { title: 'Settings ready', body: 'Values are rendered from the approved administrative projection.' },
+      success: { title: 'Settings ready', body: 'Review and update the saved values here.' },
       not_found: { title: 'Route not found', body: 'No matching settings namespace exists.' }
     },
     directionNote: 'English LTR — platform settings are approved for desktop.'

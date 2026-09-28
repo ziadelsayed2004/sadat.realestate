@@ -14,6 +14,7 @@ export function RouteStateView({ state, copy, children, onRetry }: RouteStateVie
   const message = copy.states[state];
   const semantics = FOUNDATION_STATE_SEMANTICS[state];
   const commonProps = {
+    className: 'route-state',
     'data-state': state,
     'aria-live': semantics.live
   };

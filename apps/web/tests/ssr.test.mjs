@@ -162,7 +162,8 @@ test('SSR keeps protected dashboard routes stable while session restoration is p
   assert.equal(result.locale, 'ar');
   assert.equal(result.direction, 'rtl');
   assert.match(result.html, /data-auth-resolution="pending"/);
-  assert.match(result.html, /data-state="loading"/);
+  assert.match(result.html, /aria-busy="true"/);
+  assert.doesNotMatch(result.html, /route-heading|Platform shell|واجهة المنصة|العقد الخلفي/);
 });
 
 test('SSR uses the locale preference when the URL has no explicit language', async () => {
