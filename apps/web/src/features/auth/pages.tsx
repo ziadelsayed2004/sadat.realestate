@@ -409,6 +409,10 @@ interface OtpPageProps {
   readonly initialEmail?: string | undefined;
 }
 
+function otpDigits(value: string): string {
+  return value.replace(/[٠-٩۰-۹]/gu, digit => String(digit.charCodeAt(0) - (digit >= '۰' ? 0x06f0 : 0x0660))).replace(/\D/gu, '');
+}
+
 function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false, initialEmail = '' }: OtpPageProps) {
   const copy = getAuthCopy(locale);
   const [email, setEmail] = useState(initialEmail);
@@ -517,13 +521,14 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   }
 
   function updateCodeDigit(position: number, value: string): void {
-    const digit = value.replace(/\D/gu, '').slice(-1);
+    const digits = otpDigits(value).slice(0, OTP_LENGTH - position);
     setCode(previous => {
       const next = [...previous];
-      next[position] = digit;
+      next[position] = digits[0] ?? '';
+      for (const [offset, digit] of Array.from(digits).entries()) next[position + offset] = digit;
       return next;
     });
-    if (digit !== '' && position < OTP_LENGTH - 1) inputRefs.current[position + 1]?.focus();
+    if (digits !== '') inputRefs.current[Math.min(position + digits.length, OTP_LENGTH - 1)]?.focus();
   }
 
   function handleCodeKeyDown(position: number, event: KeyboardEvent<HTMLInputElement>): void {
@@ -535,7 +540,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   }
 
   function handleCodePaste(position: number, event: ClipboardEvent<HTMLInputElement>): void {
-    const pasted = event.clipboardData.getData('text').replace(/\D/gu, '').slice(0, OTP_LENGTH - position);
+    const pasted = otpDigits(event.clipboardData.getData('text')).slice(0, OTP_LENGTH - position);
     if (pasted === '') return;
     event.preventDefault();
     setCode(previous => {
@@ -634,7 +639,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                     inputMode="numeric"
                     pattern="[0-9]*"
                     autoComplete={position === 0 ? 'one-time-code' : 'off'}
-                    maxLength={1}
+                    maxLength={position === 0 ? OTP_LENGTH : 1}
                     value={digit}
                     onChange={event => updateCodeDigit(position, event.currentTarget.value)}
                     onKeyDown={event => handleCodeKeyDown(position, event)}

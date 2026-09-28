@@ -138,6 +138,18 @@ describe('login and OTP screens', () => {
     expect(document.body.textContent).not.toContain('verificationToken');
   });
 
+  it.each(['123456', '١٢٣٤٥٦', '۱۲۳۴۵۶'])('accepts email code autofill and localized digits: %s', async value => {
+    const verifyOtp = vi.fn().mockResolvedValue({ outcome: 'authenticated', snapshot: authenticatedSnapshot });
+    const copy = getAuthCopy('en');
+    renderWithLocale(<AuthPage url="/auth/verify-email?purpose=login&roleType=seeker" locale="en" client={createClient({ verifyOtp })} onAuthenticated={vi.fn()} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.otpTitle })).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText(copy.codeDigitLabel(1)), { target: { value } });
+    fireEvent.click(screen.getByRole('button', { name: copy.verifyAction }));
+    await waitFor(() => expect(verifyOtp).toHaveBeenCalledWith(expect.objectContaining({ code: '123456' })));
+  });
+
   it('maps rate-limit and network failures to safe retry states', async () => {
     const rateLimited = new ApiClientError('rate limited', {
       code: 'HTTP_ERROR',

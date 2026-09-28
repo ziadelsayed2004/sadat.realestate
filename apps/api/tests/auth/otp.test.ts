@@ -162,6 +162,38 @@ test('SMTP readiness verifies credentials and fails closed without exposing tran
   assert.equal(await provider.verify(), false);
 });
 
+test('a resolved SMTP response that rejects the recipient cancels the OTP challenge', async () => {
+  const provider = createSmtpOtpProvider({ host: 'smtp.example.com', port: 465, tls: 'implicit', from: 'noreply@example.com' }, {
+    async verify() { return true; },
+    async sendMail(value) { return { accepted: [], rejected: [value.to] }; }
+  });
+  let cancelled = false;
+  await rejectsWithCode(() => service(repository({ async cancelChallenge() { cancelled = true; } }), provider).send({ email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration' }), 'OTP_PROVIDER_UNAVAILABLE');
+  assert.equal(cancelled, true);
+});
+
+test('SMTP recovers from transient readiness failure after ten seconds instead of five minutes', async () => {
+  const originalNow = Date.now;
+  let timestamp = originalNow();
+  let attempts = 0;
+  Date.now = () => timestamp;
+  try {
+    const provider = createSmtpOtpProvider({ host: 'smtp.example.com', port: 465, tls: 'implicit', from: 'noreply@example.com' }, {
+      async verify() { if (++attempts === 1) throw new Error('temporary'); return true; },
+      async sendMail(value) { return { accepted: [value.to] }; }
+    });
+    assert.equal(await provider.isReady(), false);
+    timestamp += 9_999;
+    assert.equal(await provider.isReady(), false);
+    assert.equal(attempts, 1);
+    timestamp += 1;
+    assert.equal(await provider.isReady(), true);
+    assert.equal(attempts, 2);
+  } finally {
+    Date.now = originalNow;
+  }
+});
+
 test('fails closed for unconfigured or failed providers and invalidates failed delivery', async () => {
   await rejectsWithCode(
     () => service(repository(), createUnconfiguredOtpProvider()).send({

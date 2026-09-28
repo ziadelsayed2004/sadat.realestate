@@ -33,7 +33,7 @@ export interface SmtpTransport {
     subject: string;
     text: string;
     html: string;
-  }): Promise<unknown>;
+  }): Promise<{ accepted: readonly (string | { address: string })[]; rejected?: readonly (string | { address: string })[] }>;
 }
 
 export interface OtpCodeGenerator {
@@ -130,11 +130,12 @@ export function createSmtpOtpProvider(
   transport: SmtpTransport = createNodemailerSmtpTransport(configuration)
 ): OtpProvider & { verify(): Promise<boolean> } {
   const readinessTtlMs = 5 * 60 * 1000;
+  const failedReadinessTtlMs = 10_000;
   let readiness: { checkedAt: number; value: boolean } | undefined;
   let readinessCheck: Promise<boolean> | undefined;
 
   async function check(force = false): Promise<boolean> {
-    if (!force && readiness && Date.now() - readiness.checkedAt < readinessTtlMs) {
+    if (!force && readiness && Date.now() - readiness.checkedAt < (readiness.value ? readinessTtlMs : failedReadinessTtlMs)) {
       return readiness.value;
     }
     if (!force && readinessCheck) return readinessCheck;
@@ -161,11 +162,16 @@ export function createSmtpOtpProvider(
     async send(delivery: OtpDelivery) {
       const message = renderOtpMessage(delivery, configuration.productName);
       try {
-        await transport.sendMail({
+        const result = await transport.sendMail({
           from: configuration.from,
           to: delivery.email,
           ...message
         });
+        const recipient = delivery.email.toLowerCase();
+        const address = (value: string | { address: string }) => (typeof value === 'string' ? value : value.address).toLowerCase();
+        if (!result.accepted.some(value => address(value) === recipient) || result.rejected?.some(value => address(value) === recipient)) {
+          throw new OtpProviderUnavailableError();
+        }
         readiness = { checkedAt: Date.now(), value: true };
       } catch (error) {
         readiness = { checkedAt: Date.now(), value: false };
