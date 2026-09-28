@@ -236,7 +236,7 @@ describe('public property details', () => {
 
     fireEvent.change(screen.getByLabelText('Full name'), { target: { value: 'Example Seeker' } });
     fireEvent.change(screen.getByLabelText('Phone number'), { target: { value: '01001234567' } });
-    fireEvent.change(screen.getByLabelText('Contact time'), { target: { value: 'morning' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Contact time' }), { target: { value: 'morning' } });
     fireEvent.change(screen.getByLabelText(copy.messageLabel), { target: { value: 'Please share the details.' } });
     fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
     await waitFor(() => expect(submitContact).toHaveBeenCalledWith({

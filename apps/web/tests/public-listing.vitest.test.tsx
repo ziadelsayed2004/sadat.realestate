@@ -122,7 +122,7 @@ describe('public property listing', () => {
       { locale: 'en' }
     );
 
-    fireEvent.change(screen.getByLabelText(copy.sortLabel), { target: { value: 'price' } });
+    fireEvent.change(screen.getByRole('combobox', { name: copy.sortLabel }), { target: { value: 'price' } });
     fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
 
     await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ sort: 'price', page: 1 }), expect.any(AbortSignal)));
