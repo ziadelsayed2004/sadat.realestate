@@ -121,6 +121,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
     return () => { active = false; };
   }, [authClient]);
   const providerLabel = locale === 'ar' ? 'مزود عقار' : 'Property provider';
+  const websiteLabel = locale === 'ar' ? 'عرض الموقع' : 'View website';
   const logoutLabel = signingOut ? (locale === 'ar' ? 'جاري تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out');
   const signOut = () => {
     if (signingOut) return;
@@ -146,10 +147,9 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
       </header>
       {mobileMenuOpen ? <button className="provider-dashboard__navigation-backdrop" type="button" aria-label={locale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu'} onClick={() => setMobileMenuOpen(false)} /> : null}
       <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow} data-mobile-open={mobileMenuOpen ? 'true' : undefined}>
-        <a className="provider-dashboard__brand" href={localeForProviderPath(locale, '/provider')} aria-label={copy.overview.eyebrow}>
+        <div className="provider-dashboard__brand">
           <img src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
-          <span>{copy.overview.eyebrow}</span>
-        </a>
+        </div>
         <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
         <ul ref={navigationList} id="provider-navigation-list">
           {navigationItems.filter(([id]) => id !== 'projects' || providerType !== 'brokerage_office').map(([id, path]) => {
@@ -166,6 +166,11 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
               </li>
             );
           })}
+          <li className="provider-dashboard__mobile-website">
+            <a href={localeForProviderPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMobileMenuOpen(false)}>
+              <span aria-hidden="true">↗</span><span>{websiteLabel}</span>
+            </a>
+          </li>
           <li className="provider-dashboard__mobile-logout">
             <button type="button" onClick={signOut} disabled={signingOut} aria-label={logoutLabel}>
               <img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="19" height="19" />
@@ -173,7 +178,8 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
           </li>
         </ul>
         <footer className="provider-dashboard__navigation-footer">
-          <strong>{providerLabel}</strong><small>{locale === 'ar' ? 'شركة' : 'Company'}</small>
+          <div className="provider-dashboard__navigation-profile"><strong>{providerLabel}</strong><small>{locale === 'ar' ? 'حساب مزود عقار' : 'Provider account'}</small></div>
+          <a className="provider-dashboard__website-link" href={localeForProviderPath(locale, '/')}><span>{websiteLabel}</span><span aria-hidden="true">↗</span></a>
           <button type="button" onClick={signOut} disabled={signingOut}><img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="16" height="16" />{logoutLabel}</button>
         </footer>
       </nav>

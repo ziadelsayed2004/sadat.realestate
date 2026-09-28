@@ -141,6 +141,8 @@ test.describe('PRV-01 Provider Overview', () => {
     expect(insightsBox?.height).toBe(277);
     expect(chartBox?.y).toBe(quickActionsBox?.y);
     expect(chartBox?.height).toBe(277);
+    await expect(page.locator('.provider-dashboard__website-link')).toBeVisible();
+    await expect(page.locator('.provider-dashboard__website-link')).toHaveAttribute('href', `/?lang=${locale}`);
     await expect(metricGrid).toHaveCSS('grid-template-columns', '313.25px 313.25px 313.25px 313.25px');
     await page.screenshot({ path: testInfo.outputPath(`provider-1577-${locale}.png`), fullPage: true });
   });
@@ -175,7 +177,10 @@ test.describe('PRV-01 Provider Overview', () => {
       const menu = page.locator('.provider-dashboard__menu-button');
       await menu.click();
       await expect(menu).toHaveAttribute('aria-expanded', 'true');
-      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(10);
+      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(11);
+      await expect(page.locator('.provider-dashboard__mobile-website a')).toBeVisible();
+      await expect(page.locator('.provider-dashboard__mobile-website a')).toHaveAttribute('href', `/?lang=${locale}`);
+      await page.locator('.provider-dashboard__navigation').screenshot({ path: testInfo.outputPath(`provider-navigation-${locale}.png`) });
       await page.locator('.provider-dashboard__navigation-backdrop').click({ position: { x: 2, y: 300 } });
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
     } else {
