@@ -7,6 +7,33 @@
   padding: 24px;
 }
 
+.provider-property-wizard[data-screen-id='PRV-03'] .provider-property-wizard__content { max-width: none; }
+.provider-property-wizard__form[data-form-step='basic'] {
+  display: grid;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 0;
+  margin-inline: auto;
+}
+.provider-property-wizard__form[data-form-step='basic'] > :is(.provider-property-wizard__intro, .provider-property-wizard__steps, .provider-property-wizard__card, .provider-property-wizard__contract-note, .provider-property-wizard__reason, .provider-property-wizard__form-error, .provider-property-wizard__form-message, .provider-property-wizard__actions) { margin: 0; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__intro h1 { margin-bottom: 8px; font-size: 1.5rem; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__intro > p:last-child { margin-bottom: 0; font-size: .9375rem; line-height: 1.7; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__steps strong { font-size: .75rem; line-height: 1.5; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__card { padding: clamp(20px, 2.5vw, 32px); }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__card-heading { display: grid; gap: 8px; margin-bottom: 24px; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__card-heading > span { line-height: 1.7; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__reason { max-width: none; }
+.provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__actions button { min-height: 44px; line-height: 1.5; }
+
+@media (max-width: 620px) {
+  .provider-property-wizard__form[data-form-step='basic'] { gap: 20px; }
+  .provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__steps { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 8px; }
+  .provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__steps strong { font-size: .6875rem; }
+  .provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .provider-property-wizard__form[data-form-step='basic'] .provider-property-wizard__actions button { width: 100%; }
+}
+
 .provider-property-wizard__steps {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));

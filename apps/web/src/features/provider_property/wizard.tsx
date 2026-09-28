@@ -198,7 +198,7 @@ function BasicFormView({
   const updateName = (value: string) => setForm({ ...form, name: { ...form.name, [locale]: value } });
   const saving = mutationState === 'saving';
   return (
-    <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+    <form className="provider-property-wizard__form" data-form-step="basic" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
       <div className="provider-property-wizard__intro">
         <p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p>
         <h1 id="provider-property-wizard-title">{wizard.createTitle}</h1>
@@ -206,7 +206,7 @@ function BasicFormView({
       </div>
       <WizardSteps step="basic" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-core-title">
-        <div className="provider-property-wizard__card-heading"><h2 id="provider-property-core-title">{wizard.basicTitle}</h2><span>{wizard.steps.basic}</span></div>
+        <div className="provider-property-wizard__card-heading"><h2 id="provider-property-core-title">{wizard.basicTitle}</h2></div>
         <div className="provider-property-wizard__grid">
           <Input id="provider-property-name" label={wizard.labels.name} value={form.name[locale]} placeholder={wizard.placeholders.name} onChange={event => updateName(event.target.value)} aria-invalid={validationError || undefined} required />
           <Input id="provider-property-slug" label={wizard.labels.slug} value={form.slug} placeholder={wizard.placeholders.slug} onChange={event => setForm({ ...form, slug: event.target.value })} aria-invalid={validationError || undefined} required />

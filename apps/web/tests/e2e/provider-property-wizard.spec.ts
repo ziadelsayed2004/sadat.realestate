@@ -162,7 +162,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
 });
 
 test.describe('PRV-03 responsive source geometry', () => {
-  test('keeps the basic-information form contained at desktop, tablet, and Pixel 5 widths', async ({ page }) => {
+  test('keeps the basic-information form contained at desktop, tablet, and Pixel 5 widths', async ({ page }, testInfo) => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
@@ -183,6 +183,18 @@ test.describe('PRV-03 responsive source geometry', () => {
       expect(geometry.documentWidth, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
       expect(geometry.screenRight, `${locale} at ${viewport.width}px`).toBeLessThanOrEqual(geometry.viewport + 1);
       expect(geometry.cardsContained, `${locale} at ${viewport.width}px`).toBe(true);
+      const form = await page.locator('.provider-property-wizard__form').boundingBox();
+      const intro = await page.locator('.provider-property-wizard__intro').boundingBox();
+      const card = await page.locator('.provider-property-wizard__card').first().boundingBox();
+      expect(card!.width).toBeCloseTo(form!.width, 0);
+      expect(intro!.x).toBeCloseTo(card!.x, 0);
+      if (viewport.width > 1100) expect(card!.width).toBeGreaterThan(1000);
+      if (viewport.width <= 620) {
+        expect(await page.locator('.provider-property-wizard__steps').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(4);
+        const actions = await page.locator('.provider-property-wizard__actions button').evaluateAll(elements => elements.map(element => element.getBoundingClientRect()));
+        actions.forEach(action => expect(action.height).toBeGreaterThanOrEqual(44));
+      }
+      await page.screenshot({ path: testInfo.outputPath(`provider-basic-${locale}-${viewport.width}.png`), fullPage: true });
     }
   });
 
