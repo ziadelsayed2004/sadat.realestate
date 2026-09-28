@@ -78,13 +78,12 @@ test('localized copy keeps referential identity for render effect dependencies',
   assert.equal(localizeCopy('test.identity', 'ar', fallback), localizeCopy('test.identity', 'ar', fallback));
 });
 
-test('the early locale guard and transition skeleton are present before hydration', () => {
+test('the early locale guard preserves visible SSR content and uses local fonts', () => {
   const indexHtml = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-  assert.match(indexHtml, /classList\.add\('app-booting'\)/);
   assert.match(indexHtml, /sadat-real-estate\\\.locale=\(ar\|en\)/);
-  assert.match(indexHtml, /id="app-transition-loader"/);
+  assert.match(indexHtml, /assets\/fonts\/cairo-v31\.css/);
+  assert.doesNotMatch(indexHtml, /app-booting|app-navigating|fonts\.googleapis|link\.remove\(\)/);
   assert.doesNotMatch(indexHtml, /addEventListener\('submit'/);
-  assert.ok(indexHtml.indexOf('app-booting') < indexHtml.indexOf('id="app"'));
 });
 
 test('locale normalization preserves approved direction rules and falls back safely', () => {
@@ -149,11 +148,12 @@ test('locale URL replacement preserves route, query and hash while changing only
   );
 });
 
-test('client bootstrap and design tokens include a CJK-capable fallback font', () => {
+test('Cairo is self-hosted and CSS and JavaScript typography tokens agree', () => {
   const indexHtml = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   const cssTokens = readFileSync(new URL('../src/features/design_system/tokens.css', import.meta.url), 'utf8');
   const jsTokens = readFileSync(new URL('../src/features/design_system/tokens.ts', import.meta.url), 'utf8');
-  assert.match(indexHtml, /family=Noto\+Sans\+SC/);
-  assert.match(cssTokens, /"Noto Sans SC"/);
-  assert.match(jsTokens, /"Noto Sans SC"/);
+  assert.match(indexHtml, /cairo-v31-arabic\.woff2/);
+  assert.match(indexHtml, /cairo-v31-latin\.woff2/);
+  assert.match(cssTokens, /Cairo, ui-sans-serif/);
+  assert.match(jsTokens, /Cairo, ui-sans-serif/);
 });

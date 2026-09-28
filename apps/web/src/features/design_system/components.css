@@ -644,6 +644,27 @@ select:not(.a11y-visually-hidden):disabled {
   text-decoration: none;
 }
 
+.ui-property-card:has(a.ui-property-card__title) {
+  position: relative;
+}
+
+a.ui-property-card__title::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: '';
+}
+
+.ui-property-card__action {
+  position: relative;
+  z-index: 2;
+}
+
+.ui-property-card:has(a.ui-property-card__title:focus-visible) {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 3px;
+}
+
 .ui-property-card__location,
 .ui-property-card__source {
   color: var(--color-text-secondary);

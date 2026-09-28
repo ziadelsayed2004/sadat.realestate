@@ -180,7 +180,7 @@ function ArticleCard({
         {category === undefined ? null : <Badge className="public-articles__card-category" tone="warning">{category}</Badge>}
       </div>
       <div className="public-articles__card-body">
-        <h2><a href={publicArticleUrl(article.slug)}>{title}</a></h2>
+        <h2><a className="public-articles__card-primary-link" href={`${publicArticleUrl(article.slug)}?lang=${locale}`}>{title}</a></h2>
         <p className="public-articles__card-summary">{summary(body, copy)}</p>
         <div className="public-articles__card-byline">
           <span className="public-articles__card-author">{authorName}</span>
@@ -193,10 +193,10 @@ function ArticleCard({
           </div>
           <div>
             <dt>{copy.readTime(1)}</dt>
-            <dd>{copy.readTime(readTime(body))}</dd>
+            <dd>{copy.readTime(readingTimeMinutes)}</dd>
           </div>
         </dl>
-        <a className="public-articles__card-link" href={publicArticleUrl(article.slug)}>{copy.openArticle}</a>
+        <a className="public-articles__card-link" href={`${publicArticleUrl(article.slug)}?lang=${locale}`}>{copy.openArticle}</a>
       </div>
     </article>
   );

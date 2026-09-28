@@ -90,10 +90,10 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
         {organization.logoUrl ? <PublicMediaImage className="public-developer-directory__card-logo" src={organization.logoUrl} alt="" loading="lazy" fallback={<span className="public-developer-directory__card-logo-fallback" aria-hidden="true" />} /> : null}
       </div>
       <div className="public-developer-directory__card-body">
-        <h2><a href={`/developers/${encodeURIComponent(organization.slug)}`}>{title}</a></h2>
+        <h2><a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}>{title}</a></h2>
         {description === undefined ? null : <p className="public-developer-directory__card-description">{description}</p>}
         {locations.length > 0 ? <div className="public-developer-directory__card-locations" aria-label={copy.locationsLabel}>{locations.map(location => <span key={location.key}>{location.label}</span>)}</div> : null}
-        <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}`}><span>{copy.openProfile}</span><span aria-hidden="true">←</span></a>
+        <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}><span>{copy.openProfile}</span><span aria-hidden="true">←</span></a>
       </div>
     </article>
   );

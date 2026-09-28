@@ -4034,6 +4034,7 @@
     "title": "Property search results",
     "filtersTitle": "Filter results",
     "resetFilters": "Reset",
+    "backToCategories": "Back to all categories",
     "searchLabel": "Search",
     "searchPlaceholder": "Property name or keyword",
     "transactionLabel": "Transaction type",

@@ -31,6 +31,33 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it('applies a price range once, preserves the selected category, and rejects reversed prices', async () => {
+    window.history.replaceState({}, '', '/properties?lang=en');
+    const load = vi.fn().mockResolvedValue(listingData);
+    const copy = getPublicPropertyListingCopy('en');
+    renderWithLocale(<PublicPropertyListing locale="en" initialData={listingData} initialQuery={{ ...defaultPublicPropertySearchQuery(), propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb' }} load={load} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.minPrice), { target: { value: '1000000' } });
+    fireEvent.change(screen.getByLabelText(copy.maxPrice), { target: { value: '2000000' } });
+    expect(load).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
+    await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
+    expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', minPrice: 1000000, maxPrice: 2000000 }), expect.any(AbortSignal));
+    expect(window.location.search).toContain('lang=en');
+    fireEvent.change(screen.getByLabelText(copy.maxPrice), { target: { value: '500000' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.invalidFilters);
+    expect(load).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows returning from an empty selected type without losing other filters', async () => {
+    const copy = getPublicPropertyListingCopy('en');
+    const load = vi.fn().mockResolvedValue(listingData);
+    renderWithLocale(<PublicPropertyListing locale="en" initialData={{ ...listingData, items: [], total: 0 }} initialQuery={{ ...defaultPublicPropertySearchQuery(), propertyTypeId: 'cccccccccccccccccccccccc', minPrice: 100 }} load={load} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.backToCategories }));
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyTypeId: undefined, propertyCategoryId: undefined, minPrice: 100, page: 1 }), expect.any(AbortSignal)));
+    expect(window.location.search).not.toContain('propertyTypeId');
+  });
+
   it('parses only the implemented allowlisted query and synchronizes it to the route', () => {
     const query = parsePublicPropertySearchQuery('/properties?search=home&transactionType=rent&sort=price&direction=asc&page=2&limit=10&%24where=true');
 
@@ -48,7 +75,7 @@ describe('public property listing', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     const localizedName = listingData.items[0]?.name[locale] ?? listingData.items[0]?.slug ?? 'published-home';
-    expect(screen.getByRole('link', { name: localizedName })).toHaveAttribute('href', '/properties/published-home');
+    expect(screen.getByRole('link', { name: localizedName })).toHaveAttribute('href', `/properties/published-home?lang=${locale}`);
     expect(screen.getByText(copy.resultCount(1))).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('audit');

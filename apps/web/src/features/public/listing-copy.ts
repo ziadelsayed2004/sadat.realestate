@@ -6,6 +6,7 @@ export interface PublicPropertyListingCopy {
   readonly resultCount: (count: number) => string;
   readonly filtersTitle: string;
   readonly resetFilters: string;
+  readonly backToCategories: string;
   readonly searchLabel: string;
   readonly searchPlaceholder: string;
   readonly transactionLabel: string;
@@ -80,6 +81,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     resultCount: count => `${count} عقار متاح`,
     filtersTitle: 'تصفية النتائج',
     resetFilters: 'إعادة ضبط',
+    backToCategories: 'العودة إلى كل الفئات',
     searchLabel: 'البحث',
     searchPlaceholder: 'اسم العقار أو كلمة مفتاحية',
     transactionLabel: 'نوع المعاملة',
@@ -152,6 +154,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     resultCount: count => `${count} available ${count === 1 ? 'property' : 'properties'}`,
     filtersTitle: 'Filter results',
     resetFilters: 'Reset',
+    backToCategories: 'Back to all categories',
     searchLabel: 'Search',
     searchPlaceholder: 'Property name or keyword',
     transactionLabel: 'Transaction type',

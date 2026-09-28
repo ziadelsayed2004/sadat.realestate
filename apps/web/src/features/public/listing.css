@@ -19,6 +19,29 @@
   font-size: var(--font-size-body-large);
 }
 
+.public-property-listing__back {
+  margin-block-start: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-brand-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.public-property-listing__price-range {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.public-property-listing__price-range input {
+  inline-size: 100%;
+  direction: ltr;
+  text-align: start;
+}
+
 .public-property-listing__reset,
 .public-property-listing__view-toggle button {
   color: var(--color-text-strong);
@@ -456,32 +479,61 @@
   }
 
   .public-property-listing__cards,
-  .public-property-listing__cards.is-list,
-  .public-property-listing__cards.is-list .public-property-listing__card {
+  .public-property-listing__cards.is-list {
     grid-template-columns: 1fr;
   }
 
-  .public-property-listing__cards.is-list .public-property-listing__card .ui-property-card__media {
-    min-block-size: 13rem;
+  .public-property-listing__cards.is-list .public-property-listing__card {
+    grid-template-columns: minmax(5.5rem, 30%) minmax(0, 1fr);
   }
+
+  .public-property-listing__cards.is-list .public-property-listing__card .ui-property-card__media {
+    min-block-size: 0;
+    block-size: 100%;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__media > img {
+    block-size: 100%;
+    min-block-size: 10rem;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__body {
+    min-inline-size: 0;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__title {
+    font-size: 1rem;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__source {
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+  }
+
 }
 
 @media (min-width: 1101px) {
   .public-property-listing__intro,
   .public-property-listing__category-rail,
   .public-property-listing__body {
-    width: 1232px;
+    width: min(1232px, calc(100% - 3rem));
   }
 
   .public-property-listing__intro {
     box-sizing: border-box;
-    height: 56px;
+    min-height: 56px;
     margin-block-start: 40px;
     padding: 0;
   }
 
   .public-property-listing__intro h1 {
-    height: 32px;
     font-size: 25px;
     font-weight: 800;
     line-height: 32px;
@@ -591,7 +643,7 @@
   }
 
   .public-property-listing__body {
-    grid-template-columns: 288px 920px;
+    grid-template-columns: minmax(240px, 288px) minmax(0, 1fr);
     gap: 24px;
     box-sizing: border-box;
     padding: 24px 0 40px;
@@ -670,7 +722,6 @@
     opacity: 0;
   }
 
-  .public-property-listing__apply,
   .public-property-listing__visually-hidden {
     position: absolute;
     width: 1px;
@@ -705,7 +756,7 @@
   }
 
   .public-property-listing__filter-field input::placeholder {
-    color: transparent;
+    color: var(--color-text-secondary);
   }
 
   .public-property-listing__filter-field select {
@@ -991,3 +1042,33 @@
 .public-property-listing__card .ui-property-card__badges span { padding: 3px 9px; color: #855300; background: #fff4cf; border-radius: 999px; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 .public-property-listing__card .ui-property-card__badges [data-badge="installment"] { color: #12603e; background: #d9f5df; }
 .public-property-listing__card .ui-property-card__badges [data-badge="code"] { color: #17233f; background: #fff; direction: ltr; }
+
+/* List rows must override the desktop card template as well as the mobile grid. */
+.public-property-listing__cards.is-list {
+  grid-auto-rows: auto;
+}
+
+.public-property-listing__cards.is-list .public-property-listing__card {
+  grid-template-rows: 1fr;
+}
+
+@media (max-width: 560px) {
+  .public-property-listing__cards.is-list .ui-property-card__badges {
+    inset: 0.5rem 0.25rem auto;
+    gap: 0.25rem;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__badges span {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.625rem;
+  }
+}
+
+@media (pointer: coarse) {
+  .public-property-listing__view-toggle button,
+  .public-property-listing__compare-button,
+  .public-property-listing__reset {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}

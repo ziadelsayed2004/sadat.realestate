@@ -43,6 +43,7 @@ interface ListingFilterDraft {
   readonly bedrooms: string;
   readonly locationId: string;
   readonly projectId: string;
+  readonly propertyCategoryId: string;
   readonly propertyTypeId: string;
   readonly deliveryStatus: '' | 'ready_to_move' | 'under_construction' | 'future_delivery';
   readonly sort: PublicPropertySearchQuery['sort'];
@@ -86,10 +87,11 @@ function listingRailItems(data: PublicPropertyListData): ReadonlyArray<ListingRa
 
 function listingFilterTypes(data: PublicPropertyListData): PublicHomepageCategory[] {
   const propertyTypes = new Map(data.propertyTypes.map(item => [item.slug, item] as const));
-  return propertyTypeFilterOrder.flatMap(slug => {
+  const ordered = propertyTypeFilterOrder.flatMap(slug => {
     const item = propertyTypes.get(slug);
-    return item === undefined || item.propertyCount === 0 ? [] : [item];
+    return item === undefined ? [] : [item];
   });
+  return [...ordered, ...data.propertyTypes.filter(item => !ordered.some(type => type.id === item.id))];
 }
 
 type FilterKey = keyof ListingFilterDraft;
@@ -138,6 +140,7 @@ function draftFromQuery(query: PublicPropertySearchQuery): ListingFilterDraft {
     bedrooms: query.bedrooms === undefined ? '' : String(query.bedrooms),
     locationId: query.locationId ?? '',
     projectId: query.projectId ?? '',
+    propertyCategoryId: query.propertyCategoryId ?? '',
     propertyTypeId: query.propertyTypeId ?? '',
     deliveryStatus: query.deliveryStatus ?? '',
     sort: query.sort,
@@ -196,6 +199,7 @@ function ListingFilters({
   copy,
   locale,
   onCommit,
+  onDraftChange,
   onSubmit,
   onReset,
   error,
@@ -206,6 +210,7 @@ function ListingFilters({
   readonly copy: PublicPropertyListingCopy;
   readonly locale: SupportedLocale;
   readonly onCommit: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
+  readonly onDraftChange: (key: 'minPrice' | 'maxPrice', value: string) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onReset: () => void;
   readonly error: boolean;
@@ -232,6 +237,14 @@ function ListingFilters({
           <label><input type="radio" name="transactionType" value="sale" checked={draft.transactionType === 'sale'} onChange={() => onCommit('transactionType', 'sale')} /> {copy.sale}</label>
           <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onCommit('transactionType', 'rent')} /> {copy.rent}</label>
         </fieldset>
+        <div className="public-property-listing__price-range">
+          <FilterField id="public-property-min-price" label={copy.minPrice}>
+            <input id="public-property-min-price" name="minPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.minPrice} onChange={event => onDraftChange('minPrice', event.currentTarget.value)} />
+          </FilterField>
+          <FilterField id="public-property-max-price" label={copy.maxPrice}>
+            <input id="public-property-max-price" name="maxPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.maxPrice} onChange={event => onDraftChange('maxPrice', event.currentTarget.value)} />
+          </FilterField>
+        </div>
         <fieldset className="public-property-listing__filter-chips public-property-listing__filter-chips--types">
           <legend>{copy.propertyType}</legend>
           <label><input type="radio" name="propertyTypeId" value="" checked={draft.propertyTypeId === ''} onChange={() => onCommit('propertyTypeId', '')} /> {copy.allKinds}</label>
@@ -307,7 +320,7 @@ function PropertyResults({
           <PropertyCard
             key={property.id}
             title={localizedText(property.name, locale) ?? property.slug}
-            href={'/properties/' + property.slug}
+            href={'/properties/' + property.slug + '?lang=' + locale}
             price={listingPrice(property.price, property.transactionType, locale)}
             location={localizedText(property.locationName, locale)}
             source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
@@ -403,8 +416,9 @@ export function PublicPropertyListing({
   }, []);
 
   const navigate = (nextQuery: PublicPropertySearchQuery, syncDraft = true) => {
-    const nextUrl = publicPropertySearchUrl(nextQuery);
-    if (typeof window !== 'undefined') window.history.pushState({}, '', nextUrl);
+    const nextUrl = new URL(publicPropertySearchUrl(nextQuery), 'http://sadat-real-estate.local');
+    nextUrl.searchParams.set('lang', locale);
+    if (typeof window !== 'undefined') window.history.pushState({}, '', nextUrl.pathname + nextUrl.search);
     setQuery(nextQuery);
     if (syncDraft) setDraft(draftFromQuery(nextQuery));
     setFilterError(false);
@@ -412,7 +426,7 @@ export function PublicPropertyListing({
   };
 
   const commitFilterChange = <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => {
-    const nextDraft = { ...draft, [key]: value, sort: query.sort, direction: query.direction };
+    const nextDraft = { ...draft, [key]: value, ...(key === 'propertyTypeId' ? { propertyCategoryId: '' } : {}), sort: query.sort, direction: query.direction };
     setDraft(nextDraft);
     const nextQuery = queryFromDraft(nextDraft);
     if (nextQuery === undefined) {
@@ -433,11 +447,11 @@ export function PublicPropertyListing({
   };
 
   const updatePropertyCategory = (propertyCategoryId: string | undefined) => {
-    navigate({ ...query, propertyCategoryId, propertyTypeId: undefined, page: 1 }, false);
+    navigate({ ...query, propertyCategoryId, propertyTypeId: undefined, page: 1 });
   };
 
   const updatePropertyType = (propertyTypeId: string) => {
-    navigate({ ...query, propertyCategoryId: undefined, propertyTypeId, page: 1 }, false);
+    navigate({ ...query, propertyCategoryId: undefined, propertyTypeId, page: 1 });
   };
 
   const railItemActive = (item: ListingRailItem): boolean => item.actualKind === 'category'
@@ -467,15 +481,16 @@ export function PublicPropertyListing({
         <div>
           <h1 id="public-property-listing-title">{copy.title}</h1>
           {view === 'success' && data !== undefined ? <p>{copy.resultCount(data.total)}</p> : null}
+          {query.propertyCategoryId !== undefined || query.propertyTypeId !== undefined ? <button className="public-property-listing__back" type="button" onClick={() => updatePropertyCategory(undefined)}>{copy.backToCategories}</button> : null}
         </div>
       </section>
-      {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
+      {data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
         {railItems.slice(0, 1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
         <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.propertyCountLabel}</span></button>
         {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
-        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
+        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onDraftChange={(key, value) => { setDraft(previous => ({ ...previous, [key]: value })); setFilterError(false); }} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">

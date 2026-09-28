@@ -13,41 +13,15 @@
           : cookieLocale === 'en' ? 'en' : 'ar';
         document.documentElement.lang = locale;
         document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.classList.add('app-booting');
-        addEventListener('pageshow', () => document.documentElement.classList.remove('app-navigating'));
-        addEventListener('click', event => {
-          const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
-          if (!(link instanceof HTMLAnchorElement) || event.defaultPrevented || event.button !== 0 || link.target === '_blank' || link.hasAttribute('download')) return;
-          const target = new URL(link.href, location.href);
-          if (target.origin === location.origin && target.href !== location.href) document.documentElement.classList.add('app-navigating');
-        }, { capture: true });
       })();
     </script>
     <link rel="icon" type="image/png" href="/assets/sadat-real-estate-favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link id="sadat-font-stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
-    <script>
-      (() => {
-        const link = document.getElementById('sadat-font-stylesheet');
-        if (!(link instanceof HTMLLinkElement)) return;
-        window.setTimeout(() => {
-          const fonts = document.fonts;
-          const settled = fonts === undefined || (
-            fonts.check('400 16px Cairo', 'Search preferences') &&
-            fonts.check('400 16px "Noto Sans SC"', '搜索偏好')
-          );
-          if (!settled) link.remove();
-        }, 2500);
-      })();
-    </script>
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet" /></noscript>
+    <link rel="preload" href="/assets/fonts/cairo-v31-arabic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/cairo-v31-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/fonts/cairo-v31.css" />
     <title>Sadat Real Estate</title>
   </head>
   <body>
-    <div id="app-transition-loader" aria-hidden="true">
-      <div class="ui-skeleton" data-variant="page"><span class="ui-skeleton__line ui-skeleton__line--title"></span><span class="ui-skeleton__line ui-skeleton__line--copy"></span><span class="ui-skeleton__grid"><span></span><span></span><span></span></span><span class="ui-skeleton__line ui-skeleton__line--wide"></span><span class="ui-skeleton__line ui-skeleton__line--wide"></span></div>
-    </div>
     <div id="app"><!--ssr-outlet--></div>
     <script type="module" src="/src/features/frontend_foundation/entry-client.tsx"></script>
   </body>

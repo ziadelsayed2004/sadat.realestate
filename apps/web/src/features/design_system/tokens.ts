@@ -27,7 +27,7 @@ export const DESIGN_TOKENS = Object.freeze({
   }),
   typography: Object.freeze({
     fontFamily: Object.freeze({
-      sans: 'Cairo, "Noto Sans SC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      sans: 'Cairo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     }),
     fontSize: Object.freeze({
       caption: '0.75rem',

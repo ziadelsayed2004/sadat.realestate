@@ -100,7 +100,7 @@ describe('public article listing and details', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByText(copy.eyebrow)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Buying in Sadat City' })).toHaveAttribute('href', '/articles/buying-in-sadat');
+    expect(screen.getByRole('link', { name: 'Buying in Sadat City' })).toHaveAttribute('href', `/articles/buying-in-sadat?lang=${locale}`);
     expect(screen.getAllByText('Buying tips').length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('authorId');
@@ -147,7 +147,7 @@ describe('public article listing and details', () => {
     expect(screen.getByRole('heading', { name: 'Buying in Sadat City', level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: getPublicArticlesCopy('en').introduction, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Related articles', level: 2 })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Rental tips' })).toHaveAttribute('href', '/articles/rental-tips');
+    expect(screen.getByRole('link', { name: 'Rental tips' })).toHaveAttribute('href', '/articles/rental-tips?lang=en');
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('authorId');
   });

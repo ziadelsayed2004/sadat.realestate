@@ -222,7 +222,7 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
   const name = localizedText(project.name, locale) ?? project.slug;
   const description = localizedText(project.description, locale);
   const website = safePublicUrl(project.website);
-  const projectUrl = website ?? '/properties?projectId=' + encodeURIComponent(project.id);
+  const projectUrl = website ?? '/properties?projectId=' + encodeURIComponent(project.id) + '&lang=' + locale;
   const projectType = localizedText(project.projectType, locale);
   const meta: ReadonlyArray<readonly [string, string | undefined]> = [
     [copy.projectUnits, project.unitCount === undefined ? undefined : String(project.unitCount)],
@@ -274,7 +274,7 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
               <article className="public-developer-profile__property-card" key={property.id}>
                 <PublicMediaImage src={property.imageUrl} alt={name} fallback={<span className="public-developer-profile__property-media-fallback" />} />
                 <div className="public-developer-profile__badges"><span>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span><span>{propertyLabel(property, copy)}</span></div>
-                <h3><a className="public-developer-profile__project-link" href={'/properties/' + encodeURIComponent(property.slug)}>{name}</a></h3>
+                <h3><a className="public-developer-profile__project-link" href={'/properties/' + encodeURIComponent(property.slug) + '?lang=' + locale}>{name}</a></h3>
               </article>
             );
           })}

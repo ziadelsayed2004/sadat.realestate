@@ -1558,6 +1558,26 @@
   padding: 1rem;
 }
 
+.public-homepage__section--article .public-homepage__content-card {
+  position: relative;
+}
+
+.public-homepage__article-body .public-homepage__article-link {
+  color: inherit;
+}
+
+.public-homepage__article-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  content: '';
+}
+
+.public-homepage__content-card:has(.public-homepage__article-link:focus-visible) {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 3px;
+}
+
 .public-homepage__article-body h3 {
   overflow: hidden;
   margin: 0;

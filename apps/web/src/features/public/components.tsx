@@ -936,7 +936,7 @@ function ContentGrid({
                   <p className="public-homepage__content-type">{contentType}</p>
                 </div>
                 <div className="public-homepage__article-body">
-                  <h3>{localizedText(item.title, locale) ?? item.key}</h3>
+                  <h3><a className="public-homepage__article-link" href={`/articles?lang=${locale}`}>{localizedText(item.title, locale) ?? item.key}</a></h3>
                   {bodyLines[0] === undefined ? null : <p>{bodyLines[0]}</p>}
                   {articleDetails === undefined ? <a href="/articles">{copy.readMore}</a> : <div className="public-homepage__article-meta">
                     <span>{articleDetails.duration[locale]}<svg viewBox="0 0 20 20" focusable="false"><circle cx="10" cy="10" r="7" /><path d="M10 6v4l2.5 1.5" /></svg></span>

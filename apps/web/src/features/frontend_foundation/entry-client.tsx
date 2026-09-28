@@ -2,6 +2,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { useEffect, useState } from 'react';
 import { articleListQuerySchema, articlePublicListDataSchema, articlePublicSchema, cmsPublicContentListDataSchema, communityPublicPostListDataSchema, publicHomepageDataSchema, publicOrganizationListDataSchema, publicOrganizationProfileSchema, publicPropertyComparisonDataSchema, publicPropertyDetailsSchema, publicPropertyListDataSchema, type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { App } from './app.js';
+import { installPublicNavigation } from './public-navigation.ts';
 import { AuthClient } from '../auth/index.ts';
 import { applyLocaleToDocument, createBrowserLocaleStore, LOCALE_CHANGE_EVENT, normalizeLocale, persistLocaleCookie, replaceLocaleInUrl } from '../localization/index.js';
 import type { PublicDeveloperProfileInitialState, PublicPropertyComparisonInitialState, PublicPropertyDetailsInitialState } from '../public/index.ts';
@@ -19,8 +20,8 @@ applyLocaleToDocument(locale);
 localeStore.setLocale(locale);
 persistLocaleCookie(locale);
 
-function readHomepageBootstrap(): PublicHomepageData | undefined {
-  const element = document.getElementById('sadat-public-homepage-data');
+function readHomepageBootstrap(source: Document = document): PublicHomepageData | undefined {
+  const element = source.getElementById('sadat-public-homepage-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') {
     return undefined;
   }
@@ -31,8 +32,8 @@ function readHomepageBootstrap(): PublicHomepageData | undefined {
   }
 }
 
-function readPropertyListBootstrap(): PublicPropertyListData | undefined {
-  const element = document.getElementById('sadat-public-property-list-data');
+function readPropertyListBootstrap(source: Document = document): PublicPropertyListData | undefined {
+  const element = source.getElementById('sadat-public-property-list-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') {
     return undefined;
   }
@@ -43,8 +44,8 @@ function readPropertyListBootstrap(): PublicPropertyListData | undefined {
   }
 }
 
-function readPropertyDetailsBootstrap(): PublicPropertyDetails | undefined {
-  const element = document.getElementById('sadat-public-property-details-data');
+function readPropertyDetailsBootstrap(source: Document = document): PublicPropertyDetails | undefined {
+  const element = source.getElementById('sadat-public-property-details-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') {
     return undefined;
   }
@@ -55,14 +56,14 @@ function readPropertyDetailsBootstrap(): PublicPropertyDetails | undefined {
   }
 }
 
-function readPropertyDetailsInitialState(): PublicPropertyDetailsInitialState | undefined {
-  const element = document.getElementById('sadat-public-property-details-state');
+function readPropertyDetailsInitialState(source: Document = document): PublicPropertyDetailsInitialState | undefined {
+  const element = source.getElementById('sadat-public-property-details-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' || state === 'not_found' ? state : undefined;
 }
 
-function readPropertyComparisonBootstrap(): PublicPropertyComparisonData | undefined {
-  const element = document.getElementById('sadat-public-property-comparison-data');
+function readPropertyComparisonBootstrap(source: Document = document): PublicPropertyComparisonData | undefined {
+  const element = source.getElementById('sadat-public-property-comparison-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') {
     return undefined;
   }
@@ -73,14 +74,14 @@ function readPropertyComparisonBootstrap(): PublicPropertyComparisonData | undef
   }
 }
 
-function readPropertyComparisonInitialState(): PublicPropertyComparisonInitialState | undefined {
-  const element = document.getElementById('sadat-public-property-comparison-state');
+function readPropertyComparisonInitialState(source: Document = document): PublicPropertyComparisonInitialState | undefined {
+  const element = source.getElementById('sadat-public-property-comparison-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' || state === 'empty' || state === 'unavailable' ? state : undefined;
 }
 
-function readDeveloperListBootstrap(): PublicOrganizationListData | undefined {
-  const element = document.getElementById('sadat-public-developer-list-data');
+function readDeveloperListBootstrap(source: Document = document): PublicOrganizationListData | undefined {
+  const element = source.getElementById('sadat-public-developer-list-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return publicOrganizationListDataSchema.parse(JSON.parse(element.textContent));
@@ -89,8 +90,8 @@ function readDeveloperListBootstrap(): PublicOrganizationListData | undefined {
   }
 }
 
-function readDeveloperProfileBootstrap(): PublicOrganizationProfile | undefined {
-  const element = document.getElementById('sadat-public-developer-profile-data');
+function readDeveloperProfileBootstrap(source: Document = document): PublicOrganizationProfile | undefined {
+  const element = source.getElementById('sadat-public-developer-profile-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return publicOrganizationProfileSchema.parse(JSON.parse(element.textContent));
@@ -99,14 +100,14 @@ function readDeveloperProfileBootstrap(): PublicOrganizationProfile | undefined 
   }
 }
 
-function readDeveloperProfileInitialState(): PublicDeveloperProfileInitialState | undefined {
-  const element = document.getElementById('sadat-public-developer-profile-state');
+function readDeveloperProfileInitialState(source: Document = document): PublicDeveloperProfileInitialState | undefined {
+  const element = source.getElementById('sadat-public-developer-profile-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' || state === 'not_found' ? state : undefined;
 }
 
-function readArticleListBootstrap(): ArticlePublicListData | undefined {
-  const element = document.getElementById('sadat-public-article-list-data');
+function readArticleListBootstrap(source: Document = document): ArticlePublicListData | undefined {
+  const element = source.getElementById('sadat-public-article-list-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return articlePublicListDataSchema.parse(JSON.parse(element.textContent));
@@ -115,8 +116,8 @@ function readArticleListBootstrap(): ArticlePublicListData | undefined {
   }
 }
 
-function readArticleListQueryBootstrap(): ArticleListQuery | undefined {
-  const element = document.getElementById('sadat-public-article-list-query');
+function readArticleListQueryBootstrap(source: Document = document): ArticleListQuery | undefined {
+  const element = source.getElementById('sadat-public-article-list-query');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return articleListQuerySchema.parse(JSON.parse(element.textContent));
@@ -125,14 +126,14 @@ function readArticleListQueryBootstrap(): ArticleListQuery | undefined {
   }
 }
 
-function readArticleListInitialState(): 'loading' | 'retry' | undefined {
-  const element = document.getElementById('sadat-public-article-list-state');
+function readArticleListInitialState(source: Document = document): 'loading' | 'retry' | undefined {
+  const element = source.getElementById('sadat-public-article-list-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' ? state : undefined;
 }
 
-function readArticleDetailsBootstrap(): ArticlePublic | undefined {
-  const element = document.getElementById('sadat-public-article-details-data');
+function readArticleDetailsBootstrap(source: Document = document): ArticlePublic | undefined {
+  const element = source.getElementById('sadat-public-article-details-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return articlePublicSchema.parse(JSON.parse(element.textContent));
@@ -141,14 +142,14 @@ function readArticleDetailsBootstrap(): ArticlePublic | undefined {
   }
 }
 
-function readArticleDetailsInitialState(): 'loading' | 'retry' | 'not_found' | undefined {
-  const element = document.getElementById('sadat-public-article-details-state');
+function readArticleDetailsInitialState(source: Document = document): 'loading' | 'retry' | 'not_found' | undefined {
+  const element = source.getElementById('sadat-public-article-details-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' || state === 'not_found' ? state : undefined;
 }
 
-function readRelatedArticlesBootstrap(): ArticlePublicListData | undefined {
-  const element = document.getElementById('sadat-public-related-articles-data');
+function readRelatedArticlesBootstrap(source: Document = document): ArticlePublicListData | undefined {
+  const element = source.getElementById('sadat-public-related-articles-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return articlePublicListDataSchema.parse(JSON.parse(element.textContent));
@@ -157,8 +158,8 @@ function readRelatedArticlesBootstrap(): ArticlePublicListData | undefined {
   }
 }
 
-function readCommunityBootstrap(): CommunityPublicPostListData | undefined {
-  const element = document.getElementById('sadat-public-community-data');
+function readCommunityBootstrap(source: Document = document): CommunityPublicPostListData | undefined {
+  const element = source.getElementById('sadat-public-community-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return communityPublicPostListDataSchema.parse(JSON.parse(element.textContent));
@@ -167,14 +168,14 @@ function readCommunityBootstrap(): CommunityPublicPostListData | undefined {
   }
 }
 
-function readCommunityInitialState(): 'loading' | 'retry' | undefined {
-  const element = document.getElementById('sadat-public-community-state');
+function readCommunityInitialState(source: Document = document): 'loading' | 'retry' | undefined {
+  const element = source.getElementById('sadat-public-community-state');
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' ? state : undefined;
 }
 
-function readPublicContentBootstrap(id: 'about' | 'team'): CmsPublicContentListData | undefined {
-  const element = document.getElementById(`sadat-public-${id}-data`);
+function readPublicContentBootstrap(id: 'about' | 'team', source: Document = document): CmsPublicContentListData | undefined {
+  const element = source.getElementById(`sadat-public-${id}-data`);
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
   try {
     return cmsPublicContentListDataSchema.parse(JSON.parse(element.textContent));
@@ -183,63 +184,71 @@ function readPublicContentBootstrap(id: 'about' | 'team'): CmsPublicContentListD
   }
 }
 
-function readPublicContentInitialState(id: 'about' | 'team'): 'loading' | 'retry' | undefined {
-  const element = document.getElementById(`sadat-public-${id}-state`);
+function readPublicContentInitialState(id: 'about' | 'team', source: Document = document): 'loading' | 'retry' | undefined {
+  const element = source.getElementById(`sadat-public-${id}-state`);
   const state = element?.textContent?.trim();
   return state === 'loading' || state === 'retry' ? state : undefined;
 }
 
-const homepageData = readHomepageBootstrap();
-const propertyListData = readPropertyListBootstrap();
-const propertyDetailsData = readPropertyDetailsBootstrap();
-const propertyDetailsInitialState = readPropertyDetailsInitialState();
-const propertyComparisonData = readPropertyComparisonBootstrap();
-const propertyComparisonInitialState = readPropertyComparisonInitialState();
-const developerListData = readDeveloperListBootstrap();
-const developerProfileData = readDeveloperProfileBootstrap();
-const developerProfileInitialState = readDeveloperProfileInitialState();
-const articleListData = readArticleListBootstrap();
-const articleListQuery = readArticleListQueryBootstrap();
-const articleListInitialState = readArticleListInitialState();
-const articleDetailsData = readArticleDetailsBootstrap();
-const articleDetailsInitialState = readArticleDetailsInitialState();
-const relatedArticles = readRelatedArticlesBootstrap();
-const communityData = readCommunityBootstrap();
-const communityInitialState = readCommunityInitialState();
-const aboutData = readPublicContentBootstrap('about');
-const aboutInitialState = readPublicContentInitialState('about');
-const teamData = readPublicContentBootstrap('team');
-const teamInitialState = readPublicContentInitialState('team');
 const authClient = new AuthClient();
-const appProps = {
-  url: window.location.href,
-  locale,
-  ...(homepageData === undefined ? {} : { homepageData }),
-  ...(propertyListData === undefined ? {} : { propertyListData }),
-  ...(propertyDetailsData === undefined ? {} : { propertyDetailsData }),
-  ...(propertyDetailsInitialState === undefined ? {} : { propertyDetailsInitialState }),
-  ...(propertyComparisonData === undefined ? {} : { propertyComparisonData }),
-  ...(propertyComparisonInitialState === undefined ? {} : { propertyComparisonInitialState }),
-  ...(developerListData === undefined ? {} : { developerListData }),
-  ...(developerProfileData === undefined ? {} : { developerProfileData }),
-  ...(developerProfileInitialState === undefined ? {} : { developerProfileInitialState }),
-  ...(articleListData === undefined ? {} : { articleListData }),
-  ...(articleListQuery === undefined ? {} : { articleListQuery }),
-  ...(articleListInitialState === undefined ? {} : { articleListInitialState }),
-  ...(articleDetailsData === undefined ? {} : { articleDetailsData }),
-  ...(articleDetailsInitialState === undefined ? {} : { articleDetailsInitialState }),
-  ...(relatedArticles === undefined ? {} : { relatedArticles }),
-  ...(communityData === undefined ? {} : { communityData }),
-  ...(communityInitialState === undefined ? {} : { communityInitialState }),
-  ...(aboutData === undefined ? {} : { aboutData }),
-  ...(aboutInitialState === undefined ? {} : { aboutInitialState }),
-  ...(teamData === undefined ? {} : { teamData }),
-  ...(teamInitialState === undefined ? {} : { teamInitialState }),
-  authClient
-};
+
+function readAppProps(source: Document = document, url = window.location.href) {
+  const homepageData = readHomepageBootstrap(source);
+  const propertyListData = readPropertyListBootstrap(source);
+  const propertyDetailsData = readPropertyDetailsBootstrap(source);
+  const propertyDetailsInitialState = readPropertyDetailsInitialState(source);
+  const propertyComparisonData = readPropertyComparisonBootstrap(source);
+  const propertyComparisonInitialState = readPropertyComparisonInitialState(source);
+  const developerListData = readDeveloperListBootstrap(source);
+  const developerProfileData = readDeveloperProfileBootstrap(source);
+  const developerProfileInitialState = readDeveloperProfileInitialState(source);
+  const articleListData = readArticleListBootstrap(source);
+  const articleListQuery = readArticleListQueryBootstrap(source);
+  const articleListInitialState = readArticleListInitialState(source);
+  const articleDetailsData = readArticleDetailsBootstrap(source);
+  const articleDetailsInitialState = readArticleDetailsInitialState(source);
+  const relatedArticles = readRelatedArticlesBootstrap(source);
+  const communityData = readCommunityBootstrap(source);
+  const communityInitialState = readCommunityInitialState(source);
+  const aboutData = readPublicContentBootstrap('about', source);
+  const aboutInitialState = readPublicContentInitialState('about', source);
+  const teamData = readPublicContentBootstrap('team', source);
+  const teamInitialState = readPublicContentInitialState('team', source);
+  return {
+    url,
+    locale,
+    ...(homepageData === undefined ? {} : { homepageData }),
+    ...(propertyListData === undefined ? {} : { propertyListData }),
+    ...(propertyDetailsData === undefined ? {} : { propertyDetailsData }),
+    ...(propertyDetailsInitialState === undefined ? {} : { propertyDetailsInitialState }),
+    ...(propertyComparisonData === undefined ? {} : { propertyComparisonData }),
+    ...(propertyComparisonInitialState === undefined ? {} : { propertyComparisonInitialState }),
+    ...(developerListData === undefined ? {} : { developerListData }),
+    ...(developerProfileData === undefined ? {} : { developerProfileData }),
+    ...(developerProfileInitialState === undefined ? {} : { developerProfileInitialState }),
+    ...(articleListData === undefined ? {} : { articleListData }),
+    ...(articleListQuery === undefined ? {} : { articleListQuery }),
+    ...(articleListInitialState === undefined ? {} : { articleListInitialState }),
+    ...(articleDetailsData === undefined ? {} : { articleDetailsData }),
+    ...(articleDetailsInitialState === undefined ? {} : { articleDetailsInitialState }),
+    ...(relatedArticles === undefined ? {} : { relatedArticles }),
+    ...(communityData === undefined ? {} : { communityData }),
+    ...(communityInitialState === undefined ? {} : { communityInitialState }),
+    ...(aboutData === undefined ? {} : { aboutData }),
+    ...(aboutInitialState === undefined ? {} : { aboutInitialState }),
+    ...(teamData === undefined ? {} : { teamData }),
+    ...(teamInitialState === undefined ? {} : { teamInitialState }),
+    authClient
+  };
+
+}
+
+const appProps = readAppProps();
 
 function ClientApp(props: typeof appProps) {
   const [url, setUrl] = useState(props.url);
+  const [pageProps, setPageProps] = useState(props);
+  const [routeVersion, setRouteVersion] = useState(0);
   const [currentLocale, setCurrentLocale] = useState(props.locale);
 
   const handleLocaleChange = (nextLocale: SupportedLocale) => {
@@ -252,7 +261,6 @@ function ClientApp(props: typeof appProps) {
   };
 
   useEffect(() => {
-    document.documentElement.classList.remove('app-booting', 'app-navigating');
     const onLocaleEvent = (event: Event) => {
       const detail = (event as CustomEvent<{ readonly locale?: unknown }>).detail;
       const nextLocale = normalizeLocale(detail?.locale);
@@ -262,7 +270,17 @@ function ClientApp(props: typeof appProps) {
     return () => window.removeEventListener(LOCALE_CHANGE_EVENT, onLocaleEvent);
   }, [currentLocale]);
 
-  return <App {...props} url={url} locale={currentLocale} onLocaleChange={handleLocaleChange} />;
+  useEffect(() => installPublicNavigation((source, target) => {
+    const nextLocale = normalizeLocale(target.searchParams.get('lang')) ?? localeStore.getSnapshot().locale;
+    localeStore.setLocale(nextLocale);
+    applyLocaleToDocument(nextLocale);
+    setCurrentLocale(nextLocale);
+    setPageProps(readAppProps(source, target.href));
+    setUrl(target.href);
+    setRouteVersion(previous => previous + 1);
+  }), []);
+
+  return <App key={routeVersion} {...pageProps} url={url} locale={currentLocale} onLocaleChange={handleLocaleChange} />;
 }
 
 hydrateRoot(root, <ClientApp {...appProps} />);

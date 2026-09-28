@@ -9,6 +9,8 @@
   font-family: var(--font-family-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 * {
@@ -22,35 +24,36 @@ body {
   background: var(--color-page-background);
 }
 
-#app-transition-loader {
-  position: fixed;
-  z-index: 1000;
-  inset: 0;
-  display: none;
-  place-items: center;
-  padding: clamp(1rem, 4vw, 3rem);
-  background: var(--color-page-background);
-}
-
-.app-booting #app-transition-loader,
-.app-navigating #app-transition-loader {
-  display: grid;
-}
-
-.app-booting #app,
-.app-navigating #app {
-  visibility: hidden;
-}
-
-#app-transition-loader .ui-skeleton {
-  inline-size: min(100%, 72rem);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-}
-
 button,
 a {
   font: inherit;
+  touch-action: manipulation;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+html[data-navigation-pending="true"]::after {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 1000;
+  block-size: 3px;
+  background: var(--color-brand-accent);
+  content: '';
+  pointer-events: none;
+}
+
+/* Avoid Safari's automatic zoom when focusing small form fields. */
+@media (max-width: 600px) {
+  :root body input:not([type="radio"]):not([type="checkbox"]),
+  :root body select,
+  :root body textarea {
+    font-size: max(16px, 1rem);
+  }
 }
 
 a {

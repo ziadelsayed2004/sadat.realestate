@@ -260,6 +260,8 @@
 }
 
 .public-developer-directory__card-link {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1909,4 +1911,27 @@
   .public-developer-profile__tabs {
     margin-block: 1rem 1.5rem;
   }
+}
+
+/* Make the image and whitespace part of each card's existing native link. */
+.public-developer-directory__card,
+.public-developer-profile__project-card,
+.public-developer-profile__property-card {
+  position: relative;
+}
+
+.public-developer-directory__card-body h2 a::after,
+.public-developer-profile__project-card .public-developer-profile__project-link::after,
+.public-developer-profile__property-card .public-developer-profile__project-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: '';
+}
+
+.public-developer-directory__card:has(a:focus-visible),
+.public-developer-profile__project-card:has(a:focus-visible),
+.public-developer-profile__property-card:has(a:focus-visible) {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 3px;
 }
