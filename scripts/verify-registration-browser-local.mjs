@@ -75,7 +75,7 @@ try {
   await expect(page.locator('[data-screen-id="AUTH-06"]')).toBeVisible();
   report.checks.push('email_otp_and_browser_registration_success');
 
-  await page.goto(`${base}/seeker?lang=en`, { waitUntil: 'networkidle' });
+  await page.goto(`${base}/seeker?lang=en`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
   await expect(page.locator('[data-screen-id="SEK-01"]')).toBeVisible();
   const width = await page.evaluate(() => ({ innerWidth: window.innerWidth, scrollWidth: document.documentElement.scrollWidth }));
   assert.equal(width.innerWidth, 393);

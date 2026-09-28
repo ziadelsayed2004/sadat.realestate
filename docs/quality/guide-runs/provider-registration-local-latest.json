@@ -1,5 +1,5 @@
 {
-  "commit": "842bd2ca6a12840826f40ac254bc11f966f1ee64",
+  "commit": "61a43256f198003159c2f5c29ff14aae1ecaa17c",
   "worktreeChanges": true,
   "journeys": [
     "GUIDE-11",
@@ -8,7 +8,7 @@
   ],
   "environment": "local-real-browser-api-mailhog-mongodb",
   "mockedRoutes": false,
-  "startedAt": "2026-09-13T15:31:07.514Z",
+  "startedAt": "2026-09-28T14:13:17.525Z",
   "status": "PASS_LOCAL",
   "transitions": [
     "browser_provider_type_password_and_email_otp",
@@ -193,7 +193,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa6c1bfd7f283c95fb671f2/review",
+      "path": "/api/v1/admin/providers/6aba7600313a4978586c906e/review",
       "status": 403
     },
     {
@@ -203,7 +203,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa6c1bfd7f283c95fb671f2/review",
+      "path": "/api/v1/admin/providers/6aba7600313a4978586c906e/review",
       "status": 200
     },
     {
@@ -213,7 +213,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa6c1bfd7f283c95fb671f2/review",
+      "path": "/api/v1/admin/providers/6aba7600313a4978586c906e/review",
       "status": 409
     },
     {
@@ -243,7 +243,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/admin/providers/6aa6c1bfd7f283c95fb671f2/review",
+      "path": "/api/v1/admin/providers/6aba7600313a4978586c906e/review",
       "status": 200
     },
     {
@@ -857,5 +857,5 @@
     "account_state_transitions",
     "audit_logs"
   ],
-  "finishedAt": "2026-09-13T15:31:41.633Z"
+  "finishedAt": "2026-09-28T14:13:49.882Z"
 }

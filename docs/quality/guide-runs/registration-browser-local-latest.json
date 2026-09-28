@@ -5,8 +5,8 @@
   ],
   "environment": "local-real-browser-api-mongodb",
   "mockedRoutes": false,
-  "commit": "dfa5325d27884fc24530b0a81fecce812682e384",
-  "startedAt": "2026-09-12T15:16:14.174Z",
+  "commit": "61a43256f198003159c2f5c29ff14aae1ecaa17c",
+  "startedAt": "2026-09-28T16:01:21.450Z",
   "locale": "en",
   "device": "Pixel 5",
   "checks": [
@@ -64,5 +64,5 @@
     "credential": 0,
     "profile": 0
   },
-  "finishedAt": "2026-09-12T15:16:26.867Z"
+  "finishedAt": "2026-09-28T16:01:24.400Z"
 }
