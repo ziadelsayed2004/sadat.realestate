@@ -2326,6 +2326,8 @@
   }
 
   .public-homepage__actions {
+    grid-column: 3;
+    inline-size: 3rem;
     justify-content: end;
   }
 
@@ -2482,6 +2484,8 @@
 
   .public-homepage__menu-toggle {
     display: inline-flex;
+    inline-size: 3rem;
+    block-size: 3rem;
   }
 
   .public-homepage img,
