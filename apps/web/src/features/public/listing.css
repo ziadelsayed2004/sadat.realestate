@@ -970,6 +970,26 @@
   background: rgb(255 255 255 / 0.1);
 }
 
+.public-property-listing__filters-toggle { display: none; }
+
+@media (max-width: 780px) {
+  .public-property-listing__filters-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.5rem;
+    padding-inline: 0.75rem;
+    color: var(--color-brand-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+
+  .public-property-listing__filters[data-expanded="false"] > form { display: none; }
+  .public-property-listing__filters-heading { flex-wrap: wrap; margin-block-end: 0; }
+  .public-property-listing__filters[data-expanded="true"] .public-property-listing__filters-heading { margin-block-end: var(--space-lg); }
+}
+
 @media (max-width: 40rem) {
   /* Keep the compare action a real touch target on phones.  The desktop card
      density rule above intentionally uses a compact label; it should not make

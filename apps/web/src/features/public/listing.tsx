@@ -217,6 +217,7 @@ function ListingFilters({
   readonly categories: PublicPropertyListData['categories'];
   readonly locations: NonNullable<PublicPropertyListData['locations']>;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const locationNames = new Map(locations.map(location => [location.id, localizedText(location.name, locale) ?? location.slug] as const));
   const locationOptions = locations.map(location => ({
     value: location.id,
@@ -225,12 +226,13 @@ function ListingFilters({
       : localizedText(location.name, locale) ?? location.slug
   }));
   return (
-    <aside className="public-property-listing__filters" aria-labelledby="public-property-listing-filters-title">
+    <aside className="public-property-listing__filters" data-expanded={expanded} aria-labelledby="public-property-listing-filters-title">
       <div className="public-property-listing__filters-heading">
         <h2 id="public-property-listing-filters-title">{copy.filtersTitle}</h2>
+        <button type="button" className="public-property-listing__filters-toggle" aria-expanded={expanded} aria-controls="public-property-listing-filter-form" onClick={() => setExpanded(value => !value)}>{expanded ? (locale === 'ar' ? 'إخفاء الفلاتر' : 'Hide filters') : (locale === 'ar' ? 'عرض الفلاتر' : 'Show filters')}</button>
         <button type="button" className="public-property-listing__reset" onClick={onReset}>{copy.resetFilters}</button>
       </div>
-      <form onSubmit={onSubmit} aria-label={copy.filtersTitle}>
+      <form id="public-property-listing-filter-form" onSubmit={onSubmit} aria-label={copy.filtersTitle}>
         <fieldset className="public-property-listing__filter-chips">
           <legend>{copy.transactionLabel}</legend>
           <label><input type="radio" name="transactionType" value="" checked={draft.transactionType === ''} onChange={() => onCommit('transactionType', '')} /> {copy.allTransactions}</label>

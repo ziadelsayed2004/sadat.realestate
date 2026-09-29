@@ -92,6 +92,7 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
       <div className="public-developer-directory__card-body">
         <h2><a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}>{title}</a></h2>
         {description === undefined ? null : <p className="public-developer-directory__card-description">{description}</p>}
+        <div className="public-developer-directory__card-counts"><span>{copy.projectCount(organization.projectCount)}</span><span>{copy.propertyCount(organization.propertyCount)}</span></div>
         {locations.length > 0 ? <div className="public-developer-directory__card-locations" aria-label={copy.locationsLabel}>{locations.map(location => <span key={location.key}>{location.label}</span>)}</div> : null}
         <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}><span>{copy.openProfile}</span><span aria-hidden="true">←</span></a>
       </div>

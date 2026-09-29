@@ -71,6 +71,7 @@ describe('public developer directory and profiles', () => {
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Approved builder' })).toHaveAttribute('href', `/developers/approved-builder?lang=${locale}`);
     expect(screen.getByText('Central district')).toBeInTheDocument();
+    expect(result.container.querySelector('.public-developer-directory__card-counts')).toHaveTextContent(copy.projectCount(2));
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('audit');
   });
@@ -80,7 +81,13 @@ describe('public developer directory and profiles', () => {
 
     expect(screen.getByRole('heading', { name: 'Approved builder', level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Central project', level: 3 })).toBeInTheDocument();
+    const projectDetails = result.container.querySelector('.public-developer-profile__project-details');
+    expect(projectDetails?.querySelector('summary')).toHaveTextContent('View project');
+    fireEvent.click(projectDetails!.querySelector('summary')!);
+    expect(projectDetails).toHaveAttribute('open');
     expect(screen.getByText('Project description.')).toBeInTheDocument();
+    expect(projectDetails?.querySelector('a[href="https://example.com/central-project"]')).toBeInTheDocument();
+    expect(result.container.querySelector('a[href*="/properties?projectId="]')).toBeNull();
     expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home?lang=en');
     expect(screen.getByText('Public contact details are not available in this profile yet.')).toBeInTheDocument();
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();

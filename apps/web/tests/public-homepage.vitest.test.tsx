@@ -129,6 +129,17 @@ describe('public homepage', () => {
     expect(card?.querySelector('.public-homepage__source-copy')).toHaveTextContent('Professional Development Company');
   });
 
+  it('shows the comparison action on the homepage as soon as a property is selected', () => {
+    window.localStorage.removeItem('sadat-property-comparison');
+    renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add to compare' }));
+    expect(screen.getByText('1 properties selected')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Compare now' })).toHaveAttribute('href', '/compare?lang=en&propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa');
+    fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
+    expect(screen.queryByRole('link', { name: 'Compare now' })).not.toBeInTheDocument();
+  });
+
   it('renders the hero district control from active admin-managed locations', () => {
     const data = publicHomepageDataSchema.parse({
       ...homepageData,

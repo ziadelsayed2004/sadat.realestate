@@ -17,6 +17,7 @@ import { LocaleSwitcher, replaceLocaleInUrl } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
 import { getPublicPropertyListingCopy } from './listing-copy.ts';
+import { publicPropertyComparisonUrl } from './compare-data.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import {
@@ -356,14 +357,20 @@ export function PublicSiteHeader({
   useEffect(() => {
     if (!menuOpen || typeof window === 'undefined') return undefined;
     const previousOverflow = document.body.style.overflow;
+    const desktopQuery = window.matchMedia?.('(min-width: 701px)');
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
     };
+    const onBreakpointChange = () => {
+      if (desktopQuery?.matches) setMenuOpen(false);
+    };
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKeyDown);
+    desktopQuery?.addEventListener('change', onBreakpointChange);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
+      desktopQuery?.removeEventListener('change', onBreakpointChange);
     };
   }, [menuOpen]);
 
@@ -744,7 +751,8 @@ function PropertyGrid({
   });
 
   return (
-    <div className="public-homepage__property-grid">
+    <>
+      <div className="public-homepage__property-grid">
       {properties.map(property => {
         const title = localizedText(property.name, locale) ?? property.slug;
         const features = propertyFeatures(property, locale, copy);
@@ -766,7 +774,9 @@ function PropertyGrid({
           />
         );
       })}
-    </div>
+      </div>
+      {comparedIds.length > 0 ? <aside className="public-homepage__compare-tray" aria-live="polite"><span>{listingCopy.comparisonSelected.replace('{count}', String(comparedIds.length))}</span><a href={publicPropertyComparisonUrl(comparedIds, `/compare?lang=${locale}`)}>{listingCopy.compareNow}</a><button type="button" onClick={() => { setComparedIds([]); window.localStorage.removeItem('sadat-property-comparison'); }}>{listingCopy.clearComparison}</button></aside> : null}
+    </>
   );
 }
 

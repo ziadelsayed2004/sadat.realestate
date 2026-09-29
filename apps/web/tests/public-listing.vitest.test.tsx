@@ -111,6 +111,12 @@ describe('public property listing', () => {
     expect(document.getElementById('public-site-navigation')).toHaveClass('is-open');
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+
+    const filtersToggle = screen.getByRole('button', { name: 'Show filters' });
+    expect(filtersToggle).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(filtersToggle);
+    expect(filtersToggle).toHaveAttribute('aria-expanded', 'true');
+    expect(filtersToggle).toHaveAttribute('aria-controls', 'public-property-listing-filter-form');
   });
 
   it('updates filters, sort, and browser query state through the implemented route', async () => {

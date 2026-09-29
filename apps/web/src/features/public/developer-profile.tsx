@@ -222,7 +222,6 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
   const name = localizedText(project.name, locale) ?? project.slug;
   const description = localizedText(project.description, locale);
   const website = safePublicUrl(project.website);
-  const projectUrl = website ?? '/properties?projectId=' + encodeURIComponent(project.id) + '&lang=' + locale;
   const projectType = localizedText(project.projectType, locale);
   const meta: ReadonlyArray<readonly [string, string | undefined]> = [
     [copy.projectUnits, project.unitCount === undefined ? undefined : String(project.unitCount)],
@@ -238,13 +237,17 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
       <div className="public-developer-profile__project-content">
         {localizedText(project.locationName, locale) ? <span className="public-developer-profile__project-location"><ProfileIcon name="location" />{localizedText(project.locationName, locale)}</span> : null}
         <h3>{name}</h3>
-        {description ? <p>{description}</p> : null}
         <div className="public-developer-profile__project-meta">
           {meta.map(([label, value], index) => value ? <span key={`${label}-${index}`}><strong>{value}</strong>{label ? <small>{label}</small> : null}</span> : null)}
         </div>
         {localizedText(project.deliveryLabel, locale) ? <p className="public-developer-profile__project-delivery"><ProfileIcon name="calendar" />{localizedText(project.deliveryLabel, locale)}</p> : null}
         {localizedText(project.priceLabel, locale) ? <p className="public-developer-profile__project-price">{localizedText(project.priceLabel, locale)}</p> : null}
-        <a className="public-developer-profile__project-link" href={projectUrl} rel={website ? 'noreferrer' : undefined}>{copy.viewProject}<ProfileIcon name="arrow" /></a>
+        <details className="public-developer-profile__project-details">
+          <summary className="public-developer-profile__project-link">{copy.viewProject}<ProfileIcon name="arrow" /></summary>
+          {description ? <p>{description}</p> : null}
+          {website ? <a href={website} rel="noopener noreferrer" target="_blank">{copy.openWebsite}</a> : null}
+          <a href="#developer-contact">{copy.sendInquiry}</a>
+        </details>
       </div>
     </article>
   );
