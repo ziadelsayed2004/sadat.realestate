@@ -1,4 +1,4 @@
-# Build/test sources stay in the release gate; generated evidence does not.
+# Build/test sources and required parity evidence stay until the release gate.
 /.git/
 node_modules/
 dist/
@@ -10,4 +10,11 @@ coverage/
 playwright-report/
 test-results/
 .playwright-*/
-/docs/quality/
+# Keep the reviewed evidence referenced by frontend_093/design-comparison.json.
+# Include parents first so rsync can traverse them, then exclude other captures.
++ /docs/quality/
++ /docs/quality/figma_parity/
++ /docs/quality/figma_parity/screens/
++ /docs/quality/figma_parity/screens/SEK-04/
++ /docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png
+/docs/quality/***

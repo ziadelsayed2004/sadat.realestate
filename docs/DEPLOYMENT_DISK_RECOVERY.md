@@ -34,10 +34,19 @@ synthetic data; use it only when that is intended.
 
 Deployment now excludes generated quality reports and captures during staging
 and release copying. Git's sparse checkout also excludes them before checkout,
-so the blob-filtered clone does not fetch those images. Design reference files,
+so the blob-filtered clone does not fetch unused images. The single SEK-04
+runtime capture referenced by the parity ledger is explicitly retained in both
+filters until tests finish; it is pruned with `docs/quality` after the gates.
+The deployment regression test reads the actual ledgers to check these dependencies.
+Design reference files,
 browser specs, manifests and public runtime assets are retained for the existing
 typecheck/lint/test/build gates. Design reference images are pruned after the
 gates, as before. Unsuccessful, inactive release attempts are removed on exit.
+
+If disk recovery has already succeeded but deployment stops with `SEK-04 runtime
+evidence is missing`, publish/pull the evidence-filter fix and rerun
+`bash deploy/native/manage-production.sh update`. No additional recovery or
+test skipping is needed. The inactive failed attempt is cleaned up automatically.
 
 At least 3 GiB must be free before cloning and before creating a release. If the
 preflight still fails, inspect usage instead of deleting application data:

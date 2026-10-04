@@ -1,2 +1,9 @@
 /*
-!/docs/quality/
+!/docs/quality/*
+/docs/quality/figma_parity/
+!/docs/quality/figma_parity/*
+/docs/quality/figma_parity/screens/
+!/docs/quality/figma_parity/screens/*
+/docs/quality/figma_parity/screens/SEK-04/
+!/docs/quality/figma_parity/screens/SEK-04/*
+/docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png
