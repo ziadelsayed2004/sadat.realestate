@@ -60,6 +60,8 @@ PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
 
 install -d -o elsadat -g elsadat -m 0750 "$STAGED_SOURCE"
 rsync -a --delete \
+  --delete-excluded \
+  --exclude-from="$OPERATOR_REPOSITORY/deploy/native/release-source.exclude" \
   --exclude='.env*' \
   --exclude='.git' \
   --exclude='node_modules' \

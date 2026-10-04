@@ -19,8 +19,24 @@ PREVIOUS=''
 if [[ -L "$CURRENT_LINK" ]]; then
   PREVIOUS=$(readlink -e "$CURRENT_LINK" 2>/dev/null || true)
 fi
-mkdir -p "$RELEASE_DIR"
+bash "$SOURCE_DIR/deploy/native/check-disk-space.sh"
+
+# Only this attempt's directory may be removed. An active release is retained
+# even when a later health/smoke check fails.
+cleanup_failed_release() {
+  local status=$?
+  if (( status != 0 )) && [[ "$RELEASE_DIR" =~ ^/opt/elsadatrealestate/releases/[0-9]{8}T[0-9]{6}Z$ ]] \
+    && [[ -d "$RELEASE_DIR" && ! -L "$RELEASE_DIR" ]] \
+    && [[ $(readlink -e "$CURRENT_LINK" 2>/dev/null || true) != "$RELEASE_DIR" ]]; then
+    rm -rf -- "$RELEASE_DIR"
+  fi
+  return "$status"
+}
+# Refuse to reuse any existing release, including another concurrent attempt.
+mkdir "$RELEASE_DIR"
+trap cleanup_failed_release EXIT
 rsync -a --delete \
+  --exclude-from="$SOURCE_DIR/deploy/native/release-source.exclude" \
   --exclude node_modules --exclude .git --exclude .local \
   --include '.env*.example' --exclude '.env*' \
   "$SOURCE_DIR/" "$RELEASE_DIR/"
@@ -42,6 +58,7 @@ if [[ "$RELEASE_DIR" != /opt/elsadatrealestate/releases/* ]]; then
 fi
 rm -rf -- \
   "$RELEASE_DIR/docs/design_sources" \
+  "$RELEASE_DIR/docs/quality" \
   "$RELEASE_DIR/apps/web/tests/e2e" \
   "$RELEASE_DIR/apps/web/test-results" \
   "$RELEASE_DIR/apps/web/playwright-report"

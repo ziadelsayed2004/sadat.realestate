@@ -1,0 +1,13 @@
+# Build/test sources stay in the release gate; generated evidence does not.
+/.git/
+node_modules/
+dist/
+/.local/
+/.tmp/
+/.tmp-*/
+.cache/
+coverage/
+playwright-report/
+test-results/
+.playwright-*/
+/docs/quality/

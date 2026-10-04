@@ -18,11 +18,16 @@ if [[ ! "$RELEASE_REF" =~ ^[A-Za-z0-9._/-]+$ || "$RELEASE_REF" == -* || "$RELEAS
   exit 1
 fi
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+bash "$SCRIPT_DIR/check-disk-space.sh"
 SOURCE_DIR=$(mktemp -d /opt/elsadatrealestate/staging/github.XXXXXX)
 cleanup() { rm -rf -- "$SOURCE_DIR"; }
 trap cleanup EXIT
 
-git clone --filter=blob:none --no-tags --depth 1 --branch "$RELEASE_REF" "$REPOSITORY_URL" "$SOURCE_DIR"
+# Set the sparse tree before checkout so excluded screenshots are never fetched.
+git clone --filter=blob:none --no-checkout --no-tags --depth 1 --branch "$RELEASE_REF" "$REPOSITORY_URL" "$SOURCE_DIR"
+git -C "$SOURCE_DIR" sparse-checkout set --no-cone --stdin < "$SCRIPT_DIR/release-source.sparse-checkout"
+git -C "$SOURCE_DIR" checkout --force "$RELEASE_REF"
 git -C "$SOURCE_DIR" diff --quiet
 git -C "$SOURCE_DIR" diff --cached --quiet
 
