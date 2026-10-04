@@ -24,7 +24,7 @@ export function DocumentLocationRepair({ application, locale, save, onSaved }: {
     }).catch(() => { if (active) setError(true); });
     return () => { active = false; };
   }, [attempt]);
-  return <form onSubmit={event => {
+  return <form className="provider-document-repair" onSubmit={event => {
     event.preventDefault();
     if (busy || !primary || areas.length === 0) return;
     setBusy(true); setError(false);

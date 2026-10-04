@@ -47,7 +47,7 @@ const navigationItems = [
   ['providers', '/admin/providers'],
   ['properties', '/admin/properties'],
   ['requests', '/admin/requests'],
-  ['content', '/admin/content'],
+  ['content', '/admin/articles'],
   ['advertising', '/admin/advertising'],
   ['commissions', '/admin/commissions'],
   ['notifications', '/admin/notifications'],
@@ -140,8 +140,8 @@ const sidebarGroups: readonly AdminSidebarGroup[] = [
       sidebarItem('articles', '/admin/articles', 'content', 'المقالات', 'Articles'),
       sidebarItem('article-categories', '/admin/article-categories', 'content', 'تصنيفات المقالات', 'Article categories'),
       sidebarItem('community', '/admin/community', 'content', 'الكوميونيتي', 'Community', ['/admin/community']),
-      sidebarItem('community-comments', '/admin/community/comments', 'content', 'التعليقات', 'Comments'),
-      sidebarItem('community-reports', '/admin/community/moderation', 'requests', 'البلاغات', 'Reports'),
+      sidebarItem('community-comments', '/admin/community/comments', 'content', 'أرشيف التعليقات', 'Archived comments'),
+      sidebarItem('community-reports', '/admin/community/moderation', 'requests', 'بلاغات المجتمع', 'Community reports'),
       sidebarItem('about', '/admin/content/about', 'content', 'النبذة عن المنصة', 'About the platform'),
       sidebarItem('team', '/admin/content/team', 'content', 'فريق العمل', 'Team'),
       sidebarItem('population', '/admin/content/population-counter', 'content', 'عدّاد سكان مدينة السادات', 'Sadat population counter')
@@ -484,7 +484,7 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
   const headingActions = [
     [copy.overview.actions.reviewAccounts, '/admin/users'],
     [copy.overview.actions.reviewProperties, '/admin/properties'],
-    [copy.overview.actions.createArticle, '/admin/content/articles'],
+    [copy.overview.actions.createArticle, '/admin/articles'],
     [copy.overview.actions.reviewAdvertising, '/admin/advertising']
   ] as const;
   return (

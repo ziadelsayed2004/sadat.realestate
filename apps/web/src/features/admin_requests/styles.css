@@ -118,6 +118,16 @@
 .admin-requests__detail { max-width: 1420px; margin: 24px auto 0; padding: 28px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
 .admin-requests__detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-block-end: 22px; }
 .admin-requests__detail-heading h2 { margin: 0; color: #1b2942; }
+.admin-requests .ui-modal-backdrop { z-index: 100; }
+.admin-requests .ui-modal.admin-requests__detail-modal {
+  inline-size: min(56rem, calc(100vw - 2rem));
+  max-block-size: calc(100dvh - 2rem);
+  display: flex;
+  flex-direction: column;
+}
+.admin-requests__detail-modal .ui-modal__body { overflow-y: auto; min-block-size: 0; }
+.admin-requests__detail-modal .admin-requests__detail { margin: 0; padding: 0; border: 0; box-shadow: none; }
+.admin-requests__detail-modal .admin-requests__details dd { overflow-wrap: anywhere; min-inline-size: 0; }
 .admin-requests__details { display: grid; gap: 10px; margin: 0; }
 .admin-requests__details > div { display: flex; justify-content: space-between; gap: 20px; padding-block-end: 10px; border-block-end: 1px solid #eef0f3; }
 .admin-requests__details dt { color: #68768b; font-weight: 800; }

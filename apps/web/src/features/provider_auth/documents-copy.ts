@@ -93,7 +93,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderDocumentsCopy>> = {
     backAction: 'رجوع',
     reviewAction: 'مراجعة الطلب',
     reviewUnavailableTitle: 'لا يمكن الانتقال للمراجعة',
-    reviewUnavailableBody: 'اكتمل البيانات والمستندات المطلوبة أوحدث الطلب قبل المتابعة.',
+    reviewUnavailableBody: 'أكمل البيانات والمستندات المطلوبة قبل المتابعة.',
     noPublicUrlNote: 'لا تعرض الواجهة عنوان التخزين أو رابط تنزيل دائم.',
     categoryLabels: {
       government_id_front: 'الهوية الحكومية - الوجه الأمامي',

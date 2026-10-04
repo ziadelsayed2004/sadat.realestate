@@ -58,15 +58,15 @@ try {
   assert.equal((await connection.collection('community_reactions').findOne({ postId, userId: userId.toHexString() })).reaction, 'like');
   report.checks.push({ name: 'reaction_records_are_isolated_by_authenticated_account', pass: true });
 
-  const commentText = 'Persisted isolated community comment';
+  const commentText = 'Blocked community comment';
   const comment = await mutate('/comments', { body: commentText });
-  assert.equal(comment.status, 201);
-  assert.equal((await comment.json()).data.body, commentText);
+  assert.equal(comment.status, 403);
+  assert.equal((await comment.json()).error.code, 'COMMENTS_DISABLED');
   const detail = await fetch(`${origin}/api/v1/public/community/posts/${postId}`);
   const detailData = (await detail.json()).data;
-  assert.equal(detailData.post.commentCount, 1);
-  assert.equal(detailData.comments[0].body, commentText);
-  report.checks.push({ name: 'comment_persists_and_returns_in_public_detail', pass: true });
+  assert.equal(detailData.post.commentCount, 0);
+  assert.deepEqual(detailData.comments, []);
+  report.checks.push({ name: 'comments_disabled_and_excluded_from_public_detail', pass: true });
 
   await connection.collection('users').updateOne({ _id: userId }, { $set: { status: 'suspended' } });
   const before = await connection.collection('community_posts').findOne({ id: postId });
@@ -74,7 +74,7 @@ try {
   assert.equal((await mutate('/comments', { body: 'Denied comment' })).status, 403);
   const after = await connection.collection('community_posts').findOne({ id: postId });
   assert.equal(after?.likeCount, before?.likeCount);
-  assert.equal(await connection.collection('community_comments').countDocuments({ postId }), 1);
+  assert.equal(await connection.collection('community_comments').countDocuments({ postId }), 0);
   report.checks.push({ name: 'current_account_state_blocks_interactions', pass: true });
   report.status = 'PASS_LOCAL';
 } finally {

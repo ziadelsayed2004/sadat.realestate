@@ -47,7 +47,7 @@ describe('public community feed and post creation', () => {
     for (const card of result.container.querySelectorAll('.public-community__card')) {
       expect(card).toHaveAttribute('data-category', 'advice');
       expect(card.querySelector('.public-community__author strong')).toHaveTextContent(locale === 'ar' ? 'كاتب من البيانات' : 'API author');
-      expect(Array.from(card.querySelectorAll('.public-community__stat')).map(item => item.textContent)).toEqual(['7', '3', '5']);
+      expect(Array.from(card.querySelectorAll('.public-community__stat')).map(item => item.textContent)).toEqual(['7', '3']);
       expect(card.querySelector('time')).toHaveAttribute('dateTime', post.createdAt);
     }
     fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'نصيحة' : 'Advice' }));
@@ -141,7 +141,7 @@ describe('public community feed and post creation', () => {
     await waitFor(() => expect(mutations.createPost).toHaveBeenCalledWith({ title: 'A new post', body: 'A new body', category: 'advice' }));
   });
 
-  it('loads details and submits comment and report mutations without exposing private fields', async () => {
+  it('reports directly from a card without exposing legacy comments or private fields', async () => {
     const mutations: CommunityMutationApi = {
       createPost: vi.fn().mockResolvedValue(undefined),
       createComment: vi.fn().mockResolvedValue({ ...detailData.comments[0]!, id: 'cccccccccccccccccccccccc', body: 'A useful reply' }),
@@ -159,22 +159,21 @@ describe('public community feed and post creation', () => {
       />,
       { locale: 'en' }
     );
-    fireEvent.click(screen.getByRole('button', { name: copy.openDiscussion }));
-    await waitFor(() => expect(screen.getByText('A visible public comment.')).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText(copy.commentLabel), { target: { value: 'A useful reply' } });
-    fireEvent.click(screen.getByRole('button', { name: copy.submitComment }));
-    await waitFor(() => expect(mutations.createComment).toHaveBeenCalledWith(post.id, { body: 'A useful reply' }));
-
-    await waitFor(() => expect(screen.getByRole('button', { name: copy.reportPost })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: copy.reportPost }));
+    await waitFor(() => expect(screen.getByLabelText(copy.reportDetails)).toBeInTheDocument());
+    expect(screen.getByRole('dialog', { name: copy.reportPost })).toBeInTheDocument();
+    expect(screen.queryByText('A visible public comment.')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(copy.commentLabel)).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText(copy.reportDetails), { target: { value: 'This needs review' } });
     fireEvent.click(screen.getByRole('button', { name: copy.submitReport }));
     await waitFor(() => expect(mutations.reportPost).toHaveBeenCalledWith(post.id, { reason: 'other', details: 'This needs review' }));
-    expect(screen.getByText('A visible public comment.')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(screen.getByText(new RegExp(copy.reportCreated))).toBeInTheDocument();
+    expect(mutations.createComment).not.toHaveBeenCalled();
     expect(screen.queryByText('authorId')).not.toBeInTheDocument();
   });
 
-  it('opens comments from their visible control and updates a persisted reaction result', async () => {
+  it('updates a persisted reaction without offering comments', async () => {
     const copy = getCommunityCopy('en');
     const mutations: CommunityMutationApi = {
       createPost: vi.fn().mockResolvedValue(undefined),
@@ -187,11 +186,23 @@ describe('public community feed and post creation', () => {
       { locale: 'en' }
     );
 
-    fireEvent.click(screen.getByRole('button', { name: copy.comments(1) }));
-    await waitFor(() => expect(screen.getByText('A visible public comment.')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: copy.comments(1) })).not.toBeInTheDocument();
     const like = screen.getByRole('button', { name: `${copy.like} (24)` });
     fireEvent.click(like);
     await waitFor(() => expect(mutations.react).toHaveBeenCalledWith(post.id, 'like'));
     expect(screen.getByRole('button', { name: `${copy.like} (25)` })).toHaveAttribute('aria-pressed', 'true');
   });
+  it('requires authentication to report and keeps the post readable without comments', async () => {
+    const copy = getCommunityCopy('en');
+    renderWithLocale(<PublicCommunity locale="en" initialData={listData} loadDetail={vi.fn().mockResolvedValue(detailData)} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.reportPost }));
+    const dialog = screen.getByRole('dialog', { name: copy.reportPost });
+    await waitFor(() => expect(within(dialog).getByRole('link', { name: copy.signIn })).toHaveAttribute('href', '/auth/login'));
+    expect(within(dialog).queryByLabelText(copy.commentLabel)).not.toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole('button', { name: copy.close }));
+    fireEvent.click(screen.getByRole('button', { name: copy.openDiscussion }));
+    await waitFor(() => expect(within(screen.getByRole('dialog', { name: copy.openDiscussion })).getByText(post.body)).toBeInTheDocument());
+    expect(screen.queryByText('A visible public comment.')).not.toBeInTheDocument();
+  });
+
 });

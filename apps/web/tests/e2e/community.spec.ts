@@ -134,11 +134,11 @@ test('anonymous community login modal stays inside a full viewport overlay', asy
   await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
 
-test('community comments and reactions work responsively after authentication', async ({ page }) => {
+test('community reporting replaces comments and preserves authenticated reactions', async ({ page }) => {
   const locale = localeForProject();
   let likeCount = 0;
   let dislikeCount = 0;
-  let commentCount = 0;
+  let reportCount = 0;
   await page.route('**/api/v1/public/community/posts**', async route => {
     const request = route.request();
     const pathname = new URL(request.url()).pathname;
@@ -149,15 +149,16 @@ test('community comments and reactions work responsively after authentication', 
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { postId: 'aaaaaaaaaaaaaaaaaaaaaaaa', reaction: requestBody.reaction, likeCount, dislikeCount }, meta: { requestId: 'e2e-reaction' } }) });
       return;
     }
-    if (request.method() === 'POST' && pathname.endsWith('/comments')) {
-      commentCount += 1;
-      const requestBody = request.postDataJSON() as { body: string };
-      await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: { id: 'cccccccccccccccccccccccc', postId: 'aaaaaaaaaaaaaaaaaaaaaaaa', body: requestBody.body, depth: 0, createdAt: '2026-09-12T10:00:00+00:00' }, meta: { requestId: 'e2e-comment' } }) });
+    if (request.method() === 'POST' && pathname.endsWith('/reports')) {
+      reportCount += 1;
+      expect(request.postDataJSON()).toEqual({ reason: 'other', details: 'Content needs moderation' });
+      await route.fulfill({ json: { data: { id: 'cccccccccccccccccccccccc', status: 'open', createdAt: '2026-09-12T10:00:00+00:00' }, meta: { requestId: 'e2e-report' } } });
       return;
     }
+    expect(pathname.endsWith('/comments')).toBe(false);
     if (request.method() === 'GET' && pathname.endsWith('/aaaaaaaaaaaaaaaaaaaaaaaa')) {
       const fixture = communityListFixture().data.items[0]!;
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { post: { ...fixture, commentCount }, comments: [] }, meta: { requestId: 'e2e-detail' } }) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { post: { ...fixture, commentCount: 0 }, comments: [] }, meta: { requestId: 'e2e-detail' } }) });
       return;
     }
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(communityListFixture()) });
@@ -174,12 +175,14 @@ test('community comments and reactions work responsively after authentication', 
   await expect(like).toHaveAttribute('aria-pressed', 'true');
   await expect(like.locator('span')).toHaveText('1');
 
-  await page.locator('.public-community__comment-action').first().click();
-  const comment = page.locator('#community-comment');
-  await expect(comment).toBeVisible();
-  await comment.fill(locale === 'ar' ? 'تعليق مفيد للاختبار' : 'A useful test comment');
-  await page.locator('.public-community__comment-form button[type="submit"]').click();
-  await expect(page.locator('.public-community__comment-list')).toContainText(locale === 'ar' ? 'تعليق مفيد للاختبار' : 'A useful test comment');
+  await expect(page.locator('.public-community__comment-action')).toHaveCount(0);
+  await page.locator('.public-community__report-stat').first().click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('#community-comment')).toHaveCount(0);
+  await page.locator('#community-report-details').fill('Content needs moderation');
+  await page.locator('.public-community__report button[type="submit"]').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(reportCount).toBe(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  await page.screenshot({ path: test.info().outputPath('community-comments-and-reactions.png'), fullPage: true });
+  await page.screenshot({ path: test.info().outputPath('community-reporting-and-reactions.png'), fullPage: true });
 });

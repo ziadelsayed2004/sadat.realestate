@@ -1,6 +1,27 @@
 import { expect, test } from '@playwright/test';
 import { routePublicHomepageApi } from './public-fixtures';
 
+test('category labels wrap inside their cards in English and Arabic', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await routePublicHomepageApi(page);
+  await page.goto(`/?lang=${locale}`);
+  const card = page.locator('.public-homepage__category-card').filter({ hasText: locale === 'en' ? 'Full commercial building' : 'مبنى تجاري كامل' });
+  await expect(card).toHaveCount(1);
+  await card.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: test.info().outputPath('category-label.png') });
+  const geometry = await card.evaluate(element => {
+    const label = element.querySelector('strong')!;
+    const bounds = element.getBoundingClientRect();
+    const labelBounds = label.getBoundingClientRect();
+    return { cardWidth: element.clientWidth, contentWidth: element.scrollWidth,
+      contained: labelBounds.left >= bounds.left && labelBounds.right <= bounds.right,
+      nowrap: getComputedStyle(label).whiteSpace === 'nowrap' };
+  });
+  expect(geometry.contained).toBe(true);
+  expect(geometry.nowrap).toBe(false);
+  expect(geometry.contentWidth).toBeLessThanOrEqual(geometry.cardWidth + 1);
+});
+
 test('homepage statistics and community cards stay readable on narrow screens', async ({ page }) => {
   test.skip(!['mobile-ar', 'mobile-en'].includes(test.info().project.name), 'Homepage narrow-layout regression runs on the two supported copy directions.');
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';

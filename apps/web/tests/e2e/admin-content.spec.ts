@@ -21,6 +21,14 @@ async function routeAdminContentApis(page: import('@playwright/test').Page, allo
 }
 
 test.describe('ADM-25 and ADM-26 article management', () => {
+  test('content quick-action aliases open content management instead of 404', async ({ page }) => {
+    for (const path of ['/admin/content', '/admin/content/articles']) {
+      await page.goto(`${path}?lang=${localeForContent()}`);
+      await expect(page.locator('[data-screen-id="ADM-25"]')).toBeVisible();
+      await expect(page.getByTestId(`admin-article-${adminArticleId}`)).toBeVisible();
+      await expect(page.getByText('404', { exact: true })).toHaveCount(0);
+    }
+  });
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-25 and ADM-26 local final exports; Figma prototype node 6017:61879; desktop scope.' });
     await routeAdminContentApis(page);

@@ -1,7 +1,5 @@
 import { randomBytes } from 'node:crypto';
 import {
-  communityCommentCreateSchema,
-  communityCommentSchema,
   communityAdminPostListQuerySchema,
   communityAdminCommentListQuerySchema,
   communityPostCreateSchema,
@@ -15,10 +13,8 @@ import {
   type CommunityAdminPostListQuery,
   type CommunityAdminCommentListData,
   type CommunityAdminCommentListQuery,
-  type CommunityCommentCreate,
   type CommunityPost,
   type CommunityPostCreate,
-  type CommunityPublicComment,
   type CommunityPublicPost,
   type CommunityPublicPostDetailData,
   type CommunityPublicPostListData,
@@ -131,17 +127,6 @@ function publicPost(post: CommunityPost, commentCount: number): CommunityPublicP
   };
 }
 
-function publicComment(comment: CommunityComment): CommunityPublicComment {
-  return {
-    id: comment.id,
-    postId: comment.postId,
-    body: comment.body,
-    ...(comment.parentId === undefined ? {} : { parentId: comment.parentId }),
-    depth: comment.depth,
-    createdAt: comment.createdAt
-  };
-}
-
 export function createCommunityService(
   seed: CommunityPost[] = [],
   repository: CommunityRepository = createMemoryCommunityRepository(seed),
@@ -229,23 +214,13 @@ export function createCommunityService(
       });
       return updated;
     },
-    async createComment(claims, input) {
+    async createComment(claims) {
       await requireActive(claims);
-      const parsed: CommunityCommentCreate = communityCommentCreateSchema.parse(input);
-      const post = await repository.getPost(parsed.postId);
-      if (!post || post.status !== 'published') throw new Error('INVALID_STATE');
-      const parent = parsed.parentId === undefined ? undefined : await repository.getComment(parsed.parentId);
-      if (parsed.parentId !== undefined && (!parent || parent.postId !== parsed.postId || parent.status !== 'visible')) throw new Error('INVALID_STATE');
-      const depth = parent === undefined ? 0 : parent.depth + 1;
-      if (depth > 2) throw new Error('INVALID_STATE');
-      const comment = communityCommentSchema.parse({ id: id(), ...parsed, authorId: claims.sub, depth, status: 'visible', createdAt: now() });
-      await repository.saveComment(comment);
-      return comment;
+      throw new Error('COMMENTS_DISABLED');
     },
-    async listComments(postId) {
-      return (await repository.listComments(postId))
-        .filter(comment => comment.status === 'visible')
-        .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    async listComments() {
+      // Legacy comments remain available only through the admin archive.
+      return [];
     },
     async removeComment(claims, commentId) {
       await requireActive(claims);
@@ -272,22 +247,18 @@ export function createCommunityService(
     },
     async publicFeed() {
       const posts = await this.publicList();
-      return Promise.all(posts.map(async post => ({ post, comments: await this.listComments(post.id) })));
+      return posts.map(post => ({ post, comments: [] }));
     },
     async publicPage(query) {
       const posts = await this.publicList();
       const start = (query.page - 1) * query.limit;
-      const items = await Promise.all(posts.slice(start, start + query.limit).map(async post => {
-        const comments = await this.listComments(post.id);
-        return publicPost(post, comments.length);
-      }));
+      const items = posts.slice(start, start + query.limit).map(post => publicPost(post, 0));
       return { items, page: query.page, limit: query.limit, total: posts.length };
     },
     async publicDetail(postId) {
       const post = await repository.getPost(postId);
       if (!post || post.status !== 'published') return undefined;
-      const comments = await this.listComments(post.id);
-      return { post: publicPost(post, comments.length), comments: comments.map(publicComment) };
+      return { post: publicPost(post, 0), comments: [] };
     },
     async adminPage(claims, query) {
       await requireAdminView(claims);

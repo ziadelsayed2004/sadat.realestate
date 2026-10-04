@@ -15,10 +15,15 @@ import './styles.css';
 import { getProviderAccountCopy } from './account-copy.ts';
 import { DocumentLocationRepair } from './document-location-repair.tsx';
 import type { ProviderAccountFlowClient } from './account.tsx';
+import type { ProviderOrganizationFlowClient } from './organization.tsx';
+import { getProviderOrganizationCopy } from './organization-copy.ts';
+import { DocumentAuthorityRepair } from './document-authority-repair.tsx';
 
 export interface ProviderDocumentsFlowClient {
   readonly listProviderDocuments?: (() => Promise<readonly ProviderDocumentData[]>) | undefined;
   readonly updateProviderAccount?: ProviderAccountFlowClient['updateProviderAccount'];
+  readonly updateProviderBusiness?: ProviderOrganizationFlowClient['updateProviderBusiness'];
+  readonly updateProviderCompany?: ProviderOrganizationFlowClient['updateProviderCompany'];
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
   readonly uploadProviderDocument?: ((category: ProviderDocumentCategory, file: File) => Promise<ProviderDocumentData>) | undefined;
   readonly deleteProviderDocument?: ((documentId: string) => Promise<{ readonly documentId: string; readonly deleted: true }>) | undefined;
@@ -373,6 +378,7 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
   }
 
   const canEdit = application !== undefined && canEditDocuments(application, providerType);
+  const saveOrganization = providerType === 'brokerage_office' ? client.updateProviderBusiness : providerType === 'developer_company' ? client.updateProviderCompany : undefined;
   const missingRequiredDocuments = application === undefined ? [] : missingRequiredDocumentCategories(application);
   const hasUnreadyRequiredDocument = requirements.some(requirement => {
     if (!requirement.applies || requirement.classification === 'optional') return false;
@@ -428,10 +434,13 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
             <DocumentLocationRepair application={application} locale={locale} save={client.updateProviderAccount.bind(client)} onSaved={setApplication} />
           ) : null}
           {!canSubmit ? <StateMessage state="empty" title={copy.reviewUnavailableTitle} message={copy.reviewUnavailableBody} /> : null}
+          {canEdit && application !== undefined && saveOrganization !== undefined && application.missingFields.includes('accountOwnerHasRegisteredAuthority') ? (
+            <DocumentAuthorityRepair application={application} locale={locale} save={patch => saveOrganization.call(client, patch)} onSaved={setApplication} />
+          ) : null}
           {application !== undefined && application.missingFields.length > 0 ? (
             <aside role="status">
               <p>{locale === 'ar' ? 'ارجع لاستكمال بيانات الحساب الناقصة؛ الملفات المرفوعة محفوظة:' : 'Go back to complete the missing account details; uploaded files are saved:'}</p>
-              <ul>{application.missingFields.map(field => <li key={field}>{getProviderAccountCopy(locale).missingFieldLabels[field] ?? field}</li>)}</ul>
+              <ul>{application.missingFields.map(field => <li key={field}>{getProviderAccountCopy(locale).missingFieldLabels[field] ?? getProviderOrganizationCopy(locale).missingFieldLabels[field] ?? (locale === 'ar' ? 'بيانات إضافية مطلوبة في الخطوة السابقة' : 'Additional details required in the previous step')}</li>)}</ul>
             </aside>
           ) : null}
           <div className="provider-documents-card__footer">

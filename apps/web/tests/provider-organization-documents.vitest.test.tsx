@@ -18,6 +18,43 @@ vi.mock('../src/features/provider_auth/locations.ts', () => ({
 }));
 const documentId = 'c'.repeat(24);
 
+it.each(['brokerage_office', 'developer_company'] as const)('repairs missing authority for %s without re-uploading saved documents', async providerType => {
+  const draft = application(providerType, { missingFields: ['accountOwnerHasRegisteredAuthority'], missingDocuments: [] });
+  const saved = { ...documentData('commercial_registration'), securityState: 'clean' as const };
+  const update = vi.fn().mockResolvedValue({ ...draft, version: 1, accountOwnerHasRegisteredAuthority: true, missingFields: [] });
+  const list = vi.fn().mockResolvedValue([saved]);
+  const copy = getProviderOrganizationCopy('ar');
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType={providerType} initialApplication={draft}
+    client={{ getProviderApplication: vi.fn().mockResolvedValue(draft), listProviderDocuments: list, updateProviderBusiness: update, updateProviderCompany: update }} onBack={vi.fn()} />, { locale: 'ar' });
+  expect(await screen.findByTestId('provider-document-file-commercial_registration')).toHaveTextContent(saved.originalFilename);
+  expect(screen.queryByText('accountOwnerHasRegisteredAuthority')).not.toBeInTheDocument();
+  const review = screen.getByRole('button', { name: getProviderDocumentsCopy('ar').reviewAction });
+  expect(review).toBeDisabled();
+  fireEvent.change(screen.getByRole('combobox', { name: copy.authorityLabel }), { target: { value: 'true' } });
+  fireEvent.click(screen.getByRole('button', { name: copy.saveDraftAction }));
+  await waitFor(() => expect(review).toBeEnabled());
+  expect(update).toHaveBeenCalledWith({ version: 0, accountOwnerHasRegisteredAuthority: true });
+  expect(screen.getByTestId('provider-document-file-commercial_registration')).toHaveTextContent(saved.originalFilename);
+  cleanup();
+});
+
+it('keeps authorization-letter requirements returned after an authority repair', async () => {
+  const draft = application('brokerage_office', { missingFields: ['accountOwnerHasRegisteredAuthority'], missingDocuments: [] });
+  const updated = { ...draft, version: 1, accountOwnerHasRegisteredAuthority: false, missingFields: [], missingDocuments: ['authorization_letter'] as const,
+    requirementsSnapshot: { ...draft.requirementsSnapshot!, requirements: [...draft.requirementsSnapshot!.requirements,
+      { key: 'authorization_letter' as const, labelKey: 'provider.documents.authorizationLetter', classification: 'conditional' as const, applies: true }] } };
+  const update = vi.fn().mockResolvedValue(updated);
+  const copy = getProviderOrganizationCopy('ar');
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="brokerage_office" initialApplication={draft}
+    client={{ updateProviderBusiness: update }} onBack={vi.fn()} />, { locale: 'ar' });
+  fireEvent.change(await screen.findByRole('combobox', { name: copy.authorityLabel }), { target: { value: 'false' } });
+  fireEvent.click(screen.getByRole('button', { name: copy.saveDraftAction }));
+  await screen.findByTestId('provider-document-authorization_letter');
+  expect(update).toHaveBeenCalledWith({ version: 0, accountOwnerHasRegisteredAuthority: false });
+  expect(screen.getByRole('button', { name: getProviderDocumentsCopy('ar').reviewAction })).toBeDisabled();
+  cleanup();
+});
+
 it('prevents review while a document replacement is in flight', async () => {
   let finishUpload!: (document: ProviderDocumentData) => void;
   const pending = new Promise<ProviderDocumentData>(resolve => { finishUpload = resolve; });

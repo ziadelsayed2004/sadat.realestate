@@ -3,6 +3,41 @@ import { expect, test } from '@playwright/test';
 const APPLICATION_ID = 'a'.repeat(24);
 const DOCUMENT_ID = 'c'.repeat(24);
 
+test('office and developer repair authority inline with saved documents preserved', async ({ page }) => {
+  const locale = localeForProject();
+  const ar = locale === 'ar';
+  let current = application('brokerage_office', { missingFields: ['accountOwnerHasRegisteredAuthority'], missingDocuments: [] });
+  await page.route('**/api/v1/provider/application', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
+  await page.route('**/api/v1/provider/application/documents', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{
+    id: DOCUMENT_ID, applicationId: APPLICATION_ID, category: 'commercial_registration', originalFilename: 'saved-registration.pdf',
+    requirementVersion: '2026-08-13.1', normalizedExtension: '.pdf', detectedMime: 'application/pdf', byteSize: 256,
+    sha256: '0'.repeat(64), active: true, securityState: 'clean', reviewState: 'uploaded', version: 1,
+    uploadedAt: '2026-08-13T00:00:00.000Z', idempotentReplay: false
+  }] }) }));
+  for (const variant of ['business', 'company']) await page.route(`**/api/v1/provider/application/${variant}`, async route => {
+    const patch = route.request().postDataJSON();
+    expect(patch).toEqual({ version: 0, accountOwnerHasRegisteredAuthority: true });
+    current = { ...current, ...patch, version: 1, missingFields: [] };
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
+  });
+  for (const providerType of ['brokerage_office', 'developer_company'] as const) {
+    current = application(providerType, { missingFields: ['accountOwnerHasRegisteredAuthority'], missingDocuments: [] });
+    await page.goto(`/auth/register/provider/account?providerType=${providerType}&step=documents&lang=${locale}`);
+    const file = page.getByTestId('provider-document-file-commercial_registration');
+    await expect(file).toContainText('saved-registration.pdf');
+    const review = page.getByRole('button', { name: ar ? 'مراجعة الطلب' : 'Review application', exact: true });
+    await expect(review).toBeDisabled();
+    await review.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: test.info().outputPath(`${providerType}-repair.png`) });
+    await expect(page.getByText('accountOwnerHasRegisteredAuthority', { exact: true })).toHaveCount(0);
+    await page.getByRole('combobox', { name: ar ? 'هل يملك صاحب الحساب صلاحية مسجلة؟' : 'Does the account owner have registered authority?' }).selectOption('true');
+    await page.getByRole('button', { name: ar ? 'حفظ المسودة' : 'Save draft', exact: true }).click();
+    await expect(review).toBeEnabled();
+    await expect(file).toContainText('saved-registration.pdf');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  }
+});
+
 test('individual broker repairs locations inline before reviewing documents', async ({ page }, testInfo) => {
   const locale = localeForProject();
   const ar = locale === 'ar';

@@ -109,12 +109,15 @@ test('provider submission loads and atomically transitions its persistent draft'
 });
 
 test('administrative quotes compute integer minor-unit totals and accept idempotently', async () => {
-  const service = createAdSettingsService(); const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  const service = createAdSettingsService({ now: () => new Date('2026-09-01T00:00:00.000Z') }); const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
   await service.createPlacement(admin, { key: 'project.hero', surface: 'homepage', label: { en: 'Project' }, width: 900, height: 300, active: true, sortOrder: 1, allowedLocales: ['en'], targetUrlRequired: true });
   const request = await service.createRequest(provider, { placementKey: 'project.hero', purpose: 'Promote project', intervalStart: '2026-09-01T09:00:00+00:00', intervalEnd: '2026-09-02T09:00:00+00:00' }); await service.transitionRequest(provider, request.id, { status: 'review', expectedVersion: 0 }); await service.transitionRequest(admin, request.id, { status: 'waiting_pricing', expectedVersion: 1 });
   const quoteInput = { requestId: request.id, currency: 'EGP', lineItems: [{ description: 'One day', quantity: 2, unitAmountMinor: 1250 }], validUntil: '2026-10-01T00:00:00+00:00', terms: 'Manual quote; payment proof is reviewed separately.' };
   await assert.rejects(() => service.issueQuote(provider, quoteInput), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
   await assert.rejects(() => service.issueQuote(admin, { ...quoteInput, unknown: true }));
+  for (const validUntil of ['2026-08-31T23:59:59.000Z', '2026-09-01T00:00:00.000Z']) {
+    await assert.rejects(() => service.issueQuote(admin, { ...quoteInput, validUntil }), error => error instanceof AdSettingsServiceError && error.code === 'VERSION_CONFLICT');
+  }
   const quote = await service.issueQuote(admin, quoteInput);
   assert.equal(quote.totalMinor, 2500); assert.equal(quote.status, 'issued'); assert.equal(quote.decisionHistory.length, 1); assert.equal(quote.decisionHistory[0]?.action, 'issued'); assert.equal('bankVerified' in quote, false);
   const afterIssue = (await service.listRequests(admin)).find(item => item.id === request.id); assert.equal(afterIssue?.status, 'quote_sent');

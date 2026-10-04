@@ -51,8 +51,8 @@
         "articles": "المقالات",
         "article-categories": "تصنيفات المقالات",
         "community": "الكوميونيتي",
-        "community-comments": "التعليقات",
-        "community-reports": "البلاغات",
+        "community-comments": "أرشيف التعليقات",
+        "community-reports": "بلاغات المجتمع",
         "about": "النبذة عن المنصة",
         "team": "فريق العمل",
         "population": "عدّاد سكان مدينة السادات",
@@ -935,18 +935,18 @@
     "eyebrow": "إدارة المجتمع",
     "title": {
       "posts": "إدارة المجتمع",
-      "comments": "التعليقات",
+      "comments": "أرشيف التعليقات",
       "reports": "البلاغات والإشراف"
     },
     "description": {
       "posts": "راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.",
-      "comments": "راجع التعليقات وحالتها دون عرض بيانات داخلية غير مصرح بها.",
+      "comments": "التعليقات متوقفة. هذا أرشيف التعليقات السابقة المتاح للإدارة فقط.",
       "reports": "راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع."
     },
     "tab": {
       "posts": "المنشورات",
-      "comments": "التعليقات",
-      "reports": "البلاغات"
+      "comments": "أرشيف التعليقات",
+      "reports": "بلاغات المجتمع"
     },
     "search": "بحث",
     "searchPlaceholder": "ابحث في العنوان أو المحتوى",
@@ -2190,8 +2190,8 @@
     "allPosts": "الكل",
     "like": "إعجاب",
     "dislike": "عدم إعجاب",
-    "openDiscussion": "عرض النقاش",
-    "closeDiscussion": "إغلاق النقاش",
+    "openDiscussion": "عرض المنشور",
+    "closeDiscussion": "إغلاق المنشور",
     "postTitle": "عنوان البوست",
     "postBody": "محتوى البوست",
     "postTitlePlaceholder": "عنوان البوست",
@@ -2208,7 +2208,7 @@
     "submitReport": "إرسال البلاغ",
     "cancel": "إلغاء",
     "close": "إغلاق",
-    "signInToContinue": "سجّل الدخول للمشاركة والتعليق والإبلاغ.",
+    "signInToContinue": "سجّل الدخول للمشاركة والإبلاغ.",
     "signIn": "تسجيل الدخول",
     "authenticationRequired": "تسجيل الدخول مطلوب",
     "loadingTitle": "جارٍ تحميل المجتمع",
@@ -3151,7 +3151,7 @@
     "backAction": "رجوع",
     "reviewAction": "مراجعة الطلب",
     "reviewUnavailableTitle": "لا يمكن الانتقال للمراجعة",
-    "reviewUnavailableBody": "اكتمل البيانات والمستندات المطلوبة أوحدث الطلب قبل المتابعة.",
+    "reviewUnavailableBody": "أكمل البيانات والمستندات المطلوبة قبل المتابعة.",
     "noPublicUrlNote": "لا تعرض الواجهة عنوان التخزين أو رابط تنزيل دائم.",
     "categoryLabels": {
       "government_id_front": "الهوية الحكومية - الوجه الأمامي",

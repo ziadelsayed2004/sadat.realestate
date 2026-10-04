@@ -817,8 +817,16 @@
   box-shadow: var(--shadow-card);
   font-size: 12px;
   line-height: 15px;
-  white-space: nowrap;
   text-decoration: none;
+}
+
+.public-homepage__category-card strong {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: 2.5em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 [dir="rtl"] .public-homepage__section--banners .public-homepage__banner-media-wrapper,

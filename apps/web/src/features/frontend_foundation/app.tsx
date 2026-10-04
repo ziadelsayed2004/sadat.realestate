@@ -183,7 +183,7 @@ export function App({
   const isAdminSeekers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-seekers';
   const isAdminProviders = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/providers';
   const isAdminVerification = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/verification';
-  const isAdminContent = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/articles', '/admin/article-categories'].includes(seekerPathname);
+  const isAdminContent = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/articles', '/admin/article-categories', '/admin/content', '/admin/content/articles'].includes(seekerPathname);
   const isAdminCmsContent = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/content/about', '/admin/content/team', '/admin/content/population-counter'].includes(seekerPathname);
   const isAdminCommunity = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/community';
   const isAdminCommunityComments = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/community/comments';

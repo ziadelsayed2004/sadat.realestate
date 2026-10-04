@@ -51,8 +51,8 @@
         "articles": "Articles",
         "article-categories": "Article categories",
         "community": "Community",
-        "community-comments": "Comments",
-        "community-reports": "Reports",
+        "community-comments": "Archived comments",
+        "community-reports": "Community reports",
         "about": "About the platform",
         "team": "Team",
         "population": "Sadat population counter",
@@ -935,18 +935,18 @@
     "eyebrow": "Community administration",
     "title": {
       "posts": "Community management",
-      "comments": "Comments",
+      "comments": "Archived comments",
       "reports": "Reports and moderation"
     },
     "description": {
       "posts": "Review community posts from the server-approved projection.",
-      "comments": "Review comment content and state without exposing unrelated internal data.",
+      "comments": "Comments are disabled. Previous comments remain in this admin-only archive.",
       "reports": "Review incoming reports and resolve them with a clear reason and version."
     },
     "tab": {
       "posts": "Posts",
-      "comments": "Comments",
-      "reports": "Reports"
+      "comments": "Archived comments",
+      "reports": "Community reports"
     },
     "search": "Search",
     "searchPlaceholder": "Search title or content",
@@ -2190,8 +2190,8 @@
     "allPosts": "All posts",
     "like": "Like",
     "dislike": "Dislike",
-    "openDiscussion": "Open discussion",
-    "closeDiscussion": "Close discussion",
+    "openDiscussion": "View post",
+    "closeDiscussion": "Close post",
     "postTitle": "Post title",
     "postBody": "Post body",
     "postTitlePlaceholder": "Write a clear title",
@@ -2208,7 +2208,7 @@
     "submitReport": "Send report",
     "cancel": "Cancel",
     "close": "Close",
-    "signInToContinue": "Sign in to post, comment, or report community content.",
+    "signInToContinue": "Sign in to post or report community content.",
     "signIn": "Sign in",
     "authenticationRequired": "Sign-in required",
     "loadingTitle": "Loading the community",

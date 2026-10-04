@@ -735,3 +735,21 @@
     inline-size: 100%;
   }
 }
+.provider-document-repair {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+}
+
+.provider-document-repair h2,
+.provider-document-repair p { margin: 0; }
+
+.provider-document-repair fieldset {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  border: 1px solid var(--color-border);
+  border-radius: .75rem;
+}

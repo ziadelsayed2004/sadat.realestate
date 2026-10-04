@@ -100,14 +100,11 @@ test('admin community post listing enforces RBAC, strict filters, pagination, an
   assert.equal(body.data.items[0]?.commentCount, 0);
   assert.equal((await request(origin, 'GET', '/api/v1/admin/community/posts?unexpected=true', 'admin')).status, 400);
 
-  assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/comments`, 'seeker', { body: 'Reviewable comment' })).status, 201);
+  assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/comments`, 'seeker', { body: 'Reviewable comment' })).status, 403);
   const comments = await request(origin, 'GET', `/api/v1/admin/community/comments?postId=${postId}&status=visible&search=Reviewable`, 'admin');
   assert.equal(comments.status, 200);
   const commentsBody = await comments.json() as { data: { items: Array<Record<string, unknown>>; total: number } };
-  assert.equal(commentsBody.data.total, 1);
-  assert.equal(commentsBody.data.items[0]?.postId, postId);
-  assert.equal(commentsBody.data.items[0]?.authorId, SEEKER_ID);
-  assert.equal(commentsBody.data.items[0]?.status, 'visible');
+  assert.equal(commentsBody.data.total, 0);
   assert.equal((await request(origin, 'GET', '/api/v1/admin/community/comments?postId=not-an-id', 'admin')).status, 400);
 }));
 
@@ -122,11 +119,9 @@ test('community mutations require verified authentication and keep strict safe r
   assert.equal('authorId' in createdBody.data, false);
 
   const comment = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/comments`, 'provider', { body: 'A visible comment' });
-  assert.equal(comment.status, 201);
-  const commentBody = await comment.json() as { data: Record<string, unknown> };
-  assert.equal(commentBody.data.postId, postId);
-  assert.equal(commentBody.data.body, 'A visible comment');
-  assert.equal('authorId' in commentBody.data, false);
+  assert.equal(comment.status, 403);
+  const commentBody = await comment.json() as { error: { code: string } };
+  assert.equal(commentBody.error.code, 'COMMENTS_DISABLED');
 
   const liked = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reactions`, 'seeker', { reaction: 'like' });
   assert.equal(liked.status, 200);

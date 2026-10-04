@@ -2,6 +2,24 @@ import { expect, test } from '@playwright/test';
 import { adminIssueId, adminRequestId, adminViewingId, localeForAdminRequests, routeAdminRequestApis } from './admin-requests.fixtures.ts';
 
 test.describe('ADM-18 through ADM-24 request administration', () => {
+  test('overdue view opens a visible dialog and supports direct links', async ({ page }) => {
+    const locale = localeForAdminRequests(test.info().project.name);
+    await page.goto(`/admin/overdue-requests?lang=${locale}`);
+    const trigger = page.getByTestId(`admin-request-${adminRequestId}`).getByRole('button');
+    await trigger.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByTestId('admin-request-detail')).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath('overdue-details.png') });
+    const bounds = await dialog.boundingBox();
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+    await dialog.locator('.ui-modal__close').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await page.goto(`/admin/overdue-requests?lang=${locale}&requestId=${adminRequestId}`);
+    await expect(page.getByRole('dialog')).toBeVisible();
+  });
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-18 exact recovered Figma node 6017:69276 / page 6017:4356; ADM-19 through ADM-24 local final exports' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');

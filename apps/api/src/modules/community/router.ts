@@ -97,6 +97,7 @@ function sendError(request: Request, response: Response, error: unknown): void {
   const code = error instanceof Error ? error.message : '';
   const known: Record<string, { statusCode: number; messageKey: string }> = {
     FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
+    COMMENTS_DISABLED: { statusCode: 403, messageKey: 'errors.forbidden' },
     NOT_FOUND: { statusCode: 404, messageKey: 'errors.communityNotFound' },
     INVALID_STATE: { statusCode: 409, messageKey: 'errors.communityInvalidState' },
     BLOCKED_CONTENT: { statusCode: 422, messageKey: 'errors.communityBlockedContent' },

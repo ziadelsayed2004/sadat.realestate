@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
-  communityCommentCreateRequestSchema,
   communityPostCreateSchema,
   communityReportCreateRequestSchema,
   type CommunityPublicPost,
@@ -33,7 +32,7 @@ import { getCommunityPresentationCopy } from './presentation-copy.ts';
 export type PublicCommunityViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 type DetailViewState = PublicCommunityViewState | 'not_found';
 type ComposerState = 'closed' | 'checking' | 'open' | 'permission';
-type MutationState = 'idle' | 'creating' | 'commenting' | 'reporting';
+type MutationState = 'idle' | 'creating' | 'reporting';
 type ReportReason = 'spam' | 'abuse' | 'misinformation' | 'other';
 type PostCategory = 'question' | 'experience' | 'advice' | 'service' | 'area' | 'property';
 
@@ -100,7 +99,6 @@ type CommunityPresentation = {
   readonly categoryKey: string;
   readonly likes: number;
   readonly dislikes: number;
-  readonly comments: number;
   readonly avatar?: string;
   readonly image?: string;
 };
@@ -114,7 +112,6 @@ function postPresentation(post: CommunityPublicPost, locale: SupportedLocale): C
     categoryKey: post.category ?? 'post',
     likes: post.likeCount ?? 0,
     dislikes: post.dislikeCount ?? 0,
-    comments: post.commentCount,
     ...(post.avatarUrl === undefined ? {} : { avatar: post.avatarUrl }),
     ...(post.imageUrl === undefined ? {} : { image: post.imageUrl }),
   };
@@ -158,6 +155,7 @@ function PostCard({
   locale,
   copy,
   onOpen,
+  onReport,
   onReact,
   currentReaction,
   reacting
@@ -166,6 +164,7 @@ function PostCard({
   readonly locale: SupportedLocale;
   readonly copy: CommunityCopy;
   readonly onOpen: () => void;
+  readonly onReport: () => void;
   readonly onReact: (reaction: CommunityReactionType) => void;
   readonly currentReaction: CommunityReactionType | undefined;
   readonly reacting: boolean;
@@ -198,11 +197,9 @@ function PostCard({
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3Zm0 0 4-7a2 2 0 0 1 2 2v3h5.2a2 2 0 0 1 1.96 2.4l-1.6 8A2 2 0 0 1 16.6 20H7" /></svg>
             <span>{presentation.dislikes}</span>
           </button>
-          <button className="public-community__stat public-community__comment-action" type="button" aria-label={copy.comments(presentation.comments)} onClick={onOpen}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H9l-4 4V5Z" /></svg><span>{presentation.comments}</span>
+          <button className="public-community__report-stat" type="button" aria-label={copy.reportPost} onClick={onReport}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4m0 0c5-4 9 4 14 0v10c-5 4-9-4-14 0" /></svg>{getCommunityPresentationCopy(locale).report}
           </button>
-          <span className="public-community__report-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11l2 2v14H6V4Zm2 2v12h9V7h-2V6H8Zm2 3h5v2h-5V9Zm0 4h5v2h-5v-2Z" /></svg>{getCommunityPresentationCopy(locale).report}</span>
-          <span className="public-community__legacy-comment-count">{copy.comments(post.commentCount)}</span>
           <Button className="public-community__card-open" variant="ghost" size="sm" onClick={onOpen}>{copy.openDiscussion}</Button>
         </div>
       </div>
@@ -217,13 +214,9 @@ function DetailPanel({
   copy,
   isAuthenticated,
   mutationState,
-  comment,
   report,
-  onCommentChange,
-  onCommentSubmit,
   onReportChange,
   onReportSubmit,
-  onClose,
   onRetry,
   onOpenReport,
   reportOpen,
@@ -235,13 +228,9 @@ function DetailPanel({
   readonly copy: CommunityCopy;
   readonly isAuthenticated: boolean;
   readonly mutationState: MutationState;
-  readonly comment: string;
   readonly report: { readonly reason: ReportReason; readonly details: string };
-  readonly onCommentChange: (value: string) => void;
-  readonly onCommentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onReportChange: (value: Partial<{ readonly reason: ReportReason; readonly details: string }>) => void;
   readonly onReportSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  readonly onClose: () => void;
   readonly onRetry: () => void;
   readonly onOpenReport: () => void;
   readonly reportOpen: boolean;
@@ -251,7 +240,7 @@ function DetailPanel({
     const text = stateCopy(state, copy);
     return (
       <section className="public-community__detail" data-detail-state={state} aria-label={text?.title}>
-        <div className="public-community__detail-header"><h2>{text?.title}</h2><Button variant="ghost" size="sm" onClick={onClose}>{copy.close}</Button></div>
+        <div className="public-community__detail-header"><h2>{text?.title}</h2></div>
         <StateMessage state={state} title={text?.title} message={text?.body} loadingVariant="page" onRetry={state === 'retry' ? onRetry : undefined} retryLabel={copy.retryLabel} />
       </section>
     );
@@ -260,7 +249,7 @@ function DetailPanel({
   if (state === 'not_found' || detail === undefined) {
     return (
       <section className="public-community__detail" data-detail-state="not_found" aria-label={copy.notFoundTitle}>
-        <div className="public-community__detail-header"><h2>{copy.notFoundTitle}</h2><Button variant="ghost" size="sm" onClick={onClose}>{copy.close}</Button></div>
+        <div className="public-community__detail-header"><h2>{copy.notFoundTitle}</h2></div>
         <StateMessage state="error" title={copy.notFoundTitle} message={copy.notFoundBody} />
       </section>
     );
@@ -273,32 +262,9 @@ function DetailPanel({
           <p className="public-community__eyebrow">{copy.allPosts}</p>
           <h2 id="community-detail-title">{detail.post.title}</h2>
         </div>
-        <Button variant="ghost" size="sm" onClick={onClose}>{copy.close}</Button>
       </div>
       <p className="public-community__detail-date">{formatDate(detail.post.createdAt, locale)}</p>
       <p className="public-community__detail-body">{detail.post.body}</p>
-      <div className="public-community__comments">
-        <h3>{copy.comments(detail.comments.length)}</h3>
-        {detail.comments.length === 0 ? <p className="public-community__inline-empty">{copy.noComments}</p> : (
-          <ol className="public-community__comment-list">
-            {detail.comments.map(item => (
-              <li key={item.id}>
-                <p>{item.body}</p>
-                <time dateTime={item.createdAt}>{formatDate(item.createdAt, locale)}</time>
-              </li>
-            ))}
-          </ol>
-        )}
-      </div>
-      {isAuthenticated ? (
-        <form className="public-community__comment-form" onSubmit={onCommentSubmit}>
-          <label htmlFor="community-comment">{copy.commentLabel}</label>
-          <textarea id="community-comment" value={comment} onChange={event => onCommentChange(event.target.value)} placeholder={copy.commentPlaceholder} rows={4} />
-          <Button type="submit" loading={mutationState === 'commenting'} disabled={mutationState !== 'idle'}>{copy.submitComment}</Button>
-        </form>
-      ) : (
-        <p className="public-community__auth-note"><a href="/auth/login">{copy.signIn}</a> — {copy.signInToContinue}</p>
-      )}
       <div className="public-community__report">
         {reportOpen ? (
           isAuthenticated ? (
@@ -353,7 +319,6 @@ export function PublicCommunity({
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [category, setCategory] = useState<PostCategory>('question');
-  const [comment, setComment] = useState('');
   const [report, setReport] = useState<{ readonly reason: ReportReason; readonly details: string }>({ reason: 'other', details: '' });
   const [reportOpen, setReportOpen] = useState(false);
   const [mutationState, setMutationState] = useState<MutationState>('idle');
@@ -438,12 +403,13 @@ export function PublicCommunity({
     removeCreateQuery();
   };
 
-  const openDetail = (post: CommunityPublicPost) => {
+  const openDetail = (post: CommunityPublicPost, reporting = false) => {
     setSelectedPostId(post.id);
     setDetail(undefined);
     setDetailState('loading');
-    setComment('');
-    setReportOpen(false);
+    setReportOpen(reporting);
+    setReport({ reason: 'other', details: '' });
+    setNotice(undefined);
     setMutationError(undefined);
   };
 
@@ -478,37 +444,6 @@ export function PublicCommunity({
       });
   };
 
-  const submitComment = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (selectedPostId === undefined || !isAuthenticated) return;
-    const parsed = communityCommentCreateRequestSchema.safeParse({ body: comment });
-    if (!parsed.success) {
-      setMutationError(copy.validationBody);
-      return;
-    }
-    setMutationState('commenting');
-    setMutationError(undefined);
-    void mutationApi.createComment(selectedPostId, parsed.data)
-      .then(createdComment => {
-        setMutationState('idle');
-        setComment('');
-        setNotice(copy.commentCreated);
-        setDetail(current => current === undefined ? current : {
-          ...current,
-          post: { ...current.post, commentCount: current.post.commentCount + 1 },
-          comments: [...current.comments, createdComment]
-        });
-        setData(current => current === undefined ? current : {
-          ...current,
-          items: current.items.map(item => item.id === selectedPostId ? { ...item, commentCount: item.commentCount + 1 } : item)
-        });
-      })
-      .catch(error => {
-        setMutationState('idle');
-        setMutationError(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.authenticationRequired : copy.mutationErrorBody);
-      });
-  };
-
   const submitReport = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedPostId === undefined || !isAuthenticated) return;
@@ -522,7 +457,7 @@ export function PublicCommunity({
     void mutationApi.reportPost(selectedPostId, parsed.data)
       .then(() => {
         setMutationState('idle');
-        setReportOpen(false);
+        closeDetail();
         setReport({ reason: 'other', details: '' });
         setNotice(copy.reportCreated);
       })
@@ -615,7 +550,7 @@ export function PublicCommunity({
         {mutationError === undefined || selectedPostId !== undefined || modalOpen ? null : <p className="public-community__mutation-error" role="alert">{mutationError}</p>}
         {view === 'success' && data !== undefined && !filteredEmpty ? (
           <div className="public-community__grid">
-            {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} onReact={reaction => reactToPost(post.id, reaction)} currentReaction={reactions[post.id]} reacting={reactingPostId === post.id} />)}
+            {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} onReport={() => openDetail(post, true)} onReact={reaction => reactToPost(post.id, reaction)} currentReaction={reactions[post.id]} reacting={reactingPostId === post.id} />)}
           </div>
         ) : <CommunityState state={view === 'success' ? 'empty' : view} copy={copy} onRetry={recoverList} />}
         {pageCount > 1 ? (
@@ -625,27 +560,23 @@ export function PublicCommunity({
             <Button variant="ghost" size="sm" disabled={query.page >= pageCount} onClick={() => goToPage(query.page + 1)}>›</Button>
           </nav>
         ) : null}
-        {selectedPostId === undefined ? null : (
-          <DetailPanel
+        <Modal open={selectedPostId !== undefined} title={reportOpen ? copy.reportPost : copy.openDiscussion} closeLabel={copy.close} onClose={closeDetail} className="public-community__detail-modal">
+          {selectedPostId === undefined ? null : <DetailPanel
             detail={detail}
             state={detailState}
             locale={locale}
             copy={copy}
             isAuthenticated={isAuthenticated}
             mutationState={mutationState}
-            comment={comment}
             report={report}
-            onCommentChange={setComment}
-            onCommentSubmit={submitComment}
             onReportChange={value => setReport(current => ({ ...current, ...value }))}
             onReportSubmit={submitReport}
-            onClose={closeDetail}
             onRetry={() => setDetailAttempt(value => value + 1)}
             onOpenReport={() => setReportOpen(true)}
             reportOpen={reportOpen}
             mutationError={mutationError}
-          />
-        )}
+          />}
+        </Modal>
       </div>
       <PublicSiteFooter locale={locale} description={homepageCopy.footerDescription} />
       <Modal

@@ -386,7 +386,7 @@
 }
 
 .public-community__reaction,
-.public-community__comment-action {
+.public-community__report-stat {
   min-inline-size: 2.25rem;
   min-block-size: 2.25rem;
   justify-content: center;
@@ -401,13 +401,13 @@
 }
 
 .public-community__reaction:hover,
-.public-community__comment-action:hover {
+.public-community__report-stat:hover {
   color: var(--color-brand-primary);
   background: color-mix(in srgb, var(--color-brand-accent) 12%, transparent);
 }
 
 .public-community__reaction:active,
-.public-community__comment-action:active { transform: scale(0.94); }
+.public-community__report-stat:active { transform: scale(0.94); }
 
 .public-community__reaction[aria-pressed="true"] {
   color: var(--color-brand-primary);
@@ -415,7 +415,7 @@
 }
 
 .public-community__reaction:focus-visible,
-.public-community__comment-action:focus-visible {
+.public-community__report-stat:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-brand-accent) 45%, transparent);
   outline-offset: 2px;
 }
@@ -435,30 +435,44 @@
   stroke-width: 1.7;
 }
 
-.public-community__legacy-comment-count {
-  display: none;
-}
-
 .public-community__card-open {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  padding: 0;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
+  margin-inline-start: auto;
+  font-size: inherit;
 }
 
-.public-community__card-open:focus-visible {
-  position: static;
-  inline-size: auto;
+.public-community .ui-modal.public-community__detail-modal {
   block-size: auto;
-  overflow: visible;
-  padding: 0.3rem 0.5rem;
-  clip: auto;
-  clip-path: none;
-  white-space: normal;
+  max-block-size: calc(100dvh - 2rem);
+}
+
+.public-community .public-community__detail-modal .ui-modal__body {
+  flex: 0 1 auto;
+  block-size: auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  padding-block: 1rem;
+}
+
+.public-community__detail-modal .public-community__report form {
+  display: grid;
+  gap: .5rem;
+}
+
+.public-community__detail-modal .public-community__report form > .ui-button {
+  margin-block-start: .5rem;
+}
+
+.public-community__detail-modal .public-community__detail-body {
+  max-block-size: 8rem;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.public-community__detail-modal .public-community__detail {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
 }
 
 .public-community__state,

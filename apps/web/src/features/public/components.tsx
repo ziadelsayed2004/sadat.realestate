@@ -937,7 +937,6 @@ function ContentGrid({
                 <h4 className="public-homepage__community-title">{communityTitle}</h4>
                 {communityBody === '' ? null : <p className="public-homepage__community-body">{communityBody}</p>}
                 {communityDetails === undefined ? null : <div className="public-homepage__community-stats" aria-hidden="true">
-                  <span>{communityDetails.comments}<svg viewBox="0 0 20 20" focusable="false"><path d="M4 4.5h12v8H9l-3.5 3v-3H4Z" /></svg></span>
                   <span>{communityDetails.views}<svg viewBox="0 0 20 20" focusable="false"><path d="M2.5 10s2.5-4 7.5-4 7.5 4 7.5 4-2.5 4-7.5 4-7.5-4-7.5-4Z" /><circle cx="10" cy="10" r="1.75" /></svg></span>
                 </div>}
               </> : type === 'article' ? <>

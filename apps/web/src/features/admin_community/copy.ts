@@ -62,9 +62,9 @@ export interface AdminCommunityCopy {
 const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
   ar: {
     eyebrow: 'إدارة المجتمع',
-    title: { posts: 'إدارة المجتمع', comments: 'التعليقات', reports: 'البلاغات والإشراف' },
-    description: { posts: 'راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.', comments: 'راجع التعليقات وحالتها دون عرض بيانات داخلية غير مصرح بها.', reports: 'راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع.' },
-    tab: { posts: 'المنشورات', comments: 'التعليقات', reports: 'البلاغات' },
+    title: { posts: 'إدارة المجتمع', comments: 'أرشيف التعليقات', reports: 'البلاغات والإشراف' },
+    description: { posts: 'راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.', comments: 'التعليقات متوقفة. هذا أرشيف التعليقات السابقة المتاح للإدارة فقط.', reports: 'راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع.' },
+    tab: { posts: 'المنشورات', comments: 'أرشيف التعليقات', reports: 'بلاغات المجتمع' },
     search: 'بحث', searchPlaceholder: 'ابحث في العنوان أو المحتوى', status: 'الحالة', postId: 'معرّف المنشور', all: 'الكل', apply: 'تطبيق', clear: 'مسح', retry: 'إعادة المحاولة', previous: 'السابق', next: 'التالي', page: (page, totalPages) => `صفحة ${page} من ${totalPages}`,
     columns: { id: 'المعرّف', title: 'العنوان', body: 'المحتوى', post: 'المنشور', author: 'الكاتب', reporter: 'المبلّغ', reason: 'السبب', details: 'التفاصيل', status: 'الحالة', comments: 'التعليقات', created: 'تاريخ الإنشاء', updated: 'آخر تحديث', actions: 'الإجراءات' },
     postStatus: { draft: 'مسودة', published: 'منشور', hidden: 'مخفي', rejected: 'مرفوض', removed: 'محذوف' }, commentStatus: { visible: 'ظاهر', hidden: 'مخفي', removed: 'محذوف' }, reportStatus: { open: 'مفتوح', in_review: 'قيد المراجعة', resolved: 'تم الحل', dismissed: 'مرفوض' }, reportReason: { spam: 'رسائل مزعجة', abuse: 'إساءة', misinformation: 'معلومات مضللة', other: 'أخرى' },
@@ -74,9 +74,9 @@ const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
   },
   en: {
     eyebrow: 'Community administration',
-    title: { posts: 'Community management', comments: 'Comments', reports: 'Reports and moderation' },
-    description: { posts: 'Review community posts from the server-approved projection.', comments: 'Review comment content and state without exposing unrelated internal data.', reports: 'Review incoming reports and resolve them with a clear reason and version.' },
-    tab: { posts: 'Posts', comments: 'Comments', reports: 'Reports' },
+    title: { posts: 'Community management', comments: 'Archived comments', reports: 'Reports and moderation' },
+    description: { posts: 'Review community posts from the server-approved projection.', comments: 'Comments are disabled. Previous comments remain in this admin-only archive.', reports: 'Review incoming reports and resolve them with a clear reason and version.' },
+    tab: { posts: 'Posts', comments: 'Archived comments', reports: 'Community reports' },
     search: 'Search', searchPlaceholder: 'Search title or content', status: 'Status', postId: 'Post ID', all: 'All', apply: 'Apply', clear: 'Clear', retry: 'Retry', previous: 'Previous', next: 'Next', page: (page, totalPages) => `Page ${page} of ${totalPages}`,
     columns: { id: 'ID', title: 'Title', body: 'Content', post: 'Post', author: 'Author', reporter: 'Reporter', reason: 'Reason', details: 'Details', status: 'Status', comments: 'Comments', created: 'Created', updated: 'Updated', actions: 'Actions' },
     postStatus: { draft: 'Draft', published: 'Published', hidden: 'Hidden', rejected: 'Rejected', removed: 'Removed' }, commentStatus: { visible: 'Visible', hidden: 'Hidden', removed: 'Removed' }, reportStatus: { open: 'Open', in_review: 'In review', resolved: 'Resolved', dismissed: 'Dismissed' }, reportReason: { spam: 'Spam', abuse: 'Abuse', misinformation: 'Misinformation', other: 'Other' },

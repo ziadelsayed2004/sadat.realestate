@@ -10,8 +10,10 @@ test('removing another author comment requires current moderation permission', a
   });
   const post = await service.create(seeker, { title: 'Permission check', body: 'Published discussion' });
   await service.moderate(moderator, post.id, { action: 'publish', reason: 'Reviewed post', expectedVersion: 0 }, { requestId: 'test', traceId: 'test' });
-  const first = await service.createComment(seeker, { postId: post.id, body: 'First comment' });
-  const second = await service.createComment(seeker, { postId: post.id, body: 'Second comment' });
+  const first = { id: '3123456789abcdef01234567', postId: post.id, authorId: seeker.sub, body: 'First legacy comment', depth: 0, status: 'visible' as const, createdAt: new Date().toISOString() };
+  const second = { ...first, id: '4123456789abcdef01234567', body: 'Second legacy comment' };
+  await repository.saveComment(first);
+  await repository.saveComment(second);
   await assert.rejects(() => createCommunityService([], repository).removeComment(moderator, first.id), /FORBIDDEN/);
   assert.equal((await repository.getComment(first.id))?.status, 'visible');
   assert.equal((await service.removeComment(moderator, first.id)).status, 'removed');
@@ -22,9 +24,31 @@ test('removing another author comment requires current moderation permission', a
 });
 test('community posts are owned, bounded, moderated, and removed without cross-user access', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Hello', body: 'A community post' }); assert.equal(post.status, 'draft'); await assert.rejects(() => service.update({ ...seeker, sub: '1123456789abcdef01234567' } as AccessTokenClaims, post.id, { body: 'IDOR' }), /NOT_FOUND/); const published = await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); assert.equal(published.status, 'published'); assert.equal(published.version, 1); assert.equal((await service.publicList()).length, 1); const removed = await service.remove(seeker, post.id); assert.equal(removed.status, 'removed'); assert.equal(removed.version, 2); assert.equal((await service.publicList()).length, 0); });
 
-test('comments enforce published-post state, bounded reply depth, and ownership', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Hello', body: 'A community post' }); await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); const comment = await service.createComment(seeker, { postId: post.id, body: 'Helpful reply' }); assert.equal(comment.depth, 0); const reply = await service.createComment(admin, { postId: post.id, body: 'Thanks', parentId: comment.id }); assert.equal(reply.depth, 1); assert.equal((await service.listComments(post.id)).length, 2); await assert.rejects(() => service.removeComment({ ...seeker, sub: '1123456789abcdef01234567' } as AccessTokenClaims, comment.id), /NOT_FOUND/); });
+test('comments are disabled for every authenticated role and never persisted', async () => {
+  const repository = createMemoryCommunityRepository();
+  const service = createCommunityService([], repository);
+  const post = await service.create(seeker, { title: 'Comments disabled', body: 'A community post' });
+  for (const role of ['seeker', 'provider', 'admin'] as const) {
+    await assert.rejects(() => service.createComment({ ...seeker, role }, { postId: post.id, body: 'Blocked comment' }), /COMMENTS_DISABLED/);
+  }
+  assert.equal((await repository.listComments()).length, 0);
+});
 
-test('public community feed returns published posts, visible comments, and truthful counts only', async () => { const service = createCommunityService([], createMemoryCommunityRepository([], { record: async () => 'audit-id' }), { authorize: async () => true }); const post = await service.create(seeker, { title: 'Feed', body: 'Visible' }); await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' }); const comment = await service.createComment(seeker, { postId: post.id, body: 'Visible comment' }); const feed = await service.publicFeed(); assert.equal(feed.length, 1); assert.equal(feed[0].comments.length, 1); await service.removeComment(seeker, comment.id); assert.equal((await service.publicFeed())[0].comments.length, 0); await service.remove(seeker, post.id); assert.equal((await service.publicFeed()).length, 0); });
+test('public projections exclude legacy comments while the admin archive preserves them', async () => {
+  const repository = createMemoryCommunityRepository([], { record: async () => 'audit-id' });
+  const service = createCommunityService([], repository, { authorize: async () => true });
+  const post = await service.create(seeker, { title: 'Feed', body: 'Visible' });
+  await service.moderate(admin, post.id, { action: 'publish', expectedVersion: post.version, reason: 'Approved after review' }, { requestId: 'test', traceId: 'test' });
+  await repository.saveComment({ id: '3123456789abcdef01234567', postId: post.id, authorId: seeker.sub, body: 'Legacy comment', depth: 0, status: 'visible', createdAt: new Date().toISOString() });
+  assert.equal((await service.publicFeed())[0].comments.length, 0);
+  assert.equal((await service.listComments(post.id)).length, 0);
+  assert.equal((await service.publicPage({ page: 1, limit: 20 })).items[0].commentCount, 0);
+  assert.deepEqual((await service.publicDetail(post.id))?.comments, []);
+  assert.equal((await service.publicDetail(post.id))?.post.commentCount, 0);
+  assert.equal((await service.adminCommentsPage(admin, { page: 1, limit: 20 })).total, 1);
+  await service.remove(seeker, post.id);
+  assert.equal((await service.publicFeed()).length, 0);
+});
 
 test('community reactions toggle and switch once per authenticated account', async () => {
   const repository = createMemoryCommunityRepository([], { record: async () => 'audit-id' });

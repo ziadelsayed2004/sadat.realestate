@@ -78,6 +78,33 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin request administration contracts and views', () => {
+  it.each([false, true])('opens overdue details in a dialog (deep link: %s)', async deepLink => {
+    window.history.pushState({}, '', `/admin/overdue-requests${deepLink ? `?requestId=${request.id}` : ''}`);
+    const loadRequest = vi.fn();
+    const result = renderWithLocale(<AdminRequests locale="en" session={session} initialOverdue={{ items: [{ request, overdueBySeconds: 120 }], page: 1, limit: 20, total: 1 }} loadRequest={loadRequest} />, { locale: 'en' });
+    const trigger = screen.getByRole('button', { name: getAdminRequestsCopy('en').view });
+    if (!deepLink) { trigger.focus(); fireEvent.click(trigger); }
+    expect(await screen.findByRole('dialog', { name: getAdminRequestsCopy('en').details })).toBeVisible();
+    expect(screen.getByTestId('admin-request-detail')).toBeInTheDocument();
+    expect(loadRequest).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').closeDetails }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(window.location.search).not.toContain('requestId');
+    if (!deepLink) expect(trigger).toHaveFocus();
+    result.unmount();
+  });
+
+  it('isolates detail loading failures from the overdue list and allows retry', async () => {
+    window.history.pushState({}, '', `/admin/overdue-requests?requestId=${request.id}`);
+    const loadRequest = vi.fn().mockRejectedValueOnce(new Error('Offline')).mockResolvedValueOnce(request);
+    const result = renderWithLocale(<AdminRequests locale="en" session={session} initialOverdue={{ items: [], page: 1, limit: 20, total: 0 }} loadRequest={loadRequest} />, { locale: 'en' });
+    await waitFor(() => expect(loadRequest).toHaveBeenCalledTimes(1));
+    await screen.findByRole('button', { name: getAdminRequestsCopy('en').retry });
+    fireEvent.click(screen.getByRole('button', { name: getAdminRequestsCopy('en').retry }));
+    expect(await screen.findByTestId('admin-request-detail')).toBeInTheDocument();
+    expect(loadRequest).toHaveBeenCalledTimes(2);
+    result.unmount();
+  });
   it('uses the implemented request, overdue, viewing, and issue routes with strict schemas', async () => {
     const requests: Array<{ method: string; path: string; query: string; authorization: string | null; body: unknown }> = [];
     const client = apiClientFor(requests);
