@@ -109,6 +109,12 @@
   justify-self: start;
 }
 
+.admin-commissions__manual-account summary {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  color: var(--color-text-secondary, #566675);
+}
+
 .admin-commissions__table-wrap {
   overflow-x: auto;
 }

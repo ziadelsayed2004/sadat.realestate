@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { publicHomepageDataSchema } from '@sadat-real-estate/contracts';
-import { createPublicHomepageService, publicHomepageProjection, type HomepageSources } from '../../src/modules/public/homepage.js';
+import { createMongoosePublicHomepageRepository, createPublicHomepageService, publicHomepageProjection, type HomepageSources } from '../../src/modules/public/homepage.js';
+import type { Connection } from 'mongoose';
 
 const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
@@ -88,4 +89,23 @@ test('applies the saved population counter to the public homepage projection', (
 test('drops malformed persisted public rows and supports a safe empty state', async () => {
   const service = createPublicHomepageService({ repository: { async read() { return sources({ sections: [{ key: 'bad key', title: {}, order: -1, status: 'published', visible: true }] as never, properties: [], developers: [], content: [], banners: [] }); } } });
   assert.deepEqual(await service.read(), { sections: [], categories: [{ id, slug: 'apartments', name: localized, propertyCount: 7, order: 0 }], metrics: [{ key: 'population', title: localized, value: 342800, order: 0 }], properties: [], developers: [], content: [], banners: [] });
+});
+
+test('reads the published listing total independently of the homepage preview limit and CMS city metrics', async () => {
+  let countFilter: Record<string, unknown> | undefined;
+  const connection = {
+    collection(name: string) {
+      return {
+        find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_homepage_metrics' ? [{ key: 'housing_units', title: localized, value: 1200, order: 1, status: 'published', visible: true }] : []; } }; } }; } }; },
+        async countDocuments(filter: Record<string, unknown>) { assert.equal(name, 'properties'); countFilter = filter; return 243; }
+      };
+    }
+  } as unknown as Connection;
+  const result = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
+  assert.equal(result.totalPropertyCount, 243);
+  assert.equal(result.properties.length, 0);
+  assert.equal(result.metrics[0]?.value, 1200);
+  assert.equal(countFilter?.status, 'published');
+  assert.equal(countFilter?.active, true);
+  assert.ok(countFilter?.expiresAt, 'Expired listings must be excluded from the total');
 });

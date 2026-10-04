@@ -787,6 +787,7 @@
   },
   "admin_commissions/copy#getAdminCommissionsCopy": {
     "eyebrow": "Commission administration",
+    "autoKey": "Generated automatically; leave blank",
     "navLabel": "Commissions",
     "titles": {
       "policies": "Commission policies",
@@ -799,9 +800,9 @@
     },
     "descriptions": {
       "policies": "Review explicit policies and their effective windows.",
-      "newPolicy": "Create an explicit policy using the approved contract.",
+      "newPolicy": "Choose the commission type, scope and start date. Enter 2.5 for 2.5%; the policy code is generated automatically. Policies are saved as drafts before activation.",
       "history": "Review the chronological record of sensitive changes.",
-      "account": "Review the effective policy for one account and create an override when needed.",
+      "account": "Choose a provider account to view its current commission. An override here applies only to this account.",
       "exceptions": "Review account-linked commission exceptions.",
       "newException": "Record an exception with a reason and effective date.",
       "confirmations": "Review policy, account, and exception confirmations."
@@ -846,7 +847,7 @@
       "back": "Back"
     },
     "labels": {
-      "key": "Key",
+      "key": "Policy code (optional)",
       "label": "Label",
       "kind": "Kind",
       "scope": "Scope",
@@ -856,8 +857,8 @@
       "effectiveFrom": "Effective from",
       "effectiveTo": "Effective to",
       "currency": "Currency",
-      "amountMinor": "Amount in minor units",
-      "percentageBps": "Percentage basis points",
+      "amountMinor": "Commission amount",
+      "percentageBps": "Commission (%)",
       "accountId": "Account ID",
       "reason": "Reason",
       "source": "Source",
@@ -892,8 +893,8 @@
         "body": "This administrator session cannot view or change commission records."
       },
       "not_found": {
-        "title": "Account identifier required",
-        "body": "Open this view with a valid accountId. The API does not provide an account directory here."
+        "title": "Account not found",
+        "body": "Choose an account from the list or check its account ID."
       }
     },
     "kinds": {
@@ -928,7 +929,7 @@
       "commission_confirmation": "Confirmation"
     },
     "noAccount": "Enter a 24-character hexadecimal accountId.",
-    "validation": "Review the required fields and contract rules.",
+    "validation": "Check the required fields. Percentages must be between 0 and 100, and the end date must follow the start date.",
     "saved": "Saved successfully."
   },
   "admin_community/copy#getAdminCommunityCopy": {

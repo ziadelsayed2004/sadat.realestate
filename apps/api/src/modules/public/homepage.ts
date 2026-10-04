@@ -27,6 +27,7 @@ export interface HomepageBannerSource { key: string; title?: unknown; eyebrow?: 
 export interface HomepageSources {
   sections: HomepageSectionSource[];
   categories?: HomepageCategorySource[];
+  totalPropertyCount?: number;
   locations?: HomepageLocationSource[];
   metrics?: HomepageMetricSource[];
   properties: HomepagePropertySource[];
@@ -137,6 +138,7 @@ export function publicHomepageProjection(sources: HomepageSources, settings: Dis
   return publicHomepageDataSchema.parse({
     sections: publicSections(sources.sections),
     categories: publicCategories(sources.categories),
+    ...(sources.totalPropertyCount === undefined ? {} : { totalPropertyCount: sources.totalPropertyCount }),
     ...(sources.locations === undefined ? {} : { locations: publicLocations(sources.locations) }),
     metrics: publicMetrics(configuredMetrics(sources, settings)),
     properties: publicProperties(sources.properties),
@@ -198,7 +200,7 @@ async function findRows(connection: Connection, collection: string, filter: Reco
 export function createMongoosePublicHomepageRepository(connection: Connection): PublicHomepageRepository {
   return {
     async read() {
-      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations] = await Promise.all([
+      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
@@ -208,7 +210,8 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'property_taxonomy', { kind: 'type', active: true }, { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, active: 1 }, { order: 1, slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500),
-        findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100)
+        findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
+        connection.collection('properties').countDocuments({ status: 'published', active: true, ...unexpiredPropertyFilter() })
       ]);
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
       const categoryCounts = categoryIds.length ? await connection.collection('properties').aggregate<{_id: unknown; count: number}>([
@@ -220,6 +223,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       const locationNames = new Map(locations.flatMap((row) => { const value = mapId(row); return value && row.name !== undefined ? [[value, row.name] as const] : []; }));
       const organizationById = new Map(organizations.flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), kind: row.kind }] as const] : []; }));
       return {
+        totalPropertyCount,
         sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
         categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
         locations: locations.flatMap((row) => { const rowId = mapId(row); const parentLocationId = id(row.parentLocationId); return rowId && typeof row.kind === 'string' && row.name !== undefined && typeof row.slug === 'string' && typeof row.order === 'number' && typeof row.active === 'boolean' ? [{ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order, active: row.active }] : []; }),

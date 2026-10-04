@@ -94,11 +94,12 @@ describe('public homepage', () => {
   it('submits the selected transaction type and renders the data-backed all-properties card', () => {
     const data = publicHomepageDataSchema.parse({
       ...homepageData,
+      totalPropertyCount: 93,
       categories: [{
         id: 'cccccccccccccccccccccccc',
         slug: 'villa',
         name: { en: 'Villa' },
-        propertyCount: 87,
+        propertyCount: 7,
         order: 0
       }],
       metrics: [{
@@ -115,7 +116,11 @@ describe('public homepage', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'For rent' }));
     expect(transactionInput).toHaveValue('rent');
     expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveAttribute('href', '/properties');
-    expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveTextContent('1,200+ properties');
+    expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveTextContent('93 properties');
+    const categories = result.container.querySelectorAll('.public-homepage__category-card:not(.public-homepage__category-card--all)');
+    expect(categories).toHaveLength(1);
+    expect(categories[0]).toHaveTextContent('7 properties');
+    expect(categories[0]).toHaveAttribute('href', '/properties?propertyTypeId=cccccccccccccccccccccccc');
   });
 
   it('keeps homepage property metadata clean and aligns the developer identity', () => {

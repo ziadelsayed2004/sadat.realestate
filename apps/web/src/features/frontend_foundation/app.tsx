@@ -367,7 +367,7 @@ export function App({
   if (protectedRoute && !authResolutionComplete) return <SessionLoading locale={locale} />;
 
   return (
-    <RouteErrorBoundary key={`${route.id}:${locale}`} copy={copy}>
+    <RouteErrorBoundary key={route.id} copy={copy}>
       <RouteShell route={route} locale={locale} copy={copy} assets={assets} authClient={authClient} onLocaleChange={onLocaleChange}>
 
         <PublicAuthRoleContext.Provider key={protectedRoute ? (authSnapshot?.status ?? 'server') : 'public'} value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>

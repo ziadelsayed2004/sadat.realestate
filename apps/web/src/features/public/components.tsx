@@ -247,20 +247,20 @@ const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.fr
 ]);
 
 export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Object.freeze([
-  { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés' }, imageUrl: '/assets/canonical/public/category-restaurants-cafes.png', propertyCount: 22, order: 10 },
-  { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms' }, imageUrl: '/assets/canonical/public/category-showrooms.png', propertyCount: 34, order: 20 },
-  { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building' }, imageUrl: '/assets/canonical/public/category-full-commercial-building.png', propertyCount: 19, order: 30 },
-  { id: '555555555555555555555555', slug: 'room', name: { ar: 'غرفة', en: 'Room' }, imageUrl: '/assets/canonical/public/category-room.png', propertyCount: 65, order: 40 },
-  { id: '666666666666666666666666', slug: 'roof', name: { ar: 'روف', en: 'Roof' }, imageUrl: '/assets/canonical/public/category-roof.png', propertyCount: 28, order: 50 },
-  { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex' }, imageUrl: '/assets/canonical/public/category-duplex.png', propertyCount: 43, order: 60 },
-  { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa' }, imageUrl: '/assets/canonical/public/category-villa.png', propertyCount: 87, order: 70 }
+  { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés' }, imageUrl: '/assets/canonical/public/category-restaurants-cafes.png', propertyCount: 0, order: 10 },
+  { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms' }, imageUrl: '/assets/canonical/public/category-showrooms.png', propertyCount: 0, order: 20 },
+  { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building' }, imageUrl: '/assets/canonical/public/category-full-commercial-building.png', propertyCount: 0, order: 30 },
+  { id: '555555555555555555555555', slug: 'room', name: { ar: 'غرفة', en: 'Room' }, imageUrl: '/assets/canonical/public/category-room.png', propertyCount: 0, order: 40 },
+  { id: '666666666666666666666666', slug: 'roof', name: { ar: 'روف', en: 'Roof' }, imageUrl: '/assets/canonical/public/category-roof.png', propertyCount: 0, order: 50 },
+  { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex' }, imageUrl: '/assets/canonical/public/category-duplex.png', propertyCount: 0, order: 60 },
+  { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa' }, imageUrl: '/assets/canonical/public/category-villa.png', propertyCount: 0, order: 70 }
 ]);
 
 function withCanonicalHomepageCategories(categories: readonly PublicHomepageCategory[]): readonly PublicHomepageCategory[] {
-  const bySlug = new Map(categories.map(category => [category.slug, category] as const));
-  return canonicalHomepageCategories.map(fallback => {
-    const current = bySlug.get(fallback.slug);
-    return current === undefined ? fallback : { ...fallback, id: current.id, imageUrl: current.imageUrl ?? fallback.imageUrl };
+  const bySlug = new Map(canonicalHomepageCategories.map(category => [category.slug, category] as const));
+  return categories.map(current => {
+    const fallback = bySlug.get(current.slug);
+    return { ...current, ...(current.imageUrl ?? fallback?.imageUrl ? { imageUrl: current.imageUrl ?? fallback?.imageUrl } : {}) };
   });
 }
 
@@ -813,17 +813,16 @@ function HomepageCategoryRail({
   locale,
   copy,
   categories,
-  metrics
+  totalPropertyCount
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly categories: readonly PublicHomepageCategory[];
-  readonly metrics: readonly PublicHomepageMetric[];
+  readonly totalPropertyCount: number | undefined;
 }) {
   if (categories.length === 0) return null;
 
   const firstCategory = categories[0];
-  const allPropertiesMetric = metrics.find(metric => metric.key === 'housing_units');
   const allPropertiesLabel = locale === 'ar' ? '\u0639\u0642\u0627\u0631' :'properties';
   const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
@@ -841,11 +840,11 @@ function HomepageCategoryRail({
       <p className="public-homepage__section-description">{copy.categoryDescription}</p>
       <div className="public-homepage__category-rail" tabIndex={0} aria-label={title}>
         {firstCategory === undefined ? null : renderCategory(firstCategory)}
-        {allPropertiesMetric === undefined ? null : <a className="public-homepage__category-card public-homepage__category-card--all" href="/properties" key="all-properties">
+        <a className="public-homepage__category-card public-homepage__category-card--all" href="/properties" key="all-properties">
           <img className="public-homepage__category-image" src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" decoding="async" loading="lazy" />
           <strong>{allPropertiesTitle}</strong>
-          <small>{new Intl.NumberFormat(locale).format(allPropertiesMetric.value)}+ {allPropertiesLabel}</small>
-        </a>}
+          {totalPropertyCount === undefined ? null : <small>{new Intl.NumberFormat(locale).format(totalPropertyCount)} {allPropertiesLabel}</small>}
+        </a>
         {categories.slice(1).map(renderCategory)}
       </div>
     </section>
@@ -1152,7 +1151,7 @@ function HomepageContent({
       <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} locations={locations} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       <HomepageSummary locale={locale} metrics={data.metrics} />
-      <HomepageCategoryRail locale={locale} copy={copy} categories={categories} metrics={data.metrics} />
+      <HomepageCategoryRail locale={locale} copy={copy} categories={categories} totalPropertyCount={data.totalPropertyCount} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
           <SectionHeading eyebrow={copy.propertiesEyebrow} id="public-homepage-properties" title={copy.propertiesTitle} action={<a href="/properties">{copy.viewAll}</a>} />

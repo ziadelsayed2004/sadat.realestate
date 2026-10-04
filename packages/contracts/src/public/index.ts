@@ -109,6 +109,7 @@ export const publicHomepageBannerSchema = z.object({
 export const publicHomepageDataSchema = z.object({
   sections: z.array(publicHomepageSectionSchema).max(100),
   categories: z.array(publicHomepageCategorySchema).max(100),
+  totalPropertyCount: z.number().int().nonnegative().optional(),
   locations: z.array(publicHomepageLocationSchema).max(500).optional(),
   metrics: z.array(publicHomepageMetricSchema).max(100),
   properties: z.array(publicHomepagePropertySchema).max(100),

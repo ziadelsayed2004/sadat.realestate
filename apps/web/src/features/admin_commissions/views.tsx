@@ -19,6 +19,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { AdminNavigation } from '../admin/index.ts';
+import { createAdminUsersLoader, type AdminUsersLoader } from '../admin_accounts/data.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
@@ -52,6 +53,7 @@ export interface AdminCommissionsProps {
   readonly loadPolicies?: AdminCommissionPolicyLoader | undefined;
   readonly createPolicy?: AdminCommissionPolicyMutation | undefined;
   readonly loadAccount?: AdminCommissionAccountLoader | undefined;
+  readonly loadUsers?: AdminUsersLoader | undefined;
   readonly createAccountOverride?: AdminCommissionAccountMutation | undefined;
   readonly loadExceptions?: AdminCommissionExceptionLoader | undefined;
   readonly createException?: AdminCommissionExceptionMutation | undefined;
@@ -131,10 +133,11 @@ function permissionFor(authClient: AdminCommissionAuthorizationSource | undefine
   return availableActions !== undefined && availableActions.length === 0 ? fallback : candidate.hasAvailableAction(action);
 }
 
-function numberInput(value: string): number | undefined {
-  if (value.trim() === '') return undefined;
-  const parsed = Number(value);
-  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : undefined;
+// Forms use ordinary percentages and currency units; the API stores hundredths.
+function hundredthsInput(value: string): number | undefined {
+  if (!/^\d+(?:\.\d{1,2})?$/u.test(value.trim())) return undefined;
+  const parsed = Math.round(Number(value) * 100);
+  return Number.isSafeInteger(parsed) ? parsed : undefined;
 }
 
 function dateInput(value: string): string | undefined {
@@ -234,8 +237,8 @@ function PolicyForm({ locale, canManage, create }: { readonly locale: SupportedL
   const [scopeKey, setScopeKey] = useState('');
   const [percentageBps, setPercentageBps] = useState('');
   const [fixedAmountMinor, setFixedAmountMinor] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [effectiveFrom, setEffectiveFrom] = useState('');
+  const [currency, setCurrency] = useState('EGP');
+  const [effectiveFrom, setEffectiveFrom] = useState(new Date().toISOString().slice(0, 10));
   const [effectiveTo, setEffectiveTo] = useState('');
   const [state, setState] = useState<FormState>('idle');
   const [error, setError] = useState<string | undefined>();
@@ -243,17 +246,19 @@ function PolicyForm({ locale, canManage, create }: { readonly locale: SupportedL
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setError(undefined);
-    const payload: Record<string, unknown> = { key, label, kind, scope: { kind: scopeKind, ...(scopeKind === 'default' ? {} : { key: scopeKey }) }, effectiveFrom: dateInput(effectiveFrom), ...(dateInput(effectiveTo) === undefined ? {} : { effectiveTo: dateInput(effectiveTo) }) };
-    if (kind === 'percentage') payload.percentageBps = numberInput(percentageBps);
-    if (kind === 'fixed') { payload.fixedAmountMinor = numberInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
+    const policyKey = key.trim() || `policy.${crypto.randomUUID()}`;
+    setKey(policyKey);
+    const payload: Record<string, unknown> = { key: policyKey, label, kind, scope: { kind: scopeKind, ...(scopeKind === 'default' ? {} : { key: scopeKey }) }, effectiveFrom: dateInput(effectiveFrom), ...(dateInput(effectiveTo) === undefined ? {} : { effectiveTo: dateInput(effectiveTo) }) };
+    if (kind === 'percentage') payload.percentageBps = hundredthsInput(percentageBps);
+    if (kind === 'fixed') { payload.fixedAmountMinor = hundredthsInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
     const parsed = commissionPolicyCreateSchema.safeParse(payload);
-    if (!parsed.success) { setState('error'); setError(parsed.error.issues[0]?.message ?? copy.validation); return; }
+    if (!parsed.success) { setState('error'); setError(copy.validation); return; }
     if (!canManage) { setState('permission'); return; }
     setState('saving');
     try { await create(parsed.data); setState('success'); } catch (cause) { setState(cause instanceof ApiClientError && (cause.status === 401 || cause.status === 403) ? 'permission' : 'error'); setError(cause instanceof Error ? cause.message : copy.states.error.body); }
   }
 
-  return <form className="admin-commissions__form" onSubmit={event => { void submit(event); }} aria-describedby="admin-commission-policy-help"><p id="admin-commission-policy-help" className="admin-commissions__form-note">{copy.descriptions.newPolicy}</p><div className="admin-commissions__form-grid"><FormField id="admin-commission-policy-key" label={copy.labels.key}><input id="admin-commission-policy-key" value={key} onChange={event => setKey(event.target.value)} required pattern="[a-z][a-z0-9_.-]*" /></FormField><FormField id="admin-commission-policy-label" label={copy.labels.label}><input id="admin-commission-policy-label" value={label} onChange={event => setLabel(event.target.value)} required /></FormField><FormField id="admin-commission-policy-kind" label={copy.labels.kind}><select id="admin-commission-policy-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField><FormField id="admin-commission-policy-scope" label={copy.labels.scope}><select id="admin-commission-policy-scope" value={scopeKind} onChange={event => setScopeKind(event.target.value as CommissionScope['kind'])}>{(['default', 'provider_type', 'transaction_type', 'property_kind', 'organization', 'account'] as const).map(value => <option key={value} value={value}>{copy.scopes[value]}</option>)}</select></FormField>{scopeKind !== 'default' ? <FormField id="admin-commission-policy-scope-key" label={copy.labels.scopeKey}><input id="admin-commission-policy-scope-key" value={scopeKey} onChange={event => setScopeKey(event.target.value)} required /></FormField> : null}{kind === 'percentage' ? <FormField id="admin-commission-policy-percentage" label={copy.labels.percentageBps}><input id="admin-commission-policy-percentage" type="number" min="0" max="10000" step="1" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-policy-amount" label={copy.labels.amountMinor}><input id="admin-commission-policy-amount" type="number" min="0" step="1" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-policy-currency" label={copy.labels.currency}><input id="admin-commission-policy-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-policy-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-policy-effective-from" type="datetime-local" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-policy-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-policy-effective-to" type="datetime-local" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form>;
+  return <form className="admin-commissions__form" onSubmit={event => { void submit(event); }} aria-describedby="admin-commission-policy-help"><p id="admin-commission-policy-help" className="admin-commissions__form-note">{copy.descriptions.newPolicy}</p><div className="admin-commissions__form-grid"><FormField id="admin-commission-policy-key" label={copy.labels.key}><input id="admin-commission-policy-key" value={key} onChange={event => setKey(event.target.value)} placeholder={copy.autoKey} pattern="[a-z][a-z0-9_.-]*" /></FormField><FormField id="admin-commission-policy-label" label={copy.labels.label}><input id="admin-commission-policy-label" value={label} onChange={event => setLabel(event.target.value)} required /></FormField><FormField id="admin-commission-policy-kind" label={copy.labels.kind}><select id="admin-commission-policy-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField><FormField id="admin-commission-policy-scope" label={copy.labels.scope}><select id="admin-commission-policy-scope" value={scopeKind} onChange={event => setScopeKind(event.target.value as CommissionScope['kind'])}>{(['default', 'provider_type', 'transaction_type', 'property_kind', 'organization', 'account'] as const).map(value => <option key={value} value={value}>{copy.scopes[value]}</option>)}</select></FormField>{scopeKind !== 'default' ? <FormField id="admin-commission-policy-scope-key" label={copy.labels.scopeKey}><input id="admin-commission-policy-scope-key" value={scopeKey} onChange={event => setScopeKey(event.target.value)} required /></FormField> : null}{kind === 'percentage' ? <FormField id="admin-commission-policy-percentage" label={copy.labels.percentageBps}><input id="admin-commission-policy-percentage" type="number" min="0" max="100" step="0.01" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-policy-amount" label={copy.labels.amountMinor}><input id="admin-commission-policy-amount" type="number" min="0" step="0.01" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-policy-currency" label={copy.labels.currency}><input id="admin-commission-policy-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-policy-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-policy-effective-from" type="date" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-policy-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-policy-effective-to" type="date" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form>;
 }
 
 function ExceptionForm({ locale, canManage, create }: { readonly locale: SupportedLocale; readonly canManage: boolean; readonly create: AdminCommissionExceptionMutation }) {
@@ -262,9 +267,9 @@ function ExceptionForm({ locale, canManage, create }: { readonly locale: Support
   const [kind, setKind] = useState<CommissionPolicyKind>('percentage');
   const [percentageBps, setPercentageBps] = useState('');
   const [fixedAmountMinor, setFixedAmountMinor] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('EGP');
   const [reason, setReason] = useState('');
-  const [effectiveFrom, setEffectiveFrom] = useState('');
+  const [effectiveFrom, setEffectiveFrom] = useState(new Date().toISOString().slice(0, 10));
   const [effectiveTo, setEffectiveTo] = useState('');
   const [state, setState] = useState<FormState>('idle');
   const [error, setError] = useState<string | undefined>();
@@ -273,16 +278,16 @@ function ExceptionForm({ locale, canManage, create }: { readonly locale: Support
     event.preventDefault();
     setError(undefined);
     const payload: Record<string, unknown> = { accountId, kind, reason, effectiveFrom: dateInput(effectiveFrom), ...(dateInput(effectiveTo) === undefined ? {} : { effectiveTo: dateInput(effectiveTo) }) };
-    if (kind === 'percentage') payload.percentageBps = numberInput(percentageBps);
-    if (kind === 'fixed') { payload.fixedAmountMinor = numberInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
+    if (kind === 'percentage') payload.percentageBps = hundredthsInput(percentageBps);
+    if (kind === 'fixed') { payload.fixedAmountMinor = hundredthsInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
     const parsed = commissionExceptionCreateSchema.safeParse(payload);
-    if (!parsed.success) { setState('error'); setError(parsed.error.issues[0]?.message ?? copy.validation); return; }
+    if (!parsed.success) { setState('error'); setError(copy.validation); return; }
     if (!canManage) { setState('permission'); return; }
     setState('saving');
     try { await create(parsed.data); setState('success'); } catch (cause) { setState(cause instanceof ApiClientError && (cause.status === 401 || cause.status === 403) ? 'permission' : 'error'); setError(cause instanceof Error ? cause.message : copy.states.error.body); }
   }
 
-  return <form className="admin-commissions__form" onSubmit={event => { void submit(event); }} aria-describedby="admin-commission-exception-help"><p id="admin-commission-exception-help" className="admin-commissions__form-note">{copy.descriptions.newException}</p><div className="admin-commissions__form-grid"><FormField id="admin-commission-exception-account" label={copy.labels.accountId}><input id="admin-commission-exception-account" value={accountId} onChange={event => setAccountId(event.target.value)} pattern="[a-f0-9]{24}" required /></FormField><FormField id="admin-commission-exception-kind" label={copy.labels.kind}><select id="admin-commission-exception-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField>{kind === 'percentage' ? <FormField id="admin-commission-exception-percentage" label={copy.labels.percentageBps}><input id="admin-commission-exception-percentage" type="number" min="0" max="10000" step="1" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-exception-amount" label={copy.labels.amountMinor}><input id="admin-commission-exception-amount" type="number" min="0" step="1" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-exception-currency" label={copy.labels.currency}><input id="admin-commission-exception-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-exception-reason" label={copy.labels.reason}><textarea id="admin-commission-exception-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required /></FormField><FormField id="admin-commission-exception-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-exception-effective-from" type="datetime-local" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-exception-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-exception-effective-to" type="datetime-local" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form>;
+  return <form className="admin-commissions__form" onSubmit={event => { void submit(event); }} aria-describedby="admin-commission-exception-help"><p id="admin-commission-exception-help" className="admin-commissions__form-note">{copy.descriptions.newException}</p><div className="admin-commissions__form-grid"><FormField id="admin-commission-exception-account" label={copy.labels.accountId}><input id="admin-commission-exception-account" value={accountId} onChange={event => setAccountId(event.target.value)} pattern="[a-f0-9]{24}" required /></FormField><FormField id="admin-commission-exception-kind" label={copy.labels.kind}><select id="admin-commission-exception-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField>{kind === 'percentage' ? <FormField id="admin-commission-exception-percentage" label={copy.labels.percentageBps}><input id="admin-commission-exception-percentage" type="number" min="0" max="100" step="0.01" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-exception-amount" label={copy.labels.amountMinor}><input id="admin-commission-exception-amount" type="number" min="0" step="0.01" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-exception-currency" label={copy.labels.currency}><input id="admin-commission-exception-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-exception-reason" label={copy.labels.reason}><textarea id="admin-commission-exception-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required /></FormField><FormField id="admin-commission-exception-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-exception-effective-from" type="date" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-exception-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-exception-effective-to" type="date" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form>;
 }
 
 function AccountForm({ locale, accountId, canManage, create }: { readonly locale: SupportedLocale; readonly accountId: string; readonly canManage: boolean; readonly create: AdminCommissionAccountMutation }) {
@@ -290,8 +295,8 @@ function AccountForm({ locale, accountId, canManage, create }: { readonly locale
   const [kind, setKind] = useState<CommissionPolicyKind>('percentage');
   const [percentageBps, setPercentageBps] = useState('');
   const [fixedAmountMinor, setFixedAmountMinor] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [effectiveFrom, setEffectiveFrom] = useState('');
+  const [currency, setCurrency] = useState('EGP');
+  const [effectiveFrom, setEffectiveFrom] = useState(new Date().toISOString().slice(0, 10));
   const [effectiveTo, setEffectiveTo] = useState('');
   const [state, setState] = useState<FormState>('idle');
   const [error, setError] = useState<string | undefined>();
@@ -300,16 +305,16 @@ function AccountForm({ locale, accountId, canManage, create }: { readonly locale
     event.preventDefault();
     setError(undefined);
     const payload: Record<string, unknown> = { kind, effectiveFrom: dateInput(effectiveFrom), ...(dateInput(effectiveTo) === undefined ? {} : { effectiveTo: dateInput(effectiveTo) }) };
-    if (kind === 'percentage') payload.percentageBps = numberInput(percentageBps);
-    if (kind === 'fixed') { payload.fixedAmountMinor = numberInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
+    if (kind === 'percentage') payload.percentageBps = hundredthsInput(percentageBps);
+    if (kind === 'fixed') { payload.fixedAmountMinor = hundredthsInput(fixedAmountMinor); payload.currency = currency.trim().toUpperCase(); }
     const parsed = commissionAccountOverrideCreateSchema.safeParse(payload);
-    if (!parsed.success) { setState('error'); setError(parsed.error.issues[0]?.message ?? copy.validation); return; }
+    if (!parsed.success) { setState('error'); setError(copy.validation); return; }
     if (!canManage) { setState('permission'); return; }
     setState('saving');
     try { await create(accountId, parsed.data); setState('success'); } catch (cause) { setState(cause instanceof ApiClientError && (cause.status === 401 || cause.status === 403) ? 'permission' : 'error'); setError(cause instanceof Error ? cause.message : copy.states.error.body); }
   }
 
-  return <section className="admin-commissions__subpanel"><h2>{copy.actions.create}</h2><form className="admin-commissions__form" onSubmit={event => { void submit(event); }}><div className="admin-commissions__form-grid"><FormField id="admin-commission-account-kind" label={copy.labels.kind}><select id="admin-commission-account-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField>{kind === 'percentage' ? <FormField id="admin-commission-account-percentage" label={copy.labels.percentageBps}><input id="admin-commission-account-percentage" type="number" min="0" max="10000" step="1" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-account-amount" label={copy.labels.amountMinor}><input id="admin-commission-account-amount" type="number" min="0" step="1" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-account-currency" label={copy.labels.currency}><input id="admin-commission-account-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-account-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-account-effective-from" type="datetime-local" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-account-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-account-effective-to" type="datetime-local" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form></section>;
+  return <section className="admin-commissions__subpanel"><h2>{copy.actions.create}</h2><form className="admin-commissions__form" onSubmit={event => { void submit(event); }}><div className="admin-commissions__form-grid"><FormField id="admin-commission-account-kind" label={copy.labels.kind}><select id="admin-commission-account-kind" value={kind} onChange={event => setKind(event.target.value as CommissionPolicyKind)}>{(['percentage', 'fixed', 'exempt'] as const).map(value => <option key={value} value={value}>{copy.kinds[value]}</option>)}</select></FormField>{kind === 'percentage' ? <FormField id="admin-commission-account-percentage" label={copy.labels.percentageBps}><input id="admin-commission-account-percentage" type="number" min="0" max="100" step="0.01" value={percentageBps} onChange={event => setPercentageBps(event.target.value)} required /></FormField> : null}{kind === 'fixed' ? <><FormField id="admin-commission-account-amount" label={copy.labels.amountMinor}><input id="admin-commission-account-amount" type="number" min="0" step="0.01" value={fixedAmountMinor} onChange={event => setFixedAmountMinor(event.target.value)} required /></FormField><FormField id="admin-commission-account-currency" label={copy.labels.currency}><input id="admin-commission-account-currency" value={currency} onChange={event => setCurrency(event.target.value.toUpperCase())} minLength={3} maxLength={3} required /></FormField></> : null}<FormField id="admin-commission-account-effective-from" label={copy.labels.effectiveFrom}><input id="admin-commission-account-effective-from" type="date" value={effectiveFrom} onChange={event => setEffectiveFrom(event.target.value)} required /></FormField><FormField id="admin-commission-account-effective-to" label={copy.labels.effectiveTo}><input id="admin-commission-account-effective-to" type="date" value={effectiveTo} onChange={event => setEffectiveTo(event.target.value)} /></FormField></div><MutationFeedback state={state} locale={locale} error={error} /><Button type="submit" loading={state === 'saving'} disabled={!canManage}>{copy.actions.save}</Button></form></section>;
 }
 
 function AccountSummary({ data, locale }: { readonly data: CommissionAccountCommission; readonly locale: SupportedLocale }) {
@@ -317,12 +322,40 @@ function AccountSummary({ data, locale }: { readonly data: CommissionAccountComm
   return <section className="admin-commissions__panel"><div className="admin-commissions__panel-heading"><div><h2>{copy.titles.account}</h2><p><code>{data.accountId}</code></p></div><Badge tone={data.source === 'none' ? 'warning' : 'success'}>{copy.sources[data.source]}</Badge></div><dl className="admin-commissions__details"><div><dt>{copy.labels.source}</dt><dd>{copy.sources[data.source]}</dd></div><div><dt>{copy.labels.effectiveAt}</dt><dd>{dateLabel(data.effectiveAt, locale)}</dd></div><div><dt>{copy.labels.kind}</dt><dd>{data.kind === undefined ? '—' : copy.kinds[data.kind]}</dd></div><div><dt>{copy.labels.value}</dt><dd>{data.kind === undefined ? '—' : copy.value(data.kind, data.percentageBps, data.fixedAmountMinor, data.currency)}</dd></div><div><dt>{copy.labels.policyVersion}</dt><dd>{data.policyVersion ?? '—'}</dd></div></dl></section>;
 }
 
+function AccountPicker({ locale, load, selected, onSelect }: { readonly locale: SupportedLocale; readonly load: AdminUsersLoader; readonly selected: string; readonly onSelect: (id: string) => void }) {
+  const [page, setPage] = useState(1);
+  const [result, setResult] = useState<Awaited<ReturnType<AdminUsersLoader>>>();
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true); setFailed(false);
+    void load({ roleType: 'provider', page, limit: 20 }, controller.signal).then(data => {
+      if (!controller.signal.aborted) { setResult(data); setLoading(false); }
+    }).catch(() => {
+      if (!controller.signal.aborted) { setFailed(true); setLoading(false); }
+    });
+    return () => controller.abort();
+  }, [load, page, attempt]);
+  return <section className="admin-commissions__panel" aria-label={locale === 'ar' ? 'اختيار حساب مقدم الخدمة' : 'Choose a provider account'}>
+    <FormField id="admin-commission-account-picker" label={locale === 'ar' ? 'حساب مقدم الخدمة' : 'Provider account'}>
+      <select id="admin-commission-account-picker" value={selected} disabled={loading || failed} onChange={event => onSelect(event.target.value)}>
+        <option value="">{locale === 'ar' ? 'اختر حساباً لعرض العمولة' : 'Choose an account to view its commission'}</option>
+        {selected && !result?.items.some(item => item.id === selected) ? <option value={selected}>{selected}</option> : null}
+        {result?.items.map(item => <option key={item.id} value={item.id}>{item.displayName ?? item.email ?? item.id}{item.displayName && item.email ? ` — ${item.email}` : ''}</option>)}
+      </select>
+    </FormField>
+    {loading ? <p role="status">{getAdminCommissionsCopy(locale).states.loading.title}</p> : failed ? <p role="alert">{locale === 'ar' ? 'تعذر تحميل الحسابات. تحقق من صلاحية عرض المستخدمين أو استخدم معرّف الحساب أدناه.' : 'Accounts could not load. Check your user-view permission or use an account ID below.'} <Button variant="secondary" size="sm" onClick={() => setAttempt(value => value + 1)}>{getAdminCommissionsCopy(locale).actions.retry}</Button></p> : result?.items.length === 0 ? <p>{locale === 'ar' ? 'لا توجد حسابات مقدمي خدمة.' : 'No provider accounts found.'}</p> : <Pagination page={page} limit={20} total={result?.total ?? 0} locale={locale} onPrevious={() => setPage(value => value - 1)} onNext={() => setPage(value => value + 1)} />}
+  </section>;
+}
+
 function FilterBar({ view, locale, status, scopeKind, onStatus, onScopeKind, onApply }: { readonly view: 'policies' | 'exceptions'; readonly locale: SupportedLocale; readonly status: string; readonly scopeKind?: string; readonly onStatus: (value: string) => void; readonly onScopeKind?: (value: string) => void; readonly onApply: () => void }) {
   const copy = getAdminCommissionsCopy(locale);
   return <form className="admin-commissions__filters" role="search" aria-label={copy.eyebrow} onSubmit={event => { event.preventDefault(); onApply(); }}><FormField id={`admin-commission-${view}-status`} label={copy.labels.status}><select id={`admin-commission-${view}-status`} value={status} onChange={event => onStatus(event.target.value)}><option value="">—</option>{(['draft', 'active', 'inactive', 'archived'] as const).map(value => <option key={value} value={value}>{copy.statuses[value]}</option>)}</select></FormField>{view === 'policies' && onScopeKind !== undefined ? <FormField id="admin-commission-policy-scope-filter" label={copy.labels.scope}><select id="admin-commission-policy-scope-filter" value={scopeKind ?? ''} onChange={event => onScopeKind(event.target.value)}><option value="">—</option>{(['default', 'provider_type', 'transaction_type', 'property_kind', 'organization', 'account'] as const).map(value => <option key={value} value={value}>{copy.scopes[value]}</option>)}</select></FormField> : null}<Button type="submit" size="sm">{copy.actions.apply}</Button></form>;
 }
 
-export function AdminCommissions({ locale, session, authClient, apiOrigin, url, loadPolicies: providedPolicies, createPolicy: providedCreatePolicy, loadAccount: providedAccount, createAccountOverride: providedCreateAccountOverride, loadExceptions: providedExceptions, createException: providedCreateException, loadConfirmations: providedConfirmations, loadChangeLog: providedChangeLog }: AdminCommissionsProps) {
+export function AdminCommissions({ locale, session, authClient, apiOrigin, url, loadUsers: providedUsers, loadPolicies: providedPolicies, createPolicy: providedCreatePolicy, loadAccount: providedAccount, createAccountOverride: providedCreateAccountOverride, loadExceptions: providedExceptions, createException: providedCreateException, loadConfirmations: providedConfirmations, loadChangeLog: providedChangeLog }: AdminCommissionsProps) {
   const copy = getAdminCommissionsCopy(locale);
   const pathname = pathnameFrom(url);
   const projection = projectionForPath(pathname);
@@ -332,6 +365,7 @@ export function AdminCommissions({ locale, session, authClient, apiOrigin, url, 
   const loadPolicies = providedPolicies ?? source.loadPolicies;
   const createPolicy = providedCreatePolicy ?? source.createPolicy;
   const loadAccount = providedAccount ?? source.loadAccount;
+  const loadUsers = useMemo(() => providedUsers ?? createAdminUsersLoader({ apiOrigin, authorization: authClient }), [providedUsers, apiOrigin, authClient]);
   const createAccountOverride = providedCreateAccountOverride ?? source.createAccountOverride;
   const loadExceptions = providedExceptions ?? source.loadExceptions;
   const createException = providedCreateException ?? source.createException;
@@ -353,7 +387,7 @@ export function AdminCommissions({ locale, session, authClient, apiOrigin, url, 
     const controller = new AbortController();
     if (!canView) { setPayload(undefined); setState('permission'); return () => controller.abort(); }
     if (projection.view === 'newPolicy' || projection.view === 'newException') { setPayload(undefined); setState('success'); return () => controller.abort(); }
-    if (projection.view === 'account' && !/^[a-f0-9]{24}$/u.test(accountId)) { setPayload(undefined); setState('not_found'); return () => controller.abort(); }
+    if (projection.view === 'account' && !/^[a-f0-9]{24}$/u.test(accountId)) { setPayload(undefined); setState(accountId === '' ? 'success' : 'not_found'); return () => controller.abort(); }
     setState('loading');
     const run = async (): Promise<void> => {
       try {
@@ -388,7 +422,11 @@ export function AdminCommissions({ locale, session, authClient, apiOrigin, url, 
 
   function applyAccount(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    const value = accountInput.trim();
+    selectAccount(accountInput.trim());
+  }
+
+  function selectAccount(value: string): void {
+    setAccountInput(value);
     setAccountId(value);
     const next = new URL(typeof window === 'undefined' ? url ?? ADMIN_COMMISSIONS_ACCOUNT_ROUTE : window.location.href, 'http://sadat-real-estate.local');
     if (value) next.searchParams.set('accountId', value); else next.searchParams.delete('accountId');
@@ -400,5 +438,5 @@ export function AdminCommissions({ locale, session, authClient, apiOrigin, url, 
   const body = state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} form={projection.view === 'account'} onRetry={retry} /> : state === 'not_found' ? <NotFoundPanel locale={locale} /> : state === 'empty' ? <EmptyPanel locale={locale} /> : null;
   const listBody = state === 'success' && payload?.view === 'policies' ? <PolicyTable data={payload.data} locale={locale} onPage={setPage} /> : state === 'success' && payload?.view === 'exceptions' ? <ExceptionTable data={payload.data} locale={locale} onPage={setPage} /> : state === 'success' && payload?.view === 'history' ? <HistoryTable data={payload.data} locale={locale} onPage={setPage} /> : state === 'success' && payload?.view === 'confirmations' ? <ConfirmationTable data={payload.data} locale={locale} onPage={setPage} /> : state === 'success' && payload?.view === 'account' ? <><AccountSummary data={payload.data} locale={locale} />{accountId !== '' ? <AccountForm locale={locale} accountId={accountId} canManage={canManage} create={createAccountOverride} /> : null}</> : null;
 
-  return <section className="admin-commissions" data-screen-id={projection.screenId} data-route={projection.route} data-device-scope="desktop"><AdminNavigation locale={locale} activePath={projection.route} /><div className="admin-commissions__content"><Header copy={copy} projection={projection} /><Tabs copy={copy} locale={locale} route={projection.route} />{projection.view === 'policies' ? <FilterBar view="policies" locale={locale} status={policyStatus} scopeKind={policyScope} onStatus={value => setPolicyStatus(value as CommissionPolicyStatus | '')} onScopeKind={value => setPolicyScope(value as NonNullable<CommissionPolicyListQuery['scopeKind']> | '')} onApply={retry} /> : null}{projection.view === 'exceptions' ? <FilterBar view="exceptions" locale={locale} status={exceptionStatus} onStatus={value => setExceptionStatus(value as NonNullable<CommissionExceptionListQuery['status']> | '')} onApply={retry} /> : null}{projection.view === 'account' ? <form className="admin-commissions__account-search" role="search" aria-label={copy.labels.accountId} onSubmit={applyAccount}><FormField id="admin-commission-account-search" label={copy.labels.accountId}><input id="admin-commission-account-search" value={accountInput} onChange={event => setAccountInput(event.target.value)} pattern="[a-f0-9]{24}" /></FormField><Button type="submit" size="sm">{copy.actions.apply}</Button></form> : null}{projection.view !== 'newPolicy' && projection.view !== 'newException' ? body : null}{projection.view !== 'newPolicy' && projection.view !== 'newException' ? listBody : null}{projection.view === 'newPolicy' ? <section className="admin-commissions__panel" data-state="success"><PolicyForm locale={locale} canManage={canManage} create={createPolicy} /></section> : null}{projection.view === 'newException' ? <section className="admin-commissions__panel" data-state="success"><ExceptionForm locale={locale} canManage={canManage} create={createException} /></section> : null}</div></section>;
+  return <section className="admin-commissions" data-screen-id={projection.screenId} data-route={projection.route} data-device-scope="desktop"><AdminNavigation locale={locale} activePath={projection.route} /><div className="admin-commissions__content"><Header copy={copy} projection={projection} /><Tabs copy={copy} locale={locale} route={projection.route} />{projection.view === 'policies' ? <FilterBar view="policies" locale={locale} status={policyStatus} scopeKind={policyScope} onStatus={value => setPolicyStatus(value as CommissionPolicyStatus | '')} onScopeKind={value => setPolicyScope(value as NonNullable<CommissionPolicyListQuery['scopeKind']> | '')} onApply={retry} /> : null}{projection.view === 'exceptions' ? <FilterBar view="exceptions" locale={locale} status={exceptionStatus} onStatus={value => setExceptionStatus(value as NonNullable<CommissionExceptionListQuery['status']> | '')} onApply={retry} /> : null}{projection.view === 'account' && canView ? <AccountPicker locale={locale} load={loadUsers} selected={accountId} onSelect={selectAccount} /> : null}{projection.view === 'account' ? <details className="admin-commissions__manual-account"><summary>{locale === 'ar' ? 'استخدام معرّف الحساب يدوياً (اختياري)' : 'Use an account ID manually (optional)'}</summary><form className="admin-commissions__account-search" role="search" aria-label={copy.labels.accountId} onSubmit={applyAccount}><FormField id="admin-commission-account-search" label={copy.labels.accountId}><input id="admin-commission-account-search" value={accountInput} onChange={event => setAccountInput(event.target.value)} pattern="[a-f0-9]{24}" /></FormField><Button type="submit" size="sm">{copy.actions.apply}</Button></form></details> : null}{projection.view !== 'newPolicy' && projection.view !== 'newException' ? body : null}{projection.view !== 'newPolicy' && projection.view !== 'newException' ? listBody : null}{projection.view === 'newPolicy' ? <section className="admin-commissions__panel" data-state="success"><PolicyForm locale={locale} canManage={canManage} create={createPolicy} /></section> : null}{projection.view === 'newException' ? <section className="admin-commissions__panel" data-state="success"><ExceptionForm locale={locale} canManage={canManage} create={createException} /></section> : null}</div></section>;
 }

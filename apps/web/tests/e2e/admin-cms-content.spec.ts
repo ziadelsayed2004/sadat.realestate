@@ -80,4 +80,32 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
     await page.goto('/admin/content/team?lang=en');
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
   });
+
+  test('keeps unsaved bilingual team fields when changing the interface language', async ({ page }) => {
+    await page.goto('/admin/content/team?lang=ar');
+    await page.getByTestId('admin-cms-team-bbbbbbbbbbbbbbbbbbbbbbbb').getByRole('button', { name: 'حفظ التغييرات' }).click();
+    const editor = page.getByTestId('admin-cms-team-editor');
+    await editor.locator('#admin-cms-team-name-ar').fill('اسم لم يُحفظ بعد');
+    await editor.locator('#admin-cms-team-name-en').fill('Unsaved English name');
+    await editor.locator('#admin-cms-team-reason').fill('تحديث بيانات الفريق');
+    await page.locator('[data-locale-switch="true"]').selectOption('en', { force: true });
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(editor).toBeVisible();
+    await expect(editor.locator('#admin-cms-team-name-ar')).toHaveValue('اسم لم يُحفظ بعد');
+    await expect(editor.locator('#admin-cms-team-name-en')).toHaveValue('Unsaved English name');
+    await expect(editor.locator('#admin-cms-team-reason')).toHaveValue('تحديث بيانات الفريق');
+    await page.locator('[data-locale-switch="true"]').selectOption('ar', { force: true });
+    await expect(editor.locator('#admin-cms-team-name-en')).toHaveValue('Unsaved English name');
+  });
+
+  test('saves a population statement with a date and no time entry', async ({ page }) => {
+    await page.goto('/admin/content/population-counter?lang=ar');
+    const editor = page.getByTestId('admin-cms-population-editor');
+    await expect(editor.locator('#admin-cms-population-as-of')).toHaveAttribute('type', 'date');
+    await editor.locator('#admin-cms-population-as-of').fill('2026-10-04');
+    await editor.locator('#admin-cms-population-reason').fill('تحديث من مصدر رسمي');
+    const request = page.waitForRequest(request => request.method() === 'PUT' && request.url().endsWith('/api/v1/admin/content/population'));
+    await editor.getByRole('button', { name: 'حفظ التغييرات' }).click();
+    expect((await request).postDataJSON()).toMatchObject({ version: 3, asOf: '2026-10-04T00:00:00.000Z' });
+  });
 });

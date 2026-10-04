@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { adminCommissionAccountId, expectNoPrivateCommissionFields, routeAdminCommissionApis } from './admin-commissions.fixtures.ts';
+import { adminUserFixture } from './admin-accounts.fixtures.ts';
 
 function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
@@ -21,6 +22,7 @@ test.describe('ADM-39 through ADM-45 commission administration', () => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-39..ADM-45 checked-in local final exports under docs/design_sources/final_screens/admin; per-screen Drive references in DESIGN_SOURCE_MANIFEST.json; shared Figma prototype node 6017:61879.' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminCommissionApis(page);
+    await page.route('**/api/v1/admin/users**', async route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [{ ...adminUserFixture(), id: adminCommissionAccountId, roleType: 'provider', displayName: 'Brokerage Office', email: 'office@example.test' }], page: 1, limit: 20, total: 1 }, meta: { requestId: 'commission-account-picker' } }) }));
   });
 
   test('renders every approved route with locale direction, desktop scope, and safe projections', async ({ page }) => {
@@ -41,8 +43,8 @@ test.describe('ADM-39 through ADM-45 commission administration', () => {
     await page.goto(`/admin/commissions/new?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await page.locator('#admin-commission-policy-key').fill('default.sale');
     await page.locator('#admin-commission-policy-label').fill('Default sale commission');
-    await page.locator('#admin-commission-policy-percentage').fill('250');
-    await page.locator('#admin-commission-policy-effective-from').fill('2026-08-20T09:00');
+    await page.locator('#admin-commission-policy-percentage').fill('2.5');
+    await page.locator('#admin-commission-policy-effective-from').fill('2026-08-20');
     const requestPromise = page.waitForRequest(request => request.method() === 'POST' && request.url().includes('/api/v1/admin/commission-policies'));
     await page.locator('.admin-commissions__form button[type="submit"]').click();
     const request = await requestPromise;
@@ -57,5 +59,16 @@ test.describe('ADM-39 through ADM-45 commission administration', () => {
     await routeAdminCommissionApis(page, false);
     await page.goto('/admin/commissions?lang=en', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
+  });
+
+  test('chooses a provider account without typing an identifier', async ({ page }) => {
+    await page.goto('/admin/commissions/account?lang=ar');
+    const picker = page.locator('#admin-commission-account-picker');
+    await expect(picker.getByRole('option', { name: 'Brokerage Office — office@example.test' })).toHaveCount(1);
+    await expect(page.locator('[data-state="not_found"]')).toHaveCount(0);
+    await picker.selectOption(adminCommissionAccountId);
+    await expect(page.locator('.admin-commissions__details')).toContainText('2.50%');
+    await expect(page).toHaveURL(new RegExp(`accountId=${adminCommissionAccountId}`, 'u'));
+    await expect(page.locator('input#admin-commission-account-search')).not.toBeVisible();
   });
 });

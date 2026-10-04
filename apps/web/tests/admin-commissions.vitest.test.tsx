@@ -9,6 +9,7 @@ import {
   commissionPolicyListDataSchema,
   commissionPolicySchema
 } from '@sadat-real-estate/contracts';
+import { adminAccountUserListDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import {
@@ -97,6 +98,7 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 const loaders = {
+  loadUsers: vi.fn(async () => adminAccountUserListDataSchema.parse({ items: [{ id: accountId, displayName: 'Brokerage Office', email: 'office@example.test', roleType: 'provider', status: 'verified', locale: 'en', version: 1, statusChangedAt: date, createdAt: date, updatedAt: date, availableActions: [] }], page: 1, limit: 20, total: 1 })),
   loadPolicies: vi.fn(async () => policyList),
   createPolicy: vi.fn(async () => policy),
   loadAccount: vi.fn(async () => account),
@@ -162,10 +164,10 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     if (form === null) throw new Error('Expected the policy form to render.');
     fireEvent.submit(form);
     expect(create).not.toHaveBeenCalled();
-    fireEvent.change(screen.getByLabelText('Key'), { target: { value: 'default.sale' } });
+    fireEvent.change(screen.getByLabelText('Policy code (optional)'), { target: { value: 'default.sale' } });
     fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Default sale commission' } });
-    fireEvent.change(screen.getByLabelText('Percentage basis points'), { target: { value: '250' } });
-    fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20T09:00' } });
+    fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
+    fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20' } });
     fireEvent.submit(form);
     await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ kind: 'percentage', percentageBps: 250, scope: { kind: 'default' } })));
   });
@@ -178,11 +180,39 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     expect(form).not.toBeNull();
     if (form === null) throw new Error('Expected the view-only policy form to render.');
     expect(screen.getByRole('button', { name: getAdminCommissionsCopy('en').actions.save })).toBeDisabled();
-    fireEvent.change(screen.getByLabelText('Key'), { target: { value: 'default.sale' } });
+    fireEvent.change(screen.getByLabelText('Policy code (optional)'), { target: { value: 'default.sale' } });
     fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Default sale commission' } });
-    fireEvent.change(screen.getByLabelText('Percentage basis points'), { target: { value: '250' } });
-    fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20T09:00' } });
+    fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
+    fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20' } });
     fireEvent.submit(form);
     expect(await screen.findByText(getAdminCommissionsCopy('en').states.permission.body)).toBeInTheDocument();
+  });
+
+  it('generates a policy code and translates ordinary percentages and amounts to API units', async () => {
+    const create = vi.fn(async () => policy);
+    window.history.pushState({}, '', '/admin/commissions/new');
+    const result = renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createPolicy={create} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Standard commission' } });
+    fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
+    const form = result.container.querySelector('form.admin-commissions__form')!;
+    fireEvent.submit(form);
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ key: expect.stringMatching(/^policy\.[a-f0-9-]+$/u), percentageBps: 250 })));
+    fireEvent.change(screen.getByLabelText('Kind'), { target: { value: 'fixed' } });
+    fireEvent.change(screen.getByLabelText('Commission amount'), { target: { value: '125.50' } });
+    fireEvent.submit(form);
+    await waitFor(() => expect(create).toHaveBeenLastCalledWith(expect.objectContaining({ fixedAmountMinor: 12550, currency: 'EGP' })));
+  });
+
+  it('opens an account from the provider list without showing an error for the empty initial selection', async () => {
+    const loadAccount = vi.fn(async () => account);
+    window.history.pushState({}, '', '/admin/commissions/account');
+    renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} loadAccount={loadAccount} />, { locale: 'en' });
+    await screen.findByRole('option', { name: 'Brokerage Office — office@example.test' });
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(loadAccount).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('Provider account'), { target: { value: accountId } });
+    await waitFor(() => expect(loadAccount).toHaveBeenCalledWith(accountId, undefined, expect.any(AbortSignal)));
+    expect(new URL(window.location.href).searchParams.get('accountId')).toBe(accountId);
+    expect(await screen.findByText('2.50%')).toBeInTheDocument();
   });
 });
