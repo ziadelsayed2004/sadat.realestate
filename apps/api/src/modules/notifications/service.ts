@@ -16,7 +16,9 @@ import {
   type NotificationListQuery,
   type NotificationPermission,
   type NotificationReadAllData,
-  type NotificationReadData
+  type NotificationReadData,
+  type AdminAttention,
+  type AdminNotificationListData
 } from '@sadat-real-estate/contracts';
 
 export interface NotificationSource {
@@ -47,6 +49,7 @@ export interface NotificationServiceDependencies {
   repository: NotificationRepository;
   isActiveAccount: (claims: AccessTokenClaims) => Promise<boolean>;
   authorization?: NotificationAuthorization;
+  attention?: { read(adminId: string, permissions?: readonly string[]): Promise<AdminAttention> };
   now?: () => Date;
 }
 
@@ -158,7 +161,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
       return notificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'provider') });
     },
 
-    async listAdmin(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<NotificationListData> {
+    async listAdmin(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<AdminNotificationListData> {
       await authorizeAdmin(claims);
       const query = adminNotificationListQuerySchema.parse(unparsedQuery) as NotificationListQuery;
       const permittedPermissions = await dependencies.authorization?.permissions?.(claims.sub);
@@ -166,6 +169,7 @@ export function createNotificationService(dependencies: NotificationServiceDepen
       const items = (await Promise.all(result.items.map(item => projectAdmin(claims, item))))
         .filter((item): item is NotificationData => item !== undefined);
       return adminNotificationListDataSchema.parse({
+        ...(dependencies.attention ? { attention: await dependencies.attention.read(claims.sub, permittedPermissions) } : {}),
         items,
         unreadCount: result.unreadCount,
         page: query.page,

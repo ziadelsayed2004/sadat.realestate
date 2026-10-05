@@ -13,6 +13,22 @@ const adminClaims: AccessTokenClaims = {
 const providerClaims: AccessTokenClaims = {
   ...claims, sub: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified'
 };
+
+test('includes attention only for active administrators and preserves it when inbox records are read', async () => {
+  let calls = 0;
+  const service = createNotificationService({
+    isActiveAccount,
+    repository: repository(),
+    attention: { async read(adminId) { assert.equal(adminId, adminClaims.sub); calls++; return { counts: { 'property-review': 2 }, total: 2 }; } }
+  });
+  assert.equal((await service.listAdmin(adminClaims, {})).attention?.total, 2);
+  assert.equal('attention' in await service.list(claims, {}), false);
+  assert.equal(calls, 1);
+  await assert.rejects(service.listAdmin(providerClaims, {}));
+  assert.equal(calls, 1);
+  await service.markAllAdminRead(adminClaims);
+  assert.equal((await service.listAdmin(adminClaims, { unreadOnly: true })).attention?.total, 2);
+});
 const createdAt = new Date('2026-08-01T00:00:00.000Z');
 const isActiveAccount = async () => true;
 const source: NotificationSource = {

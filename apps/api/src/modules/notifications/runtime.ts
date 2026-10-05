@@ -4,6 +4,7 @@ import type { RbacService } from '../rbac/service.js';
 import type { NotificationRouterDependencies } from './router.js';
 import { createMongooseNotificationRepository } from './repository.js';
 import { createNotificationService } from './service.js';
+import { createMongooseAdminAttentionSource } from './attention.js';
 
 export function createNotificationRuntime(
   connection: Connection,
@@ -13,6 +14,7 @@ export function createNotificationRuntime(
   return {
     service: createNotificationService({
       repository: createMongooseNotificationRepository(connection),
+      ...(authorization ? { attention: createMongooseAdminAttentionSource(connection, authorization.authorize) } : {}),
       ...(authorization ? {
         authorization: {
           authorize: authorization.authorize,

@@ -1,4 +1,5 @@
 @import '../design_system/tokens.css';
+@import '../routing/admin-attention.css';
 @import '../design_system/components.css';
 @import '../routing/styles.css';
 @import '../accessibility/styles.css';

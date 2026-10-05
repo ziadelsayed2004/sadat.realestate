@@ -7,6 +7,7 @@ import { directionForLocale } from '../frontend_foundation/locale.js';
 import type { RouteMatch } from '../../routes/route-table.js';
 
 import { LocaleSwitcher } from '../localization/index.ts';
+import { AdminAttentionBell, AdminAttentionProvider } from './admin-attention.tsx';
 
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
@@ -21,6 +22,7 @@ export interface RouteShellProps {
 }
 
 export interface RouteShellAuthClient {
+  readonly getAuthorizationHeader?: (() => string | undefined) | undefined;
   readonly getSnapshot?: (() => unknown) | undefined;
   readonly logout?: (() => Promise<unknown>) | undefined;
 }
@@ -76,6 +78,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
 
   return (
     <RouteShellAuthContext.Provider value={authClient}>
+      <AdminAttentionProvider enabled={kind === 'admin'} authorization={authClient}>
       <div
         className={`app-shell route-shell route-shell--${kind} surface-${route.surface}`}
         data-auth-required={route.requiresAuthentication}
@@ -119,6 +122,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
               <span aria-hidden="true" className="admin-shell-header__menu-glyph"><i /><i /><i /></span>
             </button>
             <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
+            <AdminAttentionBell locale={locale} />
           </div>
         )}
         </header>
@@ -132,6 +136,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
           </div>
         ) : body}
       </div>
+      </AdminAttentionProvider>
     </RouteShellAuthContext.Provider>
   );
 }

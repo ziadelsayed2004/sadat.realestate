@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { notificationListQuerySchema, type NotificationListData, type NotificationReadAllData, type NotificationReadData } from '@sadat-real-estate/contracts';
+import { notificationListQuerySchema, type AdminNotificationListData, type NotificationListData, type NotificationReadAllData, type NotificationReadData } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -29,7 +29,7 @@ export interface NotificationRouterDependencies {
     listProvider(claims: AccessTokenClaims, query: unknown): Promise<NotificationListData>;
     markProviderRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
     markAllProviderRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
-    listAdmin(claims: AccessTokenClaims, query: unknown): Promise<NotificationListData>;
+    listAdmin(claims: AccessTokenClaims, query: unknown): Promise<AdminNotificationListData>;
     markAdminRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
     markAllAdminRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
   };

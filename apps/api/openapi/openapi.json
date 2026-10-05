@@ -1053,7 +1053,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NotificationListSuccessEnvelope"
+                  "$ref": "#/components/schemas/AdminNotificationListSuccessEnvelope"
                 }
               }
             }
@@ -18468,6 +18468,37 @@
           "total": {
             "type": "integer",
             "minimum": 0
+          }
+        }
+      },
+      "AdminNotificationListSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AdminNotificationListData" } } }
+        ]
+      },
+      "AdminNotificationListData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["items", "unreadCount", "page", "limit", "total"],
+        "properties": {
+          "items": { "type": "array", "maxItems": 100, "items": { "$ref": "#/components/schemas/NotificationData" } },
+          "unreadCount": { "type": "integer", "minimum": 0 },
+          "page": { "type": "integer", "minimum": 1 },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "total": { "type": "integer", "minimum": 0 },
+          "attention": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["counts", "total"],
+            "properties": {
+              "total": { "type": "integer", "minimum": 0 },
+              "counts": {
+                "type": "object",
+                "propertyNames": { "enum": ["verification", "property-review", "project-review", "account-reports", "property-reports", "request-issues", "community", "community-reports", "contact-requests", "viewing-requests", "search-requests", "customer-requests", "advertising", "payment-review"] },
+                "additionalProperties": { "type": "integer", "minimum": 0 }
+              }
+            }
           }
         }
       },

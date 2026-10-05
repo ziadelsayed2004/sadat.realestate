@@ -11,7 +11,7 @@ import {
   type AuditLogData,
   type AuditLogListData,
   type AuditLogListQuery,
-  type NotificationListData,
+  type AdminNotificationListData,
   type NotificationListQuery,
   type NotificationReadAllData,
   type NotificationReadData
@@ -47,7 +47,7 @@ export interface AdminAuditLogDetailLoadOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
-export type AdminNotificationsLoader = (query: NotificationListQuery, signal?: AbortSignal) => Promise<NotificationListData>;
+export type AdminNotificationsLoader = (query: NotificationListQuery, signal?: AbortSignal) => Promise<AdminNotificationListData>;
 export type AdminAuditLogsLoader = (query: AuditLogListQuery, signal?: AbortSignal) => Promise<AdminAuditLogPage>;
 export type AdminAuditLogLoader = (auditId: string, signal?: AbortSignal) => Promise<AuditLogData>;
 
@@ -87,7 +87,7 @@ function requestOptions(options: CommonOptions & { readonly signal?: AbortSignal
   };
 }
 
-export async function loadAdminNotifications(options: AdminNotificationsLoadOptions = {}): Promise<NotificationListData> {
+export async function loadAdminNotifications(options: AdminNotificationsLoadOptions = {}): Promise<AdminNotificationListData> {
   const query = adminNotificationListQuerySchema.parse({
     page: 1,
     limit: ADMIN_NOTIFICATIONS_PAGE_LIMIT,

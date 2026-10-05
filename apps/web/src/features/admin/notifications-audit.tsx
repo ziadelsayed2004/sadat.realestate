@@ -4,7 +4,7 @@ import {
   type AuditLogData,
   type AuditLogListQuery,
   type NotificationData,
-  type NotificationListData,
+  type AdminNotificationListData,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -12,6 +12,7 @@ import { Button, Pagination, StateMessage } from '../design_system/index.ts';
 import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { AdminNavigation } from './overview.tsx';
+import { AdminAttentionQueues } from '../routing/admin-attention.tsx';
 import {
   ADMIN_AUDIT_LOGS_PAGE_LIMIT,
   ADMIN_AUDIT_LOGS_ROUTE,
@@ -40,7 +41,7 @@ export interface AdminNotificationsAuditProps {
   readonly notificationActions?: AdminNotificationActions | undefined;
   readonly loadAuditLogs?: AdminAuditLogsLoader | undefined;
   readonly loadAuditLog?: AdminAuditLogLoader | undefined;
-  readonly initialNotifications?: NotificationListData | undefined;
+  readonly initialNotifications?: AdminNotificationListData | undefined;
   readonly initialAuditLogs?: AdminAuditLogPage | undefined;
   readonly initialAuditLog?: AuditLogData | undefined;
 }
@@ -147,13 +148,13 @@ function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly
   );
 }
 
-function NotificationsView({ locale, session, authClient, apiOrigin, load, actions, initialData }: { readonly locale: SupportedLocale; readonly session: RouteSession; readonly authClient?: AdminNotificationsAuditProps['authClient']; readonly apiOrigin?: string | undefined; readonly load?: AdminNotificationsLoader | undefined; readonly actions?: AdminNotificationActions | undefined; readonly initialData?: NotificationListData | undefined }) {
+function NotificationsView({ locale, session, authClient, apiOrigin, load, actions, initialData }: { readonly locale: SupportedLocale; readonly session: RouteSession; readonly authClient?: AdminNotificationsAuditProps['authClient']; readonly apiOrigin?: string | undefined; readonly load?: AdminNotificationsLoader | undefined; readonly actions?: AdminNotificationActions | undefined; readonly initialData?: AdminNotificationListData | undefined }) {
   const copy = getAdminNotificationsAuditCopy(locale);
   const [filter, setFilter] = useState<AdminNotificationFilter>('all');
   const [page, setPage] = useState(1);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<AdminNotificationsAuditState>(initialData === undefined ? 'loading' : initialData.items.length === 0 ? 'empty' : 'success');
-  const [data, setData] = useState<NotificationListData | undefined>(initialData);
+  const [data, setData] = useState<AdminNotificationListData | undefined>(initialData);
   const [markingId, setMarkingId] = useState<string | undefined>();
   const [markingAll, setMarkingAll] = useState(false);
   const [feedback, setFeedback] = useState<{ readonly kind: 'success' | 'permission' | 'not_found' | 'error'; readonly text: string } | undefined>();
@@ -197,6 +198,7 @@ function NotificationsView({ locale, session, authClient, apiOrigin, load, actio
   return (
     <Shell locale={locale} path={ADMIN_NOTIFICATIONS_ROUTE} screenId="ADM-65" state={state}>
       <Heading eyebrow={copy.notifications.eyebrow} title={copy.notifications.title} description={copy.notifications.description} action={<Button variant="secondary" size="sm" loading={markingAll} disabled={data?.unreadCount === 0 || state !== 'success'} onClick={() => { void markAllRead(); }}>{copy.notifications.markAll}</Button>} />
+      <AdminAttentionQueues locale={locale} attention={data?.attention} />
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
       {feedback !== undefined ? <p className="admin-notifications-audit__feedback" data-state={feedback.kind} role={feedback.kind === 'success' ? 'status' : 'alert'}>{feedback.text}</p> : null}
       {(state === 'success' || state === 'empty') && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-notifications-list-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-notifications-list-title">{copy.notifications.listLabel} <span className="admin-notifications-audit__muted">({data.unreadCount} {copy.notifications.unreadCount})</span></h2><div className="admin-notifications-audit__tabs" aria-label={copy.notifications.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="admin-notifications-audit__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setFeedback(undefined); }}>{copy.notifications.tabs[tab]}</button>)}</div></div>{data.items.length === 0 ? <div className="admin-notifications-audit__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="admin-notifications-audit__list" role="list" aria-label={copy.notifications.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => { void markRead(item.id); }} />)}</div>}<Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setPage(next); setFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}

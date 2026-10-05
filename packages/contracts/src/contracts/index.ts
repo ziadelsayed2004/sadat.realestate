@@ -211,6 +211,9 @@ export type {
 
 export {
   NOTIFICATION_AUDIENCES,
+  ADMIN_ATTENTION_KEYS,
+  adminAttentionSchema,
+  adminAttentionKeySchema,
   adminNotificationListDataSchema,
   adminNotificationListQuerySchema,
   adminNotificationListSuccessEnvelopeSchema,
@@ -234,6 +237,9 @@ export {
 } from '../notifications/index.js';
 
 export type {
+  AdminAttention,
+  AdminAttentionKey,
+  AdminNotificationListData,
   NotificationAudience,
   NotificationData,
   NotificationListData,

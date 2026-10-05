@@ -52,15 +52,22 @@ export const notificationListSuccessEnvelopeSchema = successEnvelopeSchema(notif
 export const notificationReadSuccessEnvelopeSchema = successEnvelopeSchema(notificationReadDataSchema);
 export const notificationReadAllSuccessEnvelopeSchema = successEnvelopeSchema(notificationReadAllDataSchema);
 
-// Admin notifications deliberately reuse the same bounded, localized and
-// credential-free projection as seeker notifications.  Separate names keep
-// the audience-specific API contract explicit without creating a second data
-// shape that could drift from the recipient-owned projection.
+export const ADMIN_ATTENTION_KEYS = [
+  'verification', 'property-review', 'project-review', 'account-reports',
+  'property-reports', 'request-issues', 'community', 'community-reports',
+  'contact-requests', 'viewing-requests', 'search-requests', 'customer-requests',
+  'advertising', 'payment-review'
+] as const;
+export const adminAttentionKeySchema = z.enum(ADMIN_ATTENTION_KEYS);
+export const adminAttentionSchema = z.object({
+  counts: z.partialRecord(adminAttentionKeySchema, z.number().int().nonnegative()),
+  total: z.number().int().nonnegative()
+}).strict();
 export const adminNotificationListQuerySchema = notificationListQuerySchema;
-export const adminNotificationListDataSchema = notificationListDataSchema;
+export const adminNotificationListDataSchema = notificationListDataSchema.extend({ attention: adminAttentionSchema.optional() });
 export const adminNotificationReadDataSchema = notificationReadDataSchema;
 export const adminNotificationReadAllDataSchema = notificationReadAllDataSchema;
-export const adminNotificationListSuccessEnvelopeSchema = notificationListSuccessEnvelopeSchema;
+export const adminNotificationListSuccessEnvelopeSchema = successEnvelopeSchema(adminNotificationListDataSchema);
 export const adminNotificationReadSuccessEnvelopeSchema = notificationReadSuccessEnvelopeSchema;
 export const adminNotificationReadAllSuccessEnvelopeSchema = notificationReadAllSuccessEnvelopeSchema;
 
@@ -71,3 +78,6 @@ export type NotificationListQuery = z.infer<typeof notificationListQuerySchema>;
 export type NotificationListData = z.infer<typeof notificationListDataSchema>;
 export type NotificationReadData = z.infer<typeof notificationReadDataSchema>;
 export type NotificationReadAllData = z.infer<typeof notificationReadAllDataSchema>;
+export type AdminAttentionKey = z.infer<typeof adminAttentionKeySchema>;
+export type AdminAttention = z.infer<typeof adminAttentionSchema>;
+export type AdminNotificationListData = z.infer<typeof adminNotificationListDataSchema>;

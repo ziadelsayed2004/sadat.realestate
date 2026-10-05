@@ -10,6 +10,7 @@ import {
   type AdminOverviewLoader
 } from './data.ts';
 import './styles.css';
+import { AdminAttentionContext, AdminAttentionBadge, adminAttentionCount } from '../routing/admin-attention.tsx';
 
 export interface AdminOverviewProps {
   readonly locale: SupportedLocale;
@@ -191,6 +192,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
   const copy = getAdminCopy(locale);
   const authClient = useContext(RouteShellAuthContext);
   const sidebarController = useContext(AdminSidebarContext);
+  const attention = useContext(AdminAttentionContext);
   const [signingOut, setSigningOut] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<readonly string[]>([]);
   const navigationScroll = useRef<HTMLDivElement>(null);
@@ -273,6 +275,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
             <div className="admin-dashboard__navigation-group" key={group.id}>
               <button type="button" className="admin-dashboard__navigation-kicker" aria-expanded={!collapsedGroups.includes(group.id)} aria-controls={`admin-navigation-${group.id}`} onClick={() => toggleGroup(group.id)}>
                 <span>{copy.sidebar.groups[group.id] ?? group.label[locale]}</span>
+                {group.items.some(item => adminAttentionCount(item.id, attention.attention, attention.unread) > 0) ? <span className="admin-attention__group-dot" aria-label={locale === 'ar' ? 'يوجد ما يحتاج المراجعة' : 'Needs attention'} /> : null}
                 <span aria-hidden="true">{collapsedGroups.includes(group.id) ? '+' : '−'}</span>
               </button>
               <ul id={`admin-navigation-${group.id}`} hidden={collapsedGroups.includes(group.id)}>
@@ -285,6 +288,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
                           <img src={navigationIconSources[item.icon]} alt="" width="17" height="17" />
                         </span>
                         <span>{copy.sidebar.items[item.id] ?? item.label[locale]}</span>
+                        <AdminAttentionBadge id={item.id} locale={locale} count={adminAttentionCount(item.id, attention.attention, attention.unread)} />
                       </a>
                     </li>
                   );

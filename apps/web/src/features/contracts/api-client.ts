@@ -360,6 +360,9 @@ export class ApiClient {
         } catch (error) {
           throw invalidResponseError(requestId, error);
         }
+        if (typeof window !== 'undefined' && !SAFE_RETRY_METHODS.has(method) && normalizedRoutePath(path).startsWith('/admin/')) {
+          window.dispatchEvent(new Event('sadat-admin-attention-refresh'));
+        }
         return {
           data,
           requestId: responseRequestId(data, response, requestId),

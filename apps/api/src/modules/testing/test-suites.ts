@@ -64,6 +64,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/favorites/service.test.ts',
     'tests/favorites/router.test.ts',
     'tests/notifications/service.test.ts',
+    'tests/notifications/attention.test.ts',
     'tests/notifications/outbox.test.ts',
     'tests/events/outbox.test.ts',
     'tests/requests/service.test.ts',
