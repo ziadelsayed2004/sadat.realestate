@@ -1,10 +1,12 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
+  publicPropertyListSuccessEnvelopeSchema,
   seekerProfileDataSchema,
   type SeekerPreferencesData,
   type SeekerProfileData
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   SeekerProfile,
@@ -18,6 +20,16 @@ import {
 } from '../src/features/seeker/index.ts';
 import type { SeekerProfileActions } from '../src/features/seeker/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { server } from '../src/features/testing/msw/server.ts';
+
+beforeEach(() => {
+  server.use(http.get('*/api/v1/public/properties', () => HttpResponse.json(
+    publicPropertyListSuccessEnvelopeSchema.parse({
+      data: { items: [], categories: [], propertyTypes: [], locations: [], page: 1, limit: 1, total: 0 },
+      meta: { requestId: 'seeker-preferences-catalog' }
+    })
+  )));
+});
 
 const profile = seekerProfileDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',

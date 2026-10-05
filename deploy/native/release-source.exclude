@@ -10,10 +10,11 @@ coverage/
 playwright-report/
 test-results/
 .playwright-*/
-# Keep the reviewed evidence referenced by frontend_093/design-comparison.json.
+# Keep test inputs and the reviewed evidence referenced by frontend_093/design-comparison.json.
 # Include parents first so rsync can traverse them, then exclude other captures.
 + /docs/quality/
 + /docs/quality/figma_parity/
++ /docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json
 + /docs/quality/figma_parity/screens/
 + /docs/quality/figma_parity/screens/SEK-04/
 + /docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png

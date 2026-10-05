@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const native = path.join(root, 'deploy/native');
 const temporaryRoot = path.join(root, '.tmp');
+const requiredTestInputs = ['docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json'];
 
 function runGit(args, options = {}) {
   const result = spawnSync('git', args, { encoding: 'utf8', windowsHide: true, ...options });
@@ -31,7 +32,7 @@ test('sparse deployment checkout retains required parity evidence but excludes u
   const clone = path.join(sandbox, 'clone');
   try {
     fs.mkdirSync(source);
-    const retained = ['package-lock.json', '.env.production.example', '.github/workflows/ci.yml', 'docs/design_sources/final_screens/admin/ADM-01.png', 'apps/web/public/assets/logo.svg', 'apps/web/tests/e2e/visual.spec.ts', ...requiredQualityEvidence];
+    const retained = ['package-lock.json', '.env.production.example', '.github/workflows/ci.yml', 'docs/design_sources/final_screens/admin/ADM-01.png', 'apps/web/public/assets/logo.svg', 'apps/web/tests/e2e/visual.spec.ts', ...requiredTestInputs, ...requiredQualityEvidence];
     const excluded = ['docs/quality/figma_parity/screens/PUB-10/figma.png', 'docs/quality/figma_parity/screens/SEK-04/unused.png', 'docs/quality/figma_parity/report.json', 'docs/quality/unused.json'];
     const files = [...retained, ...excluded];
     for (const file of files) {
@@ -71,7 +72,7 @@ test('both deployment copies exclude generated evidence before copying, while ke
   assert.match(manage, /--delete-excluded/u);
   for (const source of [manage, release]) assert.match(source, /--exclude-from=.*release-source\.exclude/u);
   assert.match(filters, /^\/docs\/quality\/\*\*\*$/mu);
-  for (const evidence of requiredQualityEvidence) {
+  for (const evidence of [...requiredTestInputs, ...requiredQualityEvidence]) {
     const parts = evidence.split('/');
     for (let length = 2; length <= parts.length; length++) {
       const rule = `+ /${parts.slice(0, length).join('/')}${length < parts.length ? '/' : ''}`;

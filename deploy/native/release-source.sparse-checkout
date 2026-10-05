@@ -2,6 +2,7 @@
 !/docs/quality/*
 /docs/quality/figma_parity/
 !/docs/quality/figma_parity/*
+/docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json
 /docs/quality/figma_parity/screens/
 !/docs/quality/figma_parity/screens/*
 /docs/quality/figma_parity/screens/SEK-04/
