@@ -22,7 +22,8 @@ export const EXPECTED_API_DEPENDENCIES = {
     express: '5.2.1',
     helmet: '8.3.0',
     mongoose: '9.9.2',
-    nodemailer: '9.1.1'
+    nodemailer: '9.1.1',
+    sharp: '0.35.5'
   },
   devDependencies: {
     '@types/express': '5.0.6',

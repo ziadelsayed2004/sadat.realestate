@@ -84,6 +84,22 @@ test('rejects an API lockfile dependency mismatch', () => {
   assert.ok(validateWorkspaceGraph(graph).some((issue) => issue.includes('apps/api dependencies')));
 });
 
+test('requires the approved banner image processor in the manifest and lockfile', () => {
+  const graph = graphCopy();
+  assert.equal(graph.workspacePackages['apps/api'].dependencies.sharp, '0.35.5');
+  assert.equal(graph.lockfile.packages['apps/api'].dependencies.sharp, '0.35.5');
+  delete graph.workspacePackages['apps/api'].dependencies.sharp;
+  delete graph.lockfile.packages['apps/api'].dependencies.sharp;
+  assert.ok(validateWorkspaceGraph(graph).some((issue) => issue.includes('apps/api dependencies')));
+});
+
+test('rejects a different image processor version even if the lockfile matches it', () => {
+  const graph = graphCopy();
+  graph.workspacePackages['apps/api'].dependencies.sharp = '0.35.4';
+  graph.lockfile.packages['apps/api'].dependencies.sharp = '0.35.4';
+  assert.ok(validateWorkspaceGraph(graph).some((issue) => issue.includes('apps/api dependencies')));
+});
+
 test('rejects a non-strict shared configuration', () => {
   const graph = graphCopy();
   graph.tsconfig.compilerOptions.strict = false;
