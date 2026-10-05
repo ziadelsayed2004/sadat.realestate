@@ -90,6 +90,9 @@ describe('interactive administrator reference', () => {
 
   it('maximizes with focus containment, Escape restores focus and scroll, and minimizes independently', () => {
     renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
+    // Focus containment does not need every chapter; keep the dialog representative
+    // without repeatedly walking the entire reference under concurrent test load.
+    fireEvent.change(screen.getByLabelText('القسم'), { target: { value: 'banners' } });
     const button = screen.getByRole('button', { name: 'تكبير مساحة القراءة' });
       button.focus(); fireEvent.click(button);
       const dialog = screen.getByRole('dialog', { name: 'دليل الاستخدام' });

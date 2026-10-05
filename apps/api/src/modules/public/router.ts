@@ -61,6 +61,7 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
   });
   router.get('/public/home', async (request, response) => {
     try {
+      // Scheduled or disabled banners must not remain visible in cached homepage responses.
       response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(await dependencies.service.read(), requestId(request)));
     } catch (error) {

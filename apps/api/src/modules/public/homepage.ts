@@ -201,7 +201,7 @@ async function findRows(connection: Connection, collection: string, filter: Reco
 export function createMongoosePublicHomepageRepository(connection: Connection): PublicHomepageRepository {
   return {
     async read() {
-      const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `banner-${row._id.toString()}`, title: row.title, imageUrl: String(row.media.url), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
+      const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `banner_${row._id.toString()}`, title: row.title, imageUrl: String(row.media.url), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
       const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),

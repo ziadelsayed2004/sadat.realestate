@@ -7,16 +7,36 @@ import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 const data = { sections: [], properties: [], developers: [], content: [], banners: [] };
 const service: PublicRouterDependencies['service'] = { async read() { return data; } };
 
-test('homepage is unauthenticated and returns the stable public envelope', async () => {
+test('homepage is unauthenticated and returns an uncached public envelope for scheduled banners', async () => {
   const server = createApiServer({ database: { isReady: async () => true }, publicHomepage: { service } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try {
     const response = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/home`);
     assert.equal(response.status, 200);
-    assert.equal(response.headers.get('cache-control'), 'public, max-age=60, stale-while-revalidate=300');
+    assert.equal(response.headers.get('cache-control'), 'no-store');
     const body = await response.json() as { data: typeof data; meta: { requestId: string } };
     assert.deepEqual(body.data, data);
     assert.equal(typeof body.meta.requestId, 'string');
+  } finally {
+    await stopApiServer(server);
+  }
+});
+
+test('homepage reflects banner removal on the next request', async () => {
+  let banners = [{ key: 'scheduled_banner', title: { ar: 'إعلان' }, order: 0 }];
+  const server = createApiServer({ database: { isReady: async () => true }, publicHomepage: { service: { async read() { return { ...data, banners }; } } } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  try {
+    const url = `http://127.0.0.1:${address.port}/api/v1/public/home`;
+    const before = await fetch(url);
+    assert.equal(before.status, 200);
+    assert.equal(before.headers.get('cache-control'), 'no-store');
+    assert.equal((await before.json() as { data: typeof data }).data.banners.length, 1);
+    banners = [];
+    const after = await fetch(url);
+    assert.equal(after.status, 200);
+    assert.equal(after.headers.get('cache-control'), 'no-store');
+    assert.deepEqual((await after.json() as { data: typeof data }).data.banners, []);
   } finally {
     await stopApiServer(server);
   }

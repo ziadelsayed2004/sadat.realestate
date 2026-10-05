@@ -96,6 +96,11 @@ test('reads the published listing total independently of the homepage preview li
   const connection = {
     collection(name: string) {
       return {
+        async findOne(filter: Record<string, unknown>) {
+          assert.equal(name, 'ad_settings');
+          assert.deepEqual(filter, { enabled: true, allowedSurfaces: 'homepage' });
+          return null;
+        },
         find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_homepage_metrics' ? [{ key: 'housing_units', title: localized, value: 1200, order: 1, status: 'published', visible: true }] : []; } }; } }; } }; },
         async countDocuments(filter: Record<string, unknown>) { assert.equal(name, 'properties'); countFilter = filter; return 243; }
       };
@@ -108,4 +113,26 @@ test('reads the published listing total independently of the homepage preview li
   assert.equal(countFilter?.status, 'published');
   assert.equal(countFilter?.active, true);
   assert.ok(countFilter?.expiresAt, 'Expired listings must be excluded from the total');
+});
+
+test('includes enabled managed banners ahead of legacy CMS banners using only public fields', async () => {
+  const connection = {
+    collection(name: string) {
+      return {
+        async findOne() { assert.equal(name, 'ad_settings'); return { maxActiveBanners: 5 }; },
+        aggregate(pipeline: Array<Record<string, unknown>>) {
+          assert.equal(name, 'ad_banners');
+          assert.ok(pipeline.some(stage => stage.$limit === 5));
+          return { async toArray() { return [{ _id: id, title: localized, targetUrl: '/properties', media: { url: `/api/v1/public/banner-media/${secondId}` }, internalNotes: 'private' }]; } };
+        },
+        find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_banners' ? [{ key: 'legacy', title: localized, imageUrl: 'https://cdn.example/legacy.webp', order: 0, status: 'published', active: true }] : []; } }; } }; } }; },
+        async countDocuments() { return 0; }
+      };
+    }
+  } as unknown as Connection;
+  const result = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
+  assert.deepEqual(result.banners.map(banner => banner.key), [`banner_${id}`, 'legacy']);
+  assert.equal(result.banners[0]?.targetUrl, '/properties');
+  assert.equal(result.banners[0]?.imageUrl, `/api/v1/public/banner-media/${secondId}`);
+  assert.equal('internalNotes' in result.banners[0]!, false);
 });

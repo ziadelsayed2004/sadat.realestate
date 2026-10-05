@@ -7,8 +7,8 @@
   "mockedRoutes": false,
   "environment": "isolated-local-MongoDB",
   "faultInjection": "durable audit throws after insert inside banner create and update transactions",
-  "commit": "2879e6db81e855cc7210ecb6c918b117a0fe2020",
-  "startedAt": "2026-10-05T18:10:15.292Z",
+  "commit": "087537002e6674ea382796fba9a9f3d659135674",
+  "startedAt": "2026-10-05T19:55:07.297Z",
   "checks": [
     "audit_failure_rolls_back_banner_creation_and_inserted_audit",
     "create_retry_commits_banner_with_exactly_one_audit",
@@ -22,5 +22,5 @@
     "reorder_conflict_rolls_back_all_orders_and_versions"
   ],
   "cleanup": true,
-  "finishedAt": "2026-10-05T18:10:16.798Z"
+  "finishedAt": "2026-10-05T19:55:07.989Z"
 }

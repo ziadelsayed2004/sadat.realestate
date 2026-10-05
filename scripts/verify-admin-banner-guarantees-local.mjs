@@ -124,7 +124,7 @@ try {
   current = await repository.updateBanner(actorId, first.id, { expectedVersion: current.version, status: 'active', reason: 'Publish now' }, now, metadata);
   assert.equal((await readPublishedBannerRows(connection)).length, 1);
   const homepage = await createMongoosePublicHomepageRepository(connection).read();
-  assert.equal(homepage.banners.some(row => row.key === 'banner-' + first.id && row.imageUrl === media.url), true);
+  assert.equal(homepage.banners.some(row => row.key === 'banner_' + first.id && row.imageUrl === media.url), true);
   const visible = await management.openMedia(media.id); for await (const chunk of visible.stream) { assert.ok(chunk.length > 0); }
   report.checks.push('scanned_device_image_is_private_as_draft_and_visible_on_real_homepage_after_publication');
   const attachedSecond = await repository.createBannerMedia(actorId, second.id, { url: 'https://example.com/banner.png', mime: 'image/png', width: 1200, height: 400 }, now);
