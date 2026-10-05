@@ -1,5 +1,7 @@
 import {
   adBannerCreateSchema,
+  adBannerConfigSuccessEnvelopeSchema,
+  adBannerConfigPutSchema,
   adBannerIdParamsSchema,
   adBannerListDataSchema,
   adBannerListQuerySchema,
@@ -208,6 +210,17 @@ export async function updateAdminHomeContent(namespace: AdminHomeCmsNamespace, i
 
 export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    loadBannerConfig: async () => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
+    updateBannerConfig: async (input: unknown) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { method: 'PUT', json: adBannerConfigPutSchema.parse(input), responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
+    uploadBannerImage: async (id: string, file: File) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/upload`, { method: 'POST', body: file, responseSchema: adBannerMediaSuccessEnvelopeSchema, ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type } })).data.data,
+    loadMediaPreview: async (url: string) => {
+      if (!/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/u.test(url)) return url;
+      const origin = options.apiOrigin ? new URL(options.apiOrigin, window.location.origin).origin : window.location.origin;
+      const response = await fetch(`${origin}${url}`, { ...requestOptions(options), credentials: 'include' });
+      if (!response.ok) throw new Error('BANNER_PREVIEW_FAILED');
+      return URL.createObjectURL(await response.blob());
+    },
+
     loadBanners: (query: AdBannerListQuery, signal?: AbortSignal) => loadAdminBanners({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createBanner: (input: AdBannerCreate, signal?: AbortSignal) => createAdminBanner(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     updateBanner: (id: string, input: AdBannerPatch, signal?: AbortSignal) => updateAdminBanner(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),

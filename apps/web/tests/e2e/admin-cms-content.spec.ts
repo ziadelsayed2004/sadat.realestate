@@ -7,6 +7,7 @@ function localeForAdminCms(): 'ar' | 'en' {
 }
 
 async function routeAdminCmsApis(page: import('@playwright/test').Page, allow = true): Promise<void> {
+  let teamDeleted = false;
   await page.route('**/api/v1/auth/refresh', async route => route.fulfill({
     status: allow ? 200 : 401,
     contentType: 'application/json',
@@ -19,10 +20,11 @@ async function routeAdminCmsApis(page: import('@playwright/test').Page, allow = 
     const url = new URL(route.request().url());
     const namespace = url.pathname.endsWith('/team') ? 'team' : url.pathname.endsWith('/population') ? 'population' : 'about';
     const method = route.request().method();
+    if (namespace === 'team' && method === 'DELETE') teamDeleted = true;
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(adminCmsEnvelope(adminCmsContentFor(namespace), method === 'GET' ? `admin-cms-${namespace}-list` : `admin-cms-${namespace}-update`))
+      body: JSON.stringify(adminCmsEnvelope(namespace === 'team' && teamDeleted ? { namespace: 'team', items: [] } : adminCmsContentFor(namespace), method === 'GET' ? `admin-cms-${namespace}-list` : `admin-cms-${namespace}-update`))
     });
   });
 }
@@ -83,7 +85,7 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
 
   test('keeps unsaved bilingual team fields when changing the interface language', async ({ page }) => {
     await page.goto('/admin/content/team?lang=ar');
-    await page.getByTestId('admin-cms-team-bbbbbbbbbbbbbbbbbbbbbbbb').getByRole('button', { name: 'حفظ التغييرات' }).click();
+    await page.getByTestId('admin-cms-team-bbbbbbbbbbbbbbbbbbbbbbbb').getByRole('button', { name: 'تعديل' }).click();
     const editor = page.getByTestId('admin-cms-team-editor');
     await editor.locator('#admin-cms-team-name-ar').fill('اسم لم يُحفظ بعد');
     await editor.locator('#admin-cms-team-name-en').fill('Unsaved English name');
@@ -107,5 +109,31 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
     const request = page.waitForRequest(request => request.method() === 'PUT' && request.url().endsWith('/api/v1/admin/content/population'));
     await editor.getByRole('button', { name: 'حفظ التغييرات' }).click();
     expect((await request).postDataJSON()).toMatchObject({ version: 3, asOf: '2026-10-04T00:00:00.000Z' });
+  });
+
+  test('edits and deletes a team member through explicit actions', async ({ page }) => {
+    const locale = localeForAdminCms();
+    await page.goto(`/admin/content/team?lang=${locale}`);
+    const record = page.getByTestId('admin-cms-team-bbbbbbbbbbbbbbbbbbbbbbbb');
+    await record.getByRole('button', { name: locale === 'ar' ? 'تعديل' : 'Edit', exact: true }).click();
+    const editor = page.getByTestId('admin-cms-team-editor');
+    await editor.locator('#admin-cms-team-name-en').fill('Updated team member');
+    await editor.locator('#admin-cms-team-reason').fill('Update team profile');
+    const update = page.waitForRequest(request => request.method() === 'PUT' && request.url().endsWith('/admin/content/team'));
+    await editor.locator('button[type="submit"]').click();
+    expect((await update).postDataJSON()).toMatchObject({ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', version: 2, name: { en: 'Updated team member' } });
+    await expect(editor).not.toBeVisible();
+    await record.getByRole('button', { name: locale === 'ar' ? 'حذف' : 'Delete', exact: true }).click();
+    const confirmation = page.getByTestId('admin-cms-team-delete');
+    await confirmation.getByRole('button', { name: locale === 'ar' ? 'إلغاء' : 'Cancel', exact: true }).click();
+    await expect(record).toBeVisible();
+    await record.getByRole('button', { name: locale === 'ar' ? 'حذف' : 'Delete', exact: true }).click();
+    await confirmation.locator('textarea').fill('Member left the team');
+    const deletion = page.waitForRequest(request => request.method() === 'DELETE' && request.url().endsWith('/admin/content/team'));
+    await confirmation.locator('button[type="submit"]').click();
+    expect((await deletion).postDataJSON()).toEqual({ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', version: 2, reason: 'Member left the team' });
+    await expect(record).not.toBeVisible();
+    await page.reload();
+    await expect(record).not.toBeVisible();
   });
 });

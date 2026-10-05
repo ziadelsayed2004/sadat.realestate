@@ -7,15 +7,20 @@
   "mockedRoutes": false,
   "environment": "isolated-local-MongoDB",
   "faultInjection": "durable audit throws after insert inside banner create and update transactions",
-  "commit": "33a8fed6ca3466a87d52ccc1e3962b6d516b2830",
-  "startedAt": "2026-09-12T21:55:37.950Z",
+  "commit": "2879e6db81e855cc7210ecb6c918b117a0fe2020",
+  "startedAt": "2026-10-05T18:10:15.292Z",
   "checks": [
     "audit_failure_rolls_back_banner_creation_and_inserted_audit",
     "create_retry_commits_banner_with_exactly_one_audit",
     "audit_failure_rolls_back_banner_values_version_and_update_audit",
     "update_retry_commits_values_version_and_exactly_one_audit",
-    "stale_update_and_duplicate_create_write_no_state_or_audit"
+    "stale_update_and_duplicate_create_write_no_state_or_audit",
+    "explicit_authorized_display_setup_creates_default_placement_and_rejects_stale_config",
+    "concurrent_banner_creation_allocates_distinct_order_without_duplicate_drafts",
+    "scanned_device_image_is_private_as_draft_and_visible_on_real_homepage_after_publication",
+    "overlap_rejected_stop_revokes_public_image_schedule_appears_and_expires_without_manual_activation",
+    "reorder_conflict_rolls_back_all_orders_and_versions"
   ],
   "cleanup": true,
-  "finishedAt": "2026-09-12T21:55:38.373Z"
+  "finishedAt": "2026-10-05T18:10:16.798Z"
 }

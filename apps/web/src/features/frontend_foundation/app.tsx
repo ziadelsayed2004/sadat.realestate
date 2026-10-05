@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicContentListData, CommunityPublicPostListData, PublicHomepageData, PublicOrganizationDirectoryQuery, PublicOrganizationListData, PublicOrganizationProfile, PublicPropertyComparisonData, PublicPropertyDetails, PublicPropertyListData, PublicPropertySearchQuery, SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
 import { PublicCommunity, type CommunityAuthClient } from '../community/index.ts';
@@ -36,6 +36,8 @@ import { type DesignAssetCatalog } from '../design_system/index.ts';
 import { getFoundationCopy } from './locale.js';
 import { SessionLoading } from './session-loading.tsx';
 import './styles.css';
+
+const AdminUserGuide = lazy(() => import('../admin_user_guide/views.tsx'));
 
 export interface AppProps {
   readonly url: string;
@@ -179,6 +181,7 @@ export function App({
   const isProviderNotifications = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/notifications';
   const isProviderSettings = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/settings';
   const isAdminOverview = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin' || seekerPathname === '/admin/overview');
+  const isAdminUserGuide = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/user-guide';
   const isAdminUsers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/users';
   const isAdminSeekers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-seekers';
   const isAdminProviders = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/providers';
@@ -309,6 +312,8 @@ export function App({
       <SeekerProfile locale={locale} session={effectiveSession} authClient={authClient} tab={seekerProfileTab} />
     ) : isSeekerSettings ? (
       <SeekerProfile locale={locale} session={effectiveSession} authClient={authClient} tab="settings" />
+    ) : isAdminUserGuide ? (
+      <Suspense fallback={<p role="status">{locale === 'ar' ? 'جارٍ تحميل دليل الاستخدام…' : 'Loading the user guide…'}</p>}><AdminUserGuide locale={locale} session={effectiveSession} /></Suspense>
     ) : isAdminOverview ? (
       <AdminOverview locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isAdminAccountReports ? (

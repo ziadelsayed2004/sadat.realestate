@@ -4,6 +4,7 @@ import type { SupportedLocale } from '@sadat-real-estate/contracts';
 export type AdminHomeState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
 
 export interface AdminHomeCopy {
+  readonly mutation: { readonly placementNotFound: string; readonly notFound: string; readonly conflict: string; readonly failed: string };
   readonly eyebrow: string;
   readonly banners: string;
   readonly newBanner: string;
@@ -27,6 +28,7 @@ export interface AdminHomeCopy {
   readonly targetUrl: string;
   readonly start: string;
   readonly end: string;
+  readonly schedule: Readonly<{ startDate: string; startTime: string; endDate: string; endTime: string; hint: string; invalidRange: string }>;
   readonly order: string;
   readonly status: string;
   readonly visible: string;
@@ -54,6 +56,8 @@ export interface AdminHomeCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, AdminHomeCopy>> = {
   ar: {
+    mutation: { placementNotFound: 'موضع البانر غير موجود في إعدادات الموقع. يلزم تجهيز هذا الموضع قبل إضافة بانر فيه.', notFound: 'البانر أو الوسائط المطلوبة لم تعد موجودة. راجع قائمة البانرات قبل إعادة الحفظ.', conflict: 'يوجد تعارض مع ترتيب بانر سابق أو إصدار السجل. راجع القائمة قبل إعادة الحفظ.', failed: 'تعذر حفظ التغيير. راجع البيانات والاتصال وحاول مرة أخرى.' },
+    schedule: { startDate: 'تاريخ البداية', startTime: 'وقت البداية', endDate: 'تاريخ النهاية', endTime: 'وقت النهاية', hint: 'اختر التاريخ والوقت بشكل منفصل. التوقيت حسب جهازك، والوقت الافتراضي 00:00.', invalidRange: 'يجب أن يكون تاريخ ووقت النهاية بعد تاريخ ووقت البداية.' },
     eyebrow: 'إدارة الصفحة الرئيسية', banners: 'البانرات', newBanner: 'إضافة بانر', tips: 'النصائح', homepage: 'أقسام الصفحة الرئيسية',
     bannerDescription: 'أدر البانرات من الإسقاط الإداري المعتمد مع ترتيبها وحالتها.', tipsDescription: 'أدر النصائح العقارية المنشورة أو المسودة من مصدر المحتوى المعتمد.', homepageDescription: 'رتب أقسام الصفحة الرئيسية وحدد ظهورها وحالتها.', add: 'إضافة', save: 'حفظ', saving: 'جارٍ الحفظ', cancel: 'إلغاء', retry: 'إعادة المحاولة', preview: 'معاينة', moveUp: 'تحريك لأعلى', moveDown: 'تحريك لأسفل',
     key: 'المفتاح', placement: 'الموضع', title: 'العنوان', altText: 'النص البديل', targetUrl: 'الرابط المستهدف', start: 'البداية', end: 'النهاية', order: 'الترتيب', status: 'الحالة', visible: 'ظاهر', active: 'نشط', version: 'الإصدار', updated: 'آخر تحديث', actions: 'الإجراءات', body: 'المحتوى', reason: 'سبب التغيير', reasonPlaceholder: 'اكتب سببًا واضحًا لا يقل عن ثلاثة أحرف', reasonRequired: 'سبب التغيير مطلوب.', localizedHint: 'أدخل النص بالعربية والإنجليزية والصينية عند الحاجة.', mediaUrl: 'رابط الوسائط HTTPS', mediaMime: 'نوع الوسائط', mediaWidth: 'العرض', mediaHeight: 'الارتفاع', mediaNote: 'يقبل النظام رابط HTTPS المعتمد فقط؛ لا تعرض مفاتيح التخزين أو روابط خاصة دائمة.', saved: 'تم الحفظ.', validation: 'تحقق من الحقول المطلوبة.',
@@ -61,6 +65,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminHomeCopy>> = {
     states: { loading: { title: 'جارٍ تحميل البيانات', body: 'يتم جلب السجلات من المصدر المعتمد.' }, empty: { title: 'لا توجد سجلات', body: 'لا توجد سجلات متاحة في الإسقاط الحالي.' }, error: { title: 'تعذر تحميل البيانات', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الاتصال غير متاح مؤقتًا', body: 'يمكن إعادة المحاولة دون تغيير البيانات الحالية.' }, permission: { title: 'الوصول غير مسموح', body: 'تتطلب هذه الصفحة جلسة مدير مصادقًا عليها والصلاحية المناسبة.' }, not_found: { title: 'المسار غير موجود', body: 'لا يوجد مسار إدارة مطابق.' }, success: { title: 'البيانات جاهزة', body: 'تُعرض السجلات من الإسقاط الآمن المعتمد.' } }, directionNote: 'العربية RTL — إدارة الصفحة الرئيسية معتمدة لسطح المكتب.'
   },
   en: {
+    mutation: { placementNotFound: 'This banner placement is not configured on the site. It must be set up before adding a banner.', notFound: 'The requested banner or media no longer exists. Check the banner list before saving again.', conflict: 'The banner order or record version conflicts with an existing record. Check the list before saving again.', failed: 'The change could not be saved. Check the fields and connection, then try again.' },
+    schedule: { startDate: 'Start date', startTime: 'Start time', endDate: 'End date', endTime: 'End time', hint: 'Choose the date and time separately. Times use your device’s time zone and default to 00:00.', invalidRange: 'The end date and time must be later than the start date and time.' },
     eyebrow: 'Homepage administration', banners: 'Banners', newBanner: 'Add banner', tips: 'Tips', homepage: 'Homepage sections',
     bannerDescription: 'Manage banners from the approved administrative projection, including order and status.', tipsDescription: 'Manage approved real-estate tips from the CMS projection.', homepageDescription: 'Order homepage sections and control visibility and publication state.', add: 'Add', save: 'Save', saving: 'Saving', cancel: 'Cancel', retry: 'Retry', preview: 'Preview', moveUp: 'Move up', moveDown: 'Move down',
     key: 'Key', placement: 'Placement', title: 'Title', altText: 'Alt text', targetUrl: 'Target URL', start: 'Start', end: 'End', order: 'Order', status: 'Status', visible: 'Visible', active: 'Active', version: 'Version', updated: 'Updated', actions: 'Actions', body: 'Body', reason: 'Change reason', reasonPlaceholder: 'Write a clear reason of at least three characters', reasonRequired: 'A change reason is required.', localizedHint: 'Provide Arabic and English values as applicable.', mediaUrl: 'HTTPS media URL', mediaMime: 'Media MIME', mediaWidth: 'Width', mediaHeight: 'Height', mediaNote: 'Only approved HTTPS media URLs are accepted; storage keys and permanent private links are never displayed.', saved: 'Saved.', validation: 'Check the required fields.',

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { adminHomeBannerId, adminHomeSectionId, adminHomeTipId, routeAdminHomeApis } from './admin-home.fixtures.ts';
+import { getBannerControlCopy } from '../../src/features/admin_home/banner-controls-copy.ts';
 
 function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
@@ -7,6 +8,32 @@ function localeForProject(): 'ar' | 'en' {
 }
 
 test.describe('ADM-46 through ADM-49 homepage administration', () => {
+  test('uploads, schedules, edits, stops and archives a banner', async ({ page }) => {
+    const locale = localeForProject();
+    const copy = getBannerControlCopy(locale);
+    await page.goto(`/admin/banners/new?lang=${locale}`);
+    await page.locator('#admin-home-banner-title-en').fill('Scheduled device banner');
+    await page.locator('#admin-home-banner-start').fill('2030-01-01');
+    await page.locator('#admin-home-banner-end').fill('2030-01-02');
+    await page.locator('#admin-home-banner-file').setInputFiles({ name: 'banner.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', 'base64') });
+    await page.locator('#admin-home-banner-reason').fill('Create scheduled banner');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('.admin-home__feedback[role="status"]')).toContainText(copy.draftSaved);
+    await page.getByRole('button', { name: copy.publish, exact: true }).click();
+    await expect(page.locator('.admin-home__feedback[role="status"]')).toContainText(copy.published);
+    await page.goto(`/admin/banners?lang=${locale}`);
+    const row = page.getByTestId(`admin-home-banner-${adminHomeBannerId}`);
+    await row.getByRole('button', { name: copy.edit, exact: true }).click();
+    await page.locator('#admin-home-banner-title-en').fill('Edited scheduled banner');
+    await page.locator('#admin-home-banner-reason').fill('Correct banner title');
+    await page.locator('button[type="submit"]').click();
+    await expect(row).toContainText('Edited scheduled banner');
+    await row.getByRole('button', { name: copy.stop, exact: true }).click();
+    await expect(row.getByRole('button', { name: copy.publish, exact: true })).toBeVisible();
+    await row.getByRole('button', { name: copy.archive, exact: true }).click();
+    await page.getByRole('button', { name: copy.confirm, exact: true }).click();
+    await expect(row.getByRole('button', { name: copy.edit, exact: true })).toHaveCount(0);
+  });
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-46 docs/design_sources/final_screens/admin/ADM-46.png; ADM-47 ADM-47.png; ADM-48 ADM-48.png; ADM-49 ADM-49.png; approved desktop scope, Drive folders and Figma prototype node 6017:61879.' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
@@ -37,17 +64,33 @@ test.describe('ADM-46 through ADM-49 homepage administration', () => {
     const locale = localeForProject();
     await page.goto(`/admin/banners/new?lang=${encodeURIComponent(locale)}`);
     await page.locator('#admin-home-banner-title-en').fill('New homepage banner');
-    await page.locator('#admin-home-banner-start').fill('2026-08-20T10:00');
-    await page.locator('#admin-home-banner-end').fill('2026-09-20T10:00');
+    await page.locator('#admin-home-banner-start').fill('2026-08-20');
+    await page.locator('#admin-home-banner-start-time').fill('10:00');
+    await page.locator('#admin-home-banner-end').fill('2026-09-20');
+    await page.locator('#admin-home-banner-end-time').fill('10:00');
     const create = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/banners'));
     await page.getByRole('button', { name: /save|حفظ|保存/iu }).click();
     await create;
-    await expect(page.getByRole('status')).toContainText(/saved|تم الحفظ|已保存/iu);
+    await expect(page.locator('.admin-home__feedback[role="status"]')).toContainText(/saved|\u062a\u0645.*\u062d\u0641\u0638|تم الحفظ|已保存/iu);
   });
 
   test('fails closed when the administrator session cannot refresh', async ({ page }) => {
     await routeAdminHomeApis(page, false);
     await page.goto('/admin/content/tips?lang=en');
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
+  });
+
+  test('accepts date-only entry with complete default times', async ({ page }) => {
+    const locale = localeForProject();
+    await page.goto(`/admin/banners/new?lang=${encodeURIComponent(locale)}`);
+    await page.locator('#admin-home-banner-title-en').fill('Date picker banner');
+    await page.locator('#admin-home-banner-start').fill('2026-10-05');
+    await page.locator('#admin-home-banner-end').fill('2026-10-06');
+    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('00:00');
+    await expect(page.locator('#admin-home-banner-end-time')).toHaveValue('00:00');
+    const create = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/banners'));
+    await page.getByRole('button', { name: /save|حفظ/iu }).click();
+    await create;
+    await expect(page.locator('.admin-home__feedback[role="status"]')).toContainText(/saved|\u062a\u0645.*\u062d\u0641\u0638|تم الحفظ/iu);
   });
 });

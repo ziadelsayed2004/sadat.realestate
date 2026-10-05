@@ -7,6 +7,12 @@ import { createMongooseAdBannerRepository } from '../apps/api/src/modules/ads/ba
 import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
 import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
 
+import sharp from 'sharp';
+import { Readable } from 'node:stream';
+import { createBannerManagement, readPublishedBannerRows } from '../apps/api/src/modules/ads/banner-management.ts';
+import { createInMemoryStorageAdapter, createDeterministicMalwareScanner } from '../apps/api/src/modules/uploads/adapters.ts';
+import { createMongoosePublicHomepageRepository } from '../apps/api/src/modules/public/homepage.ts';
+
 const database = `admin_banners_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
 const report = {
@@ -93,6 +99,54 @@ try {
   );
   assert.equal(await audits.AuditLog.countDocuments({ targetId: created.id }), 2);
   report.checks.push('stale_update_and_duplicate_create_write_no_state_or_audit');
+  const claims = { sub: actorId, role: 'admin', status: 'verified' };
+  const storage = createInMemoryStorageAdapter();
+  const management = createBannerManagement({ connection, authorization: { authorize: async () => true }, audit: durable, storage, scanner: createDeterministicMalwareScanner('clean'), policy: { read: async () => ({ supportedPlacements: [], supportedAdTypes: [], acceptedFileFormats: [], dimensions: [], paymentProofMethods: [] }) } });
+  await assert.rejects(management.readConfig({ ...claims, role: 'seeker' }), /errors.forbidden/u);
+  const configured = await management.updateConfig(claims, { enabled: true, expectedVersion: 0, reason: 'Set up homepage banners' }, metadata);
+  assert.equal(configured.enabled, true);
+  assert.equal(configured.placements.some(row => row.key === 'homepage.hero'), true);
+  await assert.rejects(management.updateConfig(claims, { enabled: false, expectedVersion: 0, reason: 'Stale config' }, metadata), /errors.conflict/u);
+  report.checks.push('explicit_authorized_display_setup_creates_default_placement_and_rejects_stale_config');
+  const now = new Date();
+  const liveInput = { placementKey: 'homepage.hero', title: { ar: '???? ?????? ?????', en: 'Published test banner' }, startAt: new Date(now.getTime() - 60000).toISOString(), endAt: new Date(now.getTime() + 3600000).toISOString() };
+  const [first, second] = await Promise.all([repository.createBanner(actorId, liveInput, now, metadata), repository.createBanner(actorId, liveInput, now, metadata)]);
+  assert.notEqual(first.sortOrder, second.sortOrder);
+  report.checks.push('concurrent_banner_creation_allocates_distinct_order_without_duplicate_drafts');
+  await assert.rejects(repository.updateBanner(actorId, first.id, { expectedVersion: 0, status: 'active', reason: 'No image' }, now, metadata), /BANNER_MEDIA_REQUIRED/u);
+  await assert.rejects(management.upload(claims, first.id, Readable.from(Buffer.from('<svg/>')), 'image/png', metadata));
+  const image = await sharp({ create: { width: 1200, height: 400, channels: 3, background: '#154c40' } }).png().toBuffer();
+  const media = await management.upload(claims, first.id, Readable.from(image), 'image/png', metadata);
+  assert.equal(media.width, 1200); assert.equal(media.height, 400); assert.equal('storageKey' in media, false);
+  await assert.rejects(management.openMedia(media.id), /errors.notFound/u);
+  const preview = await management.openMedia(media.id, claims); for await (const chunk of preview.stream) { assert.ok(chunk.length > 0); }
+  let current = await repository.updateBanner(actorId, first.id, { expectedVersion: 0, mediaId: media.id, reason: 'Attach scanned image' }, now, metadata);
+  current = await repository.updateBanner(actorId, first.id, { expectedVersion: current.version, status: 'active', reason: 'Publish now' }, now, metadata);
+  assert.equal((await readPublishedBannerRows(connection)).length, 1);
+  const homepage = await createMongoosePublicHomepageRepository(connection).read();
+  assert.equal(homepage.banners.some(row => row.key === 'banner-' + first.id && row.imageUrl === media.url), true);
+  const visible = await management.openMedia(media.id); for await (const chunk of visible.stream) { assert.ok(chunk.length > 0); }
+  report.checks.push('scanned_device_image_is_private_as_draft_and_visible_on_real_homepage_after_publication');
+  const attachedSecond = await repository.createBannerMedia(actorId, second.id, { url: 'https://example.com/banner.png', mime: 'image/png', width: 1200, height: 400 }, now);
+  await repository.updateBanner(actorId, second.id, { expectedVersion: 0, mediaId: attachedSecond.id, reason: 'Attach second image' }, now, metadata);
+  await assert.rejects(repository.updateBanner(actorId, second.id, { expectedVersion: 1, status: 'active', reason: 'Overlapping publication' }, now, metadata), /PLACEMENT_CONFLICT/u);
+  current = await repository.updateBanner(actorId, first.id, { expectedVersion: current.version, status: 'draft', reason: 'Stop display' }, now, metadata);
+  assert.equal((await readPublishedBannerRows(connection)).length, 0);
+  await assert.rejects(management.openMedia(media.id), /errors.notFound/u);
+  const future = new Date(now.getTime() + 120000); const end = new Date(now.getTime() + 180000);
+  current = await repository.updateBanner(actorId, first.id, { expectedVersion: current.version, startAt: future.toISOString(), endAt: end.toISOString(), status: 'scheduled', reason: 'Schedule future display' }, now, metadata);
+  assert.equal((await readPublishedBannerRows(connection, now)).length, 0);
+  assert.equal((await readPublishedBannerRows(connection, future)).length, 1);
+  assert.equal((await readPublishedBannerRows(connection, end)).length, 0);
+  await management.updateConfig(claims, { enabled: false, expectedVersion: configured.version, reason: 'Disable all banners' }, metadata);
+  assert.equal((await readPublishedBannerRows(connection, future)).length, 0);
+  await repository.updateBanner(actorId, first.id, { expectedVersion: current.version, status: 'archived', reason: 'Archive banner' }, now, metadata);
+  report.checks.push('overlap_rejected_stop_revokes_public_image_schedule_appears_and_expires_without_manual_activation');
+  const beforeReorder = (await repository.previewBanner(first.id)).banner;
+  await assert.rejects(repository.reorderBanners(actorId, { placementKey: 'homepage.hero', reason: 'Reject partial reorder', items: [{ bannerId: first.id, sortOrder: 99, expectedVersion: beforeReorder.version }, { bannerId: second.id, sortOrder: 100, expectedVersion: 999 }] }, now), /VERSION_CONFLICT/u);
+  assert.equal((await repository.previewBanner(first.id)).banner.sortOrder, beforeReorder.sortOrder);
+  assert.equal((await repository.previewBanner(first.id)).banner.version, beforeReorder.version);
+  report.checks.push('reorder_conflict_rolls_back_all_orders_and_versions');
   report.status = 'PASS_LOCAL';
 } catch (error) {
   report.status = 'FAIL_LOCAL';

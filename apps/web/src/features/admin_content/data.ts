@@ -18,6 +18,7 @@ import {
   cmsAdminContentSuccessEnvelopeSchema,
   cmsAdminPopulationValuePutSchema,
   cmsAdminTeamMemberPutSchema,
+  cmsAdminTeamMemberDeleteSchema,
   type Article,
   type ArticleAdminListData,
   type ArticleAdminListQuery,
@@ -221,10 +222,20 @@ export function createAdminContentSource(options: Omit<CommonOptions, 'signal'> 
   };
 }
 
+export async function deleteAdminCmsTeamMember(input: unknown, options: CommonOptions = {}): Promise<CmsAdminContentData> {
+  const body = cmsAdminTeamMemberDeleteSchema.parse(input);
+  const response = await clientFor(options).request(ADMIN_CMS_TEAM_ROUTE, {
+    method: 'DELETE', responseSchema: cmsAdminContentSuccessEnvelopeSchema,
+    json: body, ...requestOptions(options)
+  });
+  return response.data.data;
+}
+
 export function createAdminCmsContentSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
     load: (namespace: CmsAdminContentNamespace, signal?: AbortSignal) => loadAdminCmsContent(namespace, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    update: (namespace: CmsAdminContentNamespace, input: unknown, signal?: AbortSignal) => updateAdminCmsContent(namespace, input, { ...options, ...(signal === undefined ? {} : { signal }) })
+    update: (namespace: CmsAdminContentNamespace, input: unknown, signal?: AbortSignal) => updateAdminCmsContent(namespace, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    deleteTeam: (input: unknown) => deleteAdminCmsTeamMember(input, options)
   };
 }
 

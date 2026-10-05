@@ -69,15 +69,18 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
       : { error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'admin-home-refresh-denied' } })
   }));
 
+  let storedBanner = adminHomeBannerFixture();
   await page.route('**/api/v1/admin/banners**', async route => {
     const url = new URL(route.request().url());
     const method = route.request().method();
-    const banner = adminHomeBannerFixture(method === 'POST' ? { status: 'draft', version: 0 } : {});
+    let banner = storedBanner;
+    if (method === 'POST' && url.pathname.endsWith('/banners')) { storedBanner = { ...banner, ...route.request().postDataJSON(), status: 'draft', version: 0 }; banner = storedBanner; }
+    if (url.pathname.endsWith('/config')) { await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ enabled: true, version: 1, placements: [{ key: 'homepage.hero', label: { ar: '???? ????????', en: 'Homepage banner' }, active: true }] }, 'banner-config')) }); return; }
     if (url.pathname.endsWith('/preview')) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ banner, preview: true }, 'admin-home-preview')) });
       return;
     }
-    if (url.pathname.endsWith('/media')) {
+    if (url.pathname.endsWith('/media') || url.pathname.endsWith('/upload')) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', bannerId: adminHomeBannerId, url: 'https://example.com/banner.png', mime: 'image/png', width: 1200, height: 400, active: true, version: 0, createdBy: adminId, createdAt: '2026-08-19T08:00:00.000Z', updatedAt: '2026-08-19T08:00:00.000Z' }, 'admin-home-media')) });
       return;
     }
@@ -86,7 +89,10 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
       return;
     }
     if (method === 'PATCH') {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ ...banner, version: 3 }, 'admin-home-banner-update')) });
+      const changes = { ...route.request().postDataJSON() }; delete changes.expectedVersion; delete changes.reason;
+      storedBanner = { ...banner, ...changes, version: banner.version + 1 };
+      for (const key of ["altText", "targetUrl", "mediaId"]) if (changes[key] === null) Reflect.deleteProperty(storedBanner, key);
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success(storedBanner, 'admin-home-banner-update')) });
       return;
     }
     if (method === 'POST') {

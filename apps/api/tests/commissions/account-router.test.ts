@@ -141,6 +141,28 @@ test('protects account commission reads and writes with strict projections and p
   });
 });
 
+test('retries identical concurrent saves without duplicate drafts and keeps changed values in conflict', async () => {
+  await withServer(['admin:commissions.view', 'admin:commissions.manage'], async baseUrl => {
+    const path = `${baseUrl}/api/v1/admin/account-commissions/${accountId}`;
+    const input = { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-10-05T00:00:00.000Z', effectiveTo: '2026-10-06T00:00:00.000Z' };
+    const save = (body: unknown) => fetch(path, {
+      method: 'PUT', headers: { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' }, body: JSON.stringify(body)
+    });
+    const responses = await Promise.all([save(input), save(input)]);
+    for (const response of responses) assert.equal(response.status, 201);
+    const [first, repeated] = await Promise.all(responses.map(response => response.json())) as Array<{ data: CommissionAccountOverride }>;
+    assert.deepEqual(first?.data, repeated?.data);
+    assert.equal(first?.data.status, 'draft');
+    const changed = await save({ ...input, percentageBps: 400 });
+    assert.equal(changed.status, 409);
+    assert.equal((await changed.json() as { error: { code: string } }).error.code, 'COMMISSION_ACCOUNT_DUPLICATE');
+    const retry = await save(input);
+    assert.deepEqual((await retry.json() as { data: CommissionAccountOverride }).data, first?.data);
+    const read = await fetch(path, { headers: { authorization: `Bearer ${adminToken}` } });
+    assert.equal((await read.json() as { data: { percentageBps: number } }).data.percentageBps, 250);
+  });
+});
+
 test('keeps view and manage permissions separate and rejects invalid account inputs', async () => {
   await withServer(['admin:commissions.view'], async baseUrl => {
     const response = await fetch(`${baseUrl}/api/v1/admin/account-commissions/${accountId}`, {

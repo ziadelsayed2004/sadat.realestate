@@ -129,6 +129,19 @@ const cmsCopyByLocale: Readonly<Record<SupportedLocale, AdminCmsCopy>> = {
     eyebrow: 'Platform content administration', namespace: { about: 'About platform', team: 'Team', population: 'Population counter', tips: 'Real-estate tips' }, description: { about: 'Manage the approved About page content.', team: 'Maintain the approved team projection and ordering.', population: 'Update the population counter only from an approved source.', tips: 'Manage the approved real-estate tips.' }, add: 'Add', save: 'Save changes', saving: 'Saving', preview: 'Preview', hidePreview: 'Hide preview', cancel: 'Cancel', retry: 'Retry', key: 'Key', name: 'Name', title: 'Title', body: 'Body', order: 'Order', status: 'Status', active: 'Active', value: 'Population value', sourceLabel: 'Source label', sourceUrl: 'Source URL', asOf: 'As of', reason: 'Change reason', reasonPlaceholder: 'Write a clear reason for this change', reasonRequired: 'A change reason is required.', localizedHint: 'Provide approved copy in Arabic or English as applicable.', noData: 'No content is available yet.', unavailable: 'Value unavailable', states: { loading: { title: 'Loading content', body: 'Fetching records from the approved CMS source.' }, empty: { title: 'No records found', body: 'Create a draft record to establish the approved content state.' }, error: { title: 'Content could not load', body: 'Check the connection and try again.' }, retry: { title: 'Connection temporarily unavailable', body: 'Retry without changing the current data.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator content session.' }, success: { title: 'Content ready', body: 'The server-approved projection is ready for editing or preview.' }, not_found: { title: 'Content route not found', body: 'The requested content namespace is not available.' } }, statusLabels: { draft: 'Draft', published: 'Published', inactive: 'Inactive', available: 'Available', unavailable: 'Unavailable' }
   },};
 
-export function getAdminCmsCopy(locale: SupportedLocale): AdminCmsCopy {
-  return localizeCopy('admin_content/copy#getAdminCmsCopy', locale, cmsCopyByLocale[locale]);
+const cmsActions = {
+  ar: {
+    edit: 'تعديل', delete: 'حذف', deleteTitle: 'حذف عضو من فريق العمل',
+    deleteHint: 'سيتم حذف العضو من فريق العمل والموقع. اكتب سبب الحذف ثم أكد؛ لا يمكن التراجع عن الحذف من هذه الصفحة.',
+    mutation: { notFound: 'السجل لم يعد موجودًا. حدّث القائمة قبل المحاولة مرة أخرى.', conflict: 'تم تعديل السجل من جلسة أخرى أو المفتاح مستخدم. راجع أحدث البيانات قبل الحفظ.', invalid: 'راجع الحقول المطلوبة وصحة البيانات.', failed: 'تعذر حفظ التغيير. حاول مرة أخرى.' }
+  },
+  en: {
+    edit: 'Edit', delete: 'Delete', deleteTitle: 'Delete team member',
+    deleteHint: 'This removes the member from the team and public site. Enter a reason and confirm. This page cannot undo the deletion.',
+    mutation: { notFound: 'This record no longer exists. Refresh the list before retrying.', conflict: 'The record changed in another session or the key is already used. Review the latest data before saving.', invalid: 'Check the required fields and their values.', failed: 'The change could not be saved. Try again.' }
+  }
+} as const;
+
+export function getAdminCmsCopy(locale: SupportedLocale): AdminCmsCopy & (typeof cmsActions)[SupportedLocale] {
+  return localizeCopy('admin_content/copy#getAdminCmsCopy', locale, { ...cmsCopyByLocale[locale], ...cmsActions[locale] });
 }

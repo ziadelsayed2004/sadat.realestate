@@ -30,6 +30,7 @@ export interface AdminCommissionsCopy {
   readonly autoKey: string;
   readonly validation: string;
   readonly saved: string;
+  readonly mutation: Readonly<{ duplicateAccount: string; conflict: string; network: string; failed: string; savedDraft: string }>;
   readonly count: (total: number) => string;
   readonly page: (page: number, pages: number) => string;
   readonly value: (kind: 'percentage' | 'fixed' | 'exempt', percentageBps?: number, fixedAmountMinor?: number, currency?: string) => string;
@@ -54,6 +55,13 @@ function valueLabel(kind: 'percentage' | 'fixed' | 'exempt', percentageBps?: num
 const copyByLocale: Readonly<Record<SupportedLocale, AdminCommissionsCopy>> = {
   ar: {
     eyebrow: 'إدارة العمولات',
+    mutation: {
+      duplicateAccount: 'يوجد تخصيص عمولة محفوظ لهذا الحساب بنفس تاريخ البداية ببيانات مختلفة أو بحالة غير مسودة. لم يتم تغيير السجل السابق. استخدم تاريخ بداية آخر لإنشاء تخصيص جديد.',
+      conflict: 'تعذر الحفظ لأن السجل موجود بالفعل أو تغيرت نسخته. حدّث الصفحة وراجع البيانات قبل إعادة المحاولة.',
+      network: 'تعذر الاتصال لحفظ العمولة. تحقق من الاتصال ثم أعد المحاولة؛ تكرار نفس الحفظ لا ينشئ مسودة أخرى.',
+      failed: 'تعذر حفظ العمولة. أعد المحاولة، وإذا استمرت المشكلة تواصل مع الدعم.',
+      savedDraft: 'تم حفظ السجل كمسودة. لم تتغير العمولة الفعالة على الحساب.'
+    },
     autoKey: 'يتم إنشاؤه تلقائياً؛ لا تحتاج لكتابته',
     navLabel: 'العمولات',
     titles: { policies: 'سياسات العمولات', newPolicy: 'إنشاء سياسة عمولة', history: 'سجل تغييرات العمولات', account: 'عمولة الحساب', exceptions: 'استثناءات العمولات', newException: 'إنشاء استثناء', confirmations: 'تأكيدات العمولات' },
@@ -66,6 +74,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCommissionsCopy>> = {
   },
   en: {
     eyebrow: 'Commission administration',
+    mutation: {
+      duplicateAccount: 'This account already has an override with the same start date and different details or a non-draft status. The existing record was not changed. Use a different start date to create a new override.',
+      conflict: 'The record already exists or its version has changed. Refresh the page and review the data before trying again.',
+      network: 'Could not connect to save the commission. Check your connection and retry; repeating the same save does not create another draft.',
+      failed: 'Could not save the commission. Try again and contact support if the problem persists.',
+      savedDraft: 'The record was saved as a draft. The account’s active commission has not changed.'
+    },
     autoKey: 'Generated automatically; leave blank',
     navLabel: 'Commissions',
     titles: { policies: 'Commission policies', newPolicy: 'Create commission policy', history: 'Commission change history', account: 'Account commission', exceptions: 'Commission exceptions', newException: 'Create exception', confirmations: 'Commission confirmations' },

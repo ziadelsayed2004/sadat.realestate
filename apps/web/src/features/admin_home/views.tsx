@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   AdBanner,
+  AdBannerConfig,
   AdBannerCreate,
   AdBannerListData,
   AdBannerMediaCreate,
@@ -22,11 +23,23 @@ import {
   type AdminHomeSource
 } from './data.ts';
 import { getAdminHomeCopy, type AdminHomeCopy, type AdminHomeState } from './copy.ts';
+import { BannerDisplayControls, getBannerControlCopy } from './banner-controls.tsx';
 import './styles.css';
 
 type AdminHomeRoute = 'banners' | 'banner_create' | 'tips' | 'homepage' | 'not_found';
 type DraftLocalized = Partial<Record<SupportedLocale, string>>;
 type HomeContentItem = CmsAdminTip | CmsAdminHomepageSection;
+
+function mutationMessage(error: unknown, copy: AdminHomeCopy, creating = false): string {
+  if (error instanceof ApiClientError) {
+    if (error.status === 404) return creating ? copy.mutation.placementNotFound : copy.mutation.notFound;
+    if (error.status === 409) return copy.mutation.conflict;
+    if (error.status === 401 || error.status === 403) return copy.states.permission.body;
+    if (error.status === 400) return copy.validation;
+    if (error.code === 'NETWORK_ERROR' || error.code === 'ABORTED') return copy.states.retry.body;
+  }
+  return copy.mutation.failed;
+}
 
 export interface AdminHomeProps {
   readonly url?: string | undefined;
@@ -72,6 +85,20 @@ function dateLabel(value: string, locale: SupportedLocale): string {
   } catch {
     return '—';
   }
+}
+
+function localDateParts(value: string): [string, string] { const date = new Date(value); const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString(); return [local.slice(0, 10), local.slice(11, 16)]; }
+
+function scheduleInstant(date: string, time: string): Date | undefined {
+  if (!/^\d{4}-\d{2}-\d{2}$/u.test(date) || !/^(?:[01]\d|2[0-3]):[0-5]\d$/u.test(time)) return undefined;
+  const value = new Date(`${date}T${time}`);
+  if (!Number.isFinite(value.getTime())
+    || value.getFullYear() !== Number(date.slice(0, 4))
+    || value.getMonth() + 1 !== Number(date.slice(5, 7))
+    || value.getDate() !== Number(date.slice(8, 10))
+    || value.getHours() !== Number(time.slice(0, 2))
+    || value.getMinutes() !== Number(time.slice(3, 5))) return undefined;
+  return value;
 }
 
 function stateForError(error: unknown): Exclude<AdminHomeState, 'loading' | 'empty' | 'success'> {
@@ -123,6 +150,22 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
   const [feedback, setFeedback] = useState<string | undefined>();
   const [preview, setPreview] = useState<{ readonly banner: AdBanner; readonly imageUrl?: string } | undefined>();
 
+  const controls = getBannerControlCopy(locale);
+  const [editing, setEditing] = useState<AdBanner>();
+  const [archiveId, setArchiveId] = useState<string>();
+  async function transition(item: AdBanner, status: 'draft' | 'active' | 'scheduled' | 'archived') {
+    if (status === 'active' || status === 'scheduled') {
+      if (!item.mediaId) { setFeedback(controls.mediaRequired); return; }
+      if (new Date(item.endAt).getTime() <= Date.now()) { setFeedback(controls.expired); return; }
+    }
+    setBusyId(item.id); setFeedback(undefined);
+    try {
+      const updated = await source.updateBanner(item.id, { expectedVersion: item.version, status, reason: `Banner display: ${status}` });
+      onChanged({ ...data, items: data.items.map(row => row.id === item.id ? updated : row) });
+      setArchiveId(undefined); setEditing(undefined);
+    } catch (error) { setFeedback(error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy)); } finally { setBusyId(undefined); }
+  }
+
   async function reorder(item: AdBanner, direction: -1 | 1): Promise<void> {
     const placementItems = data.items.filter(candidate => candidate.placementKey === item.placementKey);
     const index = placementItems.findIndex(candidate => candidate.id === item.id);
@@ -138,35 +181,46 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
       const reordered = await source.reorderBanners({ placementKey: item.placementKey, items: reorderedItems.map((candidate, order) => ({ bannerId: candidate.id, sortOrder: placementItems[order]!.sortOrder, expectedVersion: candidate.version })), reason: 'Reorder approved homepage banners' });
       let placementCursor = 0;
       onChanged({ ...data, items: data.items.map(candidate => candidate.placementKey === item.placementKey ? reordered[placementCursor++] ?? candidate : candidate) });
-    } catch (error) { setFeedback(error instanceof Error ? error.message : copy.states.error.title); } finally { setBusyId(undefined); }
+    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setBusyId(undefined); }
   }
 
   async function showPreview(item: AdBanner): Promise<void> {
     setBusyId(item.id); setFeedback(undefined);
     try {
       const result = await source.previewBanner(item.id);
-      setPreview({ banner: result.banner, ...(result.media === undefined ? {} : { imageUrl: result.media.url }) });
-    } catch (error) { setFeedback(error instanceof Error ? error.message : copy.states.error.title); } finally { setBusyId(undefined); }
+      setPreview({ banner: result.banner, ...(result.media === undefined ? {} : { imageUrl: await source.loadMediaPreview(result.media.url) }) });
+    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setBusyId(undefined); }
   }
 
   return (
     <section className="admin-home__panel" aria-labelledby="admin-home-banners-list-title">
       <div className="admin-home__panel-heading"><div><h2 id="admin-home-banners-list-title">{copy.banners}</h2><p>{copy.bannerDescription}</p></div><span>{data.total}</span></div>
-      <div className="admin-home__table-wrap"><table className="admin-home__table"><caption className="a11y-visually-hidden">{copy.banners}</caption><thead><tr><th scope="col">{copy.order}</th><th scope="col">{copy.title}</th><th scope="col">{copy.placement}</th><th scope="col">{copy.status}</th><th scope="col">{copy.start}</th><th scope="col">{copy.end}</th><th scope="col">{copy.actions}</th></tr></thead><tbody>{data.items.map(item => { const placementItems = data.items.filter(candidate => candidate.placementKey === item.placementKey); const placementIndex = placementItems.findIndex(candidate => candidate.id === item.id); return <tr key={item.id} data-testid={`admin-home-banner-${item.id}`}><td>{item.sortOrder}</td><td><strong>{localeValue(item.title, locale)}</strong><small>{item.id}</small></td><td><code>{item.placementKey}</code></td><td><StatusBadge status={item.status} locale={locale} /></td><td>{dateLabel(item.startAt, locale)}</td><td>{dateLabel(item.endAt, locale)}</td><td><div className="admin-home__row-actions"><Button size="sm" variant="secondary" disabled={busyId !== undefined} onClick={() => void showPreview(item)}>{copy.preview}</Button><Button size="sm" variant="ghost" disabled={busyId !== undefined || placementIndex <= 0} onClick={() => void reorder(item, -1)} aria-label={`${copy.moveUp}: ${localeValue(item.title, locale)}`}>↑</Button><Button size="sm" variant="ghost" disabled={busyId !== undefined || placementIndex === placementItems.length - 1} onClick={() => void reorder(item, 1)} aria-label={`${copy.moveDown}: ${localeValue(item.title, locale)}`}>↓</Button></div></td></tr>; })}</tbody></table></div>
+      <div className="admin-home__table-wrap"><table className="admin-home__table"><caption className="a11y-visually-hidden">{copy.banners}</caption><thead><tr><th scope="col">{copy.order}</th><th scope="col">{copy.title}</th><th scope="col">{copy.placement}</th><th scope="col">{copy.status}</th><th scope="col">{copy.start}</th><th scope="col">{copy.end}</th><th scope="col">{copy.actions}</th></tr></thead><tbody>{data.items.map(item => { const placementItems = data.items.filter(candidate => candidate.placementKey === item.placementKey); const placementIndex = placementItems.findIndex(candidate => candidate.id === item.id); return <tr key={item.id} data-testid={`admin-home-banner-${item.id}`}><td>{item.sortOrder}</td><td><strong>{localeValue(item.title, locale)}</strong><small>{item.id}</small></td><td><code>{item.placementKey}</code></td><td><StatusBadge status={item.status} locale={locale} /></td><td>{dateLabel(item.startAt, locale)}</td><td>{dateLabel(item.endAt, locale)}</td><td><div className="admin-home__row-actions">{item.status !== "archived" ? <><Button size="sm" variant="secondary" disabled={busyId !== undefined} onClick={() => setEditing(item)}>{controls.edit}</Button>{item.status === "draft" ? <Button size="sm" disabled={busyId !== undefined} onClick={() => void transition(item, new Date(item.startAt).getTime() > Date.now() ? "scheduled" : "active")}>{controls.publish}</Button> : <Button size="sm" variant="secondary" disabled={busyId !== undefined} onClick={() => void transition(item, "draft")}>{controls.stop}</Button>}<Button size="sm" variant="ghost" disabled={busyId !== undefined} onClick={() => setArchiveId(item.id)}>{controls.archive}</Button></> : null}<Button size="sm" variant="secondary" disabled={busyId !== undefined} onClick={() => void showPreview(item)}>{copy.preview}</Button><Button size="sm" variant="ghost" disabled={busyId !== undefined || placementIndex <= 0} onClick={() => void reorder(item, -1)} aria-label={`${copy.moveUp}: ${localeValue(item.title, locale)}`}>↑</Button><Button size="sm" variant="ghost" disabled={busyId !== undefined || placementIndex === placementItems.length - 1} onClick={() => void reorder(item, 1)} aria-label={`${copy.moveDown}: ${localeValue(item.title, locale)}`}>↓</Button></div></td></tr>; })}</tbody></table></div>
       {feedback ? <p className="admin-home__feedback" role="alert">{feedback}</p> : null}
+      {archiveId ? <div className="admin-home__preview" role="alertdialog" aria-label={controls.archive}><p>{controls.archiveNote}</p><Button disabled={busyId !== undefined} onClick={() => { const item = data.items.find(row => row.id === archiveId); if (item) void transition(item, "archived"); }}>{controls.confirm}</Button><Button variant="secondary" onClick={() => setArchiveId(undefined)}>{copy.cancel}</Button></div> : null}
+      {editing ? <BannerCreateForm key={editing.id} locale={locale} source={source} initialBanner={editing} onSaved={updated => { if (updated) { onChanged({ ...data, items: data.items.map(row => row.id === updated.id ? updated : row) }); setEditing(updated); } }} /> : null}
       {preview ? <aside className="admin-home__preview" aria-label={copy.preview}><h3>{copy.preview}</h3><strong>{localeValue(preview.banner.title, locale)}</strong>{preview.imageUrl ? <img src={preview.imageUrl} alt={localeValue(preview.banner.altText ?? preview.banner.title, locale)} /> : <p>{copy.mediaNote}</p>}<p><code>{preview.banner.targetUrl ?? copy.targetUrl}</code></p></aside> : null}
     </section>
   );
 }
 
-function BannerCreateForm({ locale, source, onSaved }: { readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: () => void }) {
+function BannerCreateForm({ locale, source, onSaved, initialBanner }: { readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: (banner?: AdBanner) => void; readonly initialBanner?: AdBanner }) {
   const copy = getAdminHomeCopy(locale);
-  const [title, setTitle] = useState<DraftLocalized>({ ar: '', en: '',});
-  const [altText, setAltText] = useState<DraftLocalized>({ ar: '', en: '',});
-  const [placementKey, setPlacementKey] = useState('homepage.hero');
-  const [targetUrl, setTargetUrl] = useState('');
-  const [startAt, setStartAt] = useState('');
-  const [endAt, setEndAt] = useState('');
+  const controls = getBannerControlCopy(locale);
+  const [savedBanner, setSavedBanner] = useState(initialBanner);
+  const [dirty, setDirty] = useState(false);
+  const [placements, setPlacements] = useState<AdBannerConfig["placements"]>([]);
+  useEffect(() => { let active = true; void source.loadBannerConfig().then(config => { if (active) setPlacements(config.placements); }).catch(() => {}); return () => { active = false; }; }, [source]);
+  const [file, setFile] = useState<File>();
+  const [currentImage, setCurrentImage] = useState<string>();
+  const [title, setTitle] = useState<DraftLocalized>(draftLocalized(initialBanner?.title));
+  const [altText, setAltText] = useState<DraftLocalized>(draftLocalized(initialBanner?.altText));
+  const [placementKey, setPlacementKey] = useState(initialBanner?.placementKey ?? 'homepage.hero');
+  const [targetUrl, setTargetUrl] = useState(initialBanner?.targetUrl ?? '');
+  const [startDate, setStartDate] = useState(initialBanner ? localDateParts(initialBanner.startAt)[0] : '');
+  const [startTime, setStartTime] = useState(initialBanner ? localDateParts(initialBanner.startAt)[1] : '00:00');
+  const [endDate, setEndDate] = useState(initialBanner ? localDateParts(initialBanner.endAt)[0] : '');
+  const [endTime, setEndTime] = useState(initialBanner ? localDateParts(initialBanner.endAt)[1] : '00:00');
   const [media, setMedia] = useState<Pick<AdBannerMediaCreate, 'url' | 'mime' | 'width' | 'height'>>({ url: '', mime: 'image/png', width: 1200, height: 400 });
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);
@@ -175,21 +229,50 @@ function BannerCreateForm({ locale, source, onSaved }: { readonly locale: Suppor
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault(); setFeedback(undefined);
     const parsedTitle = localizedInput(title);
-    if (parsedTitle === undefined || !startAt || !endAt || (media.url.trim() !== '' && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: media.url.trim() !== '' && reason.trim().length < 2 ? copy.reasonRequired : copy.validation }); return; }
-    const input: AdBannerCreate = { placementKey: placementKey.trim(), title: parsedTitle, ...(localizedInput(altText) === undefined ? {} : { altText: localizedInput(altText) }), ...(targetUrl.trim() === '' ? {} : { targetUrl: targetUrl.trim() }), startAt: new Date(startAt).toISOString(), endAt: new Date(endAt).toISOString(), sortOrder: 0 };
+    const startAt = scheduleInstant(startDate, startTime);
+    const endAt = scheduleInstant(endDate, endTime);
+    if (parsedTitle === undefined || startAt === undefined || endAt === undefined || ((savedBanner || file || media.url.trim() !== '') && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: media.url.trim() !== '' && reason.trim().length < 2 ? copy.reasonRequired : copy.validation }); return; }
+    if (endAt <= startAt) { setFeedback({ tone: 'error', text: copy.schedule.invalidRange }); return; }
+    const input: AdBannerCreate = { placementKey: placementKey.trim(), title: parsedTitle, ...(localizedInput(altText) === undefined ? {} : { altText: localizedInput(altText) }), ...(targetUrl.trim() === '' ? {} : { targetUrl: targetUrl.trim() }), startAt: startAt.toISOString(), endAt: endAt.toISOString() };
     setSaving(true);
+    let creating = savedBanner === undefined;
     try {
-      const created = await source.createBanner(input);
-      if (media.url.trim() !== '') {
-        const attached = await source.createBannerMedia(created.id, { ...media, url: media.url.trim() });
-        await source.updateBanner(created.id, { expectedVersion: created.version, mediaId: attached.id, reason: reason.trim() });
+      let created = savedBanner ? await source.updateBanner(savedBanner.id, { ...input, altText: localizedInput(altText) ?? null, targetUrl: targetUrl.trim() || null, expectedVersion: savedBanner.version, reason: reason.trim() }) : await source.createBanner(input);
+      setSavedBanner(created);
+      creating = false;
+      if (file || media.url.trim() !== '') {
+        const attached = file ? await source.uploadBannerImage(created.id, file) : await source.createBannerMedia(created.id, { ...media, url: media.url.trim() });
+        created = await source.updateBanner(created.id, { expectedVersion: created.version, mediaId: attached.id, reason: reason.trim() });
+        setSavedBanner(created); setFile(undefined); setMedia(current => ({ ...current, url: '' }));
+        setCurrentImage(await source.loadMediaPreview(attached.url).catch(() => undefined));
       }
-      setFeedback({ tone: 'success', text: copy.saved });
-      onSaved();
-    } catch (error) { setFeedback({ tone: 'error', text: error instanceof Error ? error.message : copy.states.error.title }); } finally { setSaving(false); }
+      setDirty(false);
+      setFeedback({ tone: 'success', text: created.status === 'draft' ? controls.draftSaved : copy.saved });
+      onSaved(created);
+    } catch (error) { setFeedback({ tone: 'error', text: mutationMessage(error, copy, creating) }); } finally { setSaving(false); }
   }
 
-  return <section className="admin-home__editor" data-testid="admin-home-banner-editor"><div className="admin-home__editor-heading"><div><h2>{copy.newBanner}</h2><p>{copy.bannerDescription}</p></div><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div><form onSubmit={event => { void submit(event); }}><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-placement">{copy.placement}<input id="admin-home-banner-placement" value={placementKey} onChange={event => setPlacementKey(event.target.value)} pattern="[a-z][a-z0-9_.-]*" required /></label><label htmlFor="admin-home-banner-target">{copy.targetUrl}<input id="admin-home-banner-target" type="url" value={targetUrl} onChange={event => setTargetUrl(event.target.value)} placeholder="https://" /></label><label htmlFor="admin-home-banner-start">{copy.start}<input id="admin-home-banner-start" type="datetime-local" value={startAt} onChange={event => setStartAt(event.target.value)} required /></label><label htmlFor="admin-home-banner-end">{copy.end}<input id="admin-home-banner-end" type="datetime-local" value={endAt} onChange={event => setEndAt(event.target.value)} required /></label></div><LocalizedFields prefix="admin-home-banner-title" label={copy.title} value={title} onChange={(key, value) => setTitle(current => ({ ...current, [key]: value }))} copy={copy} /><LocalizedFields prefix="admin-home-banner-alt" label={copy.altText} value={altText} onChange={(key, value) => setAltText(current => ({ ...current, [key]: value }))} copy={copy} /><fieldset className="admin-home__media-fields"><legend>{copy.mediaUrl}</legend><p className="admin-home__hint">{copy.mediaNote}</p><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-media-url">{copy.mediaUrl}<input id="admin-home-banner-media-url" type="url" value={media.url} onChange={event => setMedia(current => ({ ...current, url: event.target.value }))} placeholder="https://" /></label><label htmlFor="admin-home-banner-media-mime">{copy.mediaMime}<select id="admin-home-banner-media-mime" value={media.mime} onChange={event => setMedia(current => ({ ...current, mime: event.target.value as AdBannerMediaCreate['mime'] }))}><option value="image/png">image/png</option><option value="image/jpeg">image/jpeg</option><option value="image/webp">image/webp</option></select></label><label htmlFor="admin-home-banner-media-width">{copy.mediaWidth}<input id="admin-home-banner-media-width" type="number" min="1" value={media.width} onChange={event => setMedia(current => ({ ...current, width: Number(event.target.value) }))} /></label><label htmlFor="admin-home-banner-media-height">{copy.mediaHeight}<input id="admin-home-banner-media-height" type="number" min="1" value={media.height} onChange={event => setMedia(current => ({ ...current, height: Number(event.target.value) }))} /></label></div></fieldset>{media.url.trim() !== '' ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
+  useEffect(() => {
+    if (!initialBanner?.mediaId) return;
+    let active = true; let objectUrl: string | undefined;
+    void source.previewBanner(initialBanner.id).then(async result => {
+      if (!result.media) return;
+      const url = await source.loadMediaPreview(result.media.url);
+      if (!active) { if (url.startsWith('blob:')) URL.revokeObjectURL(url); return; }
+      objectUrl = url; setCurrentImage(url);
+    }).catch(() => { if (active) setFeedback({ tone: 'error', text: controls.failed }); });
+    return () => { active = false; if (objectUrl?.startsWith('blob:')) URL.revokeObjectURL(objectUrl); };
+  }, [initialBanner?.id, initialBanner?.mediaId, source, controls.failed]);
+  async function publish() {
+    if (!savedBanner?.mediaId) { setFeedback({ tone: 'error', text: controls.mediaRequired }); return; }
+    if (new Date(savedBanner.endAt).getTime() <= Date.now()) { setFeedback({ tone: 'error', text: controls.expired }); return; }
+    setSaving(true);
+    try {
+      const updated = await source.updateBanner(savedBanner.id, { expectedVersion: savedBanner.version, status: new Date(savedBanner.startAt).getTime() > Date.now() ? 'scheduled' : 'active', reason: 'Publish saved banner' });
+      setSavedBanner(updated); onSaved(updated); setFeedback({ tone: 'success', text: controls.published });
+    } catch (error) { setFeedback({ tone: 'error', text: error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy) }); } finally { setSaving(false); }
+  }
+  return <section className="admin-home__editor" data-testid="admin-home-banner-editor"><div className="admin-home__editor-heading"><div><h2>{initialBanner ? controls.edit : copy.newBanner}</h2><p>{copy.bannerDescription}</p></div><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div><form onChange={() => setDirty(true)} onSubmit={event => { void submit(event); }}><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-placement">{copy.placement}<select id="admin-home-banner-placement" value={placementKey} onChange={event => setPlacementKey(event.target.value)} required>{placements.length ? placements.map(item => <option key={item.key} value={item.key} disabled={!item.active}>{localeValue(item.label, locale)}</option>) : <option value="homepage.hero">{locale === "ar" ? "???? ?????? ????????" : "Homepage banner"}</option>}</select></label><label htmlFor="admin-home-banner-target">{copy.targetUrl}<input id="admin-home-banner-target" type="url" value={targetUrl} onChange={event => setTargetUrl(event.target.value)} placeholder="https://" /></label><label htmlFor="admin-home-banner-start">{copy.schedule.startDate}<input id="admin-home-banner-start" type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startDate} onChange={event => setStartDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-start-time">{copy.schedule.startTime}<input id="admin-home-banner-start-time" type="time" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startTime} onChange={event => setStartTime(event.target.value)} required /></label><label htmlFor="admin-home-banner-end">{copy.schedule.endDate}<input id="admin-home-banner-end" type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endDate} onChange={event => setEndDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-end-time">{copy.schedule.endTime}<input id="admin-home-banner-end-time" type="time" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endTime} onChange={event => setEndTime(event.target.value)} required /></label></div><p className="admin-home__hint" id="admin-home-banner-schedule-hint">{copy.schedule.hint}</p><LocalizedFields prefix="admin-home-banner-title" label={copy.title} value={title} onChange={(key, value) => setTitle(current => ({ ...current, [key]: value }))} copy={copy} /><LocalizedFields prefix="admin-home-banner-alt" label={copy.altText} value={altText} onChange={(key, value) => setAltText(current => ({ ...current, [key]: value }))} copy={copy} /><fieldset className="admin-home__media-fields"><label htmlFor="admin-home-banner-file">{controls.upload}<input id="admin-home-banner-file" type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const selected = event.target.files?.[0]; if (selected && (selected.size > 10 * 1024 * 1024 || !["image/png", "image/jpeg", "image/webp"].includes(selected.type))) { setFeedback({ tone: "error", text: controls.uploadHint }); event.target.value = ""; setFile(undefined); return; } setFile(selected); setMedia(current => ({ ...current, url: "" })); }} /></label><p className="admin-home__hint">{controls.uploadHint}</p>{currentImage ? <img className="admin-home__banner-image" src={currentImage} alt="" /> : null}<legend>{copy.mediaUrl}</legend><p className="admin-home__hint">{copy.mediaNote}</p><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-media-url">{copy.mediaUrl}<input id="admin-home-banner-media-url" type="url" value={media.url} onChange={event => { setFile(undefined); setMedia(current => ({ ...current, url: event.target.value })); }} placeholder="https://" /></label><label htmlFor="admin-home-banner-media-mime">{copy.mediaMime}<select id="admin-home-banner-media-mime" value={media.mime} onChange={event => setMedia(current => ({ ...current, mime: event.target.value as AdBannerMediaCreate['mime'] }))}><option value="image/png">image/png</option><option value="image/jpeg">image/jpeg</option><option value="image/webp">image/webp</option></select></label><label htmlFor="admin-home-banner-media-width">{copy.mediaWidth}<input id="admin-home-banner-media-width" type="number" min="1" value={media.width} onChange={event => setMedia(current => ({ ...current, width: Number(event.target.value) }))} /></label><label htmlFor="admin-home-banner-media-height">{copy.mediaHeight}<input id="admin-home-banner-media-height" type="number" min="1" value={media.height} onChange={event => setMedia(current => ({ ...current, height: Number(event.target.value) }))} /></label></div></fieldset>{savedBanner || file || media.url.trim() !== '' ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
 }
 
 function ContentForm({ namespace, item, locale, source, onSaved, onCancel }: { readonly namespace: 'tips' | 'homepage'; readonly item?: HomeContentItem; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: (data: AdminHomeCmsContent) => void; readonly onCancel: () => void }) {
@@ -220,7 +303,7 @@ function ContentForm({ namespace, item, locale, source, onSaved, onCancel }: { r
     try {
       const next = item === undefined ? await source.updateContent(namespace, common) : await source.updateContent(namespace, { id: item.id, version: item.version, ...changes });
       onSaved(next); onCancel();
-    } catch (error) { setFeedback(error instanceof Error ? error.message : copy.states.error.title); } finally { setSaving(false); }
+    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setSaving(false); }
   }
 
   return <section className="admin-home__editor" data-testid={`admin-home-${namespace}-editor`}><div className="admin-home__editor-heading"><div><h2>{item === undefined ? `${copy.add}: ${isTip ? copy.tips : copy.homepage}` : `${copy.save}: ${localeValue(item.title, locale)}`}</h2><p>{isTip ? copy.tipsDescription : copy.homepageDescription}</p></div><Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div><form onSubmit={event => { void submit(event); }}><div className="admin-home__form-grid"><label htmlFor={`admin-home-${namespace}-key`}>{copy.key}<input id={`admin-home-${namespace}-key`} value={key} onChange={event => setKey(event.target.value)} pattern="[a-z][a-z0-9_]{1,63}" disabled={item !== undefined} required /></label><label htmlFor={`admin-home-${namespace}-order`}>{copy.order}<input id={`admin-home-${namespace}-order`} type="number" min="0" value={order} onChange={event => setOrder(event.target.value)} required /></label></div><LocalizedFields prefix={`admin-home-${namespace}-title`} label={copy.title} value={title} onChange={(localeKey, value) => setTitle(current => ({ ...current, [localeKey]: value }))} copy={copy} /><LocalizedFields prefix={`admin-home-${namespace}-body`} label={copy.body} value={body} onChange={(localeKey, value) => setBody(current => ({ ...current, [localeKey]: value }))} multiline copy={copy} /><div className="admin-home__form-grid"><label htmlFor={`admin-home-${namespace}-status`}>{copy.status}<select id={`admin-home-${namespace}-status`} value={status} onChange={event => setStatus(event.target.value as typeof status)}><option value="draft">{copy.statuses.draft}</option><option value="published">{copy.statuses.published}</option><option value="inactive">{copy.statuses.inactive}</option></select></label><label className="admin-home__checkbox" htmlFor={`admin-home-${namespace}-${isTip ? 'active' : 'visible'}`}><input id={`admin-home-${namespace}-${isTip ? 'active' : 'visible'}`} type="checkbox" checked={isTip ? active : visible} onChange={event => isTip ? setActive(event.target.checked) : setVisible(event.target.checked)} />{isTip ? copy.active : copy.visible}</label></div><label htmlFor={`admin-home-${namespace}-reason`}>{copy.reason}<textarea id={`admin-home-${namespace}-reason`} value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-home__inline-actions">{canUpdate ? <Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-home__muted">{copy.states.permission.title}</span>}<Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p className="admin-home__feedback" data-tone="error" role="alert">{feedback}</p> : null}</form></section>;
@@ -243,6 +326,7 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
   const [banners, setBanners] = useState<AdBannerListData | undefined>(initialBannersMatch ? initialBanners : undefined);
   const [content, setContent] = useState<AdminHomeCmsContent | undefined>(initialContentMatch ? initialContent : undefined);
   const [attempt, setAttempt] = useState(0);
+  const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<HomeContentItem | 'new' | undefined>();
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
@@ -250,17 +334,17 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
     const allowed = session.status === 'authenticated' && session.role === 'admin';
     if (!allowed) { setState('permission'); return undefined; }
     if (route === 'not_found' || route === 'banner_create') { setState(route === 'not_found' ? 'not_found' : 'success'); return undefined; }
-    if ((route === 'banners' && initialBannersMatch && attempt === 0) || (route === 'tips' && initialContentMatch && attempt === 0) || (route === 'homepage' && initialContentMatch && attempt === 0)) return undefined;
+    if ((route === 'banners' && initialBannersMatch && attempt === 0 && page === 1) || (route === 'tips' && initialContentMatch && attempt === 0) || (route === 'homepage' && initialContentMatch && attempt === 0)) return undefined;
     const controller = new AbortController();
     setState('loading');
-    const request = route === 'banners' ? source.loadBanners({ page: 1, limit: 20 }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
+    const request = route === 'banners' ? source.loadBanners({ page, limit: 20 }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
     void request.then(next => {
       if (controller.signal.aborted) return;
       if (route === 'banners') { const nextBanners = next as AdBannerListData; setBanners(nextBanners); setState(stateForItems(nextBanners.items)); }
       else { const nextContent = next as AdminHomeCmsContent; setContent(nextContent); setState(stateForItems(nextContent.items)); }
     }).catch(error => { if (!controller.signal.aborted) setState(stateForError(error)); });
     return () => controller.abort();
-  }, [attempt, initialBannersMatch, initialContentMatch, route, sessionRole, session.status, source]);
+  }, [attempt, page, initialBannersMatch, initialContentMatch, route, sessionRole, session.status, source]);
 
   const refresh = () => setAttempt(value => value + 1);
   const cmsNamespace = route === 'tips' || route === 'homepage' ? route : undefined;
@@ -269,5 +353,5 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
 
   async function saveContent(next: AdminHomeCmsContent): Promise<void> { setContent(next); setState(stateForItems(next.items)); }
 
-  return <section className="admin-home" data-screen-id={route === 'banners' ? 'ADM-46' : route === 'banner_create' ? 'ADM-47' : route === 'tips' ? 'ADM-48' : route === 'homepage' ? 'ADM-49' : undefined} data-route={path} data-device-scope="desktop" data-admin-home-state={state}><AdminNavigation locale={locale} activePath={path} /><div className="admin-home__content"><header className="admin-home__heading"><div><p className="admin-home__eyebrow">{copy.eyebrow}</p><h1>{route === 'banners' ? copy.banners : route === 'banner_create' ? copy.newBanner : route === 'tips' ? copy.tips : route === 'homepage' ? copy.homepage : copy.states.not_found.title}</h1><p>{route === 'banners' || route === 'banner_create' ? copy.bannerDescription : route === 'tips' ? copy.tipsDescription : copy.homepageDescription}</p></div>{route === 'banners' ? <a className="admin-home__primary-link" href={`${ADMIN_BANNERS_ROUTE}/new?lang=${encodeURIComponent(locale)}`}>{copy.newBanner}</a> : route === 'tips' || route === 'homepage' ? <Button type="button" onClick={addContent}>{copy.add}</Button> : null}</header><nav className="admin-home__tabs" aria-label={copy.eyebrow}><a href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'banners' || route === 'banner_create' || undefined}>{copy.banners}</a><a href={`${ADMIN_CMS_TIPS_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'tips' || undefined}>{copy.tips}</a><a href={`${ADMIN_CMS_HOMEPAGE_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'homepage' || undefined}>{copy.homepage}</a></nav>{state === 'loading' || state === 'error' || state === 'retry' || state === 'permission' ? <StatePanel state={state} locale={locale} form={route === 'banner_create'} onRetry={refresh} /> : null}{state === 'not_found' ? <section className="admin-home__state" data-state="not_found"><h2>{copy.states.not_found.title}</h2><p>{copy.states.not_found.body}</p></section> : null}{route === 'banner_create' && state === 'success' ? <BannerCreateForm locale={locale} source={source} onSaved={() => {}} /> : null}{route === 'banners' && state === 'empty' ? <section className="admin-home__state" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><a className="admin-home__primary-link" href={`${ADMIN_BANNERS_ROUTE}/new?lang=${encodeURIComponent(locale)}`}>{copy.newBanner}</a></section> : null}{route === 'banners' && state === 'success' && banners !== undefined ? <BannerTable data={banners} locale={locale} source={source} onChanged={setBanners} /> : null}{cmsNamespace !== undefined && activeContent !== undefined && state === 'empty' ? <section className="admin-home__state" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><Button type="button" onClick={addContent}>{copy.add}</Button></section> : null}{cmsNamespace !== undefined && activeContent !== undefined && state === 'success' ? <ContentTable data={activeContent} namespace={cmsNamespace} locale={locale} onEdit={item => setEditing(item)} /> : null}{cmsNamespace !== undefined && editing !== undefined ? <ContentForm namespace={cmsNamespace} {...(editing === 'new' ? {} : { item: editing })} locale={locale} source={source} onSaved={next => void saveContent(next)} onCancel={() => setEditing(undefined)} /> : null}<p className="admin-home__direction-note">{copy.directionNote}</p></div></section>;
+  return <section className="admin-home" data-screen-id={route === 'banners' ? 'ADM-46' : route === 'banner_create' ? 'ADM-47' : route === 'tips' ? 'ADM-48' : route === 'homepage' ? 'ADM-49' : undefined} data-route={path} data-device-scope="desktop" data-admin-home-state={state}><AdminNavigation locale={locale} activePath={path} /><div className="admin-home__content"><header className="admin-home__heading"><div><p className="admin-home__eyebrow">{copy.eyebrow}</p><h1>{route === 'banners' ? copy.banners : route === 'banner_create' ? copy.newBanner : route === 'tips' ? copy.tips : route === 'homepage' ? copy.homepage : copy.states.not_found.title}</h1><p>{route === 'banners' || route === 'banner_create' ? copy.bannerDescription : route === 'tips' ? copy.tipsDescription : copy.homepageDescription}</p></div>{route === 'banners' ? <a className="admin-home__primary-link" href={`${ADMIN_BANNERS_ROUTE}/new?lang=${encodeURIComponent(locale)}`}>{copy.newBanner}</a> : route === 'tips' || route === 'homepage' ? <Button type="button" onClick={addContent}>{copy.add}</Button> : null}</header><nav className="admin-home__tabs" aria-label={copy.eyebrow}><a href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'banners' || route === 'banner_create' || undefined}>{copy.banners}</a><a href={`${ADMIN_CMS_TIPS_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'tips' || undefined}>{copy.tips}</a><a href={`${ADMIN_CMS_HOMEPAGE_ROUTE}?lang=${encodeURIComponent(locale)}`} data-active={route === 'homepage' || undefined}>{copy.homepage}</a></nav>{state === 'loading' || state === 'error' || state === 'retry' || state === 'permission' ? <StatePanel state={state} locale={locale} form={route === 'banner_create'} onRetry={refresh} /> : null}{state === 'not_found' ? <section className="admin-home__state" data-state="not_found"><h2>{copy.states.not_found.title}</h2><p>{copy.states.not_found.body}</p></section> : null}{(route === "banners" || route === "banner_create") && (state === "success" || state === "empty") ? <BannerDisplayControls locale={locale} source={source} /> : null}{route === 'banner_create' && state === 'success' ? <BannerCreateForm locale={locale} source={source} onSaved={() => {}} /> : null}{route === 'banners' && state === 'empty' ? <section className="admin-home__state" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><a className="admin-home__primary-link" href={`${ADMIN_BANNERS_ROUTE}/new?lang=${encodeURIComponent(locale)}`}>{copy.newBanner}</a></section> : null}{route === 'banners' && state === 'success' && banners !== undefined ? <><BannerTable data={banners} locale={locale} source={source} onChanged={setBanners} />{banners.total > banners.limit ? <nav className="admin-home__inline-actions" aria-label={copy.banners}><Button variant="secondary" disabled={page <= 1} onClick={() => setPage(value => value - 1)}>{getBannerControlCopy(locale).previous}</Button><span>{page} / {Math.ceil(banners.total / banners.limit)}</span><Button variant="secondary" disabled={page * banners.limit >= banners.total} onClick={() => setPage(value => value + 1)}>{getBannerControlCopy(locale).next}</Button></nav> : null}</> : null}{cmsNamespace !== undefined && activeContent !== undefined && state === 'empty' ? <section className="admin-home__state" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><Button type="button" onClick={addContent}>{copy.add}</Button></section> : null}{cmsNamespace !== undefined && activeContent !== undefined && state === 'success' ? <ContentTable data={activeContent} namespace={cmsNamespace} locale={locale} onEdit={item => setEditing(item)} /> : null}{cmsNamespace !== undefined && editing !== undefined ? <ContentForm namespace={cmsNamespace} {...(editing === 'new' ? {} : { item: editing })} locale={locale} source={source} onSaved={next => void saveContent(next)} onCancel={() => setEditing(undefined)} /> : null}<p className="admin-home__direction-note">{copy.directionNote}</p></div></section>;
 }

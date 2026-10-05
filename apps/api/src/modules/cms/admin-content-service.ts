@@ -10,6 +10,7 @@ import {
   cmsAdminPopulationValuePutSchema,
   cmsAdminPopulationValueSchema,
   cmsAdminTeamMemberPutSchema,
+  cmsAdminTeamMemberDeleteSchema,
   cmsAdminTeamMemberSchema,
   cmsAdminTipPutSchema,
   cmsAdminTipSchema,
@@ -66,6 +67,7 @@ export class CmsAdminContentServiceError extends Error {
 export interface CmsAdminContentService {
   get(principal: CmsAdminPrincipal, namespace: CmsAdminContentNamespace): Promise<CmsAdminContentData>;
   put(principal: CmsAdminPrincipal, namespace: CmsAdminContentNamespace, input: unknown, context: CmsAdminMutationContext): Promise<CmsAdminContentData>;
+  deleteTeam(principal: CmsAdminPrincipal, input: unknown, context: CmsAdminMutationContext): Promise<CmsAdminContentData>;
 }
 
 function actions(manage: boolean, publish: boolean): CmsAdminAboutBlock['availableActions'] {
@@ -87,7 +89,7 @@ function teamData(row: StoredTeamMember, manage: boolean, publish: boolean): Cms
   return cmsAdminTeamMemberSchema.parse({
     ...row,
     updatedAt: row.updatedAt.toISOString(),
-    availableActions: actions(manage, publish),
+    availableActions: [...actions(manage, publish), ...(manage ? ['delete'] : [])],
     name: row.name,
     title: row.title,
     ...(row.bio ? { bio: row.bio } : {}),
@@ -246,6 +248,13 @@ export function createCmsAdminContentService(dependencies: {
   }
 
   const service: CmsAdminContentService = {
+    async deleteTeam(principal, unparsedInput, context) {
+      await requireManage(principal.userId);
+      const input = cmsAdminTeamMemberDeleteSchema.parse(unparsedInput);
+      const row = teamResult(await dependencies.repository.deleteTeam(input.id, input.version));
+      await audit('cms.team.delete', 'cms_team_member', row.id, principal, input.reason, row, null, context, now());
+      return read(principal, 'team');
+    },
     async get(principal, namespace) {
       return read(principal, cmsAdminContentNamespaceSchema.parse(namespace));
     },
@@ -404,6 +413,7 @@ export function createCmsAdminContentService(dependencies: {
   if (!dependencies.transaction) return service;
   return {
     ...service,
-    put: (...args) => dependencies.transaction!(() => service.put(...args))
+    put: (...args) => dependencies.transaction!(() => service.put(...args)),
+    deleteTeam: (...args) => dependencies.transaction!(() => service.deleteTeam(...args))
   };
 }

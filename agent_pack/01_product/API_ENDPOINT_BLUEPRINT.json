@@ -2363,5 +2363,65 @@
     "purpose": "Publish or hide community content with reason, audit and optimistic concurrency",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/banners/config",
+    "module": "ads",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Read banner settings",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/banners/config",
+    "module": "ads",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Set up or stop banner display",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/banners/:bannerId/upload",
+    "module": "ads",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Upload scanned banner image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/banner-media/:mediaId",
+    "module": "ads",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Serve publicly visible banner image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/content/team",
+    "module": "cms",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Delete a team member with version check",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

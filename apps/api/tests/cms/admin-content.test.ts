@@ -16,6 +16,7 @@ const secondId = '1123456789abcdef01234567';
 const changedAt = new Date('2026-08-19T11:00:00.000Z');
 
 function repository(): CmsAdminContentRepository {
+  let teamDeleted = false;
   let about: StoredAboutBlock = {
     id: adminId,
     key: 'mission',
@@ -69,16 +70,22 @@ function repository(): CmsAdminContentRepository {
       about = { ...about, ...input, updatedBy: actorId, version: version + 1, updatedAt: at };
       return { kind: 'written', item: about };
     },
-    async listTeam() { return [team]; },
-    async findTeam(id) { return id === team.id ? team : null; },
+    async listTeam() { return teamDeleted ? [] : [team]; },
+    async findTeam(id) { return !teamDeleted && id === team.id ? team : null; },
     async createTeam(input, actorId, at) {
       team = { id: secondId, ...input, updatedBy: actorId, version: 0, updatedAt: at };
       return { kind: 'written', item: team };
     },
     async updateTeam(id, version, input, actorId, at) {
-      if (id !== team.id) return { kind: 'not_found' };
+      if (teamDeleted || id !== team.id) return { kind: 'not_found' };
       if (version !== team.version) return { kind: 'version_conflict' };
       team = { ...team, ...input, updatedBy: actorId, version: version + 1, updatedAt: at };
+      return { kind: 'written', item: team };
+    },
+    async deleteTeam(id, version) {
+      if (teamDeleted || id !== team.id) return { kind: 'not_found' };
+      if (version !== team.version) return { kind: 'version_conflict' };
+      teamDeleted = true;
       return { kind: 'written', item: team };
     },
     async getPopulation() { return population; },
@@ -152,6 +159,29 @@ function createService(options: { manage?: boolean; publish?: boolean } = {}) {
   });
   return { service: created, audits };
 }
+
+test('deletes a team member with management permission and records the deletion audit', async () => {
+  const { service, audits } = createService();
+  const result = await service.deleteTeam({ userId: adminId }, { id: secondId, version: 1, reason: 'Member left the team' }, { requestId: 'delete-team', traceId: 'a'.repeat(32) });
+  assert.deepEqual(result, { namespace: 'team', items: [] });
+  assert.deepEqual(audits, ['cms.team.delete']);
+  await assert.rejects(service.deleteTeam({ userId: adminId }, { id: secondId, version: 1, reason: 'Member left the team' }, { requestId: 'delete-team', traceId: 'a'.repeat(32) }),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_NOT_FOUND');
+});
+
+test('rejects unauthorized or stale team deletions without removing the member', async () => {
+  const input = { id: secondId, version: 0, reason: 'Member left the team' };
+  const context = { requestId: 'delete-team', traceId: 'a'.repeat(32) };
+  const unauthorized = createService({ manage: false });
+  await assert.rejects(unauthorized.service.deleteTeam({ userId: adminId }, input, context),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_FORBIDDEN');
+  const stale = createService();
+  await assert.rejects(stale.service.deleteTeam({ userId: adminId }, input, context),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_VERSION_CONFLICT');
+  assert.equal((await stale.service.get({ userId: adminId }, 'team')).items.length, 1);
+  assert.deepEqual(stale.audits, []);
+  assert.deepEqual(unauthorized.audits, []);
+});
 
 test('returns ordered admin About/Team projections with permission-derived actions', async () => {
   const { service } = createService();

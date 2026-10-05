@@ -1,0 +1,83 @@
+.user-guide { min-width: 0; padding: clamp(16px, 3vw, 40px); color: #1b2942; background: #f8f7f2; scroll-margin-block-start: 80px; }
+.user-guide__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.user-guide h1 { margin: 6px 0 12px; font-size: clamp(1.6rem, 3vw, 2.25rem); }
+.user-guide p { margin: 0; line-height: 1.85; }
+.user-guide__header p { color: #526174; }
+.user-guide__header small { display: block; margin-top: 12px; color: #526174; }
+.user-guide__header .user-guide__eyebrow { color: #976b25; font-weight: 700; font-size: .85rem; }
+.user-guide button, .user-guide__links a { min-height: 42px; border: 1px solid #d6dcd6; border-radius: 12px; padding: 8px 13px; background: #fff; color: #145649; cursor: pointer; font: inherit; font-size: .875rem; font-weight: 700; transition: background 160ms ease, border-color 160ms ease; }
+.user-guide button:hover, .user-guide__links a:hover { background: #eef6f1; border-color: #145649; }
+.user-guide :is(button,a,input,select):focus-visible { outline: 3px solid #4684da; outline-offset: 3px; }
+.user-guide__window-controls, .user-guide__actions, .user-guide__links { display: flex; flex-wrap: wrap; gap: 8px; }
+.user-guide__window-controls { flex-shrink: 0; max-width: 280px; }
+.user-guide__window-controls button:last-child { background: #145649; color: #fff; border-color: #145649; }
+.user-guide__toolbar { display: grid; grid-template-columns: minmax(180px, 1.5fr) minmax(160px, 1fr); gap: 16px; padding: 20px; background: #fff; border: 1px solid #e1e5df; border-radius: 18px; }
+.user-guide__toolbar label { display: block; margin-bottom: 8px; font-weight: 700; font-size: .875rem; }
+.user-guide__toolbar :is(input,select) { width: 100%; min-width: 0; min-height: 46px; padding: 10px 12px; border: 1px solid #cbd4cd; border-radius: 12px; background: #fafbf9; color: #1b2942; font: inherit; font-size: .9rem; }
+.user-guide__actions { grid-column: 1 / -1; }
+.user-guide__count { grid-column: 1 / -1; color: #526174; font-size: .85rem; }
+.user-guide__link-note { padding-block: 16px 6px; font-size: .85rem; color: #526174; }
+.user-guide__feedback { color: #145649; min-height: 1.5em; font-size: .85rem; margin-bottom: 12px !important; }
+.user-guide__layout { display: grid; grid-template-columns: minmax(190px, 240px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.user-guide__toc { position: sticky; top: 16px; max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; padding: 18px; background: #fff; border: 1px solid #e1e5df; border-radius: 16px; }
+.user-guide__toc h2 { font-size: 1rem; margin: 0 0 12px; }
+.user-guide__toc h3 { font-size: .86rem; color: #145649; margin: 20px 0 6px; line-height: 1.6; }
+.user-guide__toc ul { padding: 0; margin: 0; list-style: none; }
+.user-guide__toc a { display: block; padding: 8px; border-radius: 8px; color: #526174; font-size: .82rem; line-height: 1.7; text-decoration: none; }
+.user-guide__toc a:hover, .user-guide__toc a[aria-current] { background: #eef6f1; color: #145649; }
+.user-guide__chapters { min-width: 0; }
+.user-guide__section { margin-bottom: 28px; }
+.user-guide__section-heading { display: flex; justify-content: space-between; gap: 16px; align-items: start; padding: 8px 4px 14px; }
+.user-guide__section-heading h2 { font-size: 1.2rem; margin: 0 0 6px; line-height: 1.65; }
+.user-guide__section-heading p { font-size: .875rem; color: #526174; }
+.user-guide__section-heading button { flex-shrink: 0; width: 42px; }
+.user-guide__topic { margin-bottom: 12px; border: 1px solid #dfe5df; border-radius: 16px; background: #fff; overflow: clip; scroll-margin-top: 24px; }
+.user-guide__topic h3 { margin: 0; }
+.user-guide__topic h3 > button { scroll-margin-block-start: 90px; }
+.user-guide__topic h3 > button { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border: 0; border-radius: 0; color: #1b2942; text-align: start; font-weight: 400; }
+.user-guide__topic h3 strong { display: block; font-size: 1rem; line-height: 1.75; }
+.user-guide__topic h3 small { display: block; font-size: .83rem; color: #526174; line-height: 1.85; margin-top: 4px; }
+.user-guide__chevron { display: grid; place-items: center; width: 30px; height: 30px; flex-shrink: 0; background: #eef6f1; border-radius: 50%; color: #145649; font-size: 1.25rem; }
+.user-guide__body { padding: 0 22px 22px; border-top: 1px solid #eef0ec; font-size: .925rem; line-height: 1.9; }
+.user-guide__body h4 { margin: 22px 0 10px; font-size: 1rem; color: #145649; }
+.user-guide__body h5 { margin: 0 0 6px; font-size: .925rem; }
+.user-guide__body ol { margin: 0; padding-inline-start: 24px; }
+.user-guide__body li { padding-inline-start: 4px; margin-bottom: 10px; }
+.user-guide__body dl { margin: 0; }
+.user-guide__body dl > div { padding: 12px 0; border-bottom: 1px solid #eef0ec; }
+.user-guide__body dt { font-weight: 700; }
+.user-guide__body dd { margin: 4px 0 0; color: #526174; }
+.user-guide__before, .user-guide__result, .user-guide__limit { border-radius: 12px; padding: 16px; margin-block: 18px; background: #f5f7f9; }
+.user-guide__result { background: #eef6f1; }
+.user-guide__limit { background: #fff7df; border-inline-start: 3px solid #b68127; }
+.user-guide__body :is(.user-guide__before,.user-guide__result,.user-guide__limit) h4 { margin: 0 0 8px; }
+.user-guide__faq > div { margin-bottom: 16px; }
+.user-guide__links a { text-decoration: none; overflow-wrap: anywhere; }
+.user-guide__body footer { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; border-top: 1px solid #eef0ec; margin-top: 24px; padding-top: 16px; }
+.user-guide__body footer a { color: #145649; font-size: .85rem; }
+.user-guide__empty, .user-guide__minimized { padding: 24px; border-radius: 16px; border: 1px solid #dfe5df; background: #fff; }
+.user-guide__empty h2 { font-size: 1.2rem; }
+.user-guide__empty button { margin-top: 16px; }
+.user-guide[data-large="true"] .user-guide__body { font-size: 1.075rem; }
+.user-guide[data-maximized="true"] { position: fixed; inset: 0; z-index: 1000; overflow: auto; overscroll-behavior: contain; padding: clamp(16px, 3vw, 48px); animation: guide-enter 160ms ease-out; }
+.user-guide[data-maximized="true"] .user-guide__layout { max-width: 1300px; margin-inline: auto; }
+.user-guide[data-maximized="true"] .user-guide__toc { max-height: calc(100dvh - 48px); }
+.user-guide[data-maximized="true"] .user-guide__topic h3 > button { scroll-margin-block-start: 24px; }
+.user-guide [hidden] { display: none; }
+@keyframes guide-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 1000px) { .user-guide__layout { grid-template-columns: minmax(0, 1fr); } .user-guide__toc { position: static; max-height: 280px; } .user-guide__header { flex-direction: column; } .user-guide__window-controls { max-width: none; } }
+@media (max-width: 600px) { .user-guide__toolbar { grid-template-columns: minmax(0, 1fr); padding: 16px; } .user-guide__body { padding-inline: 16px; } .user-guide__topic h3 > button { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { .user-guide[data-maximized="true"] { animation: none; } .user-guide button, .user-guide__links a { transition: none; } }
+@media print {
+  html, body, .route-shell--admin .route-shell__body { overflow: visible !important; }
+  .route-shell--admin > .route-shell__header, .route-shell__footer, .admin-dashboard__navigation, .admin-dashboard__navigation-backdrop, .user-guide__window-controls, .user-guide__toolbar, .user-guide__toc, .user-guide__feedback, .user-guide__minimized, .user-guide__body footer, .user-guide__section-heading > button { display: none !important; }
+  .route-shell--admin .route-shell__body > .app-main > .admin-user-guide { display: block !important; overflow: visible !important; }
+  .user-guide, .user-guide[data-maximized="true"] { position: static; overflow: visible; padding: 0; background: white; color: black; }
+  .user-guide__layout { display: block; }
+  .user-guide [hidden] { display: block; }
+  .user-guide__topic { overflow: visible; }
+  .user-guide__topic h3, .user-guide__body h4 { break-after: avoid; }
+  .user-guide__body :is(li,dl > div,.user-guide__faq > div) { break-inside: avoid; }
+  .user-guide__links a { color: black; }
+  .user-guide__links a::after { content: ' (' attr(href) ')'; font-size: .75rem; }
+}

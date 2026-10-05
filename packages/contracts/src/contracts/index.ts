@@ -1,3 +1,4 @@
+export { cmsAdminTeamMemberDeleteSchema } from '../cms/index.js';
 export {
   apiErrorSchema,
   createErrorEnvelope,
@@ -791,3 +792,6 @@ export type {
 
 export { communityPostModerationSchema } from '../community/index.js';
 export type { CommunityPostModeration } from '../community/index.js';
+
+export { adBannerConfigSchema, adBannerConfigPutSchema, adBannerConfigSuccessEnvelopeSchema } from '../ads/index.js';
+export type { AdBannerConfig } from '../ads/index.js';

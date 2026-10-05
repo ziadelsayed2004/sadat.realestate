@@ -31,6 +31,36 @@ test('models percentage, fixed, and exempt policies with strict scope and effect
   assert.deepEqual(listed.items.map(item => item.id), [active.id]);
 });
 
+test('repeated and concurrent draft saves retain one record without changing another arrangement', async () => {
+  const accountId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+  const effectiveFrom = '2026-08-20T00:00:00.000Z';
+  for (const input of [
+    { kind: 'percentage', percentageBps: 300, effectiveFrom },
+    { kind: 'fixed', fixedAmountMinor: 7500, currency: 'EGP', effectiveFrom },
+    { kind: 'exempt', effectiveFrom }
+  ]) {
+    const service = createCommissionAccountService({ now: () => new Date(effectiveFrom) });
+    const [first, repeated] = await Promise.all([
+      service.createOverride(admin, accountId, input),
+      service.createOverride(admin, accountId, input)
+    ]);
+    assert.deepEqual(first, repeated);
+    assert.deepEqual(await service.createOverride(admin, accountId, input), first);
+    assert.equal(first.version, 0);
+    assert.equal(first.status, 'draft');
+    assert.equal((await service.listOverrides(admin, { accountId })).total, 1);
+    const different = { kind: 'percentage', percentageBps: 400, effectiveFrom };
+    await assert.rejects(() => service.createOverride(admin, accountId, different),
+      (error) => error instanceof CommissionAccountServiceError && error.code === 'COMMISSION_ACCOUNT_DUPLICATE');
+    assert.deepEqual(await service.getOverride(admin, first.id), first);
+    await assert.rejects(() => service.createOverride(seeker, accountId, input),
+      (error) => error instanceof CommissionAccountServiceError && error.code === 'COMMISSION_FORBIDDEN');
+    await service.updateOverride(admin, first.id, { expectedVersion: 0, reason: 'Archive draft', status: 'archived' });
+    await assert.rejects(() => service.createOverride(admin, accountId, input),
+      (error) => error instanceof CommissionAccountServiceError && error.code === 'COMMISSION_ACCOUNT_DUPLICATE');
+  }
+});
+
 test('applies account-level overrides with ownership-safe reads, source attribution, effective dates, and optimistic versions', async () => {
   let current = new Date('2026-08-14T00:00:00.000Z');
   const accountId = 'aaaaaaaaaaaaaaaaaaaaaaaa';

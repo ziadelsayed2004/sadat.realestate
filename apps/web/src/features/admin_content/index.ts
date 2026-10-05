@@ -12,6 +12,7 @@ export {
   createAdminContentSource,
   createAdminCmsContentSource,
   deleteAdminArticleCategory,
+  deleteAdminCmsTeamMember,
   loadAdminCmsContent,
   loadAdminArticleCategories,
   loadAdminArticles,

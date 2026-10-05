@@ -12,7 +12,8 @@ import { CmsAdminContentServiceError, type CmsAdminContentService } from './admi
 
 export const CMS_ADMIN_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/content/:namespace', operationId: 'getAdminCmsContent' },
-  { method: 'PUT', path: '/api/v1/admin/content/:namespace', operationId: 'putAdminCmsContent' }
+  { method: 'PUT', path: '/api/v1/admin/content/:namespace', operationId: 'putAdminCmsContent' },
+  { method: 'DELETE', path: '/api/v1/admin/content/team', operationId: 'deleteAdminCmsTeamMember' }
 ] as const;
 
 export interface CmsAdminContentRouterDependencies {
@@ -85,6 +86,15 @@ export function createCmsAdminContentRouter(dependencies: CmsAdminContentRouterD
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.delete('/admin/content/team', async (request, response) => {
+    try {
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.deleteTeam(principal(response), request.body ?? {}, context(request)),
+        requestId(request)
+      ));
+    } catch (error) { sendError(request, response, error); }
   });
 
   return router;

@@ -9,6 +9,9 @@ import { createAdAdminRequestService, createAdCalendarService } from './service.
 import type { AdminAdsRouterDependencies } from './admin-router.js';
 import type { AdminBannerRouterDependencies } from './banner-router.js';
 import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
+import { createBannerManagement } from './banner-management.js';
+import type { UploadEnvironment } from '../uploads/environment.js';
+import { createInMemoryStorageAdapter, createLocalFilesystemStorageAdapter, createUnavailableStorageAdapter, createClamAvMalwareScanner, createDeterministicMalwareScanner, createUnavailableMalwareScanner } from '../uploads/adapters.js';
 
 export function createAdminAdsRuntime(
   connection: Connection,
@@ -33,10 +36,15 @@ export function createAdminBannersRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
   authorization: Pick<RbacService, 'authorize'>,
-  audit: AuditWriter
+  audit: AuditWriter,
+  environment: UploadEnvironment
 ): AdminBannerRouterDependencies {
   return {
     accessTokens,
+    management: createBannerManagement({ connection, authorization, audit,
+      storage: environment.mode === 'memory' ? createInMemoryStorageAdapter() : environment.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter(),
+      scanner: environment.scannerMode === 'clamav' && environment.clamav ? createClamAvMalwareScanner(environment.clamav) : environment.scannerMode === 'deterministic-fake' ? createDeterministicMalwareScanner('clean') : createUnavailableMalwareScanner(),
+      policy: createMongooseAdvertisingSettingsReader(connection) }),
     service: createAdSettingsService({
       bannerRepository: createMongooseAdBannerRepository(connection, audit),
       bannerAuthorization: authorization,

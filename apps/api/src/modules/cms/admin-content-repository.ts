@@ -154,6 +154,7 @@ export interface CmsAdminContentRepository {
   findTeam(id: string): Promise<StoredTeamMember | null>;
   createTeam(input: Omit<TeamMemberCreate, 'reason'>, actorId: string, at: Date): Promise<CmsWriteResult<StoredTeamMember>>;
   updateTeam(id: string, version: number, input: TeamMemberChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredTeamMember>>;
+  deleteTeam(id: string, version: number): Promise<CmsWriteResult<StoredTeamMember>>;
   getPopulation(): Promise<StoredPopulationValue | null>;
   createPopulation(input: PopulationValueChanges, actorId: string, at: Date): Promise<StoredPopulationValue>;
   updatePopulation(id: string, version: number, input: PopulationValueUpdateChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredPopulationValue>>;
@@ -359,6 +360,13 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
       } catch (error) {
         return duplicateKey(error) ? { kind: 'key_conflict' } : Promise.reject(error);
       }
+    },
+    async deleteTeam(id, version) {
+      const row = await models.team.findOneAndDelete({ _id: new Types.ObjectId(id), version }).lean();
+      if (!row) return await models.team.exists({ _id: new Types.ObjectId(id) })
+        ? { kind: 'version_conflict' }
+        : { kind: 'not_found' };
+      return { kind: 'written', item: mapTeam(row) };
     },
     async getPopulation() {
       const row = await models.population.findOne().sort({ updatedAt: -1, _id: 1 }).lean();

@@ -26,7 +26,8 @@ const routeStylesheets = {
   public: baseStylesheetBytes + stylesheetSize('feature-public-'),
   seeker: baseStylesheetBytes + stylesheetSize('feature-seeker-'),
   provider: baseStylesheetBytes + stylesheetSize('feature-provider-'),
-  admin: baseStylesheetBytes + stylesheetSize('feature-admin-')
+  admin: baseStylesheetBytes + stylesheetSize('feature-admin-'),
+  userGuide: baseStylesheetBytes + stylesheetSize('feature-admin-') + stylesheetSize('feature-user-guide-')
 };
 const largestRouteStylesheet = Object.entries(routeStylesheets).reduce(
   (largest, [route, bytes]) => bytes > largest.bytes ? { route, bytes } : largest,

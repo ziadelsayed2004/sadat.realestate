@@ -11,7 +11,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import { adminAccountUserListDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClient } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminCommissions,
   createAdminAccountCommissionOverride,
@@ -201,6 +201,54 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     fireEvent.change(screen.getByLabelText('Commission amount'), { target: { value: '125.50' } });
     fireEvent.submit(form);
     await waitFor(() => expect(create).toHaveBeenLastCalledWith(expect.objectContaining({ fixedAmountMinor: 12550, currency: 'EGP' })));
+  });
+
+  it.each(['ar', 'en'] as const)('explains account duplicate conflicts in %s without losing entered values', async locale => {
+    const copy = getAdminCommissionsCopy(locale);
+    const create = vi.fn().mockRejectedValue(new ApiClientError('errors.conflict', {
+      code: 'HTTP_ERROR', status: 409,
+      apiError: { code: 'COMMISSION_ACCOUNT_DUPLICATE', messageKey: 'errors.conflict', details: [], requestId: 'commission-duplicate-test' }
+    }));
+    window.history.pushState({}, '', `/admin/commissions/account?accountId=${accountId}`);
+    const result = renderWithLocale(<AdminCommissions locale={locale} session={session} {...loaders} createAccountOverride={create} />, { locale });
+    const percentage = await screen.findByLabelText(copy.labels.percentageBps!);
+    fireEvent.change(percentage, { target: { value: '3' } });
+    fireEvent.change(screen.getByLabelText(copy.labels.effectiveFrom!), { target: { value: '2026-10-05' } });
+    fireEvent.change(screen.getByLabelText(copy.labels.effectiveTo!), { target: { value: '2026-10-06' } });
+    fireEvent.submit(result.container.querySelector('form.admin-commissions__form')!);
+    expect(await screen.findByRole('alert')).toHaveTextContent(copy.mutation.duplicateAccount);
+    expect(result.container).not.toHaveTextContent('errors.conflict');
+    expect(percentage).toHaveValue(3);
+    expect(screen.getByLabelText(copy.labels.effectiveTo!)).toHaveValue('2026-10-06');
+    expect(create).toHaveBeenCalledWith(accountId, { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-10-05T00:00:00.000Z', effectiveTo: '2026-10-06T00:00:00.000Z' });
+  });
+
+  it('shows a draft confirmation on repeated saves rather than claiming the active commission changed', async () => {
+    const copy = getAdminCommissionsCopy('ar');
+    const create = vi.fn(async () => override);
+    window.history.pushState({}, '', `/admin/commissions/account?accountId=${accountId}`);
+    const result = renderWithLocale(<AdminCommissions locale="ar" session={session} {...loaders} createAccountOverride={create} />, { locale: 'ar' });
+    fireEvent.change(await screen.findByLabelText(copy.labels.percentageBps!), { target: { value: '3' } });
+    const form = result.container.querySelector('form.admin-commissions__form')!;
+    fireEvent.submit(form);
+    await waitFor(() => expect(result.container).toHaveTextContent(copy.mutation.savedDraft));
+    fireEvent.submit(form);
+    await waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(result.container).toHaveTextContent(copy.mutation.savedDraft));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it.each([
+    new ApiClientError('errors.conflict', { code: 'HTTP_ERROR', status: 409 }),
+    new ApiClientError('private network failure', { code: 'NETWORK_ERROR' })
+  ])('uses a readable message for a generic conflict or network failure', async failure => {
+    const copy = getAdminCommissionsCopy('ar');
+    window.history.pushState({}, '', `/admin/commissions/account?accountId=${accountId}`);
+    const result = renderWithLocale(<AdminCommissions locale="ar" session={session} {...loaders} createAccountOverride={vi.fn().mockRejectedValue(failure)} />, { locale: 'ar' });
+    fireEvent.change(await screen.findByLabelText(copy.labels.percentageBps!), { target: { value: '3' } });
+    fireEvent.submit(result.container.querySelector('form.admin-commissions__form')!);
+    expect(await screen.findByRole('alert')).toHaveTextContent(failure.status === 409 ? copy.mutation.conflict : copy.mutation.network);
+    expect(result.container).not.toHaveTextContent(failure.message);
   });
 
   it('opens an account from the provider list without showing an error for the empty initial selection', async () => {

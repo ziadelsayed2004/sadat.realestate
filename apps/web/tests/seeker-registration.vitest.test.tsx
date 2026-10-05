@@ -57,7 +57,45 @@ describe('seeker registration screens', () => {
     expect(screen.getByRole('heading', { name: copy.accountSelectionTitle, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) })).toHaveAttribute('aria-pressed', 'false');
     expect(screen.getByRole('button', { name: copy.continueAction })).toBeDisabled();
-    expect(screen.getByRole('link', { name: new RegExp(copy.providerAccountTitle) })).toHaveAttribute('href', '/auth/register/provider/type');
+    expect(screen.getByRole('button', { name: new RegExp(copy.providerAccountTitle) })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it.each(['ar', 'en'] as const)('waits for Continue before opening provider registration and preserves %s', locale => {
+    const client = createClient();
+    const copy = getAuthCopy(locale);
+    window.history.replaceState({}, '', `/auth/register?lang=${locale}`);
+    renderWithLocale(<AuthPage url={`/auth/register?lang=${locale}`} locale={locale} client={client} onAuthenticated={vi.fn()} />, { locale });
+    const seeker = screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) });
+    const provider = screen.getByRole('button', { name: new RegExp(copy.providerAccountTitle) });
+
+    fireEvent.click(provider);
+    expect(provider).toHaveAttribute('aria-pressed', 'true');
+    expect(seeker).toHaveAttribute('aria-pressed', 'false');
+    expect(window.location.pathname).toBe('/auth/register');
+    expect(screen.queryByTestId('provider-type-selection')).not.toBeInTheDocument();
+    expect(client.sendOtp).not.toHaveBeenCalled();
+    fireEvent.click(seeker);
+    expect(provider).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(provider);
+    fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
+
+    expect(window.location.pathname).toBe('/auth/register/provider/type');
+    expect(window.location.search).toBe(`?lang=${locale}`);
+    expect(screen.getByTestId('provider-type-selection')).toBeInTheDocument();
+    expect(client.sendOtp).not.toHaveBeenCalled();
+  });
+
+  it('continues with the seeker flow when switching back from provider', () => {
+    const copy = getAuthCopy('en');
+    window.history.replaceState({}, '', '/auth/register');
+    renderWithLocale(<AuthPage url="/auth/register" locale="en" client={createClient()} onAuthenticated={vi.fn()} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.providerAccountTitle) }));
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) }));
+    expect(window.location.pathname).toBe('/auth/register');
+    fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
+    expect(window.location.pathname).toBe('/auth/verify-email');
+    expect(window.location.search).toContain('roleType=seeker');
+    expect(screen.getByLabelText(copy.identifierLabel)).toBeInTheDocument();
   });
 
   it('uses the verified authority in memory, submits the strict seeker request, and gates success on the API result', async () => {

@@ -710,18 +710,15 @@ interface RegistrationRolePageProps {
   readonly locale: SupportedLocale;
   readonly restartRequired: boolean;
   readonly onSelectSeeker: () => void;
+  readonly onSelectProvider: () => void;
 }
 
-function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }: RegistrationRolePageProps) {
-  const [selected, setSelected] = useState(false);
+function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker, onSelectProvider }: RegistrationRolePageProps) {
+  const [selected, setSelected] = useState<'seeker' | 'provider' | undefined>();
 
-  function selectSeeker(): void {
-    setSelected(true);
-  }
-
-  function continueToEmail(): void {
-    if (!selected) return;
-    onSelectSeeker();
+  function continueRegistration(): void {
+    if (selected === 'seeker') onSelectSeeker();
+    if (selected === 'provider') onSelectProvider();
   }
 
   return (
@@ -745,24 +742,29 @@ function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }:
           ) : null}
           <div className="auth-role-options" aria-label={copy.roleLabel}>
             <button
-              className={`auth-role-card${selected ? ' auth-role-card--selected' : ''}`}
+              className={`auth-role-card${selected === 'seeker' ? ' auth-role-card--selected' : ''}`}
               type="button"
-              aria-pressed={selected}
-              onClick={selectSeeker}
+              aria-pressed={selected === 'seeker'}
+              onClick={() => setSelected('seeker')}
             >
               <span className="auth-role-card__icon"><AuthIcon name="home" /></span>
               <span className="auth-role-card__title">{copy.seekerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.seekerAccountBody}</span>
             </button>
-            <a className="auth-role-card auth-role-card--link" href="/auth/register/provider/type">
+            <button
+              className={`auth-role-card auth-role-card--provider${selected === 'provider' ? ' auth-role-card--selected' : ''}`}
+              type="button"
+              aria-pressed={selected === 'provider'}
+              onClick={() => setSelected('provider')}
+            >
               <span className="auth-role-card__icon"><AuthIcon name="building" /></span>
               <span className="auth-role-card__title">{copy.providerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.providerAccountBody}</span>
               <span className="auth-role-card__tag"><span className="auth-role-card__tag-label">{copy.roleProvider}</span></span>
-            </a>
+            </button>
           </div>
           <div className="auth-role-actions">
-            <Button type="button" size="lg" disabled={!selected} onClick={continueToEmail}>
+            <Button type="button" size="lg" disabled={selected === undefined} onClick={continueRegistration}>
               {copy.continueAction}
             </Button>
             <p className="auth-card__prompt"><a href="/auth/login">{copy.backAction}</a></p>
@@ -946,12 +948,19 @@ interface SeekerRegistrationFlowProps {
 }
 
 function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequired }: SeekerRegistrationFlowProps) {
-  const [step, setStep] = useState<'role' | 'otp' | 'form' | 'success'>('role');
+  const [step, setStep] = useState<'role' | 'provider-type' | 'otp' | 'form' | 'success'>('role');
   const [showRestartNotice, setShowRestartNotice] = useState(restartRequired);
   const [verificationToken, setVerificationToken] = useState<string | undefined>();
   const [email, setEmail] = useState<string | undefined>();
   const [snapshot, setSnapshot] = useState<AuthSnapshot | undefined>();
   const copy = getAuthCopy(locale);
+  const providerTypePath = `/auth/register/provider/type?lang=${encodeURIComponent(locale)}`;
+
+  function startProviderRegistration(): void {
+    setShowRestartNotice(false);
+    replaceAuthUrl(providerTypePath);
+    setStep('provider-type');
+  }
 
   function startSeekerRegistration(): void {
     setShowRestartNotice(false);
@@ -985,7 +994,10 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   }, []);
 
   if (step === 'role') {
-    return <RegistrationRolePage copy={copy} locale={locale} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} />;
+    return <RegistrationRolePage copy={copy} locale={locale} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} onSelectProvider={startProviderRegistration} />;
+  }
+  if (step === 'provider-type') {
+    return <ProviderRegistrationFlow client={client} locale={locale} url={providerTypePath} initialStep="type" onAuthenticated={onAuthenticated} />;
   }
   if (step === 'otp') {
     return (
@@ -1018,7 +1030,7 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   if (step === 'success' && snapshot !== undefined) {
     return <SeekerRegistrationSuccess copy={copy} locale={locale} snapshot={snapshot} onContinue={onAuthenticated} />;
   }
-  return <RegistrationRolePage copy={copy} locale={locale} restartRequired onSelectSeeker={startSeekerRegistration} />;
+  return <RegistrationRolePage copy={copy} locale={locale} restartRequired onSelectSeeker={startSeekerRegistration} onSelectProvider={startProviderRegistration} />;
 }
 
 type ProviderRegistrationStep = 'type' | 'otp' | 'registering' | 'resuming' | 'account' | 'organization' | 'documents' | 'review' | 'registration-error' | 'resume-error';

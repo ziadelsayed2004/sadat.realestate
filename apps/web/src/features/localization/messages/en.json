@@ -787,6 +787,13 @@
   },
   "admin_commissions/copy#getAdminCommissionsCopy": {
     "eyebrow": "Commission administration",
+    "mutation": {
+      "duplicateAccount": "This account already has an override with the same start date and different details or a non-draft status. The existing record was not changed. Use a different start date to create a new override.",
+      "conflict": "The record already exists or its version has changed. Refresh the page and review the data before trying again.",
+      "network": "Could not connect to save the commission. Check your connection and retry; repeating the same save does not create another draft.",
+      "failed": "Could not save the commission. Try again and contact support if the problem persists.",
+      "savedDraft": "The record was saved as a draft. The account’s active commission has not changed."
+    },
     "autoKey": "Generated automatically; leave blank",
     "navLabel": "Commissions",
     "titles": {
@@ -1119,6 +1126,16 @@
       "inactive": "Inactive",
       "available": "Available",
       "unavailable": "Unavailable"
+    },
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteTitle": "Delete team member",
+    "deleteHint": "This removes the member from the team and public site. Enter a reason and confirm. This page cannot undo the deletion.",
+    "mutation": {
+      "notFound": "This record no longer exists. Refresh the list before retrying.",
+      "conflict": "The record changed in another session or the key is already used. Review the latest data before saving.",
+      "invalid": "Check the required fields and their values.",
+      "failed": "The change could not be saved. Try again."
     }
   },
   "admin_content/copy#getAdminContentCopy": {
@@ -1215,7 +1232,47 @@
     "allArticles": "All articles",
     "statusSummary": "Article status summary"
   },
+  "admin_home/banner-controls-copy#getBannerControlCopy": {
+    "edit": "Edit",
+    "publish": "Publish / schedule",
+    "stop": "Stop display",
+    "archive": "Archive",
+    "confirm": "Confirm archive",
+    "setup": "Homepage banner display",
+    "enable": "Enable display and set up placement",
+    "disable": "Stop all homepage banners",
+    "on": "Banner display enabled",
+    "off": "Banner display stopped",
+    "setupError": "Banner settings could not load. Retry.",
+    "upload": "Upload image from device",
+    "uploadHint": "PNG, JPEG or WebP, up to 10 MB. Images are scanned and dimensions detected automatically.",
+    "draftSaved": "Draft saved. Select “Publish / schedule” to publish.",
+    "published": "Publication approved. The banner appears during its display window and disappears at the end.",
+    "mediaRequired": "Attach a valid image before publishing.",
+    "expired": "The end date has passed. Edit the dates before publishing.",
+    "conflict": "Another banner occupies this placement and time, or another user changed the record. Review the list and dates, then retry.",
+    "reason": "Change reason",
+    "failed": "The change could not complete. Check the image, display settings and permissions, then retry.",
+    "archiveNote": "Archiving is final for this banner and removes it from display. Stop display instead for a temporary pause.",
+    "previous": "Previous",
+    "next": "Next",
+    "configureHint": "Enable display once, save the image and details, then publish. Drafts are never shown to visitors."
+  },
   "admin_home/copy#getAdminHomeCopy": {
+    "mutation": {
+      "placementNotFound": "This banner placement is not configured on the site. It must be set up before adding a banner.",
+      "notFound": "The requested banner or media no longer exists. Check the banner list before saving again.",
+      "conflict": "The banner order or record version conflicts with an existing record. Check the list before saving again.",
+      "failed": "The change could not be saved. Check the fields and connection, then try again."
+    },
+    "schedule": {
+      "startDate": "Start date",
+      "startTime": "Start time",
+      "endDate": "End date",
+      "endTime": "End time",
+      "hint": "Choose the date and time separately. Times use your device’s time zone and default to 00:00.",
+      "invalidRange": "The end date and time must be later than the start date and time."
+    },
     "eyebrow": "Homepage administration",
     "banners": "Banners",
     "newBanner": "Add banner",
@@ -2081,6 +2138,46 @@
     },
     "directionNote": "English LTR — platform settings are approved for desktop.",
     "selectPlaceholder": "Select a value"
+  },
+  "admin_user_guide/copy#getUserGuideCopy": {
+    "title": "User guide",
+    "eyebrow": "Administration help centre",
+    "description": "Task steps, field explanations, answers and direct links to the working screens.",
+    "language": "Detailed reference in Arabic • 5 October 2026 edition",
+    "search": "Search the guide",
+    "placeholder": "Search a topic or route; Arabic explanations are included…",
+    "category": "Section",
+    "all": "All sections",
+    "toc": "Contents",
+    "openAll": "Expand all",
+    "closeAll": "Collapse all",
+    "maximize": "Maximize reading area",
+    "restore": "Restore size",
+    "minimize": "Minimize guide",
+    "expand": "Show guide",
+    "print": "Print results / save PDF",
+    "clear": "Clear search and filters",
+    "empty": "No matching topics",
+    "emptyHelp": "Try a shorter term, a screen name or all sections.",
+    "count": "topics",
+    "before": "Before you start",
+    "steps": "Steps",
+    "fields": "Fields and meanings",
+    "result": "Expected result",
+    "faq": "Questions and solutions",
+    "links": "Open task screen",
+    "limitation": "Current feature limits",
+    "share": "Copy topic link",
+    "copied": "Topic link copied.",
+    "copyFailed": "Copy failed. Open the topic from the contents and copy its browser URL.",
+    "tabNote": "Task links open a new tab. Seeker and provider screens require an account with that role.",
+    "permission": "The user guide is available to administrator accounts only.",
+    "textSize": "Explanation text size",
+    "normal": "Normal",
+    "large": "Large",
+    "minimized": "The guide is minimized. Select Show guide to resume reading.",
+    "resume": "Resume last topic",
+    "top": "Back to top"
   },
   "auth/copy#getAuthCopy": {
     "brand": "Sadat Real Estate",

@@ -269,10 +269,12 @@ test('banners enforce admin media ownership, lifecycle publication, localization
   assert.equal((await service.previewBanner(admin, banner.id)).preview, true);
   await assert.rejects(() => service.updateBanner(admin, banner.id, { expectedVersion: 0, reason: 'attach media', mediaId: media.id, unknown: true }), /Unrecognized key/);
   const attached = await service.updateBanner(admin, banner.id, { expectedVersion: 0, reason: 'Attach approved media', mediaId: media.id });
-  const scheduled = await service.updateBanner(admin, banner.id, { expectedVersion: attached.version, reason: 'Schedule campaign', status: 'scheduled' });
+  await assert.rejects(() => service.updateBanner(admin, banner.id, { expectedVersion: attached.version, reason: 'Schedule before display setup', status: 'scheduled' }), /BANNER_INVALID_STATE/);
   await service.updateSettings(admin, { expectedVersion: 0, reason: 'Enable advertising', patch: { enabled: true } });
+  const scheduled = await service.updateBanner(admin, banner.id, { expectedVersion: attached.version, reason: 'Schedule campaign', status: 'scheduled' });
   await assert.rejects(() => service.updateBanner(admin, banner.id, { expectedVersion: scheduled.version, reason: 'Activate too early', status: 'active' }), /BANNER_INVALID_STATE/);
   current = new Date('2026-09-01T10:00:00.000Z');
+  assert.equal((await service.listPublicBanners('homepage', 'ar', current)).length, 1);
   const active = await service.updateBanner(admin, banner.id, { expectedVersion: scheduled.version, reason: 'Activate in window', status: 'active' });
   const publicItems = await service.listPublicBanners('homepage', 'ar', current);
   assert.equal(publicItems.length, 1);

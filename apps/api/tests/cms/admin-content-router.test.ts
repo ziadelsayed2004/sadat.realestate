@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { cmsAdminAboutBlockPutSchema } from '@sadat-real-estate/contracts';
+import { cmsAdminAboutBlockPutSchema, cmsAdminTeamMemberDeleteSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import type { CmsAdminContentService } from '../../src/modules/cms/admin-content-service.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
@@ -27,6 +27,11 @@ function accessTokens(): AccessTokenService {
 
 function service(): CmsAdminContentService {
   return {
+    async deleteTeam(principal, input) {
+      assert.equal(principal.userId, adminId);
+      cmsAdminTeamMemberDeleteSchema.parse(input);
+      return { namespace: 'team', items: [] };
+    },
     async get(principal, namespace) {
       assert.equal(principal.userId, adminId);
       return namespace === 'about'
@@ -55,6 +60,21 @@ async function withServer(run: (baseUrl: string) => Promise<void>): Promise<void
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try { await run(`http://127.0.0.1:${address.port}`); } finally { await stopApiServer(server); }
 }
+
+test('protects and validates team deletion', async () => {
+  await withServer(async baseUrl => {
+    const route = `${baseUrl}/api/v1/admin/content/team`;
+    const body = JSON.stringify({ id: adminId, version: 1, reason: 'Member left the team' });
+    assert.equal((await fetch(route, { method: 'DELETE', headers: { 'content-type': 'application/json' }, body })).status, 401);
+    assert.equal((await fetch(route, { method: 'DELETE', headers: { authorization: 'Bearer seeker-token', 'content-type': 'application/json' }, body })).status, 403);
+    const headers = { authorization: 'Bearer admin-token', 'content-type': 'application/json' };
+    assert.equal((await fetch(route, { method: 'DELETE', headers, body: JSON.stringify({ id: adminId, version: 1, reason: 'x' }) })).status, 400);
+    const response = await fetch(route, { method: 'DELETE', headers, body });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.deepEqual((await response.json() as { data: unknown }).data, { namespace: 'team', items: [] });
+  });
+});
 
 test('protects CMS namespaces with admin authentication and rejects unknown fields', async () => {
   await withServer(async baseUrl => {

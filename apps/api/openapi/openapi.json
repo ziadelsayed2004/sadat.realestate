@@ -10194,6 +10194,267 @@
           }
         }
       }
+    },
+    "/api/v1/admin/content/team": {
+      "delete": {
+        "operationId": "deleteAdminCmsTeamMember",
+        "summary": "Delete a team member with an audit reason and current version",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CmsAdminTeamMemberDelete"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Team member deleted; returns the remaining team members",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsAdminContentSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CmsContentError"
+          },
+          "409": {
+            "$ref": "#/components/responses/CmsContentError"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/banners/config": {
+      "get": {
+        "operationId": "getAdminBannerConfig",
+        "summary": "Read homepage banner display settings and placements",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdBannerConfigSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "409": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateAdminBannerConfig",
+        "summary": "Enable or stop banner display with version check and audit",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "enabled",
+                  "expectedVersion",
+                  "reason"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "expectedVersion": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdBannerConfigSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "409": {
+            "$ref": "#/components/responses/AuthError"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/banners/{bannerId}/upload": {
+      "parameters": [
+        {
+          "name": "bannerId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/AdObjectId"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "uploadAdminBannerImage",
+        "summary": "Upload and scan a PNG JPEG or WebP image up to 10 MiB",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdBannerMediaSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "409": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "503": {
+            "description": "Storage or malware scanner unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/public/banner-media/{mediaId}": {
+      "parameters": [
+        {
+          "name": "mediaId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/AdObjectId"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "downloadPublicBannerImage",
+        "summary": "Download an image only during its public display window; authorized admins may preview drafts",
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -12530,8 +12791,7 @@
           "sortOrder": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 100000,
-            "default": 0
+            "maximum": 100000
           }
         }
       },
@@ -12732,10 +12992,18 @@
             "$ref": "#/components/schemas/AdObjectId"
           },
           "url": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https://",
-            "maxLength": 2048
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              },
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/banner-media/[a-f0-9]{24}$"
+              }
+            ]
           },
           "mime": {
             "$ref": "#/components/schemas/AdBannerMediaMime"
@@ -12781,10 +13049,18 @@
         ],
         "properties": {
           "url": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https://",
-            "maxLength": 2048
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              },
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/banner-media/[a-f0-9]{24}$"
+              }
+            ]
           },
           "mime": {
             "$ref": "#/components/schemas/AdBannerMediaMime"
@@ -12819,10 +13095,18 @@
             "maxLength": 500
           },
           "url": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https://",
-            "maxLength": 2048
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              },
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/banner-media/[a-f0-9]{24}$"
+              }
+            ]
           },
           "mime": {
             "$ref": "#/components/schemas/AdBannerMediaMime"
@@ -19810,8 +20094,15 @@
             "$ref": "#/components/schemas/CommunityObjectId"
           },
           "reaction": {
-            "type": ["string", "null"],
-            "enum": ["like", "dislike", null]
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "like",
+              "dislike",
+              null
+            ]
           },
           "likeCount": {
             "type": "integer",
@@ -20200,7 +20491,8 @@
         "enum": [
           "update",
           "publish",
-          "deactivate"
+          "deactivate",
+          "delete"
         ]
       },
       "CmsAdminAboutBlock": {
@@ -23289,6 +23581,86 @@
                 "minimum": 0
               }
             }
+          }
+        }
+      },
+      "CmsAdminTeamMemberDelete": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 500
+          }
+        }
+      },
+      "AdBannerConfig": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "version",
+          "placements"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "placements": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "label",
+                "active"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "label": {
+                  "$ref": "#/components/schemas/LocalizedText"
+                },
+                "active": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AdBannerConfigSuccessEnvelope": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AdBannerConfig"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
           }
         }
       }

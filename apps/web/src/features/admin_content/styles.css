@@ -36,6 +36,7 @@
 .admin-content__state { display: grid; justify-items: center; gap: 12px; max-width: 1320px; margin: 0 auto 24px; padding: 48px 24px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; text-align: center; }
 .admin-content__state h2, .admin-content__state p { margin: 0; }
 .admin-content__editor, .admin-content__action-panel { margin-block-start: 24px; overflow: hidden; }
+.admin-cms-content .admin-content__editor, .admin-cms-content .admin-content__action-panel { scroll-margin-block-start: 96px; }
 .admin-content__editor form, .admin-content__action-panel form { display: grid; gap: 18px; padding: 24px 26px 30px; }
 .admin-content__form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .admin-content__localized-fields { display: grid; min-inline-size: 0; gap: 8px; margin: 0; padding: 0; border: 0; }
@@ -57,6 +58,8 @@
 .admin-cms__record-card { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(12rem, auto); align-items: center; gap: 18px; padding: 18px 20px; border: 1px solid #e3e5e7; border-radius: 14px; background: #fffdf8; }
 .admin-cms__record-card strong, .admin-cms__record-card small { display: block; }
 .admin-cms__record-card small { margin-block-start: 5px; color: #7e8999; }
+.admin-cms__record-card > div { min-inline-size: 0; overflow-wrap: anywhere; }
+.admin-cms__record-card .admin-content__row-actions { min-inline-size: 0; flex-wrap: wrap; }
 .admin-cms__preview { max-width: 1320px; margin: 24px auto 0; padding: 28px; border-radius: 20px; background: linear-gradient(135deg, #123d3c, #182c47); color: #fff; }
 .admin-cms__preview h3 { margin: 0 0 14px; color: #d79a2b; font-size: .85rem; text-transform: uppercase; }
 .admin-cms__preview strong { display: block; font-size: clamp(1.6rem, 3vw, 2.8rem); }

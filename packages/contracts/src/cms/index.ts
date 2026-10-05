@@ -372,6 +372,7 @@ export const cmsAdminContentActionSchema = z.enum([
   "update",
   "publish",
   "deactivate",
+  "delete",
 ]);
 const cmsAdminRecordFields = {
   id: objectId,
@@ -494,6 +495,11 @@ export const cmsAdminTeamMemberPutSchema = z.union([
   teamMemberCreateSchema,
   teamMemberPatchSchema.extend({ id: objectId }),
 ]);
+export const cmsAdminTeamMemberDeleteSchema = z.object({
+  id: objectId,
+  version: z.number().int().nonnegative(),
+  reason: z.string().trim().min(5).max(500),
+}).strict();
 export const cmsAdminPopulationValuePutSchema = z.intersection(
   populationValueSchema,
   z.object({ version: z.number().int().nonnegative().optional() }),

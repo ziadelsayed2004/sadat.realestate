@@ -92,7 +92,7 @@ const sidebarItem = (id: string, path: string, icon: AdminSidebarIcon, ar: strin
 });
 
 const sidebarGroups: readonly AdminSidebarGroup[] = [
-  { id: 'home', label: { ar: 'الرئيسية', en: 'Home' }, items: [sidebarItem('overview', '/admin', 'overview', 'نظرة عامة', 'Overview', ['/admin', '/admin/overview'])] },
+  { id: 'home', label: { ar: 'الرئيسية', en: 'Home' }, items: [sidebarItem('overview', '/admin', 'overview', 'نظرة عامة', 'Overview', ['/admin', '/admin/overview']), sidebarItem('user-guide', '/admin/user-guide', 'content', 'دليل الاستخدام', 'User guide')] },
   {
     id: 'accounts',
     label: { ar: 'المستخدمون والحسابات', en: 'Users and accounts' },

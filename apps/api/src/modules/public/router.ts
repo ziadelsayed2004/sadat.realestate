@@ -61,7 +61,7 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
   });
   router.get('/public/home', async (request, response) => {
     try {
-      response.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(await dependencies.service.read(), requestId(request)));
     } catch (error) {
       const mapped = toApiErrorResponse(error, requestId(request));

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type Dispatch, type FormEvent, type SetStateAction } from 'react';
+import { useEffect, useMemo, useRef, useState, type Dispatch, type FormEvent, type SetStateAction } from 'react';
 import {
   articleCategoryCreateSchema,
   articleCategoryPatchSchema,
@@ -80,6 +80,15 @@ const actionToStatus: Readonly<Partial<Record<ArticleAvailableAction, ArticleSta
 
 type LocalizedDraft = Record<SupportedLocale, string>;
 type LocalizedStateSetter = Dispatch<SetStateAction<LocalizedDraft>>;
+
+function useEditorReveal() {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    ref.current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
+    ref.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input:not(:disabled):not([type="number"]), textarea')?.focus({ preventScroll: true });
+  }, []);
+  return ref;
+}
 
 function localizedDraft(value: LocalizedText | undefined): LocalizedDraft {
   return { ar: value?.ar ?? '', en: value?.en ?? '',};
@@ -316,6 +325,35 @@ function cmsNamespaceForPath(path: string): CmsAdminContentNamespace | undefined
   return undefined;
 }
 
+function cmsMutationMessage(error: unknown, locale: SupportedLocale): string {
+  const copy = getAdminCmsCopy(locale);
+  if (error instanceof ApiClientError) {
+    if (error.status === 404) return copy.mutation.notFound;
+    if (error.status === 409) return copy.mutation.conflict;
+    if (error.status === 401 || error.status === 403) return copy.states.permission.body;
+    if (error.status === 400) return copy.mutation.invalid;
+    if (error.code === 'NETWORK_ERROR' || error.code === 'ABORTED') return copy.states.retry.body;
+  }
+  return copy.mutation.failed;
+}
+
+function TeamDeleteForm({ member, locale, onCancel, onDelete }: { readonly member: CmsAdminTeamMember; readonly locale: SupportedLocale; readonly onCancel: () => void; readonly onDelete: (input: unknown) => Promise<void> }) {
+  const editorRef = useEditorReveal();
+  const copy = getAdminCmsCopy(locale);
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState<string>();
+  async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    if (reason.trim().length < 5) { setFeedback(copy.reasonRequired); return; }
+    setSaving(true); setFeedback(undefined);
+    try { await onDelete({ id: member.id, version: member.version, reason: reason.trim() }); }
+    catch (error) { setFeedback(cmsMutationMessage(error, locale)); }
+    finally { setSaving(false); }
+  }
+  return <section ref={editorRef} className="admin-content__action-panel" data-testid="admin-cms-team-delete"><div className="admin-content__editor-heading"><h2>{copy.deleteTitle}: {localizedValue(member.name, locale)}</h2></div><form onSubmit={event => { void submit(event); }}><p>{copy.deleteHint}</p><label htmlFor="admin-cms-delete-reason">{copy.reason}<textarea id="admin-cms-delete-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={5} maxLength={500} required /></label><div className="admin-content__inline-actions"><Button type="submit" disabled={saving} loading={saving}>{copy.delete}</Button><Button type="button" variant="secondary" disabled={saving} onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p role="alert" className="admin-content__feedback">{feedback}</p> : null}</form></section>;
+}
+
 function cmsStatusLabel(status: string, locale: SupportedLocale): string {
   const labels = getAdminCmsCopy(locale).statusLabels;
   return status in labels ? labels[status as keyof typeof labels] : status;
@@ -362,13 +400,14 @@ function AboutBlockForm({ block, locale, onCancel, onSave }: { readonly block: C
       const common = { title: parseLocalized(title), body: parseLocalized(body), order: Number(order), active, status, reason: reason.trim() };
       setSaving(true); setFeedback(undefined);
       await onSave(block === undefined ? { key: key.trim(), ...common } : { id: block.id, version: block.version, ...common });
-    } catch { setFeedback(copy.states.error.title); } finally { setSaving(false); }
+    } catch (error) { setFeedback(cmsMutationMessage(error, locale)); } finally { setSaving(false); }
   }
   const canUpdate = block === undefined || block.availableActions.includes('update');
   return <section className="admin-content__editor" data-testid="admin-cms-about-editor"><div className="admin-content__editor-heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h2>{block === undefined ? `${copy.add}: ${copy.namespace.about}` : `${copy.namespace.about}: ${localizedValue(block.title, locale)}`}</h2></div><Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div><form onSubmit={event => { void submit(event); }}><div className="admin-content__form-grid"><label htmlFor="admin-cms-about-key">{copy.key}<input id="admin-cms-about-key" value={key} onChange={event => setKey(event.target.value)} pattern="[a-z][a-z0-9_]{1,63}" disabled={block !== undefined} required /></label><label htmlFor="admin-cms-about-order">{copy.order}<input id="admin-cms-about-order" type="number" min="0" value={order} onChange={event => setOrder(event.target.value)} required /></label></div><CmsLocalizedFields locale={locale} prefix="about-title" label={copy.title} value={title} onChange={update(setTitle)} /><CmsLocalizedFields locale={locale} prefix="about-body" label={copy.body} value={body} onChange={update(setBody)} multiline /><div className="admin-content__form-grid"><label htmlFor="admin-cms-about-status">{copy.status}<select id="admin-cms-about-status" value={status} onChange={event => setStatus(event.target.value as CmsAboutStatus)}>{cmsAboutStatuses.map(option => <option key={option} value={option}>{cmsStatusLabel(option, locale)}</option>)}</select></label><label className="admin-content__checkbox" htmlFor="admin-cms-about-active"><input id="admin-cms-about-active" type="checkbox" checked={active} onChange={event => setActive(event.target.checked)} />{copy.active}</label></div><label htmlFor="admin-cms-about-reason">{copy.reason}<textarea id="admin-cms-about-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={5} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-content__inline-actions">{canUpdate ? <Button type="submit" disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-content__muted">{copy.states.permission.title}</span>}<Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p className="admin-content__feedback" role="alert">{feedback}</p> : null}</form></section>;
 }
 
 function TeamMemberForm({ member, locale, onCancel, onSave }: { readonly member: CmsAdminTeamMember | undefined; readonly locale: SupportedLocale; readonly onCancel: () => void; readonly onSave: (input: unknown) => Promise<void> }) {
+  const editorRef = useEditorReveal();
   const copy = getAdminCmsCopy(locale);
   const [key, setKey] = useState(member?.key ?? '');
   const [name, setName] = useState<LocalizedDraft>(() => localizedDraft(member?.name));
@@ -387,13 +426,13 @@ function TeamMemberForm({ member, locale, onCancel, onSave }: { readonly member:
     if (reason.trim().length < 5) { setFeedback(copy.reasonRequired); return; }
     if (member === undefined && key.trim() === '') { setFeedback(`${copy.key} is required.`); return; }
     try {
-      const common = { name: parseLocalized(name), title: parseLocalized(title), ...(Object.values(bio).some(value => value.trim() !== '') ? { bio: parseLocalized(bio) } : {}), ...(photoAssetId.trim() === '' ? {} : { photoAssetId: photoAssetId.trim() }), order: Number(order), active, status, reason: reason.trim() };
+      const common = { name: parseLocalized(name), title: parseLocalized(title), ...(Object.values(bio).some(value => value.trim() !== '') ? { bio: parseLocalized(bio) } : member?.bio ? { bio: null } : {}), ...(photoAssetId.trim() !== '' ? { photoAssetId: photoAssetId.trim() } : member?.photoAssetId ? { photoAssetId: null } : {}), order: Number(order), active, status, reason: reason.trim() };
       setSaving(true); setFeedback(undefined);
       await onSave(member === undefined ? { key: key.trim(), ...common } : { id: member.id, version: member.version, ...common });
-    } catch { setFeedback(copy.states.error.title); } finally { setSaving(false); }
+    } catch (error) { setFeedback(cmsMutationMessage(error, locale)); } finally { setSaving(false); }
   }
   const canUpdate = member === undefined || member.availableActions.includes('update');
-  return <section className="admin-content__editor" data-testid="admin-cms-team-editor"><div className="admin-content__editor-heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h2>{member === undefined ? `${copy.add}: ${copy.namespace.team}` : `${copy.namespace.team}: ${localizedValue(member.name, locale)}`}</h2></div><Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div><form onSubmit={event => { void submit(event); }}><div className="admin-content__form-grid"><label htmlFor="admin-cms-team-key">{copy.key}<input id="admin-cms-team-key" value={key} onChange={event => setKey(event.target.value)} pattern="[a-z][a-z0-9_]{1,63}" disabled={member !== undefined} required /></label><label htmlFor="admin-cms-team-order">{copy.order}<input id="admin-cms-team-order" type="number" min="0" value={order} onChange={event => setOrder(event.target.value)} required /></label></div><CmsLocalizedFields locale={locale} prefix="team-name" label={copy.name} value={name} onChange={update(setName)} /><CmsLocalizedFields locale={locale} prefix="team-title" label={copy.title} value={title} onChange={update(setTitle)} /><CmsLocalizedFields locale={locale} prefix="team-bio" label={copy.body} value={bio} onChange={update(setBio)} multiline /><label htmlFor="admin-cms-team-photo">Photo asset ID<input id="admin-cms-team-photo" value={photoAssetId} onChange={event => setPhotoAssetId(event.target.value)} inputMode="text" /></label><div className="admin-content__form-grid"><label htmlFor="admin-cms-team-status">{copy.status}<select id="admin-cms-team-status" value={status} onChange={event => setStatus(event.target.value as CmsAboutStatus)}>{cmsAboutStatuses.map(option => <option key={option} value={option}>{cmsStatusLabel(option, locale)}</option>)}</select></label><label className="admin-content__checkbox" htmlFor="admin-cms-team-active"><input id="admin-cms-team-active" type="checkbox" checked={active} onChange={event => setActive(event.target.checked)} />{copy.active}</label></div><label htmlFor="admin-cms-team-reason">{copy.reason}<textarea id="admin-cms-team-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={5} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-content__inline-actions">{canUpdate ? <Button type="submit" disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-content__muted">{copy.states.permission.title}</span>}<Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p className="admin-content__feedback" role="alert">{feedback}</p> : null}</form></section>;
+  return <section ref={editorRef} className="admin-content__editor" data-testid="admin-cms-team-editor"><div className="admin-content__editor-heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h2>{member === undefined ? `${copy.add}: ${copy.namespace.team}` : `${copy.namespace.team}: ${localizedValue(member.name, locale)}`}</h2></div><Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div><form onSubmit={event => { void submit(event); }}><div className="admin-content__form-grid"><label htmlFor="admin-cms-team-key">{copy.key}<input id="admin-cms-team-key" value={key} onChange={event => setKey(event.target.value)} pattern="[a-z][a-z0-9_]{1,63}" disabled={member !== undefined} required /></label><label htmlFor="admin-cms-team-order">{copy.order}<input id="admin-cms-team-order" type="number" min="0" value={order} onChange={event => setOrder(event.target.value)} required /></label></div><CmsLocalizedFields locale={locale} prefix="team-name" label={copy.name} value={name} onChange={update(setName)} /><CmsLocalizedFields locale={locale} prefix="team-title" label={copy.title} value={title} onChange={update(setTitle)} /><CmsLocalizedFields locale={locale} prefix="team-bio" label={copy.body} value={bio} onChange={update(setBio)} multiline /><label htmlFor="admin-cms-team-photo">Photo asset ID<input id="admin-cms-team-photo" value={photoAssetId} onChange={event => setPhotoAssetId(event.target.value)} inputMode="text" /></label><div className="admin-content__form-grid"><label htmlFor="admin-cms-team-status">{copy.status}<select id="admin-cms-team-status" value={status} onChange={event => setStatus(event.target.value as CmsAboutStatus)}>{cmsAboutStatuses.map(option => <option key={option} value={option}>{cmsStatusLabel(option, locale)}</option>)}</select></label><label className="admin-content__checkbox" htmlFor="admin-cms-team-active"><input id="admin-cms-team-active" type="checkbox" checked={active} onChange={event => setActive(event.target.checked)} />{copy.active}</label></div><label htmlFor="admin-cms-team-reason">{copy.reason}<textarea id="admin-cms-team-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={5} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-content__inline-actions">{canUpdate ? <Button type="submit" disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-content__muted">{copy.states.permission.title}</span>}<Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p className="admin-content__feedback" role="alert">{feedback}</p> : null}</form></section>;
 }
 
 function PopulationValueForm({ population, locale, onSave }: { readonly population: CmsAdminPopulationValue | undefined; readonly locale: SupportedLocale; readonly onSave: (input: unknown) => Promise<void> }) {
@@ -415,7 +454,7 @@ function PopulationValueForm({ population, locale, onSave }: { readonly populati
       const common = { status, ...(value.trim() === '' ? {} : { value: Number(value) }), ...(hasSourceLabel ? { sourceLabel: parseLocalized(sourceLabel) } : {}), ...(sourceUrl.trim() === '' ? {} : { sourceUrl: sourceUrl.trim() }), ...(asOf.trim() === '' ? {} : { asOf: new Date(`${asOf}T00:00:00.000Z`).toISOString() }), reason: reason.trim() };
       setSaving(true); setFeedback(undefined);
       await onSave(population === undefined ? common : { version: population.version, ...common });
-    } catch { setFeedback(copy.states.error.title); } finally { setSaving(false); }
+    } catch (error) { setFeedback(cmsMutationMessage(error, locale)); } finally { setSaving(false); }
   }
   const canUpdate = population === undefined || population.availableActions.includes('update');
   return <section className="admin-content__editor" data-testid="admin-cms-population-editor"><div className="admin-content__editor-heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h2>{copy.namespace.population}</h2></div></div><p className="admin-content__muted">{locale === 'ar' ? 'اكتب عدد السكان في خانة القيمة، واسم الجهة التي أصدرت البيان في خانة المصدر. اختر تاريخ البيان فقط؛ لا يلزم إدخال وقت.' : 'Enter the population in the value field and the issuing organization in the source field. Select the statement date; no time is required.'}</p><p className="admin-content__muted">{locale === 'ar' ? 'اكتب عدد السكان في خانة القيمة، واسم الجهة التي أصدرت البيان في خانة المصدر. اختر تاريخ البيان فقط؛ لا يلزم إدخال وقت.' : 'Enter the population in the value field and the issuing organization in the source field. Select the statement date; no time is required.'}</p><form onSubmit={event => { void submit(event); }}><label htmlFor="admin-cms-population-status">{copy.status}<select id="admin-cms-population-status" value={status} onChange={event => setStatus(event.target.value as CmsPopulationStatus)}>{cmsPopulationStatuses.map(option => <option key={option} value={option}>{cmsStatusLabel(option, locale)}</option>)}</select></label><label htmlFor="admin-cms-population-value">{copy.value}<input id="admin-cms-population-value" type="number" min="0" step="1" value={value} onChange={event => setValue(event.target.value)} disabled={status !== 'available'} /></label><CmsLocalizedFields locale={locale} prefix="population-source" label={copy.sourceLabel} value={sourceLabel} onChange={update} /><div className="admin-content__form-grid"><label htmlFor="admin-cms-population-url">{copy.sourceUrl}<input id="admin-cms-population-url" type="url" value={sourceUrl} onChange={event => setSourceUrl(event.target.value)} /></label><label htmlFor="admin-cms-population-as-of">{copy.asOf}<input id="admin-cms-population-as-of" type="date" value={asOf} onChange={event => setAsOf(event.target.value)} /></label></div><label htmlFor="admin-cms-population-reason">{copy.reason}<textarea id="admin-cms-population-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={5} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-content__inline-actions">{canUpdate ? <Button type="submit" disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-content__muted">{copy.states.permission.title}</span>}</div>{feedback ? <p className="admin-content__feedback" role="alert">{feedback}</p> : null}</form></section>;
@@ -426,9 +465,9 @@ function AboutBlockList({ items, locale, onEdit, onPreview }: { readonly items: 
   return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-about-${item.id}`}><div><strong>{localizedValue(item.title, locale)}</strong><small>{item.key} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.save}</Button> : null}</div></article>)}</div>;
 }
 
-function TeamMemberList({ items, locale, onEdit, onPreview }: { readonly items: readonly CmsAdminTeamMember[]; readonly locale: SupportedLocale; readonly onEdit: (item: CmsAdminTeamMember) => void; readonly onPreview: (item: CmsAdminTeamMember) => void }) {
+function TeamMemberList({ items, locale, onEdit, onPreview, onDelete }: { readonly items: readonly CmsAdminTeamMember[]; readonly locale: SupportedLocale; readonly onEdit: (item: CmsAdminTeamMember) => void; readonly onPreview: (item: CmsAdminTeamMember) => void; readonly onDelete: (item: CmsAdminTeamMember) => void }) {
   const copy = getAdminCmsCopy(locale);
-  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-team-${item.id}`}><div><strong>{localizedValue(item.name, locale)}</strong><small>{localizedValue(item.title, locale)} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.save}</Button> : null}</div></article>)}</div>;
+  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-team-${item.id}`}><div><strong>{localizedValue(item.name, locale)}</strong><small>{localizedValue(item.title, locale)} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.edit}</Button> : null}{item.availableActions.includes('delete') ? <Button type="button" size="sm" variant="secondary" onClick={() => onDelete(item)}>{copy.delete}</Button> : null}</div></article>)}</div>;
 }
 
 export interface AdminCmsContentProps {
@@ -440,9 +479,10 @@ export interface AdminCmsContentProps {
   readonly initialData?: CmsAdminContentData | undefined;
   readonly load?: AdminCmsContentLoader | undefined;
   readonly update?: AdminCmsContentMutation | undefined;
+  readonly deleteTeam?: ((input: unknown) => Promise<CmsAdminContentData>) | undefined;
 }
 
-export function AdminCmsContent({ path = ADMIN_CMS_ABOUT_ROUTE, locale, session, authClient, apiOrigin, initialData, load, update }: AdminCmsContentProps) {
+export function AdminCmsContent({ path = ADMIN_CMS_ABOUT_ROUTE, locale, session, authClient, apiOrigin, initialData, load, update, deleteTeam }: AdminCmsContentProps) {
   const copy = getAdminCmsCopy(locale);
   const namespace = cmsNamespaceForPath(path);
   const sessionAllowed = session.status === 'authenticated' && session.role === 'admin';
@@ -451,10 +491,12 @@ export function AdminCmsContent({ path = ADMIN_CMS_ABOUT_ROUTE, locale, session,
   const [data, setData] = useState<CmsAdminContentData | undefined>(initialMatches ? initialData : undefined);
   const [attempt, setAttempt] = useState(0);
   const [editing, setEditing] = useState<string | 'new' | undefined>();
+  const [deleting, setDeleting] = useState<CmsAdminTeamMember>();
   const [preview, setPreview] = useState<{ title: string; body?: string } | undefined>();
   const source = useMemo(() => createAdminCmsContentSource({ apiOrigin, authorization: authClient }), [apiOrigin, authClient]);
   const loadContent = load ?? source.load;
   const updateContent = update ?? source.update;
+  const removeTeam = deleteTeam ?? source.deleteTeam;
 
   useEffect(() => {
     if (!sessionAllowed) { setState('permission'); return undefined; }
@@ -467,6 +509,11 @@ export function AdminCmsContent({ path = ADMIN_CMS_ABOUT_ROUTE, locale, session,
   }, [attempt, initialMatches, loadContent, namespace, sessionAllowed]);
 
   const refresh = () => setAttempt(value => value + 1);
+  const remove = async (input: unknown): Promise<void> => {
+    const next = await removeTeam(input);
+    setData(next); setDeleting(undefined); setEditing(undefined); setPreview(undefined);
+    setState(next.items.length === 0 ? 'empty' : 'success');
+  };
   const save = async (input: unknown): Promise<void> => {
     if (namespace === undefined) return;
     const next = await updateContent(namespace, input);
@@ -480,5 +527,5 @@ export function AdminCmsContent({ path = ADMIN_CMS_ABOUT_ROUTE, locale, session,
   const title = namespace === undefined ? copy.eyebrow : copy.namespace[namespace];
   const description = namespace === undefined ? copy.states.not_found.body : copy.description[namespace];
 
-  return <section className="admin-content admin-cms-content" data-screen-id={namespace === 'about' ? 'ADM-30' : namespace === 'team' ? 'ADM-31' : 'ADM-32'} data-route={path} data-device-scope="desktop" data-admin-cms-state={state}><AdminNavigation locale={locale} activePath={path} /><div className="admin-content__content"><div className="admin-content__heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{description}</p></div><div className="admin-content__heading-actions">{namespace !== undefined ? <Button type="button" onClick={() => setEditing('new')}>{copy.add}</Button> : null}</div></div>{namespace !== undefined ? <nav className="admin-cms__tabs" aria-label={copy.eyebrow}><a href={localePath(locale, ADMIN_CMS_ABOUT_ROUTE)} data-active={namespace === 'about' || undefined}>{copy.namespace.about}</a><a href={localePath(locale, ADMIN_CMS_TEAM_ROUTE)} data-active={namespace === 'team' || undefined}>{copy.namespace.team}</a><a href={localePath(locale, ADMIN_CMS_POPULATION_ROUTE)} data-active={namespace === 'population' || undefined}>{copy.namespace.population}</a></nav> : null}{state === 'loading' || state === 'error' || state === 'retry' || state === 'permission' || state === 'not_found' ? <CmsStatePanel state={state} locale={locale} form={namespace === 'population'} onRetry={refresh} /> : null}{empty ? <section className="admin-content__state" data-state="empty" aria-label={copy.states.empty.title}><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><Button type="button" onClick={() => setEditing('new')}>{copy.add}</Button></section> : null}{state === 'success' && namespace === 'about' ? <section className="admin-content__panel admin-cms__panel" aria-labelledby="admin-cms-about-list-title"><div className="admin-content__panel-heading"><h2 id="admin-cms-about-list-title">{copy.namespace.about}</h2><span>{aboutItems.length}</span></div><AboutBlockList items={aboutItems} locale={locale} onEdit={item => setEditing(item.id)} onPreview={item => setPreview({ title: localizedValue(item.title, locale), body: localizedValue(item.body, locale) })} /></section> : null}{state === 'success' && namespace === 'team' ? <section className="admin-content__panel admin-cms__panel" aria-labelledby="admin-cms-team-list-title"><div className="admin-content__panel-heading"><h2 id="admin-cms-team-list-title">{copy.namespace.team}</h2><span>{teamItems.length}</span></div><TeamMemberList items={teamItems} locale={locale} onEdit={item => setEditing(item.id)} onPreview={item => setPreview({ title: localizedValue(item.name, locale), body: localizedValue(item.bio, locale) })} /></section> : null}{(state === 'success' || empty) && namespace === 'population' ? <PopulationValueForm population={population} locale={locale} onSave={save} /> : null}{showEditor && namespace === 'about' ? <AboutBlockForm block={editing === 'new' ? undefined : aboutItems.find(item => item.id === editing)} locale={locale} onCancel={() => setEditing(undefined)} onSave={save} /> : null}{showEditor && namespace === 'team' ? <TeamMemberForm member={editing === 'new' ? undefined : teamItems.find(item => item.id === editing)} locale={locale} onCancel={() => setEditing(undefined)} onSave={save} /> : null}{preview ? <CmsPreview label={copy.preview} title={preview.title} body={preview.body} locale={locale} /> : null}</div></section>;
+  return <section className="admin-content admin-cms-content" data-screen-id={namespace === 'about' ? 'ADM-30' : namespace === 'team' ? 'ADM-31' : 'ADM-32'} data-route={path} data-device-scope="desktop" data-admin-cms-state={state}><AdminNavigation locale={locale} activePath={path} /><div className="admin-content__content"><div className="admin-content__heading"><div><p className="admin-content__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{description}</p></div><div className="admin-content__heading-actions">{namespace !== undefined ? <Button type="button" onClick={() => { setDeleting(undefined); setEditing('new'); }}>{copy.add}</Button> : null}</div></div>{namespace !== undefined ? <nav className="admin-cms__tabs" aria-label={copy.eyebrow}><a href={localePath(locale, ADMIN_CMS_ABOUT_ROUTE)} data-active={namespace === 'about' || undefined}>{copy.namespace.about}</a><a href={localePath(locale, ADMIN_CMS_TEAM_ROUTE)} data-active={namespace === 'team' || undefined}>{copy.namespace.team}</a><a href={localePath(locale, ADMIN_CMS_POPULATION_ROUTE)} data-active={namespace === 'population' || undefined}>{copy.namespace.population}</a></nav> : null}{state === 'loading' || state === 'error' || state === 'retry' || state === 'permission' || state === 'not_found' ? <CmsStatePanel state={state} locale={locale} form={namespace === 'population'} onRetry={refresh} /> : null}{empty ? <section className="admin-content__state" data-state="empty" aria-label={copy.states.empty.title}><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><Button type="button" onClick={() => setEditing('new')}>{copy.add}</Button></section> : null}{state === 'success' && namespace === 'about' ? <section className="admin-content__panel admin-cms__panel" aria-labelledby="admin-cms-about-list-title"><div className="admin-content__panel-heading"><h2 id="admin-cms-about-list-title">{copy.namespace.about}</h2><span>{aboutItems.length}</span></div><AboutBlockList items={aboutItems} locale={locale} onEdit={item => setEditing(item.id)} onPreview={item => setPreview({ title: localizedValue(item.title, locale), body: localizedValue(item.body, locale) })} /></section> : null}{state === 'success' && namespace === 'team' ? <section className="admin-content__panel admin-cms__panel" aria-labelledby="admin-cms-team-list-title"><div className="admin-content__panel-heading"><h2 id="admin-cms-team-list-title">{copy.namespace.team}</h2><span>{teamItems.length}</span></div><TeamMemberList items={teamItems} locale={locale} onEdit={item => { setDeleting(undefined); setEditing(item.id); }} onDelete={item => { setEditing(undefined); setDeleting(item); }} onPreview={item => setPreview({ title: localizedValue(item.name, locale), body: localizedValue(item.bio, locale) })} /></section> : null}{(state === 'success' || empty) && namespace === 'population' ? <PopulationValueForm population={population} locale={locale} onSave={save} /> : null}{showEditor && namespace === 'about' ? <AboutBlockForm key={editing} block={editing === 'new' ? undefined : aboutItems.find(item => item.id === editing)} locale={locale} onCancel={() => setEditing(undefined)} onSave={save} /> : null}{showEditor && namespace === 'team' ? <TeamMemberForm key={editing} member={editing === 'new' ? undefined : teamItems.find(item => item.id === editing)} locale={locale} onCancel={() => setEditing(undefined)} onSave={save} /> : null}{deleting ? <TeamDeleteForm key={deleting.id} member={deleting} locale={locale} onCancel={() => setDeleting(undefined)} onDelete={remove} /> : null}{preview ? <CmsPreview label={copy.preview} title={preview.title} body={preview.body} locale={locale} /> : null}</div></section>;
 }

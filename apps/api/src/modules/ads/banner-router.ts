@@ -10,8 +10,13 @@ import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { AdBannerServiceError, type AdBannerService } from './service.js';
+import type { BannerManagement } from './banner-management.js';
 
 export const ADMIN_BANNER_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/admin/banners/config', operationId: 'getAdminBannerConfig' },
+  { method: 'PUT', path: '/api/v1/admin/banners/config', operationId: 'updateAdminBannerConfig' },
+  { method: 'POST', path: '/api/v1/admin/banners/:bannerId/upload', operationId: 'uploadAdminBannerImage' },
+  { method: 'GET', path: '/api/v1/public/banner-media/:mediaId', operationId: 'downloadPublicBannerImage' },
   { method: 'GET', path: '/api/v1/admin/banners', operationId: 'listAdminBanners' },
   { method: 'POST', path: '/api/v1/admin/banners', operationId: 'createAdminBanner' },
   { method: 'PATCH', path: '/api/v1/admin/banners/:bannerId', operationId: 'updateAdminBanner' },
@@ -26,6 +31,7 @@ export const ADMIN_BANNER_ROUTE_DEFINITIONS = [
 export interface AdminBannerRouterDependencies {
   service: AdBannerService;
   accessTokens: AccessTokenService;
+  management?: BannerManagement;
 }
 
 const ERROR_MAP = Object.freeze({
@@ -74,6 +80,37 @@ export function createAdminBannerRouter(dependencies: AdminBannerRouterDependenc
   });
   router.use('/admin/banners', createAdminRbacAuthMiddleware(dependencies.accessTokens));
   router.use('/admin/banner-media', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+
+  if (dependencies.management) {
+    const management = dependencies.management;
+    router.get('/admin/banners/config', async (request, response) => {
+      try { response.json(toSuccessResponse(await management.readConfig(claims(response)), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.put('/admin/banners/config', async (request, response) => {
+      try { response.json(toSuccessResponse(await management.updateConfig(claims(response), request.body, mutationContext(request)), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.post('/admin/banners/:bannerId/upload', async (request, response) => {
+      try {
+        const { bannerId } = adBannerIdParamsSchema.parse(request.params);
+        const media = await management.upload(claims(response), bannerId, request, request.get('content-type') ?? '', mutationContext(request));
+        response.status(201).json(toSuccessResponse(media, requestId(request)));
+      } catch (error) { sendError(request, response, error); }
+    });
+    router.get('/public/banner-media/:mediaId', async (request, response) => {
+      try {
+        const { mediaId } = adBannerMediaIdParamsSchema.parse(request.params);
+        const bearer = request.get('authorization');
+        const actor = bearer?.startsWith('Bearer ') ? dependencies.accessTokens.verify(bearer.slice(7)) : undefined;
+        const media = await management.openMedia(mediaId, actor);
+        response.setHeader('Content-Type', media.mime);
+        response.setHeader('X-Content-Type-Options', 'nosniff');
+        media.stream.on('error', () => response.destroy());
+        media.stream.pipe(response);
+      } catch (error) { sendError(request, response, error); }
+    });
+  }
 
   router.get('/admin/banners', async (request, response) => {
     try {

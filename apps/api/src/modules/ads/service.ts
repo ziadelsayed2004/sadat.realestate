@@ -228,10 +228,10 @@ const egyptLocal = (value: string): string => {
 };
 
 const BANNER_TRANSITIONS: Record<AdBanner['status'], AdBanner['status'][]> = {
-  draft: ['scheduled', 'archived'],
-  scheduled: ['active', 'ended', 'archived'],
-  active: ['ended', 'archived'],
-  ended: ['archived'],
+  draft: ['scheduled', 'active', 'archived'],
+  scheduled: ['draft', 'active', 'ended', 'archived'],
+  active: ['draft', 'ended', 'archived'],
+  ended: ['draft', 'archived'],
   archived: []
 };
 
@@ -303,7 +303,7 @@ export function createAdSettingsService(seed: {
   const checkLiveRequirements = (banner: AdBanner, placement: AdPlacement, media: AdBannerMedia | undefined) => {
     if (!media) throw new AdBannerServiceError('BANNER_MEDIA_REQUIRED');
     if (placement.targetUrlRequired && !banner.targetUrl) throw new AdBannerServiceError('BANNER_TARGET_REQUIRED');
-    if (!placement.active || (banner.status === 'active' && (!settings.enabled || !settings.allowedSurfaces.includes(placement.surface)))) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+    if (!placement.active || (!settings.enabled || !settings.allowedSurfaces.includes(placement.surface))) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     const startsAt = new Date(banner.startAt).getTime();
     const endsAt = new Date(banner.endAt).getTime();
     const currentAt = clock().getTime();
@@ -493,7 +493,7 @@ export function createAdSettingsService(seed: {
       placementByKey(parsed.placementKey);
       if ([...banners.values()].some(item => item.placementKey === parsed.placementKey && item.sortOrder === parsed.sortOrder && item.status !== 'archived')) throw new AdBannerServiceError('DUPLICATE');
       const stamp = now();
-      const banner = adBannerSchema.parse({ id: id(), ...parsed, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
+      const banner = adBannerSchema.parse({ id: id(), ...parsed, sortOrder: parsed.sortOrder ?? Math.max(-1, ...[...banners.values()].filter(item => item.placementKey === parsed.placementKey).map(item => item.sortOrder)) + 1, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
       banners.set(banner.id, banner);
       return banner;
     },
@@ -608,7 +608,7 @@ export function createAdSettingsService(seed: {
       const parsedLocale = supportedLocaleSchema.parse(locale);
       if (!settings.enabled || !settings.allowedSurfaces.includes(surface as AdPlacement['surface'])) return [];
       const currentAt = at.getTime();
-      const values = [...banners.values()].filter(item => item.status === 'active' && currentAt >= new Date(item.startAt).getTime() && currentAt < new Date(item.endAt).getTime()).filter(item => {
+      const values = [...banners.values()].filter(item => isBannerLiveState(item.status) && currentAt >= new Date(item.startAt).getTime() && currentAt < new Date(item.endAt).getTime()).filter(item => {
         const placement = [...placements.values()].find(candidate => candidate.key === item.placementKey);
         if (!placement || !placement.active || placement.surface !== surface || !placement.allowedLocales.includes(parsedLocale)) return false;
         const media = item.mediaId ? bannerMedia.get(item.mediaId) : undefined;

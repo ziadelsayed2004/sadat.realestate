@@ -39,7 +39,7 @@ export function adminCmsContentFor(namespace: 'about' | 'team' | 'population') {
         updatedBy: adminId,
         version: 2,
         updatedAt: '2026-08-19T10:00:00.000Z',
-        availableActions: ['update']
+        availableActions: ['update', 'delete']
       }]
     };
   }

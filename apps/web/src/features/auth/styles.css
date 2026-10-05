@@ -855,6 +855,11 @@
   row-gap: 0;
 }
 
+.auth-page--registration-role .auth-role-card.auth-role-card--selected {
+  border-color: var(--color-brand-secondary);
+  background: color-mix(in srgb, var(--color-status-success) 7%, var(--color-surface));
+}
+
 .auth-page--registration-role .auth-role-card__icon {
   inline-size: 3.5rem;
   block-size: 3.5rem;
@@ -892,14 +897,14 @@
   inset-block-start: 0.25rem;
 }
 
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon,
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__title,
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__body {
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--provider) .auth-role-card__icon,
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--provider) .auth-role-card__title,
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--provider) .auth-role-card__body {
   position: relative;
   inset-block-start: 0.3125rem;
 }
 
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon svg {
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--provider) .auth-role-card__icon svg {
   position: relative;
   inset-block-start: -0.125rem;
 }
@@ -977,25 +982,25 @@
   font-size: 30.6875px;
 }
 
-.auth-page--registration-role .auth-role-card--link .auth-role-card__title {
+.auth-page--registration-role .auth-role-card--provider .auth-role-card__title {
   position: relative;
   inset-inline-start: 1px;
   margin-block-start: 1.1875rem;
 }
 
-.auth-page--registration-role .auth-role-card--link .auth-role-card__body {
+.auth-page--registration-role .auth-role-card--provider .auth-role-card__body {
   margin-block-start: 0.3125rem;
 }
 
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__body {
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--provider) .auth-role-card__body {
   inset-block-start: 0.25rem;
 }
 
-.auth-page--registration-role .auth-role-card--link .auth-role-card__tag {
+.auth-page--registration-role .auth-role-card--provider .auth-role-card__tag {
   font-weight: var(--font-weight-semibold);
 }
 
-.auth-page--registration-role .auth-role-card--link .auth-role-card__tag-label {
+.auth-page--registration-role .auth-role-card--provider .auth-role-card__tag-label {
   position: relative;
   inset-inline-start: -2px;
   inset-block-start: 2px;

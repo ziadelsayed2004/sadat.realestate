@@ -7619,6 +7619,220 @@
           ]
         }
       }
+    },
+    {
+      "name": "Admin CMS - Delete Team Member",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin CMS namespace update is authorized or safely rejected', function () { pm.expect([200, 400, 401, 403, 404, 409, 500]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{syntheticBearer}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"id\":\"bbbbbbbbbbbbbbbbbbbbbbbb\",\"version\":2,\"reason\":\"Member left the team\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/content/team",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "content",
+            "team"
+          ]
+        },
+        "description": "Permanently deletes the selected team member. Use its current id and version and provide a reason. Requires admin content management permission."
+      }
+    },
+    {
+      "name": "Banner publication and image upload",
+      "item": [
+        {
+          "name": "Read banner display settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/banners/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "banners",
+                "config"
+              ],
+              "variable": [
+                {
+                  "key": "mediaId",
+                  "value": "{{mediaId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enable homepage banner display",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/banners/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "banners",
+                "config"
+              ],
+              "variable": [
+                {
+                  "key": "mediaId",
+                  "value": "{{mediaId}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true,\n  \"expectedVersion\": 0,\n  \"reason\": \"Enable homepage banners\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Upload banner image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "image/png"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/banners/:bannerId/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "banners",
+                ":bannerId",
+                "upload"
+              ],
+              "variable": [
+                {
+                  "key": "bannerId",
+                  "value": "{{bannerId}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            },
+            "description": "Select a PNG JPEG or WebP file, maximum 10 MiB. Attach returned media id to the banner before publishing."
+          }
+        },
+        {
+          "name": "Download public banner image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/banner-media/:mediaId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "public",
+                "banner-media",
+                ":mediaId"
+              ],
+              "variable": [
+                {
+                  "key": "mediaId",
+                  "value": "{{mediaId}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

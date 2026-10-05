@@ -677,7 +677,7 @@ function Hero({
   readonly locations: readonly PublicHomepageLocation[];
 }) {
   const section = sections[0];
-  const banner = banners[0];
+  const banner = banners.find(item => !item.key.startsWith('banner-'));
   const title = localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
   const body = localizedText(section?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
@@ -1029,7 +1029,8 @@ function BannerGrid({
   readonly copy: PublicHomepageCopy;
   readonly banners: readonly PublicHomepageBanner[];
 }) {
-  const dynamicBanners = ordered(banners).slice(1);
+  const legacyHero = banners.find(item => !item.key.startsWith('banner-'));
+  const dynamicBanners = ordered(banners).filter(item => item !== legacyHero);
   const carouselBanners = dynamicBanners.length > 0 ? dynamicBanners : canonicalPromotionalBanners;
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);

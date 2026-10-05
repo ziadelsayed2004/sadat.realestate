@@ -60,10 +60,10 @@ interface SettingsRow {
 
 const LIVE_STATUSES: readonly BannerStatus[] = ['scheduled', 'active'];
 const TRANSITIONS: Record<BannerStatus, readonly BannerStatus[]> = {
-  draft: ['scheduled', 'archived'],
-  scheduled: ['active', 'ended', 'archived'],
-  active: ['ended', 'archived'],
-  ended: ['archived'],
+  draft: ['scheduled', 'active', 'archived'],
+  scheduled: ['draft', 'active', 'ended', 'archived'],
+  active: ['draft', 'ended', 'archived'],
+  ended: ['draft', 'archived'],
   archived: []
 };
 
@@ -212,6 +212,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
       const banner = adBannerSchema.parse({
         id: new Types.ObjectId().toHexString(),
         ...input,
+        sortOrder: input.sortOrder ?? 0,
         status: 'draft',
         version: 0,
         createdBy: actorId,
@@ -238,8 +239,13 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
       };
       const write = async (session?: ClientSession): Promise<AdBanner> => {
         await findPlacement(input.placementKey, session);
+        await placements.updateOne({ key: input.placementKey }, { $inc: { bannerWriteVersion: 1 } }, session ? { session } : {});
+        if (input.sortOrder === undefined) {
+          const last = await banners.find({ placementKey: input.placementKey }, session ? { session } : {}).sort({ sortOrder: -1 }).limit(1).next();
+          row.sortOrder = (last?.sortOrder ?? -1) + 1;
+        }
         const existing = await banners.findOne(
-          { placementKey: input.placementKey, sortOrder: input.sortOrder, status: { $ne: 'archived' } },
+          { placementKey: input.placementKey, sortOrder: row.sortOrder, status: { $ne: 'archived' } },
           session ? { session } : {}
         );
         if (existing) throw new AdBannerServiceError('DUPLICATE');
@@ -254,7 +260,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         return toBanner(row);
       };
       try {
-        return audit ? await transaction(session => write(session)) : await write();
+        return await transaction(session => write(session));
       } catch (error) {
         if (duplicate(error)) throw new AdBannerServiceError('DUPLICATE');
         throw error;
@@ -294,6 +300,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         });
         if (nextValue.status !== current.status && !TRANSITIONS[current.status].includes(nextValue.status)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
         const placement = await findPlacement(nextValue.placementKey, session);
+        await placements.updateOne({ key: nextValue.placementKey }, { $inc: { bannerWriteVersion: 1 } }, session ? { session } : {});
         await validateLiveBanner(nextValue, placement, now, session);
         const result = await banners.updateOne(
           { _id: current._id, version: input.expectedVersion },
@@ -311,7 +318,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         }
         return updated;
       };
-      return audit ? await transaction(session => write(session)) : await write();
+      return await transaction(session => write(session));
     },
 
     async previewBanner(bannerId) {
@@ -379,18 +386,22 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     },
 
     async reorderBanners(actorId, input, now) {
-      const values = await Promise.all(input.items.map(item => findBanner(item.bannerId)));
+      return transaction(async session => {
+      await findPlacement(input.placementKey, session);
+      await placements.updateOne({ key: input.placementKey }, { $inc: { bannerWriteVersion: 1 } }, { session });
+      const values = await Promise.all(input.items.map(item => findBanner(item.bannerId, session)));
       if (values.some(item => item.placementKey !== input.placementKey)) throw new AdBannerServiceError('NOT_FOUND');
       const updated: AdBanner[] = [];
       for (const [index, row] of values.entries()) {
         const item = input.items[index];
         if (!item) throw new AdBannerServiceError('NOT_FOUND');
         if (item.expectedVersion !== undefined && item.expectedVersion !== row.version) throw new AdBannerServiceError('VERSION_CONFLICT');
-        const result = await banners.updateOne({ _id: row._id, ...(item.expectedVersion === undefined ? {} : { version: item.expectedVersion }) }, { $set: { sortOrder: item.sortOrder, updatedBy: objectId(actorId, 'FORBIDDEN'), updatedAt: now }, $inc: { version: 1 } });
+        const result = await banners.updateOne({ _id: row._id, ...(item.expectedVersion === undefined ? {} : { version: item.expectedVersion }) }, { $set: { sortOrder: item.sortOrder, updatedBy: objectId(actorId, 'FORBIDDEN'), updatedAt: now }, $inc: { version: 1 } }, { session });
         if (result.matchedCount !== 1) throw new AdBannerServiceError('VERSION_CONFLICT');
-        updated.push(toBanner(await findBanner(row._id.toHexString())));
+        updated.push(toBanner(await findBanner(row._id.toHexString(), session)));
       }
       return updated.sort((a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
+      });
     }
   };
 }

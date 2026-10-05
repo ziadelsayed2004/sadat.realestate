@@ -96,7 +96,8 @@ export const AD_BANNER_STATUSES = ['draft', 'scheduled', 'active', 'ended', 'arc
 export const AD_BANNER_MEDIA_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 export const adBannerStatusSchema = z.enum(AD_BANNER_STATUSES);
 export const adBannerMediaMimeSchema = z.enum(AD_BANNER_MEDIA_MIME_TYPES);
-const publicHttpsUrl = z.string().url().max(2_048).refine(value => new URL(value).protocol === 'https:', { message: 'Only HTTPS media and target URLs are accepted' });
+const publicHttpsUrl = z.string().url().max(2_048).refine(value => value.startsWith('https://'), { message: 'Only HTTPS media and target URLs are accepted' });
+const bannerMediaUrl = z.union([publicHttpsUrl, z.string().regex(/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/)]);
 const bannerDateRange = (value: { startAt?: string | undefined; endAt?: string | undefined }, ctx: z.RefinementCtx) => {
   if (value.startAt && value.endAt && new Date(value.endAt) <= new Date(value.startAt)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endAt'], message: 'endAt must be after startAt' });
 };
@@ -104,7 +105,7 @@ const bannerDateRange = (value: { startAt?: string | undefined; endAt?: string |
 export const adBannerMediaSchema = z.object({
   id,
   bannerId: id,
-  url: publicHttpsUrl,
+  url: bannerMediaUrl,
   mime: adBannerMediaMimeSchema,
   width: positiveInt(20_000),
   height: positiveInt(20_000),
@@ -118,7 +119,7 @@ export const adBannerMediaCreateSchema = adBannerMediaSchema.omit({ id: true, ba
 export const adBannerMediaPatchSchema = z.object({
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(2).max(500),
-  url: publicHttpsUrl.optional(),
+  url: bannerMediaUrl.optional(),
   mime: adBannerMediaMimeSchema.optional(),
   width: positiveInt(20_000).optional(),
   height: positiveInt(20_000).optional()
@@ -150,7 +151,7 @@ export const adBannerCreateSchema = z.object({
   targetUrl: publicHttpsUrl.optional(),
   startAt: z.string().datetime({ offset: true }),
   endAt: z.string().datetime({ offset: true }),
-  sortOrder: z.number().int().nonnegative().max(100_000).default(0)
+  sortOrder: z.number().int().nonnegative().max(100_000).optional()
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerPatchSchema = z.object({
   expectedVersion: z.number().int().nonnegative(),
@@ -211,7 +212,7 @@ export const adBannerPublicSchema = z.object({
   altText: localizedTextSchema.optional(),
   resolvedTitle: z.string(),
   resolvedAltText: z.string().optional(),
-  imageUrl: publicHttpsUrl,
+  imageUrl: bannerMediaUrl,
   targetUrl: publicHttpsUrl.optional(),
   startAt: z.string().datetime({ offset: true }),
   endAt: z.string().datetime({ offset: true }),
@@ -232,3 +233,8 @@ export type AdBannerListData = z.infer<typeof adBannerListDataSchema>;
 export type AdBannerOrder = z.infer<typeof adBannerOrderSchema>;
 export type AdBannerPreview = z.infer<typeof adBannerPreviewSchema>;
 export type AdBannerPublic = z.infer<typeof adBannerPublicSchema>;
+
+export const adBannerConfigSchema = z.object({ enabled: z.boolean(), version: z.number().int().nonnegative(), placements: z.array(z.object({ key: placementKey, label: localizedTextSchema, active: z.boolean() }).strict()).max(100) }).strict();
+export const adBannerConfigPutSchema = z.object({ enabled: z.boolean(), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
+export const adBannerConfigSuccessEnvelopeSchema = successEnvelopeSchema(adBannerConfigSchema);
+export type AdBannerConfig = z.infer<typeof adBannerConfigSchema>;
