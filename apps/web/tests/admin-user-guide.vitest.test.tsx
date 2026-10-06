@@ -8,6 +8,8 @@ import { getUserGuideCopy } from '../src/features/admin_user_guide/copy.ts';
 import { App } from '../src/features/frontend_foundation/app.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { resolveRoute } from '../src/routes/route-table.ts';
+import { audienceLabels, GUIDE_AUDIENCES, sectionsForAudience } from '../src/features/admin_user_guide/account-guides.ts';
+import { guideAsText } from '../src/features/admin_user_guide/export.ts';
 
 const admin = { status: 'authenticated' as const, role: 'admin' as const };
 const topics = GUIDE_SECTIONS.flatMap(section => section.topics);
@@ -20,6 +22,44 @@ beforeEach(() => {
 });
 
 describe('interactive administrator reference', () => {
+  it('has useful instructions and working links for every requested account type', () => {
+    for (const audience of GUIDE_AUDIENCES) {
+      const sections = sectionsForAudience(GUIDE_SECTIONS, audience);
+      expect(sections.length, audience).toBeGreaterThan(0);
+      const text = guideAsText(sections, 'ar');
+      expect(text).toContain('https://elsadatrealestate.com/');
+      expect(text).not.toMatch(/:[a-z]|\*|[a-f0-9]{24}/u);
+    }
+    const provider = guideAsText(sectionsForAudience(GUIDE_SECTIONS, 'brokerage_office'));
+    expect(provider).toContain('دليل مكتب الوساطة');
+    expect(provider).toContain('ليس مفتاحًا يُشترى');
+    expect(provider).not.toContain('دليل الأدمن الرئيسي');
+    expect(guideAsText(GUIDE_SECTIONS)).toContain('/admin/banners?lang=ar#banner-placements');
+  });
+  it('filters the administrator guide by account type without granting permissions', () => {
+    renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
+    fireEvent.change(screen.getByLabelText('نوع الحساب'), { target: { value: 'brokerage_office' } });
+    expect(screen.getByRole('option', { name: audienceLabels.brokerage_office })).toBeVisible();
+    expect(document.getElementById('guide-office-journey')).toBeInTheDocument();
+    expect(document.getElementById('guide-owner-journey')).toBeNull();
+    expect(screen.getByText(/اختيار نوع الحساب يغيّر الشرح فقط/)).toBeVisible();
+  });
+  it('selects the company guide from the actual developer account type', async () => {
+    window.history.replaceState(null, '', '/provider/user-guide?lang=ar');
+    const authClient = { getAuthorizationHeader: () => 'Bearer guide', getProviderApplicationStatus: async () => ({ applicationId: 'cccccccccccccccccccccccc', providerType: 'developer_company' as const, status: 'approved' as const, version: 1, availableActions: ['open_dashboard' as const] }) };
+    renderWithLocale(<AdminUserGuide locale="ar" session={{ status: 'authenticated', role: 'provider' }} authClient={authClient} />);
+    await waitFor(() => expect(screen.getByLabelText('نوع الحساب')).toHaveValue('developer'));
+    expect(document.getElementById('guide-developer-journey')).toBeInTheDocument();
+  });
+  it.each(['seeker', 'provider'] as const)('opens the %s guide from its own dashboard without admin task links', async role => {
+    window.history.replaceState(null, '', `/${role}/user-guide?lang=ar`);
+    renderWithLocale(<App url={`/${role}/user-guide?lang=ar`} locale="ar" session={{ status: 'authenticated', role }} />);
+    expect(await screen.findByTestId('admin-user-guide')).toBeVisible();
+    const guide = document.querySelector('.user-guide')!;
+    expect(guide.querySelector('a[href^="/admin"]')).toBeNull();
+    expect(guide.querySelector('select#user-guide-audience option[value="owner-admin"]')).toBeNull();
+    expect(document.querySelector(`a[href="/${role}/user-guide?lang=ar"][aria-current="page"]`)).toBeInTheDocument();
+  });
   it('covers every sidebar task and every canonical admin screen without fake record links', () => {
     const navigation = navigationSource;
     const navigationPaths = [...navigation.matchAll(/sidebarItem\('[^']+',\s*'([^']+)'/gu)].map(match => match[1]);

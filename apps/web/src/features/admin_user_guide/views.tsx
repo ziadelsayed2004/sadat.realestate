@@ -1,25 +1,40 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import { AdminNavigation } from '../admin/overview.tsx';
+import { ProviderNavigation } from '../provider/overview.tsx';
+import { SeekerNavigation } from '../seeker/overview.tsx';
+import type { ProviderAuthorizationSource } from '../provider/data.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { GUIDE_SECTIONS, searchGuide } from './content.ts';
+import { GUIDE_AUDIENCES, audienceLabels, sectionsForAudience, type GuideAudience } from './account-guides.ts';
 import { getUserGuideCopy } from './copy.ts';
+import { guideAsText } from './export.ts';
 import './styles.css';
 
 const STORAGE_KEY = 'sadat-admin-user-guide-v1';
-const topicIds = new Set(GUIDE_SECTIONS.flatMap(section => section.topics.map(topic => topic.id)));
 interface Preferences { opened: string[]; last: string; large: boolean }
 const initialPreferences: Preferences = { opened: ['use-guide'], last: '', large: false };
 
 function taskPath(path: string, locale: SupportedLocale): string {
   const url = new URL(path, 'https://elsadatrealestate.com');
   url.searchParams.set('lang', locale);
-  return `${url.pathname}${url.search}`;
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
-export default function AdminUserGuide({ locale, session }: { readonly locale: SupportedLocale; readonly session: RouteSession }) {
+export default function AdminUserGuide({ locale, session, authClient }: { readonly locale: SupportedLocale; readonly session: RouteSession; readonly authClient?: ProviderAuthorizationSource | undefined }) {
   const copy = getUserGuideCopy(locale);
-  const allowed = session.status === 'authenticated' && session.role === 'admin';
+  const allowed = session.status === 'authenticated';
+  const role = session.status === 'authenticated' ? session.role : 'admin';
+  const guidePath = `/${role}/user-guide`;
+  const storageKey = role === 'admin' ? STORAGE_KEY : `sadat-${role}-user-guide-v1`;
+  const audiences = useMemo(() => role === 'admin' ? [...GUIDE_AUDIENCES] : role === 'seeker' ? ['seeker'] as GuideAudience[] : ['individual_broker', 'brokerage_office', 'developer'] as GuideAudience[], [role]);
+  const [audience, setAudience] = useState<GuideAudience>(() => {
+    const requested = typeof window === 'undefined' ? null : new URLSearchParams(window.location.search).get('audience');
+    return audiences.includes(requested as GuideAudience) ? requested as GuideAudience : audiences[0]!;
+  });
+  const audienceChosen = useRef(typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('audience'));
+  const sections = useMemo(() => sectionsForAudience(GUIDE_SECTIONS, audience).map(section => role === 'admin' ? section : ({ ...section, topics: section.topics.map(topic => ({ ...topic, ...(topic.id === 'use-guide' ? { before: 'الدخول بحسابك؛ الدليل يشرح الاستخدام ولا يغيّر صلاحيات الحساب.', links: [{ label: 'لوحتي', path: `/${role}` }, { label: 'دليل الاستخدام', path: guidePath }] } : { links: topic.links.filter(link => !link.path.startsWith('/admin/') || link.path === '/admin/user-guide').map(link => link.path === '/admin/user-guide' ? { ...link, path: guidePath } : link) }) })) })), [audience, role, guidePath]);
+  const topicIds = useMemo(() => new Set(sections.flatMap(section => section.topics.map(topic => topic.id))), [sections]);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [preferences, setPreferences] = useState<Preferences>(initialPreferences);
@@ -30,15 +45,33 @@ export default function AdminUserGuide({ locale, session }: { readonly locale: S
   const [jump, setJump] = useState('');
   const panel = useRef<HTMLDivElement>(null);
   const restoreFocus = useRef<HTMLElement | null>(null);
-  const visible = useMemo(() => searchGuide(query, category), [query, category]);
+  const visible = useMemo(() => searchGuide(query, category, sections), [query, category, sections]);
   const visibleIds = useMemo(() => visible.flatMap(section => section.topics.map(topic => topic.id)), [visible]);
   const opened = new Set(preferences.opened);
+
+  useEffect(() => {
+    if (role !== 'provider' || !authClient?.getProviderApplicationStatus) return;
+    let active = true;
+    void authClient.getProviderApplicationStatus().then(application => {
+      const accountAudience = application.providerType === 'developer_company' ? 'developer' : application.providerType;
+      if (active && !audienceChosen.current && audiences.includes(accountAudience)) setAudience(accountAudience);
+    }, () => undefined);
+    return () => { active = false; };
+  }, [role, authClient, audiences]);
+
+  function download(): void {
+    const url = URL.createObjectURL(new Blob([guideAsText(visible, locale)], { type: 'text/plain;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url; link.download = `sadat-user-guide-${audience}.txt`;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
   useEffect(() => {
     if (!allowed) return;
     let saved: Preferences = initialPreferences;
     try {
-      const raw: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
+      const raw: unknown = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
       if (raw !== null && typeof raw === 'object') {
         const value = raw as Record<string, unknown>;
         saved = { opened: Array.isArray(value.opened) ? value.opened.filter((id): id is string => typeof id === 'string' && topicIds.has(id)) : initialPreferences.opened, last: typeof value.last === 'string' && topicIds.has(value.last) ? value.last : '', large: value.large === true };
@@ -51,12 +84,12 @@ export default function AdminUserGuide({ locale, session }: { readonly locale: S
     }
     setPreferences(saved);
     setReady(true);
-  }, [allowed]);
+  }, [allowed, storageKey, topicIds]);
 
   useEffect(() => {
     if (!ready || !allowed) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences)); } catch { /* No persistence is required to read. */ }
-  }, [preferences, ready, allowed]);
+    try { localStorage.setItem(storageKey, JSON.stringify(preferences)); } catch { /* No persistence is required to read. */ }
+  }, [preferences, ready, allowed, storageKey]);
 
   useEffect(() => {
     if (!allowed) return;
@@ -70,7 +103,7 @@ export default function AdminUserGuide({ locale, session }: { readonly locale: S
     window.addEventListener('hashchange', followHash);
     window.addEventListener('popstate', followHash);
     return () => { window.removeEventListener('hashchange', followHash); window.removeEventListener('popstate', followHash); };
-  }, [allowed]);
+  }, [allowed, topicIds]);
 
   useEffect(() => {
     if (query.trim() !== '') setPreferences(value => ({ ...value, opened: [...new Set([...value.opened, ...visibleIds])] }));
@@ -139,33 +172,35 @@ export default function AdminUserGuide({ locale, session }: { readonly locale: S
   }
   async function shareTopic(id: string) {
     try {
-      const url = new URL(`/admin/user-guide?lang=${locale}#guide-${id}`, window.location.origin);
+      const url = new URL(`${guidePath}?lang=${locale}${audience === 'all' ? '' : `&audience=${audience}`}#guide-${id}`, window.location.origin);
       await navigator.clipboard.writeText(url.href);
       setMessage(copy.copied);
     } catch { setMessage(copy.copyFailed); }
   }
 
   if (!allowed) return <p role="alert">{copy.permission}</p>;
-  return <section className="admin-user-guide" data-testid="admin-user-guide">
-    <AdminNavigation locale={locale} activePath="/admin/user-guide" />
-    <div className="user-guide" ref={panel} data-maximized={maximized} data-large={preferences.large} {...(maximized ? { role: 'dialog', 'aria-modal': true as const } : {})} aria-labelledby="user-guide-title">
+  return <section className={`admin-user-guide${role === 'provider' ? ' provider-dashboard' : role === 'seeker' ? ' seeker-dashboard' : ''}`} data-testid="admin-user-guide">
+    {role === 'admin' ? <AdminNavigation locale={locale} activePath={guidePath} /> : role === 'provider' ? <ProviderNavigation locale={locale} activePath={guidePath} authClient={authClient} /> : <SeekerNavigation locale={locale} activePath={guidePath} authClient={authClient} />}
+    <div className={`user-guide${role === 'provider' ? ' provider-dashboard__content' : role === 'seeker' ? ' seeker-dashboard__content' : ''}`} ref={panel} data-maximized={maximized} data-large={preferences.large} {...(maximized ? { role: 'dialog', 'aria-modal': true as const } : {})} aria-labelledby="user-guide-title">
       <header className="user-guide__header" id="user-guide-top">
         <div><p className="user-guide__eyebrow">{copy.eyebrow}</p><h1 id="user-guide-title">{copy.title}</h1><p>{copy.description}</p><small>{copy.language}</small></div>
         <div className="user-guide__window-controls">
           <button type="button" aria-expanded={!minimized} aria-controls="user-guide-reading" onClick={() => { setMinimized(value => !value); setMaximized(false); }}>{minimized ? copy.expand : copy.minimize}</button>
-          <button type="button" data-guide-restore aria-pressed={maximized} onClick={() => { restoreFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setMinimized(false); setMaximized(value => !value); }}>{maximized ? copy.restore : copy.maximize}</button>
+          <button type="button" data-guide-restore aria-pressed={maximized} onClick={event => { restoreFocus.current = event.currentTarget; setMinimized(false); setMaximized(value => !value); }}>{maximized ? copy.restore : copy.maximize}</button>
         </div>
       </header>
       {minimized ? <p className="user-guide__minimized" role="status">{copy.minimized}</p> : null}
       <div id="user-guide-reading" hidden={minimized}>
         <div className="user-guide__toolbar">
+          <div><label htmlFor="user-guide-audience">{copy.accountType}</label><select id="user-guide-audience" value={audience} onChange={event => { audienceChosen.current = true; setAudience(event.target.value as GuideAudience); setCategory('all'); setQuery(''); }}>{audiences.map(value => <option key={value} value={value}>{audienceLabels[value]}</option>)}</select><small>{copy.audienceNote}</small></div>
           <div className="user-guide__search"><label htmlFor="user-guide-search">{copy.search}</label><input id="user-guide-search" type="search" value={query} placeholder={copy.placeholder} onChange={event => setQuery(event.target.value)} /></div>
-          <div><label htmlFor="user-guide-category">{copy.category}</label><select id="user-guide-category" value={category} onChange={event => setCategory(event.target.value)}><option value="all">{copy.all}</option>{GUIDE_SECTIONS.map(section => <option key={section.id} value={section.id}>{section.title}</option>)}</select></div>
+          <div><label htmlFor="user-guide-category">{copy.category}</label><select id="user-guide-category" value={category} onChange={event => setCategory(event.target.value)}><option value="all">{copy.all}</option>{sections.map(section => <option key={section.id} value={section.id}>{section.title}</option>)}</select></div>
           <div className="user-guide__actions">
             <button type="button" onClick={() => setPreferences(value => ({ ...value, opened: [...new Set([...value.opened, ...visibleIds])] }))}>{copy.openAll}</button>
             <button type="button" onClick={() => setPreferences(value => ({ ...value, opened: value.opened.filter(id => !visibleIds.includes(id)) }))}>{copy.closeAll}</button>
             <button type="button" aria-pressed={preferences.large} aria-label={`${copy.textSize}: ${preferences.large ? copy.large : copy.normal}`} onClick={() => setPreferences(value => ({ ...value, large: !value.large }))}>A<span aria-hidden="true">{preferences.large ? '−' : '+'}</span></button>
             <button type="button" onClick={() => window.print()}>{copy.print}</button>
+            <button type="button" onClick={download}>{copy.download}</button>
             <button type="button" onClick={() => { setQuery(''); setCategory('all'); }}>{copy.clear}</button>
           </div>
           <p className="user-guide__count" role="status">{visibleIds.length} {copy.count}</p>

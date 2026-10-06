@@ -182,7 +182,7 @@ export function App({
   const isProviderNotifications = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/notifications';
   const isProviderSettings = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/settings';
   const isAdminOverview = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin' || seekerPathname === '/admin/overview');
-  const isAdminUserGuide = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/user-guide';
+  const isAdminUserGuide = route.kind === 'matched' && ['/admin/user-guide', '/seeker/user-guide', '/provider/user-guide'].includes(seekerPathname);
   const isAdminUsers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/users';
   const isAdminSeekers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-seekers';
   const isAdminProviders = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/providers';
@@ -308,7 +308,7 @@ export function App({
     ) : isSeekerSettings ? (
       <SeekerProfile locale={locale} session={effectiveSession} authClient={authClient} tab="settings" />
     ) : isAdminUserGuide ? (
-      <Suspense fallback={<p role="status">{locale === 'ar' ? 'جارٍ تحميل دليل الاستخدام…' : 'Loading the user guide…'}</p>}><AdminUserGuide locale={locale} session={effectiveSession} /></Suspense>
+      <Suspense fallback={<p role="status">{locale === 'ar' ? 'جارٍ تحميل دليل الاستخدام…' : 'Loading the user guide…'}</p>}><AdminUserGuide locale={locale} session={effectiveSession} authClient={authClient} /></Suspense>
     ) : isAdminOverview ? (
       <AdminOverview locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isAdminAccountReports ? (

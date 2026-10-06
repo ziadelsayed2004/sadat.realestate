@@ -133,12 +133,12 @@ const cmsActions = {
   ar: {
     edit: 'تعديل', delete: 'حذف', deleteTitle: 'حذف عضو من فريق العمل',
     deleteHint: 'سيتم حذف العضو من فريق العمل والموقع. اكتب سبب الحذف ثم أكد؛ لا يمكن التراجع عن الحذف من هذه الصفحة.',
-    mutation: { notFound: 'السجل لم يعد موجودًا. حدّث القائمة قبل المحاولة مرة أخرى.', conflict: 'تم تعديل السجل من جلسة أخرى أو المفتاح مستخدم. راجع أحدث البيانات قبل الحفظ.', invalid: 'راجع الحقول المطلوبة وصحة البيانات.', failed: 'تعذر حفظ التغيير. حاول مرة أخرى.' }
+    mutation: { notFound: 'السجل لم يعد موجودًا. حدّث القائمة قبل المحاولة مرة أخرى.', conflict: 'تم تعديل السجل من جلسة أخرى أو المفتاح مستخدم. راجع أحدث البيانات قبل الحفظ.', invalid: 'راجع الحقول المطلوبة وصحة البيانات.', failed: 'تعذر حفظ التغيير. حاول مرة أخرى.', sessionExpired: 'تعذر تجديد جلسة الإدارة. سجّل الدخول مجددًا قبل تنفيذ التغيير.', forbidden: 'حسابك لا يملك صلاحية هذا الإجراء، أو تغيّرت صلاحياته. اطلب من المدير الرئيسي مراجعة الدور وصلاحية إدارة المحتوى.' }
   },
   en: {
     edit: 'Edit', delete: 'Delete', deleteTitle: 'Delete team member',
     deleteHint: 'This removes the member from the team and public site. Enter a reason and confirm. This page cannot undo the deletion.',
-    mutation: { notFound: 'This record no longer exists. Refresh the list before retrying.', conflict: 'The record changed in another session or the key is already used. Review the latest data before saving.', invalid: 'Check the required fields and their values.', failed: 'The change could not be saved. Try again.' }
+    mutation: { notFound: 'This record no longer exists. Refresh the list before retrying.', conflict: 'The record changed in another session or the key is already used. Review the latest data before saving.', invalid: 'Check the required fields and their values.', failed: 'The change could not be saved. Try again.', sessionExpired: 'The administrator session could not be renewed. Sign in again before making the change.', forbidden: 'Your account does not have permission for this action, or its permissions changed. Ask the main administrator to check the role and content management permission.' }
   }
 } as const;
 

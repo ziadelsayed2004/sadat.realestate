@@ -211,6 +211,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
             );
           })}
         </ul>
+        <a href={localeForSeekerPath(locale, '/seeker/user-guide')} aria-current={activePath === '/seeker/user-guide' ? 'page' : undefined} data-active={activePath === '/seeker/user-guide' || undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true" className="seeker-dashboard__nav-icon">?</span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a>
         <div className="seeker-dashboard__nav-footer">
           <div className="seeker-dashboard__nav-footer-profile">
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>

@@ -106,3 +106,6 @@
   .admin-ads__detail-list > div { align-items: flex-start; flex-direction: column; gap: 6px; }
   .admin-ads__detail-list dd { max-width: none; text-align: start; }
 }
+
+.admin-ads__setup-links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 16px; }
+.admin-ads__setup-links a { color: #145649; text-decoration: underline; overflow-wrap: anywhere; }

@@ -95,6 +95,32 @@ describe('admin About, Team, and population CMS content', () => {
     await expect(deleteAdminCmsTeamMember({ id: teamId, version: 2, reason: 'x' }, { apiClient: client })).rejects.toThrow();
     expect(requests).toHaveLength(1);
   });
+  it('renews an expired admin session once and sends the unchanged deletion with the new token', async () => {
+    let token = 'expired';
+    const refresh = vi.fn(async () => { token = 'renewed'; });
+    const fetcher = vi.fn().mockResolvedValueOnce(new Response('{}', { status: 401 })).mockResolvedValueOnce(envelope({ namespace: 'team', items: [] }));
+    const input = { id: teamId, version: 2, reason: 'Member left the team' };
+    await deleteAdminCmsTeamMember(input, { apiClient: new ApiClient({ fetcher }), authorization: { getAuthorizationHeader: () => `Bearer ${token}`, refresh } });
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(new Headers(fetcher.mock.calls[0]?.[1]?.headers).get('authorization')).toBe('Bearer expired');
+    expect(new Headers(fetcher.mock.calls[1]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
+    expect(fetcher.mock.calls[1]?.[1]?.body).toBe(JSON.stringify(input));
+  });
+  it.each([403, 409])('does not retry a deletion denied with status %s', async status => {
+    const refresh = vi.fn();
+    const fetcher = vi.fn(async () => new Response('{}', { status }));
+    await expect(deleteAdminCmsTeamMember({ id: teamId, version: 2, reason: 'Member left the team' }, { apiClient: new ApiClient({ fetcher }), authorization: { getAuthorizationHeader: () => 'Bearer valid', refresh } })).rejects.toMatchObject({ status });
+    expect(refresh).not.toHaveBeenCalled();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it('stops after one renewal when the server still rejects the session', async () => {
+    const refresh = vi.fn(async () => undefined);
+    const fetcher = vi.fn(async () => new Response('{}', { status: 401 }));
+    await expect(deleteAdminCmsTeamMember({ id: teamId, version: 2, reason: 'Member left the team' }, { apiClient: new ApiClient({ fetcher }), authorization: { getAuthorizationHeader: () => 'Bearer invalid', refresh } })).rejects.toMatchObject({ status: 401 });
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
   it('uses the implemented namespace routes and strict request schemas', async () => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const client = apiClientFor(requests, about);

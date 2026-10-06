@@ -166,6 +166,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
               </li>
             );
           })}
+          <li data-provider-nav="userGuide"><a href={localeForProviderPath(locale, '/provider/user-guide')} aria-current={activePath === '/provider/user-guide' ? 'page' : undefined} data-active={activePath === '/provider/user-guide' ? 'true' : undefined} onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>?</span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a></li>
           <li className="provider-dashboard__mobile-website">
             <a href={localeForProviderPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMobileMenuOpen(false)}>
               <span aria-hidden="true">↗</span><span>{websiteLabel}</span>

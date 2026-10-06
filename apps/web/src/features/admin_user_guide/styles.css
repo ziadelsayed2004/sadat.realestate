@@ -16,6 +16,8 @@
 .user-guide__toolbar :is(input,select) { width: 100%; min-width: 0; min-height: 46px; padding: 10px 12px; border: 1px solid #cbd4cd; border-radius: 12px; background: #fafbf9; color: #1b2942; font: inherit; font-size: .9rem; }
 .user-guide__actions { grid-column: 1 / -1; }
 .user-guide__count { grid-column: 1 / -1; color: #526174; font-size: .85rem; }
+.user-guide__toolbar > div > small { display: block; margin-top: 8px; line-height: 1.6; color: #526174; }
+.admin-user-guide { min-width: 0; }
 .user-guide__link-note { padding-block: 16px 6px; font-size: .85rem; color: #526174; }
 .user-guide__feedback { color: #145649; min-height: 1.5em; font-size: .85rem; margin-bottom: 12px !important; }
 .user-guide__layout { display: grid; grid-template-columns: minmax(190px, 240px) minmax(0, 1fr); gap: 24px; align-items: start; }
@@ -69,9 +71,11 @@
 @media (max-width: 600px) { .user-guide__toolbar { grid-template-columns: minmax(0, 1fr); padding: 16px; } .user-guide__body { padding-inline: 16px; } .user-guide__topic h3 > button { padding-inline: 16px; } }
 @media (prefers-reduced-motion: reduce) { .user-guide[data-maximized="true"] { animation: none; } .user-guide button, .user-guide__links a { transition: none; } }
 @media print {
-  html, body, .route-shell--admin .route-shell__body { overflow: visible !important; }
+  body:has(.admin-user-guide) nav { display: none !important; }
+  html, body, :is(.route-shell--admin,.route-shell--provider,.route-shell--seeker) .route-shell__body { overflow: visible !important; }
+  .provider-dashboard__topbar, .provider-dashboard__navigation, .seeker-dashboard__topbar, .seeker-dashboard__navigation { display: none !important; }
   .route-shell--admin > .route-shell__header, .route-shell__footer, .admin-dashboard__navigation, .admin-dashboard__navigation-backdrop, .user-guide__window-controls, .user-guide__toolbar, .user-guide__toc, .user-guide__feedback, .user-guide__minimized, .user-guide__body footer, .user-guide__section-heading > button { display: none !important; }
-  .route-shell--admin .route-shell__body > .app-main > .admin-user-guide { display: block !important; overflow: visible !important; }
+  .route-shell__body > .app-main > .admin-user-guide { display: block !important; overflow: visible !important; }
   .user-guide, .user-guide[data-maximized="true"] { position: static; overflow: visible; padding: 0; background: white; color: black; }
   .user-guide__layout { display: block; }
   .user-guide [hidden] { display: block; }

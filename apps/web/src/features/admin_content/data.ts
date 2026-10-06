@@ -34,7 +34,7 @@ import {
   type CmsAdminContentData,
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
 
 export const ADMIN_ARTICLES_ROUTE = '/admin/articles' as const;
 export const ADMIN_ARTICLE_CATEGORIES_ROUTE = '/admin/article-categories' as const;
@@ -45,6 +45,7 @@ export const ADMIN_CMS_POPULATION_ROUTE = `${ADMIN_CMS_CONTENT_ROUTE}/population
 
 export interface AdminContentAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 interface CommonOptions {
@@ -94,6 +95,19 @@ function requestOptions(options: CommonOptions): { readonly headers?: HeadersIni
     ...(headers === undefined ? {} : { headers }),
     ...(options.signal === undefined ? {} : { signal: options.signal })
   };
+}
+
+async function withCurrentSession<T>(options: CommonOptions, request: () => Promise<T>): Promise<T> {
+  try {
+    return await request();
+  } catch (error) {
+    // Authentication is checked before the mutation runs. Renew an expired
+    // session once; a permission denial must never be retried or bypassed.
+    if (!(error instanceof ApiClientError) || error.status !== 401 || !options.authorization?.refresh || options.signal?.aborted) throw error;
+    await options.authorization.refresh();
+    if (!options.authorization.getAuthorizationHeader() || options.signal?.aborted) throw error;
+    return request();
+  }
 }
 
 export async function loadAdminArticles(options: AdminContentLoadOptions = {}): Promise<AdminArticleListData> {
@@ -178,10 +192,10 @@ export async function deleteAdminArticleCategory(categoryId: string, input: unkn
 
 export async function loadAdminCmsContent(namespace: CmsAdminContentNamespace, options: AdminCmsContentOptions = {}): Promise<CmsAdminContentData> {
   const parsedNamespace = cmsAdminContentNamespaceSchema.parse(namespace);
-  const response = await clientFor(options).request(`${ADMIN_CMS_CONTENT_ROUTE}/${parsedNamespace}`, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_CMS_CONTENT_ROUTE}/${parsedNamespace}`, {
     responseSchema: cmsAdminContentSuccessEnvelopeSchema,
     ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 
@@ -192,12 +206,12 @@ export async function updateAdminCmsContent(namespace: CmsAdminContentNamespace,
     : parsedNamespace === 'team'
       ? cmsAdminTeamMemberPutSchema.parse(input)
       : cmsAdminPopulationValuePutSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_CMS_CONTENT_ROUTE}/${parsedNamespace}`, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_CMS_CONTENT_ROUTE}/${parsedNamespace}`, {
     method: 'PUT',
     responseSchema: cmsAdminContentSuccessEnvelopeSchema,
     json: body,
     ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 
@@ -224,10 +238,10 @@ export function createAdminContentSource(options: Omit<CommonOptions, 'signal'> 
 
 export async function deleteAdminCmsTeamMember(input: unknown, options: CommonOptions = {}): Promise<CmsAdminContentData> {
   const body = cmsAdminTeamMemberDeleteSchema.parse(input);
-  const response = await clientFor(options).request(ADMIN_CMS_TEAM_ROUTE, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(ADMIN_CMS_TEAM_ROUTE, {
     method: 'DELETE', responseSchema: cmsAdminContentSuccessEnvelopeSchema,
     json: body, ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 

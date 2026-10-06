@@ -8,6 +8,18 @@ function localeForProject(): 'ar' | 'en' {
 }
 
 test.describe('ADM-46 through ADM-49 homepage administration', () => {
+  test('shows the advertising placement codes and the matching administration settings', async ({ page }, testInfo) => {
+    const locale = localeForProject();
+    const copy = getBannerControlCopy(locale);
+    await page.route('**/api/v1/admin/banners/config', route => route.fulfill({ json: { data: { enabled: true, version: 1, placements: [{ key: 'homepage.hero', label: { ar: 'بانر الرئيسية', en: 'Homepage banner' }, active: true }, { key: 'search.sidebar', label: { ar: 'جانب البحث', en: 'Search sidebar' }, active: false }] }, meta: { requestId: 'placement-guide' } } }));
+    await page.goto(`/admin/banners?lang=${locale}#banner-placements`);
+    const placements = page.locator('#banner-placements');
+    await expect(placements.getByRole('heading', { name: copy.placementsTitle })).toBeVisible();
+    await expect(placements.getByRole('row', { name: /homepage.hero/u })).toContainText(copy.placementActive);
+    await expect(placements.getByRole('row', { name: /search.sidebar/u })).toContainText(copy.placementInactive);
+    await expect(placements.getByRole('link', { name: copy.advertisingSettings })).toHaveAttribute('href', `/admin/settings/advertising?lang=${locale}`);
+    await page.screenshot({ path: testInfo.outputPath('advertising-placement-codes.png'), fullPage: true });
+  });
   test('uploads, schedules, edits, stops and archives a banner', async ({ page }) => {
     const locale = localeForProject();
     const copy = getBannerControlCopy(locale);

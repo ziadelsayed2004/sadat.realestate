@@ -92,7 +92,8 @@ describe('Provider overview', () => {
   it.each(['ar', 'en'] as const)('renders the canonical Provider rail assets and maps viewings to Customer Requests for %s', locale => {
     const result = renderWithLocale(<ProviderNavigation locale={locale} activePath="/provider/viewings" />, { locale });
     const links = Array.from(result.container.querySelectorAll('.provider-dashboard__navigation [data-provider-nav] a'));
-    expect(links).toHaveLength(9);
+    expect(links).toHaveLength(10);
+    expect(result.container.querySelector('[data-provider-nav="userGuide"] a')).toHaveAttribute('href', `/provider/user-guide?lang=${locale}`);
     expect(result.container.querySelector('.provider-dashboard__brand')).not.toHaveAttribute('href');
     expect(result.container.querySelector('.provider-dashboard__website-link')).toHaveAttribute('href', `/?lang=${locale}`);
     expect(result.container.querySelector('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider/customer-requests?lang=${locale}`);
@@ -126,7 +127,7 @@ describe('Provider overview', () => {
     );
 
     await waitFor(() => expect(result.container.querySelector('[data-provider-nav="projects"]')).toBeNull());
-    expect(result.container.querySelectorAll('.provider-dashboard__navigation [data-provider-nav] a')).toHaveLength(8);
+    expect(result.container.querySelectorAll('.provider-dashboard__navigation [data-provider-nav] a')).toHaveLength(9);
   });
 
   it('fails closed for an anonymous session and exposes retry without fallback values', async () => {

@@ -1,8 +1,11 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installPublicNavigation } from '../src/features/frontend_foundation/public-navigation.ts';
 import { publicPageState, pushPublicPage, savePublicListingView } from '../src/features/frontend_foundation/public-history.ts';
 
 let stop: (() => void) | undefined;
+// jsdom does not implement scrolling; individual restoration tests replace this
+// with an assertion spy and the browser suite verifies actual positions.
+beforeEach(() => vi.stubGlobal('scrollTo', vi.fn()));
 afterEach(() => {
   stop?.();
   stop = undefined;
@@ -88,6 +91,8 @@ describe('public navigation', () => {
     await vi.waitFor(() => expect(onNavigate).toHaveBeenCalledTimes(1));
     const detailsState = window.history.state;
     expect(publicPageState()?.from?.url).toBe('/properties?page=2&lang=en');
+    expect(scroll).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'instant' });
+    scroll.mockClear();
     // Simulate the browser traversing back to the original entry.
     const sourceId = publicPageState()!.from!.id;
     window.history.replaceState({ otherRouterState: 'preserved', sadatPublicPage: { id: sourceId, scroll: { x: 0, y: 1300 }, listingView: 'list' } }, '', '/properties?page=2&lang=en');

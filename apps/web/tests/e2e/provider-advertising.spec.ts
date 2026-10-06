@@ -111,7 +111,7 @@ test('PRV-19 advertising requests match the responsive source and keep creation 
   expect(dialogBounds?.x).toBeGreaterThanOrEqual(0);
   expect((dialogBounds?.x ?? 0) + (dialogBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width + 1);
   expect(dialogBounds?.height).toBeLessThanOrEqual(page.viewportSize()!.height);
-  await dialog.getByRole('button', { name: /Submit request|إرسال الطلب/u }).click();
+  await dialog.getByRole('button', { name: /Save request draft|حفظ مسودة الطلب/u }).click();
   await expect(dialog.getByRole('alert')).toBeVisible();
 });
 

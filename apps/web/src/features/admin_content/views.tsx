@@ -330,7 +330,8 @@ function cmsMutationMessage(error: unknown, locale: SupportedLocale): string {
   if (error instanceof ApiClientError) {
     if (error.status === 404) return copy.mutation.notFound;
     if (error.status === 409) return copy.mutation.conflict;
-    if (error.status === 401 || error.status === 403) return copy.states.permission.body;
+    if (error.status === 401) return copy.mutation.sessionExpired;
+    if (error.status === 403) return copy.mutation.forbidden;
     if (error.status === 400) return copy.mutation.invalid;
     if (error.code === 'NETWORK_ERROR' || error.code === 'ABORTED') return copy.states.retry.body;
   }
