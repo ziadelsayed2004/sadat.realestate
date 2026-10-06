@@ -483,20 +483,6 @@
     grid-template-columns: 1fr;
   }
 
-  .public-property-listing__cards.is-list .public-property-listing__card {
-    grid-template-columns: minmax(5.5rem, 30%) minmax(0, 1fr);
-  }
-
-  .public-property-listing__cards.is-list .public-property-listing__card .ui-property-card__media {
-    min-block-size: 0;
-    block-size: 100%;
-  }
-
-  .public-property-listing__cards.is-list .ui-property-card__media > img {
-    block-size: 100%;
-    min-block-size: 10rem;
-  }
-
   .public-property-listing__cards.is-list .ui-property-card__body {
     min-inline-size: 0;
     padding: 0.75rem;
@@ -1072,15 +1058,35 @@
   grid-template-rows: 1fr;
 }
 
-@media (max-width: 560px) {
-  .public-property-listing__cards.is-list .ui-property-card__badges {
-    inset: 0.5rem 0.25rem auto;
-    gap: 0.25rem;
+@media (max-width: 780px) {
+  /* A horizontal row turns property photos into narrow strips on phones.
+     Keep the full card width for media, independently of the text height. */
+  .public-property-listing__cards.is-list .public-property-listing__card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
   }
 
-  .public-property-listing__cards.is-list .ui-property-card__badges span {
-    padding: 0.125rem 0.25rem;
-    font-size: 0.625rem;
+  .public-property-listing__cards.is-list .public-property-listing__card .ui-property-card__media {
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: 0;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__media > img {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .public-property-listing__cards.is-list .ui-property-card__badges {
+    inset: 10px 10px auto;
+    gap: 6px;
   }
 }
 
