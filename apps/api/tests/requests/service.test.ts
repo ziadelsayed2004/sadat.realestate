@@ -27,6 +27,20 @@ test('enforces ownership, deterministic listing, and optimistic state transition
   await assert.rejects(() => service.transition(admin, created.id, { transition: 'contact', reason: 'Contact requested', expectedVersion: 0 }), error => (error as { code?: string }).code === 'REQUEST_VERSION_CONFLICT');
 });
 
+test('continues review through contact and resolution while exposing only deliberate customer messages', async () => {
+  const repository = createInMemoryRequestRepository(); const service = createRequestService({ authorization: { authorize: async () => true }, repository });
+  const created = await service.create(seeker, { type: 'contact', payload: { message: 'Contact please' } });
+  const reviewed = await service.transition(admin, created.id, { transition: 'start_review', reason: 'Private administration reason', customerMessage: 'We are reviewing your request', expectedVersion: 0 });
+  assert.deepEqual(reviewed.availableActions, ['contact', 'needs_information', 'cancel']);
+  const contacted = await service.transition(admin, created.id, { transition: 'contact', reason: 'Called the customer', customerMessage: 'Our team contacted you', expectedVersion: 1 });
+  const resolved = await service.transition(admin, created.id, { transition: 'resolve', reason: 'Follow-up completed', expectedVersion: contacted.version });
+  const own = await service.get(seeker, resolved.id);
+  assert.deepEqual(own.customerUpdates?.map(update => update.status), ['under_review', 'contacted', 'resolved']);
+  assert.equal(own.customerUpdates?.[0]?.message, 'We are reviewing your request');
+  assert.equal(JSON.stringify(own).includes('Private administration reason'), false);
+  await assert.rejects(service.transition(seeker, created.id, { transition: 'cancel', reason: 'Cancel please', customerMessage: 'Forged admin message', expectedVersion: own.version }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
+});
+
 test('stores bounded locale-neutral search criteria without fabricating matches', async () => {
   const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'property_search', payload: { locations: ['4123456789abcdef01234567'], propertyTypes: ['apartment'], minBudget: 100, maxBudget: 500, minBedrooms: 1, maxBedrooms: 3, locale: 'ar' } });

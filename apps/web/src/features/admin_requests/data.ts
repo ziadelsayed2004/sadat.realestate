@@ -26,7 +26,7 @@ import {
   type ViewingListData,
   type ViewingListQuery
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions, type ApiRequestOptions } from '../contracts/index.ts';
 
 export const ADMIN_REQUESTS_ROUTE = '/admin/requests' as const;
 export const ADMIN_OVERDUE_REQUESTS_ROUTE = '/admin/requests/overdue' as const;
@@ -35,6 +35,7 @@ export const ADMIN_REQUEST_ISSUES_ROUTE = '/admin/request-issues' as const;
 
 export interface AdminRequestsAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 interface CommonOptions {
@@ -69,6 +70,16 @@ function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin'>): Api
   if (options.apiClient !== undefined) return options.apiClient;
   const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
   return new ApiClient(clientOptions);
+}
+
+async function requestWithSession<T>(options: CommonOptions, path: string, request: ApiRequestOptions<T>) {
+  const run = () => clientFor(options).request(path, { ...request, headers: { ...request.headers, ...headersFor(options.authorization) } });
+  try { return await run(); } catch (error) {
+    if (!(error instanceof ApiClientError) || error.status !== 401 || !options.authorization?.refresh || options.signal?.aborted) throw error;
+    await options.authorization.refresh();
+    if (!options.authorization.getAuthorizationHeader() || options.signal?.aborted) throw error;
+    return run();
+  }
 }
 
 function headersFor(source: AdminRequestsAuthorizationSource | undefined): HeadersInit | undefined {
@@ -107,7 +118,7 @@ function viewingQueryValues(query: ViewingListQuery): Readonly<Record<string, st
 export async function loadAdminRequests(options: AdminRequestsLoadOptions = {}): Promise<RequestListData> {
   const query = requestQuery(options.query);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(ADMIN_REQUESTS_ROUTE, {
+  const response = await requestWithSession(options, ADMIN_REQUESTS_ROUTE, {
     responseSchema: successEnvelopeSchema(requestListDataSchema),
     query: requestQueryValues(query),
     ...(headers === undefined ? {} : { headers }),
@@ -119,7 +130,7 @@ export async function loadAdminRequests(options: AdminRequestsLoadOptions = {}):
 export async function loadAdminOverdueRequests(options: AdminRequestsLoadOptions = {}): Promise<OverdueRequestListData> {
   const query = requestQuery(options.query);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(ADMIN_OVERDUE_REQUESTS_ROUTE, {
+  const response = await requestWithSession(options, ADMIN_OVERDUE_REQUESTS_ROUTE, {
     responseSchema: successEnvelopeSchema(overdueRequestListDataSchema),
     query: requestQueryValues(query),
     ...(headers === undefined ? {} : { headers }),
@@ -131,7 +142,7 @@ export async function loadAdminOverdueRequests(options: AdminRequestsLoadOptions
 export async function loadAdminRequest(requestId: string, options: CommonOptions = {}): Promise<RequestData> {
   const id = requestIdParamsSchema.parse({ requestId }).requestId;
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(`${ADMIN_REQUESTS_ROUTE}/${id}`, {
+  const response = await requestWithSession(options, `${ADMIN_REQUESTS_ROUTE}/${id}`, {
     responseSchema: successEnvelopeSchema(requestDataSchema),
     ...(headers === undefined ? {} : { headers }),
     ...(options.signal === undefined ? {} : { signal: options.signal })
@@ -142,7 +153,7 @@ export async function loadAdminRequest(requestId: string, options: CommonOptions
 export async function loadAdminViewings(options: AdminViewingsLoadOptions = {}): Promise<ViewingListData> {
   const query = viewingQuery(options.query);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(ADMIN_VIEWINGS_ROUTE, {
+  const response = await requestWithSession(options, ADMIN_VIEWINGS_ROUTE, {
     responseSchema: successEnvelopeSchema(viewingListDataSchema),
     query: viewingQueryValues(query),
     ...(headers === undefined ? {} : { headers }),
@@ -154,7 +165,7 @@ export async function loadAdminViewings(options: AdminViewingsLoadOptions = {}):
 export async function loadAdminRequestIssues(options: AdminRequestIssuesLoadOptions = {}): Promise<RequestIssueListData> {
   const query = requestQuery({ page: options.page ?? 1, limit: options.limit ?? 20 });
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(ADMIN_REQUEST_ISSUES_ROUTE, {
+  const response = await requestWithSession(options, ADMIN_REQUEST_ISSUES_ROUTE, {
     responseSchema: successEnvelopeSchema(requestIssueListDataSchema),
     query: requestQueryValues(query),
     ...(headers === undefined ? {} : { headers }),
@@ -167,7 +178,7 @@ export async function assignAdminRequest(requestId: string, input: unknown, opti
   const id = requestIdParamsSchema.parse({ requestId }).requestId;
   const body: RequestAssignment = requestAssignmentSchema.parse(input);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(`${ADMIN_REQUESTS_ROUTE}/${id}/assign`, {
+  const response = await requestWithSession(options, `${ADMIN_REQUESTS_ROUTE}/${id}/assign`, {
     method: 'POST',
     responseSchema: successEnvelopeSchema(requestDataSchema),
     json: body,
@@ -181,7 +192,7 @@ export async function addAdminRequestNote(requestId: string, input: unknown, opt
   const id = requestIdParamsSchema.parse({ requestId }).requestId;
   const body: RequestNote = requestNoteSchema.parse(input);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(`${ADMIN_REQUESTS_ROUTE}/${id}/notes`, {
+  const response = await requestWithSession(options, `${ADMIN_REQUESTS_ROUTE}/${id}/notes`, {
     method: 'POST',
     responseSchema: successEnvelopeSchema(requestDataSchema),
     json: body,
@@ -195,7 +206,7 @@ export async function transitionAdminRequest(requestId: string, input: unknown, 
   const id = requestIdParamsSchema.parse({ requestId }).requestId;
   const body: RequestTransitionRequest = requestTransitionRequestSchema.parse(input);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(`${ADMIN_REQUESTS_ROUTE}/${id}/transitions`, {
+  const response = await requestWithSession(options, `${ADMIN_REQUESTS_ROUTE}/${id}/transitions`, {
     method: 'POST',
     responseSchema: successEnvelopeSchema(requestDataSchema),
     json: body,
@@ -209,7 +220,7 @@ export async function resolveAdminRequestIssue(issueId: string, input: unknown, 
   const id = requestIdParamsSchema.parse({ requestId: issueId }).requestId;
   const body: RequestIssueResolve = requestIssueResolveSchema.parse(input);
   const headers = headersFor(options.authorization);
-  const response = await clientFor(options).request(`${ADMIN_REQUEST_ISSUES_ROUTE}/${id}/resolve`, {
+  const response = await requestWithSession(options, `${ADMIN_REQUEST_ISSUES_ROUTE}/${id}/resolve`, {
     method: 'POST',
     responseSchema: successEnvelopeSchema(requestIssueSchema),
     json: body,

@@ -5,6 +5,17 @@ export type AdminRequestsScreen = 'all' | 'customer' | 'overdue' | 'contact' | '
 export type AdminRequestsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
 
 export interface AdminRequestsCopy {
+  readonly openProperty: string;
+  readonly manageProperty: string;
+  readonly customerMessage: string;
+  readonly customerMessageHint: string;
+  readonly reasonHint: string;
+  readonly permissionHint: string;
+  readonly conflictHint: string;
+  readonly sessionHint: string;
+  readonly reloadDetails: string;
+  readonly reloadHint: string;
+
   readonly eyebrow: string;
   readonly titles: Readonly<Record<AdminRequestsScreen, string>>;
   readonly descriptions: Readonly<Record<AdminRequestsScreen, string>>;
@@ -83,7 +94,8 @@ export interface AdminRequestsCopy {
   readonly states: Readonly<Record<AdminRequestsState, { readonly title: string; readonly body: string }>>;
 }
 
-const copyByLocale: Readonly<Record<SupportedLocale, AdminRequestsCopy>> = {
+type AdditionalCopy = 'openProperty' | 'manageProperty' | 'customerMessage' | 'customerMessageHint' | 'reasonHint' | 'permissionHint' | 'conflictHint' | 'sessionHint' | 'reloadDetails' | 'reloadHint';
+const copyByLocale: Readonly<Record<SupportedLocale, Omit<AdminRequestsCopy, AdditionalCopy>>> = {
   ar: {
     eyebrow: 'إدارة الطلبات',
     titles: { all: 'إدارة كل الطلبات', customer: 'طلبات العملاء', overdue: 'الطلبات المتأخرة', contact: 'طلبات التواصل', viewing: 'طلبات المعاينة', search: 'طلبات البحث عن عقار', issues: 'بلاغات الطلبات' },
@@ -98,5 +110,21 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminRequestsCopy>> = {
   },};
 
 export function getAdminRequestsCopy(locale: SupportedLocale): AdminRequestsCopy {
-  return localizeCopy('admin_requests/copy#getAdminRequestsCopy', locale, copyByLocale[locale]);
+  return localizeCopy('admin_requests/copy#getAdminRequestsCopy', locale, { ...copyByLocale[locale], ...(locale === 'ar' ? {
+    openProperty: 'فتح العقار', manageProperty: 'فتح العقار في الإدارة',
+    customerMessage: 'رسالة للعميل (اختياري)',
+    customerMessageHint: 'تصل هذه الرسالة مع إشعار تغيير الحالة وتظهر في تفاصيل الطلب. لا تضع ملاحظات إدارية خاصة هنا.',
+    reasonHint: 'سبب التغيير للتوثيق الإداري؛ لا يُرسل للعميل. الملاحظة الإدارية أيضًا داخلية.',
+    permissionHint: 'لا توجد إجراءات متاحة لهذه الحالة أو حسابك يملك العرض فقط. راجع صلاحية إدارة الطلبات مع المدير الرئيسي.',
+    conflictHint: 'الطلب اتغير من جلسة أخرى. اضغط تحديث بيانات الطلب ثم راجع الحالة قبل إعادة الحفظ؛ مدخلاتك محفوظة في النموذج.',
+    sessionHint: 'انتهت جلسة الإدارة وتعذر تجديدها. سجّل الدخول مجددًا.', reloadDetails: 'تحديث بيانات الطلب', reloadHint: 'تم تحديث البيانات. راجع الحالة والإجراءات قبل إعادة الحفظ؛ تم الاحتفاظ بمدخلاتك.'
+  } : {
+    openProperty: 'Open property', manageProperty: 'Open property in administration',
+    customerMessage: 'Message to customer (optional)',
+    customerMessageHint: 'Sent with the status notification and shown in request details. Do not enter private administrative notes here.',
+    reasonHint: 'The change reason is for administrative records and is not sent to the customer. Administrative notes are private too.',
+    permissionHint: 'No actions are available for this status, or your account has viewing permission only. Ask the main administrator to check request management permission.',
+    conflictHint: 'The request changed in another session. Refresh request data and review its status before saving again. Your entered text stays in the form.',
+    sessionHint: 'The administrator session expired and could not be renewed. Sign in again.', reloadDetails: 'Refresh request data', reloadHint: 'Data refreshed. Review the status and available actions before saving again. Your entered text has been kept.'
+  }) });
 }

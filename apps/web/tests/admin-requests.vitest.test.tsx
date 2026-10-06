@@ -1,7 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { requestDataSchema, requestIssueListDataSchema, requestListDataSchema, viewingDataSchema, viewingListDataSchema, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClient } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
+import { RequestPropertyLinks } from '../src/features/admin_requests/property-links.tsx';
 import {
   AdminRequests,
   getAdminRequestsCopy,
@@ -78,6 +79,66 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin request administration contracts and views', () => {
+  it.each(['ar', 'en'] as const)('links directly to the published property and its administrative record in %s', locale => {
+    const property = { id: request.propertyId!, slug: 'requested-property', kind: 'property' as const, name: { ar: 'عقار العميل', en: 'Customer property' }, transactionType: 'sale' as const, sourceType: 'individual_broker' as const, publicCode: 'SDT-1234' };
+    const copy = getAdminRequestsCopy(locale);
+    renderWithLocale(<RequestPropertyLinks locale={locale} request={{ ...request, property }} />, { locale });
+    expect(screen.getByRole('link', { name: copy.openProperty })).toHaveAttribute('href', `/properties/requested-property?lang=${locale}`);
+    expect(screen.getByRole('link', { name: copy.manageProperty })).toHaveAttribute('href', `/admin/properties/${request.propertyId}?lang=${locale}`);
+  });
+
+  it('refreshes a conflicting request without losing either message field and then saves the current version', async () => {
+    window.history.pushState({}, '', '/admin/contact-requests');
+    const copy = getAdminRequestsCopy('en');
+    const next = { ...request, status: 'under_review' as const, version: 12, availableActions: ['contact' as const] };
+    const loadRequest = vi.fn().mockResolvedValue(next);
+    const transition = vi.fn().mockRejectedValueOnce(new ApiClientError('Conflict', { code: 'HTTP_ERROR', status: 409 })).mockResolvedValueOnce({ ...next, status: 'contacted', version: 13, availableActions: ['resolve'] });
+    renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={requestList} loadRequest={loadRequest} transition={transition} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    fireEvent.change(screen.getByLabelText(copy.transitionReason), { target: { value: 'Private audit reason' } });
+    fireEvent.change(screen.getByLabelText(copy.customerMessage), { target: { value: 'We will call tomorrow' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveTransition }));
+    expect(await screen.findByText(copy.conflictHint)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.reloadDetails }));
+    expect(await screen.findByText(copy.reloadHint)).toBeInTheDocument();
+    expect(loadRequest).toHaveBeenCalledWith(request.id);
+    expect(screen.getByLabelText(copy.transitionReason)).toHaveValue('Private audit reason');
+    expect(screen.getByLabelText(copy.customerMessage)).toHaveValue('We will call tomorrow');
+    fireEvent.click(screen.getByRole('button', { name: copy.saveTransition }));
+    await waitFor(() => expect(transition).toHaveBeenLastCalledWith(request.id, { transition: 'contact', expectedVersion: 12, reason: 'Private audit reason', customerMessage: 'We will call tomorrow' }, undefined));
+  });
+
+  it('continues review, contact and resolution in the same dialog with current actions and version', async () => {
+    window.history.pushState({}, '', '/admin/contact-requests');
+    const copy = getAdminRequestsCopy('en');
+    const transition = vi.fn()
+      .mockResolvedValueOnce({ ...request, status: 'under_review', version: 3, availableActions: ['contact', 'needs_information', 'cancel'] })
+      .mockResolvedValueOnce({ ...request, status: 'contacted', version: 4, availableActions: ['schedule', 'start_progress', 'resolve', 'cancel'] })
+      .mockResolvedValueOnce({ ...request, status: 'resolved', version: 5, availableActions: ['reopen', 'close'] });
+    renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={requestList} transition={transition} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    expect(screen.getAllByRole('link', { name: copy.manageProperty })[0]).toHaveAttribute('href', `/admin/properties/${request.propertyId}?lang=en`);
+    for (const [index, action] of ['start_review', 'contact', 'resolve'].entries()) {
+      if (action === 'resolve') fireEvent.change(screen.getByLabelText(copy.transition), { target: { value: action } });
+      fireEvent.change(screen.getByLabelText(copy.transitionReason), { target: { value: 'Private audit reason' } });
+      fireEvent.change(screen.getByLabelText(copy.customerMessage), { target: { value: 'Your request is being followed up' } });
+      fireEvent.click(screen.getByRole('button', { name: copy.saveTransition }));
+      await waitFor(() => expect(transition).toHaveBeenNthCalledWith(index + 1, request.id, { transition: action, expectedVersion: index + 2, reason: 'Private audit reason', customerMessage: 'Your request is being followed up' }, undefined));
+      await waitFor(() => expect(screen.getByLabelText(copy.transitionReason)).toHaveValue(''));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText(copy.transition)).toHaveValue('reopen');
+  });
+
+  it('renews an expired session once before saving, using the new authorization header', async () => {
+    let header = 'Bearer expired.requests.token';
+    const refresh = vi.fn(async () => { header = 'Bearer renewed.requests.token'; });
+    const fetcher = vi.fn(async (_input, init) => new Headers(init?.headers).get('authorization') === header && header.includes('renewed')
+      ? envelope(request) : new Response(JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'expired-test' } }), { status: 401 }));
+    await transitionAdminRequest(request.id, { transition: 'start_review', reason: 'Begin review', expectedVersion: request.version }, { apiClient: new ApiClient({ fetcher }), authorization: { getAuthorizationHeader: () => header, refresh } });
+    expect(refresh).toHaveBeenCalledTimes(1); expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
   it.each([false, true])('opens overdue details in a dialog (deep link: %s)', async deepLink => {
     window.history.pushState({}, '', `/admin/overdue-requests${deepLink ? `?requestId=${request.id}` : ''}`);
     const loadRequest = vi.fn();

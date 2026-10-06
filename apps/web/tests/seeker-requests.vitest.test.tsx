@@ -34,6 +34,12 @@ const list = requestListDataSchema.parse({ items: [request], page: 1, limit: 5, 
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker requests', () => {
+  it('shows customer messages and status updates in owned request details', async () => {
+    const updated = requestDataSchema.parse({ ...request, customerUpdates: [{ status: 'under_review', message: 'We will call you tomorrow', createdAt: '2026-10-06T18:00:00.000Z' }] });
+    renderWithLocale(<SeekerRequests locale="en" session={session} requestId={request.id} detailLoad={async () => updated} />, { locale: 'en' });
+    expect(await screen.findByText('We will call you tomorrow')).toBeVisible();
+    expect(screen.queryByText('internalNotes')).not.toBeInTheDocument();
+  });
   it('loads list and detail routes through the implemented contracts with authorization and query parameters', async () => {
     const calls: Array<{ url: string; authorization: string | null }> = [];
     const client = new ApiClient({

@@ -1979,7 +1979,17 @@
         "title": "Data ready",
         "body": "Records are rendered from the server-approved projection."
       }
-    }
+    },
+    "openProperty": "Open property",
+    "manageProperty": "Open property in administration",
+    "customerMessage": "Message to customer (optional)",
+    "customerMessageHint": "Sent with the status notification and shown in request details. Do not enter private administrative notes here.",
+    "reasonHint": "The change reason is for administrative records and is not sent to the customer. Administrative notes are private too.",
+    "permissionHint": "No actions are available for this status, or your account has viewing permission only. Ask the main administrator to check request management permission.",
+    "conflictHint": "The request changed in another session. Keep your text, then close and reopen the details before retrying.",
+    "sessionHint": "The administrator session expired and could not be renewed. Sign in again.",
+    "reloadDetails": "Refresh request data",
+    "reloadHint": "Data refreshed. Review the status and available actions before saving again. Your entered text has been kept."
   },
   "admin_requests/metrics-copy#getRequestMetricsCopy": {
     "totalRequests": "Total requests",

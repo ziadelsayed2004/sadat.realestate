@@ -217,7 +217,7 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
             })}
           </ol>
         </section>
-        <div className="seeker-request-detail__side">
+        <div className="seeker-request-detail__side">{request.customerUpdates?.length ? <section className="seeker-request-detail__card" aria-labelledby="seeker-request-updates-title"><h2 id="seeker-request-updates-title">{locale === 'ar' ? 'تحديثات الإدارة ورسائلها' : 'Administration updates and messages'}</h2><ol className="seeker-request-detail__updates">{[...request.customerUpdates].reverse().map((update, index) => <li key={`${update.createdAt}-${index}`}><strong>{requestStatusLabel(update.status, locale)}</strong><time dateTime={update.createdAt}>{dateLabel(update.createdAt, locale)}</time>{update.message ? <p>{update.message}</p> : null}</li>)}</ol></section> : null}
           <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
             <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
             <dl className="seeker-request-detail__values">

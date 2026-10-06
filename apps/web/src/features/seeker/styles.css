@@ -3149,3 +3149,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+.seeker-request-detail__updates { display: grid; gap: 18px; padding-inline-start: 20px; }
+.seeker-request-detail__updates time { display: block; margin-block: 6px; color: #69768b; }
+.seeker-request-detail__updates p { white-space: pre-wrap; overflow-wrap: anywhere; }

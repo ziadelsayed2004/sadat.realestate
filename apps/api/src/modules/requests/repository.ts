@@ -10,6 +10,7 @@ import {
   projectPublicRelatedProperty
 } from '../public/related-property.js';
 import type { RequestRecord, RequestRepository } from './service.js';
+import { requestCustomerNotification } from './customer-update.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 type Row = Record<string, unknown>;
@@ -29,6 +30,7 @@ function row(value: Row): RequestRecord | undefined {
     ...(value.propertyId instanceof Types.ObjectId ? { propertyId: value.propertyId.toHexString() } : {}),
     ...(value.projectId instanceof Types.ObjectId ? { projectId: value.projectId.toHexString() } : {}),
     status: value.status as RequestRecord['status'],
+    ...(Array.isArray(value.customerUpdates) ? { customerUpdates: value.customerUpdates as NonNullable<RequestRecord['customerUpdates']> } : {}),
     payload: (value.payload ?? {}) as Record<string, unknown>,
     ...(value.assignedTo instanceof Types.ObjectId ? { assignedTo: value.assignedTo.toHexString() } : {}),
     ...(Array.isArray(value.internalNotes) ? { internalNotes: value.internalNotes as NonNullable<RequestRecord['internalNotes']> } : {}),
@@ -103,14 +105,19 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
     return enriched;
   }
 
-  async function write(input: { id: string; expectedVersion: number; audit: AuditRecordInput }, update: Row) {
+  async function write(input: { id: string; expectedVersion: number; audit: AuditRecordInput; actorId?: string; customerMessage?: string }, update: Row) {
     if (!audit) throw new Error('AUDIT_UNAVAILABLE');
     const result = await connection.transaction(async session => {
       const updated = await requests.findOneAndUpdate(
         { _id: toObjectId(input.id), version: input.expectedVersion }, update,
         { returnDocument: 'after', session }
       );
-      if (updated) await audit.record(input.audit, session);
+      if (updated) {
+        await audit.record(input.audit, session);
+        const parsed = row(updated as Row);
+        const notification = parsed && input.actorId ? requestCustomerNotification(parsed, input.actorId, input.customerMessage) : undefined;
+        if (notification) await connection.collection('notifications').insertOne(notification, { session });
+      }
       return updated;
     });
     if (!result) return { kind: 'version_conflict' } as const;
@@ -163,21 +170,24 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
       if (scope?.providerId) filter.providerId = toObjectId(scope.providerId);
       const search = query.search?.trim();
       if (search) {
+        const matches = await properties.find({ $or: [{ publicCode: escapedSearch(search) }, { 'name.ar': escapedSearch(search) }, { 'name.en': escapedSearch(search) }, { slug: escapedSearch(search) }] }, { projection: { _id: 1 } }).toArray();
         const clauses: Record<string, unknown>[] = [
           { type: escapedSearch(search) },
           { status: escapedSearch(search) },
+          { 'payload.fullName': escapedSearch(search) },
           { 'payload.firstName': escapedSearch(search) },
           { 'payload.lastName': escapedSearch(search) },
           { 'payload.phone': escapedSearch(search) },
           { 'payload.email': escapedSearch(search) },
           { $expr: { $regexMatch: {
-            input: { $concat: [{ $ifNull: ['$payload.firstName', ''] }, ' ', { $ifNull: ['$payload.lastName', ''] }] },
+            input: { $concat: [{ $convert: { input: '$payload.firstName', to: 'string', onError: '', onNull: '' } }, ' ', { $convert: { input: '$payload.lastName', to: 'string', onError: '', onNull: '' } }] },
             regex: escapedSearch(search)
           } } },
           { 'payload.message': escapedSearch(search) },
           { 'payload.note': escapedSearch(search) }
         ];
-        if (/^[a-f0-9]{24}$/u.test(search)) clauses.unshift({ _id: toObjectId(search) });
+        if (matches.length) clauses.push({ propertyId: { $in: matches.map(match => match._id) } });
+        if (/^[a-f0-9]{24}$/iu.test(search)) clauses.unshift({ _id: toObjectId(search) }, { propertyId: toObjectId(search) });
         filter.$or = clauses;
       }
       const [rows, total] = await Promise.all([
@@ -197,7 +207,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
       return enrichedResult(await requests.findOne(filter));
     },
     async transition(input) {
-      return write(input, { $set: { status: input.status, updatedAt: input.now }, $inc: { version: 1 } });
+      return write(input, { $set: { status: input.status, updatedAt: input.now }, $push: { customerUpdates: { $each: [{ status: input.status, ...(input.customerMessage ? { message: input.customerMessage } : {}), createdAt: input.now }], $slice: -50 } }, $inc: { version: 1 } });
     },
     async assign(input) {
       return write(input, { $set: { assignedTo: toObjectId(input.assigneeId), updatedAt: input.now }, $inc: { version: 1 } });

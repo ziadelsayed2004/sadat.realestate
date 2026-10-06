@@ -3,6 +3,15 @@ import type { PropertyAdminListQuery, PropertyContactStep, PropertyCoordinates, 
 import type { AuditWriter } from '../audit/writer.js';
 import type { PropertyModels, PropertyRecord } from './models.js';
 
+function propertySearch(search: string): Record<string, unknown>[] {
+  const value = search.trim();
+  const pattern = new RegExp(value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&'), 'i');
+  return [
+    ...(Types.ObjectId.isValid(value) && /^[a-f0-9]{24}$/iu.test(value) ? [{ _id: new Types.ObjectId(value) }] : []),
+    { publicCode: pattern }, { slug: pattern }, { 'name.ar': pattern }, { 'name.en': pattern }
+  ];
+}
+
 export interface StoredProperty {
   id: string;
   providerId: string;
@@ -216,7 +225,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     async listOwned(providerId, query) {
       const filter: Record<string, unknown> = { providerId: new Types.ObjectId(providerId) };
       if (query.status) filter.status = query.status;
-      if (query.search) filter.$text = { $search: query.search };
+      if (query.search?.trim()) filter.$or = propertySearch(query.search);
       const direction: 1 | -1 = query.direction === 'asc' ? 1 : -1;
       const sort: Record<string, 1 | -1> = query.sort === 'name' ? { 'name.en': direction, slug: 1 } : { [query.sort]: direction, slug: 1 };
       const [rows, total] = await Promise.all([
@@ -232,7 +241,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       if (query.locationId) filter.locationId = new Types.ObjectId(query.locationId);
       if (query.projectId) filter.projectId = new Types.ObjectId(query.projectId);
       if (query.active !== undefined) filter.active = query.active;
-      if (query.search) filter.$text = { $search: query.search };
+      if (query.search?.trim()) filter.$or = propertySearch(query.search);
       const direction: 1 | -1 = query.direction === 'asc' ? 1 : -1;
       const sort: Record<string, 1 | -1> = query.sort === 'name' ? { 'name.en': direction, slug: 1 } : { [query.sort]: direction, slug: 1 };
       const [rows, total] = await Promise.all([

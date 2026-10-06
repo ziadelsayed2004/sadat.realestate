@@ -5619,7 +5619,14 @@
         "operationId": "listSeekerRequests",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestListSuccessEnvelope"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/ProviderError"
@@ -5637,7 +5644,14 @@
         "operationId": "getSeekerRequest",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/ProviderError"
@@ -5658,7 +5672,14 @@
         "operationId": "transitionSeekerRequest",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -5764,7 +5785,14 @@
         "operationId": "listAdminRequests",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestListSuccessEnvelope"
+                }
+              }
+            }
           },
           "403": {
             "$ref": "#/components/responses/ProviderError"
@@ -5800,7 +5828,14 @@
         "operationId": "getAdminRequest",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "404": {
             "$ref": "#/components/responses/ProviderError"
@@ -5818,7 +5853,14 @@
         "operationId": "assignAdminRequest",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -5839,7 +5881,14 @@
         "operationId": "addAdminRequestNote",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -5860,7 +5909,14 @@
         "operationId": "transitionAdminRequest",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Request data with customer-visible status history. Private administrative notes and audit reasons are excluded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -5873,7 +5929,17 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminRequestTransition"
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/seeker/viewings": {
@@ -23976,6 +24042,591 @@
             }
           }
         ]
+      },
+      "RequestData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "contact",
+              "viewing",
+              "property_search",
+              "provider_customer"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "public",
+              "seeker",
+              "provider",
+              "admin"
+            ]
+          },
+          "creatorId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "seekerId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "providerId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "propertyId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "projectId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "property": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "slug": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "property",
+                  "unit"
+                ]
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "transactionType": {
+                "type": "string",
+                "enum": [
+                  "sale",
+                  "rent"
+                ]
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)[^\\s]*$"
+                  }
+                ]
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "area": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000
+                  },
+                  "unit": {
+                    "type": "string",
+                    "const": "sqm"
+                  }
+                },
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false
+              },
+              "layout": {
+                "type": "object",
+                "properties": {
+                  "bedrooms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "bathrooms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "floor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "totalFloors": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000
+                  }
+                },
+                "additionalProperties": false
+              },
+              "price": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000000000000
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "additionalProperties": false
+              },
+              "locationName": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "sourceName": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "sourceImageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)[^\\s]*$"
+                  }
+                ]
+              },
+              "sourceType": {
+                "type": "string",
+                "enum": [
+                  "individual_broker",
+                  "brokerage_office",
+                  "developer_company"
+                ]
+              },
+              "sourceVerified": {
+                "type": "boolean"
+              },
+              "publicCode": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "viewCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "installmentAvailable": {
+                "type": "boolean"
+              },
+              "featured": {
+                "type": "boolean"
+              },
+              "deliveryStatus": {
+                "type": "string",
+                "enum": [
+                  "ready_to_move",
+                  "under_construction",
+                  "future_delivery"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "kind",
+              "name",
+              "transactionType"
+            ],
+            "additionalProperties": false
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "under_review",
+              "contacted",
+              "scheduled",
+              "needs_information",
+              "in_progress",
+              "resolved",
+              "cancelled",
+              "closed"
+            ]
+          },
+          "customerUpdates": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "new",
+                    "under_review",
+                    "contacted",
+                    "scheduled",
+                    "needs_information",
+                    "in_progress",
+                    "resolved",
+                    "cancelled",
+                    "closed"
+                  ]
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000,
+                  "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                }
+              },
+              "required": [
+                "status",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "payload": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "assignedTo": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "dueAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "appointmentAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "appointmentTimezone": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "availableActions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "start_review",
+                "contact",
+                "schedule",
+                "needs_information",
+                "start_progress",
+                "resolve",
+                "cancel",
+                "close",
+                "reopen"
+              ]
+            }
+          },
+          "capabilities": {
+            "type": "object",
+            "properties": {
+              "assign": {
+                "type": "boolean"
+              },
+              "note": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "assign",
+              "note"
+            ],
+            "additionalProperties": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "source",
+          "status",
+          "payload",
+          "version",
+          "availableActions",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "RequestSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RequestData"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "RequestListSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RequestData"
+                }
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "items",
+              "page",
+              "limit",
+              "total"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "AdminRequestTransition": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transition",
+          "reason",
+          "expectedVersion"
+        ],
+        "properties": {
+          "transition": {
+            "type": "string",
+            "enum": [
+              "start_review",
+              "contact",
+              "schedule",
+              "needs_information",
+              "start_progress",
+              "resolve",
+              "cancel",
+              "close",
+              "reopen"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500,
+            "description": "Private audit reason; not sent to the customer."
+          },
+          "customerMessage": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$",
+            "description": "Optional customer-facing message, delivered with the status notification and saved in request details. Administrator only."
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
       }
     }
   }
