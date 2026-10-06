@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type { AuthSnapshot } from '../auth/index.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, StateMessage } from '../design_system/index.ts';
@@ -64,6 +64,7 @@ interface LocationForm {
 }
 
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
+type BasicValidationField = keyof ProviderPropertyCopy['wizard']['validationMessages'];
 
 const LOCALES: readonly SupportedLocale[] = ['ar', 'en',];
 
@@ -183,7 +184,9 @@ function BasicFormView({
   onSubmit,
   mutationState,
   mutationMessage,
-  validationError
+  validationError,
+  invalidFields,
+  sourceEditable
 }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
@@ -193,10 +196,13 @@ function BasicFormView({
   readonly mutationState: MutationState;
   readonly mutationMessage: string | undefined;
   readonly validationError: boolean;
+  readonly invalidFields: readonly BasicValidationField[];
+  readonly sourceEditable: boolean;
 }) {
   const wizard = copy.wizard;
   const updateName = (value: string) => setForm({ ...form, name: { ...form.name, [locale]: value } });
   const saving = mutationState === 'saving';
+  const fieldError = (field: BasicValidationField) => invalidFields.includes(field) ? wizard.validationMessages[field] : undefined;
   return (
     <form className="provider-property-wizard__form" data-form-step="basic" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
       <div className="provider-property-wizard__intro">
@@ -208,26 +214,26 @@ function BasicFormView({
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-core-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-core-title">{wizard.basicTitle}</h2></div>
         <div className="provider-property-wizard__grid">
-          <Input id="provider-property-name" label={wizard.labels.name} value={form.name[locale]} placeholder={wizard.placeholders.name} onChange={event => updateName(event.target.value)} aria-invalid={validationError || undefined} required />
-          <Input id="provider-property-slug" label={wizard.labels.slug} value={form.slug} placeholder={wizard.placeholders.slug} onChange={event => setForm({ ...form, slug: event.target.value })} aria-invalid={validationError || undefined} required />
-          <div className="provider-property-wizard__field"><label htmlFor="provider-property-kind">{wizard.labels.kind}</label><select id="provider-property-kind" value={form.kind} onChange={event => setForm({ ...form, kind: event.target.value as BasicForm['kind'] })}><option value="property">{wizard.kindLabels.property}</option><option value="unit">{wizard.kindLabels.unit}</option></select></div>
+          <Input id="provider-property-name" label={wizard.labels.name} value={form.name[locale]} placeholder={wizard.placeholders.name} onChange={event => updateName(event.target.value)} state={fieldError('name') ? 'error' : 'default'} error={fieldError('name')} required />
+          <Input id="provider-property-slug" label={wizard.labels.slug} value={form.slug} placeholder={wizard.placeholders.slug} onChange={event => setForm({ ...form, slug: event.target.value })} state={fieldError('slug') ? 'error' : 'default'} error={fieldError('slug')} required />
+          <div className="provider-property-wizard__field"><label htmlFor="provider-property-kind">{wizard.labels.kind}</label><select id="provider-property-kind" value={form.kind} onChange={event => setForm({ ...form, kind: event.target.value as BasicForm['kind'], parentPropertyId: '' })}><option value="property">{wizard.kindLabels.property}</option><option value="unit">{wizard.kindLabels.unit}</option></select></div>
           <div className="provider-property-wizard__field"><label htmlFor="provider-property-transaction">{wizard.labels.transaction}</label><select id="provider-property-transaction" value={form.transactionType} onChange={event => setForm({ ...form, transactionType: event.target.value as BasicForm['transactionType'] })}><option value="sale">{wizard.transactionLabels.sale}</option><option value="rent">{wizard.transactionLabels.rent}</option></select></div>
         </div>
       </section>
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-source-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-source-title">{wizard.labels.sourceType}</h2><span>{wizard.sourceHelp}</span></div>
         <div className="provider-property-wizard__grid">
-          <div className="provider-property-wizard__field"><label htmlFor="provider-property-source-type">{wizard.labels.sourceType}</label><select id="provider-property-source-type" value={form.sourceType} onChange={event => setForm({ ...form, sourceType: event.target.value as BasicForm['sourceType'] })} required><option value="">{wizard.unavailable}</option>{(['individual_broker', 'brokerage_office', 'developer_company'] as const).map(value => <option key={value} value={value}>{wizard.sourceTypeLabels[value]}</option>)}</select></div>
-          <Input id="provider-property-organization" label={wizard.labels.organizationId} value={form.organizationId} placeholder={wizard.placeholders.organizationId} onChange={event => setForm({ ...form, organizationId: event.target.value })} />
-          <Input id="provider-property-project" label={wizard.labels.projectId} value={form.projectId} placeholder={wizard.placeholders.projectId} onChange={event => setForm({ ...form, projectId: event.target.value })} />
-          {form.kind === 'unit' ? <Input id="provider-property-parent" label={wizard.labels.parentPropertyId} value={form.parentPropertyId} placeholder={wizard.placeholders.parentPropertyId} onChange={event => setForm({ ...form, parentPropertyId: event.target.value })} /> : null}
+          <div className="provider-property-wizard__field"><label htmlFor="provider-property-source-type">{wizard.labels.sourceType}</label><select id="provider-property-source-type" value={form.sourceType} onChange={event => setForm({ ...form, sourceType: event.target.value as BasicForm['sourceType'], organizationId: '' })} disabled={!sourceEditable} aria-invalid={fieldError('sourceType') ? true : undefined} aria-describedby={fieldError('sourceType') ? 'provider-property-source-type-error' : undefined} required><option value="">{wizard.unavailable}</option>{(['individual_broker', 'brokerage_office', 'developer_company'] as const).map(value => <option key={value} value={value}>{wizard.sourceTypeLabels[value]}</option>)}</select>{fieldError('sourceType') ? <small id="provider-property-source-type-error">{fieldError('sourceType')}</small> : null}</div>
+          {form.sourceType === 'brokerage_office' || form.sourceType === 'developer_company' ? <Input id="provider-property-organization" label={wizard.labels.organizationId} value={form.organizationId} placeholder={wizard.placeholders.organizationId} onChange={event => setForm({ ...form, organizationId: event.target.value })} disabled={!sourceEditable} state={fieldError('organizationId') ? 'error' : 'default'} error={fieldError('organizationId')} required /> : null}
+          <Input id="provider-property-project" label={wizard.labels.projectId} value={form.projectId} placeholder={wizard.placeholders.projectId} onChange={event => setForm({ ...form, projectId: event.target.value })} state={fieldError('projectId') ? 'error' : 'default'} error={fieldError('projectId')} />
+          {form.kind === 'unit' ? <Input id="provider-property-parent" label={wizard.labels.parentPropertyId} value={form.parentPropertyId} placeholder={wizard.placeholders.parentPropertyId} onChange={event => setForm({ ...form, parentPropertyId: event.target.value })} state={fieldError('parentPropertyId') ? 'error' : 'default'} error={fieldError('parentPropertyId')} /> : null}
         </div>
       </section>
       <section className="provider-property-wizard__contract-note" aria-label={wizard.contractBoundaryTitle}>
         <strong>{wizard.contractBoundaryTitle}</strong><p>{wizard.contractBoundaryBody}</p>
       </section>
-      <div className="provider-property-wizard__field provider-property-wizard__reason"><label htmlFor="provider-property-reason">{wizard.labels.reason}</label><textarea id="provider-property-reason" rows={2} value={form.reason} placeholder={wizard.placeholders.reason} onChange={event => setForm({ ...form, reason: event.target.value })} required /></div>
-      {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{wizard.validationTitle}</strong> {wizard.validationBody}</p> : null}
+      <div className="provider-property-wizard__field provider-property-wizard__reason"><label htmlFor="provider-property-reason">{wizard.labels.reason}</label><textarea id="provider-property-reason" rows={2} value={form.reason} placeholder={wizard.placeholders.reason} onChange={event => setForm({ ...form, reason: event.target.value })} aria-invalid={fieldError('reason') ? true : undefined} aria-describedby={fieldError('reason') ? 'provider-property-reason-error' : undefined} required />{fieldError('reason') ? <small id="provider-property-reason-error">{fieldError('reason')}</small> : null}</div>
+      {validationError ? <div className="provider-property-wizard__form-error" role="alert"><strong>{wizard.validationTitle}</strong> {wizard.validationBody}<ul>{invalidFields.map(field => <li key={field}>{wizard.validationMessages[field]}</li>)}</ul></div> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
       <div className="provider-property-wizard__actions"><Button type="submit" name="intent" value="save" disabled={saving}>{saving ? wizard.saving : wizard.saveDraft}</Button><Button type="submit" name="intent" value="continue" variant="secondary" disabled={saving}>{wizard.continue}</Button></div>
     </form>
@@ -305,15 +311,19 @@ function LocationFormView({
 
 export function ProviderPropertyWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, initialState = 'loading', load, create, save, loadLocations }: ProviderPropertyWizardProps) {
   const copy = getProviderPropertyCopy(locale);
-  const isNew = propertyId === undefined;
-  const [state, setState] = useState<ProviderPropertyWizardState>(() => isNew ? 'success' : initialData === undefined ? initialState : 'success');
+  const currentCopy = useRef(copy);
+  currentCopy.current = copy;
   const [property, setProperty] = useState<PropertyData | undefined>(initialData);
+  const isNew = propertyId === undefined && property === undefined;
+  const draftId = propertyId ?? property?.id;
+  const [state, setState] = useState<ProviderPropertyWizardState>(() => isNew ? 'success' : initialData === undefined ? initialState : 'success');
   const [basic, setBasic] = useState<BasicForm>(() => initialData === undefined ? emptyBasic(copy) : basicFromProperty(initialData, copy));
   const [location, setLocation] = useState<LocationForm>(() => initialData === undefined ? emptyLocation(copy) : locationFromProperty(initialData, copy));
   const [attempt, setAttempt] = useState(0);
   const [mutationState, setMutationState] = useState<MutationState>('idle');
   const [mutationMessage, setMutationMessage] = useState<string | undefined>();
   const [validationError, setValidationError] = useState(false);
+  const [invalidFields, setInvalidFields] = useState<readonly BasicValidationField[]>([]);
   const [locations, setLocations] = useState<readonly ProviderPropertyLocationOption[]>([]);
   const [locationsState, setLocationsState] = useState<'loading' | 'success' | 'error'>('loading');
   const [locationsAttempt, setLocationsAttempt] = useState(0);
@@ -335,8 +345,8 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     }
     if (initialData !== undefined && attempt === 0) {
       setProperty(initialData);
-      setBasic(basicFromProperty(initialData, copy));
-      setLocation(locationFromProperty(initialData, copy));
+      setBasic(basicFromProperty(initialData, currentCopy.current));
+      setLocation(locationFromProperty(initialData, currentCopy.current));
       setState('success');
       return undefined;
     }
@@ -346,15 +356,15 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     void loadAction(propertyId).then(next => {
       if (controller.signal.aborted) return;
       setProperty(next);
-      setBasic(basicFromProperty(next, copy));
-      setLocation(locationFromProperty(next, copy));
+      setBasic(basicFromProperty(next, currentCopy.current));
+      setLocation(locationFromProperty(next, currentCopy.current));
       setState('success');
     }).catch(error => {
       if (controller.signal.aborted) return;
       setState(errorState(error));
     });
     return () => controller.abort();
-  }, [attempt, copy, initialData, isNew, loadAction, propertyId, session.status, sessionRole]);
+  }, [attempt, initialData, isNew, loadAction, propertyId, session.status, sessionRole]);
 
   useEffect(() => {
     if (step !== 'location' || state !== 'success' || session.status !== 'authenticated' || sessionRole !== 'provider') return undefined;
@@ -383,33 +393,40 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
 
   const onBasicSubmit = async (event: FormEvent<HTMLFormElement>, continueAfter: boolean) => {
     event.preventDefault();
+    if (mutationState === 'saving') return;
     setValidationError(false);
+    setInvalidFields([]);
     setMutationMessage(undefined);
     const providerId = authClient?.getSnapshot().user?.id;
     const name = textMap(basic.name);
     const source = {
       providerId,
       sourceType: basic.sourceType,
-      ...(basic.organizationId.trim() === '' ? {} : { organizationId: basic.organizationId.trim() })
+      ...(basic.sourceType === 'individual_broker' || basic.organizationId.trim() === '' ? {} : { organizationId: basic.organizationId.trim().toLowerCase() })
     };
     const common = {
       kind: basic.kind,
       name,
       slug: basic.slug.trim().toLowerCase(),
       transactionType: basic.transactionType,
-      ...(basic.projectId.trim() === '' ? {} : { projectId: basic.projectId.trim() }),
-      ...(basic.parentPropertyId.trim() === '' ? {} : { parentPropertyId: basic.parentPropertyId.trim() })
+      ...(basic.projectId.trim() === '' ? (isNew ? {} : { projectId: null }) : { projectId: basic.projectId.trim().toLowerCase() }),
+      ...(basic.kind !== 'unit' || basic.parentPropertyId.trim() === '' ? (isNew ? {} : { parentPropertyId: null }) : { parentPropertyId: basic.parentPropertyId.trim().toLowerCase() })
     };
     const parsed = isNew
       ? propertyCreateSchema.safeParse({ ...common, source, reason: basic.reason.trim() })
       : propertyCoreStepSchema.safeParse({ version: property?.version ?? 0, ...common, reason: basic.reason.trim() });
     if (!parsed.success || (isNew && providerId === undefined)) {
+      const fields = parsed.success ? ['providerId'] : parsed.error.issues.map(issue => String(issue.path[0] === 'source' ? issue.path[1] : issue.path[0]));
+      const invalid = [...new Set(fields)].filter(field => field in copy.wizard.validationMessages) as BasicValidationField[];
+      setInvalidFields(invalid);
       setValidationError(true);
+      const fieldIds: Partial<Record<BasicValidationField, string>> = { name: 'name', slug: 'slug', sourceType: 'source-type', organizationId: 'organization', projectId: 'project', parentPropertyId: 'parent', reason: 'reason' };
+      if (invalid[0] && fieldIds[invalid[0]]) document.getElementById(`provider-property-${fieldIds[invalid[0]]}`)?.focus();
       return;
     }
     setMutationState('saving');
     try {
-      const next = isNew ? await createAction(parsed.data as ProviderPropertyCreate) : await saveAction(propertyId!, 'basic', parsed.data as PropertyCoreStep);
+      const next = isNew ? await createAction(parsed.data as ProviderPropertyCreate) : await saveAction(draftId!, 'basic', parsed.data as PropertyCoreStep);
       setProperty(next);
       setBasic(basicFromProperty(next, copy));
       setLocation(locationFromProperty(next, copy));
@@ -464,7 +481,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       <div className="provider-dashboard__content provider-property-wizard__content">
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
-          step === 'basic' ? <BasicFormView locale={locale} copy={copy} form={basic} setForm={setBasic} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
+          step === 'basic' ? <BasicFormView invalidFields={invalidFields} sourceEditable={isNew} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>

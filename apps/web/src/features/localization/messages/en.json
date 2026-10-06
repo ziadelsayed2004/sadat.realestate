@@ -3594,7 +3594,17 @@
       "saved": "Draft saved.",
       "saving": "Saving…",
       "validationTitle": "Check the form",
-      "validationBody": "Complete the required fields using values accepted by the contract.",
+      "validationBody": "Correct the fields listed below and save again. Your entered values remain in the form.",
+      "validationMessages": {
+        "name": "Enter a property name in at least one language.",
+        "slug": "Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.",
+        "sourceType": "Select the property source type.",
+        "organizationId": "Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.",
+        "projectId": "The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.",
+        "parentPropertyId": "A unit needs a project or parent property with a valid 24-character ID containing digits or letters a–f.",
+        "reason": "Enter a save reason of 5–500 characters on one line.",
+        "providerId": "The provider account could not be identified. Sign in as a provider and try again."
+      },
       "mutationError": "The draft could not be saved. Check the connection and try again.",
       "locationCatalogUnavailableTitle": "The provider location catalog is unavailable",
       "locationCatalogUnavailableBody": "The current provider contract does not expose a location list. The admin route and unapproved data are not used; enter an active location ID from an approved source or coordinates.",
@@ -3607,7 +3617,7 @@
       "contractBoundaryTitle": "Fields not supported by the current contract",
       "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
       "coordinateHelp": "A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.",
-      "sourceHelp": "The provider identity comes from the authenticated session and cannot be changed in this form.",
+      "sourceHelp": "The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.",
       "notFoundTitle": "Draft not found",
       "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
       "unavailable": "Unavailable"

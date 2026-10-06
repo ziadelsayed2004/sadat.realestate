@@ -28,6 +28,7 @@ export interface ProviderPropertyCopy {
     readonly saving: string;
     readonly validationTitle: string;
     readonly validationBody: string;
+    readonly validationMessages: Readonly<Record<'name' | 'slug' | 'sourceType' | 'organizationId' | 'projectId' | 'parentPropertyId' | 'reason' | 'providerId', string>>;
     readonly mutationError: string;
     readonly locationCatalogUnavailableTitle: string;
     readonly locationCatalogUnavailableBody: string;
@@ -76,7 +77,17 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       transactionLabels: { sale: 'بيع', rent: 'إيجار' },
       statusLabels: { draft: 'مسودة', pending_review: 'قيد المراجعة', needs_changes: 'تحتاج تعديلات', approved: 'معتمدة', published: 'منشورة', rejected: 'مرفوضة', hidden: 'مخفية', archived: 'مؤرشفة' },
       saveDraft: 'حفظ المسودة', continue: 'متابعة', back: 'رجوع', saved: 'تم حفظ المسودة.', saving: 'جارٍ الحفظ…',
-      validationTitle: 'تحقق من البيانات', validationBody: 'أكمل الحقول المطلوبة واستخدم القيم التي يقبلها العقد.',
+      validationTitle: 'تحقق من البيانات', validationBody: 'راجع الحقول المحددة أدناه ثم أعد الحفظ؛ البيانات المكتوبة محفوظة في النموذج.',
+      validationMessages: {
+        name: 'اكتب اسماً للعقار في لغة واحدة على الأقل.',
+        slug: 'المعرّف المختصر يجب أن يكون من 2 إلى 120 حرفاً إنجليزياً صغيراً أو رقماً، مع شرطة بين الكلمات، مثل sadat-apartment.',
+        sourceType: 'اختر نوع مصدر العقار.',
+        organizationId: 'أدخل معرّف المؤسسة لمكتب الوساطة أو الشركة: يتكون من 24 حرفاً من الأرقام والحروف a إلى f؛ الوسيط الفردي لا يحتاج مؤسسة.',
+        projectId: 'معرّف المشروع اختياري؛ إن أدخلته يجب أن يتكون من 24 حرفاً من الأرقام والحروف a إلى f.',
+        parentPropertyId: 'الوحدة تحتاج إلى مشروع أو عقار أب بمعرّف صحيح من 24 حرفاً من الأرقام والحروف a إلى f.',
+        reason: 'اكتب سبب الحفظ من 5 إلى 500 حرف في سطر واحد.',
+        providerId: 'تعذر تحديد حساب مقدم العقار. سجّل الدخول بحساب مقدم خدمة ثم حاول مرة أخرى.'
+      },
       mutationError: 'تعذر حفظ المسودة. تحقق من الاتصال وحاول مرة أخرى.',
       locationCatalogUnavailableTitle: 'دليل المواقع غير متاح للمزوّد حالياً',
       locationCatalogUnavailableBody: 'لا يعرض العقد الحالي قائمة مواقع للمزوّد. لن نستخدم مسار الإدارة أو بيانات غير معتمدة؛ استخدم معرّف موقع نشطاً من المصدر المصرح به أو الإحداثيات.',
@@ -87,7 +98,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
       coordinateHelp: 'يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.',
-      sourceHelp: 'يتم أخذ هوية المزوّد من جلسة الدخول ولا يمكن تعديلها من النموذج.',
+      sourceHelp: 'حساب مالك العقار يتحدد من جلسة الدخول. اختر نوع المصدر عند الإضافة؛ لا يتغير المصدر بعد حفظ المسودة.',
       notFoundTitle: 'المسودة غير موجودة', notFoundBody: 'لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.', unavailable: 'غير متاح'
     },
     states: {
@@ -126,7 +137,17 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       transactionLabels: { sale: 'Sale', rent: 'Rent' },
       statusLabels: { draft: 'Draft', pending_review: 'Pending review', needs_changes: 'Needs changes', approved: 'Approved', published: 'Published', rejected: 'Rejected', hidden: 'Hidden', archived: 'Archived' },
       saveDraft: 'Save draft', continue: 'Continue', back: 'Back', saved: 'Draft saved.', saving: 'Saving…',
-      validationTitle: 'Check the form', validationBody: 'Complete the required fields using values accepted by the contract.',
+      validationTitle: 'Check the form', validationBody: 'Correct the fields listed below and save again. Your entered values remain in the form.',
+      validationMessages: {
+        name: 'Enter a property name in at least one language.',
+        slug: 'Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.',
+        sourceType: 'Select the property source type.',
+        organizationId: 'Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.',
+        projectId: 'The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.',
+        parentPropertyId: 'A unit needs a project or parent property with a valid 24-character ID containing digits or letters a–f.',
+        reason: 'Enter a save reason of 5–500 characters on one line.',
+        providerId: 'The provider account could not be identified. Sign in as a provider and try again.'
+      },
       mutationError: 'The draft could not be saved. Check the connection and try again.',
       locationCatalogUnavailableTitle: 'The provider location catalog is unavailable',
       locationCatalogUnavailableBody: 'The current provider contract does not expose a location list. The admin route and unapproved data are not used; enter an active location ID from an approved source or coordinates.',
@@ -137,7 +158,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       contractBoundaryTitle: 'Fields not supported by the current contract',
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
       coordinateHelp: 'A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.',
-      sourceHelp: 'The provider identity comes from the authenticated session and cannot be changed in this form.',
+      sourceHelp: 'The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.',
       notFoundTitle: 'Draft not found', notFoundBody: 'This draft could not be loaded or is not owned by the current session.', unavailable: 'Unavailable'
     },
     states: {
