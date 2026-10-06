@@ -146,11 +146,10 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
         <button className="seeker-dashboard__menu-button" type="button" aria-label={menuOpen ? closeMenuLabel : menuLabel} aria-expanded={menuOpen} aria-controls="seeker-dashboard-navigation" onClick={toggleMenu}>
           <span aria-hidden="true" className="seeker-dashboard__menu-glyph"><i /><i /><i /></span>
         </button>
-        <label className="seeker-dashboard__search">
-          <span className="a11y-visually-hidden">{searchLabel}</span>
+        <a className="seeker-dashboard__search" href={localeForSeekerPath(locale, '/')} aria-label={searchLabel}>
           <SeekerIcon name="search" className="seeker-dashboard__search-icon" />
-          <input type="search" placeholder={searchLabel} aria-label={searchLabel} />
-        </label>
+          <span className="seeker-dashboard__search-label">{searchLabel}</span>
+        </a>
         <div className="seeker-dashboard__topbar-actions">
           <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel}>
             <SeekerIcon name="notifications" /><i aria-hidden="true" />
@@ -351,7 +350,7 @@ function OverviewActivity({ data, locale }: { readonly data: SeekerOverviewData;
         <RequestsActivity data={data.recentRequests ?? []} locale={locale} />
         <div className="seeker-overview__activity-side"><ViewingsActivity data={data.upcomingViewings ?? []} locale={locale} /><NotificationsActivity data={data.recentNotifications ?? []} locale={locale} /></div>
       </div>
-      <div className="seeker-overview__search-cta"><div><strong>{copy.overview.searchProperties}</strong><span>{locale === 'ar' ? 'تصفح مئات العقارات المتاحة في مدينة السادات' : 'Browse hundreds of available properties in Sadat City'}</span></div><a href={localeForSeekerPath(locale, '/properties')}>{locale === 'ar' ? 'تصفح العقارات' : 'Browse properties'}<span aria-hidden="true">⌕</span></a></div>
+      <div className="seeker-overview__search-cta"><div><strong>{copy.overview.searchProperties}</strong><span>{locale === 'ar' ? 'تصفح مئات العقارات المتاحة في مدينة السادات' : 'Browse hundreds of available properties in Sadat City'}</span></div><a href={localeForSeekerPath(locale, '/')}>{locale === 'ar' ? 'تصفح العقارات' : 'Browse properties'}<span aria-hidden="true">⌕</span></a></div>
     </section>
   );
 }
@@ -364,7 +363,7 @@ function OverviewContent({ data, locale, displayName }: { readonly data: SeekerO
     : locale === 'ar' ? `أهلاً، ${firstName} 👋` : `Welcome, ${firstName} 👋`;
   return (
     <>
-      <div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.overview.eyebrow}</p><h1>{heading}</h1><p>{copy.overview.description}</p></div><a className="seeker-dashboard__primary-link" href={localeForSeekerPath(locale, '/properties')}><SeekerIcon name="search" />{copy.overview.searchProperties}</a></div>
+      <div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.overview.eyebrow}</p><h1>{heading}</h1><p>{copy.overview.description}</p></div><a className="seeker-dashboard__primary-link" href={localeForSeekerPath(locale, '/')}><SeekerIcon name="search" />{copy.overview.searchProperties}</a></div>
       <section className="seeker-dashboard__summary" aria-labelledby="seeker-summary-title"><div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2></div><div className="seeker-dashboard__summary-grid"><SummaryCard label={copy.overview.cards.requests} value={data.requests} tone="requests" testId="seeker-summary-requests" /><SummaryCard label={copy.overview.cards.activeRequests} value={data.activeRequests} tone="active-requests" testId="seeker-summary-active-requests" /><SummaryCard label={copy.overview.cards.viewings} value={data.viewings} tone="viewings" testId="seeker-summary-viewings" /><SummaryCard label={copy.overview.cards.savedProperties} value={data.savedProperties} tone="saved" testId="seeker-summary-saved" /></div></section>
       <OverviewActivity data={data} locale={locale} />
     </>
