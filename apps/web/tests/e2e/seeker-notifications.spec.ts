@@ -141,7 +141,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-07' });
     testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/seeker/SEK-07.png; Figma node 6027-3579' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Seeker dashboard is approved for desktop only.');
+    test.skip(!testInfo.project.name.includes('desktop') && !/filters unread notifications|truthful empty state/u.test(testInfo.title), 'Visual baseline coverage remains desktop only.');
     await routeSession(page);
     await routeNotifications(page);
   });
@@ -219,6 +219,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await page.goto(`/seeker/notifications?lang=${encodeURIComponent(locale)}`);
     await page.locator('.seeker-notifications__tab').nth(1).click();
     await expect(page.locator('.seeker-notifications__item')).toHaveCount(4);
+    await expect(page.getByTestId('seeker-notifications-indicator')).toHaveCount(1);
     await expect(page.getByTestId(`seeker-notification-${firstId}`)).toBeVisible();
     await expect(page.getByTestId(`seeker-notification-${secondId}`)).toBeVisible();
     await expect(page.getByTestId(`seeker-notification-${fifthId}`)).toHaveCount(0);
@@ -229,6 +230,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await expect(page.getByTestId(`seeker-notification-${fifthId}`)).toBeVisible();
     await page.getByRole('button', { name: new RegExp(`^${copy.markAll}`) }).click();
     await expect(page.locator('.seeker-notifications__feedback[data-state="success"]')).toContainText(copy.mutation.markedAll);
+    await expect(page.getByTestId('seeker-notifications-indicator')).toHaveCount(0);
     await expect(page.locator('.seeker-notifications__count')).toContainText('0');
   });
 
@@ -238,6 +240,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await page.goto(`/seeker/notifications?lang=${encodeURIComponent(locale)}&state=empty`);
     await expect(page.locator('[data-state="empty"]')).toBeVisible();
     await expect(page.getByRole('heading', { name: copy.empty.all.title, level: 3 })).toBeVisible();
+    await expect(page.getByTestId('seeker-notifications-indicator')).toHaveCount(0);
 
     await page.unroute('**/api/v1/auth/refresh');
     await routeSession(page, false);

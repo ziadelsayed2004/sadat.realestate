@@ -11,7 +11,7 @@ import { Button, StateMessage } from '../design_system/index.ts';
 import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { getSeekerCopy } from './copy.ts';
-import { createSeekerOverviewLoader, createSeekerProfileLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
+import { createSeekerNotificationsLoader, createSeekerOverviewLoader, createSeekerProfileLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
 import './styles.css';
 
 export type SeekerOverviewViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
@@ -70,11 +70,41 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
   );
 }
 
-export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, onDisplayNameChange }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onDisplayNameChange?: ((displayName: string) => void) | undefined }) {
+export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, onDisplayNameChange, unreadNotifications }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onDisplayNameChange?: ((displayName: string) => void) | undefined; readonly unreadNotifications?: number | undefined }) {
   const copy = getSeekerCopy(locale);
   const [displayName, setDisplayName] = useState<string>();
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [fetchedUnread, setFetchedUnread] = useState(0);
+  const unreadCount = unreadNotifications ?? fetchedUnread;
+  useEffect(() => {
+    // Overview and notification pages already own the authoritative count.
+    if (unreadNotifications !== undefined || authClient?.getAuthorizationHeader() === undefined) {
+      setFetchedUnread(0);
+      return undefined;
+    }
+    const loadNotifications = createSeekerNotificationsLoader({ authorization: authClient, apiOrigin });
+    let controller: AbortController | undefined;
+    const update = () => {
+      if (document.visibilityState === 'hidden') return;
+      controller?.abort();
+      const request = new AbortController();
+      controller = request;
+      const header = authClient.getAuthorizationHeader();
+      if (!header) { setFetchedUnread(0); return; }
+      void loadNotifications({ page: 1, limit: 1, unreadOnly: false }, request.signal).then(result => {
+        if (!request.signal.aborted && header === authClient.getAuthorizationHeader()) setFetchedUnread(result.unreadCount);
+      }).catch(() => { if (!request.signal.aborted) setFetchedUnread(0); });
+    };
+    update();
+    window.addEventListener('focus', update);
+    document.addEventListener('visibilitychange', update);
+    return () => {
+      controller?.abort();
+      window.removeEventListener('focus', update);
+      document.removeEventListener('visibilitychange', update);
+    };
+  }, [apiOrigin, authClient, unreadNotifications]);
   useEffect(() => {
     if (authClient?.getAuthorizationHeader() === undefined) return undefined;
     const controller = new AbortController();
@@ -151,8 +181,8 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
           <span className="seeker-dashboard__search-label">{searchLabel}</span>
         </a>
         <div className="seeker-dashboard__topbar-actions">
-          <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel}>
-            <SeekerIcon name="notifications" /><i aria-hidden="true" />
+          <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel} aria-description={unreadCount > 0 ? `${unreadCount} ${copy.overview.cards.notifications}` : undefined}>
+            <SeekerIcon name="notifications" />{unreadCount > 0 ? <i aria-hidden="true" data-testid="seeker-notifications-indicator" /> : null}
           </a>
           <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
@@ -406,7 +436,7 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
 
   return (
     <section className="seeker-dashboard seeker-overview" data-screen-id="SEK-01" data-route="/seeker">
-      <SeekerNavigation locale={locale} activePath={path} authClient={authClient} apiOrigin={apiOrigin} onDisplayNameChange={setDisplayName} />
+      <SeekerNavigation locale={locale} activePath={path} authClient={authClient} apiOrigin={apiOrigin} onDisplayNameChange={setDisplayName} unreadNotifications={state === 'success' || state === 'empty' ? data?.unreadNotifications ?? 0 : 0} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? <OverviewContent data={data} locale={locale} displayName={displayName} /> : null}

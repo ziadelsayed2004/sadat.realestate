@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { seekerOverviewDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
@@ -17,6 +17,31 @@ const overview = seekerOverviewDataSchema.parse({
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker overview', () => {
+  it.each([[0, 0], [3, 0], [3, 2]])('only marks the bell for actual unread notifications (total %s, unread %s)', (notifications, unreadNotifications) => {
+    renderWithLocale(<SeekerOverview locale="en" session={session} initialData={{ ...overview, notifications, unreadNotifications }} />, { locale: 'en' });
+    expect(screen.queryByTestId('seeker-notifications-indicator') !== null).toBe(unreadNotifications > 0);
+  });
+
+  it('loads the real count on other seeker pages and clears it when refreshed', async () => {
+    let unreadCount = 1;
+    const fetcher = vi.fn(async (input: string | URL | Request) => new Response(JSON.stringify({
+      data: String(input).includes('/seeker/notifications')
+        ? { items: unreadCount ? [{ id: '4123456789abcdef01234567', type: 'request.updated', title: { en: 'Request updated' }, readAt: null, createdAt: '2026-08-18T10:00:00.000Z' }] : [], unreadCount, page: 1, limit: 1, total: unreadCount }
+        : { id: '64b7f39d1f5a2a0012345678', roleType: 'seeker', status: 'verified', email: 'private@example.com', firstName: 'Mohamed', lastName: 'Ahmed', locale: 'en' },
+      meta: { requestId: 'seeker-navigation-count' }
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetcher);
+    const result = renderWithLocale(<SeekerNavigation locale="en" activePath="/seeker/saved" authClient={{ getAuthorizationHeader: () => 'Bearer seeker-token' }} />, { locale: 'en' });
+    expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByTestId('seeker-notifications-indicator')).toBeInTheDocument());
+    unreadCount = 0;
+    fireEvent(window, new Event('focus'));
+    await waitFor(() => expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument());
+    expect(fetcher).toHaveBeenCalledWith('/api/v1/seeker/notifications?page=1&limit=1&unreadOnly=false', expect.objectContaining({ headers: expect.any(Object) }));
+    result.unmount();
+    vi.unstubAllGlobals();
+  });
+
   it('loads the authenticated profile name for the shared navigation without rendering the email', async () => {
     const fetcher = vi.fn(async () => new Response(JSON.stringify({
       data: {
@@ -125,6 +150,7 @@ describe('Seeker overview', () => {
 
     expect(screen.getByRole('heading', { name: getSeekerCopy('en').states.permission.title })).toBeInTheDocument();
     expect(screen.queryByTestId('seeker-summary-requests')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="SEK-01"]')).toBeInTheDocument();
   });
 

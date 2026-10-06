@@ -37,7 +37,7 @@ async function routeSeekerSession(page: import('@playwright/test').Page, allowed
   });
 }
 
-async function routeOverview(page: import('@playwright/test').Page, locale: 'ar' | 'en'): Promise<void> {
+async function routeOverview(page: import('@playwright/test').Page, locale: 'ar' | 'en', unreadNotifications = 2, notifications = 3): Promise<void> {
   await page.route('**/api/v1/me', async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer seeker.access.token');
@@ -70,8 +70,8 @@ async function routeOverview(page: import('@playwright/test').Page, locale: 'ar'
           activeRequests: 2,
           viewings: 2,
           savedProperties: 14,
-          notifications: 3,
-          unreadNotifications: 2,
+          notifications,
+          unreadNotifications,
           recentRequests: [{
             id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
             type: 'property_search',
@@ -107,7 +107,7 @@ test.describe('SEK-01 Seeker Overview', () => {
     void page;
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-01' });
     testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/seeker/SEK-01.png; Figma node 6027-3579' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Seeker dashboard is approved for desktop only.');
+    test.skip(!testInfo.project.name.includes('desktop') && !testInfo.title.includes('only marks the notification bell'), 'Visual baseline coverage remains desktop only.');
   });
 
   test('loads real summary data through the authenticated API and preserves the protected shell', async ({ page }) => {
@@ -140,6 +140,17 @@ test.describe('SEK-01 Seeker Overview', () => {
     await page.locator('.seeker-dashboard__nav a').nth(1).evaluate(element => { (element as HTMLElement).blur(); });
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
     await expect(page).toHaveScreenshot(`seeker-overview-${locale}.png`, { fullPage: true });
+  });
+
+  test('only marks the notification bell when unread notifications exist', async ({ page }) => {
+    const locale = localeForProject();
+    await routeSeekerSession(page);
+    for (const [unread, total] of [[0, 0], [0, 3], [2, 3]]) {
+      await routeOverview(page, locale, unread, total);
+      await page.goto(`/seeker?lang=${locale}`);
+      await expect(page.getByTestId('seeker-summary-requests')).toBeVisible();
+      await expect(page.getByTestId('seeker-notifications-indicator')).toHaveCount(unread! > 0 ? 1 : 0);
+    }
   });
 
   test('fails closed when the refresh session is unavailable', async ({ page }) => {

@@ -62,6 +62,7 @@ describe('Seeker notifications', () => {
     const copy = getSeekerNotificationsCopy(locale);
     const result = renderWithLocale(<SeekerNotifications locale={locale} session={session} load={async () => list} actions={emptyActions()} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`seeker-notification-${reminder.id}`)).toBeInTheDocument());
+    expect(screen.getByTestId('seeker-notifications-indicator')).toBeInTheDocument();
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByTestId('seeker-notifications-unread-count')).toHaveTextContent(`1 ${copy.unreadCount}`);
@@ -83,6 +84,7 @@ describe('Seeker notifications', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Mark as read' }));
     await waitFor(() => expect(actions.markRead).toHaveBeenCalledWith(reminder.id));
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Notification marked as read.'));
+    expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /^All$/u }));
     await waitFor(() => expect(load).toHaveBeenLastCalledWith({ page: 1, limit: 20, unreadOnly: false }, expect.any(AbortSignal)));
     fireEvent.click(screen.getByRole('button', { name: 'Mark all as read' }));
@@ -95,9 +97,20 @@ describe('Seeker notifications', () => {
     const empty = notificationListDataSchema.parse({ items: [], unreadCount: 0, page: 1, limit: 20, total: 0 });
     renderWithLocale(<SeekerNotifications locale="en" session={session} load={async () => empty} actions={emptyActions()} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.empty.all.title, level: 3 })).toBeInTheDocument());
+    expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument();
     renderWithLocale(<SeekerNotifications locale="en" session={{ status: 'anonymous' }} load={async () => list} actions={emptyActions()} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: copy.states.permission.title })).toBeInTheDocument();
   });
+});
+
+it('clears the bell when marking all notifications read and retains the read list', async () => {
+  const load = vi.fn().mockResolvedValueOnce(list).mockResolvedValue({ ...list, unreadCount: 0, items: list.items.map(item => ({ ...item, readAt: '2026-08-18T12:00:00.000Z' })) });
+  renderWithLocale(<SeekerNotifications locale="en" session={session} load={load} actions={emptyActions()} />, { locale: 'en' });
+  await waitFor(() => expect(screen.getByTestId('seeker-notifications-indicator')).toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: 'Mark all as read' }));
+  await waitFor(() => expect(screen.getByTestId('seeker-notifications-unread-count')).toHaveTextContent('0 unread'));
+  expect(screen.queryByTestId('seeker-notifications-indicator')).not.toBeInTheDocument();
+  expect(screen.getByTestId(`seeker-notification-${reminder.id}`)).toBeInTheDocument();
 });
 
 function emptyActions(): SeekerNotificationActions & { readonly markRead: ReturnType<typeof vi.fn>; readonly markAllRead: ReturnType<typeof vi.fn> } {
