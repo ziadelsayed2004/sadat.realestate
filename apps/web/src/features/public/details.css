@@ -1,3 +1,40 @@
+.public-property-details__related-source {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+  line-height: 1.5;
+}
+
+.public-property-details__related-source > img {
+  display: block;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.public-property-details__related-source > span {
+  flex: 1 1 8rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.public-property-details__related-source > b {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  color: var(--color-brand-primary);
+  background: #d9f3df;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
 @media (min-width: 1101px) {
   .public-property-details .public-property-details__card {
     border-color: #efeff1;

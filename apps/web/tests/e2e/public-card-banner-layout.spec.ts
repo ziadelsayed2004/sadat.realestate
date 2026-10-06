@@ -1,6 +1,39 @@
 import { expect, test } from '@playwright/test';
 import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures.ts';
 
+test('related property source photo, long name, and verification badge do not overlap', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await page.route('**/api/v1/public/properties/source-layout', route => route.fulfill({
+    json: { data: {
+      id: 'aaaaaaaaaaaaaaaaaaaaaaaa', slug: 'source-layout', kind: 'property',
+      name: { ar: 'عقار للاختبار', en: 'Source layout property' }, transactionType: 'rent',
+      source: { sourceType: 'individual_broker' }, seo: { slug: 'source-layout', title: { en: 'Source layout property' } },
+      project: null, media: [], features: [], services: [],
+      relatedProperties: [
+        { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'related-source', kind: 'property', name: { ar: 'شقة للإيجار في الحي الثالث', en: 'Apartment in the third district' }, transactionType: 'rent', imageUrl: '/assets/canonical/public/listing-property-rental.png', price: { amount: 8500, currency: 'EGP' }, layout: { bedrooms: 2, bathrooms: 2 }, area: { value: 120, unit: 'sqm' }, viewCount: 267, sourceName: { ar: 'أحمد حسن للتسويق والاستشارات العقارية بمدينة السادات', en: 'Ahmed Hassan Real Estate Marketing and Advisory in Sadat City' }, sourceImageUrl: '/assets/canonical/public/listing-provider-ahmed.png', sourceVerified: true }
+      ]
+    }, meta: { requestId: 'source-layout' } }
+  }));
+  await page.goto(`/properties/source-layout?lang=${locale}`);
+  const identities = page.locator('.public-property-details__related-source');
+  await expect(identities).toHaveCount(1);
+  await identities.first().scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
+  const geometry = await identities.evaluateAll(elements => elements.map(element => {
+    const parent = element.getBoundingClientRect();
+    const children = [...element.children].map(child => child.getBoundingClientRect());
+    return {
+      contained: children.every(rect => rect.left >= parent.left - 1 && rect.right <= parent.right + 1 && rect.top >= parent.top - 1 && rect.bottom <= parent.bottom + 1),
+      separated: children.every((rect, index) => children.slice(index + 1).every(other => rect.right + 4 <= other.left || other.right + 4 <= rect.left || rect.bottom + 4 <= other.top || other.bottom + 4 <= rect.top)),
+      photoWidth: element.querySelector('img')?.getBoundingClientRect().width
+    };
+  }));
+  expect(geometry.every(identity => identity.contained && identity.separated)).toBe(true);
+  expect(geometry[0]!.photoWidth).toBeGreaterThanOrEqual(20);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.locator('.public-property-details__related-card').first().screenshot({ path: test.info().outputPath('related-source-card.png') });
+});
+
 test('detail gallery badges are separated over the image and show the transaction type', async ({ page }) => {
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
   await page.route('**/api/v1/public/properties/badge-check', route => route.fulfill({
