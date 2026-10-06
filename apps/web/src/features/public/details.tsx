@@ -532,6 +532,7 @@ function RequestPanel({
 
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (contactState === 'submitting') return;
     if (fullName.trim().length === 0 || phone.trim().length === 0 || contactTime.trim().length === 0) {
       setContactValidation(true);
       return;
@@ -551,7 +552,6 @@ function RequestPanel({
     try {
       await actions.submitContact(input);
       setContactState('success');
-      setMessage('');
       onContactSubmitted?.();
     } catch (error) {
       setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
@@ -600,16 +600,6 @@ function RequestPanel({
       <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { setViewingState('idle'); setViewingOpen(true); }}>{copy.requestViewing}</Button>
       <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>
-        {data.contact === undefined ? null : (
-          <div className="public-property-details__revealed-contact" data-contact-revealed="true">
-            {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
-            {data.contact.preferredContactTime ? <p>{data.contact.preferredContactTime}</p> : null}
-            {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
-            {data.contact.whatsappNumber ? <a href={`https://wa.me/${data.contact.whatsappNumber.replace(/\D/gu, '')}`} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
-            {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}
-          </div>
-        )}
-        {contactState === 'success' || contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{copy.fullName}</label>
           <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
@@ -627,7 +617,18 @@ function RequestPanel({
           />
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
+          {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
+          {contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
         </form>
+        {data.contact === undefined ? null : (
+          <div className="public-property-details__revealed-contact" data-contact-revealed="true">
+            {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
+            {data.contact.preferredContactTime ? <p>{data.contact.preferredContactTime}</p> : null}
+            {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
+            {data.contact.whatsappNumber ? <a href={`https://wa.me/${data.contact.whatsappNumber.replace(/\D/gu, '')}`} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
+            {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}
+          </div>
+        )}
         <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{copy.contactWhatsapp}</span></a>
       </section>
       {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
@@ -717,6 +718,7 @@ export function PublicPropertyDetails({
   const [data, setData] = useState<PublicPropertyDetailsData | undefined>(initialData);
   const [view, setView] = useState<PublicPropertyDetailsViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
+  const [contactRefresh, setContactRefresh] = useState<{ slug: string; authorizationHeader: string }>();
   const authorizationHeader = authClient?.getAuthorizationHeader();
   const hasRequestedData = useRef(false);
   const [dataScope, setDataScope] = useState({ slug, authorizationHeader: undefined as string | undefined });
@@ -756,13 +758,24 @@ export function PublicPropertyDetails({
     return () => controller.abort();
   }, [attempt, authorizationHeader, initialData, resolvedLoader, slug]);
 
+  // Refresh newly authorized contact details without unmounting the form or
+  // losing the successful request feedback. A failed read does not undo a send.
+  useEffect(() => {
+    if (!contactRefresh || contactRefresh.slug !== slug || contactRefresh.authorizationHeader !== authorizationHeader) return undefined;
+    const controller = new AbortController();
+    void resolvedLoader(contactRefresh.slug, controller.signal).then(nextData => {
+      if (!controller.signal.aborted && authClient?.getAuthorizationHeader() === contactRefresh.authorizationHeader) setData(nextData);
+    }).catch(() => undefined);
+    return () => controller.abort();
+  }, [authClient, authorizationHeader, contactRefresh, resolvedLoader, slug]);
+
   const retry = () => setAttempt(value => value + 1);
   const visibleView = view === 'success' && (dataScope.slug !== slug || dataScope.authorizationHeader !== authorizationHeader) ? 'loading' : view;
 
   return (
     <div className="public-property-details" data-page="public-property-details" data-details-state={visibleView}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
-      {visibleView === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined ? undefined : retry} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
+      {visibleView === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined || slug === undefined ? undefined : () => setContactRefresh({ slug, authorizationHeader })} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

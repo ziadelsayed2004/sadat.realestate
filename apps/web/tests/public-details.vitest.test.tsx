@@ -299,6 +299,48 @@ describe('public property details', () => {
     });
   });
 
+  it.each(['ar', 'en'] as const)('keeps the form and success message mounted during the authorized contact refresh for %s', async locale => {
+    const copy = getPublicPropertyDetailsCopy(locale);
+    let finishRefresh: ((value: typeof detailsData) => void) | undefined;
+    const load = vi.fn().mockResolvedValueOnce(detailsData).mockImplementationOnce(() => new Promise<typeof detailsData>(resolve => { finishRefresh = resolve; }));
+    const submitContact = vi.fn().mockResolvedValue(contactResponse);
+    const result = renderWithLocale(<PublicPropertyDetails locale={locale} url="/properties/published-home" authClient={{ getAuthorizationHeader: () => 'Bearer seeker' }} load={load} actions={{ submitContact, submitViewing: vi.fn() }} />, { locale });
+    await screen.findByRole('heading', { name: detailsData.name[locale] ?? detailsData.slug, level: 1 });
+    const form = screen.getByRole('form', { name: copy.contactTitle });
+    fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Seeker' } });
+    fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: '01001234567' } });
+    fireEvent.change(screen.getByRole('combobox', { name: copy.contactTime }), { target: { value: 'morning' } });
+    fireEvent.change(screen.getByLabelText(copy.messageLabel), { target: { value: 'Please share the details.' } });
+    fireEvent.submit(form);
+    await screen.findByText(copy.actionSuccessTitle);
+    await waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(screen.getByRole('form', { name: copy.contactTitle })).toBe(form);
+    expect(result.container.querySelector('[data-details-state="success"]')).toBeInTheDocument();
+    finishRefresh?.({ ...detailsData, contact: { phone: '+201234567890' } });
+    await screen.findByRole('link', { name: '+201234567890' });
+    expect(screen.getByRole('form', { name: copy.contactTitle })).toBe(form);
+    expect(screen.getByLabelText(copy.fullName)).toHaveValue('Example Seeker');
+    expect(screen.getByLabelText(copy.phoneNumber)).toHaveValue('01001234567');
+    expect(screen.getByRole('combobox', { name: copy.contactTime })).toHaveValue('morning');
+    expect(screen.getByLabelText(copy.messageLabel)).toHaveValue('Please share the details.');
+    expect(form.querySelector('[role="status"]')).toHaveTextContent(copy.actionSuccessTitle);
+  });
+
+  it('retains a successful send if the background contact read fails', async () => {
+    const copy = getPublicPropertyDetailsCopy('en');
+    const load = vi.fn().mockResolvedValueOnce(detailsData).mockRejectedValueOnce(new Error('offline'));
+    renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" authClient={{ getAuthorizationHeader: () => 'Bearer seeker' }} load={load} actions={{ submitContact: vi.fn().mockResolvedValue(contactResponse), submitViewing: vi.fn() }} />, { locale: 'en' });
+    await screen.findByRole('heading', { name: 'Published home', level: 1 });
+    fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Seeker' } });
+    fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: '01001234567' } });
+    fireEvent.change(screen.getByRole('combobox', { name: copy.contactTime }), { target: { value: 'morning' } });
+    fireEvent.submit(screen.getByRole('form', { name: copy.contactTitle }));
+    await screen.findByText(copy.actionSuccessTitle);
+    await waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(screen.getByRole('form', { name: copy.contactTitle })).toBeInTheDocument();
+    expect(screen.queryByText(copy.actionErrorTitle)).not.toBeInTheDocument();
+  });
+
   it('renders loading, retry, permission, and not-found states without exposing protected data', async () => {
     const copy = getPublicPropertyDetailsCopy('en');
     const pendingLoad = vi.fn(() => new Promise<typeof detailsData>(() => undefined));

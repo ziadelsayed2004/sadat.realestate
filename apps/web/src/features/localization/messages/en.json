@@ -3991,7 +3991,7 @@
     "contactValidation": "Write a message before sending the request.",
     "viewingValidation": "Enter a future time and a valid time zone.",
     "actionLoading": "Sending",
-    "actionSuccessTitle": "Request sent",
+    "actionSuccessTitle": "Your request was sent successfully",
     "actionSuccessBody": "Your request was saved for review.",
     "actionPermissionTitle": "Sign-in required",
     "actionPermissionBody": "Sign in with a property-seeker account to send a request.",

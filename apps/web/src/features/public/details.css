@@ -1,3 +1,8 @@
+.public-property-details {
+  /* Appending request feedback must not move the user's scroll position. */
+  overflow-anchor: none;
+}
+
 .public-property-details__related-source {
   display: flex;
   align-items: center;
@@ -359,6 +364,18 @@
 .public-property-details__contact {
   position: sticky;
   inset-block-start: var(--space-xl);
+}
+
+.public-property-details__contact-success {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: var(--color-brand-primary);
+  background: var(--color-brand-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  line-height: 1.5;
 }
 
 .public-property-details__contact form,
