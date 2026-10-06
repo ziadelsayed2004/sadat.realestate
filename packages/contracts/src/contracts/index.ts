@@ -214,6 +214,7 @@ export {
   ADMIN_ATTENTION_KEYS,
   adminAttentionSchema,
   adminAttentionKeySchema,
+  adminAttentionReadRequestSchema,
   adminNotificationListDataSchema,
   adminNotificationListQuerySchema,
   adminNotificationListSuccessEnvelopeSchema,
@@ -239,6 +240,7 @@ export {
 export type {
   AdminAttention,
   AdminAttentionKey,
+  AdminAttentionReadRequest,
   AdminNotificationListData,
   NotificationAudience,
   NotificationData,

@@ -60,6 +60,7 @@ describe('provider application review and status', () => {
 
   it('submits only the current application version and transitions to the API-provided pending state', async () => {
     const copy = getProviderReviewCopy('en');
+    const onSubmitted = vi.fn();
     const submitProviderApplication = vi.fn().mockResolvedValue(application({
       status: 'pending_review',
       version: 4,
@@ -72,6 +73,7 @@ describe('provider application review and status', () => {
         locale="en"
         initialApplication={application()}
         onBack={vi.fn()}
+        onSubmitted={onSubmitted}
       />,
       { locale: 'en' }
     );
@@ -81,6 +83,7 @@ describe('provider application review and status', () => {
     await waitFor(() => expect(submitProviderApplication).toHaveBeenCalledWith({ version: 3 }));
     await waitFor(() => expect(screen.getByTestId('provider-review')).toHaveAttribute('data-screen-id', 'AUTH-14'));
     expect(screen.getByText(copy.underReviewTitle)).toBeInTheDocument();
+    expect(onSubmitted).toHaveBeenCalledTimes(1);
   });
 
   it('allows submission when only an optional document is listed as missing', async () => {

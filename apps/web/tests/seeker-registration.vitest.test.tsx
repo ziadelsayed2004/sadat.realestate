@@ -102,7 +102,8 @@ describe('seeker registration screens', () => {
     const registerSeeker = vi.fn().mockResolvedValue(authenticatedSnapshot);
     const client = createClient({ registerSeeker });
     const copy = getAuthCopy('en');
-    renderWithLocale(<AuthPage url="/auth/register" locale="en" client={client} onAuthenticated={vi.fn()} />, { locale: 'en' });
+    const onAuthenticated = vi.fn();
+    renderWithLocale(<AuthPage url="/auth/register" locale="en" client={client} onAuthenticated={onAuthenticated} />, { locale: 'en' });
 
     fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) }));
     fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
@@ -128,6 +129,8 @@ describe('seeker registration screens', () => {
     }));
     expect(await screen.findByRole('heading', { name: copy.registrationSuccessTitle, level: 1 })).toBeInTheDocument();
     expect(window.location.pathname).toBe('/auth/register/seeker/success');
+    expect(onAuthenticated).toHaveBeenCalledTimes(1);
+    expect(onAuthenticated).toHaveBeenCalledWith(authenticatedSnapshot);
     expect(document.body.textContent).not.toContain(registrationToken);
   });
 

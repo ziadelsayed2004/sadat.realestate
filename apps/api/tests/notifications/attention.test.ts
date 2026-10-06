@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { adminAttentionSchema, notificationListDataSchema } from '@sadat-real-estate/contracts';
+import { adminAttentionSchema, adminAttentionReadRequestSchema, notificationListDataSchema } from '@sadat-real-estate/contracts';
 import { createAdminAttentionSource } from '../../src/modules/notifications/attention.js';
 
 test('counts authorized submissions and reports across all dates without returning private records', async () => {
@@ -44,4 +44,17 @@ test('failed or malformed database counts cannot masquerade as an empty queue', 
   await assert.rejects(createAdminAttentionSource(async () => -1, async () => true).read('admin'));
   assert.equal(adminAttentionSchema.safeParse({ counts: { privateQueue: 3 }, total: 3 }).success, false);
   assert.equal(notificationListDataSchema.safeParse({ items: [], total: 0, unreadCount: 0, page: 1, limit: 1, attention: { counts: {}, total: 0 } }).success, false);
+});
+
+test('acknowledges only the selected authorized queue and item, scoped to the administrator', async () => {
+  const writes: unknown[] = [];
+  const source = createAdminAttentionSource(async () => 3, async (_id, permission) => permission === 'admin:properties.review', async (collection, filter, adminId, key, itemId) => {
+    writes.push({ collection, filter, adminId, key, itemId }); return 1;
+  });
+  assert.equal(await source.markRead('admin-a', { queueKey: 'property-review', itemId: 'record1' }), 1);
+  assert.deepEqual(writes, [{ collection: 'properties', filter: { status: 'pending_review' }, adminId: 'admin-a', key: 'property-review', itemId: 'record1' }]);
+  assert.equal(await source.markRead('admin-a', { queueKey: 'account-reports' }), 0);
+  assert.equal(writes.length, 1);
+  assert.equal(adminAttentionReadRequestSchema.safeParse({ itemId: 'record1' }).success, false);
+  assert.equal(adminAttentionReadRequestSchema.safeParse({ queueKey: 'property-review', itemId: '$bad.regex' }).success, false);
 });

@@ -1,3 +1,4 @@
+import { authCompletionHref } from '../auth/redirect.ts';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicContentListData, CommunityPublicPostListData, PublicHomepageData, PublicOrganizationDirectoryQuery, PublicOrganizationListData, PublicOrganizationProfile, PublicPropertyComparisonData, PublicPropertyDetails, PublicPropertyListData, PublicPropertySearchQuery, SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
@@ -263,13 +264,7 @@ export function App({
         client={authFlowClient}
         onAuthenticated={snapshot => {
           if (typeof window === 'undefined') return;
-          const requestedReturnTo = new URL(url, window.location.origin).searchParams.get('returnTo');
-          const safeReturnTo = requestedReturnTo !== null && requestedReturnTo.startsWith('/') && !requestedReturnTo.startsWith('//')
-            ? requestedReturnTo
-            : undefined;
-          const role = snapshot.user?.roleType;
-          const roleHome = role === 'admin' ? '/admin' : role === 'provider' ? '/provider' : '/seeker';
-          window.location.assign(safeReturnTo ?? `${roleHome}?lang=${locale}`);
+          window.location.assign(authCompletionHref(url, snapshot.user?.roleType, locale));
         }}
       />
     ) : isProviderOverview ? (

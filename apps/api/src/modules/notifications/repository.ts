@@ -101,6 +101,16 @@ export function createMongooseNotificationRepository(connection: Connection): No
       return existing ? source(existing as Row) : undefined;
     },
 
+    async markRelatedRead(recipientId, itemId, now, permittedPermissions) {
+      await ensureIndexes();
+      const result = await notifications.updateMany({
+        recipientId: new Types.ObjectId(recipientId), audience: 'admin',
+        ...permissionFilter(permittedPermissions), ...unreadFilter(),
+        link: { $regex: `(?:/|=)${itemId}(?:[/?&#]|$)` }
+      }, { $set: { readAt: now } });
+      return result.modifiedCount;
+    },
+
     async markAllRead(recipientId, now, audience, permittedPermissions) {
       await ensureIndexes();
       const result = await notifications.updateMany(

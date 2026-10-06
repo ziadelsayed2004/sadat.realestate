@@ -1125,7 +1125,7 @@
     "/api/v1/admin/notifications/read-all": {
       "post": {
         "operationId": "markAllAdminNotificationsRead",
-        "summary": "Mark all owned administrator notifications as read",
+        "summary": "Mark owned notifications and review queue items as read without changing workflow status",
         "security": [
           {
             "bearerAuth": []
@@ -1150,6 +1150,49 @@
           },
           "500": {
             "$ref": "#/components/responses/NotificationError"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "queueKey": {
+                    "type": "string",
+                    "enum": [
+                      "verification",
+                      "property-review",
+                      "project-review",
+                      "account-reports",
+                      "property-reports",
+                      "request-issues",
+                      "community",
+                      "community-reports",
+                      "contact-requests",
+                      "viewing-requests",
+                      "search-requests",
+                      "customer-requests",
+                      "advertising",
+                      "payment-review"
+                    ]
+                  },
+                  "itemId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "^[a-zA-Z0-9_-]+$"
+                  }
+                },
+                "dependentRequired": {
+                  "itemId": [
+                    "queueKey"
+                  ]
+                }
+              }
+            }
           }
         }
       }

@@ -14,12 +14,13 @@ const providerClaims: AccessTokenClaims = {
   ...claims, sub: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified'
 };
 
-test('includes attention only for active administrators and preserves it when inbox records are read', async () => {
+test('marks queue attention read for active administrators without exposing it to other roles', async () => {
   let calls = 0;
+  let pending = 2;
   const service = createNotificationService({
     isActiveAccount,
     repository: repository(),
-    attention: { async read(adminId) { assert.equal(adminId, adminClaims.sub); calls++; return { counts: { 'property-review': 2 }, total: 2 }; } }
+    attention: { async read(adminId) { assert.equal(adminId, adminClaims.sub); calls++; return { counts: { 'property-review': pending }, total: pending }; }, async markRead(adminId, input) { assert.equal(adminId, adminClaims.sub); assert.deepEqual(input, {}); pending = 0; return 2; } }
   });
   assert.equal((await service.listAdmin(adminClaims, {})).attention?.total, 2);
   assert.equal('attention' in await service.list(claims, {}), false);
@@ -27,7 +28,31 @@ test('includes attention only for active administrators and preserves it when in
   await assert.rejects(service.listAdmin(providerClaims, {}));
   assert.equal(calls, 1);
   await service.markAllAdminRead(adminClaims);
-  assert.equal((await service.listAdmin(adminClaims, { unreadOnly: true })).attention?.total, 2);
+  assert.equal((await service.listAdmin(adminClaims, { unreadOnly: true })).attention?.total, 0);
+});
+
+test('opening one detail marks its queue receipt and linked notifications without reading the whole inbox', async () => {
+  const queueCalls: unknown[] = [];
+  const relatedCalls: unknown[] = [];
+  const service = createNotificationService({
+    isActiveAccount,
+    authorization: { authorize: async () => true, permissions: async () => ['admin:requests.view'] },
+    repository: repository({
+      async markAllRead() { assert.fail('A detail must not mark the whole inbox read'); },
+      async markRelatedRead(recipientId, itemId, _now, permissions) { relatedCalls.push({ recipientId, itemId, permissions }); return 1; }
+    }),
+    attention: {
+      async read() { return { counts: {}, total: 0 }; },
+      async markRead(adminId, input, permissions) { queueCalls.push({ adminId, input, permissions }); return 1; }
+    }
+  });
+  const input = { queueKey: 'contact-requests', itemId: 'abcdefabcdefabcdefabcdef' };
+  assert.equal((await service.markAllAdminRead(adminClaims, input)).updatedCount, 2);
+  assert.deepEqual(queueCalls, [{ adminId: adminClaims.sub, input, permissions: ['admin:requests.view'] }]);
+  assert.deepEqual(relatedCalls, [{ recipientId: adminClaims.sub, itemId: input.itemId, permissions: ['admin:requests.view'] }]);
+  await assert.rejects(service.markAllAdminRead(providerClaims, input));
+  await assert.rejects(service.markAllAdminRead(adminClaims, { itemId: input.itemId }));
+  assert.equal(queueCalls.length, 1);
 });
 const createdAt = new Date('2026-08-01T00:00:00.000Z');
 const isActiveAccount = async () => true;

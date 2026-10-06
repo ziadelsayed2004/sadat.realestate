@@ -31,7 +31,7 @@ export interface NotificationRouterDependencies {
     markAllProviderRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
     listAdmin(claims: AccessTokenClaims, query: unknown): Promise<AdminNotificationListData>;
     markAdminRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
-    markAllAdminRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
+    markAllAdminRead(claims: AccessTokenClaims, input?: unknown): Promise<NotificationReadAllData>;
   };
   accessTokens: AccessTokenService;
 }
@@ -106,7 +106,7 @@ export function createNotificationRouter(dependencies: NotificationRouterDepende
   });
   router.post('/admin/notifications/read-all', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (request, response) => {
     try {
-      const result = await dependencies.service.markAllAdminRead(adminClaims(response));
+      const result = await dependencies.service.markAllAdminRead(adminClaims(response), request.body);
       response.status(200).json(toSuccessResponse(result, requestId(request)));
     } catch (error) { sendError(request, response, error); }
   });

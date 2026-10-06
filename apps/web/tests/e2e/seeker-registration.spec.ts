@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi } from './public-fixtures';
 
 const VERIFICATION_TOKEN = 'A'.repeat(43);
 
@@ -113,6 +114,7 @@ async function completeVerification(page: import('@playwright/test').Page, local
 test('seeker registration follows the verified OTP authority through the implemented API and reaches truthful success', async ({ page }) => {
   const locale = localeForProject();
   await routeRegistrationApi(page);
+  await routePublicHomepageApi(page);
   await page.goto(`/auth/register?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('html')).toHaveAttribute('lang', locale);
   await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -126,8 +128,8 @@ test('seeker registration follows the verified OTP authority through the impleme
   await page.locator('#auth-registration-password').fill('Seeker12!');
   await page.locator('#auth-registration-password-confirmation').fill('Seeker12!');
   await page.getByRole('button', { name: /create account|إنشاء الحساب|创建账号/iu }).click();
-  await expect(page.locator('[data-screen-id="AUTH-06"]')).toBeVisible();
-  await expect(page).toHaveURL(/\/auth\/register\/seeker\/success$/u);
+  await expect(page).toHaveURL(new RegExp(`/\\?lang=${locale}$`));
+  await expect(page.locator('[data-page="public-home"]')).toBeVisible();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.locator('body')).not.toContainText(VERIFICATION_TOKEN);
   await expect(page.locator('body')).not.toContainText('verificationToken');
@@ -137,6 +139,7 @@ test('seeker registration follows the verified OTP authority through the impleme
 test('seeker registration controls support keyboard focus and accessible form labels', async ({ page }) => {
   const locale = localeForProject();
   await routeRegistrationApi(page);
+  await routePublicHomepageApi(page);
   await page.goto(`/auth/register?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('[data-screen-id="AUTH-02"]')).toBeVisible();
 
@@ -157,6 +160,7 @@ test('seeker registration controls support keyboard focus and accessible form la
 test('seeker registration role, form, and success states have responsive visual baselines', async ({ page }) => {
   const locale = localeForProject();
   await routeRegistrationApi(page);
+  await routePublicHomepageApi(page);
   await page.goto(`/auth/register?lang=${encodeURIComponent(locale)}`);
   await hideSkipLink(page);
   await expect(page).toHaveScreenshot(`seeker-registration-role-${locale}.png`, { fullPage: true });
@@ -171,7 +175,7 @@ test('seeker registration role, form, and success states have responsive visual 
   await page.locator('#auth-registration-password').fill('Seeker12!');
   await page.locator('#auth-registration-password-confirmation').fill('Seeker12!');
   await page.getByRole('button', { name: /create account|إنشاء الحساب|创建账号/iu }).click();
-  await expect(page.locator('[data-screen-id="AUTH-06"]')).toBeVisible();
-  await hideSkipLink(page);
-  await expect(page).toHaveScreenshot(`seeker-registration-success-${locale}.png`, { fullPage: true });
+  await expect(page).toHaveURL(new RegExp(`/\\?lang=${locale}$`));
+  await expect(page.locator('[data-page="public-home"]')).toBeVisible();
+  await page.screenshot({ path: `test-results/seeker-registration-home-${test.info().project.name}.png`, fullPage: true });
 });

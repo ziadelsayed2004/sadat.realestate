@@ -59,6 +59,10 @@ export const ADMIN_ATTENTION_KEYS = [
   'advertising', 'payment-review'
 ] as const;
 export const adminAttentionKeySchema = z.enum(ADMIN_ATTENTION_KEYS);
+export const adminAttentionReadRequestSchema = z.object({
+  queueKey: adminAttentionKeySchema.optional(),
+  itemId: z.string().trim().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
+}).strict().refine(value => value.itemId === undefined || value.queueKey !== undefined, { message: 'An item requires its queue' });
 export const adminAttentionSchema = z.object({
   counts: z.partialRecord(adminAttentionKeySchema, z.number().int().nonnegative()),
   total: z.number().int().nonnegative()
@@ -80,4 +84,5 @@ export type NotificationReadData = z.infer<typeof notificationReadDataSchema>;
 export type NotificationReadAllData = z.infer<typeof notificationReadAllDataSchema>;
 export type AdminAttentionKey = z.infer<typeof adminAttentionKeySchema>;
 export type AdminAttention = z.infer<typeof adminAttentionSchema>;
+export type AdminAttentionReadRequest = z.infer<typeof adminAttentionReadRequestSchema>;
 export type AdminNotificationListData = z.infer<typeof adminNotificationListDataSchema>;

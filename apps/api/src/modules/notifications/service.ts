@@ -1,6 +1,7 @@
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import {
   adminNotificationListDataSchema,
+  adminAttentionReadRequestSchema,
   adminNotificationListQuerySchema,
   adminNotificationReadAllDataSchema,
   adminNotificationReadDataSchema,
@@ -18,6 +19,7 @@ import {
   type NotificationReadAllData,
   type NotificationReadData,
   type AdminAttention,
+  type AdminAttentionReadRequest,
   type AdminNotificationListData
 } from '@sadat-real-estate/contracts';
 
@@ -38,6 +40,7 @@ export interface NotificationRepository {
   findById(recipientId: string, notificationId: string, audience?: NotificationAudience, permittedPermissions?: readonly string[]): Promise<NotificationSource | undefined>;
   markRead(recipientId: string, notificationId: string, now: Date, audience?: NotificationAudience, permittedPermissions?: readonly string[]): Promise<NotificationSource | undefined>;
   markAllRead(recipientId: string, now: Date, audience?: NotificationAudience, permittedPermissions?: readonly string[]): Promise<number>;
+  markRelatedRead?(recipientId: string, itemId: string, now: Date, permittedPermissions?: readonly string[]): Promise<number>;
 }
 
 export interface NotificationAuthorization {
@@ -49,7 +52,7 @@ export interface NotificationServiceDependencies {
   repository: NotificationRepository;
   isActiveAccount: (claims: AccessTokenClaims) => Promise<boolean>;
   authorization?: NotificationAuthorization;
-  attention?: { read(adminId: string, permissions?: readonly string[]): Promise<AdminAttention> };
+  attention?: { read(adminId: string, permissions?: readonly string[]): Promise<AdminAttention>; markRead?(adminId: string, input: AdminAttentionReadRequest, permissions?: readonly string[]): Promise<number> };
   now?: () => Date;
 }
 
@@ -193,10 +196,15 @@ export function createNotificationService(dependencies: NotificationServiceDepen
       return adminNotificationReadDataSchema.parse({ id, readAt: source.readAt?.toISOString() ?? changedAt.toISOString() });
     },
 
-    async markAllAdminRead(claims: AccessTokenClaims): Promise<NotificationReadAllData> {
+    async markAllAdminRead(claims: AccessTokenClaims, unparsedInput?: unknown): Promise<NotificationReadAllData> {
       await authorizeAdmin(claims);
+      const input = adminAttentionReadRequestSchema.parse(unparsedInput ?? {});
       const permittedPermissions = await dependencies.authorization?.permissions?.(claims.sub);
-      return adminNotificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'admin', permittedPermissions ?? []) });
+      const queueChanges = await dependencies.attention?.markRead?.(claims.sub, input, permittedPermissions) ?? 0;
+      const notificationChanges = input.itemId
+        ? await dependencies.repository.markRelatedRead?.(claims.sub, input.itemId, now(), permittedPermissions ?? []) ?? 0
+        : input.queueKey ? 0 : await dependencies.repository.markAllRead(claims.sub, now(), 'admin', permittedPermissions ?? []);
+      return adminNotificationReadAllDataSchema.parse({ updatedCount: queueChanges + notificationChanges });
     }
   };
 }

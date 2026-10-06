@@ -1,3 +1,4 @@
+import { authCompletionHref } from './redirect.ts';
 import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
@@ -120,16 +121,6 @@ function parseAuthLocation(url: string): AuthLocation {
   return { pathname, roleType, purpose, returnTo };
 }
 
-function navigateAfterAuthentication(snapshot: AuthSnapshot, returnTo: string | undefined, locale: SupportedLocale): void {
-  if (typeof window === 'undefined') return;
-  if (returnTo !== undefined) {
-    window.location.assign(returnTo);
-    return;
-  }
-  const role = snapshot.user?.roleType;
-  const dashboard = role === 'admin' ? '/admin' : role === 'provider' ? '/provider' : '/seeker';
-  window.location.assign(`${dashboard}?lang=${encodeURIComponent(locale)}`);
-}
 
 function getApiErrorCode(error: unknown): string | undefined {
   return error instanceof ApiClientError ? error.apiError?.code : undefined;
@@ -991,7 +982,8 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
     setSnapshot(nextSnapshot);
     replaceAuthUrl('/auth/register/seeker/success');
     setStep('success');
-  }, []);
+    onAuthenticated(nextSnapshot);
+  }, [onAuthenticated]);
 
   if (step === 'role') {
     return <RegistrationRolePage copy={copy} locale={locale} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} onSelectProvider={startProviderRegistration} />;
@@ -1366,6 +1358,7 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
         initialApplication={application}
         onBack={backToDocuments}
         onEdit={updated => backToDocuments(updated)}
+        onSubmitted={() => window.location.assign(`/?lang=${locale}`)}
       />
     );
   }
@@ -1376,7 +1369,9 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
   const client = useMemo<AuthFlowClient>(() => providedClient ?? new AuthClient(), [providedClient]);
   const location = useMemo(() => parseAuthLocation(url), [url]);
   const copy = getAuthCopy(locale);
-  const onAuthenticated = providedOnAuthenticated ?? ((snapshot: AuthSnapshot) => navigateAfterAuthentication(snapshot, location.returnTo, locale));
+  const onAuthenticated = providedOnAuthenticated ?? ((snapshot: AuthSnapshot) => {
+    if (typeof window !== 'undefined') window.location.assign(authCompletionHref(url, snapshot.user?.roleType, locale));
+  });
 
   useEffect(() => {
     if (providedClient !== undefined) return undefined;

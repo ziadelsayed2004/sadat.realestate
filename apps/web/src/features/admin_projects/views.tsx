@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectData, ProjectListQuery, ProjectReviewAction, ProjectStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -155,6 +156,7 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
 }
 
 function ReviewPanel({ project, locale, onBack, review }: { readonly project: ProjectData; readonly locale: SupportedLocale; readonly onBack: () => void; readonly review: AdminProjectReviewMutation }) {
+  useAdminAttentionRead('project-review', project.id);
   const copy = getAdminProjectsCopy(locale);
   const availableActions = actions.filter(action => project.availableActions.includes(action));
   const [action, setAction] = useState<ProjectReviewAction | ''>(availableActions[0] ?? '');

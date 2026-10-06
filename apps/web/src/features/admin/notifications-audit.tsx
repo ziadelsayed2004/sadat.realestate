@@ -127,7 +127,7 @@ function Heading({ title, eyebrow, description, action }: { readonly title: stri
   return <header className="admin-notifications-audit__heading"><div><p className="admin-notifications-audit__eyebrow">{eyebrow}</p><h1>{title}</h1><p className="admin-notifications-audit__description">{description}</p></div>{action}</header>;
 }
 
-function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly item: NotificationData; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getAdminNotificationsAuditCopy>; readonly marking: boolean; readonly onMarkRead: () => void }) {
+function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly item: NotificationData; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getAdminNotificationsAuditCopy>; readonly marking: boolean; readonly onMarkRead: () => Promise<void> }) {
   const title = localizedText(item.title, locale) ?? item.type;
   const message = localizedText(item.message, locale);
   const href = item.link === undefined ? undefined : localePath(locale, item.link);
@@ -140,8 +140,13 @@ function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly
         <h3>{title}</h3>
         {message !== undefined ? <p>{message}</p> : null}
         <div className="admin-notifications-audit__actions">
-          {href !== undefined ? <a href={href}>{copy.notifications.openLink}</a> : null}
-          {!read ? <Button variant="ghost" size="xs" loading={marking} onClick={onMarkRead}>{copy.notifications.markRead}</Button> : null}
+          {href !== undefined ? <a href={href} onClick={event => {
+            if (read) return;
+            if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) { void onMarkRead(); return; }
+            event.preventDefault();
+            void onMarkRead().finally(() => window.location.assign(href));
+          }}>{copy.notifications.openLink}</a> : null}
+          {!read ? <Button variant="ghost" size="xs" loading={marking} onClick={() => { void onMarkRead(); }}>{copy.notifications.markRead}</Button> : null}
         </div>
       </div>
     </article>
@@ -197,11 +202,11 @@ function NotificationsView({ locale, session, authClient, apiOrigin, load, actio
   const pageCount = data === undefined ? 0 : Math.ceil(data.total / data.limit);
   return (
     <Shell locale={locale} path={ADMIN_NOTIFICATIONS_ROUTE} screenId="ADM-65" state={state}>
-      <Heading eyebrow={copy.notifications.eyebrow} title={copy.notifications.title} description={copy.notifications.description} action={<Button variant="secondary" size="sm" loading={markingAll} disabled={data?.unreadCount === 0 || state !== 'success'} onClick={() => { void markAllRead(); }}>{copy.notifications.markAll}</Button>} />
+      <Heading eyebrow={copy.notifications.eyebrow} title={copy.notifications.title} description={copy.notifications.description} action={<Button variant="secondary" size="sm" loading={markingAll} disabled={((data?.unreadCount ?? 0) + (data?.attention?.total ?? 0)) === 0 || (state !== 'success' && state !== 'empty')} onClick={() => { void markAllRead(); }}>{copy.notifications.markAll}</Button>} />
       <AdminAttentionQueues locale={locale} attention={data?.attention} />
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
       {feedback !== undefined ? <p className="admin-notifications-audit__feedback" data-state={feedback.kind} role={feedback.kind === 'success' ? 'status' : 'alert'}>{feedback.text}</p> : null}
-      {(state === 'success' || state === 'empty') && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-notifications-list-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-notifications-list-title">{copy.notifications.listLabel} <span className="admin-notifications-audit__muted">({data.unreadCount} {copy.notifications.unreadCount})</span></h2><div className="admin-notifications-audit__tabs" aria-label={copy.notifications.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="admin-notifications-audit__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setFeedback(undefined); }}>{copy.notifications.tabs[tab]}</button>)}</div></div>{data.items.length === 0 ? <div className="admin-notifications-audit__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="admin-notifications-audit__list" role="list" aria-label={copy.notifications.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => { void markRead(item.id); }} />)}</div>}<Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setPage(next); setFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}
+      {(state === 'success' || state === 'empty') && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-notifications-list-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-notifications-list-title">{copy.notifications.listLabel} <span className="admin-notifications-audit__muted">({data.unreadCount} {copy.notifications.unreadCount})</span></h2><div className="admin-notifications-audit__tabs" aria-label={copy.notifications.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="admin-notifications-audit__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setFeedback(undefined); }}>{copy.notifications.tabs[tab]}</button>)}</div></div>{data.items.length === 0 ? <div className="admin-notifications-audit__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="admin-notifications-audit__list" role="list" aria-label={copy.notifications.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => markRead(item.id)} />)}</div>}<Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setPage(next); setFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}
     </Shell>
   );
 }

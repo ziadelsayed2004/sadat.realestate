@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type { OverdueRequestListData, RequestData, RequestIssue, RequestListData, RequestListQuery, RequestStatus, RequestTransition, RequestType, SupportedLocale, ViewingListData, ViewingStatus } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -247,6 +248,7 @@ function DetailRows({ copy, request, locale }: { readonly copy: AdminRequestsCop
 }
 
 function RequestDetail({ copy, locale, request, onTransition, onAssign, onNote }: { readonly copy: AdminRequestsCopy; readonly locale: SupportedLocale; readonly request: RequestData; readonly onTransition: AdminRequestMutation; readonly onAssign: AdminRequestMutation; readonly onNote: AdminRequestMutation }) {
+  useAdminAttentionRead(({ contact: 'contact-requests', viewing: 'viewing-requests', property_search: 'search-requests', provider_customer: 'customer-requests' } as const)[request.type], request.id, request.updatedAt);
   const [transitionValue, setTransitionValue] = useState<RequestTransition | ''>(request.availableActions[0] ?? '');
   const [transitionReason, setTransitionReason] = useState('');
   const [assigneeId, setAssigneeId] = useState(request.assignedTo ?? '');
@@ -278,6 +280,7 @@ function RequestDetail({ copy, locale, request, onTransition, onAssign, onNote }
 }
 
 function IssueDetail({ copy, issue, onClose, resolve }: { readonly copy: AdminRequestsCopy; readonly issue: RequestIssue; readonly onClose: () => void; readonly resolve: AdminIssueMutation }) {
+  useAdminAttentionRead('request-issues', issue.id);
   const [action, setAction] = useState<'resolve' | 'dismiss'>('resolve');
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);

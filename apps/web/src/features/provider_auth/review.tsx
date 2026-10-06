@@ -31,6 +31,7 @@ export interface ProviderReviewPageProps {
   readonly initialApplication?: ProviderApplicationData | undefined;
   readonly onBack: () => void;
   readonly onEdit?: ((application: ProviderApplicationData) => void) | undefined;
+  readonly onSubmitted?: (() => void) | undefined;
 }
 
 type LoadState = 'loading' | 'ready' | 'error' | 'retry' | 'permission';
@@ -402,7 +403,7 @@ function Restricted({ application, copy, locale, onBack }: { readonly applicatio
   );
 }
 
-export function ProviderReviewPage({ client, locale, providerType, initialApplication, onBack, onEdit }: ProviderReviewPageProps) {
+export function ProviderReviewPage({ client, locale, providerType, initialApplication, onBack, onEdit, onSubmitted }: ProviderReviewPageProps) {
   const copy = useMemo(() => getProviderReviewCopy(locale), [locale]);
   const [application, setApplication] = useState<ProviderApplicationData | undefined>(initialApplication);
   const [loadState, setLoadState] = useState<LoadState>('loading');
@@ -507,12 +508,13 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
       setApplication(nextApplication);
       setShowTracking(false);
       setActionState('success');
+      if (nextApplication.status === 'pending_review') onSubmitted?.();
     } catch (requestError: unknown) {
       const nextError = toReviewError(requestError, copy, true);
       setActionState(nextError.state === 'permission' ? 'error' : nextError.state);
       setActionError(nextError);
     }
-  }, [application, client, copy]);
+  }, [application, client, copy, onSubmitted]);
 
   if (loadState === 'loading') {
     return <PageFrame locale={locale} screenId="AUTH-13" state="loading"><div className="auth-card auth-card--form provider-review-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} loadingVariant="form" /></div></div></PageFrame>;

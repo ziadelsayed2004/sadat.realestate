@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { adminNotificationListSuccessEnvelopeSchema, type AdminAttention, type AdminAttentionKey, type SupportedLocale } from '@sadat-real-estate/contracts';
+import { createContext, useContext, useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
+import { adminNotificationListSuccessEnvelopeSchema, adminNotificationReadAllSuccessEnvelopeSchema, type AdminAttentionReadRequest, type AdminAttention, type AdminAttentionKey, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClient, ApiClientError } from '../contracts/index.ts';
 
 const destinations: ReadonlyArray<{ key: AdminAttentionKey; path: string; ar: string; en: string }> = [
@@ -20,24 +20,32 @@ const destinations: ReadonlyArray<{ key: AdminAttentionKey; path: string; ar: st
 ];
 
 type AttentionData = { attention?: AdminAttention; unread: number; ready: boolean; unavailable?: boolean };
-type AttentionState = AttentionData & { refresh: () => void };
-export const AdminAttentionContext = createContext<AttentionState>({ unread: 0, ready: false, refresh: () => undefined });
+type AttentionState = AttentionData & { refresh: () => void; markRead: (input?: AdminAttentionReadRequest) => Promise<void> };
+export const AdminAttentionContext = createContext<AttentionState>({ unread: 0, ready: false, refresh: () => undefined, markRead: async () => undefined });
 const REFRESH_EVENT = 'sadat-admin-attention-refresh';
 export function refreshAdminAttention(): void { window.dispatchEvent(new Event(REFRESH_EVENT)); }
 
 export function AdminAttentionProvider({ enabled, authorization, children }: { enabled: boolean; authorization?: { getAuthorizationHeader?: (() => string | undefined) | undefined } | undefined; children: ReactNode }) {
   const [state, setState] = useState<AttentionData>({ unread: 0, ready: false });
   const refresh = useRef<() => void>(() => undefined);
+  const markRead = useCallback(async (input: AdminAttentionReadRequest = {}) => {
+    const header = enabled ? authorization?.getAuthorizationHeader?.() : undefined;
+    if (!header) return;
+    await new ApiClient().request('/admin/notifications/read-all', { method: 'POST', json: input, headers: { authorization: header }, responseSchema: adminNotificationReadAllSuccessEnvelopeSchema });
+    refresh.current();
+  }, [enabled, authorization]);
   useEffect(() => {
     if (!enabled || !authorization?.getAuthorizationHeader) { setState({ unread: 0, ready: false }); return; }
     let stopped = false;
     let controller: AbortController | undefined;
     let inFlight = false;
+    let refreshPending = false;
     const client = new ApiClient();
     const update = () => {
       const header = authorization.getAuthorizationHeader?.();
       if (!header) { setState({ unread: 0, ready: false }); return; }
-      if (stopped || inFlight || document.visibilityState === 'hidden') return;
+      if (stopped || document.visibilityState === 'hidden') return;
+      if (inFlight) { refreshPending = true; return; }
       inFlight = true;
       controller = new AbortController();
       void client.request('/admin/notifications', { query: { page: 1, limit: 1 }, headers: { authorization: header }, signal: controller.signal, responseSchema: adminNotificationListSuccessEnvelopeSchema }).then(result => {
@@ -48,7 +56,7 @@ export function AdminAttentionProvider({ enabled, authorization, children }: { e
           if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) setState({ unread: 0, ready: false, unavailable: true });
           else setState(current => ({ ...current, unavailable: true }));
         }
-      }).finally(() => { inFlight = false; });
+      }).finally(() => { inFlight = false; if (refreshPending && !stopped) { refreshPending = false; update(); } });
     };
     refresh.current = update;
     update();
@@ -61,7 +69,15 @@ export function AdminAttentionProvider({ enabled, authorization, children }: { e
       window.removeEventListener('focus', update); document.removeEventListener('visibilitychange', update); window.removeEventListener(REFRESH_EVENT, update);
     };
   }, [enabled, authorization]);
-  return <AdminAttentionContext.Provider value={{ ...state, refresh: () => refresh.current() }}>{children}</AdminAttentionContext.Provider>;
+  return <AdminAttentionContext.Provider value={{ ...state, refresh: () => refresh.current(), markRead }}>{children}</AdminAttentionContext.Provider>;
+}
+
+// Only acknowledge a successfully displayed record, never a list or failed load.
+export function useAdminAttentionRead(queueKey: AdminAttentionKey, itemId?: string, revision?: string | number) {
+  const { markRead } = useContext(AdminAttentionContext);
+  useEffect(() => {
+    if (itemId) void markRead({ queueKey, itemId }).catch(() => undefined);
+  }, [queueKey, itemId, revision, markRead]);
 }
 
 export function adminAttentionCount(id: string, attention: AdminAttention | undefined, unread = 0): number {
@@ -88,7 +104,7 @@ export function AdminAttentionQueues({ locale, attention }: { locale: SupportedL
   if (!attention?.total) return null;
   return <section className="admin-attention__queues" aria-label={locale === 'ar' ? 'تحتاج المراجعة' : 'Needs attention'}>
     <h2>{locale === 'ar' ? 'تحتاج المراجعة' : 'Needs attention'}</h2>
-    <p>{locale === 'ar' ? 'العدد يقل بعد مراجعة العنصر أو إغلاقه، وليس بمجرد فتح الصفحة.' : 'Counts decrease after reviewing or closing an item, not simply opening its page.'}</p>
+    <p>{locale === 'ar' ? 'عناصر لم تقرأها بعد. فتح التفاصيل أو تمييزها كمقروء يخفي العلامة، ويظل الطلب متاحًا للمراجعة.' : 'Items you have not read yet. Opening details or marking them read clears the badge; the item remains available for review.'}</p>
     <ul>{destinations.filter(item => (attention.counts[item.key] ?? 0) > 0).map(item => <li key={item.key}><a href={hrefFor(item.path, locale)}><span>{item[locale]}</span><AdminAttentionBadge count={attention.counts[item.key]!} locale={locale} /></a></li>)}</ul>
   </section>;
 }
@@ -96,6 +112,8 @@ export function AdminAttentionQueues({ locale, attention }: { locale: SupportedL
 export function AdminAttentionBell({ locale }: { locale: SupportedLocale }) {
   const state = useContext(AdminAttentionContext);
   const [open, setOpen] = useState(false);
+  const [marking, setMarking] = useState(false);
+  const [readError, setReadError] = useState(false);
   const [position, setPosition] = useState({ left: 16, top: 80 });
   const wrapper = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -122,6 +140,11 @@ export function AdminAttentionBell({ locale }: { locale: SupportedLocale }) {
     </button>
     {open ? <div className="admin-attention__panel" style={{ left: position.left, top: position.top, maxHeight: `calc(100dvh - ${position.top + 16}px)` }} id="admin-attention-panel" role="region" aria-label={locale === 'ar' ? 'التنبيهات الجديدة' : 'New alerts'}>
       <AdminAttentionQueues locale={locale} attention={state.attention} />
+      {count > 0 ? <button type="button" className="admin-attention__mark-read" disabled={marking} onClick={() => {
+        setMarking(true); setReadError(false);
+        void state.markRead().catch(() => setReadError(true)).finally(() => setMarking(false));
+      }}>{marking ? (locale === 'ar' ? 'جارٍ الحفظ…' : 'Saving…') : (locale === 'ar' ? 'تمييز الكل كمقروء' : 'Mark all as read')}</button> : null}
+      {readError ? <p role="alert">{locale === 'ar' ? 'تعذر حفظ حالة القراءة. حاول مرة أخرى.' : 'Could not save read status. Please retry.'}</p> : null}
       {state.unavailable ? <p role="status">{locale === 'ar' ? 'تعذر تحديث التنبيهات. اضغط على الجرس لإعادة المحاولة.' : 'Alerts could not refresh. Press the bell to retry.'}</p> : !state.ready ? <p role="status">{locale === 'ar' ? 'جارٍ تحميل التنبيهات…' : 'Loading alerts…'}</p> : count === 0 ? <p>{locale === 'ar' ? 'لا توجد عناصر جديدة تحتاج المراجعة.' : 'No new items need attention.'}</p> : null}
       <a className="admin-attention__inbox" href={hrefFor('/admin/notifications', locale)}>{locale === 'ar' ? 'عرض كل الإشعارات' : 'View all notifications'}<AdminAttentionBadge count={state.unread} locale={locale} /></a>
     </div> : null}

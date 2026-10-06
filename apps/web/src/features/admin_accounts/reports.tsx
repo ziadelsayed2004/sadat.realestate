@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   accountObjectIdSchema,
@@ -188,6 +189,7 @@ function ReportStatusStrip({ locale, status, onStatusChange }: { readonly locale
 }
 
 function ReportDetail({ report, account, locale, reason, mutationError, mutationSuccess, busyAction, onReasonChange, onResolve, onTransition }: { readonly report: AccountReportData; readonly account: AdminAccountUserData | undefined; readonly locale: SupportedLocale; readonly reason: string; readonly mutationError: string | undefined; readonly mutationSuccess: string | undefined; readonly busyAction: string | undefined; readonly onReasonChange: (value: string) => void; readonly onResolve: (action: 'resolve' | 'dismiss') => void; readonly onTransition: (action: AccountTransitionRequest['action']) => void }) {
+  useAdminAttentionRead('account-reports', report.id);
   const copy = getAdminAccountReportsCopy(locale);
   const canResolve = report.status === 'open' || report.status === 'in_review';
   return (

@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type { PropertyAdminListQuery, PropertyAvailableAction, PropertyData, PropertyDuplicateData, PropertyReportAction, PropertyReportData, PropertyReportListData, PropertyReportListQuery, PropertyReportStatus, PropertyReviewAction, PropertyStatus, PropertyVisibilityAction, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -230,6 +231,7 @@ function PropertyActionPanel({ locale, property, review, visibility }: { readonl
 }
 
 function PropertyReviewPanel({ locale, property, review, visibility }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly review: AdminPropertyReviewMutation; readonly visibility: AdminPropertyVisibilityMutation }) {
+  useAdminAttentionRead('property-review', property.id);
   const copy = getAdminPropertiesCopy(locale);
   return <section className="admin-properties__review" data-screen-id="ADM-15" data-route={ADMIN_PROPERTY_REVIEW_ROUTE} data-device-scope="desktop"><div className="admin-properties__review-heading"><div><p className="admin-properties__eyebrow">{copy.eyebrow}</p><h1>{copy.titles.review}</h1><p>{copy.descriptions.review}</p></div><a className="admin-properties__back-link" href={localePath(locale, ADMIN_PROPERTIES_ROUTE)}>{copy.back}</a></div><div className="admin-properties__review-grid"><article className="admin-properties__detail-card"><h2>{localizedValue(property.name, locale)}</h2><dl><div><dt>{copy.columns.id}</dt><dd><code>{property.id}</code></dd></div><div><dt>{copy.columns.source}</dt><dd>{safeSource(property)}</dd></div><div><dt>{copy.columns.kind}</dt><dd>{property.kind}</dd></div><div><dt>{copy.columns.transaction}</dt><dd>{property.transactionType}</dd></div><div><dt>{copy.columns.status}</dt><dd><StatusBadge status={property.status} locale={locale} /></dd></div><div><dt>{copy.columns.active}</dt><dd>{property.active ? copy.active : copy.inactive}</dd></div><div><dt>{copy.columns.version}</dt><dd>{property.version}</dd></div>{property.reviewReason !== undefined ? <div><dt>{copy.columns.reason}</dt><dd>{property.reviewReason}</dd></div> : null}</dl><div className="admin-properties__detail-links"><a href={localePath(locale, `${ADMIN_PROPERTY_DUPLICATES_ROUTE}?propertyId=${encodeURIComponent(property.id)}`)}>{copy.openDuplicates}</a><a href={localePath(locale, ADMIN_PROPERTY_REPORTS_ROUTE)}>{copy.openReports}</a></div></article><PropertyActionPanel locale={locale} property={property} review={review} visibility={visibility} /></div></section>;
 }
@@ -240,6 +242,7 @@ function DuplicatePanel({ locale, propertyId, data }: { readonly locale: Support
 }
 
 function ReportResolutionPanel({ locale, report, resolve }: { readonly locale: SupportedLocale; readonly report: PropertyReportData; readonly resolve: AdminPropertyReportResolver }) {
+  useAdminAttentionRead('property-reports', report.id);
   const copy = getAdminPropertiesCopy(locale);
   const [action, setAction] = useState<PropertyReportAction>('resolve');
   const [reason, setReason] = useState('');

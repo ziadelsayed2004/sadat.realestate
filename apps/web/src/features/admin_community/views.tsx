@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   communityAdminCommentListQuerySchema,
@@ -171,6 +172,7 @@ function ReportTable({ items, locale, onReview }: { readonly items: readonly Com
 }
 
 function ReportResolution({ report, locale, onClose, onResolve }: { readonly report: CommunityAdminReport; readonly locale: SupportedLocale; readonly onClose: () => void; readonly onResolve: (reportId: string, input: CommunityReportResolve) => Promise<void> }) {
+  useAdminAttentionRead('community-reports', report.id);
   const copy = getAdminCommunityCopy(locale);
   const [action, setAction] = useState<'resolve' | 'dismiss'>('resolve');
   const [reason, setReason] = useState('');
@@ -280,6 +282,7 @@ function PostModeration({ post, locale, onSave, onClose, onReload }: {
   readonly onSave: (action: 'publish' | 'hide' | 'reject', reason: string) => Promise<void>;
   readonly onClose: () => void; readonly onReload: () => void;
 }) {
+  useAdminAttentionRead('community', post.id);
   const copy = getAdminCommunityCopy(locale);
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);

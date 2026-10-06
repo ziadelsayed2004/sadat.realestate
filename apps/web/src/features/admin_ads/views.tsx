@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type {
   AdAdminRequest,
@@ -224,6 +225,7 @@ function QuoteIssuePanel({ locale, onIssue }: { readonly locale: SupportedLocale
 }
 
 function RequestDetail({ data, locale, onBack, onReview, onIssueQuote, onSchedule }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onBack: () => void; readonly onReview: (action: 'approve' | 'reject', reason: string) => Promise<void>; readonly onIssueQuote: (input: { currency: string; lineItems: [{ description: string; quantity: number; unitAmountMinor: number }]; validUntil: string; terms: string }) => Promise<void>; readonly onSchedule: () => Promise<void> }) {
+  useAdminAttentionRead('advertising', data.request.id);
   const copy = getAdminAdsCopy(locale);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
@@ -257,6 +259,7 @@ function PaymentProofTable({ data, locale, review, onReview }: { readonly data: 
 }
 
 function ReviewPanel({ proof, locale, review, onSaved }: { readonly proof: PaymentProofData; readonly locale: SupportedLocale; readonly review: AdminAdsPaymentProofReviewMutation; readonly onSaved: () => void }) {
+  useAdminAttentionRead('payment-review', proof.id);
   const copy = getAdminAdsCopy(locale);
   const [action, setAction] = useState<'approve' | 'reject'>('approve');
   const [reason, setReason] = useState('');

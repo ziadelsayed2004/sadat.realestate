@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi } from './public-fixtures';
 
 const APPLICATION_ID = 'a'.repeat(24);
 
@@ -53,6 +54,7 @@ async function hideSkipLink(page: import('@playwright/test').Page): Promise<void
 test('review, submit, under-review, and tracking states remain API-backed across locales and devices', async ({ page }) => {
   const locale = localeForProject();
   let current = application('draft');
+  await routePublicHomepageApi(page);
   await page.route('**/api/v1/provider/application', async route => {
     expect(route.request().method()).toBe('GET');
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
@@ -92,6 +94,9 @@ test('review, submit, under-review, and tracking states remain API-backed across
   }
 
   await page.locator('[data-testid="provider-review-submit"]').click();
+  await expect(page).toHaveURL(new RegExp(`/\\?lang=${locale}$`));
+  await expect(page.locator('[data-page="public-home"]')).toBeVisible();
+  await page.goto(`/auth/register/provider/review?providerType=developer_company&lang=${locale}`);
   await expect(page.locator('[data-testid="provider-review"]')).toHaveAttribute('data-screen-id', 'AUTH-14');
   if (process.env.AUTH_LANE_SEMANTIC_ONLY !== '1') {
     await expect(page).toHaveScreenshot(`provider-application-under-review-${locale}.png`, { fullPage: true });

@@ -1,3 +1,4 @@
+import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type {
   AdminAccountUserData,
@@ -471,6 +472,7 @@ function DocumentRow({ document, locale, onOpen, opening }: { readonly document:
 }
 
 function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocumentId, documentError, reviewReason, onReviewReasonChange, onReview, reviewingAction, reviewFeedback }: { readonly provider: AdminProviderData; readonly locale: SupportedLocale; readonly onBack: string; readonly onOpenDocument: (documentId: string) => void; readonly openingDocumentId: string | undefined; readonly documentError: string | undefined; readonly reviewReason: string; readonly onReviewReasonChange: (value: string) => void; readonly onReview: (action: ProviderReviewAction) => void; readonly reviewingAction: ProviderReviewAction | undefined; readonly reviewFeedback: { readonly tone: 'success' | 'error'; readonly message: string } | undefined }) {
+  useAdminAttentionRead('verification', provider.id);
   const copy = getAdminAccountsCopy(locale);
   const reviewLabels: Readonly<Record<ProviderReviewAction, string>> = { verify: copy.actions.verify, reject: copy.actions.reject, needs_information: copy.actions.needsInformation, suspend: copy.actions.suspend };
   const validReason = reviewReason.trim().length >= 3;
