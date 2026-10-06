@@ -61,7 +61,7 @@ test('related property source photo, long name, and verification badge do not ov
       source: { sourceType: 'individual_broker' }, seo: { slug: 'source-layout', title: { en: 'Source layout property' } },
       project: null, media: [], features: [], services: [],
       relatedProperties: [
-        { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'related-source', kind: 'property', name: { ar: 'شقة للإيجار في الحي الثالث', en: 'Apartment in the third district' }, transactionType: 'rent', imageUrl: '/assets/canonical/public/listing-property-rental.png', price: { amount: 8500, currency: 'EGP' }, layout: { bedrooms: 2, bathrooms: 2 }, area: { value: 120, unit: 'sqm' }, viewCount: 267, sourceName: { ar: 'أحمد حسن للتسويق والاستشارات العقارية بمدينة السادات', en: 'Ahmed Hassan Real Estate Marketing and Advisory in Sadat City' }, sourceImageUrl: '/assets/canonical/public/listing-provider-ahmed.png', sourceVerified: true }
+        { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'related-source', kind: 'property', name: { ar: 'مكتب تجاري في المنطقة الصناعية مع عنوان طويل يوضح تفاصيل العقار بالكامل', en: 'Commercial office in the Industrial District with an exceptionally long property title' }, transactionType: 'rent', imageUrl: '/assets/canonical/public/listing-property-rental.png', price: { amount: 8500, currency: 'EGP' }, layout: { bedrooms: 2, bathrooms: 2 }, area: { value: 120, unit: 'sqm' }, viewCount: 267, sourceName: { ar: 'أحمد حسن للتسويق والاستشارات العقارية بمدينة السادات', en: 'Ahmed Hassan Real Estate Marketing and Advisory in Sadat City' }, sourceImageUrl: '/assets/canonical/public/listing-provider-ahmed.png', sourceVerified: true }
       ]
     }, meta: { requestId: 'source-layout' } }
   }));
@@ -70,6 +70,21 @@ test('related property source photo, long name, and verification badge do not ov
   await expect(identities).toHaveCount(1);
   await identities.first().scrollIntoViewIfNeeded();
   await page.evaluate(() => document.fonts.ready);
+  const relatedCard = page.locator('.public-property-details__related-card').first();
+  const assertTitleFits = async () => {
+    const geometry = await relatedCard.evaluate(element => {
+      const card = element.getBoundingClientRect();
+      const heading = element.querySelector('h3')!;
+      const body = element.querySelector('.ui-property-card__body')!.getBoundingClientRect();
+      return {
+        contained: card.left >= -1 && card.right <= window.innerWidth + 1 && body.right <= card.right + 1 && body.left >= card.left - 1,
+        readable: heading.scrollWidth <= heading.clientWidth + 1,
+        overflow: document.documentElement.scrollWidth > window.innerWidth
+      };
+    });
+    expect(geometry).toEqual({ contained: true, readable: true, overflow: false });
+  };
+  await assertTitleFits();
   const geometry = await identities.evaluateAll(elements => elements.map(element => {
     const parent = element.getBoundingClientRect();
     const children = [...element.children].map(child => child.getBoundingClientRect());
@@ -83,6 +98,10 @@ test('related property source photo, long name, and verification badge do not ov
   expect(geometry[0]!.photoWidth).toBeGreaterThanOrEqual(20);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.locator('.public-property-details__related-card').first().screenshot({ path: test.info().outputPath('related-source-card.png') });
+  if ((page.viewportSize()?.width ?? 0) <= 768) {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await assertTitleFits();
+  }
 });
 
 test('detail gallery badges are separated over the image and show the transaction type', async ({ page }) => {
