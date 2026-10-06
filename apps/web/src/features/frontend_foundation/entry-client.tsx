@@ -1,4 +1,5 @@
 import { hydrateRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
 import { useEffect, useState } from 'react';
 import { articleListQuerySchema, articlePublicListDataSchema, articlePublicSchema, cmsPublicContentListDataSchema, communityPublicPostListDataSchema, publicHomepageDataSchema, publicOrganizationListDataSchema, publicOrganizationProfileSchema, publicPropertyComparisonDataSchema, publicPropertyDetailsSchema, publicPropertyListDataSchema, type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { App } from './app.js';
@@ -276,10 +277,12 @@ function ClientApp(props: typeof appProps) {
     const nextLocale = normalizeLocale(target.searchParams.get('lang')) ?? localeStore.getSnapshot().locale;
     localeStore.setLocale(nextLocale);
     applyLocaleToDocument(nextLocale);
-    setCurrentLocale(nextLocale);
-    setPageProps(readAppProps(source, target.href));
-    setUrl(target.href);
-    setRouteVersion(previous => previous + 1);
+    flushSync(() => {
+      setCurrentLocale(nextLocale);
+      setPageProps(readAppProps(source, target.href));
+      setUrl(target.href);
+      setRouteVersion(previous => previous + 1);
+    });
   }), []);
 
   return <App key={routeVersion} {...pageProps} url={url} locale={currentLocale} onLocaleChange={handleLocaleChange} />;

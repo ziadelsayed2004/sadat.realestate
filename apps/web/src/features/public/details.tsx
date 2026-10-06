@@ -22,6 +22,7 @@ import {
 import { getPublicPropertyDetailsCopy, type PublicPropertyDetailsCopy } from './details-copy.ts';
 import { formatArea, formatMoney, localizedText } from './model.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
+import { publicReturnUrl } from '../frontend_foundation/public-history.ts';
 import './details.css';
 
 export type PublicPropertyDetailsInitialState = 'loading' | 'retry' | 'not_found';
@@ -675,7 +676,7 @@ function SuccessDetails({
   return (
     <>
       <div className="public-property-details__content">
-        <a className="public-property-details__back" href="/properties"><DetailLineIcon kind="back" />{copy.backToResults}</a>
+        <PropertyReturnLink locale={locale} copy={copy} />
         <div className="public-property-details__layout">
           <div className="public-property-details__main-column">
             <Gallery media={galleryMedia(data)} copy={copy} transactionType={data.transactionType} installmentAvailable={data.installmentAvailable} />
@@ -691,6 +692,13 @@ function SuccessDetails({
       </div>
     </>
   );
+}
+
+function PropertyReturnLink({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicPropertyDetailsCopy }) {
+  const fallback = '/properties?lang=' + locale;
+  const [href, setHref] = useState(fallback);
+  useEffect(() => { setHref(publicReturnUrl(fallback)); }, [fallback]);
+  return <a className="public-property-details__back" href={href} data-public-return><DetailLineIcon kind="back" />{copy.backToResults}</a>;
 }
 
 export function PublicPropertyDetails({

@@ -21,6 +21,7 @@ import {
 import { getPublicPropertyListingCopy, type PublicPropertyListingCopy } from './listing-copy.ts';
 import { formatMoney, localizedText, propertyFeatures } from './model.ts';
 import { publicPropertyComparisonUrl } from './compare-data.ts';
+import { publicPageState, pushPublicPage, savePublicListingFilters, savePublicListingView } from '../frontend_foundation/public-history.ts';
 import './listing.css';
 
 export type PublicPropertyListingViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
@@ -218,6 +219,16 @@ function ListingFilters({
   readonly locations: NonNullable<PublicPropertyListData['locations']>;
 }) {
   const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    const restore = () => { if (window.location.pathname === '/properties') setExpanded(publicPageState()?.filtersExpanded === true); };
+    restore();
+    window.addEventListener('popstate', restore);
+    return () => window.removeEventListener('popstate', restore);
+  }, []);
+  const toggleExpanded = () => {
+    savePublicListingFilters(!expanded);
+    setExpanded(!expanded);
+  };
   const locationNames = new Map(locations.map(location => [location.id, localizedText(location.name, locale) ?? location.slug] as const));
   const locationOptions = locations.map(location => ({
     value: location.id,
@@ -229,7 +240,7 @@ function ListingFilters({
     <aside className="public-property-listing__filters" data-expanded={expanded} aria-labelledby="public-property-listing-filters-title">
       <div className="public-property-listing__filters-heading">
         <h2 id="public-property-listing-filters-title">{copy.filtersTitle}</h2>
-        <button type="button" className="public-property-listing__filters-toggle" aria-expanded={expanded} aria-controls="public-property-listing-filter-form" onClick={() => setExpanded(value => !value)}>{expanded ? (locale === 'ar' ? 'إخفاء الفلاتر' : 'Hide filters') : (locale === 'ar' ? 'عرض الفلاتر' : 'Show filters')}</button>
+        <button type="button" className="public-property-listing__filters-toggle" aria-expanded={expanded} aria-controls="public-property-listing-filter-form" onClick={toggleExpanded}>{expanded ? (locale === 'ar' ? 'إخفاء الفلاتر' : 'Hide filters') : (locale === 'ar' ? 'عرض الفلاتر' : 'Show filters')}</button>
         <button type="button" className="public-property-listing__reset" onClick={onReset}>{copy.resetFilters}</button>
       </div>
       <form id="public-property-listing-filter-form" onSubmit={onSubmit} aria-label={copy.filtersTitle}>
@@ -369,6 +380,13 @@ export function PublicPropertyListing({
   const [listMode, setListMode] = useState(false);
   const [comparedIds, setComparedIds] = useState<readonly string[]>([]);
 
+  useEffect(() => { setListMode(publicPageState()?.listingView === 'list'); }, []);
+
+  const changeListMode = (next: boolean) => {
+    savePublicListingView(next ? 'list' : 'grid');
+    setListMode(next);
+  };
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const saved = window.localStorage.getItem('sadat-property-comparison');
@@ -408,7 +426,9 @@ export function PublicPropertyListing({
 
   useEffect(() => {
     const onPopState = () => {
+      if (window.location.pathname !== '/properties') return;
       const nextQuery = parsePublicPropertySearchQuery(window.location.href);
+      setListMode(publicPageState()?.listingView === 'list');
       setQuery(nextQuery);
       setDraft(draftFromQuery(nextQuery));
       setFilterError(false);
@@ -421,7 +441,7 @@ export function PublicPropertyListing({
   const navigate = (nextQuery: PublicPropertySearchQuery, syncDraft = true) => {
     const nextUrl = new URL(publicPropertySearchUrl(nextQuery), 'http://sadat-real-estate.local');
     nextUrl.searchParams.set('lang', locale);
-    if (typeof window !== 'undefined') window.history.pushState({}, '', nextUrl.pathname + nextUrl.search);
+    if (typeof window !== 'undefined') pushPublicPage(nextUrl.pathname + nextUrl.search, true);
     setQuery(nextQuery);
     if (syncDraft) setDraft(draftFromQuery(nextQuery));
     setFilterError(false);
@@ -517,8 +537,8 @@ export function PublicPropertyListing({
               />
             </div>
             <div className="public-property-listing__view-toggle" role="group" aria-label={copy.title}>
-              <button type="button" aria-pressed={!listMode} aria-label={copy.gridView} onClick={() => setListMode(false)}><ListingIcon type="grid" /></button>
-              <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => setListMode(true)}><ListingIcon type="list" /></button>
+              <button type="button" aria-pressed={!listMode} aria-label={copy.gridView} onClick={() => changeListMode(false)}><ListingIcon type="grid" /></button>
+              <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => changeListMode(true)}><ListingIcon type="list" /></button>
             </div>
           </div>
           {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} comparedIds={comparedIds} onToggleCompare={toggleCompare} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retryResults} /> : <StateNotice state={view} copy={copy} onRetry={retryResults} />}
