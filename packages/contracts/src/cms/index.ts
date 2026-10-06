@@ -400,11 +400,14 @@ export const cmsAdminTeamMemberSchema = z
     title: localizedTextSchema,
     bio: localizedTextSchema.optional(),
     photoAssetId: objectId.optional(),
+    imageUrl: publicAssetUrl.optional(),
     order,
     active: z.boolean(),
     status: cmsSettingStatusSchema,
   })
   .strict();
+export const cmsTeamPhotoSchema = z.object({ id: objectId, imageUrl: publicAssetUrl }).strict();
+export const cmsTeamPhotoSuccessEnvelopeSchema = successEnvelopeSchema(cmsTeamPhotoSchema);
 export const cmsAdminPopulationValueSchema = z
   .object({
     ...cmsAdminRecordFields,

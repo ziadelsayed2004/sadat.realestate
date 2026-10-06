@@ -80,6 +80,7 @@ function repository(): CmsAdminContentRepository {
       if (teamDeleted || id !== team.id) return { kind: 'not_found' };
       if (version !== team.version) return { kind: 'version_conflict' };
       team = { ...team, ...input, updatedBy: actorId, version: version + 1, updatedAt: at };
+      for (const field of ['bio', 'photoAssetId', 'imageUrl'] as const) if (input[field] === null) delete team[field];
       return { kind: 'written', item: team };
     },
     async deleteTeam(id, version) {
@@ -159,6 +160,26 @@ function createService(options: { manage?: boolean; publish?: boolean } = {}) {
   });
   return { service: created, audits };
 }
+
+test('attaches a verified uploaded portrait and clears both the photo ID and displayed URL on removal', async () => {
+  const id = 'd'.repeat(24); const checked: string[] = [];
+  const service = createCmsAdminContentService({ repository: repository(), authorization: { async authorize() { return true; } }, audit: { async record() { return 'audit'; } }, validateTeamPhoto: async value => { checked.push(value); } });
+  const context = { requestId: 'photo-save', traceId: 'a'.repeat(32) };
+  const saved = await service.put({ userId: adminId }, 'team', { id: secondId, version: 1, order: 0, photoAssetId: id, reason: 'Attach team portrait' }, context);
+  assert.equal(saved.namespace, 'team');
+  if (saved.namespace !== 'team') return;
+  assert.equal(saved.items[0]?.imageUrl, `/api/v1/public/team-photos/${id}`);
+  assert.deepEqual(checked, [id]);
+  const removed = await service.put({ userId: adminId }, 'team', { id: secondId, version: 2, order: 0, photoAssetId: null, reason: 'Remove team portrait' }, context);
+  if (removed.namespace !== 'team') return;
+  assert.equal(removed.items[0]?.photoAssetId, undefined); assert.equal(removed.items[0]?.imageUrl, undefined);
+});
+test('rejects an invalid uploaded photo reference without changing the member', async () => {
+  const service = createCmsAdminContentService({ repository: repository(), authorization: { async authorize() { return true; } }, audit: { async record() { return 'audit'; } }, validateTeamPhoto: async () => { throw new Error('Photo not found'); } });
+  await assert.rejects(service.put({ userId: adminId }, 'team', { id: secondId, version: 1, order: 0, photoAssetId: 'd'.repeat(24), name: { en: 'Must not save' }, reason: 'Attach missing portrait' }, { requestId: 'photo-save', traceId: 'a'.repeat(32) }), /Photo not found/);
+  const data = await service.get({ userId: adminId }, 'team');
+  if (data.namespace === 'team') { assert.equal(data.items[0]?.version, 1); assert.equal(data.items[0]?.name.en, 'Team lead'); }
+});
 
 test('deletes a team member with management permission and records the deletion audit', async () => {
   const { service, audits } = createService();

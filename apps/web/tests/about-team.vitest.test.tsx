@@ -31,6 +31,12 @@ const teamData = cmsPublicContentListDataSchema.parse({
 });
 
 describe('public About and Team content', () => {
+  it('renders the saved portrait for a new team key and does not restore fixed portraits after removal', () => {
+    const data = cmsPublicContentListDataSchema.parse({ items: [{ ...teamData.items[0], key: 'new_member', imageUrl: '/api/v1/public/team-photos/aaaaaaaaaaaaaaaaaaaaaaaa' }, { ...teamData.items[0], key: 'team_ahmed', name: { en: 'Member without photo' } }] });
+    renderWithLocale(<PublicTeam locale="en" initialData={data} />, { locale: 'en' });
+    expect(document.querySelector('img[src="/api/v1/public/team-photos/aaaaaaaaaaaaaaaaaaaaaaaa"]')).not.toBeNull();
+    expect(document.querySelector('img[src="/assets/canonical/public/team-asset-1.png"]')).toBeNull();
+  });
   it('loads the implemented versioned public CMS routes and keeps the safe projection', async () => {
     const requests: string[] = [];
     const client = new ApiClient({

@@ -7833,6 +7833,105 @@
           }
         }
       ]
+    },
+    {
+      "name": "Team portraits",
+      "item": [
+        {
+          "name": "uploadAdminTeamPhoto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "image/png"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/content/team/photos",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "content",
+                "team",
+                "photos"
+              ]
+            },
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            },
+            "description": "Upload and scan a team portrait, up to 10 MiB"
+          }
+        },
+        {
+          "name": "previewAdminTeamPhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/content/team/photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "content",
+                "team",
+                "photos",
+                ":assetId"
+              ]
+            },
+            "description": "Preview a team portrait with content viewing permission"
+          }
+        },
+        {
+          "name": "downloadPublicTeamPhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/team-photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "team-photos",
+                ":assetId"
+              ]
+            },
+            "description": "Download a portrait attached to a published active team member"
+          }
+        }
+      ]
     }
   ]
 }

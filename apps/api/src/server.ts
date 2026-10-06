@@ -224,7 +224,8 @@ async function runEntrypoint(): Promise<void> {
     database.nativeConnection,
     auth.accessTokens,
     audit.writer,
-    rbac.service
+    rbac.service,
+    uploadEnvironment
   );
   const server = createApiServer({
     database,

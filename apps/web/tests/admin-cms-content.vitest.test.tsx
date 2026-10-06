@@ -43,6 +43,62 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('admin About, Team, and population CMS content', () => {
+  it.each(['ar', 'en'] as const)('uploads a chosen portrait and retains the draft on a failed save in %s', async locale => {
+    const copy = getAdminCmsCopy(locale);
+    const assetId = 'dddddddddddddddddddddddd';
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:team-photo');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    const upload = vi.fn(async () => ({ id: assetId, imageUrl: `/api/v1/public/team-photos/${assetId}` }));
+    const update = vi.fn(async () => { throw new ApiClientError('Conflict', { code: 'HTTP_ERROR', status: 409 }); });
+    const { unmount } = renderWithLocale(<AdminCmsContent path="/admin/content/team" locale={locale} session={session} initialData={team} uploadTeamPhoto={upload} update={update} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.edit }));
+    const file = new File(['portrait'], 'photo.jpg', { type: 'image/jpeg' });
+    fireEvent.change(screen.getByLabelText(copy.photo.choose), { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(copy.photo.uploaded));
+    expect(screen.getByAltText(copy.photo.preview)).toHaveAttribute('src', 'blob:team-photo');
+    expect(screen.queryByLabelText('Photo asset ID')).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Update team portrait' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-team-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('team', expect.objectContaining({ photoAssetId: assetId })));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(copy.mutation.conflict));
+    expect(screen.getByAltText(copy.photo.preview)).toBeVisible();
+    unmount(); expect(revokeUrl).toHaveBeenCalledWith('blob:team-photo'); createUrl.mockRestore(); revokeUrl.mockRestore();
+  });
+  it('rejects an invalid portrait, preserves other fields and removes a legacy photo only on save', async () => {
+    const copy = getAdminCmsCopy('en');
+    const data = cmsAdminContentDataSchema.parse({ namespace: 'team', items: [{ ...team.items[0], imageUrl: '/assets/team.png' }] });
+    const upload = vi.fn(); const update = vi.fn(async () => data);
+    renderWithLocale(<AdminCmsContent path="/admin/content/team" locale="en" session={session} initialData={data} uploadTeamPhoto={upload} update={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.edit }));
+    fireEvent.change(screen.getByLabelText('EN ' + copy.name), { target: { value: 'Keep my changes' } });
+    fireEvent.change(screen.getByLabelText(copy.photo.replace), { target: { files: [new File(['bad'], 'bad.svg', { type: 'image/svg+xml' })] } });
+    expect(upload).not.toHaveBeenCalled(); expect(screen.getByRole('status')).toHaveTextContent(copy.photo.invalid);
+    expect(screen.getByLabelText('EN ' + copy.name)).toHaveValue('Keep my changes');
+    fireEvent.click(screen.getByRole('button', { name: copy.photo.remove }));
+    expect(update).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Remove old portrait' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-team-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('team', expect.objectContaining({ photoAssetId: null })));
+  });
+  it('blocks saving during upload and keeps entered values and the old photo when upload fails', async () => {
+    const copy = getAdminCmsCopy('en');
+    const data = cmsAdminContentDataSchema.parse({ namespace: 'team', items: [{ ...team.items[0], imageUrl: '/assets/team.png' }] });
+    let fail!: (error: unknown) => void;
+    const upload = vi.fn(() => new Promise<{ id: string; imageUrl: string }>((_resolve, reject) => { fail = reject; }));
+    const update = vi.fn(async () => data);
+    renderWithLocale(<AdminCmsContent path="/admin/content/team" locale="en" session={session} initialData={data} uploadTeamPhoto={upload} update={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.edit }));
+    fireEvent.change(screen.getByLabelText('EN ' + copy.name), { target: { value: 'My unsaved name' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Update the portrait' } });
+    fireEvent.change(screen.getByLabelText(copy.photo.replace), { target: { files: [new File(['portrait'], 'photo.png', { type: 'image/png' })] } });
+    expect(screen.getByRole('button', { name: copy.save })).toBeDisabled();
+    fireEvent.submit(screen.getByTestId('admin-cms-team-editor').querySelector('form')!); expect(update).not.toHaveBeenCalled();
+    fail(new ApiClientError('Unavailable', { code: 'HTTP_ERROR', status: 503 }));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(copy.photo.failed));
+    expect(screen.getByLabelText('EN ' + copy.name)).toHaveValue('My unsaved name');
+    expect(screen.getByAltText(copy.photo.preview)).toHaveAttribute('src', '/assets/team.png');
+    expect(screen.getByRole('button', { name: copy.save })).toBeEnabled();
+  });
   it.each(['ar', 'en'] as const)('edits the selected team member and clears removed optional fields in %s', async locale => {
     const copy = getAdminCmsCopy(locale);
     const data = cmsAdminContentDataSchema.parse({ namespace: 'team', items: [team.items[0], { ...team.items[0], id: aboutId, key: 'second', name: { en: 'Second member' } }] });

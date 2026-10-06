@@ -1130,6 +1130,20 @@
     "edit": "Edit",
     "delete": "Delete",
     "deleteTitle": "Delete team member",
+    "photo": {
+      "title": "Team member photo",
+      "choose": "Choose image from device",
+      "replace": "Replace image",
+      "preview": "Team member photo preview",
+      "remove": "Remove image",
+      "hint": "Choose JPG, PNG or WebP up to 10 MB. The image uploads automatically; save the member changes to display it on the website.",
+      "uploading": "Uploading and checking the image…",
+      "uploaded": "Image uploaded. Save the member changes to keep it.",
+      "removed": "Image removal selected. Save changes to confirm removal.",
+      "invalid": "Choose a valid JPG, PNG or WebP image up to 10 MB.",
+      "failed": "The image could not upload; the previous photo is unchanged. Try again.",
+      "previewFailed": "The current photo preview could not load. Reopen the editor to retry or choose a new image."
+    },
     "deleteHint": "This removes the member from the team and public site. Enter a reason and confirm. This page cannot undo the deletion.",
     "mutation": {
       "notFound": "This record no longer exists. Refresh the list before retrying.",

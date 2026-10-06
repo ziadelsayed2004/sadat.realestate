@@ -1,4 +1,8 @@
 .admin-content { min-height: calc(100vh - var(--header-height-min)); overflow: hidden; background: #f5e9cb; color: #1b2942; }
+.admin-content__team-photo { min-width: 0; display: grid; gap: 12px; padding: 16px; border: 1px solid #e3e5e7; border-radius: 12px; }
+.admin-content__team-photo img { display: block; max-width: 100%; border-radius: 16px; object-fit: cover; }
+.admin-content__team-photo p { margin: 0; }
+.admin-content__team-photo input[type="file"] { max-width: 100%; min-width: 0; }
 .admin-content__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
 .admin-content__heading, .admin-content__panel, .admin-content__editor, .admin-content__action-panel { max-width: 1320px; margin-inline: auto; }
 .admin-content__panel, .admin-content__editor, .admin-content__action-panel { border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }

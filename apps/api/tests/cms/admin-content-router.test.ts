@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { Readable } from 'node:stream';
 import { cmsAdminAboutBlockPutSchema, cmsAdminTeamMemberDeleteSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import type { CmsAdminContentService } from '../../src/modules/cms/admin-content-service.js';
@@ -60,6 +61,28 @@ async function withServer(run: (baseUrl: string) => Promise<void>): Promise<void
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try { await run(`http://127.0.0.1:${address.port}`); } finally { await stopApiServer(server); }
 }
+
+test('protects the team upload and preview routes and streams published public portraits', async () => {
+  const assetId = 'd'.repeat(24); let uploads = 0;
+  const server = createApiServer({ database: { isReady: async () => true }, cmsAdminContent: {
+    accessTokens: accessTokens(), service: service(), photos: {
+      async validateAttach() {},
+      async upload(actor, source, mime) { assert.equal(actor.role, 'admin'); assert.equal(mime, 'image/png'); let bytes = 0; for await (const chunk of source) bytes += chunk.length; assert.equal(bytes, 3); uploads += 1; return { id: assetId, imageUrl: `/api/v1/public/team-photos/${assetId}` }; },
+      async open(id, actor) { assert.equal(id, assetId); if (actor) assert.equal(actor.role, 'admin'); return { mime: 'image/webp', stream: Readable.from('photo') }; }
+    }
+  } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 }); const base = `http://127.0.0.1:${address.port}/api/v1`;
+  try {
+    const url = `${base}/admin/content/team/photos`;
+    assert.equal((await fetch(url, { method: 'POST', headers: { 'content-type': 'image/png' }, body: 'png' })).status, 401);
+    assert.equal((await fetch(url, { method: 'POST', headers: { authorization: 'Bearer seeker-token', 'content-type': 'image/png' }, body: 'png' })).status, 403);
+    const uploaded = await fetch(url, { method: 'POST', headers: { authorization: 'Bearer admin-token', 'content-type': 'image/png' }, body: 'png' });
+    assert.equal(uploaded.status, 201); assert.equal(uploads, 1);
+    assert.equal((await fetch(`${url}/${assetId}`)).status, 401);
+    const preview = await fetch(`${url}/${assetId}`, { headers: { authorization: 'Bearer admin-token' } }); assert.equal(await preview.text(), 'photo');
+    const publicPhoto = await fetch(`${base}/public/team-photos/${assetId}`); assert.equal(publicPhoto.headers.get('content-type'), 'image/webp'); assert.equal(publicPhoto.headers.get('x-content-type-options'), 'nosniff'); assert.equal(publicPhoto.headers.get('cache-control'), 'no-store'); assert.equal(await publicPhoto.text(), 'photo');
+  } finally { await stopApiServer(server); }
+});
 
 test('protects and validates team deletion', async () => {
   await withServer(async baseUrl => {

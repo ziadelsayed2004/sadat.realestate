@@ -250,8 +250,8 @@ function TeamCard({ locale, copy, member }: { readonly locale: SupportedLocale; 
   const fallback = <div className="public-team__media-fallback"><UxStateView state="missing_image" title={copy.imageUnavailable} /></div>;
   return (
     <article className="public-team__card" data-team-category={presentation?.category ?? 'unknown'}>
-      <div className="public-team__media" data-media-state={presentation === undefined ? 'unavailable' : 'success'}>
-        {presentation === undefined ? fallback : <PublicMediaImage src={presentation.image} alt="" fallback={fallback} className="public-team__photo" loading="eager" />}
+      <div className="public-team__media" data-media-state={member.imageUrl === undefined ? 'unavailable' : 'success'}>
+        {member.imageUrl === undefined ? fallback : <PublicMediaImage src={member.imageUrl} alt="" fallback={fallback} className="public-team__photo" loading="eager" />}
       </div>
       <div className="public-team__card-body"><h2>{name}</h2><p className="public-team__role">{role}</p><p>{bio}</p></div>
     </article>

@@ -19,6 +19,7 @@ import {
   cmsAdminPopulationValuePutSchema,
   cmsAdminTeamMemberPutSchema,
   cmsAdminTeamMemberDeleteSchema,
+  cmsTeamPhotoSuccessEnvelopeSchema,
   type Article,
   type ArticleAdminListData,
   type ArticleAdminListQuery,
@@ -34,7 +35,7 @@ import {
   type CmsAdminContentData,
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
-import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, buildApiUrl, type ApiClientOptions } from '../contracts/index.ts';
 
 export const ADMIN_ARTICLES_ROUTE = '/admin/articles' as const;
 export const ADMIN_ARTICLE_CATEGORIES_ROUTE = '/admin/article-categories' as const;
@@ -247,6 +248,18 @@ export async function deleteAdminCmsTeamMember(input: unknown, options: CommonOp
 
 export function createAdminCmsContentSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    uploadTeamPhoto: async (file: File) => {
+      const bytes = await file.arrayBuffer();
+      return (await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_CMS_TEAM_ROUTE}/photos`, {
+        method: 'POST', body: bytes, responseSchema: cmsTeamPhotoSuccessEnvelopeSchema,
+        ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type }
+      }))).data.data;
+    },
+    loadTeamPhoto: (id: string, signal?: AbortSignal) => withCurrentSession({ ...options, ...(signal ? { signal } : {}) }, async () => {
+      const response = await fetch(buildApiUrl(options.apiOrigin, `${ADMIN_CMS_TEAM_ROUTE}/photos/${id}`), { ...requestOptions(options), ...(signal ? { signal } : {}), credentials: 'include' });
+      if (!response.ok) throw new ApiClientError('Team photo unavailable', { code: 'HTTP_ERROR', status: response.status });
+      return response.blob();
+    }),
     load: (namespace: CmsAdminContentNamespace, signal?: AbortSignal) => loadAdminCmsContent(namespace, { ...options, ...(signal === undefined ? {} : { signal }) }),
     update: (namespace: CmsAdminContentNamespace, input: unknown, signal?: AbortSignal) => updateAdminCmsContent(namespace, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     deleteTeam: (input: unknown) => deleteAdminCmsTeamMember(input, options)

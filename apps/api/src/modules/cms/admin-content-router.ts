@@ -9,16 +9,21 @@ import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { CmsAdminContentServiceError, type CmsAdminContentService } from './admin-content-service.js';
+import type { TeamPhotos } from './team-photos.js';
 
 export const CMS_ADMIN_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/content/:namespace', operationId: 'getAdminCmsContent' },
   { method: 'PUT', path: '/api/v1/admin/content/:namespace', operationId: 'putAdminCmsContent' },
-  { method: 'DELETE', path: '/api/v1/admin/content/team', operationId: 'deleteAdminCmsTeamMember' }
+  { method: 'DELETE', path: '/api/v1/admin/content/team', operationId: 'deleteAdminCmsTeamMember' },
+  { method: 'POST', path: '/api/v1/admin/content/team/photos', operationId: 'uploadAdminTeamPhoto' },
+  { method: 'GET', path: '/api/v1/admin/content/team/photos/:assetId', operationId: 'previewAdminTeamPhoto' },
+  { method: 'GET', path: '/api/v1/public/team-photos/:assetId', operationId: 'downloadPublicTeamPhoto' }
 ] as const;
 
 export interface CmsAdminContentRouterDependencies {
   service: CmsAdminContentService;
   accessTokens: AccessTokenService;
+  photos?: TeamPhotos;
 }
 
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
@@ -65,6 +70,28 @@ export function createCmsAdminContentRouter(dependencies: CmsAdminContentRouterD
     next();
   });
   router.use('/admin/content', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+
+  if (dependencies.photos) {
+    const photos = dependencies.photos;
+    router.post('/admin/content/team/photos', async (request, response) => {
+      try {
+        const photo = await photos.upload(response.locals.adminRbacClaims as AccessTokenClaims, request, request.get('content-type') ?? '', context(request));
+        response.status(201).json(toSuccessResponse(photo, requestId(request)));
+      } catch (error) { sendError(request, response, error); }
+    });
+    for (const path of ['/admin/content/team/photos/:assetId', '/public/team-photos/:assetId']) {
+      router.get(path, async (request, response) => {
+        try {
+          const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined);
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('Content-Type', photo.mime);
+          response.setHeader('X-Content-Type-Options', 'nosniff');
+          photo.stream.on('error', () => response.destroy());
+          photo.stream.pipe(response);
+        } catch (error) { sendError(request, response, error); }
+      });
+    }
+  }
 
   router.get('/admin/content/:namespace', async (request, response) => {
     try {

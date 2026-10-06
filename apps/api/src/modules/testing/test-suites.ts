@@ -87,6 +87,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/payments/service.test.ts',
     'tests/cms/settings.test.ts',
     'tests/cms/about-team.test.ts',
+    'tests/cms/team-photos.test.ts',
     'tests/cms/public-about-team-router.test.ts',
     'tests/cms/population-tips.test.ts',
     'tests/cms/admin-content.test.ts',

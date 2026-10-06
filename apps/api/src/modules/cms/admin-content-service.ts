@@ -141,6 +141,7 @@ export function createCmsAdminContentService(dependencies: {
   audit: Pick<AuditWriter, 'record'>;
   now?: () => Date;
   transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
+  validateTeamPhoto?: (id: string) => Promise<void>;
 }): CmsAdminContentService {
   const now = dependencies.now ?? (() => new Date());
   const allowed = (userId: string, permission: RbacPermission) => dependencies.authorization.authorize(userId, permission);
@@ -288,6 +289,12 @@ export function createCmsAdminContentService(dependencies: {
       }
       if (namespace === 'team') {
         const input = cmsAdminTeamMemberPutSchema.parse(unparsedInput) as CmsAdminTeamMemberPut;
+        const existing = 'id' in input ? await dependencies.repository.findTeam(input.id!) : undefined;
+        const photoChanged = input.photoAssetId !== undefined && input.photoAssetId !== existing?.photoAssetId;
+        if (photoChanged && input.photoAssetId) await dependencies.validateTeamPhoto?.(input.photoAssetId);
+        const imageChanges = photoChanged
+          ? { imageUrl: input.photoAssetId ? `/api/v1/public/team-photos/${input.photoAssetId}` : null }
+          : {};
         let row: StoredTeamMember;
         if ('id' in input && input.id !== undefined) {
           const update = input as Extract<CmsAdminTeamMemberPut, { id: string }>;
@@ -297,6 +304,7 @@ export function createCmsAdminContentService(dependencies: {
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.bio !== undefined ? { bio: update.bio } : {}),
             ...(update.photoAssetId !== undefined ? { photoAssetId: update.photoAssetId } : {}),
+            ...imageChanges,
             ...(update.order !== undefined ? { order: update.order } : {}),
             ...(update.active !== undefined ? { active: update.active } : {}),
             ...(update.status !== undefined ? { status: update.status } : {})
@@ -308,6 +316,7 @@ export function createCmsAdminContentService(dependencies: {
             key: create.key, name: create.name, title: create.title,
             ...(create.bio ? { bio: create.bio } : {}),
             ...(create.photoAssetId ? { photoAssetId: create.photoAssetId } : {}),
+            ...(imageChanges.imageUrl ? { imageUrl: imageChanges.imageUrl } : {}),
             order: create.order, active: create.active, status: create.status
           }, principal.userId, at));
         }

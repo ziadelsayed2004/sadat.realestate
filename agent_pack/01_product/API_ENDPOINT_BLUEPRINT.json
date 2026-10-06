@@ -2423,5 +2423,41 @@
     "purpose": "Delete a team member with version check",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/content/team/photos",
+    "module": "cms",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Upload and scan a team portrait, up to 10 MiB",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/content/team/photos/:assetId",
+    "module": "cms",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Preview a team portrait with content viewing permission",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/team-photos/:assetId",
+    "module": "cms",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Download a portrait attached to a published active team member",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

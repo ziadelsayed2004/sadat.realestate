@@ -10498,6 +10498,150 @@
           }
         }
       }
+    },
+    "/api/v1/admin/content/team/photos": {
+      "post": {
+        "operationId": "uploadAdminTeamPhoto",
+        "summary": "Upload and scan a team portrait, up to 10 MiB",
+        "responses": {
+          "201": {
+            "description": "Scanned portrait stored; save the team member to attach it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsTeamPhotoSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          },
+          "503": {
+            "description": "Storage or scanner unavailable"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/content/team/photos/{assetId}": {
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "previewAdminTeamPhoto",
+        "summary": "Preview a team portrait with content viewing permission",
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/public/team-photos/{assetId}": {
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "downloadPublicTeamPhoto",
+        "summary": "Download a portrait attached to a published active team member",
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -18516,30 +18660,90 @@
       },
       "AdminNotificationListSuccessEnvelope": {
         "allOf": [
-          { "$ref": "#/components/schemas/SuccessEnvelope" },
-          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AdminNotificationListData" } } }
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/AdminNotificationListData"
+              }
+            }
+          }
         ]
       },
       "AdminNotificationListData": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["items", "unreadCount", "page", "limit", "total"],
+        "required": [
+          "items",
+          "unreadCount",
+          "page",
+          "limit",
+          "total"
+        ],
         "properties": {
-          "items": { "type": "array", "maxItems": 100, "items": { "$ref": "#/components/schemas/NotificationData" } },
-          "unreadCount": { "type": "integer", "minimum": 0 },
-          "page": { "type": "integer", "minimum": 1 },
-          "limit": { "type": "integer", "minimum": 1, "maximum": 100 },
-          "total": { "type": "integer", "minimum": 0 },
+          "items": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/NotificationData"
+            }
+          },
+          "unreadCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
           "attention": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["counts", "total"],
+            "required": [
+              "counts",
+              "total"
+            ],
             "properties": {
-              "total": { "type": "integer", "minimum": 0 },
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
               "counts": {
                 "type": "object",
-                "propertyNames": { "enum": ["verification", "property-review", "project-review", "account-reports", "property-reports", "request-issues", "community", "community-reports", "contact-requests", "viewing-requests", "search-requests", "customer-requests", "advertising", "payment-review"] },
-                "additionalProperties": { "type": "integer", "minimum": 0 }
+                "propertyNames": {
+                  "enum": [
+                    "verification",
+                    "property-review",
+                    "project-review",
+                    "account-reports",
+                    "property-reports",
+                    "request-issues",
+                    "community",
+                    "community-reports",
+                    "contact-requests",
+                    "viewing-requests",
+                    "search-requests",
+                    "customer-requests",
+                    "advertising",
+                    "payment-review"
+                  ]
+                },
+                "additionalProperties": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             }
           }
@@ -20707,6 +20911,9 @@
             "items": {
               "$ref": "#/components/schemas/CmsAdminContentAction"
             }
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -23737,6 +23944,38 @@
             "$ref": "#/components/schemas/ResponseMeta"
           }
         }
+      },
+      "CmsTeamPhoto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "imageUrl"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "CmsTeamPhotoSuccessEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/CmsTeamPhoto"
+              }
+            }
+          }
+        ]
       }
     }
   }
