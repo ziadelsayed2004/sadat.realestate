@@ -112,6 +112,48 @@ test('banner text remains fully visible and its action fits inside the banner', 
   await card.screenshot({ path: test.info().outputPath('banner.png') });
 });
 
+test('developer directory logos stay inside the cover instead of behind the description', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await page.route('**/api/v1/public/developers?**', route => route.fulfill({ json: {
+    data: {
+      items: [{
+        id: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'developer_company', slug: 'approved-builder',
+        name: { ar: 'شركة AS للتطوير العقاري', en: 'AS Real Estate Development' },
+        description: { ar: 'شركة رائدة في تطوير العقارات بمدينة السادات منذ أكثر من خمسة عشر عامًا. تعمل الشركة في السوق العقاري بخبرة طويلة لتقديم أفضل الخدمات.', en: 'A leading Sadat City developer for more than fifteen years, providing experienced real estate services and consultation.' },
+        imageUrl: '/assets/clone/pub05-a.png', logoUrl: '/assets/clone/pub05-b.png',
+        locations: [{ ar: 'المنطقة الراقية والحي الأول', en: 'The upscale area and First District' }], verified: true,
+        projectCount: 2, propertyCount: 0
+      }], page: 1, limit: 20, total: 1
+    }, meta: { requestId: 'developer-directory-layout' }
+  } }));
+  await page.goto(`/developers?lang=${locale}`);
+  const card = page.locator('.public-developer-directory__card').first();
+  const logo = card.locator('.public-developer-directory__card-logo');
+  await expect(logo).toBeVisible();
+  await card.scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).complete)).toBe(true);
+  const geometry = await card.evaluate(element => {
+    const media = element.querySelector('.public-developer-directory__card-media')!.getBoundingClientRect();
+    const photo = element.querySelector('.public-developer-directory__card-logo')!.getBoundingClientRect();
+    const body = element.querySelector('.public-developer-directory__card-body')!.getBoundingClientRect();
+    return {
+      contained: photo.left >= media.left - 1 && photo.right <= media.right + 1 && photo.top >= media.top - 1 && photo.bottom <= media.bottom + 1,
+      bodyAfterMedia: body.top >= media.bottom - 1,
+      logoWidth: photo.width, logoHeight: photo.height,
+      overflow: document.documentElement.scrollWidth > window.innerWidth
+    };
+  });
+  expect(geometry.contained).toBe(true);
+  expect(geometry.bodyAfterMedia).toBe(true);
+  expect(geometry.logoWidth).toBeLessThanOrEqual(64);
+  expect(geometry.logoHeight).toBe(geometry.logoWidth);
+  expect(geometry.overflow).toBe(false);
+  await card.screenshot({ path: test.info().outputPath('developer-directory-card.png') });
+  await card.locator('.public-developer-directory__card-link').click();
+  await expect(page).toHaveURL(new RegExp(`/developers/approved-builder\\?lang=${locale}$`));
+});
+
 test('developer profile media and identity stay inside their responsive frame', async ({ page }) => {
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
   await page.route('**/api/v1/public/developers/approved-builder', route => route.fulfill({ json: {

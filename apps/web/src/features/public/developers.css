@@ -217,6 +217,28 @@
   block-size: 100%;
 }
 
+.public-developer-directory__card-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.public-developer-directory__card-media > .public-developer-directory__card-logo,
+.public-developer-directory__card-media > .public-developer-directory__card-logo-fallback {
+  position: absolute;
+  inset-block-end: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 2;
+  inline-size: 4rem;
+  block-size: 4rem;
+  min-block-size: 4rem;
+  object-fit: contain;
+  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+  background: var(--color-surface);
+  box-shadow: 0 0.25rem 0.75rem rgb(12 29 56 / 18%);
+  pointer-events: none;
+}
+
 .public-developer-directory__card-body {
   display: grid;
   gap: var(--space-md);
@@ -1434,32 +1456,6 @@
     block-size: 11rem;
   }
 
-  .public-developer-directory__card-logo {
-    position: absolute;
-    inset-block-end: 1rem;
-    inset-inline-end: 1rem;
-    z-index: 2;
-    inline-size: 4rem !important;
-    block-size: 4rem !important;
-    min-block-size: 4rem !important;
-    object-fit: cover;
-    border: 2px solid var(--color-surface);
-    border-radius: 50%;
-    box-shadow: 0 0.25rem 0.75rem rgb(12 29 56 / 18%);
-  }
-
-  .public-developer-directory__card-logo-fallback {
-    position: absolute;
-    inset-block-end: 1rem;
-    inset-inline-end: 1rem;
-    z-index: 2;
-    inline-size: 4rem;
-    block-size: 4rem;
-    border: 2px solid var(--color-surface);
-    border-radius: 50%;
-    background: var(--color-brand-soft);
-  }
-
   .public-developer-directory__card-body {
     grid-template-rows: auto auto auto 1fr;
     align-content: stretch;
@@ -2011,7 +2007,7 @@
 .public-developer-profile__project-details > a { display: inline-block; margin-inline-end: 1rem; color: var(--color-brand-primary); }
 
 @media (max-width: 48rem) {
-  .public-developer-directory__card { min-block-size: 0; }
+  .public-developer-directory__card { min-block-size: 0; grid-template-rows: 9rem minmax(0, auto); }
   .public-developer-directory__card-media,
   .public-developer-directory__card-media > img { block-size: 9rem; min-block-size: 9rem; }
 }
