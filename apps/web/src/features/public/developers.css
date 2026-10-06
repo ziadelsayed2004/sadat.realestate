@@ -1702,7 +1702,7 @@
   }
 
   .public-developer-profile__identity-copy > p {
-    margin-top: -0.125rem;
+    margin-top: 0.375rem;
   }
 
   .public-developer-profile__identity-locations {
@@ -1774,6 +1774,14 @@
    deliberate frame height so intrinsic banner dimensions cannot expand the
    identity region, then preserve the three-part identity composition. */
 @media (max-width: 64rem) {
+  .public-developer-profile {
+    --developer-text-direction: rtl;
+  }
+
+  .public-developer-profile:dir(ltr) {
+    --developer-text-direction: ltr;
+  }
+
   .public-developer-profile__content {
     width: min(calc(100% - 2rem), 60rem);
     padding-block: 2rem 3rem;
@@ -1798,7 +1806,7 @@
   .public-developer-profile__identity-actions {
     display: grid;
     gap: 0.5rem;
-    direction: rtl;
+    direction: var(--developer-text-direction);
   }
 
   .public-developer-profile__identity-action {
@@ -1823,13 +1831,15 @@
   .public-developer-profile__identity-copy,
   .public-developer-profile__identity-logo {
     min-inline-size: 0;
-    direction: rtl;
+    direction: var(--developer-text-direction);
+    text-align: start;
   }
 
   .public-developer-profile__identity-copy h1 {
     margin: 0;
     font-size: 1.5rem;
     line-height: 1.4;
+    overflow-wrap: anywhere;
   }
 
   .public-developer-profile__identity-copy > p {
@@ -1848,6 +1858,14 @@
   .public-developer-profile__identity-logo-check {
     inset-block-start: 5.25rem;
   }
+
+  .public-developer-profile__back {
+    align-items: center;
+    gap: 0.375rem;
+    min-inline-size: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 48rem) {
@@ -1864,7 +1882,7 @@
   }
 
   .public-developer-profile__identity {
-    grid-template-columns: minmax(0, 1fr) 5rem;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.875rem;
     padding: 1rem;
   }
@@ -1872,12 +1890,17 @@
   .public-developer-profile__identity-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
+  }
+
+  .public-developer-profile__identity-action {
+    padding-block: 0.5rem;
+    line-height: 1.4;
   }
 
   .public-developer-profile__identity-copy {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
   }
 
   .public-developer-profile__identity-copy h1 {
@@ -1885,8 +1908,12 @@
   }
 
   .public-developer-profile__identity-logo {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 1rem;
   }
 
   .public-developer-profile__identity-logo > img,
@@ -1897,6 +1924,7 @@
 
   .public-developer-profile__identity-logo-check {
     inset-block-start: 4.35rem;
+    inset-inline-start: 4.35rem;
   }
 
   .public-developer-profile__identity-locations {

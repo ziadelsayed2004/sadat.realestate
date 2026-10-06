@@ -190,3 +190,45 @@ test('developer profile media and identity stay inside their responsive frame', 
   expect(geometry.tabsAfterHero).toBe(true);
   expect(geometry.overflow).toBe(false);
 });
+
+test('developer profile header keeps long text, logo, and back link separate in both languages', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await page.route('**/api/v1/public/developers/delta-real-estate-group', route => route.fulfill({ json: {
+    data: {
+      id: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'developer_company', slug: 'delta-real-estate-group',
+      name: { ar: 'مجموعة دلتا للتطوير والاستثمار العقاري', en: 'Delta Real Estate Group' },
+      description: { ar: 'عشرون عامًا من الخبرة في السوق العقاري المصري.', en: 'Twenty years of experience in the Egyptian real-estate market.' },
+      imageUrl: '/assets/clone/pub05-a.png', logoUrl: '/assets/clone/pub05-b.png',
+      locations: [{ ar: 'المنطقة الصناعية', en: 'Industrial District' }, { ar: 'المنطقة الراقية', en: 'Upscale District' }], verified: true,
+      projectCount: 0, propertyCount: 0, projects: [], properties: [],
+      stats: { publishedProjects: 0, availableProperties: 0, saleProperties: 0, rentalProperties: 0 }
+    }, meta: { requestId: 'developer-header-layout' }
+  } }));
+  await page.goto(`/developers/delta-real-estate-group?lang=${locale}`);
+  const hero = page.locator('.public-developer-profile__hero');
+  await expect(hero.locator('h1')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const checkLayout = async () => {
+    const geometry = await hero.evaluate(element => {
+      const identity = element.querySelector('.public-developer-profile__identity')!.getBoundingClientRect();
+      const elements = [...element.querySelectorAll('.public-developer-profile__identity-logo > img, .public-developer-profile__back, .public-developer-profile__identity-copy h1, .public-developer-profile__identity-copy > p, .public-developer-profile__badges > span, .public-developer-profile__identity-locations > span, .public-developer-profile__identity-action')];
+      const rectangles = elements.map(child => child.getBoundingClientRect());
+      return {
+        contained: rectangles.every(rect => rect.left >= identity.left - 1 && rect.right <= identity.right + 1 && rect.top >= identity.top - 1 && rect.bottom <= identity.bottom + 1),
+        separated: rectangles.every((rect, index) => rectangles.slice(index + 1).every(other => rect.right <= other.left + 1 || other.right <= rect.left + 1 || rect.bottom <= other.top + 1 || other.bottom <= rect.top + 1)),
+        textDirection: getComputedStyle(element.querySelector('.public-developer-profile__identity-copy')!).direction,
+        overflow: document.documentElement.scrollWidth > window.innerWidth
+      };
+    });
+    expect(geometry).toMatchObject({ contained: true, separated: true, overflow: false });
+    if ((page.viewportSize()?.width ?? 0) <= 1024) expect(geometry.textDirection).toBe(locale === 'en' ? 'ltr' : 'rtl');
+  };
+  await checkLayout();
+  await hero.screenshot({ path: test.info().outputPath('developer-profile-header.png') });
+  if ((page.viewportSize()?.width ?? 0) <= 768) {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await checkLayout();
+  }
+  await page.locator('.public-developer-profile__identity-action--primary').click();
+  await expect(page).toHaveURL(/#developer-contact$/u);
+});
