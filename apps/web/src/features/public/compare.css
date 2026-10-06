@@ -207,6 +207,42 @@
   font-weight: var(--font-weight-bold);
 }
 
+.public-property-comparison__source-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-inline-size: 0;
+}
+
+.public-property-comparison__source-content > img,
+.public-property-comparison__source-image-fallback {
+  display: block;
+  inline-size: 2rem;
+  block-size: 2rem;
+  flex: 0 0 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-surface-soft);
+}
+
+.public-property-comparison__source-content > span:last-child {
+  display: grid;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.public-property-comparison__source-content strong,
+.public-property-comparison__source-content small {
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+.public-property-comparison__source-content small {
+  color: var(--color-text-secondary);
+}
+
 .public-property-comparison__card-actions {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -518,35 +554,9 @@
     line-height: 1.125rem;
   }
 
-  .public-property-comparison__source-content {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-  }
-
-  .public-property-comparison__source-content > img,
-  .public-property-comparison__source-image-fallback {
-    inline-size: 2rem;
-    block-size: 2rem;
-    flex: 0 0 2rem;
-    border-radius: 50%;
-    object-fit: cover;
-    background: var(--color-surface-soft);
-  }
-
-  .public-property-comparison__source-content > span:last-child {
-    display: grid;
-    gap: 0.125rem;
-  }
-
   .public-property-comparison__source-content strong,
   .public-property-comparison__source-content small {
     font: inherit;
-  }
-
-  .public-property-comparison__source-content small {
-    color: var(--color-text-secondary);
   }
 
   .public-property-comparison__card .ui-property-card__action {

@@ -1,5 +1,56 @@
 import { expect, test } from '@playwright/test';
+import { PUBLIC_PROPERTY_COMPARISON_FIELDS } from '@sadat-real-estate/contracts';
 import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures.ts';
+
+test('comparison cards keep source photos and long names separate with readable source types', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  const ids = ['aaaaaaaaaaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbbbbbbbbbb'];
+  await page.route('**/api/v1/public/properties/compare', route => route.fulfill({ json: {
+    data: {
+      items: ids.map((id, index) => ({
+        id, slug: `comparison-layout-${index}`, kind: 'property', transactionType: 'sale',
+        name: { ar: 'شقة فاخرة في الحي الأول', en: 'Luxury apartment in the First District' },
+        locationName: { ar: 'الحي الأول', en: 'First District' },
+        price: { amount: 1900000, currency: 'EGP' },
+        imageUrl: '/assets/canonical/public/listing-property-rental.png',
+        sourceName: { ar: 'شركة السادات للتطوير والاستثمار والتسويق العقاري', en: 'Sadat Real Estate Development and Property Investment' },
+        sourceType: 'developer_company',
+        sourceImageUrl: index === 0 ? '/assets/clone/pub05-b.png' : '/missing-comparison-source.png'
+      })),
+      fields: PUBLIC_PROPERTY_COMPARISON_FIELDS
+    }, meta: { requestId: 'comparison-source-layout' }
+  } }));
+  await page.route('**/missing-comparison-source.png', route => route.fulfill({ status: 404, body: '' }));
+  await page.goto(`/compare?lang=${locale}&propertyIds=${ids[0]}&propertyIds=${ids[1]}`);
+  const cards = page.locator('.public-property-comparison__card');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.nth(1).locator('.public-property-comparison__source-image-fallback')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const checkLayout = async () => {
+    const geometry = await cards.evaluateAll(elements => elements.map(card => {
+      const bounds = card.getBoundingClientRect();
+      const source = card.querySelector('.public-property-comparison__source-content')!;
+      const photo = source.firstElementChild!.getBoundingClientRect();
+      const text = source.lastElementChild!.getBoundingClientRect();
+      const name = source.querySelector('strong')!.getBoundingClientRect();
+      const kind = source.querySelector('small')!.getBoundingClientRect();
+      return {
+        photoWidth: photo.width, photoHeight: photo.height,
+        separated: photo.right + 4 <= text.left || text.right + 4 <= photo.left,
+        labelBelowName: kind.top >= name.bottom,
+        contained: [photo, text, ...[...card.querySelectorAll('.public-property-comparison__card-actions > *')].map(child => child.getBoundingClientRect())].every(rect => rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1 && rect.bottom <= bounds.bottom + 1)
+      };
+    }));
+    expect(geometry).toEqual([{ photoWidth: 32, photoHeight: 32, separated: true, labelBelowName: true, contained: true }, { photoWidth: 32, photoHeight: 32, separated: true, labelBelowName: true, contained: true }]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  };
+  await checkLayout();
+  await cards.first().screenshot({ path: test.info().outputPath('comparison-source-card.png') });
+  if ((page.viewportSize()?.width ?? 0) <= 780) {
+    await page.setViewportSize({ width: 320, height: 740 });
+    await checkLayout();
+  }
+});
 
 test('related property source photo, long name, and verification badge do not overlap', async ({ page }) => {
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
