@@ -384,6 +384,38 @@
   gap: var(--space-sm);
 }
 
+.public-property-details__viewing-dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+.public-property-details__viewing-dialog .ui-modal__header,
+.public-property-details__viewing-dialog .ui-modal__footer {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.public-property-details__viewing-dialog .ui-modal__header > div {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.public-property-details__viewing-dialog .ui-modal__header h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+.public-property-details__viewing-dialog .ui-modal__body {
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: var(--space-md);
+}
+
+.public-property-details__viewing-form small {
+  color: var(--color-text-secondary);
+}
+
 .public-property-details__contact form {
   margin-block-start: var(--space-xl);
 }

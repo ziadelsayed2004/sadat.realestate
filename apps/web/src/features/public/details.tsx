@@ -473,6 +473,19 @@ function RelatedProperties({
 
 type ActionState = 'idle' | 'submitting' | 'success' | 'permission' | 'error';
 
+const maximumViewingDelay = 366 * 24 * 60 * 60 * 1000;
+
+function localDateTime(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function publicOnlyDetails(data: PublicPropertyDetailsData): PublicPropertyDetailsData {
+  const { contact, ...publicData } = data;
+  void contact;
+  return publicData;
+}
+
 function ActionFeedback({
   state,
   copy,
@@ -488,7 +501,7 @@ function ActionFeedback({
   if (state === 'permission') {
     return <UxStateView state="permission" title={copy.actionPermissionTitle} message={copy.actionPermissionBody}><a href={loginUrl(url)}>{copy.actionPermissionLink}</a></UxStateView>;
   }
-  return <UxStateView state="error" title={copy.actionErrorTitle} message={copy.actionErrorBody}><button type="button">{copy.retryLabel}</button></UxStateView>;
+  return <UxStateView state="error" title={copy.actionErrorTitle} message={copy.actionErrorBody} />;
 }
 
 function RequestPanel({
@@ -514,11 +527,23 @@ function RequestPanel({
   const [contactState, setContactState] = useState<ActionState>('idle');
   const [viewingOpen, setViewingOpen] = useState(false);
   const [requestedAt, setRequestedAt] = useState('');
-  const [timezone, setTimezone] = useState('');
+  const [timezone, setTimezone] = useState('UTC');
   const [note, setNote] = useState('');
   const [viewingValidation, setViewingValidation] = useState(false);
   const [viewingState, setViewingState] = useState<ActionState>('idle');
+  const viewingFeedback = useRef<HTMLDivElement>(null);
   const [saveState, setSaveState] = useState<ActionState>('idle');
+  useEffect(() => {
+    // datetime-local uses the device's local clock, so send its matching IANA zone.
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
+  }, []);
+  useEffect(() => {
+    if (viewingOpen && ['success', 'error', 'permission'].includes(viewingState)) viewingFeedback.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [viewingOpen, viewingState]);
+  const viewingDate = new Date(requestedAt);
+  const timezoneName = new Intl.DateTimeFormat(locale, { timeZone: timezone, timeZoneName: 'long' })
+    .formatToParts(Number.isNaN(viewingDate.getTime()) ? new Date() : viewingDate)
+    .find(part => part.type === 'timeZoneName')?.value ?? timezone;
   const saveProperty = async () => {
     if (!actions.saveProperty || saveState === 'submitting') return;
     setSaveState('submitting');
@@ -565,8 +590,10 @@ function RequestPanel({
 
   const submitViewing = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (viewingState === 'submitting' || viewingState === 'success') return;
     const parsedDate = new Date(requestedAt);
-    if (!requestedAt || !timezone.trim() || Number.isNaN(parsedDate.getTime()) || parsedDate.getTime() <= Date.now()) {
+    const now = Date.now();
+    if (!requestedAt || Number.isNaN(parsedDate.getTime()) || parsedDate.getTime() <= now || parsedDate.getTime() > now + maximumViewingDelay) {
       setViewingValidation(true);
       return;
     }
@@ -580,10 +607,6 @@ function RequestPanel({
         ...(note.trim().length === 0 ? {} : { note: note.trim() })
       });
       setViewingState('success');
-      setViewingOpen(false);
-      setRequestedAt('');
-      setTimezone('');
-      setNote('');
     } catch (error) {
       setViewingState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
     }
@@ -597,7 +620,7 @@ function RequestPanel({
         {saveState === 'permission' ? <p role="alert">{copy.savePermission} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
         {saveState === 'error' ? <p role="alert">{copy.saveError}</p> : null}
       </> : null}
-      <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { setViewingState('idle'); setViewingOpen(true); }}>{copy.requestViewing}</Button>
+      <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { if (viewingState !== 'success') setViewingState('idle'); setViewingValidation(false); setViewingOpen(true); }}>{copy.requestViewing}</Button>
       <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
@@ -631,8 +654,8 @@ function RequestPanel({
         )}
         <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{copy.contactWhatsapp}</span></a>
       </section>
-      {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
       <Modal
+        className="public-property-details__viewing-dialog"
         open={viewingOpen}
         title={copy.viewingTitle}
         description={copy.viewingBody}
@@ -640,18 +663,23 @@ function RequestPanel({
         onClose={() => setViewingOpen(false)}
         footer={(
           <>
-            <Button type="button" variant="ghost" onClick={() => setViewingOpen(false)}>{copy.cancel}</Button>
-            <Button type="submit" form="public-property-viewing-form" loading={viewingState === 'submitting'}>{viewingState === 'submitting' ? copy.actionLoading : copy.submitViewing}</Button>
+            <Button type="button" variant="ghost" onClick={() => setViewingOpen(false)}>{viewingState === 'success' ? copy.close : copy.cancel}</Button>
+            <Button type="submit" form="public-property-viewing-form" disabled={viewingState === 'success'} loading={viewingState === 'submitting'}>{viewingState === 'submitting' ? copy.actionLoading : copy.submitViewing}</Button>
           </>
         )}
       >
-        <form id="public-property-viewing-form" className="public-property-details__viewing-form" onSubmit={submitViewing}>
+        <form id="public-property-viewing-form" className="public-property-details__viewing-form" noValidate onSubmit={submitViewing}>
+          <div ref={viewingFeedback}>
+            {viewingState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
+            {viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
+          </div>
           <label htmlFor="public-property-viewing-requested-at">{copy.requestedAt}</label>
-          <input id="public-property-viewing-requested-at" name="requestedAt" type="datetime-local" required value={requestedAt} onChange={event => setRequestedAt(event.target.value)} />
+          <input id="public-property-viewing-requested-at" name="requestedAt" type="datetime-local" dir="ltr" required min={localDateTime(new Date(Date.now() + 60_000))} max={localDateTime(new Date(Date.now() + maximumViewingDelay))} readOnly={viewingState === 'success'} value={requestedAt} onChange={event => { setRequestedAt(event.target.value); setViewingValidation(false); }} />
           <label htmlFor="public-property-viewing-timezone">{copy.timezone}</label>
-          <input id="public-property-viewing-timezone" name="timezone" type="text" required placeholder={copy.timezonePlaceholder} value={timezone} onChange={event => setTimezone(event.target.value)} />
+          <input id="public-property-viewing-timezone" name="timezone" type="text" readOnly value={timezoneName} aria-describedby="public-property-viewing-timezone-help" />
+          <small id="public-property-viewing-timezone-help">{copy.timezonePlaceholder}</small>
           <label htmlFor="public-property-viewing-note">{copy.note}</label>
-          <textarea id="public-property-viewing-note" name="note" rows={4} placeholder={copy.notePlaceholder} value={note} onChange={event => setNote(event.target.value)} />
+          <textarea id="public-property-viewing-note" name="note" rows={3} readOnly={viewingState === 'success'} placeholder={copy.notePlaceholder} value={note} onChange={event => setNote(event.target.value)} />
           {viewingValidation ? <p className="public-property-details__validation" role="alert">{copy.viewingValidation}</p> : null}
         </form>
       </Modal>
@@ -718,10 +746,13 @@ export function PublicPropertyDetails({
   const [data, setData] = useState<PublicPropertyDetailsData | undefined>(initialData);
   const [view, setView] = useState<PublicPropertyDetailsViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const [contactRefresh, setContactRefresh] = useState<{ slug: string; authorizationHeader: string }>();
   const authorizationHeader = authClient?.getAuthorizationHeader();
   const hasRequestedData = useRef(false);
   const [dataScope, setDataScope] = useState({ slug, authorizationHeader: undefined as string | undefined });
+  const currentPage = useRef({ slug: dataScope.slug, view });
+  currentPage.current = { slug: dataScope.slug, view };
   const resolvedLoader = useMemo(
     () => load === defaultPublicPropertyDetailsLoader && authorizationHeader !== undefined
       ? createPublicPropertyDetailsLoader({ authorizationHeader })
@@ -743,7 +774,10 @@ export function PublicPropertyDetails({
     }
     const controller = new AbortController();
     hasRequestedData.current = true;
-    setView('loading');
+    setRefreshFailed(false);
+    // Session restoration or token renewal must not remove an already open form.
+    const retainingPage = currentPage.current.slug === slug && currentPage.current.view === 'success';
+    if (!retainingPage) setView('loading');
     void resolvedLoader(slug, controller.signal)
       .then(nextData => {
         if (controller.signal.aborted) return;
@@ -753,7 +787,9 @@ export function PublicPropertyDetails({
       })
       .catch(error => {
         if (controller.signal.aborted || (error instanceof ApiClientError && error.code === 'ABORTED')) return;
-        setView(errorState(error));
+        if (errorState(error) === 'permission') setData(current => current === undefined ? undefined : publicOnlyDetails(current));
+        if (retainingPage && errorState(error) !== 'not_found') setRefreshFailed(true);
+        else setView(errorState(error));
       });
     return () => controller.abort();
   }, [attempt, authorizationHeader, initialData, resolvedLoader, slug]);
@@ -770,12 +806,19 @@ export function PublicPropertyDetails({
   }, [authClient, authorizationHeader, contactRefresh, resolvedLoader, slug]);
 
   const retry = () => setAttempt(value => value + 1);
-  const visibleView = view === 'success' && (dataScope.slug !== slug || dataScope.authorizationHeader !== authorizationHeader) ? 'loading' : view;
+  const visibleView = view === 'success' && dataScope.slug !== slug ? 'loading' : view;
+  const visibleData = useMemo(() => {
+    if (data === undefined || dataScope.authorizationHeader === authorizationHeader) return data;
+    // Hide protected contact details immediately while changing authorization,
+    // but keep the public page and the visitor's draft mounted.
+    return publicOnlyDetails(data);
+  }, [authorizationHeader, data, dataScope.authorizationHeader]);
 
   return (
     <div className="public-property-details" data-page="public-property-details" data-details-state={visibleView}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
-      {visibleView === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined || slug === undefined ? undefined : () => setContactRefresh({ slug, authorizationHeader })} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
+      {refreshFailed ? <p className="public-property-details__validation" role="alert">{copy.errorBody} <button type="button" onClick={retry}>{copy.retryLabel}</button></p> : null}
+      {visibleView === 'success' && visibleData !== undefined ? <SuccessDetails data={visibleData} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined || slug === undefined ? undefined : () => setContactRefresh({ slug, authorizationHeader })} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

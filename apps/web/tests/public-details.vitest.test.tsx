@@ -192,6 +192,40 @@ describe('public property details', () => {
     expect(screen.getByRole('link', { name: locale === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' })).toHaveAttribute('href', expect.stringContaining('https://wa.me/'));
   });
 
+  it('keeps an entered draft mounted while the session token changes and its read fails', async () => {
+    const credentials = { token: undefined as string | undefined };
+    let failRead: ((error: Error) => void) | undefined;
+    const load = vi.fn(() => new Promise<typeof detailsData>((_resolve, reject) => { failRead = reject; }));
+    const authClient = { getAuthorizationHeader: () => credentials.token };
+    const page = () => <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={load} />;
+    const result = renderWithLocale(page(), { locale: 'en' });
+    const input = screen.getByLabelText('Full name');
+    fireEvent.change(input, { target: { value: 'Keep this draft' } });
+    credentials.token = 'Bearer restored-token';
+    result.rerender(page());
+    await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
+    expect(screen.getByLabelText('Full name')).toBe(input);
+    expect(input).toHaveValue('Keep this draft');
+    failRead?.(new Error('Temporary network error'));
+    await screen.findByRole('alert');
+    expect(screen.getByLabelText('Full name')).toBe(input);
+    expect(input).toHaveValue('Keep this draft');
+  });
+
+  it('removes protected contacts when a retained page read loses permission', async () => {
+    const authorized = publicPropertyDetailsSchema.parse({ ...detailsData, contact: { phone: '+201234567890' } });
+    const authClient = { getAuthorizationHeader: () => 'Bearer seeker' };
+    const load = vi.fn().mockResolvedValue(authorized);
+    const result = renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={load} />, { locale: 'en' });
+    await screen.findByRole('link', { name: '+201234567890' });
+    fireEvent.change(screen.getByLabelText('Full name'), { target: { value: 'Keep this draft' } });
+    const revokedLoad = vi.fn().mockRejectedValue(new ApiClientError('forbidden', { code: 'HTTP_ERROR', status: 403 }));
+    result.rerender(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={revokedLoad} />);
+    await screen.findByRole('alert');
+    expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Full name')).toHaveValue('Keep this draft');
+  });
+
   it('uses a published property cover as the gallery when no ready media rows exist', () => {
     const fallbackImage = '/assets/canonical/public/listing-property-duplex.png';
     const fallbackData = publicPropertyDetailsSchema.parse({
@@ -250,15 +284,31 @@ describe('public property details', () => {
     }));
 
     fireEvent.click(screen.getByRole('button', { name: copy.requestViewing }));
-    const requestedAt = '2099-01-01T10:00';
+    const requestedAt = new Date(Date.now() + 86_400_000).toISOString().slice(0, 16);
     fireEvent.change(screen.getByLabelText(copy.requestedAt), { target: { value: requestedAt } });
-    fireEvent.change(screen.getByLabelText(copy.timezone), { target: { value: 'Africa/Cairo' } });
+    expect(screen.getByLabelText(copy.timezone)).toHaveAttribute('readonly');
     fireEvent.click(screen.getByRole('button', { name: copy.submitViewing }));
     await waitFor(() => expect(submitViewing).toHaveBeenCalledWith({
       propertyId,
       requestedAt: expect.any(String),
-      timezone: 'Africa/Cairo'
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
     }));
+    expect(screen.getByRole('dialog')).toHaveTextContent(copy.actionSuccessTitle);
+    expect(screen.getByLabelText(copy.requestedAt)).toHaveValue(requestedAt);
+    expect(screen.getByRole('button', { name: copy.submitViewing })).toBeDisabled();
+  });
+
+  it.each(['2000-01-01T10:00', '2099-01-01T10:00', ''])('rejects an out-of-range viewing date %s without losing the note', async requestedAt => {
+    const submitViewing = vi.fn();
+    const copy = getPublicPropertyDetailsCopy('en');
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={{ submitContact: vi.fn(), submitViewing }} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.requestViewing }));
+    fireEvent.change(screen.getByLabelText(copy.requestedAt), { target: { value: requestedAt } });
+    fireEvent.change(screen.getByLabelText(copy.note), { target: { value: 'Keep my note' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitViewing }));
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.viewingValidation);
+    expect(screen.getByLabelText(copy.note)).toHaveValue('Keep my note');
+    expect(submitViewing).not.toHaveBeenCalled();
   });
 
   it('sends the current authenticated session and complete lead fields to the contact API', async () => {

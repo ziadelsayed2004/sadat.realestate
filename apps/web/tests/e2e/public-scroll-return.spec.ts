@@ -74,3 +74,29 @@ test('return from property details preserves the homepage position', async ({ pa
   await returnPosition(page, saved);
   await expect(page).toHaveURL(new RegExp(`/\\?lang=${language}$`));
 });
+
+test('a new property page starts at the top even while its details are still loading', async ({ page }) => {
+  const language = locale();
+  await page.goto(`/properties?lang=${language}`);
+  const link = page.locator('.public-property-listing__card .ui-property-card__title').nth(2);
+  await link.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  const target = new URL((await link.getAttribute('href'))!, page.url());
+  const slug = target.pathname.split('/').at(-1)!;
+  let reading = false;
+  let release: (() => void) | undefined;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route(`**/api/v1/public/properties/${slug}`, async route => {
+    reading = true;
+    await gate;
+    const item = publicPropertyListFixture().data.items[0]!;
+    await route.fulfill({ json: { data: { id: item.id, kind: item.kind, name: item.name, transactionType: item.transactionType, slug, source: { sourceType: 'developer_company' }, seo: { title: item.name, slug }, project: null, media: [], features: [], services: [], relatedProperties: [] }, meta: { requestId: 'slow-property' } } });
+  });
+  await link.click();
+  await expect.poll(() => reading).toBe(true);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  release?.();
+  await expect(page.locator('[data-details-state="success"]')).toBeAttached();
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});

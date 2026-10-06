@@ -28,6 +28,9 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
 
   const positionPage = (target: URL, returning: boolean) => {
     cancelRestoration();
+    // New pages start at the top as soon as React commits, including while their
+    // data/fonts are loading. Only history returns restore an earlier position.
+    if (!returning) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     const saved = publicPageState()?.scroll ?? { x: 0, y: 0 };
     restoring = true;
     const deadline = performance.now() + 10_000;
@@ -118,7 +121,10 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
       return;
     }
     // Same-document anchors must remain native: no fetch, no masking, no reload.
-    if (target.pathname === current.pathname && target.search === current.search) return;
+    if (target.pathname === current.pathname && target.search === current.search) {
+      cancelRestoration();
+      return;
+    }
     event.preventDefault();
     savePosition();
     cancelRestoration();
