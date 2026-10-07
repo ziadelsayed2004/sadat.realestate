@@ -324,6 +324,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
   ];
   const phone = data.contactPhone;
   const whatsapp = safePublicUrl(data.whatsappUrl);
+  const hasContactDetails = Boolean(phone || data.contactAddress || whatsapp);
   return (
     <aside className="public-developer-profile__aside">
       <section className="public-developer-profile__activity" aria-labelledby="developer-activity-title">
@@ -339,7 +340,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
         {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
         {whatsapp ? <a href={whatsapp}><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
-        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{copy.sendInquiry}</a>
+        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{hasContactDetails ? copy.sendInquiry : copy.profileContact}</a>
       </section>
       <div className="public-developer-profile__advisory"><ProfileIcon name="shield" /><div><strong>{copy.advisoryTitle}</strong><p>{copy.advisoryBody}</p></div></div>
     </aside>

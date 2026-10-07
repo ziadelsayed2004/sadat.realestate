@@ -31,6 +31,45 @@ function click(href: string, options: MouseEventInit = {}): boolean {
 const html = '<html><head><title>Articles</title><link rel="canonical" href="http://localhost/articles"></head><body><div id="app"></div><script>window.untrustedExecuted = true;</script></body></html>';
 
 describe('public navigation', () => {
+  it('waits for async content before positioning an initial fragment without resetting to the top', () => {
+    window.history.replaceState({}, '', '/developers/builder?lang=ar#developer-contact');
+    document.body.innerHTML = '<div id="app"><div aria-busy="true"></div></div>';
+    Object.defineProperty(document.documentElement, 'scrollHeight', { configurable: true, value: 3000 });
+    const scroll = vi.fn(); const anchorScroll = vi.fn();
+    const frames = new Map<number, FrameRequestCallback>(); let frameId = 0;
+    const tick = () => { const frame = frames.entries().next().value; if (frame) { frames.delete(frame[0]); frame[1](0); } };
+    vi.stubGlobal('scrollTo', scroll);
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { frames.set(++frameId, callback); return frameId; });
+    vi.stubGlobal('cancelAnimationFrame', (id: number) => frames.delete(id));
+    stop = installPublicNavigation(vi.fn());
+    for (let index = 0; index < 5; index++) tick();
+    expect(scroll).not.toHaveBeenCalled(); expect(anchorScroll).not.toHaveBeenCalled();
+    document.querySelector('[aria-busy]')?.remove();
+    const contact = document.createElement('section'); contact.id = 'developer-contact'; contact.scrollIntoView = anchorScroll;
+    document.getElementById('app')?.append(contact);
+    for (let index = 0; index < 4; index++) tick();
+    expect(anchorScroll).toHaveBeenCalled(); expect(scroll).not.toHaveBeenCalled();
+  });
+
+  it('does not override the native fragment scroll when popstate arrives before the browser jumps', () => {
+    window.history.replaceState({}, '', '/developers/builder?lang=ar');
+    const scroll = vi.fn(); const frames = vi.fn(); const fetcher = vi.fn();
+    vi.stubGlobal('scrollY', 700);
+    vi.stubGlobal('scrollTo', scroll); vi.stubGlobal('requestAnimationFrame', frames); vi.stubGlobal('fetch', fetcher);
+    stop = installPublicNavigation(vi.fn());
+    expect(click('#developer-contact')).toBe(false);
+    expect(publicPageState()?.scroll.y).toBe(700);
+    // The new native fragment entry has no application state. It dispatches
+    // popstate first, while scrollY still points at the previous section.
+    window.history.pushState(null, '', '#developer-contact');
+    window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+    expect(scroll).not.toHaveBeenCalled(); expect(frames).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
+    expect(window.history.state).toBeNull();
+    vi.stubGlobal('scrollY', 1900);
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    expect(publicPageState()?.scroll.y).toBe(1900);
+  });
+
   it('leaves same-document anchors, modified clicks, auth, and external links to the browser', () => {
     window.history.replaceState({}, '', '/developers/builder?lang=ar');
     const fetcher = vi.fn();

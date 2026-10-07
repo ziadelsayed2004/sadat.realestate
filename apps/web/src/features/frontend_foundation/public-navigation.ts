@@ -11,6 +11,7 @@ function publicUrl(url: URL): boolean {
 export function installPublicNavigation(onNavigate: (source: Document, url: URL) => void): () => void {
   let pathname = window.location.pathname;
   let pending: AbortController | undefined;
+  const hadPageState = publicPageState() !== undefined;
   ensurePublicPageState();
   let cancelRestoration = () => {};
   let restoring = false;
@@ -26,11 +27,11 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     scrollTimer = setTimeout(savePosition, 120);
   };
 
-  const positionPage = (target: URL, returning: boolean) => {
+  const positionPage = (target: URL, returning: boolean, resetBeforeReady = true) => {
     cancelRestoration();
     // New pages start at the top as soon as React commits, including while their
     // data/fonts are loading. Only history returns restore an earlier position.
-    if (!returning) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (!returning && resetBeforeReady) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     const saved = publicPageState()?.scroll ?? { x: 0, y: 0 };
     restoring = true;
     const deadline = performance.now() + 10_000;
@@ -123,6 +124,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     // Same-document anchors must remain native: no fetch, no masking, no reload.
     if (target.pathname === current.pathname && target.search === current.search) {
       cancelRestoration();
+      savePosition();
       return;
     }
     event.preventDefault();
@@ -135,9 +137,13 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     pending?.abort();
     cancelRestoration();
     clearTimeout(scrollTimer);
-    ensurePublicPageState();
     delete document.documentElement.dataset.navigationPending;
     const target = new URL(window.location.href);
+    // A native fragment click creates a same-document entry without our state.
+    // Its popstate fires before the browser scrolls to the fragment. Restoring
+    // the current position here would undo that jump on the following frames.
+    if (target.pathname === pathname && publicPageState() === undefined) return;
+    ensurePublicPageState();
     // Listing filters own their query history; do not reload their component.
     if (target.pathname === pathname) {
       positionPage(target, true);
@@ -149,6 +155,9 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
 
   document.addEventListener('click', click);
   window.addEventListener('popstate', popstate);
+  // Commit the new fragment position before an immediate Back/Forward action;
+  // the normal scroll debounce may not have run when the next entry is opened.
+  window.addEventListener('hashchange', savePosition);
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('pagehide', savePosition);
   const onPageShow = (event: PageTransitionEvent) => {
@@ -156,7 +165,11 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
   };
   window.addEventListener('pageshow', onPageShow);
   const navigation = performance.getEntriesByType?.('navigation')[0] as PerformanceNavigationTiming | undefined;
-  if (publicUrl(new URL(window.location.href)) && (navigation?.type === 'back_forward' || navigation?.type === 'reload')) positionPage(new URL(window.location.href), true);
+  const initialUrl = new URL(window.location.href);
+  if (publicUrl(initialUrl)) {
+    if (navigation?.type === 'back_forward' || navigation?.type === 'reload') positionPage(initialUrl, hadPageState, false);
+    else if (initialUrl.hash) positionPage(initialUrl, false, false);
+  }
   return () => {
     savePosition();
     cancelRestoration();
@@ -166,6 +179,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     delete document.documentElement.dataset.navigationPending;
     document.removeEventListener('click', click);
     window.removeEventListener('popstate', popstate);
+    window.removeEventListener('hashchange', savePosition);
     window.removeEventListener('scroll', onScroll);
     window.removeEventListener('pagehide', savePosition);
     window.removeEventListener('pageshow', onPageShow);

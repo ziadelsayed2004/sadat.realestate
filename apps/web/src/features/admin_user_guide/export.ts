@@ -2,7 +2,7 @@ import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { GuideSection } from './content.ts';
 
 export function guideAsText(sections: readonly GuideSection[], locale: SupportedLocale = 'ar'): string {
-  const lines = ['دليل استخدام منصة عقارات السادات — 6 أكتوبر 2026', 'الشرح عربي. الروابط تتبع لغة الواجهة؛ فتح الرابط لا يمنح صلاحية جديدة.', ''];
+  const lines = ['دليل استخدام منصة عقارات السادات — 7 أكتوبر 2026', 'الشرح عربي. الروابط تتبع لغة الواجهة؛ فتح الرابط لا يمنح صلاحية جديدة.', ''];
   for (const section of sections) {
     lines.push(`=== ${section.title} ===`, section.description, '');
     for (const topic of section.topics) {
