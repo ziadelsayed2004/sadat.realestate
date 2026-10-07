@@ -421,7 +421,7 @@
 }
 
 .public-team__media {
-  block-size: 13rem;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--color-surface-soft);
 }
@@ -747,9 +747,6 @@
     flex-wrap: wrap;
   }
 
-  .public-team__media {
-    block-size: 11rem;
-  }
 }
 
 @media (max-width: 28rem) {
