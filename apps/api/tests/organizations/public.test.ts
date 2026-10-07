@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPublicOrganizationService, type PublicOrganizationSource } from '../../src/modules/organizations/public.js';
+import { createMongoosePublicOrganizationRepository, createPublicOrganizationService, type PublicOrganizationSource } from '../../src/modules/organizations/public.js';
+import type { Connection } from 'mongoose';
 
 const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
@@ -27,4 +28,38 @@ test('rejects unsafe directory queries and unapproved provider identity', async 
   await assert.rejects(() => service.list({ limit: 101 }));
   await assert.rejects(() => service.list({ $where: true }));
   await assert.rejects(() => service.get('Bad Slug'));
+});
+
+test('company name searches support Arabic and English fragments without a text index or regex operators', async () => {
+  let filters: Array<Record<string, unknown>> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        find(filter: Record<string, unknown>) {
+          assert.equal(name, 'organizations'); filters.push(filter);
+          return { sort() { return { skip() { return { limit() { return { async toArray() { return []; } }; } }; } }; } };
+        },
+        async countDocuments(filter: Record<string, unknown>) { filters.push(filter); return 0; }
+      };
+    }
+  } as unknown as Connection;
+  const service = createPublicOrganizationService({ repository: createMongoosePublicOrganizationRepository(connection) });
+  for (const search of ['النيل', 'NiLe', 'A.*(group)']) {
+    filters = [];
+    assert.equal((await service.list({ search })).total, 0);
+    assert.equal(filters.length, 2);
+    for (const filter of filters) {
+      assert.equal(filter.status, 'approved');
+      assert.deepEqual(filter.directoryVisible, { $ne: false });
+      assert.equal('$text' in filter, false);
+      const alternatives = filter.$or as Array<Record<string, RegExp>>;
+      assert.deepEqual(alternatives.map(item => Object.keys(item)[0]), ['name.ar', 'name.en', 'slug']);
+      for (const item of alternatives) {
+        const pattern = Object.values(item)[0]!;
+        assert.ok(pattern.test(`Company ${search.toLowerCase()} Real Estate`));
+        assert.equal(pattern.test('An unrelated developer'), false);
+        if (search.includes('*')) assert.equal(pattern.test('A random group'), false);
+      }
+    }
+  }
 });

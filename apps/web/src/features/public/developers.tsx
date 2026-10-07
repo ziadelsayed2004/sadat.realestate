@@ -54,8 +54,11 @@ function stateCopy(state: Exclude<PublicDevelopersViewState, 'success'>, copy: P
   }
 }
 
-function syncBrowserUrl(query: PublicOrganizationDirectoryQuery): void {
-  if (typeof window !== 'undefined') window.history.replaceState({}, '', publicDeveloperDirectoryUrl(query));
+function syncBrowserUrl(query: PublicOrganizationDirectoryQuery, locale: SupportedLocale): void {
+  if (typeof window === 'undefined') return;
+  const next = new URL(publicDeveloperDirectoryUrl(query), window.location.origin);
+  next.searchParams.set('lang', locale);
+  window.history.replaceState(window.history.state, '', next.pathname + next.search);
 }
 
 function StateNotice({
@@ -165,7 +168,7 @@ export function PublicDevelopers({
   const changePage = (page: number) => {
     const nextQuery = { ...query, page };
     setQuery(nextQuery);
-    syncBrowserUrl(nextQuery);
+    syncBrowserUrl(nextQuery, locale);
     setAttempt(value => value + 1);
   };
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -173,7 +176,7 @@ export function PublicDevelopers({
     const parsed = publicOrganizationDirectoryQuerySchema.safeParse({ ...query, search: search.trim() || undefined, page: 1 });
     if (!parsed.success) return;
     setQuery(parsed.data);
-    syncBrowserUrl(parsed.data);
+    syncBrowserUrl(parsed.data, locale);
     setAttempt(value => value + 1);
   };
 
@@ -187,30 +190,17 @@ export function PublicDevelopers({
           <p>{copy.subtitle}</p>
         </div>
       </header>
-      {view === 'success' && data !== undefined ? (
-        <div className="public-developer-directory__body">
+      <div className="public-developer-directory__body">
           <aside className="public-developer-directory__filters" aria-label={copy.searchLabel}>
-            <h2>{copy.searchLabel}</h2>
-            <form onSubmit={submitSearch} aria-label={copy.searchLabel}>
-              <label className="public-developer-directory__filter-field" htmlFor="public-developer-search">{copy.searchLabel}<input id="public-developer-search" name="search" type="search" value={search} placeholder={copy.searchPlaceholder} onChange={event => setSearch(event.target.value)} /></label>
-              <div className="public-developer-directory__filter-actions"><button type="submit">{copy.searchAction}</button><button type="button" className="public-developer-directory__reset" onClick={() => { setSearch(''); const reset = defaultPublicDeveloperDirectoryQuery(); setQuery(reset); syncBrowserUrl(reset); setAttempt(value => value + 1); }}>{copy.resetFilters}</button></div>
+            <form role="search" onSubmit={submitSearch} aria-label={copy.searchLabel}>
+              <label className="public-developer-directory__filter-field" htmlFor="public-developer-search">{copy.searchLabel}<input id="public-developer-search" name="search" type="search" maxLength={80} value={search} placeholder={copy.searchPlaceholder} onChange={event => setSearch(event.target.value)} /></label>
+              <div className="public-developer-directory__filter-actions"><button type="submit">{copy.searchAction}</button><button type="button" className="public-developer-directory__reset" onClick={() => { setSearch(''); const reset = defaultPublicDeveloperDirectoryQuery(); setQuery(reset); syncBrowserUrl(reset, locale); setAttempt(value => value + 1); }}>{copy.resetFilters}</button></div>
             </form>
           </aside>
-          <DirectorySuccess data={data} locale={locale} copy={copy} onPageChange={changePage} />
-        </div>
-      ) : view === 'empty' ? (
-        <div className="public-developer-directory__body">
-          <StateNotice state="empty" copy={copy} onRetry={retry} />
-        </div>
-      ) : view === 'success' ? (
-        <div className="public-developer-directory__body">
-          <StateNotice state="empty" copy={copy} onRetry={retry} />
-        </div>
-      ) : (
-        <div className="public-developer-directory__body">
-          <StateNotice state={view} copy={copy} onRetry={retry} />
-        </div>
-      )}
+          {view === 'success' && data !== undefined
+            ? <DirectorySuccess data={data} locale={locale} copy={copy} onPageChange={changePage} />
+            : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} onRetry={retry} />}
+      </div>
       <Footer locale={locale} copy={copy} />
     </div>
   );

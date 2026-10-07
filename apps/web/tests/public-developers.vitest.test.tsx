@@ -113,6 +113,25 @@ describe('public developer directory and profiles', () => {
     expect(window.location.search).toContain('search=builder');
   });
 
+  it.each(['ar', 'en'] as const)('keeps company search available for empty results and clears it without losing language or page history in %s', async locale => {
+    window.history.replaceState({ keptPosition: true }, '', `/developers?lang=${locale}`);
+    const load = vi.fn().mockResolvedValueOnce({ ...directoryData, items: [], total: 0 }).mockResolvedValueOnce(directoryData);
+    const copy = getPublicDevelopersCopy(locale);
+    renderWithLocale(<PublicDevelopers locale={locale} initialData={directoryData} load={load} />, { locale });
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'Missing company' } });
+    fireEvent.submit(screen.getByRole('search'));
+    await waitFor(() => expect(document.querySelector('[data-developers-state="empty"]')).not.toBeNull());
+    expect(screen.getByRole('searchbox')).toHaveValue('Missing company');
+    expect(new URLSearchParams(window.location.search).get('lang')).toBe(locale);
+    expect(window.history.state).toMatchObject({ keptPosition: true });
+    fireEvent.click(screen.getByRole('button', { name: copy.resetFilters }));
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Approved builder' })).toBeInTheDocument());
+    expect(screen.getByRole('searchbox')).toHaveValue('');
+    expect(new URLSearchParams(window.location.search).has('search')).toBe(false);
+    expect(new URLSearchParams(window.location.search).get('lang')).toBe(locale);
+    expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1 }), expect.any(AbortSignal));
+  });
+
   it('keeps forbidden and missing profiles safe', async () => {
     const copy = getPublicDevelopersCopy('en');
     const permissionLoad = vi.fn().mockRejectedValue(new ApiClientError('forbidden', { code: 'HTTP_ERROR', status: 403 }));
