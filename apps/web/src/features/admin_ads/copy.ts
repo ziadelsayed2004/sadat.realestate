@@ -87,6 +87,9 @@ export interface AdminAdsCopy {
   readonly financialState: Readonly<Record<string, string>>;
   readonly ledgerKind: Readonly<Record<string, string>>;
   readonly view: string;
+  readonly viewPaymentReview: string;
+  readonly paymentMethod: string;
+  readonly paymentMethodLabels: Readonly<Record<string, string>>;
   readonly reviewAction: string;
   readonly approve: string;
   readonly reject: string;
@@ -136,6 +139,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     financialState: { not_submitted: 'لم يُرسل', quote_only: 'اقتباس فقط', payment_proof_pending_review: 'إثبات قيد المراجعة', payment_proof_approved: 'إثبات معتمد', payment_proof_rejected: 'إثبات مرفوض' },
     ledgerKind: { quote_issued: 'إصدار اقتباس', quote_accepted: 'قبول اقتباس', quote_rejected: 'رفض اقتباس', quote_cancelled: 'إلغاء اقتباس', payment_proof_uploaded: 'رفع إثبات', payment_proof_approved: 'اعتماد إثبات', payment_proof_rejected: 'رفض إثبات', scheduled: 'جدولة', active: 'تفعيل', ended: 'إنهاء' },
     view: 'عرض',
+    viewPaymentReview: 'عرض البيانات ومراجعة الدفع',
+    paymentMethod: 'طريقة الدفع',
+    paymentMethodLabels: { vodafone_cash: 'فودافون كاش', instapay: 'إنستا باي', bank_transfer: 'تحويل بنكي', cash: 'نقدًا' },
     reviewAction: 'إجراء المراجعة',
     approve: 'اعتماد',
     reject: 'رفض',
@@ -183,6 +189,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     financialState: { not_submitted: 'Not submitted', quote_only: 'Quote only', payment_proof_pending_review: 'Payment proof pending', payment_proof_approved: 'Payment proof approved', payment_proof_rejected: 'Payment proof rejected' },
     ledgerKind: { quote_issued: 'Quote issued', quote_accepted: 'Quote accepted', quote_rejected: 'Quote rejected', quote_cancelled: 'Quote cancelled', payment_proof_uploaded: 'Proof uploaded', payment_proof_approved: 'Proof approved', payment_proof_rejected: 'Proof rejected', scheduled: 'Scheduled', active: 'Activated', ended: 'Ended' },
     view: 'View',
+    viewPaymentReview: 'View details and review payment',
+    paymentMethod: 'Payment method',
+    paymentMethodLabels: { vodafone_cash: 'Vodafone Cash', instapay: 'InstaPay', bank_transfer: 'Bank transfer', cash: 'Cash' },
     reviewAction: 'Review action',
     approve: 'Approve',
     reject: 'Reject',

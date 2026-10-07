@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { adminAdsProofId, adminAdsRequestId, expectNoPrivateAdminAdsFields, routeAdminAdsApis } from './admin-ads.fixtures.ts';
+import { getAdminAdsCopy } from '../../src/features/admin_ads/copy.ts';
 
 function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
@@ -56,7 +57,7 @@ test.describe('ADM-33 through ADM-38 advertising administration', () => {
     await page.goto(`/admin/ads/payments/pending-review?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     const row = page.getByTestId(`admin-payment-proof-${adminAdsProofId}`);
     await expect(row).toBeVisible();
-    await row.locator('td').last().getByRole('button').click();
+    await row.getByRole('button', { name: getAdminAdsCopy(locale).viewPaymentReview }).click();
     await expect(page.locator('.admin-ads__review-card')).toBeVisible();
     await page.locator('#admin-ads-review-reason').fill('Reviewed against the submitted proof');
     await page.locator('.admin-ads__review-card button[type="submit"]').click();

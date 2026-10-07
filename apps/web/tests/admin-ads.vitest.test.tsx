@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   adAdminRequestListSuccessEnvelopeSchema,
   adAdminRequestSchema,
@@ -181,6 +181,20 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(screen.getByTestId(`admin-ad-request-${request.id}`)).toBeInTheDocument();
     expect(result.container.textContent).not.toMatch(/storageKey|downloadUrl|bankVerified|internalNotes|assignedTo|auditData|accessToken|refreshToken/u);
     result.unmount();
+  });
+
+  it.each(['ar', 'en'] as const)('makes payment review and file viewing available from the pending list for %s', async locale => {
+    window.history.pushState({}, '', '/admin/ads/payment-proofs/pending');
+    const file = vi.fn(async () => { throw new ApiClientError('Missing fixture receipt', { code: 'HTTP_ERROR', status: 404 }); });
+    renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} loadPaymentProofFile={file} />, { locale });
+    const row = await screen.findByTestId(`admin-payment-proof-${proof.id}`);
+    const copy = getAdminAdsCopy(locale);
+    expect(within(row).getByRole('button', { name: copy.viewPaymentReview })).toBeEnabled();
+    expect(within(row).getByRole('link', { name: proof.adRequestId })).toHaveAttribute('href', `/admin/ads/requests?requestId=${proof.adRequestId}&lang=${locale}`);
+    expect(within(row).getByRole('link', { name: proof.providerId })).toHaveAttribute('href', `/admin/providers/${proof.providerId}?lang=${locale}`);
+    fireEvent.click(within(row).getByRole('button', { name: proof.originalFilename }));
+    await waitFor(() => expect(file).toHaveBeenCalledWith(proof.id, expect.any(AbortSignal)));
+    expect(screen.getByTestId('admin-payment-proof-preview')).toBeInTheDocument();
   });
 
   it('renders the approved proof review route, requires a reason, and sends the current version', async () => {
