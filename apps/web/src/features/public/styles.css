@@ -1430,12 +1430,13 @@
 /* ==========================================================================
    PUBLIC HOMEPAGE: ABOUT SECTION (Figma Parity: PUB-01)
    ========================================================================== */
-.public-homepage__section--about {
+.public-homepage .public-homepage__section--about {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   width: 100%;
+  inline-size: 100%;
   max-width: none;
-  padding: 0;
+  margin-inline: 0;
   background: #131e2b;
   color: #ffffff;
   overflow: hidden;
@@ -1455,12 +1456,15 @@
   justify-content: center;
   padding: 0;
   order: initial;
-  direction: rtl;
+  direction: ltr;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 [dir="rtl"] .public-homepage__about-content {
   order: initial;
   padding: 0;
+  direction: rtl;
 }
 
 .public-homepage__about-title {
@@ -1535,6 +1539,7 @@
   order: initial;
   position: relative;
   min-height: 20rem;
+  min-inline-size: 0;
   overflow: hidden;
   border-radius: 1rem;
 }
@@ -1551,9 +1556,9 @@
 }
 
 @media (max-width: 900px) {
-  .public-homepage__section--about {
-    grid-template-columns: 1fr;
-    padding: 3rem 1.5rem;
+  .public-homepage .public-homepage__section--about {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 2rem 1rem;
     gap: 2rem;
   }
 
@@ -1564,7 +1569,9 @@
 
   .public-homepage__about-media {
     order: 2 !important;
-    height: 24rem;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 10;
   }
 }
 
@@ -2214,7 +2221,7 @@
 
   .public-homepage .public-homepage__section--about {
     display: grid;
-    block-size: 28rem;
+    block-size: auto;
     width: 100%;
     padding: 3rem max(calc((100vw - 76.875rem) / 2), 2.5rem);
     background: var(--color-brand-secondary);

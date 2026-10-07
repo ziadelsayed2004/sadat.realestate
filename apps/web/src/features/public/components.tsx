@@ -1061,7 +1061,7 @@ function HomepageAbout({ locale, copy, content }: { readonly locale: SupportedLo
         </div>
       </div>
       <div className="public-homepage__about-media">
-        <PublicMediaImage src={item.imageUrl ?? '/assets/canonical/public/home-about-dashboard.png'} alt={locale === 'ar' ? 'لوحة مؤشرات عقارات مدينة السادات' : 'Sadat real-estate analytics dashboard'} fallback={<img src="/assets/canonical/public/home-about-dashboard.png" alt={locale === 'ar' ? 'لوحة مؤشرات عقارات مدينة السادات' : 'Sadat real-estate analytics dashboard'} />} />
+        <PublicMediaImage src={item.imageUrl ?? '/assets/canonical/public/home-hero-sadat-city.png'} alt={locale === 'ar' ? 'نظرة على المناطق السكنية والعقارات' : 'Residential neighborhoods and properties'} fallback={<img src="/assets/canonical/public/home-hero-sadat-city.png" alt={locale === 'ar' ? 'نظرة على المناطق السكنية والعقارات' : 'Residential neighborhoods and properties'} loading="lazy" decoding="async" />} />
       </div>
     </section>
   );
