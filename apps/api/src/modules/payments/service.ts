@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import type { Readable } from 'node:stream';
 import {
   PAYMENT_PROOF_MAX_BYTES,
@@ -28,6 +28,7 @@ export type PaymentProofServiceErrorCode =
   | 'PAYMENT_PROOF_AUDIT_UNAVAILABLE'
   | 'PAYMENT_PROOF_AUDIT_FAILED'
   | 'NOT_FOUND'
+  | 'FILE_NOT_READY'
   | 'VERSION_CONFLICT'
   | 'INVALID_STORAGE_KEY'
   | 'INVALID_FILENAME'
@@ -179,6 +180,41 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
 
   return {
     isReady,
+
+    async getAdmin(claims: AccessTokenClaims, proofId: string): Promise<PaymentProofData> {
+      await requireReviewer(claims);
+      const record = dependencies.repository ? await dependencies.repository.find(proofId) : records.get(proofId);
+      if (!record?.active) throw new PaymentProofServiceError('NOT_FOUND');
+      return project(record, false);
+    },
+
+    async readFile(claims: AccessTokenClaims, proofId: string) {
+      await requireReviewer(claims);
+      const record = dependencies.repository ? await dependencies.repository.find(proofId) : records.get(proofId);
+      if (!record?.active) throw new PaymentProofServiceError('NOT_FOUND');
+      if (record.securityState !== 'clean') throw new PaymentProofServiceError('FILE_NOT_READY');
+      if (!isObjectKey(record.storageKey)) throw new PaymentProofServiceError('INVALID_STORAGE_KEY');
+      if (!await dependencies.storage.isReady()) throw new PaymentProofServiceError('PAYMENT_PROOF_CAPABILITY_UNAVAILABLE');
+      let source: Readable | undefined;
+      try {
+        source = await dependencies.storage.openPrivate(record.storageKey);
+        const chunks: Buffer[] = [];
+        let size = 0;
+        for await (const chunk of source) {
+          const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+          size += buffer.length;
+          if (size > PAYMENT_PROOF_MAX_BYTES || size > record.byteSize) throw new PaymentProofServiceError('FILE_NOT_READY');
+          chunks.push(buffer);
+        }
+        const bytes = Buffer.concat(chunks);
+        if (bytes.length !== record.byteSize || createHash('sha256').update(bytes).digest('hex') !== record.sha256) throw new PaymentProofServiceError('FILE_NOT_READY');
+        return { bytes, mime: record.detectedMime, filename: record.originalFilename };
+      } catch (error) {
+        if (error instanceof PaymentProofServiceError) throw error;
+        if (error instanceof Error && (error.message === 'PRIVATE_OBJECT_NOT_FOUND' || ('code' in error && error.code === 'ENOENT'))) throw new PaymentProofServiceError('NOT_FOUND');
+        throw new PaymentProofServiceError('PAYMENT_PROOF_CAPABILITY_UNAVAILABLE');
+      } finally { source?.destroy(); }
+    },
 
     async upload(
       claims: AccessTokenClaims,

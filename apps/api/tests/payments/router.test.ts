@@ -14,6 +14,30 @@ const seekerToken = 'seeker.payment-proof.token';
 const adminToken = 'admin.payment-proof.token';
 const pdf = Buffer.from('%PDF-1.7\nprivate receipt\n%%EOF', 'ascii');
 
+test('admin retrieves the exact scanned receipt bytes with authentication and no caching', async () => {
+  await withServer(async baseUrl => {
+    const { data: proof } = await (await upload(baseUrl)).json() as { data: PaymentProofData };
+    const fileUrl = `${baseUrl}/api/v1/admin/payment-proofs/${proof.id}/file`;
+    assert.equal((await fetch(fileUrl)).status, 401);
+    for (const token of [providerToken, seekerToken]) assert.equal((await fetch(fileUrl, { headers: { Authorization: `Bearer ${token}` } })).status, 403);
+    const headers = { Authorization: `Bearer ${adminToken}` };
+    const detail = await fetch(`${baseUrl}/api/v1/admin/payment-proofs/${proof.id}`, { headers });
+    assert.equal(detail.status, 200);
+    const detailBody = await detail.json() as { data: Record<string, unknown> };
+    assert.equal(detailBody.data.id, proof.id);
+    assert.equal('storageKey' in detailBody.data, false);
+    const file = await fetch(fileUrl, { headers });
+    assert.equal(file.status, 200);
+    assert.equal(file.headers.get('content-type'), 'application/pdf');
+    assert.equal(file.headers.get('cache-control'), 'no-store');
+    assert.equal(file.headers.get('x-content-type-options'), 'nosniff');
+    assert.match(file.headers.get('content-disposition')!, /^inline;/);
+    assert.deepEqual(Buffer.from(await file.arrayBuffer()), pdf);
+    assert.equal((await fetch(`${baseUrl}/api/v1/admin/payment-proofs/${'f'.repeat(24)}/file`, { headers })).status, 404);
+    assert.equal((await fetch(`${baseUrl}/api/v1/admin/payment-proofs/invalid/file`, { headers })).status, 400);
+  });
+});
+
 function createRepository(): PaymentProofRepository {
   const records = new Map<string, StoredPaymentProof>();
   return {

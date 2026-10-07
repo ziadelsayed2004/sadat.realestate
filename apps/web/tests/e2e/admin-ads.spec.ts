@@ -56,7 +56,7 @@ test.describe('ADM-33 through ADM-38 advertising administration', () => {
     await page.goto(`/admin/ads/payments/pending-review?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     const row = page.getByTestId(`admin-payment-proof-${adminAdsProofId}`);
     await expect(row).toBeVisible();
-    await row.getByRole('button').click();
+    await row.locator('td').last().getByRole('button').click();
     await expect(page.locator('.admin-ads__review-card')).toBeVisible();
     await page.locator('#admin-ads-review-reason').fill('Reviewed against the submitted proof');
     await page.locator('.admin-ads__review-card button[type="submit"]').click();

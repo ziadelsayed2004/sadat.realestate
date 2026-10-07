@@ -11044,6 +11044,116 @@
         "summary": "Administer a viewing appointment",
         "description": "Requires current admin session, admin:viewings.view and admin:requests.manage. Confirm, reschedule, cancel or complete a viewing using its current expectedVersion. Notifications and audit are saved with the decision."
       }
+    },
+    "/api/v1/admin/payment-proofs/{proofId}": {
+      "get": {
+        "operationId": "getAdminPaymentProof",
+        "summary": "Get a private payment proof for an authorized reviewer",
+        "description": "Requires admin:payments.review. Returns active receipt metadata without private storage keys.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "proofId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/AdObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PaymentProofSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "401": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "404": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "409": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "503": {
+            "$ref": "#/components/responses/PaymentProofError"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payment-proofs/{proofId}/file": {
+      "get": {
+        "operationId": "downloadAdminPaymentProof",
+        "summary": "Read the scanned private payment proof",
+        "description": "Requires admin:payments.review and an active clean receipt. Content is verified against its stored size and digest. The binary response is no-store and does not expose a public URL or storage key.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "proofId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/AdObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Private receipt bytes. Content-Disposition is inline with the original filename; Cache-Control is no-store.",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "401": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "404": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "409": {
+            "$ref": "#/components/responses/PaymentProofError"
+          },
+          "503": {
+            "$ref": "#/components/responses/PaymentProofError"
+          }
+        }
+      }
     }
   },
   "components": {

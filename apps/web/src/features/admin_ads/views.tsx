@@ -1,3 +1,4 @@
+import { PaymentProofPreview } from './proof-preview.tsx';
 import { AdSchedulePanel, type SchedulingOptions } from './schedule-panel.tsx';
 import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
@@ -34,6 +35,8 @@ import {
   type AdminAdsFinancialReviewLoader,
   type AdminAdsLedgerLoader,
   type AdminAdsPaymentProofLoader,
+  type AdminAdsPaymentProofDetailLoader,
+  type AdminAdsPaymentProofFileLoader,
   type AdminAdsPaymentProofReviewMutation,
   type AdminAdsQuoteIssueMutation,
   type AdminAdsRequestDetailLoader,
@@ -54,6 +57,8 @@ export interface AdminAdsProps {
   readonly reviewRequest?: AdminAdsRequestReviewMutation | undefined;
   readonly issueQuote?: AdminAdsQuoteIssueMutation | undefined;
   readonly loadPaymentProofs?: AdminAdsPaymentProofLoader | undefined;
+  readonly loadPaymentProof?: AdminAdsPaymentProofDetailLoader | undefined;
+  readonly loadPaymentProofFile?: AdminAdsPaymentProofFileLoader | undefined;
   readonly reviewPaymentProof?: AdminAdsPaymentProofReviewMutation | undefined;
   readonly loadCalendar?: AdminAdsCalendarLoader | undefined;
   readonly loadFinancialReview?: AdminAdsFinancialReviewLoader | undefined;
@@ -65,7 +70,7 @@ type AdminAdsView = 'requests' | 'pendingProofs' | 'approvedProofs' | 'calendar'
 type LoadedPayload =
   | { readonly kind: 'requests'; readonly data: AdAdminRequestListData }
   | { readonly kind: 'requestDetail'; readonly data: AdAdminRequest }
-  | { readonly kind: 'proofs'; readonly data: PaymentProofAdminListData }
+  | { readonly kind: 'proofs'; readonly data: PaymentProofAdminListData; readonly selectedProof?: PaymentProofData }
   | { readonly kind: 'calendar'; readonly data: AdCalendarListData }
   | { readonly kind: 'financial'; readonly data: AdFinancialReviewListData; readonly ledger: AdLedgerListData }
   | { readonly kind: 'financialDetail'; readonly data: AdFinancialReviewRow };
@@ -127,6 +132,7 @@ function stateForError(error: unknown, detail = false): Exclude<AdminAdsState, '
 
 function stateForPayload(payload: LoadedPayload, selectedId: string | undefined): AdminAdsState {
   if (payload.kind === 'requestDetail' || payload.kind === 'financialDetail') return selectedId === undefined ? 'success' : 'success';
+  if (payload.kind === 'proofs' && payload.selectedProof) return 'success';
   if (payload.kind === 'financial') return payload.data.items.length === 0 && payload.ledger.items.length === 0 ? 'empty' : 'success';
   return payload.data.items.length === 0 ? 'empty' : 'success';
 }
@@ -252,7 +258,9 @@ function RequestDetail({ data, locale, onBack, onReview, onIssueQuote, onSchedul
   return <section className="admin-ads__detail"><div className="admin-ads__detail-heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h2>{copy.detail}</h2></div><Button variant="secondary" onClick={onBack}>{copy.back}</Button></div><dl className="admin-ads__detail-list"><div><dt>{copy.columns.id}</dt><dd><code>{data.request.id}</code></dd></div><div><dt>{copy.columns.provider}</dt><dd><code>{data.request.providerId}</code></dd></div><div><dt>{copy.columns.placement}</dt><dd>{data.request.placementKey ?? (locale === 'ar' ? 'لم يُحدد بعد' : 'Not assigned yet')}</dd></div><div><dt>{copy.columns.purpose}</dt><dd>{data.request.purpose}</dd></div>{data.request.contactPhone ? <div><dt>{locale === 'ar' ? 'رقم التواصل' : 'Contact number'}</dt><dd><a dir="ltr" href={`tel:${data.request.contactPhone}`}>{data.request.contactPhone}</a></dd></div> : null}<div><dt>{copy.columns.status}</dt><dd><StatusBadge status={data.request.status} label={copy.requestStatus[data.request.status] ?? data.request.status} /></dd></div><div><dt>{copy.columns.interval}</dt><dd>{dateLabel(data.request.intervalStart, locale)} — {dateLabel(data.request.intervalEnd, locale)}</dd></div><div><dt>{copy.columns.version}</dt><dd>{data.request.version}</dd></div>{data.quote !== undefined ? <div><dt>{copy.columns.quote}</dt><dd>{moneyLabel(data.quote.totalMinor, data.quote.currency, locale)} · {data.quote.status}</dd></div> : null}</dl>{data.quote !== undefined ? <div className="admin-ads__quote-lines"><h3>{copy.columns.quote}</h3><ul>{data.quote.lineItems.map((line, index) => <li key={`${line.description}-${index}`}><span>{line.description} × {line.quantity}</span><strong>{moneyLabel(line.unitAmountMinor * line.quantity, data.quote?.currency, locale)}</strong></li>)}</ul></div> : null}{data.request.status === 'review' ? <RequestReviewPanel locale={locale} onReview={onReview} /> : null}{data.request.status === 'waiting_pricing' ? <QuoteIssuePanel locale={locale} data={data} onIssue={onIssueQuote} /> : null}{data.request.status === 'waiting_payment' ? <AdSchedulePanel data={data} locale={locale} save={onSchedule} /> : null}{data.request.paymentWaiver ? <p role="status">{locale === 'ar' ? 'إعلان مجاني — سبب الإعفاء: ' : 'Free advertisement — waiver reason: '}{data.request.paymentWaiver.reason}</p> : null}</section>;
 }
 
-function PaymentProofTable({ data, locale, review, onReview }: { readonly data: PaymentProofAdminListData; readonly locale: SupportedLocale; readonly review: boolean; readonly onReview: (id: string) => void }) {
+function PaymentProofTable({ data, locale, review, onReview, loadFile }: { readonly data: PaymentProofAdminListData; readonly locale: SupportedLocale; readonly review: boolean; readonly onReview: (id: string) => void; readonly loadFile: AdminAdsPaymentProofFileLoader }) {
+  const [openedId, setOpenedId] = useState<string>();
+  const openedProof = data.items.find(item => item.id === openedId);
   const copy = getAdminAdsCopy(locale);
   const countStatus = (status: PaymentProofData['status']) => data.items.filter(item => item.status === status).length;
   const securityAttention = data.items.filter(item => item.securityState !== 'clean').length;
@@ -275,10 +283,10 @@ function PaymentProofTable({ data, locale, review, onReview }: { readonly data: 
         { label: labels[3], value: securityAttention, color: '#d6561d' }
       ];
   const showMetrics = review || data.items.some(item => item.status === 'pending_review');
-  return <>{showMetrics ? <AdsMetricStrip metrics={metrics} locale={locale} testId={review ? 'admin-payment-review-metrics' : 'admin-payment-proof-metrics'} /> : null}<div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.filename}</th><th scope="col">{copy.columns.size}</th><th scope="col">{copy.columns.security}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.version}</th><th scope="col">{copy.columns.uploaded}</th>{review ? <th scope="col">{copy.columns.actions}</th> : null}</tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-payment-proof-${item.id}`}><td><code>{item.id}</code></td><td><code>{item.adRequestId}</code></td><td><code>{item.providerId}</code></td><td>{item.originalFilename}</td><td>{Math.round(item.byteSize / 1024)} KB</td><td><StatusBadge status={item.securityState} label={item.securityState} /></td><td><StatusBadge status={item.status} label={copy.proofStatus[item.status] ?? item.status} /></td><td>{item.version}</td><td>{dateLabel(item.uploadedAt, locale)}</td>{review ? <td><Button size="sm" variant="secondary" onClick={() => onReview(item.id)}>{copy.reviewAction}</Button></td> : null}</tr>)}</tbody></table></div></>;
+  return <>{showMetrics ? <AdsMetricStrip metrics={metrics} locale={locale} testId={review ? 'admin-payment-review-metrics' : 'admin-payment-proof-metrics'} /> : null}<div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.filename}</th><th scope="col">{copy.columns.size}</th><th scope="col">{copy.columns.security}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.version}</th><th scope="col">{copy.columns.uploaded}</th>{review ? <th scope="col">{copy.columns.actions}</th> : null}</tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-payment-proof-${item.id}`}><td><code>{item.id}</code></td><td><code>{item.adRequestId}</code></td><td><code>{item.providerId}</code></td><td><Button type="button" size="sm" variant="secondary" onClick={() => setOpenedId(item.id === openedId ? undefined : item.id)} aria-expanded={item.id === openedId}>{item.originalFilename}</Button></td><td>{Math.round(item.byteSize / 1024)} KB</td><td><StatusBadge status={item.securityState} label={item.securityState} /></td><td><StatusBadge status={item.status} label={copy.proofStatus[item.status] ?? item.status} /></td><td>{item.version}</td><td>{dateLabel(item.uploadedAt, locale)}</td>{review ? <td><Button size="sm" variant="secondary" onClick={() => onReview(item.id)}>{copy.reviewAction}</Button></td> : null}</tr>)}</tbody></table></div>{openedProof ? <PaymentProofPreview key={openedProof.id} proof={openedProof} locale={locale} load={loadFile} /> : null}</>;
 }
 
-function ReviewPanel({ proof, locale, review, onSaved }: { readonly proof: PaymentProofData; readonly locale: SupportedLocale; readonly review: AdminAdsPaymentProofReviewMutation; readonly onSaved: () => void }) {
+function ReviewPanel({ proof, locale, review, onSaved, loadFile }: { readonly proof: PaymentProofData; readonly locale: SupportedLocale; readonly review: AdminAdsPaymentProofReviewMutation; readonly onSaved: () => void; readonly loadFile: AdminAdsPaymentProofFileLoader }) {
   useAdminAttentionRead('payment-review', proof.id);
   const copy = getAdminAdsCopy(locale);
   const [action, setAction] = useState<'approve' | 'reject'>('approve');
@@ -305,7 +313,7 @@ function ReviewPanel({ proof, locale, review, onSaved }: { readonly proof: Payme
     }
   }
 
-  return <form className="admin-ads__review-card" onSubmit={event => { void submit(event); }}><h3>{copy.reviewAction}</h3><p className="admin-ads__muted">{proof.originalFilename} · {copy.columns.version}: {proof.version}</p><fieldset disabled={state === 'saving' || state === 'permission'}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ads-review-action" value="approve" checked={action === 'approve'} onChange={() => setAction('approve')} />{copy.approve}</label><label><input type="radio" name="admin-ads-review-action" value="reject" checked={action === 'reject'} onChange={() => setAction('reject')} />{copy.reject}</label></div><label className="admin-ads__field" htmlFor="admin-ads-review-reason">{copy.reasonLabel}<textarea id="admin-ads-review-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={state === 'saving'} disabled={state === 'permission'}>{state === 'saving' ? copy.reviewing : copy.reviewAction}</Button></fieldset>{feedback !== undefined ? <p className="admin-ads__feedback" data-tone={state === 'error' || state === 'permission' ? 'error' : 'success'} role={state === 'error' || state === 'permission' ? 'alert' : 'status'}>{feedback}</p> : null}</form>;
+  return <form className="admin-ads__review-card" onSubmit={event => { void submit(event); }}><h3>{copy.reviewAction}</h3><p className="admin-ads__muted">{proof.originalFilename} · {copy.columns.version}: {proof.version}</p><PaymentProofPreview key={proof.id} proof={proof} locale={locale} load={loadFile} /><fieldset disabled={state === 'saving' || state === 'permission' || proof.status !== 'pending_review'}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ads-review-action" value="approve" checked={action === 'approve'} onChange={() => setAction('approve')} />{copy.approve}</label><label><input type="radio" name="admin-ads-review-action" value="reject" checked={action === 'reject'} onChange={() => setAction('reject')} />{copy.reject}</label></div><label className="admin-ads__field" htmlFor="admin-ads-review-reason">{copy.reasonLabel}<textarea id="admin-ads-review-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={state === 'saving'} disabled={state === 'permission'}>{state === 'saving' ? copy.reviewing : copy.reviewAction}</Button></fieldset>{feedback !== undefined ? <p className="admin-ads__feedback" data-tone={state === 'error' || state === 'permission' ? 'error' : 'success'} role={state === 'error' || state === 'permission' ? 'alert' : 'status'}>{feedback}</p> : null}</form>;
 }
 
 function CalendarTable({ data, locale }: { readonly data: AdCalendarListData; readonly locale: SupportedLocale }) {
@@ -338,7 +346,7 @@ function EmptyPanel({ locale }: { readonly locale: SupportedLocale }) {
   return <section className="admin-ads__state" data-state="empty" aria-label={message.title}><h2>{message.title}</h2><p>{message.body}</p></section>;
 }
 
-export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequests, loadRequestDetail, reviewRequest, issueQuote, loadPaymentProofs, reviewPaymentProof, loadCalendar, loadFinancialReview, loadFinancialDetail, loadLedger }: AdminAdsProps) {
+export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequests, loadRequestDetail, reviewRequest, issueQuote, loadPaymentProofs, loadPaymentProof, loadPaymentProofFile, reviewPaymentProof, loadCalendar, loadFinancialReview, loadFinancialDetail, loadLedger }: AdminAdsProps) {
   const copy = getAdminAdsCopy(locale);
   const pathname = pathnameFrom(url);
   const projection = projectionForPath(pathname);
@@ -349,12 +357,14 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
     loadRequests: loadRequests ?? source.loadRequests,
     loadRequestDetail: loadRequestDetail ?? source.loadRequestDetail,
     loadPaymentProofs: loadPaymentProofs ?? source.loadPaymentProofs,
+    loadPaymentProof: loadPaymentProof ?? source.loadPaymentProof,
+    loadPaymentProofFile: loadPaymentProofFile ?? source.loadPaymentProofFile,
     reviewPaymentProof: reviewPaymentProof ?? source.reviewPaymentProof,
     loadCalendar: loadCalendar ?? source.loadCalendar,
     loadFinancialReview: loadFinancialReview ?? source.loadFinancialReview,
     loadFinancialDetail: loadFinancialDetail ?? source.loadFinancialDetail,
     loadLedger: loadLedger ?? source.loadLedger
-  }), [loadCalendar, loadFinancialDetail, loadFinancialReview, loadLedger, loadPaymentProofs, loadRequestDetail, loadRequests, reviewPaymentProof, source]);
+  }), [loadCalendar, loadFinancialDetail, loadFinancialReview, loadLedger, loadPaymentProofs, loadPaymentProof, loadPaymentProofFile, loadRequestDetail, loadRequests, reviewPaymentProof, source]);
   const [state, setState] = useState<AdminAdsState>('loading');
   const [payload, setPayload] = useState<LoadedPayload | undefined>(undefined);
   const [attempt, setAttempt] = useState(0);
@@ -385,7 +395,10 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
     else if (projection.view === 'requests') request = loaders.loadRequests(requestQuery, controller.signal).then(data => ({ kind: 'requests', data }));
     else if (projection.view === 'pendingProofs') request = loaders.loadPaymentProofs({ status: 'pending_review', page: 1, limit: 20 }, controller.signal).then(data => ({ kind: 'proofs', data }));
     else if (projection.view === 'approvedProofs') request = loaders.loadPaymentProofs({ status: 'approved', page: 1, limit: 20 }, controller.signal).then(data => ({ kind: 'proofs', data }));
-    else if (projection.view === 'review') request = loaders.loadPaymentProofs({ status: 'pending_review', page: 1, limit: 20 }, controller.signal).then(data => ({ kind: 'proofs', data }));
+    else if (projection.view === 'review') request = loaders.loadPaymentProofs({ status: 'pending_review', page: 1, limit: 20 }, controller.signal).then(async data => {
+      const selectedProof = selectedProofId === undefined ? undefined : data.items.find(item => item.id === selectedProofId) ?? await loaders.loadPaymentProof(selectedProofId, controller.signal);
+      return { kind: 'proofs', data, ...(selectedProof ? { selectedProof } : {}) };
+    });
     else if (projection.view === 'calendar') request = loaders.loadCalendar({ page: 1, limit: 50 }, controller.signal).then(data => ({ kind: 'calendar', data }));
     else request = Promise.all([loaders.loadFinancialReview(financialQuery, controller.signal), loaders.loadLedger({ page: 1, limit: 20 }, controller.signal)]).then(([data, ledger]) => ({ kind: 'financial', data, ledger }));
     void request.then(nextPayload => {
@@ -436,7 +449,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
     [ADMIN_ADS_PENDING_REVIEW_ROUTE, copy.tabs.review],
     [ADMIN_ADS_FINANCIAL_REVIEW_ROUTE, copy.tabs.financial]
   ] as const;
-  const selectedProof = payload?.kind === 'proofs' ? payload.data.items.find(item => item.id === selectedProofId) ?? (projection.view === 'review' ? payload.data.items[0] : undefined) : undefined;
+  const selectedProof = payload?.kind === 'proofs' ? payload.selectedProof ?? (selectedProofId === undefined && projection.view === 'review' ? payload.data.items[0] : undefined) : undefined;
   const selectedRequest = payload?.kind === 'requestDetail' ? payload.data : undefined;
   const selectedFinancial = payload?.kind === 'financialDetail' ? payload.data : undefined;
 
@@ -454,7 +467,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
       {state === 'success' && selectedRequest !== undefined ? <RequestDetail data={selectedRequest} locale={locale} onBack={() => go(ADMIN_ADS_REQUESTS_ROUTE)} onReview={async (action, reason) => { await (reviewRequest ?? source.reviewRequest)(selectedRequest.request.id, { action, reason, expectedVersion: selectedRequest.request.version }); setAttempt(value => value + 1); }} onIssueQuote={async input => { await (issueQuote ?? source.issueQuote)(selectedRequest.request.id, input); setAttempt(value => value + 1); }} onSchedule={async options => { await source.scheduleRequest(selectedRequest.request.id, selectedRequest.request.version, options); setAttempt(value => value + 1); }} /> : null}
       {state === 'success' && selectedFinancial !== undefined ? <section className="admin-ads__detail"><div className="admin-ads__detail-heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h2>{copy.detail}</h2></div><Button variant="secondary" onClick={() => go(ADMIN_ADS_FINANCIAL_REVIEW_ROUTE)}>{copy.back}</Button></div><dl className="admin-ads__detail-list"><div><dt>{copy.columns.request}</dt><dd><code>{selectedFinancial.requestId}</code></dd></div><div><dt>{copy.columns.provider}</dt><dd><code>{selectedFinancial.providerId}</code></dd></div><div><dt>{copy.columns.placement}</dt><dd>{selectedFinancial.placementKey}</dd></div><div><dt>{copy.columns.status}</dt><dd><StatusBadge status={selectedFinancial.requestStatus} label={copy.requestStatus[selectedFinancial.requestStatus] ?? selectedFinancial.requestStatus} /></dd></div><div><dt>{copy.columns.state}</dt><dd><StatusBadge status={selectedFinancial.financialState} label={copy.financialState[selectedFinancial.financialState] ?? selectedFinancial.financialState} /></dd></div><div><dt>{copy.columns.quote}</dt><dd>{moneyLabel(selectedFinancial.quotedTotalMinor, selectedFinancial.quoteCurrency, locale)}</dd></div><div><dt>{copy.columns.interval}</dt><dd>{dateLabel(selectedFinancial.intervalStart, locale)} — {dateLabel(selectedFinancial.intervalEnd, locale)}</dd></div></dl><p className="admin-ads__notice">{copy.notRealized}</p></section> : null}
       {state === 'success' && payload?.kind === 'requests' ? <><TableFrame title={copy.titles.requests} count={copy.count(payload.data.total)} note={copy.directionNote}><RequestsTable data={payload.data} locale={locale} onDetail={id => go(`${ADMIN_ADS_REQUESTS_ROUTE}?requestId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => { setRequestQuery(current => ({ ...current, page: current.page - 1 })); setAttempt(value => value + 1); }} onNext={() => { setRequestQuery(current => ({ ...current, page: current.page + 1 })); setAttempt(value => value + 1); }} /></TableFrame></> : null}
-      {state === 'success' && payload?.kind === 'proofs' ? <><TableFrame title={copy.titles[projection.view]} count={copy.count(payload.data.total)} note={copy.directionNote}><PaymentProofTable data={payload.data} locale={locale} review={projection.view === 'review'} onReview={id => go(`${ADMIN_ADS_PENDING_REVIEW_ROUTE}?proofId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame>{projection.view === 'review' && selectedProof !== undefined ? <ReviewPanel proof={selectedProof} locale={locale} review={loaders.reviewPaymentProof} onSaved={() => { setReviewFeedback(copy.reviewSaved); setAttempt(value => value + 1); }} /> : null}</> : null}
+      {state === 'success' && payload?.kind === 'proofs' ? <><TableFrame title={copy.titles[projection.view]} count={copy.count(payload.data.total)} note={copy.directionNote}><PaymentProofTable data={payload.data} locale={locale} loadFile={loaders.loadPaymentProofFile} review={projection.view === 'review'} onReview={id => go(`${ADMIN_ADS_PENDING_REVIEW_ROUTE}?proofId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame>{projection.view === 'review' && selectedProof !== undefined ? <ReviewPanel key={selectedProof.id} loadFile={loaders.loadPaymentProofFile} proof={selectedProof} locale={locale} review={loaders.reviewPaymentProof} onSaved={() => { setReviewFeedback(copy.reviewSaved); setAttempt(value => value + 1); }} /> : null}</> : null}
       {state === 'success' && payload?.kind === 'calendar' ? <TableFrame title={copy.titles.calendar} count={copy.count(payload.data.total)} note={copy.directionNote}><CalendarTable data={payload.data} locale={locale} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame> : null}
       {state === 'success' && payload?.kind === 'financial' ? <><TableFrame title={copy.titles.financial} count={copy.count(payload.data.total)} note={copy.notRealized}><FinancialTable data={payload.data} locale={locale} onDetail={id => go(`${ADMIN_ADS_FINANCIAL_REVIEW_ROUTE}?requestId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame><TableFrame title={copy.columns.source} count={copy.count(payload.ledger.total)} note={copy.notRealized}><LedgerTable data={payload.ledger} locale={locale} /></TableFrame></> : null}
     </div>

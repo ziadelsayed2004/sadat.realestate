@@ -113,3 +113,8 @@
 .admin-ads__campaign-fields p { margin: 0; line-height: 1.7; }
 .admin-ads__campaign-fields select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #ddd9cd; border-radius: 12px; background: white; color: #17233d; font: inherit; }
 .admin-ads__campaign-fields select:focus-visible { outline: 2px solid #cfa344; outline-offset: 2px; }
+.admin-ads__proof-preview { min-width: 0; display: grid; gap: 12px; margin-block: 16px; padding: 16px; border: 1px solid #e3e5e7; border-radius: 14px; background: #faf8f2; }
+.admin-ads__proof-preview h4, .admin-ads__proof-preview p { margin: 0; overflow-wrap: anywhere; }
+.admin-ads__proof-preview img { display: block; max-width: 100%; max-height: 70dvh; margin-inline: auto; object-fit: contain; border-radius: 8px; }
+.admin-ads__proof-file-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-ads__proof-file-actions a { min-height: 44px; padding: 10px 16px; text-decoration: none; text-align: center; }

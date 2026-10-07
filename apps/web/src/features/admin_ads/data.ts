@@ -38,7 +38,7 @@ import {
   type PaymentProofData,
   type PaymentProofReview
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, buildApiUrl, type ApiClientOptions } from '../contracts/index.ts';
 
 export const ADMIN_ADS_REQUESTS_ROUTE = '/admin/ads/requests' as const;
 export const ADMIN_ADS_PENDING_PROOFS_ROUTE = '/admin/ads/payment-proofs/pending' as const;
@@ -55,6 +55,7 @@ const ADMIN_LEDGER_API_ROUTE = '/admin/ad-ledger' as const;
 
 export type AdminAdsAuthorizationSource = {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 };
 
 interface CommonOptions {
@@ -96,6 +97,8 @@ export type AdminAdsRequestReviewMutation = (requestId: string, input: AdAdminRe
 export type AdminAdsQuoteIssueMutation = (requestId: string, input: Omit<AdQuoteIssue, 'requestId'>, signal?: AbortSignal) => Promise<AdQuote>;
 export type AdminAdsPaymentProofLoader = (query: PaymentProofAdminListQuery, signal?: AbortSignal) => Promise<AdminAdsPaymentProofListData>;
 export type AdminAdsPaymentProofReviewMutation = (proofId: string, input: PaymentProofReview, signal?: AbortSignal) => Promise<PaymentProofData>;
+export type AdminAdsPaymentProofDetailLoader = (proofId: string, signal?: AbortSignal) => Promise<PaymentProofData>;
+export type AdminAdsPaymentProofFileLoader = (proofId: string, signal?: AbortSignal) => Promise<Blob>;
 export type AdminAdsCalendarLoader = (query: AdCalendarQuery, signal?: AbortSignal) => Promise<AdminAdsCalendarData>;
 export type AdminAdsFinancialReviewLoader = (query: AdFinancialReviewQuery, signal?: AbortSignal) => Promise<AdminAdsFinancialReviewData>;
 export type AdminAdsFinancialDetailLoader = (requestId: string, signal?: AbortSignal) => Promise<AdFinancialReviewRow>;
@@ -168,6 +171,25 @@ export async function reviewAdminPaymentProof(proofId: string, input: unknown, o
     ...requestOptions(options)
   });
   return response.data.data;
+}
+
+export async function loadAdminPaymentProof(proofId: string, options: CommonOptions = {}): Promise<PaymentProofData> {
+  const id = adRequestIdParamsSchema.parse({ adRequestId: proofId }).adRequestId;
+  return (await clientFor(options).request(`${ADMIN_PAYMENT_PROOFS_API_ROUTE}/${id}`, { responseSchema: paymentProofSuccessEnvelopeSchema, ...requestOptions(options) })).data.data;
+}
+
+export async function loadAdminPaymentProofFile(proofId: string, options: CommonOptions = {}): Promise<Blob> {
+  const id = adRequestIdParamsSchema.parse({ adRequestId: proofId }).adRequestId;
+  const request = () => fetch(buildApiUrl(options.apiOrigin, `${ADMIN_PAYMENT_PROOFS_API_ROUTE}/${id}/file`), { ...requestOptions(options), credentials: 'include', cache: 'no-store' });
+  let response = await request();
+  if (response.status === 401 && options.authorization?.refresh && !options.signal?.aborted) {
+    await options.authorization.refresh();
+    response = await request();
+  }
+  if (!response.ok) throw new ApiClientError('Payment proof file unavailable', { code: 'HTTP_ERROR', status: response.status });
+  const blob = await response.blob();
+  if (!['image/jpeg', 'image/png', 'application/pdf'].includes(blob.type) || blob.size === 0 || blob.size > 10 * 1024 * 1024) throw new ApiClientError('Invalid payment proof file', { code: 'HTTP_ERROR' });
+  return blob;
 }
 
 export async function loadAdminAdCalendar(options: AdminAdsCalendarLoadOptions = {}): Promise<AdminAdsCalendarData> {
@@ -276,6 +298,8 @@ export function createAdminAdsSource(options: Omit<CommonOptions, 'signal'> = {}
     loadRequests: createAdminAdsRequestLoader(options),
     loadRequestDetail: createAdminAdsRequestDetailLoader(options),
     loadPaymentProofs: createAdminAdsPaymentProofLoader(options),
+    loadPaymentProof: (id: string, signal?: AbortSignal) => loadAdminPaymentProof(id, { ...options, ...(signal ? { signal } : {}) }),
+    loadPaymentProofFile: (id: string, signal?: AbortSignal) => loadAdminPaymentProofFile(id, { ...options, ...(signal ? { signal } : {}) }),
     reviewPaymentProof: createAdminAdsPaymentProofReviewMutation(options),
     loadCalendar: createAdminAdsCalendarLoader(options),
     loadFinancialReview: createAdminAdsFinancialReviewLoader(options),

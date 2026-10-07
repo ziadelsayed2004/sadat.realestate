@@ -5999,6 +5999,67 @@
             },
             "description": "Requires a verified administrator with the pricing permission. The quote is manually issued in integer minor units with a future expiry; no universal advertising price is used."
           }
+        },
+        {
+          "name": "Get administrative payment proof",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/payment-proofs/:proofId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "payment-proofs",
+                ":proofId"
+              ],
+              "variable": [
+                {
+                  "key": "proofId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Active payment proof metadata. Requires admin:payments.review; private storage keys are redacted."
+          }
+        },
+        {
+          "name": "Download private payment proof file",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/payment-proofs/:proofId/file",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "payment-proofs",
+                ":proofId",
+                "file"
+              ],
+              "variable": [
+                {
+                  "key": "proofId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Private receipt bytes. Requires admin:payments.review, an active clean proof, and valid stored content. No public URL is returned. Use Send and Download to save the binary response."
+          }
         }
       ]
     },

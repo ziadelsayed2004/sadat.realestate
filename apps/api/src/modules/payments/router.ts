@@ -11,10 +11,12 @@ import { PaymentProofServiceError, type PaymentProofServiceDependencies, createP
 export const PAYMENT_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/provider/ads/:adRequestId/payment-proof', operationId: 'uploadProviderPaymentProof' },
   { method: 'GET', path: '/api/v1/admin/payment-proofs', operationId: 'listAdminPaymentProofs' },
+  { method: 'GET', path: '/api/v1/admin/payment-proofs/:proofId', operationId: 'getAdminPaymentProof' },
+  { method: 'GET', path: '/api/v1/admin/payment-proofs/:proofId/file', operationId: 'downloadAdminPaymentProof' },
   { method: 'POST', path: '/api/v1/admin/payment-proofs/:proofId/review', operationId: 'reviewAdminPaymentProof' }
 ] as const;
 
-type PaymentProofService = Pick<ReturnType<typeof createPaymentProofService>, 'upload' | 'listAdmin' | 'review'>;
+type PaymentProofService = Pick<ReturnType<typeof createPaymentProofService>, 'upload' | 'listAdmin' | 'review' | 'getAdmin' | 'readFile'>;
 
 export interface PaymentProofRouterDependencies {
   service: PaymentProofService;
@@ -29,6 +31,7 @@ const ERROR_MAP: Readonly<Record<string, { statusCode: number; messageKey: strin
   AD_REQUEST_NOT_PAYABLE: { statusCode: 409, messageKey: 'errors.conflict' },
   DUPLICATE: { statusCode: 409, messageKey: 'errors.conflict' },
   NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
+  FILE_NOT_READY: { statusCode: 409, messageKey: 'errors.conflict' },
   PAYMENT_PROOF_AUDIT_UNAVAILABLE: { statusCode: 503, messageKey: 'errors.auditUnavailable' },
   PAYMENT_PROOF_AUDIT_FAILED: { statusCode: 503, messageKey: 'errors.auditUnavailable' },
   MALWARE_SCAN_FAILED: { statusCode: 503, messageKey: 'errors.upload.scanFailed' },
@@ -137,6 +140,24 @@ export function createPaymentProofRouter(dependencies: PaymentProofRouterDepende
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.get('/admin/payment-proofs/:proofId', async (request, response) => {
+    try {
+      const data = await dependencies.service.getAdmin(adminClaims(response), objectIdPath(request.params.proofId));
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+
+  router.get('/admin/payment-proofs/:proofId/file', async (request, response) => {
+    try {
+      const file = await dependencies.service.readFile(adminClaims(response), objectIdPath(request.params.proofId));
+      response.setHeader('Content-Type', file.mime);
+      response.setHeader('Content-Disposition', `inline; filename="payment-proof"; filename*=UTF-8''${encodeURIComponent(file.filename)}`);
+      response.setHeader('X-Content-Type-Options', 'nosniff');
+      response.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+      response.status(200).send(file.bytes);
+    } catch (error) { sendError(request, response, error); }
   });
 
   router.post('/provider/ads/:adRequestId/payment-proof', providerAuth, uploadRateLimit, async (request, response) => {

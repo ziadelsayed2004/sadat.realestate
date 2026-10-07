@@ -87,6 +87,15 @@ export async function routeAdminAdsApis(page: Page, allow = true): Promise<void>
   });
   await page.route('**/api/v1/admin/payment-proofs**', async route => {
     const url = new URL(route.request().url());
+    if (url.pathname.endsWith('/file')) {
+      expect(route.request().headers().authorization).toBe('Bearer admin.ads.qa');
+      await route.fulfill({ status: 200, contentType: 'application/pdf', body: '%PDF-1.7\nPrivate receipt fixture\n%%EOF' });
+      return;
+    }
+    if (url.pathname.endsWith(`/${adminAdsProofId}`)) {
+      await route.fulfill({ json: success(adminAdsProofFixture(), 'admin-ads-proof-detail') });
+      return;
+    }
     if (route.request().method() === 'POST') {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success(adminAdsProofFixture('approved'), 'admin-ads-proof-review')) });
       return;

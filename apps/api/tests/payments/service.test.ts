@@ -4,6 +4,7 @@ import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createDeterministicMalwareScanner, createInMemoryStorageAdapter, createUnavailableMalwareScanner } from '../../src/modules/uploads/adapters.js';
 import { PaymentProofServiceError, createPaymentProofService } from '../../src/modules/payments/service.js';
+import type { PaymentProofRepository, StoredPaymentProof } from '../../src/modules/payments/service.js';
 
 const provider = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '2123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'provider', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const admin = { ...provider, sub: '3123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
@@ -11,6 +12,40 @@ const seeker = { ...provider, role: 'seeker' } as AccessTokenClaims;
 const adRequestId = '4123456789abcdef01234567';
 const validPdf = Buffer.from('%PDF-1.7\nprivate proof\n%%EOF', 'ascii');
 const headers = { filename: 'receipt.pdf', contentType: 'application/pdf' as const, contentLength: validPdf.byteLength };
+
+test('receipt preview requires payment-review permission and rejects unsafe, altered or missing private files', async () => {
+  const storage = createInMemoryStorageAdapter();
+  const key = `quarantine/${'a'.repeat(32)}`;
+  const initial = createPaymentProofService({ storage, scanner: createDeterministicMalwareScanner('clean'), createObjectKey: () => key, findPayableAdRequest: ownerId => requestFor(ownerId) });
+  const proof = await initial.upload(provider, adRequestId, headers, Readable.from(validPdf));
+  let current: StoredPaymentProof = { ...proof, storageKey: key };
+  let permitted = true;
+  const repository: PaymentProofRepository = {
+    find: async id => id === current.id ? current : undefined,
+    findPayableAdRequest: async () => undefined,
+    list: async () => ({ items: [], total: 0 }),
+    register: async () => { throw new Error('Not used'); },
+    updateScan: async () => undefined, review: async () => undefined
+  };
+  const service = createPaymentProofService({ storage, repository, scanner: createDeterministicMalwareScanner('clean'), authorization: { authorize: async () => permitted } });
+  const rejects = (code: string) => (error: unknown) => error instanceof PaymentProofServiceError && error.code === code;
+  assert.deepEqual((await service.readFile(admin, proof.id)).bytes, validPdf);
+  for (const claims of [provider, seeker, { ...admin, status: 'suspended' as const }]) await assert.rejects(service.readFile(claims, proof.id), rejects('FORBIDDEN'));
+  permitted = false;
+  await assert.rejects(service.readFile(admin, proof.id), rejects('FORBIDDEN'));
+  permitted = true;
+  for (const securityState of ['scan_pending', 'infected', 'scan_failed'] as const) {
+    current = { ...current, securityState };
+    await assert.rejects(service.readFile(admin, proof.id), rejects('FILE_NOT_READY'));
+  }
+  current = { ...current, securityState: 'clean', active: false };
+  await assert.rejects(service.readFile(admin, proof.id), rejects('NOT_FOUND'));
+  current = { ...current, active: true };
+  await storage.putPrivateQuarantine(key, Readable.from(Buffer.from('x'.repeat(validPdf.length))));
+  await assert.rejects(service.readFile(admin, proof.id), rejects('FILE_NOT_READY'));
+  await storage.deletePrivate(key);
+  await assert.rejects(service.readFile(admin, proof.id), rejects('NOT_FOUND'));
+});
 
 function requestFor(ownerId: string, status = 'waiting_payment') {
   return { id: adRequestId, providerId: ownerId, status };

@@ -12,7 +12,7 @@ import {
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClient } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminAds,
   createAdminAdsSource,
@@ -186,7 +186,7 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
   it('renders the approved proof review route, requires a reason, and sends the current version', async () => {
     window.history.pushState({}, '', `/admin/ads/payments/pending-review?proofId=${proof.id}`);
     const review = vi.fn(async () => proof);
-    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} reviewPaymentProof={review} />, { locale: 'en' });
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadPaymentProofFile={async () => { throw new ApiClientError('Missing test receipt', { code: 'HTTP_ERROR', status: 404 }); }} reviewPaymentProof={review} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId(`admin-payment-proof-${proof.id}`)).toBeInTheDocument());
     const copy = getAdminAdsCopy('en');
     const reasonField = screen.getByLabelText(copy.reasonLabel);
