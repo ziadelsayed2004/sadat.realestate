@@ -10,7 +10,10 @@ const maxJavaScriptBytes = 2_500 * 1024;
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route
 // payload instead, including the provider-property extension where applicable.
-const maxRouteStylesheetBytes = 256 * 1024;
+// The accessible homepage range popover adds about 5.5 KB to the existing
+// 261,783-byte public route. Allow a bounded 8 KB increment (3.1%) for it;
+// keep the JavaScript limits unchanged and continue counting the whole route.
+const maxRouteStylesheetBytes = 264 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

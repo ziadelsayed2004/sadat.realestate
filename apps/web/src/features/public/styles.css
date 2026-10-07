@@ -3045,3 +3045,103 @@
     transition-duration: 0.01ms;
   }
 }
+
+.public-homepage__search-row .homepage-price-range {
+  position: relative;
+  min-inline-size: 0;
+  color: #17233d;
+}
+
+.homepage-price-range[data-open='true'] { z-index: 210; }
+
+.public-homepage__search-row .homepage-price-range__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  inline-size: 100%;
+  min-block-size: 2.875rem;
+  padding: 0.65rem 0.875rem;
+  color: #17233d;
+  background: #faf8f2;
+  border: 1.5px solid rgb(23 35 61 / 12%);
+  border-radius: 1.125rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 180ms ease-in-out, box-shadow 180ms ease-in-out;
+}
+
+.homepage-price-range__trigger > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.homepage-price-range__trigger svg { flex: 0 0 auto; transition: transform 180ms ease-in-out; }
+.homepage-price-range[data-open='true'] .homepage-price-range__trigger svg { transform: rotate(180deg); }
+.homepage-price-range__trigger:hover,
+.homepage-price-range__trigger:focus-visible,
+.homepage-price-range[data-open='true'] .homepage-price-range__trigger { border-color: #d1a044; box-shadow: 0 0 0 3px rgb(209 160 68 / 15%); outline: none; }
+.homepage-price-range__trigger[aria-invalid='true'] { border-color: #b42318; }
+
+.homepage-price-range__panel {
+  position: absolute;
+  inset-block-start: calc(100% + 0.625rem);
+  inset-inline-end: 0;
+  inline-size: min(22rem, calc(100vw - 3rem));
+  box-sizing: border-box;
+  padding: 1.125rem;
+  color: #17233d;
+  background: #fff;
+  border: 1px solid #e8e4d9;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2.5rem rgb(23 35 61 / 18%);
+  text-align: start;
+  animation: homepage-price-reveal 180ms ease-in-out;
+}
+
+.homepage-price-range__panel header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.homepage-price-range__panel header strong { font-size: 1rem; }
+.homepage-price-range__panel header small { color: #657182; font-size: 0.75rem; white-space: nowrap; }
+.homepage-price-range__help,
+.homepage-price-range__limit { margin: 0.625rem 0; color: #657182; font-size: 0.8125rem; line-height: 1.6; }
+.homepage-price-range__error { margin: 0.625rem 0; color: #b42318; font-size: 0.8125rem; line-height: 1.6; }
+
+.homepage-price-range__sliders { position: relative; block-size: 2.75rem; margin: 0.625rem 0.75rem; }
+.homepage-price-range__track { position: absolute; inset-inline: 0; inset-block-start: calc(50% - 3px); block-size: 6px; background: linear-gradient(to right, #e8e4d9 var(--range-start), #d1a044 var(--range-start), #d1a044 var(--range-end), #e8e4d9 var(--range-end)); border-radius: 1rem; }
+.public-homepage__search-row .homepage-price-range input[type='range'] {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 0;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  outline: none;
+}
+.homepage-price-range input[type='range']::-webkit-slider-runnable-track { block-size: 6px; background: transparent; }
+.homepage-price-range input[type='range']::-moz-range-track { block-size: 6px; background: transparent; }
+.homepage-price-range input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; inline-size: 24px; block-size: 24px; margin-block-start: -9px; pointer-events: auto; cursor: grab; touch-action: none; background: #fff; border: 3px solid #d1a044; border-radius: 50%; box-shadow: 0 2px 6px rgb(23 35 61 / 18%); }
+.homepage-price-range input[type='range']::-moz-range-thumb { inline-size: 18px; block-size: 18px; pointer-events: auto; cursor: grab; touch-action: none; background: #fff; border: 3px solid #d1a044; border-radius: 50%; }
+.homepage-price-range input[type='range']:focus-visible { z-index: 2; }
+.homepage-price-range input[type='range']:focus-visible::-webkit-slider-thumb { outline: 3px solid #17233d; outline-offset: 3px; }
+.homepage-price-range input[type='range']:focus-visible::-moz-range-thumb { outline: 3px solid #17233d; outline-offset: 3px; }
+
+.homepage-price-range__values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.public-homepage__search-row .homepage-price-range__values label { position: static; display: grid; gap: 0.375rem; block-size: auto; }
+.public-homepage__search-row .homepage-price-range__values label > span { position: static; inline-size: auto; block-size: auto; clip: auto; clip-path: none; overflow: visible; color: #17233d; font-size: 0.8125rem; }
+.public-homepage__search-row .homepage-price-range__values input { box-sizing: border-box; inline-size: 100%; min-inline-size: 0; min-block-size: 2.875rem; block-size: 2.875rem; padding: 0.5rem 0.625rem; background: #faf8f2; color: #17233d; border: 1px solid #e8e4d9; border-radius: 0.625rem; font: inherit; font-size: 0.875rem; direction: ltr; text-align: start; }
+.homepage-price-range__values input:focus-visible { outline: 2px solid #d1a044; outline-offset: 2px; }
+.homepage-price-range__panel footer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-block-start: 1rem; }
+.homepage-price-range__panel footer button { min-block-size: 2.75rem; padding: 0.5rem 1rem; border: 0; border-radius: 0.75rem; color: #17233d; background: #f5f2eb; font: inherit; font-size: 0.875rem; cursor: pointer; transition: background-color 180ms ease-in-out; }
+.homepage-price-range__panel footer button:last-child { color: #fff; background: #17233d; }
+.homepage-price-range__panel footer button:hover { background: #eae3d4; }
+.homepage-price-range__panel footer button:last-child:hover { background: #263b60; }
+.public-homepage__search-row button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+@keyframes homepage-price-reveal { from { opacity: 0; transform: translateY(-0.375rem); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 560px) { .homepage-price-range__panel { inline-size: 100%; } }
+@media (prefers-reduced-motion: reduce) { .homepage-price-range__panel { animation: none; } .homepage-price-range__trigger, .homepage-price-range__trigger svg, .homepage-price-range__panel footer button { transition: none; } }

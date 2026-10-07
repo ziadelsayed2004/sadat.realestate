@@ -29,6 +29,7 @@ import {
   propertyFeatures
 } from './model.ts';
 import './styles.css';
+import { HomepagePriceRange, isHomepagePriceRangeValid } from './price-range.tsx';
 
 export type PublicHomepageViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
 
@@ -640,7 +641,13 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
   const [transactionType, setTransactionType] = useState<'sale' | 'rent'>('sale');
   const [propertyType, setPropertyType] = useState('');
   const [locationId, setLocationId] = useState('');
+  const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const priceRangeValid = isHomepagePriceRangeValid(minPrice, maxPrice);
+  const selectTransaction = (next: 'sale' | 'rent') => {
+    if (next !== transactionType) { setMinPrice(''); setMaxPrice(''); }
+    setTransactionType(next);
+  };
   const labels = locale === 'ar'
     ? { type: 'نوع العقار', district: 'المنطقة', price: 'السعر', any: 'الكل' }
     : { type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
@@ -654,12 +661,13 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
   }));
 
   return (
-    <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel}>
+    <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel} onSubmit={event => { if (!priceRangeValid) event.preventDefault(); }}>
       <div className="public-homepage__search-tabs" role="tablist" aria-label={locale === 'ar' ? '\u0646\u0648\u0639 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629' : 'Transaction type'}>
-        <button type="button" role="tab" aria-selected={transactionType === 'sale'} className={transactionType === 'sale' ? 'is-active' : ''} onClick={() => setTransactionType('sale')}>{copy.sale}</button>
-        <button type="button" role="tab" aria-selected={transactionType === 'rent'} className={transactionType === 'rent' ? 'is-active' : ''} onClick={() => setTransactionType('rent')}>{copy.rent}</button>
+        <button type="button" role="tab" aria-selected={transactionType === 'sale'} className={transactionType === 'sale' ? 'is-active' : ''} onClick={() => selectTransaction('sale')}>{copy.sale}</button>
+        <button type="button" role="tab" aria-selected={transactionType === 'rent'} className={transactionType === 'rent' ? 'is-active' : ''} onClick={() => selectTransaction('rent')}>{copy.rent}</button>
       </div>
       <input type="hidden" name="transactionType" value={transactionType} readOnly />
+      <input type="hidden" name="lang" value={locale} readOnly />
       <div className="public-homepage__search-row">
         <CustomSelect
           name="propertyTypeId"
@@ -687,20 +695,8 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
             submit the legacy homepage search key.  The visible district
             control above is always backed by admin-managed location ids. */}
         <input id="public-homepage-search" name="search" type="search" className="a11y-visually-hidden" tabIndex={-1} aria-hidden="true" />
-        <CustomSelect
-          name="maxPrice"
-          label={labels.price}
-          placeholder={labels.price}
-          value={maxPrice}
-          onChange={setMaxPrice}
-          options={[
-            { value: '1000000', label: '1,000,000' },
-            { value: '3000000', label: '3,000,000' },
-            { value: '5000000', label: '5,000,000' },
-            { value: '10000000', label: '10,000,000' }
-          ]}
-        />
-        <button type="submit">
+        <HomepagePriceRange key={transactionType} locale={locale} transactionType={transactionType} minPrice={minPrice} maxPrice={maxPrice} onChange={(min, max) => { setMinPrice(min); setMaxPrice(max); }} />
+        <button type="submit" disabled={!priceRangeValid}>
           <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg>
           {searchActionLabel}
         </button>

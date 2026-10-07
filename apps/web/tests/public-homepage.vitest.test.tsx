@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClientError } from '../src/features/contracts/index.ts';
 import { PublicHomepage } from '../src/features/public/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { parsePublicPropertySearchQuery } from '../src/features/public/listing-data.ts';
 
 const homepageData = publicHomepageDataSchema.parse({
   sections: [{
@@ -204,6 +205,57 @@ describe('public homepage', () => {
 
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Published homes', level: 1 })).toBeInTheDocument());
     expect(load).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps price optional and switches from purchase prices to a cleared rental budget', () => {
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+    const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
+    expect(new FormData(form).has('minPrice')).toBe(false);
+    expect(new FormData(form).has('maxPrice')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: 'Price range: Price' }));
+    expect(screen.getByRole('slider', { name: 'Maximum price — EGP' })).toHaveAttribute('max', '10000000');
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Minimum price (Optional)' }), { target: { value: '1000000' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Maximum price (Optional)' }), { target: { value: '3000000' } });
+    fireEvent.click(screen.getByRole('tab', { name: 'For rent' }));
+    expect(new FormData(form).has('minPrice')).toBe(false);
+    expect(new FormData(form).has('maxPrice')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: 'Price range: Price' }));
+    expect(screen.getByRole('slider', { name: 'Maximum price — EGP' })).toHaveAttribute('max', '100000');
+  });
+
+  it('submits both price endpoints to the listing query and supports manually entered budgets above the slider scale', () => {
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('tab', { name: 'For rent' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Price range: Price' }));
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Minimum price (Optional)' }), { target: { value: '5000' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Maximum price (Optional)' }), { target: { value: '150000' } });
+    expect(screen.getByRole('slider', { name: 'Maximum price — EGP' })).toHaveAttribute('max', '150000');
+    const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
+    const params = new URLSearchParams([...new FormData(form).entries()].map(([key, value]) => [key, String(value)]));
+    expect(parsePublicPropertySearchQuery(`/properties?${params}`)).toMatchObject({ transactionType: 'rent', minPrice: 5000, maxPrice: 150000 });
+    fireEvent.click(screen.getByRole('button', { name: 'Clear price' }));
+    expect(new FormData(form).has('minPrice')).toBe(false);
+    expect(new FormData(form).has('maxPrice')).toBe(false);
+  });
+
+  it('prevents reversed and negative budgets and allows a single optional endpoint', () => {
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Price range: Price' }));
+    const min = screen.getByRole('spinbutton', { name: 'Minimum price (Optional)' });
+    const max = screen.getByRole('spinbutton', { name: 'Maximum price (Optional)' });
+    fireEvent.change(min, { target: { value: '20000' } });
+    fireEvent.change(max, { target: { value: '5000' } });
+    expect(screen.getByRole('alert')).toHaveTextContent('minimum no higher than');
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
+    const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
+    expect(form.querySelector('button[type="submit"]')).toBeDisabled();
+    expect(fireEvent.submit(form)).toBe(false);
+    fireEvent.change(max, { target: { value: '' } });
+    expect(form.querySelector('button[type="submit"]')).not.toBeDisabled();
+    expect(new FormData(form).get('minPrice')).toBe('20000');
+    expect(new FormData(form).has('maxPrice')).toBe(false);
+    fireEvent.change(min, { target: { value: '-1' } });
+    expect(form.querySelector('button[type="submit"]')).toBeDisabled();
   });
 
   it('opens a mobile navigation panel with locale and account actions', () => {
