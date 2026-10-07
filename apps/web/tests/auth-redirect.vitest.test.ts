@@ -11,9 +11,11 @@ describe('authentication completion destination', () => {
       expect(authCompletionHref(`/auth/register/provider/account?providerType=${providerType}`, 'provider', locale)).toBe(`/?lang=${locale}`);
     }
   });
-  it('preserves login destinations and rejects external return URLs', () => {
-    expect(authCompletionHref('/auth/login?returnTo=/properties%3Flang%3Dar', 'seeker', 'ar')).toBe('/properties?lang=ar');
-    expect(authCompletionHref('/auth/login?returnTo=//external.example', 'admin', 'en')).toBe('/admin?lang=en');
-    expect(authCompletionHref('/auth/verify-email?purpose=login', 'provider', 'ar')).toBe('/provider?lang=ar');
+  it.each(['ar', 'en'] as const)('opens the homepage on login even with a previous destination in %s', locale => {
+    for (const role of ['seeker', 'provider', 'admin', undefined]) {
+      for (const url of [undefined, '/auth/login', '/auth/verify-email?purpose=login', '/auth/login?returnTo=/seeker/viewings%3Flang%3Dar', '/auth/login?returnTo=/properties%3Flang%3Dar', '/auth/login?returnTo=//external.example', '/auth/login?returnTo=https%3A%2F%2Fexternal.example']) {
+        expect(authCompletionHref(url, role, locale)).toBe(`/?lang=${locale}`);
+      }
+    }
   });
 });

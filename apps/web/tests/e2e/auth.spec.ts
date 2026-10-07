@@ -93,7 +93,7 @@ test('login refreshes the public header into the authenticated customer account'
   await page.locator('#auth-login-email').fill('admin@example.com');
   await page.locator('#auth-login-password').fill('secret');
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
-  await page.waitForURL(url => url.pathname === '/admin' && url.searchParams.get('lang') === locale);
+  await page.waitForURL(url => url.pathname === '/' && url.searchParams.get('lang') === locale);
 
   await page.goto(`/?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('[data-page="public-home"][data-homepage-state="success"]')).toBeVisible();
@@ -104,9 +104,10 @@ test('login refreshes the public header into the authenticated customer account'
   await expect(page.locator('.public-homepage__actions a[href="/auth/register"]')).toHaveCount(0);
 });
 
-test('seeker login enters the customer dashboard and keeps the authenticated session', async ({ page }) => {
+test('seeker login opens the public homepage and keeps the authenticated session', async ({ page }) => {
   test.skip(!test.info().project.name.startsWith('desktop-'), 'The seeker login journey is covered once on the desktop matrix.');
   const locale = localeForProject();
+  await routePublicHomepageApi(page);
   await page.route('**/api/v1/auth/login', async route => {
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({ email: 'seeker@example.com', password: 'secret' });
@@ -160,7 +161,9 @@ test('seeker login enters the customer dashboard and keeps the authenticated ses
   await page.locator('#auth-login-email').fill('seeker@example.com');
   await page.locator('#auth-login-password').fill('secret');
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
-  await page.waitForURL(url => url.pathname === '/seeker' && url.searchParams.get('lang') === locale);
+  await page.waitForURL(url => url.pathname === '/' && url.searchParams.get('lang') === locale);
+  await expect(page.locator('[data-page="public-home"][data-homepage-state="success"]')).toBeVisible();
+  await page.goto(`/seeker?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('[data-screen-id="SEK-01"]')).toBeVisible();
   await expect(page.locator('.seeker-dashboard__topbar-profile')).toContainText('Seeker Customer');
 });

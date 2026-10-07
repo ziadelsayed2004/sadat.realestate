@@ -55,17 +55,18 @@ test('access tokens stay out of browser storage and hostile returnTo values fail
   await page.locator('#auth-login-password').fill('secret');
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
 
-  await expect(page).toHaveURL(new RegExp(`/admin\\?lang=${locale}$`, 'u'));
+  await expect(page).toHaveURL(new RegExp(`/\\?lang=${locale}$`, 'u'));
   const storage = await page.evaluate(() => ({
     local: window.localStorage.length,
-    session: window.sessionStorage.length,
+    sessionEntries: Object.entries(window.sessionStorage),
     localValues: Object.values(window.localStorage),
     sessionValues: Object.values(window.sessionStorage)
   }));
-  expect(storage.session).toBe(0);
-  expect(storage.sessionValues).toEqual([]);
+  // The homepage stores only a non-sensitive flag to avoid repeating its intro.
+  expect(storage.sessionEntries.filter(([key, value]) => key !== 'sadat.home-intro.seen' || value !== '1')).toEqual([]);
+  expect(storage.sessionValues).not.toContain('header.payload.signature');
   expect(storage.localValues).not.toContain('header.payload.signature');
-  expect(storage.localValues.join('|')).not.toMatch(/accessToken|refreshToken|secret/iu);
+  expect([...storage.localValues, ...storage.sessionValues].join('|')).not.toMatch(/accessToken|refreshToken|secret/iu);
   await expect(page.locator('body')).not.toContainText(/header\.payload\.signature|accessToken|refreshToken/u);
 });
 
