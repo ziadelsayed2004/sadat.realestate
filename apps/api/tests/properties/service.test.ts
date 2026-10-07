@@ -137,6 +137,19 @@ test('creates provider-owned drafts and saves core/location steps with optimisti
   assert.equal(contacted.contact?.phone, '+201234567890');
 });
 
+test('saves optional features empty and clears previous selections without blocking the draft', async () => {
+  const { service } = fixture();
+  const metadata = { requestId: 'optional-features', traceId: '3'.repeat(32) };
+  const empty = await service.saveStep(claims(), id, 'features-services', { version: 0, featureIds: [], serviceIds: [], reason: 'Continue without optional features' }, metadata);
+  assert.deepEqual(empty.featureIds, []);
+  assert.deepEqual(empty.serviceIds, []);
+  const selected = await service.saveStep(claims(), id, 'features-services', { version: 1, featureIds: ['6123456789abcdef01234567'], serviceIds: [], reason: 'Select elevator' }, metadata);
+  assert.equal(selected.featureIds?.length, 1);
+  const cleared = await service.saveStep(claims(), id, 'features-services', { version: 2, featureIds: [], serviceIds: [], reason: 'Remove optional selections' }, metadata);
+  assert.deepEqual(cleared.featureIds, []);
+  assert.equal(cleared.status, 'draft');
+});
+
 test('lists only owned properties with bounded filters and state-derived actions', async () => {
   const { service } = fixture();
   const result = await service.list(claims(), { status: 'draft', page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });

@@ -44,6 +44,10 @@ test('supports allowlisted filters and deterministic query validation', async ()
   assert.equal(publicPropertySearchQuerySchema.safeParse({ propertyTypeId: 'not-an-object-id' }).success, false);
   assert.equal(publicPropertySearchQuerySchema.safeParse({ deliveryStatus: 'ready_to_move' }).success, true);
   assert.equal(publicPropertySearchQuerySchema.safeParse({ deliveryStatus: 'unknown' }).success, false);
+  assert.equal(publicPropertySearchQuerySchema.parse({ includeAmenities: 'true' }).includeAmenities, true);
+  assert.equal(publicPropertySearchQuerySchema.parse({ includeAmenities: 'false' }).includeAmenities, false);
+  assert.equal(publicPropertySearchQuerySchema.safeParse({ includeAmenities: 'yes' }).success, false);
+  assert.equal(publicPropertySearchQuerySchema.safeParse({ includeAmenities: { $ne: false } }).success, false);
 });
 
 test('returns a safe empty page when no public rows exist', async () => {

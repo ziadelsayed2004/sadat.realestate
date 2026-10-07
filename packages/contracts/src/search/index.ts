@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { propertyDeliveryStatusSchema, propertyKindSchema, propertyObjectIdSchema, propertyTransactionTypeSchema } from '../properties/index.js';
 import { publicHomepagePropertySchema } from '../public/index.js';
-import { publicHomepageCategorySchema } from '../public/index.js';
+import { publicHomepageCategorySchema, publicPropertyAmenitySchema } from '../public/index.js';
 import { localizedTextSchema } from '../localization/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 import { locationKindSchema, locationObjectIdSchema, locationSlugSchema } from '../locations/index.js';
@@ -16,6 +16,7 @@ export const publicPropertySearchQuerySchema = z.object({
   propertyTypeId: propertyObjectIdSchema.optional(),
   deliveryStatus: propertyDeliveryStatusSchema.optional(),
   locationId: propertyObjectIdSchema.optional(),
+  includeAmenities: z.preprocess(value => value === 'true' ? true : value === 'false' ? false : value, z.boolean()).optional(),
   search: z.string().trim().min(1).max(80).regex(/^[^\u0000-\u001f\u007f]+$/u).optional(),
   minPrice: nonNegativeQuery(1_000_000_000_000_000),
   maxPrice: nonNegativeQuery(1_000_000_000_000_000),
@@ -59,6 +60,7 @@ export const publicPropertyListDataSchema = z.object({
   categories: z.array(publicHomepageCategorySchema).max(100),
   propertyTypes: z.array(publicHomepageCategorySchema).max(100),
   locations: z.array(publicPropertyLocationSchema).max(500).optional(),
+  amenities: z.array(publicPropertyAmenitySchema).max(1_000).optional(),
   page: z.number().int().positive(),
   limit: z.number().int().positive().max(100),
   total: z.number().int().nonnegative()

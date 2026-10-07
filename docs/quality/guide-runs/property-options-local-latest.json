@@ -1,0 +1,8 @@
+{
+  "status": "PASS_LOCAL",
+  "checks": [
+    "ordinary_search_does_not_fetch_amenities",
+    "only_active_named_features_and_services_without_private_fields"
+  ],
+  "cleanup": true
+}

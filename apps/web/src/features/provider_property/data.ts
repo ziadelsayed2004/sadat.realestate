@@ -28,9 +28,10 @@ import {
   type PropertyMediaOrder,
   type PropertySubmit,
   type PublicHomepageCategory,
-  type PublicPropertyLocation
+  type PublicPropertyLocation,
+  type PublicPropertyAmenity
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from '../provider/data.ts';
 
 export const PROVIDER_PROPERTY_ROUTE = '/provider/properties' as const;
@@ -134,6 +135,15 @@ export async function loadProviderPropertyTypes(options: ProviderPropertyRequest
   return response.data.data.propertyTypes;
 }
 
+export async function loadProviderPropertyAmenities(options: ProviderPropertyRequestOptions = {}): Promise<readonly PublicPropertyAmenity[]> {
+  const response = await clientFor(options).request(PUBLIC_PROPERTY_CATALOG_ROUTE, {
+    responseSchema: publicPropertyListSuccessEnvelopeSchema,
+    query: { page: 1, limit: 1, includeAmenities: true },
+    ...(options.signal === undefined ? {} : { signal: options.signal })
+  });
+  return response.data.data.amenities ?? [];
+}
+
 function safeMediaFilename(filename: string, contentType: PropertyMediaMime, kind: PropertyMediaKind): string {
   const normalized = filename.trim();
   const extensionStart = normalized.lastIndexOf('.');
@@ -166,12 +176,14 @@ export async function createProviderProperty(
 
 export async function loadProviderProperty(options: ProviderPropertyLoadOptions): Promise<PropertyData> {
   const client = clientFor(options);
-  const headers = authorizationHeaders(options.authorization);
-  const response = await client.request(propertyPath(options.propertyId), {
-    method: 'GET',
-    responseSchema: successEnvelopeSchema(propertyDataSchema),
-    ...(headers === undefined ? {} : { headers }),
-    ...(options.signal === undefined ? {} : { signal: options.signal })
+  const response = await withPropertySession(options, () => {
+    const headers = authorizationHeaders(options.authorization);
+    return client.request(propertyPath(options.propertyId), {
+      method: 'GET',
+      responseSchema: successEnvelopeSchema(propertyDataSchema),
+      ...(headers === undefined ? {} : { headers }),
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    });
   });
   return response.data.data;
 }
@@ -192,15 +204,25 @@ export async function saveProviderPropertyStep(
           : options.step === 'features-services'
             ? propertyFeaturesServicesStepSchema.parse(input)
             : propertyContactStepSchema.parse(input);
-  const headers = authorizationHeaders(options.authorization);
-  const response = await client.request(`${propertyPath(options.propertyId)}/steps/${options.step}`, {
-    method: 'PATCH',
-    json: request,
-    responseSchema: successEnvelopeSchema(propertyDataSchema),
-    ...(headers === undefined ? {} : { headers }),
-    ...(options.signal === undefined ? {} : { signal: options.signal })
+  const response = await withPropertySession(options, () => {
+    const headers = authorizationHeaders(options.authorization);
+    return client.request(`${propertyPath(options.propertyId)}/steps/${options.step}`, {
+      method: 'PATCH',
+      json: request,
+      responseSchema: successEnvelopeSchema(propertyDataSchema),
+      ...(headers === undefined ? {} : { headers }),
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    });
   });
   return response.data.data;
+}
+
+async function withPropertySession<T>(options: ProviderPropertyRequestOptions, request: () => Promise<T>): Promise<T> {
+  try { return await request(); } catch (error: unknown) {
+    if (!(error instanceof ApiClientError) || error.status !== 401 || options.authorization?.refresh === undefined || options.signal?.aborted) throw error;
+    await options.authorization.refresh();
+    return request();
+  }
 }
 
 export async function uploadProviderPropertyMedia(options: ProviderPropertyMediaUploadOptions): Promise<PropertyMediaData> {

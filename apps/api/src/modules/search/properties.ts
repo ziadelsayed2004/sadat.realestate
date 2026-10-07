@@ -1,5 +1,5 @@
 import { Types, type Connection } from 'mongoose';
-import { publicHomepageCategorySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
+import { publicHomepageCategorySchema, publicPropertyAmenitySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicPropertyAmenity, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface PublicPropertySearchSource {
@@ -31,7 +31,7 @@ export interface PublicPropertySearchSource {
 }
 
 export interface PublicPropertySearchRepository {
-  list(query: PublicPropertySearchQuery): Promise<{ items: PublicPropertySearchSource[]; total: number; categories: PublicHomepageCategory[]; propertyTypes: PublicHomepageCategory[]; locations?: PublicPropertyLocation[] }>;
+  list(query: PublicPropertySearchQuery): Promise<{ items: PublicPropertySearchSource[]; total: number; categories: PublicHomepageCategory[]; propertyTypes: PublicHomepageCategory[]; locations?: PublicPropertyLocation[]; amenities?: PublicPropertyAmenity[] }>;
 }
 
 function item(source: PublicPropertySearchSource) {
@@ -69,7 +69,7 @@ export function createPublicPropertySearchService(dependencies: { repository: Pu
         const value = item(source);
         return value ? [value] : [];
       });
-      return publicPropertyListDataSchema.parse({ items, categories: result.categories, propertyTypes: result.propertyTypes, ...(result.locations === undefined ? {} : { locations: result.locations }), page: query.page, limit: query.limit, total: result.total });
+      return publicPropertyListDataSchema.parse({ items, categories: result.categories, propertyTypes: result.propertyTypes, ...(result.locations === undefined ? {} : { locations: result.locations }), ...(result.amenities === undefined ? {} : { amenities: result.amenities }), page: query.page, limit: query.limit, total: result.total });
     }
   };
 }
@@ -185,7 +185,15 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicHomepageCategorySchema.safeParse({ id: rowId, slug: row.slug, name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), propertyCount: countByCategoryId.get(rowId) ?? 0, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: rows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations };
+      const amenityRows = query.includeAmenities ? await connection.collection('features_services').find(
+        { active: true, kind: { $in: ['feature', 'service'] } },
+        { projection: { _id: 1, kind: 1, groupKey: 1, name: 1, detail: 1, distanceLabel: 1, slug: 1, order: 1 } }
+      ).sort({ order: 1, slug: 1, _id: 1 }).limit(1_000).toArray() : undefined;
+      const amenities = amenityRows?.flatMap(row => {
+        const parsed = publicPropertyAmenitySchema.safeParse({ id: id(row._id), kind: row.kind, groupKey: row.groupKey, name: row.name, ...(row.detail === undefined ? {} : { detail: row.detail }), ...(row.distanceLabel === undefined ? {} : { distanceLabel: row.distanceLabel }), slug: row.slug, order: row.order });
+        return parsed.success ? [parsed.data] : [];
+      });
+      return { items: rows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
     }
   };
 }

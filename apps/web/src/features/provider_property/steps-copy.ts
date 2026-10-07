@@ -50,31 +50,31 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     },
     steps: { details: 'تفاصيل العقار', 'price-payment': 'السعر والسداد', 'features-services': 'المميزات والخدمات' },
     labels: {
-      description: 'وصف العقار', propertyTypeId: 'معرّف نوع العقار', deliveryStatus: 'حالة التسليم', area: 'المساحة (م²)', bedrooms: 'عدد غرف النوم', bathrooms: 'عدد دورات المياه', floor: 'الطابق', totalFloors: 'إجمالي الطوابق',
-      priceAmount: 'السعر الإجمالي', currency: 'العملة', paymentPlan: 'خطة سداد', planName: 'اسم الخطة', installments: 'عدد الأقساط', frequency: 'دورية السداد', downPaymentAmount: 'الدفعة المقدمة', installmentAmount: 'قيمة القسط', featureIds: 'مراجع المميزات', serviceIds: 'مراجع الخدمات'
+      description: 'وصف العقار', propertyTypeId: 'نوع العقار', deliveryStatus: 'حالة التسليم', area: 'المساحة (م²)', bedrooms: 'عدد غرف النوم', bathrooms: 'عدد دورات المياه', floor: 'الطابق', totalFloors: 'إجمالي الطوابق',
+      priceAmount: 'السعر الإجمالي', currency: 'العملة', paymentPlan: 'خطة سداد', planName: 'اسم الخطة', installments: 'عدد الأقساط', frequency: 'دورية السداد', downPaymentAmount: 'الدفعة المقدمة', installmentAmount: 'قيمة القسط', featureIds: 'المميزات (اختياري)', serviceIds: 'الخدمات القريبة (اختياري)'
     },
     placeholders: {
       description: 'اكتب وصفاً واضحاً للعقار...', propertyTypeId: '24 حرفاً سداسياً عشرينياً', area: 'مثال: 120', bedrooms: '0', bathrooms: '0', floor: '0', totalFloors: '1', priceAmount: 'مثال: 1000000', currency: 'EGP', planName: 'خطة تقسيط', installments: '12', downPaymentAmount: 'اختياري', installmentAmount: 'مثال: 80000', featureIds: 'مراجع سداسية عشرية مفصولة بفواصل', serviceIds: 'مراجع سداسية عشرية مفصولة بفواصل'
     },
     frequencyLabels: { monthly: 'شهري', quarterly: 'ربع سنوي', annually: 'سنوي' },
-    propertyTypeCatalogUnavailableTitle: 'دليل أنواع العقارات غير متاح للمزوّد حالياً',
-    propertyTypeCatalogUnavailableBody: 'لا يعرض العقد الحالي قائمة أنواع للمزوّد. لن نستخدم مسار الإدارة أو نخترع نوعاً؛ يمكن الاحتفاظ بمرجع موجود أو إدخال مرجع معتمد من مصدر مصرح به.',
+    propertyTypeCatalogUnavailableTitle: 'تعذر تحميل أنواع العقارات',
+    propertyTypeCatalogUnavailableBody: 'اضغط إعادة المحاولة لعرض الأنواع بأسمائها. لا تكتب اسم النوع أو أي رمز في خانة أخرى.',
     propertyTypeCatalogLoading: 'جارٍ تحميل أنواع العقارات…',
     propertyTypeCatalogEmptyTitle: 'لا توجد أنواع عقارات نشطة',
     propertyTypeCatalogEmptyBody: 'أضف نوع عقار نشطًا من لوحة الإدارة ليظهر هنا.',
     propertyTypeSelectPlaceholder: 'اختر نوع العقار',
-    featureCatalogUnavailableTitle: 'دليل المميزات غير متاح للمزوّد حالياً',
-    featureCatalogUnavailableBody: 'لا يوجد مسار مزوّد لعرض المميزات المعتمدة. لن نستخدم بيانات الإدارة أو أسماء وهمية؛ احفظ مراجع معتمدة فقط.',
-    serviceCatalogUnavailableTitle: 'دليل الخدمات غير متاح للمزوّد حالياً',
-    serviceCatalogUnavailableBody: 'لا يوجد مسار مزوّد لعرض الخدمات المعتمدة. لن نستخدم بيانات الإدارة أو أسماء وهمية؛ احفظ مراجع معتمدة فقط.',
-    referenceHelp: 'استخدم مراجع سداسية عشرية من مصدر معتمد فقط. سيتم التحقق من الشكل والتكرار والتداخل قبل الإرسال.',
+    featureCatalogUnavailableTitle: 'تعذر تحميل الاختيارات',
+    featureCatalogUnavailableBody: 'أعد المحاولة لعرض الاختيارات. اختياراتك المحفوظة لن تُمسح؛ ويمكنك المتابعة بدون إضافة اختيارات.',
+    serviceCatalogUnavailableTitle: 'تعذر تحميل الخدمات',
+    serviceCatalogUnavailableBody: 'يمكنك المتابعة دون اختيار خدمة.',
+    referenceHelp: 'اختر ما يتوفر بالفعل بالعقار أو بالقرب منه. كل الاختيارات اختيارية؛ يمكنك الحفظ والمتابعة بدون اختيار أي ميزة أو خدمة.',
     paymentPlanHelp: 'يجب أن تطابق عملة الخطة عملة السعر. لا يتم عرض عمولة عامة أو قيمة تمويل غير صادرة من الخادم.',
     commissionBoundaryTitle: 'العمولة يحددها النظام',
     commissionBoundaryBody: 'لا يعرض هذا النموذج نسبة عمولة مفترضة أو سعراً عاماً. أي سياسة فعالة يجب أن تأتي من بيانات المنصة المعتمدة.',
     commissionTitle: 'عمولة عقارات السادات', commissionLoading: 'جارٍ تحميل سياسة العمولة…', commissionError: 'تعذر تحميل سياسة العمولة الحالية.', commissionNone: 'لا توجد سياسة عمولة مطبقة على هذا الحساب حالياً.',
     commissionSource: 'مصدر السياسة', commissionKind: 'نوع الحساب', commissionValue: 'القيمة', commissionEffective: 'تاريخ السريان', commissionVersion: 'إصدار السياسة', commissionExempt: 'معفى',
     commissionSources: { exception: 'استثناء', account_override: 'تخصيص الحساب', policy: 'السياسة العامة' }, commissionKinds: { percentage: 'نسبة مئوية', fixed: 'قيمة ثابتة', exempt: 'معفى' },
-    invalidReference: 'تحقق من مراجع المميزات والخدمات؛ كل مرجع يجب أن يكون 24 حرفاً سداسياً عشرياً وفريداً.',
+    invalidReference: 'راجع الاختيارات وسبب الحفظ ثم أعد المحاولة.',
     versionConflict: 'تغيرت المسودة منذ تحميلها. أعد تحميلها قبل حفظ تعديلاتك.'
   },
   en: {
@@ -86,31 +86,31 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     },
     steps: { details: 'Property details', 'price-payment': 'Price and payment', 'features-services': 'Features and services' },
     labels: {
-      description: 'Property description', propertyTypeId: 'Property type reference ID', deliveryStatus: 'Delivery status', area: 'Area (sqm)', bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', floor: 'Floor', totalFloors: 'Total floors',
-      priceAmount: 'Total price', currency: 'Currency', paymentPlan: 'Payment plan', planName: 'Plan name', installments: 'Installments', frequency: 'Payment frequency', downPaymentAmount: 'Down payment', installmentAmount: 'Installment amount', featureIds: 'Feature references', serviceIds: 'Service references'
+      description: 'Property description', propertyTypeId: 'Property type', deliveryStatus: 'Delivery status', area: 'Area (sqm)', bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', floor: 'Floor', totalFloors: 'Total floors',
+      priceAmount: 'Total price', currency: 'Currency', paymentPlan: 'Payment plan', planName: 'Plan name', installments: 'Installments', frequency: 'Payment frequency', downPaymentAmount: 'Down payment', installmentAmount: 'Installment amount', featureIds: 'Features (optional)', serviceIds: 'Nearby services (optional)'
     },
     placeholders: {
       description: 'Write a clear property description...', propertyTypeId: '24 hexadecimal characters', area: 'Example: 120', bedrooms: '0', bathrooms: '0', floor: '0', totalFloors: '1', priceAmount: 'Example: 1000000', currency: 'EGP', planName: 'Installment plan', installments: '12', downPaymentAmount: 'Optional', installmentAmount: 'Example: 80000', featureIds: 'Comma-separated hexadecimal references', serviceIds: 'Comma-separated hexadecimal references'
     },
     frequencyLabels: { monthly: 'Monthly', quarterly: 'Quarterly', annually: 'Annually' },
-    propertyTypeCatalogUnavailableTitle: 'The provider property-type catalog is unavailable',
-    propertyTypeCatalogUnavailableBody: 'The current provider contract does not expose a property-type list. The admin route and invented labels are not used; an existing reference can be retained or an approved reference can be entered.',
+    propertyTypeCatalogUnavailableTitle: 'Unable to load property types',
+    propertyTypeCatalogUnavailableBody: 'Retry to display property types by name. Do not enter a type name or code in another field.',
     propertyTypeCatalogLoading: 'Loading property types…',
     propertyTypeCatalogEmptyTitle: 'No active property types',
     propertyTypeCatalogEmptyBody: 'Add an active property type from the admin dashboard so it appears here.',
     propertyTypeSelectPlaceholder: 'Select a property type',
-    featureCatalogUnavailableTitle: 'The provider feature catalog is unavailable',
-    featureCatalogUnavailableBody: 'There is no provider route for approved feature labels. Admin data and fabricated labels are not used; save approved references only.',
-    serviceCatalogUnavailableTitle: 'The provider service catalog is unavailable',
-    serviceCatalogUnavailableBody: 'There is no provider route for approved service labels. Admin data and fabricated labels are not used; save approved references only.',
-    referenceHelp: 'Use references from an approved source only. Format, duplicates, overlap, and server-side ownership rules are checked before saving.',
+    featureCatalogUnavailableTitle: 'Unable to load choices',
+    featureCatalogUnavailableBody: 'Retry to load the choices. Saved selections are retained; you can continue without adding any choices.',
+    serviceCatalogUnavailableTitle: 'Unable to load services',
+    serviceCatalogUnavailableBody: 'You can continue without selecting a service.',
+    referenceHelp: 'Select what is actually available in or near the property. All choices are optional; you can save and continue without selecting a feature or service.',
     paymentPlanHelp: 'Plan currencies must match the property price currency. This form does not display a universal commission or an unsupported financing claim.',
     commissionBoundaryTitle: 'Commission is platform-controlled',
     commissionBoundaryBody: 'This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.',
     commissionTitle: 'Sadat Real Estate commission', commissionLoading: 'Loading commission policy…', commissionError: 'The current commission policy could not load.', commissionNone: 'No commission policy currently applies to this account.',
     commissionSource: 'Policy source', commissionKind: 'Calculation type', commissionValue: 'Value', commissionEffective: 'Effective date', commissionVersion: 'Policy version', commissionExempt: 'Exempt',
     commissionSources: { exception: 'Exception', account_override: 'Account override', policy: 'General policy' }, commissionKinds: { percentage: 'Percentage', fixed: 'Fixed amount', exempt: 'Exempt' },
-    invalidReference: 'Check feature and service references. Each must be a unique 24-character hexadecimal ID with no overlap.',
+    invalidReference: 'Check the selections and save reason, then try again.',
     versionConflict: 'The draft changed after it was loaded. Reload the draft before saving your changes.'
   },};
 

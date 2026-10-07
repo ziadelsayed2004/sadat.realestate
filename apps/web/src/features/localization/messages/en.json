@@ -3780,7 +3780,7 @@
     },
     "labels": {
       "description": "Property description",
-      "propertyTypeId": "Property type reference ID",
+      "propertyTypeId": "Property type",
       "deliveryStatus": "Delivery status",
       "area": "Area (sqm)",
       "bedrooms": "Bedrooms",
@@ -3795,8 +3795,8 @@
       "frequency": "Payment frequency",
       "downPaymentAmount": "Down payment",
       "installmentAmount": "Installment amount",
-      "featureIds": "Feature references",
-      "serviceIds": "Service references"
+      "featureIds": "Features (optional)",
+      "serviceIds": "Nearby services (optional)"
     },
     "placeholders": {
       "description": "Write a clear property description...",
@@ -3820,17 +3820,17 @@
       "quarterly": "Quarterly",
       "annually": "Annually"
     },
-    "propertyTypeCatalogUnavailableTitle": "The provider property-type catalog is unavailable",
-    "propertyTypeCatalogUnavailableBody": "The current provider contract does not expose a property-type list. The admin route and invented labels are not used; an existing reference can be retained or an approved reference can be entered.",
+    "propertyTypeCatalogUnavailableTitle": "Unable to load property types",
+    "propertyTypeCatalogUnavailableBody": "Retry to display property types by name. Do not enter a type name or code in another field.",
     "propertyTypeCatalogLoading": "Loading property types…",
     "propertyTypeCatalogEmptyTitle": "No active property types",
     "propertyTypeCatalogEmptyBody": "Add an active property type from the admin dashboard so it appears here.",
     "propertyTypeSelectPlaceholder": "Select a property type",
-    "featureCatalogUnavailableTitle": "The provider feature catalog is unavailable",
-    "featureCatalogUnavailableBody": "There is no provider route for approved feature labels. Admin data and fabricated labels are not used; save approved references only.",
-    "serviceCatalogUnavailableTitle": "The provider service catalog is unavailable",
-    "serviceCatalogUnavailableBody": "There is no provider route for approved service labels. Admin data and fabricated labels are not used; save approved references only.",
-    "referenceHelp": "Use references from an approved source only. Format, duplicates, overlap, and server-side ownership rules are checked before saving.",
+    "featureCatalogUnavailableTitle": "Unable to load choices",
+    "featureCatalogUnavailableBody": "Retry to load the choices. Saved selections are retained; you can continue without adding any choices.",
+    "serviceCatalogUnavailableTitle": "Unable to load services",
+    "serviceCatalogUnavailableBody": "You can continue without selecting a service.",
+    "referenceHelp": "Select what is actually available in or near the property. All choices are optional; you can save and continue without selecting a feature or service.",
     "paymentPlanHelp": "Plan currencies must match the property price currency. This form does not display a universal commission or an unsupported financing claim.",
     "commissionBoundaryTitle": "Commission is platform-controlled",
     "commissionBoundaryBody": "This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.",
@@ -3854,7 +3854,7 @@
       "fixed": "Fixed amount",
       "exempt": "Exempt"
     },
-    "invalidReference": "Check feature and service references. Each must be a unique 24-character hexadecimal ID with no overlap.",
+    "invalidReference": "Check the selections and save reason, then try again.",
     "versionConflict": "The draft changed after it was loaded. Reload the draft before saving your changes."
   },
   "public/compare-copy#getPublicPropertyComparisonCopy": {
