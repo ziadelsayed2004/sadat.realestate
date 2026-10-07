@@ -1,3 +1,5 @@
+@import '../dashboard_account/styles.css';
+
 .route-shell--seeker .route-shell__navigation {
   display: none;
 }

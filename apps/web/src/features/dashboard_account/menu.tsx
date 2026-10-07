@@ -1,6 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import './styles.css';
 
 export function UserGuideIcon() {
   return <svg data-user-guide-icon="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15" /><path d="M6 8h3M6 11h3M15 8h3M15 11h3" /></svg>;

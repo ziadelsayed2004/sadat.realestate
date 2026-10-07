@@ -18,7 +18,7 @@
   .route-shell--admin .admin-shell-header__menu { position: static; flex: 0 0 44px; }
 }
 @media (max-width: 640px) {
-  [dir="rtl"] .seeker-dashboard__topbar { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .seeker-dashboard[dir="rtl"] .seeker-dashboard__topbar { grid-template-columns: auto minmax(0, 1fr) auto; }
   .seeker-dashboard__topbar-profile .dashboard-account__chevron { display: none; }
 }
 @media (max-width: 480px) {
