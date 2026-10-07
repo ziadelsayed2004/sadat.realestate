@@ -1145,6 +1145,11 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
     if (typeof window !== 'undefined') window.location.assign(`/provider?lang=${encodeURIComponent(locale)}`);
   }, [locale]);
 
+  const handleSubmitted = useCallback(() => {
+    // Keep the confirmation mounted and retain the registration session.
+    replaceAuthUrl(`/provider-application/status?lang=${encodeURIComponent(locale)}`);
+  }, [locale]);
+
   const resumeApplication = useCallback(async () => {
     const copy = getProviderAccountCopy(locale);
     if (client.getProviderApplication === undefined) {
@@ -1357,8 +1362,9 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
         providerType={providerType}
         initialApplication={application}
         onBack={backToDocuments}
+        onPendingBack={backToProviderDashboard}
         onEdit={updated => backToDocuments(updated)}
-        onSubmitted={() => window.location.assign(`/?lang=${locale}`)}
+        onSubmitted={handleSubmitted}
       />
     );
   }

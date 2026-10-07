@@ -233,6 +233,9 @@ export function App({
   const seekerProfileQueryTab = seekerUrl.searchParams.get('tab');
   const seekerProfileTab = seekerProfileQueryTab === 'personal' || seekerProfileQueryTab === 'profile' ? 'profile' : 'preferences';
   const providerSettingsTab = seekerUrl.searchParams.get('tab') === 'contact' ? 'contact' : seekerUrl.searchParams.get('tab') === 'security' ? 'security' : 'account';
+  const providerAwaitingActivation = route.kind === 'matched' && route.id === 'provider-dashboard'
+    && authSnapshot?.status === 'authenticated' && authSnapshot.user?.roleType === 'provider'
+    && authSnapshot.user.status !== 'verified' && !isProviderSettings && !isAdminUserGuide;
 
   const content = guard.allowed ? (
     isPublicHomepage ? (
@@ -267,7 +270,7 @@ export function App({
           window.location.assign(authCompletionHref(url, snapshot.user?.roleType, locale));
         }}
       />
-    ) : isProviderOverview ? (
+    ) : isProviderOverview || providerAwaitingActivation ? (
       <ProviderOverview locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isProviderProperties ? (
       <ProviderProperties locale={locale} session={effectiveSession} authClient={authClient} />

@@ -186,8 +186,36 @@ try {
   assert.equal(await auditModels.AuditLog.countDocuments({
     targetId: registered.data.application.id
   }), 1);
+  assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 1);
+  report.checks.push('same_provider_review_retry_after_rollback_writes_once_preserving_session');
+
+  const resumed = await authService.refresh(registered.refreshToken);
+  assert.equal(resumed.data.user.status, 'needs_information');
+  report.checks.push('needs_information_provider_refreshes_existing_session');
+  const pending = await accountRepository.findProviderReviewTarget(registered.data.application.id);
+  // Complete the resubmission status in this isolated fixture; property tools
+  // remain protected by both current user claims and application approval.
+  await Promise.all([
+    identity.User.updateOne({ _id: objectId }, { $set: { status: 'pending_review' } }),
+    identity.ProviderProfile.updateOne({ userId: objectId }, { $set: { status: 'pending_review' } }),
+    providerModels.ProviderApplication.updateOne({ _id: pending.providerApplicationId }, { $set: { status: 'pending_review' } })
+  ]);
+  const waiting = await authService.refresh(resumed.refreshToken);
+  assert.equal(waiting.data.user.status, 'pending_review');
+  const passwordLogin = await authService.loginAdmin({ email, password: 'Provider-Strong!2026' });
+  assert.equal(passwordLogin.data.user.status, 'pending_review');
+  report.checks.push('pending_provider_can_login_and_refresh_without_activation');
+  const approvalTarget = await accountRepository.findProviderReviewTarget(registered.data.application.id);
+  await accountRepository.reviewProvider({ ...reviewInput, target: approvalTarget, action: 'verify', toAccountStatus: 'verified', toProviderStatus: 'approved', changedAt: new Date() });
+  assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 2);
+  const approved = await authService.refresh(waiting.refreshToken);
+  assert.equal(approved.data.user.status, 'verified');
+  report.checks.push('approval_preserves_sessions_and_refresh_activates_claims');
+  const approvedTarget = await accountRepository.findProviderReviewTarget(registered.data.application.id);
+  await accountRepository.reviewProvider({ ...reviewInput, target: approvedTarget, action: 'suspend', toAccountStatus: 'suspended', toProviderStatus: 'suspended', changedAt: new Date() });
   assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 0);
-  report.checks.push('same_provider_review_retry_after_rollback_writes_once');
+  await assert.rejects(authService.refresh(approved.refreshToken));
+  report.checks.push('suspension_revokes_sessions_and_blocks_refresh');
 
   report.mongo = { collections: ['otp_challenges', 'users', 'provider_profiles', 'provider_applications', 'admin_credentials', 'sessions'],
     successRecords: 5, failedRegistrationResidue: 0, duplicateGrantRestored: true,
@@ -198,7 +226,7 @@ try {
       failedReviewSessionStillActive: true,
       recoveredTransitionCount: 1,
       recoveredAuditCount: 1,
-      recoveredSessionRevoked: true
+      recoveredSessionPreserved: true
     } };
   report.status = 'PASS_LOCAL';
   report.remaining = ['Production verification remains deferred while the project stays in Demo mode.'];

@@ -30,6 +30,7 @@ export interface ProviderReviewPageProps {
   readonly providerType?: ProviderType | undefined;
   readonly initialApplication?: ProviderApplicationData | undefined;
   readonly onBack: () => void;
+  readonly onPendingBack?: (() => void) | undefined;
   readonly onEdit?: ((application: ProviderApplicationData) => void) | undefined;
   readonly onSubmitted?: (() => void) | undefined;
 }
@@ -403,7 +404,7 @@ function Restricted({ application, copy, locale, onBack }: { readonly applicatio
   );
 }
 
-export function ProviderReviewPage({ client, locale, providerType, initialApplication, onBack, onEdit, onSubmitted }: ProviderReviewPageProps) {
+export function ProviderReviewPage({ client, locale, providerType, initialApplication, onBack, onPendingBack, onEdit, onSubmitted }: ProviderReviewPageProps) {
   const copy = useMemo(() => getProviderReviewCopy(locale), [locale]);
   const [application, setApplication] = useState<ProviderApplicationData | undefined>(initialApplication);
   const [loadState, setLoadState] = useState<LoadState>('loading');
@@ -539,7 +540,7 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
     return <ReviewDraft application={application} copy={copy} locale={locale} submitState={actionState} submitError={actionError} onSubmit={() => void submit()} onBack={onBack} />;
   }
   if (application.status === 'pending_review') {
-    return <UnderReview application={application} copy={copy} locale={locale} tracking={showTracking} onTrack={() => setShowTracking(true)} onRefresh={() => void refreshStatus()} refreshing={actionState === 'loading'} refreshError={actionError} onBack={onBack} />;
+    return <UnderReview application={application} copy={copy} locale={locale} tracking={showTracking} onTrack={() => setShowTracking(true)} onRefresh={() => void refreshStatus()} refreshing={actionState === 'loading'} refreshError={actionError} onBack={onPendingBack ?? onBack} />;
   }
   if (application.status === 'needs_information') {
     return <NeedsInformation application={application} copy={copy} locale={locale} onEdit={() => onEdit?.(application)} onBack={onBack} />;

@@ -126,6 +126,33 @@ class TestSessionHintStorage {
   }
 }
 
+for (const refreshFails of [false, true]) {
+  test(`provider submission preserves login and confirmation when refresh ${refreshFails ? 'temporarily fails' : 'updates pending claims'}`, async () => {
+    const sync = new TestSync();
+    const store = new AuthStore({ sync });
+    store.setSession({ ...session('provider'), user: { id: USER_ID, roleType: 'provider', status: 'draft' } });
+    const calls: string[] = [];
+    const application = {
+      id: USER_ID, providerType: 'individual_broker', status: 'pending_review', version: 1,
+      requirementVersion: 'test-1', missingFields: [], missingDocuments: [], availableActions: ['view_status'],
+      createdAt: '2026-10-07T00:00:00.000Z', updatedAt: '2026-10-07T00:00:00.000Z'
+    };
+    const apiClient = new FakeApiClient(async path => {
+      calls.push(path);
+      if (path === '/provider/application/submit') return response(application);
+      if (refreshFails) throw new ApiClientError('Temporary restart', { status: 503, code: 'HTTP_ERROR' });
+      return response({ ...session('provider', 'header.pending.signature'), user: { id: USER_ID, roleType: 'provider', status: 'pending_review' } });
+    });
+    const client = new AuthClient({ apiClient, store });
+    assert.equal((await client.submitProviderApplication({ version: 0 })).status, 'pending_review');
+    assert.deepEqual(calls, ['/provider/application/submit', '/auth/refresh']);
+    assert.equal(client.getSnapshot().status, 'authenticated');
+    assert.equal(client.getSnapshot().user?.status, refreshFails ? 'draft' : 'pending_review');
+    assert.equal(sync.publishCount, 0);
+    client.dispose();
+  });
+}
+
 test('admin login normalizes input, keeps the access token in memory, and exposes a safe snapshot', async () => {
   const sync = new TestSync();
   const apiClient = new FakeApiClient(async (path, options) => {

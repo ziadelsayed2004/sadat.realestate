@@ -6,7 +6,8 @@ import {
   type PropertyStatus,
   type ProviderApplicationStatusData
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
+import type { AuthSnapshot } from '../auth/store.ts';
 
 export const PROVIDER_APPLICATION_STATUS_ROUTE = '/provider/application/status' as const;
 export const PROVIDER_DASHBOARD_ROUTE = '/provider/dashboard' as const;
@@ -14,8 +15,10 @@ export const PROVIDER_PROPERTIES_ROUTE = '/provider/properties' as const;
 
 export interface ProviderAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly getSnapshot?: (() => AuthSnapshot) | undefined;
   readonly getProviderApplicationStatus?: (() => Promise<ProviderApplicationStatusData>) | undefined;
   readonly logout?: () => Promise<unknown>;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 export interface ProviderOverviewProperties {
@@ -82,12 +85,22 @@ function authorizationHeaders(source: ProviderAuthorizationSource | undefined): 
 
 export async function loadProviderOverview(options: ProviderOverviewLoadOptions = {}): Promise<ProviderOverviewData> {
   const client = clientFor(options);
-  const headers = authorizationHeaders(options.authorization);
-  const response = await client.request(PROVIDER_DASHBOARD_ROUTE, {
-    responseSchema: providerDashboardSuccessEnvelopeSchema,
-    ...(headers === undefined ? {} : { headers }),
-    ...(options.signal === undefined ? {} : { signal: options.signal })
-  });
+  const request = () => {
+    const headers = authorizationHeaders(options.authorization);
+    return client.request(PROVIDER_DASHBOARD_ROUTE, {
+      responseSchema: providerDashboardSuccessEnvelopeSchema,
+      ...(headers === undefined ? {} : { headers }),
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    });
+  };
+  let response;
+  try {
+    response = await request();
+  } catch (error: unknown) {
+    if (!(error instanceof ApiClientError) || error.status !== 401 || options.authorization?.refresh === undefined || options.signal?.aborted) throw error;
+    await options.authorization.refresh();
+    response = await request();
+  }
   return response.data.data;
 }
 

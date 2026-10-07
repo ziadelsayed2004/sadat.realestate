@@ -277,7 +277,7 @@ const providerRegistrationLocalAcceptanceReady = providerRegistrationEvidence?.s
   && ['provider.needs_information', 'provider.verify'].every(action => providerRegistrationEvidence.mongo?.auditActions?.includes(action))
   && ['draft_provider_denied_admin_projection_403', 'limited_admin_provider_review_denied_403',
     'admin_review_reason_required_in_browser', 'repeated_stale_review_rejected_409',
-    'provider_sessions_revoked_after_each_admin_decision', 'provider_reauthentication_reflects_authoritative_status']
+    'provider_review_progress_preserves_session', 'provider_refresh_reflects_authoritative_status']
     .every(check => providerRegistrationEvidence.authorization?.includes(check))
   && [
     ['draft_ready', 4], ['pending_review_responsive', 1],
@@ -302,7 +302,7 @@ const providerRegistrationLocalAcceptanceReady = providerRegistrationEvidence?.s
   && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.failedReviewSessionStillActive === true
   && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredTransitionCount === 1
   && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredAuditCount === 1
-  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredSessionRevoked === true;
+  && providerRegistrationGuarantees.mongo?.reviewAuditRollback?.recoveredSessionPreserved === true;
 
 const propertyLifecycleLocalAcceptanceReady = propertyLifecycleEvidence?.status === 'PASS_LOCAL'
   && propertyLifecycleEvidence.mockedRoutes === false && propertyLifecycleEvidence.cleanup === true
@@ -1007,7 +1007,7 @@ matrix.journeys = matrix.journeys.map((journey) => {
   if (['GUIDE-11', 'GUIDE-12', 'GUIDE-13'].includes(journey.id) && providerRegistrationLocalAcceptanceReady) {
     for (const [category, check, path, verifiedAt] of [
       ['roleAuthorization', 'draft_provider_and_limited_admin_forbidden_from_admin_review_capabilities', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
-      ['currentSessionState', 'review_decisions_revoke_provider_sessions_and_reauthentication_reads_authoritative_state', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
+      ['currentSessionState', 'review_progress_preserves_provider_sessions_and_refresh_reads_authoritative_state', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['duplicateMutation', 'document_replay_is_idempotent_and_registration_grant_replay_is_rejected', 'docs/quality/guide-runs/provider-registration-guarantees-local-latest.json', providerRegistrationGuarantees.finishedAt],
       ['expectedVersion409', 'incomplete_submit_and_repeated_stale_review_are_rejected_with_409', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],
       ['decisionReason', 'review_reason_is_required_and_persisted_with_both_review_audits', 'docs/quality/guide-runs/provider-registration-local-latest.json', providerRegistrationEvidence.finishedAt],

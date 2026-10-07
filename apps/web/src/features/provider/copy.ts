@@ -136,7 +136,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
     },
     application: {
       draft: { title: 'أكمل طلب المزود', body: 'أكمل البيانات المطلوبة قبل الوصول إلى لوحة المزود.' },
-      pending_review: { title: 'طلبك قيد المراجعة', body: 'ستظهر لوحة المزود الكاملة بعد انتهاء مراجعة الطلب.' },
+      pending_review: { title: 'طلبك قيد المراجعة', body: 'حسابك مسجّل دخول ويمكنك متابعة طلبك. إضافة العقارات وأدوات العارض تتاح بعد اعتماد الإدارة للورق.' },
       needs_information: { title: 'يلزم استكمال معلومات الطلب', body: 'راجع المعلومات المطلوبة ثم أعد إرسال الطلب.' },
       approved: { title: 'الحساب معتمد', body: 'يمكنك إدارة سجلاتك المعتمدة من لوحة المزود.' },
       rejected: { title: 'لم تتم الموافقة على الطلب', body: 'يمكنك مراجعة سبب القرار والخيارات المتاحة لحسابك.' },
@@ -228,7 +228,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
     },
     application: {
       draft: { title: 'Complete your provider application', body: 'Complete the required information before accessing the provider dashboard.' },
-      pending_review: { title: 'Your application is under review', body: 'The full provider dashboard will be available after the application review.' },
+      pending_review: { title: 'Your application is under review', body: 'You are signed in and can track your application. Property submissions and provider tools become available after the team approves your documents.' },
       needs_information: { title: 'More application information is required', body: 'Review the requested information and submit the application again.' },
       approved: { title: 'Account approved', body: 'You can manage your approved records from the provider dashboard.' },
       rejected: { title: 'Application not approved', body: 'Review the decision reason and the options available to your account.' },

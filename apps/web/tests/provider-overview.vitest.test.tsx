@@ -53,6 +53,30 @@ function success(data: unknown, requestId: string, total?: number): Response {
 }
 
 describe('Provider overview', () => {
+  it('renews stale application claims once and retries using the new token', async () => {
+    let token = 'old-token';
+    const headers: Array<string | null> = [];
+    const refresh = vi.fn(async () => { token = 'current-token'; });
+    const client = new ApiClient({ fetcher: async (_input, init) => {
+      headers.push(new Headers(init?.headers).get('authorization'));
+      if (headers.length === 1) return new Response(JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', requestId: 'stale-status' } }), { status: 401 });
+      return success(overview, 'current-status');
+    } });
+    await expect(loadProviderOverview({ apiClient: client, authorization: { getAuthorizationHeader: () => `Bearer ${token}`, refresh } })).resolves.toEqual(overview);
+    expect(headers).toEqual(['Bearer old-token', 'Bearer current-token']);
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides business navigation before approval but retains account and guide access', async () => {
+    const pending = { ...application, status: 'pending_review' as const, availableActions: ['view_status' as const] };
+    const authClient = { getAuthorizationHeader: () => 'Bearer pending', getProviderApplicationStatus: vi.fn(async () => pending) };
+    const result = renderWithLocale(<ProviderOverview locale="en" session={session} authClient={authClient} initialData={{ ...overview, application: pending }} />, { locale: 'en' });
+    await waitFor(() => expect(result.container.querySelector('[data-provider-nav="addProperty"]')).toBeNull());
+    expect(result.container.querySelector('[data-provider-nav="settings"]')).not.toBeNull();
+    expect(result.container.querySelector('[data-provider-nav="userGuide"]')).not.toBeNull();
+    expect(screen.getByRole('link', { name: 'Track application status' })).toHaveAttribute('href', '/provider-application/status?lang=en');
+    expect(screen.getByRole('button', { name: 'Refresh application status' })).toBeInTheDocument();
+  });
   it('loads application status and owner-scoped property totals with the provider authorization header', async () => {
     const requests: Array<{ url: string; authorization: string | null }> = [];
     const client = new ApiClient({

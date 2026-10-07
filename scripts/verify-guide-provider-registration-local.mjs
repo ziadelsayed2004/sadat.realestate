@@ -487,7 +487,7 @@ try {
     auditActions: audits.map((item) => item.action),
     atomicStateCoherence: storedUser.status === 'verified' && storedProfile.status === 'approved' && storedApplication.status === 'approved'
   };
-  evidence.authorization.push('provider_sessions_revoked_after_each_admin_decision', 'provider_reauthentication_reflects_authoritative_status');
+  evidence.authorization.push('provider_review_progress_preserves_session', 'provider_refresh_reflects_authoritative_status');
   evidence.status = 'PASS_LOCAL';
   evidence.remaining = ['Run the same provider registration and review lifecycle on Production after deployment.'];
 

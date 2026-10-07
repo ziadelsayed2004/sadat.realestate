@@ -595,11 +595,16 @@ export function createMongooseAccountRepository(
             throw new ConcurrentAccountTransitionError();
           }
 
-          await Session.updateMany(
-            { userId, revokedAt: { $exists: false } },
-            { $set: { revokedAt: input.changedAt, lastUsedAt: input.changedAt } },
-            { session }
-          ).exec();
+          // Review progress must not sign the provider out. The access guard
+          // rejects the old account status until refresh issues current claims.
+          // Only a decision that blocks authentication revokes the sessions.
+          if (input.toAccountStatus === 'rejected' || input.toAccountStatus === 'suspended' || input.toAccountStatus === 'restricted') {
+            await Session.updateMany(
+              { userId, revokedAt: { $exists: false } },
+              { $set: { revokedAt: input.changedAt, lastUsedAt: input.changedAt } },
+              { session }
+            ).exec();
+          }
 
           const [transition] = await AccountStateTransition.create([{
             targetUserId: userId,

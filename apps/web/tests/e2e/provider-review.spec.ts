@@ -55,6 +55,19 @@ test('review, submit, under-review, and tracking states remain API-backed across
   const locale = localeForProject();
   let current = application('draft');
   await routePublicHomepageApi(page);
+  await page.route('**/api/v1/auth/refresh', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({
+      accessToken: 'header.provider.signature', tokenType: 'Bearer', expiresInSeconds: 900,
+      user: { id: APPLICATION_ID, roleType: 'provider', status: current.status === 'approved' ? 'verified' : current.status }
+    }) });
+  });
+  await page.route('**/api/v1/provider/dashboard', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({
+      application: { applicationId: APPLICATION_ID, providerType: current.providerType, status: current.status, version: current.version, availableActions: current.availableActions },
+      properties: { total: 0, published: 0, pendingReview: 0, needsChanges: 0, drafts: 0, recent: [] },
+      activity: { customerRequests: 0, bookedViewings: 0 }
+    }) });
+  });
   await page.route('**/api/v1/provider/application', async route => {
     expect(route.request().method()).toBe('GET');
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
@@ -73,10 +86,10 @@ test('review, submit, under-review, and tracking states remain API-backed across
       body: envelope({
         applicationId: APPLICATION_ID,
         providerType: 'developer_company',
-        status: 'pending_review',
-        version: 4,
+        status: current.status,
+        version: current.version,
         submittedAt: '2026-08-14T00:00:00.000Z',
-        availableActions: ['view_status']
+        availableActions: current.availableActions
       })
     });
   });
@@ -93,10 +106,13 @@ test('review, submit, under-review, and tracking states remain API-backed across
     await expect(page).toHaveScreenshot(`provider-review-${locale}.png`, { fullPage: true });
   }
 
+  let navigations = 0;
+  page.on('request', request => { if (request.isNavigationRequest() && request.resourceType() === 'document' && request.frame() === page.mainFrame()) navigations += 1; });
   await page.locator('[data-testid="provider-review-submit"]').click();
-  await expect(page).toHaveURL(new RegExp(`/\\?lang=${locale}$`));
-  await expect(page.locator('[data-page="public-home"]')).toBeVisible();
-  await page.goto(`/auth/register/provider/review?providerType=developer_company&lang=${locale}`);
+  await expect(page).toHaveURL(new RegExp(`/provider-application/status\\?lang=${locale}$`));
+  await expect(page.locator('[data-testid="provider-review"]')).toHaveAttribute('data-screen-id', 'AUTH-14');
+  expect(navigations).toBe(0);
+  await page.reload();
   await expect(page.locator('[data-testid="provider-review"]')).toHaveAttribute('data-screen-id', 'AUTH-14');
   if (process.env.AUTH_LANE_SEMANTIC_ONLY !== '1') {
     await expect(page).toHaveScreenshot(`provider-application-under-review-${locale}.png`, { fullPage: true });
@@ -112,6 +128,18 @@ test('review, submit, under-review, and tracking states remain API-backed across
   await expect(page.locator('body')).not.toContainText('internalNote');
   await expect(page.locator('body')).not.toContainText('storageKey');
   await expect(page.locator('main#main-content')).toBeVisible();
+  // A direct tool URL must show the application state instead of opening a
+  // submission form or expelling a provider waiting for document approval.
+  await page.goto(`/provider/properties/new/basic?lang=${locale}`);
+  await expect(page.locator('[data-provider-status="pending_review"]')).toBeVisible();
+  await expect(page.locator('[data-provider-nav="addProperty"]')).toHaveCount(0);
+  if (await page.locator('.provider-dashboard__menu-button').isVisible()) await page.locator('.provider-dashboard__menu-button').click();
+  await expect(page.locator('[data-provider-nav="userGuide"]')).toBeVisible();
+  current = application('approved');
+  await page.goto(`/provider?lang=${locale}`);
+  if (await page.locator('.provider-dashboard__menu-button').isVisible()) await page.locator('.provider-dashboard__menu-button').click();
+  await expect(page.locator('[data-provider-nav="addProperty"]')).toHaveCount(1);
+  await expect(page.locator('a.provider-dashboard__primary-action[href^="/provider/properties/new/basic"]')).toBeVisible();
 });
 
 test('needs-information and approved states expose only API-authorized actions', async ({ page }) => {

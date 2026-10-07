@@ -311,6 +311,10 @@ export class AuthClient {
         json: request,
         responseSchema: providerApplicationSuccessEnvelopeSchema
       });
+      // Submission changes draft/needs_information to pending_review in the
+      // database. Renew the claims before the next protected request, without
+      // turning a confirmed submission into an error during a network outage.
+      await this.refresh().catch(() => undefined);
       return response.data.data;
     });
   }

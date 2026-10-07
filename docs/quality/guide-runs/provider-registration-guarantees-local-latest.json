@@ -7,15 +7,19 @@
   ],
   "environment": "isolated-local-MongoDB-rs0-real-services",
   "mockedRoutes": false,
-  "commit": "842bd2ca6a12840826f40ac254bc11f966f1ee64",
-  "startedAt": "2026-09-13T15:24:39.843Z",
+  "commit": "1d8d0c1f73557effe071b22aa3e983353b846483",
+  "startedAt": "2026-10-07T14:51:35.372Z",
   "checks": [
     "registration_atomically_creates_grant_user_profile_application_credential_and_session",
     "verification_grant_replay_rejected_without_duplicate_account",
     "duplicate_email_rolls_back_grant_consumption_without_second_provider",
     "credential_failure_rolls_back_grant_and_all_provider_registration_records",
     "audit_failure_rolls_back_provider_review_session_revocation_transition_and_inserted_audit",
-    "same_provider_review_retry_after_rollback_writes_once"
+    "same_provider_review_retry_after_rollback_writes_once_preserving_session",
+    "needs_information_provider_refreshes_existing_session",
+    "pending_provider_can_login_and_refresh_without_activation",
+    "approval_preserves_sessions_and_refresh_activates_claims",
+    "suspension_revokes_sessions_and_blocks_refresh"
   ],
   "cleanup": true,
   "mongo": {
@@ -37,11 +41,11 @@
       "failedReviewSessionStillActive": true,
       "recoveredTransitionCount": 1,
       "recoveredAuditCount": 1,
-      "recoveredSessionRevoked": true
+      "recoveredSessionPreserved": true
     }
   },
   "remaining": [
     "Production verification remains deferred while the project stays in Demo mode."
   ],
-  "finishedAt": "2026-09-13T15:24:41.119Z"
+  "finishedAt": "2026-10-07T14:51:35.926Z"
 }

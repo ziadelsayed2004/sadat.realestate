@@ -6,6 +6,7 @@ import type { IdentityModels } from '../../src/modules/identity/models.js';
 import type { ProviderModels } from '../../src/modules/provider/models.js';
 import type { AccountModels } from '../../src/modules/accounts/models.js';
 import { createMongooseAccountRepository } from '../../src/modules/accounts/repository.js';
+import type { ProviderReviewWriteInput } from '../../src/modules/accounts/repository.js';
 
 const actorId = '0123456789abcdef01234567';
 const userId = '1123456789abcdef01234567';
@@ -32,6 +33,38 @@ function models() {
       }
     } as unknown as AccountModels
   };
+}
+
+for (const [action, accountStatus, applicationStatus, shouldRevoke] of [
+  ['needs_information', 'needs_information', 'needs_information', false],
+  ['verify', 'verified', 'approved', false],
+  ['reject', 'rejected', 'rejected', true],
+  ['suspend', 'suspended', 'suspended', true]
+] as const) {
+  test(`provider ${action} ${shouldRevoke ? 'revokes' : 'preserves'} sessions with atomic state and audit writes`, async () => {
+    const transactionSession = { id: 'provider-review' } as unknown as ClientSession;
+    const value = models();
+    const writes: string[] = [];
+    const update = (collection: string) => () => ({ async exec() { writes.push(collection); return { modifiedCount: 1 }; } });
+    value.identity.User.updateOne = update('user') as typeof value.identity.User.updateOne;
+    value.identity.ProviderProfile = { updateOne: update('profile') } as IdentityModels['ProviderProfile'];
+    value.identity.Session.updateMany = update('sessions') as typeof value.identity.Session.updateMany;
+    value.provider.ProviderApplication = { updateOne: update('application') } as ProviderModels['ProviderApplication'];
+    const writer: AuditWriter = { async record(input, session) {
+      assert.equal(session, transactionSession);
+      assert.equal(input.action, `provider.${action}`);
+      writes.push('audit');
+      return '3123456789abcdef01234567';
+    } };
+    const repository = createMongooseAccountRepository(connection(transactionSession), value.identity, value.provider, value.account, writer);
+    const input: ProviderReviewWriteInput = {
+      target: { providerApplicationId: '4123456789abcdef01234567', userId, providerType: 'individual_broker', accountStatus: 'pending_review', accountVersion: 1, applicationStatus: 'pending_review', applicationVersion: 1, profileStatus: 'pending_review', profileVersion: 1 },
+      actorAdminId: actorId, action, toAccountStatus: accountStatus, toProviderStatus: applicationStatus,
+      reason: 'Document review decision', requestId: 'review-session-test', traceId: 'a'.repeat(32), changedAt
+    };
+    assert.equal((await repository.reviewProvider(input)).kind, 'written');
+    assert.deepEqual(writes, ['application', 'profile', 'user', ...(shouldRevoke ? ['sessions'] : []), 'audit']);
+  });
 }
 
 test('appends the unified audit in the same transaction as an account transition', async () => {

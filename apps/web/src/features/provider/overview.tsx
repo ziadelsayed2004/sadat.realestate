@@ -102,6 +102,10 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
   const [signingOut, setSigningOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [providerType, setProviderType] = useState<ProviderType | undefined>();
+  const [applicationStatus, setApplicationStatus] = useState<ProviderOverviewData['application']['status'] | undefined>(() => {
+    const user = authClient?.getSnapshot?.().user;
+    return user?.roleType === 'provider' ? user.status === 'verified' ? 'approved' : 'pending_review' : undefined;
+  });
   const navigationList = useRef<HTMLUListElement>(null);
   useEffect(() => {
     const revealActive = () => {
@@ -117,7 +121,10 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
     let active = true;
     if (authClient?.getProviderApplicationStatus === undefined) return undefined;
     void authClient.getProviderApplicationStatus().then(application => {
-      if (active) setProviderType(application.providerType);
+      if (active) {
+        setProviderType(application.providerType);
+        setApplicationStatus(application.status);
+      }
     }, () => undefined);
     return () => { active = false; };
   }, [authClient]);
@@ -142,9 +149,9 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
         <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
         <span className="provider-dashboard__topbar-spacer" />
         <DashboardAccountMenu locale={locale} settingsHref={localeForProviderPath(locale, '/provider/settings')} guideHref={localeForProviderPath(locale, '/provider/user-guide')} signingOut={signingOut} onSignOut={signOut}><span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span></DashboardAccountMenu>
-        <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
+        {applicationStatus === undefined || applicationStatus === 'approved' ? <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
           <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
-        </a>
+        </a> : null}
       </header>
       {mobileMenuOpen ? <button className="provider-dashboard__navigation-backdrop" type="button" aria-label={locale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu'} onClick={() => setMobileMenuOpen(false)} /> : null}
       <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow} data-mobile-open={mobileMenuOpen ? 'true' : undefined}>
@@ -153,7 +160,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
         </div>
         <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
         <ul ref={navigationList} id="provider-navigation-list">
-          {navigationItems.filter(([id]) => id !== 'projects' || providerType !== 'brokerage_office').map(([id, path]) => {
+          {navigationItems.filter(([id]) => (applicationStatus === undefined || applicationStatus === 'approved' || id === 'overview' || id === 'settings') && (id !== 'projects' || providerType !== 'brokerage_office')).map(([id, path]) => {
             const active = navigationItemIsActive(id, path, activePath);
             const icon = navigationIcons[id];
             return (
@@ -232,7 +239,7 @@ function DashboardInsights({ locale }: { readonly locale: SupportedLocale }) {
   );
 }
 
-function ApplicationStatusPanel({ data, locale }: { readonly data: ProviderOverviewData; readonly locale: SupportedLocale }) {
+function ApplicationStatusPanel({ data, locale, onRefresh }: { readonly data: ProviderOverviewData; readonly locale: SupportedLocale; readonly onRefresh: () => void }) {
   const copy = getProviderCopy(locale);
   const application = data.application;
   if (application.status === 'approved') return null;
@@ -245,6 +252,8 @@ function ApplicationStatusPanel({ data, locale }: { readonly data: ProviderOverv
       <p>{message.body}</p>
       {application.reviewReason ? <p className="provider-dashboard__review-reason"><strong>{copy.reviewReason}</strong> {application.reviewReason}</p> : null}
       {canContinue ? <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider-application')}>{copy.continueApplication}</a> : null}
+      {!canContinue ? <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider-application/status')}>{locale === 'ar' ? 'متابعة حالة الطلب' : 'Track application status'}</a> : null}
+      <button type="button" className="provider-dashboard__secondary-action" onClick={onRefresh}>{locale === 'ar' ? 'تحديث حالة الطلب' : 'Refresh application status'}</button>
     </section>
   );
 }
@@ -369,7 +378,7 @@ export function ProviderOverview({ locale, session, authClient, apiOrigin, initi
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? (
-          data.application.status === 'approved' ? <OverviewContent data={data} locale={locale} /> : <ApplicationStatusPanel data={data} locale={locale} />
+          data.application.status === 'approved' ? <OverviewContent data={data} locale={locale} /> : <ApplicationStatusPanel data={data} locale={locale} onRefresh={() => setAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>
