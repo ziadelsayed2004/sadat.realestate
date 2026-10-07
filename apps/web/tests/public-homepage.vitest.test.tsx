@@ -64,6 +64,21 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it.each(['ar', 'en'] as const)('makes only the promotion CTA a link and repairs the seeded project destination in %s', locale => {
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'city_banner', title: { en: 'Elite Compound' }, targetUrl: '/properties/demo-open-view-apartment', order: 1 }] });
+    const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
+    const card = result.container.querySelector('.public-homepage__banner-card')!;
+    expect(card.querySelectorAll('a')).toHaveLength(1);
+    expect(card.querySelector('a')).toHaveAttribute('href', `/developers/as-real-estate-development?lang=${locale}#project-elite-compound`);
+    expect(card.querySelector('h2')?.closest('a')).toBeNull();
+    expect(card.querySelector('.public-homepage__banner-media-wrapper')?.closest('a')).toBeNull();
+  });
+  it.each(['/developers/approved-builder?source=ad#developer-projects', 'https://example.com/campaign?source=ad'])('preserves administrator-selected promotional destinations: %s', targetUrl => {
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'city_banner', title: { en: 'Custom promotion' }, targetUrl, order: 1 }] });
+    const result = renderWithLocale(<PublicHomepage locale="ar" initialData={data} />, { locale: 'ar' });
+    const expected = targetUrl.startsWith('/') ? '/developers/approved-builder?source=ad&lang=ar#developer-projects' : targetUrl;
+    expect(result.container.querySelector('.public-homepage__banner-cta')).toHaveAttribute('href', expected);
+  });
   it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
     const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };
     const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title, altText: { en: 'Description of the banner image' }, imageUrl: 'https://example.com/new-banner.jpg', order: 0 }] });

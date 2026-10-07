@@ -163,6 +163,7 @@ const bannerPresentation: Readonly<Record<string, {
   }
 });
 
+const eliteProjectPage = '/developers/as-real-estate-development#project-elite-compound';
 const canonicalPromotionalBanners: ReadonlyArray<PublicHomepageBanner> = Object.freeze([
   {
     key: 'elite_compound',
@@ -174,7 +175,7 @@ const canonicalPromotionalBanners: ReadonlyArray<PublicHomepageBanner> = Object.
     },
     highlight: { ar: 'تبدأ من 1.2 مليون جنيه', en: 'Starting from 1.2M EGP' },
     imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png',
-    targetUrl: '/properties',
+    targetUrl: eliteProjectPage,
     order: 1
   },
   {
@@ -1108,7 +1109,11 @@ function BannerGrid({
   const eyebrow = localizedText(banner.eyebrow, locale) ?? (locale === 'ar' ? 'إعلان مميز' : 'Featured Ad');
   const body = localizedText(banner.body, locale);
   const highlight = localizedText(banner.highlight, locale);
-  const targetUrl = safePublicUrl(banner.targetUrl) ?? '/properties';
+  const configuredTarget = safePublicUrl(banner.targetUrl);
+  // Repair the original seeded promotion without overriding administrator-chosen links.
+  const destination = banner.key === 'city_banner' && configuredTarget === '/properties/demo-open-view-apartment'
+    ? eliteProjectPage : configuredTarget ?? '/properties';
+  const targetUrl = destination.startsWith('/') && !destination.startsWith('//') ? replaceLocaleInUrl(destination, locale) : destination;
   const presentation = bannerPresentation[banner.key] ?? bannerPresentation.city_banner;
   const previousLabel = locale === 'ar' ? 'الإعلان السابق' : 'Previous banner';
   const nextLabel = locale === 'ar' ? 'الإعلان التالي' : 'Next banner';
@@ -1123,7 +1128,7 @@ function BannerGrid({
       onBlur={() => setIsPaused(false)}
     >
       <div className="public-homepage__banner-card">
-        <a className="public-homepage__banner-link" href={targetUrl}>
+        <div className="public-homepage__banner-layout">
           <div className="public-homepage__banner-media-wrapper">
             <BannerMedia banner={banner} copy={copy} locale={locale} />
           </div>
@@ -1149,14 +1154,14 @@ function BannerGrid({
                 {presentation === undefined ? null : <span className="public-homepage__banner-installment">{presentation.installment[locale]}</span>}
               </div>
             )}
-            <span className="public-homepage__banner-cta">
+            <a className="public-homepage__banner-cta" href={targetUrl}>
               {copy.discoverProject}
               <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true" className="public-homepage__banner-cta-icon">
                 <path d={locale === 'ar' ? 'M13 15l-5-5 5-5' : 'M7 5l5 5-5 5'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </span>
+            </a>
           </div>
-        </a>
+        </div>
         <button
           className="public-homepage__banner-control public-homepage__banner-control--previous"
           type="button"

@@ -819,6 +819,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 }
 
 .public-developer-profile__project-card {
+  scroll-margin-block-start: 7rem;
   display: grid;
   grid-template-rows: 7rem minmax(0, 1fr);
   gap: 0;

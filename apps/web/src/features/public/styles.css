@@ -511,7 +511,7 @@
   min-height: 442px;
 }
 
-.public-homepage__banner-link {
+.public-homepage__banner-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
@@ -670,6 +670,7 @@
 }
 
 .public-homepage__banner-cta {
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -715,8 +716,8 @@
 }
 
 @media (max-width: 900px) {
-  .public-homepage__banner-link,
-  [dir="rtl"] .public-homepage__banner-link {
+  .public-homepage__banner-layout,
+  [dir="rtl"] .public-homepage__banner-layout {
     grid-template-columns: 1fr;
     min-height: 0;
   }
@@ -1271,8 +1272,8 @@
   direction: ltr;
 }
 
-.public-homepage__banner-link>img,
-.public-homepage__banner-link>.public-homepage__missing-media {
+.public-homepage__banner-layout>img,
+.public-homepage__banner-layout>.public-homepage__missing-media {
   display: block;
   inline-size: 100%;
   block-size: 10rem;
@@ -1280,8 +1281,8 @@
   background: var(--color-surface-soft);
 }
 
-.public-homepage__section--banners .public-homepage__banner-link>img,
-.public-homepage__section--banners .public-homepage__banner-link>.public-homepage__missing-media {
+.public-homepage__section--banners .public-homepage__banner-layout>img,
+.public-homepage__section--banners .public-homepage__banner-layout>.public-homepage__missing-media {
   block-size: 27rem;
 }
 
@@ -1291,7 +1292,7 @@
   min-block-size: 27rem;
 }
 
-.public-homepage__banner-link {
+.public-homepage__banner-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-block-size: 27rem;
@@ -2069,9 +2070,9 @@
   }
 
   .public-homepage__section--banners .public-homepage__banner-card,
-  .public-homepage__section--banners .public-homepage__banner-link,
-  .public-homepage__section--banners .public-homepage__banner-link>img,
-  .public-homepage__section--banners .public-homepage__banner-link>.public-homepage__missing-media {
+  .public-homepage__section--banners .public-homepage__banner-layout,
+  .public-homepage__section--banners .public-homepage__banner-layout>img,
+  .public-homepage__section--banners .public-homepage__banner-layout>.public-homepage__missing-media {
     block-size: 27.5rem;
     min-block-size: 27.5rem;
   }
@@ -2085,7 +2086,7 @@
     line-height: 2.34375rem;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link>.public-homepage__banner-copy {
+  .public-homepage__section--banners .public-homepage__banner-layout>.public-homepage__banner-copy {
     block-size: 27.5rem;
   }
 
@@ -2597,13 +2598,13 @@
     width: min(100% - var(--space-xl), 78rem);
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     grid-template-columns: 1fr;
     min-block-size: auto;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link>img,
-  .public-homepage__section--banners .public-homepage__banner-link>.public-homepage__missing-media {
+  .public-homepage__section--banners .public-homepage__banner-layout>img,
+  .public-homepage__section--banners .public-homepage__banner-layout>.public-homepage__missing-media {
     block-size: 16rem;
     min-block-size: 16rem;
   }
@@ -2710,7 +2711,7 @@
 }
 
 .public-homepage__section--banners .public-homepage__banner-card,
-.public-homepage__section--banners .public-homepage__banner-link {
+.public-homepage__section--banners .public-homepage__banner-layout {
   block-size: auto;
   min-block-size: 27.765625rem;
 }
@@ -2720,7 +2721,7 @@
   min-height: max-content;
 }
 
-.public-homepage__section--banners .public-homepage__banner-link {
+.public-homepage__section--banners .public-homepage__banner-layout {
   overflow: hidden;
   border-radius: inherit;
 }
@@ -2788,7 +2789,7 @@
 
 @media (max-width: 56.25rem) and (min-width: 48.0625rem) {
   .public-homepage__section--banners .public-homepage__banner-card,
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     min-block-size: 34rem;
   }
 
@@ -2811,7 +2812,7 @@
     overflow: visible;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     grid-template-rows: 11.25rem 18.375rem;
     gap: 1rem;
     block-size: 30.625rem;
@@ -2916,11 +2917,11 @@
 
 @media (min-width: 56.3125rem) {
   .public-homepage__section--banners .public-homepage__banner-card,
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     min-block-size: 0;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     min-block-size: 27rem;
   }
 
@@ -2988,7 +2989,7 @@
    and gives both media and copy an identical clipping boundary. */
 @media (min-width: 56.3125rem) {
   .public-homepage__section--banners .public-homepage__banner-card,
-  .public-homepage__section--banners .public-homepage__banner-link,
+  .public-homepage__section--banners .public-homepage__banner-layout,
   .public-homepage__section--banners .public-homepage__banner-media-wrapper,
   .public-homepage__section--banners .public-homepage__banner-copy {
     box-sizing: border-box;
@@ -2997,7 +2998,7 @@
     max-block-size: 34rem;
   }
 
-  .public-homepage__section--banners .public-homepage__banner-link {
+  .public-homepage__section--banners .public-homepage__banner-layout {
     align-items: stretch;
   }
 

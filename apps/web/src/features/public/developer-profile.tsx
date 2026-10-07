@@ -224,6 +224,19 @@ function ProfileMetric({ value, label, icon }: { readonly value: number; readonl
 
 
 function ProjectCard({ project, locale, copy }: { readonly project: PublicOrganizationProject; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+  const anchorId = `project-${project.slug}`;
+  useEffect(() => {
+    const reveal = () => {
+      if (window.location.hash !== `#${anchorId}`) return;
+      const card = document.getElementById(anchorId);
+      const details = card?.querySelector('details');
+      if (details) details.open = true;
+      card?.scrollIntoView({ block: 'start' });
+    };
+    reveal();
+    window.addEventListener('hashchange', reveal);
+    return () => window.removeEventListener('hashchange', reveal);
+  }, [anchorId]);
   const name = localizedText(project.name, locale) ?? project.slug;
   const description = localizedText(project.description, locale);
   const website = safePublicUrl(project.website);
@@ -234,7 +247,7 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
     ['', projectType]
   ];
   return (
-    <article className="public-developer-profile__project-card">
+    <article className="public-developer-profile__project-card" id={anchorId}>
       <div className="public-developer-profile__project-media">
         <PublicMediaImage src={project.imageUrl} alt={name} fallback={<span className="public-developer-profile__project-media-fallback" />} />
         {localizedText(project.statusLabel, locale) ? <span className="public-developer-profile__project-status">{localizedText(project.statusLabel, locale)}</span> : null}

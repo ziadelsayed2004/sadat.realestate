@@ -971,7 +971,7 @@ export const FIGMA_PUBLIC_CONTENT_SEED_STEP: DevelopmentSeedStep = {
         body: localized('وحدات سكنية حديثة بتصميمات متنوعة وخدمات متكاملة في قلب مدينة السادات.', 'Modern homes with varied layouts and integrated services in the heart of Sadat City.'),
         highlight: localized('تبدأ من 1.2 مليون جنيه', 'Starting from EGP 1.2 million'),
         imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png',
-        targetUrl: '/properties/demo-open-view-apartment',
+        targetUrl: '/developers/as-real-estate-development#project-elite-compound',
         order: 20,
         active: true,
         status: 'published',
