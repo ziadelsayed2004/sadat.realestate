@@ -7,8 +7,8 @@
   ],
   "environment": "isolated-local-MongoDB-rs0-real-services",
   "mockedRoutes": false,
-  "commit": "1d8d0c1f73557effe071b22aa3e983353b846483",
-  "startedAt": "2026-10-07T14:51:35.372Z",
+  "commit": "f8da2515579ff6a3ced9f73c11c7c13c047612b4",
+  "startedAt": "2026-10-07T20:34:50.227Z",
   "checks": [
     "registration_atomically_creates_grant_user_profile_application_credential_and_session",
     "verification_grant_replay_rejected_without_duplicate_account",
@@ -19,6 +19,8 @@
     "needs_information_provider_refreshes_existing_session",
     "pending_provider_can_login_and_refresh_without_activation",
     "approval_preserves_sessions_and_refresh_activates_claims",
+    "approved_developer_can_log_in_with_registered_password",
+    "legacy_provider_missing_credential_can_recover_password_after_approval",
     "suspension_revokes_sessions_and_blocks_refresh"
   ],
   "cleanup": true,
@@ -47,5 +49,5 @@
   "remaining": [
     "Production verification remains deferred while the project stays in Demo mode."
   ],
-  "finishedAt": "2026-10-07T14:51:35.926Z"
+  "finishedAt": "2026-10-07T20:34:51.330Z"
 }

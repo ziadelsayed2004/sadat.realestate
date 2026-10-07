@@ -177,6 +177,16 @@ export function createSecurityMiddleware(options: SecurityOptions = {}): Request
   const resolved = resolveSecurityOptions(options);
   return [
     helmet(),
+    // Private routes and early errors must never inherit a cacheable response.
+    // Public projection routes can explicitly opt into their existing TTLs.
+    (request, response, next) => {
+      if (request.path.startsWith('/api/')) {
+        response.setHeader('Cache-Control', 'no-store');
+        response.vary('Cookie');
+        response.vary('Authorization');
+      }
+      next();
+    },
     createCorsMiddleware(resolved.allowedOrigins),
     createRateLimitMiddleware(resolved.rateLimit),
     express.json({ limit: resolved.jsonBodyLimit, strict: true }),

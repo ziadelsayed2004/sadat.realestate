@@ -56,6 +56,7 @@ test('API client uses generated envelopes, one /api/v1 prefix, request IDs, JSON
   assert.equal(new Headers(seenInit?.headers).get('x-request-id'), 'web-request-1');
   assert.equal(new Headers(seenInit?.headers).get('content-type'), 'application/json');
   assert.equal(seenInit?.credentials, 'include');
+  assert.equal(seenInit?.cache, 'no-store');
   assert.equal(seenInit?.body, JSON.stringify({ confirm: true }));
   assert.deepEqual(result.data, logoutResponse('server-request-1'));
   assert.equal(result.requestId, 'server-request-1');

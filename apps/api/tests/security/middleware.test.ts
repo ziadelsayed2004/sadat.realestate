@@ -63,7 +63,13 @@ test('enforces JSON body limits and returns a redacted error envelope', async ()
 test('rate-limits repeated requests by the socket-derived client key', async () => {
   await withServer({ rateLimit: { max: 2, windowMs: 10_000 } }, async (baseUrl) => {
     const statuses: number[] = [];
-    for (let index = 0; index < 3; index += 1) statuses.push((await fetch(`${baseUrl}/api/v1/not-implemented`)).status);
+    for (let index = 0; index < 3; index += 1) {
+      const response = await fetch(`${baseUrl}/api/v1/not-implemented`);
+      statuses.push(response.status);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+      assert.match(response.headers.get('vary') ?? '', /Cookie/u);
+      assert.match(response.headers.get('vary') ?? '', /Authorization/u);
+    }
     assert.deepEqual(statuses, [404, 404, 429]);
   });
 });

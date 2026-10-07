@@ -1,0 +1,60 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-real-MongoDB-API-web-browser",
+  "mockedRoutes": false,
+  "checks": [
+    {
+      "role": "seeker",
+      "case": "shared-homepage",
+      "senderKeepsOwnAccount": true,
+      "signedInRecipientKeepsOwnAccount": true,
+      "guestStaysAnonymous": true,
+      "ssrContainsNoCredentials": true
+    },
+    {
+      "role": "seeker",
+      "case": "shared-account-url-with-forged-query-hash-and-storage-hint",
+      "guestRefresh": 401,
+      "loginRequired": true,
+      "recipientSessionNotReplaced": true
+    },
+    {
+      "role": "seeker",
+      "case": "real-private-profile-access",
+      "eachTokenReturnsOwnProfile": true,
+      "queryAndCookieWithoutBearer": 401
+    },
+    {
+      "role": "provider",
+      "case": "shared-homepage",
+      "senderKeepsOwnAccount": true,
+      "signedInRecipientKeepsOwnAccount": true,
+      "guestStaysAnonymous": true,
+      "ssrContainsNoCredentials": true
+    },
+    {
+      "role": "provider",
+      "case": "shared-account-url-with-forged-query-hash-and-storage-hint",
+      "guestRefresh": 401,
+      "loginRequired": true,
+      "recipientSessionNotReplaced": true
+    },
+    {
+      "role": "admin",
+      "case": "shared-homepage",
+      "senderKeepsOwnAccount": true,
+      "signedInRecipientKeepsOwnAccount": true,
+      "guestStaysAnonymous": true,
+      "ssrContainsNoCredentials": true
+    },
+    {
+      "role": "admin",
+      "case": "shared-account-url-with-forged-query-hash-and-storage-hint",
+      "guestRefresh": 401,
+      "loginRequired": true,
+      "recipientSessionNotReplaced": true
+    }
+  ],
+  "cleanup": true,
+  "finishedAt": "2026-10-07T20:25:14.553Z"
+}

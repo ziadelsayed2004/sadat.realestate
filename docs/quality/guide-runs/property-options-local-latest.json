@@ -2,7 +2,10 @@
   "status": "PASS_LOCAL",
   "checks": [
     "ordinary_search_does_not_fetch_amenities",
-    "only_active_named_features_and_services_without_private_fields"
+    "only_active_named_features_and_services_without_private_fields",
+    "named_choices_save_through_real_API_and_persist_in_MongoDB",
+    "empty_optional_choices_save_through_real_API",
+    "malformed_choice_rejected_without_changing_saved_property"
   ],
   "cleanup": true
 }

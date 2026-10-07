@@ -24,6 +24,8 @@ test('HTML responses expose browser security headers and private pages are not c
   expect(response?.status()).toBe(200);
   expect(response?.headers()).toMatchObject({
     'cache-control': 'no-store',
+    'cdn-cache-control': 'no-store',
+    'vary': 'Cookie, Accept-Language',
     'content-security-policy': expect.stringContaining("default-src 'self'"),
     'cross-origin-opener-policy': 'same-origin',
     'cross-origin-resource-policy': 'same-origin',

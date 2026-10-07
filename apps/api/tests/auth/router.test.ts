@@ -151,6 +151,21 @@ test('logs in an Admin with strict input, a success envelope, and a secure HttpO
   });
 });
 
+test('shared URLs cannot authenticate with refresh or access tokens in query parameters', async () => {
+  await withAuthServer(async (baseUrl) => {
+    const query = new URLSearchParams({ token: currentToken, refreshToken: currentToken, accessToken: 'header.payload.signature', session: currentToken });
+    const response = await fetch(`${baseUrl}/api/v1/auth/refresh?${query}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}'
+    });
+    assert.equal(response.status, 401);
+    const body = await response.json() as AuthResponseBody;
+    assert.equal(body.data, undefined);
+    assert.equal(body.error?.code, 'INVALID_REFRESH_TOKEN');
+    assert.match(response.headers.get('set-cookie') ?? '', /Max-Age=0/u);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+  });
+});
+
 test('changes the authenticated account password and clears the refresh cookie', async () => {
   await withAuthServer(async (baseUrl) => {
     const response = await fetch(`${baseUrl}/api/v1/auth/account-access/change`, {

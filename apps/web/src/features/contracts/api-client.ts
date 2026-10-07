@@ -329,7 +329,7 @@ export class ApiClient {
     headers.set('accept', 'application/json');
     headers.set('x-request-id', requestId);
 
-    const init: RequestInit = { method, headers, credentials: this.credentials };
+    const init: RequestInit = { method, headers, credentials: this.credentials, cache: 'no-store' };
     if (options.signal) init.signal = options.signal;
     if (options.json !== undefined) {
       init.body = JSON.stringify(options.json);

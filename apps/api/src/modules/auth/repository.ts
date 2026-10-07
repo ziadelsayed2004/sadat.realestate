@@ -273,9 +273,15 @@ export function createMongooseAuthRepository(
       if (!user) return false;
       const result = await AdminCredential.updateOne(
         { userId: user._id },
-        { $set: { passwordHash, passwordChangedAt: now, updatedAt: now } }
+        {
+          $set: { passwordHash, passwordChangedAt: now, updatedAt: now },
+          $setOnInsert: { userId: user._id }
+        },
+        // OTP-verified password recovery also enables password login for
+        // accounts created before registration started storing credentials.
+        { upsert: true, runValidators: true }
       ).exec();
-      if (result.matchedCount !== 1) return false;
+      if (result.matchedCount !== 1 && result.upsertedCount !== 1) return false;
       await revokeAll(user._id, now);
       return true;
     },

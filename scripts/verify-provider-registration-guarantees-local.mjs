@@ -7,6 +7,9 @@ import { createAuthModels } from '../apps/api/src/modules/auth/models.ts';
 import { createIdentityModels } from '../apps/api/src/modules/identity/models.ts';
 import { createMongooseAuthRepository, createMongooseOtpRepository } from '../apps/api/src/modules/auth/repository.ts';
 import { createAuthService } from '../apps/api/src/modules/auth/service.ts';
+import { createOtpService } from '../apps/api/src/modules/auth/otp-service.ts';
+import { createDeterministicFakeOtpProvider, createDeterministicOtpCodeGenerator } from '../apps/api/src/modules/auth/otp-provider.ts';
+import { createHmacOtpCodeHasher } from '../apps/api/src/modules/auth/crypto.ts';
 import { createArgon2PasswordHasher, createHmacAccessTokenService, createOpaqueTokenService } from '../apps/api/src/modules/auth/crypto.ts';
 import { createProviderModels } from '../apps/api/src/modules/provider/models.ts';
 import { createMongooseProviderRepository } from '../apps/api/src/modules/provider/repository.ts';
@@ -36,7 +39,7 @@ const report = {
 };
 const env = parseEnvironment(await readFile('.env.local', 'utf8'));
 assert.ok(env.MONGODB_URI);
-const uri = new URL(env.MONGODB_URI);
+const uri = new URL(process.env.PROVIDER_REGISTRATION_QA_MONGODB_URI ?? env.MONGODB_URI);
 assert.ok(['127.0.0.1', 'localhost'].includes(uri.hostname));
 uri.pathname = `/guide_provider_registration_${Date.now()}`;
 const connection = await mongoose.createConnection(uri.toString()).asPromise();
@@ -211,10 +214,41 @@ try {
   const approved = await authService.refresh(waiting.refreshToken);
   assert.equal(approved.data.user.status, 'verified');
   report.checks.push('approval_preserves_sessions_and_refresh_activates_claims');
+  const approvedLogin = await authService.loginAdmin({ email, password: 'Provider-Strong!2026' });
+  assert.equal(approvedLogin.data.user.status, 'verified');
+  assert.equal(approvedLogin.data.user.id, registered.data.session.user.id);
+  report.checks.push('approved_developer_can_log_in_with_registered_password');
+
+  // Legacy OTP accounts without a credential must recover through a verified
+  // reset grant, rather than failing permanently after approval.
+  await authModels.AdminCredential.deleteOne({ userId: objectId });
+  const diagnostic = JSON.parse(execFileSync(process.execPath, ['scripts/check-provider-login.mjs', '--provider-id', registered.data.application.id],
+    { encoding: 'utf8', env: { ...process.env, MONGODB_URI: uri.toString() } }));
+  assert.equal(diagnostic.accountStatus, 'verified');
+  assert.equal(diagnostic.passwordCredentialPresent, false);
+  assert.equal(diagnostic.recommendedAction, 'RECOVER_PASSWORD_WITH_OTP');
+  assert.ok(!JSON.stringify(diagnostic).includes(email));
+  await assert.rejects(authService.loginAdmin({ email, password: 'Provider-Strong!2026' }));
+  const recovery = createOtpService({ repository: otpRepository, provider: createDeterministicFakeOtpProvider(),
+    codeGenerator: createDeterministicOtpCodeGenerator(), codeHasher: createHmacOtpCodeHasher(Buffer.alloc(32, 7)),
+    verificationTokens: registrationTokens, authService });
+  const recoveryChallenge = await recovery.send({ email, roleType: 'provider', purpose: 'password_reset' });
+  const recoveredGrant = await recovery.verify({ email, roleType: 'provider', purpose: 'password_reset', challengeId: recoveryChallenge.challengeId, code: '000000' });
+  assert.equal(recoveredGrant.data.outcome, 'verified');
+  await recovery.resetPassword({ verificationToken: recoveredGrant.data.verificationToken, newPassword: 'Recovered-Strong!2026' });
+  await assert.rejects(recovery.resetPassword({ verificationToken: recoveredGrant.data.verificationToken, newPassword: 'Other-Strong!2026' }));
+  assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 0);
+  const recoveredLogin = await authService.loginAdmin({ email, password: 'Recovered-Strong!2026' });
+  assert.equal(recoveredLogin.data.user.status, 'verified');
+  assert.equal(await authModels.AdminCredential.countDocuments({ userId: objectId }), 1);
+  await assert.rejects(authService.loginAdmin({ email, password: 'Provider-Strong!2026' }));
+  report.checks.push('legacy_provider_missing_credential_can_recover_password_after_approval');
   const approvedTarget = await accountRepository.findProviderReviewTarget(registered.data.application.id);
   await accountRepository.reviewProvider({ ...reviewInput, target: approvedTarget, action: 'suspend', toAccountStatus: 'suspended', toProviderStatus: 'suspended', changedAt: new Date() });
   assert.equal(await identity.Session.countDocuments({ userId: objectId, revokedAt: { $exists: false } }), 0);
   await assert.rejects(authService.refresh(approved.refreshToken));
+  await assert.rejects(authService.resetAccountPassword(email, 'provider', 'Blocked-Strong!2026'));
+  await assert.rejects(authService.resetAccountPassword('missing@example.invalid', 'provider', 'Blocked-Strong!2026'));
   report.checks.push('suspension_revokes_sessions_and_blocks_refresh');
 
   report.mongo = { collections: ['otp_challenges', 'users', 'provider_profiles', 'provider_applications', 'admin_credentials', 'sessions'],

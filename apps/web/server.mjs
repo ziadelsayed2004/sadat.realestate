@@ -344,6 +344,8 @@ function sendHtml(response, statusCode, html, development = false, cspNonce) {
   applySecurityHeaders(response, true, development, cspNonce);
   response.statusCode = statusCode;
   response.setHeader('Cache-Control', 'no-store');
+  response.setHeader('CDN-Cache-Control', 'no-store');
+  response.setHeader('Vary', 'Cookie, Accept-Language');
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
   response.end(html);
 }
@@ -377,6 +379,7 @@ async function proxyApiRequest(request, response) {
   const requestUrl = request.url ?? '/';
   const pathname = new URL(requestUrl, 'http://sadat.local').pathname;
   if (!pathname.startsWith('/api/')) return false;
+  response.setHeader('Cache-Control', 'no-store');
   const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
   if (apiOrigin === undefined) {
     response.statusCode = 503;
