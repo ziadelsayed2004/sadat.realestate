@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { publicHomepageDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClientError } from '../src/features/contracts/index.ts';
@@ -63,6 +63,38 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
+    const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title, altText: { en: 'Description of the banner image' }, imageUrl: 'https://example.com/new-banner.jpg', order: 0 }] });
+    const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title[locale]);
+    expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('src', 'https://example.com/new-banner.jpg');
+    expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('alt', 'Description of the banner image');
+  });
+
+  it('refreshes timed banners without replacing the search form, and retains the page if background refresh fails', async () => {
+    vi.useFakeTimers();
+    const title = 'A scheduled banner';
+    const load = vi.fn().mockResolvedValueOnce({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title: { en: title }, imageUrl: 'https://example.com/timed.jpg', order: 0 }] })
+      .mockRejectedValueOnce(new Error('Temporary outage'))
+      .mockResolvedValueOnce({ ...homepageData, banners: [] });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} load={load} />, { locale: 'en' });
+    try {
+      fireEvent.click(screen.getByRole('tab', { name: 'For rent' }));
+      const searchForm = result.container.querySelector('.public-homepage__hero form');
+      await act(() => vi.advanceTimersByTimeAsync(30_000));
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title);
+      expect(result.container.querySelector('.public-homepage__hero form')).toBe(searchForm);
+      expect(result.container.querySelector('input[name="transactionType"]')).toHaveValue('rent');
+      await act(() => vi.advanceTimersByTimeAsync(30_000));
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title);
+      expect(result.container.querySelector('[data-homepage-state]')).toHaveAttribute('data-homepage-state', 'success');
+      await act(() => vi.advanceTimersByTimeAsync(30_000));
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Published homes');
+      expect(result.container.querySelector('.public-homepage__hero form')).toBe(searchForm);
+      expect(result.container.querySelector('input[name="transactionType"]')).toHaveValue('rent');
+    } finally { result.unmount(); vi.useRealTimers(); }
+  });
   it.each(['ar', 'en'] as const)('renders the contract projection for %s', (locale) => {
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={homepageData} />, { locale });
 

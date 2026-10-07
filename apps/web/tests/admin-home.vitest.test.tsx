@@ -140,7 +140,7 @@ describe('Admin banners, tips, and homepage administration', () => {
     fireEvent.submit(form);
     await waitFor(() => expect(document.querySelector('.admin-home__feedback[role="status"]')).toHaveTextContent(copy.saved));
     expect(requests.find(request => request.method === 'POST')?.body).toMatchObject({
-      startAt: new Date('2026-10-05T00:00').toISOString(), endAt: new Date('2026-10-06T00:00').toISOString()
+      startAt: '2026-10-04T21:00:00.000Z', endAt: '2026-10-05T21:00:00.000Z'
     });
   });
 
@@ -169,7 +169,7 @@ describe('Admin banners, tips, and homepage administration', () => {
     fireEvent.submit(form);
     await waitFor(() => expect(document.querySelector('.admin-home__feedback[role="status"]')).toHaveTextContent(copy.saved));
     expect(requests.find(request => request.method === 'POST')?.body).toMatchObject({
-      startAt: new Date('2026-10-05T14:30').toISOString(), endAt: new Date('2026-10-05T16:45').toISOString()
+      startAt: '2026-10-05T11:30:00.000Z', endAt: '2026-10-05T13:45:00.000Z'
     });
   });
 

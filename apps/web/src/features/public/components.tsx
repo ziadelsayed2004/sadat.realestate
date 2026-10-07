@@ -588,7 +588,7 @@ function BannerMedia({
   } as const)[banner?.key as 'city_banner' | 'elite_compound' | 'local_preview_banner'];
   const rawUrl = canonicalBanner ?? banner?.imageUrl ?? (priority ? fallbackHero : fallbackBanner);
   const imageUrl = safePublicUrl(rawUrl);
-  const imageAlt = localizedText(banner?.title, locale) ?? copy.brand;
+  const imageAlt = localizedText(banner?.altText, locale) ?? localizedText(banner?.title, locale) ?? copy.brand;
 
   if (imageUrl === undefined || failed) {
     return (
@@ -704,7 +704,8 @@ function Hero({
 }) {
   const section = sections[0];
   const banner = banners.find(item => !item.key.startsWith('banner-'));
-  const title = localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
+  const managed = banner?.key.startsWith('banner_');
+  const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
   const body = localizedText(section?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
 
@@ -1240,6 +1241,30 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
       });
     return () => controller.abort();
   }, [attempt, initialData, load]);
+
+  useEffect(() => {
+    if (view !== 'success') return;
+    const controller = new AbortController();
+    let pending = false;
+    const refreshBanners = async () => {
+      if (pending || document.visibilityState === 'hidden') return;
+      pending = true;
+      try {
+        const next = await load(controller.signal);
+        if (!controller.signal.aborted) setData(current => current ? { ...current, banners: next.banners } : current);
+      } catch { /* Keep the current page and search entries on a temporary failure. */ }
+      finally { pending = false; }
+    };
+    const timer = window.setInterval(() => { void refreshBanners(); }, 30_000);
+    const onVisible = () => { void refreshBanners(); };
+    window.addEventListener('focus', onVisible);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      controller.abort(); window.clearInterval(timer);
+      window.removeEventListener('focus', onVisible);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [load, view]);
 
   const retry = () => setAttempt(value => value + 1);
 

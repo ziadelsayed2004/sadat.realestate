@@ -1295,7 +1295,7 @@
       "startTime": "Start time",
       "endDate": "End date",
       "endTime": "End time",
-      "hint": "Choose the date and time separately. Times use your device’s time zone and default to 00:00.",
+      "hint": "Dates and times use Egypt time, including summer/winter changes. 00:00 means midnight at the start of the day. Save, then select “Publish / schedule”; saving alone does not publish.",
       "invalidRange": "The end date and time must be later than the start date and time."
     },
     "eyebrow": "Homepage administration",
