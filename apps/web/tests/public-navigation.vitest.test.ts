@@ -85,6 +85,41 @@ describe('public navigation', () => {
     expect(document.documentElement.dataset.navigationPending).toBeUndefined();
   });
 
+  it('records the final fragment destination before a smooth scroll has moved, then commits an interrupted position at scrollend', () => {
+    window.history.replaceState({}, '', '/developers/builder?lang=ar');
+    vi.stubGlobal('scrollY', 700);
+    Object.defineProperty(document.documentElement, 'scrollHeight', { configurable: true, value: 3000 });
+    const anchor = document.createElement('section'); anchor.id = 'developer-contact'; anchor.style.scrollMarginTop = '88px';
+    anchor.getBoundingClientRect = () => ({ top: 900 }) as DOMRect;
+    document.body.append(anchor);
+    stop = installPublicNavigation(vi.fn());
+    expect(click('#developer-contact')).toBe(false);
+    window.history.pushState(null, '', '#developer-contact');
+    window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    expect(publicPageState()?.scroll.y).toBe(1512);
+    vi.stubGlobal('scrollY', 1000);
+    window.dispatchEvent(new Event('scrollend'));
+    expect(publicPageState()?.scroll.y).toBe(1000);
+  });
+
+  it('scrolls a repeated current fragment in place without fetching or a second native history event', () => {
+    window.history.replaceState({}, '', '/developers/builder?lang=ar#developer-properties');
+    const anchor = document.createElement('section'); anchor.id = 'developer-properties';
+    const anchorScroll = vi.fn(); anchor.scrollIntoView = anchorScroll;
+    document.body.append(anchor);
+    const fetcher = vi.fn(); const push = vi.spyOn(window.history, 'pushState');
+    vi.stubGlobal('fetch', fetcher); vi.stubGlobal('requestAnimationFrame', vi.fn());
+    stop = installPublicNavigation(vi.fn());
+    vi.stubGlobal('scrollY', 700);
+    expect(click('#developer-properties')).toBe(true);
+    expect(anchorScroll).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+    expect(publicPageState()?.scroll.y).toBe(700);
+    expect(push).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
+    expect(click('#missing-section')).toBe(false);
+    expect(click('#%E0%A4%A')).toBe(false);
+  });
+
   it('commits only the latest navigation and never executes fetched scripts', async () => {
     window.history.replaceState({}, '', '/properties');
     let resolveFirst: (response: Response) => void = () => undefined;

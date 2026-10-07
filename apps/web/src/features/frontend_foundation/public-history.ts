@@ -26,9 +26,9 @@ export function ensurePublicPageState(): PublicPageState {
   return value;
 }
 
-export function savePublicScroll(): void {
+export function savePublicScroll(position = { x: window.scrollX, y: window.scrollY }): void {
   const value = ensurePublicPageState();
-  writePageState({ ...value, scroll: { x: window.scrollX, y: window.scrollY } });
+  writePageState({ ...value, scroll: position });
 }
 
 export function savePublicListingView(view: 'list' | 'grid'): void {

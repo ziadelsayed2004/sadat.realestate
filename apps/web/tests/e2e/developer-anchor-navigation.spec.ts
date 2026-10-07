@@ -14,7 +14,10 @@ async function atSection(page: Page, id: string) {
   await expect.poll(() => page.locator(`#${id}`).evaluate(element => {
     const bounds = element.getBoundingClientRect();
     const tabsBottom = document.querySelector('.public-developer-profile__tabs')?.getBoundingClientRect().bottom ?? 0;
-    return bounds.top >= tabsBottom - 2 && bounds.top < window.innerHeight - 40;
+    const margin = parseFloat(getComputedStyle(element).scrollMarginTop) || 0;
+    const room = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
+    const destination = Math.max(0, Math.min(room, window.scrollY + bounds.top - margin));
+    return bounds.top >= tabsBottom - 2 && bounds.top < window.innerHeight - 40 && Math.abs(window.scrollY - destination) < 2;
   })).toBe(true);
 }
 test.beforeEach(async ({ page }) => {
@@ -57,6 +60,27 @@ test('a direct contact hash waits for profile data and reaches the contact secti
   await page.goto(`/developers/${slug}?lang=${locale()}#developer-contact`);
   await page.locator('.public-developer-profile__inquiry input[name="name"]').waitFor();
   await atSection(page, 'developer-contact');
+});
+
+test('repeated section links stay at the section instead of jumping back to their starting position', async ({ page }) => {
+  await page.route(`**/api/v1/public/developers/${slug}`, route => route.fulfill({ json: { data: { ...profile, contactPhone: undefined }, meta: { requestId: 'developer-repeat-contact' } } }));
+  await page.goto(`/developers/${slug}?lang=${locale()}#developer-contact`);
+  await atSection(page, 'developer-contact');
+  // The sidebar link already points to the current fragment. Clicking it must
+  // not let popstate restore the position from before the native anchor jump.
+  await page.locator('.public-developer-profile__aside-cta').click();
+  await atSection(page, 'developer-contact');
+  await page.waitForTimeout(1000);
+  await atSection(page, 'developer-contact');
+  const properties = page.locator('.public-developer-profile__tabs a[href="#developer-properties"]');
+  await properties.click();
+  await atSection(page, 'developer-properties');
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await properties.click();
+  await atSection(page, 'developer-properties');
+  await page.waitForTimeout(1000);
+  await atSection(page, 'developer-properties');
+  await expect(page).toHaveURL(new RegExp(`#developer-properties$`, 'u'));
 });
 
 test('contact navigation animates through intermediate positions and respects reduced motion', async ({ page }) => {

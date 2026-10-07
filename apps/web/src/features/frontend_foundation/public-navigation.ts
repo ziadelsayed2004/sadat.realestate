@@ -19,8 +19,18 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
   const previousRestoration = window.history.scrollRestoration;
   if (publicUrl(new URL(window.location.href))) window.history.scrollRestoration = 'manual';
 
-  const savePosition = () => {
-    if (!restoring && publicUrl(new URL(window.location.href)) && pathname === window.location.pathname && !document.documentElement.dataset.navigationPending && !document.querySelector('#app [aria-busy="true"]')) savePublicScroll();
+  const canSavePosition = () => !restoring && publicUrl(new URL(window.location.href)) && pathname === window.location.pathname && !document.documentElement.dataset.navigationPending && !document.querySelector('#app [aria-busy="true"]');
+  const savePosition = () => { if (canSavePosition()) savePublicScroll(); };
+  const saveFragmentPosition = () => {
+    if (!canSavePosition()) return;
+    let anchor: HTMLElement | null = null;
+    try { anchor = document.getElementById(decodeURIComponent(window.location.hash.slice(1))); } catch { /* Malformed fragments have no scroll target. */ }
+    if (!anchor) { savePublicScroll(); return; }
+    // hashchange fires before smooth scrolling finishes. Record its destination
+    // now so an immediate Back/Forward cannot restore the animation's start.
+    const margin = parseFloat(getComputedStyle(anchor).scrollMarginTop) || 0;
+    const room = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
+    savePublicScroll({ x: window.scrollX, y: Math.max(0, Math.min(room, window.scrollY + anchor.getBoundingClientRect().top - margin)) });
   };
   const onScroll = () => {
     clearTimeout(scrollTimer);
@@ -121,10 +131,22 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
       window.history.back();
       return;
     }
-    // Same-document anchors must remain native: no fetch, no masking, no reload.
+    // Fragment links stay in this document: no fetch, no masking, no reload.
     if (target.pathname === current.pathname && target.search === current.search) {
       cancelRestoration();
       savePosition();
+      // Re-clicking the current fragment can dispatch popstate with this
+      // entry's existing state. Our history restoration would then undo the
+      // browser's anchor jump. Scroll in place without another history event.
+      if (target.hash && target.hash === current.hash) {
+        let anchor: HTMLElement | null = null;
+        try { anchor = document.getElementById(decodeURIComponent(target.hash.slice(1))); } catch { /* Leave invalid fragments to the browser. */ }
+        if (anchor) {
+          event.preventDefault();
+          anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+          saveFragmentPosition();
+        }
+      }
       return;
     }
     event.preventDefault();
@@ -155,9 +177,8 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
 
   document.addEventListener('click', click);
   window.addEventListener('popstate', popstate);
-  // Commit the new fragment position before an immediate Back/Forward action;
-  // the normal scroll debounce may not have run when the next entry is opened.
-  window.addEventListener('hashchange', savePosition);
+  window.addEventListener('hashchange', saveFragmentPosition);
+  window.addEventListener('scrollend', savePosition);
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('pagehide', savePosition);
   const onPageShow = (event: PageTransitionEvent) => {
@@ -179,7 +200,8 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     delete document.documentElement.dataset.navigationPending;
     document.removeEventListener('click', click);
     window.removeEventListener('popstate', popstate);
-    window.removeEventListener('hashchange', savePosition);
+    window.removeEventListener('hashchange', saveFragmentPosition);
+    window.removeEventListener('scrollend', savePosition);
     window.removeEventListener('scroll', onScroll);
     window.removeEventListener('pagehide', savePosition);
     window.removeEventListener('pageshow', onPageShow);
