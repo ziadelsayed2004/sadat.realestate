@@ -416,11 +416,13 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 
 .public-developer-profile__inquiry {
   display: grid;
+  min-inline-size: 0;
   margin-block-start: var(--space-xl);
 }
 
 .public-developer-profile__inquiry label {
   display: grid;
+  min-inline-size: 0;
   font-weight: var(--font-weight-semibold);
 }
 
@@ -1281,7 +1283,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 
   .public-developer-profile__inquiry,
   .public-developer-profile__inquiry-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .public-developer-profile__inquiry-wide,
@@ -1387,7 +1389,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   }
 
   .public-developer-profile__inquiry {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .public-developer-profile__inquiry label:last-of-type {
@@ -1603,16 +1605,6 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   .public-developer-profile__overview-content {
     min-block-size: 27.25rem;
     box-sizing: border-box;
-  }
-
-  .public-developer-profile__inquiry {
-    grid-template-rows: 4.25rem 4.25rem 4.25rem 7rem 2.5rem 1.25rem;
-  }
-
-  .public-developer-profile__inquiry textarea {
-    block-size: 5rem;
-    min-block-size: 5rem;
-    resize: none;
   }
 
   .public-developer-profile__tabs {
