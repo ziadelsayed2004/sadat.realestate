@@ -5,6 +5,7 @@ import type {
   AdminUserListQuery,
   AdminUserPatch
 } from '@sadat-real-estate/contracts';
+import { createArgon2PasswordHasher, type PasswordHasher } from '../auth/crypto.js';
 import {
   adminUserCreateSchema,
   adminUserDataSchema,
@@ -13,7 +14,7 @@ import {
 } from '@sadat-real-estate/contracts';
 
 export interface AdministratorAuthorization {
-  authorize(adminId: string, permission: 'admin:staff.view' | 'admin:staff.manage'): Promise<boolean>;
+  authorize(adminId: string, permission: 'admin:staff.view' | 'admin:staff.manage' | 'admin:roles.manage'): Promise<boolean>;
 }
 
 export type AdministratorWriteResult =
@@ -34,7 +35,8 @@ export interface AdministratorRepository {
   countActiveSuperAdmins(): Promise<number>;
   create(input: {
     actorId: string;
-    data: AdminUserCreate;
+    data: Omit<AdminUserCreate, 'password'>;
+    passwordHash?: string;
     now: string;
     requestId: string;
     traceId: string;
@@ -43,7 +45,8 @@ export interface AdministratorRepository {
     actorId: string;
     id: string;
     expectedVersion: number;
-    patch: AdminUserPatch;
+    patch: Omit<AdminUserPatch, 'password'>;
+    passwordHash?: string;
     now: string;
     requestId: string;
     traceId: string;
@@ -66,6 +69,7 @@ export interface AdministratorServiceDependencies {
   authorization: AdministratorAuthorization;
   repository: AdministratorRepository;
   now?: () => Date;
+  passwordHasher?: PasswordHasher;
 }
 
 export type AdministratorServiceErrorCode =
@@ -74,7 +78,8 @@ export type AdministratorServiceErrorCode =
   | 'ADMINISTRATOR_EMAIL_CONFLICT'
   | 'ADMINISTRATOR_VERSION_CONFLICT'
   | 'ADMINISTRATOR_SELF_LOCKOUT'
-  | 'ADMINISTRATOR_LAST_SUPER_ADMIN';
+  | 'ADMINISTRATOR_LAST_SUPER_ADMIN'
+  | 'ADMINISTRATOR_ROLE_INVALID';
 
 export class AdministratorServiceError extends Error {
   constructor(readonly code: AdministratorServiceErrorCode) {
@@ -90,7 +95,7 @@ function objectId(value: string): boolean {
 async function requirePermission(
   dependencies: AdministratorServiceDependencies,
   adminId: string,
-  permission: 'admin:staff.view' | 'admin:staff.manage'
+  permission: 'admin:staff.view' | 'admin:staff.manage' | 'admin:roles.manage'
 ): Promise<void> {
   if (!objectId(adminId) || !await dependencies.authorization.authorize(adminId, permission)) {
     throw new AdministratorServiceError('ADMINISTRATOR_FORBIDDEN');
@@ -108,6 +113,7 @@ function output(value: AdminUserData, actorId?: string): AdminUserData {
 
 export function createAdministratorService(dependencies: AdministratorServiceDependencies) {
   const clock = dependencies.now ?? (() => new Date());
+  const passwordHasher = dependencies.passwordHasher ?? createArgon2PasswordHasher();
   const defaultMutationContext: AdministratorMutationContext = {
     requestId: 'administrator-management',
     traceId: '0'.repeat(32)
@@ -117,7 +123,8 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     const query = adminUserListQuerySchema.parse(input) as AdminUserListQuery;
     const values = (await dependencies.repository.list())
       .map((value) => output(value, adminId))
-      .filter((value) => (!query.status || value.status === query.status) && (!query.accessLevel || value.accessLevel === query.accessLevel))
+      .filter((value) => (!query.status || value.status === query.status) && (!query.accessLevel || value.accessLevel === query.accessLevel)
+        && (!query.search || `${value.displayName} ${value.email}`.toLocaleLowerCase().includes(query.search.toLocaleLowerCase())))
       .sort((left, right) => left.email.localeCompare(right.email) || left.id.localeCompare(right.id));
     return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
   };
@@ -135,9 +142,12 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
   ): Promise<AdminUserData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.manage');
     const data = adminUserCreateSchema.parse(input);
+    if (data.roleIds) await requirePermission(dependencies, adminId, 'admin:roles.manage');
+    const { password, ...safeData } = data;
     const result = await dependencies.repository.create({
       actorId: adminId,
-      data,
+      data: safeData,
+      ...(password ? { passwordHash: await passwordHasher.hash(password) } : {}),
       now: clock().toISOString(),
       requestId: context.requestId,
       traceId: context.traceId
@@ -155,8 +165,11 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     await requirePermission(dependencies, adminId, 'admin:staff.manage');
     if (!objectId(id)) throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
     const patch = adminUserPatchSchema.parse(input) as AdminUserPatch;
+    if (patch.roleIds) await requirePermission(dependencies, adminId, 'admin:roles.manage');
+    const { password, ...safePatch } = patch;
     const current = await dependencies.repository.findById(id);
     if (!current) throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
+    if (id === adminId && patch.roleIds) throw new AdministratorServiceError('ADMINISTRATOR_SELF_LOCKOUT');
     const nextStatus = patch.status ?? current.status;
     const nextAccessLevel = patch.accessLevel ?? current.accessLevel;
     if (id === adminId && (nextStatus === 'disabled' || nextAccessLevel !== current.accessLevel)) {
@@ -169,7 +182,8 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
       actorId: adminId,
       id,
       expectedVersion: patch.expectedVersion,
-      patch,
+      patch: safePatch,
+      ...(password ? { passwordHash: await passwordHasher.hash(password) } : {}),
       now: clock().toISOString(),
       requestId: context.requestId,
       traceId: context.traceId

@@ -9805,6 +9805,17 @@
               "maximum": 100,
               "default": 20
             }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "description": "Case-insensitive employee display-name or email search."
           }
         ],
         "responses": {
@@ -9850,7 +9861,7 @@
       "post": {
         "operationId": "createAdminAdministrator",
         "summary": "Create an administrator account",
-        "description": "Requires admin:staff.manage. Credentials are provisioned through the approved authentication boundary and are never accepted or returned here.",
+        "description": "Requires admin:staff.manage; role assignment additionally requires admin:roles.manage. Employee identity, hashed credential, active role assignment and audit commit atomically. The response never includes credential material.",
         "security": [
           {
             "bearerAuth": []
@@ -9977,7 +9988,7 @@
       "patch": {
         "operationId": "updateAdminAdministrator",
         "summary": "Update, disable, or enable an administrator account",
-        "description": "Requires admin:staff.manage. Updates use an expected version and a bounded reason; self-lockout and removal of the last active Super Admin are rejected.",
+        "description": "Requires admin:staff.manage and an expected version. Role assignment additionally requires admin:roles.manage. Password and role changes revoke active sessions atomically. Self role changes and last-Super-Admin removal are blocked.",
         "security": [
           {
             "bearerAuth": []
@@ -23712,6 +23723,38 @@
           },
           "accessLevel": {
             "$ref": "#/components/schemas/AdminAccessLevel"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "writeOnly": true,
+            "allOf": [
+              {
+                "pattern": "[a-z]"
+              },
+              {
+                "pattern": "[A-Z]"
+              },
+              {
+                "pattern": "\\d"
+              },
+              {
+                "pattern": "[^A-Za-z0-9]"
+              }
+            ],
+            "description": "Optional for existing API integrations; required by the new employee form. Hashed before persistence, never returned or audited. Updating it revokes existing sessions."
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "uniqueItems": true,
+            "description": "Active employee role IDs. Assigning roles additionally requires admin:roles.manage."
           }
         }
       },
@@ -23748,6 +23791,38 @@
           },
           "status": {
             "$ref": "#/components/schemas/AdminUserStatus"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "writeOnly": true,
+            "allOf": [
+              {
+                "pattern": "[a-z]"
+              },
+              {
+                "pattern": "[A-Z]"
+              },
+              {
+                "pattern": "\\d"
+              },
+              {
+                "pattern": "[^A-Za-z0-9]"
+              }
+            ],
+            "description": "Optional for existing API integrations; required by the new employee form. Hashed before persistence, never returned or audited. Updating it revokes existing sessions."
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "uniqueItems": true,
+            "description": "Active employee role IDs. Assigning roles additionally requires admin:roles.manage."
           }
         }
       },
@@ -23809,6 +23884,17 @@
             },
             "maxItems": 3,
             "uniqueItems": true
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "minItems": 0,
+            "maxItems": 10,
+            "uniqueItems": true,
+            "description": "Roles assigned to this employee, including inactive roles for review."
           }
         }
       },

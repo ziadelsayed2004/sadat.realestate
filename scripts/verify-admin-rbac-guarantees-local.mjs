@@ -10,6 +10,9 @@ import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.
 import { createIdentityModels } from '../apps/api/src/modules/identity/models.ts';
 import { createRbacModels } from '../apps/api/src/modules/rbac/models.ts';
 import { createMongooseRbacRepository } from '../apps/api/src/modules/rbac/repository.ts';
+import { createAdministratorService } from '../apps/api/src/modules/admin/administrator-service.ts';
+import { createArgon2PasswordHasher } from '../apps/api/src/modules/auth/crypto.ts';
+import { createAuthModels } from '../apps/api/src/modules/auth/models.ts';
 
 const database = `admin_rbac_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27018/${database}?replicaSet=rs0`).asPromise();
@@ -117,6 +120,39 @@ try {
   assert.equal(assignment.kind, 'written');
   assert.equal(await audits.AuditLog.countDocuments({ targetType: 'admin_role_assignment', targetId: administrator.id }), 1);
   report.checks.push('role_assignment_retry_commits_once');
+
+  const hasher = createArgon2PasswordHasher();
+  const credentials = createAuthModels(connection).AdminCredential;
+  const service = createAdministratorService({ repository: administrators, authorization: { async authorize() { return true; } }, passwordHasher: hasher });
+  const staff = await service.create(actorId, { email: 'employee.login@example.invalid', displayName: 'Named Employee', accessLevel: 'standard_admin', password: 'SyntheticEmployee123!', roleIds: [role.id] });
+  const credential = await credentials.findOne({ userId: staff.id }).select('+passwordHash').lean();
+  assert.ok(credential && await hasher.verify(credential.passwordHash, 'SyntheticEmployee123!'));
+  assert.deepEqual(staff.roleIds, [role.id]);
+  assert.equal('password' in staff, false);
+  assert.equal('passwordHash' in staff, false);
+  assert.deepEqual((await roles.getAdminAuthorization(staff.id)).roles.map(item => item.id), [role.id]);
+  assert.equal((await service.list(actorId, { search: 'employee.login@', page: 1, limit: 20 })).items[0].id, staff.id);
+  report.checks.push('named_employee_password_hash_active_role_and_search_persist_together');
+
+  const sessionId = new mongoose.Types.ObjectId();
+  await connection.collection('sessions').insertOne({ _id: sessionId, userId: new mongoose.Types.ObjectId(staff.id), tokenHash: 's'.repeat(43), expiresAt: new Date(Date.now() + 86400000) });
+  await service.update(actorId, staff.id, { expectedVersion: staff.version, reason: 'Set new employee password', password: 'ReplacementEmployee456!' });
+  assert.ok((await connection.collection('sessions').findOne({ _id: sessionId })).revokedAt instanceof Date);
+  const updatedCredential = await credentials.findOne({ userId: staff.id }).select('+passwordHash').lean();
+  assert.ok(await hasher.verify(updatedCredential.passwordHash, 'ReplacementEmployee456!'));
+  assert.equal(await hasher.verify(updatedCredential.passwordHash, 'SyntheticEmployee123!'), false);
+  await assert.rejects(() => service.update(actorId, staff.id, { expectedVersion: staff.version, reason: 'Stale role assignment', roleIds: [role.id] }), /ADMINISTRATOR_VERSION_CONFLICT/);
+  report.checks.push('employee_password_change_revokes_sessions_and_stale_assignment_is_rejected');
+
+  failAudit = true;
+  await assert.rejects(() => service.create(actorId, { email: 'failed.employee@example.invalid', displayName: 'Rolled Back Employee', accessLevel: 'standard_admin', password: 'SyntheticEmployee123!', roleIds: [role.id] }), /INJECTED_ADMIN_RBAC_AUDIT_FAILURE/);
+  assert.equal(await identity.User.countDocuments({ normalizedEmail: 'failed.employee@example.invalid' }), 0);
+  assert.equal(await credentials.countDocuments(), 1);
+  assert.equal(await rbac.AdminRoleAssignment.countDocuments(), 2);
+  failAudit = false;
+  await assert.rejects(() => service.create(actorId, { email: 'invalid.role@example.invalid', displayName: 'Invalid Role Employee', accessLevel: 'standard_admin', password: 'SyntheticEmployee123!', roleIds: [new mongoose.Types.ObjectId().toHexString()] }), /ADMINISTRATOR_ROLE_INVALID/);
+  assert.equal(await identity.User.countDocuments({ normalizedEmail: 'invalid.role@example.invalid' }), 0);
+  report.checks.push('audit_failure_and_unknown_role_roll_back_employee_credentials_and_assignment');
 
   report.status = 'PASS_LOCAL';
 } catch (error) {

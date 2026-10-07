@@ -29,7 +29,8 @@ const ADMINISTRATOR_ERROR_MAP = Object.freeze({
   ADMINISTRATOR_EMAIL_CONFLICT: { statusCode: 409, messageKey: 'errors.conflict' },
   ADMINISTRATOR_VERSION_CONFLICT: { statusCode: 409, messageKey: 'errors.conflict' },
   ADMINISTRATOR_SELF_LOCKOUT: { statusCode: 409, messageKey: 'errors.conflict' },
-  ADMINISTRATOR_LAST_SUPER_ADMIN: { statusCode: 409, messageKey: 'errors.conflict' }
+  ADMINISTRATOR_LAST_SUPER_ADMIN: { statusCode: 409, messageKey: 'errors.conflict' },
+  ADMINISTRATOR_ROLE_INVALID: { statusCode: 409, messageKey: 'errors.rbac.assignmentRoleInvalid' }
 });
 
 function requestId(request: Request): string {

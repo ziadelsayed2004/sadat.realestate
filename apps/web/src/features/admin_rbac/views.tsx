@@ -6,6 +6,7 @@ import { Button, StateMessage } from "../design_system/index.ts";
 import type { RouteSession } from "../routing/index.ts";
 import { ADMIN_RBAC_ROLES_ROUTE, ADMIN_RBAC_USERS_ROUTE, createAdminRbacSource, type AdminRbacAuthorizationSource, type AdminRbacSource } from "./data.ts";
 import { getAdminRbacCopy } from "./copy.ts";
+import { PermissionChooser, RoleStaff, StaffRoles } from './role-tools.tsx';
 import "./styles.css";
 
 export type AdminRbacState = "loading" | "empty" | "error" | "retry" | "permission" | "not_found" | "conflict" | "success";
@@ -303,16 +304,19 @@ function UsersList({ locale, source, authClient }: { readonly locale: SupportedL
   );
 }
 
-function UserCreate({ locale, source, authClient }: { readonly locale: SupportedLocale; readonly source: AdminRbacSource; readonly authClient?: AdminRbacAuthorizationSource | undefined }) {
+function UserCreate({ locale, source, authClient, initialRoleId }: { readonly locale: SupportedLocale; readonly source: AdminRbacSource; readonly authClient?: AdminRbacAuthorizationSource | undefined; readonly initialRoleId?: string | undefined }) {
   const copy = getAdminRbacCopy(locale);
   const [form, setForm] = useState<AdminUserCreate>({
     email: "",
     displayName: "",
     accessLevel: "standard_admin",
+    password: '',
+    ...(initialRoleId ? { roleIds: [initialRoleId] } : {})
   });
   const [state, setState] = useState<AdminRbacState>("success");
   const [feedback, setFeedback] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
+  const [createdId, setCreatedId] = useState<string>();
   const canCreate = permissionFor(authClient, "admin:staff.manage", true);
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -321,14 +325,20 @@ function UserCreate({ locale, source, authClient }: { readonly locale: Supported
       setState("permission");
       return;
     }
-    const parsed = adminUserCreateSchema.safeParse(form);
+    const parsed = adminUserCreateSchema.safeParse(form.accessLevel === 'super_admin' ? { ...form, roleIds: undefined } : form);
+    if (!form.password || (form.accessLevel === 'standard_admin' && !form.roleIds?.length)) {
+      setFeedback(locale === 'ar' ? 'اكتب كلمة مرور واختر منصب الموظف قبل إنشاء الحساب.' : 'Enter a password and choose an employee role before creating the account.');
+      return;
+    }
     if (!parsed.success) {
       setFeedback(copy.validation);
       return;
     }
     setSaving(true);
     try {
-      await source.createUser(parsed.data);
+      const created = await source.createUser(parsed.data);
+      setCreatedId(created.id);
+      setForm(current => ({ ...current, password: '' }));
       setFeedback(copy.saved);
       setState("success");
     } catch (error) {
@@ -372,7 +382,10 @@ function UserCreate({ locale, source, authClient }: { readonly locale: Supported
               </select>
             </label>
           </div>
-          <Button type="submit" loading={saving} disabled={!canCreate}>
+          <label className="admin-rbac__field">{locale === 'ar' ? 'كلمة المرور (مطلوبة)' : 'Password (required)'}<input type="password" aria-label={locale === 'ar' ? 'كلمة المرور (مطلوبة)' : 'Password (required)'} autoComplete="new-password" dir="ltr" required minLength={8} maxLength={128} value={form.password ?? ''} disabled={!canCreate || saving || Boolean(createdId)} onChange={event => { const password = event.currentTarget.value; setForm(current => ({ ...current, password })); }} /><small>{locale === 'ar' ? '8 أحرف على الأقل، بحرف إنجليزي كبير وصغير ورقم ورمز. الموظف يدخل بالإيميل وكلمة المرور ويكمل تحقق الإدارة المعتاد.' : 'At least 8 characters, including uppercase, lowercase, a number and a symbol. The employee signs in with email and password and completes the usual administrator verification.'}</small></label>
+          <p className="admin-rbac__muted">{locale === 'ar' ? 'المسؤول الأعلى يدير المنصة بالكامل. المسؤول القياسي يعمل بصلاحيات المنصب الذي تختاره.' : 'Super Admin manages the entire platform. Standard Admin uses the selected role permissions.'}</p>
+          {form.accessLevel === 'standard_admin' ? <StaffRoles locale={locale} source={source} value={form.roleIds ?? []} change={roleIds => setForm(current => ({ ...current, roleIds }))} disabled={saving || !canCreate || Boolean(createdId)} required /> : null}
+          <Button type="submit" loading={saving} disabled={!canCreate || Boolean(createdId)}>
             {copy.save}
           </Button>
           {feedback !== undefined ? (
@@ -380,6 +393,7 @@ function UserCreate({ locale, source, authClient }: { readonly locale: Supported
               {feedback}
             </p>
           ) : null}
+          {createdId ? <RbacLink href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${createdId}`)}>{locale === 'ar' ? 'فتح حساب الموظف' : 'Open employee account'}</RbacLink> : null}
         </form>
       </section>
     </Shell>
@@ -523,6 +537,8 @@ function UserDetail({ id, locale, source }: { readonly id: string; readonly loca
                 </select>
               </label>
             </div>
+            <label className="admin-rbac__field">{locale === 'ar' ? 'كلمة مرور جديدة (اختياري)' : 'New password (optional)'}<input type="password" aria-label={locale === 'ar' ? 'كلمة مرور جديدة (اختياري)' : 'New password (optional)'} autoComplete="new-password" dir="ltr" minLength={8} maxLength={128} value={form.password ?? ''} disabled={saving} onChange={event => { const password = event.currentTarget.value; setForm(current => ({ ...current, password: password || undefined })); }} /><small>{locale === 'ar' ? 'اتركها فارغة للاحتفاظ بكلمة المرور. تغييرها ينهي جلسات الموظف الحالية.' : 'Leave blank to keep the current password. Changing it ends the employee’s current sessions.'}</small></label>
+            {user.accessLevel === 'standard_admin' ? <StaffRoles locale={locale} source={source} value={form.roleIds ?? user.roleIds ?? []} change={roleIds => setForm(current => ({ ...current, roleIds }))} disabled={saving} /> : null}
             <ReasonField copy={copy} value={form.reason} disabled={saving} onChange={(reason) => setForm((current) => ({ ...current, reason }))} />
             <div className="admin-rbac__actions">
               <Button type="submit" loading={saving}>
@@ -597,12 +613,6 @@ function RoleList({ locale, source }: { readonly locale: SupportedLocale; readon
     return () => controller.abort();
   }, [attempt, source]);
   const canManage = data?.effectivePermissions.includes("admin:roles.manage") ?? false;
-  function togglePermission(permission: RbacPermission): void {
-    setForm((current) => ({
-      ...current,
-      permissions: current.permissions.includes(permission) ? current.permissions.filter((item) => item !== permission) : [...current.permissions, permission],
-    }));
-  }
   async function create(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setFeedback(undefined);
@@ -703,15 +713,7 @@ function RoleList({ locale, source }: { readonly locale: SupportedLocale; readon
                     </select>
                   </label>
                 </div>
-                <fieldset className="admin-rbac__permissions">
-                  <legend>{copy.permissionCatalog}</legend>
-                  {data.permissionCatalog.map((permission) => (
-                    <label key={permission}>
-                      <input type="checkbox" checked={form.permissions.includes(permission)} disabled={creating || (form.accessMode === "view_only" && !permission.endsWith(".view"))} onChange={() => togglePermission(permission)} />
-                      {permission}
-                    </label>
-                  ))}
-                </fieldset>
+                <PermissionChooser locale={locale} catalog={data.permissionCatalog} value={form.permissions} mode={form.accessMode} disabled={creating} change={permissions => setForm(current => ({ ...current, permissions }))} applyPreset={(name, permissions, accessMode) => setForm(current => ({ ...current, name, permissions, accessMode }))} />
                 <ReasonField copy={copy} value={form.reason} disabled={creating} onChange={(reason) => setForm((current) => ({ ...current, reason }))} />
                 <Button type="submit" loading={creating}>
                   {copy.createRole}
@@ -787,12 +789,6 @@ function RoleDetail({ id, locale, source }: { readonly id: string; readonly loca
       </Shell>
     );
   const canUpdate = role.availableActions.includes("update") && data.effectivePermissions.includes("admin:roles.manage");
-  function togglePermission(permission: RbacPermission): void {
-    setForm((current) => ({
-      ...current,
-      permissions: current.permissions.includes(permission) ? current.permissions.filter((item) => item !== permission) : [...current.permissions, permission],
-    }));
-  }
   async function save(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setFeedback(undefined);
@@ -877,15 +873,7 @@ function RoleDetail({ id, locale, source }: { readonly id: string; readonly loca
               />
               {copy.active}
             </label>
-            <fieldset className="admin-rbac__permissions">
-              <legend>{copy.permissions}</legend>
-              {data.permissionCatalog.map((permission) => (
-                <label key={permission}>
-                  <input type="checkbox" checked={form.permissions.includes(permission)} disabled={saving || (form.accessMode === "view_only" && !permission.endsWith(".view"))} onChange={() => togglePermission(permission)} />
-                  {permission}
-                </label>
-              ))}
-            </fieldset>
+            <PermissionChooser locale={locale} catalog={data.permissionCatalog} value={form.permissions} mode={form.accessMode} disabled={saving} change={permissions => setForm(current => ({ ...current, permissions }))} applyPreset={(_name, permissions, accessMode) => setForm(current => ({ ...current, permissions, accessMode }))} />
             <ReasonField copy={copy} value={form.reason} disabled={saving} onChange={(reason) => setForm((current) => ({ ...current, reason }))} />
             <Button type="submit" loading={saving}>
               {copy.save}
@@ -900,6 +888,7 @@ function RoleDetail({ id, locale, source }: { readonly id: string; readonly loca
           <p className="admin-rbac__muted">{copy.noActions}</p>
         )}
       </section>
+      <RoleStaff locale={locale} source={source} role={role} canAssign={data.effectivePermissions.includes('admin:staff.manage') && data.effectivePermissions.includes('admin:roles.manage')} />
     </Shell>
   );
 }
@@ -921,7 +910,7 @@ export function AdminRbac({ url, locale, session, authClient, apiOrigin, source:
       </Shell>
     );
   if (view.kind === "users") return <UsersList locale={locale} source={source} authClient={authClient} />;
-  if (view.kind === "user-create") return <UserCreate locale={locale} source={source} authClient={authClient} />;
+  if (view.kind === "user-create") return <UserCreate locale={locale} source={source} authClient={authClient} initialRoleId={new URL(url ?? (typeof window !== 'undefined' ? window.location.href : '/admin/admin-users/new'), 'http://sadat-real-estate.local').searchParams.get('roleId') ?? undefined} />;
   if (view.kind === "user-detail") return <UserDetail id={view.id} locale={locale} source={source} />;
   if (view.kind === "roles") return <RoleList locale={locale} source={source} />;
   return <RoleDetail id={view.id} locale={locale} source={source} />;

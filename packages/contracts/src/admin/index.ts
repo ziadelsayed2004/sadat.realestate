@@ -71,12 +71,14 @@ export const adminUserStatusSchema = z.enum(ADMIN_USER_STATUSES);
 export const adminUserAvailableActionSchema = z.enum(ADMIN_USER_AVAILABLE_ACTIONS);
 const adminUserDisplayNameSchema = z.string().trim().min(2).max(160).refine((value) => !/[\u0000-\u001f\u007f]/.test(value), { message: 'Display name must not contain control characters' });
 const adminUserObjectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
+const adminRoleIdsSchema = z.array(adminUserObjectIdSchema).min(1).max(10).refine(ids => new Set(ids).size === ids.length, { message: 'Roles must be unique' });
 const adminUserDateSchema = z.string().datetime({ offset: true });
 export const adminUserIdParamsSchema = z.object({
   adminId: adminUserObjectIdSchema
 }).strict();
 
 export const adminUserListQuerySchema = z.object({
+  search: z.string().trim().min(1).max(160).optional(),
   status: adminUserStatusSchema.optional(),
   accessLevel: adminAccessLevelSchema.optional(),
   page: z.preprocess((value) => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000)),
@@ -86,7 +88,9 @@ export const adminUserListQuerySchema = z.object({
 export const adminUserCreateSchema = z.object({
   email: normalizedEmailSchema,
   displayName: adminUserDisplayNameSchema,
-  accessLevel: adminAccessLevelSchema
+  accessLevel: adminAccessLevelSchema,
+  password: accountPasswordSchema.optional(),
+  roleIds: adminRoleIdsSchema.optional()
 }).strict();
 
 export const adminUserPatchSchema = z.object({
@@ -94,11 +98,14 @@ export const adminUserPatchSchema = z.object({
   reason: z.string().trim().min(3).max(500).refine((value) => !/[\u0000-\u001f\u007f]/.test(value), { message: 'Reason must not contain control characters' }),
   email: normalizedEmailSchema.optional(),
   displayName: adminUserDisplayNameSchema.optional(),
+  password: accountPasswordSchema.optional(),
+  roleIds: adminRoleIdsSchema.optional(),
   accessLevel: adminAccessLevelSchema.optional(),
   status: adminUserStatusSchema.optional()
 }).strict().refine((value) => Object.keys(value).some((key) => !['expectedVersion', 'reason'].includes(key)), { message: 'At least one administrator field must be changed' });
 
 export const adminUserDataSchema = z.object({
+  roleIds: z.array(adminUserObjectIdSchema).max(10).optional(),
   id: adminUserObjectIdSchema,
   email: normalizedEmailSchema,
   displayName: adminUserDisplayNameSchema,

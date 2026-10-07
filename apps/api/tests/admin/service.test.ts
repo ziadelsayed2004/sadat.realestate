@@ -200,6 +200,24 @@ test('prevents self-lockout, last Super Admin removal, stale updates, and mass a
   await last.service.update('2123456789abcdef01234567', '1123456789abcdef01234567', { expectedVersion: 0, reason: 'Disable one Super Admin', status: 'disabled' });
   await assert.rejects(() => last.service.update('2123456789abcdef01234567', adminId, { expectedVersion: 0, reason: 'Disable last Super Admin', status: 'disabled' }), (error) => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_LAST_SUPER_ADMIN');
   await assert.rejects(() => two.service.update(adminId, '1123456789abcdef01234567', { expectedVersion: 9, reason: 'Stale', status: 'disabled' }), (error) => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_VERSION_CONFLICT');
-  await assert.rejects(() => two.service.update(adminId, '1123456789abcdef01234567', { expectedVersion: 0, reason: 'Unknown', password: 'secret' }), /Unrecognized key/);
+  await assert.rejects(() => two.service.update(adminId, '1123456789abcdef01234567', { expectedVersion: 0, reason: 'Unknown', passwordHash: 'secret' }), /Unrecognized key/);
   await assert.rejects(() => two.service.list('2123456789abcdef01234567', { page: 1, limit: 10 }), (error) => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_FORBIDDEN');
+});
+
+test('hashes employee passwords without passing plaintext to persistence and protects role assignment', async () => {
+  const { repository } = administratorFixture();
+  let saved: Parameters<AdministratorRepository['create']>[0] | undefined;
+  const create = repository.create;
+  repository.create = async input => { saved = input; return create(input); };
+  const service = createAdministratorService({ repository, authorization: { async authorize() { return true; } }, passwordHasher: { async hash() { return '$argon2id$synthetic'; }, async verify() { return true; } } });
+  const input = { email: 'employee@example.com', displayName: 'Employee', accessLevel: 'standard_admin', password: 'SyntheticAdmin123!', roleIds: ['3123456789abcdef01234567'] };
+  const result = await service.create('0123456789abcdef01234567', input);
+  assert.equal(saved?.passwordHash, '$argon2id$synthetic');
+  assert.equal('password' in (saved?.data ?? {}), false);
+  assert.equal('password' in result, false);
+  assert.equal('passwordHash' in result, false);
+  const staffOnly = createAdministratorService({ repository, authorization: { async authorize(_id, permission) { return permission !== 'admin:roles.manage'; } } });
+  await assert.rejects(() => staffOnly.create('0123456789abcdef01234567', input), error => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_FORBIDDEN');
+  await assert.rejects(() => staffOnly.update('0123456789abcdef01234567', result.id, { expectedVersion: 0, reason: 'Assign role', roleIds: input.roleIds }), error => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_FORBIDDEN');
+  assert.equal((await service.list('0123456789abcdef01234567', { search: 'EMPLOYEE@', page: 1, limit: 20 })).total, 1);
 });

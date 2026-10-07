@@ -8,7 +8,6 @@ function localeForProject(): 'ar' | 'en' {
 
 test.describe('ADM-59 through ADM-64 administrator users and roles', () => {
   test.beforeEach(async ({ page }, testInfo) => {
-    test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-59 through ADM-64 use approved local Admin Desktop exports under docs/design_sources/final_screens/admin.' });
     await routeAdminRbacApis(page);
   });
@@ -33,15 +32,35 @@ test.describe('ADM-59 through ADM-64 administrator users and roles', () => {
     }
   });
 
-  test('sends the implemented create-admin payload without credentials or invented fields', async ({ page }) => {
+  test('creates an employee with a password and a selected role', async ({ page }) => {
     const locale = localeForProject();
     await page.goto(`/admin/admin-users/new?lang=${encodeURIComponent(locale)}`);
     await page.getByLabel(/display name|الاسم الظاهر|显示名称/iu).fill('New Operations Admin');
     await page.getByLabel(/email|البريد|电子邮箱/iu).fill('new.operations@example.com');
+    await page.getByLabel(/Password \(required\)|كلمة المرور \(مطلوبة\)/iu).fill('SyntheticAdmin123!');
+    await page.getByRole('checkbox', { name: /Operations reviewer/ }).check();
+    if (test.info().project.name === 'mobile-ar') await page.locator('.admin-rbac__form-panel').screenshot({ path: '.local/staff-create-mobile.png' });
     const requestPromise = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/admin-users'));
     await page.getByRole('button', { name: /save changes|حفظ التغييرات|保存更改/iu }).click();
     const request = await requestPromise;
-    expect(request.postDataJSON()).toEqual({ email: 'new.operations@example.com', displayName: 'New Operations Admin', accessLevel: 'standard_admin' });
+    expect(request.postDataJSON()).toEqual({ email: 'new.operations@example.com', displayName: 'New Operations Admin', accessLevel: 'standard_admin', password: 'SyntheticAdmin123!', roleIds: [roleId] });
+    await expect(page.getByLabel(/Password \(required\)|كلمة المرور \(مطلوبة\)/iu)).toHaveValue('');
+  });
+
+  test('selects all permissions and assigns the role to an employee by name and email', async ({ page }) => {
+    const locale = localeForProject();
+    await page.goto(`/admin/roles/${roleId}?lang=${locale}`);
+    await page.getByRole('button', { name: /^(Select all|تحديد الكل)$/ }).click();
+    const permissions = page.locator('.admin-rbac__permissions input[type=checkbox]');
+    expect(await permissions.count()).toBeGreaterThan(20);
+    for (const checkbox of await permissions.all()) await expect(checkbox).toBeChecked();
+    await page.getByRole('combobox', { name: /^(Employee|الموظف)$/ }).selectOption(adminId);
+    await page.getByLabel(/Assignment reason|سبب إسناد المنصب/).fill('Assign approved office employee');
+    if (test.info().project.name === 'mobile-ar') await page.locator('.admin-rbac__form-panel').last().screenshot({ path: '.local/staff-role-mobile.png' });
+    const requestPromise = page.waitForRequest(request => request.method() === 'PATCH' && request.url().includes(`/admin/admin-users/${adminId}`));
+    await page.getByRole('button', { name: /Assign employee to role|ربط الموظف بالمنصب/ }).click();
+    expect((await requestPromise).postDataJSON()).toEqual({ expectedVersion: 3, reason: 'Assign approved office employee', roleIds: [roleId] });
+    await expect(page.getByRole('link', { name: /Add employee with this role|إضافة موظف بهذا المنصب/ })).toHaveAttribute('href', `/admin/admin-users/new?roleId=${roleId}&lang=${locale}`);
   });
 
   test('renders View Only state without role mutation controls', async ({ page }) => {

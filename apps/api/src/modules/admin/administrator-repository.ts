@@ -5,6 +5,9 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { IdentityModels } from '../identity/models.js';
+import { createAuthModels } from '../auth/models.js';
+import { createRbacModels } from '../rbac/models.js';
+import { AdministratorServiceError } from './administrator-service.js';
 import type {
   AdministratorRepository,
   AdministratorWriteResult
@@ -62,7 +65,8 @@ function accountFor(
 function administratorData(
   user: LeanUser,
   account: LeanAdminAccount | undefined,
-  bootstrap: LeanBootstrap | undefined
+  bootstrap: LeanBootstrap | undefined,
+  roleIds: string[] = []
 ): AdminUserData | undefined {
   if (!user.normalizedEmail) return undefined;
   const status = user.status === 'verified' ? 'active' : 'disabled';
@@ -70,6 +74,7 @@ function administratorData(
     ? (user.statusChangedAt ?? user.updatedAt).toISOString()
     : undefined;
   return adminUserDataSchema.parse({
+    roleIds,
     id: user._id.toHexString(),
     email: user.normalizedEmail,
     displayName: account?.displayName ?? fallbackDisplayName(user.normalizedEmail),
@@ -109,9 +114,11 @@ async function readAdministrators(
         accountQuery.lean<LeanAdminAccount[]>(),
         bootstrapQuery.lean<LeanBootstrap[]>()
       ]);
+  const assignments = await createRbacModels(dependencies.connection).AdminRoleAssignment.find({ adminUserId: { $in: users.map(user => user._id) } }).session(session ?? null).lean();
   return users.flatMap((user) => {
     const related = accountFor(user._id, accounts, bootstraps);
-    const value = administratorData(user, related.account, related.bootstrap);
+    const assignment = assignments.find(item => item.adminUserId.equals(user._id));
+    const value = administratorData(user, related.account, related.bootstrap, assignment?.roleIds.map(id => id.toHexString()) ?? []);
     return value ? [value] : [];
   });
 }
@@ -145,7 +152,8 @@ async function readAdministrator(
         accountQuery.lean<LeanAdminAccount | null>(),
         bootstrapQuery.lean<LeanBootstrap | null>()
       ]);
-  return user ? administratorData(user, account ?? undefined, bootstrap ?? undefined) : undefined;
+  const assignment = user ? await createRbacModels(dependencies.connection).AdminRoleAssignment.findOne({ adminUserId: user._id }).session(session ?? null).lean() : undefined;
+  return user ? administratorData(user, account ?? undefined, bootstrap ?? undefined, assignment?.roleIds.map(id => id.toHexString()) ?? []) : undefined;
 }
 
 function auditProjection(value: AdminUserData): Record<string, unknown> {
@@ -155,7 +163,8 @@ function auditProjection(value: AdminUserData): Record<string, unknown> {
     displayName: value.displayName,
     accessLevel: value.accessLevel,
     status: value.status,
-    version: value.version
+    version: value.version,
+    roleIds: value.roleIds ?? []
   };
 }
 
@@ -194,6 +203,15 @@ export function createMongooseAdministratorRepository(
   dependencies: AdministratorRepositoryDependencies
 ): AdministratorRepository {
   const { connection, identityModels, adminModels, auditWriter } = dependencies;
+  async function saveRoles(adminId: Types.ObjectId, roleIds: string[] | undefined, session: ClientSession, now: Date, actorId: string): Promise<void> {
+    if (!roleIds) return;
+    const models = createRbacModels(connection);
+    if (await models.Role.countDocuments({ _id: { $in: roleIds }, active: true }).session(session) !== roleIds.length) throw new AdministratorServiceError('ADMINISTRATOR_ROLE_INVALID');
+    await models.AdminRoleAssignment.findOneAndUpdate({ adminUserId: adminId }, {
+      $set: { roleIds: roleIds.map(id => new Types.ObjectId(id)), updatedAt: now, assignedBy: new Types.ObjectId(actorId), assignedAt: now },
+      $setOnInsert: { adminUserId: adminId, createdAt: now }, $inc: { version: 1 }
+    }, { upsert: true, runValidators: true, session });
+  }
   return {
     async list() {
       return readAdministrators(dependencies);
@@ -224,6 +242,8 @@ export function createMongooseAdministratorRepository(
             updatedAt: now
           }], { session });
           if (!user) throw new Error('ADMINISTRATOR_NOT_CREATED');
+          if (input.passwordHash) await createAuthModels(connection).AdminCredential.create([{ userId: user._id, passwordHash: input.passwordHash, passwordChangedAt: now, createdAt: now, updatedAt: now }], { session });
+          await saveRoles(user._id, input.data.roleIds, session, now, input.actorId);
           await identityModels.AdminProfile.create([{ userId: user._id, createdAt: now, updatedAt: now }], { session });
           const [account] = await adminModels.AdminAccount.create([{
             userId: user._id,
@@ -236,7 +256,8 @@ export function createMongooseAdministratorRepository(
           const value = administratorData(
             user.toObject() as LeanUser,
             account.toObject() as LeanAdminAccount,
-            undefined
+            undefined,
+            input.data.roleIds ?? []
           );
           if (!value) throw new Error('ADMINISTRATOR_PROJECTION_INVALID');
           await recordAudit(auditWriter, {
@@ -287,6 +308,17 @@ export function createMongooseAdministratorRepository(
             const stillExists = await identityModels.User.exists({ _id: userId, roleType: 'admin' }).session(session);
             return stillExists ? { kind: 'version_conflict' as const } : { kind: 'not_found' as const };
           }
+          const stamp = new Date(input.now);
+          if (input.passwordHash) await createAuthModels(connection).AdminCredential.findOneAndUpdate({ userId }, {
+            $set: { passwordHash: input.passwordHash, passwordChangedAt: stamp, updatedAt: stamp },
+            $setOnInsert: { userId, createdAt: stamp }
+          }, { upsert: true, runValidators: true, session });
+          await saveRoles(userId, input.patch.roleIds, session, stamp, input.actorId);
+          if (input.passwordHash || input.patch.roleIds || input.patch.status === 'disabled'
+            || (input.patch.email && input.patch.email !== before.email)
+            || (input.patch.accessLevel && input.patch.accessLevel !== before.accessLevel)) {
+            await identityModels.Session.updateMany({ userId, revokedAt: { $exists: false } }, { $set: { revokedAt: stamp, lastUsedAt: stamp } }, { session });
+          }
           const account = await adminModels.AdminAccount.findOneAndUpdate(
             { userId },
             {
@@ -299,7 +331,7 @@ export function createMongooseAdministratorRepository(
             },
             { new: true, upsert: true, runValidators: true, session }
           ).lean<LeanAdminAccount>();
-          const after = administratorData(updatedUser, account ?? undefined, undefined);
+          const after = administratorData(updatedUser, account ?? undefined, undefined, input.patch.roleIds ?? before.roleIds ?? []);
           if (!after) throw new Error('ADMINISTRATOR_PROJECTION_INVALID');
           await recordAudit(auditWriter, {
             actorId: input.actorId,
