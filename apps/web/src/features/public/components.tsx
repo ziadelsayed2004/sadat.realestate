@@ -506,8 +506,8 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 .public-site-footer__bottom{margin:0;padding:1rem 0;font-size:var(--font-size-small);line-height:inherit}
 }
 @media (min-width:1051px){
-.public-homepage__footer.public-site-footer{block-size:25.875rem;min-block-size:25.875rem;margin-block-start:5rem}
-.public-site-footer__main{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:2rem;row-gap:0;block-size:13.5rem;padding:1.5rem 3.5rem 1.5rem}
+.public-homepage__footer.public-site-footer{block-size:auto;min-block-size:25.875rem;margin-block-start:5rem}
+.public-site-footer__main{grid-template-columns:minmax(0,1.25fr) repeat(4,minmax(0,1fr));column-gap:1.5rem;row-gap:1.5rem;block-size:auto;padding:1.5rem 3.5rem}
 .public-site-footer__logo{inline-size:10rem;block-size:7.0625rem;margin-block-end:1rem}
 .public-site-footer__brand{inline-size:100%;max-inline-size:none}
 .public-site-footer__brand>p{inline-size:min(16.625rem,100%);margin-inline:auto;padding-block-start:1rem;font-size:.875rem;line-height:1.625;text-align:center}
@@ -525,6 +525,10 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
   const contact = usePublicContact();
   const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   const copy = getPublicHomepageCopy(locale);
+  const support = locale === 'ar'
+    ? { title: 'خدمة العملاء', call: 'اتصل بنا', chat: 'تواصل معنا', complaint: 'إرسال شكوى', unavailable: 'بيانات التواصل غير متاحة حاليًا.', message: 'مرحبًا خدمة عملاء عقارات السادات، أود تقديم شكوى.\nالاسم:\nتفاصيل الشكوى:\nرقم العقار أو الطلب (إن وجد):' }
+    : { title: 'Customer service', call: 'Call us', chat: 'Contact us', complaint: 'Send a complaint', unavailable: 'Contact details are currently unavailable.', message: 'Hello Sadat Real Estate customer service, I would like to submit a complaint.\nName:\nComplaint details:\nProperty or request reference (if available):' };
+  const complaintLink = getWhatsAppLink(support.message, contact.whatsappNumber);
   // The approved public design uses one platform-level footer description on every
   // public route. Keep the prop for existing callers, but do not let a
   // feature-specific description change the shared visual/content contract.
@@ -567,6 +571,14 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
             {contact.mapUrl ? <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer">{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
             {contact.isDemo ? <small>{locale === 'ar' ? 'بيانات تواصل تجريبية' : 'Demo contact details'}</small> : null}
+          </div>
+        </div>
+        <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">
+          <p id="public-footer-support-title" className="public-homepage__footer-title">{support.title}</p>
+          <div className="public-homepage__footer-links public-site-footer__contact-links">
+            {contact.phone ? <a href={`tel:${contact.phone}`}>{support.call}<img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{support.chat}<WhatsAppIcon /></a> : null}
+            {complaintLink ? <a href={complaintLink} target="_blank" rel="noopener noreferrer">{support.complaint}<WhatsAppIcon /></a> : null}
+            {!contact.phone && !whatsapp ? <span>{support.unavailable}</span> : null}
           </div>
         </div>
       </div>

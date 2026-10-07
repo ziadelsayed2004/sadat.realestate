@@ -1,11 +1,33 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { act, render, screen, cleanup, within } from '@testing-library/react';
 import { PublicSiteFooter } from '../src/features/public/components.tsx';
 import { refreshPublicContact } from '../src/features/public/contact.tsx';
 import { getWhatsAppLink, getWhatsAppUrl } from '../src/features/frontend_foundation/config.ts';
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 describe('configured public contacts', () => {
+  it.each(['ar', 'en'] as const)('opens complaints on configured WhatsApp with a localized draft in %s', async locale => {
+    let contact: Record<string, string> = { phone: '+201098765432', whatsappNumber: '+201012345678' };
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'support-contact' } }), { headers: { 'content-type': 'application/json' } })));
+    await refreshPublicContact();
+    render(<PublicSiteFooter locale={locale} />);
+    const support = within(screen.getByRole('group', { name: locale === 'ar' ? 'خدمة العملاء' : 'Customer service' }));
+    expect(support.getByRole('link', { name: locale === 'ar' ? 'اتصل بنا' : 'Call us' })).toHaveAttribute('href', `tel:${contact.phone}`);
+    const complaint = support.getByRole('link', { name: locale === 'ar' ? 'إرسال شكوى' : 'Send a complaint' });
+    let link = new URL(complaint.getAttribute('href')!);
+    expect(link.origin).toBe('https://wa.me'); expect(link.pathname).toBe('/201012345678');
+    expect(link.searchParams.get('text')).toContain(locale === 'ar' ? 'أود تقديم شكوى' : 'submit a complaint');
+    expect(link.searchParams.get('text')).toContain(locale === 'ar' ? 'تفاصيل الشكوى:' : 'Complaint details:');
+    expect(complaint).toHaveAttribute('target', '_blank'); expect(complaint).toHaveAttribute('rel', 'noopener noreferrer');
+    contact = { whatsappNumber: '+201011122233' }; await act(async () => { await refreshPublicContact(); });
+    link = new URL(complaint.getAttribute('href')!);
+    expect(link.pathname).toBe('/201011122233');
+    expect(support.getByRole('link', { name: locale === 'ar' ? 'تواصل معنا' : 'Contact us' })).toHaveAttribute('href', 'https://wa.me/201011122233');
+    contact = {}; await act(async () => { await refreshPublicContact(); });
+    expect(support.queryByRole('link')).toBeNull();
+    expect(support.getByText(locale === 'ar' ? 'بيانات التواصل غير متاحة حاليًا.' : 'Contact details are currently unavailable.')).toBeInTheDocument();
+  });
+
   it('normalizes Egyptian and international WhatsApp numbers and encodes the enquiry without a placeholder destination', () => {
     expect(getWhatsAppLink('عقار & details', '01012345678')).toBe('https://wa.me/201012345678?text=%D8%B9%D9%82%D8%A7%D8%B1%20%26%20details');
     expect(getWhatsAppLink(undefined, '00201012345678')).toBe('https://wa.me/201012345678');
