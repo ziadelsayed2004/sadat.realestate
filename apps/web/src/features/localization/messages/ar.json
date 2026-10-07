@@ -2525,6 +2525,8 @@
     "sendPaymentProof": "إرسال الطلب",
     "paymentProofSendHelp": "اختيار الملف لا يرسله تلقائيًا. اضغط «إرسال الطلب» لإرسال إثبات الدفع للمراجعة.",
     "paymentProofInvalidFile": "اختر ملف PDF أو JPG أو PNG غير فارغ بحجم لا يتجاوز 10 ميجابايت.",
+    "choosePaymentMethod": "اختر طريقة الدفع",
+    "paymentMethodLabels": { "vodafone_cash": "فودافون كاش", "instapay": "إنستا باي", "bank_transfer": "تحويل بنكي", "cash": "نقدًا" },
     "paymentMethod": "طريقة الدفع",
     "paymentProofUploaded": "تم إرسال إثبات الدفع للمراجعة.",
     "noPaymentProof": "لم يتم إرسال إثبات دفع.",

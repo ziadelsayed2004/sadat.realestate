@@ -2525,6 +2525,8 @@
     "sendPaymentProof": "Send request",
     "paymentProofSendHelp": "Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.",
     "paymentProofInvalidFile": "Choose a non-empty PDF, JPG, or PNG file up to 10 MB.",
+    "choosePaymentMethod": "Choose payment method",
+    "paymentMethodLabels": { "vodafone_cash": "Vodafone Cash", "instapay": "InstaPay", "bank_transfer": "Bank transfer", "cash": "Cash" },
     "paymentMethod": "Payment method",
     "paymentProofUploaded": "Payment proof was submitted for review.",
     "noPaymentProof": "No payment proof submitted.",

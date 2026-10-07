@@ -299,6 +299,7 @@ export const providerAdRequestProjectionSchema = z.object({
   history: z.array(providerAdRequestHistoryEntrySchema).max(100),
   quote: providerAdQuoteProjectionSchema.optional(),
   paymentProofs: z.array(providerAdPaymentProjectionSchema).max(20),
+  paymentMethods: z.array(z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/)).max(100).optional(),
   schedule: providerAdScheduleProjectionSchema.optional()
 }).strict();
 export const providerAdRequestListQuerySchema = z.object({

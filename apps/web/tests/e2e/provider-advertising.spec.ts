@@ -89,7 +89,7 @@ test('payment proof is sent only by the send button and can be retried without c
   let sent = false;
   let posts = 0;
   const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, paymentMethod: proof.paymentMethod, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
-  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
+  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentMethods: ['vodafone_cash', 'bank_transfer', `custom_${'method_'.repeat(10)}`], paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
   await page.route(`**/api/v1/provider/ads/${REQUEST_ID}/payment-proof`, async route => {
     posts += 1;
     expect(route.request().method()).toBe('POST');
@@ -106,7 +106,10 @@ test('payment proof is sent only by the send button and can be retried without c
   const input = page.getByLabel(copy.uploadPaymentProof, { exact: true });
   const send = page.getByRole('button', { name: copy.sendPaymentProof, exact: true });
   await expect(send).toBeDisabled();
-  await page.getByLabel(copy.paymentMethod, { exact: true }).fill('vodafone_cash');
+  const method = page.getByRole('combobox', { name: copy.paymentMethod });
+  await expect(method).toHaveAttribute('required', '');
+  await expect(method.locator('option')).toHaveCount(4);
+  await method.selectOption('vodafone_cash');
   await input.setInputFiles({ name: filename, mimeType: 'image/png', buffer: image });
   await expect(send).toBeEnabled();
   await expect(page.getByText(copy.paymentProofSendHelp)).toBeVisible();

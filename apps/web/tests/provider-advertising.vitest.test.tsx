@@ -260,6 +260,28 @@ describe('Provider advertising requests and commission', () => {
     await waitFor(() => expect(mutations.submitRequest).toHaveBeenCalledWith(requestId, 4));
   });
 
+  it.each(['ar', 'en'] as const)('offers configured payment methods and requires a valid selection before sending for %s', async locale => {
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentMethods: ['instapay'] });
+    const copy = getProviderAdvertisingCopy(locale);
+    const upload = vi.fn(async () => proof);
+    const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => request), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: upload };
+    renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={waiting} loadDetail={vi.fn(async () => waiting)} mutations={mutations} />, { locale });
+    const select = screen.getByRole('combobox', { name: copy.paymentMethod });
+    expect(within(select).getAllByRole('option')).toHaveLength(2);
+    expect(within(select).getByRole('option', { name: copy.paymentMethodLabels.instapay })).toHaveValue('instapay');
+    expect(screen.queryByRole('textbox', { name: copy.paymentMethod })).not.toBeInTheDocument();
+    const file = new File(['receipt'], 'receipt.png', { type: 'image/png' });
+    fireEvent.change(screen.getByLabelText(copy.uploadPaymentProof), { target: { files: [file] } });
+    const send = screen.getByRole('button', { name: copy.sendPaymentProof });
+    expect(send).toBeDisabled();
+    fireEvent.change(select, { target: { value: '22222' } });
+    fireEvent.submit(send.closest('form')!);
+    expect(upload).not.toHaveBeenCalled();
+    fireEvent.change(select, { target: { value: 'instapay' } });
+    fireEvent.click(send);
+    await waitFor(() => expect(upload).toHaveBeenCalledWith(requestId, file, 'receipt.png', 'instapay'));
+  });
+
   it.each(['ar', 'en'] as const)('waits for explicit payment-proof submission and retains the file after failure for %s', async locale => {
     const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' } });
     const copy = getProviderAdvertisingCopy(locale);
@@ -304,6 +326,7 @@ describe('Provider advertising requests and commission', () => {
     const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => request), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: upload };
     renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={waiting} mutations={mutations} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText(copy.uploadPaymentProof), { target: { files: [file] } });
+    fireEvent.change(screen.getByLabelText(copy.paymentMethod), { target: { value: 'bank_transfer' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendPaymentProof }));
     expect(await screen.findByRole('alert')).toHaveTextContent(copy.paymentProofInvalidFile);
     expect(upload).not.toHaveBeenCalled();

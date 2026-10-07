@@ -41,6 +41,8 @@ export interface ProviderAdvertisingCopy {
   readonly paymentProofSendHelp: string;
   readonly paymentProofInvalidFile: string;
   readonly paymentMethod: string;
+  readonly choosePaymentMethod: string;
+  readonly paymentMethodLabels: Readonly<Record<'vodafone_cash' | 'instapay' | 'bank_transfer' | 'cash', string>>;
   readonly paymentProofUploaded: string;
   readonly noPaymentProof: string;
   readonly schedule: string;
@@ -126,6 +128,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProofSendHelp: 'اختيار الملف لا يرسله تلقائيًا. اضغط «إرسال الطلب» لإرسال إثبات الدفع للمراجعة.',
     paymentProofInvalidFile: 'اختر ملف PDF أو JPG أو PNG غير فارغ بحجم لا يتجاوز 10 ميجابايت.',
     paymentMethod: 'طريقة الدفع',
+    choosePaymentMethod: 'اختر طريقة الدفع',
+    paymentMethodLabels: { vodafone_cash: 'فودافون كاش', instapay: 'إنستا باي', bank_transfer: 'تحويل بنكي', cash: 'نقدًا' },
     paymentProofUploaded: 'تم إرسال إثبات الدفع للمراجعة.',
     noPaymentProof: 'لم يتم إرسال إثبات دفع.',
     schedule: 'الجدولة',
@@ -176,6 +180,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProofSendHelp: 'Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.',
     paymentProofInvalidFile: 'Choose a non-empty PDF, JPG, or PNG file up to 10 MB.',
     paymentMethod: 'Payment method',
+    choosePaymentMethod: 'Choose payment method',
+    paymentMethodLabels: { vodafone_cash: 'Vodafone Cash', instapay: 'InstaPay', bank_transfer: 'Bank transfer', cash: 'Cash' },
     paymentProofUploaded: 'Payment proof was submitted for review.',
     noPaymentProof: 'No payment proof submitted.',
     schedule: 'Schedule',

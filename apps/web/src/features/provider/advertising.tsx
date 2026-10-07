@@ -200,6 +200,8 @@ function FilterBar({ copy, draftStatus, onDraftStatus, onApply, onClear }: { rea
 function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string) => Promise<boolean> }) {
   const payment = detail.paymentProofs.find(proof => proof.active) ?? detail.paymentProofs.at(-1);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const paymentMethods = detail.paymentMethods?.length ? detail.paymentMethods : ['vodafone_cash', 'instapay', 'bank_transfer', 'cash'];
+  const validPaymentMethod = paymentMethods.includes(paymentMethod);
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -208,7 +210,7 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
   const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
   async function sendProof(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    if (!selectedFile || busy || sendingProof.current || !canUpload) return;
+    if (!selectedFile || busy || sendingProof.current || !canUpload || !validPaymentMethod) return;
     if (selectedFile.size === 0 || selectedFile.size > PAYMENT_PROOF_MAX_BYTES || !paymentProofMimeSchema.safeParse(selectedFile.type.toLowerCase()).success) {
       setFileError(true);
       return;
@@ -235,11 +237,11 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
         <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2><p className="provider-advertising__muted">{copy.paymentProofHelp}</p>
         {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span><span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span></div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
         {canUpload ? <form className="provider-advertising__proof-form" onSubmit={event => { void sendProof(event); }}>
-          <Input id="provider-advertising-payment-method" label={copy.paymentMethod} value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} disabled={busy} />
+          <label className="provider-advertising__field" htmlFor="provider-advertising-payment-method"><span>{copy.paymentMethod}</span><select id="provider-advertising-payment-method" value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} required disabled={busy}><option value="" disabled>{copy.choosePaymentMethod}</option>{paymentMethods.map(method => <option key={method} value={method}>{copy.paymentMethodLabels[method as keyof typeof copy.paymentMethodLabels] ?? method.replace(/[_.-]/gu, ' ')}</option>)}</select></label>
           <label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input ref={fileInput} type="file" accept="application/pdf,image/jpeg,image/png" aria-describedby="provider-advertising-proof-help" onChange={(event: ChangeEvent<HTMLInputElement>) => { setSelectedFile(event.target.files?.[0]); setFileError(false); }} disabled={busy} /></label>
           <p id="provider-advertising-proof-help" className="provider-advertising__help">{copy.paymentProofSendHelp}</p>
           {fileError ? <p className="provider-advertising__form-error" role="alert">{copy.paymentProofInvalidFile}</p> : null}
-          <Button type="submit" loading={busy} disabled={!selectedFile || busy || fileError}>{copy.sendPaymentProof}</Button>
+          <Button type="submit" loading={busy} disabled={!selectedFile || busy || fileError || !validPaymentMethod}>{copy.sendPaymentProof}</Button>
         </form> : null}
         <section className="provider-advertising__nested-card"><h2>{copy.schedule}</h2>{detail.schedule ? <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{detail.schedule.status}</dd></div><div><dt>{copy.interval}</dt><dd>{detail.schedule.localStart} — {detail.schedule.localEnd} ({detail.schedule.timezone})</dd></div></dl> : <p className="provider-advertising__muted">{copy.noSchedule}</p>}</section>
       </section>

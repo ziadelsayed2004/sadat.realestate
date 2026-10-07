@@ -13,6 +13,7 @@ import {
   providerAdRequestListQuerySchema,
   providerAdRequestProjectionSchema
 } from '@sadat-real-estate/contracts';
+import type { AdvertisingSettingsReader } from '../settings/advertising-policy.js';
 
 export type ProviderAdvertisingHistoryRecord = ProviderAdRequestHistoryEntry;
 
@@ -31,6 +32,7 @@ export interface ProviderAdvertisingRequestSource {
 
 export interface ProviderAdvertisingProjectionDependencies {
   source: ProviderAdvertisingRequestSource;
+  settings?: AdvertisingSettingsReader;
 }
 
 export type ProviderAdvertisingProjectionErrorCode = 'PROVIDER_AD_FORBIDDEN' | 'PROVIDER_AD_NOT_FOUND' | 'PROVIDER_AD_SOURCE_INVALID';
@@ -141,7 +143,10 @@ export function createProviderAdvertisingProjectionService(dependencies: Provide
       ? await dependencies.source.findForProvider(claims.sub, requestId)
       : (await dependencies.source.listForProvider(claims.sub)).find(item => item.request.id === requestId);
     if (!record) throw new ProviderAdvertisingProjectionError('PROVIDER_AD_NOT_FOUND');
-    return projection(ownerRecord(record, claims.sub));
+    const result = projection(ownerRecord(record, claims.sub));
+    if (!dependencies.settings) return result;
+    const policy = await dependencies.settings.read();
+    return providerAdRequestProjectionSchema.parse({ ...result, paymentMethods: policy.paymentProofMethods });
   };
   return {
     list,

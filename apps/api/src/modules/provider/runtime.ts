@@ -82,6 +82,7 @@ export function createProviderRuntime(
     service,
     ...(dashboardDependencies ? { dashboard: createProviderDashboardService({ application: service, ...dashboardDependencies }) } : {}),
     advertisingProjection: createProviderAdvertisingProjectionService({
+      settings: createMongooseAdvertisingSettingsReader(connection),
       source: createMongooseProviderAdvertisingSource(
         connection,
         advertisingModels

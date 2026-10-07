@@ -386,7 +386,8 @@
   min-width: 0;
 }
 
-.provider-advertising__proof-form input[type='file'] {
+.provider-advertising__proof-form input[type='file'],
+.provider-advertising__proof-form select {
   width: 100%;
   min-width: 0;
 }
