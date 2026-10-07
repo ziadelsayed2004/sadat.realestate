@@ -467,7 +467,8 @@
       "rejected": "مرفوضة",
       "suspended": "موقوفة",
       "totalRequests": "إجمالي طلبات التحقق",
-      "needsInformation": "تحتاج معلومات"
+      "needsInformation": "تحتاج معلومات",
+      "matched": "الحسابات المطابقة للفلتر"
     },
     "documents": {
       "title": "مستندات مقدم العقار",

@@ -149,7 +149,16 @@ export const adminAccountUserListDataSchema = z.object({
   items: z.array(adminAccountUserDataSchema).max(100),
   page: z.number().int().positive(),
   limit: z.number().int().positive(),
-  total: z.number().int().nonnegative()
+  total: z.number().int().nonnegative(),
+  // Counts across every page of the selected account type, before filtering by status.
+  summary: z.object({
+    total: z.number().int().nonnegative(),
+    seekers: z.number().int().nonnegative(),
+    providers: z.number().int().nonnegative(),
+    verified: z.number().int().nonnegative(),
+    pending: z.number().int().nonnegative(),
+    restricted: z.number().int().nonnegative()
+  }).strict().optional()
 }).strict();
 
 export const adminAccountUserSuccessEnvelopeSchema = successEnvelopeSchema(adminAccountUserDataSchema);

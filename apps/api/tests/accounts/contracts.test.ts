@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   ACCOUNT_TRANSITION_ACTIONS,
+  adminAccountUserListDataSchema,
   accountDeleteRequestSchema,
   accountTransitionDataSchema,
   accountTransitionRequestSchema,
@@ -11,6 +12,15 @@ import {
 } from '@sadat-real-estate/contracts';
 
 const timestamp = '2026-08-14T08:00:00.000Z';
+
+test('account list summary can describe all pages even when a selected status is empty', () => {
+  const list = { items: [], page: 1, limit: 20, total: 0, summary: { total: 45, seekers: 30, providers: 15, verified: 40, pending: 3, restricted: 2 } };
+  assert.deepEqual(adminAccountUserListDataSchema.parse(list), list);
+  assert.equal(adminAccountUserListDataSchema.safeParse({ ...list, summary: { ...list.summary, pending: -1 } }).success, false);
+  assert.equal(adminAccountUserListDataSchema.safeParse({ ...list, summary: { ...list.summary, verified: 1.5 } }).success, false);
+  assert.equal(adminAccountUserListDataSchema.safeParse({ ...list, summary: { ...list.summary, hiddenInternalCount: 1 } }).success, false);
+  assert.equal(adminAccountUserListDataSchema.safeParse({ items: [], page: 1, limit: 20, total: 0 }).success, true);
+});
 
 test('account deletion requires current version, bounded reason, and explicit confirmation', () => {
   const valid = { version: 2, reason: 'Delete duplicate account', confirmed: true };

@@ -167,6 +167,33 @@ describe('Admin account and verification views', () => {
 
 
 describe('empty account filter recovery', () => {
+  it('keeps all-page account totals when a status is empty and restores initial rows on All', async () => {
+    const summary = { total: 45, seekers: 30, providers: 15, verified: 40, pending: 3, restricted: 2 };
+    const loadUsers = vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, limit: 20, summary });
+    renderWithLocale(<AdminAccounts locale="en" session={session} view="users" initialListData={{ ...userList, total: 45, summary }} loadUsers={loadUsers} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Pending review' }));
+    await waitFor(() => expect(document.querySelector('[data-admin-accounts-state="empty"]')).not.toBeNull());
+    expect(loadUsers).toHaveBeenCalledWith({ page: 1, limit: 20, status: 'pending_review' }, expect.any(AbortSignal));
+    expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45');
+    expect(screen.getByTestId('admin-accounts-metric-1')).toHaveTextContent('0');
+    expect(screen.getByTestId('admin-accounts-metric-2')).toHaveTextContent('30');
+    expect(screen.getByTestId('admin-accounts-metric-4')).toHaveTextContent('40');
+    fireEvent.click(screen.getByRole('button', { name: 'All' }));
+    await waitFor(() => expect(screen.getByTestId(`admin-user-${user.id}`)).toBeInTheDocument());
+    expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45');
+  });
+
+  it('uses server counts beyond the current page and updates them after refresh', async () => {
+    const loadUsers = vi.fn().mockResolvedValueOnce({ ...userList, summary: { total: 45, seekers: 30, providers: 15, verified: 40, pending: 3, restricted: 2 }, total: 45 })
+      .mockResolvedValue({ ...userList, page: 2, summary: { total: 44, seekers: 29, providers: 15, verified: 39, pending: 3, restricted: 2 }, total: 44 });
+    renderWithLocale(<AdminAccounts locale="en" session={session} view="users" loadUsers={loadUsers} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45'));
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await waitFor(() => expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('44'));
+    expect(screen.getByTestId('admin-accounts-metric-4')).toHaveTextContent('39');
+    expect(loadUsers).toHaveBeenLastCalledWith({ page: 2, limit: 20 }, expect.any(AbortSignal));
+  });
+
   it('keeps provider filters available and reloads results without refreshing', async () => {
     const loadProviders = vi.fn().mockResolvedValueOnce({ ...providerList, items: [], total: 0 }).mockResolvedValue(providerList);
     renderWithLocale(<AdminAccounts locale="en" session={session} view="providers" loadProviders={loadProviders} />, { locale: 'en' });

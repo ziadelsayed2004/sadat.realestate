@@ -308,12 +308,12 @@ export function createMongooseAccountRepository(
 
   return {
     async listUsers(query) {
-      const filter: QueryFilter<UserRecord> = {
+      const summaryFilter: QueryFilter<UserRecord> = {
         deletedAt: null,
-        roleType: query.roleType ? query.roleType : { $in: ['seeker', 'provider'] },
-        ...(query.status ? { status: query.status } : {})
+        roleType: query.roleType ? query.roleType : { $in: ['seeker', 'provider'] }
       };
-      const [users, total] = await Promise.all([
+      const filter: QueryFilter<UserRecord> = { ...summaryFilter, ...(query.status ? { status: query.status } : {}) };
+      const [users, total, counts] = await Promise.all([
         User.find(filter)
           .sort({ createdAt: -1, _id: 1 })
           .skip((query.page - 1) * query.limit)
@@ -321,7 +321,20 @@ export function createMongooseAccountRepository(
           .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
           .lean<LeanUser[]>()
           .exec(),
-        User.countDocuments(filter).exec()
+        User.countDocuments(filter).exec(),
+        User.aggregate<{ total: number; seekers: number; providers: number; verified: number; pending: number; restricted: number }>([
+          { $match: summaryFilter },
+          { $group: {
+            _id: null,
+            total: { $sum: 1 },
+            seekers: { $sum: { $cond: [{ $eq: ['$roleType', 'seeker'] }, 1, 0] } },
+            providers: { $sum: { $cond: [{ $eq: ['$roleType', 'provider'] }, 1, 0] } },
+            verified: { $sum: { $cond: [{ $eq: ['$status', 'verified'] }, 1, 0] } },
+            pending: { $sum: { $cond: [{ $eq: ['$status', 'pending_review'] }, 1, 0] } },
+            restricted: { $sum: { $cond: [{ $eq: ['$status', 'restricted'] }, 1, 0] } }
+          } },
+          { $project: { _id: 0 } }
+        ]).exec()
       ]);
       const ids = users.map((user) => user._id);
       const [seekers, applications] = await Promise.all([
@@ -346,7 +359,8 @@ export function createMongooseAccountRepository(
         items: users.map((user) => userData(user, names.get(user._id.toHexString()))),
         page: query.page,
         limit: query.limit,
-        total
+        total,
+        summary: counts[0] ?? { total: 0, seekers: 0, providers: 0, verified: 0, pending: 0, restricted: 0 }
       });
     },
 

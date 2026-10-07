@@ -467,7 +467,8 @@
       "rejected": "Rejected",
       "suspended": "Suspended",
       "totalRequests": "Total applications",
-      "needsInformation": "Needs information"
+      "needsInformation": "Needs information",
+      "matched": "Matching accounts"
     },
     "documents": {
       "title": "Provider documents",

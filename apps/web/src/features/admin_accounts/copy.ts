@@ -87,7 +87,7 @@ export interface AdminAccountsCopy {
     readonly seekers: string;
     readonly propertyProviders: string;
   };
-  readonly metricLabels: Readonly<Record<'totalAccounts' | 'totalSeekers' | 'loaded' | 'seekers' | 'providers' | 'verified' | 'pending' | 'restricted' | 'totalProviders' | 'approved' | 'rejected' | 'suspended' | 'totalRequests' | 'needsInformation', string>>;
+  readonly metricLabels: Readonly<Record<'totalAccounts' | 'totalSeekers' | 'loaded' | 'matched' | 'seekers' | 'providers' | 'verified' | 'pending' | 'restricted' | 'totalProviders' | 'approved' | 'rejected' | 'suspended' | 'totalRequests' | 'needsInformation', string>>;
   readonly documents: {
     readonly title: string;
     readonly empty: string;
@@ -169,7 +169,7 @@ const english: AdminAccountsCopy = {
   actions: { retry: 'Retry', view: 'View details', back: 'Back to list', openDocument: 'Open document', unavailableDocument: 'Unavailable', loadingDocument: 'Opening…', reviewHeading: 'Application decision', reviewReason: 'Decision reason', reviewReasonPlaceholder: 'Write a clear reason (at least 3 characters)', reviewReasonRequired: 'Enter a valid reason before saving the decision.', reviewSaved: 'The provider application decision was saved.', verify: 'Verify account', reject: 'Reject application', needsInformation: 'Request information', suspend: 'Suspend account' },
   roleLabels: { seeker: 'Seeker', provider: 'Provider' },
   common: { apply: 'Apply', clear: 'Clear', previous: 'Previous', next: 'Next', pagination: 'Pagination', metricsLabel: 'Record metrics', providerTypeFilter: 'Provider type', recordStatusFilter: 'Record status', headingActionsLabel: 'Account actions', addUser: 'Add user', seekers: 'Seekers', propertyProviders: 'Property providers' },
-  metricLabels: { totalAccounts: 'Total accounts', totalSeekers: 'Total seekers', loaded: 'Loaded records', seekers: 'Seekers', providers: 'Providers', verified: 'Verified accounts', pending: 'Pending review', restricted: 'Restricted accounts', totalProviders: 'Total providers', approved: 'Approved', rejected: 'Rejected', suspended: 'Suspended', totalRequests: 'Total applications', needsInformation: 'Needs information' },
+  metricLabels: { totalAccounts: 'Total accounts', totalSeekers: 'Total seekers', loaded: 'Loaded records', matched: 'Matching accounts', seekers: 'Seekers', providers: 'Providers', verified: 'Verified accounts', pending: 'Pending review', restricted: 'Restricted accounts', totalProviders: 'Total providers', approved: 'Approved', rejected: 'Rejected', suspended: 'Suspended', totalRequests: 'Total applications', needsInformation: 'Needs information' },
   documents: { title: 'Provider documents', empty: 'No active documents are available.', document: 'Document', mime: 'MIME', size: 'Size', securityState: 'Security state', reviewState: 'Review state', uploaded: 'Uploaded', action: 'Action' }
 };
 
@@ -201,7 +201,7 @@ const arabic: AdminAccountsCopy = {
   actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…', reviewHeading: 'قرار مراجعة الطلب', reviewReason: 'سبب القرار', reviewReasonPlaceholder: 'اكتب سبباً واضحاً لا يقل عن 3 أحرف', reviewReasonRequired: 'أدخل سبباً صحيحاً قبل حفظ القرار.', reviewSaved: 'تم حفظ قرار مراجعة طلب مقدم العقار.', verify: 'توثيق الحساب', reject: 'رفض الطلب', needsInformation: 'طلب استكمال البيانات', suspend: 'إيقاف الحساب' },
   roleLabels: { seeker: 'باحث عن عقار', provider: 'مقدم عقار' },
   common: { apply: 'تطبيق', clear: 'مسح', previous: 'السابق', next: 'التالي', pagination: 'ترقيم الصفحات', metricsLabel: 'مؤشرات السجلات', providerTypeFilter: 'نوع مقدم العقار', recordStatusFilter: 'حالة السجل', headingActionsLabel: 'إجراءات الحسابات', addUser: 'إضافة مستخدم', seekers: 'الباحثون', propertyProviders: 'مقدمو العقارات' },
-  metricLabels: { totalAccounts: 'إجمالي الحسابات', totalSeekers: 'إجمالي الباحثين', loaded: 'السجلات المحملة', seekers: 'الباحثون عن عقار', providers: 'مقدمو العقارات', verified: 'الحسابات الموثقة', pending: 'قيد المراجعة', restricted: 'الحسابات المقيدة', totalProviders: 'إجمالي مقدمي العقارات', approved: 'معتمدة', rejected: 'مرفوضة', suspended: 'موقوفة', totalRequests: 'إجمالي طلبات التحقق', needsInformation: 'تحتاج معلومات' },
+  metricLabels: { totalAccounts: 'إجمالي الحسابات', totalSeekers: 'إجمالي الباحثين', loaded: 'السجلات المحملة', matched: 'الحسابات المطابقة للفلتر', seekers: 'الباحثون عن عقار', providers: 'مقدمو العقارات', verified: 'الحسابات الموثقة', pending: 'قيد المراجعة', restricted: 'الحسابات المقيدة', totalProviders: 'إجمالي مقدمي العقارات', approved: 'معتمدة', rejected: 'مرفوضة', suspended: 'موقوفة', totalRequests: 'إجمالي طلبات التحقق', needsInformation: 'تحتاج معلومات' },
   documents: { title: 'مستندات مقدم العقار', empty: 'لا توجد مستندات نشطة.', document: 'المستند', mime: 'MIME', size: 'الحجم', securityState: 'حالة الأمان', reviewState: 'حالة المراجعة', uploaded: 'تاريخ الرفع', action: 'الإجراء' }
 };
 
