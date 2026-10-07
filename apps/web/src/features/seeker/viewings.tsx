@@ -9,6 +9,7 @@ import {
   type ViewingPatch,
   type ViewingStatus
 } from '@sadat-real-estate/contracts';
+import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptTimeLabel } from '../public/egypt-time.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, StateMessage } from '../design_system/index.ts';
 import { PublicMediaImage } from '../public/components.tsx';
@@ -59,19 +60,18 @@ function mutationErrorFor(error: unknown): MutationError {
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(value));
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
 }
 
 function timeLabel(value: string, locale: SupportedLocale): string {
-  return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(new Date(value));
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
 }
 
 function dateTimeLocalValue(value: string | undefined): string {
   if (value === undefined) return '';
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return '';
-  const pad = (part: number) => String(part).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return egyptLocalDateTime(date);
 }
 
 function shortId(value: string, prefix: string): string {
@@ -128,15 +128,15 @@ function ViewingForm({ locale, mode, viewing, onClose, onSubmit }: ViewingFormPr
   const copy = getSeekerViewingsCopy(locale);
   const [propertyId, setPropertyId] = useState(viewing?.propertyId ?? '');
   const [requestedAt, setRequestedAt] = useState(dateTimeLocalValue(viewing?.requestedAt));
-  const [timezone, setTimezone] = useState(viewing?.timezone ?? 'UTC');
+  const timezone = EGYPT_TIME_ZONE;
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const validate = (): ViewingCreate | ViewingPatch | undefined => {
     const nextErrors: string[] = [];
-    const date = new Date(requestedAt);
-    const isoRequestedAt = Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
+    const date = egyptInstant(requestedAt);
+    const isoRequestedAt = date?.toISOString();
     if (mode === 'create' && !/^[a-f0-9]{24}$/u.test(propertyId)) nextErrors.push(copy.invalidProperty);
     if (isoRequestedAt === undefined) nextErrors.push(copy.invalidDate);
     if (!/^[A-Za-z_]+(?:\/[A-Za-z0-9_+\-]+)*$/u.test(timezone.trim())) nextErrors.push(copy.invalidTimezone);
@@ -183,7 +183,7 @@ function ViewingForm({ locale, mode, viewing, onClose, onSubmit }: ViewingFormPr
       {errors.length > 0 ? <div className="seeker-viewing-form__errors" role="alert" aria-live="assertive">{errors.map(error => <p key={error}>{error}</p>)}</div> : null}
       {mode === 'create' ? <Input id="seeker-viewing-property-id" label={copy.propertyId} value={propertyId} onChange={event => setPropertyId(event.target.value.trim().toLowerCase())} autoComplete="off" inputMode="text" /> : <Input label={copy.propertyId} value={shortId(viewing?.propertyId ?? '', 'PROP')} disabled readOnly />}
       <Input id={mode === 'create' ? 'seeker-viewing-requested-at' : `seeker-viewing-requested-at-${viewing?.id ?? 'edit'}`} label={copy.requestedAt} type="datetime-local" value={requestedAt} onChange={event => setRequestedAt(event.target.value)} />
-      <Input id={mode === 'create' ? 'seeker-viewing-timezone' : `seeker-viewing-timezone-${viewing?.id ?? 'edit'}`} label={copy.formTimezone} value={timezone} onChange={event => setTimezone(event.target.value)} autoComplete="off" />
+      <Input id={mode === 'create' ? 'seeker-viewing-timezone' : `seeker-viewing-timezone-${viewing?.id ?? 'edit'}`} label={copy.formTimezone} value={egyptTimeLabel(locale, egyptInstant(requestedAt) ?? new Date())} readOnly />
       {mode === 'create' ? <label className="seeker-viewing-form__textarea-label" htmlFor="seeker-viewing-note">{copy.formNote}<textarea id="seeker-viewing-note" className="ui-field__control" value={note} onChange={event => setNote(event.target.value)} maxLength={1000} rows={3} /></label> : null}
       <div className="seeker-viewing-form__actions">
         <Button type="submit" loading={submitting}>{mode === 'create' ? copy.submit : copy.save}</Button>
@@ -248,7 +248,7 @@ function ViewingCard({
           <div><dt>{copy.time}</dt><dd>{timeLabel(viewing.requestedAt, locale)}</dd></div>
         </dl>
         {providerName ? <div className="seeker-viewing-card__property-meta"><span className="seeker-viewing-card__provider"><strong>{providerName}</strong><small>{property?.sourceType === 'brokerage_office' ? (locale === 'ar' ? 'مكتب سمسرة' : 'Brokerage office') : (locale === 'ar' ? 'شركة تطوير' : 'Development company')}</small></span></div> : null}
-        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p><p><strong>{copy.timezone}:</strong> {viewing.timezone}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
+        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p><p><strong>{copy.timezone}:</strong> {egyptTimeLabel(locale, new Date(viewing.requestedAt))}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
         {editing ? <ViewingForm locale={locale} mode="reschedule" viewing={viewing} onClose={onCloseForm} onSubmit={input => onReschedule(input as ViewingPatch)} /> : (
           <div className="seeker-viewing-card__actions">
             <Button variant="ghost" size="sm" aria-expanded={expanded} onClick={onToggleDetails}>{expanded ? copy.hideDetails : copy.details}</Button>

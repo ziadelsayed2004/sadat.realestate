@@ -17,6 +17,7 @@ export interface PublicPropertyDetailsCopy {
   readonly galleryTitle: string;
   readonly imageUnavailable: string;
   readonly mediaUnavailable: string;
+  readonly videoUnavailable: string;
   readonly mediaItem: (position: number) => string;
   readonly sourceTitle: string;
   readonly publishedSource: string;
@@ -104,6 +105,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     galleryTitle: 'صور العقار',
     imageUnavailable: 'الصورة غير متاحة',
     mediaUnavailable: 'لا تتوفر وسائط عامة لهذا العقار حالياً.',
+    videoUnavailable: 'تعذر تشغيل الفيديو. جرّب متصفحاً آخر أو تواصل للاستفسار عن العقار.' ,
     mediaItem: position => `الوسائط ${position}`,
     sourceTitle: 'مصدر هذا العقار',
     publishedSource: 'مصدر منشور معتمد',
@@ -128,8 +130,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     viewingTitle: 'طلب معاينة العقار',
     viewingBody: 'اختر الوقت المناسب وسيراجع الفريق طلبك.',
     requestedAt: 'التاريخ والوقت',
-    timezone: 'توقيت الموعد (تلقائي)',
-    timezonePlaceholder: 'يُضبط تلقائياً حسب توقيت جهازك؛ لا تحتاج لكتابة اسم المدينة.',
+    timezone: 'توقيت مصر (تلقائي)',
+    timezonePlaceholder: 'اختر الموعد بتوقيت مصر؛ يتغير تلقائياً بين GMT+2 شتاءً وGMT+3 صيفاً.',
     note: 'ملاحظة إضافية',
     notePlaceholder: 'أي تفاصيل تساعد الفريق',
     submitViewing: 'إرسال طلب المعاينة',
@@ -193,6 +195,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     galleryTitle: 'Property gallery',
     imageUnavailable: 'Image unavailable',
     mediaUnavailable: 'No public media is available for this property yet.',
+    videoUnavailable: 'Unable to play this video. Try another browser or contact us about the property.',
     mediaItem: position => `Media item ${position}`,
     sourceTitle: 'Property source',
     publishedSource: 'Approved published source',
@@ -217,8 +220,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     viewingTitle: 'Request a property viewing',
     viewingBody: 'Choose a suitable time and the team will review your request.',
     requestedAt: 'Date and time',
-    timezone: 'Time zone (automatic)',
-    timezonePlaceholder: 'Set automatically from your device; no city name is needed.',
+    timezone: 'Egypt time (automatic)',
+    timezonePlaceholder: 'Choose the time in Egypt: GMT+2 in winter and GMT+3 in summer, automatically.',
     note: 'Additional note',
     notePlaceholder: 'Any detail that may help the team',
     submitViewing: 'Send viewing request',

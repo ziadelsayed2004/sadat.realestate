@@ -42,7 +42,7 @@ test('homepage reflects banner removal on the next request', async () => {
   }
 });
 
-test('bootstrap and sitemap expose safe cacheable public projections', async () => {
+test('bootstrap contacts stay fresh while sitemap exposes a safe public projection', async () => {
   const server = createApiServer({
     database: { isReady: async () => true },
     publicHomepage: {
@@ -59,7 +59,7 @@ test('bootstrap and sitemap expose safe cacheable public projections', async () 
     const sitemap = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/sitemap`);
     assert.equal(sitemap.status, 200);
     assert.deepEqual((await sitemap.json() as { data: { items: Array<{ path: string }> } }).data.items.map(item => item.path), ['/', '/properties/published-home']);
-    assert.match(bootstrap.headers.get('cache-control') ?? '', /max-age=300/);
+    assert.equal(bootstrap.headers.get('cache-control'), 'no-store');
   } finally {
     await stopApiServer(server);
   }

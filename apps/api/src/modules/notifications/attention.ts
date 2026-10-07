@@ -12,7 +12,7 @@ const queues: ReadonlyArray<{ key: AdminAttentionKey; collection: string; permis
   { key: 'community', collection: 'community_posts', permission: 'admin:community.moderate', filter: { status: 'draft' } },
   { key: 'community-reports', collection: 'community_reports', permission: 'admin:community.moderate', filter: { status: { $in: ['open', 'in_review'] } } },
   { key: 'contact-requests', collection: 'requests', permission: 'admin:requests.view', filter: { status: 'new', type: 'contact' } },
-  { key: 'viewing-requests', collection: 'requests', permission: 'admin:viewings.view', filter: { status: 'new', type: 'viewing' } },
+  { key: 'viewing-requests', collection: 'viewings', permission: 'admin:viewings.view', filter: { status: 'requested' } },
   { key: 'search-requests', collection: 'requests', permission: 'admin:requests.view', filter: { status: 'new', type: 'property_search' } },
   { key: 'customer-requests', collection: 'requests', permission: 'admin:requests.view', filter: { status: 'new', type: 'provider_customer' } },
   { key: 'advertising', collection: 'ad_requests', permission: 'admin:ads.view', filter: { status: { $in: ['review', 'waiting_pricing'] } } },

@@ -288,6 +288,18 @@ test('refresh failures retain a safe error state and request correlation', async
   client.dispose();
 });
 
+test('a temporary refresh outage preserves the authenticated screen, access token and permissions', async () => {
+  const apiClient = new FakeApiClient(async () => { throw new ApiClientError('server restarting', { code: 'NETWORK_ERROR' }); });
+  const store = new AuthStore({ sync: new TestSync() });
+  store.setSession(session('provider'), ['provider:properties.update']);
+  const client = new AuthClient({ apiClient, store });
+  await assert.rejects(client.refresh());
+  assert.equal(client.getSnapshot().status, 'authenticated');
+  assert.equal(client.getAuthorizationHeader(), 'Bearer header.payload.signature');
+  assert.deepEqual(client.getSnapshot().availableActions, ['provider:properties.update']);
+  client.dispose();
+});
+
 test('OTP verification stores authenticated sessions without exposing access tokens', async () => {
   const verifiedSession = session('seeker', 'otp.payload.signature');
   const otpResult: OtpVerifyData = { outcome: 'authenticated', ...verifiedSession };

@@ -10,11 +10,13 @@ const requestSource = z.enum(['public', 'seeker', 'provider', 'admin']);
 const requestStatus = z.enum(['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress', 'resolved', 'cancelled', 'closed']);
 const requestTransition = z.enum(['start_review', 'contact', 'schedule', 'needs_information', 'start_progress', 'resolve', 'cancel', 'close', 'reopen']);
 const contactPayload = z.object({
-  message: safeText(2_000),
+  message: customerText,
   fullName: safeText(160).optional(),
   phone: z.string().trim().min(7).max(40).regex(/^[+\d][\d\s()-]+$/u).optional(),
   preferredContactTime: z.enum(['morning', 'evening']).optional(),
   propertyId: objectId.optional(),
+  organizationId: objectId.optional(),
+  contactChannel: z.enum(['platform', 'provider']).optional(),
   projectId: objectId.optional(),
   locale: supportedLocaleSchema.optional()
 }).strict();

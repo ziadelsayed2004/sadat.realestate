@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+import { WhatsAppIcon, usePublicContact } from './contact.tsx';
+import { getWhatsAppLink, getWhatsAppUrl } from '../frontend_foundation/config.ts';
+import { createPublicPropertyDetailsActions, type PublicPropertyDetailsActions } from './details-data.ts';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   PublicOrganizationProfile,
   PublicOrganizationProperty,
@@ -23,6 +26,8 @@ export type PublicDeveloperProfileInitialState = 'loading' | 'retry' | 'not_foun
 export type PublicDeveloperProfileViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'> | 'not_found';
 
 export interface PublicDeveloperProfileProps {
+  readonly authClient?: { getAuthorizationHeader(): string | undefined; refresh?(): Promise<unknown> } | undefined;
+  readonly actions?: PublicPropertyDetailsActions | undefined;
   readonly url?: string;
   readonly locale: SupportedLocale;
   readonly initialData?: PublicOrganizationProfile | undefined;
@@ -97,7 +102,7 @@ function ProfileIcon({ name }: { readonly name: IconName }) {
     case 'unit':
       return <svg {...common}><path d="M5 20V8l7-4 7 4v12M9 20v-4h6v4M9 10h.01M12 10h.01M15 10h.01" /></svg>;
     case 'whatsapp':
-      return <svg className="public-developer-profile__icon public-developer-profile__icon--whatsapp" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor" /><path d="M8.2 7.4c.2-.45.42-.47.79-.48h.67c.2 0 .42.07.54.43l.76 2.05c.1.3.03.55-.15.78l-.57.7c-.18.2-.14.4-.02.6.7 1.2 1.6 2.1 2.82 2.8.22.12.4.14.6-.08l.72-.86c.2-.24.45-.3.73-.18l1.93.91c.3.14.45.28.45.5 0 .35-.17 1.1-.78 1.68-.6.57-1.4.8-2.16.8-1.05 0-2.62-.52-4.37-2.05-2.08-1.82-3.42-4.3-3.42-5.88 0-.64.2-1.24.46-1.72Z" fill="#fff" stroke="none" /><path d="M5.7 18.5 6.5 16a7.25 7.25 0 1 1 2 1.8l-2.8.7Z" fill="none" stroke="#fff" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+      return <WhatsAppIcon />;
   }
 }
 
@@ -323,7 +328,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
     [stats.publishedProjects, copy.projects, 'project']
   ];
   const phone = data.contactPhone;
-  const whatsapp = safePublicUrl(data.whatsappUrl);
+  const whatsapp = getWhatsAppUrl(data.whatsappUrl);
   const hasContactDetails = Boolean(phone || data.contactAddress || whatsapp);
   return (
     <aside className="public-developer-profile__aside">
@@ -339,7 +344,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
       <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
         {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
-        {whatsapp ? <a href={whatsapp}><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
+        {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer"><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
         <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{hasContactDetails ? copy.sendInquiry : copy.profileContact}</a>
       </section>
       <div className="public-developer-profile__advisory"><ProfileIcon name="shield" /><div><strong>{copy.advisoryTitle}</strong><p>{copy.advisoryBody}</p></div></div>
@@ -347,33 +352,64 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
   );
 }
 
-function ContactSection({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
-  const whatsapp = safePublicUrl(data.whatsappUrl);
-  if (!data.contactPhone && !data.contactAddress && !whatsapp) {
-    return <section className="public-developer-profile__contact" id="developer-contact" aria-labelledby="developer-contact-title"><h2 id="developer-contact-title">{copy.profileContact}</h2><p>{copy.profileContactUnavailable}</p></section>;
+function ContactSection({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+  const [state, setState] = useState<'idle' | 'submitting' | 'success' | 'permission' | 'error'>('idle');
+  const [requestId, setRequestId] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const feedback = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (state === 'success' || state === 'permission' || state === 'error') feedback.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [state]);
+  const [channel, setChannel] = useState<'provider' | 'platform'>('provider');
+  const platform = usePublicContact();
+  const ar = locale === 'ar';
+  const companyName = localizedText(data.name, locale) ?? data.slug;
+  const profileLink = typeof window === 'undefined' ? `/developers/${data.slug}?lang=${locale}` : new URL(`/developers/${data.slug}?lang=${locale}`, window.location.origin).href;
+  const whatsapp = channel === 'provider' ? getWhatsAppUrl(data.whatsappUrl, `${companyName} ${profileLink}`) : getWhatsAppLink(`${companyName} ${profileLink}`, platform.whatsappNumber);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (state === 'submitting' || state === 'success') return;
+    const fields = new FormData(event.currentTarget);
+    setState('submitting');
+    try {
+      const projectId = String(fields.get('projectId') ?? '');
+      const result = await actions.submitContact({
+        fullName: fullName.trim(), phone: phone.trim(),
+        preferredContactTime: String(fields.get('preferredTime') ?? 'morning') as 'morning' | 'evening',
+        message: message.trim(), organizationId: data.id, contactChannel: channel,
+        ...(projectId ? { projectId } : {}), locale
+      });
+      setRequestId(result.id); setState('success');
+    } catch (error) {
+      setState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+    }
   }
   return (
     <section className="public-developer-profile__contact" id="developer-contact" aria-labelledby="developer-contact-title">
-      <h2 id="developer-contact-title">{copy.profileInquiryTitle(localizedText(data.name, locale) ?? data.slug)}</h2>
-      <form className="public-developer-profile__inquiry" action="/auth/login" method="get">
-        <input type="hidden" name="returnTo" value={'/developers/' + data.slug + '#developer-contact'} />
-        <label><span>{copy.fieldName} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="name" autoComplete="name" required /></label>
-        <label><span>{copy.fieldPhone} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="phone" type="tel" autoComplete="tel" required placeholder="0100xxxxxxxx" /></label>
-        <label className="public-developer-profile__inquiry-wide">{copy.fieldEmail}<input name="email" type="email" autoComplete="email" placeholder="example@mail.com" /></label>
-        <label>{copy.fieldRequestType}<CustomSelect name="requestType" defaultValue="" placeholder="" ariaLabel={copy.fieldRequestType} options={[{ value: 'unit', label: copy.availableUnits }, { value: 'project', label: copy.profileProjects }]} /></label>
-        <label>{copy.fieldPreferredTime}<CustomSelect name="preferredTime" defaultValue="" placeholder="" ariaLabel={copy.fieldPreferredTime} options={[{ value: 'morning', label: '09:00 - 12:00' }, { value: 'evening', label: '16:00 - 20:00' }]} /></label>
-        <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required placeholder={copy.messagePlaceholder} /></label>
+      <h2 id="developer-contact-title">{copy.profileInquiryTitle(companyName)}</h2>
+      <form className="public-developer-profile__inquiry" onSubmit={event => { void submit(event); }} onChange={() => { if (state === 'success') setState('idle'); }} aria-busy={state === 'submitting'}>
+        <label className="public-developer-profile__inquiry-wide"><span>{ar ? 'جهة التواصل' : 'Send inquiry to'}</span><CustomSelect name="contactChannel" value={channel} onChange={value => { setChannel(value as 'provider' | 'platform'); setState('idle'); }} ariaLabel={ar ? 'جهة التواصل' : 'Send inquiry to'} options={[{ value: 'provider', label: companyName }, { value: 'platform', label: ar ? 'إدارة عقارات السادات' : 'Sadat Real Estate team' }]} /></label>
+        <p className="public-developer-profile__inquiry-wide">{channel === 'provider' ? (ar ? 'يصل الطلب إلى الشركة مباشرة، ويمكنك متابعة حالته من حسابك.' : 'The company receives your inquiry directly. Track its progress in your account.') : (ar ? 'تستقبل إدارة المنصة طلبك وتتولى المتابعة مع الشركة كوسيط.' : 'The platform receives your inquiry and follows up with the company as an intermediary.')}</p>
+        <label><span>{copy.fieldName} *</span><input name="name" autoComplete="name" required maxLength={160} value={fullName} onChange={event => setFullName(event.target.value)} /></label>
+        <label><span>{copy.fieldPhone} *</span><input name="phone" type="tel" dir="ltr" autoComplete="tel" required maxLength={40} placeholder="010xxxxxxxx" value={phone} onChange={event => setPhone(event.target.value)} /></label>
+        {data.projects.length ? <label>{copy.profileProjects}<CustomSelect name="projectId" defaultValue="" placeholder={ar ? 'اختياري' : 'Optional'} ariaLabel={copy.profileProjects} options={data.projects.map(project => ({ value: project.id, label: localizedText(project.name, locale) ?? project.slug }))} /></label> : null}
+        <label>{copy.fieldPreferredTime}<CustomSelect name="preferredTime" defaultValue="morning" ariaLabel={copy.fieldPreferredTime} options={[{ value: 'morning', label: ar ? 'صباحاً' : 'Morning' }, { value: 'evening', label: ar ? 'مساءً' : 'Evening' }]} /></label>
+        <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required maxLength={2000} placeholder={copy.messagePlaceholder} value={message} onChange={event => setMessage(event.target.value)} /></label>
         <div className="public-developer-profile__inquiry-actions">
-          <button type="submit">{copy.sendInquiry}<ProfileIcon name="arrow" /></button>
-          {whatsapp ? <a href={whatsapp} className="public-developer-profile__whatsapp-button"><ProfileIcon name="whatsapp" />{copy.contactWhatsapp}</a> : null}
+          <button type="submit" disabled={state === 'submitting' || state === 'success'}>{state === 'submitting' ? (ar ? 'جارٍ الإرسال…' : 'Sending…') : copy.sendInquiry}<ProfileIcon name="arrow" /></button>
+          {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="public-developer-profile__whatsapp-button"><ProfileIcon name="whatsapp" />{channel === 'provider' ? copy.contactWhatsapp : (ar ? 'واتساب المنصة' : 'Platform WhatsApp')}</a> : null}
         </div>
-        <p className="public-developer-profile__form-note">{copy.formNote}</p>
+        {state === 'success' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="status" aria-live="polite">{ar ? 'تم إرسال طلبك بنجاح.' : 'Your inquiry was sent successfully.'} <a href={`/seeker/requests/${requestId}?lang=${locale}`}>{ar ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
+        {state === 'permission' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'إرسال الطلب يحتاج حساب باحث عن عقار. يمكنك أيضاً التواصل بالواتساب المتاح.' : 'Use a property seeker account to submit an inquiry, or contact the available WhatsApp number.'} <a href={`/auth/login?lang=${locale}`}>{ar ? 'تسجيل الدخول' : 'Sign in'}</a></p> : null}
+        {state === 'error' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'تعذر إرسال الطلب. تحقق من رقم الهاتف وحاول مرة أخرى؛ بياناتك محفوظة في النموذج.' : 'Unable to send. Check the phone number and retry; your form entries are still here.'}</p> : null}
       </form>
     </section>
   );
 }
 
-function ProfileSuccess({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+function ProfileSuccess({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
   return (
     <div className="public-developer-profile__content">
       <ProfileHero data={data} locale={locale} copy={copy} />
@@ -384,7 +420,7 @@ function ProfileSuccess({ data, locale, copy }: { readonly data: PublicOrganizat
           <ProfileOverview data={data} locale={locale} copy={copy} />
           <ProjectsSection data={data} locale={locale} copy={copy} />
           <PropertiesSection data={data} locale={locale} copy={copy} />
-          <ContactSection data={data} locale={locale} copy={copy} />
+          <ContactSection data={data} locale={locale} copy={copy} actions={actions} />
         </div>
       </div>
     </div>
@@ -400,8 +436,11 @@ export function PublicDeveloperProfile({
   locale,
   initialData,
   initialState,
-  load = defaultPublicDeveloperProfileLoader
+  load = defaultPublicDeveloperProfileLoader,
+  authClient,
+  actions
 }: PublicDeveloperProfileProps) {
+  const resolvedActions = useMemo(() => actions ?? createPublicPropertyDetailsActions({ authorizationHeader: () => authClient?.getAuthorizationHeader(), refreshSession: authClient?.refresh ? () => authClient.refresh!() : undefined }), [actions, authClient]);
   const copy = getPublicDevelopersCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? '/developers' : window.location.href);
   const slug = publicDeveloperProfileSlugFromUrl(sourceUrl);
@@ -436,7 +475,7 @@ export function PublicDeveloperProfile({
   return (
     <div className="public-developer-profile" data-page="public-developer-profile" data-developer-profile-state={view}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/developers" />
-      {view === 'success' && data !== undefined ? <ProfileSuccess data={data} locale={locale} copy={copy} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retry} /> : <StateNotice state={view} copy={copy} onRetry={retry} />}
+      {view === 'success' && data !== undefined ? <ProfileSuccess data={data} locale={locale} copy={copy} actions={resolvedActions} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retry} /> : <StateNotice state={view} copy={copy} onRetry={retry} />}
       <Footer locale={locale} copy={copy} />
     </div>
   );

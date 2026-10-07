@@ -15,7 +15,7 @@ import {
   type ViewingCreate,
   type ViewingData
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
 
 export const PUBLIC_PROPERTY_DETAILS_ROUTE_PREFIX = '/public/properties' as const;
 export const PUBLIC_PROPERTY_DETAILS_PATH_PREFIX = '/properties' as const;
@@ -38,7 +38,9 @@ export interface PublicContactRequestInput {
   readonly fullName: string;
   readonly phone: string;
   readonly preferredContactTime: 'morning' | 'evening';
-  readonly propertyId: string;
+  readonly propertyId?: string | undefined;
+  readonly organizationId?: string | undefined;
+  readonly contactChannel?: 'platform' | 'provider' | undefined;
   readonly projectId?: string | undefined;
   readonly locale?: SupportedLocale | undefined;
 }
@@ -50,6 +52,7 @@ export interface PublicPropertyDetailsActions {
 }
 
 export interface PublicPropertyDetailsActionOptions {
+  readonly refreshSession?: (() => Promise<unknown>) | undefined;
   readonly apiClient?: ApiClient | undefined;
   readonly apiOrigin?: string | undefined;
   readonly authorizationHeader?: string | (() => string | undefined) | undefined;
@@ -113,7 +116,7 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
   const requestResponseSchema = successEnvelopeSchema(requestDataSchema);
   const viewingResponseSchema = successEnvelopeSchema(viewingDataSchema);
 
-  return {
+  const actions: PublicPropertyDetailsActions = {
     async saveProperty(propertyId) {
       const id = favoritePropertyParamsSchema.parse({ propertyId }).propertyId;
       const headers = actionHeaders(options);
@@ -134,6 +137,8 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
           phone: input.phone,
           preferredContactTime: input.preferredContactTime,
           propertyId: input.propertyId,
+          ...(input.organizationId === undefined ? {} : { organizationId: input.organizationId }),
+          ...(input.contactChannel === undefined ? {} : { contactChannel: input.contactChannel }),
           ...(input.projectId === undefined ? {} : { projectId: input.projectId }),
           ...(input.locale === undefined ? {} : { locale: input.locale })
         }
@@ -157,6 +162,18 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
       });
       return response.data.data;
     }
+  };
+  async function withSession<T>(request: () => Promise<T>): Promise<T> {
+    try { return await request(); } catch (error) {
+      if (!(error instanceof ApiClientError) || error.status !== 401 || !options.refreshSession) throw error;
+      await options.refreshSession();
+      return request();
+    }
+  }
+  return {
+    saveProperty: propertyId => withSession(() => actions.saveProperty!(propertyId)),
+    submitContact: input => withSession(() => actions.submitContact(input)),
+    submitViewing: input => withSession(() => actions.submitViewing(input))
   };
 }
 

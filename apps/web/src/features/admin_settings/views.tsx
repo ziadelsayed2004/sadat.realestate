@@ -1,3 +1,5 @@
+import { getWhatsAppLink } from '../frontend_foundation/config.ts';
+import { refreshPublicContact } from '../public/contact.tsx';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type { AdminSettingsData, AdminSettingsNamespace, AdminSettingsUpdate, AdminSettingsValues, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -97,9 +99,6 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
   social: [
     { key: 'facebook_url', kind: 'url', labelKey: 'facebook_url' },
     { key: 'instagram_url', kind: 'url', labelKey: 'instagram_url' },
-    { key: 'linkedin_url', kind: 'url', labelKey: 'linkedin_url' },
-    { key: 'youtube_url', kind: 'url', labelKey: 'youtube_url' },
-    { key: 'tiktok_url', kind: 'url', labelKey: 'tiktok_url' }
   ],
   properties: [
     { key: 'requires_admin_review', kind: 'boolean', labelKey: 'requires_admin_review' },
@@ -170,6 +169,7 @@ function namespaceForPath(path: string): SettingsNamespace | undefined {
 function fieldsForValues(namespace: SettingsNamespace, values: DraftValues): readonly Field[] {
   const known = FIELD_MAP[namespace];
   const knownKeys = new Set(known.map(field => field.key));
+  if (namespace === 'social') return known;
   const dynamic = Object.keys(values).filter(key => !knownKeys.has(key)).map(key => {
     const value = values[key];
     if (value !== undefined && typeof value === 'object' && !Array.isArray(value)) return { key, kind: 'localized' as const, labelKey: key };
@@ -225,7 +225,7 @@ function PrimitiveField({ field, values, copy, onChangeText, onChangeArray, onCh
   if (field.kind === 'select') return <label htmlFor={`admin-settings-${field.key}`}>{label}<select id={`admin-settings-${field.key}`} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)}><option value="">{copy.selectPlaceholder}</option>{field.options?.map(option => <option key={option.value} value={option.value}>{copy.fields[option.labelKey] ?? option.value}</option>)}</select></label>;
   if (field.kind === 'array') return <label style={{ gridColumn: '1 / -1' }} htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} /></label>;
   if (field.kind === 'number') return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type="number" inputMode="decimal" value={numberDraft(values[field.key])} onChange={event => onChangeNumber(field.key, event.target.value)} /></label>;
-  return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type={field.kind === 'url' ? 'url' : 'text'} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)} /></label>;
+  return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type={field.kind === 'url' ? 'url' : field.key.endsWith('phone') || field.key === 'whatsapp_number' ? 'tel' : 'text'} dir={field.kind === 'url' || field.key === 'whatsapp_number' || field.key.endsWith('phone') ? 'ltr' : undefined} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)} /></label>;
 }
 
 function SettingsForm({ namespace, data, values, locale, saving, onChangeText, onChangeLocalized, onChangeArray, onChangeNumber, onChangeBoolean, onSave }: { readonly namespace: SettingsNamespace; readonly data?: AdminSettingsData; readonly values: DraftValues; readonly locale: SupportedLocale; readonly saving: boolean; readonly onChangeText: (key: string, value: string) => void; readonly onChangeLocalized: (key: string, language: LocalizedLocale, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void; readonly onSave: (input: AdminSettingsUpdate) => Promise<boolean> }) {
@@ -241,11 +241,25 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
     setError(undefined);
     const trimmedReason = reason.trim();
     if (trimmedReason.length < 3) { setError(copy.reasonRequired); return; }
+    if (namespace === 'contact') {
+      for (const key of ['primary_phone', 'whatsapp_number']) {
+        const value = stringDraft(values[key]).trim();
+        if (value && !getWhatsAppLink(undefined, value)) { setError(locale === 'ar' ? 'اكتب رقمًا صحيحًا، مثل 01012345678 أو +201012345678.' : 'Enter a valid number, such as +201012345678.'); return; }
+      }
+    }
+    if (namespace === 'social') {
+      for (const [key, domain] of [['facebook_url', 'facebook.com'], ['instagram_url', 'instagram.com']]) {
+        const value = stringDraft(values[key!]).trim();
+        if (!value) continue;
+        try { const url = new URL(value); if (url.protocol !== 'https:' || url.username || url.password || !(url.hostname === domain || url.hostname.endsWith(`.${domain}`))) throw new Error(); }
+        catch { setError(locale === 'ar' ? 'اكتب رابط HTTPS صحيحًا لصفحة فيسبوك أو إنستجرام.' : 'Enter a valid HTTPS Facebook or Instagram page URL.'); return; }
+      }
+    }
     const saved = await onSave({ schemaVersion: data?.schemaVersion ?? 1, values: values as AdminSettingsValues, expectedVersion: data?.version ?? 0, reason: trimmedReason });
-    if (saved) setReason('');
+    if (saved) { setReason(''); if (namespace === 'contact' || namespace === 'social') void refreshPublicContact(); }
   }
 
-  return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}><div className="admin-settings__editor-heading"><div><h2>{copy.labels[namespace]}</h2><p>{copy.descriptions[namespace]}</p></div><span className="admin-settings__version">{copy.version}: {data?.version ?? 0} · {copy.schemaVersion}: {data?.schemaVersion ?? 1}</span></div><form onSubmit={event => { void submit(event); }}><div className="admin-settings__fields">{showEmptyValues ? <div className="admin-settings__empty-values" data-state="empty-values" role="status"><div className="admin-settings__empty-icon" aria-hidden="true">⌁</div><div><h3>{emptyValues.title}</h3><p>{emptyValues.body}</p></div></div> : fields.map(field => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} locale={locale} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField key={field.key} field={field} values={values} copy={copy} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />)}</div><p className="admin-settings__hint">{copy.preservedValues}</p><label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label><div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button></div>{error ? <p className="admin-settings__feedback" role="alert">{error}</p> : null}</form></section>;
+  return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}><div className="admin-settings__editor-heading"><div><h2>{copy.labels[namespace]}</h2><p>{copy.descriptions[namespace]}</p></div><span className="admin-settings__version">{copy.version}: {data?.version ?? 0} · {copy.schemaVersion}: {data?.schemaVersion ?? 1}</span></div><form onSubmit={event => { void submit(event); }}>{namespace === 'contact' || namespace === 'social' ? <p className="admin-settings__hint">{locale === 'ar' ? 'يظهر الرقم والروابط المحفوظة في أزرار الموقع والفوتر. اترك الحقل فارغًا لإخفاء الزر. رقم مصري: 01012345678 أو +201012345678. روابط التواصل: فيسبوك وإنستجرام فقط.' : 'Saved contacts appear on the site and footer. Leave a field empty to hide its button. Use an international phone number. Social links support Facebook and Instagram only.'}</p> : null}<div className="admin-settings__fields">{showEmptyValues ? <div className="admin-settings__empty-values" data-state="empty-values" role="status"><div className="admin-settings__empty-icon" aria-hidden="true">⌁</div><div><h3>{emptyValues.title}</h3><p>{emptyValues.body}</p></div></div> : fields.map(field => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} locale={locale} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField key={field.key} field={field} values={values} copy={copy} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />)}</div><p className="admin-settings__hint">{copy.preservedValues}</p><label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label><div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button></div>{error ? <p className="admin-settings__feedback" role="alert">{error}</p> : null}</form></section>;
 }
 
 export interface AdminSettingsProps {

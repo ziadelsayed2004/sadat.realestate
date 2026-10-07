@@ -4539,7 +4539,7 @@
     "/api/v1/provider/properties/{propertyId}/media": {
       "post": {
         "operationId": "uploadProviderPropertyMedia",
-        "summary": "Upload owned property image or floor plan media",
+        "summary": "Upload owned property image, floor plan or MP4 video (maximum 10 MB)",
         "security": [
           {
             "bearerAuth": []
@@ -4562,7 +4562,8 @@
             "schema": {
               "enum": [
                 "image",
-                "floor_plan"
+                "floor_plan",
+                "video"
               ]
             }
           },
@@ -4573,7 +4574,8 @@
             "schema": {
               "type": "string",
               "maxLength": 120
-            }
+            },
+            "description": "Display filename; URI-encode non-ASCII characters."
           }
         ],
         "requestBody": {
@@ -4592,6 +4594,12 @@
               }
             },
             "application/pdf": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "video/mp4": {
               "schema": {
                 "type": "string",
                 "format": "binary"
@@ -4641,6 +4649,65 @@
             "$ref": "#/components/responses/ProviderError"
           },
           "503": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      },
+      "get": {
+        "operationId": "listProviderPropertyMedia",
+        "summary": "List saved media owned by the verified provider",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reordered property media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyMediaListData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
             "$ref": "#/components/responses/ProviderError"
           }
         }
@@ -5577,7 +5644,14 @@
         "operationId": "createSeekerContactRequest",
         "responses": {
           "201": {
-            "$ref": "#/components/responses/AuthSessionSuccess"
+            "description": "Persisted inquiry with selected destination and customer-visible history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -5590,7 +5664,17 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInquiryCreate"
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/seeker/search-requests": {
@@ -10705,6 +10789,107 @@
           },
           "404": {
             "description": "Image not publicly available"
+          }
+        }
+      }
+    },
+    "/api/v1/public/properties/{propertyId}/media/{assetId}/content": {
+      "get": {
+        "operationId": "getPublicPropertyMediaContent",
+        "summary": "Stream ready media of a published active property; supports HEAD and single byte ranges",
+        "security": [],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "Range",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "bytes=0-1023"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full media content",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Requested byte range",
+            "headers": {
+              "Content-Range": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "416": {
+            "description": "Range not satisfiable",
+            "headers": {
+              "Content-Range": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -17984,7 +18169,8 @@
           "kind": {
             "enum": [
               "image",
-              "floor_plan"
+              "floor_plan",
+              "video"
             ]
           },
           "originalFilename": {
@@ -17996,7 +18182,8 @@
             "enum": [
               "application/pdf",
               "image/jpeg",
-              "image/png"
+              "image/png",
+              "video/mp4"
             ]
           },
           "byteSize": {
@@ -19615,7 +19802,8 @@
           "kind": {
             "enum": [
               "image",
-              "floor_plan"
+              "floor_plan",
+              "video"
             ]
           },
           "originalFilename": {
@@ -19627,7 +19815,8 @@
             "enum": [
               "application/pdf",
               "image/jpeg",
-              "image/png"
+              "image/png",
+              "video/mp4"
             ]
           },
           "byteSize": {
@@ -23823,6 +24012,38 @@
                 "type": "boolean"
               }
             }
+          },
+          "contact": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Approved public platform contacts. Empty fields are omitted.",
+            "properties": {
+              "phone": {
+                "type": "string"
+              },
+              "whatsappNumber": {
+                "type": "string"
+              },
+              "facebookUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "instagramUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string"
+                  },
+                  "en": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -24625,6 +24846,63 @@
           "expectedVersion": {
             "type": "integer",
             "minimum": 0
+          }
+        }
+      },
+      "ContactInquiryCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "fullName": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 40
+          },
+          "preferredContactTime": {
+            "type": "string",
+            "enum": [
+              "morning",
+              "evening"
+            ]
+          },
+          "propertyId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "projectId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "organizationId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "contactChannel": {
+            "type": "string",
+            "enum": [
+              "platform",
+              "provider"
+            ],
+            "description": "Defaults to platform. Direct recipient is resolved server-side from the published property or approved organization; the client cannot supply a provider ID."
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "ar",
+              "en"
+            ]
           }
         }
       }

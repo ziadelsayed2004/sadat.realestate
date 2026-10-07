@@ -314,7 +314,8 @@ test('SSR renders the public About projection and safe bootstrap', async () => {
   assert.match(result.html, /data-page="public-about"/);
   assert.match(result.html, /data-about-state="success"/);
   assert.match(result.html, /A gateway to trust and transparency/);
-  assert.doesNotMatch(result.html, /updatedBy|status|active/);
+  // CSS pseudo-classes and ARIA selectors are not private CMS fields.
+  assert.doesNotMatch(result.html.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gu, ''), /updatedBy|status|active/);
   assert.deepEqual(result.aboutData?.items.map(item => item.key), ['mission']);
 });
 

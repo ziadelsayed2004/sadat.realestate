@@ -6,6 +6,7 @@ import {
   type ViewingStatus,
   type ViewingTransition
 } from '@sadat-real-estate/contracts';
+import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptTimeLabel } from '../public/egypt-time.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, Modal, Pagination, StateMessage, type BadgeTone } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
@@ -57,9 +58,9 @@ function stateForError(error: unknown): Exclude<ProviderViewingsViewState, 'load
   return 'error';
 }
 
-function dateLabel(value: string, timezone: string, locale: SupportedLocale): string {
+function dateLabel(value: string, _timezone: string, locale: SupportedLocale): string {
   try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: timezone }).format(new Date(value));
+    return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
   } catch {
     return '—';
   }
@@ -69,25 +70,23 @@ function dateTimeInputValue(value: string): string {
   try {
     const date = new Date(value);
     if (!Number.isFinite(date.getTime())) return '';
-    const pad = (input: number) => String(input).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return egyptLocalDateTime(date);
   } catch {
     return '';
   }
 }
 
 function isoFromDateTimeInput(value: string): string | undefined {
-  const date = new Date(value);
-  return Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
+  return egyptInstant(value)?.toISOString();
 }
 
 function safeReference(value: string): string {
   return value.length > 6 ? `…${value.slice(-6)}` : value;
 }
 
-function dateGroupLabel(value: string, timezone: string, locale: SupportedLocale): string {
+function dateGroupLabel(value: string, _timezone: string, locale: SupportedLocale): string {
   try {
-    return new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: timezone }).format(new Date(value));
+    return new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
   } catch {
     return '—';
   }
@@ -132,7 +131,7 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
   readonly onSubmit: (input: ViewingTransition) => Promise<void>;
 }) {
   const [dateTime, setDateTime] = useState(() => dateTimeInputValue(viewing.requestedAt));
-  const [timezone, setTimezone] = useState(viewing.timezone);
+  const timezone = EGYPT_TIME_ZONE;
   const [reason, setReason] = useState('');
   const [validationError, setValidationError] = useState<string | undefined>();
   const formId = `provider-viewing-transition-${action}`;
@@ -173,7 +172,7 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
         {action === 'reschedule' ? (
           <div className="provider-viewings__form-grid">
             <Input id={`${formId}-date`} type="datetime-local" label={copy.dialog.date} value={dateTime} onChange={event => setDateTime(event.target.value)} required />
-            <Input id={`${formId}-timezone`} label={copy.dialog.timezone} value={timezone} onChange={event => setTimezone(event.target.value)} required />
+            <Input id={`${formId}-timezone`} label={copy.dialog.timezone} value={timezone} readOnly />
           </div>
         ) : null}
         {action === 'cancel' ? <Input id={`${formId}-reason`} label={copy.dialog.reason} helpText={copy.dialog.reasonHelp} value={reason} onChange={event => setReason(event.target.value)} required /> : null}
@@ -186,11 +185,11 @@ function ViewingTime({ viewing, locale }: { readonly viewing: ViewingData; reado
   let clock = '—';
   let period = '';
   try {
-    const parts = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: viewing.timezone }).formatToParts(new Date(viewing.requestedAt));
+    const parts = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: EGYPT_TIME_ZONE }).formatToParts(new Date(viewing.requestedAt));
     clock = parts.filter(part => ['hour', 'minute', 'literal'].includes(part.type)).map(part => part.value).join('').trim();
     period = parts.find(part => part.type === 'dayPeriod')?.value ?? '';
   } catch { /* Invalid legacy timestamps retain the unavailable label. */ }
-  return <time className="provider-viewings__clock" dateTime={viewing.requestedAt} aria-label={dateLabel(viewing.requestedAt, viewing.timezone, locale)} title={viewing.timezone}><b>{clock}</b><small>{period}</small></time>;
+  return <time className="provider-viewings__clock" dateTime={viewing.requestedAt} aria-label={dateLabel(viewing.requestedAt, viewing.timezone, locale)} title={egyptTimeLabel(locale, new Date(viewing.requestedAt))}><b>{clock}</b><small>{period}</small></time>;
 }
 
 function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {

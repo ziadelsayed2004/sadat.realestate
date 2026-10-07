@@ -19,4 +19,12 @@ export const publicHomeHandler = http.get(
   () => HttpResponse.json(publicHomeFixture)
 );
 
-export const handlers = [publicHomeHandler];
+export const handlers = [publicHomeHandler,
+  http.get('*/api/v1/public/bootstrap', () => HttpResponse.json({
+    data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact: {} },
+    meta: { requestId: 'test-public-bootstrap' }
+  })),
+  http.get('*/api/v1/provider/properties/:propertyId/media', () => HttpResponse.json({
+    data: { items: [] }, meta: { requestId: 'test-provider-media' }
+  }))
+];

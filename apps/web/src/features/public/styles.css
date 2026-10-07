@@ -1778,20 +1778,12 @@
   stroke-width: 1.7;
 }
 
-.public-site-footer__social a:last-child {
-  color: #35d07f;
-  border-color: #159a59;
-}
-
 .public-site-footer__social img { inline-size: 0.875rem; block-size: 0.875rem; }
 
 .public-site-footer__contact-links a,
 .public-site-footer__contact-links span { display: flex; align-items: center; gap: 0.5rem; }
 
 .public-site-footer__contact-links img { display: none; inline-size: 0.8125rem; block-size: 0.8125rem; }
-
-.public-site-footer__social a:nth-child(n+4),
-.public-site-footer__contact-links a:nth-child(2) { display: none; }
 
 .public-site-footer__bottom {
   display: block;

@@ -7,6 +7,7 @@ import { createPropertyMediaModels } from './models.js';
 import { createMongoosePropertyMediaRepository } from './repository.js';
 import type { PropertyMediaRouterDependencies } from './router.js';
 import { createPropertyMediaService } from './service.js';
+import { createPropertyMediaContentReader } from './content.js';
 import { createMongoosePropertySettingsReader } from '../settings/property-policy.js';
 
 export function createPropertyMediaRuntime(connection: Connection, accessTokens: AccessTokenService, environment: UploadEnvironment, audit: AuditWriter): PropertyMediaRouterDependencies {
@@ -16,5 +17,6 @@ export function createPropertyMediaRuntime(connection: Connection, accessTokens:
     : environment.scannerMode === 'deterministic-fake'
       ? createDeterministicMalwareScanner('clean')
       : createUnavailableMalwareScanner();
-  return { accessTokens, service: createPropertyMediaService({ repository: createMongoosePropertyMediaRepository(connection, createPropertyMediaModels(connection), audit), storage, scanner, settings: createMongoosePropertySettingsReader(connection) }) };
+  const models = createPropertyMediaModels(connection);
+  return { accessTokens, content: createPropertyMediaContentReader(connection, models, storage), service: createPropertyMediaService({ repository: createMongoosePropertyMediaRepository(connection, models, audit), storage, scanner, settings: createMongoosePropertySettingsReader(connection) }) };
 }

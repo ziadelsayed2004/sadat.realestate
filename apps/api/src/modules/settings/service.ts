@@ -1,4 +1,6 @@
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import { ApiContractError } from '../contracts/error-boundary.js';
+import { contactSettingsProjection } from './contact-policy.js';
 import {
   adminSettingsDataSchema,
   adminSettingsNamespaceSchema,
@@ -170,6 +172,17 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     await requirePermission(dependencies, claims.sub, 'admin:settings.manage');
     const target = namespace(unparsedNamespace);
     const data = adminSettingsUpdateSchema.parse(unparsedInput);
+    if (target === 'contact' || target === 'social') {
+      const projected = contactSettingsProjection(target === 'contact' ? data.values : {}, target === 'social' ? data.values : {});
+      const fields = target === 'contact' ? [['primary_phone', 'phone'], ['whatsapp_number', 'whatsappNumber']] as const : [['facebook_url', 'facebookUrl'], ['instagram_url', 'instagramUrl']] as const;
+      for (const [key, field] of fields) {
+        const raw = data.values[key];
+        const value = typeof raw === 'string' ? raw.trim() : raw;
+        if (value === '') data.values[key] = '';
+        if (value !== undefined && value !== '' && (typeof value !== 'string' || !projected[field])) throw new ApiContractError('SETTINGS_INVALID_CONTACT', 'errors.validation', 400);
+        if (projected[field]) data.values[key] = projected[field];
+      }
+    }
     const before = await dependencies.repository.find(target);
     if (before && before.schemaVersion !== data.schemaVersion) {
       throw new SettingsServiceError('SETTINGS_SCHEMA_VERSION_CONFLICT');

@@ -107,6 +107,7 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await routeSession(page);
     await routeProperty(page);
     await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/media`, async route => {
+      if (route.request().method() === 'GET') { await route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'media-list' } } }); return; }
       expect(route.request().method()).toBe('POST');
       expect(route.request().headers()['authorization']).toBe('Bearer provider.completion.token');
       expect(route.request().headers()['x-media-kind']).toBe('image');
@@ -173,6 +174,7 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await routeSession(page);
     await routeProperty(page);
     await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/submit`, async route => {
+      if (route.request().method() === 'GET') { await route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'media-list' } } }); return; }
       expect(route.request().method()).toBe('POST');
       expect(route.request().postDataJSON()).toEqual({ version: 2, reason: locale === 'ar' ? 'إرسال العقار للمراجعة' : 'Provider submitted property for review' });
       await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(propertyFixture({ status: 'pending_review', availableActions: [] }), 'completion-submit') });

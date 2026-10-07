@@ -3829,6 +3829,43 @@
               }
             }
           ]
+        },
+        {
+          "name": "List saved property media",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/media",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "media"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "description": "Lists all saved media owned by the verified provider."
         }
       ]
     },
@@ -7932,6 +7969,42 @@
           }
         }
       ]
+    },
+    {
+      "name": "Stream public property media",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/properties/:propertyId/media/:assetId/content",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "properties",
+            ":propertyId",
+            "media",
+            ":assetId",
+            "content"
+          ],
+          "variable": [
+            {
+              "key": "propertyId",
+              "value": "000000000000000000000000"
+            },
+            {
+              "key": "assetId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "description": "Streams ready media of a published active property only. Optional Range header supports video seeking."
     }
   ]
 }

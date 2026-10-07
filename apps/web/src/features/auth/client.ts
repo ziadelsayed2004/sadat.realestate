@@ -381,7 +381,10 @@ export class AuthClient {
     // Switching to `refreshing` here remounts provider navigation, which can
     // repeatedly request a failing endpoint and start another refresh.
     if (this.store.getSnapshot().status !== 'authenticated') this.store.beginRefresh();
-    const pending = this.performRefresh();
+    // The refresh cookie is shared between tabs and rotates after each use.
+    const pending = typeof navigator !== 'undefined' && navigator.locks
+      ? navigator.locks.request('sadat-auth-refresh', () => this.performRefresh())
+      : this.performRefresh();
     const settled = pending.then(
       (snapshot) => {
         if (this.refreshPromise === settled) this.refreshPromise = undefined;
@@ -432,7 +435,9 @@ export class AuthClient {
         return this.store.clear();
       }
       const requestId = error instanceof ApiClientError ? error.requestId : undefined;
-      this.store.setError(requestId);
+      // A network failure or a rolling restart is not evidence that the
+      // refresh cookie was revoked. Keep the current screen and its draft.
+      if (this.store.getSnapshot().status !== 'authenticated') this.store.setError(requestId);
       throw error;
     }
   }

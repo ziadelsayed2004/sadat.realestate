@@ -3487,11 +3487,11 @@
       "uploading": "Uploading…",
       "count": "Media count",
       "emptyTitle": "No media uploaded yet",
-      "emptyBody": "Add an image or floor plan from the supported file types.",
+      "emptyBody": "Add an image, video or floor plan from the supported file types.",
       "existingUnavailableTitle": "Existing media list is not exposed by the current contract",
       "existingUnavailableBody": "This editor shows media uploaded during the current session only; it does not fabricate old media records or URLs.",
-      "acceptedTypes": "Supported types: JPG and PNG for images, PDF for floor plans. Maximum 10 MB per file.",
-      "privacyNote": "Private media uses an authorized quarantine flow. Storage keys and permanent public URLs are never rendered.",
+      "acceptedTypes": "Supported types: JPG and PNG for images, PDF for floor plans and MP4 video (H.264 recommended). Maximum 10 MB per file.",
+      "privacyNote": "Media appears to visitors after the property is reviewed and published. Videos cannot be cover images.",
       "invalidFileTitle": "File is not valid",
       "invalidFileBody": "Choose a non-empty file with a supported extension and MIME type.",
       "tooLargeTitle": "File is too large",
@@ -3503,7 +3503,9 @@
       "permissionTitle": "Upload permission required",
       "permissionBody": "Media cannot be uploaded for this draft or session.",
       "versionConflictTitle": "Media version conflict",
-      "versionConflictBody": "The media order changed. Reload the draft before continuing."
+      "versionConflictBody": "The media order changed. Reload the draft before continuing.",
+      "chooseVideo": "Choose video",
+      "videoKind": "Video"
     },
     "contact": {
       "contactName": "Contact name",
@@ -4029,8 +4031,8 @@
     "viewingTitle": "Request a property viewing",
     "viewingBody": "Choose a suitable time and the team will review your request.",
     "requestedAt": "Date and time",
-    "timezone": "Time zone (automatic)",
-    "timezonePlaceholder": "Set automatically from your device; no city name is needed.",
+    "timezone": "Egypt time (automatic)",
+    "timezonePlaceholder": "Choose the time in Egypt: GMT+2 in winter and GMT+3 in summer, automatically.",
     "note": "Additional note",
     "notePlaceholder": "Any detail that may help the team",
     "submitViewing": "Send viewing request",
@@ -4076,7 +4078,8 @@
     "morning": "Morning",
     "evening": "Evening",
     "extraMessage": "Additional message",
-    "contactWhatsapp": "Contact on WhatsApp"
+    "contactWhatsapp": "Contact on WhatsApp",
+    "videoUnavailable": "Unable to play this video. Try another browser or contact us about the property."
   },
   "public/developers-copy#getPublicDevelopersCopy": {
     "introEyebrow": "Trusted partners",

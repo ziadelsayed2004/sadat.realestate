@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { publicOrganizationListDataSchema, publicOrganizationProfileSchema } from '@sadat-real-estate/contracts';
+import { publicOrganizationListDataSchema, publicOrganizationProfileSchema, requestDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClientError } from '../src/features/contracts/index.ts';
 import {
@@ -55,6 +55,23 @@ const profileData = publicOrganizationProfileSchema.parse({
 });
 
 describe('public developer directory and profiles', () => {
+  it('sends a real company inquiry and retains its controlled draft when the surrounding page rerenders', async () => {
+    const submitContact = vi.fn(async (payload) => requestDataSchema.parse({ id: 'f'.repeat(24), type: 'contact', source: 'seeker', status: 'new', payload, version: 0, availableActions: ['cancel'], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }));
+    const actions = { submitContact, submitViewing: vi.fn() };
+    const props = { locale: 'en' as const, url: '/developers/approved-builder?lang=en', initialData: profileData, actions };
+    const result = renderWithLocale(<PublicDeveloperProfile {...props} />, { locale: 'en' });
+    const form = result.container.querySelector('form.public-developer-profile__inquiry')!;
+    fireEvent.change(form.querySelector('[name=name]')!, { target: { value: 'Example Customer' } });
+    fireEvent.change(form.querySelector('[name=phone]')!, { target: { value: '01012345678' } });
+    fireEvent.change(form.querySelector('[name=message]')!, { target: { value: 'First line\nSecond line' } });
+    result.rerender(<PublicDeveloperProfile {...props} />);
+    expect(form.querySelector('[name=message]')).toHaveValue('First line\nSecond line');
+    fireEvent.submit(form);
+    await waitFor(() => expect(submitContact).toHaveBeenCalledWith(expect.objectContaining({ organizationId: profileData.id, contactChannel: 'provider', message: 'First line\nSecond line' })));
+    await waitFor(() => expect(form.querySelector('[role=status]')).toHaveTextContent('Your inquiry was sent successfully.'));
+    expect(form.querySelector('[name=name]')).toHaveValue('Example Customer');
+    expect(form.querySelector('[name=message]')).toHaveValue('First line\nSecond line');
+  });
   it('parses only the implemented directory query and creates the approved route', () => {
     const query = parsePublicDeveloperDirectoryQuery('/developers?kind=developer_company&search=builder&sort=name&direction=desc&page=2&limit=40&%24where=true');
 
@@ -89,7 +106,8 @@ describe('public developer directory and profiles', () => {
     expect(projectDetails?.querySelector('a[href="https://example.com/central-project"]')).toBeInTheDocument();
     expect(result.container.querySelector('a[href*="/properties?projectId="]')).toBeNull();
     expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home?lang=en');
-    expect(screen.getByText('Public contact details are not available in this profile yet.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send inquiry' })).toBeInTheDocument();
+    expect(result.container.querySelector('form[action="/auth/login"]')).toBeNull();
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('organizationId');
   });

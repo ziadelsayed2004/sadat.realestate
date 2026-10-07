@@ -54,7 +54,7 @@ function stateForError(error: unknown): Exclude<ProviderCustomerRequestsViewStat
   return 'error';
 }
 
-function payloadText(request: RequestData, key: 'firstName' | 'lastName' | 'phone' | 'email' | 'message' | 'propertyId' | 'projectId' | 'sourceNote'): string | undefined {
+function payloadText(request: RequestData, key: 'fullName' | 'organizationNameAr' | 'organizationNameEn' | 'organizationSlug' | 'firstName' | 'lastName' | 'phone' | 'email' | 'message' | 'propertyId' | 'projectId' | 'sourceNote'): string | undefined {
   const value = request.payload[key];
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
@@ -72,6 +72,8 @@ function maskEmail(value: string): string {
 }
 
 function customerName(request: RequestData, unavailable: string): string {
+  const directName = payloadText(request, 'fullName');
+  if (directName) return directName;
   const name = [payloadText(request, 'firstName'), payloadText(request, 'lastName')].filter((value): value is string => value !== undefined).join(' ').trim();
   return name === '' ? unavailable : name;
 }
@@ -80,7 +82,7 @@ function relatedLabel(request: RequestData, copy: ProviderCustomerRequestsCopy, 
   if (request.property) return request.property.name[locale] ?? request.property.name.ar ?? request.property.name.en ?? copy.unavailable;
   if (payloadText(request, 'propertyId') !== undefined || request.propertyId !== undefined) return copy.form.propertyId;
   if (payloadText(request, 'projectId') !== undefined || request.projectId !== undefined) return copy.form.projectId;
-  return copy.unavailable;
+  return payloadText(request, locale === 'ar' ? 'organizationNameAr' : 'organizationNameEn') ?? copy.unavailable;
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -180,28 +182,30 @@ function RequestFormModal({ copy, saving, error, onClose, onSave }: {
   );
 }
 
-function TransitionModal({ request, action, copy, saving, error, onClose, onConfirm }: {
+function TransitionModal({ request, action, copy, locale, saving, error, onClose, onConfirm }: {
   readonly request: RequestData;
   readonly action: RequestTransition;
   readonly copy: ProviderCustomerRequestsCopy;
   readonly saving: boolean;
   readonly error?: string | undefined;
   readonly onClose: () => void;
-  readonly onConfirm: (reason: string) => Promise<void>;
+  readonly locale: SupportedLocale;
+  readonly onConfirm: (reason: string, customerMessage?: string) => Promise<void>;
 }) {
   const [reason, setReason] = useState('');
+  const [customerMessage, setCustomerMessage] = useState('');
   const [validationError, setValidationError] = useState<string | undefined>();
   const formId = `provider-request-transition-${request.id}`;
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setValidationError(undefined);
-    const parsed = requestTransitionRequestSchema.safeParse({ transition: action, expectedVersion: request.version, ...(reason.trim() === '' ? {} : { reason: reason.trim() }) });
+    const parsed = requestTransitionRequestSchema.safeParse({ transition: action, expectedVersion: request.version, ...(reason.trim() === '' ? {} : { reason: reason.trim() }), ...(customerMessage.trim() ? { customerMessage: customerMessage.trim() } : {}) });
     if (!parsed.success) {
       setValidationError(copy.transition.validation);
       return;
     }
-    await onConfirm(parsed.data.reason ?? '');
+    await onConfirm(parsed.data.reason ?? '', parsed.data.customerMessage);
   }
 
   return (
@@ -217,6 +221,7 @@ function TransitionModal({ request, action, copy, saving, error, onClose, onConf
         <label className="provider-customer-requests__textarea-label" htmlFor={`${formId}-reason`}>{copy.transition.reason}</label>
         <textarea id={`${formId}-reason`} value={reason} onChange={event => setReason(event.target.value)} rows={4} aria-describedby={`${formId}-reason-help`} />
         <p id={`${formId}-reason-help`} className="provider-customer-requests__help">{copy.transition.reasonHelp}</p>
+        {request.seekerId && request.payload.contactChannel === 'provider' ? <label>{locale === 'ar' ? 'رسالة للعميل (اختياري، تصل إليه في الطلب والإشعارات)' : 'Message to customer (optional, appears in their request and notifications)'}<textarea value={customerMessage} onChange={event => setCustomerMessage(event.target.value)} maxLength={2000} rows={3} /></label> : null}
       </form>
     </Modal>
   );
@@ -231,11 +236,12 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
       <td>
         <div className="provider-customer-requests__identity">
           <strong>{name}</strong>
-          {phone ? <span>{maskPhone(phone)}</span> : null}
+          {phone ? request.payload.contactChannel === 'provider' ? <a href={`tel:${phone}`} dir="ltr">{phone}</a> : <span>{maskPhone(phone)}</span> : null}
           {email ? <span>{maskEmail(email)}</span> : null}
+          {request.type === 'contact' ? <details><summary>{locale === 'ar' ? 'تفاصيل الاستفسار' : 'Inquiry details'}</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{payloadText(request, 'message')}</p></details> : null}
         </div>
       </td>
-      <td><span>{copy.requestType}</span><small>{copy.source}: {payloadText(request, 'sourceNote') ?? copy.providerSource}</small></td>
+      <td><span>{request.type === 'contact' ? (locale === 'ar' ? 'استفسار وارد' : 'Incoming inquiry') : copy.requestType}</span><small>{copy.source}: {request.type === 'contact' ? (locale === 'ar' ? 'الموقع' : 'Website') : payloadText(request, 'sourceNote') ?? copy.providerSource}</small></td>
       <td><RequestStatusBadge status={request.status} copy={copy} /></td>
       <td>{relatedLabel(request, copy, locale)}</td>
       <td><time dateTime={request.createdAt}>{dateLabel(request.createdAt, locale)}</time></td>
@@ -405,7 +411,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
     }
   }
 
-  async function transitionRequest(reason: string): Promise<void> {
+  async function transitionRequest(reason: string, customerMessage?: string): Promise<void> {
     if (transitionTarget === undefined) return;
     if (sessionRole !== 'provider') {
       setMutationError(copy.errors.generic);
@@ -414,7 +420,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
     setSaving(true);
     setMutationError(undefined);
     try {
-      await mutationApi.transition(transitionTarget.request.id, { transition: transitionTarget.action, expectedVersion: transitionTarget.request.version, ...(reason === '' ? {} : { reason }) });
+      await mutationApi.transition(transitionTarget.request.id, { transition: transitionTarget.action, expectedVersion: transitionTarget.request.version, ...(reason === '' ? {} : { reason }), ...(customerMessage ? { customerMessage } : {}) });
       setTransitionTarget(undefined);
       setFeedback(copy.feedback.transitioned);
       setAttempt(value => value + 1);
@@ -434,7 +440,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
         {feedback ? <p className="provider-customer-requests__feedback" role="status">{feedback}</p> : null}
       </div>
       {requestFormOpen && session.status === 'authenticated' && sessionRole === 'provider' ? <div data-screen-id="PRV-17" data-device-scope="desktop/tablet/mobile"><RequestFormModal copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveRequest} /></div> : null}
-      {transitionTarget !== undefined ? <TransitionModal request={transitionTarget.request} action={transitionTarget.action} copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onConfirm={transitionRequest} /> : null}
+      {transitionTarget !== undefined ? <TransitionModal locale={locale} request={transitionTarget.request} action={transitionTarget.action} copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onConfirm={transitionRequest} /> : null}
       {state === 'permission' ? <span className="a11y-visually-hidden">{providerCopy.states.permission.title}</span> : null}
     </section>
   );

@@ -3,6 +3,8 @@ import test from 'node:test';
 import { Types, type Connection } from 'mongoose';
 import { createMongooseViewingRepository } from '../../src/modules/viewings/repository.js';
 import type { ViewingRecord } from '../../src/modules/viewings/service.js';
+import { viewingNotifications } from '../../src/modules/viewings/notifications.js';
+import { notificationDataSchema } from '@sadat-real-estate/contracts';
 
 const owner = '2123456789abcdef01234567';
 const stamp = new Date('2026-09-05T10:00:00Z');
@@ -30,6 +32,22 @@ test('persists the published property owner, overriding any supplied recipient',
   assert.equal(String(setup.inserted[0]?.providerId), owner);
   assert.equal(setup.lookup()?.status, 'published');
   assert.equal(setup.lookup()?.active, true);
+  assert.equal(setup.inserted.length, 2);
+  assert.equal(setup.inserted[1]?.audience, 'provider');
+  assert.equal(String(setup.inserted[1]?.recipientId), owner);
+});
+
+test('viewing confirmation, reschedule and cancellation notify the other participant with Egypt time and stable IDs', () => {
+  for (const status of ['confirmed', 'rescheduled', 'cancelled', 'completed'] as const) {
+    const changed = { ...row, providerId: owner, status, version: 1 };
+    const [notification] = viewingNotifications(changed, owner);
+    assert.equal(notification?.audience, 'seeker');
+    assert.equal(notification?.link, '/seeker/viewings');
+    assert.match(notification!.message.en, /Egypt time/u);
+    assert.equal(notificationDataSchema.safeParse({ id: String(notification!._id), type: notification!.type, title: notification!.title, message: notification!.message, link: notification!.link, readAt: null, createdAt: row.updatedAt.toISOString() }).success, true);
+    assert.equal(String(notification!._id), String(viewingNotifications(changed, owner)[0]!._id));
+    assert.equal(viewingNotifications(changed, row.seekerId)[0]?.audience, 'provider');
+  }
 });
 
 test('rejects missing, unavailable or ownerless properties without writing a viewing', async () => {

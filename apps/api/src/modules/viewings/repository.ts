@@ -11,6 +11,7 @@ import {
 } from '../public/related-property.js';
 import type { ViewingRecord, ViewingRepository } from './service.js';
 import { ViewingServiceError } from './service.js';
+import { viewingNotifications } from './notifications.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 type Row = Record<string, unknown>;
@@ -160,6 +161,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
         createdAt: row.createdAt,
         updatedAt: row.updatedAt
       }, { session });
+      for (const notification of viewingNotifications(row, row.seekerId)) await connection.collection('notifications').insertOne(notification, { session });
       });
       const [enriched] = await enrich([row]);
       return enriched ?? row;
@@ -215,7 +217,11 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
         },
         { returnDocument: 'after', session }
       );
-      if (updated) await audit.record(input.audit, session);
+      if (updated) {
+        await audit.record(input.audit, session);
+        const changed = parse(updated as Row);
+        if (changed) for (const notification of viewingNotifications(changed, input.audit.actorId ?? '')) await connection.collection('notifications').insertOne(notification, { session });
+      }
       return updated;
       });
       if (!result) return { kind: 'version_conflict' };

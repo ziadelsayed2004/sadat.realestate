@@ -125,6 +125,7 @@ describe('provider property media, contact, and review completion', () => {
     const copy = getProviderPropertyCompletionCopy('en');
     renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="media" propertyId={propertyId} initialData={property()} upload={uploaded} />, { locale: 'en' });
     const input = screen.getByLabelText(copy.media.chooseImage) as HTMLInputElement;
+    await waitFor(() => expect(input).toBeEnabled());
     fireEvent.change(input, { target: { files: [new File(['jpeg'], 'front.jpg', { type: 'image/jpeg' })] } });
     await waitFor(() => expect(uploaded).toHaveBeenCalledTimes(1));
     expect(uploaded).toHaveBeenCalledWith(expect.objectContaining({ propertyId, kind: 'image', contentType: 'image/jpeg', filename: 'front.jpg' }));

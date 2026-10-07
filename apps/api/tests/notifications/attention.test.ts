@@ -16,6 +16,7 @@ test('counts authorized submissions and reports across all dates without returni
   assert.equal(result.total, 9);
   assert.deepEqual(filters.find(row => row.collection === 'properties')?.filter, { status: 'pending_review' });
   assert.deepEqual(filters.find(row => row.collection === 'ad_requests')?.filter, { status: { $in: ['review', 'waiting_pricing'] } });
+  assert.deepEqual(filters.find(row => row.collection === 'viewings')?.filter, { status: 'requested' });
   assert.equal(filters.some(row => 'createdAt' in row.filter || 'updatedAt' in row.filter), false);
   assert.deepEqual(Object.keys(result).sort(), ['counts', 'total']);
 });
@@ -29,7 +30,7 @@ test('does not query or disclose queues outside the administrator permissions', 
 
 test('fresh queue reads remove processed submissions and retain independent request types', async () => {
   let pending = 2;
-  const source = createAdminAttentionSource(async (collection, filter) => collection === 'properties' ? pending : filter.type === 'contact' ? 3 : filter.type === 'viewing' ? 1 : 0, async () => true);
+  const source = createAdminAttentionSource(async (collection, filter) => collection === 'properties' ? pending : filter.type === 'contact' ? 3 : collection === 'viewings' ? 1 : 0, async () => true);
   assert.equal((await source.read('admin')).total, 6);
   pending = 0;
   const result = await source.read('admin');

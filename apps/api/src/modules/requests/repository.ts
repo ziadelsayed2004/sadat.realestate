@@ -12,6 +12,7 @@ import {
 import type { RequestRecord, RequestRepository } from './service.js';
 import { requestCustomerNotification } from './customer-update.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
+import { routeContact, directContactNotification } from './contact-routing.js';
 
 type Row = Record<string, unknown>;
 
@@ -130,6 +131,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
       return Boolean(await connection.collection('users').findOne({ _id: toObjectId(claims.sub), roleType: claims.role, status: 'verified' }, { projection: { _id: 1 } }));
     },
     async create(request) {
+      request = await routeContact(connection, request);
       await ensureCreationIndex();
       try {
         const doc = {
@@ -149,7 +151,13 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
           createdAt: request.createdAt,
           updatedAt: request.updatedAt
         };
-        await requests.insertOne(doc);
+        const notification = directContactNotification(request);
+        if (notification) {
+          await connection.transaction(async session => {
+            await requests.insertOne(doc, { session });
+            await connection.collection('notifications').insertOne(notification, { session });
+          });
+        } else await requests.insertOne(doc);
         return { kind: 'written', request: (await enrichedResult(doc)) ?? request };
       } catch (error) {
         if (typeof error === 'object' && error !== null && 'code' in error && (error as { code?: number }).code === 11000) return { kind: 'duplicate' };

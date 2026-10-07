@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { Readable } from 'node:stream';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import type { PropertyMediaRouterDependencies } from '../../src/modules/media/router.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
@@ -18,3 +19,20 @@ test('property media routes enforce verified-provider access and canonical uploa
   assert.equal((await request(url, 'PATCH', `/api/v1/provider/properties/${property}/media/order`, 'provider', { version: 1, items: [{ mediaId: media, sortOrder: 0, isCover: true }], reason: 'Order property media' })).status, 200);
   assert.equal((await request(url, 'DELETE', `/api/v1/provider/properties/${property}/media/${media}`, 'provider')).status, 200);
 }));
+
+test('streams public media with HEAD and byte ranges, rejects invalid ranges and unavailable private media', async () => {
+  const contentBytes = Buffer.from('0123456789');
+  const server = createApiServer({ database: { isReady: async () => true }, propertyMedia: { service, accessTokens: tokens, async content(propertyId, mediaId) {
+    if (propertyId !== property || mediaId !== media) return null;
+    return { mime: 'video/mp4', size: contentBytes.length, async open(range) { return Readable.from(range ? contentBytes.subarray(range.start, range.end + 1) : contentBytes); } };
+  } } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const url = `http://127.0.0.1:${address.port}/api/v1/public/properties/${property}/media/${media}/content`;
+  try {
+    const full = await fetch(url); assert.equal(full.status, 200); assert.equal(await full.text(), '0123456789');
+    const range = await fetch(url, { headers: { range: 'bytes=3-6' } }); assert.equal(range.status, 206); assert.equal(range.headers.get('content-range'), 'bytes 3-6/10'); assert.equal(await range.text(), '3456');
+    const head = await fetch(url, { method: 'HEAD' }); assert.equal(head.headers.get('content-length'), '10'); assert.equal(await head.text(), '');
+    const bad = await fetch(url, { headers: { range: 'bytes=10-' } }); assert.equal(bad.status, 416); assert.equal(bad.headers.get('content-range'), 'bytes */10');
+    assert.equal((await fetch(url.replace(media, 'f'.repeat(24)))).status, 404);
+  } finally { await stopApiServer(server); }
+});

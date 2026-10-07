@@ -20,6 +20,7 @@ import { getPublicPropertyListingCopy } from './listing-copy.ts';
 import { publicPropertyComparisonUrl } from './compare-data.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
+import { usePublicContact, WhatsAppIcon } from './contact.tsx';
 import {
   formatMoney,
   isHomepageEmpty,
@@ -41,7 +42,7 @@ export interface PublicHomepageProps {
   readonly load?: PublicHomepageLoader | undefined;
 }
 
-function safePublicUrl(value: string | undefined): string | undefined {
+export function safePublicUrl(value: string | undefined): string | undefined {
   if (value === undefined) return undefined;
   try {
     const url = new URL(value, 'http://sadat-real-estate.local');
@@ -441,13 +442,40 @@ export function PublicMediaImage({
 }
 
 const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
+.public-site-footer .public-site-footer__contact-links a{display:flex;align-items:center;gap:.5rem;min-block-size:2.75rem}
+.public-site-footer__contact-links svg{inline-size:1.25rem;block-size:1.25rem;flex-shrink:0}
+.public-site-footer a{transition:color .2s ease-in-out,background-color .2s ease-in-out}
+@media(prefers-reduced-motion:no-preference){
+:is(.public-homepage,.public-property-details,.public-developer-profile,.public-developers,.public-property-listing) :is(button,.ui-button){transition:background-color .2s ease-in-out,color .2s ease-in-out,box-shadow .2s ease-in-out,transform .15s ease-in-out}
+:is(.public-homepage,.public-property-details,.public-developer-profile,.public-developers,.public-property-listing) button:active:not(:disabled){transform:scale(.98)}
+.public-developer-profile__icon--arrow{transition:transform .2s ease-in-out}
+.public-developer-profile a:hover .public-developer-profile__icon--arrow,.public-developer-profile button:hover .public-developer-profile__icon--arrow{transform:translateX(3px)}
+[dir=rtl] .public-developer-profile a:hover .public-developer-profile__icon--arrow,[dir=rtl] .public-developer-profile button:hover .public-developer-profile__icon--arrow{transform:translateX(-3px) scaleX(-1)}
+.public-homepage__search-tabs button{transition:background-color .25s ease-in-out,color .25s ease-in-out,box-shadow .25s ease-in-out}
+}
+.public-developer-profile__inquiry button:disabled{opacity:.65;cursor:default}
+.public-developer-profile__inquiry [role=status]{color:#125345;line-height:1.7}
+
+.public-site-footer a:hover,.public-site-footer a:focus-visible{color:#f3d58c}
+.public-site-footer a:focus-visible{outline:2px solid #f3d58c;outline-offset:3px}
+.public-site-footer .public-site-footer__social a{display:inline-flex;align-items:center;justify-content:center;inline-size:2.75rem;block-size:2.75rem}
+.public-site-footer .public-site-footer__social a:hover,.public-site-footer .public-site-footer__social a:focus-visible{background:#365046;color:#fff}
+.public-site-footer .public-site-footer__social svg{fill:none;stroke:currentColor}
+.public-site-footer .public-site-footer__social a[aria-label="Facebook"] svg{fill:currentColor;stroke:none}
+.public-site-footer .public-site-footer__social a[aria-label="WhatsApp"]{color:#fff;background:#146b46}
+.public-homepage__whatsapp-action{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-block-size:2.75rem}
+.public-homepage__whatsapp-action svg,.public-property-details__button-icon svg{inline-size:1.25rem;block-size:1.25rem;flex-shrink:0}
+.public-developer-profile__whatsapp-button{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-block-size:2.75rem;text-decoration:none}
+.public-developer-profile__whatsapp-button:hover,.public-developer-profile__whatsapp-button:focus-visible{background:#146b46;color:#fff}
+.public-developer-profile__whatsapp-button:focus-visible{outline:2px solid #146b46;outline-offset:3px}
+.public-homepage__platform-callout{direction:inherit}
+.public-homepage__platform-callout>div{direction:inherit}
+
 @media (min-width:701px){
 .public-homepage__footer.public-site-footer{padding:0}
 .public-site-footer__main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-inline-size:80rem;margin-inline:auto;padding:2.5rem 2rem}
 .public-site-footer__desktop-description,.public-site-footer__desktop-legal{display:inline}
 .public-site-footer__mobile-description,.public-site-footer__mobile-policy{display:none}
-.public-site-footer__contact-links a:nth-child(2),.public-site-footer__social a:nth-child(n+4){display:inline-grid;grid-auto-flow: column}
-.public-site-footer__mobile-social{display:none!important}
 .public-site-footer__contact-links img{display:block}
 .public-site-footer__follow{margin:0;border-block-start:1px solid rgb(255 255 255/.1)}
 .public-site-footer__follow-inner{justify-content:space-between;gap:var(--space-lg);max-inline-size:80rem;margin-inline:auto;padding:1.25rem 2rem}
@@ -473,14 +501,16 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 }`;
 
 export function PublicSiteFooter({ locale, description }: { readonly locale: SupportedLocale; readonly description?: string | undefined }) {
+  const contact = usePublicContact();
+  const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   const copy = getPublicHomepageCopy(locale);
   // The approved public design uses one platform-level footer description on every
   // public route. Keep the prop for existing callers, but do not let a
   // feature-specific description change the shared visual/content contract.
   const footerDescription = description === copy.footerDescription ? description : copy.footerDescription;
   const labels = locale === 'ar'
-    ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', privacy: 'سياسة الخصوصية', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة السادات للعقارات — جميع الحقوق محفوظة', mobileDescription: 'بوابتك الموثوقة لعقارات مدينة السادات — بيعاً وإيجاراً بأعلى موثوقية.', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
-    : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', privacy: 'Privacy policy', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', mobileDescription: 'Your trusted gateway to Sadat City real estate — sales and rentals with confidence.', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
+    ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', privacy: 'سياسة الخصوصية', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة السادات للعقارات — جميع الحقوق محفوظة', mobileDescription: 'بوابتك الموثوقة لعقارات مدينة السادات — بيعاً وإيجاراً بأعلى موثوقية.', phone: '01001234567', whatsapp: 'تواصل عبر واتساب', address: 'مدينة السادات، مصر' }
+    : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', privacy: 'Privacy policy', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', mobileDescription: 'Your trusted gateway to Sadat City real estate — sales and rentals with confidence.', phone: '01001234567', whatsapp: 'Contact on WhatsApp', address: 'Sadat City, Egypt' };
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
@@ -512,9 +542,9 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
         <div>
           <p className="public-homepage__footer-title">{labels.contact}</p>
           <div className="public-homepage__footer-links public-site-footer__contact-links">
-            <a href={`tel:${labels.phone}`}>{labels.phone}<img src="/assets/figma/public-footer-phone.svg" alt="" /></a>
-            <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<img src="/assets/figma/public-footer-whatsapp.svg" alt="" /></a>
-            <span>{labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>
+            {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
+            {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
+            <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>
           </div>
         </div>
       </div>
@@ -522,13 +552,9 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
         <div className="public-site-footer__follow-inner">
           <div className="public-site-footer__follow-copy"><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
           <div className="public-site-footer__social" aria-label="social links">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
-            <a className="public-site-footer__mobile-social" href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X"><img src="/assets/figma/public-footer-x.svg" alt="" /></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
-            <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
+            {contact.facebookUrl ? <a href={contact.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a> : null}
+            {contact.instagramUrl ? <a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a> : null}
+            {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><WhatsAppIcon /></a> : null}
           </div>
         </div>
       </div>
@@ -852,6 +878,8 @@ function HomepageCategoryRail({
 }
 
 function PlatformCallout({ copy }: { readonly copy: PublicHomepageCopy }) {
+  const contact = usePublicContact();
+  const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   return (
     <section className="public-homepage__platform-callout" aria-labelledby="public-homepage-platform-callout">
       <div>
@@ -859,7 +887,7 @@ function PlatformCallout({ copy }: { readonly copy: PublicHomepageCopy }) {
         <p>{copy.readyCtaBody}</p>
       </div>
       <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
-      <a className="public-homepage__secondary-action public-homepage__whatsapp-action" href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{copy.whatsappAction}</a>
+      {whatsapp ? <a className="public-homepage__secondary-action public-homepage__whatsapp-action" href={whatsapp} target="_blank" rel="noopener noreferrer"><WhatsAppIcon />{copy.whatsappAction}</a> : null}
     </section>
   );
 }

@@ -129,7 +129,8 @@ function RequestStatusBadge({ status, locale }: { readonly status: RequestStatus
 function RequestRow({ request, locale }: { readonly request: RequestData; readonly locale: SupportedLocale }) {
   const copy = getSeekerRequestsCopy(locale);
   const propertyName = localizedText(request.property?.name, locale);
-  const propertySource = localizedText(request.property?.sourceName, locale);
+  const organizationName = request.payload[locale === 'ar' ? 'organizationNameAr' : 'organizationNameEn'];
+  const propertySource = localizedText(request.property?.sourceName, locale) ?? (typeof organizationName === 'string' ? organizationName : undefined);
   const propertyLocation = localizedText(request.property?.locationName, locale);
   const propertyMeta = [propertyLocation, request.property?.publicCode].filter((value): value is string => value !== undefined).join(' · ');
   const propertyHref = request.property?.slug === undefined ? undefined : localeForSeekerPath(locale, `/properties/${request.property.slug}`);
@@ -176,7 +177,11 @@ function DetailValue({ label, value }: { readonly label: string; readonly value:
 function RequestPropertyValue({ request, locale, label }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly label: string }) {
   const property = request.property;
   const title = localizedText(property?.name, locale);
-  if (title === undefined && request.propertyId === undefined) return null;
+  if (title === undefined && request.propertyId === undefined) {
+    const slug = request.payload.organizationSlug;
+    const name = request.payload[locale === 'ar' ? 'organizationNameAr' : 'organizationNameEn'];
+    return typeof slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(slug) ? <section className="seeker-request-details__property"><h2>{locale === 'ar' ? 'الشركة المرتبطة بالطلب' : 'Company for this inquiry'}</h2><a href={`/developers/${slug}?lang=${locale}`}>{typeof name === 'string' ? name : slug}</a><p>{request.payload.contactChannel === 'provider' ? (locale === 'ar' ? 'تواصل مباشر مع الشركة' : 'Sent directly to the company') : (locale === 'ar' ? 'متابعة عن طريق إدارة المنصة' : 'Handled by the platform team')}</p></section> : null;
+  }
   const href = property?.slug === undefined ? undefined : localeForSeekerPath(locale, `/properties/${property.slug}`);
   const details = [localizedText(property?.sourceName, locale), localizedText(property?.locationName, locale), property?.publicCode].filter((value): value is string => value !== undefined).join(' · ');
   return <div className="seeker-request-detail__value"><dt>{label}</dt><dd>{href === undefined ? (title ?? shortRequestId(request.propertyId ?? '')) : <a href={href}>{title}</a>}{details ? <small>{details}</small> : null}</dd></div>;

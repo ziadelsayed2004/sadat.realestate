@@ -28,10 +28,10 @@ export interface PropertyMediaModels {
 export const propertyMediaSchema = new Schema<PropertyMediaRecord>({
   propertyId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'Property' },
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
-  kind: { type: String, enum: ['image', 'floor_plan'], required: true, immutable: true },
+  kind: { type: String, enum: ['image', 'floor_plan', 'video'], required: true, immutable: true },
   originalFilename: { type: String, required: true, trim: true, maxlength: 120, immutable: true },
-  declaredMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png'], required: true, immutable: true },
-  detectedMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png'], required: true, immutable: true },
+  declaredMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png', 'video/mp4'], required: true, immutable: true },
+  detectedMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png', 'video/mp4'], required: true, immutable: true },
   byteSize: { type: Number, required: true, min: 1, max: 10 * 1024 * 1024, immutable: true },
   sha256: { type: String, required: true, match: /^[a-f0-9]{64}$/, immutable: true },
   storageKey: { type: String, required: true, select: false, immutable: true },
@@ -43,7 +43,7 @@ export const propertyMediaSchema = new Schema<PropertyMediaRecord>({
 }, { collection: 'property_media', strict: 'throw', timestamps: true, versionKey: 'version', optimisticConcurrency: true });
 
 propertyMediaSchema.pre('validate', function validateCover() {
-  if (this.isCover && (!this.active || this.processingState !== 'ready')) this.invalidate('isCover', 'Only active ready media can be a cover');
+  if (this.isCover && (this.kind !== 'image' || !this.active || this.processingState !== 'ready')) this.invalidate('isCover', 'Only active ready media can be a cover');
   if (this.processingState === 'failed' && !this.failureCode) this.invalidate('failureCode', 'Failed media requires a failure code');
   if (this.processingState !== 'failed' && this.failureCode) this.invalidate('failureCode', 'Only failed media can have a failure code');
 });

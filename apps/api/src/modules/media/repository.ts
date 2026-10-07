@@ -64,7 +64,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
       if (!['processing', 'failed'].includes(current.processingState)) return { kind: 'version_conflict' };
       const media = await tx(async session => {
         const hasCover = input.state === 'ready' && await models.PropertyMedia.exists({ propertyId: current.propertyId, providerId: input.providerId, isCover: true, active: true, processingState: 'ready' }).session(session);
-        const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, providerId: input.providerId, processingState: current.processingState, active: true }, { $set: { processingState: input.state, ...(input.state === 'ready' && !hasCover ? { isCover: true } : {}), ...(input.failureCode ? { failureCode: input.failureCode } : { failureCode: null }), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
+        const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, providerId: input.providerId, processingState: current.processingState, active: true }, { $set: { processingState: input.state, ...(input.state === 'ready' && current.kind === 'image' && !hasCover ? { isCover: true } : {}), ...(input.failureCode ? { failureCode: input.failureCode } : { failureCode: null }), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return null;
         const output = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId });
         await auditWrite('property_media.processing', output.id, current, output, input.metadata, session);

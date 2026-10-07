@@ -17,6 +17,7 @@ import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction, ProviderPr
 import {
   deleteProviderPropertyMedia,
   loadProviderProperty,
+  loadProviderPropertyMedia,
   reorderProviderPropertyMedia,
   saveProviderPropertyStep,
   submitProviderProperty,
@@ -34,13 +35,14 @@ import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './s
 import './styles.css';
 
 const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
-const MEDIA_MIMES: readonly PropertyMediaMime[] = ['application/pdf', 'image/jpeg', 'image/png'];
+const MEDIA_MIMES: readonly PropertyMediaMime[] = ['application/pdf', 'image/jpeg', 'image/png', 'video/mp4'];
 const providerMediaUploadIcon = '/assets/canonical/provider/navigation/upload-media.svg';
 const providerPropertyContentStyle = { boxSizing: 'border-box', width: 'min(100%, 768px)', marginInline: 'auto', padding: 24 } as const;
 const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
   'application/pdf': ['.pdf'],
   'image/jpeg': ['.jpg', '.jpeg'],
-  'image/png': ['.png']
+  'image/png': ['.png'],
+  'video/mp4': ['.mp4']
 };
 type ViewState = 'loading' | 'success' | 'retry' | 'error' | 'permission' | 'not_found';
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
@@ -138,7 +140,8 @@ function mediaMimeFor(file: File, kind: PropertyMediaKind): PropertyMediaMime | 
   const mime = file.type as PropertyMediaMime;
   if (!MEDIA_MIMES.includes(mime)) return undefined;
   if (kind === 'floor_plan' && mime !== 'application/pdf') return undefined;
-  if (kind === 'image' && mime === 'application/pdf') return undefined;
+  if (kind === 'video' && mime !== 'video/mp4') return undefined;
+  if (kind === 'image' && !['image/jpeg', 'image/png'].includes(mime)) return undefined;
   const filename = file.name.trim();
   const extensionStart = filename.lastIndexOf('.');
   const extension = extensionStart < 0 ? '' : filename.slice(extensionStart).toLowerCase();
@@ -314,6 +317,8 @@ function MediaView({
           <input id="provider-property-media-image" type="file" accept="image/jpeg,image/png" onChange={event => onFile('image', event)} disabled={busy} />
         </div>
         <div className="provider-property-completion__upload-actions">
+          <label className="provider-property-completion__file-button" htmlFor="provider-property-media-video">{labels.chooseVideo}</label>
+          <input id="provider-property-media-video" type="file" accept="video/mp4,.mp4" onChange={event => onFile('video', event)} disabled={busy} />
           <span className="provider-property-completion__media-count">{labels.count}: {media.length}</span>
           <label className="provider-property-completion__file-button" htmlFor="provider-property-media-floor-plan">{labels.chooseFloorPlan}</label>
           <input id="provider-property-media-floor-plan" type="file" accept="application/pdf" onChange={event => onFile('floor_plan', event)} disabled={busy} />
@@ -322,7 +327,7 @@ function MediaView({
           <ul className="provider-property-completion__media-list" aria-label={labels.count}>
             {media.map((item, index) => (
               <li key={item.id} className="provider-property-completion__media-item">
-                <div><strong>{item.originalFilename}</strong><span>{item.kind === 'image' ? labels.imageKind : labels.floorPlanKind} · {item.processingState}</span></div>
+                <div><strong>{item.originalFilename}</strong><span>{item.kind === 'video' ? labels.videoKind : item.kind === 'image' ? labels.imageKind : labels.floorPlanKind} · {item.processingState}</span></div>
                 <div className="provider-property-completion__item-actions">
                   <Button type="button" size="xs" variant="ghost" onClick={() => onMove(index, -1)} disabled={busy || index === 0} aria-label={`${labels.moveUp}: ${item.originalFilename}`}>{labels.moveUp}</Button>
                   <Button type="button" size="xs" variant="ghost" onClick={() => onMove(index, 1)} disabled={busy || index === media.length - 1} aria-label={`${labels.moveDown}: ${item.originalFilename}`}>{labels.moveDown}</Button>
@@ -332,7 +337,6 @@ function MediaView({
             ))}
           </ul>
         ) : null}
-        <p className="provider-property-completion__notice">{labels.existingUnavailableBody}</p>
         <p className="provider-property-completion__privacy">{labels.privacyNote}</p>
         {message !== undefined ? <p className="provider-property-wizard__form-message provider-property-wizard__form-message--error" role="alert">{message}</p> : null}
       </section>
@@ -473,6 +477,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const propertyCopy = getProviderPropertyCopy(locale);
   const [state, setState] = useState<ViewState>('loading');
   const [property, setProperty] = useState<PropertyData | undefined>(initialData);
+  const [mediaLoading, setMediaLoading] = useState(false);
   const [media, setMedia] = useState<readonly PropertyMediaData[]>([]);
   const [contact, setContact] = useState<ContactForm>(() => contactFromProperty(initialData, locale));
   const [checks, setChecks] = useState<Checks>({ data: false, authority: false, review: false });
@@ -509,7 +514,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
       if (controller.signal.aborted) return;
       setProperty(next);
       setContact(contactFromProperty(next, locale));
-      setMedia([]);
+
       setSubmitted(next.status === 'pending_review');
       setState('success');
     }).catch(error => {
@@ -517,6 +522,18 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
     });
     return () => controller.abort();
   }, [attempt, initialData, loadAction, locale, propertyId, sessionRole, session.status]);
+
+  useEffect(() => {
+    if (step !== 'media' || session.status !== 'authenticated' || session.role !== 'provider' || !authClient) return undefined;
+    const controller = new AbortController();
+    setMediaLoading(true);
+    void loadProviderPropertyMedia({ propertyId, authorization: authClient, apiOrigin, signal: controller.signal }).then(items => {
+      if (!controller.signal.aborted) { setMedia(items.filter(item => item.active && item.processingState !== 'deleted'));  setMediaLoading(false); }
+    }).catch(() => {
+      if (!controller.signal.aborted) { setMediaLoading(false); setMediaMessage(locale === 'ar' ? 'تعذر تحميل الوسائط السابقة. أعد المحاولة قبل تعديلها.' : 'Could not load existing media. Retry before editing it.'); }
+    });
+    return () => controller.abort();
+  }, [step, propertyId, authClient, apiOrigin, attempt, locale, session.status, sessionRole]);
 
   const retry = () => setAttempt(value => value + 1);
   const goBack = () => navigate(locale, propertyId, step === 'media' ? 'features-services' : step === 'contact' ? 'media' : 'contact');
@@ -571,7 +588,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
     setMutationState('saving');
     try {
       const item = await uploadAction({ propertyId, file, filename: file.name, kind, contentType: mime, apiOrigin, authorization: authClient });
-      setMedia(items => [...items, item]);
+      setMedia(items => items.some(existing => existing.id === item.id) ? items.map(existing => existing.id === item.id ? item : existing) : [...items, item]);
       setMutationState('success');
     } catch (error) {
       setMutationState(mutationError(error));
@@ -643,7 +660,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const validationIssues = property === undefined ? [] : getProviderPropertyValidationIssues(property);
   const validationState = step === 'review' && property !== undefined && (property.status === 'draft' || property.status === 'needs_changes') && validationIssues.length > 0;
   const content = state === 'success' && property !== undefined ? (
-    step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving'} message={mediaMessage} onBack={goBack} onContinue={goForward} />
+    step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving' || mediaLoading} message={mediaMessage} onBack={goBack} onContinue={goForward} />
       : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onSaveDraft={() => { void saveContact(false); }} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
         : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
   ) : null;

@@ -42,7 +42,7 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
   router.get('/public/bootstrap', async (request, response) => {
     try {
       if (!dependencies.bootstrap) throw new ApiContractError('PUBLIC_BOOTSTRAP_UNAVAILABLE', 'errors.internal', 503);
-      response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(await dependencies.bootstrap.read(), requestId(request)));
     } catch (error) {
       const mapped = toApiErrorResponse(error, requestId(request));

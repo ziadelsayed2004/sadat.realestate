@@ -39,7 +39,8 @@ export const PUBLIC_PROPERTY_CATALOG_ROUTE = '/public/properties' as const;
 const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
   'application/pdf': ['.pdf'],
   'image/jpeg': ['.jpg', '.jpeg'],
-  'image/png': ['.png']
+  'image/png': ['.png'],
+  'video/mp4': ['.mp4']
 };
 
 export type ProviderPropertyStep = 'basic' | 'location' | 'details' | 'price-payment' | 'features-services' | 'contact';
@@ -53,6 +54,15 @@ export interface ProviderPropertyRequestOptions {
 
 export interface ProviderPropertyLoadOptions extends ProviderPropertyRequestOptions {
   readonly propertyId: string;
+}
+
+export async function loadProviderPropertyMedia(options: ProviderPropertyLoadOptions): Promise<readonly PropertyMediaData[]> {
+  const response = await clientFor(options).request(`${propertyPath(options.propertyId)}/media`, {
+    responseSchema: propertyMediaListSuccessEnvelopeSchema,
+    ...(authorizationHeaders(options.authorization) ? { headers: authorizationHeaders(options.authorization)! } : {}),
+    ...(options.signal ? { signal: options.signal } : {})
+  });
+  return response.data.data.items;
 }
 
 export type ProviderPropertyCreateOptions = ProviderPropertyRequestOptions;
@@ -132,7 +142,7 @@ function safeMediaFilename(filename: string, contentType: PropertyMediaMime, kin
     && normalized.length <= 120
     && !/[\\/\u0000-\u001f\u007f]/u.test(normalized)
     && MEDIA_FILENAME_EXTENSIONS[contentType].includes(extension);
-  const kindMatchesMime = kind === 'floor_plan' ? contentType === 'application/pdf' : contentType !== 'application/pdf';
+  const kindMatchesMime = kind === 'video' ? contentType === 'video/mp4' : kind === 'floor_plan' ? contentType === 'application/pdf' : ['image/jpeg', 'image/png'].includes(contentType);
   if (!filenameIsSafe || !kindMatchesMime) throw new Error('Invalid property media filename or type');
   return normalized;
 }
@@ -207,7 +217,7 @@ export async function uploadProviderPropertyMedia(options: ProviderPropertyMedia
     ...(authorization ?? {}),
     'content-type': headersInput.contentType,
     'x-media-kind': headersInput.kind,
-    'x-file-name': headersInput.filename
+    'x-file-name': encodeURIComponent(headersInput.filename)
   };
   const response = await client.request(`${propertyPath(options.propertyId)}/media`, {
     method: 'POST',

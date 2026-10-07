@@ -44,7 +44,7 @@ export interface ProviderCustomerRequestMutationOptions {
 
 export interface ProviderCustomerRequestMutationApi {
   create(input: ProviderCustomerRequestPayload): Promise<RequestData>;
-  transition(requestId: string, input: { transition: RequestTransition; reason?: string; expectedVersion: number }): Promise<RequestData>;
+  transition(requestId: string, input: { transition: RequestTransition; reason?: string; customerMessage?: string; expectedVersion: number }): Promise<RequestData>;
 }
 
 function clientFor(options: Pick<ProviderCustomerRequestsLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -67,8 +67,6 @@ export async function loadProviderCustomerRequests(options: ProviderCustomerRequ
   const query = requestListQuerySchema.parse({
     page,
     limit,
-    source: 'provider',
-    type: 'provider_customer',
     ...(options.query?.status === undefined ? {} : { status: options.query.status }),
     ...(search === undefined || search === '' ? {} : { search })
   });

@@ -1,3 +1,4 @@
+import { EGYPT_TIME_ZONE, egyptTimeLabel } from '../public/egypt-time.ts';
 import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import type { OverdueRequestListData, RequestData, RequestIssue, RequestListData, RequestListQuery, RequestStatus, RequestTransition, RequestType, SupportedLocale, ViewingListData, ViewingStatus } from '@sadat-real-estate/contracts';
@@ -203,6 +204,8 @@ function requestPropertyLabel(request: RequestData, locale: SupportedLocale): st
   if (typeof localized === 'string' && localized.trim() !== '') return localized;
   const payloadLabel = requestPayloadText(request, locale === 'ar' ? ['propertyNameAr', 'propertyName', 'propertyTitle', 'listingTitle'] : ['propertyNameEn', 'propertyName', 'propertyTitle', 'listingTitle']);
   if (payloadLabel !== undefined) return payloadLabel;
+  const organizationName = requestPayloadText(request, locale === 'ar' ? ['organizationNameAr', 'organizationNameEn'] : ['organizationNameEn', 'organizationNameAr']);
+  if (organizationName) return organizationName;
   return request.propertyId === undefined ? '—' : `…${request.propertyId.slice(-6)}`;
 }
 
@@ -226,8 +229,31 @@ function RequestTable({ copy, data, locale, onSelect, overdue = false, sourceDen
   return <div className="admin-requests__table-wrap"><table className="admin-requests__table admin-requests__table--requests"><thead><tr>{headings.map(heading => <th key={heading} scope="col">{heading}</th>)}</tr></thead><tbody>{items.map(request => <tr key={request.id} data-testid={`admin-request-${request.id}`}><td><strong>{requestCustomerLabel(request, locale)}</strong><code>{request.id}</code></td><td>{requestPayloadText(request, ['phone', 'mobile', 'whatsapp']) ?? '—'}</td><td>{requestPropertyLabel(request, locale)}<RequestPropertyLinks request={request} locale={locale} compact /></td><td>{requestSourceLabel(request, locale)}</td><td><StatusBadge label={copy.statusLabel[request.status]} status={request.status} /></td><td>{requestAssigneeLabel(request, locale)}</td><td>{overdueSeconds?.get(request.id) !== undefined ? copy.overdueBy(overdueSeconds.get(request.id)!) : dateLabel(request.createdAt, locale, sourceDensity)}</td><td><Button size="sm" variant="secondary" onClick={() => onSelect(request)}>{copy.view}</Button></td></tr>)}</tbody></table></div>;
 }
 
+function AdminViewingRow({ item, copy, locale }: { readonly item: ViewingListData['items'][number]; readonly copy: AdminRequestsCopy; readonly locale: SupportedLocale }) {
+  const [open, setOpen] = useState(false);
+  useAdminAttentionRead('viewing-requests', open ? item.id : undefined, item.updatedAt);
+  const name = item.property?.name[locale] ?? item.property?.name.en ?? item.property?.name.ar ?? item.propertyId;
+  const appointment = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(item.requestedAt));
+  const propertyLink = item.property?.slug ? `/properties/${item.property.slug}?lang=${locale}` : `/admin/properties/${item.propertyId}?lang=${locale}`;
+  return <tr data-testid={`admin-viewing-${item.id}`}>
+    <td><a href={propertyLink} target="_blank" rel="noopener noreferrer">{name}</a>{item.property?.publicCode ? <small>{item.property.publicCode}</small> : null}</td>
+    <td>{item.customerName ?? item.seekerId}</td><td><code>{item.id}</code></td>
+    <td><StatusBadge label={copy.viewingStatusLabel[item.status]} status={item.status} /></td><td>{appointment}</td>
+    <td>{egyptTimeLabel(locale, new Date(item.requestedAt))}</td>
+    <td><Button size="sm" variant="secondary" onClick={() => setOpen(true)}>{copy.view}</Button>
+      {open ? <Modal open title={copy.details} closeLabel={copy.closeDetails} onClose={() => setOpen(false)}><dl className="admin-requests__details">
+        <div><dt>{copy.property}</dt><dd><a href={propertyLink} target="_blank" rel="noopener noreferrer">{name}</a></dd></div>
+        <div><dt>{copy.seeker}</dt><dd>{item.customerName ?? item.seekerId}</dd></div>
+        <div><dt>{copy.appointment}</dt><dd>{appointment} — {egyptTimeLabel(locale, new Date(item.requestedAt))}</dd></div>
+        <div><dt>{copy.state}</dt><dd>{copy.viewingStatusLabel[item.status]}</dd></div>
+        {item.note ? <div><dt>{locale === 'ar' ? 'ملاحظة العميل' : 'Customer note'}</dt><dd style={{ whiteSpace: 'pre-wrap' }}>{item.note}</dd></div> : null}
+        {item.providerId ? <div><dt>{copy.provider}</dt><dd><a href={`/admin/users/${item.providerId}?lang=${locale}`}>{locale === 'ar' ? 'عرض مقدم العقار' : 'View provider'}</a></dd></div> : null}
+      </dl></Modal> : null}
+    </td></tr>;
+}
+
 function ViewingTable({ copy, data, locale }: { readonly copy: AdminRequestsCopy; readonly data: ViewingListData; readonly locale: SupportedLocale }) {
-  return <div className="admin-requests__table-wrap"><table className="admin-requests__table"><thead><tr><th scope="col">{copy.property}</th><th scope="col">{copy.seeker}</th><th scope="col">{copy.requestId}</th><th scope="col">{copy.status}</th><th scope="col">{copy.appointment}</th><th scope="col">{copy.timezone}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-viewing-${item.id}`}><td><code>{item.propertyId}</code></td><td><code>{item.seekerId}</code></td><td><code>{item.id}</code></td><td><StatusBadge label={copy.viewingStatusLabel[item.status]} status={item.status} /></td><td>{dateLabel(item.requestedAt, locale)}</td><td>{item.timezone}</td></tr>)}</tbody></table></div>;
+  return <div className="admin-requests__table-wrap"><table className="admin-requests__table"><thead><tr>{[copy.property, copy.seeker, copy.requestId, copy.status, copy.appointment, copy.timezone, copy.actions].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead><tbody>{data.items.map(item => <AdminViewingRow key={item.id} item={item} copy={copy} locale={locale} />)}</tbody></table></div>;
 }
 
 function IssueTable({ copy, data, onSelect }: { readonly copy: AdminRequestsCopy; readonly data: import('@sadat-real-estate/contracts').RequestIssueListData; readonly onSelect: (issue: RequestIssue) => void }) {
@@ -236,7 +262,7 @@ function IssueTable({ copy, data, onSelect }: { readonly copy: AdminRequestsCopy
 
 function requestPayloadEntries(request: RequestData): Array<readonly [string, string]> {
   const payload = request.payload;
-  const fields = ['message', 'note', 'firstName', 'lastName', 'phone', 'email', 'propertyId', 'projectId', 'minBudget', 'maxBudget', 'minBedrooms', 'maxBedrooms'];
+  const fields = ['organizationNameAr', 'organizationNameEn', 'contactChannel', 'message', 'note', 'firstName', 'lastName', 'phone', 'email', 'propertyId', 'projectId', 'minBudget', 'maxBudget', 'minBedrooms', 'maxBedrooms'];
   return fields.flatMap(field => {
     const value = payload[field];
     if (value === undefined || value === null || typeof value === 'object') return [];

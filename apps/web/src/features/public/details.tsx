@@ -8,7 +8,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader, safePublicUrl } from './components.tsx';
 import {
   createPublicPropertyDetailsActions,
   createPublicPropertyDetailsLoader,
@@ -22,6 +22,8 @@ import {
 import { getPublicPropertyDetailsCopy, type PublicPropertyDetailsCopy } from './details-copy.ts';
 import { formatArea, formatMoney, localizedText } from './model.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
+import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptTimeLabel } from './egypt-time.ts';
+import { usePublicContact, WhatsAppIcon } from './contact.tsx';
 import { publicReturnUrl } from '../frontend_foundation/public-history.ts';
 import './details.css';
 
@@ -35,7 +37,7 @@ export interface PublicPropertyDetailsProps {
   readonly initialState?: PublicPropertyDetailsInitialState | undefined;
   readonly load?: PublicPropertyDetailsLoader | undefined;
   readonly actions?: PublicPropertyDetailsActions | undefined;
-  readonly authClient?: { getAuthorizationHeader(): string | undefined } | undefined;
+  readonly authClient?: { getAuthorizationHeader(): string | undefined; refresh?(): Promise<unknown> } | undefined;
 }
 
 function errorState(error: unknown): PublicPropertyDetailsViewState {
@@ -129,12 +131,14 @@ function Gallery({
   readonly transactionType: PublicPropertyDetailsData['transactionType'];
   readonly installmentAvailable?: boolean | undefined;
 }) {
-  const [selectedId, setSelectedId] = useState<string | undefined>(media[0]?.id);
-  const selected = media.find(item => item.id === selectedId) ?? media[0];
+  const cover = media.find(item => item.kind === 'image' && item.isCover) ?? media.find(item => item.kind === 'image') ?? media[0];
+  const [selectedId, setSelectedId] = useState<string | undefined>(cover?.id);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const selected = media.find(item => item.id === selectedId) ?? cover;
 
   useEffect(() => {
-    setSelectedId(media[0]?.id);
-  }, [media]);
+    setSelectedId(current => media.some(item => item.id === current) ? current : cover?.id);
+  }, [media, cover?.id]);
 
   return (
     <section className="public-property-details__gallery" aria-labelledby="public-property-details-gallery-title" data-gallery="true">
@@ -144,12 +148,12 @@ function Gallery({
         <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{transactionType === 'sale' ? copy.sale : copy.rent}</span>
       </div>
       <div className="public-property-details__gallery-main">
-        <PublicMediaImage
+        {selected?.kind === 'video' ? videoFailed ? <UxStateView state="error" title={copy.videoUnavailable} /> : <video key={selected.id} src={safePublicUrl(selected.imageUrl)} controls playsInline preload="metadata" aria-label={copy.galleryTitle} onError={() => setVideoFailed(true)} style={{ width: '100%', height: '100%', maxHeight: '70vh', objectFit: 'contain', background: '#111' }} /> : <PublicMediaImage
           src={selected?.imageUrl}
           alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
           fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
           loading="eager"
-        />
+        />}
       </div>
       {media.length > 0 ? (
         <div className="public-property-details__gallery-thumbnails" role="list" aria-label={copy.galleryTitle}>
@@ -160,10 +164,10 @@ function Gallery({
               className={item.id === selected?.id ? 'is-selected' : undefined}
               aria-label={copy.mediaItem(index + 1)}
               aria-pressed={item.id === selected?.id}
-              onClick={() => setSelectedId(item.id)}
+              onClick={() => { setSelectedId(item.id); setVideoFailed(false); }}
               role="listitem"
             >
-              <span aria-hidden="true">{index + 1}</span>
+              <span aria-hidden="true">{item.kind === 'video' ? '▶' : index + 1}</span>
             </button>
           ))}
         </div>
@@ -475,10 +479,7 @@ type ActionState = 'idle' | 'submitting' | 'success' | 'permission' | 'error';
 
 const maximumViewingDelay = 366 * 24 * 60 * 60 * 1000;
 
-function localDateTime(date: Date): string {
-  const pad = (value: number) => String(value).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
+const localDateTime = egyptLocalDateTime;
 
 function publicOnlyDetails(data: PublicPropertyDetailsData): PublicPropertyDetailsData {
   const { contact, ...publicData } = data;
@@ -523,27 +524,21 @@ function RequestPanel({
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [contactTime, setContactTime] = useState('');
+  const [contactChannel, setContactChannel] = useState<'platform' | 'provider'>('platform');
   const [contactValidation, setContactValidation] = useState(false);
   const [contactState, setContactState] = useState<ActionState>('idle');
   const [viewingOpen, setViewingOpen] = useState(false);
   const [requestedAt, setRequestedAt] = useState('');
-  const [timezone, setTimezone] = useState('UTC');
+  const timezone = EGYPT_TIME_ZONE;
   const [note, setNote] = useState('');
   const [viewingValidation, setViewingValidation] = useState(false);
   const [viewingState, setViewingState] = useState<ActionState>('idle');
   const viewingFeedback = useRef<HTMLDivElement>(null);
   const [saveState, setSaveState] = useState<ActionState>('idle');
   useEffect(() => {
-    // datetime-local uses the device's local clock, so send its matching IANA zone.
-    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
-  }, []);
-  useEffect(() => {
     if (viewingOpen && ['success', 'error', 'permission'].includes(viewingState)) viewingFeedback.current?.scrollIntoView?.({ block: 'nearest' });
   }, [viewingOpen, viewingState]);
-  const viewingDate = new Date(requestedAt);
-  const timezoneName = new Intl.DateTimeFormat(locale, { timeZone: timezone, timeZoneName: 'long' })
-    .formatToParts(Number.isNaN(viewingDate.getTime()) ? new Date() : viewingDate)
-    .find(part => part.type === 'timeZoneName')?.value ?? timezone;
+  const timezoneName = egyptTimeLabel(locale, egyptInstant(requestedAt) ?? new Date());
   const saveProperty = async () => {
     if (!actions.saveProperty || saveState === 'submitting') return;
     setSaveState('submitting');
@@ -571,6 +566,8 @@ function RequestPanel({
       phone: phone.trim(),
       preferredContactTime: contactTime as 'morning' | 'evening',
       propertyId: data.id,
+      contactChannel,
+      ...(data.source.organizationId ? { organizationId: data.source.organizationId } : {}),
       ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
       locale
     };
@@ -584,16 +581,18 @@ function RequestPanel({
   };
 
   const propTitle = localizedText(data.name, locale) ?? data.slug;
+  const platformContact = usePublicContact();
+  const propertyLink = typeof window === 'undefined' ? `/properties/${data.slug}?lang=${locale}` : new URL(`/properties/${data.slug}?lang=${locale}`, window.location.origin).href;
   const whatsappText = locale === 'ar'
-    ? `مرحباً، أود الاستفسار عن العقار: ${propTitle}`
-    : `Hello, I would like to inquire about property: ${propTitle}`;
+    ? `مرحباً، أود الاستفسار عن العقار: ${propTitle} ${propertyLink}`
+    : `Hello, I would like to inquire about property: ${propTitle} ${propertyLink}`;
 
   const submitViewing = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (viewingState === 'submitting' || viewingState === 'success') return;
-    const parsedDate = new Date(requestedAt);
+    const parsedDate = egyptInstant(requestedAt);
     const now = Date.now();
-    if (!requestedAt || Number.isNaN(parsedDate.getTime()) || parsedDate.getTime() <= now || parsedDate.getTime() > now + maximumViewingDelay) {
+    if (!requestedAt || parsedDate === undefined || parsedDate.getTime() <= now || parsedDate.getTime() > now + maximumViewingDelay) {
       setViewingValidation(true);
       return;
     }
@@ -624,6 +623,8 @@ function RequestPanel({
       <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
+          {data.source.organizationId ? <CustomSelect name="contactChannel" value={contactChannel} onChange={value => setContactChannel(value as 'platform' | 'provider')} ariaLabel={locale === 'ar' ? 'جهة التواصل' : 'Send inquiry to'} options={[{ value: 'platform', label: locale === 'ar' ? 'إدارة عقارات السادات' : 'Sadat Real Estate team' }, { value: 'provider', label: localizedText(data.source.name, locale) ?? (locale === 'ar' ? 'الشركة مباشرة' : 'Company directly') }]} /> : null}
+          <p>{contactChannel === 'provider' ? (locale === 'ar' ? 'يصل طلبك إلى الشركة مباشرة وتتابع حالته من حسابك.' : 'The company receives your inquiry directly. Track it in your account.') : (locale === 'ar' ? 'تستقبل إدارة المنصة طلبك وتتولى المتابعة كوسيط.' : 'The platform team receives your inquiry and follows up as an intermediary.')}</p>
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{copy.fullName}</label>
           <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{copy.phoneNumber}</label>
@@ -645,14 +646,15 @@ function RequestPanel({
         </form>
         {data.contact === undefined ? null : (
           <div className="public-property-details__revealed-contact" data-contact-revealed="true">
+            <strong>{locale === 'ar' ? 'تواصل مباشر مع مقدم العقار' : 'Contact the property provider directly'}</strong>
             {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
             {data.contact.preferredContactTime ? <p>{data.contact.preferredContactTime}</p> : null}
             {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
-            {data.contact.whatsappNumber ? <a href={`https://wa.me/${data.contact.whatsappNumber.replace(/\D/gu, '')}`} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
+            {data.contact.whatsappNumber ? <a href={getWhatsAppLink(whatsappText, data.contact.whatsappNumber)} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
             {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}
           </div>
         )}
-        <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{copy.contactWhatsapp}</span></a>
+        {platformContact.whatsappNumber ? <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText, platformContact.whatsappNumber)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><WhatsAppIcon /></span><span>{locale === 'ar' ? 'تواصل مع المنصة عبر واتساب' : 'Contact the platform on WhatsApp'}</span></a> : null}
       </section>
       <Modal
         className="public-property-details__viewing-dialog"
@@ -762,7 +764,7 @@ export function PublicPropertyDetails({
   const resolvedActions = useMemo(
     () => actions ?? (authClient === undefined
       ? defaultPublicPropertyDetailsActions
-      : createPublicPropertyDetailsActions({ authorizationHeader: () => authClient.getAuthorizationHeader() })),
+      : createPublicPropertyDetailsActions({ authorizationHeader: () => authClient.getAuthorizationHeader(), refreshSession: authClient.refresh ? () => authClient.refresh!() : undefined })),
     [actions, authClient]
   );
 

@@ -246,7 +246,7 @@ export function App({
     ) : isPublicDevelopers ? (
       <PublicDevelopers url={url} locale={locale} initialData={developerListData} initialQuery={developerListQuery} initialState={developerListInitialState} />
     ) : isPublicDeveloperProfile ? (
-      <PublicDeveloperProfile url={url} locale={locale} initialData={developerProfileData} initialState={developerProfileInitialState} />
+      <PublicDeveloperProfile url={url} locale={locale} initialData={developerProfileData} initialState={developerProfileInitialState} authClient={authClient} />
     ) : isPublicArticles ? (
       <PublicArticles url={url} locale={locale} initialData={articleListData} initialQuery={articleListQuery} initialState={articleListInitialState} />
     ) : isPublicArticleDetails ? (
@@ -364,6 +364,10 @@ export function App({
     <AuthenticationRequiredPage copy={copy} url={url} />
   );
 
+  if (protectedRoute && authSnapshot?.status === 'error') return <main role="alert" style={{ padding: '2rem', textAlign: 'center' }}>
+    <p>{locale === 'ar' ? 'تعذر استعادة الاتصال بحسابك. أعد المحاولة لاستكمال الصفحة.' : 'Unable to reconnect to your account. Retry to continue.'}</p>
+    <button type="button" onClick={() => { void authClient?.refresh().catch(() => undefined); }}>{locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}</button>
+  </main>;
   if (protectedRoute && !authResolutionComplete) return <SessionLoading locale={locale} />;
 
   return (

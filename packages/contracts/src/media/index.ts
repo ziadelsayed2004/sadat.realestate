@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
-export const PROPERTY_MEDIA_KINDS = ['image', 'floor_plan'] as const;
+export const PROPERTY_MEDIA_KINDS = ['image', 'floor_plan', 'video'] as const;
 export const propertyMediaKindSchema = z.enum(PROPERTY_MEDIA_KINDS);
-export const PROPERTY_MEDIA_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png'] as const;
+export const PROPERTY_MEDIA_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'video/mp4'] as const;
 export const propertyMediaMimeSchema = z.enum(PROPERTY_MEDIA_MIME_TYPES);
 export const PROPERTY_MEDIA_PROCESSING_STATES = ['processing', 'ready', 'failed', 'deleted'] as const;
 export const propertyMediaProcessingStateSchema = z.enum(PROPERTY_MEDIA_PROCESSING_STATES);
@@ -14,7 +14,7 @@ export const propertyMediaUploadHeadersSchema = z.object({
   contentType: propertyMediaMimeSchema,
   contentLength: z.number().int().positive().max(10 * 1024 * 1024).optional()
 }).strict().superRefine((value, context) => {
-  if (value.kind === 'image' && value.contentType === 'application/pdf') context.addIssue({ code: 'custom', path: ['contentType'], message: 'Images must use JPEG or PNG' });
+  if ((value.kind === 'image' && !['image/jpeg', 'image/png'].includes(value.contentType)) || (value.kind === 'floor_plan' && !['application/pdf', 'image/jpeg', 'image/png'].includes(value.contentType)) || (value.kind === 'video' && value.contentType !== 'video/mp4')) context.addIssue({ code: 'custom', path: ['contentType'], message: 'File type must match the selected media kind' });
 });
 export const propertyMediaUpdateSchema = z.object({
   version: z.number().int().nonnegative(),

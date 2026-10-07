@@ -866,6 +866,30 @@
     "apiVersion": "v1"
   },
   {
+    "method": "GET",
+    "path": "/api/v1/public/properties/:propertyId/media/:assetId/content",
+    "module": "media",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Stream ready media of an active published property with byte ranges",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/properties/:propertyId/media",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "List owned property media to resume the upload step",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
     "method": "POST",
     "path": "/api/v1/provider/properties/:propertyId/media",
     "module": "media",
@@ -873,7 +897,7 @@
     "roles": [
       "approved-provider"
     ],
-    "purpose": "Upload property media",
+    "purpose": "Upload property images, floorplans or MP4 video",
     "status": "implemented",
     "apiVersion": "v1"
   },

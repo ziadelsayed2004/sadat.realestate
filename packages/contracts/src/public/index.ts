@@ -124,6 +124,13 @@ export const publicBootstrapDataSchema = z.object({
   defaultLocale: supportedLocaleSchema,
   supportedLocales: z.array(supportedLocaleSchema).length(2),
   directions: z.object({ ar: textDirectionSchema, en: textDirectionSchema }).strict(),
+  contact: z.object({
+    phone: z.string().regex(/^\+[1-9]\d{7,14}$/).optional(),
+    whatsappNumber: z.string().regex(/^\+[1-9]\d{7,14}$/).optional(),
+    facebookUrl: z.url().max(2048).optional(),
+    instagramUrl: z.url().max(2048).optional(),
+    address: localizedTextSchema.optional()
+  }).strict().optional(),
   display: z.object({
     populationCount: z.number().int().nonnegative().max(100_000_000).optional(),
     populationLabel: localizedTextSchema.optional(),
@@ -174,10 +181,10 @@ export const publicPropertyProjectSchema = z.object({
 export const publicPropertyMediaSchema = z.object({
   id: propertyObjectIdSchema,
   propertyId: propertyObjectIdSchema,
-  kind: z.enum(['image', 'floor_plan']),
+  kind: z.enum(['image', 'floor_plan', 'video']),
   imageUrl: publicUrlSchema.optional(),
   originalFilename: z.string().trim().min(1).max(120),
-  detectedMime: z.enum(['application/pdf', 'image/jpeg', 'image/png']),
+  detectedMime: z.enum(['application/pdf', 'image/jpeg', 'image/png', 'video/mp4']),
   byteSize: z.number().int().positive().max(10 * 1024 * 1024),
   sortOrder: z.number().int().nonnegative().max(1_000),
   isCover: z.boolean()

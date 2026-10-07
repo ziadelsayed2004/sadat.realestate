@@ -12,6 +12,7 @@ import {
 } from './about-team-data.ts';
 import { getPublicAboutTeamCopy, type PublicAboutTeamCopy } from './about-team-copy.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
+import { usePublicContact, WhatsAppIcon } from '../public/contact.tsx';
 import './about-team.css';
 
 export type PublicAboutTeamViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
@@ -186,6 +187,8 @@ function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi
 }
 
 function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly data: CmsPublicContentListData }) {
+  const contact = usePublicContact();
+  const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   const ui = getAboutUi(locale, copy);
   const introItem = data.items.find(item => item.key === 'about_intro');
   const heroTitle = localizedText(introItem?.title, locale) ?? copy.aboutTitle;
@@ -220,7 +223,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
         <div className="public-about__stat-grid">{ui.stats.map(stat => <article key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></article>)}</div>
       </section>
       <section className="public-about__cta-section" aria-label={ui.statsTitle}>
-        <div className="public-about__cta"><a href="/properties" className="public-about__cta-button public-about__cta-button--dark"><Icon kind="search" />{ui.browse}</a><a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="public-about__cta-button public-about__cta-button--green"><Icon kind="whatsapp" />{ui.whatsapp}</a></div>
+        <div className="public-about__cta"><a href="/properties" className="public-about__cta-button public-about__cta-button--dark"><Icon kind="search" />{ui.browse}</a>{whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="public-about__cta-button public-about__cta-button--green"><WhatsAppIcon />{ui.whatsapp}</a> : null}</div>
       </section>
     </>
   );

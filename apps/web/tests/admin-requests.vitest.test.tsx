@@ -108,6 +108,17 @@ describe('Admin request administration contracts and views', () => {
     await waitFor(() => expect(transition).toHaveBeenLastCalledWith(request.id, { transition: 'contact', expectedVersion: 12, reason: 'Private audit reason', customerMessage: 'We will call tomorrow' }, undefined));
   });
 
+  it('opens viewing details with the property, customer note and Egypt time', () => {
+    window.history.pushState({}, '', '/admin/viewing-requests');
+    const copy = getAdminRequestsCopy('en');
+    const enriched = viewingDataSchema.parse({ ...viewing, customerName: 'Example Customer', note: 'Call before arrival', property: { id: viewing.propertyId, slug: 'requested-property', kind: 'property', transactionType: 'sale', name: { en: 'Requested property' }, publicCode: 'SDT-1234' } });
+    renderWithLocale(<AdminRequests locale="en" session={session} initialViewings={{ ...viewingList, items: [enriched] }} />, { locale: 'en' });
+    expect(screen.getByRole('link', { name: 'Requested property' })).toHaveAttribute('href', '/properties/requested-property?lang=en');
+    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('Call before arrival');
+    expect(screen.getByRole('dialog')).toHaveTextContent('Egypt time (GMT+3)');
+  });
+
   it('continues review, contact and resolution in the same dialog with current actions and version', async () => {
     window.history.pushState({}, '', '/admin/contact-requests');
     const copy = getAdminRequestsCopy('en');

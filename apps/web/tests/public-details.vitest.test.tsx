@@ -189,7 +189,7 @@ describe('public property details', () => {
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('storageKey');
     expect(result.container.textContent).not.toContain('sha256');
-    expect(screen.getByRole('link', { name: locale === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' })).toHaveAttribute('href', expect.stringContaining('https://wa.me/'));
+    expect(screen.queryByRole('link', { name: locale === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' })).toBeNull();
   });
 
   it('keeps an entered draft mounted while the session token changes and its read fails', async () => {
@@ -277,6 +277,8 @@ describe('public property details', () => {
       message: 'Please share the details.',
       fullName: 'Example Seeker',
       phone: '01001234567',
+      contactChannel: 'platform',
+      organizationId: projectId,
       preferredContactTime: 'morning',
       propertyId,
       projectId,
@@ -291,7 +293,7 @@ describe('public property details', () => {
     await waitFor(() => expect(submitViewing).toHaveBeenCalledWith({
       propertyId,
       requestedAt: expect.any(String),
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      timezone: 'Africa/Cairo'
     }));
     expect(screen.getByRole('dialog')).toHaveTextContent(copy.actionSuccessTitle);
     expect(screen.getByLabelText(copy.requestedAt)).toHaveValue(requestedAt);

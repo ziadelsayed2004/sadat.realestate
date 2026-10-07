@@ -62,7 +62,7 @@ describe('Provider customer requests', () => {
     await expect(loadProviderCustomerRequests({ apiClient: client, authorization: { getAuthorizationHeader: () => 'Bearer provider.requests.token' }, query: { status: 'new', search: 'Mona', page: 2, limit: 5 } })).resolves.toEqual(data);
     const url = new URL(requests[0]?.url ?? '', 'http://sadat-real-estate.local');
     expect(requests[0]).toMatchObject({ method: 'GET', authorization: 'Bearer provider.requests.token' });
-    expect(Object.fromEntries(url.searchParams)).toEqual({ source: 'provider', type: 'provider_customer', status: 'new', search: 'Mona', page: '2', limit: '5' });
+    expect(Object.fromEntries(url.searchParams)).toEqual({ status: 'new', search: 'Mona', page: '2', limit: '5' });
   });
 
   it.each([{ page: 0 }, { page: 1, limit: 101 }])('rejects invalid request pagination before network access: %o', async query => {

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { Readable } from 'node:stream';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { propertyMediaOrderSchema, propertyMediaUpdateSchema, propertyMediaUploadHeadersSchema } from '@sadat-real-estate/contracts';
 import { createInMemoryStorageAdapter, createDeterministicMalwareScanner } from '../../src/modules/uploads/adapters.js';
@@ -16,7 +17,7 @@ function fixture(scanner = createDeterministicMalwareScanner('clean'), settings:
   const rows = new Map<string, StoredPropertyMedia>(); const storage = createInMemoryStorageAdapter();
   const repository: PropertyMediaRepository = {
     async findOwnedProperty(owner, target) { return owner === provider && target === property ? { id: property, status: 'draft', active: true } : null; },
-    async create(input) { const current = [...rows.values()].find(row => row.sha256 === input.sha256 && row.active); if (current) return { kind: 'replay', media: current }; if ([...rows.values()].filter(row => row.active).length >= input.capacity) return { kind: 'capacity' }; const value = media({ id: mediaId, propertyId: input.propertyId, kind: input.kind, originalFilename: input.originalFilename, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, processingState: 'processing', isCover: rows.size === 0, sortOrder: rows.size }); rows.set(value.id, value); return { kind: 'written', media: value }; },
+    async create(input) { const current = [...rows.values()].find(row => row.sha256 === input.sha256 && row.active); if (current) return { kind: 'replay', media: current }; if ([...rows.values()].filter(row => row.active).length >= input.capacity) return { kind: 'capacity' }; const value = media({ id: mediaId, propertyId: input.propertyId, kind: input.kind, originalFilename: input.originalFilename, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, processingState: 'processing', isCover: rows.size === 0 && input.kind === 'image', sortOrder: rows.size }); rows.set(value.id, value); return { kind: 'written', media: value }; },
     async updateProcessing(input) { const current = rows.get(input.mediaId); if (!current) return { kind: 'not_found' }; const value = { ...current, processingState: input.state, ...(input.failureCode ? { failureCode: input.failureCode } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written', media: value }; },
     async listOwned(owner, target) { return owner === provider && target === property ? [...rows.values()] : []; },
     async listPublic() { return [...rows.values()].filter(row => row.active && row.processingState === 'ready').map(({ storageKey: _storageKey, createdAt, updatedAt, ...value }) => ({ ...value, createdAt: createdAt.toISOString(), updatedAt: updatedAt.toISOString() })); },
@@ -36,6 +37,20 @@ test('validates strict media kinds, MIME policy, ordering, and mass-assignment r
   assert.equal(propertyMediaUpdateSchema.safeParse({ version: 1, reason: 'Unknown', unexpected: true }).success, false);
   assert.equal(propertyMediaSchema.options.strict, 'throw');
   assert.ok(propertyMediaSchema.indexes().some(([keys]) => keys.propertyId === 1 && keys.sortOrder === 1));
+});
+
+test('uploads a real MP4, lists and deletes it, checks scanning and rejects video as an image or cover', async () => {
+  const video = await readFile(new URL('../../../web/tests/fixtures/property-tour.mp4', import.meta.url));
+  const { service } = fixture();
+  const uploaded = await service.upload(claims(), property, { kind: 'video', filename: 'tour.mp4', contentType: 'video/mp4' }, Readable.from(video), { requestId: 'video-upload', traceId: 'a'.repeat(32) });
+  assert.equal(uploaded.isCover, false); assert.equal(uploaded.detectedMime, 'video/mp4'); assert.equal(uploaded.processingState, 'ready');
+  assert.equal((await service.list(claims(), property))[0]?.kind, 'video');
+  await assert.rejects(service.reorder(claims(), property, { version: 1, items: [{ mediaId: uploaded.id, sortOrder: 0, isCover: true }], reason: 'Set video cover' }, { requestId: 'video-cover', traceId: 'a'.repeat(32) }));
+  assert.equal(propertyMediaUploadHeadersSchema.safeParse({ kind: 'image', filename: 'tour.mp4', contentType: 'video/mp4' }).success, false);
+  assert.equal(propertyMediaUploadHeadersSchema.safeParse({ kind: 'video', filename: 'photo.jpg', contentType: 'image/jpeg' }).success, false);
+  const failed = fixture(createDeterministicMalwareScanner('infected'));
+  await assert.rejects(failed.service.upload(claims(), property, { kind: 'video', filename: 'tour.mp4', contentType: 'video/mp4' }, Readable.from(video), { requestId: 'infected-video', traceId: 'a'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_PROCESSING_FAILED');
+  assert.equal((await service.remove(claims(), property, uploaded.id, { requestId: 'remove-video', traceId: 'a'.repeat(32) })).active, false);
 });
 
 test('uploads ready media, supports cover ordering, ownership, replay, deletion, and failed processing', async () => {

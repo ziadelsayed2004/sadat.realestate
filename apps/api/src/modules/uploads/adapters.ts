@@ -11,7 +11,7 @@ export interface StorageAdapter {
   readonly kind: 'memory' | 'local-filesystem' | 'unavailable';
   isReady(): boolean | Promise<boolean>;
   putPrivateQuarantine(objectKey: string, source: Readable): Promise<void>;
-  openPrivate(objectKey: string): Promise<Readable>;
+  openPrivate(objectKey: string, range?: { start: number; end: number }): Promise<Readable>;
   deletePrivate(objectKey: string): Promise<void>;
 }
 
@@ -46,11 +46,11 @@ export function createInMemoryStorageAdapter(): StorageAdapter & { has(key: stri
       for await (const chunk of source) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
       objects.set(objectKey, Buffer.concat(chunks));
     },
-    async openPrivate(objectKey) {
+    async openPrivate(objectKey, range) {
       assertObjectKey(objectKey);
       const value = objects.get(objectKey);
       if (!value) throw new Error('PRIVATE_OBJECT_NOT_FOUND');
-      return Readable.from(value);
+      return Readable.from(range ? value.subarray(range.start, range.end + 1) : value);
     },
     async deletePrivate(objectKey) {
       assertObjectKey(objectKey);
@@ -87,8 +87,8 @@ export function createLocalFilesystemStorageAdapter(root: string): StorageAdapte
         throw error;
       }
     },
-    async openPrivate(key) {
-      return createReadStream(objectPath(key));
+    async openPrivate(key, range) {
+      return createReadStream(objectPath(key), range);
     },
     async deletePrivate(key) {
       await rm(objectPath(key), { force: true });

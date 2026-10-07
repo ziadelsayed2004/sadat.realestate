@@ -429,6 +429,15 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   grid-column: 1 / -1;
 }
 
+.public-developer-profile__inquiry [role="status"] {
+  padding: 1rem;
+  color: #145447;
+  background: #e7f5ed;
+  border-radius: 1rem;
+  overflow-wrap: anywhere;
+  scroll-margin-block: 7rem;
+}
+
 .public-developer-profile__inquiry input,
 .public-developer-profile__inquiry textarea {
   inline-size: 100%;
@@ -1040,12 +1049,12 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   grid-column: 1 / -1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem;
-  direction: ltr;
+  direction: inherit;
 }
 
 .public-developer-profile__inquiry-actions button,
 .public-developer-profile__inquiry-actions a {
-  direction: rtl;
+  direction: inherit;
 }
 
 .public-developer-profile__inquiry-actions button,
