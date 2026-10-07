@@ -40,20 +40,12 @@
 .admin-settings__feedback { margin: 0; color: #a32129; font-weight: 700; }
 .admin-settings__direction-note { width: min(672px, 100%); margin: 24px 0 0; margin-inline: 0 auto; color: #7e8999; font-size: .84rem; }
 .admin-settings input:focus-visible, .admin-settings textarea:focus-visible, .admin-settings__tabs a:focus-visible, .admin-settings button:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
-@media (max-width: 980px) { .admin-settings { grid-template-columns: 1fr; } .admin-settings > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; } .admin-settings__content { padding-inline: 18px; } }
+@media (max-width: 980px) { .admin-settings { grid-template-columns: 1fr; } .admin-settings__content { padding-inline: 18px; } }
 @media (max-width: 700px) { .admin-settings__fields, .admin-settings__localized-grid { grid-template-columns: 1fr; } .admin-settings__heading { padding: 4px 0 14px; } .admin-settings__editor-heading { align-items: flex-start; flex-direction: column; padding: 18px; } .admin-settings__editor form { padding-inline: 18px; } .admin-settings__version { white-space: normal; } }
 
 /* ADM-54 is compared with the current owner-authored 1440 × 1080 desktop source. */
 .route-shell--admin:has(.admin-settings[data-screen-id='ADM-54']) > .route-shell__header { display: flex; }
-.route-shell--admin .admin-settings[data-screen-id='ADM-54'] { position: relative; grid-template-columns: 240px minmax(0, 1fr); min-height: 1080px; padding-top: 0; }
-.route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { position: relative; z-index: 3; grid-row: 1; width: 240px; min-height: 1080px; margin-top: 0; padding: 0; border-inline-end: 1px solid #e3e4e6; }
-.admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { content: ''; position: absolute; inset: 20px 16px auto; height: 88px; border-bottom: 1px solid #e3e4e6; background: url('/assets/sadat-real-estate-logo.png') center 2px / 102px auto no-repeat; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-groups { display: grid; gap: 0; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-group { padding-block: 0 14px; border-bottom: 1px solid #eff0f1; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-group + .admin-dashboard__navigation-group { padding-block-start: 14px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-kicker { margin: 0; padding: 0 10px 8px; color: #a3adbd; font-size: 13px; letter-spacing: 0; text-transform: none; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation a { min-height: 42px; padding: 0 10px; border-radius: 12px; font-size: 14px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation a[data-active='true'] { background: #f8efd9; color: #0e5849; }
+.route-shell--admin .admin-settings[data-screen-id='ADM-54'] { position: relative; min-height: 1080px; padding-top: 0; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__content { z-index: 2; padding: 32px 42px 76px; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__heading { max-width: none; margin: 0 0 24px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__eyebrow { margin-bottom: 8px; color: #0e5849; font-size: 13px; letter-spacing: 0; text-transform: none; }
@@ -78,56 +70,5 @@
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__actions { justify-content: flex-start; margin-top: 18px; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary { min-height: 0; padding: 12px 24px; border-radius: 999px; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__direction-note { width: min(860px, 100%); max-width: none; margin: 20px 0 0 auto; font-size: 12px; text-align: left; }
-@media (max-width: 980px) { .admin-settings[data-screen-id='ADM-54'] { grid-template-columns: 1fr; min-height: 100vh; padding-top: 0; } .admin-settings[data-screen-id='ADM-54']::before, .admin-settings[data-screen-id='ADM-54']::after { display: none; } .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { grid-row: auto; min-height: 0; margin-top: 0; padding: 20px 18px; } .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { display: none; } }
+@media (max-width: 980px) { .admin-settings[data-screen-id='ADM-54'] { grid-template-columns: 1fr; min-height: 100vh; padding-top: 0; } .admin-settings[data-screen-id='ADM-54']::before, .admin-settings[data-screen-id='ADM-54']::after { display: none; } }
 @media (max-width: 700px) { .admin-settings[data-screen-id='ADM-54'] .admin-settings__content { padding: 24px 18px 44px; } .admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs { overflow-x: auto; } .admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading { flex-direction: column; } }
-
-@media (max-width: 1100px) {
-  .route-shell--admin:has(.admin-settings[data-screen-id='ADM-54']) > .route-shell__header {
-    display: flex;
-  }
-
-  .route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation {
-    position: fixed;
-    top: 64px;
-    bottom: 0;
-    width: min(20rem, calc(100vw - 48px));
-    height: calc(100dvh - 64px);
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-
-  .route-shell--admin[dir='ltr'] .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation {
-    left: 0;
-    transform: translateX(-104%);
-  }
-
-  .route-shell--admin[dir='rtl'] .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation {
-    right: 0;
-    transform: translateX(104%);
-  }
-
-  .route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation[data-drawer-open='true'] {
-    transform: translateX(0);
-    visibility: visible;
-    pointer-events: auto;
-    transition-delay: 0s;
-  }
-}
-.admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { display: none; }
-.admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { grid-template-rows: auto minmax(0, 1fr) auto; height: 1080px; min-height: 1080px; padding: 0; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-brand { min-height: 64px; padding: 10px 12px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-scroll { padding: 12px 8px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-footer { padding: 10px 8px 12px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-kicker { padding: 0 12px 6px; font-size: 10px; }
-.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation a { min-height: 44px; padding: 10px 12px; border-radius: 18px; font-size: 13px; }
-
-@media (max-width: 1100px) {
-  .route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation {
-    z-index: 55;
-    height: calc(100dvh - 64px);
-    min-height: 0;
-  }
-}

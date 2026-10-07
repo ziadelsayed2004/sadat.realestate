@@ -265,11 +265,6 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
         if ((event.target as HTMLElement).closest('a')) sidebarController?.setOpen(false);
       }}
     >
-      <div className="admin-dashboard__navigation-brand">
-        <a href={localePath(locale, '/')} aria-label={copy.sidebar.website}>
-          <img src="/assets/sadat-real-estate-logo.png" alt={copy.sidebar.brandAlt} />
-        </a>
-      </div>
       <div className="admin-dashboard__navigation-scroll" ref={navigationScroll}>
         <div className="admin-dashboard__navigation-groups">
           {sidebarGroups.map(group => (
@@ -298,22 +293,19 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
             </div>
           ))}
         </div>
-        <div className="admin-dashboard__navigation-mobile-actions">
-          <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}>
-            <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
-            <span>{signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}</span>
-          </button>
-        </div>
       </div>
       <div className="admin-dashboard__navigation-footer">
         <div className="admin-dashboard__navigation-profile">
           <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{copy.sidebar.avatar}</span>
           <span><strong>{copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>
         </div>
-        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">{copy.sidebar.website}</a>
+        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">
+          <span className="admin-dashboard__navigation-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z" /></svg></span>
+          <span>{copy.sidebar.website}</span>
+        </a>
         <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}>
-          <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
-          {signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}
+          <span className="admin-dashboard__navigation-icon" aria-hidden="true"><img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" /></span>
+          <span>{signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}</span>
         </button>
       </div>
     </nav>

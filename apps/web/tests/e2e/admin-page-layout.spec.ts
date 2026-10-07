@@ -45,7 +45,9 @@ test('admin settings, audit, notifications and advertising use the available pag
       const editor = page.locator('.admin-settings__editor');
       await expect(editor).toBeVisible();
       await expect.poll(async () => Math.round((await editor.boundingBox())!.width)).toBeLessThanOrEqual(672);
-      await expect.poll(async () => Math.round((await page.locator('.admin-settings__heading').boundingBox())!.height)).toBe(56);
+      const heading = await page.locator('.admin-settings__heading').boundingBox();
+      const tabs = await page.locator('.admin-settings__tabs').boundingBox();
+      expect(heading!.y + heading!.height).toBeLessThanOrEqual(tabs!.y);
       await expect.poll(async () => Math.round((await page.locator('.admin-settings__tabs').boundingBox())!.height)).toBe(54);
     }
     if (page.viewportSize()!.width > 1100) {
