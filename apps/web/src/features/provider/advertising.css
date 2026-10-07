@@ -374,6 +374,28 @@
   margin-top: 16px;
 }
 
+.provider-advertising__proof-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.provider-advertising__proof-form .provider-advertising__upload {
+  margin-top: 0;
+  min-width: 0;
+}
+
+.provider-advertising__proof-form input[type='file'] {
+  width: 100%;
+  min-width: 0;
+}
+
+.provider-advertising .provider-advertising__proof-form > .ui-button[data-state] {
+  width: 100%;
+  min-height: 44px;
+}
+
 .provider-advertising__history {
   display: grid;
   gap: 12px;

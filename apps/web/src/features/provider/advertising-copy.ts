@@ -37,6 +37,9 @@ export interface ProviderAdvertisingCopy {
   readonly paymentProof: string;
   readonly paymentProofHelp: string;
   readonly uploadPaymentProof: string;
+  readonly sendPaymentProof: string;
+  readonly paymentProofSendHelp: string;
+  readonly paymentProofInvalidFile: string;
   readonly paymentMethod: string;
   readonly paymentProofUploaded: string;
   readonly noPaymentProof: string;
@@ -119,6 +122,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProof: 'إثبات الدفع',
     paymentProofHelp: 'ارفع ملف PDF أو JPG أو PNG بحجم لا يتجاوز 10 ميجابايت. يتم فحص الملف ومراجعته يدويًا؛ لا يعني الرفع التحقق البنكي.',
     uploadPaymentProof: 'رفع إثبات الدفع',
+    sendPaymentProof: 'إرسال الطلب',
+    paymentProofSendHelp: 'اختيار الملف لا يرسله تلقائيًا. اضغط «إرسال الطلب» لإرسال إثبات الدفع للمراجعة.',
+    paymentProofInvalidFile: 'اختر ملف PDF أو JPG أو PNG غير فارغ بحجم لا يتجاوز 10 ميجابايت.',
     paymentMethod: 'طريقة الدفع',
     paymentProofUploaded: 'تم إرسال إثبات الدفع للمراجعة.',
     noPaymentProof: 'لم يتم إرسال إثبات دفع.',
@@ -166,6 +172,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProof: 'Payment proof',
     paymentProofHelp: 'Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.',
     uploadPaymentProof: 'Upload payment proof',
+    sendPaymentProof: 'Send request',
+    paymentProofSendHelp: 'Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.',
+    paymentProofInvalidFile: 'Choose a non-empty PDF, JPG, or PNG file up to 10 MB.',
     paymentMethod: 'Payment method',
     paymentProofUploaded: 'Payment proof was submitted for review.',
     noPaymentProof: 'No payment proof submitted.',

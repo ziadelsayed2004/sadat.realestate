@@ -78,6 +78,55 @@ async function routeAdvertisingApi(page: import('@playwright/test').Page): Promi
   });
 }
 
+test('payment proof is sent only by the send button and can be retried without choosing it again', async ({ page }) => {
+  const locale = localeForProject();
+  const copy = getProviderAdvertisingCopy(locale);
+  await routeSession(page);
+  await routeAdvertisingApi(page);
+  const filename = 'payment-proof-receipt-with-a-long-name-for-mobile-layout.png';
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==', 'base64');
+  const proof = { id: 'dddddddddddddddddddddddd', adRequestId: REQUEST_ID, providerId: PROVIDER_ID, paymentMethod: 'vodafone_cash', originalFilename: filename, normalizedExtension: '.png', detectedMime: 'image/png', byteSize: image.length, sha256: 'a'.repeat(64), version: 1, securityState: 'scan_pending', status: 'pending_review', reviewHistory: [], uploadedAt: '2026-10-08T08:00:00.000Z', active: true, idempotentReplay: false };
+  let sent = false;
+  let posts = 0;
+  const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, paymentMethod: proof.paymentMethod, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
+  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
+  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}/payment-proof`, async route => {
+    posts += 1;
+    expect(route.request().method()).toBe('POST');
+    expect(route.request().headers()).toMatchObject({ authorization: 'Bearer provider.advertising.token', 'x-file-name': filename, 'x-payment-method': 'vodafone_cash', 'content-type': 'image/png' });
+    expect(route.request().postDataBuffer()).toEqual(image);
+    if (posts === 1) {
+      await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'temporarily_unavailable', message: 'Try again.', requestId: 'proof-offline' } }) });
+      return;
+    }
+    sent = true;
+    await route.fulfill({ status: 201, contentType: 'application/json', body: envelope(proof, 'proof-sent') });
+  });
+  await page.goto(`/provider/ads/${REQUEST_ID}?lang=${locale}`);
+  const input = page.getByLabel(copy.uploadPaymentProof, { exact: true });
+  const send = page.getByRole('button', { name: copy.sendPaymentProof, exact: true });
+  await expect(send).toBeDisabled();
+  await page.getByLabel(copy.paymentMethod, { exact: true }).fill('vodafone_cash');
+  await input.setInputFiles({ name: filename, mimeType: 'image/png', buffer: image });
+  await expect(send).toBeEnabled();
+  await expect(page.getByText(copy.paymentProofSendHelp)).toBeVisible();
+  expect(posts).toBe(0);
+  await send.click();
+  await expect(page.getByRole('alert')).toHaveText(copy.mutationFailed);
+  expect(posts).toBe(1);
+  expect(await input.evaluate(element => (element as HTMLInputElement).files?.[0]?.name)).toBe(filename);
+  await send.click();
+  await expect(page.getByRole('status').filter({ hasText: copy.paymentProofUploaded })).toBeVisible();
+  expect(posts).toBe(2);
+  await expect(send).toBeDisabled();
+  expect(await input.evaluate(element => (element as HTMLInputElement).files?.length)).toBe(0);
+  const bounds = await send.boundingBox();
+  expect(bounds!.height).toBeGreaterThanOrEqual(44);
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});
+
 test('PRV-19 advertising requests match the responsive source and keep creation usable', async ({ page }, testInfo) => {
   const locale = localeForProject();
   if (testInfo.project.name.startsWith('tablet-')) await page.setViewportSize({ width: 1024, height: 760 });

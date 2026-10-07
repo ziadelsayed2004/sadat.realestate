@@ -1,7 +1,9 @@
-﻿import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+﻿import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   type AdRequestCreate,
   adRequestCreateSchema,
+  PAYMENT_PROOF_MAX_BYTES,
+  paymentProofMimeSchema,
   type ProviderAdRequestProjection,
   type ProviderCommissionProjection,
   type SupportedLocale
@@ -195,11 +197,32 @@ function FilterBar({ copy, draftStatus, onDraftStatus, onApply, onClear }: { rea
   );
 }
 
-function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string) => void }) {
+function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string) => Promise<boolean> }) {
   const payment = detail.paymentProofs.find(proof => proof.active) ?? detail.paymentProofs.at(-1);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+  const [fileError, setFileError] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const sendingProof = useRef(false);
   const canAccept = detail.quote?.status === 'issued';
   const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
+  async function sendProof(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    if (!selectedFile || busy || sendingProof.current || !canUpload) return;
+    if (selectedFile.size === 0 || selectedFile.size > PAYMENT_PROOF_MAX_BYTES || !paymentProofMimeSchema.safeParse(selectedFile.type.toLowerCase()).success) {
+      setFileError(true);
+      return;
+    }
+    sendingProof.current = true;
+    try {
+      if (await onUpload(selectedFile, paymentMethod)) {
+        setSelectedFile(undefined);
+        if (fileInput.current) fileInput.current.value = '';
+      }
+    } finally {
+      sendingProof.current = false;
+    }
+  }
   return (
     <div className="provider-advertising__detail-grid">
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-detail-heading">
@@ -211,7 +234,13 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
         <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2><p className="provider-advertising__muted">{copy.paymentProofHelp}</p>
         {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span><span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span></div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
-        {canUpload ? <><Input id="provider-advertising-payment-method" label={copy.paymentMethod} value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} /><label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(file, paymentMethod); event.currentTarget.value = ''; }} disabled={busy} /></label></> : null}
+        {canUpload ? <form className="provider-advertising__proof-form" onSubmit={event => { void sendProof(event); }}>
+          <Input id="provider-advertising-payment-method" label={copy.paymentMethod} value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} disabled={busy} />
+          <label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input ref={fileInput} type="file" accept="application/pdf,image/jpeg,image/png" aria-describedby="provider-advertising-proof-help" onChange={(event: ChangeEvent<HTMLInputElement>) => { setSelectedFile(event.target.files?.[0]); setFileError(false); }} disabled={busy} /></label>
+          <p id="provider-advertising-proof-help" className="provider-advertising__help">{copy.paymentProofSendHelp}</p>
+          {fileError ? <p className="provider-advertising__form-error" role="alert">{copy.paymentProofInvalidFile}</p> : null}
+          <Button type="submit" loading={busy} disabled={!selectedFile || busy || fileError}>{copy.sendPaymentProof}</Button>
+        </form> : null}
         <section className="provider-advertising__nested-card"><h2>{copy.schedule}</h2>{detail.schedule ? <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{detail.schedule.status}</dd></div><div><dt>{copy.interval}</dt><dd>{detail.schedule.localStart} — {detail.schedule.localEnd} ({detail.schedule.timezone})</dd></div></dl> : <p className="provider-advertising__muted">{copy.noSchedule}</p>}</section>
       </section>
       <section className="provider-advertising__detail-card provider-advertising__detail-card--wide" aria-labelledby="provider-advertising-history-heading"><h2 id="provider-advertising-history-heading">{copy.history}</h2>{detail.history.length === 0 ? <p className="provider-advertising__muted">{copy.noHistory}</p> : <ol className="provider-advertising__history">{detail.history.map((entry, index) => <li key={`${entry.changedAt}-${entry.version}-${index}`}><Badge tone={statusTone(entry.status)}>{copy.statuses[entry.status]}</Badge><time dateTime={entry.changedAt}>{dateLabel(entry.changedAt, locale)}</time>{entry.reason ? <span>{entry.reason}</span> : null}</li>)}</ol>}</section>
@@ -325,20 +354,23 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     }
   }
 
-  async function uploadPaymentProof(file: File, paymentMethod: string): Promise<void> {
-    if (detail === undefined) return;
-    if (!isProvider) {
+  async function uploadPaymentProof(file: File, paymentMethod: string): Promise<boolean> {
+    if (detail === undefined || mutationBusy) return false;
+    if (!isProvider || detail.status !== 'waiting_payment' || detail.quote?.status !== 'accepted') {
       setMutationError(copy.mutationFailed);
-      return;
+      return false;
     }
     setMutationBusy(true);
     setMutationError(undefined);
     try {
+      setFeedback(undefined);
       await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod);
       setFeedback(copy.paymentProofUploaded);
       setAttempt(value => value + 1);
+      return true;
     } catch {
       setMutationError(copy.mutationFailed);
+      return false;
     } finally {
       setMutationBusy(false);
     }
@@ -360,7 +392,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
           {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
           {mutationError ? <p className="provider-advertising__form-error" role="alert">{mutationError}</p> : null}
           {detailState === 'loading' || detailState === 'error' || detailState === 'retry' || detailState === 'permission' || detailState === 'notFound' ? <StatePanel state={detailState} locale={locale} copy={copy} detail onRetry={() => setAttempt(value => value + 1)} /> : null}
-          {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={(file, paymentMethod) => { void uploadPaymentProof(file, paymentMethod); }} /> : null}
+          {detailState === 'success' && detail !== undefined ? <DetailContent key={detail.id} detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={uploadPaymentProof} /> : null}
         </>}
       </div>
       {createOpen ? <CreateRequestModal copy={copy} busy={mutationBusy} error={mutationError} onClose={() => setCreateOpen(false)} onSave={saveRequest} /> : null}

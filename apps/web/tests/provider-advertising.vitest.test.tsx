@@ -260,6 +260,55 @@ describe('Provider advertising requests and commission', () => {
     await waitFor(() => expect(mutations.submitRequest).toHaveBeenCalledWith(requestId, 4));
   });
 
+  it.each(['ar', 'en'] as const)('waits for explicit payment-proof submission and retains the file after failure for %s', async locale => {
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' } });
+    const copy = getProviderAdvertisingCopy(locale);
+    let finishUpload: ((value: typeof proof) => void) | undefined;
+    const upload = vi.fn().mockRejectedValueOnce(new Error('offline')).mockImplementationOnce(() => new Promise<typeof proof>(resolve => { finishUpload = resolve; }));
+    const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => request), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: upload };
+    renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={waiting} loadDetail={vi.fn(async () => waiting)} mutations={mutations} />, { locale });
+    const input = screen.getByLabelText(copy.uploadPaymentProof) as HTMLInputElement;
+    const send = screen.getByRole('button', { name: copy.sendPaymentProof });
+    expect(send).toBeDisabled();
+    const firstFile = new File(['first'], 'first.png', { type: 'image/png' });
+    const chosenFile = new File(['receipt'], 'receipt.pdf', { type: 'application/pdf' });
+    fireEvent.change(input, { target: { files: [firstFile] } });
+    fireEvent.change(input, { target: { files: [chosenFile] } });
+    fireEvent.change(screen.getByLabelText(copy.paymentMethod), { target: { value: 'vodafone_cash' } });
+    expect(upload).not.toHaveBeenCalled();
+    expect(send).toBeEnabled();
+    fireEvent.click(send);
+    await screen.findByRole('alert');
+    expect(upload).toHaveBeenNthCalledWith(1, requestId, chosenFile, chosenFile.name, 'vodafone_cash');
+    expect(input.files?.[0]).toBe(chosenFile);
+    expect(send).toBeEnabled();
+    fireEvent.click(send);
+    await waitFor(() => expect(upload).toHaveBeenCalledTimes(2));
+    expect(send).toBeDisabled();
+    expect(input).toBeDisabled();
+    fireEvent.submit(send.closest('form')!);
+    expect(upload).toHaveBeenCalledTimes(2);
+    finishUpload!(proof);
+    await screen.findByText(copy.paymentProofUploaded);
+    await waitFor(() => expect(screen.getByRole('button', { name: copy.sendPaymentProof })).toBeDisabled());
+  });
+
+  it.each([
+    new File(['text'], 'receipt.txt', { type: 'text/plain' }),
+    new File([], 'empty.png', { type: 'image/png' }),
+    new File([new Uint8Array(10 * 1024 * 1024 + 1)], 'large.pdf', { type: 'application/pdf' })
+  ])('rejects invalid payment-proof selection before sending: $name', async file => {
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' } });
+    const copy = getProviderAdvertisingCopy('en');
+    const upload = vi.fn(async () => proof);
+    const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => request), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: upload };
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={waiting} mutations={mutations} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.uploadPaymentProof), { target: { files: [file] } });
+    fireEvent.click(screen.getByRole('button', { name: copy.sendPaymentProof }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(copy.paymentProofInvalidFile);
+    expect(upload).not.toHaveBeenCalled();
+  });
+
   it.each(['ar', 'en'] as const)('sends a simple request directly with just the description and contact number for %s', async locale => {
     const sent = adRequestSchema.parse({ id: requestId, providerId, requestMode: 'assisted', contactPhone: '+201234567890', purpose: 'Promote my apartment', status: 'review', version: 0, createdAt: request.createdAt, updatedAt: request.updatedAt });
     const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => sent), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: vi.fn(async () => proof) };
