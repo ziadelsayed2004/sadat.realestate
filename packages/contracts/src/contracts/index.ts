@@ -361,6 +361,7 @@ export type {
 export {
   ACCOUNT_TRANSITION_ACTIONS,
   accountCommunicationRequestSchema,
+  accountDeleteRequestSchema, accountDeleteDataSchema, accountDeleteSuccessEnvelopeSchema,
   accountCommunicationDataSchema,
   accountCommunicationSuccessEnvelopeSchema,
   accountObjectIdSchema,
@@ -391,6 +392,7 @@ export {
 export type {
   AccountTransitionAction,
   AccountCommunicationRequest,
+  AccountDeleteRequest,
   AccountTransitionData,
   AccountTransitionRequest,
   AdminAccountUserData,

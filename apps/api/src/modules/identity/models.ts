@@ -24,6 +24,8 @@ const NORMALIZED_PHONE_PATTERN = /^\+[1-9]\d{7,14}$/;
 const TOKEN_HASH_PATTERN = /^[A-Za-z0-9_-]{43,128}$/;
 
 export interface UserRecord {
+  deletedAt?: Date;
+  deletedBy?: Types.ObjectId;
   normalizedEmail?: string;
   normalizedPhone?: string;
   roleType: UserRoleType;
@@ -119,7 +121,9 @@ const userSchema = new Schema<UserRecord>(
     roleType: { type: String, enum: USER_ROLE_TYPES, required: true, immutable: true },
     status: { type: String, enum: ACCOUNT_STATES, required: true, default: 'unverified' },
     locale: { type: String, enum: SUPPORTED_LOCALES, required: true, default: 'ar' },
-    statusChangedAt: { type: Date, required: true, default: Date.now }
+    statusChangedAt: { type: Date, required: true, default: Date.now },
+    deletedAt: { type: Date },
+    deletedBy: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { ...strictOptions, collection: 'users', optimisticConcurrency: true }
 );

@@ -8114,6 +8114,57 @@
           }
         }
       ]
+    },
+    {
+      "name": "Admin Accounts - Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete isolated synthetic duplicate account\",\n  \"confirmed\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/users/:userId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "users",
+            ":userId"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Requires admin:users.manage. Use only an isolated synthetic target: deletion revokes access and hides provider public content, retains historical records and reserves email. Self/admin targets are protected. Requires current account version and confirmation.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
     }
   ]
 }

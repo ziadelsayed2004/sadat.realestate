@@ -3,6 +3,7 @@ import type { AccountTransitionAction, AdminAccountUserData, SupportedLocale } f
 import { ApiClientError } from '../contracts/index.ts';
 import { Button } from '../design_system/index.ts';
 import { communicateAdminAccount, transitionAdminAccount, type AdminAccountsAuthorizationSource } from './data.ts';
+import { DeleteAccount } from './delete-account.tsx';
 
 export function AccountActions({ user, locale, authorization, apiOrigin, onChanged }: {
   readonly user: AdminAccountUserData; readonly locale: SupportedLocale;
@@ -49,6 +50,7 @@ export function AccountActions({ user, locale, authorization, apiOrigin, onChang
     <div className="admin-account-reports__actions">
       {user.availableActions.map(action => <Button key={action} variant={action === 'verify' ? 'success' : 'danger'} disabled={busy || !confirmation || reason.trim().length < 3} onClick={() => { void run(action); }}>{labels[action]}</Button>)}
       <Button variant="secondary" disabled={busy || !confirmation || reason.trim().length < 3} onClick={() => { void run('logout'); }}>{ar ? 'إنهاء الجلسات الحالية' : 'End current sessions'}</Button>
+      <DeleteAccount user={user} locale={locale} authorization={authorization} apiOrigin={apiOrigin} />
     </div>
     <a href={`/admin/viewing-requests?lang=${locale}&seekerId=${user.id}`}>{ar ? 'إدارة معاينات العميل' : 'Manage customer viewings'}</a>
     {feedback ? <p role="status">{feedback}</p> : null}

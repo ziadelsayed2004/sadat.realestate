@@ -299,7 +299,7 @@ export function createMongooseAccountRepository(
   }
 
   async function usersFor(userIds: readonly Types.ObjectId[]): Promise<Map<string, LeanUser>> {
-    const users = await User.find({ _id: { $in: userIds } })
+    const users = await User.find({ _id: { $in: userIds }, deletedAt: null })
       .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
       .lean<LeanUser[]>()
       .exec();
@@ -309,6 +309,7 @@ export function createMongooseAccountRepository(
   return {
     async listUsers(query) {
       const filter: QueryFilter<UserRecord> = {
+        deletedAt: null,
         roleType: query.roleType ? query.roleType : { $in: ['seeker', 'provider'] },
         ...(query.status ? { status: query.status } : {})
       };
@@ -352,6 +353,7 @@ export function createMongooseAccountRepository(
     async findUser(userId) {
       if (!validObjectId(userId)) return undefined;
       const user = await User.findOne({
+        deletedAt: null,
         _id: objectId(userId),
         roleType: { $in: ['seeker', 'provider'] }
       })
@@ -375,7 +377,9 @@ export function createMongooseAccountRepository(
     },
 
     async listProviders(query) {
+      const deletedUsers = await User.find({ deletedAt: { $ne: null } }).select('_id').lean<Array<{ _id: Types.ObjectId }>>().exec();
       const filter = {
+        userId: { $nin: deletedUsers.map(user => user._id) },
         ...(query.status ? { status: query.status } : {}),
         ...(query.providerType ? { providerType: query.providerType } : {})
       };
@@ -407,7 +411,7 @@ export function createMongooseAccountRepository(
         .lean<LeanProviderApplication | null>()
         .exec();
       if (!application) return undefined;
-      const user = await User.findOne({ _id: application.userId, roleType: 'provider' })
+      const user = await User.findOne({ _id: application.userId, roleType: 'provider', deletedAt: null })
         .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
         .lean<LeanUser | null>()
         .exec();
@@ -417,7 +421,7 @@ export function createMongooseAccountRepository(
 
     async findAccount(userId) {
       if (!validObjectId(userId)) return undefined;
-      const user = await User.findById(userId)
+      const user = await User.findOne({ _id: objectId(userId), deletedAt: null })
         .select('_id roleType status version')
         .lean<LeanUser | null>()
         .exec();
@@ -432,7 +436,7 @@ export function createMongooseAccountRepository(
         .exec();
       if (!application) return undefined;
       const [user, profile] = await Promise.all([
-        User.findOne({ _id: application.userId, roleType: 'provider' })
+        User.findOne({ _id: application.userId, roleType: 'provider', deletedAt: null })
           .select('_id roleType status version')
           .lean<LeanUser | null>()
           .exec(),
@@ -461,6 +465,7 @@ export function createMongooseAccountRepository(
       const [user, session] = await Promise.all([
         User.findOne({
           _id: userId,
+          deletedAt: null,
           roleType: input.roleType,
           status: input.status
         }).select('_id').lean<{ _id: Types.ObjectId } | null>().exec(),
@@ -481,6 +486,7 @@ export function createMongooseAccountRepository(
           const updated = await User.updateOne(
             {
               _id: userId,
+              deletedAt: null,
               roleType: input.target.roleType,
               status: input.target.status,
               version: input.target.version
@@ -590,6 +596,7 @@ export function createMongooseAccountRepository(
               {
                 _id: userId,
                 roleType: 'provider',
+                deletedAt: null,
                 status: input.target.accountStatus,
                 version: input.target.accountVersion
               },

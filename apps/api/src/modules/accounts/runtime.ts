@@ -9,6 +9,7 @@ import type { AccountRouterDependencies } from './router.js';
 import { createAccountService, type AccountAuthorization } from './service.js';
 import { createCurrentAccountAccessGuard } from './access-guard.js';
 import { createAccountCommunicator } from './communication.js';
+import { createAccountDeleter } from './deletion.js';
 
 export function createAccountRuntime(
   connection: Connection,
@@ -27,6 +28,7 @@ export function createAccountRuntime(
     auditWriter
   );
   return {
+    deleteUser: createAccountDeleter(connection, authorization, auditWriter),
     communicate: createAccountCommunicator(connection, authorization, auditWriter),
     accessTokens,
     accessGuard: createCurrentAccountAccessGuard(accessTokens, repository),

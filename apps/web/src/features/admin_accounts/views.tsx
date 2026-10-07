@@ -34,6 +34,7 @@ import {
 import { getAdminAccountsCopy, type AdminAccountsState, type AdminAccountsView } from './copy.ts';
 import './styles.css';
 import { AccountActions } from './account-actions.tsx';
+import { DeleteAccount } from './delete-account.tsx';
 
 type UserRoleFilter = 'all' | 'seeker' | 'provider';
 type UserStatusFilter = 'all' | NonNullable<AdminAccountUserListQuery['status']>;
@@ -263,7 +264,7 @@ function FilterBar({
   );
 }
 
-function UsersTable({ data, locale, search, onPageChange }: { readonly data: AdminAccountUserListData; readonly locale: SupportedLocale; readonly search: string; readonly onPageChange: (page: number) => void }) {
+function UsersTable({ data, locale, search, onPageChange, authorization, apiOrigin, onDeleted }: { readonly data: AdminAccountUserListData; readonly locale: SupportedLocale; readonly search: string; readonly onPageChange: (page: number) => void; readonly authorization: AdminAccountsAuthorizationSource | undefined; readonly apiOrigin: string | undefined; readonly onDeleted: () => void }) {
   const copy = getAdminAccountsCopy(locale).users;
   const filteredItems = data.items.filter(user => {
     const value = `${userName(user)} ${user.email ?? ''} ${user.phone ?? ''} ${user.id}`.toLocaleLowerCase(locale);
@@ -286,7 +287,7 @@ function UsersTable({ data, locale, search, onPageChange }: { readonly data: Adm
                 <td><StatusBadge label={getAdminAccountsCopy(locale).accountStatusLabels[user.status] ?? user.status} value={user.status} /></td>
                 <td>{user.locale}</td>
                 <td><time dateTime={user.updatedAt}>{dateLabel(user.updatedAt, locale)}</time></td>
-                <td><div className="admin-accounts__actions"><a href={localePath(locale, `/admin/users/${user.id}`)}>{getAdminAccountsCopy(locale).actions.view}</a></div></td>
+                <td className="admin-accounts__user-actions"><div className="admin-accounts__actions"><a href={localePath(locale, `/admin/users/${user.id}`)}>{getAdminAccountsCopy(locale).actions.view}</a><DeleteAccount user={user} locale={locale} authorization={authorization} apiOrigin={apiOrigin} onDeleted={onDeleted} /></div></td>
               </tr>
             ))}
           </tbody>
@@ -369,6 +370,7 @@ function Pagination({ page, pageCount, locale, onPageChange }: { readonly page: 
 }
 
 function ListContent({
+  authorization, apiOrigin, onDeleted,
   view,
   locale,
   data,
@@ -385,6 +387,9 @@ function ListContent({
   onSubmit,
   onClear
 }: {
+  readonly authorization: AdminAccountsAuthorizationSource | undefined;
+  readonly apiOrigin: string | undefined;
+  readonly onDeleted: () => void;
   readonly view: AdminAccountsView;
   readonly locale: SupportedLocale;
   readonly data: AdminAccountUserListData | AdminProviderListData;
@@ -425,7 +430,7 @@ function ListContent({
       <FilterBar locale={locale} view={view} searchInput={searchInput} roleFilter={roleFilter} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={onSearchChange} onRoleChange={onRoleChange} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} onSubmit={onSubmit} onClear={onClear} />
       <section className="admin-accounts__panel" aria-labelledby="admin-accounts-list-title">
         <h2 id="admin-accounts-list-title" className="a11y-visually-hidden">{viewCopy.title}</h2>
-        {view === 'users' || view === 'seekers' ? <UsersTable data={data as AdminAccountUserListData} locale={locale} search={search} onPageChange={onPageChange} /> : <ProvidersTable data={data as AdminProviderListData} locale={locale} view={view} search={search} onPageChange={onPageChange} />}
+        {view === 'users' || view === 'seekers' ? <UsersTable data={data as AdminAccountUserListData} locale={locale} search={search} onPageChange={onPageChange} authorization={authorization} apiOrigin={apiOrigin} onDeleted={onDeleted} /> : <ProvidersTable data={data as AdminProviderListData} locale={locale} view={view} search={search} onPageChange={onPageChange} />}
       </section>
     </main>
   );
@@ -535,6 +540,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
   const [providerStatusFilter, setProviderStatusFilter] = useState<ProviderStatusFilter>('all');
   const [providerTypeFilter, setProviderTypeFilter] = useState<ProviderTypeFilter>('all');
   const [attempt, setAttempt] = useState(0);
+  const [accountDeleted, setAccountDeleted] = useState(false);
   const [openingDocumentId, setOpeningDocumentId] = useState<string>();
   const [documentError, setDocumentError] = useState<string>();
   const [reviewReason, setReviewReason] = useState('');
@@ -642,11 +648,12 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
     <section className="admin-dashboard admin-accounts" data-screen-id={view === 'users' ? 'ADM-02' : view === 'seekers' ? 'ADM-03' : view === 'providers' ? 'ADM-04' : 'ADM-05'} data-route={path} data-device-scope="desktop" data-admin-accounts-state={state}>
       <AdminNavigation locale={locale} activePath={activePath} />
       <div className="admin-dashboard__content">
+        {accountDeleted || (!isDetail && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('deleted') === '1') ? <p role="status">{locale === 'ar' ? 'تم حذف الحساب وإلغاء وصوله.' : 'Account deleted and access revoked.'}</p> : null}
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={detailId !== undefined} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={backPath}>{copy.actions.back}</a></section> : null}
         {state === 'success' && isDetail && isUserView && userData !== undefined ? <><UserDetail user={userData} locale={locale} onBack={backPath} /><AccountActions user={userData} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onChanged={() => { void userLoader(userData.id).then(setUserData); }} /></> : null}
         {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}
-        {(state === 'success' || state === 'empty' || state === 'loading') && !isDetail && listData !== undefined ? <ListContent view={view} locale={locale} data={listData} search={search} onPageChange={setPage} searchInput={searchInput} roleFilter={roleFilter} statusFilter={isUserView ? userStatusFilter : providerStatusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={setSearchInput} onRoleChange={value => { setRoleFilter(value); setPage(1); }} onStatusChange={value => { if (isUserView) setUserStatusFilter(value as UserStatusFilter); else setProviderStatusFilter(value as ProviderStatusFilter); setPage(1); }} onProviderTypeChange={value => { setProviderTypeFilter(value); setPage(1); }} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(value => value + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setRoleFilter('all'); setUserStatusFilter('all'); setProviderStatusFilter('all'); setProviderTypeFilter('all'); setPage(1); setAttempt(value => value + 1); }} /> : null}
+        {(state === 'success' || state === 'empty' || state === 'loading') && !isDetail && listData !== undefined ? <ListContent authorization={authClient} apiOrigin={apiOrigin} onDeleted={() => { setAccountDeleted(true); if (listData.items.length === 1) setPage(value => Math.max(1, value - 1)); setAttempt(value => value + 1); }} view={view} locale={locale} data={listData} search={search} onPageChange={setPage} searchInput={searchInput} roleFilter={roleFilter} statusFilter={isUserView ? userStatusFilter : providerStatusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={setSearchInput} onRoleChange={value => { setRoleFilter(value); setPage(1); }} onStatusChange={value => { if (isUserView) setUserStatusFilter(value as UserStatusFilter); else setProviderStatusFilter(value as ProviderStatusFilter); setPage(1); }} onProviderTypeChange={value => { setProviderTypeFilter(value); setPage(1); }} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(value => value + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setRoleFilter('all'); setUserStatusFilter('all'); setProviderStatusFilter('all'); setProviderTypeFilter('all'); setPage(1); setAttempt(value => value + 1); }} /> : null}
       </div>
     </section>
   );

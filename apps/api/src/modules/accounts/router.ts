@@ -14,8 +14,10 @@ import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { AccountServiceError, type AccountService } from './service.js';
 import type { createAccountCommunicator } from './communication.js';
+import type { createAccountDeleter } from './deletion.js';
 
 export const ACCOUNT_ROUTE_DEFINITIONS = [
+  { method: 'DELETE', path: '/api/v1/admin/users/:userId', operationId: 'deleteAdminUser' },
   { method: 'POST', path: '/api/v1/admin/users/:userId/communication', operationId: 'communicateAdminUser' },
   {
     method: 'GET',
@@ -50,6 +52,7 @@ export const ACCOUNT_ROUTE_DEFINITIONS = [
 ] as const;
 
 export interface AccountRouterDependencies {
+  deleteUser?: ReturnType<typeof createAccountDeleter>;
   communicate?: ReturnType<typeof createAccountCommunicator>;
   service: AccountService;
   accessTokens: AccessTokenService;
@@ -148,6 +151,15 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.delete('/admin/users/:userId', async (request, response) => {
+    try {
+      if (!dependencies.deleteUser) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
+      const { userId } = accountUserIdParamsSchema.parse(request.params);
+      const context = requestContext(request);
+      response.status(200).json(toSuccessResponse(await dependencies.deleteUser(principal(response), userId, request.body, context), context.requestId));
+    } catch (error) { sendError(request, response, error); }
   });
 
   router.get('/admin/providers', async (request, response) => {

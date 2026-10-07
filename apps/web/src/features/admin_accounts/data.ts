@@ -1,5 +1,6 @@
 import {
   accountObjectIdSchema,
+  accountDeleteRequestSchema, accountDeleteSuccessEnvelopeSchema, type AccountDeleteRequest,
   accountCommunicationRequestSchema,
   accountCommunicationSuccessEnvelopeSchema,
   type AccountCommunicationRequest,
@@ -95,6 +96,14 @@ export async function loadAdminUsers(options: AdminUsersLoadOptions = {}): Promi
   const headers = headersFor(options.authorization);
   const query = adminAccountUserListQuerySchema.parse({ page: 1, limit: 20, ...options.query });
   const response = await client.request(ADMIN_USERS_ROUTE, { responseSchema: adminAccountUserListSuccessEnvelopeSchema, query, ...(headers === undefined ? {} : { headers }), ...(options.signal === undefined ? {} : { signal: options.signal }) });
+  return response.data.data;
+}
+
+export async function deleteAdminAccount(userId: string, input: AccountDeleteRequest, options: CommonLoadOptions = {}) {
+  const id = accountObjectIdSchema.parse(userId);
+  const client = clientFor(options);
+  const headers = headersFor(options.authorization);
+  const response = await client.request(`${ADMIN_USERS_ROUTE}/${id}`, { method: 'DELETE', json: accountDeleteRequestSchema.parse(input), responseSchema: accountDeleteSuccessEnvelopeSchema, ...(headers === undefined ? {} : { headers }) });
   return response.data.data;
 }
 

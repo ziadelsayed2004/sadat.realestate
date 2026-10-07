@@ -2507,5 +2507,17 @@
     "purpose": "Confirm, reschedule, cancel or complete a viewing and notify the customer",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/users/:userId",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:users.manage"
+    ],
+    "purpose": "Delete account from operating use with confirmation and audit while retaining linked history",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

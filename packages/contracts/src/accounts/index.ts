@@ -42,6 +42,15 @@ export const accountTransitionRequestSchema = z.object({
   reason: transitionReasonSchema
 }).strict();
 
+export const accountDeleteRequestSchema = z.object({
+  version: z.number().int().nonnegative(),
+  reason: transitionReasonSchema,
+  confirmed: z.literal(true)
+}).strict();
+export const accountDeleteDataSchema = z.object({ id: accountObjectIdSchema, deleted: z.literal(true) }).strict();
+export const accountDeleteSuccessEnvelopeSchema = successEnvelopeSchema(accountDeleteDataSchema);
+export type AccountDeleteRequest = z.infer<typeof accountDeleteRequestSchema>;
+
 export const accountCommunicationRequestSchema = z.object({
   action: z.enum(['notify', 'logout']),
   reason: transitionReasonSchema,

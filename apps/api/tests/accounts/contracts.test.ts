@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   ACCOUNT_TRANSITION_ACTIONS,
+  accountDeleteRequestSchema,
   accountTransitionDataSchema,
   accountTransitionRequestSchema,
   PROVIDER_REVIEW_ACTIONS,
@@ -10,6 +11,14 @@ import {
 } from '@sadat-real-estate/contracts';
 
 const timestamp = '2026-08-14T08:00:00.000Z';
+
+test('account deletion requires current version, bounded reason, and explicit confirmation', () => {
+  const valid = { version: 2, reason: 'Delete duplicate account', confirmed: true };
+  assert.deepEqual(accountDeleteRequestSchema.parse(valid), valid);
+  for (const value of [{ ...valid, version: -1 }, { ...valid, version: 1.2 }, { ...valid, confirmed: false }, { version: 2, reason: valid.reason }, { ...valid, reason: 'x' }, { ...valid, reason: 'invalid\nreason' }, { ...valid, userId: 'a'.repeat(24) }]) {
+    assert.equal(accountDeleteRequestSchema.safeParse(value).success, false);
+  }
+});
 
 test('publishes closed account and provider-review action catalogs', () => {
   assert.deepEqual(ACCOUNT_TRANSITION_ACTIONS, [

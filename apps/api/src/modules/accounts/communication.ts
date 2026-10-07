@@ -9,7 +9,7 @@ export function createAccountCommunicator(connection: Connection, authorization:
     const request = accountCommunicationRequestSchema.parse(input);
     if (!await authorization.authorize(principal.userId, 'admin:users.manage')) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
     if (userId === principal.userId) throw new AccountServiceError('ACCOUNT_SELF_TRANSITION_FORBIDDEN');
-    const target = await connection.collection('users').findOne({ _id: new Types.ObjectId(userId) });
+    const target = await connection.collection('users').findOne({ _id: new Types.ObjectId(userId), deletedAt: null });
     if (!target) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
     if (target.roleType !== 'seeker' && target.roleType !== 'provider') throw new AccountServiceError('ACCOUNT_ADMIN_TARGET_FORBIDDEN');
     let link = target.roleType === 'provider' ? '/provider' : '/seeker';

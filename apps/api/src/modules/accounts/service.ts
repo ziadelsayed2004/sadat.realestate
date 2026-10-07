@@ -171,7 +171,9 @@ export function createAccountService(
     async listUsers(principal, input) {
       const query = adminAccountUserListQuerySchema.parse(input);
       await requirePermission(principal.userId, 'admin:users.view');
-      return adminAccountUserListDataSchema.parse(await dependencies.repository.listUsers(query));
+      const data = adminAccountUserListDataSchema.parse(await dependencies.repository.listUsers(query));
+      const canManage = await dependencies.authorization.authorize(principal.userId, 'admin:users.manage');
+      return { ...data, items: data.items.map(user => ({ ...user, canManage: canManage && user.id !== principal.userId })) };
     },
 
     async getUser(principal, unparsedUserId) {
@@ -179,7 +181,7 @@ export function createAccountService(
       await requirePermission(principal.userId, 'admin:users.view');
       const result = await dependencies.repository.findUser(userId);
       if (!result) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
-      return { ...result, canManage: await dependencies.authorization.authorize(principal.userId, 'admin:users.manage') };
+      return { ...result, canManage: userId !== principal.userId && await dependencies.authorization.authorize(principal.userId, 'admin:users.manage') };
     },
 
     async listProviders(principal, input) {
