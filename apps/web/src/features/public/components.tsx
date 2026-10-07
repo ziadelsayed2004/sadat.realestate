@@ -571,7 +571,6 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
             {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
             {contact.mapUrl ? <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer">{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
-            {contact.isDemo ? <small>{locale === 'ar' ? 'بيانات تواصل تجريبية' : 'Demo contact details'}</small> : null}
           </div>
         </div>
         <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">
