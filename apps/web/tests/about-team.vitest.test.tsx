@@ -31,6 +31,29 @@ const teamData = cmsPublicContentListDataSchema.parse({
 });
 
 describe('public About and Team content', () => {
+  it.each(['ar', 'en'] as const)('shows saved statistics and hides unchecked cards in %s', locale => {
+    const data = cmsPublicContentListDataSchema.parse({ items: [{ ...aboutData.items[0], key: 'about_intro', stats: [
+      { value: '0', label: { ar: 'عقاراتنا المعدلة', en: 'Updated properties' }, visible: true },
+      { value: '9K+', label: { en: 'Hidden residents' }, visible: false }
+    ] }] });
+    renderWithLocale(<PublicAbout locale={locale} initialData={data} />, { locale });
+    expect(screen.getByText(locale === 'ar' ? 'عقاراتنا المعدلة' : 'Updated properties')).toBeInTheDocument();
+    expect(document.querySelector('.public-about__stat-grid bdi')).toHaveTextContent('0');
+    expect(document.querySelector('.public-about__stat-grid bdi')).toHaveAttribute('dir', 'ltr');
+    expect(document.querySelectorAll('.public-about__stat-grid article')).toHaveLength(1);
+    expect(screen.queryByText('Hidden residents')).not.toBeInTheDocument();
+    expect(screen.queryByText('1,200+')).not.toBeInTheDocument();
+  });
+  it.each([{ stats: [] }, { stats: [{ value: '18', label: { en: 'Hidden areas' }, visible: false }] }])('hides the statistics section when saved cards are all hidden', ({ stats }) => {
+    const data = cmsPublicContentListDataSchema.parse({ items: [{ ...aboutData.items[0], stats }] });
+    renderWithLocale(<PublicAbout locale="en" initialData={data} />, { locale: 'en' });
+    expect(document.querySelector('.public-about__stats')).toBeNull();
+  });
+  it('retains existing statistics for legacy About content without configuration', () => {
+    renderWithLocale(<PublicAbout locale="en" initialData={aboutData} />, { locale: 'en' });
+    expect(screen.getByText('1,200+')).toBeInTheDocument();
+    expect(document.querySelectorAll('.public-about__stat-grid article')).toHaveLength(4);
+  });
   it.each(['ar', 'en'] as const)('displays the edited intro title and all additional published blocks in %s', locale => {
     const data = cmsPublicContentListDataSchema.parse({ items: [
       { key: 'about_intro', title: { ar: 'عن منصتنا المعدلة', en: 'Our updated platform' }, body: { ar: 'مقدمة معدلة', en: 'Updated introduction' }, order: 0 },

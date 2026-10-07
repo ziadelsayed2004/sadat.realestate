@@ -43,6 +43,41 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('admin About, Team, and population CMS content', () => {
+  it.each(['ar', 'en'] as const)('opens statistics directly and preserves edits after a failed save in %s', async locale => {
+    const copy = getAdminCmsCopy(locale);
+    const update = vi.fn(async () => { throw new ApiClientError('Conflict', { code: 'HTTP_ERROR', status: 409 }); });
+    renderWithLocale(<AdminCmsContent path="/admin/content/about" locale={locale} session={session} initialData={about} update={update} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تعديل أرقام من نحن' : 'Edit About statistics' }));
+    const valueLabel = locale === 'ar' ? 'قيمة البطاقة 1' : 'Card 1 value';
+    fireEvent.change(screen.getByLabelText(valueLabel), { target: { value: '2,500+' } });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'عنوان البطاقة 1 بالعربية' : 'Card 1 Arabic label'), { target: { value: 'العقارات المعروضة' } });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'عنوان البطاقة 1 بالإنجليزية' : 'Card 1 English label'), { target: { value: 'Available properties' } });
+    fireEvent.click(screen.getByLabelText(locale === 'ar' ? 'إظهار البطاقة 2' : 'Show card 2'));
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Update About statistics' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-about-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('about', expect.objectContaining({ id: aboutId, version: 4, stats: expect.arrayContaining([
+      { value: '2,500+', label: { ar: 'العقارات المعروضة', en: 'Available properties' }, visible: true },
+      expect.objectContaining({ value: '18', visible: false })
+    ]) })));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(copy.mutation.conflict));
+    expect(screen.getByLabelText(valueLabel)).toHaveValue('2,500+');
+    expect(screen.getByLabelText(locale === 'ar' ? 'إظهار البطاقة 2' : 'Show card 2')).not.toBeChecked();
+  });
+  it('disables statistics editing for a view-only administrator', () => {
+    const data = cmsAdminContentDataSchema.parse({ namespace: 'about', items: [{ ...about.items[0], availableActions: [] }] });
+    renderWithLocale(<AdminCmsContent path="/admin/content/about" locale="en" session={session} initialData={data} />, { locale: 'en' });
+    expect(screen.getByRole('button', { name: 'Edit About statistics' })).toBeDisabled();
+  });
+  it('selects the intro block for statistics even when it is not the first block', async () => {
+    const data = cmsAdminContentDataSchema.parse({ namespace: 'about', items: [about.items[0], { ...about.items[0], id: teamId, key: 'about_intro', stats: [{ value: '77', label: { en: 'Saved properties' }, visible: true }] }] });
+    const update = vi.fn(async () => data);
+    renderWithLocale(<AdminCmsContent path="/admin/content/about" locale="en" session={session} initialData={data} update={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Edit About statistics' }));
+    expect(screen.getByLabelText('Card 1 value')).toHaveValue('77');
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Update verified numbers' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-about-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('about', expect.objectContaining({ id: teamId })));
+  });
   it.each(['ar', 'en'] as const)('uploads a chosen portrait and retains the draft on a failed save in %s', async locale => {
     const copy = getAdminCmsCopy(locale);
     const assetId = 'dddddddddddddddddddddddd';

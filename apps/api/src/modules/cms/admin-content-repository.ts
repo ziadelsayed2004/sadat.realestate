@@ -17,6 +17,7 @@ export interface StoredAboutBlock {
   key: string;
   title: LocalizedText;
   body: LocalizedText;
+  stats?: NonNullable<AboutBlockCreate['stats']>;
   order: number;
   active: boolean;
   status: 'draft' | 'published' | 'inactive';
@@ -93,6 +94,7 @@ export interface StoredDisplaySetting {
 export interface AboutBlockChanges {
   title?: LocalizedText;
   body?: LocalizedText;
+  stats?: NonNullable<AboutBlockCreate['stats']>;
   order?: number;
   active?: boolean;
   status?: 'draft' | 'published' | 'inactive';
@@ -190,6 +192,7 @@ function mapAbout(record: AboutBlockDocument): StoredAboutBlock {
     key: record.key,
     title: record.title,
     body: record.body,
+    ...(record.stats !== undefined ? { stats: record.stats } : {}),
     order: record.order,
     active: record.active,
     status: record.status,
@@ -295,7 +298,8 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
     },
     async createAbout(input, actorId, at) {
       try {
-        const row = await models.about.create({ ...input, updatedBy: new Types.ObjectId(actorId), updatedAt: at });
+        const { stats, ...fields } = input;
+        const row = await models.about.create({ ...fields, ...(stats !== undefined ? { stats } : {}), updatedBy: new Types.ObjectId(actorId), updatedAt: at });
         return { kind: 'written', item: mapAbout(row.toObject()) };
       } catch (error) {
         return duplicateKey(error) ? { kind: 'key_conflict' } : Promise.reject(error);

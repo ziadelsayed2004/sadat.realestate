@@ -21363,6 +21363,14 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "stats": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/CmsAboutStatistic"
+            },
+            "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
           }
         }
       },
@@ -21439,6 +21447,14 @@
             "items": {
               "$ref": "#/components/schemas/CmsAdminContentAction"
             }
+          },
+          "stats": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/CmsAboutStatistic"
+            },
+            "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
           }
         }
       },
@@ -22347,6 +22363,14 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "stats": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/CmsAboutStatistic"
+            },
+            "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
           }
         }
       },
@@ -22393,6 +22417,14 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "stats": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/CmsAboutStatistic"
+            },
+            "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
           }
         }
       },
@@ -25515,6 +25547,43 @@
           "meta"
         ],
         "additionalProperties": false
+      },
+      "CmsAboutStatistic": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "value",
+          "label"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "label": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          },
+          "visible": {
+            "type": "boolean",
+            "default": true
+          }
+        }
       }
     }
   }

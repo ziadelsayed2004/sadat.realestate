@@ -287,12 +287,16 @@
 }
 
 .public-about__stat-grid strong {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   color: var(--color-brand-accent);
   font-size: 1.55rem;
   font-weight: var(--font-weight-extrabold);
 }
 
 .public-about__stat-grid span {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   color: var(--color-text-secondary);
   font-size: 0.72rem;
 }

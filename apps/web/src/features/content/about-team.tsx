@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { DEFAULT_ABOUT_STATS } from '@sadat-real-estate/contracts';
 import type { CmsPublicContent, CmsPublicContentListData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
@@ -125,7 +126,6 @@ type AboutUi = {
   readonly whatsapp: string;
   readonly steps: ReadonlyArray<{ readonly number: string; readonly label: string; readonly detail: string; readonly icon: IconKind }>;
   readonly values: ReadonlyArray<{ readonly label: string; readonly detail: string; readonly icon: IconKind }>;
-  readonly stats: ReadonlyArray<{ readonly value: string; readonly label: string }>;
 };
 
 function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi {
@@ -148,10 +148,6 @@ function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi
       { label: '\u062a\u0646\u0638\u064a\u0645', detail: '\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0648\u0627\u0636\u062d\u0629 \u0648\u0633\u0647\u0644\u0629', icon: 'tag' },
       { label: '\u0633\u0631\u0639\u0629', detail: '\u0641\u0631\u064a\u0642 \u0645\u062a\u0627\u062d \u0637\u0648\u0627\u0644 \u0627\u0644\u0623\u0633\u0628\u0648\u0639', icon: 'bolt' }
     ],
-    stats: [
-      { value: '+1,200', label: '\u0639\u0642\u0627\u0631 \u0645\u062f\u0631\u062c' }, { value: '18', label: '\u0645\u0646\u0637\u0642\u0629 \u0645\u063a\u0637\u0627\u0629' },
-      { value: '+3,500', label: '\u0637\u0644\u0628 \u0641\u0639\u0627\u0644' }, { value: '342K+', label: '\u0633\u0627\u0643\u0646' }
-    ]
   };
   const english = locale === 'en';
   return {
@@ -177,12 +173,6 @@ function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi
       { label: english ? 'Organization' : 'تنظيم', detail: english ? 'Clear, easy-to-use categories' : 'تصنيفات واضحة وسهلة', icon: 'tag' },
       { label: english ? 'Speed' : 'سرعة', detail: english ? 'A team available throughout the week' : 'فريق متاح طوال الأسبوع', icon: 'bolt' }
     ],
-    stats: [
-      { value: '+1,200', label: english ? 'Listed properties' : 'عقار مدرج' },
-      { value: '18', label: english ? 'Covered areas' : 'منطقة مغطاة' },
-      { value: '+3,500', label: english ? 'Active requests' : 'طلب فعال' },
-      { value: '342K+', label: english ? 'Residents' : 'ساكن' }
-    ]
   };
 }
 
@@ -191,6 +181,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
   const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   const ui = getAboutUi(locale, copy);
   const introItem = data.items.find(item => item.key === 'about_intro');
+  const stats = (introItem?.stats ?? data.items.find(item => item.stats !== undefined)?.stats ?? DEFAULT_ABOUT_STATS).filter(stat => stat.visible);
   const heroTitle = localizedText(introItem?.title, locale) ?? copy.aboutTitle;
   const heroBody = localizedText(introItem?.body, locale) ?? ui.heroBody;
   const blocks = data.items.filter(item => item !== introItem);
@@ -218,10 +209,10 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
           {ui.values.map(value => <article key={value.label} className="public-about__value"><span className="public-about__icon"><Icon kind={value.icon} /></span><h3>{value.label}</h3><p>{value.detail}</p></article>)}
         </div>
       </section>
-      <section className="public-about__stats" aria-labelledby="public-about-stats-title">
+      {stats.length > 0 ? <section className="public-about__stats" aria-labelledby="public-about-stats-title">
         <div className="public-about__section-heading"><p>{ui.statsEyebrow}</p><h2 id="public-about-stats-title">{ui.statsTitle}</h2></div>
-        <div className="public-about__stat-grid">{ui.stats.map(stat => <article key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></article>)}</div>
-      </section>
+        <div className="public-about__stat-grid">{stats.map((stat, index) => <article key={index}><strong><bdi dir="ltr">{stat.value}</bdi></strong><span>{localizedText(stat.label, locale)}</span></article>)}</div>
+      </section> : null}
       <section className="public-about__cta-section" aria-label={ui.statsTitle}>
         <div className="public-about__cta"><a href="/properties" className="public-about__cta-button public-about__cta-button--dark"><Icon kind="search" />{ui.browse}</a>{whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="public-about__cta-button public-about__cta-button--green"><WhatsAppIcon />{ui.whatsapp}</a> : null}</div>
       </section>

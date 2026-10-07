@@ -9,6 +9,7 @@ export interface AboutBlockDocument {
   key: string;
   title: LocalizedText;
   body: LocalizedText;
+  stats?: Array<{ value: string; label: LocalizedText; visible: boolean }>;
   order: number;
   active: boolean;
   status: "draft" | "published" | "inactive";
@@ -39,6 +40,7 @@ export const aboutBlockSchema = new Schema<AboutBlockDocument>(
     key: { type: String, required: true, match: /^[a-z][a-z0-9_]{1,63}$/ },
     title: localized,
     body: localized,
+    stats: { type: [{ _id: false, value: { type: String, required: true, trim: true, maxlength: 24 }, label: { ar: { type: String, maxlength: 80 }, en: { type: String, maxlength: 80 } }, visible: { type: Boolean, default: true } }], default: undefined },
     order: { type: Number, min: 0, required: true },
     active: { type: Boolean, default: true },
     status: {

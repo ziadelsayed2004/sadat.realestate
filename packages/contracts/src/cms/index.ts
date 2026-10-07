@@ -119,11 +119,24 @@ export type CmsSettingPatch = z.infer<typeof cmsSettingPatchSchema>;
 export type CmsSettingRecord = z.infer<typeof cmsSettingRecordSchema>;
 export type CmsSettingHistory = z.infer<typeof cmsSettingHistorySchema>;
 const order = z.number().int().nonnegative().max(100000);
+export const aboutStatSchema = z.object({
+  value: z.string().trim().min(1).max(24).regex(/^[^\u0000-\u001f\u007f]+$/u),
+  label: localizedTextSchema.refine(value => Object.values(value).every(text => text === undefined || text.length <= 80), 'Statistic labels must be at most 80 characters'),
+  visible: z.boolean().default(true)
+}).strict();
+export const DEFAULT_ABOUT_STATS = [
+  { value: '1,200+', label: { ar: 'عقار مدرج', en: 'Listed properties' }, visible: true },
+  { value: '18', label: { ar: 'منطقة مغطاة', en: 'Covered areas' }, visible: true },
+  { value: '3,500+', label: { ar: 'طلب فعال', en: 'Active requests' }, visible: true },
+  { value: '342K+', label: { ar: 'ساكن', en: 'Residents' }, visible: true }
+] as const;
+const aboutStats = z.array(aboutStatSchema).max(4);
 export const aboutBlockCreateSchema = z
   .object({
     key: safeKey.optional(),
     title: localizedTextSchema,
     body: localizedTextSchema,
+    stats: aboutStats.optional(),
     order,
     active: z.boolean().default(true),
     status: cmsSettingStatusSchema.default("draft"),
@@ -135,6 +148,7 @@ export const aboutBlockPatchSchema = z
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
     body: localizedTextSchema.optional(),
+    stats: aboutStats.optional(),
     order,
     active: z.boolean().optional(),
     status: cmsSettingStatusSchema.optional(),
@@ -184,6 +198,7 @@ export const cmsPublicContentSchema = z
     key: safeKey,
     title: localizedTextSchema,
     body: localizedTextSchema.optional(),
+    stats: aboutStats.optional(),
     name: localizedTextSchema.optional(),
     role: localizedTextSchema.optional(),
     bio: localizedTextSchema.optional(),
@@ -387,6 +402,7 @@ export const cmsAdminAboutBlockSchema = z
     key: safeKey,
     title: localizedTextSchema,
     body: localizedTextSchema,
+    stats: aboutStats.optional(),
     order,
     active: z.boolean(),
     status: cmsSettingStatusSchema,

@@ -273,6 +273,7 @@ export function createCmsAdminContentService(dependencies: {
           row = aboutResult(await dependencies.repository.updateAbout(update.id, update.version, {
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.body !== undefined ? { body: update.body } : {}),
+            ...(update.stats !== undefined ? { stats: update.stats } : {}),
             ...(update.order !== undefined ? { order: update.order } : {}),
             ...(update.active !== undefined ? { active: update.active } : {}),
             ...(update.status !== undefined ? { status: update.status } : {})
@@ -281,7 +282,7 @@ export function createCmsAdminContentService(dependencies: {
           const create = input as AboutBlockCreate;
           requirePublish(create.status, authorization.publish);
           row = aboutResult(await dependencies.repository.createAbout({
-            key: create.key ?? generateIdentifier('about', undefined, '_'), title: create.title, body: create.body, order: create.order,
+            key: create.key ?? generateIdentifier('about', undefined, '_'), title: create.title, body: create.body, ...(create.stats !== undefined ? { stats: create.stats } : {}), order: create.order,
             active: create.active, status: create.status
           }, principal.userId, at));
         }

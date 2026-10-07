@@ -7,6 +7,7 @@ type PublishedAboutSource = {
   key: string;
   title: LocalizedText;
   body: LocalizedText;
+  stats?: CmsPublicContent['stats'];
   order: number;
   status: 'draft' | 'published' | 'inactive';
   active: boolean;
@@ -74,7 +75,7 @@ export function createMongoosePublicAboutTeamRepository(connection: Connection):
     async listAbout() {
       const rows = await models.about
         .find({ status: 'published', active: true })
-        .select({ _id: 0, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 })
+        .select({ _id: 0, key: 1, title: 1, body: 1, stats: 1, order: 1, status: 1, active: 1 })
         .sort({ order: 1, key: 1 })
         .lean()
         .exec();
@@ -82,6 +83,7 @@ export function createMongoosePublicAboutTeamRepository(connection: Connection):
         key: row.key,
         title: row.title,
         body: row.body,
+        ...(row.stats !== undefined ? { stats: row.stats } : {}),
         order: row.order,
         status: row.status,
         active: row.active

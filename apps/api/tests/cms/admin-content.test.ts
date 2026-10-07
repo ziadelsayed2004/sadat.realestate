@@ -28,6 +28,22 @@ const adminId = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const changedAt = new Date('2026-08-19T11:00:00.000Z');
 
+test('persists About statistics with version checks, audit and preservation on unrelated edits', async () => {
+  const { service, audits } = createService();
+  const stats = [{ value: '0', label: { ar: 'طلبات', en: 'Requests' }, visible: true }, { value: '9K+', label: { en: 'Residents' }, visible: false }];
+  const context = { requestId: 'about-stats', traceId: 'a'.repeat(32) };
+  const saved = await service.put({ userId: adminId }, 'about', { id: adminId, version: 2, order: 0, stats, reason: 'Update About statistics' }, context);
+  assert.equal(saved.namespace, 'about');
+  if (saved.namespace !== 'about') return;
+  assert.deepEqual(saved.items[0]?.stats, stats);
+  await assert.rejects(service.put({ userId: adminId }, 'about', { id: adminId, version: 2, order: 0, stats: [], reason: 'Overwrite old version' }, context), (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_VERSION_CONFLICT');
+  const updated = await service.put({ userId: adminId }, 'about', { id: adminId, version: 3, order: 1, reason: 'Reorder About section' }, context);
+  if (updated.namespace === 'about') assert.deepEqual(updated.items[0]?.stats, stats);
+  assert.deepEqual(audits, ['cms.about.write', 'cms.about.write']);
+  const denied = createService({ manage: false });
+  await assert.rejects(denied.service.put({ userId: adminId }, 'about', { id: adminId, version: 2, order: 0, stats, reason: 'Update About statistics' }, context), (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_FORBIDDEN');
+});
+
 function repository(): CmsAdminContentRepository {
   let teamDeleted = false;
   let about: StoredAboutBlock = {
