@@ -18,6 +18,7 @@ import {
   type AdQuoteIssue
 } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
+import { writeAdvertisingNotification } from './notifications.js';
 import { createRequestContext, getRequestContext } from '../observability/context.js';
 import {
   AdSettingsServiceError,
@@ -280,6 +281,7 @@ export function createMongooseAdAdminRequestRepository(
         await audit.record({ actorType: 'admin', actorId: metadata.actorId, targetType: 'ad_request', targetId: requestId,
           action: 'ad_request.review', reason, before: toAdRequest(before), after: toAdRequest(updated),
           requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: now }, session);
+        await writeAdvertisingNotification(connection, { event: status === 'waiting_pricing' ? 'approved' : 'rejected', requestId, providerId: updated.providerId.toHexString(), version: updated.version, occurredAt: now, ...(status === 'rejected' ? { reason } : {}) }, session);
         return updated;
       });
       if (!row) return undefined;
@@ -382,11 +384,7 @@ export function createMongooseAdCalendarRepository(
           const context = getRequestContext() ?? createRequestContext();
           await audit.record({ actorType: 'admin', actorId: options.actorId, targetType: 'ad_request', targetId: requestId, action: options.waiverReason ? 'advertising.schedule_payment_waived' : 'advertising.schedule', reason: options.waiverReason ?? 'Schedule after approved payment', before: { status: 'waiting_payment', interval: previousInterval }, after: { status: 'scheduled', paymentWaived: Boolean(options.waiverReason), interval: { start: request.intervalStart.toISOString(), end: request.intervalEnd.toISOString() } }, requestId: context.requestId, traceId: context.traceId, occurredAt: now }, session);
         }
-        if (options?.waiverReason) await connection.collection('notifications').insertOne({
-          recipientId: request.providerId, audience: 'provider', type: 'advertising.payment_waived',
-          title: { ar: 'تم اعتماد إعلانك بدون دفع', en: 'Your advertisement was approved without payment' },
-          message: { ar: options.waiverReason, en: options.waiverReason }, link: `/provider/ads/${requestId}`, createdAt: now, readAt: null
-        }, { session });
+        await writeAdvertisingNotification(connection, { event: options?.waiverReason ? 'payment_waived' : 'scheduled', requestId, providerId: request.providerId.toHexString(), version: updated.version, occurredAt: now }, session);
         return calendarEvent(updated);
       });
     }
@@ -448,6 +446,7 @@ export function createMongooseAdQuoteRepository(
           { new: true, runValidators: true, lean: true, session }
         );
         if (!updatedRequest) throw new AdSettingsServiceError('VERSION_CONFLICT');
+        await writeAdvertisingNotification(connection, { event: 'quote_sent', requestId: requestId.toHexString(), providerId: request.providerId.toHexString(), version: updatedRequest.version, occurredAt: stamp }, session);
         return toAdQuote(quote.toObject() as AdQuoteRecord & { _id: Types.ObjectId });
       });
     },
@@ -504,6 +503,7 @@ export function createMongooseAdQuoteRepository(
           { new: true, runValidators: true, lean: true, session }
         );
         if (!updatedRequest) throw new AdSettingsServiceError('VERSION_CONFLICT');
+        await writeAdvertisingNotification(connection, { event: 'waiting_payment', requestId: requestId.toHexString(), providerId: provider.toHexString(), version: updatedRequest.version, occurredAt: stamp }, session);
         return toAdQuote(updatedQuote);
       });
     }

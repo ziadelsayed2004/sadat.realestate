@@ -12,6 +12,8 @@ import {
 } from './data.ts';
 import './styles.css';
 import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.tsx';
+import { createProviderNotificationsLoader, type ProviderNotificationsLoader } from './notifications-data.ts';
+import type { NotificationListData } from '@sadat-real-estate/contracts';
 
 export type ProviderOverviewViewState = ProviderOverviewBaseState;
 
@@ -23,6 +25,7 @@ export interface ProviderOverviewProps {
   readonly initialData?: ProviderOverviewData | undefined;
   readonly initialState?: 'loading' | 'retry' | undefined;
   readonly load?: ProviderOverviewLoader | undefined;
+  readonly loadNotifications?: ProviderNotificationsLoader | undefined;
 }
 
 function stateForError(error: unknown): Exclude<ProviderOverviewViewState, 'loading' | 'empty' | 'success'> {
@@ -97,7 +100,7 @@ function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: s
   return activePath.startsWith(path);
 }
 
-export function ProviderNavigation({ locale, activePath, authClient }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined }) {
+export function ProviderNavigation({ locale, activePath, authClient, unreadCount = 0 }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined; readonly unreadCount?: number }) {
   const copy = getProviderCopy(locale);
   const [signingOut, setSigningOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -150,7 +153,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
         <span className="provider-dashboard__topbar-spacer" />
         <DashboardAccountMenu locale={locale} settingsHref={localeForProviderPath(locale, '/provider/settings')} guideHref={localeForProviderPath(locale, '/provider/user-guide')} signingOut={signingOut} onSignOut={signOut}><span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span></DashboardAccountMenu>
         {applicationStatus === undefined || applicationStatus === 'approved' ? <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
-          <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
+          <img src={navigationIcons.notifications.default} alt="" width="18" height="18" />{unreadCount > 0 ? <span className="provider-dashboard__notification-count">{new Intl.NumberFormat(locale).format(unreadCount)}</span> : null}
         </a> : null}
       </header>
       {mobileMenuOpen ? <button className="provider-dashboard__navigation-backdrop" type="button" aria-label={locale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu'} onClick={() => setMobileMenuOpen(false)} /> : null}
@@ -170,6 +173,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
                     <img src={active ? icon.active : icon.default} alt="" width={19} height={19} style={providerNavigationIconStyle} />
                   </span>
                   <span>{navigationLabel(copy, id)}</span>
+                  {id === 'notifications' && unreadCount > 0 ? <span className="provider-dashboard__notification-count">{new Intl.NumberFormat(locale).format(unreadCount)}</span> : null}
                 </a>
               </li>
             );
@@ -346,13 +350,39 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
   );
 }
 
-export function ProviderOverview({ locale, session, authClient, apiOrigin, initialData, initialState = 'loading', load }: ProviderOverviewProps) {
+export function ProviderOverview({ locale, session, authClient, apiOrigin, initialData, initialState = 'loading', load, loadNotifications }: ProviderOverviewProps) {
   const source = useMemo(() => load ?? createProviderOverviewLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
+  const notificationsSource = useMemo(() => loadNotifications ?? createProviderNotificationsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadNotifications]);
+  const [notifications, setNotifications] = useState<NotificationListData | undefined>();
+  const [notificationsFailed, setNotificationsFailed] = useState(false);
+  const [notificationAttempt, setNotificationAttempt] = useState(0);
   const [state, setState] = useState<ProviderOverviewViewState>(() => initialData === undefined ? initialState : stateForData(initialData));
   const [data, setData] = useState<ProviderOverviewData | undefined>(initialData);
   const [attempt, setAttempt] = useState(0);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const path = typeof window === 'undefined' ? '/provider' : new URL(window.location.href).pathname.replace(/\/+$/u, '') || '/';
+
+  useEffect(() => {
+    if (session.status !== 'authenticated' || sessionRole !== 'provider' || data?.application.status !== 'approved' || (!authClient && !loadNotifications)) {
+      setNotifications(undefined);
+      return undefined;
+    }
+    let controller: AbortController | undefined;
+    const refresh = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      controller?.abort();
+      const request = new AbortController();
+      controller = request;
+      void notificationsSource({ page: 1, limit: 3, unreadOnly: true }, request.signal).then(next => {
+        if (!request.signal.aborted) { setNotifications(next); setNotificationsFailed(false); }
+      }).catch(() => { if (!request.signal.aborted) setNotificationsFailed(true); });
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 45_000);
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => { controller?.abort(); window.clearInterval(timer); window.removeEventListener('focus', refresh); document.removeEventListener('visibilitychange', refresh); };
+  }, [authClient, data?.application.status, loadNotifications, notificationAttempt, notificationsSource, session.status, sessionRole]);
 
   useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'provider') {
@@ -375,8 +405,13 @@ export function ProviderOverview({ locale, session, authClient, apiOrigin, initi
 
   return (
     <section className="provider-dashboard" data-screen-id="PRV-01" data-route="/provider" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} unreadCount={notifications?.unreadCount ?? 0} />
       <div className="provider-dashboard__content">
+        {session.status === 'authenticated' && sessionRole === 'provider' && data?.application.status === 'approved' && ((notifications?.items.length ?? 0) > 0 || notificationsFailed) ? <section className="provider-dashboard__notifications-preview" aria-label={locale === 'ar' ? 'إشعارات جديدة' : 'New notifications'}>
+          <div className="provider-dashboard__section-heading"><h2>{locale === 'ar' ? 'إشعارات جديدة' : 'New notifications'} {notifications?.unreadCount ? <span>({new Intl.NumberFormat(locale).format(notifications.unreadCount)})</span> : null}</h2><a href={localeForProviderPath(locale, '/provider/notifications')}>{locale === 'ar' ? 'عرض كل الإشعارات' : 'View all notifications'}</a></div>
+          {notificationsFailed ? <p role="alert">{locale === 'ar' ? 'تعذر تحديث الإشعارات.' : 'Could not refresh notifications.'} <button className="provider-dashboard__secondary-action" type="button" onClick={() => setNotificationAttempt(value => value + 1)}>{locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}</button></p> : null}
+          <ul>{notifications?.items.map(item => <li key={item.id}><strong>{localizedValue(item.title, locale)}</strong>{item.message ? <p>{localizedValue(item.message, locale)}</p> : null}<a href={localeForProviderPath(locale, item.link?.startsWith('/provider/') ? item.link : '/provider/notifications')}>{locale === 'ar' ? 'عرض التفاصيل' : 'View details'}</a></li>)}</ul>
+        </section> : null}
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? (
           data.application.status === 'approved' ? <OverviewContent data={data} locale={locale} /> : <ApplicationStatusPanel data={data} locale={locale} onRefresh={() => setAttempt(value => value + 1)} />

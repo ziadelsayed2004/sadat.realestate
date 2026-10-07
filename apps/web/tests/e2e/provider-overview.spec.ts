@@ -38,6 +38,7 @@ async function routeProviderSession(page: import('@playwright/test').Page, allow
 }
 
 async function routeProviderOverview(page: import('@playwright/test').Page): Promise<void> {
+  await page.route('**/api/v1/provider/notifications**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [], unreadCount: 0, page: 1, limit: 3, total: 0 }, ...successMeta('provider-no-notifications') }) }));
   await page.route('**/api/v1/provider/dashboard', async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
@@ -60,6 +61,45 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
     });
   });
 }
+
+test('dashboard shows advertising approval and payment alerts with their request links and unread count', async ({ page }) => {
+  const locale = localeForProject();
+  await routeProviderSession(page);
+  await routeProviderOverview(page);
+  const requestId = 'eeeeeeeeeeeeeeeeeeeeeeee';
+  let unread = true;
+  let calls = 0;
+  const items = [
+    { id: 'ddddddddddddddddddddddd1', type: 'advertising.approved', title: { ar: 'تمت الموافقة على طلب إعلانك', en: 'Your advertising request was approved' }, message: { ar: 'ستحدد الإدارة السعر والفترة قبل الدفع.', en: 'Administration will agree the price and period before payment.' }, link: `/provider/ads/${requestId}`, readAt: null, createdAt: '2026-10-08T08:00:00.000Z' },
+    { id: 'ddddddddddddddddddddddd2', type: 'advertising.waiting_payment', title: { ar: 'مطلوب دفع قيمة إعلانك', en: 'Payment required for your advertisement' }, message: { ar: 'ارفع إثبات الدفع واضغط إرسال الطلب.', en: 'Upload payment proof and press Send request.' }, link: `/provider/ads/${requestId}`, readAt: null, createdAt: '2026-10-08T09:00:00.000Z' }
+  ] as const;
+  await page.route('**/api/v1/provider/notifications**', async route => {
+    calls++;
+    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
+    expect(new URL(route.request().url()).searchParams.get('unreadOnly')).toBe('true');
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: unread ? items : [], unreadCount: unread ? 2 : 0, page: 1, limit: 3, total: unread ? 2 : 0 }, ...successMeta('provider-ad-alerts') }) });
+  });
+  await page.goto(`/provider?lang=${locale}`);
+  const panel = page.locator('.provider-dashboard__notifications-preview');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText(locale === 'ar' ? items[0].title.ar : items[0].title.en);
+  await expect(panel).toContainText(locale === 'ar' ? items[1].title.ar : items[1].title.en);
+  await expect(panel.getByRole('link', { name: locale === 'ar' ? 'عرض التفاصيل' : 'View details' }).first()).toHaveAttribute('href', `/provider/ads/${requestId}?lang=${locale}`);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  for (const link of await panel.getByRole('link').all()) {
+    const bounds = await link.boundingBox();
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  }
+  await expect(page.locator('[data-provider-nav="notifications"] .provider-dashboard__notification-count')).toHaveText(new Intl.NumberFormat(locale).format(2));
+  await panel.screenshot({ path: test.info().outputPath(`provider-ad-alerts-${locale}.png`) });
+  unread = false;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(panel).toHaveCount(0);
+  expect(calls).toBeGreaterThanOrEqual(2);
+  await expect(page.locator('.provider-dashboard__notification-count')).toHaveCount(0);
+});
 
 test.describe('PRV-01 Provider Overview', () => {
   test.beforeEach(async ({ page }, testInfo) => {

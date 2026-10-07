@@ -2,6 +2,7 @@ import { Types, type ClientSession, type Connection } from 'mongoose';
 import { paymentProofDataSchema, type PaymentProofData } from '@sadat-real-estate/contracts';
 import { createProviderAdvertisingModels, type AdRequestRecord, type PaymentProofRecord, type ProviderAdvertisingModels } from '../provider/advertising-models.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { writeAdvertisingNotification } from '../ads/notifications.js';
 import { PaymentProofServiceError, type PayableAdRequest, type PaymentProofAuditEvent, type PaymentProofRegistrationInput, type PaymentProofRepository, type StoredPaymentProof } from './service.js';
 
 type AdRequestRow = AdRequestRecord & { _id: Types.ObjectId };
@@ -197,6 +198,7 @@ export function createMongoosePaymentProofRepository(
         ).select('+storageKey').lean<PaymentProofRow>().exec();
         if (!row) return undefined;
         await audit.record(event, session);
+        await writeAdvertisingNotification(connection, { event: update.status === 'approved' ? 'payment_approved' : 'payment_rejected', requestId: row.adRequestId.toHexString(), providerId: row.providerId.toHexString(), sourceId: id, version: row.version, occurredAt: new Date(update.reviewHistoryEntry.createdAt), ...(update.status === 'rejected' ? { reason: update.reviewHistoryEntry.reason } : {}) }, session);
         return toStoredPaymentProof(row);
       });
     }

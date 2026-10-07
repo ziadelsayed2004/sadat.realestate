@@ -165,4 +165,23 @@ describe('Provider overview', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.states.retry.title })).toBeInTheDocument());
     expect(screen.queryByTestId('provider-summary-total')).not.toBeInTheDocument();
   });
+
+  it.each(['ar', 'en'] as const)('shows unread advertising notifications on the dashboard and refreshes after returning for %s', async locale => {
+    const loadNotifications = vi.fn().mockResolvedValueOnce({ items: [{ id: 'dddddddddddddddddddddddd', type: 'advertising.waiting_payment', title: { ar: 'مطلوب دفع قيمة إعلانك', en: 'Payment required for your advertisement' }, message: { ar: 'ارفع إثبات الدفع من تفاصيل الإعلان.', en: 'Upload payment proof in the ad details.' }, link: '/provider/ads/eeeeeeeeeeeeeeeeeeeeeeee', readAt: null, createdAt: '2026-10-08T08:00:00.000Z' }], unreadCount: 1, page: 1, limit: 3, total: 1 }).mockResolvedValue({ items: [], unreadCount: 0, page: 1, limit: 3, total: 0 });
+    const result = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={overview} loadNotifications={loadNotifications} />, { locale });
+    await screen.findByText(locale === 'ar' ? 'مطلوب دفع قيمة إعلانك' : 'Payment required for your advertisement');
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض التفاصيل' : 'View details' })).toHaveAttribute('href', `/provider/ads/eeeeeeeeeeeeeeeeeeeeeeee?lang=${locale}`);
+    expect(result.container.querySelector('[data-provider-nav="notifications"] .provider-dashboard__notification-count')).toHaveTextContent(new Intl.NumberFormat(locale).format(1));
+    expect(loadNotifications).toHaveBeenCalledWith({ page: 1, limit: 3, unreadOnly: true }, expect.any(AbortSignal));
+    window.dispatchEvent(new Event('focus'));
+    await waitFor(() => expect(result.container.querySelector('.provider-dashboard__notifications-preview')).toBeNull());
+    expect(result.container.querySelector('.provider-dashboard__notification-count')).toBeNull();
+  });
+
+  it('never loads another account notifications for an anonymous dashboard', async () => {
+    const loadNotifications = vi.fn();
+    renderWithLocale(<ProviderOverview locale="en" session={{ status: 'anonymous' }} initialData={overview} loadNotifications={loadNotifications} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByRole('heading', { name: getProviderCopy('en').states.permission.title })).toBeInTheDocument());
+    expect(loadNotifications).not.toHaveBeenCalled();
+  });
 });
