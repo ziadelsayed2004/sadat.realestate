@@ -490,7 +490,7 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
     [copy.overview.actions.reviewAccounts, '/admin/users'],
     [copy.overview.actions.reviewProperties, '/admin/properties'],
     [copy.overview.actions.createArticle, '/admin/articles'],
-    [copy.overview.actions.reviewAdvertising, '/admin/advertising']
+    [copy.overview.actions.reviewAdvertising, '/admin/ads/requests']
   ] as const;
   return (
     <div className="admin-dashboard__main">
