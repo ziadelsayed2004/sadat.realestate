@@ -111,7 +111,7 @@ function nameFromForm(form: FormState): LocalizedText {
 }
 
 function buildPayload(tab: AdminMasterDataTab, form: FormState, item: MasterDataItem | undefined): unknown {
-  const common = { name: nameFromForm(form), slug: form.slug.trim(), order: Number(form.order), active: form.active, reason: form.reason.trim() };
+  const common = { name: nameFromForm(form), order: Number(form.order), active: form.active, reason: form.reason.trim() };
   if (tab === 'categories') {
     if (item === undefined) return { ...common, kind: form.kind, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
     return { ...common, version: item.version, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
@@ -216,7 +216,7 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
     <form className="admin-master-data__form" onSubmit={onSubmit}>
       <div className="admin-master-data__form-grid">
         <SelectField id="admin-master-data-kind" label={copy.labels.kind} value={form.kind} options={kindOptions} disabled={editing} onChange={kind => onChange({ kind })} />
-        <FormField id="admin-master-data-slug" label={copy.labels.slug} value={form.slug} placeholder={copy.placeholders.slug} required onChange={slug => onChange({ slug })} disabled={editing} />
+        <p>{locale === 'ar' ? 'المعرّف يتولد تلقائيًا عند الإنشاء ويظل ثابتًا عند التعديل.' : 'The identifier is generated automatically on creation and stays unchanged on edits.'}</p>
         <FormField id="admin-master-data-name-ar" label={copy.labels.nameAr} value={form.nameAr} placeholder={copy.placeholders.nameAr} onChange={nameAr => onChange({ nameAr })} />
         <FormField id="admin-master-data-name-en" label={copy.labels.nameEn} value={form.nameEn} placeholder={copy.placeholders.nameEn} onChange={nameEn => onChange({ nameEn })} />
         <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" step="1" required onChange={order => onChange({ order })} />

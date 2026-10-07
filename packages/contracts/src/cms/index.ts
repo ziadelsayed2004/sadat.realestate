@@ -121,7 +121,7 @@ export type CmsSettingHistory = z.infer<typeof cmsSettingHistorySchema>;
 const order = z.number().int().nonnegative().max(100000);
 export const aboutBlockCreateSchema = z
   .object({
-    key: safeKey,
+    key: safeKey.optional(),
     title: localizedTextSchema,
     body: localizedTextSchema,
     order,
@@ -147,7 +147,7 @@ export const aboutBlockPatchSchema = z
   );
 export const teamMemberCreateSchema = z
   .object({
-    key: safeKey,
+    key: safeKey.optional(),
     name: localizedTextSchema,
     title: localizedTextSchema,
     bio: localizedTextSchema.optional(),
@@ -253,7 +253,7 @@ export const populationValueSchema = z
   });
 export const tipCreateSchema = z
   .object({
-    key: safeKey,
+    key: safeKey.optional(),
     title: localizedTextSchema,
     body: localizedTextSchema,
     order,

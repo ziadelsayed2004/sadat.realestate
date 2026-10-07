@@ -44,7 +44,7 @@ export const articleCategoryDataSchema = z.object({
 export const articleCategorySchema = articleCategoryDataSchema;
 
 export const articleCategoryCreateSchema = z.object({
-  slug: articleSlugSchema,
+  slug: articleSlugSchema.optional(),
   name: localizedTextSchema,
   description: localizedTextSchema.optional(),
   displayOrder: z.number().int().nonnegative().max(10_000).default(0),
@@ -121,7 +121,7 @@ export const articleSchema = articleDataSchema;
 
 export const articleCreateSchema = z.object({
   categoryId: articleIdSchema,
-  slug: articleSlugSchema,
+  slug: articleSlugSchema.optional(),
   title: localizedTextSchema,
   body: localizedTextSchema,
   seoTitle: localizedTextSchema.optional(),

@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   projectCreateSchema,
   projectListQuerySchema,
@@ -113,7 +114,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
     async create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData> {
       await provider(claims);
       const parsed = projectCreateSchema.parse(input);
-      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug, ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
+      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug ?? generateIdentifier('project', parsed.name), ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
       return data(write(result));
     },
     async update(claims: AccessTokenClaims, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData> {

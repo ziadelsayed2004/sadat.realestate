@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   Schema,
   Types,
@@ -227,7 +228,7 @@ export function createFeatureService(
     async create(id, i0, c) {
       const i = featureCreateSchema.parse(i0);
       await need(id, "admin:features.manage");
-      const { reason, ...fields } = i;
+      const { reason, ...fields } = { ...i, slug: i.slug ?? generateIdentifier(i.kind, i.name) };
       try {
         return await transaction(async (session) => {
           const d = new m({

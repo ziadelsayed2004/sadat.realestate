@@ -1,5 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
+test('generates a project link without user input and keeps it on name changes', async () => {
+  const { service } = fixture();
+  const context = { requestId: 'auto-project', traceId: 'a'.repeat(32) };
+  const created = await service.create(claims(), { name: { en: 'Nile Heights' }, reason: 'Create named project' }, context);
+  assert.match(created.slug, /^nile-heights-[a-f0-9]{32}$/);
+  const updated = await service.update(claims(), created.id, { version: created.version, name: { en: 'New name' }, reason: 'Rename project only' }, context);
+  assert.equal(updated.slug, created.slug);
+});
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import type { ProjectRepository, StoredProject } from '../../src/modules/projects/repository.js';
 import { createProjectService, ProjectServiceError, publicProjectProjection } from '../../src/modules/projects/service.js';

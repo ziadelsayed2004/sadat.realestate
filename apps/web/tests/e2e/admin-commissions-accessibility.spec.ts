@@ -34,7 +34,7 @@ test('commission routes expose landmarks, labels, focus, and direction', async (
   await expect(page.locator('form[role="search"]')).toHaveAttribute('aria-label', /.+/u);
   await expect(page.locator('label[for="admin-commission-policies-status"]')).toBeVisible();
   await page.goto(`/admin/commissions/new?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
-  await expect(page.locator('#admin-commission-policy-key')).toHaveAttribute('required', '');
+  await expect(page.locator('#admin-commission-policy-key')).toHaveCount(0);
   await expect(page.locator('label[for="admin-commission-policy-effective-from"]')).toBeVisible();
   await page.goto(`/admin/commissions/exceptions/new?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#admin-commission-exception-reason')).toHaveAttribute('required', '');

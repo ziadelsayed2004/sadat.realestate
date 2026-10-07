@@ -10,12 +10,12 @@ import {
   type TeamMemberPatch,
 } from "@sadat-real-estate/contracts";
 export function parseAboutBlock(input: AboutBlockCreate | AboutBlockPatch) {
-  return "key" in input
+  return !("version" in input)
     ? aboutBlockCreateSchema.parse(input)
     : aboutBlockPatchSchema.parse(input);
 }
 export function parseTeamMember(input: TeamMemberCreate | TeamMemberPatch) {
-  return "key" in input
+  return !("version" in input)
     ? teamMemberCreateSchema.parse(input)
     : teamMemberPatchSchema.parse(input);
 }

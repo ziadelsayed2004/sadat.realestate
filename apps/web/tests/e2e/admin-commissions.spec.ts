@@ -41,7 +41,6 @@ test.describe('ADM-39 through ADM-45 commission administration', () => {
   test('creates an explicit policy without a universal commission value', async ({ page }) => {
     const locale = localeForProject();
     await page.goto(`/admin/commissions/new?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
-    await page.locator('#admin-commission-policy-key').fill('default.sale');
     await page.locator('#admin-commission-policy-label').fill('Default sale commission');
     await page.locator('#admin-commission-policy-percentage').fill('2.5');
     await page.locator('#admin-commission-policy-effective-from').fill('2026-08-20');
@@ -49,7 +48,7 @@ test.describe('ADM-39 through ADM-45 commission administration', () => {
     await page.locator('.admin-commissions__form button[type="submit"]').click();
     const request = await requestPromise;
     const body = request.postDataJSON() as Record<string, unknown>;
-    expect(body).toMatchObject({ key: 'default.sale', kind: 'percentage', percentageBps: 250, scope: { kind: 'default' } });
+    expect(body).toMatchObject({ kind: 'percentage', percentageBps: 250, scope: { kind: 'default' } });
     expect(body).not.toHaveProperty('universalPrice');
     await expect(page.locator('.admin-commissions__feedback[data-tone="success"]')).toBeVisible();
     await expectNoPrivateCommissionFields(page);

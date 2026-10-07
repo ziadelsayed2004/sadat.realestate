@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   cmsAdminAboutBlockPutSchema,
   cmsAdminAboutBlockSchema,
@@ -280,7 +281,7 @@ export function createCmsAdminContentService(dependencies: {
           const create = input as AboutBlockCreate;
           requirePublish(create.status, authorization.publish);
           row = aboutResult(await dependencies.repository.createAbout({
-            key: create.key, title: create.title, body: create.body, order: create.order,
+            key: create.key ?? generateIdentifier('about', undefined, '_'), title: create.title, body: create.body, order: create.order,
             active: create.active, status: create.status
           }, principal.userId, at));
         }
@@ -313,7 +314,7 @@ export function createCmsAdminContentService(dependencies: {
           const create = input as TeamMemberCreate;
           requirePublish(create.status, authorization.publish);
           row = teamResult(await dependencies.repository.createTeam({
-            key: create.key, name: create.name, title: create.title,
+            key: create.key ?? generateIdentifier('team', undefined, '_'), name: create.name, title: create.title,
             ...(create.bio ? { bio: create.bio } : {}),
             ...(create.photoAssetId ? { photoAssetId: create.photoAssetId } : {}),
             ...(imageChanges.imageUrl ? { imageUrl: imageChanges.imageUrl } : {}),
@@ -338,10 +339,10 @@ export function createCmsAdminContentService(dependencies: {
           };
           row = tipResult(await dependencies.repository.updateTip(update.id, update.version, changes, principal.userId, at));
         } else {
-          const create = input as Extract<CmsAdminTipPut, { key: string }>;
+          const create = input as import('@sadat-real-estate/contracts').TipCreate;
           requirePublish(create.status, authorization.publish);
           row = tipResult(await dependencies.repository.createTip({
-            key: create.key, title: create.title, body: create.body, order: create.order,
+            key: create.key ?? generateIdentifier('tip', undefined, '_'), title: create.title, body: create.body, order: create.order,
             active: create.active, status: create.status
           }, principal.userId, at));
         }

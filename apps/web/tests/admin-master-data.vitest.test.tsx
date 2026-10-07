@@ -115,7 +115,6 @@ describe('Admin master-data contracts and views', () => {
     const result = renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={client} authClient={authorization} initialData={{ items: [], page: 1, limit: 20, total: 0 }} />, { locale: 'en' });
     fireEvent.click(screen.getAllByRole('button', { name: getAdminMasterDataCopy('en').add })[0]!);
     fireEvent.change(screen.getByLabelText(getAdminMasterDataCopy('en').labels.nameEn), { target: { value: 'Projects' } });
-    fireEvent.change(screen.getByLabelText(`${getAdminMasterDataCopy('en').labels.slug} *`), { target: { value: 'projects' } });
     fireEvent.change(screen.getByLabelText(`${getAdminMasterDataCopy('en').labels.reason} *`), { target: { value: 'Approved category' } });
     fireEvent.click(screen.getByRole('button', { name: getAdminMasterDataCopy('en').save }));
     await waitFor(() => expect(screen.getByText(getAdminMasterDataCopy('en').mutation.created)).toBeInTheDocument());

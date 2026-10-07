@@ -1,5 +1,18 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
+test('generates CMS keys for About, team and tips without making update requests create new records', async () => {
+  const { service } = createService();
+  const context = { requestId: 'auto-cms', traceId: 'a'.repeat(32) };
+  for (const namespace of ['about', 'team', 'tips'] as const) {
+    const output = await service.put({ userId: adminId }, namespace, { title: { ar: 'عنوان' }, ...(namespace === 'team' ? { name: { ar: 'أحمد' } } : { body: { ar: 'محتوى' } }), order: 0, reason: 'Create automatic CMS key' }, context);
+    const item = output.items[0]!;
+    assert.ok('key' in item);
+    assert.match(item.key as string, /^(about|team|tip)_[a-f0-9]{32}$/);
+    const updated = await service.put({ userId: adminId }, namespace, { id: item.id, version: item.version, title: { en: 'Changed title' }, order: 1, reason: 'Update saved record' }, context);
+    assert.equal(updated.items[0] && 'key' in updated.items[0] ? updated.items[0].key : undefined, item.key);
+  }
+});
 import type {
   CmsAdminContentRepository,
   StoredAboutBlock,

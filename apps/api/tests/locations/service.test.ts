@@ -9,6 +9,15 @@ const locationId = '2123456789abcdef01234567';
 const neighborhoodId = '3123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 
+test('generates a location slug on the server and preserves it on rename', async () => {
+  const { service } = setup();
+  const context = { requestId: 'auto-location', traceId: 'a'.repeat(32) };
+  const created = await service.create({ userId: adminId }, { kind: 'location', name: { ar: 'السادات' }, order: 0, active: true, reason: 'Create named location' }, context);
+  assert.match(created.slug, /^location-[a-f0-9]{32}$/);
+  const updated = await service.update({ userId: adminId }, created.id, { version: created.version, name: { en: 'New City' }, reason: 'Rename city only' }, context);
+  assert.equal(updated.slug, created.slug);
+});
+
 function record(overrides: Partial<StoredLocation> = {}): StoredLocation {
   return {
     id: locationId, kind: 'location', name: { ar: 'مدينة السادات' }, slug: 'sadat-city',

@@ -3080,9 +3080,9 @@
                   "kind",
                   "groupKey",
                   "name",
-                  "slug",
                   "reason"
-                ]
+                ],
+                "description": "The server generates the slug when omitted; existing identifiers remain unchanged on name edits."
               }
             }
           }
@@ -3268,9 +3268,9 @@
                 "required": [
                   "kind",
                   "name",
-                  "slug",
                   "reason"
-                ]
+                ],
+                "description": "The server generates the slug when omitted; existing identifiers remain unchanged on name edits."
               }
             }
           }
@@ -13964,7 +13964,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "slug",
           "name",
           "reason"
         ],
@@ -13973,7 +13972,8 @@
             "type": "string",
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
             "minLength": 2,
-            "maxLength": 120
+            "maxLength": 120,
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "name": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -14063,7 +14063,6 @@
         "additionalProperties": false,
         "required": [
           "categoryId",
-          "slug",
           "title",
           "body",
           "reason"
@@ -14076,7 +14075,8 @@
             "type": "string",
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
             "minLength": 2,
-            "maxLength": 120
+            "maxLength": 120,
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -16109,7 +16109,6 @@
         "required": [
           "kind",
           "name",
-          "slug",
           "reason"
         ],
         "properties": {
@@ -16123,7 +16122,8 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 80,
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "parentLocationId": {
             "type": "string",
@@ -17359,7 +17359,6 @@
         "additionalProperties": false,
         "required": [
           "name",
-          "slug",
           "reason"
         ],
         "properties": {
@@ -17370,7 +17369,8 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 120,
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "description": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -17772,7 +17772,6 @@
         "additionalProperties": false,
         "required": [
           "name",
-          "slug",
           "transactionType",
           "source",
           "reason"
@@ -17789,7 +17788,8 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 120,
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "transactionType": {
             "$ref": "#/components/schemas/PropertyTransactionType"
@@ -21732,7 +21732,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "key",
           "title",
           "body",
           "order",
@@ -21741,7 +21740,8 @@
         "properties": {
           "key": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -22211,7 +22211,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "key",
           "title",
           "body",
           "order",
@@ -22220,7 +22219,8 @@
         "properties": {
           "key": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -22303,7 +22303,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "key",
           "name",
           "title",
           "order",
@@ -22312,7 +22311,8 @@
         "properties": {
           "key": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
           },
           "name": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -22872,7 +22872,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "key",
           "label",
           "kind",
           "scope",
@@ -22883,7 +22882,8 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 80,
-            "pattern": "^[a-z][a-z0-9_.-]*$"
+            "pattern": "^[a-z][a-z0-9_.-]*$",
+            "description": "Generated by the API when omitted; preserved on label changes."
           },
           "label": {
             "type": "string",

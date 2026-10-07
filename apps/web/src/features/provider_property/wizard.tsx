@@ -215,7 +215,7 @@ function BasicFormView({
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-core-title">{wizard.basicTitle}</h2></div>
         <div className="provider-property-wizard__grid">
           <Input id="provider-property-name" label={wizard.labels.name} value={form.name[locale]} placeholder={wizard.placeholders.name} onChange={event => updateName(event.target.value)} state={fieldError('name') ? 'error' : 'default'} error={fieldError('name')} required />
-          <Input id="provider-property-slug" label={wizard.labels.slug} value={form.slug} placeholder={wizard.placeholders.slug} onChange={event => setForm({ ...form, slug: event.target.value })} state={fieldError('slug') ? 'error' : 'default'} error={fieldError('slug')} required />
+          <p>{locale === 'ar' ? 'رابط العقار يتولد تلقائيًا عند الإنشاء ويظل ثابتًا عند التعديل.' : 'The property link is generated automatically on creation and stays unchanged on edits.'}</p>
           <div className="provider-property-wizard__field"><label htmlFor="provider-property-kind">{wizard.labels.kind}</label><select id="provider-property-kind" value={form.kind} onChange={event => setForm({ ...form, kind: event.target.value as BasicForm['kind'], parentPropertyId: '' })}><option value="property">{wizard.kindLabels.property}</option><option value="unit">{wizard.kindLabels.unit}</option></select></div>
           <div className="provider-property-wizard__field"><label htmlFor="provider-property-transaction">{wizard.labels.transaction}</label><select id="provider-property-transaction" value={form.transactionType} onChange={event => setForm({ ...form, transactionType: event.target.value as BasicForm['transactionType'] })}><option value="sale">{wizard.transactionLabels.sale}</option><option value="rent">{wizard.transactionLabels.rent}</option></select></div>
         </div>
@@ -407,7 +407,6 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     const common = {
       kind: basic.kind,
       name,
-      slug: basic.slug.trim().toLowerCase(),
       transactionType: basic.transactionType,
       ...(basic.projectId.trim() === '' ? (isNew ? {} : { projectId: null }) : { projectId: basic.projectId.trim().toLowerCase() }),
       ...(basic.kind !== 'unit' || basic.parentPropertyId.trim() === '' ? (isNew ? {} : { parentPropertyId: null }) : { parentPropertyId: basic.parentPropertyId.trim().toLowerCase() })

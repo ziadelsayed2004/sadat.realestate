@@ -12,6 +12,17 @@ import { CommissionChangeLogServiceError, createCommissionChangeLogService, type
 const admin = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '3123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const seeker = { ...admin, role: 'seeker' } as AccessTokenClaims;
 
+test('generates distinct policy keys on the server and keeps them when labels change', async () => {
+  const service = createCommissionPolicyService();
+  const input = { label: 'Standard commission', kind: 'percentage', scope: { kind: 'default' }, percentageBps: 250, effectiveFrom: '2026-08-14T00:00:00.000Z' };
+  const first = await service.createPolicy(admin, input);
+  const second = await service.createPolicy(admin, input);
+  assert.match(first.key, /^policy_[a-f0-9]{32}$/);
+  assert.notEqual(first.key, second.key);
+  const updated = await service.updatePolicy(admin, first.id, { expectedVersion: first.version, label: 'New label', reason: 'Rename policy' });
+  assert.equal(updated.key, first.key);
+});
+
 test('models percentage, fixed, and exempt policies with strict scope and effective dates', async () => {
   let current = new Date('2026-08-13T23:00:00.000Z');
   const service = createCommissionPolicyService({ now: () => current });

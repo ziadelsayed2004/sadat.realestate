@@ -1,5 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
+test('generates a property link without a manual slug and keeps it on draft edits', async () => {
+  const { service } = fixture();
+  const context = { requestId: 'auto-property', traceId: 'a'.repeat(32) };
+  const created = await service.create(claims(), { kind: 'property', name: { ar: 'شقة في السادات' }, transactionType: 'sale', source: { providerId: provider, sourceType: 'individual_broker' }, reason: 'Create automatic property' }, context);
+  assert.match(created.slug, /^property-[a-f0-9]{32}$/);
+  const updated = await service.saveStep(claims(), created.id, 'basic', { version: created.version, name: { en: 'Updated apartment' }, reason: 'Rename property only' }, context);
+  assert.equal(updated.slug, created.slug);
+});
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import type { PropertyRepository, StoredProperty } from '../../src/modules/properties/repository.js';
 import { createPropertyService, PropertyServiceError } from '../../src/modules/properties/service.js';

@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   locationCreateRequestSchema,
   locationDeleteRequestSchema,
@@ -116,7 +117,7 @@ export function createLocationService(dependencies: {
       await requireParent(input.parentLocationId);
       const result = await dependencies.repository.create({
         location: {
-          kind: input.kind, name: input.name, slug: input.slug,
+          kind: input.kind, name: input.name, slug: input.slug ?? generateIdentifier('location', input.name),
           ...(input.parentLocationId ? { parentLocationId: input.parentLocationId } : {}),
           ...(input.coordinates ? { coordinates: input.coordinates } : {}),
           order: input.order, active: input.active

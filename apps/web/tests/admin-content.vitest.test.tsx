@@ -91,12 +91,11 @@ describe('Admin article and category management contracts and views', () => {
     fireEvent.submit(screen.getByTestId('admin-article-editor').querySelector('form')!);
     expect(create).not.toHaveBeenCalled();
     expect(screen.getByText(getAdminContentCopy('en').reasonRequired)).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('Slug'), { target: { value: 'new-article' } });
     fireEvent.change(screen.getByLabelText(/AR Title/i), { target: { value: 'New article' } });
     fireEvent.change(screen.getByLabelText(/AR Body/i), { target: { value: 'Body' } });
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create article content' } });
     fireEvent.click(screen.getByRole('button', { name: getAdminContentCopy('en').save }));
-    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ categoryId: category.id, slug: 'new-article', reason: 'Create article content' })));
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ categoryId: category.id, reason: 'Create article content' })));
   });
 
   it('passes article and category filters to the implemented list query loaders', async () => {

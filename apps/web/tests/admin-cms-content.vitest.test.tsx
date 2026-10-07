@@ -219,7 +219,7 @@ describe('admin About, Team, and population CMS content', () => {
     fireEvent.click(screen.getByTestId(`admin-cms-about-${teamId}`).querySelectorAll('button')[1]!);
     expect(screen.getByLabelText('AR ' + copy.title)).toHaveFocus();
     expect(screen.getByLabelText('EN ' + copy.title)).toHaveValue('Our vision');
-    expect(screen.getByLabelText(copy.key)).toBeDisabled();
+    expect(screen.queryByLabelText(copy.key)).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('AR ' + copy.title), { target: { value: 'رؤيتنا الجديدة' } });
     fireEvent.change(screen.getByLabelText('EN ' + copy.title), { target: { value: 'Our new vision' } });
     fireEvent.change(screen.getByLabelText('AR ' + copy.body), { target: { value: 'نبذة معدلة' } });

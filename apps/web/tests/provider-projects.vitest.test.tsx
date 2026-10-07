@@ -147,10 +147,9 @@ describe('Provider projects', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Add new project' }));
     fireEvent.change(screen.getByLabelText('Project name — English'), { target: { value: 'New project' } });
-    fireEvent.change(screen.getByLabelText('Slug'), { target: { value: 'new-project' } });
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create project' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'New project' }, slug: 'new-project', reason: 'Create project' }));
+    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'New project' }, reason: 'Create project' }));
 
     await waitFor(() => expect(screen.getByTestId(`provider-project-${projectId}`)).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: `Edit: ${draft.name.en}` }));

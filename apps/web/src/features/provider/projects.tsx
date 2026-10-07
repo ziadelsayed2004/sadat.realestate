@@ -155,7 +155,6 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     if (mode === 'create') {
       const parsed = projectCreateSchema.safeParse({
         name,
-        slug: form.slug.trim(),
         ...(descriptionValue === undefined ? {} : { description: descriptionValue }),
         ...(form.locationId.trim() === '' ? {} : { locationId: form.locationId.trim() }),
         ...(form.website.trim() === '' ? {} : { website: form.website.trim() }),
@@ -172,7 +171,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
       setValidationError(copy.errors.generic);
       return;
     }
-    const candidate: Record<string, unknown> = { version: project.version, slug: form.slug.trim(), description: descriptionValue ?? null, reason };
+    const candidate: Record<string, unknown> = { version: project.version, description: descriptionValue ?? null, reason };
     if (name !== undefined) candidate.name = name;
     if (form.locationId.trim() !== (project.locationId ?? '')) candidate.locationId = form.locationId.trim() === '' ? null : form.locationId.trim();
     if (form.website.trim() !== (project.website ?? '')) candidate.website = form.website.trim() === '' ? null : form.website.trim();
@@ -214,7 +213,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
           ))}
         </fieldset>
         <div className="provider-projects__form-grid">
-          <Input id="provider-project-slug" label={copy.form.slug} value={form.slug} onChange={event => update('slug', event.target.value)} placeholder={copy.form.placeholders.slug} required />
+          <p>{locale === 'ar' ? 'رابط المشروع يتولد تلقائيًا عند الإنشاء ويظل ثابتًا عند التعديل.' : 'The project link is generated automatically on creation and stays unchanged on edits.'}</p>
           <Input id="provider-project-location" label={copy.form.locationId} value={form.locationId} onChange={event => update('locationId', event.target.value)} placeholder={copy.form.placeholders.locationId} />
           <Input id="provider-project-website" label={copy.form.website} type="url" value={form.website} onChange={event => update('website', event.target.value)} placeholder={copy.form.placeholders.website} />
         </div>

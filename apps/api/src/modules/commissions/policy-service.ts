@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { generateIdentifier } from '../shared/identifiers.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import { commissionPolicyCreateSchema, commissionPolicyListQuerySchema, commissionPolicySchema, commissionPolicyPatchSchema, type CommissionPolicy, type CommissionPolicyListData, type CommissionPolicyListQuery } from '@sadat-real-estate/contracts';
 import type { AuditRecordInput } from '../audit/writer.js';
@@ -34,7 +35,8 @@ export function createCommissionPolicyService(seed: { policies?: CommissionPolic
   return {
     async createPolicy(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
-      const parsed = commissionPolicyCreateSchema.parse(input);
+      const request = commissionPolicyCreateSchema.parse(input);
+      const parsed = { ...request, key: request.key ?? generateIdentifier('policy', undefined, '_') };
       if ((await all()).some(item => item.key === parsed.key && item.effectiveFrom === parsed.effectiveFrom)) throw new CommissionPolicyServiceError('COMMISSION_DUPLICATE');
       const stamp = now();
       const policy = commissionPolicySchema.parse({ id: id(), ...parsed, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });

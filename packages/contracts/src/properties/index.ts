@@ -109,7 +109,7 @@ export const propertyUnitSchema = z.object({
 export const propertyCreateSchema = z.object({
   kind: propertyKindSchema.default('property'),
   name: localizedTextSchema,
-  slug: propertySlugSchema,
+  slug: propertySlugSchema.optional(),
   transactionType: propertyTransactionTypeSchema,
   projectId: propertyObjectIdSchema.optional(),
   parentPropertyId: propertyObjectIdSchema.optional(),

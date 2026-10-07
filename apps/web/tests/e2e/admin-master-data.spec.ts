@@ -47,7 +47,6 @@ test.describe('ADM-09 through ADM-11 admin master data', () => {
     await page.goto(`/admin/property-categories?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="ADM-09"]')).toBeVisible();
     await page.getByRole('button', { name: /Add item|إضافة عنصر|添加项目/u }).first().click();
-    await page.locator('#admin-master-data-slug').fill('projects');
     await page.locator('#admin-master-data-name-en').fill('Projects');
     await page.locator('#admin-master-data-order').fill('2');
     await page.locator('#admin-master-data-reason').fill('Approved category');
@@ -55,7 +54,8 @@ test.describe('ADM-09 through ADM-11 admin master data', () => {
     await page.getByRole('button', { name: /Save|حفظ|保存/u }).click();
     const mutation = await request;
     expect(mutation.headers().authorization).toBe('Bearer admin.master-data.e2e');
-    expect(JSON.parse(mutation.postData() ?? '{}')).toMatchObject({ kind: 'category', slug: 'projects', order: 2, reason: 'Approved category' });
+    expect(JSON.parse(mutation.postData() ?? '{}')).toMatchObject({ kind: 'category', order: 2, reason: 'Approved category' });
+    expect(mutation.postDataJSON()).not.toHaveProperty('slug');
     await expect(page.getByRole('status')).toBeVisible();
   });
 

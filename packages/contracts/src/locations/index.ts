@@ -35,7 +35,7 @@ function validateHierarchy(
 export const locationCreateRequestSchema = z.object({
   ...hierarchyShape,
   name: localizedTextSchema,
-  slug: locationSlugSchema,
+  slug: locationSlugSchema.optional(),
   coordinates: locationCoordinatesSchema.optional(),
   order: locationOrderSchema.default(0),
   active: z.boolean().default(true),

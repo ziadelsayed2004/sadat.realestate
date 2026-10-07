@@ -150,18 +150,18 @@ export type CmsWriteResult<T> =
 export interface CmsAdminContentRepository {
   listAbout(): Promise<StoredAboutBlock[]>;
   findAbout(id: string): Promise<StoredAboutBlock | null>;
-  createAbout(input: Omit<AboutBlockCreate, 'reason'>, actorId: string, at: Date): Promise<CmsWriteResult<StoredAboutBlock>>;
+  createAbout(input: Omit<AboutBlockCreate, 'reason' | 'key'> & { key: string }, actorId: string, at: Date): Promise<CmsWriteResult<StoredAboutBlock>>;
   updateAbout(id: string, version: number, input: AboutBlockChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredAboutBlock>>;
   listTeam(): Promise<StoredTeamMember[]>;
   findTeam(id: string): Promise<StoredTeamMember | null>;
-  createTeam(input: Omit<TeamMemberCreate, 'reason'>, actorId: string, at: Date): Promise<CmsWriteResult<StoredTeamMember>>;
+  createTeam(input: Omit<TeamMemberCreate, 'reason' | 'key'> & { key: string }, actorId: string, at: Date): Promise<CmsWriteResult<StoredTeamMember>>;
   updateTeam(id: string, version: number, input: TeamMemberChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredTeamMember>>;
   deleteTeam(id: string, version: number): Promise<CmsWriteResult<StoredTeamMember>>;
   getPopulation(): Promise<StoredPopulationValue | null>;
   createPopulation(input: PopulationValueChanges, actorId: string, at: Date): Promise<StoredPopulationValue>;
   updatePopulation(id: string, version: number, input: PopulationValueUpdateChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredPopulationValue>>;
   listTips(): Promise<StoredTip[]>;
-  createTip(input: Omit<TipCreate, 'reason'>, actorId: string, at: Date): Promise<CmsWriteResult<StoredTip>>;
+  createTip(input: Omit<TipCreate, 'reason' | 'key'> & { key: string }, actorId: string, at: Date): Promise<CmsWriteResult<StoredTip>>;
   updateTip(id: string, version: number, input: TipChanges, actorId: string, at: Date): Promise<CmsWriteResult<StoredTip>>;
   listHomepageSections(): Promise<StoredHomepageSection[]>;
   createHomepageSection(input: Omit<HomepageSectionCreate, 'reason'>, actorId: string, at: Date): Promise<CmsWriteResult<StoredHomepageSection>>;

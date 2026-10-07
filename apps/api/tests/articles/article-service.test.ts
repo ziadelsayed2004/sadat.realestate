@@ -14,6 +14,21 @@ const NOW = new Date('2026-08-17T08:00:00.000Z');
 const PRINCIPAL = { userId: ADMIN_ID };
 const CONTEXT = { requestId: 'article-test-request', traceId: 'a'.repeat(32) };
 
+test('generates distinct article/category links and preserves them when titles change', async () => {
+  const { service } = fixture();
+  const category = await service.createCategory(PRINCIPAL, { name: { ar: 'سكن' }, displayOrder: 0, active: true, reason: 'Create category automatically' }, CONTEXT);
+  assert.match(category.slug, /^category-[a-f0-9]{32}$/);
+  const input = { categoryId: category.id, title: { en: 'Buying in Sadat' }, body: { en: 'Useful advice' }, reason: 'Create automatic link' };
+  const first = await service.createArticle(PRINCIPAL, input, CONTEXT);
+  const second = await service.createArticle(PRINCIPAL, input, CONTEXT);
+  assert.match(first.slug, /^buying-in-sadat-[a-f0-9]{32}$/);
+  assert.notEqual(first.slug, second.slug);
+  const updated = await service.updateArticle(PRINCIPAL, first.id, { version: first.version, title: { ar: 'عنوان جديد' }, reason: 'Update title only' }, CONTEXT);
+  assert.equal(updated.slug, first.slug);
+  const revisedCategory = await service.updateCategory(PRINCIPAL, category.id, { version: category.version, name: { ar: 'عقارات' }, reason: 'Update category name' }, CONTEXT);
+  assert.equal(revisedCategory.slug, category.slug);
+});
+
 function fixture(options: { readonly permissions?: readonly string[] } = {}) {
   const permissions = new Set(options.permissions ?? [
     'admin:content.view',

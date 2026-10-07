@@ -1,0 +1,15 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB",
+  "mockedRoutes": false,
+  "checks": [
+    "plan_is_read_only",
+    "fills_all_twelve_collections_preserving_existing_links_and_versions",
+    "same_names_get_distinct_valid_identifiers",
+    "every_backfill_change_is_audited",
+    "repeat_run_is_idempotent",
+    "audit_failure_rolls_back_identifier_and_version",
+    "amenity_api_persists_generated_identifier_and_preserves_it_on_rename"
+  ],
+  "cleanup": true
+}

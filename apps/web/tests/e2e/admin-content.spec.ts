@@ -21,6 +21,22 @@ async function routeAdminContentApis(page: import('@playwright/test').Page, allo
 }
 
 test.describe('ADM-25 and ADM-26 article management', () => {
+  test('creates an article without asking for a manual identifier', async ({ page }) => {
+    const locale = localeForContent();
+    await page.goto(`/admin/articles?lang=${locale}`);
+    await page.getByRole('button', { name: /Create article|إنشاء مقال/i }).click();
+    const editor = page.getByTestId('admin-article-editor');
+    await expect(editor.locator('#admin-article-slug')).toHaveCount(0);
+    await editor.getByLabel(/^AR (Title|العنوان)$/).fill('عنوان المقال');
+    await editor.getByLabel(/^AR (Body|المحتوى)$/).fill('محتوى المقال باللغة العربية');
+    await editor.locator('#admin-article-reason').fill('Create a named article');
+    const request = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/articles'));
+    await editor.getByRole('button', { name: /^(Save|حفظ)$/i }).click();
+    const payload = (await request).postDataJSON();
+    expect(payload).not.toHaveProperty('slug');
+    expect(payload.title).toEqual({ ar: 'عنوان المقال' });
+    await expect(editor).toHaveCount(0);
+  });
   test('content quick-action aliases open content management instead of 404', async ({ page }) => {
     for (const path of ['/admin/content', '/admin/content/articles']) {
       await page.goto(`${path}?lang=${localeForContent()}`);

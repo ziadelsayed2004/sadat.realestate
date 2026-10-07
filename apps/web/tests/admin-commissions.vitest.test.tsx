@@ -156,7 +156,7 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
   });
 
   it('validates a policy before mutation and sends no unsupported universal value', async () => {
-    const create = vi.fn(async () => policy);
+    const create = vi.fn(async (_input: unknown) => policy);
     window.history.pushState({}, '', '/admin/commissions/new');
     const result = renderWithLocale(<AdminCommissions locale="en" session={session} authClient={authorization} {...loaders} createPolicy={create} />, { locale: 'en' });
     const form = result.container.querySelector('form.admin-commissions__form');
@@ -164,7 +164,6 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     if (form === null) throw new Error('Expected the policy form to render.');
     fireEvent.submit(form);
     expect(create).not.toHaveBeenCalled();
-    fireEvent.change(screen.getByLabelText('Policy code (optional)'), { target: { value: 'default.sale' } });
     fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Default sale commission' } });
     fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
     fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20' } });
@@ -180,7 +179,6 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     expect(form).not.toBeNull();
     if (form === null) throw new Error('Expected the view-only policy form to render.');
     expect(screen.getByRole('button', { name: getAdminCommissionsCopy('en').actions.save })).toBeDisabled();
-    fireEvent.change(screen.getByLabelText('Policy code (optional)'), { target: { value: 'default.sale' } });
     fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Default sale commission' } });
     fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
     fireEvent.change(screen.getByLabelText('Effective from'), { target: { value: '2026-08-20' } });
@@ -188,15 +186,16 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     expect(await screen.findByText(getAdminCommissionsCopy('en').states.permission.body)).toBeInTheDocument();
   });
 
-  it('generates a policy code and translates ordinary percentages and amounts to API units', async () => {
-    const create = vi.fn(async () => policy);
+  it('requests an automatically generated policy code and translates percentages and amounts to API units', async () => {
+    const create = vi.fn(async (_input: unknown) => policy);
     window.history.pushState({}, '', '/admin/commissions/new');
     const result = renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createPolicy={create} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Standard commission' } });
     fireEvent.change(screen.getByLabelText('Commission (%)'), { target: { value: '2.5' } });
     const form = result.container.querySelector('form.admin-commissions__form')!;
     fireEvent.submit(form);
-    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ key: expect.stringMatching(/^policy\.[a-f0-9-]+$/u), percentageBps: 250 })));
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ percentageBps: 250 })));
+    expect(create.mock.calls[0]?.[0]).not.toHaveProperty('key');
     fireEvent.change(screen.getByLabelText('Kind'), { target: { value: 'fixed' } });
     fireEvent.change(screen.getByLabelText('Commission amount'), { target: { value: '125.50' } });
     fireEvent.submit(form);

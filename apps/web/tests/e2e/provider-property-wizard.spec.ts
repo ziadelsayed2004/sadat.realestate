@@ -82,9 +82,10 @@ async function routeProviderProperty(page: import('@playwright/test').Page, opti
     expect(route.request().method()).toBe('POST');
     expect(route.request().headers().authorization).toBe('Bearer provider.wizard.token');
     const body = route.request().postDataJSON() as { name?: Record<string, string>; slug?: string; source?: { providerId?: string; sourceType?: string }; reason?: string };
-    expect(body).toMatchObject({ name: { [localeForProject()]: 'New provider property' }, slug: 'new-provider-property', source: { providerId, sourceType: 'individual_broker' } });
+    expect(body).toMatchObject({ name: { [localeForProject()]: 'New provider property' }, source: { providerId, sourceType: 'individual_broker' } });
+    expect(body).not.toHaveProperty('slug');
     expect(typeof body.reason).toBe('string');
-    await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: propertyFixture({ name: { en: 'New provider property' }, slug: 'new-provider-property', locationId: undefined, coordinates: undefined, version: 0 }), ...successMeta('wizard-created') }) });
+    await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: propertyFixture({ name: body.name ?? { en: 'New provider property' }, slug: 'new-provider-property', locationId: undefined, coordinates: undefined, version: 0 }), ...successMeta('wizard-created') }) });
   });
 }
 
@@ -107,7 +108,6 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await expect(page.locator('[data-screen-id="PRV-03"]')).toBeVisible();
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await page.locator('#provider-property-name').fill('New provider property');
-    await page.locator('#provider-property-slug').fill('new-provider-property');
     await page.locator('#provider-property-source-type').selectOption('individual_broker');
     await page.getByRole('button', { name: /Save draft|حفظ المسودة|保存草稿/u }).click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toContainText(/Draft saved|تم حفظ المسودة|草稿已保存/u);

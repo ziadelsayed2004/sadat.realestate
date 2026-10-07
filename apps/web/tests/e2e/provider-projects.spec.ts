@@ -122,7 +122,6 @@ test.describe('PRV-15 Provider Projects', () => {
 
     await page.getByRole('button', { name: /Add new project|إضافة مشروع جديد|添加新项目/u }).click();
     await page.getByLabel(/Project name.*English|اسم المشروع.*English|项目名称.*英语/u).fill('New provider project');
-    await page.getByLabel(/Slug|الرابط المختصر|短链接/u).fill('new-provider-project');
     await page.getByLabel(/Change reason|سبب التغيير|变更原因/u).fill('Create project');
     await page.getByRole('button', { name: /Save|حفظ|保存/u }).click();
     await expect(page.getByRole('status').filter({ hasText: /created|تم إنشاء|已创建/u })).toBeVisible();

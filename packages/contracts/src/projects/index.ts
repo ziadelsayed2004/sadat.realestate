@@ -9,7 +9,7 @@ export const projectSlugSchema = z.string().trim().min(2).max(120).regex(/^[a-z0
 export const projectReasonSchema = z.string().trim().min(5).max(500).refine(v => !/[\u0000-\u001f\u007f]/.test(v), { message: 'Project reason must not contain control characters' });
 export const projectCreateSchema = z.object({
   name: localizedTextSchema,
-  slug: projectSlugSchema,
+  slug: projectSlugSchema.optional(),
   description: localizedTextSchema.optional(),
   locationId: projectObjectIdSchema.optional(),
   organizationId: projectObjectIdSchema.optional(),

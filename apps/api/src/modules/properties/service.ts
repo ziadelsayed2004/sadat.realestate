@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   propertyCoreStepSchema,
   propertyCreateSchema,
@@ -199,7 +200,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
           source: input.source,
           kind: input.kind,
           name: input.name,
-          slug: input.slug,
+          slug: input.slug ?? generateIdentifier(input.kind, input.name),
           transactionType: input.transactionType,
           ...(input.projectId ? { projectId: input.projectId } : {}),
           ...(input.parentPropertyId ? { parentPropertyId: input.parentPropertyId } : {}),

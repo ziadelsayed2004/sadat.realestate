@@ -95,17 +95,15 @@ describe('Provider property wizard', () => {
   });
 
   it('validates the real create contract, derives the provider identity from the session, and saves a draft', async () => {
-    const create = vi.fn(async (input: Parameters<NonNullable<ComponentProps<typeof ProviderPropertyWizard>['create']>>[0]) => property({ id: 'dddddddddddddddddddddddd', name: input.name, slug: input.slug, source: input.source, version: 0, locationId: undefined, coordinates: undefined }));
+    const create = vi.fn(async (input: Parameters<NonNullable<ComponentProps<typeof ProviderPropertyWizard>['create']>>[0]) => property({ id: 'dddddddddddddddddddddddd', name: input.name, slug: input.slug ?? 'generated-property', source: input.source, version: 0, locationId: undefined, coordinates: undefined }));
     const copy = getProviderPropertyCopy('en');
     renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" create={create} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'Sadat apartment' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.slug), { target: { value: 'sadat-apartment' } });
     fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.sourceType }), { target: { value: 'individual_broker' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
     await waitFor(() => expect(create).toHaveBeenCalledTimes(1));
     expect(create).toHaveBeenCalledWith(expect.objectContaining({
       name: { en: 'Sadat apartment' },
-      slug: 'sadat-apartment',
       source: { providerId, sourceType: 'individual_broker' }
     }));
     expect(screen.getByRole('status')).toHaveTextContent(copy.wizard.saved);
@@ -116,7 +114,6 @@ describe('Provider property wizard', () => {
     const create = vi.fn(async input => property({ source: input.source }));
     renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" create={create} />, { locale });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'My apartment' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.slug), { target: { value: 'my-apartment' } });
     const source = screen.getByRole('combobox', { name: copy.wizard.labels.sourceType });
     fireEvent.change(source, { target: { value: 'brokerage_office' } });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.organizationId), { target: { value: '3'.repeat(60) } });
@@ -134,29 +131,26 @@ describe('Provider property wizard', () => {
     expect(create).toHaveBeenCalledWith(expect.objectContaining({ source: { providerId, sourceType: 'individual_broker' } }));
   });
 
-  it('shows the invalid slug and reason without clearing valid property fields', () => {
+  it('validates the reason while accepting Arabic property names without a manual slug', () => {
     const copy = getProviderPropertyCopy('ar');
     const create = vi.fn();
     renderWithLocale(<ProviderPropertyWizard locale="ar" session={session} authClient={authClient} step="basic" create={create} />, { locale: 'ar' });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'شقة في السادات' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.slug), { target: { value: 'شقة في السادات' } });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.reason), { target: { value: 'سبب' } });
     fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.sourceType }), { target: { value: 'individual_broker' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
-    expect(screen.getByLabelText(copy.wizard.labels.slug)).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.queryByLabelText(copy.wizard.labels.slug)).not.toBeInTheDocument();
     expect(screen.getByLabelText(copy.wizard.labels.reason)).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByLabelText(copy.wizard.labels.name)).toHaveValue('شقة في السادات');
-    expect(screen.getByText(copy.wizard.validationMessages.slug, { selector: 'p' })).toBeVisible();
     expect(create).not.toHaveBeenCalled();
   });
 
   it('updates the newly saved draft on a second save instead of creating another property', async () => {
     const copy = getProviderPropertyCopy('en');
     const create = vi.fn(async () => property({ version: 0 }));
-    const save = vi.fn(async () => property({ version: 1 }));
+    const save = vi.fn(async (_id: string, _step: string, _input: unknown) => property({ version: 1 }));
     renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" create={create} save={save} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'My apartment' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.slug), { target: { value: 'my-apartment' } });
     fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.sourceType }), { target: { value: 'individual_broker' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
     await screen.findByRole('status');
@@ -164,15 +158,18 @@ describe('Provider property wizard', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
     expect(create).toHaveBeenCalledTimes(1);
+    expect(save.mock.calls[0]?.[2]).not.toHaveProperty('slug');
     expect(save).toHaveBeenCalledWith(propertyId, 'basic', expect.objectContaining({ version: 0, name: { ar: 'عقار المزوّد', en: 'Updated apartment' } }));
   });
 
   it('retains an existing draft edit when switching the interface language', () => {
     const initial = property();
     const result = renderWithLocale(<ProviderPropertyWizard locale="ar" session={session} authClient={authClient} propertyId={propertyId} initialData={initial} step="basic" />, { locale: 'ar' });
-    fireEvent.change(screen.getByLabelText(getProviderPropertyCopy('ar').wizard.labels.slug), { target: { value: 'edited-apartment' } });
+    fireEvent.change(screen.getByLabelText(getProviderPropertyCopy('ar').wizard.labels.name), { target: { value: 'اسم معدل' } });
     result.rerender(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} propertyId={propertyId} initialData={initial} step="basic" />);
-    expect(screen.getByLabelText(getProviderPropertyCopy('en').wizard.labels.slug)).toHaveValue('edited-apartment');
+    expect(screen.getByLabelText(getProviderPropertyCopy('en').wizard.labels.name)).toHaveValue(initial.name.en);
+    result.rerender(<ProviderPropertyWizard locale="ar" session={session} authClient={authClient} propertyId={propertyId} initialData={initial} step="basic" />);
+    expect(screen.getByLabelText(getProviderPropertyCopy('ar').wizard.labels.name)).toHaveValue('اسم معدل');
   });
 
   it('clears an invisible parent reference when changing a unit into a property', async () => {
@@ -180,7 +177,6 @@ describe('Provider property wizard', () => {
     const create = vi.fn(async input => property({ source: input.source }));
     renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" create={create} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'My apartment' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.slug), { target: { value: 'my-apartment' } });
     fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.sourceType }), { target: { value: 'individual_broker' } });
     const kind = screen.getByRole('combobox', { name: copy.wizard.labels.kind });
     fireEvent.change(kind, { target: { value: 'unit' } });

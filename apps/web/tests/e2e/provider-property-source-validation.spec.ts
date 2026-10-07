@@ -13,7 +13,7 @@ test('validates the source fields and updates the same saved draft', async ({ pa
   let creates = 0;
   let updates = 0;
   const result = (input: Record<string, unknown>, version: number) => ({
-    data: { id: propertyId, kind: 'property', name: input.name, slug: input.slug, transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' },
+    data: { id: propertyId, kind: 'property', name: input.name, slug: 'generated-property-link', transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' },
       status: 'draft', active: true, version, availableActions: ['update', 'submit'], createdAt: '2026-10-06T10:00:00.000Z', updatedAt: '2026-10-06T10:00:00.000Z' },
     meta: { requestId: 'source-draft' }
   });
@@ -33,7 +33,6 @@ test('validates the source fields and updates the same saved draft', async ({ pa
   await page.goto(`/provider/properties/new/basic?lang=${locale}`);
   const form = page.locator('[data-form-step="basic"]');
   await form.locator('#provider-property-name').fill('My apartment');
-  await form.locator('#provider-property-slug').fill('my-apartment');
   const source = form.locator('#provider-property-source-type');
   await source.selectOption('brokerage_office');
   await form.locator('#provider-property-organization').fill('3'.repeat(60));

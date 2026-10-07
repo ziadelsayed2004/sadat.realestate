@@ -1,3 +1,4 @@
+import { generateIdentifier } from '../shared/identifiers.js';
 import {
   SUPPORTED_LOCALES,
   articleAdminListQuerySchema,
@@ -286,7 +287,7 @@ export function createArticleService(dependencies: {
       await requirePermission(principal.userId, 'admin:content.manage');
       const at = now();
       const stored = categoryResult(await dependencies.repository.createCategory({
-        slug: input.slug,
+        slug: input.slug ?? generateIdentifier('category', input.name),
         name: input.name,
         ...(input.description ? { description: input.description } : {}),
         displayOrder: input.displayOrder,
@@ -354,7 +355,7 @@ export function createArticleService(dependencies: {
       const at = now();
       const stored = articleResult(await dependencies.repository.createArticle({
         categoryId: input.categoryId,
-        slug: input.slug,
+        slug: input.slug ?? generateIdentifier('article', input.title),
         title: input.title,
         body: input.body,
         ...(input.seoTitle ? { seoTitle: input.seoTitle } : {}),

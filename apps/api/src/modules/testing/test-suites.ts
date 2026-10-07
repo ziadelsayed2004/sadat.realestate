@@ -61,6 +61,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/locations/models.test.ts',
     'tests/locations/service.test.ts',
     'tests/taxonomy/taxonomy.test.ts',
+    'tests/taxonomy/automatic-identifiers.test.ts',
     'tests/taxonomy/features.test.ts',
     'tests/taxonomy/feature-contract-projections.test.ts',
     'tests/organizations/organizations.test.ts',

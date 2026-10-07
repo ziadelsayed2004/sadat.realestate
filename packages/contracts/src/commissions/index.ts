@@ -42,7 +42,7 @@ export const commissionPolicySchema = z.object({
   if (value.kind !== 'fixed' && (value.fixedAmountMinor !== undefined || value.currency !== undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Only fixed policies define amount and currency' });
 });
 export const commissionPolicyCreateSchema = z.object({
-  key: policyKeySchema,
+  key: policyKeySchema.optional(),
   label: z.string().trim().min(2).max(160),
   kind: commissionPolicyKindSchema,
   scope: commissionScopeSchema,
