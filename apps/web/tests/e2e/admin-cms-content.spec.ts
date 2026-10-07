@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { cmsAdminPopulationValueSchema } from '@sadat-real-estate/contracts';
 import { adminCmsAboutId, adminCmsContentFor, adminCmsEnvelope } from './admin-cms-content.fixtures.ts';
 
 function localeForAdminCms(): 'ar' | 'en' {
@@ -109,6 +110,41 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
     const request = page.waitForRequest(request => request.method() === 'PUT' && request.url().endsWith('/api/v1/admin/content/population'));
     await editor.getByRole('button', { name: 'حفظ التغييرات' }).click();
     expect((await request).postDataJSON()).toMatchObject({ version: 3, asOf: '2026-10-04T00:00:00.000Z' });
+    await expect(editor.getByRole('status')).toHaveText('تم حفظ عداد السكان بنجاح.');
+  });
+
+  test('explains a missing population date and saves successive edits without hiding the form', async ({ page }) => {
+    const locale = localeForAdminCms();
+    let current = { namespace: 'population' as const, items: [cmsAdminPopulationValueSchema.parse(adminCmsContentFor('population').items[0])] };
+    const requests: Array<{ version: number; value: number }> = [];
+    await page.route('**/api/v1/admin/content/population', async route => {
+      if (route.request().method() === 'PUT') {
+        const body = route.request().postDataJSON() as { version: number; value: number };
+        requests.push(body);
+        current = { ...current, items: [{ ...current.items[0]!, ...body, version: body.version + 1 }] };
+      }
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(adminCmsEnvelope(current, 'population-current')) });
+    });
+    await page.goto(`/admin/content/population-counter?lang=${locale}`);
+    const editor = page.getByTestId('admin-cms-population-editor');
+    const value = editor.locator('#admin-cms-population-value');
+    const date = editor.locator('#admin-cms-population-as-of');
+    const save = editor.locator('button[type="submit"]');
+    await value.fill('44000'); await date.fill('');
+    await editor.locator('#admin-cms-population-reason').fill('Update sourced population');
+    await save.click();
+    await expect(date).toHaveAttribute('aria-invalid', 'true');
+    await expect(date).toBeFocused(); await expect(value).toHaveValue('44000');
+    expect(requests).toHaveLength(0);
+    await date.fill('2026-10-07'); await save.click();
+    const success = locale === 'ar' ? 'تم حفظ عداد السكان بنجاح.' : 'Population counter saved successfully.';
+    await expect(editor.getByRole('status')).toHaveText(success);
+    expect(requests[0]).toMatchObject({ version: 3, value: 44000 });
+    await value.fill('45000'); await save.click();
+    await expect(editor.getByRole('status')).toHaveText(success);
+    expect(requests[1]).toMatchObject({ version: 4, value: 45000 });
+    await expect(value).toHaveValue('45000');
+    await page.reload(); await expect(value).toHaveValue('45000');
   });
 
   test('edits and deletes a team member through explicit actions', async ({ page }) => {

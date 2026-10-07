@@ -329,6 +329,14 @@ test('serves a sourced population value and requires its version for updates', a
   assert.equal(item.value, 500000);
   assert.equal(item.sourceLabel?.en, 'Sadat City authority');
 
+  const revised = await service.put({ userId: adminId }, 'population', {
+    status: 'available', version: item.version, value: 44000,
+    sourceLabel: { en: 'Sadat City authority' }, sourceUrl: 'https://example.test/population',
+    asOf: '2026-10-07T00:00:00.000Z', reason: 'Correct the sourced population'
+  }, { requestId: 'cms-revised', traceId: 'f'.repeat(32) });
+  assert.equal(revised.items[0]?.value, 44000);
+  assert.equal(revised.items[0]?.version, item.version + 1);
+
   await assert.rejects(
     service.put({ userId: adminId }, 'population', {
       status: 'unavailable', reason: 'Source temporarily unavailable'
@@ -337,7 +345,7 @@ test('serves a sourced population value and requires its version for updates', a
   );
 
   const unavailable = await service.put({ userId: adminId }, 'population', {
-    status: 'unavailable', version: item.version, reason: 'Source temporarily unavailable'
+    status: 'unavailable', version: revised.items[0]!.version, reason: 'Source temporarily unavailable'
   }, { requestId: 'cms-7', traceId: 'f'.repeat(32) });
   assert.equal(unavailable.namespace, 'population');
   assert.equal(unavailable.items[0]?.status, 'unavailable');

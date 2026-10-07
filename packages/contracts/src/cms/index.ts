@@ -503,10 +503,9 @@ export const cmsAdminTeamMemberDeleteSchema = z.object({
   version: z.number().int().nonnegative(),
   reason: z.string().trim().min(5).max(500),
 }).strict();
-export const cmsAdminPopulationValuePutSchema = z.intersection(
-  populationValueSchema,
-  z.object({ version: z.number().int().nonnegative().optional() }),
-);
+export const cmsAdminPopulationValuePutSchema = populationValueSchema.safeExtend({
+  version: z.number().int().nonnegative().optional(),
+});
 export const cmsAdminTipPutSchema = z.union([
   tipCreateSchema,
   tipPatchSchema.extend({ id: objectId }),

@@ -7,6 +7,7 @@ import {
   publicHomepageDeveloperSchema,
   publicHomepageLocationSchema,
   publicHomepageMetricSchema,
+  populationValueSchema,
   publicHomepagePropertySchema,
   publicHomepageSectionSchema,
   type PublicHomepageData,
@@ -31,6 +32,7 @@ export interface HomepageSources {
   totalPropertyCount?: number;
   locations?: HomepageLocationSource[];
   metrics?: HomepageMetricSource[];
+  population?: { status: string; value?: number; sourceLabel?: unknown; sourceUrl?: string; asOf?: string };
   properties: HomepagePropertySource[];
   developers: HomepageDeveloperSource[];
   content: HomepageContentSource[];
@@ -119,6 +121,19 @@ function configuredMetrics(sources: HomepageSources, settings: DisplayRuntimeSet
   const metrics = [...(sources.metrics ?? [])];
   const index = metrics.findIndex((metric) => metric.key === 'population');
   if (settings.showPopulationCounter === false) return metrics.filter((metric) => metric.key !== 'population');
+  // Once a CMS statement exists, its publication state and sourced value win
+  // over older metrics or display settings, including when the count is hidden.
+  if (sources.population !== undefined) {
+    const statement = populationValueSchema.safeParse({ ...sources.population, reason: 'Public population statement' });
+    const others = metrics.filter(metric => metric.key !== 'population');
+    if (!statement.success || statement.data.status !== 'available') return others;
+    const current = index >= 0 ? metrics[index] : undefined;
+    const population: HomepageMetricSource = {
+      key: 'population', title: settings.populationLabel ?? current?.title ?? { ar: 'عدد سكان مدينة السادات', en: 'Sadat City population' },
+      value: statement.data.value!, unit: current?.unit ?? { ar: 'نسمة', en: 'residents' }, order: current?.order ?? 0, status: 'published', visible: true
+    };
+    return [...others, population];
+  }
   if (settings.populationCount === undefined && settings.populationLabel === undefined) return metrics;
   const current = index >= 0 ? metrics[index] : undefined;
   const population: HomepageMetricSource = {
@@ -187,6 +202,9 @@ type MongoRow = {
   parentLocationId?: unknown;
   value?: number;
   unit?: unknown;
+  sourceLabel?: unknown;
+  sourceUrl?: string;
+  asOf?: unknown;
 };
 function id(value: unknown): string | undefined {
   if (typeof value === 'string') return value;
@@ -202,7 +220,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
   return {
     async read() {
       const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `banner_${row._id.toString()}`, title: row.title, imageUrl: String(row.media.url), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
-      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount] = await Promise.all([
+      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount, population] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
@@ -213,7 +231,8 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500),
         findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
-        connection.collection('properties').countDocuments({ status: 'published', active: true, ...unexpiredPropertyFilter() })
+        connection.collection('properties').countDocuments({ status: 'published', active: true, ...unexpiredPropertyFilter() }),
+        findRows(connection, 'cms_population_values', {}, { _id: 0, status: 1, value: 1, sourceLabel: 1, sourceUrl: 1, asOf: 1 }, { updatedAt: -1, _id: 1 }, 1)
       ]);
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
       const categoryCounts = categoryIds.length ? await connection.collection('properties').aggregate<{_id: unknown; count: number}>([
@@ -226,6 +245,13 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       const organizationById = new Map(organizations.flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), kind: row.kind }] as const] : []; }));
       return {
         totalPropertyCount,
+        ...(population[0] ? { population: {
+          status: population[0].status ?? '',
+          ...(population[0].value !== undefined ? { value: population[0].value } : {}),
+          ...(population[0].sourceLabel !== undefined ? { sourceLabel: population[0].sourceLabel } : {}),
+          ...(population[0].sourceUrl !== undefined ? { sourceUrl: population[0].sourceUrl } : {}),
+          ...(population[0].asOf instanceof Date && Number.isFinite(population[0].asOf.getTime()) ? { asOf: population[0].asOf.toISOString() } : typeof population[0].asOf === 'string' ? { asOf: population[0].asOf } : {})
+        } } : {}),
         sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
         categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
         locations: locations.flatMap((row) => { const rowId = mapId(row); const parentLocationId = id(row.parentLocationId); return rowId && typeof row.kind === 'string' && row.name !== undefined && typeof row.slug === 'string' && typeof row.order === 'number' && typeof row.active === 'boolean' ? [{ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order, active: row.active }] : []; }),

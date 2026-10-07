@@ -91,6 +91,44 @@ test('drops malformed persisted public rows and supports a safe empty state', as
   assert.deepEqual(await service.read(), { sections: [], categories: [{ id, slug: 'apartments', name: localized, propertyCount: 7, order: 0 }], metrics: [{ key: 'population', title: localized, value: 342800, order: 0 }], properties: [], developers: [], content: [], banners: [] });
 });
 
+test('uses the sourced CMS statement over older counters and does not leak its administrative data', () => {
+  const population = { status: 'available', value: 44000, sourceLabel: { ar: 'جهاز المدينة' }, sourceUrl: 'https://example.test/report', asOf: '2026-10-07T00:00:00.000Z' };
+  const result = publicHomepageProjection(sources({ population }), { populationCount: 999999 });
+  assert.equal(result.metrics.find(metric => metric.key === 'population')?.value, 44000);
+  assert.equal('population' in result, false);
+  assert.equal(JSON.stringify(result).includes('sourceLabel'), false);
+  assert.equal(publicHomepageProjection(sources({ population }), { showPopulationCounter: false }).metrics.length, 0);
+  for (const hidden of [{ status: 'unavailable' }, { status: 'draft' }, { ...population, sourceUrl: undefined }, { ...population, asOf: undefined }]) {
+    assert.equal(publicHomepageProjection(sources({ population: hidden }), { populationCount: 999999 }).metrics.length, 0);
+  }
+});
+
+test('reads the latest population statement from the collection used by CMS administration', async () => {
+  const connection = {
+    collection(name: string) {
+      return {
+        async findOne() { return null; },
+        find(filter: unknown, options: unknown) {
+          if (name === 'cms_population_values') {
+            assert.deepEqual(filter, {});
+            assert.deepEqual(options, { projection: { _id: 0, status: 1, value: 1, sourceLabel: 1, sourceUrl: 1, asOf: 1 } });
+          }
+          return { sort(sort: unknown) {
+            if (name === 'cms_population_values') assert.deepEqual(sort, { updatedAt: -1, _id: 1 });
+            return { limit(limit: number) {
+              if (name === 'cms_population_values') assert.equal(limit, 1);
+              return { async toArray() { return name === 'cms_population_values' ? [{ status: 'available', value: 44000, sourceLabel: { en: 'City authority' }, sourceUrl: 'https://example.test/report', asOf: new Date('2026-10-07T00:00:00.000Z') }] : []; } };
+            } };
+          } };
+        },
+        async countDocuments() { return 0; }
+      };
+    }
+  } as unknown as Connection;
+  const service = createPublicHomepageService({ repository: createMongoosePublicHomepageRepository(connection) });
+  assert.equal((await service.read()).metrics[0]?.value, 44000);
+});
+
 test('reads the published listing total independently of the homepage preview limit and CMS city metrics', async () => {
   let countFilter: Record<string, unknown> | undefined;
   const connection = {
