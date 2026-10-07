@@ -12,6 +12,9 @@ import {
   requestTransitionRequestSchema,
   successEnvelopeSchema,
   viewingListDataSchema,
+  viewingDataSchema,
+  viewingTransitionSchema,
+  type ViewingTransition,
   viewingListQuerySchema,
   type OverdueRequestListData,
   type RequestAssignment,
@@ -32,6 +35,14 @@ export const ADMIN_REQUESTS_ROUTE = '/admin/requests' as const;
 export const ADMIN_OVERDUE_REQUESTS_ROUTE = '/admin/requests/overdue' as const;
 export const ADMIN_VIEWINGS_ROUTE = '/admin/viewings' as const;
 export const ADMIN_REQUEST_ISSUES_ROUTE = '/admin/request-issues' as const;
+
+export async function transitionAdminViewing(id: string, input: ViewingTransition, options: CommonOptions = {}) {
+  requestIdParamsSchema.parse({ requestId: id });
+  const response = await requestWithSession(options, `${ADMIN_VIEWINGS_ROUTE}/${id}/transitions`, {
+    method: 'POST', responseSchema: successEnvelopeSchema(viewingDataSchema), json: viewingTransitionSchema.parse(input)
+  });
+  return response.data.data;
+}
 
 export interface AdminRequestsAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;

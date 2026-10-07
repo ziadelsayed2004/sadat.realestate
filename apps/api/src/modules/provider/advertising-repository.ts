@@ -1,4 +1,4 @@
-import { Types, type Connection } from 'mongoose';
+﻿import { Types, type Connection } from 'mongoose';
 import {
   AD_EGYPT_TIME_ZONE,
   adCalendarEventSchema,
@@ -45,6 +45,7 @@ function requestFromRow(row: AdRequestRecord & { _id: Types.ObjectId }): AdReque
     id: identifier(row._id),
     providerId: identifier(row.providerId),
     ...(row.requestMode ? { requestMode: row.requestMode, contactPhone: row.contactPhone } : {}),
+    ...(row.paymentWaiver ? { paymentWaiver: { ...row.paymentWaiver, grantedAt: row.paymentWaiver.grantedAt.toISOString() } } : {}),
     placementKey: row.placementKey,
     ...(row.adType ? { adType: row.adType } : {}),
     purpose: row.purpose,

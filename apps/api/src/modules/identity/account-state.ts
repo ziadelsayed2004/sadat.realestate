@@ -34,7 +34,7 @@ const accountTransitions: Readonly<Record<AccountState, readonly AccountState[]>
   draft: ['pending_review'],
   unverified: ['pending_review'],
   pending_review: ['needs_information', 'verified', 'rejected'],
-  needs_information: ['pending_review'],
+  needs_information: ['pending_review', 'verified', 'rejected'],
   verified: ['restricted', 'suspended'],
   rejected: [],
   restricted: ['verified'],
@@ -46,7 +46,7 @@ const providerTransitions: Readonly<
 > = {
   draft: ['pending_review'],
   pending_review: ['needs_information', 'approved', 'rejected'],
-  needs_information: ['pending_review'],
+  needs_information: ['pending_review', 'approved', 'rejected'],
   approved: ['suspended'],
   rejected: [],
   suspended: ['approved']

@@ -127,6 +127,7 @@ function availableAccountActions(target: AccountTarget): AccountTransitionAction
     return [];
   }
   if (target.status === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (target.status === 'needs_information') return ['verify', 'reject'];
   if (target.status === 'verified') return ['suspend', 'restrict'];
   if (target.status === 'restricted' || target.status === 'suspended') return ['verify'];
   return [];
@@ -136,6 +137,7 @@ function availableProviderReviewActions(
   state: ProviderApplicationState
 ): ProviderReviewAction[] {
   if (state === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (state === 'needs_information') return ['verify', 'reject'];
   if (state === 'approved') return ['suspend'];
   if (state === 'suspended') return ['verify'];
   return [];
@@ -177,7 +179,7 @@ export function createAccountService(
       await requirePermission(principal.userId, 'admin:users.view');
       const result = await dependencies.repository.findUser(userId);
       if (!result) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
-      return result;
+      return { ...result, canManage: await dependencies.authorization.authorize(principal.userId, 'admin:users.manage') };
     },
 
     async listProviders(principal, input) {
@@ -191,7 +193,7 @@ export function createAccountService(
       await requirePermission(principal.userId, 'admin:providers.view');
       const result = await dependencies.repository.findProvider(providerId);
       if (!result) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
-      return result;
+      return { ...result, availableActions: await dependencies.authorization.authorize(principal.userId, 'admin:providers.review') ? result.availableActions : [] };
     },
 
     async transitionAccount(principal, unparsedUserId, unparsedRequest, context) {

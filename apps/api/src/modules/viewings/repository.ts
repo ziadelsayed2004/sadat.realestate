@@ -220,7 +220,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       if (updated) {
         await audit.record(input.audit, session);
         const changed = parse(updated as Row);
-        if (changed) for (const notification of viewingNotifications(changed, input.audit.actorId ?? '')) await connection.collection('notifications').insertOne(notification, { session });
+        if (changed) for (const notification of viewingNotifications(changed, input.audit.actorId ?? '', input.audit.reason)) await connection.collection('notifications').insertOne(notification, { session });
       }
       return updated;
       });

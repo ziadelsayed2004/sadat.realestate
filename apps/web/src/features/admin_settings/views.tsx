@@ -92,9 +92,9 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
   contact: [
     { key: 'primary_phone', kind: 'text', labelKey: 'primary_phone' },
     { key: 'whatsapp_number', kind: 'text', labelKey: 'whatsapp_number' },
-    { key: 'primary_email', kind: 'text', labelKey: 'primary_email' },
-    { key: 'office_address', kind: 'localized', labelKey: 'office_address' },
-    { key: 'map_url', kind: 'url', labelKey: 'map_url' }
+    { key: 'map_url', kind: 'url', labelKey: 'map_url' },
+    { key: 'facebook_url', kind: 'url', labelKey: 'facebook_url' },
+    { key: 'instagram_url', kind: 'url', labelKey: 'instagram_url' }
   ],
   social: [
     { key: 'facebook_url', kind: 'url', labelKey: 'facebook_url' },
@@ -169,7 +169,7 @@ function namespaceForPath(path: string): SettingsNamespace | undefined {
 function fieldsForValues(namespace: SettingsNamespace, values: DraftValues): readonly Field[] {
   const known = FIELD_MAP[namespace];
   const knownKeys = new Set(known.map(field => field.key));
-  if (namespace === 'social') return known;
+  if (namespace === 'social' || namespace === 'contact') return known;
   const dynamic = Object.keys(values).filter(key => !knownKeys.has(key)).map(key => {
     const value = values[key];
     if (value !== undefined && typeof value === 'object' && !Array.isArray(value)) return { key, kind: 'localized' as const, labelKey: key };
@@ -247,7 +247,7 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
         if (value && !getWhatsAppLink(undefined, value)) { setError(locale === 'ar' ? 'اكتب رقمًا صحيحًا، مثل 01012345678 أو +201012345678.' : 'Enter a valid number, such as +201012345678.'); return; }
       }
     }
-    if (namespace === 'social') {
+    if (namespace === 'social' || namespace === 'contact') {
       for (const [key, domain] of [['facebook_url', 'facebook.com'], ['instagram_url', 'instagram.com']]) {
         const value = stringDraft(values[key!]).trim();
         if (!value) continue;
@@ -275,7 +275,8 @@ export interface AdminSettingsProps {
 }
 
 export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, session, authClient, apiOrigin, initialData, load, update, source: providedSource }: AdminSettingsProps) {
-  const namespace = namespaceForPath(path);
+  const selectedNamespace = namespaceForPath(path);
+  const namespace = selectedNamespace === 'social' ? 'contact' : selectedNamespace;
   const copy = getAdminSettingsCopy(locale);
   const source = useMemo(() => providedSource ?? createAdminSettingsSource({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, providedSource]);
   const initialMatches = initialData !== undefined && namespace !== undefined && initialData.namespace === namespace;
@@ -294,7 +295,11 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
     const controller = new AbortController();
     setState('loading');
     const loader = load ?? source.load;
-    void loader(namespace, controller.signal).then(next => {
+    void loader(namespace, controller.signal).then(async next => {
+      if (namespace === 'contact') {
+        const social = await loader('social', controller.signal).catch(error => { if (error instanceof ApiClientError && error.status === 404) return undefined; throw error; });
+        next = { ...next, values: { ...(social?.values ?? {}), ...next.values } };
+      }
       if (controller.signal.aborted) return;
       setData(next); setValues(copySettingsValues(next.values)); setState('success');
     }).catch(error => {
@@ -345,5 +350,5 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
     } finally { setSaving(false); }
   }
 
-  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div>{activeNamespace === 'requests' ? <p className="admin-settings__eyebrow">{copy.eyebrow}</p> : null}<h1>{copy.labels[activeNamespace]}</h1><p>{copy.descriptions[activeNamespace]}</p></div></header><nav ref={settingsTabsRef} className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} aria-current={activeNamespace === tab ? 'page' : undefined} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} loadingVariant="form" /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' || state === 'conflict' ? stateMessage(state, locale, refresh) : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{state === 'success' || state === 'empty' ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} /> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
+  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div>{activeNamespace === 'requests' ? <p className="admin-settings__eyebrow">{copy.eyebrow}</p> : null}<h1>{copy.labels[activeNamespace]}</h1><p>{activeNamespace === 'contact' ? (locale === 'ar' ? 'التليفون وواتساب والخريطة وفيسبوك وإنستجرام في مكان واحد. استبدل بيانات العرض التجريبية ببيانات المنصة الفعلية.' : 'Manage phone, WhatsApp, map, Facebook and Instagram in one place. Replace demo contacts with your real platform details.') : copy.descriptions[activeNamespace]}</p></div></header><nav ref={settingsTabsRef} className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.filter(tab => tab !== 'social').map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} aria-current={activeNamespace === tab ? 'page' : undefined} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} loadingVariant="form" /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' || state === 'conflict' ? stateMessage(state, locale, refresh) : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{state === 'success' || state === 'empty' ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} /> : null}{activeNamespace === 'contact' && !saving ? <Button variant="secondary" onClick={() => setValues(current => ({ ...current, primary_phone: '+201001234567', whatsapp_number: '+201001234567', facebook_url: 'https://www.facebook.com/', instagram_url: 'https://www.instagram.com/', map_url: 'https://www.google.com/maps/search/?api=1&query=Sadat+City+Egypt' }))}>{locale === 'ar' ? 'تعبئة بيانات تجريبية' : 'Fill demo contacts'}</Button> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
 }

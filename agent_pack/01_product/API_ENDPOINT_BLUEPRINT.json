@@ -2483,5 +2483,29 @@
     "purpose": "Download a portrait attached to a published active team member",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/users/:userId/communication",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Notify a customer, share a published property or end active sessions with audit",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/viewings/:viewingId/transitions",
+    "module": "viewings",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Confirm, reschedule, cancel or complete a viewing and notify the customer",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

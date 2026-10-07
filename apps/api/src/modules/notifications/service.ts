@@ -74,7 +74,7 @@ function activeAdmin(claims: AccessTokenClaims): boolean {
 }
 
 function activeProvider(claims: AccessTokenClaims): boolean {
-  return claims.role === 'provider' && claims.status === 'verified';
+  return claims.role === 'provider' && ['draft', 'unverified', 'pending_review', 'needs_information', 'verified'].includes(claims.status);
 }
 
 function project(source: NotificationSource): NotificationData | undefined {

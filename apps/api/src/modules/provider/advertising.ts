@@ -102,6 +102,7 @@ function projection(record: ProviderAdvertisingRequestRecord): ProviderAdRequest
   const result = {
     id: request.id,
     ...(request.requestMode ? { requestMode: request.requestMode, contactPhone: request.contactPhone } : {}),
+    ...(request.paymentWaiver ? { paymentWaiver: { reason: request.paymentWaiver.reason, grantedAt: request.paymentWaiver.grantedAt } } : {}),
     placementKey: request.placementKey,
     ...(request.adType ? { adType: request.adType } : {}),
     purpose: request.purpose,

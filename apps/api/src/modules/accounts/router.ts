@@ -13,8 +13,10 @@ import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { AccountServiceError, type AccountService } from './service.js';
+import type { createAccountCommunicator } from './communication.js';
 
 export const ACCOUNT_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/admin/users/:userId/communication', operationId: 'communicateAdminUser' },
   {
     method: 'GET',
     path: '/api/v1/admin/users',
@@ -48,6 +50,7 @@ export const ACCOUNT_ROUTE_DEFINITIONS = [
 ] as const;
 
 export interface AccountRouterDependencies {
+  communicate?: ReturnType<typeof createAccountCommunicator>;
   service: AccountService;
   accessTokens: AccessTokenService;
   accessGuard?: RequestHandler;
@@ -208,6 +211,15 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.post('/admin/users/:userId/communication', async (request, response) => {
+    try {
+      if (!dependencies.communicate) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
+      const { userId } = accountUserIdParamsSchema.parse(request.params);
+      const context = requestContext(request);
+      response.status(200).json(toSuccessResponse(await dependencies.communicate(principal(response), userId, request.body, context), context.requestId));
+    } catch (error) { sendError(request, response, error); }
   });
 
   return router;

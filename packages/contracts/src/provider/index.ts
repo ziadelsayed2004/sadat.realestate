@@ -286,6 +286,7 @@ export const providerAdRequestProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
   requestMode: z.literal('assisted').optional(),
   contactPhone: normalizedPhoneSchema.optional(),
+  paymentWaiver: z.object({ reason: z.string().min(3).max(500), grantedAt: providerAdvertisingDateSchema }).strict().optional(),
   placementKey: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   adType: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   purpose: safeTextSchema.max(500),

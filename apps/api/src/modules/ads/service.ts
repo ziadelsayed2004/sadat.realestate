@@ -114,7 +114,7 @@ export interface AdAdminRequestService {
 
 export interface AdCalendarRepository {
   listCalendar(query: AdCalendarQuery): Promise<{ items: AdCalendarEvent[]; total: number }>;
-  schedule(requestId: string, expectedVersion: number): Promise<AdCalendarEvent>;
+  schedule(requestId: string, expectedVersion: number, options?: { actorId: string; waiverReason?: string; interval?: { start: string; end: string } }): Promise<AdCalendarEvent>;
 }
 
 export interface AdCalendarAuthorization {
@@ -217,7 +217,7 @@ export function createAdCalendarService(dependencies: {
     async schedule(claims, requestId, input) {
       await requirePermission(claims, 'admin:ads.schedule');
       const parsed = adScheduleRequestSchema.parse(input);
-      return dependencies.repository.schedule(requestId, parsed.expectedVersion);
+      return dependencies.repository.schedule(requestId, parsed.expectedVersion, { actorId: claims.sub, ...(parsed.waiverReason ? { waiverReason: parsed.waiverReason } : {}), ...(parsed.interval ? { interval: parsed.interval } : {}) });
     }
   };
 }

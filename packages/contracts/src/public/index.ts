@@ -130,6 +130,8 @@ export const publicBootstrapDataSchema = z.object({
     whatsappNumber: z.string().regex(/^\+[1-9]\d{7,14}$/).optional(),
     facebookUrl: z.url().max(2048).optional(),
     instagramUrl: z.url().max(2048).optional(),
+    mapUrl: z.url().max(2048).optional(),
+    isDemo: z.boolean().optional(),
     address: localizedTextSchema.optional()
   }).strict().optional(),
   display: z.object({

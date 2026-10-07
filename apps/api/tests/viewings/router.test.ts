@@ -18,6 +18,7 @@ test('admin viewing list enforces current permissions, session expiry and MFA', 
     twoFactorAuthentication: mfa, ...(timeout ? { adminSessionTimeoutMinutes: 10 } : {}) }) });
   const service = createViewingService({ repository: createInMemoryViewingRepository(), authorization: { async authorize(id, permission) {
     assert.equal(id, tokens.verify('seeker').sub);
+    if (permission === 'admin:requests.manage') return false;
     assert.equal(permission, 'admin:viewings.view');
     permissionChecks++;
     return allowed;
@@ -47,7 +48,7 @@ test('admin viewing service fails closed without RBAC and view permission never 
   const admin = { ...tokens.verify('seeker'), role: 'admin' as const };
   const repository = createInMemoryViewingRepository();
   await assert.rejects(() => createViewingService({ repository }).list(admin, {}), /VIEWING_FORBIDDEN/);
-  const service = createViewingService({ repository, authorization: { authorize: async () => true } });
+  const service = createViewingService({ repository, authorization: { authorize: async (_id, permission) => permission === 'admin:viewings.view' } });
   await assert.rejects(() => service.transition(admin, '3123456789abcdef01234567', { action: 'confirm', expectedVersion: 0 }), /VIEWING_FORBIDDEN/);
   const inactive = createViewingService({ repository: { ...repository, isActiveAccount: async () => false } });
   await assert.rejects(() => inactive.list(tokens.verify('seeker'), {}), /VIEWING_FORBIDDEN/);

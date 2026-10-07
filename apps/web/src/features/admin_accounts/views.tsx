@@ -33,6 +33,7 @@ import {
 } from './data.ts';
 import { getAdminAccountsCopy, type AdminAccountsState, type AdminAccountsView } from './copy.ts';
 import './styles.css';
+import { AccountActions } from './account-actions.tsx';
 
 type UserRoleFilter = 'all' | 'seeker' | 'provider';
 type UserStatusFilter = 'all' | NonNullable<AdminAccountUserListQuery['status']>;
@@ -431,7 +432,7 @@ function ListContent({
 }
 
 function DetailFields({ fields }: { readonly fields: ReadonlyArray<readonly [string, string]> }) {
-  return <dl className="admin-accounts__detail-grid">{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>;
+  return <dl className="admin-accounts__detail-grid">{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd><bdi dir={value.startsWith('+') || value.includes('@') ? 'ltr' : undefined}>{value}</bdi></dd></div>)}</dl>;
 }
 
 function UserDetail({ user, locale, onBack }: { readonly user: AdminAccountUserData; readonly locale: SupportedLocale; readonly onBack: string }) {
@@ -504,7 +505,7 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
       </section>
       {provider.availableActions.length > 0 ? (
         <section className="admin-accounts__detail-card admin-account-reports" aria-labelledby="admin-provider-review-title">
-          <h2 id="admin-provider-review-title">{copy.actions.reviewHeading}</h2>
+          <h2 id="admin-provider-review-title">{copy.actions.reviewHeading}</h2><a href={`/admin/users/${provider.userId}?lang=${locale}`}>{locale === 'ar' ? 'إدارة الحساب وإرسال إشعار' : 'Manage account and send a notification'}</a>
           <label className="admin-account-reports__reason-label" htmlFor="admin-provider-review-reason">
             <span>{copy.actions.reviewReason}</span>
             <textarea id="admin-provider-review-reason" value={reviewReason} onChange={event => onReviewReasonChange(event.currentTarget.value)} placeholder={copy.actions.reviewReasonPlaceholder} minLength={3} maxLength={1000} rows={4} disabled={reviewingAction !== undefined} />
@@ -643,7 +644,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
       <div className="admin-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={detailId !== undefined} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={backPath}>{copy.actions.back}</a></section> : null}
-        {state === 'success' && isDetail && isUserView && userData !== undefined ? <UserDetail user={userData} locale={locale} onBack={backPath} /> : null}
+        {state === 'success' && isDetail && isUserView && userData !== undefined ? <><UserDetail user={userData} locale={locale} onBack={backPath} /><AccountActions user={userData} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onChanged={() => { void userLoader(userData.id).then(setUserData); }} /></> : null}
         {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}
         {(state === 'success' || state === 'empty' || state === 'loading') && !isDetail && listData !== undefined ? <ListContent view={view} locale={locale} data={listData} search={search} onPageChange={setPage} searchInput={searchInput} roleFilter={roleFilter} statusFilter={isUserView ? userStatusFilter : providerStatusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={setSearchInput} onRoleChange={value => { setRoleFilter(value); setPage(1); }} onStatusChange={value => { if (isUserView) setUserStatusFilter(value as UserStatusFilter); else setProviderStatusFilter(value as ProviderStatusFilter); setPage(1); }} onProviderTypeChange={value => { setProviderTypeFilter(value); setPage(1); }} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(value => value + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setRoleFilter('all'); setUserStatusFilter('all'); setProviderStatusFilter('all'); setProviderTypeFilter('all'); setPage(1); setAttempt(value => value + 1); }} /> : null}
       </div>

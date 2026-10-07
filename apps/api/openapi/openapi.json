@@ -7805,6 +7805,18 @@
           {
             "bearerAuth": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "seekerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "description": "Limit the administrator list to one customer. Seeker/provider lists retain their authenticated ownership scope."
+          }
         ]
       }
     },
@@ -10893,6 +10905,86 @@
           }
         }
       }
+    },
+    "/api/v1/admin/users/{userId}/communication": {
+      "post": {
+        "operationId": "communicateAdminUser",
+        "summary": "Send a customer notification or end active sessions",
+        "description": "Requires admin:users.manage. Property codes must resolve to published properties; notification links are built on the server. Actions are audited. Ending sessions does not disable future logins.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccountUserId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCommunicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Action completed with audit evidence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountCommunicationSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AccountError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccountError"
+          },
+          "404": {
+            "$ref": "#/components/responses/AccountError"
+          },
+          "409": {
+            "$ref": "#/components/responses/AccountError"
+          },
+          "500": {
+            "$ref": "#/components/responses/AccountError"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/viewings/{viewingId}/transitions": {
+      "post": {
+        "operationId": "transitionAdminViewing",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthSessionSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Administer a viewing appointment",
+        "description": "Requires current admin session, admin:viewings.view and admin:requests.manage. Confirm, reschedule, cancel or complete a viewing using its current expectedVersion. Notifications and audit are saved with the decision."
+      }
     }
   },
   "components": {
@@ -12266,6 +12358,29 @@
           "expectedVersion": {
             "type": "integer",
             "minimum": 0
+          },
+          "waiverReason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          },
+          "interval": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end"
+            ],
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
           }
         }
       },
@@ -12840,6 +12955,30 @@
             "minLength": 2,
             "maxLength": 80,
             "pattern": "^[a-z][a-z0-9_.-]*$"
+          },
+          "paymentWaiver": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "grantedAt",
+              "actorId"
+            ],
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 500
+              },
+              "grantedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "actorId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              }
+            }
           }
         },
         "description": "Assisted requests have no campaign until pricing. Contact phone is required for assisted intake; complete campaign is required from quote_sent onward."
@@ -16556,6 +16695,9 @@
             "items": {
               "$ref": "#/components/schemas/AccountTransitionAction"
             }
+          },
+          "canManage": {
+            "type": "boolean"
           }
         }
       },
@@ -24139,6 +24281,14 @@
                     "type": "string"
                   }
                 }
+              },
+              "mapUrl": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048
+              },
+              "isDemo": {
+                "type": "boolean"
               }
             }
           }
@@ -25034,6 +25184,69 @@
           }
         },
         "description": "Administrator-agreed display period. End must be strictly after start."
+      },
+      "AccountCommunicationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "reason"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "notify",
+              "logout"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 160
+          },
+          "propertyCode": {
+            "type": "string",
+            "maxLength": 80
+          }
+        }
+      },
+      "AccountCommunicationSuccessEnvelope": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": [
+              "id",
+              "action"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "notify",
+                  "logout"
+                ]
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
       }
     }
   }

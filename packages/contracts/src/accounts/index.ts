@@ -42,6 +42,20 @@ export const accountTransitionRequestSchema = z.object({
   reason: transitionReasonSchema
 }).strict();
 
+export const accountCommunicationRequestSchema = z.object({
+  action: z.enum(['notify', 'logout']),
+  reason: transitionReasonSchema,
+  title: z.string().trim().min(3).max(160).optional(),
+  propertyCode: z.string().trim().max(80).optional()
+}).strict().superRefine((value, context) => {
+  if (value.action === 'logout' && (value.title !== undefined || value.propertyCode !== undefined)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'Logout accepts a reason only' });
+  }
+});
+export const accountCommunicationDataSchema = z.object({ id: accountObjectIdSchema, action: z.enum(['notify', 'logout']) }).strict();
+export const accountCommunicationSuccessEnvelopeSchema = successEnvelopeSchema(accountCommunicationDataSchema);
+export type AccountCommunicationRequest = z.infer<typeof accountCommunicationRequestSchema>;
+
 export const providerReviewRequestSchema = z.object({
   action: providerReviewActionSchema,
   reason: transitionReasonSchema
@@ -107,6 +121,7 @@ export const adminAccountUserListQuerySchema = z.object({
 }).strict();
 
 export const adminAccountUserDataSchema = z.object({
+  canManage: z.boolean().optional(),
   id: accountObjectIdSchema,
   roleType: z.enum(['seeker', 'provider']),
   status: accountStateSchema,

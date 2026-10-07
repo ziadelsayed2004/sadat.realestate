@@ -8005,6 +8005,115 @@
         }
       },
       "description": "Streams ready media of a published active property only. Optional Range header supports video seeking."
+    },
+    {
+      "name": "Owner follow-up actions",
+      "item": [
+        {
+          "name": "Account notification / session action",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"notify\",\n  \"reason\": \"Synthetic follow-up notification for isolated testing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/users/:userId/communication",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":userId",
+                "communication"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires admin:users.manage. Optional propertyCode resolves a published property. Change action to logout with reason only to revoke current sessions. This example contains no real recipient.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Administrator viewing transition",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"confirm\",\n  \"expectedVersion\": 0,\n  \"reason\": \"Synthetic appointment confirmation for isolated testing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/viewings/:viewingId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "viewings",
+                ":viewingId",
+                "transitions"
+              ],
+              "variable": [
+                {
+                  "key": "viewingId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires admin:viewings.view and admin:requests.manage. Use current version. Reschedule requires a future requestedAt and Africa/Cairo timezone. This example contains no real request.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

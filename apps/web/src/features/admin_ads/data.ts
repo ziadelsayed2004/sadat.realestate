@@ -263,11 +263,11 @@ export function createAdminAdsSource(options: Omit<CommonOptions, 'signal'> = {}
       });
       return response.data.data;
     },
-    async scheduleRequest(requestId: string, expectedVersion: number) {
+    async scheduleRequest(requestId: string, expectedVersion: number, schedulingOptions?: { waiverReason?: string; interval?: { start: string; end: string } }) {
       const id = adRequestIdParamsSchema.parse({ adRequestId: requestId }).adRequestId;
       const response = await clientFor(options).request(`${ADMIN_AD_REQUESTS_API_ROUTE}/${id}/schedule`, {
         method: 'POST',
-        json: adScheduleRequestSchema.parse({ expectedVersion }),
+        json: adScheduleRequestSchema.parse({ expectedVersion, ...schedulingOptions }),
         responseSchema: successEnvelopeSchema(adCalendarEventSchema),
         ...requestOptions(options)
       });

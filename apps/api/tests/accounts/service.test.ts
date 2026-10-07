@@ -167,7 +167,16 @@ test('supports reason-bearing provider needs-information and rejection transitio
     }, context);
     assert.equal(result.applicationStatus, expected);
     assert.equal(result.accountStatus, expected);
-    assert.deepEqual(result.availableActions, []);
+    assert.deepEqual(result.availableActions, action === 'needs_information' ? ['verify', 'reject'] : []);
+  }
+});
+
+test('an administrator can approve or reject a provider after requesting information', async () => {
+  for (const action of ['verify', 'reject'] as const) {
+    const { service } = fixture();
+    await service.reviewProvider({ userId: adminId }, providerApplicationId, { action: 'needs_information', reason: 'Please clarify business registration' }, context);
+    const result = await service.reviewProvider({ userId: adminId }, providerApplicationId, { action, reason: 'Follow-up review completed' }, context);
+    assert.equal(result.applicationStatus, action === 'verify' ? 'approved' : 'rejected');
   }
 });
 

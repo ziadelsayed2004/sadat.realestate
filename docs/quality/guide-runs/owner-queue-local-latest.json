@@ -1,0 +1,13 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB",
+  "mockedRoutes": false,
+  "checks": [
+    "provider_information_followup_approval_notification_and_preserved_session",
+    "authorized_manual_notice_property_link_and_session_revocation_with_audit",
+    "admin_viewing_confirm_reschedule_cancel_and_customer_notifications_are_durable",
+    "free_ad_expired_period_replaced_and_waiver_audited_without_fake_payment",
+    "unconfigured_demo_contacts_replaced_by_saved_unified_contact_settings"
+  ],
+  "cleanup": true
+}

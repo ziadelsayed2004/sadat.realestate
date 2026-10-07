@@ -8,6 +8,7 @@ import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { ViewingServiceError } from './service.js';
 import type { createViewingService } from './service.js';
 export const VIEWING_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/admin/viewings/:viewingId/transitions', operationId: 'transitionAdminViewing' },
   { method: 'GET', path: '/api/v1/seeker/viewings', operationId: 'listSeekerViewings' }, { method: 'POST', path: '/api/v1/seeker/viewings', operationId: 'createSeekerViewing' }, { method: 'PATCH', path: '/api/v1/seeker/viewings/:viewingId', operationId: 'rescheduleSeekerViewing' }, { method: 'POST', path: '/api/v1/seeker/viewings/:viewingId/cancel', operationId: 'cancelSeekerViewing' },
   { method: 'GET', path: '/api/v1/provider/viewings', operationId: 'listProviderViewings' }, { method: 'POST', path: '/api/v1/provider/viewings/:viewingId/transitions', operationId: 'transitionProviderViewing' }, { method: 'GET', path: '/api/v1/admin/viewings', operationId: 'listAdminViewings' }
 ] as const;
@@ -23,5 +24,6 @@ export function createViewingRouter(dependencies: ViewingRouterDependencies): Ro
   router.get('/provider/viewings', auth(dependencies.accessTokens, 'provider'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(claims(res), viewingListQuerySchema.parse(req.query)), requestId(req))); } catch (e) { send(req, res, e); } });
   router.post('/provider/viewings/:viewingId/transitions', auth(dependencies.accessTokens, 'provider'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.transition(claims(res), viewingIdParamsSchema.parse(req.params).viewingId, viewingTransitionSchema.parse(req.body ?? {})), requestId(req))); } catch (e) { send(req, res, e); } });
   router.get('/admin/viewings', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(res.locals.adminRbacClaims as AccessTokenClaims, viewingListQuerySchema.parse(req.query)), requestId(req))); } catch (e) { send(req, res, e); } });
+  router.post('/admin/viewings/:viewingId/transitions', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.transition(res.locals.adminRbacClaims as AccessTokenClaims, viewingIdParamsSchema.parse(req.params).viewingId, viewingTransitionSchema.parse(req.body ?? {})), requestId(req))); } catch (e) { send(req, res, e); } });
   return router;
 }

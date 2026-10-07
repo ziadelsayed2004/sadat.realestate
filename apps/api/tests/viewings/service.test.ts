@@ -2,6 +2,18 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createInMemoryViewingRepository, createViewingService, type ViewingRecord } from '../../src/modules/viewings/service.js';
+test('admin viewing decisions require manage permission and reject stale versions', async () => {
+  const admin = { ...seeker, role: 'admin' as const };
+  const repository = createInMemoryViewingRepository([{ id: viewingId, propertyId: property, seekerId: seeker.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00Z'), timezone: 'Africa/Cairo', version: 0, createdAt: stamp, updatedAt: stamp }]);
+  let manage = false;
+  const service = createViewingService({ repository, now: () => stamp, authorization: { authorize: async (_id, permission) => permission === 'admin:viewings.view' || manage } });
+  assert.deepEqual((await service.list(admin, {})).items[0]?.availableActions, []);
+  await assert.rejects(() => service.transition(admin, viewingId, { action: 'confirm', expectedVersion: 0 }), /VIEWING_FORBIDDEN/);
+  manage = true;
+  assert.ok((await service.list(admin, {})).items[0]?.availableActions?.includes('confirm'));
+  assert.equal((await service.transition(admin, viewingId, { action: 'confirm', expectedVersion: 0 })).status, 'confirmed');
+  await assert.rejects(() => service.transition(admin, viewingId, { action: 'reschedule', requestedAt: '2026-08-16T10:00:00Z', timezone: 'Africa/Cairo', expectedVersion: 0 }), /VIEWING_VERSION_CONFLICT/);
+});
 const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const provider = { ...seeker, sub: '2123456789abcdef01234567', role: 'provider' } as AccessTokenClaims;
 const admin = { ...seeker, sub: '6123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;

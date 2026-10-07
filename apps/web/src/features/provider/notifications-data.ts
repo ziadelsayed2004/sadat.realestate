@@ -8,7 +8,7 @@ import {
   type NotificationReadAllData,
   type NotificationReadData
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions, type ApiRequestOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from './data.ts';
 
 export const PROVIDER_NOTIFICATIONS_ROUTE = '/provider/notifications' as const;
@@ -46,6 +46,16 @@ function authorizationHeaders(source: ProviderAuthorizationSource | undefined): 
   return authorization === undefined ? undefined : { authorization };
 }
 
+async function requestWithSession<T>(options: ProviderNotificationsMutationOptions, path: string, request: ApiRequestOptions<T>) {
+  const run = () => clientFor(options).request(path, { ...request, headers: { ...request.headers, ...authorizationHeaders(options.authorization) } });
+  try { return await run(); } catch (error) {
+    if (!(error instanceof ApiClientError) || ![401, 403].includes(error.status ?? 0) || !options.authorization?.refresh || request.signal?.aborted) throw error;
+    await options.authorization.refresh();
+    if (!options.authorization.getAuthorizationHeader() || request.signal?.aborted) throw error;
+    return run();
+  }
+}
+
 function notificationQuery(query: NotificationListQuery | undefined): Readonly<Record<string, string | number | boolean | undefined>> | undefined {
   if (query === undefined) return undefined;
   return {
@@ -57,12 +67,9 @@ function notificationQuery(query: NotificationListQuery | undefined): Readonly<R
 }
 
 export async function loadProviderNotifications(options: ProviderNotificationsLoadOptions = {}): Promise<NotificationListData> {
-  const client = clientFor(options);
-  const headers = authorizationHeaders(options.authorization);
   const query = notificationQuery(options.query);
-  const response = await client.request(PROVIDER_NOTIFICATIONS_ROUTE, {
+  const response = await requestWithSession(options, PROVIDER_NOTIFICATIONS_ROUTE, {
     responseSchema: notificationListSuccessEnvelopeSchema,
-    ...(headers === undefined ? {} : { headers }),
     ...(query === undefined ? {} : { query }),
     ...(options.signal === undefined ? {} : { signal: options.signal })
   });
@@ -78,22 +85,19 @@ export function createProviderNotificationsLoader(
 export const defaultProviderNotificationsLoader = createProviderNotificationsLoader();
 
 export function createProviderNotificationActions(options: ProviderNotificationsMutationOptions = {}): ProviderNotificationActions {
-  const client = clientFor(options);
-  const headers = authorizationHeaders(options.authorization);
   const requestOptions = (signal?: AbortSignal) => ({
     method: 'POST' as const,
     responseSchema: notificationReadSuccessEnvelopeSchema,
-    ...(headers === undefined ? {} : { headers }),
     ...(signal === undefined ? {} : { signal })
   });
   return {
     async markRead(notificationId, signal) {
       const id = notificationIdSchema.parse(notificationId);
-      const response = await client.request(`${PROVIDER_NOTIFICATIONS_ROUTE}/${encodeURIComponent(id)}/read`, requestOptions(signal));
+      const response = await requestWithSession(options, `${PROVIDER_NOTIFICATIONS_ROUTE}/${encodeURIComponent(id)}/read`, requestOptions(signal));
       return response.data.data;
     },
     async markAllRead(signal) {
-      const response = await client.request(`${PROVIDER_NOTIFICATIONS_ROUTE}/read-all`, {
+      const response = await requestWithSession(options, `${PROVIDER_NOTIFICATIONS_ROUTE}/read-all`, {
         ...requestOptions(signal),
         responseSchema: notificationReadAllSuccessEnvelopeSchema
       });

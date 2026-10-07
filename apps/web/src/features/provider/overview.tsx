@@ -253,6 +253,7 @@ function ApplicationStatusPanel({ data, locale, onRefresh }: { readonly data: Pr
       {application.reviewReason ? <p className="provider-dashboard__review-reason"><strong>{copy.reviewReason}</strong> {application.reviewReason}</p> : null}
       {canContinue ? <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider-application')}>{copy.continueApplication}</a> : null}
       {!canContinue ? <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider-application/status')}>{locale === 'ar' ? 'متابعة حالة الطلب' : 'Track application status'}</a> : null}
+      <a className="provider-dashboard__secondary-action" href={localeForProviderPath(locale, '/provider/notifications')}>{locale === 'ar' ? 'إشعارات الإدارة' : 'Administration notifications'}</a>
       <button type="button" className="provider-dashboard__secondary-action" onClick={onRefresh}>{locale === 'ar' ? 'تحديث حالة الطلب' : 'Refresh application status'}</button>
     </section>
   );

@@ -400,7 +400,7 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
           <span className="auth-card__icon provider-organization-card__step" aria-hidden="true">4</span>
           <p className="provider-organization-card__step-label">{copy.stepLabel}</p>
           <h1>{copy.title}</h1>
-          <p>{copy.description}</p>
+          <p>{copy.description}</p><p>{locale === 'ar' ? 'المستندات المكتوب عليها «اختياري» لا تمنع إرسال الطلب. المطلوب فقط: البيانات والمستندات الموضح بجانبها «مطلوب».' : 'Documents marked optional do not block submission. Complete only the fields and documents marked required.'}</p>
         </header>
         <div className="auth-card__body provider-documents-card__body">
           <div className="provider-account-progress" aria-label={copy.stepLabel}>

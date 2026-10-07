@@ -38,6 +38,7 @@ export interface AdRequestRecord {
   providerId: Types.ObjectId;
   requestMode?: 'assisted';
   contactPhone?: string;
+  paymentWaiver?: { reason: string; actorId: string; grantedAt: Date };
   placementKey?: AdRequest['placementKey'];
   adType?: AdRequest['adType'];
   purpose: AdRequest['purpose'];
@@ -148,6 +149,7 @@ const adRequestSchema = new Schema<AdRequestRecord>({
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
   requestMode: { type: String, enum: ['assisted'] },
   contactPhone: { type: String, maxlength: 20 },
+  paymentWaiver: { type: new Schema({ reason: { type: String, required: true, maxlength: 500 }, actorId: { type: String, required: true }, grantedAt: { type: Date, required: true } }, { _id: false }), required: false },
   placementKey: { type: String, trim: true, maxlength: 80 },
   adType: { type: String, trim: true, maxlength: 80 },
   purpose: { type: String, trim: true, required: true, maxlength: 500 },

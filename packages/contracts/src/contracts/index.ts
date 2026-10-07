@@ -360,6 +360,9 @@ export type {
 
 export {
   ACCOUNT_TRANSITION_ACTIONS,
+  accountCommunicationRequestSchema,
+  accountCommunicationDataSchema,
+  accountCommunicationSuccessEnvelopeSchema,
   accountObjectIdSchema,
   accountTransitionActionSchema,
   accountTransitionDataSchema,
@@ -387,6 +390,7 @@ export {
 
 export type {
   AccountTransitionAction,
+  AccountCommunicationRequest,
   AccountTransitionData,
   AccountTransitionRequest,
   AdminAccountUserData,

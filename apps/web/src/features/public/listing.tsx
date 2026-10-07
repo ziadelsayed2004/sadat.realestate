@@ -251,10 +251,10 @@ function ListingFilters({
           <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onCommit('transactionType', 'rent')} /> {copy.rent}</label>
         </fieldset>
         <div className="public-property-listing__price-range">
-          <FilterField id="public-property-min-price" label={copy.minPrice}>
+          <FilterField id="public-property-min-price" label={`${copy.minPrice} (${locale === 'ar' ? 'اختياري' : 'optional'})`}>
             <input id="public-property-min-price" name="minPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.minPrice} onChange={event => onDraftChange('minPrice', event.currentTarget.value)} />
           </FilterField>
-          <FilterField id="public-property-max-price" label={copy.maxPrice}>
+          <FilterField id="public-property-max-price" label={`${copy.maxPrice} (${locale === 'ar' ? 'اختياري' : 'optional'})`}>
             <input id="public-property-max-price" name="maxPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.maxPrice} onChange={event => onDraftChange('maxPrice', event.currentTarget.value)} />
           </FilterField>
         </div>

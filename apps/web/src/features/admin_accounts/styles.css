@@ -298,6 +298,9 @@
   resize: vertical;
 }
 
+.admin-account-reports__reason-label input { display: block; inline-size: 100%; min-block-size: 44px; margin-block-start: 6px; padding: 10px 12px; border: 1px solid #cfd6df; border-radius: 10px; background: #fff; color: #17243b; font: inherit; }
+.admin-account-reports__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 14px; }
+
 .admin-account-reports__success {
   margin-block-start: 14px;
   color: #00854a;

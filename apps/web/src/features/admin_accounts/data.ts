@@ -1,5 +1,8 @@
 import {
   accountObjectIdSchema,
+  accountCommunicationRequestSchema,
+  accountCommunicationSuccessEnvelopeSchema,
+  type AccountCommunicationRequest,
   accountReportDataSchema,
   accountReportListDataSchema,
   accountReportListQuerySchema,
@@ -197,4 +200,14 @@ export function createAdminAccountReportResolver(options: Omit<CommonLoadOptions
 
 export function createAdminAccountTransitionLoader(options: Omit<CommonLoadOptions, 'signal'> = {}): AdminAccountTransitionLoader {
   return (userId, input, signal) => transitionAdminAccount(userId, input, { ...options, ...(signal === undefined ? {} : { signal }) });
+}
+
+export async function communicateAdminAccount(userId: string, input: AccountCommunicationRequest, options: CommonLoadOptions = {}) {
+  const id = accountObjectIdSchema.parse(userId);
+  const headers = headersFor(options.authorization);
+  const response = await clientFor(options).request(`${ADMIN_USERS_ROUTE}/${id}/communication`, {
+    method: 'POST', responseSchema: accountCommunicationSuccessEnvelopeSchema, json: accountCommunicationRequestSchema.parse(input),
+    ...(headers === undefined ? {} : { headers })
+  });
+  return response.data.data;
 }

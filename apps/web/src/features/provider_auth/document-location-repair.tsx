@@ -33,11 +33,12 @@ export function DocumentLocationRepair({ application, locale, save, onSaved }: {
   }}>
     <h2>{ar ? 'استكمل موقعك للمتابعة' : 'Complete your location to continue'}</h2>
     <p>{ar ? 'الملفات محفوظة. اختر الموقع الرئيسي ومناطق الخدمة ثم احفظ؛ لا تحتاج لإعادة رفع الملفات.' : 'Your files are saved. Select your primary location and service areas, then save; no re-upload is needed.'}</p>
-    <Select label={ar ? 'الموقع الرئيسي' : 'Primary location'} value={primary} onChange={event => setPrimary(event.currentTarget.value)} disabled={busy || locations.length === 0} options={[
+    <Select required label={ar ? 'الموقع الرئيسي (مطلوب)' : 'Primary location (required)'} value={primary} onChange={event => setPrimary(event.currentTarget.value)} disabled={busy || locations.length === 0} options={[
       { value: '', label: ar ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
       ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
     ]} />
-    <fieldset disabled={busy}><legend>{ar ? 'مناطق الخدمة' : 'Service areas'}</legend>
+    {!primary ? <p role="status">{ar ? 'اختيار مناطق الخدمة لا يحدد الموقع الرئيسي. اختر مقر المكتب من القائمة أعلاه حتى تتمكن من الحفظ والمتابعة.' : 'Service areas do not set your primary location. Choose your office location above to save and continue.'}</p> : null}
+    <fieldset disabled={busy}><legend>{ar ? 'مناطق الخدمة (اختر منطقة واحدة على الأقل)' : 'Service areas (choose at least one)'}</legend>
       {locations.map(location => <label className="provider-account-checkbox" key={location.id}>
         <input type="checkbox" checked={areas.includes(location.id)} onChange={event => { const checked = event.currentTarget.checked; setAreas(previous => checked ? [...previous, location.id] : previous.filter(id => id !== location.id)); }} />
         <span>{location.name[locale] ?? location.name.ar}</span>

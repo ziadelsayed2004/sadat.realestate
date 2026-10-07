@@ -31,7 +31,7 @@ export function createAdminAdsRuntime(
       }
     }),
     calendar: createAdCalendarService({
-      repository: createMongooseAdCalendarRepository(connection),
+      repository: createMongooseAdCalendarRepository(connection, undefined, audit),
       authorization
     })
   };

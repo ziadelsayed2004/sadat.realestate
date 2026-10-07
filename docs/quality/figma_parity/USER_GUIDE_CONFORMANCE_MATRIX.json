@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-07T16:40:11.319Z",
+  "generatedAt": "2026-10-07T17:32:58.497Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -6457,7 +6457,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-10-07T16:40:11.319Z",
+    "updatedAt": "2026-10-07T17:32:58.497Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

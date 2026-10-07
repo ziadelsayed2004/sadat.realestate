@@ -456,6 +456,26 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 .public-developer-profile__inquiry button:disabled{opacity:.65;cursor:default}
 .public-developer-profile__inquiry [role=status]{color:#125345;line-height:1.7}
 
+.public-site-footer__floating-whatsapp {
+  position: fixed;
+  inset-inline-start: max(1rem, env(safe-area-inset-left));
+  inset-block-end: max(1rem, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  border-radius: 50%;
+  background: #146b46;
+  color: #fff;
+  box-shadow: 0 4px 14px #17243b33;
+  transition: background-color 180ms ease-in-out, transform 180ms ease-in-out;
+}
+.public-site-footer .public-site-footer__floating-whatsapp:hover,
+.public-site-footer .public-site-footer__floating-whatsapp:focus-visible { background: #0d5035; color: #fff; transform: translateY(-2px); }
+.public-site-footer__floating-whatsapp:focus-visible { outline: 3px solid #d3a445; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .public-site-footer__floating-whatsapp { transition: none; } }
 .public-site-footer a:hover,.public-site-footer a:focus-visible{color:#f3d58c}
 .public-site-footer a:focus-visible{outline:2px solid #f3d58c;outline-offset:3px}
 .public-site-footer .public-site-footer__social a{display:inline-flex;align-items:center;justify-content:center;inline-size:2.75rem;block-size:2.75rem}
@@ -544,7 +564,8 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
           <div className="public-homepage__footer-links public-site-footer__contact-links">
             {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
-            <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>
+            {contact.mapUrl ? <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer">{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
+            {contact.isDemo ? <small>{locale === 'ar' ? 'بيانات تواصل تجريبية' : 'Demo contact details'}</small> : null}
           </div>
         </div>
       </div>
@@ -561,6 +582,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
       <div className="public-site-footer__bottom">
         <span>{labels.copyright}<span className="public-site-footer__desktop-legal"> · {labels.legal}</span></span>
       </div>
+      {whatsapp ? <a className="public-site-footer__floating-whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label={labels.whatsapp}><WhatsAppIcon /></a> : null}
     </footer>
   );
 }

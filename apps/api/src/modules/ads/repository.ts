@@ -18,6 +18,7 @@ import {
   type AdQuoteIssue
 } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
+import { createRequestContext, getRequestContext } from '../observability/context.js';
 import {
   AdSettingsServiceError,
   type AdAdminRequestRepository,
@@ -43,6 +44,7 @@ function toAdRequest(row: {
   placementKey?: string | undefined;
   requestMode?: 'assisted';
   contactPhone?: string;
+  paymentWaiver?: AdRequestRecord['paymentWaiver'];
   adType?: string | undefined;
   purpose: string;
   intervalStart?: Date | undefined;
@@ -56,6 +58,7 @@ function toAdRequest(row: {
     id: row._id.toHexString(),
     providerId: row.providerId.toHexString(),
     ...(row.requestMode ? { requestMode: row.requestMode, contactPhone: row.contactPhone } : {}),
+    ...(row.paymentWaiver ? { paymentWaiver: { ...row.paymentWaiver, grantedAt: row.paymentWaiver.grantedAt.toISOString() } } : {}),
     placementKey: row.placementKey,
     ...(row.adType ? { adType: row.adType } : {}),
     purpose: row.purpose,
@@ -288,7 +291,8 @@ export function createMongooseAdAdminRequestRepository(
 
 export function createMongooseAdCalendarRepository(
   connection: Connection,
-  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection)
+  models: ProviderAdvertisingModels = createProviderAdvertisingModels(connection),
+  audit?: AuditWriter
 ): AdCalendarRepository {
   return {
     async listCalendar(query) {
@@ -304,7 +308,7 @@ export function createMongooseAdCalendarRepository(
       return { items: (rows as AdRequestRow[]).map(calendarEvent), total };
     },
 
-    async schedule(requestId, expectedVersion) {
+    async schedule(requestId, expectedVersion, options) {
       const requestObject = requestObjectId(requestId);
       return transaction(connection, async (session) => {
         const request = await models.AdRequest.findOne({ _id: requestObject })
@@ -324,10 +328,13 @@ export function createMongooseAdCalendarRepository(
           status: 'approved',
           securityState: 'clean'
         }).session(session).select('_id').lean().exec();
-        if (!approvedProof) throw new AdSettingsServiceError('VERSION_CONFLICT');
+        if (!approvedProof && !options?.waiverReason) throw new AdSettingsServiceError('VERSION_CONFLICT');
+        if (options?.waiverReason && !audit) throw new AdSettingsServiceError('FORBIDDEN');
+        const previousInterval = { start: request.intervalStart.toISOString(), end: request.intervalEnd.toISOString() };
+        if (options?.interval) { request.intervalStart = new Date(options.interval.start); request.intervalEnd = new Date(options.interval.end); }
 
         const now = new Date();
-        if (now.getTime() >= request.intervalEnd.getTime()) {
+        if (!Number.isFinite(request.intervalStart.getTime()) || !Number.isFinite(request.intervalEnd.getTime()) || request.intervalEnd <= request.intervalStart || now.getTime() >= request.intervalEnd.getTime()) {
           throw new AdSettingsServiceError('VERSION_CONFLICT');
         }
         const conflict = await models.AdRequest.findOne({
@@ -345,7 +352,7 @@ export function createMongooseAdCalendarRepository(
         const updated = await models.AdRequest.findOneAndUpdate(
           { _id: request._id, status: 'waiting_payment', version: expectedVersion },
           {
-            $set: { status: 'scheduled', updatedAt: now },
+            $set: { status: 'scheduled', updatedAt: now, intervalStart: request.intervalStart, intervalEnd: request.intervalEnd, ...(options?.waiverReason ? { paymentWaiver: { reason: options.waiverReason, actorId: options.actorId, grantedAt: now } } : {}) },
             $inc: { version: 1 },
             $push: { history: { status: 'scheduled', version: expectedVersion + 1, changedAt: now } }
           },
@@ -371,6 +378,15 @@ export function createMongooseAdCalendarRepository(
           },
           { new: true, upsert: true, runValidators: true, session }
         ).exec();
+        if (audit && options) {
+          const context = getRequestContext() ?? createRequestContext();
+          await audit.record({ actorType: 'admin', actorId: options.actorId, targetType: 'ad_request', targetId: requestId, action: options.waiverReason ? 'advertising.schedule_payment_waived' : 'advertising.schedule', reason: options.waiverReason ?? 'Schedule after approved payment', before: { status: 'waiting_payment', interval: previousInterval }, after: { status: 'scheduled', paymentWaived: Boolean(options.waiverReason), interval: { start: request.intervalStart.toISOString(), end: request.intervalEnd.toISOString() } }, requestId: context.requestId, traceId: context.traceId, occurredAt: now }, session);
+        }
+        if (options?.waiverReason) await connection.collection('notifications').insertOne({
+          recipientId: request.providerId, audience: 'provider', type: 'advertising.payment_waived',
+          title: { ar: 'تم اعتماد إعلانك بدون دفع', en: 'Your advertisement was approved without payment' },
+          message: { ar: options.waiverReason, en: options.waiverReason }, link: `/provider/ads/${requestId}`, createdAt: now, readAt: null
+        }, { session });
         return calendarEvent(updated);
       });
     }

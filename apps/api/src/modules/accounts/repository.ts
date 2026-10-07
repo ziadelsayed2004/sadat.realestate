@@ -66,6 +66,13 @@ export interface ProviderReviewWriteInput extends Omit<TransitionContext, 'actio
   toProviderStatus: ProviderApplicationState;
 }
 
+const providerReviewNotificationTitles: Record<ProviderReviewAction, { ar: string; en: string }> = {
+  verify: { ar: 'تم تفعيل حسابك', en: 'Your account is activated' },
+  needs_information: { ar: 'حسابك يحتاج استكمال بيانات', en: 'Your account needs more information' },
+  reject: { ar: 'لم تتم الموافقة على طلب حسابك', en: 'Your account application was declined' },
+  suspend: { ar: 'تم إيقاف حسابك', en: 'Your account has been suspended' }
+};
+
 export type AccountTransitionWriteResult =
   | { kind: 'written'; transitionId: string; version: number }
   | { kind: 'conflict' };
@@ -184,6 +191,7 @@ function accountActions(roleType: AuthRoleType, status: AuthAccountState): Accou
     return [];
   }
   if (status === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (status === 'needs_information') return ['verify', 'reject'];
   if (status === 'verified') return ['suspend', 'restrict'];
   if (status === 'restricted' || status === 'suspended') return ['verify'];
   return [];
@@ -211,6 +219,7 @@ function userData(
 
 function providerActions(status: ProviderApplicationState): ProviderReviewAction[] {
   if (status === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (status === 'needs_information') return ['verify', 'reject'];
   if (status === 'approved') return ['suspend'];
   if (status === 'suspended') return ['verify'];
   return [];
@@ -503,6 +512,9 @@ export function createMongooseAccountRepository(
             createdAt: input.changedAt
           }], { session });
           if (!transition) throw new Error('Account transition record was not created');
+          await connection.collection('notifications').insertOne({ _id: transition._id, recipientId: userId, audience: input.target.roleType,
+            type: `account.${input.action}`, title: { ar: 'تحديث حالة حسابك', en: 'Account status update' },
+            message: { ar: input.reason, en: input.reason }, link: `/${input.target.roleType}`, readAt: null, createdAt: input.changedAt }, { session });
           await auditWriter.record({
             actorType: 'admin',
             actorId: input.actorAdminId,
@@ -622,6 +634,17 @@ export function createMongooseAccountRepository(
             createdAt: input.changedAt
           }], { session });
           if (!transition) throw new Error('Provider review transition record was not created');
+          await connection.collection('notifications').insertOne({
+            _id: transition._id,
+            recipientId: userId,
+            audience: 'provider',
+            type: `provider.review.${input.action}`,
+            title: providerReviewNotificationTitles[input.action],
+            message: { ar: input.reason, en: input.reason },
+            link: '/provider',
+            readAt: null,
+            createdAt: input.changedAt
+          }, { session });
           await auditWriter.record({
             actorType: 'admin',
             actorId: input.actorAdminId,

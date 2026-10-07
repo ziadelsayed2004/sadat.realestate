@@ -235,7 +235,7 @@ export function App({
   const providerSettingsTab = seekerUrl.searchParams.get('tab') === 'contact' ? 'contact' : seekerUrl.searchParams.get('tab') === 'security' ? 'security' : 'account';
   const providerAwaitingActivation = route.kind === 'matched' && route.id === 'provider-dashboard'
     && authSnapshot?.status === 'authenticated' && authSnapshot.user?.roleType === 'provider'
-    && authSnapshot.user.status !== 'verified' && !isProviderSettings && !isAdminUserGuide;
+    && authSnapshot.user.status !== 'verified' && !isProviderSettings && !isProviderNotifications && !isAdminUserGuide;
 
   const content = guard.allowed ? (
     isPublicHomepage ? (
