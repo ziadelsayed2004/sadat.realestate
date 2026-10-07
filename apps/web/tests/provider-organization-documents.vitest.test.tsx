@@ -143,14 +143,14 @@ it.each([false, true])('repairs missing broker locations without optional upload
   const review = await screen.findByRole('button', { name: 'مراجعة الطلب' });
   expect(review).toBeDisabled();
   await screen.findByRole('option', { name: 'السادات' });
-  fireEvent.change(screen.getByRole('combobox', { name: 'الموقع الرئيسي' }), { target: { value: locationId } });
+  fireEvent.change(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب)' }), { target: { value: locationId } });
   fireEvent.click(screen.getByRole('checkbox', { name: 'السادات' }));
   fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
   if (failFirstSave) {
     await screen.findByRole('alert');
     expect(review).toBeDisabled();
     expect(next).not.toHaveBeenCalled();
-    expect(screen.getByRole('combobox', { name: 'الموقع الرئيسي' })).toHaveValue(locationId);
+    expect(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب)' })).toHaveValue(locationId);
     expect(screen.getByRole('checkbox', { name: 'السادات' })).toBeChecked();
     fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
   }

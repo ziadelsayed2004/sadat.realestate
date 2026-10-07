@@ -36,14 +36,14 @@ describe('public property listing', () => {
     const load = vi.fn().mockResolvedValue(listingData);
     const copy = getPublicPropertyListingCopy('en');
     renderWithLocale(<PublicPropertyListing locale="en" initialData={listingData} initialQuery={{ ...defaultPublicPropertySearchQuery(), propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb' }} load={load} />, { locale: 'en' });
-    fireEvent.change(screen.getByLabelText(copy.minPrice), { target: { value: '1000000' } });
-    fireEvent.change(screen.getByLabelText(copy.maxPrice), { target: { value: '2000000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.minPrice} (optional)`), { target: { value: '1000000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.maxPrice} (optional)`), { target: { value: '2000000' } });
     expect(load).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
     await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
     expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', minPrice: 1000000, maxPrice: 2000000 }), expect.any(AbortSignal));
     expect(window.location.search).toContain('lang=en');
-    fireEvent.change(screen.getByLabelText(copy.maxPrice), { target: { value: '500000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.maxPrice} (optional)`), { target: { value: '500000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
     expect(screen.getByRole('alert')).toHaveTextContent(copy.invalidFilters);
     expect(load).toHaveBeenCalledTimes(1);
