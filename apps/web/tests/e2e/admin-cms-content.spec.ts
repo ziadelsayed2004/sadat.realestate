@@ -59,11 +59,13 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
     const locale = localeForAdminCms();
     await page.goto(`/admin/content/about?lang=${encodeURIComponent(locale)}`);
     const record = page.getByTestId(`admin-cms-about-${adminCmsAboutId}`);
-    const recordSave = record.getByRole('button', { name: /save changes|\u062d\u0641\u0638|\u4fdd\u5b58/iu });
+    const recordSave = record.getByRole('button', { name: /edit|تعديل/iu });
     await expect(recordSave).toHaveCount(1);
     await recordSave.click();
     const editor = page.getByTestId('admin-cms-about-editor');
     await expect(editor).toBeVisible();
+    await expect(editor.locator('#admin-cms-about-title-ar')).toBeFocused();
+    expect(await editor.evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(page.viewportSize()!.height);
     const form = editor.locator('form');
     const save = form.getByRole('button', { name: /save changes|\u062d\u0641\u0638|\u4fdd\u5b58/iu });
     await expect(save).toHaveCount(1);
@@ -76,6 +78,7 @@ test.describe('ADM-30, ADM-31, and ADM-32 CMS administration', () => {
     const request = await updateRequest;
     expect(request.postDataJSON()).toMatchObject({ id: adminCmsAboutId, version: 4, reason: 'Update About content' });
     await expect(editor).not.toBeVisible();
+    await expect(page.getByRole('status')).toHaveText(locale === 'ar' ? 'تم حفظ محتوى «عن المنصة» بنجاح.' : 'About content saved successfully.');
   });
 
   test('fails closed when the administrator session cannot refresh', async ({ page }) => {

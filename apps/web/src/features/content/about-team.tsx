@@ -188,7 +188,9 @@ function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi
 function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly data: CmsPublicContentListData }) {
   const ui = getAboutUi(locale, copy);
   const introItem = data.items.find(item => item.key === 'about_intro');
+  const heroTitle = localizedText(introItem?.title, locale) ?? copy.aboutTitle;
   const heroBody = localizedText(introItem?.body, locale) ?? ui.heroBody;
+  const blocks = data.items.filter(item => item !== introItem);
   return (
     <>
       <section className="public-about__hero" aria-labelledby="public-about-title">
@@ -196,10 +198,11 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
         <div className="public-about__hero-shade" aria-hidden="true" />
         <div className="public-about__hero-content">
           <p className="public-about__eyebrow">{copy.aboutEyebrow}</p>
-          <h1 id="public-about-title"><span>{copy.aboutTitle}</span><strong>{locale === 'ar' ? 'بوابة الثقة والشفافية' : 'A gateway to trust and transparency'}</strong></h1>
+          <h1 id="public-about-title"><span>{heroTitle}</span><strong>{locale === 'ar' ? 'بوابة الثقة والشفافية' : 'A gateway to trust and transparency'}</strong></h1>
           <p>{heroBody}</p>
         </div>
       </section>
+      {blocks.length ? <section className="public-about__published-blocks" aria-label={copy.aboutTitle}>{blocks.map(block => <article key={block.key}><h2>{localizedText(block.title, locale) ?? block.key}</h2><p>{localizedText(block.body, locale)}</p></article>)}</section> : null}
       <section className="public-about__how" aria-labelledby="public-about-how-title">
         <div className="public-about__section-heading"><p>{ui.howEyebrow}</p><h2 id="public-about-how-title">{ui.howTitle}</h2></div>
         <div className="public-about__steps">

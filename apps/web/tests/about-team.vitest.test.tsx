@@ -31,6 +31,19 @@ const teamData = cmsPublicContentListDataSchema.parse({
 });
 
 describe('public About and Team content', () => {
+  it.each(['ar', 'en'] as const)('displays the edited intro title and all additional published blocks in %s', locale => {
+    const data = cmsPublicContentListDataSchema.parse({ items: [
+      { key: 'about_intro', title: { ar: 'عن منصتنا المعدلة', en: 'Our updated platform' }, body: { ar: 'مقدمة معدلة', en: 'Updated introduction' }, order: 0 },
+      ...aboutData.items
+    ] });
+    renderWithLocale(<PublicAbout locale={locale} initialData={data} />, { locale });
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(locale === 'ar' ? 'عن منصتنا المعدلة' : 'Our updated platform');
+    expect(screen.getByText(locale === 'ar' ? 'مقدمة معدلة' : 'Updated introduction')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: locale === 'ar' ? 'رسالتنا' : 'Our mission', level: 2 })).toBeInTheDocument();
+    expect(screen.getByText('A published mission.')).toBeInTheDocument();
+    expect(screen.getByText('A published trust principle.')).toBeInTheDocument();
+    expect(document.querySelectorAll('.public-about__published-blocks article')).toHaveLength(2);
+  });
   it('renders the saved portrait for a new team key and does not restore fixed portraits after removal', () => {
     const data = cmsPublicContentListDataSchema.parse({ items: [{ ...teamData.items[0], key: 'new_member', imageUrl: '/api/v1/public/team-photos/aaaaaaaaaaaaaaaaaaaaaaaa' }, { ...teamData.items[0], key: 'team_ahmed', name: { en: 'Member without photo' } }] });
     renderWithLocale(<PublicTeam locale="en" initialData={data} />, { locale: 'en' });

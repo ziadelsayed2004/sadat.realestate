@@ -209,6 +209,32 @@ describe('admin About, Team, and population CMS content', () => {
     await waitFor(() => expect(update).toHaveBeenCalledWith('about', expect.objectContaining({ id: aboutId, version: 4, reason: 'Update About content' })));
   });
 
+  it.each(['ar', 'en'] as const)('opens the selected About block for editing and confirms its saved changes in %s', async locale => {
+    const copy = getAdminCmsCopy(locale);
+    const second = { ...about.items[0], id: teamId, key: 'vision', title: { ar: 'رؤيتنا', en: 'Our vision' }, body: { ar: 'النص الحالي', en: 'Current text' } };
+    const initialData = cmsAdminContentDataSchema.parse({ namespace: 'about', items: [about.items[0], second] });
+    const revised = cmsAdminContentDataSchema.parse({ namespace: 'about', items: [about.items[0], { ...second, version: 5, title: { ar: 'رؤيتنا الجديدة', en: 'Our new vision' }, body: { ar: 'نبذة معدلة', en: 'Updated description' } }] });
+    const update = vi.fn(async () => revised);
+    renderWithLocale(<AdminCmsContent path="/admin/content/about" locale={locale} session={session} initialData={initialData} update={update} />, { locale });
+    fireEvent.click(screen.getByTestId(`admin-cms-about-${teamId}`).querySelectorAll('button')[1]!);
+    expect(screen.getByLabelText('AR ' + copy.title)).toHaveFocus();
+    expect(screen.getByLabelText('EN ' + copy.title)).toHaveValue('Our vision');
+    expect(screen.getByLabelText(copy.key)).toBeDisabled();
+    fireEvent.change(screen.getByLabelText('AR ' + copy.title), { target: { value: 'رؤيتنا الجديدة' } });
+    fireEvent.change(screen.getByLabelText('EN ' + copy.title), { target: { value: 'Our new vision' } });
+    fireEvent.change(screen.getByLabelText('AR ' + copy.body), { target: { value: 'نبذة معدلة' } });
+    fireEvent.change(screen.getByLabelText('EN ' + copy.body), { target: { value: 'Updated description' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Update official About block' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-about-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('about', expect.objectContaining({ id: teamId, version: 4, title: { ar: 'رؤيتنا الجديدة', en: 'Our new vision' } })));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'تم حفظ' : 'saved successfully'));
+    expect(screen.getByRole('status')).toHaveFocus();
+    expect(screen.queryByTestId('admin-cms-about-editor')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId(`admin-cms-about-${teamId}`).querySelectorAll('button')[1]!);
+    expect(screen.getByLabelText('EN ' + copy.body)).toHaveValue('Updated description');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
   it('fails closed for a non-admin session without loading', async () => {
     const load = vi.fn();
     renderWithLocale(<AdminCmsContent path="/admin/content/team" locale="en" session={{ status: 'anonymous' }} load={load} />, { locale: 'en' });

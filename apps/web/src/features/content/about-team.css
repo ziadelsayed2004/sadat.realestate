@@ -43,6 +43,7 @@
   width: min(100% - 2rem, 68rem);
   padding-block: 3.5rem;
   direction: rtl;
+  overflow-wrap: anywhere;
 }
 
 .public-about__eyebrow,
@@ -103,6 +104,38 @@
 .public-about__how {
   padding-block: 3.3rem 3.5rem;
   direction: rtl;
+}
+
+.public-about__published-blocks {
+  box-sizing: border-box;
+  width: min(100% - 2rem, 72rem);
+  display: grid;
+  gap: 1.5rem;
+  margin: 2.5rem auto 0;
+  padding-inline: 1.5rem;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.public-about__published-blocks article {
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid #e7e7e7;
+  border-radius: 1rem;
+}
+
+.public-about__published-blocks h2 {
+  margin: 0 0 0.75rem;
+  color: var(--color-text-strong);
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.public-about__published-blocks p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  white-space: pre-line;
 }
 
 .public-about__section-heading {
@@ -467,10 +500,10 @@
     box-sizing: border-box;
     align-self: start;
     justify-self: center;
-    inline-size: 56rem;
-    block-size: 12.625rem;
+    inline-size: min(100% - 2rem, 56rem);
+    min-block-size: 12.625rem;
     margin-block-start: 6rem;
-    padding-block: 0;
+    padding-block: 0 2rem;
   }
 
   .public-about__hero-content > * {
@@ -483,7 +516,7 @@
     line-height: 1.25rem;
   }
   .public-about__hero h1 {
-    block-size: 8.25rem;
+    min-block-size: 8.25rem;
     align-content: center;
     gap: 0;
     margin: 0;
@@ -492,7 +525,7 @@
   }
 
   .public-about__hero-content > p:last-child {
-    block-size: 3.125rem;
+    min-block-size: 3.125rem;
     max-inline-size: 42rem;
     line-height: 1.875rem;
   }
