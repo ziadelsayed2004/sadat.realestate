@@ -56,7 +56,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
       const room = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
       if ((ready && room >= top - 1) || performance.now() >= deadline) {
         const anchor = !returning && target.hash ? document.getElementById(decodeURIComponent(target.hash.slice(1))) : null;
-        if (anchor) anchor.scrollIntoView();
+        if (anchor) anchor.scrollIntoView({ behavior: 'instant', block: 'start' });
         else window.scrollTo({ top, left: returning ? saved.x : 0, behavior: 'instant' });
         settled += 1;
         if (settled >= 2 || performance.now() >= deadline) {

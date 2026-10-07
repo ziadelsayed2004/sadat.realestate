@@ -48,7 +48,7 @@ describe('public navigation', () => {
     const contact = document.createElement('section'); contact.id = 'developer-contact'; contact.scrollIntoView = anchorScroll;
     document.getElementById('app')?.append(contact);
     for (let index = 0; index < 4; index++) tick();
-    expect(anchorScroll).toHaveBeenCalled(); expect(scroll).not.toHaveBeenCalled();
+    expect(anchorScroll).toHaveBeenCalledWith({ behavior: 'instant', block: 'start' }); expect(scroll).not.toHaveBeenCalled();
   });
 
   it('does not override the native fragment scroll when popstate arrives before the browser jumps', () => {

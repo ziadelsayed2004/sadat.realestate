@@ -8,6 +8,7 @@ import type { RouteMatch } from '../../routes/route-table.js';
 
 import { LocaleSwitcher } from '../localization/index.ts';
 import { AdminAttentionBell, AdminAttentionProvider } from './admin-attention.tsx';
+import { DashboardAccountMenu } from '../dashboard_account/menu.tsx';
 
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
@@ -48,6 +49,14 @@ function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
 
 function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
   const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const signOut = () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    void (authClient?.logout?.() ?? Promise.resolve()).catch(() => undefined).finally(() => {
+      window.location.assign(`/auth/login?lang=${locale}`);
+    });
+  };
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const accessibilityCopy = getAccessibilityCopy(locale);
@@ -102,10 +111,10 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
           </div>
         ) : (
           <div className="admin-shell-header" data-admin-header="true">
-            <div className="admin-shell-header__identity">
+            <DashboardAccountMenu locale={locale} triggerClassName="admin-shell-header__identity" settingsHref={`/admin/settings?lang=${locale}`} settingsLabel={locale === 'ar' ? 'الإعدادات العامة' : 'General settings'} guideHref={`/admin/user-guide?lang=${locale}`} signingOut={signingOut} onSignOut={signOut}>
               <span aria-hidden="true" className="admin-shell-header__avatar">م</span>
               <span className="admin-shell-header__identity-copy"><strong>{adminHeader.role}</strong><small>{surfaceLabel}</small></span>
-            </div>
+            </DashboardAccountMenu>
             <label className="admin-shell-header__search">
               <span className="a11y-visually-hidden">{adminHeader.searchLabel}</span>
               <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" />

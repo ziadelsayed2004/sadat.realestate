@@ -11,6 +11,7 @@ import {
   type ProviderOverviewLoader
 } from './data.ts';
 import './styles.css';
+import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.tsx';
 
 export type ProviderOverviewViewState = ProviderOverviewBaseState;
 
@@ -140,7 +141,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
         <span className="provider-dashboard__mobile-brand"><strong>{copy.overview.eyebrow}</strong><img src="/assets/sadat-real-estate-logo.png" alt="" width="24" height="24" /></span>
         <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
         <span className="provider-dashboard__topbar-spacer" />
-        <span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span>
+        <DashboardAccountMenu locale={locale} settingsHref={localeForProviderPath(locale, '/provider/settings')} guideHref={localeForProviderPath(locale, '/provider/user-guide')} signingOut={signingOut} onSignOut={signOut}><span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span></DashboardAccountMenu>
         <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
           <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
         </a>
@@ -166,7 +167,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
               </li>
             );
           })}
-          <li data-provider-nav="userGuide"><a href={localeForProviderPath(locale, '/provider/user-guide')} aria-current={activePath === '/provider/user-guide' ? 'page' : undefined} data-active={activePath === '/provider/user-guide' ? 'true' : undefined} onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>?</span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a></li>
+          <li data-provider-nav="userGuide"><a href={localeForProviderPath(locale, '/provider/user-guide')} aria-current={activePath === '/provider/user-guide' ? 'page' : undefined} data-active={activePath === '/provider/user-guide' ? 'true' : undefined} onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}><UserGuideIcon /></span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a></li>
           <li className="provider-dashboard__mobile-website">
             <a href={localeForProviderPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMobileMenuOpen(false)}>
               <span aria-hidden="true">↗</span><span>{websiteLabel}</span>

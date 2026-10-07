@@ -30,6 +30,7 @@ test('developer tabs and inquiry link reach their sections without reloading or 
   page.on('request', request => { if (request.isNavigationRequest() && request.frame() === page.mainFrame()) documents += 1; });
   await page.goto(`/developers/${slug}?lang=${locale()}`);
   await page.locator('.public-developer-profile__inquiry input[name="name"]').waitFor();
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe('smooth');
   for (const id of ['developer-properties', 'developer-contact']) {
     await page.locator(`.public-developer-profile__tabs a[href="#${id}"]`).click();
     await atSection(page, id);
@@ -56,6 +57,32 @@ test('a direct contact hash waits for profile data and reaches the contact secti
   await page.goto(`/developers/${slug}?lang=${locale()}#developer-contact`);
   await page.locator('.public-developer-profile__inquiry input[name="name"]').waitFor();
   await atSection(page, 'developer-contact');
+});
+
+test('contact navigation animates through intermediate positions and respects reduced motion', async ({ page }) => {
+  await page.goto(`/developers/${slug}?lang=${locale()}`);
+  await page.locator('.public-developer-profile__inquiry input[name="name"]').waitFor();
+  // Observe actual animation frames, rather than relying only on the CSS value.
+  const positions = page.evaluate(() => new Promise<number[]>(resolve => {
+    const values: number[] = [];
+    const start = performance.now();
+    const sample = () => {
+      values.push(window.scrollY);
+      if (performance.now() - start < 1500) requestAnimationFrame(sample);
+      else resolve(values);
+    };
+    requestAnimationFrame(sample);
+  }));
+  await page.locator('.public-developer-profile__identity-action[href="#developer-contact"]').click();
+  await atSection(page, 'developer-contact');
+  const samples = await positions;
+  const end = samples.at(-1)!;
+  expect(end).toBeGreaterThan(100);
+  expect(samples.some(value => value > 20 && value < end - 20)).toBe(true);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe('auto');
+  await page.locator('.public-developer-profile__tabs a[href="#developer-overview"]').click();
+  await atSection(page, 'developer-overview');
 });
 
 test('an organization without public contact details shows their availability instead of an inquiry action', async ({ page }) => {

@@ -1,0 +1,28 @@
+.dashboard-account { position: relative; flex: 0 0 auto; min-inline-size: 0; }
+.dashboard-account__trigger { display: flex; align-items: center; gap: .4rem; min-block-size: 44px; min-inline-size: 44px; padding: .25rem; border: 0; border-radius: .75rem; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.dashboard-account__chevron { flex: 0 0 14px; }
+.dashboard-account__menu { position: fixed; z-index: 80; inline-size: min(15rem, calc(100vw - 2rem)); box-sizing: border-box; padding: .4rem; border: 1px solid #e0ddd4; border-radius: .9rem; background: #fff; color: #1b2942; box-shadow: 0 8px 28px rgb(23 35 61 / 18%); }
+.dashboard-account__menu :is(a, button) { display: flex; align-items: center; gap: .65rem; inline-size: 100%; min-block-size: 44px; box-sizing: border-box; padding: .65rem .75rem; border: 0; border-radius: .6rem; background: transparent; color: inherit; font: inherit; font-size: .9375rem; line-height: 1.5; text-align: start; text-decoration: none; white-space: normal; cursor: pointer; }
+.dashboard-account__menu :is(img, svg) { flex: 0 0 20px; }
+.dashboard-account__menu .dashboard-account__logout { color: #b32938; border-block-start: 1px solid #edeae3; }
+.dashboard-account__menu :is(a, button):hover { background: #f6f1e7; }
+.dashboard-account :is(a, button):focus-visible { outline: 2px solid #155b4f; outline-offset: 2px; }
+.dashboard-account__menu button:disabled { opacity: .65; cursor: wait; }
+.admin-shell-header__identity.dashboard-account__trigger { display: flex; }
+.seeker-dashboard__account-copy { display: grid; }
+.dashboard-account .provider-dashboard__topbar-avatar { display: grid; }
+@media (max-width: 760px) { .admin-shell-header__identity.dashboard-account__trigger .admin-shell-header__identity-copy { display: none; } }
+@media (max-width: 640px) { .seeker-dashboard__topbar-profile .seeker-dashboard__account-copy { display: none; } }
+@media (max-width: 760px) {
+  .route-shell--admin .admin-shell-header { gap: 6px; }
+  .route-shell--admin .admin-shell-header__menu { position: static; flex: 0 0 44px; }
+}
+@media (max-width: 640px) {
+  [dir="rtl"] .seeker-dashboard__topbar { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .seeker-dashboard__topbar-profile .dashboard-account__chevron { display: none; }
+}
+@media (max-width: 480px) {
+  .admin-shell-header .dashboard-account__chevron,
+  .admin-shell-header .locale-pill-globe { display: none; }
+  .admin-shell-header .custom-locale-pill-btn { padding-inline: 8px; gap: 6px; }
+}

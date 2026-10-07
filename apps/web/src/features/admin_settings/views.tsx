@@ -33,6 +33,7 @@ import {
 } from './data.ts';
 import { getAdminSettingsCopy } from './copy.ts';
 import './styles.css';
+import '../dashboard_account/settings-mobile.css';
 
 export type AdminSettingsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'conflict' | 'success' | 'not_found';
 type SettingsNamespace = AdminSettingsNamespace;

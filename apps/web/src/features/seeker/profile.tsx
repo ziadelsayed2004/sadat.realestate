@@ -34,6 +34,7 @@ import { SeekerNavigation } from './overview.tsx';
 import { getSeekerProfileCopy } from './profile-copy.ts';
 import { getAccountSessionCopy } from './session-copy.ts';
 import './styles.css';
+import '../dashboard_account/settings-mobile.css';
 
 export type SeekerProfileTab = 'preferences' | 'profile' | 'settings';
 export type SeekerProfileViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';

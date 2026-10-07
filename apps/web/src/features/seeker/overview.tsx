@@ -13,6 +13,7 @@ import type { RouteSession } from '../routing/index.ts';
 import { getSeekerCopy } from './copy.ts';
 import { createSeekerNotificationsLoader, createSeekerOverviewLoader, createSeekerProfileLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
 import './styles.css';
+import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.tsx';
 
 export type SeekerOverviewViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 
@@ -184,10 +185,10 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
           <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel} aria-description={unreadCount > 0 ? `${unreadCount} ${copy.overview.cards.notifications}` : undefined}>
             <SeekerIcon name="notifications" />{unreadCount > 0 ? <i aria-hidden="true" data-testid="seeker-notifications-indicator" /> : null}
           </a>
-          <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
+          <DashboardAccountMenu locale={locale} triggerClassName="seeker-dashboard__topbar-profile" settingsHref={localeForSeekerPath(locale, '/seeker/settings')} guideHref={localeForSeekerPath(locale, '/seeker/user-guide')} signingOut={signingOut} onSignOut={signOut}>
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
-            <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
-          </a>
+            <span className="seeker-dashboard__account-copy"><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
+          </DashboardAccountMenu>
         </div>
       </header>
       <button className={`seeker-dashboard__backdrop${menuOpen ? ' is-open' : ''}`} type="button" aria-label={closeMenuLabel} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} disabled={!menuOpen} onClick={() => setMenuOpen(false)} />
@@ -211,7 +212,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
             );
           })}
         </ul>
-        <a href={localeForSeekerPath(locale, '/seeker/user-guide')} aria-current={activePath === '/seeker/user-guide' ? 'page' : undefined} data-active={activePath === '/seeker/user-guide' || undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true" className="seeker-dashboard__nav-icon">?</span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a>
+        <a href={localeForSeekerPath(locale, '/seeker/user-guide')} aria-current={activePath === '/seeker/user-guide' ? 'page' : undefined} data-active={activePath === '/seeker/user-guide' || undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true" className="seeker-dashboard__nav-icon"><UserGuideIcon /></span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a>
         <div className="seeker-dashboard__nav-footer">
           <div className="seeker-dashboard__nav-footer-profile">
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>

@@ -44,11 +44,9 @@
 @media (max-width: 700px) { .admin-settings__fields, .admin-settings__localized-grid { grid-template-columns: 1fr; } .admin-settings__heading { padding: 4px 0 14px; } .admin-settings__editor-heading { align-items: flex-start; flex-direction: column; padding: 18px; } .admin-settings__editor form { padding-inline: 18px; } .admin-settings__version { white-space: normal; } }
 
 /* ADM-54 is compared with the current owner-authored 1440 × 1080 desktop source. */
-.route-shell--admin:has(.admin-settings[data-screen-id='ADM-54']) > .route-shell__header { display: none; }
-.route-shell--admin .admin-settings[data-screen-id='ADM-54'] { position: relative; grid-template-columns: 240px minmax(0, 1fr); min-height: 1080px; padding-top: 74px; }
-.admin-settings[data-screen-id='ADM-54']::after { content: '●  مدير النظام'; position: absolute; z-index: 1; inset: 0 240px auto 0; height: 74px; display: flex; align-items: center; padding-left: 38px; border-bottom: 1px solid #e3e4e6; background: #fff; color: #788296; font-size: 14px; font-weight: 700; direction: ltr; }
-.admin-settings[data-screen-id='ADM-54']::before { content: '☰    ⌕    ابحث عن مستخدم، عقار، مشروع، مقال أو طلب'; position: absolute; z-index: 2; top: 16px; left: 38px; width: 465px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid #dfd3b6; border-radius: 24px; background: #f5e9cb; color: #788296; font-size: 14px; word-spacing: 8px; direction: rtl; }
-.route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { position: relative; z-index: 3; grid-row: 1; width: 240px; min-height: 1080px; margin-top: -74px; padding: 126px 16px 18px; border-inline-end: 1px solid #e3e4e6; }
+.route-shell--admin:has(.admin-settings[data-screen-id='ADM-54']) > .route-shell__header { display: flex; }
+.route-shell--admin .admin-settings[data-screen-id='ADM-54'] { position: relative; grid-template-columns: 240px minmax(0, 1fr); min-height: 1080px; padding-top: 0; }
+.route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { position: relative; z-index: 3; grid-row: 1; width: 240px; min-height: 1080px; margin-top: 0; padding: 0; border-inline-end: 1px solid #e3e4e6; }
 .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { content: ''; position: absolute; inset: 20px 16px auto; height: 88px; border-bottom: 1px solid #e3e4e6; background: url('/assets/sadat-real-estate-logo.png') center 2px / 102px auto no-repeat; }
 .admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-groups { display: grid; gap: 0; }
 .admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-group { padding-block: 0 14px; border-bottom: 1px solid #eff0f1; }

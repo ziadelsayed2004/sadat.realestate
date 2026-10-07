@@ -10,6 +10,7 @@ import {
   type AdminOverviewLoader
 } from './data.ts';
 import './styles.css';
+import { UserGuideIcon } from '../dashboard_account/menu.tsx';
 import { AdminAttentionContext, AdminAttentionBadge, adminAttentionCount } from '../routing/admin-attention.tsx';
 
 export interface AdminOverviewProps {
@@ -285,7 +286,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
                     <li key={item.id}>
                       <a href={localePath(locale, item.path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
                         <span aria-hidden="true" className="admin-dashboard__navigation-icon">
-                          <img src={navigationIconSources[item.icon]} alt="" width="17" height="17" />
+                          {item.id === 'user-guide' ? <UserGuideIcon /> : <img src={navigationIconSources[item.icon]} alt="" width="17" height="17" />}
                         </span>
                         <span>{copy.sidebar.items[item.id] ?? item.label[locale]}</span>
                         <AdminAttentionBadge id={item.id} locale={locale} count={adminAttentionCount(item.id, attention.attention, attention.unread)} />

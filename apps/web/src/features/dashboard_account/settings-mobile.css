@@ -1,0 +1,56 @@
+@media (max-width: 700px) {
+  .seeker-profile .seeker-dashboard__content,
+  .provider-settings .provider-dashboard__content,
+  .admin-settings.admin-settings .admin-settings__content { padding: 20px 16px 32px; min-inline-size: 0; }
+  .seeker-profile .seeker-dashboard__heading-row,
+  .provider-settings .provider-settings__heading,
+  .admin-settings .admin-settings__heading { margin-block-end: 20px; }
+  .seeker-profile .seeker-dashboard__heading-row h1,
+  .provider-settings .provider-settings__heading h1,
+  .admin-settings.admin-settings .admin-settings__heading h1 { margin: 0 0 8px; font-size: 1.5rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .seeker-profile .seeker-dashboard__heading-row p,
+  .provider-settings .provider-settings__heading p,
+  .admin-settings.admin-settings .admin-settings__heading p:not(.admin-settings__eyebrow) { margin: 0; font-size: .9375rem; line-height: 1.75; }
+  .seeker-profile .seeker-profile__panel,
+  .seeker-profile .seeker-profile__settings-card,
+  .provider-settings .provider-settings__panel { box-sizing: border-box; inline-size: 100%; min-inline-size: 0; padding: 20px 16px; gap: 16px; }
+  .seeker-profile .seeker-profile__settings-card :is(h2, h3),
+  .seeker-profile .seeker-profile__panel > h2,
+  .provider-settings .provider-settings__panel h2,
+  .admin-settings.admin-settings .admin-settings__editor-heading h2 { margin: 0 0 8px; font-size: 1.125rem; line-height: 1.5; }
+  .seeker-profile .seeker-profile__settings-card p,
+  .provider-settings .provider-settings__panel p { margin-block: 0; font-size: .9375rem; line-height: 1.75; overflow-wrap: anywhere; }
+  .seeker-profile .seeker-profile__settings,
+  .seeker-profile .seeker-profile__form,
+  .provider-settings .provider-settings__security-grid { gap: 20px; }
+  .seeker-profile .ui-field__label,
+  .seeker-profile .seeker-profile__language-field,
+  .provider-settings .ui-field__label,
+  .admin-settings .admin-settings__fields > label,
+  .admin-settings .admin-settings__localized-field label,
+  .admin-settings.admin-settings .admin-settings__editor form > label { gap: 8px; font-size: .875rem; line-height: 1.6; }
+  .seeker-profile .ui-field__control,
+  .seeker-profile .seeker-profile__language-field select,
+  .provider-settings .ui-field__control,
+  .admin-settings .admin-settings__fields :is(input:not([type='checkbox']), textarea, select),
+  .admin-settings.admin-settings .admin-settings__editor form > label textarea { min-block-size: 48px; max-inline-size: 100%; box-sizing: border-box; padding: 12px; font-size: 1rem; line-height: 1.5; }
+  .seeker-profile .seeker-profile__tabs,
+  .provider-settings .provider-settings__tabs { box-sizing: border-box; gap: 6px; padding: 6px; margin-block-end: 20px; overflow-x: auto; }
+  .seeker-profile .seeker-profile__tabs a,
+  .provider-settings .provider-settings__tabs a { flex: 1 0 auto; min-block-size: 44px; box-sizing: border-box; padding: 10px 12px; font-size: .875rem; line-height: 1.5; white-space: nowrap; }
+  .seeker-profile .seeker-profile__settings-actions { flex-wrap: wrap; gap: 12px; }
+  .seeker-profile .seeker-profile__settings-actions .ui-button,
+  .provider-settings .provider-settings__panel > .ui-button { inline-size: 100%; min-inline-size: 0; min-block-size: 44px; font-size: .9375rem; line-height: 1.5; white-space: normal; }
+  .seeker-profile .seeker-profile__toggle-row { gap: 12px; padding-block: 16px; }
+  .seeker-profile .seeker-profile__toggle-row :is(strong, span, small),
+  .seeker-profile .seeker-profile__session :is(dt, dd) { font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
+  .admin-settings.admin-settings .admin-settings__editor form,
+  .admin-settings.admin-settings .admin-settings__editor-heading { padding: 20px 16px; gap: 16px; }
+  .admin-settings .admin-settings__fields,
+  .admin-settings .admin-settings__localized-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .admin-settings .admin-settings__boolean { grid-template-columns: minmax(0, 1fr) auto; }
+  .admin-settings.admin-settings .admin-settings__hint,
+  .admin-settings.admin-settings .admin-settings__editor-heading p { font-size: .875rem; line-height: 1.7; }
+  .admin-settings .admin-settings__actions { flex-wrap: wrap; gap: 12px; }
+  .admin-settings .admin-settings__actions .ui-button { flex: 1 1 100%; min-block-size: 44px; font-size: .9375rem; white-space: normal; }
+}

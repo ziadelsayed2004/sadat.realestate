@@ -18,6 +18,7 @@ import {
 } from './settings-data.ts';
 import { getProviderSettingsCopy } from './settings-copy.ts';
 import './settings.css';
+import '../dashboard_account/settings-mobile.css';
 
 export type ProviderSettingsTab = 'account' | 'contact' | 'security';
 export type ProviderSettingsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';

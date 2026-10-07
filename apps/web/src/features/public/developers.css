@@ -5,6 +5,11 @@
   }
 }
 
+/* Native fragment links keep browser history and the current form intact. */
+html:has(.public-developer-profile[data-developer-profile-state='success']) {
+  scroll-behavior: smooth;
+}
+
 .public-developer-directory,
 .public-developer-profile {
   max-inline-size: 100%;
@@ -1860,6 +1865,11 @@
     margin: 0;
     overflow-wrap: anywhere;
   }
+}
+
+.public-developer-profile__tabs a.is-active {
+  color: var(--color-text-strong);
+  box-shadow: inset 0 -2px 0 var(--color-brand-accent);
 }
 
 @media (max-width: 48rem) {
