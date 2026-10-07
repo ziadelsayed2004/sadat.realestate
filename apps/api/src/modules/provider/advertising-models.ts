@@ -36,11 +36,13 @@ interface PaymentReviewRecord {
 
 export interface AdRequestRecord {
   providerId: Types.ObjectId;
-  placementKey: AdRequest['placementKey'];
+  requestMode?: 'assisted';
+  contactPhone?: string;
+  placementKey?: AdRequest['placementKey'];
   adType?: AdRequest['adType'];
   purpose: AdRequest['purpose'];
-  intervalStart: Date;
-  intervalEnd: Date;
+  intervalStart?: Date;
+  intervalEnd?: Date;
   status: AdRequest['status'];
   version: number;
   history?: Array<RequestHistoryRecord>;
@@ -86,7 +88,7 @@ export interface PaymentProofRecord {
 
 export interface AdScheduleRecord {
   requestId: Types.ObjectId;
-  placementKey: AdRequest['placementKey'];
+  placementKey: string;
   providerId: Types.ObjectId;
   status: 'scheduled' | 'active' | 'ended';
   startsAt: Date;
@@ -144,11 +146,13 @@ const paymentReviewSchema = new Schema<PaymentReviewRecord>({
 
 const adRequestSchema = new Schema<AdRequestRecord>({
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
-  placementKey: { type: String, trim: true, required: true, maxlength: 80 },
+  requestMode: { type: String, enum: ['assisted'] },
+  contactPhone: { type: String, maxlength: 20 },
+  placementKey: { type: String, trim: true, maxlength: 80 },
   adType: { type: String, trim: true, maxlength: 80 },
   purpose: { type: String, trim: true, required: true, maxlength: 500 },
-  intervalStart: { type: Date, required: true },
-  intervalEnd: { type: Date, required: true },
+  intervalStart: { type: Date },
+  intervalEnd: { type: Date },
   status: { type: String, enum: AD_REQUEST_STATUSES, required: true },
   version: { type: Number, required: true, min: 0, default: 0 },
   history: { type: [requestHistorySchema], default: undefined }

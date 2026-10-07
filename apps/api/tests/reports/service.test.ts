@@ -14,6 +14,15 @@ const record: AdvertisingFinancialRecord = {
   schedule: { requestId: request.id, placementKey: request.placementKey, providerId: request.providerId, status: 'active', startsAt: request.intervalStart, endsAt: request.intervalEnd, timezone: 'Africa/Cairo', localStart: '2026-09-01T12:00:00', localEnd: '2026-09-02T12:00:00', version: 6 }
 };
 
+test('unpriced assisted requests do not create financial rows or break priced campaigns', async () => {
+  const assisted: AdvertisingFinancialRecord = { request: { ...request, id: 'ffffffffffffffffffffffff', requestMode: 'assisted', contactPhone: '+201234567890', status: 'review', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined }, paymentProofs: [] };
+  const service = createAdvertisingLedgerService({ source: { list: async () => [assisted, record] }, authorization: { authorize: async () => true } });
+  const result = await service.listFinancialReview(admin, {});
+  assert.equal(result.total, 1);
+  assert.equal(result.items[0]?.requestId, request.id);
+  await assert.rejects(() => service.getFinancialReview(admin, assisted.request.id), error => error instanceof AdvertisingLedgerServiceError && error.code === 'AD_REPORT_NOT_FOUND');
+});
+
 test('financial review separates quote and payment-proof states and emits non-realized ledger entries', async () => {
   const service = createAdvertisingLedgerService({
     source: { list: async () => [record] },

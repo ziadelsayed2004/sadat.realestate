@@ -12705,35 +12705,72 @@
         ]
       },
       "AdRequestCreate": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "placementKey",
-          "purpose",
-          "intervalStart",
-          "intervalEnd"
-        ],
-        "properties": {
-          "placementKey": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 80,
-            "pattern": "^[a-z][a-z0-9_.-]*$"
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "requestMode",
+              "contactPhone",
+              "purpose"
+            ],
+            "properties": {
+              "requestMode": {
+                "type": "string",
+                "enum": [
+                  "assisted"
+                ]
+              },
+              "contactPhone": {
+                "type": "string",
+                "description": "Egypt local mobile or international phone; Arabic numerals and formatting are normalized."
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 500
+              }
+            }
           },
-          "purpose": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 500
-          },
-          "intervalStart": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "intervalEnd": {
-            "type": "string",
-            "format": "date-time"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "placementKey",
+              "purpose",
+              "intervalStart",
+              "intervalEnd"
+            ],
+            "properties": {
+              "placementKey": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^[a-z][a-z0-9_.-]*$"
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 500
+              },
+              "intervalStart": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "intervalEnd": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "adType": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^[a-z][a-z0-9_.-]*$"
+              }
+            },
+            "description": "Legacy draft intake. End must be strictly after start."
           }
-        }
+        ]
       },
       "AdRequest": {
         "type": "object",
@@ -12741,10 +12778,7 @@
         "required": [
           "id",
           "providerId",
-          "placementKey",
           "purpose",
-          "intervalStart",
-          "intervalEnd",
           "status",
           "version",
           "createdAt",
@@ -12790,8 +12824,25 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "requestMode": {
+            "type": "string",
+            "enum": [
+              "assisted"
+            ]
+          },
+          "contactPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9][0-9]{7,14}$"
+          },
+          "adType": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[a-z][a-z0-9_.-]*$"
           }
-        }
+        },
+        "description": "Assisted requests have no campaign until pricing. Contact phone is required for assisted intake; complete campaign is required from quote_sent onward."
       },
       "AdQuoteStatus": {
         "type": "string",
@@ -12863,6 +12914,9 @@
           "notes": {
             "type": "string",
             "maxLength": 2000
+          },
+          "campaign": {
+            "$ref": "#/components/schemas/AdCampaign"
           }
         }
       },
@@ -13026,6 +13080,49 @@
           },
           "quote": {
             "$ref": "#/components/schemas/AdQuote"
+          },
+          "pricingOptions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "placements",
+              "adTypes"
+            ],
+            "properties": {
+              "placements": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "label"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 80,
+                      "pattern": "^[a-z][a-z0-9_.-]*$"
+                    },
+                    "label": {
+                      "$ref": "#/components/schemas/LocalizedText"
+                    }
+                  }
+                }
+              },
+              "adTypes": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 80,
+                  "pattern": "^[a-z][a-z0-9_.-]*$"
+                }
+              }
+            }
           }
         }
       },
@@ -24905,6 +25002,38 @@
             ]
           }
         }
+      },
+      "AdCampaign": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "placementKey",
+          "intervalStart",
+          "intervalEnd"
+        ],
+        "properties": {
+          "placementKey": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[a-z][a-z0-9_.-]*$"
+          },
+          "adType": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[a-z][a-z0-9_.-]*$"
+          },
+          "intervalStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "intervalEnd": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Administrator-agreed display period. End must be strictly after start."
       }
     }
   }

@@ -40,11 +40,13 @@ function ownerId(value: string): Types.ObjectId {
 function toAdRequest(row: {
   _id: Types.ObjectId;
   providerId: Types.ObjectId;
-  placementKey: string;
+  placementKey?: string | undefined;
+  requestMode?: 'assisted';
+  contactPhone?: string;
   adType?: string | undefined;
   purpose: string;
-  intervalStart: Date;
-  intervalEnd: Date;
+  intervalStart?: Date | undefined;
+  intervalEnd?: Date | undefined;
   status: AdRequest['status'];
   version: number;
   createdAt: Date;
@@ -53,11 +55,12 @@ function toAdRequest(row: {
   return adRequestSchema.parse({
     id: row._id.toHexString(),
     providerId: row.providerId.toHexString(),
+    ...(row.requestMode ? { requestMode: row.requestMode, contactPhone: row.contactPhone } : {}),
     placementKey: row.placementKey,
     ...(row.adType ? { adType: row.adType } : {}),
     purpose: row.purpose,
-    intervalStart: row.intervalStart.toISOString(),
-    intervalEnd: row.intervalEnd.toISOString(),
+    intervalStart: row.intervalStart?.toISOString(),
+    intervalEnd: row.intervalEnd?.toISOString(),
     status: row.status,
     version: row.version,
     createdAt: row.createdAt.toISOString(),
@@ -112,6 +115,7 @@ function egyptLocal(value: Date): string {
 }
 
 function calendarEvent(row: AdRequestRow): AdCalendarEvent {
+  if (!row.placementKey || !row.intervalStart || !row.intervalEnd) throw new AdSettingsServiceError('VERSION_CONFLICT');
   return adCalendarEventSchema.parse({
     requestId: row._id.toHexString(),
     placementKey: row.placementKey,
@@ -197,16 +201,14 @@ export function createMongooseAdRequestRepository(
   return {
     async createProviderRequest(providerId: string, input: AdRequestCreate, now: Date): Promise<AdRequest> {
       const providerObjectId = ownerId(providerId);
+      const assisted = 'requestMode' in input;
       const document = new models.AdRequest({
         providerId: providerObjectId,
-        placementKey: input.placementKey,
-        ...(input.adType ? { adType: input.adType } : {}),
+        ...(assisted ? { requestMode: input.requestMode, contactPhone: input.contactPhone } : { placementKey: input.placementKey, adType: input.adType, intervalStart: new Date(input.intervalStart), intervalEnd: new Date(input.intervalEnd) }),
         purpose: input.purpose,
-        intervalStart: new Date(input.intervalStart),
-        intervalEnd: new Date(input.intervalEnd),
-        status: 'draft',
+        status: assisted ? 'review' : 'draft',
         version: 0,
-        history: [{ status: 'draft', version: 0, changedAt: now }],
+        history: [{ status: assisted ? 'review' : 'draft', version: 0, changedAt: now }],
         createdAt: now,
         updatedAt: now
       });
@@ -313,6 +315,7 @@ export function createMongooseAdCalendarRepository(
         if (request.status !== 'waiting_payment' || request.version !== expectedVersion) {
           throw new AdSettingsServiceError('VERSION_CONFLICT');
         }
+        if (!request.placementKey || !request.intervalStart || !request.intervalEnd) throw new AdSettingsServiceError('VERSION_CONFLICT');
 
         const approvedProof = await models.PaymentProof.findOne({
           adRequestId: request._id,
@@ -392,6 +395,7 @@ export function createMongooseAdQuoteRepository(
           .lean() as AdRequestRow | null;
         if (!request) throw new AdSettingsServiceError('NOT_FOUND');
         if (request.status !== 'waiting_pricing') throw new AdSettingsServiceError('VERSION_CONFLICT');
+        if (!input.campaign && (!request.placementKey || !request.intervalStart || !request.intervalEnd)) throw new AdSettingsServiceError('VERSION_CONFLICT');
 
         const stamp = new Date(now);
         const quote = new models.AdQuote({
@@ -421,7 +425,7 @@ export function createMongooseAdQuoteRepository(
         const updatedRequest = await models.AdRequest.findOneAndUpdate(
           { _id: requestId, status: 'waiting_pricing', version: request.version },
           {
-            $set: { status: 'quote_sent', updatedAt: stamp },
+            $set: { ...(input.campaign ? { ...input.campaign, intervalStart: new Date(input.campaign.intervalStart), intervalEnd: new Date(input.campaign.intervalEnd) } : {}), status: 'quote_sent', updatedAt: stamp },
             $inc: { version: 1 },
             $push: { history: { status: 'quote_sent', version: request.version + 1, changedAt: stamp } }
           },

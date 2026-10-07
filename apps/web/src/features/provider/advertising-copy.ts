@@ -49,8 +49,8 @@ export interface ProviderAdvertisingCopy {
     readonly description: string;
     readonly placementKey: string;
     readonly placementKeyHelp: string;
-    readonly adType: string;
-    readonly adTypeHelp: string;
+    readonly contactPhone: string;
+    readonly contactPhoneHelp: string;
     readonly purpose: string;
     readonly start: string;
     readonly end: string;
@@ -91,7 +91,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
   ar: {
     eyebrow: 'الإعلانات',
     title: 'طلبات الإعلانات',
-    description: 'اطلب الترويج لعقارك أو مشروعك وتابع التسعير والجدولة وحالة الإعلان.',
+    description: 'أرسل طلبك ورقم التواصل. الإدارة تتفق معك على السعر والفترة، ثم تفعّل الإعلان بعد اعتماد الدفع.',
     create: 'طلب إعلان جديد',
     refresh: 'تحديث',
     filtersLabel: 'تصفية الطلبات',
@@ -126,19 +126,19 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     noSchedule: 'لا توجد جدولة متاحة بعد.',
     noQuote: 'لا يوجد عرض إداري بعد.',
     noHistory: 'لا يوجد سجل تغييرات.',
-    createForm: { title: 'طلب إعلان جديد', description: 'احفظ بيانات الطلب أولًا، ثم افتح تفاصيله لإرساله للمراجعة. الإدارة تصدر عرض السعر.', placementKey: 'كود موضع الإعلان', placementKeyHelp: 'الكود يحدد مكان العرض، وليس مفتاحًا يُشترى. اطلب من الإدارة كود موضع نشط ومسموح (مثل homepage.hero عند اعتماده).', adType: 'نوع الإعلان', adTypeHelp: 'اطلب النوع المعتمد من الإدارة. يكون مطلوبًا إذا حددت الإدارة أنواعًا مسموحة في الإعدادات.', purpose: 'الغرض من الإعلان', start: 'بداية الفترة', end: 'نهاية الفترة', cancel: 'إلغاء', save: 'حفظ مسودة الطلب', validation: 'راجع الحقول والتواريخ قبل الإرسال.', close: 'إغلاق نموذج الطلب' },
+    createForm: { title: 'طلب إعلان جديد', description: 'اكتب ما تريد الإعلان عنه ورقم التواصل؛ سيصل الطلب مباشرة إلى الإدارة لمراجعته والتواصل معك.', placementKey: 'كود موضع الإعلان', placementKeyHelp: 'اكتب اسم العقار أو المشروع أو الشركة، وأي تفاصيل تساعدنا. الإدارة تحدد مكان العرض والفترة والسعر في عرض واضح، ثم تعتمد الدفع وتفعّل الإعلان.', contactPhone: 'رقم التواصل', contactPhoneHelp: 'رقم يمكن للإدارة الاتصال بك عليه لترتيب الإعلان والدفع.', purpose: 'ماذا تريد الإعلان عنه؟', start: 'بداية الفترة', end: 'نهاية الفترة', cancel: 'إلغاء', save: 'إرسال طلب الإعلان', validation: 'أدخل رقم تواصل صحيحًا ووصفًا للإعلان من حرفين إلى 500 حرف.', close: 'إغلاق نموذج الطلب' },
     commission: { eyebrow: 'العمولة', title: 'العمولة', description: 'سياسة العمولة المطبقة على حسابك في منصة عقارات السادات.', appliedPolicy: 'السياسة الحالية', source: 'المصدر', effectiveAt: 'سارية من', version: 'إصدار السياسة', kind: 'نوع العمولة', percentage: 'نسبة مئوية', fixed: 'مبلغ ثابت', noneTitle: 'لا توجد سياسة عمولة متاحة', noneBody: 'لم يتم تحديد سياسة عمولة لحسابك حاليًا. لا يتم افتراض نسبة عامة.', readOnly: 'هذه البيانات للعرض فقط ولا يمكن تغييرها من حساب المزود.', unavailable: 'غير متاح', confirm: 'تأكيد الاطلاع على سياسة العمولة', confirmed: 'تم تأكيد السياسة.', confirmFailed: 'تعذر تأكيد السياسة.', versionChanged: 'تغير إصدار السياسة. حدّث الصفحة وراجعها مرة أخرى.' },
     states: { loading: { title: 'جارٍ التحميل', body: 'يتم تحميل بيانات الإعلانات.' }, empty: { title: 'لا توجد طلبات إعلان', body: 'ستظهر طلبات الإعلان الخاصة بحسابك هنا عند توفرها.' }, error: { title: 'تعذر تحميل الإعلانات', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الإعلانات غير متاحة مؤقتًا', body: 'يمكنك إعادة المحاولة عند توفر الاتصال.' }, permission: { title: 'يلزم تسجيل الدخول', body: 'لا يتم عرض بيانات الإعلانات قبل التحقق من جلسة المزود.' }, notFound: { title: 'طلب الإعلان غير موجود', body: 'لا يمكن العثور على هذا الطلب ضمن بيانات حسابك.' }, success: { title: 'تم تحميل الإعلانات', body: 'تم تحميل بيانات الإعلانات بنجاح.' } },
     retry: 'إعادة المحاولة',
     notFound: 'طلب الإعلان غير موجود',
     unavailable: 'غير متاح',
-    success: 'تم الحفظ بنجاح',
+    success: 'تم تنفيذ الإجراء بنجاح.',
     mutationFailed: 'تعذر تنفيذ الإجراء. حاول مرة أخرى.'
   },
   en: {
     eyebrow: 'Advertising',
     title: 'Advertising requests',
-    description: 'Request promotion for your property or project and track pricing, scheduling, and advertising status.',
+    description: 'Send your request and contact number. Administration agrees the price and period with you, then activates the ad after approving payment.',
     create: 'New advertising request',
     refresh: 'Refresh',
     filtersLabel: 'Filter requests',
@@ -173,13 +173,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     noSchedule: 'No schedule is available yet.',
     noQuote: 'No administrative quote is available yet.',
     noHistory: 'No status history is available.',
-    createForm: { title: 'New advertising request', description: 'Save the request, then open its details to submit it for review. Administration issues the price quote.', placementKey: 'Advertising placement code', placementKeyHelp: 'This code identifies a display location, not a key for purchase. Ask administration for an active, allowed code (such as homepage.hero when approved).', adType: 'Advertising type', adTypeHelp: 'Ask administration for an approved type. A type is required when administration configures allowed advertising types.', purpose: 'Advertising purpose', start: 'Period start', end: 'Period end', cancel: 'Cancel', save: 'Save request draft', validation: 'Review the fields and dates before submitting.', close: 'Close request form' },
+    createForm: { title: 'New advertising request', description: 'Describe your advertisement and add your contact number. Your request goes directly to administration for review and follow-up.', placementKey: 'Advertising placement code', placementKeyHelp: 'Include the property, project or company name and useful details. Administration sets the placement, period and price in a clear quote, then approves payment and activates the advertisement.', contactPhone: 'Contact number', contactPhoneHelp: 'A number administration can call to arrange your advertisement and payment.', purpose: 'What would you like to advertise?', start: 'Period start', end: 'Period end', cancel: 'Cancel', save: 'Send advertising request', validation: 'Enter a valid contact number and an advertising description of 2–500 characters.', close: 'Close request form' },
     commission: { eyebrow: 'Commission', title: 'Commission', description: 'The commission policy applied to your account on Sadat Real Estate.', appliedPolicy: 'Current policy', source: 'Source', effectiveAt: 'Effective from', version: 'Policy version', kind: 'Commission type', percentage: 'Percentage', fixed: 'Fixed amount', noneTitle: 'No commission policy available', noneBody: 'No commission policy is currently assigned to your account. No universal rate is assumed.', readOnly: 'This information is read-only and cannot be changed by the provider.', unavailable: 'Unavailable', confirm: 'Confirm review of the commission policy', confirmed: 'Policy confirmed.', confirmFailed: 'The policy could not be confirmed.', versionChanged: 'The policy version changed. Refresh and review it again.' },
     states: { loading: { title: 'Loading', body: 'Advertising data is loading.' }, empty: { title: 'No advertising requests', body: 'Advertising requests owned by your account will appear here when available.' }, error: { title: 'Advertising data could not load', body: 'Check the connection and try again.' }, retry: { title: 'Advertising is temporarily unavailable', body: 'You can retry when the connection is available.' }, permission: { title: 'Authentication required', body: 'Provider advertising data is not rendered before the session is verified.' }, notFound: { title: 'Advertising request not found', body: 'This request is not available in your account projection.' }, success: { title: 'Advertising data loaded', body: 'Advertising data loaded successfully.' } },
     retry: 'Retry',
     notFound: 'Advertising request not found',
     unavailable: 'Unavailable',
-    success: 'Saved successfully',
+    success: 'Action completed successfully.',
     mutationFailed: 'The action could not be completed. Try again.'
   },};
 

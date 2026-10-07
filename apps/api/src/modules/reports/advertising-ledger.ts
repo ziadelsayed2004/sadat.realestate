@@ -114,9 +114,10 @@ function quoteEntries(record: AdvertisingFinancialRecord): AdLedgerEntry[] {
 }
 
 function paymentEntries(record: AdvertisingFinancialRecord): AdLedgerEntry[] {
+  if ((record.paymentProofs?.length ?? 0) > 0 && !record.request.placementKey) throw new AdvertisingLedgerServiceError('AD_REPORT_SOURCE_INVALID');
   return (record.paymentProofs ?? []).flatMap(proof => {
     if (proof.adRequestId !== record.request.id || proof.providerId !== record.request.providerId) throw new AdvertisingLedgerServiceError('AD_REPORT_SOURCE_INVALID');
-    const entries: AdLedgerEntry[] = [{ id: eventId(`payment:${proof.id}:uploaded`), requestId: record.request.id, providerId: record.request.providerId, placementKey: record.request.placementKey, kind: 'payment_proof_uploaded', source: 'payment_proof', occurredAt: proof.uploadedAt, accountingTreatment: 'not_realized' }];
+    const entries: AdLedgerEntry[] = [{ id: eventId(`payment:${proof.id}:uploaded`), requestId: record.request.id, providerId: record.request.providerId, placementKey: record.request.placementKey!, kind: 'payment_proof_uploaded', source: 'payment_proof', occurredAt: proof.uploadedAt, accountingTreatment: 'not_realized' }];
     return entries.concat(proof.reviewHistory.map(review => adLedgerEntrySchema.parse({ id: eventId(`payment:${proof.id}:${review.version}:${review.action}`), requestId: record.request.id, providerId: record.request.providerId, placementKey: record.request.placementKey, kind: review.action === 'approve' ? 'payment_proof_approved' : 'payment_proof_rejected', source: 'payment_proof', occurredAt: review.createdAt, accountingTreatment: 'not_realized' })));
   }).map(entry => adLedgerEntrySchema.parse(entry));
 }
@@ -138,7 +139,7 @@ export function createAdvertisingLedgerService(dependencies: AdvertisingLedgerDe
     await authorizedAdmin(claims, dependencies.authorization);
     const query = adFinancialReviewQuerySchema.parse(input) as AdFinancialReviewQuery;
     const records = await dependencies.source.list();
-    const rows = records.map(row).filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.providerId || item.providerId === query.providerId) && (!query.from || inRange(item.updatedAt, query.from, query.to)) && (!query.to || inRange(item.createdAt, query.from, query.to))).filter(item => {
+    const rows = records.filter(record => record.request.placementKey && record.request.intervalStart && record.request.intervalEnd).map(row).filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.providerId || item.providerId === query.providerId) && (!query.from || inRange(item.updatedAt, query.from, query.to)) && (!query.to || inRange(item.createdAt, query.from, query.to))).filter(item => {
       if (!query.status || query.status === 'all') return true;
       return query.status === item.financialState || query.status === item.scheduleStatus;
     }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.requestId.localeCompare(a.requestId));
@@ -148,7 +149,7 @@ export function createAdvertisingLedgerService(dependencies: AdvertisingLedgerDe
     await authorizedAdmin(claims, dependencies.authorization);
     if (!/^[a-f0-9]{24}$/.test(requestId)) throw new AdvertisingLedgerServiceError('AD_REPORT_NOT_FOUND');
     const record = (await dependencies.source.list()).find(item => item.request.id === requestId);
-    if (!record) throw new AdvertisingLedgerServiceError('AD_REPORT_NOT_FOUND');
+    if (!record || !record.request.placementKey || !record.request.intervalStart || !record.request.intervalEnd) throw new AdvertisingLedgerServiceError('AD_REPORT_NOT_FOUND');
     return row(record);
   };
   const ledger = async (claims: AccessTokenClaims, input: unknown): Promise<AdLedgerListData> => {

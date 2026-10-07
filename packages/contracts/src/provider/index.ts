@@ -284,11 +284,13 @@ export const providerAdScheduleProjectionSchema = z.object({
 }).strict();
 export const providerAdRequestProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
-  placementKey: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/),
+  requestMode: z.literal('assisted').optional(),
+  contactPhone: normalizedPhoneSchema.optional(),
+  placementKey: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   adType: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   purpose: safeTextSchema.max(500),
-  intervalStart: providerAdvertisingDateSchema,
-  intervalEnd: providerAdvertisingDateSchema,
+  intervalStart: providerAdvertisingDateSchema.optional(),
+  intervalEnd: providerAdvertisingDateSchema.optional(),
   status: adRequestStatusSchema,
   version: z.number().int().nonnegative(),
   createdAt: providerAdvertisingDateSchema,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-13T15:32:19.758Z",
+  "generatedAt": "2026-10-07T16:40:11.319Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
   "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
@@ -1911,7 +1911,7 @@
         "section": "#seeker",
         "journeyId": "GUIDE-04"
       },
-      "executionDate": "2026-09-12T15:16:26.867Z",
+      "executionDate": "2026-09-28T16:01:24.400Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
@@ -1926,7 +1926,7 @@
         {
           "path": "docs/quality/guide-runs/registration-browser-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-12T15:16:26.867Z",
+          "verifiedAt": "2026-09-28T16:01:24.400Z",
           "environment": "local-real-browser-api-mongodb",
           "mockedRoutes": false
         },
@@ -1968,7 +1968,7 @@
           "check": "email_otp_registration_dashboard_rbac_logout_and_cleanup",
           "path": "docs/quality/GUIDE_04_LOCAL_ACCEPTANCE_2026-09-12.md",
           "scope": "Real email OTP and account creation in a Pixel 5 browser, authenticated dashboard, role denial, logout, persistence checks and zero residue.",
-          "verifiedAt": "2026-09-12T15:16:26.867Z"
+          "verifiedAt": "2026-09-28T16:01:24.400Z"
         },
         {
           "case": "validation",
@@ -2000,13 +2000,13 @@
           "category": "roleAuthorization",
           "check": "seeker_role_denied_admin_api",
           "path": "docs/quality/guide-runs/registration-browser-local-latest.json",
-          "verifiedAt": "2026-09-12T15:16:26.867Z"
+          "verifiedAt": "2026-09-28T16:01:24.400Z"
         },
         {
           "category": "currentSessionState",
           "check": "logout_invalidates_refresh_session",
           "path": "docs/quality/guide-runs/registration-browser-local-latest.json",
-          "verifiedAt": "2026-09-12T15:16:26.867Z"
+          "verifiedAt": "2026-09-28T16:01:24.400Z"
         },
         {
           "category": "duplicateMutation",
@@ -3383,7 +3383,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-11"
       },
-      "executionDate": "2026-09-13T15:31:41.633Z",
+      "executionDate": "2026-10-07T14:51:35.926Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
@@ -3391,7 +3391,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:31:41.633Z",
+          "verifiedAt": "2026-09-28T14:13:49.882Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -3401,7 +3401,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-guarantees-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:24:41.119Z",
+          "verifiedAt": "2026-10-07T14:51:35.926Z",
           "environment": "isolated-local-MongoDB-rs0-real-services",
           "mockedRoutes": false,
           "remaining": [
@@ -3550,7 +3550,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-12"
       },
-      "executionDate": "2026-09-13T15:31:41.633Z",
+      "executionDate": "2026-10-07T14:51:35.926Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
@@ -3558,7 +3558,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:31:41.633Z",
+          "verifiedAt": "2026-09-28T14:13:49.882Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -3568,7 +3568,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-guarantees-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:24:41.119Z",
+          "verifiedAt": "2026-10-07T14:51:35.926Z",
           "environment": "isolated-local-MongoDB-rs0-real-services",
           "mockedRoutes": false,
           "remaining": [
@@ -3717,7 +3717,7 @@
         "section": "#provider",
         "journeyId": "GUIDE-13"
       },
-      "executionDate": "2026-09-13T15:31:41.633Z",
+      "executionDate": "2026-10-07T14:51:35.926Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
@@ -3725,7 +3725,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:31:41.633Z",
+          "verifiedAt": "2026-09-28T14:13:49.882Z",
           "environment": "local-real-browser-api-mailhog-mongodb",
           "mockedRoutes": false,
           "remaining": [
@@ -3735,7 +3735,7 @@
         {
           "path": "docs/quality/guide-runs/provider-registration-guarantees-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-13T15:24:41.119Z",
+          "verifiedAt": "2026-10-07T14:51:35.926Z",
           "environment": "isolated-local-MongoDB-rs0-real-services",
           "mockedRoutes": false,
           "remaining": [
@@ -6116,7 +6116,7 @@
         "section": "#admin",
         "journeyId": "GUIDE-25"
       },
-      "executionDate": "2026-09-12T21:55:38.373Z",
+      "executionDate": "2026-10-07T16:26:22.393Z",
       "commit": "1aa69fb",
       "legacyStatus": "PARTIAL",
       "incompleteReason": "Local functional scope is reviewed; Production verification, independent Figma acceptance, and the final project-wide quality gate remain open.",
@@ -6148,7 +6148,7 @@
         {
           "path": "docs/quality/guide-runs/admin-banner-guarantees-local-latest.json",
           "status": "PASS_LOCAL",
-          "verifiedAt": "2026-09-12T21:55:38.373Z",
+          "verifiedAt": "2026-10-07T16:26:22.393Z",
           "environment": "isolated-local-MongoDB",
           "mockedRoutes": false
         }
@@ -6457,7 +6457,7 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-13T15:32:19.758Z",
+    "updatedAt": "2026-10-07T16:40:11.319Z",
     "totalJourneys": 26,
     "verified": 0,
     "partial": 26,

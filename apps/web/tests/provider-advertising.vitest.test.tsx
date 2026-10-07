@@ -220,7 +220,7 @@ describe('Provider advertising requests and commission', () => {
 
     view.rerender(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={detail} loadDetail={loadDetail} />);
     await waitFor(() => expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').requestDetails, level: 1 })).toBeInTheDocument());
-    expect(screen.getByText(detail.placementKey)).toBeInTheDocument();
+    expect(screen.getByText(detail.placementKey!)).toBeInTheDocument();
     expect(loadDetail).not.toHaveBeenCalled();
   });
 
@@ -258,6 +258,36 @@ describe('Provider advertising requests and commission', () => {
     renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={draft} loadDetail={vi.fn(async () => draft)} mutations={mutations} />, { locale: 'en' });
     fireEvent.click(screen.getByRole('button', { name: getProviderAdvertisingCopy('en').submitRequest }));
     await waitFor(() => expect(mutations.submitRequest).toHaveBeenCalledWith(requestId, 4));
+  });
+
+  it.each(['ar', 'en'] as const)('sends a simple request directly with just the description and contact number for %s', async locale => {
+    const sent = adRequestSchema.parse({ id: requestId, providerId, requestMode: 'assisted', contactPhone: '+201234567890', purpose: 'Promote my apartment', status: 'review', version: 0, createdAt: request.createdAt, updatedAt: request.updatedAt });
+    const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => sent), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: vi.fn(async () => proof) };
+    const copy = getProviderAdvertisingCopy(locale);
+    renderWithLocale(<ProviderAdvertising locale={locale} session={session} initialData={{ items: [], page: 1, limit: 5, total: 0 }} load={vi.fn(async () => ({ items: [], page: 1, limit: 5, total: 0 }))} mutations={mutations} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.create }));
+    fireEvent.change(screen.getByLabelText(copy.createForm.contactPhone), { target: { value: '01234567890' } });
+    fireEvent.change(screen.getByLabelText(copy.createForm.purpose), { target: { value: 'Promote my apartment' } });
+    expect(screen.queryByLabelText(copy.createForm.placementKey)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(copy.createForm.start)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.createForm.save }));
+    await waitFor(() => expect(mutations.createRequest).toHaveBeenCalledWith({ requestMode: 'assisted', contactPhone: '+201234567890', purpose: 'Promote my apartment' }));
+    expect(mutations.submitRequest).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(screen.getByText(locale === 'ar' ? /تم إرسال طلب الإعلان بنجاح/u : /Advertising request sent successfully/u)).toBeInTheDocument();
+  });
+
+  it('retains both inputs when sending a simple request fails', async () => {
+    const copy = getProviderAdvertisingCopy('en');
+    const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => { throw new Error('offline'); }), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: vi.fn(async () => proof) };
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} initialData={data} mutations={mutations} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.create }));
+    fireEvent.change(screen.getByLabelText(copy.createForm.contactPhone), { target: { value: '01234567890' } });
+    fireEvent.change(screen.getByLabelText(copy.createForm.purpose), { target: { value: 'My campaign' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.createForm.save }));
+    await screen.findByRole('alert');
+    expect(screen.getByLabelText(copy.createForm.contactPhone)).toHaveValue('01234567890');
+    expect(screen.getByLabelText(copy.createForm.purpose)).toHaveValue('My campaign');
   });
 
   it('renders commission as a read-only server projection and supports an unavailable source', () => {

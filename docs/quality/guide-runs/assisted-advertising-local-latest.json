@@ -1,0 +1,13 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB",
+  "mockedRoutes": false,
+  "fixtureNote": "Approved clean payment proof inserted as a fixture; this run tests the scheduling guard, not upload scanning or bank verification.",
+  "startedAt": "2026-10-07T16:36:58.817Z",
+  "checks": [
+    "direct_review_with_normalized_phone_and_owner_scoped_projection_without_fake_schedule",
+    "administrator_campaign_and_quote_saved_atomically_with_audited_request_review",
+    "acceptance_is_not_payment_scheduling_requires_own_clean_approved_proof"
+  ],
+  "cleanup": true
+}

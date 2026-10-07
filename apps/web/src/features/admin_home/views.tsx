@@ -24,7 +24,7 @@ import {
 } from './data.ts';
 import { getAdminHomeCopy, type AdminHomeCopy, type AdminHomeState } from './copy.ts';
 import { BannerDisplayControls, getBannerControlCopy } from './banner-controls.tsx';
-import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime } from '../public/egypt-time.ts';
+import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptDurationLabel } from '../public/egypt-time.ts';
 import './styles.css';
 
 type AdminHomeRoute = 'banners' | 'banner_create' | 'tips' | 'homepage' | 'not_found';
@@ -100,7 +100,7 @@ function BannerSchedulePreview({ locale, startDate, startTime, endDate, endTime 
   const end = scheduleInstant(endDate, endTime);
   if (!start || !end || end <= start) return null;
   const copy = getAdminHomeCopy(locale);
-  return <p className="admin-home__hint" role="status">{copy.start}: {dateLabel(start.toISOString(), locale)} — {copy.end}: {dateLabel(end.toISOString(), locale)} ({locale === 'ar' ? 'توقيت مصر' : 'Egypt time'})</p>;
+  return <p className="admin-home__hint" role="status">{copy.start}: {dateLabel(start.toISOString(), locale)} — {copy.end}: {dateLabel(end.toISOString(), locale)} ({locale === 'ar' ? 'توقيت مصر' : 'Egypt time'})<br />{locale === 'ar' ? 'مدة العرض' : 'Display duration'}: {egyptDurationLabel(start, end, locale)}</p>;
 }
 
 function stateForError(error: unknown): Exclude<AdminHomeState, 'loading' | 'empty' | 'success'> {

@@ -109,3 +109,7 @@
 
 .admin-ads__setup-links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 16px; }
 .admin-ads__setup-links a { color: #145649; text-decoration: underline; overflow-wrap: anywhere; }
+.admin-ads__campaign-fields { display: grid; gap: 16px; margin-block-end: 20px; }
+.admin-ads__campaign-fields p { margin: 0; line-height: 1.7; }
+.admin-ads__campaign-fields select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #ddd9cd; border-radius: 12px; background: white; color: #17233d; font: inherit; }
+.admin-ads__campaign-fields select:focus-visible { outline: 2px solid #cfa344; outline-offset: 2px; }

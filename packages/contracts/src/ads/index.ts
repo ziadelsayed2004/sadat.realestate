@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { localizedTextSchema, supportedLocaleSchema } from '../localization/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
+import { normalizedPhoneSchema } from '../auth/index.js';
 
 const id = z.string().regex(/^[a-f0-9]{24}$/);
 const placementKey = z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/);
@@ -45,8 +46,21 @@ export type AdPlacementCreate = z.infer<typeof adPlacementCreateSchema>;
 export type AdSettings = z.infer<typeof adSettingsSchema>;
 export type AdSettingsPatch = z.infer<typeof adSettingsPatchSchema>;
 export const adRequestStatusSchema = z.enum(['draft', 'review', 'waiting_pricing', 'quote_sent', 'waiting_payment', 'scheduled', 'active', 'ended', 'rejected', 'cancelled', 'expired']);
-export const adRequestSchema = z.object({ id, providerId: id, placementKey, adType: adType.optional(), purpose: z.string().trim().min(2).max(500), intervalStart: z.string().datetime({ offset: true }), intervalEnd: z.string().datetime({ offset: true }), status: adRequestStatusSchema, version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
-export const adRequestCreateSchema = adRequestSchema.pick({ placementKey: true, adType: true, purpose: true, intervalStart: true, intervalEnd: true }).strict().superRefine((value, ctx) => { if (new Date(value.intervalEnd) <= new Date(value.intervalStart)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['intervalEnd'], message: 'intervalEnd must be after intervalStart' }); });
+const adPurpose = z.string().trim().min(2).max(500);
+const adContactPhoneInput = z.preprocess(value => {
+  if (typeof value !== 'string') return value;
+  const compact = value.trim().replace(/[٠-٩]/gu, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit))).replace(/[\s().-]/gu, '');
+  return /^01[0125]\d{8}$/u.test(compact) ? `+20${compact.slice(1)}` : compact;
+}, normalizedPhoneSchema);
+export const adCampaignSchema = z.object({ placementKey, adType: adType.optional(), intervalStart: z.string().datetime({ offset: true }), intervalEnd: z.string().datetime({ offset: true }) }).strict().superRefine((value, ctx) => { if (new Date(value.intervalEnd) <= new Date(value.intervalStart)) ctx.addIssue({ code: 'custom', path: ['intervalEnd'], message: 'intervalEnd must be after intervalStart' }); });
+export const adRequestSchema = z.object({ id, providerId: id, requestMode: z.literal('assisted').optional(), contactPhone: normalizedPhoneSchema.optional(), placementKey: placementKey.optional(), adType: adType.optional(), purpose: adPurpose, intervalStart: z.string().datetime({ offset: true }).optional(), intervalEnd: z.string().datetime({ offset: true }).optional(), status: adRequestStatusSchema, version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict().superRefine((value, ctx) => {
+  if (value.requestMode === 'assisted' && !value.contactPhone) ctx.addIssue({ code: 'custom', path: ['contactPhone'], message: 'Contact phone is required' });
+  const needsCampaign = value.requestMode !== 'assisted' || value.placementKey !== undefined || value.intervalStart !== undefined || value.intervalEnd !== undefined || ['quote_sent', 'waiting_payment', 'scheduled', 'active', 'ended'].includes(value.status);
+  if (needsCampaign && !adCampaignSchema.safeParse({ placementKey: value.placementKey, adType: value.adType, intervalStart: value.intervalStart, intervalEnd: value.intervalEnd }).success) ctx.addIssue({ code: 'custom', path: ['placementKey'], message: 'A complete valid campaign is required' });
+});
+const legacyAdRequestCreateSchema = adCampaignSchema.safeExtend({ purpose: adPurpose }).strict();
+const assistedAdRequestCreateSchema = z.object({ requestMode: z.literal('assisted'), contactPhone: adContactPhoneInput, purpose: adPurpose }).strict();
+export const adRequestCreateSchema = z.union([assistedAdRequestCreateSchema, legacyAdRequestCreateSchema]);
 export const adRequestTransitionSchema = z.object({ status: adRequestStatusSchema, expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500).optional() }).strict().superRefine((value, ctx) => { if (['rejected', 'cancelled', 'expired'].includes(value.status) && !value.reason) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['reason'], message: 'reason is required' }); });
 export const adRequestSubmitSchema = z.object({ expectedVersion: z.number().int().nonnegative() }).strict();
 export const adAdminRequestReviewSchema = z.object({ action: z.enum(['approve', 'reject']), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
@@ -63,7 +77,7 @@ export type AdCalendarQuery = z.infer<typeof adCalendarQuerySchema>; export type
 const moneyMinor = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 export const adQuoteStatusSchema = z.enum(['issued', 'accepted', 'rejected', 'cancelled', 'expired']);
 export const adQuoteLineItemSchema = z.object({ description: z.string().trim().min(2).max(300), quantity: z.number().int().positive().max(1_000_000), unitAmountMinor: moneyMinor }).strict();
-export const adQuoteIssueSchema = z.object({ requestId: id, currency: z.string().regex(/^[A-Z]{3}$/), lineItems: z.array(adQuoteLineItemSchema).min(1).max(50), validUntil: z.string().datetime({ offset: true }), terms: z.string().trim().min(2).max(2_000), notes: z.string().trim().max(2_000).optional() }).strict();
+export const adQuoteIssueSchema = z.object({ requestId: id, campaign: adCampaignSchema.optional(), currency: z.string().regex(/^[A-Z]{3}$/), lineItems: z.array(adQuoteLineItemSchema).min(1).max(50), validUntil: z.string().datetime({ offset: true }), terms: z.string().trim().min(2).max(2_000), notes: z.string().trim().max(2_000).optional() }).strict();
 export const adQuoteDecisionSchema = z.object({ action: z.enum(['accept', 'reject', 'cancel']), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500).optional() }).strict().superRefine((value, ctx) => { if (['reject', 'cancel'].includes(value.action) && !value.reason) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['reason'], message: 'reason is required' }); });
 export const adQuoteDecisionHistorySchema = z.object({ action: adQuoteStatusSchema, actorId: id, actorRole: z.enum(['admin', 'provider']), reason: z.string().trim().min(2).max(500).optional(), version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }) }).strict();
 export const adQuoteSchema = z.object({ id, requestId: id, providerId: id, currency: z.string().regex(/^[A-Z]{3}$/), lineItems: z.array(adQuoteLineItemSchema), totalMinor: moneyMinor, validUntil: z.string().datetime({ offset: true }), terms: z.string().trim().min(2).max(2_000), notes: z.string().trim().max(2_000).optional(), status: adQuoteStatusSchema, issuerId: id, version: z.number().int().nonnegative(), decisionHistory: z.array(adQuoteDecisionHistorySchema).min(1).max(100), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
@@ -71,7 +85,7 @@ export type AdQuoteIssue = z.infer<typeof adQuoteIssueSchema>;
 export type AdQuoteDecision = z.infer<typeof adQuoteDecisionSchema>;
 export type AdQuote = z.infer<typeof adQuoteSchema>;
 export type AdQuoteDecisionHistory = z.infer<typeof adQuoteDecisionHistorySchema>;
-export const adAdminRequestSchema = z.object({ request: adRequestSchema, quote: adQuoteSchema.optional() }).strict();
+export const adAdminRequestSchema = z.object({ request: adRequestSchema, quote: adQuoteSchema.optional(), pricingOptions: z.object({ placements: z.array(z.object({ key: placementKey, label: localizedTextSchema }).strict()).max(100), adTypes: z.array(adType).max(100) }).strict().optional() }).strict();
 const adAdminRequestPage = z.preprocess(value => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000));
 const adAdminRequestLimit = z.preprocess(value => value === undefined ? 20 : Number(value), z.number().int().positive().max(100));
 export const adAdminRequestListQuerySchema = z.object({

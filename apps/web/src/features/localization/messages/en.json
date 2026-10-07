@@ -2462,7 +2462,7 @@
   "provider/advertising-copy#getProviderAdvertisingCopy": {
     "eyebrow": "Advertising",
     "title": "Advertising requests",
-    "description": "Request promotion for your property or project and track pricing, scheduling, and advertising status.",
+    "description": "Send your request and contact number. Administration agrees the price and period with you, then activates the ad after approving payment.",
     "create": "New advertising request",
     "refresh": "Refresh",
     "filtersLabel": "Filter requests",
@@ -2530,18 +2530,18 @@
     "noHistory": "No status history is available.",
     "createForm": {
       "title": "New advertising request",
-      "description": "Save the request, then open its details to submit it for review. Administration issues the price quote.",
+      "description": "Describe your advertisement and add your contact number. Your request goes directly to administration for review and follow-up.",
       "placementKey": "Advertising placement code",
-      "placementKeyHelp": "This code identifies a display location, not a key for purchase. Ask administration for an active, allowed code (such as homepage.hero when approved).",
-      "adType": "Advertising type",
-      "adTypeHelp": "Ask administration for an approved type. A type is required when administration configures allowed advertising types.",
-      "purpose": "Advertising purpose",
+      "placementKeyHelp": "Include the property, project or company name and useful details. Administration sets the placement, period and price in a clear quote, then approves payment and activates the advertisement.",
+      "purpose": "What would you like to advertise?",
       "start": "Period start",
       "end": "Period end",
       "cancel": "Cancel",
-      "save": "Save request draft",
-      "validation": "Review the fields and dates before submitting.",
-      "close": "Close request form"
+      "save": "Send advertising request",
+      "validation": "Enter a valid contact number and an advertising description of 2–500 characters.",
+      "close": "Close request form",
+      "contactPhone": "Contact number",
+      "contactPhoneHelp": "A number administration can call to arrange your advertisement and payment."
     },
     "commission": {
       "eyebrow": "Commission",
@@ -2596,7 +2596,7 @@
     "retry": "Retry",
     "notFound": "Advertising request not found",
     "unavailable": "Unavailable",
-    "success": "Saved successfully",
+    "success": "Action completed successfully.",
     "mutationFailed": "The action could not be completed. Try again."
   },
   "provider/copy#getProviderCopy": {

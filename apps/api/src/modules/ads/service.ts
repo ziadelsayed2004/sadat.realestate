@@ -20,6 +20,7 @@ import {
   adCalendarEventSchema,
   adCalendarListDataSchema,
   adCalendarQuerySchema,
+  adCampaignSchema,
   adPlacementCreateSchema,
   adPlacementListQuerySchema,
   adPlacementPatchSchema,
@@ -164,6 +165,7 @@ export interface AdRequestWorkflowService {
 export function createAdAdminRequestService(dependencies: {
   repository: AdAdminRequestRepository;
   authorization: AdAdminRequestAuthorization;
+  pricingOptions?: () => Promise<NonNullable<AdAdminRequest['pricingOptions']>>;
 }): AdAdminRequestService {
   const requirePermission = async (claims: AccessTokenClaims, permission: 'admin:ads.view' | 'admin:ads.price'): Promise<void> => {
     if (claims.role !== 'admin' || claims.status !== 'verified' || !await dependencies.authorization.authorize(claims.sub, permission)) {
@@ -181,7 +183,8 @@ export function createAdAdminRequestService(dependencies: {
       await requirePermission(claims, 'admin:ads.view');
       const result = await dependencies.repository.getAdminRequest(requestId);
       if (!result) throw new AdSettingsServiceError('NOT_FOUND');
-      return result;
+      return dependencies.pricingOptions && result.request.requestMode === 'assisted' && result.request.status === 'waiting_pricing'
+        ? { ...result, pricingOptions: await dependencies.pricingOptions() } : result;
     },
     async review(claims, requestId, input, context) {
       await requirePermission(claims, 'admin:ads.price');
@@ -399,6 +402,13 @@ export function createAdSettingsService(seed: {
     async createRequest(claims: AccessTokenClaims, input: unknown) {
       if (claims.role !== 'provider' || claims.status !== 'verified') throw new AdSettingsServiceError('FORBIDDEN');
       const parsed = adRequestCreateSchema.parse(input);
+      if ('requestMode' in parsed) {
+        if (seed.requestRepository) return seed.requestRepository.createProviderRequest(claims.sub, parsed, clock());
+        const stamp = now();
+        const request = adRequestSchema.parse({ id: id(), providerId: claims.sub, ...parsed, status: 'review', version: 0, createdAt: stamp, updatedAt: stamp });
+        requests.set(request.id, request);
+        return request;
+      }
       const policy = await runtimeSettings();
       if (policy.supportedPlacements.length > 0 && !policy.supportedPlacements.includes(parsed.placementKey)) throw new AdSettingsServiceError('NOT_FOUND');
       if (policy.supportedAdTypes.length > 0 && (parsed.adType === undefined || !policy.supportedAdTypes.includes(parsed.adType))) throw new AdSettingsServiceError('NOT_FOUND');
@@ -430,11 +440,11 @@ export function createAdSettingsService(seed: {
       if (!allowed[request.status].includes(parsed.status)) throw new AdSettingsServiceError('VERSION_CONFLICT');
       if (['scheduled', 'active', 'ended'].includes(parsed.status)) requireAdmin(claims);
       const currentAt = clock().getTime();
-      const startsAt = new Date(request.intervalStart).getTime();
-      const endsAt = new Date(request.intervalEnd).getTime();
-      if ((parsed.status === 'scheduled' || parsed.status === 'active') && currentAt >= endsAt) throw new AdSettingsServiceError('VERSION_CONFLICT');
+      const startsAt = new Date(request.intervalStart ?? '').getTime();
+      const endsAt = new Date(request.intervalEnd ?? '').getTime();
+      if ((parsed.status === 'scheduled' || parsed.status === 'active') && (!Number.isFinite(endsAt) || !Number.isFinite(startsAt) || currentAt >= endsAt)) throw new AdSettingsServiceError('VERSION_CONFLICT');
       if (parsed.status === 'active' && (currentAt < startsAt || currentAt >= endsAt)) throw new AdSettingsServiceError('VERSION_CONFLICT');
-      if ((parsed.status === 'scheduled' || parsed.status === 'active') && [...requests.values()].some(item => item.id !== request.id && item.placementKey === request.placementKey && ['scheduled', 'active'].includes(item.status) && startsAt < new Date(item.intervalEnd).getTime() && endsAt > new Date(item.intervalStart).getTime())) throw new AdSettingsServiceError('PLACEMENT_CONFLICT');
+      if ((parsed.status === 'scheduled' || parsed.status === 'active') && [...requests.values()].some(item => item.id !== request.id && item.placementKey === request.placementKey && ['scheduled', 'active'].includes(item.status) && startsAt < new Date(item.intervalEnd ?? '').getTime() && endsAt > new Date(item.intervalStart ?? '').getTime())) throw new AdSettingsServiceError('PLACEMENT_CONFLICT');
       if (parsed.status === 'ended' && currentAt < endsAt) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const updated = adRequestSchema.parse({ ...request, status: parsed.status, version: request.version + 1, updatedAt: now() });
       if (seed.requestRepository) {
@@ -450,18 +460,28 @@ export function createAdSettingsService(seed: {
       const query = adCalendarQuerySchema.parse(input);
       const from = query.from ? new Date(query.from).getTime() : Number.NEGATIVE_INFINITY;
       const to = query.to ? new Date(query.to).getTime() : Number.POSITIVE_INFINITY;
-      const events = [...requests.values()].filter(item => ['scheduled', 'active', 'ended'].includes(item.status)).filter(item => !query.placementKey || item.placementKey === query.placementKey).filter(item => !query.status || item.status === query.status).filter(item => new Date(item.intervalEnd).getTime() > from && new Date(item.intervalStart).getTime() < to).sort((a, b) => a.intervalStart.localeCompare(b.intervalStart) || a.placementKey.localeCompare(b.placementKey)).map(item => adCalendarEventSchema.parse({ requestId: item.id, placementKey: item.placementKey, providerId: item.providerId, status: item.status, startsAt: item.intervalStart, endsAt: item.intervalEnd, timezone: AD_EGYPT_TIME_ZONE, localStart: egyptLocal(item.intervalStart), localEnd: egyptLocal(item.intervalEnd), version: item.version }));
+      const events = [...requests.values()].filter((item): item is AdRequest & { placementKey: string; intervalStart: string; intervalEnd: string } => Boolean(item.placementKey && item.intervalStart && item.intervalEnd)).filter(item => ['scheduled', 'active', 'ended'].includes(item.status)).filter(item => !query.placementKey || item.placementKey === query.placementKey).filter(item => !query.status || item.status === query.status).filter(item => new Date(item.intervalEnd ?? '').getTime() > from && new Date(item.intervalStart ?? '').getTime() < to).sort((a, b) => a.intervalStart.localeCompare(b.intervalStart) || a.placementKey.localeCompare(b.placementKey)).map(item => adCalendarEventSchema.parse({ requestId: item.id, placementKey: item.placementKey, providerId: item.providerId, status: item.status, startsAt: item.intervalStart, endsAt: item.intervalEnd, timezone: AD_EGYPT_TIME_ZONE, localStart: egyptLocal(item.intervalStart), localEnd: egyptLocal(item.intervalEnd), version: item.version }));
       return { items: events.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: events.length };
     },
     async issueQuote(claims: AccessTokenClaims, input: unknown) {
       await requireQuotePermission(claims);
       const parsed = adQuoteIssueSchema.parse(input);
       const policy = await runtimeSettings();
+      if (parsed.campaign) {
+        const campaign = parsed.campaign;
+        if (policy.supportedPlacements.length > 0 && !policy.supportedPlacements.includes(campaign.placementKey)) throw new AdSettingsServiceError('NOT_FOUND');
+        if (policy.supportedAdTypes.length > 0 && (!campaign.adType || !policy.supportedAdTypes.includes(campaign.adType))) throw new AdSettingsServiceError('NOT_FOUND');
+        const available = seed.hasActivePlacement ? await seed.hasActivePlacement(campaign.placementKey) : [...placements.values()].some(item => item.key === campaign.placementKey && item.active);
+        if (!available) throw new AdSettingsServiceError('NOT_FOUND');
+        if (new Date(campaign.intervalEnd) <= clock()) throw new AdSettingsServiceError('VERSION_CONFLICT');
+      }
       if (policy.quoteValidityDays !== undefined && new Date(parsed.validUntil).getTime() > clock().getTime() + policy.quoteValidityDays * 24 * 60 * 60 * 1000) throw new AdSettingsServiceError('VERSION_CONFLICT');
       if (seed.quoteRepository) return seed.quoteRepository.issueAdminQuote(claims.sub, parsed, clock());
       const request = requests.get(parsed.requestId);
       if (!request) throw new AdSettingsServiceError('NOT_FOUND');
       if (request.status !== 'waiting_pricing') throw new AdSettingsServiceError('VERSION_CONFLICT');
+      const campaign = adCampaignSchema.safeParse(parsed.campaign ?? { placementKey: request.placementKey, adType: request.adType, intervalStart: request.intervalStart, intervalEnd: request.intervalEnd });
+      if (!campaign.success) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const totalMinor = parsed.lineItems.reduce((total, item) => {
         const line = item.quantity * item.unitAmountMinor;
         if (!Number.isSafeInteger(line) || !Number.isSafeInteger(total + line)) throw new AdSettingsServiceError('VERSION_CONFLICT');
@@ -469,9 +489,11 @@ export function createAdSettingsService(seed: {
       }, 0);
       if (new Date(parsed.validUntil) <= clock()) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const stamp = now();
-      const quote = adQuoteSchema.parse({ id: id(), ...parsed, providerId: request.providerId, totalMinor, status: 'issued', issuerId: claims.sub, version: 0, decisionHistory: [{ action: 'issued', actorId: claims.sub, actorRole: 'admin', version: 0, createdAt: stamp }], createdAt: stamp, updatedAt: stamp });
+      const { campaign: _campaign, ...quoteInput } = parsed;
+      void _campaign;
+      const quote = adQuoteSchema.parse({ id: id(), ...quoteInput, providerId: request.providerId, totalMinor, status: 'issued', issuerId: claims.sub, version: 0, decisionHistory: [{ action: 'issued', actorId: claims.sub, actorRole: 'admin', version: 0, createdAt: stamp }], createdAt: stamp, updatedAt: stamp });
       quotes.set(quote.id, quote);
-      requests.set(request.id, adRequestSchema.parse({ ...request, status: 'quote_sent', version: request.version + 1, updatedAt: stamp }));
+      requests.set(request.id, adRequestSchema.parse({ ...request, ...campaign.data, status: 'quote_sent', version: request.version + 1, updatedAt: stamp }));
       return quote;
     },
     async acceptQuote(claims: AccessTokenClaims, requestId: string, input: unknown) {

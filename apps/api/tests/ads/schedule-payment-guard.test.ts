@@ -18,7 +18,7 @@ test('persistent scheduling rejects requests without their own clean approved pa
   const connection = { startSession: async () => session } as unknown as Connection;
   const models = {
     AdRequest: {
-      findOne: () => query({ _id: requestId, providerId, status: 'waiting_payment', version: 3 }),
+      findOne: () => query({ _id: requestId, providerId, placementKey: 'homepage.hero', intervalStart: new Date('2099-01-01'), intervalEnd: new Date('2099-02-01'), status: 'waiting_payment', version: 3 }),
       findOneAndUpdate: () => { writes++; throw new Error('must not write'); }
     },
     PaymentProof: { findOne: (filter: unknown) => { proofFilter = filter; return query(null); } }

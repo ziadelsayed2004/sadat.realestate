@@ -222,7 +222,7 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     fireEvent.change(screen.getByLabelText('Valid until'), { target: { value: '2026-10-01T12:00' } });
     fireEvent.change(screen.getByLabelText('Terms'), { target: { value: 'Manual administrative quote' } });
     fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
-    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, { currency: 'EGP', lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 125000 }], validUntil: new Date('2026-10-01T12:00').toISOString(), terms: 'Manual administrative quote' }));
+    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, { currency: 'EGP', lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 125000 }], validUntil: '2026-10-01T09:00:00.000Z', terms: 'Manual administrative quote' }));
   });
 
   it('fails closed for a non-admin session without calling any loader', async () => {
@@ -230,5 +230,29 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     renderWithLocale(<AdminAds locale="en" session={{ status: 'anonymous' }} loadRequests={load} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: getAdminAdsCopy('en').states.permission.title })).toBeInTheDocument());
     expect(load).not.toHaveBeenCalled();
+  });
+
+  it('prices an assisted request using named placements, EGP and Egypt civil times', async () => {
+    const waiting = adAdminRequestSchema.parse({ request: { ...request, requestMode: 'assisted', contactPhone: '+201234567890', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined, status: 'waiting_pricing' }, pricingOptions: { placements: [{ key: 'homepage.hero', label: { en: 'Homepage banner', ar: 'بانر الرئيسية' } }], adTypes: [] } });
+    const issue = vi.fn(async () => quote);
+    window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => waiting)} issueQuote={issue} />, { locale: 'en' });
+    const placement = await screen.findByLabelText('Advertising placement');
+    expect(screen.getByRole('option', { name: 'Homepage banner' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '+201234567890' })).toHaveAttribute('href', 'tel:+201234567890');
+    fireEvent.change(placement, { target: { value: 'homepage.hero' } });
+    fireEvent.change(screen.getByLabelText('Campaign start — Egypt time'), { target: { value: '2026-10-10T12:00' } });
+    fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-20T12:00' } });
+    fireEvent.change(screen.getByLabelText('Price in EGP'), { target: { value: '1250.50' } });
+    fireEvent.change(screen.getByLabelText('Valid until'), { target: { value: '2026-10-09T12:00' } });
+    fireEvent.change(screen.getByLabelText('Terms'), { target: { value: 'Pay using the agreed payment instructions' } });
+    expect(screen.getByText(/Display duration: 10 days/u)).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-09T12:00' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
+    expect(issue).not.toHaveBeenCalled();
+    expect(screen.getByText(/Campaign end must be after its start/u)).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-20T12:00' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
+    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, expect.objectContaining({ campaign: { placementKey: 'homepage.hero', intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' }, lineItems: [{ description: request.purpose, quantity: 1, unitAmountMinor: 125050 }] })));
   });
 });

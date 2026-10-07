@@ -85,9 +85,10 @@ function localizedPath(locale: SupportedLocale, path: string): string {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
-function dateLabel(value: string, locale: SupportedLocale): string {
+function dateLabel(value: string | undefined, locale: SupportedLocale): string {
+  if (!value) return locale === 'ar' ? 'تحددها الإدارة' : 'To be agreed';
   try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+    return new Intl.DateTimeFormat(locale, { timeZone: 'Africa/Cairo', dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
   } catch {
     return '—';
   }
@@ -124,30 +125,14 @@ function StatePanel({ state, locale, copy, onRetry, detail = false }: { readonly
   );
 }
 
-function toIsoDate(value: string): string {
-  if (value.trim() === '') return value;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? value : parsed.toISOString();
-}
-
 function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly error?: string | undefined; readonly onClose: () => void; readonly onSave: (input: AdRequestCreate) => Promise<void> }) {
-  const [form, setForm] = useState({ placementKey: '', adType: '', purpose: '', intervalStart: '', intervalEnd: '' });
+  const [form, setForm] = useState({ contactPhone: '', purpose: '' });
   const [validationError, setValidationError] = useState(false);
   const formId = 'provider-advertising-create-form';
-
-  function update(key: keyof typeof form, value: string): void {
-    setForm(previous => ({ ...previous, [key]: value }));
-  }
-
+  const update = (key: keyof typeof form, value: string) => { setForm(current => ({ ...current, [key]: value })); setValidationError(false); };
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    const parsed = adRequestCreateSchema.safeParse({
-      placementKey: form.placementKey.trim(),
-      ...(form.adType.trim() === '' ? {} : { adType: form.adType.trim() }),
-      purpose: form.purpose.trim(),
-      intervalStart: toIsoDate(form.intervalStart),
-      intervalEnd: toIsoDate(form.intervalEnd)
-    });
+    const parsed = adRequestCreateSchema.safeParse({ requestMode: 'assisted', contactPhone: form.contactPhone, purpose: form.purpose.trim() });
     if (!parsed.success) {
       setValidationError(true);
       return;
@@ -165,18 +150,10 @@ function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly c
     )}>
       <form id={formId} className="provider-advertising__form" onSubmit={submit} noValidate>
         {validationError || error ? <p className="provider-advertising__form-error" role="alert">{validationError ? copy.createForm.validation : error}</p> : null}
-        <Input id="provider-advertising-placement-key" label={copy.createForm.placementKey} value={form.placementKey} onChange={event => update('placementKey', event.target.value)} required />
+        <Input id="provider-advertising-contact-phone" type="tel" autoComplete="tel" inputMode="tel" dir="ltr" label={copy.createForm.contactPhone} value={form.contactPhone} onChange={event => update('contactPhone', event.target.value)} required />
+        <p className="provider-advertising__help">{copy.createForm.contactPhoneHelp}</p>
+        <label className="provider-advertising__field" htmlFor="provider-advertising-purpose"><span>{copy.createForm.purpose}</span><textarea id="provider-advertising-purpose" value={form.purpose} onChange={event => update('purpose', event.target.value)} rows={4} minLength={2} maxLength={500} required /></label>
         <p className="provider-advertising__help">{copy.createForm.placementKeyHelp}</p>
-        <Input id="provider-advertising-ad-type" label={copy.createForm.adType} value={form.adType} onChange={event => update('adType', event.target.value)} />
-        <p className="provider-advertising__help">{copy.createForm.adTypeHelp}</p>
-        <label className="provider-advertising__field" htmlFor="provider-advertising-purpose">
-          <span>{copy.createForm.purpose}</span>
-          <textarea id="provider-advertising-purpose" value={form.purpose} onChange={event => update('purpose', event.target.value)} rows={3} required />
-        </label>
-        <div className="provider-advertising__form-grid">
-          <label className="provider-advertising__field" htmlFor="provider-advertising-start"><span>{copy.createForm.start}</span><input id="provider-advertising-start" type="datetime-local" value={form.intervalStart} onChange={event => update('intervalStart', event.target.value)} required /></label>
-          <label className="provider-advertising__field" htmlFor="provider-advertising-end"><span>{copy.createForm.end}</span><input id="provider-advertising-end" type="datetime-local" value={form.intervalEnd} onChange={event => update('intervalEnd', event.target.value)} required /></label>
-        </div>
       </form>
     </Modal>
   );
@@ -194,7 +171,7 @@ function RequestTable({ data, locale, copy }: { readonly data: import('@sadat-re
             return (
               <tr key={item.id} data-testid="provider-advertising-row" data-ad-request-status={item.status}>
                 <td><a className="provider-advertising__request-link" href={localizedPath(locale, `/provider/ads/${item.id}`)}>{shortId(item.id)}</a><span>{dateLabel(item.createdAt, locale)}</span></td>
-                <td><strong>{item.placementKey}</strong><span>{item.purpose}</span></td>
+                <td><strong>{item.purpose}</strong></td>
                 <td><span>{dateLabel(item.intervalStart, locale)}</span><span>{dateLabel(item.intervalEnd, locale)}</span></td>
                 <td><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></td>
                 <td>{item.quote ? <><strong>{moneyLabel(item.quote.totalMinor, item.quote.currency, locale)}</strong><span>{copy.quoteStatuses[item.quote.status]}</span></> : <span className="provider-advertising__unavailable">{copy.noQuote}</span>}</td>
@@ -228,7 +205,7 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-detail-heading">
         <div className="provider-advertising__detail-heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1 id="provider-advertising-detail-heading">{copy.requestDetails}</h1></div><Badge tone={statusTone(detail.status)}>{copy.statuses[detail.status]}</Badge></div>
         {detail.status === 'draft' ? <Button onClick={onSubmit} loading={busy}>{copy.submitRequest}</Button> : null}
-        <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.request}</dt><dd>{shortId(detail.id)}</dd></div><div><dt>{copy.columns.placement}</dt><dd>{detail.placementKey}</dd></div><div><dt>{copy.purpose}</dt><dd>{detail.purpose}</dd></div><div><dt>{copy.interval}</dt><dd>{dateLabel(detail.intervalStart, locale)} — {dateLabel(detail.intervalEnd, locale)}</dd></div></dl>
+        <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.request}</dt><dd>{shortId(detail.id)}</dd></div><div><dt>{copy.columns.placement}</dt><dd>{detail.placementKey ?? copy.unavailable}</dd></div><div><dt>{copy.purpose}</dt><dd>{detail.purpose}</dd></div>{detail.contactPhone ? <div><dt>{copy.createForm.contactPhone}</dt><dd><a dir="ltr" href={`tel:${detail.contactPhone}`}>{detail.contactPhone}</a></dd></div> : null}<div><dt>{copy.interval}</dt><dd>{dateLabel(detail.intervalStart, locale)} — {dateLabel(detail.intervalEnd, locale)}</dd></div></dl>
         {detail.quote ? <section className="provider-advertising__nested-card"><h2>{copy.quote}</h2><div className="provider-advertising__quote-total"><span>{copy.quoteTotal}</span><strong>{moneyLabel(detail.quote.totalMinor, detail.quote.currency, locale)}</strong></div><dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{copy.quoteStatuses[detail.quote.status]}</dd></div><div><dt>{copy.quoteValidUntil}</dt><dd>{dateLabel(detail.quote.validUntil, locale)}</dd></div><div><dt>{copy.quoteTerms}</dt><dd>{detail.quote.terms}</dd></div></dl>{canAccept ? <Button onClick={onAccept} loading={busy}>{copy.acceptQuote}</Button> : null}</section> : <p className="provider-advertising__muted">{copy.noQuote}</p>}
       </section>
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
@@ -305,7 +282,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     try {
       await mutationApi.createRequest(input);
       setCreateOpen(false);
-      setFeedback(copy.success);
+      setFeedback(locale === 'ar' ? 'تم إرسال طلب الإعلان بنجاح. ستراجعه الإدارة وتتواصل معك على الرقم المسجل لتحديد السعر والفترة.' : 'Advertising request sent successfully. Administration will review it and contact you to agree the price and period.');
       setAttempt(value => value + 1);
     } catch {
       setMutationError(copy.mutationFailed);

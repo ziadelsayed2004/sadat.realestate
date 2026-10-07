@@ -28,3 +28,12 @@ export function egyptTimeLabel(locale: string, date: Date): string {
     .formatToParts(date).find(part => part.type === 'timeZoneName')?.value ?? 'GMT+2';
   return `${locale === 'ar' ? 'توقيت مصر' : 'Egypt time'} (${zone})`;
 }
+
+/** Actual elapsed time, including any Cairo summer/winter offset change. */
+export function egyptDurationLabel(start: Date, end: Date, locale: string): string | undefined {
+  const minutes = Math.round((end.getTime() - start.getTime()) / 60_000);
+  if (!Number.isFinite(minutes) || minutes <= 0) return undefined;
+  const values = [Math.floor(minutes / 1440), Math.floor(minutes % 1440 / 60), minutes % 60];
+  const units = locale === 'ar' ? ['يوم', 'ساعة', 'دقيقة'] : ['day', 'hour', 'minute'];
+  return values.flatMap((value, index) => value ? [`${new Intl.NumberFormat(locale).format(value)} ${units[index]}${locale !== 'ar' && value !== 1 ? 's' : ''}`] : []).join(locale === 'ar' ? ' و' : ', ');
+}

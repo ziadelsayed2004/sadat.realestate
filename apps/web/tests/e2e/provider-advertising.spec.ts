@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { getProviderAdvertisingCopy } from '../../src/features/provider/advertising-copy.ts';
 
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const REQUEST_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -111,7 +112,7 @@ test('PRV-19 advertising requests match the responsive source and keep creation 
   expect(dialogBounds?.x).toBeGreaterThanOrEqual(0);
   expect((dialogBounds?.x ?? 0) + (dialogBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width + 1);
   expect(dialogBounds?.height).toBeLessThanOrEqual(page.viewportSize()!.height);
-  await dialog.getByRole('button', { name: /Save request draft|حفظ مسودة الطلب/u }).click();
+  await dialog.getByRole('button', { name: /Send advertising request|إرسال طلب الإعلان/u }).click();
   await expect(dialog.getByRole('alert')).toBeVisible();
 });
 
@@ -133,13 +134,14 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page.locator('.route-shell--provider')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.locator('[data-screen-id="PRV-19"]')).toHaveAttribute('data-advertising-state', 'success');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(locale === 'ar' ? 'طلبات الإعلانات' : 'Advertising requests');
-    await expect(page.locator('.provider-advertising__heading h1 + p')).toHaveText(locale === 'ar' ? 'اطلب الترويج لعقارك أو مشروعك وتابع التسعير والجدولة وحالة الإعلان.' : 'Request promotion for your property or project and track pricing, scheduling, and advertising status.');
+    await expect(page.locator('.provider-advertising__heading h1 + p')).toHaveText(getProviderAdvertisingCopy(locale).description);
     await expect(page.locator('.provider-advertising__heading > .ui-button')).toHaveCSS('background-color', 'rgb(23, 35, 61)');
     await expect(page.getByTestId('provider-advertising-row')).toBeVisible();
     await expect(page.getByRole('combobox', { name: /Status|الحالة|状态/u })).toBeVisible();
     const action = page.getByRole('link', { name: /View details|عرض التفاصيل|查看详情/u }).first();
     await action.focus();
     await expect(action).toBeFocused();
+    expect(await page.locator('.provider-advertising__table-wrap').evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
     await expect(page.locator('body')).not.toContainText(new RegExp(PROVIDER_ID));
     await expect(page.locator('body')).not.toContainText(/storageKey|accessToken|refreshToken|bank verification/u);
     await waitForVisualStability(page);

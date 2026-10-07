@@ -23,7 +23,12 @@ export function createAdminAdsRuntime(
     accessTokens,
     service: createAdAdminRequestService({
       repository: createMongooseAdAdminRequestRepository(connection, undefined, audit),
-      authorization
+      authorization,
+      async pricingOptions() {
+        const policy = await createMongooseAdvertisingSettingsReader(connection).read();
+        const rows = await connection.collection('ad_placements').find({ active: true, ...(policy.supportedPlacements.length ? { key: { $in: policy.supportedPlacements } } : {}) }, { projection: { key: 1, label: 1 } }).sort({ sortOrder: 1, key: 1 }).limit(100).toArray();
+        return { placements: rows.map(row => ({ key: String(row.key), label: row.label ?? { ar: String(row.key), en: String(row.key) } })), adTypes: policy.supportedAdTypes };
+      }
     }),
     calendar: createAdCalendarService({
       repository: createMongooseAdCalendarRepository(connection),

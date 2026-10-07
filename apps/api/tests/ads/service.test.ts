@@ -55,6 +55,7 @@ test('provider draft creation delegates to the configured persistent request rep
       async getRequest() { return undefined; },
       async transitionRequest() { return undefined; },
       async createProviderRequest(providerId, input) {
+        if ('requestMode' in input) throw new Error('Legacy fixture requires a placement');
         calledWith = { providerId, placementKey: input.placementKey };
         return adRequestSchema.parse({
           id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
@@ -82,6 +83,32 @@ test('provider draft creation delegates to the configured persistent request rep
     intervalStart: '2026-09-01T09:00:00+00:00',
     intervalEnd: '2026-09-02T09:00:00+00:00'
   }), (error) => error instanceof AdSettingsServiceError && error.code === 'NOT_FOUND');
+});
+
+test('assisted requests enter review directly and require an administrator to assign a campaign when quoting', async () => {
+  const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  const service = createAdSettingsService({ now: () => new Date('2026-10-07T00:00:00.000Z') });
+  await assert.rejects(() => service.createRequest({ ...provider, status: 'pending_review' }, { requestMode: 'assisted', purpose: 'My apartment', contactPhone: '01234567890' }), /FORBIDDEN/);
+  await assert.rejects(() => service.createRequest(provider, { requestMode: 'assisted', purpose: 'My apartment', contactPhone: 'bad' }));
+  const request = await service.createRequest(provider, { requestMode: 'assisted', purpose: 'My apartment', contactPhone: '01234567890' });
+  assert.equal(request.status, 'review');
+  assert.equal(request.contactPhone, '+201234567890');
+  assert.equal(request.placementKey, undefined);
+  assert.equal(request.intervalStart, undefined);
+  await service.transitionRequest(admin, request.id, { status: 'waiting_pricing', expectedVersion: 0 });
+  const quoteInput = { requestId: request.id, currency: 'EGP', lineItems: [{ description: 'Homepage campaign', quantity: 1, unitAmountMinor: 125050 }], validUntil: '2026-10-09T00:00:00.000Z', terms: 'Payment instructions agreed with administration' };
+  await assert.rejects(() => service.issueQuote(admin, quoteInput), /VERSION_CONFLICT/);
+  const campaign = { placementKey: 'homepage.hero', intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' };
+  await assert.rejects(() => service.issueQuote(admin, { ...quoteInput, campaign }), /NOT_FOUND/);
+  await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Homepage banner' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['en'], targetUrlRequired: false });
+  const quote = await service.issueQuote(admin, { ...quoteInput, campaign });
+  assert.equal(quote.totalMinor, 125050);
+  const stored = (await service.listRequests(provider))[0];
+  assert.equal(stored?.status, 'quote_sent');
+  assert.equal(stored?.placementKey, 'homepage.hero');
+  assert.equal(stored?.intervalStart, campaign.intervalStart);
+  await service.acceptQuote(provider, request.id, { action: 'accept', expectedVersion: quote.version });
+  assert.equal((await service.listRequests(provider))[0]?.status, 'waiting_payment');
 });
 
 test('provider submission loads and atomically transitions its persistent draft', async () => {

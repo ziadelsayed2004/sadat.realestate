@@ -101,6 +101,7 @@ function projection(record: ProviderAdvertisingRequestRecord): ProviderAdRequest
   if (schedule && (schedule.requestId !== request.id || schedule.providerId !== request.providerId)) throw new ProviderAdvertisingProjectionError('PROVIDER_AD_SOURCE_INVALID');
   const result = {
     id: request.id,
+    ...(request.requestMode ? { requestMode: request.requestMode, contactPhone: request.contactPhone } : {}),
     placementKey: request.placementKey,
     ...(request.adType ? { adType: request.adType } : {}),
     purpose: request.purpose,
