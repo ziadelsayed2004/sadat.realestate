@@ -111,16 +111,19 @@ export function createMemoryCommunityReportService(
     async adminList(claims, input) {
       await requireModeration(claims, authorization);
       const query: CommunityAdminReportListQuery = communityAdminReportListQuerySchema.parse(input);
-      const reports = [...rows.values()]
+      const matchingPost = [...rows.values()].filter(report => query.postId === undefined || report.postId === query.postId);
+      const summary = { total: matchingPost.length, open: 0, in_review: 0, resolved: 0, dismissed: 0 };
+      for (const report of matchingPost) summary[report.status] += 1;
+      const reports = matchingPost
         .filter(report => query.status === undefined || report.status === query.status)
-        .filter(report => query.postId === undefined || report.postId === query.postId)
         .sort((left, right) => right.createdAt.localeCompare(left.createdAt) || left.id.localeCompare(right.id));
       const start = (query.page - 1) * query.limit;
       return communityAdminReportListDataSchema.parse({
         items: reports.slice(start, start + query.limit).map(adminReportData),
         page: query.page,
         limit: query.limit,
-        total: reports.length
+        total: reports.length,
+        summary
       });
     },
     async resolve(claims, reportId, input, context) {
@@ -223,10 +226,22 @@ export function createMongooseCommunityReportService(
       if (query.status !== undefined) filter.status = query.status;
       if (query.postId !== undefined) filter.postId = query.postId;
       await ensureIndexes();
-      const [rows, total] = await Promise.all([
+      const summaryFilter = query.postId === undefined ? {} : { postId: query.postId };
+      const [rows, total, statusCounts] = await Promise.all([
         reports.find(filter, { projection }).sort({ createdAt: -1, id: 1 }).skip((query.page - 1) * query.limit).limit(query.limit).toArray(),
-        reports.countDocuments(filter)
+        reports.countDocuments(filter),
+        reports.aggregate<{ _id: string; count: number }>([
+          { $match: summaryFilter },
+          { $group: { _id: { $ifNull: ['$status', 'open'] }, count: { $sum: 1 } } }
+        ]).toArray()
       ]);
+      const summary = { total: 0, open: 0, in_review: 0, resolved: 0, dismissed: 0 };
+      for (const status of statusCounts) {
+        if (status._id === 'open' || status._id === 'in_review' || status._id === 'resolved' || status._id === 'dismissed') {
+          summary[status._id] = status.count;
+          summary.total += status.count;
+        }
+      }
       return communityAdminReportListDataSchema.parse({
         items: rows.flatMap(row => {
           const parsed = parseRow(row);
@@ -234,7 +249,8 @@ export function createMongooseCommunityReportService(
         }),
         page: query.page,
         limit: query.limit,
-        total
+        total,
+        summary
       });
     },
     async resolve(claims, reportId, input, context) {

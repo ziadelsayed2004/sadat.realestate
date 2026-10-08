@@ -63,11 +63,13 @@ export async function routeAdminCommunityApis(page: Page, allow = true): Promise
     contentType: 'application/json',
     body: JSON.stringify({ data: { items: [adminCommunityCommentFixture()], page: 1, limit: 20, total: 1 }, meta: { requestId: 'admin-community-comments' } })
   }));
+  let reportStatus: 'open' | 'resolved' = 'open';
   await page.route('**/api/v1/admin/community/reports**', async route => {
     if (route.request().method() === 'POST') {
+      reportStatus = 'resolved';
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: adminCommunityReportFixture('resolved'), meta: { requestId: 'admin-community-report-resolve' } }) });
       return;
     }
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [adminCommunityReportFixture()], page: 1, limit: 20, total: 1 }, meta: { requestId: 'admin-community-reports' } }) });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [adminCommunityReportFixture(reportStatus)], page: 1, limit: 20, total: 1, summary: { total: 1, open: reportStatus === 'open' ? 1 : 0, in_review: 0, resolved: reportStatus === 'resolved' ? 1 : 0, dismissed: 0 } }, meta: { requestId: 'admin-community-reports' } }) });
   });
 }

@@ -12,6 +12,8 @@
 .admin-community__tabs a { padding: 12px 22px; border-radius: 999px; color: #657188; font-weight: 700; text-decoration: none; }
 .admin-community__tabs a[data-active="true"], .admin-community__tabs a[aria-current="page"] { background: #075844; color: #fff; }
 .admin-community__summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 1320px; margin: 0 auto 20px; }
+.admin-community__summary--reports { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.admin-community__summary-note { max-width: 1320px; margin: -8px auto 20px; color: #56647a; font-size: 13px; }
 .admin-community__summary-card { min-height: 86px; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 16px; border: 1px solid #e3e5e7; border-radius: 16px; background: #fff; box-shadow: 0 1px 3px #0000001a; }
 .admin-community__summary-card strong { color: #075844; font-size: 24px; line-height: 32px; }
 .admin-community__summary-card span { color: #6d788b; font-size: 12px; line-height: 16px; }

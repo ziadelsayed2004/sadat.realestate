@@ -1,8 +1,9 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import {
   communityAdminCommentListDataSchema,
   communityAdminPostListDataSchema,
   communityAdminReportListDataSchema,
+  type CommunityAdminReportListQuery,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
@@ -49,7 +50,7 @@ const report = {
 };
 const posts = communityAdminPostListDataSchema.parse({ items: [post], page: 1, limit: 20, total: 1 });
 const comments = communityAdminCommentListDataSchema.parse({ items: [comment], page: 1, limit: 20, total: 1 });
-const reports = communityAdminReportListDataSchema.parse({ items: [report], page: 1, limit: 20, total: 1 });
+const reports = communityAdminReportListDataSchema.parse({ items: [report], page: 1, limit: 20, total: 1, summary: { total: 1, open: 1, in_review: 0, resolved: 0, dismissed: 0 } });
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 
 function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
@@ -72,6 +73,46 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('admin community contracts and views', () => {
+  it.each(['ar', 'en'] as const)('keeps the report summary when a status has no rows and when changing page in %s', async locale => {
+    window.history.pushState({}, '', '/admin/community/moderation');
+    const summary = { total: 26, open: 0, in_review: 0, resolved: 25, dismissed: 1 };
+    const loadReports = vi.fn(async (query: CommunityAdminReportListQuery) => communityAdminReportListDataSchema.parse({ ...reports, items: query.status === 'open' ? [] : [{ ...report, status: 'resolved' }], page: query.page, limit: 20, total: query.status === 'open' ? 0 : 26, summary }));
+    renderWithLocale(<AdminCommunity locale={locale} session={session} loadReports={loadReports} />, { locale });
+    const copy = getAdminCommunityCopy(locale);
+    await waitFor(() => expect(screen.getByTestId('admin-community-summary-total')).toHaveTextContent(new Intl.NumberFormat(locale).format(26)));
+    fireEvent.click(screen.getByRole('button', { name: copy.next }));
+    await waitFor(() => expect(loadReports).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }), expect.any(AbortSignal)));
+    await waitFor(() => expect(screen.getByRole('button', { name: copy.previous })).toBeEnabled());
+    expect(screen.getByTestId('admin-community-summary-resolved')).toHaveTextContent(new Intl.NumberFormat(locale).format(25));
+    fireEvent.click(screen.getByRole('tab', { name: copy.reportStatus.open }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.empty.title })).toBeVisible());
+    expect(screen.getByTestId('admin-community-summary-total')).toHaveTextContent(new Intl.NumberFormat(locale).format(26));
+    expect(screen.getByTestId('admin-community-summary-dismissed')).toHaveTextContent(new Intl.NumberFormat(locale).format(1));
+    expect(screen.getByTestId('admin-community-summary-open')).toHaveTextContent(new Intl.NumberFormat(locale).format(0));
+  });
+
+  it('does not invent zero status totals for an older paginated response without a summary', async () => {
+    window.history.pushState({}, '', '/admin/community/moderation');
+    renderWithLocale(<AdminCommunity locale="en" session={session} initialReports={{ items: [report], page: 1, limit: 20, total: 26 }} />, { locale: 'en' });
+    expect(screen.getByTestId('admin-community-summary-total')).toHaveTextContent('26');
+    expect(screen.getByTestId('admin-community-summary-resolved')).toHaveTextContent('—');
+  });
+
+  it('does not replace current report totals with an older response after switching status', async () => {
+    window.history.pushState({}, '', '/admin/community/moderation');
+    let finishOld!: (data: typeof reports) => void;
+    const oldResponse = new Promise<typeof reports>(resolve => { finishOld = resolve; });
+    const currentData = { ...reports, items: [], total: 0, summary: { total: 2, open: 0, in_review: 0, resolved: 1, dismissed: 1 } };
+    const loadReports = vi.fn(async (query: CommunityAdminReportListQuery) => query.status === 'open' ? currentData : oldResponse);
+    renderWithLocale(<AdminCommunity locale="en" session={session} loadReports={loadReports} />, { locale: 'en' });
+    await waitFor(() => expect(loadReports).toHaveBeenCalledTimes(1));
+    fireEvent.click(screen.getByRole('tab', { name: 'Open' }));
+    await waitFor(() => expect(screen.getByTestId('admin-community-summary-total')).toHaveTextContent('2'));
+    await act(async () => { finishOld(reports); await oldResponse; });
+    expect(screen.getByTestId('admin-community-summary-total')).toHaveTextContent('2');
+    expect(screen.getByRole('heading', { name: 'No records found' })).toBeVisible();
+  });
+
   it('uses the implemented list and versioned report routes', async () => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const client = apiClientFor(requests);
@@ -126,7 +167,8 @@ describe('admin community contracts and views', () => {
   it('requires a reason and sends the server version before resolving a report', async () => {
     window.history.pushState({}, '', '/admin/community/moderation');
     const resolveReport = vi.fn(async () => ({ ...report, status: 'resolved' as const, version: 3, resolutionReason: 'Moderation decision recorded.' }));
-    renderWithLocale(<AdminCommunity locale="en" session={session} initialReports={reports} resolveReport={resolveReport} />, { locale: 'en' });
+    const loadReports = vi.fn(async () => ({ ...reports, items: [{ ...report, status: 'resolved' as const, version: 3 }], summary: { total: 1, open: 0, in_review: 0, resolved: 1, dismissed: 0 } }));
+    renderWithLocale(<AdminCommunity locale="en" session={session} initialReports={reports} loadReports={loadReports} resolveReport={resolveReport} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId(`admin-community-report-${report.id}`)).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: getAdminCommunityCopy('en').action.review }));
     fireEvent.submit(screen.getByTestId('admin-community-resolution').querySelector('form')!);
@@ -135,6 +177,8 @@ describe('admin community contracts and views', () => {
     fireEvent.change(screen.getByLabelText(getAdminCommunityCopy('en').reason), { target: { value: 'Moderation decision recorded.' } });
     fireEvent.click(screen.getByRole('button', { name: getAdminCommunityCopy('en').confirm }));
     await waitFor(() => expect(resolveReport).toHaveBeenCalledWith(report.id, { version: 2, action: 'resolve', reason: 'Moderation decision recorded.' }));
+    await waitFor(() => expect(screen.getByTestId('admin-community-summary-open')).toHaveTextContent('0'));
+    expect(screen.getByTestId('admin-community-summary-resolved')).toHaveTextContent('1');
   });
 
   it('fails closed for a non-admin session without loading', async () => {

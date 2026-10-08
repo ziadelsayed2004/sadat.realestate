@@ -989,6 +989,8 @@
     "saved": "Saved successfully."
   },
   "admin_community/copy#getAdminCommunityCopy": {
+    "reportSummaryNote": "The summary covers every report status for the selected post or all posts. The status filter only changes the table.",
+    "summaryUnavailable": "The overall count is currently unavailable",
     "eyebrow": "Community administration",
     "title": {
       "posts": "Community management",

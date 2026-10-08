@@ -21693,6 +21693,19 @@
           "total": {
             "type": "integer",
             "minimum": 0
+          },
+          "summary": {
+            "type": "object",
+            "description": "Counts for all report statuses within the selected post scope, independent of status filtering and pagination.",
+            "additionalProperties": false,
+            "required": ["total", "open", "in_review", "resolved", "dismissed"],
+            "properties": {
+              "total": { "type": "integer", "minimum": 0 },
+              "open": { "type": "integer", "minimum": 0 },
+              "in_review": { "type": "integer", "minimum": 0 },
+              "resolved": { "type": "integer", "minimum": 0 },
+              "dismissed": { "type": "integer", "minimum": 0 }
+            }
           }
         }
       },

@@ -192,7 +192,15 @@ export const communityAdminReportListDataSchema = z.object({
   items: z.array(communityAdminReportSchema),
   page: z.number().int().positive(),
   limit: z.number().int().positive(),
-  total: z.number().int().nonnegative()
+  total: z.number().int().nonnegative(),
+  // Counts cover all statuses for the selected post, independently of pagination.
+  summary: z.object({
+    total: z.number().int().nonnegative(),
+    open: z.number().int().nonnegative(),
+    in_review: z.number().int().nonnegative(),
+    resolved: z.number().int().nonnegative(),
+    dismissed: z.number().int().nonnegative()
+  }).strict().optional()
 }).strict();
 export const communityAdminReportListSuccessEnvelopeSchema = successEnvelopeSchema(communityAdminReportListDataSchema);
 export const communityAdminReportResolveSuccessEnvelopeSchema = successEnvelopeSchema(communityAdminReportSchema);

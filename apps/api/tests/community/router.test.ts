@@ -4,6 +4,8 @@ import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/au
 import { createMemoryCommunityReportService } from '../../src/modules/community/report-service.js';
 import { createCommunityService, createMemoryCommunityRepository } from '../../src/modules/community/service.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
+import { createMongooseCommunityReportService } from '../../src/modules/community/report-service.js';
+import type { Connection } from 'mongoose';
 
 const SEEKER_ID = '1123456789abcdef01234567';
 const PROVIDER_ID = '2123456789abcdef01234567';
@@ -11,6 +13,42 @@ const ADMIN_ID = '3123456789abcdef01234567';
 const LIMITED_ADMIN_ID = '5123456789abcdef01234567';
 const POST_ID = '4123456789abcdef01234567';
 const NOW = '2026-08-17T08:00:00.000Z';
+
+test('report totals include closed reports even with an empty status filter and across pages', async () => withServer(async (origin, postId) => {
+  for (const action of ['resolve', 'dismiss']) {
+    const created = await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reports`, 'seeker', { reason: 'spam', details: `Report to ${action}` });
+    assert.equal(created.status, 201);
+    const { data } = await created.json() as { data: { id: string } };
+    assert.equal((await request(origin, 'POST', `/api/v1/admin/community/reports/${data.id}/resolve`, 'admin', { version: 0, action, reason: 'Reviewed the reported content' })).status, 200);
+  }
+  const summary = { total: 2, open: 0, in_review: 0, resolved: 1, dismissed: 1 };
+  for (const query of ['status=open', 'status=in_review', 'status=resolved', 'status=dismissed', 'page=2&limit=1']) {
+    const response = await request(origin, 'GET', `/api/v1/admin/community/reports?${query}`, 'admin');
+    assert.equal(response.status, 200);
+    const { data } = await response.json() as { data: { total: number; items: unknown[]; summary: unknown } };
+    assert.deepEqual(data.summary, summary);
+    if (query === 'status=open' || query === 'status=in_review') { assert.equal(data.total, 0); assert.deepEqual(data.items, []); }
+    if (query === 'page=2&limit=1') { assert.equal(data.total, 2); assert.equal(data.items.length, 1); }
+  }
+  const emptyPost = await request(origin, 'GET', '/api/v1/admin/community/reports?postId=aaaaaaaaaaaaaaaaaaaaaaaa', 'admin');
+  assert.deepEqual((await emptyPost.json() as { data: { summary: unknown } }).data.summary, { total: 0, open: 0, in_review: 0, resolved: 0, dismissed: 0 });
+}));
+
+test('MongoDB report summary groups every status before pagination and preserves the selected post scope', async () => {
+  let pipeline: unknown;
+  const cursor = { sort: () => cursor, skip: () => cursor, limit: () => cursor, toArray: async () => [] };
+  const collection = {
+    createIndex: async () => 'index',
+    find: (filter: unknown) => { assert.deepEqual(filter, { status: 'open', postId: POST_ID }); return cursor; },
+    countDocuments: async () => 0,
+    aggregate: (value: unknown) => { pipeline = value; return { toArray: async () => [{ _id: 'resolved', count: 25 }, { _id: 'dismissed', count: 1 }] }; }
+  };
+  const service = createMongooseCommunityReportService({ collection: () => collection } as unknown as Connection, { authorize: async () => true });
+  const data = await service.adminList(accessTokens.verify('admin'), { status: 'open', postId: POST_ID, page: 2, limit: 1 });
+  assert.equal(data.total, 0);
+  assert.deepEqual(data.summary, { total: 26, open: 0, in_review: 0, resolved: 25, dismissed: 1 });
+  assert.deepEqual(pipeline, [{ $match: { postId: POST_ID } }, { $group: { _id: { $ifNull: ['$status', 'open'] }, count: { $sum: 1 } } }]);
+});
 
 const accessTokens: AccessTokenService = {
   issue() { return 'unused'; },

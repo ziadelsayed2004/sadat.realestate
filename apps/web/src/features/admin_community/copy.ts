@@ -53,6 +53,8 @@ export interface AdminCommunityCopy {
   readonly totalPosts: string;
   readonly totalReports: string;
   readonly statusSummary: string;
+  readonly reportSummaryNote: string;
+  readonly summaryUnavailable: string;
   readonly stalePost: string;
   readonly states: Record<Exclude<AdminCommunityState, 'success' | 'empty'>, { readonly title: string; readonly body: string }>;
   readonly empty: { readonly title: string; readonly body: string };
@@ -61,6 +63,8 @@ export interface AdminCommunityCopy {
 
 const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
   ar: {
+    reportSummaryNote: 'الملخص يشمل كل حالات البلاغات للمنشور المحدد أو لكل المنشورات. فلتر الحالة يغيّر الجدول فقط.',
+    summaryUnavailable: 'العدد الإجمالي غير متاح حاليًا',
     eyebrow: 'إدارة المجتمع',
     title: { posts: 'إدارة المجتمع', comments: 'أرشيف التعليقات', reports: 'البلاغات والإشراف' },
     description: { posts: 'راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.', comments: 'التعليقات متوقفة. هذا أرشيف التعليقات السابقة المتاح للإدارة فقط.', reports: 'راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع.' },
@@ -73,6 +77,8 @@ const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
     empty: { title: 'لا توجد سجلات', body: 'لا توجد بيانات مطابقة للفلاتر الحالية.' }, directionNote: 'العربية RTL — إدارة المجتمع متاحة لسطح المكتب.'
   },
   en: {
+    reportSummaryNote: 'The summary covers every report status for the selected post or all posts. The status filter only changes the table.',
+    summaryUnavailable: 'The overall count is currently unavailable',
     eyebrow: 'Community administration',
     title: { posts: 'Community management', comments: 'Archived comments', reports: 'Reports and moderation' },
     description: { posts: 'Review community posts from the server-approved projection.', comments: 'Comments are disabled. Previous comments remain in this admin-only archive.', reports: 'Review incoming reports and resolve them with a clear reason and version.' },

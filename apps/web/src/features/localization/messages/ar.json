@@ -989,6 +989,8 @@
     "saved": "تم الحفظ بنجاح."
   },
   "admin_community/copy#getAdminCommunityCopy": {
+    "reportSummaryNote": "الملخص يشمل كل حالات البلاغات للمنشور المحدد أو لكل المنشورات. فلتر الحالة يغيّر الجدول فقط.",
+    "summaryUnavailable": "العدد الإجمالي غير متاح حاليًا",
     "eyebrow": "إدارة المجتمع",
     "title": {
       "posts": "إدارة المجتمع",

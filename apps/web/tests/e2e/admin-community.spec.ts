@@ -1,10 +1,36 @@
 import { expect, test } from '@playwright/test';
-import { adminCommunityPostFixture, adminCommunityCommentId, adminCommunityPostId, adminCommunityReportId, routeAdminCommunityApis } from './admin-community.fixtures.ts';
+import { adminCommunityPostFixture, adminCommunityReportFixture, adminCommunityCommentId, adminCommunityPostId, adminCommunityReportId, routeAdminCommunityApis } from './admin-community.fixtures.ts';
+import { getAdminCommunityCopy } from '../../src/features/admin_community/copy.ts';
 
 function localeForCommunity(): 'ar' | 'en' {
   const project = test.info().project.name;
   return project.endsWith('-en') ? 'en' : 'ar';
 }
+
+test('report totals stay visible when filtering to an empty status', async ({ page }) => {
+  await routeAdminCommunityApis(page);
+  const summary = { total: 2, open: 0, in_review: 0, resolved: 1, dismissed: 1 };
+  await page.route('**/api/v1/admin/community/reports**', async route => {
+    const status = new URL(route.request().url()).searchParams.get('status');
+    const rows = [adminCommunityReportFixture('resolved'), { ...adminCommunityReportFixture('dismissed'), id: 'dddddddddddddddddddddddd' }].filter(row => status === null || row.status === status);
+    await route.fulfill({ json: { data: { items: rows, total: rows.length, page: 1, limit: 20, summary }, meta: { requestId: 'report-summary-filter' } } });
+  });
+  const locale = localeForCommunity();
+  const copy = getAdminCommunityCopy(locale);
+  await page.goto(`/admin/community/moderation?lang=${locale}`);
+  await expect(page.getByTestId('admin-community-summary-total')).toContainText(new Intl.NumberFormat(locale).format(2));
+  for (const status of ['open', 'in_review'] as const) {
+    await page.getByRole('tab', { name: copy.reportStatus[status], exact: true }).click();
+    await expect(page.getByRole('heading', { name: copy.empty.title })).toBeVisible();
+    await expect(page.getByTestId('admin-community-summary-total')).toContainText(new Intl.NumberFormat(locale).format(2));
+    await expect(page.getByTestId('admin-community-summary-resolved')).toContainText(new Intl.NumberFormat(locale).format(1));
+    await expect(page.getByTestId('admin-community-summary-dismissed')).toContainText(new Intl.NumberFormat(locale).format(1));
+  }
+  await page.screenshot({ path: test.info().outputPath('report-summary-empty-filter.png'), fullPage: true });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('tab', { name: copy.all, exact: true }).click();
+  await expect(page.locator('[data-testid^="admin-community-report-"]')).toHaveCount(2);
+});
 
 test.describe('ADM-27 through ADM-29 community administration', () => {
   test.beforeEach(async ({ page }, testInfo) => {
