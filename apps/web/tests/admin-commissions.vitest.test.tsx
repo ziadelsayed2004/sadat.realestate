@@ -112,8 +112,9 @@ const loaders = {
 describe('Admin commission policies, exceptions, and confirmations', () => {
   it('creates a six-percent exception starting now with no ending date by default', async () => {
     window.history.pushState({}, '', '/admin/commissions/exceptions/new');
+    const update = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue({ ...exception, status: 'active', version: 1 });
     const create = vi.fn(async (_input: import('@sadat-real-estate/contracts').CommissionExceptionCreate) => exception);
-    renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createException={create} />, { locale: 'en' });
+    renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createException={create} updateException={update} />, { locale: 'en' });
     const copy = getAdminCommissionsCopy('en');
     expect(screen.getByLabelText('Starts now')).toBeChecked();
     expect(screen.getByLabelText('Continues until I change it')).toBeChecked();
@@ -121,10 +122,19 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     fireEvent.change(screen.getByLabelText(copy.labels.accountId!), { target: { value: accountId } });
     fireEvent.change(screen.getByLabelText(copy.labels.percentageBps!), { target: { value: '6' } });
     fireEvent.change(screen.getByLabelText(copy.labels.reason!), { target: { value: 'Owner special commission' } });
-    fireEvent.click(screen.getByRole('button', { name: copy.actions.save }));
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
     await waitFor(() => expect(create).toHaveBeenCalled());
     expect(create.mock.calls[0]?.[0]).toMatchObject({ accountId, percentageBps: 600 });
     expect(create.mock.calls[0]?.[0]).not.toHaveProperty('effectiveTo');
+    const activate = await screen.findByRole('button', { name: 'Approve and activate exception' });
+    fireEvent.click(activate);
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    fireEvent.click(activate);
+    expect(await screen.findByText('Exception approved and activated for this account.')).toBeInTheDocument();
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(2);
+    expect(update).toHaveBeenLastCalledWith(exception.id, { expectedVersion: exception.version, reason: exception.reason, status: 'active' });
+
   });
   it('uses implemented API routes, strict schemas, and authorization headers', async () => {
     const requests: Array<{ method: string; path: string; query: string; authorization: string | null; body: unknown }> = [];

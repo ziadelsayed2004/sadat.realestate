@@ -257,3 +257,7 @@
   .admin-commissions__details { grid-template-columns: 1fr; }
   .admin-commissions__heading { flex-direction: column; }
 }
+
+.admin-commission-exception-actions{display:grid;gap:.75rem;min-width:15rem}.admin-commission-exception-actions p{margin:0}.admin-commission-exception-actions label{display:grid;gap:.4rem}.admin-commission-exception-actions input{width:100%;min-height:44px;padding:.5rem .75rem;border:1px solid #ddd8ca;border-radius:.5rem;box-sizing:border-box}.admin-commission-exception-actions button{justify-self:start}.admin-commissions__table td{vertical-align:top}
+
+.admin-commissions__form > fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }

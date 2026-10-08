@@ -9,9 +9,9 @@ export function ExceptionActions({ item, locale, update, onSaved }: { item: Comm
   const [error, setError] = useState(false);
   const ar = locale === 'ar';
   if (item.status === 'archived') return null;
-  return <form onSubmit={event => {
-    event.preventDefault(); setBusy(true); setError(false);
-    void update(item.id, { expectedVersion: item.version, reason, status: item.status === 'active' ? 'inactive' : 'active' })
+  return <form className="admin-commission-exception-actions" onSubmit={event => {
+    event.preventDefault(); if (busy || reason.trim().length < 2) return; setBusy(true); setError(false);
+    void update(item.id, { expectedVersion: item.version, reason: reason.trim(), status: item.status === 'active' ? 'inactive' : 'active' })
       .then(onSaved).catch(() => setError(true)).finally(() => setBusy(false));
   }}><p>{item.effectiveTo ? new Intl.DateTimeFormat(locale, { timeZone: 'Africa/Cairo', dateStyle: 'medium' }).format(new Date(item.effectiveTo)) : ar ? 'مستمر حتى إيقافه أو تغييره' : 'Continues until stopped or changed'}</p>
     <label>{ar ? 'سبب الإجراء' : 'Action reason'}<input value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required /></label>

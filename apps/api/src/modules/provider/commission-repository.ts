@@ -122,14 +122,15 @@ export function createMongooseProviderCommissionSource(connection: Connection): 
   return {
     async getForProvider(providerId: string): Promise<CommissionResolution | undefined> {
       const accountId = new Types.ObjectId(providerId);
+      const accountFilter = { $in: [providerId, accountId] };
       const now = new Date();
       const [exceptionRows, overrideRows, policyRows] = await Promise.all([
         connection.collection('commission_exceptions').find(
-          { accountId, status: 'active' },
+          { accountId: accountFilter, status: 'active' },
           { projection: COMMISSION_PROJECTION }
         ).toArray(),
         connection.collection('commission_account_overrides').find(
-          { accountId, status: 'active' },
+          { accountId: accountFilter, status: 'active' },
           { projection: COMMISSION_PROJECTION }
         ).toArray(),
         connection.collection('commission_policies').find(
@@ -138,20 +139,14 @@ export function createMongooseProviderCommissionSource(connection: Connection): 
         ).toArray()
       ]);
 
-      const selected = choose([
-        ...exceptionRows.flatMap((row) => {
-          const value = candidate(row, 'exception');
-          return value ? [value] : [];
-        }),
-        ...overrideRows.flatMap((row) => {
-          const value = candidate(row, 'account_override');
-          return value ? [value] : [];
-        }),
-        ...policyRows.flatMap((row) => {
-          const value = candidate(row, 'policy');
-          return value ? [value] : [];
-        })
-      ], now);
+      const candidates = (rows: readonly MongoRow[], source: CommissionSource) => rows.flatMap(row => {
+        const value = candidate(row, source);
+        return value ? [value] : [];
+      });
+      // Match resolver precedence; a newer default must not replace a personal exception.
+      const selected = choose(candidates(exceptionRows, 'exception'), now)
+        ?? choose(candidates(overrideRows, 'account_override'), now)
+        ?? choose(candidates(policyRows, 'policy'), now);
 
       return selected ? resolve(providerId, selected) : undefined;
     }

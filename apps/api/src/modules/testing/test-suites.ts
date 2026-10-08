@@ -91,6 +91,8 @@ export const TEST_SUITES = Object.freeze({
     'tests/commissions/policy-router.test.ts',
     'tests/reports/service.test.ts',
     'tests/commissions/service.test.ts',
+    'tests/commissions/exception-notifications.test.ts',
+    'tests/provider/commission-repository.test.ts',
     'tests/testing/commissions-temporal.test.ts',
     'tests/payments/service.test.ts',
     'tests/cms/settings.test.ts',

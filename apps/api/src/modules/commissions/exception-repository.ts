@@ -1,3 +1,4 @@
+import { writeCommissionExceptionNotification } from './exception-notifications.js';
 import type { ClientSession, Connection } from 'mongoose';
 import {
   commissionExceptionSchema,
@@ -152,7 +153,12 @@ export function createMongooseCommissionExceptionRepository(
       try {
         return await session.withTransaction(async () => {
           const result = await collection.replaceOne({ id: exception.id, version: expectedVersion }, { ...exception }, { session });
-          if (result.matchedCount === 1) { await audit.record(event, session); return { kind: 'written' } as const; }
+          if (result.matchedCount === 1) {
+            await audit.record(event, session);
+            const before = document(event.before);
+            await writeCommissionExceptionNotification(connection, exception, String(before.status), session);
+            return { kind: 'written' } as const;
+          }
           const current = await collection.findOne({ id: exception.id }, { session, projection: { id: 1 } });
           return current ? { kind: 'version_conflict' } as const : { kind: 'not_found' } as const;
         });
