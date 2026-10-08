@@ -206,7 +206,22 @@ function PolicyTable({ data, locale, onPage }: { readonly data: CommissionPolicy
 
 function ExceptionTable({ data, locale, onPage, update, canManage, onSaved }: { readonly data: CommissionExceptionListData; readonly locale: SupportedLocale; readonly onPage: (page: number) => void; update: AdminCommissionExceptionUpdate; canManage: boolean; onSaved: () => void }) {
   const copy = getAdminCommissionsCopy(locale);
-  return <section className="admin-commissions__panel"><div className="admin-commissions__panel-heading"><div><h2>{copy.titles.exceptions}</h2><p>{copy.count(data.total)}</p></div></div><div className="admin-commissions__table-wrap"><table className="admin-commissions__table"><thead><tr><th scope="col">{copy.labels.accountId}</th><th scope="col">{copy.labels.kind}</th><th scope="col">{copy.labels.value}</th><th scope="col">{copy.labels.reason}</th><th scope="col">{copy.labels.status}</th><th scope="col">{copy.labels.effectiveFrom}</th><th scope="col">{copy.labels.version}</th><th scope="col">{copy.labels.action}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-commission-exception-${item.id}`}><td><code>{item.accountId}</code></td><td>{copy.kinds[item.kind]}</td><td>{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}</td><td>{item.reason}</td><td><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></td><td>{dateLabel(item.effectiveFrom, locale)}</td><td>{item.version}</td><td>{canManage ? <ExceptionActions item={item} locale={locale} update={update} onSaved={onSaved} /> : null}</td></tr>)}</tbody></table></div><Pagination page={data.page} limit={data.limit} total={data.total} locale={locale} onPrevious={() => onPage(data.page - 1)} onNext={() => onPage(data.page + 1)} /></section>;
+  return <section className="admin-commissions__panel admin-commission-exceptions" aria-labelledby="commission-exceptions-heading">
+    <div className="admin-commissions__panel-heading"><div><h2 id="commission-exceptions-heading">{copy.titles.exceptions}</h2><p>{locale === 'ar' ? 'راجع النسبة وفترة السريان، ثم اعتمد المسودة أو أوقف الاستثناء مع توضيح السبب.' : 'Review the value and effective period, then approve a draft or stop an exception with an action reason.'}</p></div><span className="admin-commission-exceptions__count">{copy.count(data.total)}</span></div>
+    <div className="admin-commission-exceptions__list">{data.items.map(item => <article className="admin-commission-exception" data-status={item.status} key={item.id} data-testid={`admin-commission-exception-${item.id}`}>
+      <header className="admin-commission-exception__heading">
+        <div className="admin-commission-exception__account"><span>{copy.labels.accountId}</span><code dir="ltr">{item.accountId}</code><a href={`${localePath(locale, ADMIN_COMMISSIONS_ACCOUNT_ROUTE)}&accountId=${encodeURIComponent(item.accountId)}`}>{locale === 'ar' ? 'عرض عمولة الحساب' : 'View account commission'} <span aria-hidden="true">↗</span></a></div>
+        <div className="admin-commission-exception__value"><span>{copy.kinds[item.kind]}</span><h3 dir="ltr">{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}</h3><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></div>
+      </header>
+      <dl className="admin-commission-exception__details">
+        <div><dt>{locale === 'ar' ? 'فترة السريان' : 'Effective period'}</dt><dd><span>{copy.labels.effectiveFrom}: {dateLabel(item.effectiveFrom, locale)}</span><span>{item.effectiveTo ? `${copy.labels.effectiveTo}: ${dateLabel(item.effectiveTo, locale)}` : locale === 'ar' ? 'مستمر حتى إيقافه أو تغييره' : 'Continues until stopped or changed'}</span></dd></div>
+        <div><dt>{locale === 'ar' ? 'سبب الاستثناء' : 'Exception reason'}</dt><dd className="admin-commission-exception__reason">{item.reason}</dd></div>
+        <div className="admin-commission-exception__version"><dt>{copy.labels.version}</dt><dd>{item.version}</dd></div>
+      </dl>
+      {canManage && item.status !== 'archived' ? <footer className="admin-commission-exception__footer"><ExceptionActions item={item} locale={locale} update={update} onSaved={onSaved} /></footer> : null}
+    </article>)}</div>
+    <Pagination page={data.page} limit={data.limit} total={data.total} locale={locale} onPrevious={() => onPage(data.page - 1)} onNext={() => onPage(data.page + 1)} />
+  </section>;
 }
 
 function HistoryTable({ data, locale, onPage }: { readonly data: CommissionChangeLogListData; readonly locale: SupportedLocale; readonly onPage: (page: number) => void }) {

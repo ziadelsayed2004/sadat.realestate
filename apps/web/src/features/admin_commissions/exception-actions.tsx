@@ -13,9 +13,9 @@ export function ExceptionActions({ item, locale, update, onSaved }: { item: Comm
     event.preventDefault(); if (busy || reason.trim().length < 2) return; setBusy(true); setError(false);
     void update(item.id, { expectedVersion: item.version, reason: reason.trim(), status: item.status === 'active' ? 'inactive' : 'active' })
       .then(onSaved).catch(() => setError(true)).finally(() => setBusy(false));
-  }}><p>{item.effectiveTo ? new Intl.DateTimeFormat(locale, { timeZone: 'Africa/Cairo', dateStyle: 'medium' }).format(new Date(item.effectiveTo)) : ar ? 'مستمر حتى إيقافه أو تغييره' : 'Continues until stopped or changed'}</p>
-    <label>{ar ? 'سبب الإجراء' : 'Action reason'}<input value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required /></label>
-    <Button type="submit" size="sm" loading={busy}>{item.status === 'active' ? ar ? 'إيقاف الاستثناء' : 'Stop exception' : ar ? 'اعتماد وتفعيل' : 'Approve and activate'}</Button>
+  }}>
+    <label>{ar ? 'سبب الإجراء' : 'Action reason'}<input disabled={busy} placeholder={ar ? 'اكتب سبب الاعتماد أو الإيقاف' : 'Reason for approval or stopping'} value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required /></label>
+    <Button type="submit" size="sm" variant={item.status === 'active' ? 'secondary' : 'primary'} disabled={busy} loading={busy}>{item.status === 'active' ? ar ? 'إيقاف الاستثناء' : 'Stop exception' : ar ? 'اعتماد وتفعيل' : 'Approve and activate'}</Button>
     {error ? <p role="alert">{ar ? 'تعذر الإجراء. حدّث البيانات وتأكد من أن الفترة بدأت ولم تنتهِ، ولا يوجد استثناء آخر نشط لنفس الحساب.' : 'Refresh the data and check the effective window and other active exceptions for this account.'}</p> : null}
   </form>;
 }
