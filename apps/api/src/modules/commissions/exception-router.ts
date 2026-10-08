@@ -13,7 +13,8 @@ import { CommissionExceptionServiceError, type CommissionExceptionService } from
 
 export const ADMIN_COMMISSION_EXCEPTION_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/commission-exceptions', operationId: 'listAdminCommissionExceptions' },
-  { method: 'POST', path: '/api/v1/admin/commission-exceptions', operationId: 'createAdminCommissionException' }
+  { method: 'POST', path: '/api/v1/admin/commission-exceptions', operationId: 'createAdminCommissionException' },
+  { method: 'PATCH', path: '/api/v1/admin/commission-exceptions/:exceptionId', operationId: 'updateAdminCommissionException' }
 ] as const;
 
 export interface CommissionExceptionRouterDependencies {
@@ -104,5 +105,13 @@ export function createCommissionExceptionRouter(
     }
   });
 
+  router.patch('/admin/commission-exceptions/:exceptionId', async (request, response) => {
+    try {
+      await requirePermission(dependencies, response, 'admin:commissions.manage');
+      if (!/^[a-f0-9]{24}$/.test(request.params.exceptionId ?? '')) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
+      const data = await dependencies.service.updateException(claims(response), request.params.exceptionId as string, request.body ?? {}, mutationContext(request));
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
   return router;
 }

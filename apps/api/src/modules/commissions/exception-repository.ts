@@ -23,6 +23,7 @@ export interface CommissionExceptionRepository {
     exception: CommissionException,
     expectedVersion: number
   ): Promise<CommissionExceptionReplaceResult>;
+  replaceWithAudit?(exception: CommissionException, expectedVersion: number, event: AuditRecordInput): Promise<CommissionExceptionReplaceResult>;
 }
 
 function document(value: unknown): Record<string, unknown> {
@@ -90,7 +91,8 @@ export function createMongooseCommissionExceptionRepository(
   async function insert(exception: CommissionException, session?: ClientSession): Promise<CommissionExceptionWriteResult> {
     await ensureIndexes();
     try {
-      await collection.insertOne(exception, session ? { session } : {});
+      // insertOne adds _id to its argument. Keep the contract/audit object clean.
+      await collection.insertOne({ ...exception }, session ? { session } : {});
       return { kind: 'written' };
     } catch (error) {
       if (!session && error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
@@ -142,6 +144,19 @@ export function createMongooseCommissionExceptionRepository(
         { projection: { _id: 0, id: 1 } }
       );
       return current ? { kind: 'version_conflict' } : { kind: 'not_found' };
+    },
+    async replaceWithAudit(exception, expectedVersion, event) {
+      if (!audit) throw new Error('COMMISSION_EXCEPTION_AUDIT_UNAVAILABLE');
+      await ensureIndexes();
+      const session = await connection.startSession();
+      try {
+        return await session.withTransaction(async () => {
+          const result = await collection.replaceOne({ id: exception.id, version: expectedVersion }, { ...exception }, { session });
+          if (result.matchedCount === 1) { await audit.record(event, session); return { kind: 'written' } as const; }
+          const current = await collection.findOne({ id: exception.id }, { session, projection: { id: 1 } });
+          return current ? { kind: 'version_conflict' } as const : { kind: 'not_found' } as const;
+        });
+      } finally { await session.endSession(); }
     }
   };
 }

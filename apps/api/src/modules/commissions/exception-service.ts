@@ -37,7 +37,7 @@ const overlaps = (left: { effectiveFrom: string; effectiveTo?: string | undefine
 const applies = (item: { effectiveFrom: string; effectiveTo?: string | undefined; status: string }, at: Date) =>
   item.status === 'active' && new Date(item.effectiveFrom).getTime() <= at.getTime() && (!item.effectiveTo || new Date(item.effectiveTo).getTime() > at.getTime());
 
-export function createCommissionExceptionService(seed: { exceptions?: CommissionException[]; now?: () => Date; repository?: CommissionExceptionRepository } = {}) {
+export function createCommissionExceptionService(seed: { exceptions?: CommissionException[]; now?: () => Date; repository?: CommissionExceptionRepository; accountExists?: (id: string) => Promise<boolean> } = {}) {
   const exceptions = new Map((seed.exceptions ?? []).map(item => [item.id, item]));
   const repository = seed.repository;
   const clock = seed.now ?? (() => new Date());
@@ -90,7 +90,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
     async createException(claims: AccessTokenClaims, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const parsed = commissionExceptionCreateSchema.parse(input);
-      if (!validAccountId(parsed.accountId)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
+      if (!validAccountId(parsed.accountId) || (seed.accountExists && !await seed.accountExists(parsed.accountId))) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
       if ((await all()).some(item => item.accountId === parsed.accountId && item.effectiveFrom === parsed.effectiveFrom)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
       const stamp = now();
       const exception = commissionExceptionSchema.parse({
@@ -107,7 +107,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
       });
       if (repository) {
         const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_exception', targetId: exception.id,
-          action: 'commission_exception.create', reason: parsed.reason, before: {}, after: exception,
+          action: 'commission_exception.create', reason: `Create exception: ${parsed.reason.replace(/[\u0000-\u001f\u007f]/g, ' ')}`, before: {}, after: exception,
           requestId: context?.requestId ?? 'commission-exception-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(stamp) };
         const result = repository.insertWithAudit ? await repository.insertWithAudit(exception, event) : await repository.insert(exception);
         if (result.kind === 'duplicate') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
@@ -129,7 +129,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
         .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || a.accountId.localeCompare(b.accountId) || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
-    async updateException(claims: AccessTokenClaims, exceptionId: string, input: unknown) {
+    async updateException(claims: AccessTokenClaims, exceptionId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const current = await get(exceptionId);
       const parsed = commissionExceptionPatchSchema.parse(input);
@@ -140,7 +140,10 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
       validateMutation(current, next);
       await validateActive(next, await all());
       if (repository) {
-        const result = await repository.replace(next, current.version);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_exception', targetId: next.id,
+          action: 'commission_exception.update', reason: `Update exception: ${mutationReason.replace(/[\u0000-\u001f\u007f]/g, ' ')}`, before: current, after: next,
+          requestId: context?.requestId ?? 'commission-exception-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(next.updatedAt) };
+        const result = repository.replaceWithAudit ? await repository.replaceWithAudit(next, current.version, event) : await repository.replace(next, current.version);
         if (result.kind === 'not_found') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
         if (result.kind === 'version_conflict') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_VERSION_CONFLICT');
       } else {

@@ -8,6 +8,7 @@ import {
   commissionConfirmationListQuerySchema,
   commissionConfirmationListSuccessEnvelopeSchema,
   commissionExceptionCreateSchema,
+  commissionExceptionPatchSchema,
   commissionExceptionSuccessEnvelopeSchema,
   commissionExceptionListQuerySchema,
   commissionExceptionListSuccessEnvelopeSchema,
@@ -24,6 +25,7 @@ import {
   type CommissionConfirmationListQuery,
   type CommissionException,
   type CommissionExceptionCreate,
+  type CommissionExceptionPatch,
   type CommissionExceptionListData,
   type CommissionExceptionListQuery,
   type CommissionPolicy,
@@ -82,6 +84,7 @@ export type AdminCommissionPolicyLoader = (query: CommissionPolicyListQuery, sig
 export type AdminCommissionPolicyMutation = (input: CommissionPolicyCreate, signal?: AbortSignal) => Promise<CommissionPolicy>;
 export type AdminCommissionExceptionLoader = (query: CommissionExceptionListQuery, signal?: AbortSignal) => Promise<CommissionExceptionListData>;
 export type AdminCommissionExceptionMutation = (input: CommissionExceptionCreate, signal?: AbortSignal) => Promise<CommissionException>;
+export type AdminCommissionExceptionUpdate = (id: string, input: CommissionExceptionPatch) => Promise<CommissionException>;
 export type AdminCommissionAccountLoader = (accountId: string, query?: { readonly at?: string }, signal?: AbortSignal) => Promise<CommissionAccountCommission>;
 export type AdminCommissionAccountMutation = (accountId: string, input: CommissionAccountOverrideCreate, signal?: AbortSignal) => Promise<CommissionAccountOverride>;
 export type AdminCommissionConfirmationLoader = (query: CommissionConfirmationListQuery, signal?: AbortSignal) => Promise<CommissionConfirmationListData>;
@@ -185,6 +188,13 @@ export async function createAdminCommissionException(input: unknown, options: Om
   return response.data.data;
 }
 
+export async function updateAdminCommissionException(id: string, input: CommissionExceptionPatch, options: CommonOptions = {}): Promise<CommissionException> {
+  const response = await clientFor(options).request(`${ADMIN_COMMISSION_EXCEPTIONS_API_ROUTE}/${accountIdForPath(id)}`, {
+    method: 'PATCH', responseSchema: commissionExceptionSuccessEnvelopeSchema, json: commissionExceptionPatchSchema.parse(input), ...requestOptions(options)
+  });
+  return response.data.data;
+}
+
 export async function loadAdminCommissionConfirmations(options: AdminCommissionConfirmationLoadOptions = {}): Promise<CommissionConfirmationListData> {
   const query = commissionConfirmationListQuerySchema.parse({ page: 1, limit: 20, ...options.query });
   const response = await clientFor(options).request(ADMIN_COMMISSION_CONFIRMATIONS_API_ROUTE, {
@@ -213,6 +223,7 @@ export function createAdminCommissionsSource(options: Omit<CommonOptions, 'signa
     createAccountOverride: (accountId: string, input: CommissionAccountOverrideCreate, signal?: AbortSignal) => createAdminAccountCommissionOverride(accountId, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     loadExceptions: (query: CommissionExceptionListQuery, signal?: AbortSignal) => loadAdminCommissionExceptions({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createException: (input: CommissionExceptionCreate, signal?: AbortSignal) => createAdminCommissionException(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    updateException: (id: string, input: CommissionExceptionPatch) => updateAdminCommissionException(id, input, options),
     loadConfirmations: (query: CommissionConfirmationListQuery, signal?: AbortSignal) => loadAdminCommissionConfirmations({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     loadChangeLog: (query: CommissionChangeLogListQuery, signal?: AbortSignal) => loadAdminCommissionChangeLog({ ...options, query, ...(signal === undefined ? {} : { signal }) })
   };

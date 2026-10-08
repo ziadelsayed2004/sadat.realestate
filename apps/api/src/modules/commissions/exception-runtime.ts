@@ -1,4 +1,4 @@
-import type { Connection } from 'mongoose';
+import { Types, type Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { RbacService } from '../rbac/service.js';
 import { createMongooseCommissionExceptionRepository } from './exception-repository.js';
@@ -16,7 +16,8 @@ export function createCommissionExceptionRuntime(
     accessTokens,
     authorization,
     service: createCommissionExceptionService({
-      repository: createMongooseCommissionExceptionRepository(connection, audit)
+      repository: createMongooseCommissionExceptionRepository(connection, audit),
+      accountExists: async id => Boolean(await connection.collection('users').findOne({ _id: new Types.ObjectId(id), roleType: 'provider', status: { $ne: 'deleted' } }, { projection: { _id: 1 } }))
     })
   };
 }
