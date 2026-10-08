@@ -28,6 +28,8 @@ test('saved banner content reopens and replaces the default sentence on the home
   const home = publicHomepageFixture().data;
   await page.route('**/api/v1/public/home', route => route.fulfill({ json: { data: { ...home, banners: [{ key: `banner_${adminHomeBannerId}`, title: { ar: 'عنوان البانر', en: 'Banner title' }, body, imageUrl: '/assets/canonical/public/home-hero-sadat-city.png', order: 0 }] }, meta: { requestId: 'owned-home-content' } } }));
   await page.goto(`/?lang=${locale}`);
+  await page.clock.runFor(2000);
+  await expect(page.locator('#site-intro')).toBeHidden();
   await expect(page.locator('.public-homepage__hero-body')).toHaveText(body[locale]);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(locale === 'ar' ? 'عنوان البانر' : 'Banner title');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
