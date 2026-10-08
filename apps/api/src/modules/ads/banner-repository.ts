@@ -186,7 +186,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     const start = new Date(next.startAt).getTime();
     if (next.status === 'scheduled' && currentAt.getTime() >= start) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (next.status === 'active' && (currentAt.getTime() < start || currentAt.getTime() >= end)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
-    const overlap = await banners.findOne({
+    const overlap = next.placementKey === 'homepage.hero' ? null : await banners.findOne({
       _id: { $ne: objectId(next.id) },
       placementKey: next.placementKey,
       status: { $in: LIVE_STATUSES },

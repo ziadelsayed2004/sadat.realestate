@@ -314,3 +314,32 @@ test('banners enforce admin media ownership, lifecycle publication, localization
   assert.deepEqual(reordered.map(item => item.id), [second.id, active.id]);
   await assert.rejects(() => service.updateBannerMedia(seeker, media.id, { expectedVersion: media.version, reason: 'IDOR', width: 900 }), /FORBIDDEN/);
 });
+
+test('publishes overlapping homepage banners for rotation and preserves editable paragraphs', async () => {
+  const service = createAdSettingsService({ now: () => new Date('2026-08-20T10:00:00Z') });
+  await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['en'], targetUrlRequired: false });
+  const settings = await service.getSettings(admin);
+  await service.updateSettings(admin, { expectedVersion: settings.version, reason: 'Enable rotation', patch: { enabled: true } });
+  for (const title of ['First campaign', 'Second campaign']) {
+    const banner = await service.createBanner(admin, { placementKey: 'homepage.hero', title: { en: title }, body: { en: `${title} description` }, startAt: '2026-08-20T09:00:00Z', endAt: '2026-08-21T09:00:00Z' });
+    const media = await service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/ad.png', mime: 'image/png', width: 1200, height: 400 });
+    const active = await service.updateBanner(admin, banner.id, { expectedVersion: banner.version, reason: 'Publish campaign', mediaId: media.id, status: 'active' });
+    assert.equal(active.status, 'active');
+    assert.equal(active.body?.en, `${title} description`);
+    const cleared = await service.updateBanner(admin, banner.id, { expectedVersion: active.version, reason: 'Clear description', body: null });
+    assert.equal(cleared.body, undefined);
+  }
+});
+
+test('rotation preserves the overlap restriction for other placements', async () => {
+  const service = createAdSettingsService({ now: () => new Date('2026-08-20T10:00:00Z') });
+  await service.createPlacement(admin, { key: 'homepage.fixed', surface: 'homepage', label: { en: 'Fixed' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['en'], targetUrlRequired: false });
+  await service.updateSettings(admin, { expectedVersion: 0, reason: 'Enable display', patch: { enabled: true } });
+  for (const [index, title] of ['First fixed banner', 'Second fixed banner'].entries()) {
+    const banner = await service.createBanner(admin, { placementKey: 'homepage.fixed', title: { en: title }, startAt: '2026-08-20T09:00:00Z', endAt: '2026-08-21T09:00:00Z' });
+    const media = await service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/ad.png', mime: 'image/png', width: 1200, height: 400 });
+    const publish = () => service.updateBanner(admin, banner.id, { expectedVersion: banner.version, reason: 'Publish fixed placement', mediaId: media.id, status: 'active' });
+    if (index === 0) assert.equal((await publish()).status, 'active');
+    else await assert.rejects(publish, /PLACEMENT_CONFLICT/);
+  }
+});

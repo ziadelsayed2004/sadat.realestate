@@ -316,7 +316,7 @@ export function createAdSettingsService(seed: {
     if (banner.status === 'active' && (currentAt < startsAt || currentAt >= endsAt)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (banner.status === 'ended' && currentAt < endsAt) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (isBannerLiveState(banner.status)) {
-      const overlap = [...banners.values()].some(item => item.id !== banner.id && item.placementKey === banner.placementKey && isBannerLiveState(item.status) && startsAt < new Date(item.endAt).getTime() && endsAt > new Date(item.startAt).getTime());
+      const overlap = banner.placementKey !== 'homepage.hero' && [...banners.values()].some(item => item.id !== banner.id && item.placementKey === banner.placementKey && isBannerLiveState(item.status) && startsAt < new Date(item.endAt).getTime() && endsAt > new Date(item.startAt).getTime());
       if (overlap) throw new AdBannerServiceError('PLACEMENT_CONFLICT');
     }
   };
@@ -448,7 +448,7 @@ export function createAdSettingsService(seed: {
       const endsAt = new Date(request.intervalEnd ?? '').getTime();
       if ((parsed.status === 'scheduled' || parsed.status === 'active') && (!Number.isFinite(endsAt) || !Number.isFinite(startsAt) || currentAt >= endsAt)) throw new AdSettingsServiceError('VERSION_CONFLICT');
       if (parsed.status === 'active' && (currentAt < startsAt || currentAt >= endsAt)) throw new AdSettingsServiceError('VERSION_CONFLICT');
-      if ((parsed.status === 'scheduled' || parsed.status === 'active') && [...requests.values()].some(item => item.id !== request.id && item.placementKey === request.placementKey && ['scheduled', 'active'].includes(item.status) && startsAt < new Date(item.intervalEnd ?? '').getTime() && endsAt > new Date(item.intervalStart ?? '').getTime())) throw new AdSettingsServiceError('PLACEMENT_CONFLICT');
+      if (request.placementKey !== 'homepage.hero' && (parsed.status === 'scheduled' || parsed.status === 'active') && [...requests.values()].some(item => item.id !== request.id && item.placementKey === request.placementKey && ['scheduled', 'active'].includes(item.status) && startsAt < new Date(item.intervalEnd ?? '').getTime() && endsAt > new Date(item.intervalStart ?? '').getTime())) throw new AdSettingsServiceError('PLACEMENT_CONFLICT');
       if (parsed.status === 'ended' && currentAt < endsAt) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const updated = adRequestSchema.parse({ ...request, status: parsed.status, version: request.version + 1, updatedAt: now() });
       if (seed.requestRepository) {
