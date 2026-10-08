@@ -1,0 +1,3 @@
+.public-tip-card { display: grid; align-content: start; gap: 14px; min-width: 0; padding: 24px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; box-shadow: 0 6px 18px rgb(50 50 50 / 5%); overflow-wrap: anywhere; }
+.public-tip-card h3 { margin: 0; color: #164f40; font-size: 1.15rem; line-height: 1.6; }
+.public-tip-card p { margin: 0; color: #5e6b80; font-size: 1rem; line-height: 1.8; white-space: pre-wrap; }

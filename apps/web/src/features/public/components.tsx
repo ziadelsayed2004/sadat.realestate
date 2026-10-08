@@ -1,3 +1,4 @@
+import { TipCard } from './tip-card.tsx';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
@@ -1000,6 +1001,7 @@ function ContentGrid({
       <div className="public-homepage__content-grid">
         {items.map(item => {
           const body = localizedText(item.body, locale);
+          if (type === 'tip') return <TipCard key={item.key} title={localizedText(item.title, locale) ?? item.key} body={body ?? ''} />;
           const bodyLines = body?.split('\n').filter(Boolean) ?? [];
           const contentType = type === 'community'
             ? item.key === 'community_events' ? copy.communityQuestion : copy.communityExperience
@@ -1257,6 +1259,7 @@ function HomepageContent({
       )}
       <ContentGrid locale={locale} copy={copy} type="article" content={content} />
       <ContentGrid locale={locale} copy={copy} type="community" content={content} />
+      <ContentGrid locale={locale} copy={copy} type="tip" content={content} />
       <HomepageAbout locale={locale} copy={copy} content={content} />
       <PlatformCallout copy={copy} />
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />

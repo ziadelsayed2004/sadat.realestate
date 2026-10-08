@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   adBannerListDataSchema,
   cmsAdminContentDataSchema,
@@ -228,7 +228,11 @@ describe('Admin banners, tips, and homepage administration', () => {
     const source = createAdminHomeSource({ apiClient: apiClientFor(requests) });
     renderWithLocale(<AdminHome url="/admin/content/tips" locale="en" session={session} initialContent={tips} source={source} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId(`admin-home-tips-${tipId}`)).toBeInTheDocument());
-    fireEvent.click(screen.getByTestId(`admin-home-tips-${tipId}`).querySelector('button')!);
+    fireEvent.click(Array.from(screen.getByTestId(`admin-home-tips-${tipId}`).querySelectorAll('button')).find(button => button.textContent === 'Edit')!);
+    fireEvent.change(within(screen.getByRole('group', { name: 'Title' })).getByLabelText('English'), { target: { value: 'Unsaved tip title' } });
+    fireEvent.change(within(screen.getByRole('group', { name: getAdminHomeCopy('en').body })).getByLabelText('English'), { target: { value: 'Unsaved preview text' } });
+    expect(screen.getByRole('complementary', { name: 'Content preview' })).toHaveTextContent('Unsaved tip title');
+    expect(screen.getByRole('complementary', { name: 'Content preview' })).toHaveTextContent('Unsaved preview text');
     fireEvent.submit(screen.getByTestId('admin-home-tips-editor').querySelector('form')!);
     expect(screen.getByText('A change reason is required.')).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Update approved tip' } });
