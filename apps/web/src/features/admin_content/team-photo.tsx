@@ -54,7 +54,7 @@ export function TeamPhoto({ member, locale, disabled, upload, load, onChange, on
   };
   return <fieldset className="admin-content__team-photo" disabled={disabled || busy}>
     <legend>{copy.photo.title}</legend>
-    {preview ? <img src={preview} alt={copy.photo.preview} width="160" height="200" /> : null}
+    {preview ? <img src={preview} alt={copy.photo.preview} width="240" height="144" /> : null}
     <label htmlFor="admin-cms-team-photo">{hasPhoto ? copy.photo.replace : copy.photo.choose}
       <input id="admin-cms-team-photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file); }} aria-describedby="admin-cms-team-photo-hint" />
     </label>

@@ -421,7 +421,7 @@
 }
 
 .public-team__media {
-  aspect-ratio: 4 / 5;
+  block-size: 13rem;
   overflow: hidden;
   background: var(--color-surface-soft);
 }
@@ -430,8 +430,8 @@
   display: block;
   inline-size: 100%;
   block-size: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .public-team__media-fallback,

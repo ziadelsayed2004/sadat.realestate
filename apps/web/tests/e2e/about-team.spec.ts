@@ -41,7 +41,8 @@ async function routeAboutTeamApi(page: import('@playwright/test').Page) {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(aboutFixture()) });
   });
   await page.route('**/api/v1/public/team', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...teamFixture(), data: publicTeamFixture().data }) });
+    const team = publicTeamFixture().data;
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...teamFixture(), data: { ...team, items: team.items.map((member, index) => ({ ...member, imageUrl: `/assets/canonical/public/team-asset-${index + 1}.png` })) } }) });
   });
 }
 
@@ -82,5 +83,12 @@ test('public Team renders safe published projections across approved locales and
   await expect(team.locator('.public-team__card')).toHaveCount(2);
   await team.locator('.public-team__filters button', { hasText: locale === 'ar' ? 'الكل' : 'All' }).click();
   await expect(team.locator('.public-team__card')).toHaveCount(6);
+  // Load deferred portraits before comparing the whole page, preserving lazy loading in production.
+  for (const photo of await team.locator('.public-team__photo').all()) {
+    await photo.scrollIntoViewIfNeeded();
+    await expect(photo).toHaveCSS('object-fit', 'cover');
+    await expect.poll(() => photo.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
   await expect(page).toHaveScreenshot(`public-team-${locale}.png`, { fullPage: true });
 });

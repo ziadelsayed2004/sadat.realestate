@@ -1184,7 +1184,7 @@
       "replace": "Replace image",
       "preview": "Team member photo preview",
       "remove": "Remove image",
-      "hint": "Recommended: 800 px wide × 1000 px high (4:5). The full image is shown without cropping. Upload JPG, PNG or WebP up to 10 MB, then save the member to display it.",
+      "hint": "Recommended: 1200 px wide × 720 px high (landscape, 5:3). Keep the face away from the edges. The image fills the card; other proportions are cropped to avoid empty space. Upload JPG, PNG or WebP up to 10 MB, then save the member to display it.",
       "uploading": "Uploading and checking the image…",
       "uploaded": "Image uploaded. Save the member changes to keep it.",
       "removed": "Image removal selected. Save changes to confirm removal.",

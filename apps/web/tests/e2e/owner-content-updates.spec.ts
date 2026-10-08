@@ -49,7 +49,7 @@ test('saves an unfinished article with an uploaded cover, reopens it and preview
   await page.screenshot({ path: info.outputPath('article-draft-preview.png'), fullPage: true });
 });
 
-test('creates a department, assigns a member and filters the public team with a full portrait', async ({ page }, info) => {
+test('creates a department, assigns a member and filters the public team with a filled photo frame', async ({ page }, info) => {
   const locale = info.project.name.endsWith('-en') ? 'en' : 'ar'; const copy = getAdminCmsCopy(locale);
   await authenticate(page);
   const fixture = adminCmsContentFor('team'); let member = cmsAdminTeamMemberSchema.parse({ ...fixture.items[0], category: 'management', imageUrl: '/qa-portrait.png' });
@@ -76,7 +76,7 @@ test('creates a department, assigns a member and filters the public team with a 
   await expect(editor).toHaveCount(0); expect(selected).toBe('marketing');
   await page.goto(`/team?lang=${locale}`); await page.getByRole('button', { name: locale === 'ar' ? 'التسويق' : 'Marketing', exact: true }).click();
   await expect(page.locator('[data-team-category="marketing"]')).toHaveCount(1);
-  await expect(page.locator('.public-team__photo')).toHaveCSS('object-fit', 'contain');
+  await expect(page.locator('.public-team__photo')).toHaveCSS('object-fit', 'cover');
   await page.getByRole('button', { name: locale === 'ar' ? 'إدارة' : 'Management', exact: true }).click(); await expect(page.locator('.public-team__card')).toHaveCount(0);
   await page.getByRole('button', { name: locale === 'ar' ? 'التسويق' : 'Marketing', exact: true }).click();
   await page.screenshot({ path: info.outputPath('custom-team-category.png'), fullPage: true });
