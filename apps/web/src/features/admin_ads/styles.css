@@ -53,6 +53,9 @@
 .admin-ads__proof-details { padding: 0; border: 0; box-shadow: none; }
 .admin-ads__proof-details dd { min-width: 0; overflow-wrap: anywhere; }
 .admin-ads__proof-details a { color: #145649; }
+.admin-ads__delivery p { line-height: 1.7; }
+.admin-ads__delivery-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.admin-ads__delivery-links a { min-height: 44px; max-width: 100%; white-space: normal; text-decoration: none; }
 .admin-ads__table small,
 .admin-ads__stacked-value { display: block; margin-block-start: 5px; color: #68768b; font-size: .78rem; }
 .admin-ads__badge { display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }

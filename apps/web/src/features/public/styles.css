@@ -689,6 +689,14 @@
   height: 1rem;
 }
 
+.public-homepage__hero-ad-link {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-block-size: 2.75rem;
+  justify-content: center;
+  margin-inline: auto;
+}
+
 .public-homepage__banner-dots {
   display: flex;
   align-items: center;

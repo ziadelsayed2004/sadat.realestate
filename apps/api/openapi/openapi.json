@@ -7040,6 +7040,15 @@
         ],
         "parameters": [
           {
+            "name": "adRequestId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "description": "Only banners associated with this advertising request."
+          },
+          {
             "name": "placementKey",
             "in": "query",
             "schema": {
@@ -13599,6 +13608,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "adRequestId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$",
+            "description": "Immutable advertising request associated with this banner."
           }
         }
       },
@@ -13645,6 +13659,11 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "adRequestId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$",
+            "description": "Immutable advertising request associated with this banner."
           }
         }
       },

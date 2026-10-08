@@ -3590,8 +3590,17 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{apiV1BaseUrl}}/admin/banners?placement=homepage&status=all&page=1&limit=20"
-                }
+                  "raw": "{{apiV1BaseUrl}}/admin/banners?placement=homepage&status=all&page=1&limit=20",
+                  "query": [
+                    {
+                      "key": "adRequestId",
+                      "value": "{{adRequestId}}",
+                      "disabled": true,
+                      "description": "Filter banners belonging to an advertising request."
+                    }
+                  ]
+                },
+                "description": "Optional adRequestId filters banners linked to that advertising request. Linked banner creation uses the same placement and window as the request; publication requires request scheduling and approved payment or a recorded waiver."
               }
             },
             {

@@ -9,11 +9,13 @@ import {
 } from '@sadat-real-estate/contracts';
 import { AdBannerServiceError, type AdBannerRepository } from './service.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { validateBannerCampaign } from './banner-campaign.js';
 
 type BannerStatus = AdBanner['status'];
 
 interface BannerRow {
   _id: Types.ObjectId;
+  adRequestId?: Types.ObjectId;
   placementKey: AdBanner['placementKey'];
   title: AdBanner['title'];
   altText?: AdBanner['altText'];
@@ -79,6 +81,7 @@ function duplicate(error: unknown): boolean {
 function toBanner(row: BannerRow): AdBanner {
   return adBannerSchema.parse({
     id: row._id.toHexString(),
+    ...(row.adRequestId ? { adRequestId: row.adRequestId.toHexString() } : {}),
     placementKey: row.placementKey,
     title: row.title,
     ...(row.altText === undefined ? {} : { altText: row.altText }),
@@ -126,6 +129,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
   function ensureIndexes(): Promise<unknown> {
     indexesReady ??= Promise.all([
       banners.createIndex({ placementKey: 1, status: 1, sortOrder: 1, _id: 1 }, { name: 'ad_banners_placement_status_order' }),
+      banners.createIndex({ adRequestId: 1, status: 1 }, { name: 'ad_banners_request_status' }),
       banners.createIndex({ placementKey: 1, startAt: 1, endAt: 1, status: 1 }, { name: 'ad_banners_placement_window' }),
       media.createIndex({ bannerId: 1, active: 1, updatedAt: -1, _id: -1 }, { name: 'ad_banner_media_banner_active' }),
       media.createIndex({ bannerId: 1, _id: 1 }, { name: 'ad_banner_media_banner_id' })
@@ -160,6 +164,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     const end = new Date(next.endAt).getTime();
     if (next.status === 'ended' && currentAt.getTime() < end) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (!isLive(next.status)) return;
+    await validateCampaign(next, session);
     const linkedMedia = next.mediaId === undefined
       ? undefined
       : await media.findOne({ _id: objectId(next.mediaId), bannerId: objectId(next.id), active: true }, session ? { session } : {});
@@ -185,6 +190,16 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     if (next.status === 'active') {
       const activeCount = await banners.countDocuments({ status: 'active', _id: { $ne: objectId(next.id) } }, session ? { session } : {});
       if (activeCount >= (currentSettings.maxActiveBanners ?? 100)) throw new AdBannerServiceError('BANNER_CAPACITY');
+    }
+  }
+
+  async function validateCampaign(banner: AdBanner, session?: ClientSession): Promise<void> {
+    if (!banner.adRequestId) return;
+    const request = await connection.collection('ad_requests').findOne({ _id: objectId(banner.adRequestId) }, session ? { session } : {});
+    validateBannerCampaign(banner, request ? { id: request._id.toHexString(), status: request.status, placementKey: request.placementKey, intervalStart: request.intervalStart?.toISOString(), intervalEnd: request.intervalEnd?.toISOString() } : undefined);
+    if (isLive(banner.status) && request && !request.paymentWaiver) {
+      const proof = await connection.collection('payment_proofs').findOne({ adRequestId: request._id, providerId: request.providerId, active: true, status: 'approved', securityState: 'clean' }, session ? { session, projection: { _id: 1 } } : { projection: { _id: 1 } });
+      if (!proof) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     }
   }
 
@@ -222,6 +237,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
       });
       const row: BannerRow = {
         _id: objectId(banner.id, 'FORBIDDEN'),
+        ...(banner.adRequestId ? { adRequestId: objectId(banner.adRequestId) } : {}),
         placementKey: banner.placementKey,
         title: banner.title,
         ...(banner.altText === undefined ? {} : { altText: banner.altText }),
@@ -238,6 +254,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         updatedAt: now
       };
       const write = async (session?: ClientSession): Promise<AdBanner> => {
+        await validateCampaign(banner, session);
         await findPlacement(input.placementKey, session);
         await placements.updateOne({ key: input.placementKey }, { $inc: { bannerWriteVersion: 1 } }, session ? { session } : {});
         if (input.sortOrder === undefined) {
@@ -270,6 +287,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     async listBanners(query) {
       await ensureIndexes();
       const filter: Record<string, unknown> = {};
+      if (query.adRequestId) filter.adRequestId = objectId(query.adRequestId);
       if (query.placementKey) filter.placementKey = query.placementKey;
       if (query.status) filter.status = query.status;
       const [rows, total] = await Promise.all([

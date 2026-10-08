@@ -142,6 +142,7 @@ export const adBannerMediaDeleteSchema = z.object({ expectedVersion: z.number().
 
 export const adBannerSchema = z.object({
   id,
+  adRequestId: id.optional(),
   placementKey,
   title: localizedTextSchema,
   altText: localizedTextSchema.optional(),
@@ -158,6 +159,7 @@ export const adBannerSchema = z.object({
   updatedAt: z.string().datetime({ offset: true })
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerCreateSchema = z.object({
+  adRequestId: id.optional(),
   placementKey,
   title: localizedTextSchema,
   altText: localizedTextSchema.optional(),
@@ -184,6 +186,7 @@ export const adBannerPatchSchema = z.object({
   if (Object.keys(value).every(key => ['expectedVersion', 'reason'].includes(key))) ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'At least one banner field must be changed' });
 });
 export const adBannerListQuerySchema = z.object({
+  adRequestId: id.optional(),
   placementKey: placementKey.optional(),
   status: adBannerStatusSchema.optional(),
   page: z.preprocess(value => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000)),

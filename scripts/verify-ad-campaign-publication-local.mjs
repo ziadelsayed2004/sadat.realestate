@@ -1,0 +1,56 @@
+import assert from 'node:assert/strict';
+import mongoose from 'mongoose';
+import { randomUUID } from 'node:crypto';
+import { createMongooseAdBannerRepository } from '../apps/api/src/modules/ads/banner-repository.ts';
+import { readPublishedBannerRows } from '../apps/api/src/modules/ads/banner-management.ts';
+
+const database = `qa_ad_campaign_${randomUUID().replaceAll('-', '')}`;
+const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27031/${database}?replicaSet=adcampaignqa`).asPromise();
+const ids = () => new mongoose.Types.ObjectId();
+const requestId = ids(); const providerId = ids(); const actorId = ids().toHexString();
+const at = new Date();
+const startAt = new Date(at.getTime() - 3600_000); const endAt = new Date(at.getTime() + 3600_000);
+const metadata = { requestId: 'campaign-local-check', traceId: 'a'.repeat(32) };
+const repository = createMongooseAdBannerRepository(connection, { async record() { return ids().toHexString(); } });
+const checks = [];
+try {
+  await connection.collection('ad_settings').insertOne({ enabled: true, allowedSurfaces: ['homepage'], maxActiveBanners: 100 });
+  await connection.collection('ad_placements').insertOne({ key: 'homepage.hero', surface: 'homepage', active: true, targetUrlRequired: false, sortOrder: 0 });
+  await connection.collection('ad_requests').insertOne({ _id: requestId, providerId, status: 'waiting_payment', placementKey: 'homepage.hero', intervalStart: startAt, intervalEnd: endAt });
+  const input = { adRequestId: requestId.toHexString(), placementKey: 'homepage.hero', title: { ar: 'إعلان العقار', en: 'Property advertisement' }, targetUrl: 'https://elsadatrealestate.com/properties/qa-property', startAt: startAt.toISOString(), endAt: endAt.toISOString() };
+  await assert.rejects(repository.createBanner(actorId, { ...input, adRequestId: ids().toHexString() }, at, metadata), /NOT_FOUND/);
+  await assert.rejects(repository.createBanner(actorId, { ...input, endAt: new Date(endAt.getTime() + 60_000).toISOString() }, at, metadata), /BANNER_INVALID_STATE/);
+  checks.push('unknown_request_and_changed_window_rejected');
+  const draft = await repository.createBanner(actorId, input, at, metadata);
+  assert.equal(draft.adRequestId, requestId.toHexString());
+  assert.equal((await repository.listBanners({ adRequestId: requestId.toHexString(), page: 1, limit: 20 })).items[0].id, draft.id);
+  assert.equal((await repository.listBanners({ adRequestId: ids().toHexString(), page: 1, limit: 20 })).total, 0);
+  const media = await repository.createBannerMedia(actorId, draft.id, { url: 'https://example.com/ad.png', mime: 'image/png', width: 1200, height: 400 }, at);
+  const attached = await repository.updateBanner(actorId, draft.id, { mediaId: media.id, expectedVersion: draft.version, reason: 'Attach advertisement image' }, at, metadata);
+  const publish = () => repository.updateBanner(actorId, attached.id, { status: 'active', expectedVersion: attached.version, reason: 'Publish paid advertisement' }, at, metadata);
+  await assert.rejects(publish(), /BANNER_INVALID_STATE/);
+  await connection.collection('ad_requests').updateOne({ _id: requestId }, { $set: { status: 'scheduled' } });
+  await assert.rejects(publish(), /BANNER_INVALID_STATE/);
+  await connection.collection('payment_proofs').insertOne({ adRequestId: requestId, providerId: ids(), status: 'approved', securityState: 'clean', active: true });
+  await assert.rejects(publish(), /BANNER_INVALID_STATE/);
+  checks.push('publication_requires_scheduled_request_and_own_approved_receipt');
+  const proofId = ids();
+  await connection.collection('payment_proofs').insertOne({ _id: proofId, adRequestId: requestId, providerId, status: 'approved', securityState: 'clean', active: true });
+  const published = await publish();
+  assert.equal(published.status, 'active');
+  assert.equal((await readPublishedBannerRows(connection, at))[0].targetUrl, input.targetUrl);
+  assert.equal((await readPublishedBannerRows(connection, new Date(endAt.getTime() + 1))).length, 0);
+  checks.push('published_ad_is_visible_only_during_its_window_with_selected_property_url');
+  await connection.collection('payment_proofs').updateOne({ _id: proofId }, { $set: { active: false } });
+  assert.equal((await readPublishedBannerRows(connection, at)).length, 0);
+  await connection.collection('ad_requests').updateOne({ _id: requestId }, { $set: { paymentWaiver: { actorId: new mongoose.Types.ObjectId(actorId), reason: 'Approved free advertising' } } });
+  assert.equal((await readPublishedBannerRows(connection, at)).length, 1);
+  checks.push('revoked_payment_hides_ad_and_recorded_waiver_allows_it');
+  await connection.collection('ad_requests').updateOne({ _id: requestId }, { $set: { status: 'cancelled' } });
+  assert.equal((await readPublishedBannerRows(connection, at)).length, 0);
+  checks.push('cancelled_request_hides_published_ad');
+  console.log(JSON.stringify({ status: 'PASS', checks, databaseIsolated: true }));
+} finally {
+  await connection.dropDatabase();
+  await connection.close();
+}

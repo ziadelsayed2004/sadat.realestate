@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { validateBannerCampaign } from './banner-campaign.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import { DEFAULT_ADVERTISING_RUNTIME_SETTINGS, type AdvertisingRuntimeSettings, type AdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { resolveLocalizedText } from '../quality/localization-audit.js';
@@ -516,6 +517,7 @@ export function createAdSettingsService(seed: {
       if ([...banners.values()].some(item => item.placementKey === parsed.placementKey && item.sortOrder === parsed.sortOrder && item.status !== 'archived')) throw new AdBannerServiceError('DUPLICATE');
       const stamp = now();
       const banner = adBannerSchema.parse({ id: id(), ...parsed, sortOrder: parsed.sortOrder ?? Math.max(-1, ...[...banners.values()].filter(item => item.placementKey === parsed.placementKey).map(item => item.sortOrder)) + 1, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
+      if (banner.adRequestId) validateBannerCampaign(banner, seed.requestRepository ? await seed.requestRepository.getRequest(banner.adRequestId) : requests.get(banner.adRequestId));
       banners.set(banner.id, banner);
       return banner;
     },
@@ -523,7 +525,7 @@ export function createAdSettingsService(seed: {
       const query = adBannerListQuerySchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.view');
       if (seed.bannerRepository) return seed.bannerRepository.listBanners(query);
-      const values = [...banners.values()].filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.status || item.status === query.status)).sort((a, b) => a.placementKey.localeCompare(b.placementKey) || a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
+      const values = [...banners.values()].filter(item => (!query.adRequestId || item.adRequestId === query.adRequestId) && (!query.placementKey || item.placementKey === query.placementKey) && (!query.status || item.status === query.status)).sort((a, b) => a.placementKey.localeCompare(b.placementKey) || a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
     async updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown, context?: { requestId: string; traceId: string }) {
@@ -540,6 +542,7 @@ export function createAdSettingsService(seed: {
       if (changes.mediaId === null) delete nextInput.mediaId;
       if (changes.targetUrl === null) delete nextInput.targetUrl;
       const next = adBannerSchema.parse(nextInput);
+      if (next.adRequestId && isBannerLiveState(next.status)) validateBannerCampaign(next, seed.requestRepository ? await seed.requestRepository.getRequest(next.adRequestId) : requests.get(next.adRequestId));
       const currentStatus = current.status;
       if (next.status !== currentStatus && !BANNER_TRANSITIONS[currentStatus].includes(next.status)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
       if (next.status === currentStatus && next.version !== current.version + 1) throw new AdBannerServiceError('VERSION_CONFLICT');

@@ -27,6 +27,20 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     { $lookup: { from: 'ad_banner_media', localField: 'mediaId', foreignField: '_id', as: 'media' } },
     { $unwind: '$media' },
     { $match: { 'media.active': true, $expr: { $and: [{ $eq: ['$media.bannerId', '$_id'] }, { $or: [{ $ne: ['$placement.targetUrlRequired', true] }, { $gt: [{ $strLenCP: { $ifNull: ['$targetUrl', ''] } }, 0] }] }] } } },
+    { $lookup: { from: 'ad_requests', localField: 'adRequestId', foreignField: '_id', as: 'campaign' } },
+    { $unwind: { path: '$campaign', preserveNullAndEmptyArrays: true } },
+    { $lookup: { from: 'payment_proofs', let: { requestId: '$adRequestId', providerId: '$campaign.providerId' }, pipeline: [{ $match: { active: true, status: 'approved', securityState: 'clean', $expr: { $and: [{ $eq: ['$adRequestId', '$$requestId'] }, { $eq: ['$providerId', '$$providerId'] }] } } }, { $limit: 1 }, { $project: { _id: 1 } }], as: 'campaignPayment' } },
+    { $match: { $expr: { $or: [
+      { $eq: [{ $ifNull: ['$adRequestId', null] }, null] },
+      { $and: [
+        { $in: ['$campaign.status', ['scheduled', 'active']] },
+        { $eq: ['$campaign.placementKey', '$placementKey'] },
+        { $eq: ['$campaign.intervalStart', '$startAt'] },
+        { $eq: ['$campaign.intervalEnd', '$endAt'] },
+        { $gt: [{ $strLenCP: { $ifNull: ['$targetUrl', ''] } }, 0] },
+        { $or: [{ $ne: [{ $ifNull: ['$campaign.paymentWaiver.actorId', null] }, null] }, { $gt: [{ $size: '$campaignPayment' }, 0] }] }
+      ] }
+    ] } } },
     { $sort: { 'placement.sortOrder': 1, sortOrder: 1, _id: 1 } },
     { $limit: Math.min(1000, Math.max(1, Number(settings.maxActiveBanners) || 100)) },
     { $project: { _id: 1, title: 1, altText: 1, targetUrl: 1, mediaId: 1, 'media.url': 1 } }

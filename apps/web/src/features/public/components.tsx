@@ -735,6 +735,7 @@ function Hero({
   const section = sections[0];
   const banner = banners.find(item => !item.key.startsWith('banner-'));
   const managed = banner?.key.startsWith('banner_');
+  const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
   const body = localizedText(section?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
@@ -749,6 +750,7 @@ function Hero({
         <p className="public-homepage__eyebrow">{copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
+        {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>

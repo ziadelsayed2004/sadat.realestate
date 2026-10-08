@@ -106,6 +106,14 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it('does not load a linked customer request before an administrator is authenticated', async () => {
+    const requests: Array<{ method: string; path: string; body: unknown }> = [];
+    const source = createAdminHomeSource({ apiClient: apiClientFor(requests) });
+    renderWithLocale(<AdminHome url={`/admin/banners/new?requestId=${bannerId}`} locale="ar" session={{ status: 'anonymous' }} source={source} />, { locale: 'ar' });
+    await waitFor(() => expect(document.querySelector('[data-admin-home-state="permission"]')).toBeInTheDocument());
+    expect(screen.queryByTestId('admin-home-banner-editor')).not.toBeInTheDocument();
+    expect(requests).toHaveLength(0);
+  });
   it.each(['ar', 'en'] as const)('explains a missing banner placement in %s without exposing message keys', async locale => {
     const copy = getAdminHomeCopy(locale);
     const client = new ApiClient({ fetcher: async () => { throw new ApiClientError('errors.notFound', { code: 'HTTP_ERROR', status: 404 }); } });

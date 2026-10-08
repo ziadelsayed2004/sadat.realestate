@@ -38,6 +38,7 @@ import {
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { loadAdminAdRequest } from '../admin_ads/data.ts';
 
 export const ADMIN_BANNERS_ROUTE = '/admin/banners' as const;
 export const ADMIN_BANNER_MEDIA_ROUTE = '/admin/banner-media' as const;
@@ -210,6 +211,7 @@ export async function updateAdminHomeContent(namespace: AdminHomeCmsNamespace, i
 
 export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    loadAdRequest: (id: string, signal?: AbortSignal) => loadAdminAdRequest(id, { ...options, ...(signal ? { signal } : {}) }),
     loadBannerConfig: async () => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
     updateBannerConfig: async (input: unknown) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { method: 'PUT', json: adBannerConfigPutSchema.parse(input), responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
     uploadBannerImage: async (id: string, file: File) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/upload`, { method: 'POST', body: file, responseSchema: adBannerMediaSuccessEnvelopeSchema, ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type } })).data.data,
