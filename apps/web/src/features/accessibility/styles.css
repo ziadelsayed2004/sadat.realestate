@@ -39,6 +39,13 @@
   box-shadow: 0 0 0 6px var(--color-surface);
 }
 
+/* Route announcements retain focus for assistive technology. Touch/pointer
+ * navigation should not inherit Safari's previous keyboard focus outline. */
+#app h1[data-navigation-focus="pointer"]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Native outlines render as sharp rectangles around rounded selects on touch Chromium. */
 :where(select:not(.a11y-visually-hidden)) {
   -webkit-tap-highlight-color: transparent;

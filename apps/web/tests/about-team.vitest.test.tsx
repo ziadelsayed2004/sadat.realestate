@@ -31,6 +31,18 @@ const teamData = cmsPublicContentListDataSchema.parse({
 });
 
 describe('public About and Team content', () => {
+  it('prioritizes the first visible portrait and defers later portraits after filtering', () => {
+    const data = cmsPublicContentListDataSchema.parse({ items: ['management', 'sales', 'sales'].map((category, index) => ({
+      ...teamData.items[0], key: `member_${index}`, category, imageUrl: `/api/v1/public/team-photos/${index}`, order: index
+    })) });
+    renderWithLocale(<PublicTeam locale="en" initialData={data} />, { locale: 'en' });
+    const portraits = () => [...document.querySelectorAll('.public-team__photo')];
+    expect(portraits().map(image => image.getAttribute('loading'))).toEqual(['eager', 'lazy', 'lazy']);
+    fireEvent.click(screen.getByRole('button', { name: 'Sales' }));
+    expect(portraits().map(image => image.getAttribute('loading'))).toEqual(['eager', 'lazy']);
+    expect(portraits()[0]).toHaveAttribute('src', '/api/v1/public/team-photos/1');
+  });
+
   it.each(['ar', 'en'] as const)('shows saved statistics and hides unchecked cards in %s', locale => {
     const data = cmsPublicContentListDataSchema.parse({ items: [{ ...aboutData.items[0], key: 'about_intro', stats: [
       { value: '0', label: { ar: 'عقاراتنا المعدلة', en: 'Updated properties' }, visible: true },

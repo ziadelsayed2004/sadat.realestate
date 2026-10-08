@@ -37,7 +37,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     scrollTimer = setTimeout(savePosition, 120);
   };
 
-  const positionPage = (target: URL, returning: boolean, resetBeforeReady = true) => {
+  const positionPage = (target: URL, returning: boolean, resetBeforeReady = true, pointerNavigation = true) => {
     cancelRestoration();
     // New pages start at the top as soon as React commits, including while their
     // data/fonts are loading. Only history returns restore an earlier position.
@@ -52,16 +52,20 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
       cancelAnimationFrame(frame);
       window.removeEventListener('wheel', stop);
       window.removeEventListener('touchstart', stop);
+      window.removeEventListener('pointerdown', stop);
       window.removeEventListener('keydown', onKey);
       restoring = false;
     };
     const onKey = (event: KeyboardEvent) => {
-      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stop();
+      if (!['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) stop();
     };
     const restore = () => {
       // React and the query loader must commit before checking the page height.
       passes += 1;
-      const ready = passes > 2 && !document.querySelector('#app [aria-busy="true"]') && document.fonts?.status !== 'loading';
+      // Font layout matters for anchors and saved positions, but must not delay
+      // a new page at the top or move focus after someone starts using it.
+      const waitForLayout = returning || Boolean(target.hash);
+      const ready = passes > 2 && !document.querySelector('#app [aria-busy="true"]') && (!waitForLayout || document.fonts?.status !== 'loading');
       const top = returning ? saved.y : 0;
       const room = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
       if ((ready && room >= top - 1) || performance.now() >= deadline) {
@@ -74,6 +78,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
           if (!returning) {
             const heading = document.querySelector<HTMLElement>('#app h1');
             heading?.setAttribute('tabindex', '-1');
+            heading?.setAttribute('data-navigation-focus', pointerNavigation ? 'pointer' : 'keyboard');
             heading?.focus({ preventScroll: true });
           }
           return;
@@ -83,12 +88,13 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     };
     window.addEventListener('wheel', stop, { passive: true });
     window.addEventListener('touchstart', stop, { passive: true });
+    window.addEventListener('pointerdown', stop, { passive: true });
     window.addEventListener('keydown', onKey);
     cancelRestoration = stop;
     frame = requestAnimationFrame(restore);
   };
 
-  const navigate = async (target: URL, popstate: boolean) => {
+  const navigate = async (target: URL, popstate: boolean, pointerNavigation = false) => {
     pending?.abort();
     const controller = new AbortController();
     pending = controller;
@@ -110,7 +116,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
         source.head.querySelectorAll(selector).forEach(element => document.head.append(document.importNode(element, true)));
       }
       onNavigate(source, target);
-      positionPage(target, popstate);
+      positionPage(target, popstate, true, pointerNavigation);
     } catch {
       if (!controller.signal.aborted) window.location.assign(target.href);
     } finally {
@@ -152,7 +158,7 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     event.preventDefault();
     savePosition();
     cancelRestoration();
-    void navigate(target, false);
+    void navigate(target, false, event.detail > 0);
   };
 
   const popstate = () => {

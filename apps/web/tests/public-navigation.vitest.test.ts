@@ -3,6 +3,7 @@ import { installPublicNavigation } from '../src/features/frontend_foundation/pub
 import { publicPageState, pushPublicPage, savePublicListingView } from '../src/features/frontend_foundation/public-history.ts';
 
 let stop: (() => void) | undefined;
+const originalFonts = Object.getOwnPropertyDescriptor(document, 'fonts');
 // jsdom does not implement scrolling; individual restoration tests replace this
 // with an assertion spy and the browser suite verifies actual positions.
 beforeEach(() => vi.stubGlobal('scrollTo', vi.fn()));
@@ -10,6 +11,8 @@ afterEach(() => {
   stop?.();
   stop = undefined;
   vi.unstubAllGlobals();
+  if (originalFonts) Object.defineProperty(document, 'fonts', originalFonts);
+  else Reflect.deleteProperty(document, 'fonts');
   document.body.innerHTML = '';
   window.history.replaceState({}, '', '/');
 });
@@ -30,7 +33,51 @@ function click(href: string, options: MouseEventInit = {}): boolean {
 
 const html = '<html><head><title>Articles</title><link rel="canonical" href="http://localhost/articles"></head><body><div id="app"></div><script>window.untrustedExecuted = true;</script></body></html>';
 
+function mockFrames() {
+  const frames = new Map<number, FrameRequestCallback>(); let id = 0;
+  vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { frames.set(++id, callback); return id; });
+  vi.stubGlobal('cancelAnimationFrame', (frame: number) => frames.delete(frame));
+  return {
+    frames,
+    tick: () => { const frame = frames.entries().next().value; if (frame) { frames.delete(frame[0]); frame[1](0); } }
+  };
+}
+
 describe('public navigation', () => {
+  it.each([{ detail: 1, modality: 'pointer' }, { detail: 0, modality: 'keyboard' }])('announces new pages with $modality focus without waiting for slow fonts', async ({ detail, modality }) => {
+    window.history.replaceState({}, '', '/about');
+    Object.defineProperty(document, 'fonts', { configurable: true, value: { status: 'loading' } });
+    Object.defineProperty(document.documentElement, 'scrollHeight', { configurable: true, value: 3000 });
+    const { frames, tick } = mockFrames();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(html, { headers: { 'content-type': 'text/html' } })));
+    const onNavigate = vi.fn(() => { document.body.innerHTML = '<div id="app"><h1>Team</h1></div>'; });
+    stop = installPublicNavigation(onNavigate);
+    expect(click('/team', { detail })).toBe(true);
+    await vi.waitFor(() => expect(onNavigate).toHaveBeenCalledOnce());
+    for (let index = 0; index < 4; index++) tick();
+    expect(document.activeElement).toBe(document.querySelector('h1'));
+    expect(document.activeElement).toHaveAttribute('data-navigation-focus', modality);
+    expect(frames.size).toBe(0);
+  });
+
+  it.each(['pointerdown', 'keydown'])('stops delayed positioning on %s instead of stealing filter focus', interaction => {
+    window.history.replaceState({}, '', '/team#public-team-title');
+    document.body.innerHTML = '<div id="app"><h1 id="public-team-title">Team</h1><div aria-busy="true"></div><button>Sales</button></div>';
+    const { frames, tick } = mockFrames();
+    const scroll = vi.fn(); vi.stubGlobal('scrollTo', scroll);
+    stop = installPublicNavigation(vi.fn());
+    for (let index = 0; index < 4; index++) tick();
+    const filter = document.querySelector('button'); filter?.focus();
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+    expect(frames.size).toBe(1);
+    window.dispatchEvent(interaction === 'keydown' ? new KeyboardEvent('keydown', { key: 'Tab' }) : new Event('pointerdown'));
+    document.querySelector('[aria-busy]')?.remove();
+    tick();
+    expect(frames.size).toBe(0);
+    expect(document.activeElement).toBe(filter);
+    expect(scroll).not.toHaveBeenCalled();
+  });
+
   it('waits for async content before positioning an initial fragment without resetting to the top', () => {
     window.history.replaceState({}, '', '/developers/builder?lang=ar#developer-contact');
     document.body.innerHTML = '<div id="app"><div aria-busy="true"></div></div>';

@@ -109,13 +109,14 @@ test('contact navigation animates through intermediate positions and respects re
   await atSection(page, 'developer-overview');
 });
 
-test('an organization without public contact details shows their availability instead of an inquiry action', async ({ page }) => {
+test('an organization without a public phone keeps platform inquiries available', async ({ page }) => {
   await page.route(`**/api/v1/public/developers/${slug}`, route => route.fulfill({ json: { data: { ...profile, contactPhone: undefined }, meta: { requestId: 'developer-no-contact' } } }));
   await page.goto(`/developers/${slug}?lang=${locale()}`);
   const contact = page.locator('.public-developer-profile__aside-cta');
   await expect(contact).toHaveText(locale() === 'ar' ? 'التواصل' : 'Contact');
   await contact.click();
   await atSection(page, 'developer-contact');
-  await expect(page.locator('#developer-contact')).toContainText(locale() === 'ar' ? 'بيانات التواصل العامة غير متاحة' : 'Public contact details are not available');
-  await expect(page.locator('.public-developer-profile__inquiry')).toHaveCount(0);
+  await expect(page.locator('.public-developer-profile__contact-card a[href^="tel:"]')).toHaveCount(0);
+  await expect(page.locator('.public-developer-profile__inquiry')).toBeVisible();
+  await expect(page.locator('.public-developer-profile__inquiry input[name="name"]')).toBeVisible();
 });
