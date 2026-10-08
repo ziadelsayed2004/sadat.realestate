@@ -81,9 +81,10 @@ describe('public homepage', () => {
   });
   it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
     const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };
-    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title, altText: { en: 'Description of the banner image' }, imageUrl: 'https://example.com/new-banner.jpg', order: 0 }] });
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title, body: { ar: 'نص الإعلان المعدل', en: 'Edited advertisement description' }, altText: { en: 'Description of the banner image' }, imageUrl: 'https://example.com/new-banner.jpg', order: 0 }] });
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title[locale]);
+    expect(screen.getByText(locale === 'ar' ? 'نص الإعلان المعدل' : 'Edited advertisement description')).toBeInTheDocument();
     expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('src', 'https://example.com/new-banner.jpg');
     expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('alt', 'Description of the banner image');
   });

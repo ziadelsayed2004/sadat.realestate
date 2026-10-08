@@ -53,7 +53,7 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     { $limit: Math.min(1000, Math.max(1, Number(settings.maxActiveBanners) || 100)) },
     { $unwind: '$media' },
     { $limit: 100 },
-    { $project: { _id: 1, title: 1, altText: 1, targetUrl: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
+    { $project: { _id: 1, title: 1, altText: 1, body: 1, targetUrl: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
   ]).toArray();
 }
 

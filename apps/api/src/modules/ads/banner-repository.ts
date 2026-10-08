@@ -20,6 +20,7 @@ interface BannerRow {
   placementKey: AdBanner['placementKey'];
   title: AdBanner['title'];
   altText?: AdBanner['altText'];
+  body?: AdBanner['body'];
   mediaId?: Types.ObjectId;
   mediaIds?: Types.ObjectId[];
   displaySeconds?: number;
@@ -88,6 +89,7 @@ function toBanner(row: BannerRow): AdBanner {
     placementKey: row.placementKey,
     title: row.title,
     ...(row.altText === undefined ? {} : { altText: row.altText }),
+    ...(row.body === undefined ? {} : { body: row.body }),
     ...(row.mediaId === undefined ? {} : { mediaId: row.mediaId.toHexString() }),
     ...(row.mediaIds === undefined ? {} : { mediaIds: row.mediaIds.map(value => value.toHexString()) }),
     ...(row.displaySeconds === undefined ? {} : { displaySeconds: row.displaySeconds }),
@@ -221,6 +223,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     };
     const unset: Record<string, 1> = {};
     if (next.altText === undefined) unset.altText = 1; else set.altText = next.altText;
+    if (next.body === undefined) unset.body = 1; else set.body = next.body;
     if (next.mediaId === undefined) unset.mediaId = 1; else set.mediaId = objectId(next.mediaId);
     if (next.mediaIds !== undefined) set.mediaIds = next.mediaIds.map(value => objectId(value));
     if (next.displaySeconds !== undefined) set.displaySeconds = next.displaySeconds;
@@ -248,6 +251,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         placementKey: banner.placementKey,
         title: banner.title,
         ...(banner.altText === undefined ? {} : { altText: banner.altText }),
+        ...(banner.body === undefined ? {} : { body: banner.body }),
         ...(banner.mediaId === undefined ? {} : { mediaId: objectId(banner.mediaId) }),
         ...(banner.mediaIds === undefined ? {} : { mediaIds: banner.mediaIds.map(value => objectId(value)) }),
         ...(banner.displaySeconds === undefined ? {} : { displaySeconds: banner.displaySeconds }),
@@ -317,8 +321,9 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
           ...(input.altText === null ? {} : input.altText === undefined ? {} : { altText: input.altText }),
           ...(input.mediaId === null ? {} : input.mediaId === undefined ? {} : { mediaId: input.mediaId }),
           ...(input.targetUrl === null ? {} : input.targetUrl === undefined ? {} : { targetUrl: input.targetUrl }),
-          ...Object.fromEntries(Object.entries(input).filter(([key]) => !['expectedVersion', 'reason', 'altText', 'mediaId', 'targetUrl'].includes(key))),
+          ...Object.fromEntries(Object.entries(input).filter(([key]) => !['expectedVersion', 'reason', 'altText', 'body', 'mediaId', 'targetUrl'].includes(key))),
           ...(input.altText === null ? { altText: undefined } : {}),
+          ...(input.body === undefined ? {} : { body: input.body === null ? undefined : input.body }),
           ...(input.mediaId === null ? { mediaId: undefined } : {}),
           ...(input.targetUrl === null ? { targetUrl: undefined } : {}),
           ...bannerImageChanges(currentValue, input),

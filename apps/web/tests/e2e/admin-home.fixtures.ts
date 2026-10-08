@@ -99,7 +99,7 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
     if (method === 'PATCH') {
       const changes = { ...route.request().postDataJSON() }; delete changes.expectedVersion; delete changes.reason;
       storedBanner = { ...banner, ...changes, ...(changes.mediaIds !== undefined ? { mediaId: changes.mediaIds[0] } : {}), version: banner.version + 1 };
-      for (const key of ["altText", "targetUrl", "mediaId"]) if (changes[key] === null) Reflect.deleteProperty(storedBanner, key);
+      for (const key of ["body", "altText", "targetUrl", "mediaId"]) if (changes[key] === null) Reflect.deleteProperty(storedBanner, key);
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success(storedBanner, 'admin-home-banner-update')) });
       return;
     }

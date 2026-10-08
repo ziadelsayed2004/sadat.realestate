@@ -13876,6 +13876,9 @@
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
           },
+          "body": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
           "altText": {
             "$ref": "#/components/schemas/LocalizedText"
           },
@@ -13964,6 +13967,9 @@
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
           },
+          "body": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
           "altText": {
             "$ref": "#/components/schemas/LocalizedText"
           },
@@ -14037,6 +14043,16 @@
           },
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
+          },
+          "body": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "altText": {
             "anyOf": [

@@ -734,7 +734,7 @@ function Hero({
   readonly categories: readonly PublicHomepageCategory[];
   readonly locations: readonly PublicHomepageLocation[];
 }) {
-  const section = sections[0];
+  const section = sections.find(item => item.key === 'hero') ?? sections[0];
   const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
   const [slideKey, setSlideKey] = useState<string>();
   const [paused, setPaused] = useState(false);
@@ -762,7 +762,7 @@ function Hero({
   const managed = banner?.key.startsWith('banner_');
   const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
-  const body = localizedText(section?.body, locale) ?? copy.heroFallbackBody;
+  const body = (managed ? localizedText(banner?.body, locale) : undefined) ?? localizedText(section?.body, locale) ?? localizedText(banner?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
 
   return (

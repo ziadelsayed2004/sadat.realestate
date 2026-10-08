@@ -542,6 +542,7 @@ export function createAdSettingsService(seed: {
       void _reason;
       const nextInput: Record<string, unknown> = { ...current, ...changes, updatedBy: claims.sub, updatedAt: now(), version: current.version + 1 };
       if (changes.altText === null) delete nextInput.altText;
+      if (changes.body === null) delete nextInput.body;
       if (changes.mediaId === null) delete nextInput.mediaId;
       if (changes.targetUrl === null) delete nextInput.targetUrl;
       const next = adBannerSchema.parse({ ...nextInput, ...bannerImageChanges(current, parsed) });
