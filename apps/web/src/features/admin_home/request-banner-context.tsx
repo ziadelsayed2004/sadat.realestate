@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import type { AdAdminRequest, SupportedLocale } from '@sadat-real-estate/contracts';
 import type { AdminHomeSource } from './data.ts';
 import { Button } from '../design_system/index.ts';
+import { AdRequestSummary } from '../admin_ads/request-summary.tsx';
 
 export function RequestBannerContext({ requestId, locale, source, render }: { readonly requestId: string; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly render: (data: AdAdminRequest) => ReactNode }) {
   const ar = locale === 'ar';
@@ -21,7 +22,8 @@ export function RequestBannerContext({ requestId, locale, source, render }: { re
     <section className="admin-home__panel admin-home__request-context" aria-label={ar ? 'طلب الإعلان المرتبط' : 'Linked ad request'}>
       <h2>{ar ? 'طلب الإعلان المرتبط' : 'Linked ad request'}</h2>
       <p><a href={`/admin/ads/requests?requestId=${requestId}&lang=${locale}`}>{requestId}</a></p>
-      <p>{data.request.purpose}</p>
+      <AdRequestSummary data={data} locale={locale} />
+      <p>{ar ? 'هذا النموذج لإعداد بانر في موضع الطلب، وليس لتفعيل علامة «مميز» على العقار. إذا كان المكان أو الغرض غير صحيح، ارجع إلى تفاصيل الطلب قبل الحفظ.' : 'This form prepares a banner in the request’s placement; it does not mark a property as Featured. If the placement or brief is incorrect, return to request details before saving.'}</p>
       <a href={`/admin/providers/${data.request.providerId}?lang=${locale}`}>{ar ? 'حساب صاحب الإعلان' : 'Advertiser account'}</a>
       {data.request.contactPhone ? <p><a dir="ltr" href={`tel:${data.request.contactPhone}`}>{data.request.contactPhone}</a></p> : null}
       <p>{ar ? 'موضع العرض والتواريخ مأخوذة من الطلب. ارفع صورة الإعلان واكتب عنوانه ورابط صفحة العقار أو الشركة المطورة. النشر يحتاج جدولة الطلب بعد اعتماد الدفع أو قرار الإعفاء.' : 'Placement and dates come from this request. Add the ad image, title and property or developer page URL. Publishing requires scheduling the request after payment approval or a waiver.'}</p>

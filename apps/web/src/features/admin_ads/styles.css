@@ -54,6 +54,17 @@
 .admin-ads__proof-details dd { min-width: 0; overflow-wrap: anywhere; }
 .admin-ads__proof-details a { color: #145649; }
 .admin-ads__delivery p { line-height: 1.7; }
+.admin-ads__campaign-summary { display: grid; gap: 12px; margin-block: 20px; padding: 16px; border-radius: 14px; background: #faf8f2; }
+.admin-ads__campaign-summary > div { display: grid; gap: 6px; min-width: 0; }
+.admin-ads__campaign-summary dt { color: #68768b; font-size: .85rem; font-weight: 700; }
+.admin-ads__campaign-summary dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
+.admin-ads__creatives { margin-block: 20px; }
+.admin-ads__creatives h4 { font-size: 1.1rem; }
+.admin-ads__creative { min-width: 0; margin-block: 14px; padding: 16px; border: 1px solid #e3e5e7; border-radius: 14px; }
+.admin-ads__creative h5 { margin: 0; font-size: 1rem; overflow-wrap: anywhere; }
+.admin-ads__creative a { display: grid; gap: 6px; color: #145649; overflow-wrap: anywhere; }
+.admin-ads__creative-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px; margin-block-start: 16px; }
+.admin-ads__creative-images img { display: block; width: 100%; max-height: 260px; object-fit: contain; border-radius: 8px; background: #f7f8f9; }
 .admin-ads__delivery-links { display: flex; flex-wrap: wrap; gap: 12px; }
 .admin-ads__delivery-links a { min-height: 44px; max-width: 100%; white-space: normal; text-decoration: none; }
 .admin-ads__table small,

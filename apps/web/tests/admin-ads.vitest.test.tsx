@@ -11,7 +11,9 @@ import {
   paymentProofDataSchema,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminAds,
@@ -135,6 +137,19 @@ const loaders = {
 };
 
 describe('Admin advertising, payment, calendar, and financial projections', () => {
+  beforeEach(() => {
+    server.use(http.get('/api/v1/admin/banners', () => HttpResponse.json({ data: { items: [], page: 1, limit: 20, total: 0 }, meta: { requestId: 'ads-banner-context' } })));
+  });
+
+  it('loads the request brief on financial details while preserving the financial projection', async () => {
+    window.history.pushState({}, '', `/admin/ads/financial-review?requestId=${request.id}`);
+    const loadDetail = vi.fn(async () => adminRequest);
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={loadDetail} />, { locale: 'en' });
+    expect(await screen.findByTestId('ad-request-summary')).toHaveTextContent(request.purpose);
+    expect(loadDetail).toHaveBeenCalledWith(request.id, expect.any(AbortSignal));
+    expect(screen.getByRole('link', { name: 'Prepare banner: Homepage hero banner' })).toHaveAttribute('href', `/admin/banners/new?requestId=${request.id}&lang=en`);
+    expect(document.querySelector('.admin-ads__detail')).toHaveTextContent(request.id);
+  });
   it.each(['ar', 'en'] as const)('explains quote acceptance separately from payment approval in %s', async locale => {
     const accepted = adAdminRequestSchema.parse({ request, quote: { ...quote, status: 'accepted' } });
     window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
