@@ -47,3 +47,28 @@ export function RoleStaff({ locale, source, role, canAssign }: { readonly locale
       <label className="admin-rbac__field">{ar ? 'سبب إسناد المنصب' : 'Assignment reason'}<textarea value={reason} required minLength={3} maxLength={500} disabled={busy} onChange={event => setReason(event.currentTarget.value)} /></label><Button type="submit" loading={busy} disabled={!employee || !role.active || reason.trim().length < 3 || (employee.roleIds ?? []).includes(role.id)}>{ar ? 'ربط الموظف بالمنصب' : 'Assign employee to role'}</Button>{employee?.roleIds?.includes(role.id) ? <p>{ar ? 'الموظف مرتبط بهذا المنصب بالفعل.' : 'Employee already has this role.'}</p> : null}
     </form> : <p className="admin-rbac__muted">{ar ? 'ربط الموظفين يحتاج صلاحيات إدارة الموظفين والمناصب.' : 'Assignment requires staff and role management permissions.'}</p>}{feedback ? <p className="admin-rbac__feedback" role="status">{feedback}</p> : null}</section>;
 }
+
+export function RoleAccountGuide({ locale, roleId, canCreate = true }: { readonly locale: SupportedLocale; readonly roleId?: string | undefined; readonly canCreate?: boolean }) {
+  const ar = locale === 'ar';
+  return <aside className="admin-rbac__form-panel admin-rbac__account-guide" aria-label={ar ? 'إزاي الموظف يدخل ويستخدم المنصب؟' : 'How does an employee sign in and use a role?'}>
+    <h2>{ar ? 'إزاي الموظف يدخل ويستخدم المنصب؟' : 'How does an employee sign in and use a role?'}</h2>
+    <p>{ar ? 'المنصب مجموعة صلاحيات، مش حساب دخول. حساب الموظف بتنشئه من «المستخدمون الإداريون»؛ إضافة شخص في فريق العمل لا تنشئ له حساب إدارة.' : 'A role is a set of permissions, not a login account. Create the employee under Administrator users; adding a person to the public team does not create an administrator account.'}</p>
+    <ol>
+      <li>{ar ? 'احفظ المنصب والصلاحيات المطلوبة أولًا.' : 'Save the role and its required permissions first.'}</li>
+      <li>{ar ? 'لو الموظف جديد: أضف اسمه وإيميله وكلمة مرور، واختر «مسؤول قياسي» والمنصب المناسب. لو عنده حساب إدارة بالفعل: افتح المنصب واربطه من «مين هيشتغل بالمنصب ده؟» أو عدّل حسابه.' : 'For a new employee, enter their name, email and password, then choose Standard Admin and the role. For an existing administrator, assign them from “Who will use this role?” on the role page or edit their account.'}</li>
+      <li>{ar ? 'أبلغ الموظف بالإيميل وكلمة المرور اللي اخترتها ورابط تسجيل الدخول. كلمة المرور لا تظهر بعد الحفظ، وإنشاء الحساب لا يرسل دعوة دخول تلقائية.' : 'Give the employee their email, the password you chose and the login link. The password is not displayed after saving, and creating the account does not send an automatic login invitation.'}</li>
+      <li>{ar ? 'يدخل من صفحة تسجيل الدخول العادية بالإيميل وكلمة المرور. لو التحقق بخطوتين مفعّل، يكمل كود التحقق المرسل لإيميله، ثم يفتح لوحة الإدارة ويستخدم الصلاحيات المسندة له.' : 'They use the normal login page with email and password. If two-factor verification is enabled, they complete the code sent to their email, then open administration with their assigned permissions.'}</li>
+    </ol>
+    <div className="admin-rbac__actions">
+      {canCreate ? <a className="ui-button ui-button--primary" href={`/admin/admin-users/new?${roleId ? `roleId=${roleId}&` : ''}lang=${locale}`}>{ar ? 'إنشاء حساب موظف' : 'Create employee account'}</a> : null}
+      <a className="admin-rbac__secondary-link" href={`/admin/admin-users?lang=${locale}`}>{ar ? 'حسابات موظفي الإدارة' : 'Administrator accounts'}</a>
+      <a className="admin-rbac__secondary-link" href={`/auth/login?lang=${locale}`} target="_blank" rel="noopener noreferrer">{ar ? 'رابط دخول الموظف' : 'Employee login link'}</a>
+    </div>
+    {!canCreate ? <p>{ar ? 'إنشاء الحساب وربطه بالمنصب يحتاج صلاحيات إدارة الموظفين والمناصب ومنصبًا نشطًا؛ راجع المسؤول الأعلى.' : 'Creating an account with a role requires staff and role management permissions and an active role; contact the Super Admin.'}</p> : null}
+  </aside>;
+}
+
+export function StaffLoginHandoff({ locale, email }: { locale: SupportedLocale; email: string }) {
+  const ar = locale === 'ar';
+  return <div className="admin-rbac__account-guide" role="status"><p>{ar ? `تم إنشاء الحساب بالإيميل ${email}. أبلغ الموظف بالإيميل وكلمة المرور اللي اخترتها؛ كلمة المرور لا تظهر بعد الحفظ ولا تُرسل دعوة دخول تلقائية.` : `Account created for ${email}. Give the employee their email and the password you chose; saved passwords are not displayed and no login invitation is sent automatically.`}</p><a href={`/auth/login?lang=${locale}`} target="_blank" rel="noopener noreferrer">{ar ? 'رابط دخول الموظف' : 'Employee login link'}</a></div>;
+}

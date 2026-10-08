@@ -34,7 +34,11 @@ test.describe('ADM-59 through ADM-64 administrator users and roles', () => {
 
   test('creates an employee with a password and a selected role', async ({ page }) => {
     const locale = localeForProject();
-    await page.goto(`/admin/admin-users/new?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/admin/roles/${roleId}?lang=${locale}`);
+    const guide = page.getByRole('complementary', { name: locale === 'ar' ? 'إزاي الموظف يدخل ويستخدم المنصب؟' : 'How does an employee sign in and use a role?' });
+    await expect(guide.getByRole('link', { name: locale === 'ar' ? 'رابط دخول الموظف' : 'Employee login link' })).toHaveAttribute('href', `/auth/login?lang=${locale}`);
+    await guide.getByRole('link', { name: locale === 'ar' ? 'إنشاء حساب موظف' : 'Create employee account' }).click();
+    await expect(page.getByRole('checkbox', { name: /Operations reviewer/ })).toBeChecked();
     await page.getByLabel(/display name|الاسم الظاهر|显示名称/iu).fill('New Operations Admin');
     await page.getByLabel(/email|البريد|电子邮箱/iu).fill('new.operations@example.com');
     await page.getByLabel(/Password \(required\)|كلمة المرور \(مطلوبة\)/iu).fill('SyntheticAdmin123!');
@@ -45,6 +49,12 @@ test.describe('ADM-59 through ADM-64 administrator users and roles', () => {
     const request = await requestPromise;
     expect(request.postDataJSON()).toEqual({ email: 'new.operations@example.com', displayName: 'New Operations Admin', accessLevel: 'standard_admin', password: 'SyntheticAdmin123!', roleIds: [roleId] });
     await expect(page.getByLabel(/Password \(required\)|كلمة المرور \(مطلوبة\)/iu)).toHaveValue('');
+    const handoff = page.getByRole('status');
+    await expect(handoff).toContainText('new.operations@example.com');
+    await expect(handoff.getByRole('link')).toHaveAttribute('href', `/auth/login?lang=${locale}`);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.getByRole('heading', { level: 1 }).click();
+    await page.screenshot({ path: test.info().outputPath('staff-account-login-handoff.png'), fullPage: true });
   });
 
   test('selects all permissions and assigns the role to an employee by name and email', async ({ page }) => {

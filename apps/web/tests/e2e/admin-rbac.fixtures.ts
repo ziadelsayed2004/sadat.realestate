@@ -48,7 +48,9 @@ export async function routeAdminRbacApis(page: Page, options: { readonly manage?
     const method = route.request().method();
     const accessLevel = new URL(page.url(), 'http://sadat-real-estate.local').searchParams.get('accessLevel') === 'super_admin' ? 'super_admin' : 'standard_admin';
     const data = adminUser(manage ? ['update', 'disable'] : [], accessLevel);
-    await route.fulfill({ status: method === 'POST' ? 201 : 200, contentType: 'application/json', body: JSON.stringify(success(method === 'POST' ? data : { items: [data], page: 1, limit: 20, total: 1 }, `admin-rbac-users-${method.toLowerCase()}`)) });
+    const input = method === 'POST' ? route.request().postDataJSON() as { email: string; displayName: string; roleIds?: string[] } : undefined;
+    const created = input ? { ...data, email: input.email, displayName: input.displayName, ...(input.roleIds ? { roleIds: input.roleIds } : {}) } : data;
+    await route.fulfill({ status: method === 'POST' ? 201 : 200, contentType: 'application/json', body: JSON.stringify(success(method === 'POST' ? created : { items: [data], page: 1, limit: 20, total: 1 }, `admin-rbac-users-${method.toLowerCase()}`)) });
   });
   await page.route('**/api/v1/admin/admin-users/*', async route => {
     const method = route.request().method();

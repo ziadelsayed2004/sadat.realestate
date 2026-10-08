@@ -6,7 +6,7 @@ import { Button, StateMessage } from "../design_system/index.ts";
 import type { RouteSession } from "../routing/index.ts";
 import { ADMIN_RBAC_ROLES_ROUTE, ADMIN_RBAC_USERS_ROUTE, createAdminRbacSource, type AdminRbacAuthorizationSource, type AdminRbacSource } from "./data.ts";
 import { getAdminRbacCopy } from "./copy.ts";
-import { PermissionChooser, RoleStaff, StaffRoles } from './role-tools.tsx';
+import { PermissionChooser, RoleStaff, StaffRoles, RoleAccountGuide, StaffLoginHandoff } from './role-tools.tsx';
 import "./styles.css";
 
 export type AdminRbacState = "loading" | "empty" | "error" | "retry" | "permission" | "not_found" | "conflict" | "success";
@@ -317,6 +317,7 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
   const [feedback, setFeedback] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
   const [createdId, setCreatedId] = useState<string>();
+  const [createdEmail, setCreatedEmail] = useState<string>();
   const canCreate = permissionFor(authClient, "admin:staff.manage", true);
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -338,6 +339,7 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
     try {
       const created = await source.createUser(parsed.data);
       setCreatedId(created.id);
+      setCreatedEmail(created.email);
       setForm(current => ({ ...current, password: '' }));
       setFeedback(copy.saved);
       setState("success");
@@ -394,6 +396,7 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
             </p>
           ) : null}
           {createdId ? <RbacLink href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${createdId}`)}>{locale === 'ar' ? 'فتح حساب الموظف' : 'Open employee account'}</RbacLink> : null}
+          {createdId && createdEmail ? <StaffLoginHandoff locale={locale} email={createdEmail} /> : null}
         </form>
       </section>
     </Shell>
@@ -635,6 +638,7 @@ function RoleList({ locale, source }: { readonly locale: SupportedLocale; readon
   }
   return (
     <Shell locale={locale} path={ADMIN_RBAC_ROLES_ROUTE} screenId="ADM-63" state={state} title={copy.roles} description={copy.rolesDescription} actions={<RbacLink href={localePath(locale, ADMIN_RBAC_USERS_ROUTE)}>{copy.users}</RbacLink>}>
+      {data ? <RoleAccountGuide locale={locale} canCreate={canManage && data.effectivePermissions.includes('admin:staff.manage')} /> : null}
       {state === "loading" || state === "error" || state === "retry" || state === "permission" ? <StatePanel state={state === "loading" ? "loading" : panelState(state)} locale={locale} onRetry={() => setAttempt((value) => value + 1)} /> : null}
       {state === "empty" ? (
         <section className="admin-rbac__state" data-state="empty" aria-label={copy.states.empty.title}>
@@ -830,6 +834,7 @@ function RoleDetail({ id, locale, source }: { readonly id: string; readonly loca
   }
   return (
     <Shell locale={locale} path={`${ADMIN_RBAC_ROLES_ROUTE}/${id}`} screenId="ADM-64" state={state} title={role.name} description={copy.rolesDescription} actions={<RbacLink href={localePath(locale, ADMIN_RBAC_ROLES_ROUTE)}>{copy.back}</RbacLink>}>
+      <RoleAccountGuide locale={locale} roleId={role.active ? role.id : undefined} canCreate={role.active && data.effectivePermissions.includes('admin:roles.manage') && data.effectivePermissions.includes('admin:staff.manage')} />
       <section className="admin-rbac__form-panel">
         {canUpdate ? (
           <form

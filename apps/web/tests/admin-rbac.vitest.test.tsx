@@ -122,7 +122,7 @@ describe('frontend_075 Administrator Users and Roles', () => {
 
 describe('employee role workflow', () => {
   it('creates a named employee with a password and the role selected from the role page', async () => {
-    const createUser = vi.fn(async () => user());
+    const createUser = vi.fn(async () => user({ email: 'new@example.com' }));
     renderWithLocale(<AdminRbac url={`/admin/admin-users/new?roleId=${roleId}`} locale="en" session={adminSession} source={source({ createUser })} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('checkbox', { name: /Operations reviewer/ })).toBeChecked());
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'New Employee' } });
@@ -132,6 +132,10 @@ describe('employee role workflow', () => {
     await waitFor(() => expect(createUser).toHaveBeenCalledWith({ displayName: 'New Employee', email: 'new@example.com', password: 'SyntheticAdmin123!', accessLevel: 'standard_admin', roleIds: [roleId] }));
     await waitFor(() => expect(screen.getByLabelText('Password (required)')).toHaveValue(''));
     expect(screen.getByRole('link', { name: 'Open employee account' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('new@example.com');
+    expect(screen.getByRole('link', { name: 'Employee login link' })).toHaveAttribute('href', '/auth/login?lang=en');
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'edited@example.com' } });
+    expect(screen.getByRole('status')).toHaveTextContent('new@example.com');
   });
   it('selects all allowed permissions, excludes edits in View Only, and assigns an existing employee', async () => {
     const updateUser = vi.fn(async () => user({ roleIds: [roleId], version: 4 }));
