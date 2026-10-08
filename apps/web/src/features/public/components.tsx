@@ -30,6 +30,7 @@ import {
 } from './model.ts';
 import './styles.css';
 import { HomepagePriceRange, isHomepagePriceRangeValid } from './price-range.tsx';
+import { PublicNotificationBell } from './notification-bell.tsx';
 
 export type PublicHomepageViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
 
@@ -407,6 +408,7 @@ export function PublicSiteHeader({
       <div className="public-homepage__actions">
         <LocaleSwitcher locale={locale} label={copy.localeLabel} />
         {accountActions}
+        {role !== undefined && <PublicNotificationBell role={role} locale={locale} />}
         <button
           type="button"
           className="public-homepage__menu-toggle"

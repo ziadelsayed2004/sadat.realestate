@@ -23,6 +23,7 @@ export interface RouteShellProps {
 }
 
 export interface RouteShellAuthClient {
+  readonly refresh?: (() => Promise<unknown>) | undefined;
   readonly getAuthorizationHeader?: (() => string | undefined) | undefined;
   readonly getSnapshot?: (() => unknown) | undefined;
   readonly logout?: (() => Promise<unknown>) | undefined;
