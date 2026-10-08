@@ -9,7 +9,19 @@ const reason = z.string().trim().min(3).max(500);
 const safeKey = z.string().regex(/^[a-z][a-z0-9_]{1,63}$/);
 const url = z.url().max(2048);
 const publicAssetUrl = z.string().trim().max(2048).refine(value => value.startsWith('/') || z.url().safeParse(value).success);
-const teamCategory = z.enum(['management', 'sales', 'support', 'content']);
+export const teamCategoryKeySchema = z.string().regex(/^[a-z][a-z0-9_]{1,63}$/);
+const teamCategory = teamCategoryKeySchema;
+export const teamCategorySchema = z.object({ key: teamCategoryKeySchema, label: localizedTextSchema, order: z.number().int().nonnegative().max(10000), active: z.boolean(), version: z.number().int().nonnegative() }).strict();
+export const teamCategoryListSchema = z.object({ items: z.array(teamCategorySchema).max(100) }).strict();
+export const teamCategoryPutSchema = z.object({ key: teamCategoryKeySchema.optional(), label: localizedTextSchema, order: z.number().int().nonnegative().max(10000).default(0), active: z.boolean().default(true), version: z.number().int().nonnegative().optional(), reason: z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/) }).strict();
+export const teamCategoryListSuccessEnvelopeSchema = successEnvelopeSchema(teamCategoryListSchema);
+export type TeamCategory = z.infer<typeof teamCategorySchema>;
+export const DEFAULT_TEAM_CATEGORIES: readonly TeamCategory[] = [
+  { key: 'management', label: { ar: 'إدارة', en: 'Management' }, order: 0, active: true, version: 0 },
+  { key: 'sales', label: { ar: 'مبيعات', en: 'Sales' }, order: 1, active: true, version: 0 },
+  { key: 'support', label: { ar: 'دعم', en: 'Support' }, order: 2, active: true, version: 0 },
+  { key: 'content', label: { ar: 'محتوى', en: 'Content' }, order: 3, active: true, version: 0 }
+];
 export const cmsSettingNamespaceSchema = z.enum([
   "platform",
   "contact",
@@ -182,7 +194,7 @@ export const teamMemberPatchSchema = z
     bio: localizedTextSchema.optional(),
     photoAssetId: objectId.nullish(),
     imageUrl: publicAssetUrl.nullish(),
-    category: teamCategory.optional(),
+    category: teamCategory.nullable().optional(),
     order,
     active: z.boolean().optional(),
     status: cmsSettingStatusSchema.optional(),
@@ -209,7 +221,7 @@ export const cmsPublicContentSchema = z
   })
   .strict();
 export const cmsPublicContentListDataSchema = z
-  .object({ items: z.array(cmsPublicContentSchema).max(100) })
+  .object({ items: z.array(cmsPublicContentSchema).max(100), categories: z.array(teamCategorySchema).max(100).optional() })
   .strict();
 export const cmsPublicContentListSuccessEnvelopeSchema = successEnvelopeSchema(
   cmsPublicContentListDataSchema,
@@ -417,6 +429,7 @@ export const cmsAdminTeamMemberSchema = z
     bio: localizedTextSchema.optional(),
     photoAssetId: objectId.optional(),
     imageUrl: publicAssetUrl.optional(),
+    category: teamCategory.optional(),
     order,
     active: z.boolean(),
     status: cmsSettingStatusSchema,

@@ -1,4 +1,5 @@
 export { cmsAdminTeamMemberDeleteSchema } from '../cms/index.js';
+export { DEFAULT_TEAM_CATEGORIES, teamCategorySchema, teamCategoryKeySchema, teamCategoryListSchema, teamCategoryPutSchema, teamCategoryListSuccessEnvelopeSchema, type TeamCategory } from '../cms/index.js';
 export {
   apiErrorSchema,
   createErrorEnvelope,

@@ -46,5 +46,9 @@ const copy: Readonly<Record<SupportedLocale, ProviderNotificationsCopy>> = {
   },};
 
 export function getProviderNotificationsCopy(locale: SupportedLocale): ProviderNotificationsCopy {
-  return localizeCopy('provider/notifications-copy#getProviderNotificationsCopy', locale, copy[locale]);
+  const localized = localizeCopy('provider/notifications-copy#getProviderNotificationsCopy', locale, copy[locale]);
+  const labels = locale === 'ar'
+    ? { 'account.admin_message': 'رسالة من الإدارة', 'advertising.approved': 'موافقة على طلب الإعلان', 'advertising.rejected': 'رفض طلب الإعلان', 'advertising.quote_sent': 'عرض سعر الإعلان', 'advertising.waiting_payment': 'دفع الإعلان', 'advertising.payment_approved': 'اعتماد الدفع', 'advertising.payment_rejected': 'تصحيح إثبات الدفع', 'advertising.scheduled': 'جدولة الإعلان', 'advertising.payment_waived': 'إعفاء من الدفع' }
+    : { 'account.admin_message': 'Message from administration', 'advertising.approved': 'Advertising approval', 'advertising.rejected': 'Advertising rejection', 'advertising.quote_sent': 'Advertising quote', 'advertising.waiting_payment': 'Advertising payment', 'advertising.payment_approved': 'Payment approval', 'advertising.payment_rejected': 'Payment proof correction', 'advertising.scheduled': 'Advertisement schedule', 'advertising.payment_waived': 'Payment waiver' };
+  return { ...localized, typeLabels: { ...localized.typeLabels, ...labels } };
 }

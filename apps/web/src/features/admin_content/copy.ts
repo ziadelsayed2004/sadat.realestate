@@ -144,6 +144,7 @@ const cmsActions = {
   }
 } as const;
 
-export function getAdminCmsCopy(locale: SupportedLocale): AdminCmsCopy & (typeof cmsActions)[SupportedLocale] {
-  return localizeCopy('admin_content/copy#getAdminCmsCopy', locale, { ...cmsCopyByLocale[locale], ...cmsActions[locale] });
+export function getAdminCmsCopy(locale: SupportedLocale) {
+  const copy = localizeCopy('admin_content/copy#getAdminCmsCopy', locale, { ...cmsCopyByLocale[locale], ...cmsActions[locale] });
+  return { ...copy, photo: { ...copy.photo, hint: locale === 'ar' ? 'المقاس المقترح: عرض 800 × ارتفاع 1000 بكسل (نسبة 4:5). الصورة تظهر كاملة بدون قص. ارفع JPG أو PNG أو WebP حتى 10 ميجابايت، ثم احفظ بيانات الشخص لعرضها.' : 'Recommended: 800 px wide × 1000 px high (4:5). The full image is shown without cropping. Upload JPG, PNG or WebP up to 10 MB, then save the member to display it.' } };
 }

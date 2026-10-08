@@ -1,4 +1,7 @@
 import {
+  teamCategoryListSuccessEnvelopeSchema,
+  teamCategoryPutSchema,
+  type TeamCategory,
   articleAdminListQuerySchema,
   articleAdminListSuccessEnvelopeSchema,
   articleCategoryCreateSchema,
@@ -255,8 +258,13 @@ export async function deleteAdminCmsTeamMember(input: unknown, options: CommonOp
   return response.data.data;
 }
 
+export type TeamCategoryLoader = (signal?: AbortSignal) => Promise<TeamCategory[]>;
+export type TeamCategorySave = (input: unknown) => Promise<TeamCategory[]>;
+
 export function createAdminCmsContentSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    loadTeamCategories: async (signal?: AbortSignal) => (await withCurrentSession(options, () => clientFor(options).request('/admin/content/team/categories', { responseSchema: teamCategoryListSuccessEnvelopeSchema, ...requestOptions(options), ...(signal ? { signal } : {}) }))).data.data.items,
+    saveTeamCategory: async (input: unknown) => (await withCurrentSession(options, () => clientFor(options).request('/admin/content/team/categories', { method: 'PUT', json: teamCategoryPutSchema.parse(input), responseSchema: teamCategoryListSuccessEnvelopeSchema, ...requestOptions(options) }))).data.data.items,
     uploadTeamPhoto: async (file: File) => {
       const bytes = await file.arrayBuffer();
       return (await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_CMS_TEAM_ROUTE}/photos`, {

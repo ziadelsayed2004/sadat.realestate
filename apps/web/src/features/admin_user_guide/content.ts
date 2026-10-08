@@ -1,3 +1,4 @@
+import { updatedOwnerTopic } from './owner-updates.ts';
 import { adPaymentsGuide, adPublicationGuide } from './advertising-guide.ts';
 import { ACCOUNT_GUIDES } from './account-guides.ts';
 
@@ -19,7 +20,7 @@ export interface GuideSection { readonly id: string; readonly title: string; rea
 const links = (...items: readonly (readonly [string, string])[]): GuideLink[] => items.map(([label, path]) => ({ label, path }));
 const topic = (id: string, title: string, summary: string, before: string, steps: readonly string[], fields: GuideTopic['fields'], result: string, questions: GuideTopic['questions'], related: GuideLink[], limitation?: string): GuideTopic => ({ id, title, summary, before, steps, fields, result, questions, links: related, ...(limitation === undefined ? {} : { limitation }) });
 
-export const GUIDE_SECTIONS: readonly GuideSection[] = [
+const BASE_GUIDE_SECTIONS: readonly GuideSection[] = [
   ACCOUNT_GUIDES,
   { id: 'account-followup', title: 'متابعة الحساب والمعاينات والإعلانات', description: 'إشعارات حالات الحساب والمعاينات والطلبات والإعلانات داخل المنصة فقط. البريد الإلكتروني مخصص لرموز التحقق OTP.', topics: [
     topic('account-communication', 'إشعار العميل وإرسال عقار وإدارة الدخول', 'التواصل من تفاصيل المستخدم بدل الاكتفاء بعرض بياناته.', 'صلاحية إدارة الحسابات؛ حساب العرض فقط لا يستطيع تنفيذ الإجراءات.', ['افتح المستخدم من الإدارة واكتب رسالة واضحة.', 'لإرسال عقار، اكتب رمز عقار منشور مثل SDT-1234 ثم اضغط إرسال إشعار؛ يصل معه رابط العقار.', 'لإنهاء الجلسات أو تعطيل الحساب، اكتب السبب وحدد تأكيد الإجراء. إنهاء الجلسات يسمح بالدخول لاحقًا؛ التعطيل يمنع الاستخدام حتى إعادة التفعيل.', 'من تفاصيل المستخدم افتح إدارة معاينات العميل لإكمال طلبه.'], [['إشعار داخل الموقع', 'لا يحتاج خدمة بريد؛ يصل إلى إشعارات صاحب الحساب.'], ['إرسال عقار', 'الرمز لعقار منشور، والرابط يُنشأ تلقائيًا.'], ['تعطيل الحساب', 'يحافظ على طلبات العميل وسجل المعاملات؛ لا يحذف بياناته نهائيًا.']], 'إجراء محفوظ في سجل الإدارة وإشعار موجه للحساب الصحيح.', [['هل الإشعار يظهر أثناء انتظار اعتماد العارض؟', 'نعم؛ يستطيع الدخول وقراءة إشعارات الإدارة وإكمال النواقص، مع بقاء أدوات التشغيل محجوبة حتى التفعيل.']], links(['المستخدمون', '/admin/users'], ['مقدمو العقارات', '/admin/providers'], ['إشعارات العارض', '/provider/notifications'], ['إشعارات الباحث', '/seeker/notifications'])),
@@ -118,3 +119,5 @@ export function searchGuide(query: string, sectionId = 'all', sections: readonly
     })
   })).filter(section => section.topics.length > 0);
 }
+
+export const GUIDE_SECTIONS: readonly GuideSection[] = BASE_GUIDE_SECTIONS.map(section => ({ ...section, topics: section.topics.map(updatedOwnerTopic) }));

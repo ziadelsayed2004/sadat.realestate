@@ -8235,6 +8235,200 @@
           ]
         }
       }
+    },
+    {
+      "name": "Owner workflow additions",
+      "item": [
+        {
+          "name": "uploadAdminArticlePhoto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "image/png"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/photos",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                "photos"
+              ]
+            },
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            },
+            "description": "Upload scanned article images or preview them; public download is available only for published articles."
+          }
+        },
+        {
+          "name": "previewAdminArticlePhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                "photos",
+                ":assetId"
+              ]
+            },
+            "description": "Upload scanned article images or preview them; public download is available only for published articles."
+          }
+        },
+        {
+          "name": "downloadPublicArticlePhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/article-photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "article-photos",
+                ":assetId"
+              ]
+            },
+            "description": "Upload scanned article images or preview them; public download is available only for published articles."
+          }
+        },
+        {
+          "name": "Update Commission Exception",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-exceptions/:exceptionId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-exceptions",
+                ":exceptionId"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0,\n  \"status\": \"active\",\n  \"reason\": \"Activate reviewed exception\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "listAdminTeamCategories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/content/team/categories",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "content",
+                "team",
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "saveAdminTeamCategory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/content/team/categories",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "content",
+                "team",
+                "categories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": {\n    \"ar\": \"???????\",\n    \"en\": \"Marketing\"\n  },\n  \"order\": 4,\n  \"active\": true,\n  \"reason\": \"Create marketing department\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }

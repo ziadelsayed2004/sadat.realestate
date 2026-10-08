@@ -98,6 +98,25 @@ describe('Admin article and category management contracts and views', () => {
     await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ categoryId: category.id, reason: 'Create article content' })));
   });
 
+  it('saves an unfinished first article as a draft and preserves entered text after a conflict', async () => {
+    window.history.pushState({}, '', '/admin/articles');
+    const { ApiClientError } = await import('../src/features/contracts/index.ts');
+    const create = vi.fn().mockRejectedValueOnce(new ApiClientError('Conflict', { code: 'HTTP_ERROR', status: 409 })).mockResolvedValue(article);
+    renderWithLocale(<AdminContent locale="en" session={session} initialArticles={{ items: [], page: 1, limit: 20, total: 0 }} initialCategories={categories} loadArticles={async () => articles} loadCategories={async () => categories} createArticle={create} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getAdminContentCopy('en').createArticle }));
+    fireEvent.change(screen.getByLabelText(/EN Title/i), { target: { value: 'Incomplete article' } });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Save unfinished article' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Preview article' }));
+    expect(screen.getByTestId('admin-article-preview')).toHaveTextContent('Incomplete article');
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+    expect(screen.getByLabelText(/EN Title/i)).toHaveValue('Incomplete article');
+    expect(screen.getByRole('alert')).not.toHaveTextContent(getAdminContentCopy('en').titleRequired);
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    await waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+    expect(create.mock.calls[1]?.[0]).toMatchObject({ title: { en: 'Incomplete article' }, body: { en: '' } });
+  });
+
   it('passes article and category filters to the implemented list query loaders', async () => {
     window.history.pushState({}, '', '/admin/articles');
     const loadArticles = vi.fn(async () => articles);

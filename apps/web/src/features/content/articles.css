@@ -1004,3 +1004,9 @@
   }
 
 }
+.public-article-gallery-image {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}

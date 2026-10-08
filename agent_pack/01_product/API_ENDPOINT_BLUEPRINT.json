@@ -2519,5 +2519,99 @@
     "purpose": "Delete account from operating use with confirmation and audit while retaining linked history",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/payment-proofs/:proofId",
+    "status": "implemented",
+    "module": "admin-advertising",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "getAdminPaymentProof",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/payment-proofs/:proofId/file",
+    "status": "implemented",
+    "module": "admin-advertising",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "previewAdminPaymentProof",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/articles/photos",
+    "status": "implemented",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "uploadAdminArticlePhoto",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/articles/photos/:assetId",
+    "status": "implemented",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "previewAdminArticlePhoto",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/article-photos/:assetId",
+    "status": "implemented",
+    "module": "articles",
+    "auth": "public",
+    "roles": [],
+    "purpose": "downloadPublicArticlePhoto",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/content/team/categories",
+    "status": "implemented",
+    "module": "cms",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "listAdminTeamCategories",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/content/team/categories",
+    "status": "implemented",
+    "module": "cms",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "saveAdminTeamCategory",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/commission-exceptions/:exceptionId",
+    "status": "implemented",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.manage"
+    ],
+    "purpose": "updateAdminCommissionException",
+    "apiVersion": "v1"
   }
 ]

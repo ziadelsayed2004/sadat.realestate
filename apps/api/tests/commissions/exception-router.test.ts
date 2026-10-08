@@ -121,6 +121,23 @@ test('protects exception list/create with strict projections and reason-bearing 
   });
 });
 
+test('activates and stops an indefinite exception through the protected versioned route', async () => {
+  await withServer(['admin:commissions.view', 'admin:commissions.manage'], async baseUrl => {
+    const headers = { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' };
+    const response = await fetch(`${baseUrl}/api/v1/admin/commission-exceptions`, { method: 'POST', headers, body: JSON.stringify({ accountId, kind: 'percentage', percentageBps: 600, reason: 'Owner override', effectiveFrom: '2026-08-19T00:00:00Z' }) });
+    assert.equal(response.status, 201);
+    const { data } = await response.json() as { data: CommissionException };
+    assert.equal(data.effectiveTo, undefined);
+    const url = `${baseUrl}/api/v1/admin/commission-exceptions/${data.id}`;
+    const patch = (version: number, status: string) => fetch(url, { method: 'PATCH', headers, body: JSON.stringify({ expectedVersion: version, status, reason: 'Owner decision' }) });
+    assert.equal((await fetch(url, { method: 'PATCH', headers: { ...headers, authorization: `Bearer ${seekerToken}` }, body: '{}' })).status, 403);
+    assert.equal((await patch(0, 'active')).status, 200);
+    assert.equal((await patch(0, 'inactive')).status, 409);
+    const stopped = await patch(1, 'inactive'); assert.equal(stopped.status, 200);
+    assert.equal((await stopped.json() as { data: CommissionException }).data.status, 'inactive');
+  });
+});
+
 test('keeps exception view/manage permissions separate and rejects invalid payloads', async () => {
   await withServer(['admin:commissions.view'], async baseUrl => {
     const response = await fetch(`${baseUrl}/api/v1/admin/commission-exceptions`, {

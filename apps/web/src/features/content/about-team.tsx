@@ -246,7 +246,7 @@ function TeamCard({ locale, copy, member }: { readonly locale: SupportedLocale; 
   const bio = localizedText(member.bio, locale) ?? copy.bioUnavailable;
   const fallback = <div className="public-team__media-fallback"><UxStateView state="missing_image" title={copy.imageUnavailable} /></div>;
   return (
-    <article className="public-team__card" data-team-category={presentation?.category ?? 'unknown'}>
+    <article className="public-team__card" data-team-category={member.category ?? presentation?.category ?? 'unknown'}>
       <div className="public-team__media" data-media-state={member.imageUrl === undefined ? 'unavailable' : 'success'}>
         {member.imageUrl === undefined ? fallback : <PublicMediaImage src={member.imageUrl} alt="" fallback={fallback} className="public-team__photo" loading="eager" />}
       </div>
@@ -257,8 +257,8 @@ function TeamCard({ locale, copy, member }: { readonly locale: SupportedLocale; 
 
 function TeamContent({ locale, copy, data }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly data: CmsPublicContentListData }) {
   const [activeFilter, setActiveFilter] = useState('all');
-  const filters = teamFilters(locale);
-  const visibleMembers = data.items.filter(member => activeFilter === 'all' || teamPresentation[member.key]?.category === activeFilter);
+  const filters = data.categories ? [{ key: 'all', label: locale === 'ar' ? 'الكل' : 'All' }, ...data.categories.map(item => ({ key: item.key, label: item.label[locale] ?? item.label.ar ?? item.label.en ?? item.key }))] : teamFilters(locale);
+  const visibleMembers = data.items.filter(member => activeFilter === 'all' || (member.category ?? teamPresentation[member.key]?.category) === activeFilter);
   return (
     <>
       <section className="public-team__intro" aria-labelledby="public-team-title">

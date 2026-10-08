@@ -142,6 +142,7 @@ export function createCmsAdminContentService(dependencies: {
   audit: Pick<AuditWriter, 'record'>;
   now?: () => Date;
   transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
+  validateTeamCategory?: (key: string) => Promise<void>;
   validateTeamPhoto?: (id: string) => Promise<void>;
 }): CmsAdminContentService {
   const now = dependencies.now ?? (() => new Date());
@@ -292,6 +293,7 @@ export function createCmsAdminContentService(dependencies: {
       if (namespace === 'team') {
         const input = cmsAdminTeamMemberPutSchema.parse(unparsedInput) as CmsAdminTeamMemberPut;
         const existing = 'id' in input ? await dependencies.repository.findTeam(input.id!) : undefined;
+        if (input.category && input.category !== existing?.category) await dependencies.validateTeamCategory?.(input.category);
         const photoChanged = input.photoAssetId !== undefined && input.photoAssetId !== existing?.photoAssetId;
         if (photoChanged && input.photoAssetId) await dependencies.validateTeamPhoto?.(input.photoAssetId);
         const imageChanges = photoChanged
@@ -302,6 +304,7 @@ export function createCmsAdminContentService(dependencies: {
           const update = input as Extract<CmsAdminTeamMemberPut, { id: string }>;
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           row = teamResult(await dependencies.repository.updateTeam(update.id, update.version, {
+            ...(update.category !== undefined ? { category: update.category } : {}),
             ...(update.name !== undefined ? { name: update.name } : {}),
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.bio !== undefined ? { bio: update.bio } : {}),
@@ -316,6 +319,7 @@ export function createCmsAdminContentService(dependencies: {
           requirePublish(create.status, authorization.publish);
           row = teamResult(await dependencies.repository.createTeam({
             key: create.key ?? generateIdentifier('team', undefined, '_'), name: create.name, title: create.title,
+            ...(create.category ? { category: create.category } : {}),
             ...(create.bio ? { bio: create.bio } : {}),
             ...(create.photoAssetId ? { photoAssetId: create.photoAssetId } : {}),
             ...(imageChanges.imageUrl ? { imageUrl: imageChanges.imageUrl } : {}),

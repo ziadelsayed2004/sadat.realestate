@@ -723,7 +723,11 @@
       "quote_only": "Quote only",
       "payment_proof_pending_review": "Payment proof pending",
       "payment_proof_approved": "Payment proof approved",
-      "payment_proof_rejected": "Payment proof rejected"
+      "payment_proof_rejected": "Payment proof rejected",
+      "all": "All statuses",
+      "payment_pending_review": "Payment proof pending",
+      "payment_approved": "Payment proof approved",
+      "payment_rejected": "Payment proof rejected"
     },
     "ledgerKind": {
       "quote_issued": "Quote issued",
@@ -1173,7 +1177,7 @@
       "replace": "Replace image",
       "preview": "Team member photo preview",
       "remove": "Remove image",
-      "hint": "Choose JPG, PNG or WebP up to 10 MB. The image uploads automatically; save the member changes to display it on the website.",
+      "hint": "Recommended: 800 px wide × 1000 px high (4:5). The full image is shown without cropping. Upload JPG, PNG or WebP up to 10 MB, then save the member to display it.",
       "uploading": "Uploading and checking the image…",
       "uploaded": "Image uploaded. Save the member changes to keep it.",
       "removed": "Image removal selected. Save changes to confirm removal.",
@@ -2977,7 +2981,16 @@
       "viewing.reminder": "Viewing reminder",
       "request.updated": "Request update",
       "property.updated": "Property update",
-      "profile.updated": "Profile update"
+      "profile.updated": "Profile update",
+      "account.admin_message": "Message from administration",
+      "advertising.approved": "Advertising approval",
+      "advertising.rejected": "Advertising rejection",
+      "advertising.quote_sent": "Advertising quote",
+      "advertising.waiting_payment": "Advertising payment",
+      "advertising.payment_approved": "Payment approval",
+      "advertising.payment_rejected": "Payment proof correction",
+      "advertising.scheduled": "Advertisement schedule",
+      "advertising.payment_waived": "Payment waiver"
     },
     "retry": "Retry"
   },

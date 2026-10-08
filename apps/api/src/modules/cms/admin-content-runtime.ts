@@ -11,6 +11,7 @@ import { registerHomepageDisplayModels } from './homepage-display-models.js';
 import type { UploadEnvironment } from '../uploads/environment.js';
 import { createInMemoryStorageAdapter, createLocalFilesystemStorageAdapter, createUnavailableStorageAdapter, createClamAvMalwareScanner, createDeterministicMalwareScanner, createUnavailableMalwareScanner } from '../uploads/adapters.js';
 import { createTeamPhotos } from './team-photos.js';
+import { createTeamCategories } from './team-categories.js';
 
 export function createCmsAdminContentRuntime(
   connection: Connection,
@@ -23,12 +24,14 @@ export function createCmsAdminContentRuntime(
   const aboutTeam = registerAboutTeamModels(connection);
   const populationTips = registerPopulationTipsModels(connection);
   const homepageDisplay = registerHomepageDisplayModels(connection);
+  const categories = createTeamCategories(connection, authorization, audit);
   const photos = createTeamPhotos({ connection, authorization, audit,
     storage: environment.mode === 'memory' ? createInMemoryStorageAdapter() : environment.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter(),
     scanner: environment.scannerMode === 'clamav' && environment.clamav ? createClamAvMalwareScanner(environment.clamav) : environment.scannerMode === 'deterministic-fake' ? createDeterministicMalwareScanner('clean') : createUnavailableMalwareScanner() });
   return {
     accessTokens,
     photos,
+    categories,
     service: createCmsAdminContentService({
       repository: createMongooseCmsAdminContentRepository({
         about: aboutTeam.about,
@@ -41,6 +44,7 @@ export function createCmsAdminContentRuntime(
       authorization,
       audit,
       validateTeamPhoto: photos.validateAttach,
+      validateTeamCategory: categories.validate,
       transaction: operation => connection.transaction(operation)
     })
   };

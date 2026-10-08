@@ -1,10 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import {
   cmsAdminContentDataSchema,
+  DEFAULT_TEAM_CATEGORIES,
   type CmsAdminContentData,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminCmsContent,
@@ -19,6 +22,7 @@ const adminId = 'cccccccccccccccccccccccc';
 const aboutId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const teamId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const session = { status: 'authenticated' as const, role: 'admin' as const };
+beforeEach(() => server.use(http.get('/api/v1/admin/content/team/categories', () => HttpResponse.json({ data: { items: DEFAULT_TEAM_CATEGORIES }, meta: { requestId: 'team-categories' } }))));
 
 const about = cmsAdminContentDataSchema.parse({
   namespace: 'about',

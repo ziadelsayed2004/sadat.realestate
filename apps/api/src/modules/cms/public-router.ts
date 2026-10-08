@@ -7,6 +7,7 @@ import { toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import type { PublicAboutTeamService } from './public-content.js';
+import type { TeamCategories } from './team-categories.js';
 
 export const CMS_PUBLIC_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/public/about', operationId: 'getPublicAbout' },
@@ -15,6 +16,7 @@ export const CMS_PUBLIC_ROUTE_DEFINITIONS = [
 
 export interface PublicAboutTeamRouterDependencies {
   service: PublicAboutTeamService;
+  categories?: Pick<TeamCategories, 'list'>;
 }
 
 function requestId(request: Request): string {
@@ -40,7 +42,9 @@ export function createPublicAboutTeamRouter(dependencies: PublicAboutTeamRouterD
   router.get('/public/team', async (request, response) => {
     const currentRequestId = requestId(request);
     try {
-      const data = cmsPublicContentListDataSchema.parse({ items: await dependencies.service.listTeam() });
+      const items = await dependencies.service.listTeam();
+      const categories = await dependencies.categories?.list();
+      const data = cmsPublicContentListDataSchema.parse({ items, ...(categories ? { categories: categories.filter(item => item.active || items.some(member => member.category === item.key)) } : {}) });
       cmsPublicContentListSuccessEnvelopeSchema.parse(toSuccessResponse(data, currentRequestId));
       response.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
       response.status(200).json(toSuccessResponse(data, currentRequestId));

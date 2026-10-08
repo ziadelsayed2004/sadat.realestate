@@ -20,7 +20,7 @@ type PublishedTeamSource = {
   bio?: LocalizedText;
   photoAssetId?: string;
   imageUrl?: string;
-  category?: 'management' | 'sales' | 'support' | 'content';
+  category?: string;
   order: number;
   status: 'draft' | 'published' | 'inactive';
   active: boolean;

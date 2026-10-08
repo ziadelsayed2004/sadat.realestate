@@ -10,6 +10,7 @@ import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { CmsAdminContentServiceError, type CmsAdminContentService } from './admin-content-service.js';
 import type { TeamPhotos } from './team-photos.js';
+import type { TeamCategories } from './team-categories.js';
 
 export const CMS_ADMIN_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/content/:namespace', operationId: 'getAdminCmsContent' },
@@ -17,13 +18,16 @@ export const CMS_ADMIN_ROUTE_DEFINITIONS = [
   { method: 'DELETE', path: '/api/v1/admin/content/team', operationId: 'deleteAdminCmsTeamMember' },
   { method: 'POST', path: '/api/v1/admin/content/team/photos', operationId: 'uploadAdminTeamPhoto' },
   { method: 'GET', path: '/api/v1/admin/content/team/photos/:assetId', operationId: 'previewAdminTeamPhoto' },
-  { method: 'GET', path: '/api/v1/public/team-photos/:assetId', operationId: 'downloadPublicTeamPhoto' }
+  { method: 'GET', path: '/api/v1/public/team-photos/:assetId', operationId: 'downloadPublicTeamPhoto' },
+  { method: 'GET', path: '/api/v1/admin/content/team/categories', operationId: 'listAdminTeamCategories' },
+  { method: 'PUT', path: '/api/v1/admin/content/team/categories', operationId: 'saveAdminTeamCategory' }
 ] as const;
 
 export interface CmsAdminContentRouterDependencies {
   service: CmsAdminContentService;
   accessTokens: AccessTokenService;
   photos?: TeamPhotos;
+  categories?: TeamCategories;
 }
 
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
@@ -70,6 +74,18 @@ export function createCmsAdminContentRouter(dependencies: CmsAdminContentRouterD
     next();
   });
   router.use('/admin/content', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+
+  if (dependencies.categories) {
+    const categories = dependencies.categories;
+    router.get('/admin/content/team/categories', async (request, response) => {
+      try { response.json(toSuccessResponse(await categories.adminList(response.locals.adminRbacClaims as AccessTokenClaims), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.put('/admin/content/team/categories', async (request, response) => {
+      try { response.json(toSuccessResponse(await categories.put(response.locals.adminRbacClaims as AccessTokenClaims, request.body ?? {}, context(request)), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+  }
 
   if (dependencies.photos) {
     const photos = dependencies.photos;

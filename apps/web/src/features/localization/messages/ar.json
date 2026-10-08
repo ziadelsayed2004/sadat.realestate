@@ -678,7 +678,7 @@
       "placement": "الموضع",
       "purpose": "الغرض",
       "status": "الحالة",
-      "quote": "الاقتباس",
+      "quote": "عرض السعر",
       "interval": "الفترة",
       "filename": "اسم الملف",
       "size": "الحجم",
@@ -723,7 +723,11 @@
       "quote_only": "اقتباس فقط",
       "payment_proof_pending_review": "إثبات قيد المراجعة",
       "payment_proof_approved": "إثبات معتمد",
-      "payment_proof_rejected": "إثبات مرفوض"
+      "payment_proof_rejected": "إثبات مرفوض",
+      "all": "كل الحالات",
+      "payment_pending_review": "إثبات قيد المراجعة",
+      "payment_approved": "إثبات معتمد",
+      "payment_rejected": "إثبات مرفوض"
     },
     "ledgerKind": {
       "quote_issued": "إصدار اقتباس",
@@ -1173,7 +1177,7 @@
       "replace": "استبدال الصورة",
       "preview": "معاينة صورة عضو الفريق",
       "remove": "إزالة الصورة",
-      "hint": "اختر JPG أو PNG أو WebP بحد أقصى 10 ميجابايت. تُرفع الصورة تلقائيًا؛ احفظ تغييرات العضو لتظهر على الموقع.",
+      "hint": "المقاس المقترح: عرض 800 × ارتفاع 1000 بكسل (نسبة 4:5). الصورة تظهر كاملة بدون قص. ارفع JPG أو PNG أو WebP حتى 10 ميجابايت، ثم احفظ بيانات الشخص لعرضها.",
       "uploading": "جارٍ رفع الصورة وفحصها…",
       "uploaded": "تم رفع الصورة. احفظ تغييرات العضو لتثبيتها.",
       "removed": "تم اختيار إزالة الصورة. احفظ التغييرات لتأكيد الإزالة.",
@@ -2977,7 +2981,16 @@
       "viewing.reminder": "تذكير بموعد معاينة",
       "request.updated": "تحديث على طلب",
       "property.updated": "تحديث على عقار",
-      "profile.updated": "تحديث الملف"
+      "profile.updated": "تحديث الملف",
+      "account.admin_message": "رسالة من الإدارة",
+      "advertising.approved": "موافقة على طلب الإعلان",
+      "advertising.rejected": "رفض طلب الإعلان",
+      "advertising.quote_sent": "عرض سعر الإعلان",
+      "advertising.waiting_payment": "دفع الإعلان",
+      "advertising.payment_approved": "اعتماد الدفع",
+      "advertising.payment_rejected": "تصحيح إثبات الدفع",
+      "advertising.scheduled": "جدولة الإعلان",
+      "advertising.payment_waived": "إعفاء من الدفع"
     },
     "retry": "إعادة المحاولة"
   },

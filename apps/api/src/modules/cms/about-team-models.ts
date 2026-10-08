@@ -26,7 +26,7 @@ export interface TeamMemberDocument {
   bio?: LocalizedText;
   photoAssetId?: Types.ObjectId;
   imageUrl?: string;
-  category?: "management" | "sales" | "support" | "content";
+  category?: string;
   order: number;
   active: boolean;
   status: "draft" | "published" | "inactive";
@@ -71,7 +71,7 @@ export const teamMemberSchema = new Schema<TeamMemberDocument>(
     bio: localized,
     photoAssetId: { type: Schema.Types.ObjectId, ref: "Upload" },
     imageUrl: { type: String, trim: true, maxlength: 2048 },
-    category: { type: String, enum: ["management", "sales", "support", "content"] },
+    category: { type: String, match: /^[a-z][a-z0-9_]{1,63}$/ },
     order: { type: Number, min: 0, required: true },
     active: { type: Boolean, default: true },
     status: {
