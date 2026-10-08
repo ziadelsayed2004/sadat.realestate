@@ -3220,3 +3220,36 @@
   outline: 3px solid white;
   outline-offset: 3px;
 }
+
+@media (max-width: 767px) {
+  .public-homepage__hero--advertisement {
+    display: block;
+    block-size: auto;
+    min-block-size: 0;
+    padding: 0;
+  }
+
+  .public-homepage__hero--advertisement .public-homepage__hero-media {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    inline-size: 100%;
+  }
+
+  .public-homepage__hero--advertisement .public-homepage__hero-media > img {
+    inline-size: 100%;
+    block-size: auto;
+    object-fit: contain;
+    opacity: 1;
+  }
+
+  .public-homepage__hero--advertisement .public-homepage__hero-shade {
+    display: none;
+  }
+
+  .public-homepage__hero--advertisement .public-homepage__hero-content {
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding: 1.5rem 1rem;
+  }
+}

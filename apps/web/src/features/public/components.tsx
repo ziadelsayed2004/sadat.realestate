@@ -766,7 +766,7 @@ function Hero({
   const titleLines = title.split('\n');
 
   return (
-    <section className="public-homepage__hero" aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+    <section className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
         <BannerMedia key={banner?.key ?? 'default-hero'} banner={banner} copy={copy} locale={locale} priority />
       </div>
