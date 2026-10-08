@@ -7,6 +7,7 @@ import {
   articleCategoryParamsSchema,
   articleCategoryPatchSchema,
   articleCreateSchema,
+  articleDeleteSchema,
   articleListQuerySchema,
   articleParamsSchema,
   articlePatchSchema,
@@ -49,6 +50,7 @@ export const ARTICLE_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/articles/photos/:assetId', operationId: 'previewAdminArticlePhoto' },
   { method: 'GET', path: '/api/v1/public/article-photos/:assetId', operationId: 'downloadPublicArticlePhoto' },
   { method: 'PATCH', path: '/api/v1/admin/articles/:articleId', operationId: 'updateAdminArticle' },
+  { method: 'DELETE', path: '/api/v1/admin/articles/:articleId', operationId: 'deleteAdminArticle' },
   { method: 'POST', path: '/api/v1/admin/articles/:articleId/transitions', operationId: 'transitionAdminArticle' },
   { method: 'GET', path: '/api/v1/public/article-categories', operationId: 'listPublicArticleCategories' },
   { method: 'GET', path: '/api/v1/public/articles', operationId: 'listPublicArticles' },
@@ -203,6 +205,15 @@ export function createArticleRouter(dependencies: ArticleRouterDependencies): Ro
         await dependencies.service.updateArticle(principal(response), articleId, input, current),
         current.requestId
       ));
+    } catch (error) { sendError(request, response, error); }
+  });
+
+  router.delete('/admin/articles/:articleId', async (request, response) => {
+    try {
+      const { articleId } = articleParamsSchema.parse(request.params);
+      const input = articleDeleteSchema.parse(request.body ?? {});
+      const current = context(request);
+      response.status(200).json(toSuccessResponse(await dependencies.service.deleteArticle(principal(response), articleId, input, current), current.requestId));
     } catch (error) { sendError(request, response, error); }
   });
 

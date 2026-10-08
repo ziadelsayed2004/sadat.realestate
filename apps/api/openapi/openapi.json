@@ -8320,7 +8320,52 @@
         },
         "responses": {
           "200": {
-            "description": "Draft article updated with optimistic version control",
+            "description": "Draft or published article updated with optimistic version control; published edits require content management and publishing permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ArticleError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ArticleError"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteAdminArticle",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArticleDeleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Article deleted from administration and public access; audit reason retained",
             "content": {
               "application/json": {
                 "schema": {

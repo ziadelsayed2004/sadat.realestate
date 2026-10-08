@@ -232,7 +232,7 @@ test('inactive categories, in-use deletion, duplicate slugs, and publish permiss
 });
 
 
-test('admin article lists accept stored public display fields without leaking them into the strict admin contract', async () => {
+test('admin article lists retain saved cover previews and omit computed reading time', async () => {
   const repository = createMemoryArticleRepository({ articles: [{
     id: '4123456789abcdef01234567', categoryId: '5123456789abcdef01234567',
     slug: 'display-fields', title: { en: 'Display fields' }, body: { en: 'Article body' },
@@ -242,7 +242,58 @@ test('admin article lists accept stored public display fields without leaking th
   const service = createArticleService({ repository, authorization: { authorize: async () => true }, audit: { record: async () => 'audit-id' } });
   const result = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
   assert.equal(result.data.items.length, 1);
-  assert.equal('imageUrl' in result.data.items[0]!, false);
+  assert.equal(result.data.items[0]?.imageUrl, '/assets/article.jpg');
   assert.equal('readingTimeMinutes' in result.data.items[0]!, false);
   assert.equal((await repository.findArticle('4123456789abcdef01234567'))!.imageUrl, '/assets/article.jpg');
+});
+
+test('published article edits and cover removal require both content management and publishing permission', async () => {
+  const { service, repository } = fixture();
+  const category = await createCategory(service, 'editable-guides');
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { ar: 'Arabic title' }, body: { ar: 'Arabic body' }, coverAssetId: 'cccccccccccccccccccccccc', reason: 'Create article' }, CONTEXT);
+  const review = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'pending_review', version: draft.version, reason: 'Review article' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'published', version: review.version, reason: 'Publish article' }, CONTEXT);
+  assert.deepEqual(published.availableActions, ['update', 'archive', 'delete']);
+  const limited = createArticleService({ repository, authorization: { authorize: async (_id, permission) => permission === 'admin:content.manage' }, audit: { record: async () => 'aaaaaaaaaaaaaaaaaaaaaaaa' } });
+  await assert.rejects(limited.updateArticle(PRINCIPAL, draft.id, { version: published.version, title: { en: 'Unauthorized edit' }, reason: 'Attempt edit' }, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_FORBIDDEN');
+  const edited = await service.updateArticle(PRINCIPAL, draft.id, { version: published.version, title: { ar: 'Updated title' }, coverAssetId: null, reason: 'Update published article' }, CONTEXT);
+  assert.equal(edited.status, 'published');
+  assert.equal(edited.coverAssetId, undefined);
+  assert.equal(edited.imageUrl, undefined);
+  assert.equal((await service.getPublicBySlug(edited.slug, 'ar')).title.ar, 'Updated title');
+});
+
+test('deleting articles checks permissions and versions, removes public access and records the reason', async () => {
+  const { service, repository, auditRecords } = fixture();
+  const category = await createCategory(service, 'deletion-guides');
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Delete this guide' }, body: { en: 'Guide body' }, reason: 'Create deletion fixture' }, CONTEXT);
+  const review = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'pending_review', version: draft.version, reason: 'Submit fixture for review' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'published', version: review.version, reason: 'Publish deletion fixture' }, CONTEXT);
+  const limited = createArticleService({ repository, authorization: { authorize: async (_id, permission) => permission !== 'admin:content.publish' }, audit: { record: async () => 'audit-id' } });
+  const deletion = { version: published.version, reason: 'Remove obsolete guide permanently' };
+  await assert.rejects(limited.deleteArticle(PRINCIPAL, published.id, deletion, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_FORBIDDEN');
+  await assert.rejects(service.deleteArticle(PRINCIPAL, published.id, { ...deletion, version: 0 }, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_VERSION_CONFLICT');
+  assert.equal((await service.getPublicBySlug(published.slug, 'en')).id, published.id);
+  assert.deepEqual(await service.deleteArticle(PRINCIPAL, published.id, deletion, CONTEXT), { id: published.id, deleted: true });
+  assert.equal(await repository.findArticle(published.id), null);
+  await assert.rejects(service.getPublicBySlug(published.slug, 'en'), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_NOT_FOUND');
+  assert.equal((await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' })).total, 0);
+  assert.equal(auditRecords.at(-1)?.action, 'article.delete');
+  assert.equal(auditRecords.at(-1)?.reason, deletion.reason);
+  await assert.rejects(service.deleteArticle(PRINCIPAL, published.id, deletion, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_NOT_FOUND');
+});
+
+test('replacing a published cover validates the new image and preserves publication state', async () => {
+  const { service, repository } = fixture();
+  const category = await createCategory(service, 'image-guides');
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Image guide' }, body: { en: 'Guide body' }, reason: 'Create image fixture' }, CONTEXT);
+  const review = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'pending_review', version: draft.version, reason: 'Submit image fixture' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'published', version: review.version, reason: 'Publish image fixture' }, CONTEXT);
+  const validated: string[] = [];
+  const images = createArticleService({ repository, authorization: { authorize: async () => true }, audit: { record: async () => 'audit-id' }, validateImage: async id => { validated.push(id); } });
+  const assetId = 'dddddddddddddddddddddddd';
+  const replaced = await images.updateArticle(PRINCIPAL, published.id, { version: published.version, coverAssetId: assetId, reason: 'Replace guide cover' }, CONTEXT);
+  assert.deepEqual(validated, [assetId]);
+  assert.equal(replaced.status, 'published');
+  assert.equal((await images.getPublicBySlug(replaced.slug, 'en')).imageUrl, `/api/v1/public/article-photos/${assetId}`);
 });

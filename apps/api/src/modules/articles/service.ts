@@ -9,6 +9,7 @@ import {
   articleCategoryPatchSchema,
   articleCreateSchema,
   articleDataSchema,
+  articleDeleteSchema,
   articleIdSchema,
   articleListQuerySchema,
   articlePatchSchema,
@@ -26,6 +27,7 @@ import {
   type ArticleCategoryListQuery,
   type ArticleCategoryPatch,
   type ArticleCreate,
+  type ArticleDelete,
   type ArticleListQuery,
   type ArticlePatch,
   type ArticlePublic,
@@ -88,6 +90,7 @@ export interface ArticleService {
   createArticle(principal: ArticlePrincipal, input: ArticleCreate, context: ArticleMutationContext): Promise<Article>;
   updateArticle(principal: ArticlePrincipal, id: string, input: ArticlePatch, context: ArticleMutationContext): Promise<Article>;
   transitionArticle(principal: ArticlePrincipal, id: string, input: ArticleTransitionRequest, context: ArticleMutationContext): Promise<Article>;
+  deleteArticle(principal: ArticlePrincipal, id: string, input: ArticleDelete, context: ArticleMutationContext): Promise<{ id: string; deleted: true }>;
   listPublic(query: ArticleListQuery): Promise<{ data: ArticlePublic[]; page: number; limit: number; total: number }>;
   getPublicBySlug(slug: string, locale: SupportedLocale): Promise<ArticlePublic>;
 }
@@ -126,10 +129,12 @@ function categoryActions(manage: boolean): ArticleCategory['availableActions'] {
 function articleActions(status: ArticleStatus, manage: boolean, publish: boolean): Article['availableActions'] {
   const actions: Article['availableActions'] = [];
   if (manage && status === 'draft') actions.push('update', 'submit');
-  if (!publish) return actions;
-  if (status === 'pending_review') actions.push('publish', 'return_to_draft');
-  if (status === 'published') actions.push('archive');
-  if (status === 'archived') actions.push('restore');
+  if (publish) {
+    if (status === 'pending_review') actions.push('publish', 'return_to_draft');
+    if (status === 'published') { if (manage) actions.push('update'); actions.push('archive'); }
+    if (status === 'archived') actions.push('restore');
+  }
+  if (manage && (status === 'draft' || publish)) actions.push('delete');
   return actions;
 }
 
@@ -144,7 +149,7 @@ function categoryData(item: StoredArticleCategory, manage: boolean): ArticleCate
 
 function articleData(item: StoredArticle, manage: boolean, publish: boolean): Article {
   const adminFields = { ...item };
-  delete adminFields.imageUrl;
+  // Include the saved cover URL so administrators can see legacy article images.
   delete adminFields.readingTimeMinutes;
   return articleDataSchema.parse({
     ...adminFields,
@@ -379,7 +384,11 @@ export function createArticleService(dependencies: {
       await requirePermission(principal.userId, 'admin:content.manage');
       const before = await dependencies.repository.findArticle(id);
       if (!before) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
-      if (before.status !== 'draft') throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
+      if (before.status !== 'draft' && before.status !== 'published') throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
+      if (before.status === 'published') {
+        await requirePermission(principal.userId, 'admin:content.publish');
+        if (!Object.values(input.body ?? before.body).some(value => value?.trim())) throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
+      }
       if (input.categoryId) await requireActiveCategory(input.categoryId);
       for (const id of [input.coverAssetId !== before.coverAssetId ? input.coverAssetId : undefined, ...(input.galleryAssetIds ?? [])]) { if (id) await dependencies.validateImage?.(id); }
       const at = now();
@@ -427,6 +436,20 @@ export function createArticleService(dependencies: {
       return output;
     },
 
+    async deleteArticle(principal, id, unparsedInput, context) {
+      articleIdSchema.parse(id);
+      const input = articleDeleteSchema.parse(unparsedInput);
+      await requirePermission(principal.userId, 'admin:content.manage');
+      const before = await dependencies.repository.findArticle(id);
+      if (!before) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
+      if (before.status !== 'draft') await requirePermission(principal.userId, 'admin:content.publish');
+      const result = await dependencies.repository.deleteArticle(id, input.version);
+      if (result.kind === 'not_found') throw new ArticleServiceError('ARTICLE_NOT_FOUND');
+      if (result.kind === 'version_conflict') throw new ArticleServiceError('ARTICLE_VERSION_CONFLICT');
+      await audit('article.delete', 'article', id, principal, input.reason, articleAuditSnapshot(articleData(before, true, true)), null, context, now());
+      return { id, deleted: true };
+    },
+
     async listPublic(unparsedQuery) {
       const query = articleListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.listPublicArticles(query);
@@ -458,6 +481,7 @@ export function createArticleService(dependencies: {
     deleteCategory: (...args) => dependencies.transaction!(() => service.deleteCategory(...args)),
     createArticle: (...args) => dependencies.transaction!(() => service.createArticle(...args)),
     updateArticle: (...args) => dependencies.transaction!(() => service.updateArticle(...args)),
-    transitionArticle: (...args) => dependencies.transaction!(() => service.transitionArticle(...args))
+    transitionArticle: (...args) => dependencies.transaction!(() => service.transitionArticle(...args)),
+    deleteArticle: (...args) => dependencies.transaction!(() => service.deleteArticle(...args))
   };
 }

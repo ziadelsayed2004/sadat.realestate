@@ -109,6 +109,7 @@ export interface ArticleRepository {
   createArticle(value: ArticleCreateRecord, actorId: string, at: Date): Promise<ArticleWriteResult>;
   updateArticle(id: string, version: number, changes: ArticleChanges, actorId: string, at: Date): Promise<ArticleWriteResult>;
   transitionArticle(id: string, version: number, status: ArticleStatus, actorId: string, at: Date): Promise<ArticleWriteResult>;
+  deleteArticle(id: string, version: number): Promise<{ kind: 'deleted' | 'not_found' | 'version_conflict' }>;
   listPublicArticles(query: ArticleListQuery): Promise<{ items: PublicStoredArticle[]; total: number }>;
   findPublicArticleBySlug(slug: string): Promise<PublicStoredArticle | null>;
 }
@@ -341,6 +342,12 @@ export function createMongooseArticleRepository(models: ArticleModels): ArticleR
       return { kind: 'written', item: mapArticle(row as ArticleRecord) };
     },
 
+    async deleteArticle(id, version) {
+      const row = await models.Article.findOneAndDelete({ _id: id, version });
+      if (row) return { kind: 'deleted' };
+      return await models.Article.exists({ _id: id }) ? { kind: 'version_conflict' } : { kind: 'not_found' };
+    },
+
     async listPublicArticles(query) {
       const categoryRows = await models.ArticleCategory.find({ active: true }).lean();
       const categories = new Map(categoryRows.map((row) => {
@@ -508,6 +515,13 @@ export function createMemoryArticleRepository(
       if (status === 'draft') delete next.publishedAt;
       articles.set(id, next);
       return { kind: 'written', item: next };
+    },
+    async deleteArticle(id, version) {
+      const before = articles.get(id);
+      if (!before) return { kind: 'not_found' };
+      if (before.version !== version) return { kind: 'version_conflict' };
+      articles.delete(id);
+      return { kind: 'deleted' };
     },
     async listPublicArticles(query) {
       const activeCategories = new Map([...categories.values()].filter((item) => item.active).map((item) => [item.id, item]));

@@ -22,14 +22,14 @@ export function ArticleImages({ value, locale, upload, load, onChange, onBusy, o
     });
     return () => controller.abort();
   }, [ids, load, urls]);
-  const select = async (file?: File) => {
+  const select = async (file?: File, cover = false) => {
     if (!file || busy) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size === 0 || file.size > 10 * 1024 * 1024) { setError(ar ? 'اختر JPG أو PNG أو WebP بحجم لا يتجاوز 10 ميجابايت.' : 'Choose JPG, PNG or WebP up to 10 MB.'); return; }
     setBusy(true); onBusy(true); setError('');
     try {
       const photo = await upload(file); if (!mounted.current) return;
       const url = URL.createObjectURL(file); allocated.current.push(url); setUrls(current => ({ ...current, [photo.id]: url }));
-      onChange(value.coverId ? { ...value, galleryIds: [...value.galleryIds, photo.id] } : { ...value, coverId: photo.id });
+      onChange(cover || !value.coverId ? { ...value, coverId: photo.id } : { ...value, galleryIds: [...value.galleryIds, photo.id] });
     } catch { if (mounted.current) setError(ar ? 'تعذر رفع الصورة. أعد المحاولة؛ نص المقال محفوظ في النموذج.' : 'Image upload failed. Retry; your article text remains in the form.'); }
     finally { if (mounted.current) { setBusy(false); onBusy(false); } }
   };
@@ -40,6 +40,7 @@ export function ArticleImages({ value, locale, upload, load, onChange, onBusy, o
       {id !== value.coverId ? <Button type="button" size="sm" variant="secondary" onClick={() => onChange({ coverId: id, galleryIds: [...(value.coverId ? [value.coverId] : []), ...value.galleryIds.filter(item => item !== id)] })}>{ar ? 'تعيين كغلاف' : 'Use as cover'}</Button> : null}
       <Button type="button" size="sm" variant="secondary" onClick={() => onChange({ ...(id !== value.coverId && value.coverId ? { coverId: value.coverId } : {}), galleryIds: value.galleryIds.filter(item => item !== id) })}>{ar ? 'إزالة' : 'Remove'}</Button>
     </div>)}</div>
+    <label>{ar ? 'رفع أو تغيير صورة الغلاف' : 'Upload or replace cover'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file, true); }} /></label>
     <label>{ar ? 'إضافة صورة' : 'Add image'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || Boolean(value.coverId && value.galleryIds.length >= 12)} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file); }} /></label>
     {busy ? <p role="status">{ar ? 'جارٍ رفع وفحص الصورة…' : 'Uploading and scanning image…'}</p> : null}{error ? <p role="alert">{error}</p> : null}
   </fieldset>;

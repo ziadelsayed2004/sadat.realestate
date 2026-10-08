@@ -12,6 +12,8 @@ import {
   articleCategorySuccessEnvelopeSchema,
   articleCategoryDeleteSuccessEnvelopeSchema,
   articleCreateSchema,
+  articleDeleteSchema,
+  articleDeleteSuccessEnvelopeSchema,
   articleParamsSchema,
   articlePatchSchema,
   articleSuccessEnvelopeSchema,
@@ -33,6 +35,7 @@ import {
   type ArticleCategoryListQuery,
   type ArticleCategoryPatch,
   type ArticleCreate,
+  type ArticleDelete,
   type ArticlePatch,
   type ArticleTransitionRequest,
   type CmsAdminContentData,
@@ -75,6 +78,7 @@ export type AdminArticlesLoader = (query: ArticleAdminListQuery, signal?: AbortS
 export type AdminCategoriesLoader = (query: ArticleCategoryListQuery, signal?: AbortSignal) => Promise<AdminCategoryListData>;
 export type AdminArticleCreateMutation = (input: ArticleCreate, signal?: AbortSignal) => Promise<Article>;
 export type AdminArticleUpdateMutation = (articleId: string, input: ArticlePatch, signal?: AbortSignal) => Promise<Article>;
+export type AdminArticleDeleteMutation = (articleId: string, input: ArticleDelete, signal?: AbortSignal) => Promise<{ id: string; deleted: true }>;
 export type AdminArticleTransitionMutation = (articleId: string, input: ArticleTransitionRequest, signal?: AbortSignal) => Promise<Article>;
 export type AdminCategoryCreateMutation = (input: ArticleCategoryCreate, signal?: AbortSignal) => Promise<ArticleCategory>;
 export type AdminCategoryUpdateMutation = (categoryId: string, input: ArticleCategoryPatch, signal?: AbortSignal) => Promise<ArticleCategory>;
@@ -239,6 +243,7 @@ export function createAdminContentSource(options: Omit<CommonOptions, 'signal'> 
       return response.blob();
     }),
     loadArticles: createAdminArticlesLoader(options),
+    deleteArticle: async (id: string, input: ArticleDelete) => (await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_ARTICLES_ROUTE}/${articleParamsSchema.parse({ articleId: id }).articleId}`, { method: 'DELETE', responseSchema: articleDeleteSuccessEnvelopeSchema, json: articleDeleteSchema.parse(input), ...requestOptions(options) }))).data.data,
     createArticle: (input: ArticleCreate, signal?: AbortSignal) => createAdminArticle(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     updateArticle: (id: string, input: ArticlePatch, signal?: AbortSignal) => updateAdminArticle(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     transitionArticle: (id: string, input: ArticleTransitionRequest, signal?: AbortSignal) => transitionAdminArticle(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),

@@ -1251,8 +1251,9 @@
       "submit": "إرسال للمراجعة",
       "publish": "نشر",
       "return_to_draft": "إعادة لمسودة",
-      "archive": "أرشفة",
-      "restore": "استعادة"
+      "archive": "إزالة من الموقع",
+      "restore": "استعادة",
+      "delete": "حذف المقال"
     },
     "status": {
       "draft": "مسودة",

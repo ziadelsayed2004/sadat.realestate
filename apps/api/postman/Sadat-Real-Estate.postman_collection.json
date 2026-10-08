@@ -6421,7 +6421,7 @@
           }
         },
         {
-          "name": "Update admin article draft",
+          "name": "Update admin article",
           "request": {
             "method": "PATCH",
             "header": [
@@ -6456,7 +6456,56 @@
                 }
               ]
             },
-            "description": "Only draft articles are editable; the current optimistic version is required.",
+            "description": "Edit draft or published content and images. Published edits require management and publishing permission.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete admin article",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Remove isolated obsolete article\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                ":articleId"
+              ],
+              "variable": [
+                {
+                  "key": "articleId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Delete an article permanently using its current version and an audit reason. Non-draft deletion requires publishing permission.",
             "auth": {
               "type": "bearer",
               "bearer": [

@@ -14,7 +14,8 @@ export const articleAvailableActionSchema = z.enum([
   'publish',
   'return_to_draft',
   'archive',
-  'restore'
+  'restore',
+  'delete'
 ]);
 export const articleCategoryAvailableActionSchema = z.enum(['update', 'delete']);
 
@@ -110,13 +111,14 @@ export const articleDataSchema = z.object({
   seoDescription: localizedTextSchema.optional(),
   coverAssetId: articleIdSchema.optional(),
   galleryAssetIds: articleGallerySchema.optional(),
+  imageUrl: z.union([z.url().max(2048).refine(value => /^https?:\/\//iu.test(value)), z.string().max(2048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   authorId: articleIdSchema,
   status: articleStatusSchema,
   publishedAt: z.string().datetime({ offset: true }).optional(),
   version: z.number().int().nonnegative(),
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true }),
-  availableActions: z.array(articleAvailableActionSchema).max(3)
+  availableActions: z.array(articleAvailableActionSchema).max(4)
 }).strict();
 
 // Compatibility alias used by the original service-level implementation.
@@ -155,6 +157,8 @@ export const articleTransitionRequestSchema = z.object({
   version: z.number().int().nonnegative(),
   reason: mutationReasonSchema
 }).strict();
+export const articleDeleteSchema = z.object({ version: z.number().int().nonnegative(), reason: mutationReasonSchema }).strict();
+export const articleDeleteSuccessEnvelopeSchema = successEnvelopeSchema(z.object({ id: articleIdSchema, deleted: z.literal(true) }).strict());
 export const articleParamsSchema = z.object({ articleId: articleIdSchema }).strict();
 
 export const articleAdminListQuerySchema = z.object({
@@ -223,6 +227,7 @@ export type Article = z.infer<typeof articleDataSchema>;
 export type ArticleCreate = z.infer<typeof articleCreateSchema>;
 export type ArticlePatch = z.infer<typeof articlePatchSchema>;
 export type ArticleTransitionRequest = z.infer<typeof articleTransitionRequestSchema>;
+export type ArticleDelete = z.infer<typeof articleDeleteSchema>;
 export type ArticleAdminListQuery = z.infer<typeof articleAdminListQuerySchema>;
 export type ArticleAdminListData = z.infer<typeof articleAdminListDataSchema>;
 export type ArticleListQuery = z.infer<typeof articleListQuerySchema>;

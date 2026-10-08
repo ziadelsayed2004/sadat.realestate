@@ -1251,8 +1251,9 @@
       "submit": "Submit for review",
       "publish": "Publish",
       "return_to_draft": "Return to draft",
-      "archive": "Archive",
-      "restore": "Restore"
+      "archive": "Remove from website",
+      "restore": "Restore",
+      "delete": "Delete article"
     },
     "status": {
       "draft": "Draft",

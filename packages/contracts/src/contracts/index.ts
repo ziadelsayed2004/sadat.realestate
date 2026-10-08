@@ -544,7 +544,7 @@ export {
   articleCategoryListQuerySchema, articleCategoryListSuccessEnvelopeSchema,
   articleCategoryParamsSchema, articleCategoryPatchSchema, articleCategorySchema,
   articleCategorySuccessEnvelopeSchema, articleCreateSchema, articleDataSchema, articleIdSchema,
-  articleListQuerySchema, articleParamsSchema, articlePatchSchema,
+  articleListQuerySchema, articleParamsSchema, articlePatchSchema, articleDeleteSchema, articleDeleteSuccessEnvelopeSchema,
   articlePublicCategoryListDataSchema, articlePublicCategoryListQuerySchema,
   articlePublicCategoryListSuccessEnvelopeSchema, articlePublicCategorySchema,
   articlePublicListDataSchema, articlePublicListSuccessEnvelopeSchema, articlePublicSchema,
@@ -557,7 +557,7 @@ export type {
   ArticleCategoryListData, ArticleCategoryListQuery, ArticleCategoryPatch, ArticleCreate,
   ArticleListQuery, ArticlePatch, ArticlePublic, ArticlePublicCategory,
   ArticlePublicCategoryListData, ArticlePublicCategoryListQuery, ArticlePublicListData,
-  ArticleStatus, ArticleTransitionRequest
+  ArticleStatus, ArticleTransitionRequest, ArticleDelete
 } from '../articles/index.js';
 export {
   communityCommentCreateRequestSchema,

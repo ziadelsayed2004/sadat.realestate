@@ -82,6 +82,18 @@ function request(origin: string, method: string, path: string, token?: string, b
   });
 }
 
+test('article deletion HTTP route rejects unauthorized and stale requests then removes the public article', async () => withServer(async origin => {
+  const path = `/api/v1/admin/articles/${ARTICLE_ID}`;
+  const body = { version: 2, reason: 'Remove obsolete article' };
+  assert.equal((await request(origin, 'DELETE', path, undefined, body)).status, 401);
+  assert.equal((await request(origin, 'DELETE', path, 'viewer', body)).status, 403);
+  assert.equal((await request(origin, 'DELETE', path, 'admin', { ...body, version: 1 })).status, 409);
+  const deleted = await request(origin, 'DELETE', path, 'admin', body);
+  assert.equal(deleted.status, 200);
+  assert.deepEqual((await deleted.json() as { data: unknown }).data, { id: ARTICLE_ID, deleted: true });
+  assert.equal((await request(origin, 'GET', '/api/v1/public/articles/buying-in-sadat?locale=en')).status, 404);
+}));
+
 test('public article HTTP routes expose only published localized projections and active category metadata', async () => withServer(async (origin) => {
   const categories = await request(origin, 'GET', '/api/v1/public/article-categories?locale=en');
   assert.equal(categories.status, 200);
