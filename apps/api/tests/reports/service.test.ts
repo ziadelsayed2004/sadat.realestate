@@ -32,6 +32,9 @@ test('financial review separates quote and payment-proof states and emits non-re
   assert.equal(result.total, 1);
   assert.equal(result.items[0]?.financialState, 'payment_proof_approved');
   assert.equal(result.items[0]?.quotedTotalMinor, 1500);
+  assert.deepEqual(result.summary, { approvedRequests: 1, pendingRequests: 0, totals: [{ currency: 'EGP', amountMinor: 1500 }] });
+  assert.equal((await service.listFinancialReview(admin, { status: 'payment_approved' })).total, 1);
+  assert.equal((await service.listFinancialReview(admin, { status: 'payment_pending_review' })).total, 0);
   assert.equal('realizedRevenueMinor' in result.items[0]!, false);
   assert.equal('bankVerified' in result.items[0]!, false);
   const ledger = await service.listLedger(admin, { source: 'quote', page: 1, limit: 10 });
@@ -40,6 +43,17 @@ test('financial review separates quote and payment-proof states and emits non-re
   assert.equal(ledger.items.every(item => item.amountMinor === 1500), true);
   const detail = await service.getFinancialReview(admin, request.id);
   assert.equal(detail.paymentProofStatus, 'approved');
+});
+
+test('approved totals count one request once, ignore pending and foreign receipts, and do not mix currencies', async () => {
+  const { advertisingSummary } = await import('../../src/modules/reports/advertising-summary.js');
+  const duplicateProof = { ...record.paymentProofs![0]!, id: 'e'.repeat(24) };
+  const duplicated = { ...record, paymentProofs: [...record.paymentProofs!, duplicateProof] };
+  const pending = { ...record, request: { ...request, id: 'f'.repeat(24) }, quote: undefined, paymentProofs: [{ ...duplicateProof, adRequestId: 'f'.repeat(24), status: 'pending_review' as const }] };
+  assert.deepEqual(advertisingSummary([duplicated, duplicated, pending]), { approvedRequests: 1, pendingRequests: 1, totals: [{ currency: 'EGP', amountMinor: 1500 }] });
+  assert.equal(advertisingSummary([{ ...record, paymentProofs: [{ ...duplicateProof, providerId: '9'.repeat(24) }] }]).approvedRequests, 0);
+  assert.equal(advertisingSummary([record], { from: '2026-08-14T00:00:00Z', to: '2026-08-15T00:00:00Z' }).totals.length, 0);
+  assert.equal(advertisingSummary([{ ...record, request: { ...request, paymentWaiver: { actorId: admin.sub, reason: 'Free ad', grantedAt: request.createdAt } } }]).totals.length, 0);
 });
 
 test('financial reports require verified admins, reject unsafe filters, and fail closed for source ownership', async () => {

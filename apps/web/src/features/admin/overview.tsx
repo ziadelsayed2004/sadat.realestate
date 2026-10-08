@@ -1,3 +1,4 @@
+﻿import { AdditionalMetrics } from './additional-metrics.tsx';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -30,7 +31,7 @@ function stateForError(error: unknown): Exclude<AdminOverviewState, 'loading' | 
 }
 
 function hasMetrics(data: AdminOverviewData): boolean {
-  return Object.values(data.metrics).some(value => value > 0);
+  return Object.values(data.metrics).some(value => (value ?? 0) > 0);
 }
 
 function stateForData(data: AdminOverviewData): AdminOverviewState {
@@ -351,19 +352,6 @@ function MetricSection({ title, metrics, data, locale }: { readonly title: strin
   );
 }
 
-function PlaceholderMetricSection({ title, labels, unavailable }: { readonly title: string; readonly labels: readonly string[]; readonly unavailable: string }) {
-  return (
-    <section className="admin-dashboard__metric-section" aria-labelledby={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>
-      <div className="admin-dashboard__section-heading">
-        <h2 id={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>{title}</h2>
-      </div>
-      <div className="admin-dashboard__metric-grid">
-        {labels.map(label => <UnavailableCard key={label} label={label} unavailable={unavailable} />)}
-      </div>
-    </section>
-  );
-}
-
 function UnavailableCard({ label, unavailable }: { readonly label: string; readonly unavailable: string }) {
   return (
     <article className="admin-dashboard__metric admin-dashboard__metric--unavailable" data-state="unavailable">
@@ -477,7 +465,7 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 
 function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
-  const extraMetricSections = copy.overview.placeholderSections;
+
   const headingActions = [
     [copy.overview.actions.reviewAccounts, '/admin/users'],
     [copy.overview.actions.reviewProperties, '/admin/properties'],
@@ -499,7 +487,7 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
       </div>
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />
       <MetricSection title={copy.overview.operationsTitle} metrics={operationMetrics} data={data.metrics} locale={locale} />
-      {extraMetricSections.map(section => <PlaceholderMetricSection key={section.title} title={section.title} labels={section.labels} unavailable={copy.unavailable} />)}
+      <AdditionalMetrics metrics={data.metrics} locale={locale} />
       <ExtendedOverview data={data} locale={locale} />
     </div>
   );

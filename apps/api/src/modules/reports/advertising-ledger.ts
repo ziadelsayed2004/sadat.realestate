@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { advertisingSummary } from './advertising-summary.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { AdCalendarEvent, AdQuote, AdRequest, PaymentProofData, AdFinancialReviewListData, AdFinancialReviewQuery, AdFinancialReviewRow, AdLedgerEntry, AdLedgerListData, AdLedgerQuery } from '@sadat-real-estate/contracts';
 import { adFinancialReviewListDataSchema, adFinancialReviewQuerySchema, adFinancialReviewRowSchema, adLedgerEntrySchema, adLedgerListDataSchema, adLedgerQuerySchema } from '@sadat-real-estate/contracts';
@@ -141,9 +142,11 @@ export function createAdvertisingLedgerService(dependencies: AdvertisingLedgerDe
     const records = await dependencies.source.list();
     const rows = records.filter(record => record.request.placementKey && record.request.intervalStart && record.request.intervalEnd).map(row).filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.providerId || item.providerId === query.providerId) && (!query.from || inRange(item.updatedAt, query.from, query.to)) && (!query.to || inRange(item.createdAt, query.from, query.to))).filter(item => {
       if (!query.status || query.status === 'all') return true;
-      return query.status === item.financialState || query.status === item.scheduleStatus;
+      const states = { payment_pending_review: 'payment_proof_pending_review', payment_approved: 'payment_proof_approved', payment_rejected: 'payment_proof_rejected' };
+      return (states[query.status as keyof typeof states] ?? query.status) === item.financialState || query.status === item.scheduleStatus;
     }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.requestId.localeCompare(a.requestId));
-    return { items: rows.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: rows.length };
+    const selected = new Set(rows.map(item => item.requestId));
+    return { items: rows.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: rows.length, summary: advertisingSummary(records.filter(record => selected.has(record.request.id))) };
   };
   const detail = async (claims: AccessTokenClaims, requestId: string): Promise<AdFinancialReviewRow> => {
     await authorizedAdmin(claims, dependencies.authorization);

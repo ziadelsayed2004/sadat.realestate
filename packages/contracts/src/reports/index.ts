@@ -42,6 +42,7 @@ export const adFinancialReviewRowSchema = z.object({
 }).strict();
 export const adFinancialReviewListDataSchema = z.object({
   items: z.array(adFinancialReviewRowSchema).max(100),
+  summary: z.object({ approvedRequests: z.number().int().nonnegative(), pendingRequests: z.number().int().nonnegative(), totals: z.array(z.object({ currency: z.string().regex(/^[A-Z]{3}$/), amountMinor: moneyMinorSchema }).strict()) }).strict().optional(),
   page: z.number().int().positive(),
   limit: z.number().int().positive(),
   total: z.number().int().nonnegative()

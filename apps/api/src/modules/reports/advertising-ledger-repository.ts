@@ -29,6 +29,9 @@ function request(row: RequestRow): AdRequest {
   return adRequestSchema.parse({
     id: row._id.toHexString(),
     providerId: row.providerId.toHexString(),
+    requestMode: row.requestMode,
+    ...(row.contactPhone ? { contactPhone: row.contactPhone } : {}),
+    ...(row.paymentWaiver ? { paymentWaiver: { actorId: row.paymentWaiver.actorId, reason: row.paymentWaiver.reason, grantedAt: row.paymentWaiver.grantedAt.toISOString() } } : {}),
     placementKey: row.placementKey,
     purpose: row.purpose,
     intervalStart: row.intervalStart?.toISOString(),

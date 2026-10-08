@@ -1,6 +1,8 @@
 import type { Connection } from 'mongoose';
 import type { AdminOverviewMetrics, AdminOverviewQuery } from '@sadat-real-estate/contracts';
 import type { AdminOverviewAggregationSource } from './overview-service.js';
+import { createMongooseAdvertisingFinancialSource } from '../reports/advertising-ledger-repository.js';
+import { advertisingSummary } from '../reports/advertising-summary.js';
 
 type MongoCollection = ReturnType<Connection['collection']>;
 export type AdminOverviewFilter = NonNullable<Parameters<MongoCollection['countDocuments']>[0]>;
@@ -75,9 +77,24 @@ export function createAdminOverviewSource(
 export function createMongooseAdminOverviewSource(
   connection: Connection
 ): AdminOverviewAggregationSource {
-  return createAdminOverviewSource({
+  const base = createAdminOverviewSource({
     count(collection, filter) {
       return connection.collection(collection).countDocuments(filter);
     }
   });
+  const financial = createMongooseAdvertisingFinancialSource(connection);
+  return { async aggregate(range) {
+    const [metrics, records, adRequests, paymentProofs, activeAds, publishedArticles, communityPosts, communityComments, contentReports] = await Promise.all([
+      base.aggregate(range), financial.list(),
+      connection.collection('ad_requests').countDocuments(dateRange('createdAt', range)),
+      connection.collection('payment_proofs').countDocuments({ ...dateRange('uploadedAt', range), active: true }),
+      connection.collection('ad_banners').countDocuments({ status: { $in: ['active', 'scheduled'] }, startAt: { $lte: new Date() }, endAt: { $gt: new Date() } }),
+      connection.collection('articles').countDocuments({ ...dateRange('publishedAt', range), status: 'published' }),
+      connection.collection('community_posts').countDocuments({ ...dateRange('createdAt', range), status: 'published' }),
+      connection.collection('community_comments').countDocuments(dateRange('createdAt', range)),
+      connection.collection('community_reports').countDocuments(dateRange('createdAt', range))
+    ]);
+    const summary = advertisingSummary(records, range);
+    return { ...metrics, adRequests, paymentProofs, activeAds, publishedArticles, communityPosts, communityComments, contentReports, approvedAdPaymentsMinor: summary.totals.find(item => item.currency === 'EGP')?.amountMinor ?? 0 };
+  } };
 }

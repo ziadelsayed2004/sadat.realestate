@@ -26,6 +26,13 @@ function success(data: unknown): Response {
 }
 
 describe('Admin overview', () => {
+  it('shows approved payment amounts in EGP and real advertisement counts', () => {
+    renderWithLocale(<AdminOverview locale="en" session={session} initialData={{ ...overview, metrics: { ...overview.metrics, adRequests: 3, paymentProofs: 2, activeAds: 1, approvedAdPaymentsMinor: 50000, publishedArticles: 4 } }} />, { locale: 'en' });
+    expect(screen.getByTestId('admin-metric-approvedAdPaymentsMinor')).toHaveTextContent('500.00');
+    expect(screen.getByTestId('admin-metric-adRequests')).toHaveTextContent('3');
+    expect(screen.getByTestId('admin-metric-paymentProofs')).toHaveTextContent('2');
+    expect(screen.getByTestId('admin-metric-publishedArticles')).toHaveTextContent('4');
+  });
   it('requests the implemented overview contract with a bounded date range and admin authorization', async () => {
     const requests: Array<{ url: string; authorization: string | null }> = [];
     const client = new ApiClient({

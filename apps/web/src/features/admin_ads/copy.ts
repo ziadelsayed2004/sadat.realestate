@@ -213,5 +213,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
   },};
 
 export function getAdminAdsCopy(locale: SupportedLocale): AdminAdsCopy {
-  return localizeCopy('admin_ads/copy#getAdminAdsCopy', locale, copyByLocale[locale]);
+  const copy = localizeCopy('admin_ads/copy#getAdminAdsCopy', locale, copyByLocale[locale]);
+  return { ...copy, columns: { ...copy.columns, quote: locale === 'ar' ? 'عرض السعر' : 'Quote' }, financialState: { ...copy.financialState,
+    all: copy.allStatuses, payment_pending_review: copy.financialState.payment_proof_pending_review ?? '',
+    payment_approved: copy.financialState.payment_proof_approved ?? '', payment_rejected: copy.financialState.payment_proof_rejected ?? ''
+  } };
 }

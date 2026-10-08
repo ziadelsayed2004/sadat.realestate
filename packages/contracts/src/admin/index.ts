@@ -48,7 +48,15 @@ export const adminOverviewMetricsSchema = z.object({
   verifiedProviders: adminOverviewMetricSchema,
   publishedProperties: adminOverviewMetricSchema,
   openRequests: adminOverviewMetricSchema,
-  pendingReviews: adminOverviewMetricSchema
+  pendingReviews: adminOverviewMetricSchema,
+  adRequests: adminOverviewMetricSchema.optional(),
+  paymentProofs: adminOverviewMetricSchema.optional(),
+  activeAds: adminOverviewMetricSchema.optional(),
+  approvedAdPaymentsMinor: adminOverviewMetricSchema.optional(),
+  publishedArticles: adminOverviewMetricSchema.optional(),
+  communityPosts: adminOverviewMetricSchema.optional(),
+  communityComments: adminOverviewMetricSchema.optional(),
+  contentReports: adminOverviewMetricSchema.optional()
 }).strict();
 
 export const adminOverviewDataSchema = z.object({
