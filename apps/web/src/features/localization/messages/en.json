@@ -457,6 +457,7 @@
       "totalAccounts": "Total accounts",
       "totalSeekers": "Total seekers",
       "loaded": "Loaded records",
+      "matched": "Matching accounts",
       "seekers": "Seekers",
       "providers": "Providers",
       "verified": "Verified accounts",
@@ -467,8 +468,7 @@
       "rejected": "Rejected",
       "suspended": "Suspended",
       "totalRequests": "Total applications",
-      "needsInformation": "Needs information",
-      "matched": "Matching accounts"
+      "needsInformation": "Needs information"
     },
     "documents": {
       "title": "Provider documents",
@@ -738,10 +738,15 @@
       "ended": "Ended"
     },
     "view": "View",
-    "reviewAction": "Review action",
     "viewPaymentReview": "View details and review payment",
     "paymentMethod": "Payment method",
-    "paymentMethodLabels": { "vodafone_cash": "Vodafone Cash", "instapay": "InstaPay", "bank_transfer": "Bank transfer", "cash": "Cash" },
+    "paymentMethodLabels": {
+      "vodafone_cash": "Vodafone Cash",
+      "instapay": "InstaPay",
+      "bank_transfer": "Bank transfer",
+      "cash": "Cash"
+    },
+    "reviewAction": "Review action",
     "approve": "Approve",
     "reject": "Reject",
     "reasonLabel": "Action reason",
@@ -787,6 +792,34 @@
         "title": "Data ready",
         "body": "Records are rendered from the server-approved projection."
       }
+    }
+  },
+  "admin_ads/ledger-copy#getAdLedgerCopy": {
+    "title": "Advertisement and payment activity",
+    "help": "Each row records a request step, not a new payment. The same request can appear several times: quote issued, customer acceptance, receipt submission and review. Do not add these row amounts as collected revenue.",
+    "sources": {
+      "quote": "Price quote",
+      "payment_proof": "Payment receipt",
+      "schedule": "Advertisement display window"
+    },
+    "treatment": "Activity record, not an accounting entry",
+    "noAmount": "No amount recorded for this step",
+    "record": "Activity reference",
+    "request": "Open advertising request",
+    "action": "Completed action",
+    "meaning": "Record meaning",
+    "guide": "Financial review explained in the user guide",
+    "kinds": {
+      "quote_issued": "Quote sent to customer",
+      "quote_accepted": "Customer accepted the quote",
+      "quote_rejected": "Customer rejected the quote",
+      "quote_cancelled": "Quote cancelled",
+      "payment_proof_uploaded": "Customer submitted a payment receipt",
+      "payment_proof_approved": "Administrator approved the receipt",
+      "payment_proof_rejected": "Administrator rejected the receipt",
+      "scheduled": "Advertisement display scheduled",
+      "active": "Advertisement display window started",
+      "ended": "Advertisement display window ended"
     }
   },
   "admin_commissions/copy#getAdminCommissionsCopy": {
@@ -2182,10 +2215,10 @@
     "title": "User guide",
     "eyebrow": "Help centre",
     "description": "Task steps, field explanations, answers and direct links to the working screens.",
-    "language": "Detailed reference in Arabic • 6 October 2026 edition",
+    "language": "Detailed reference in Arabic • 8 October 2026 edition",
     "accountType": "Account type",
     "audienceNote": "This selection filters the instructions; it does not change your account role or permissions.",
-    "download": "Download results as text",
+    "download": "Download guide as Markdown (.md)",
     "search": "Search the guide",
     "placeholder": "Search a topic or route; Arabic explanations are included…",
     "category": "Section",
@@ -2528,9 +2561,14 @@
     "sendPaymentProof": "Send request",
     "paymentProofSendHelp": "Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.",
     "paymentProofInvalidFile": "Choose a non-empty PDF, JPG, or PNG file up to 10 MB.",
-    "choosePaymentMethod": "Choose payment method",
-    "paymentMethodLabels": { "vodafone_cash": "Vodafone Cash", "instapay": "InstaPay", "bank_transfer": "Bank transfer", "cash": "Cash" },
     "paymentMethod": "Payment method",
+    "choosePaymentMethod": "Choose payment method",
+    "paymentMethodLabels": {
+      "vodafone_cash": "Vodafone Cash",
+      "instapay": "InstaPay",
+      "bank_transfer": "Bank transfer",
+      "cash": "Cash"
+    },
     "paymentProofUploaded": "Payment proof was submitted for review.",
     "noPaymentProof": "No payment proof submitted.",
     "schedule": "Schedule",
@@ -2542,15 +2580,15 @@
       "description": "Describe your advertisement and add your contact number. Your request goes directly to administration for review and follow-up.",
       "placementKey": "Advertising placement code",
       "placementKeyHelp": "Include the property, project or company name and useful details. Administration sets the placement, period and price in a clear quote, then approves payment and activates the advertisement.",
+      "contactPhone": "Contact number",
+      "contactPhoneHelp": "A number administration can call to arrange your advertisement and payment.",
       "purpose": "What would you like to advertise?",
       "start": "Period start",
       "end": "Period end",
       "cancel": "Cancel",
       "save": "Send advertising request",
       "validation": "Enter a valid contact number and an advertising description of 2–500 characters.",
-      "close": "Close request form",
-      "contactPhone": "Contact number",
-      "contactPhoneHelp": "A number administration can call to arrange your advertisement and payment."
+      "close": "Close request form"
     },
     "commission": {
       "eyebrow": "Commission",
@@ -3485,6 +3523,8 @@
     "versionConflict": "The draft changed in another session. Reload it and try again.",
     "media": {
       "chooseImage": "Choose image",
+      "chooseVideo": "Choose video",
+      "videoKind": "Video",
       "chooseFloorPlan": "Choose floor plan",
       "imageKind": "Image",
       "floorPlanKind": "Floor plan",
@@ -3512,9 +3552,7 @@
       "permissionTitle": "Upload permission required",
       "permissionBody": "Media cannot be uploaded for this draft or session.",
       "versionConflictTitle": "Media version conflict",
-      "versionConflictBody": "The media order changed. Reload the draft before continuing.",
-      "chooseVideo": "Choose video",
-      "videoKind": "Video"
+      "versionConflictBody": "The media order changed. Reload the draft before continuing."
     },
     "contact": {
       "contactName": "Contact name",
@@ -4017,6 +4055,7 @@
     "galleryTitle": "Property gallery",
     "imageUnavailable": "Image unavailable",
     "mediaUnavailable": "No public media is available for this property yet.",
+    "videoUnavailable": "Unable to play this video. Try another browser or contact us about the property.",
     "sourceTitle": "Property source",
     "publishedSource": "Approved published source",
     "sourceTypes": {
@@ -4087,8 +4126,7 @@
     "morning": "Morning",
     "evening": "Evening",
     "extraMessage": "Additional message",
-    "contactWhatsapp": "Contact on WhatsApp",
-    "videoUnavailable": "Unable to play this video. Try another browser or contact us about the property."
+    "contactWhatsapp": "Contact on WhatsApp"
   },
   "public/developers-copy#getPublicDevelopersCopy": {
     "introEyebrow": "Trusted partners",

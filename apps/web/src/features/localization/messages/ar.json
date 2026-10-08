@@ -457,6 +457,7 @@
       "totalAccounts": "إجمالي الحسابات",
       "totalSeekers": "إجمالي الباحثين",
       "loaded": "السجلات المحملة",
+      "matched": "الحسابات المطابقة للفلتر",
       "seekers": "الباحثون عن عقار",
       "providers": "مقدمو العقارات",
       "verified": "الحسابات الموثقة",
@@ -467,8 +468,7 @@
       "rejected": "مرفوضة",
       "suspended": "موقوفة",
       "totalRequests": "إجمالي طلبات التحقق",
-      "needsInformation": "تحتاج معلومات",
-      "matched": "الحسابات المطابقة للفلتر"
+      "needsInformation": "تحتاج معلومات"
     },
     "documents": {
       "title": "مستندات مقدم العقار",
@@ -738,10 +738,15 @@
       "ended": "إنهاء"
     },
     "view": "عرض",
-    "reviewAction": "إجراء المراجعة",
     "viewPaymentReview": "عرض البيانات ومراجعة الدفع",
     "paymentMethod": "طريقة الدفع",
-    "paymentMethodLabels": { "vodafone_cash": "فودافون كاش", "instapay": "إنستا باي", "bank_transfer": "تحويل بنكي", "cash": "نقدًا" },
+    "paymentMethodLabels": {
+      "vodafone_cash": "فودافون كاش",
+      "instapay": "إنستا باي",
+      "bank_transfer": "تحويل بنكي",
+      "cash": "نقدًا"
+    },
+    "reviewAction": "إجراء المراجعة",
     "approve": "اعتماد",
     "reject": "رفض",
     "reasonLabel": "سبب الإجراء",
@@ -787,6 +792,34 @@
         "title": "البيانات جاهزة",
         "body": "تُعرض السجلات من إسقاط الخادم المعتمد."
       }
+    }
+  },
+  "admin_ads/ledger-copy#getAdLedgerCopy": {
+    "title": "سجل إجراءات الإعلان والدفع",
+    "help": "كل صف يسجل خطوة حدثت في الطلب، وليس دفعة جديدة. ظهور نفس الطلب أكثر من مرة طبيعي: إصدار عرض السعر، قبول العميل، إرسال الإيصال، ثم قرار الإدارة. لا تجمع مبالغ هذه الصفوف كإجمالي التحصيل.",
+    "sources": {
+      "quote": "عرض السعر",
+      "payment_proof": "إيصال الدفع",
+      "schedule": "موعد عرض الإعلان"
+    },
+    "treatment": "سجل متابعة، ليس قيدًا محاسبيًا",
+    "noAmount": "لا يوجد مبلغ مسجل لهذه الخطوة",
+    "record": "رقم السجل",
+    "request": "فتح طلب الإعلان",
+    "action": "الإجراء الذي تم",
+    "meaning": "معنى السجل",
+    "guide": "شرح المراجعة المالية في دليل الاستخدام",
+    "kinds": {
+      "quote_issued": "إرسال عرض السعر للعميل",
+      "quote_accepted": "موافقة العميل على عرض السعر",
+      "quote_rejected": "رفض العميل لعرض السعر",
+      "quote_cancelled": "إلغاء عرض السعر",
+      "payment_proof_uploaded": "إرسال العميل إيصال الدفع",
+      "payment_proof_approved": "اعتماد الإدارة لإيصال الدفع",
+      "payment_proof_rejected": "رفض الإدارة لإيصال الدفع",
+      "scheduled": "تحديد موعد عرض الإعلان",
+      "active": "بدء فترة عرض الإعلان",
+      "ended": "انتهاء فترة عرض الإعلان"
     }
   },
   "admin_commissions/copy#getAdminCommissionsCopy": {
@@ -2182,10 +2215,10 @@
     "title": "دليل الاستخدام",
     "eyebrow": "مركز المساعدة",
     "description": "خطوات واضحة، شرح الحقول، إجابات للأسئلة وروابط مباشرة لكل مهمة.",
-    "language": "الشرح التفصيلي باللغة العربية • إصدار 6 أكتوبر 2026",
+    "language": "الشرح التفصيلي باللغة العربية • إصدار 8 أكتوبر 2026",
     "accountType": "نوع الحساب",
     "audienceNote": "اختيار نوع الحساب يغيّر الشرح فقط ولا يغيّر دورك أو صلاحياتك.",
-    "download": "تحميل النتائج كملف نصي",
+    "download": "تحميل الشرح بصيغة Markdown (.md)",
     "search": "ابحث في الدليل",
     "placeholder": "مثال: نشر بانر، عمولة، مستندات، تعديل الفريق…",
     "category": "القسم",
@@ -2528,9 +2561,14 @@
     "sendPaymentProof": "إرسال الطلب",
     "paymentProofSendHelp": "اختيار الملف لا يرسله تلقائيًا. اضغط «إرسال الطلب» لإرسال إثبات الدفع للمراجعة.",
     "paymentProofInvalidFile": "اختر ملف PDF أو JPG أو PNG غير فارغ بحجم لا يتجاوز 10 ميجابايت.",
-    "choosePaymentMethod": "اختر طريقة الدفع",
-    "paymentMethodLabels": { "vodafone_cash": "فودافون كاش", "instapay": "إنستا باي", "bank_transfer": "تحويل بنكي", "cash": "نقدًا" },
     "paymentMethod": "طريقة الدفع",
+    "choosePaymentMethod": "اختر طريقة الدفع",
+    "paymentMethodLabels": {
+      "vodafone_cash": "فودافون كاش",
+      "instapay": "إنستا باي",
+      "bank_transfer": "تحويل بنكي",
+      "cash": "نقدًا"
+    },
     "paymentProofUploaded": "تم إرسال إثبات الدفع للمراجعة.",
     "noPaymentProof": "لم يتم إرسال إثبات دفع.",
     "schedule": "الجدولة",
@@ -2542,15 +2580,15 @@
       "description": "اكتب ما تريد الإعلان عنه ورقم التواصل؛ سيصل الطلب مباشرة إلى الإدارة لمراجعته والتواصل معك.",
       "placementKey": "كود موضع الإعلان",
       "placementKeyHelp": "اكتب اسم العقار أو المشروع أو الشركة، وأي تفاصيل تساعدنا. الإدارة تحدد مكان العرض والفترة والسعر في عرض واضح، ثم تعتمد الدفع وتفعّل الإعلان.",
+      "contactPhone": "رقم التواصل",
+      "contactPhoneHelp": "رقم يمكن للإدارة الاتصال بك عليه لترتيب الإعلان والدفع.",
       "purpose": "ماذا تريد الإعلان عنه؟",
       "start": "بداية الفترة",
       "end": "نهاية الفترة",
       "cancel": "إلغاء",
       "save": "إرسال طلب الإعلان",
       "validation": "أدخل رقم تواصل صحيحًا ووصفًا للإعلان من حرفين إلى 500 حرف.",
-      "close": "إغلاق نموذج الطلب",
-      "contactPhone": "رقم التواصل",
-      "contactPhoneHelp": "رقم يمكن للإدارة الاتصال بك عليه لترتيب الإعلان والدفع."
+      "close": "إغلاق نموذج الطلب"
     },
     "commission": {
       "eyebrow": "العمولة",
@@ -3485,6 +3523,8 @@
     "versionConflict": "تغيرت المسودة في جلسة أخرى. أعد تحميلها ثم حاول مرة أخرى.",
     "media": {
       "chooseImage": "اختيار صورة",
+      "chooseVideo": "اختيار فيديو",
+      "videoKind": "فيديو",
       "chooseFloorPlan": "اختيار مخطط",
       "imageKind": "صورة",
       "floorPlanKind": "مخطط طابق",
@@ -3512,9 +3552,7 @@
       "permissionTitle": "لا توجد صلاحية للرفع",
       "permissionBody": "لا يمكن رفع وسائط لهذه المسودة أو للجلسة الحالية.",
       "versionConflictTitle": "تعارض في نسخة الوسائط",
-      "versionConflictBody": "تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة.",
-      "chooseVideo": "اختيار فيديو",
-      "videoKind": "فيديو"
+      "versionConflictBody": "تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة."
     },
     "contact": {
       "contactName": "اسم مسؤول التواصل",
@@ -4017,6 +4055,7 @@
     "galleryTitle": "صور العقار",
     "imageUnavailable": "الصورة غير متاحة",
     "mediaUnavailable": "لا تتوفر وسائط عامة لهذا العقار حالياً.",
+    "videoUnavailable": "تعذر تشغيل الفيديو. جرّب متصفحاً آخر أو تواصل للاستفسار عن العقار.",
     "sourceTitle": "مصدر هذا العقار",
     "publishedSource": "مصدر منشور معتمد",
     "sourceTypes": {
@@ -4087,8 +4126,7 @@
     "morning": "صباحاً",
     "evening": "مساءً",
     "extraMessage": "رسالة إضافية",
-    "contactWhatsapp": "تواصل عبر واتساب",
-    "videoUnavailable": "تعذر تشغيل الفيديو. جرّب متصفحاً آخر أو تواصل للاستفسار عن العقار."
+    "contactWhatsapp": "تواصل عبر واتساب"
   },
   "public/developers-copy#getPublicDevelopersCopy": {
     "introEyebrow": "شركاء الثقة",

@@ -9,7 +9,7 @@ import { App } from '../src/features/frontend_foundation/app.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { resolveRoute } from '../src/routes/route-table.ts';
 import { audienceLabels, GUIDE_AUDIENCES, sectionsForAudience } from '../src/features/admin_user_guide/account-guides.ts';
-import { guideAsText } from '../src/features/admin_user_guide/export.ts';
+import { guideAsText, guideAsMarkdown, GUIDE_EDITION } from '../src/features/admin_user_guide/export.ts';
 
 const admin = { status: 'authenticated' as const, role: 'admin' as const };
 const topics = GUIDE_SECTIONS.flatMap(section => section.topics);
@@ -22,6 +22,17 @@ beforeEach(() => {
 });
 
 describe('interactive administrator reference', () => {
+  it('exports the current financial instructions as Markdown with localized working links', () => {
+    const sections = searchGuide('', 'ads-commissions');
+    const markdown = guideAsMarkdown(sections, 'en');
+    expect(markdown).toContain(`# دليل استخدام منصة عقارات السادات`);
+    expect(markdown).toContain(GUIDE_EDITION);
+    expect(markdown).toContain('### فهم المراجعة المالية وإيصالات الدفع');
+    expect(markdown).toContain('هذان الصفان لا يعنيان دفع 1000 جنيه');
+    expect(markdown).toContain('[المراجعة المالية](https://elsadatrealestate.com/admin/ads/financial-review?lang=en)');
+    expect(markdown).toContain('إعداد صورة الإعلان ورابط العقار');
+    expect(markdown).not.toContain('===');
+  });
   it('has useful instructions and working links for every requested account type', () => {
     for (const audience of GUIDE_AUDIENCES) {
       const sections = sectionsForAudience(GUIDE_SECTIONS, audience);

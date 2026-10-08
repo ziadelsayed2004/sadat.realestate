@@ -8,7 +8,7 @@ import type { RouteSession } from '../routing/index.ts';
 import { GUIDE_SECTIONS, searchGuide } from './content.ts';
 import { GUIDE_AUDIENCES, audienceLabels, sectionsForAudience, type GuideAudience } from './account-guides.ts';
 import { getUserGuideCopy } from './copy.ts';
-import { guideAsText } from './export.ts';
+import { guideAsMarkdown } from './export.ts';
 import './styles.css';
 
 const STORAGE_KEY = 'sadat-admin-user-guide-v1';
@@ -60,9 +60,9 @@ export default function AdminUserGuide({ locale, session, authClient }: { readon
   }, [role, authClient, audiences]);
 
   function download(): void {
-    const url = URL.createObjectURL(new Blob([guideAsText(visible, locale)], { type: 'text/plain;charset=utf-8' }));
+    const url = URL.createObjectURL(new Blob([guideAsMarkdown(visible, locale)], { type: 'text/markdown;charset=utf-8' }));
     const link = document.createElement('a');
-    link.href = url; link.download = `sadat-user-guide-${audience}.txt`;
+    link.href = url; link.download = `sadat-user-guide-${audience}.md`;
     link.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
