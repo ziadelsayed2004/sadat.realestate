@@ -30,6 +30,7 @@ export interface StoredArticle {
   seoTitle?: LocalizedText;
   seoDescription?: LocalizedText;
   coverAssetId?: string;
+  galleryAssetIds?: string[];
   imageUrl?: string;
   readingTimeMinutes?: number;
   authorId: string;
@@ -74,6 +75,8 @@ export interface ArticleCreateRecord {
   seoTitle?: LocalizedText;
   seoDescription?: LocalizedText;
   coverAssetId?: string;
+  galleryAssetIds?: string[];
+  imageUrl?: string;
   authorId: string;
 }
 
@@ -84,7 +87,9 @@ export interface ArticleChanges {
   body?: LocalizedText;
   seoTitle?: LocalizedText | null;
   seoDescription?: LocalizedText | null;
+  imageUrl?: string | null;
   coverAssetId?: string | null;
+  galleryAssetIds?: string[];
 }
 
 export interface PublicStoredArticle {
@@ -131,6 +136,7 @@ function mapArticle(record: ArticleRecord): StoredArticle {
     id: record._id.toHexString(),
     categoryId: record.categoryId.toHexString(),
     slug: record.slug,
+    ...(record.galleryAssetIds ? { galleryAssetIds: record.galleryAssetIds.map(id => id.toHexString()) } : {}),
     title: record.title,
     body: record.body,
     ...(record.seoTitle ? { seoTitle: record.seoTitle } : {}),
@@ -259,6 +265,7 @@ export function createMongooseArticleRepository(models: ArticleModels): ArticleR
       try {
         const document = await models.Article.create({
           ...value,
+          ...(value.galleryAssetIds ? { galleryAssetIds: value.galleryAssetIds.map(id => new Types.ObjectId(id)) } : {}),
           categoryId: new Types.ObjectId(value.categoryId),
           ...(value.coverAssetId ? { coverAssetId: new Types.ObjectId(value.coverAssetId) } : {}),
           authorId: new Types.ObjectId(value.authorId),
@@ -285,7 +292,7 @@ export function createMongooseArticleRepository(models: ArticleModels): ArticleR
         for (const [key, value] of Object.entries(changes)) {
           if (value === null) unset[key] = 1;
           else if (value !== undefined) {
-            set[key] = ['categoryId', 'coverAssetId'].includes(key)
+            set[key] = key === 'galleryAssetIds' ? (value as string[]).map(id => new Types.ObjectId(id)) : ['categoryId', 'coverAssetId'].includes(key)
               ? new Types.ObjectId(value as string)
               : value;
           }
@@ -470,17 +477,18 @@ export function createMemoryArticleRepository(
       if (!before) return { kind: 'not_found' };
       if (before.version !== version) return { kind: 'version_conflict' };
       if (changes.slug && [...articles.values()].some((item) => item.id !== id && item.slug === changes.slug)) return { kind: 'slug_conflict' };
-      const { seoTitle, seoDescription, coverAssetId, ...articleChanges } = changes;
+      const { seoTitle, seoDescription, coverAssetId, imageUrl, ...articleChanges } = changes;
       const next: StoredArticle = {
         ...before,
         ...articleChanges,
+        ...(imageUrl !== undefined && imageUrl !== null ? { imageUrl } : {}),
         ...(seoTitle !== undefined && seoTitle !== null ? { seoTitle } : {}),
         ...(seoDescription !== undefined && seoDescription !== null ? { seoDescription } : {}),
         ...(coverAssetId !== undefined && coverAssetId !== null ? { coverAssetId } : {}),
         version: before.version + 1,
         updatedAt: at
       };
-      for (const key of ['seoTitle', 'seoDescription', 'coverAssetId'] as const) {
+      for (const key of ['seoTitle', 'seoDescription', 'coverAssetId', 'imageUrl'] as const) {
         if (changes[key] === null) delete next[key];
       }
       articles.set(id, next);

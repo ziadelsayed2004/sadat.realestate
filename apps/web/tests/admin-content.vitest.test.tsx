@@ -94,7 +94,7 @@ describe('Admin article and category management contracts and views', () => {
     fireEvent.change(screen.getByLabelText(/AR Title/i), { target: { value: 'New article' } });
     fireEvent.change(screen.getByLabelText(/AR Body/i), { target: { value: 'Body' } });
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create article content' } });
-    fireEvent.click(screen.getByRole('button', { name: getAdminContentCopy('en').save }));
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
     await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ categoryId: category.id, reason: 'Create article content' })));
   });
 

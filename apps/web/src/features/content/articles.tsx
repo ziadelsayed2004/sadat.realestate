@@ -341,6 +341,7 @@ function ArticleBody({ article, locale, copy }: { readonly article: ArticlePubli
       {paragraphs.length === 0 ? <p>{copy.noSummary}</p> : paragraphs.map((paragraph, index) => /^['"“«]/u.test(paragraph)
         ? <blockquote key={`${article.id}-paragraph-${index}`}>{paragraph.replace(/^['"“«]|['"”»]$/gu, '').trim()}</blockquote>
         : <p key={`${article.id}-paragraph-${index}`}>{paragraph}</p>)}
+      {article.images?.map(image => <figure key={image.id}><PublicMediaImage className="public-article-gallery-image" src={image.imageUrl} fallback={<p>{copy.imageUnavailable}</p>} alt={localizedText(article.title, locale) ?? ''} /></figure>)}
     </section>
   );
 }

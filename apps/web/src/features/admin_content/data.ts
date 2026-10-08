@@ -226,6 +226,15 @@ export function createAdminCategoriesLoader(options: Omit<AdminCategoryLoadOptio
 
 export function createAdminContentSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    uploadArticlePhoto: async (file: File) => (await withCurrentSession(options, () => clientFor(options).request('/admin/articles/photos', {
+      method: 'POST', body: file, responseSchema: cmsTeamPhotoSuccessEnvelopeSchema,
+      ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type }
+    }))).data.data,
+    loadArticlePhoto: (id: string, signal?: AbortSignal) => withCurrentSession({ ...options, ...(signal ? { signal } : {}) }, async () => {
+      const response = await fetch(buildApiUrl(options.apiOrigin, `/admin/articles/photos/${id}`), { ...requestOptions(options), ...(signal ? { signal } : {}), credentials: 'include' });
+      if (!response.ok) throw new ApiClientError('Article image unavailable', { code: 'HTTP_ERROR', status: response.status });
+      return response.blob();
+    }),
     loadArticles: createAdminArticlesLoader(options),
     createArticle: (input: ArticleCreate, signal?: AbortSignal) => createAdminArticle(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     updateArticle: (id: string, input: ArticlePatch, signal?: AbortSignal) => updateAdminArticle(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),

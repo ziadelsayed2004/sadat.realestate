@@ -6,6 +6,8 @@ export const articleIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 export const articleSlugSchema = z.string().trim().min(2).max(120)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export const articleStatusSchema = z.enum(['draft', 'pending_review', 'published', 'archived']);
+export const articleDraftBodySchema = z.object({ ar: z.string().max(20_000).optional(), en: z.string().max(20_000).optional() }).strict().refine(value => value.ar !== undefined || value.en !== undefined);
+const articleGallerySchema = z.array(articleIdSchema).max(12).refine(value => new Set(value).size === value.length);
 export const articleAvailableActionSchema = z.enum([
   'update',
   'submit',
@@ -103,10 +105,11 @@ export const articleDataSchema = z.object({
   categoryId: articleIdSchema,
   slug: articleSlugSchema,
   title: localizedTextSchema,
-  body: localizedTextSchema,
+  body: articleDraftBodySchema,
   seoTitle: localizedTextSchema.optional(),
   seoDescription: localizedTextSchema.optional(),
   coverAssetId: articleIdSchema.optional(),
+  galleryAssetIds: articleGallerySchema.optional(),
   authorId: articleIdSchema,
   status: articleStatusSchema,
   publishedAt: z.string().datetime({ offset: true }).optional(),
@@ -123,10 +126,11 @@ export const articleCreateSchema = z.object({
   categoryId: articleIdSchema,
   slug: articleSlugSchema.optional(),
   title: localizedTextSchema,
-  body: localizedTextSchema,
+  body: articleDraftBodySchema,
   seoTitle: localizedTextSchema.optional(),
   seoDescription: localizedTextSchema.optional(),
   coverAssetId: articleIdSchema.optional(),
+  galleryAssetIds: articleGallerySchema.optional(),
   reason: mutationReasonSchema
 }).strict();
 
@@ -135,10 +139,11 @@ export const articlePatchSchema = z.object({
   categoryId: articleIdSchema.optional(),
   slug: articleSlugSchema.optional(),
   title: localizedTextSchema.optional(),
-  body: localizedTextSchema.optional(),
+  body: articleDraftBodySchema.optional(),
   seoTitle: localizedTextSchema.nullable().optional(),
   seoDescription: localizedTextSchema.nullable().optional(),
   coverAssetId: articleIdSchema.nullable().optional(),
+  galleryAssetIds: articleGallerySchema.optional(),
   reason: mutationReasonSchema
 }).strict().refine(
   (value) => Object.keys(value).some((key) => !['version', 'reason'].includes(key)),
@@ -173,6 +178,8 @@ export const articlePublicSchema = articleDataSchema.pick({
   coverAssetId: true,
   publishedAt: true
 }).extend({
+  body: localizedTextSchema,
+  images: z.array(z.object({ id: articleIdSchema, imageUrl: z.string().regex(/^\/api\/v1\/public\/article-photos\/[a-f0-9]{24}$/) }).strict()).max(12).optional(),
   imageUrl: z.union([z.url().max(2_048), z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   category: articlePublicCategorySchema.optional(),
   authorName: localizedTextSchema.optional(),

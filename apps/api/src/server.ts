@@ -216,7 +216,8 @@ async function runEntrypoint(): Promise<void> {
     database.nativeConnection,
     auth.accessTokens,
     audit.writer,
-    rbac.service
+    rbac.service,
+    uploadEnvironment
   );
   const community = createCommunityRuntime(database.nativeConnection, auth.accessTokens, rbac.service, audit.writer);
   const publicAboutTeam = createPublicAboutTeamRuntime(database.nativeConnection);

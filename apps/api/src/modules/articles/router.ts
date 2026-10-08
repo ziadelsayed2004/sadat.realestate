@@ -26,6 +26,7 @@ import {
   type ArticleTransitionRequest
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
+import type { TeamPhotos } from '../cms/team-photos.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
@@ -44,6 +45,9 @@ export const ARTICLE_ROUTE_DEFINITIONS = [
   { method: 'DELETE', path: '/api/v1/admin/article-categories/:categoryId', operationId: 'deleteAdminArticleCategory' },
   { method: 'GET', path: '/api/v1/admin/articles', operationId: 'listAdminArticles' },
   { method: 'POST', path: '/api/v1/admin/articles', operationId: 'createAdminArticle' },
+  { method: 'POST', path: '/api/v1/admin/articles/photos', operationId: 'uploadAdminArticlePhoto' },
+  { method: 'GET', path: '/api/v1/admin/articles/photos/:assetId', operationId: 'previewAdminArticlePhoto' },
+  { method: 'GET', path: '/api/v1/public/article-photos/:assetId', operationId: 'downloadPublicArticlePhoto' },
   { method: 'PATCH', path: '/api/v1/admin/articles/:articleId', operationId: 'updateAdminArticle' },
   { method: 'POST', path: '/api/v1/admin/articles/:articleId/transitions', operationId: 'transitionAdminArticle' },
   { method: 'GET', path: '/api/v1/public/article-categories', operationId: 'listPublicArticleCategories' },
@@ -54,6 +58,7 @@ export const ARTICLE_ROUTE_DEFINITIONS = [
 export interface ArticleRouterDependencies {
   service: ArticleService;
   accessTokens: AccessTokenService;
+  photos?: TeamPhotos;
 }
 
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
@@ -101,6 +106,23 @@ export function createArticleRouter(dependencies: ArticleRouterDependencies): Ro
   });
   router.use('/admin/article-categories', createAdminRbacAuthMiddleware(dependencies.accessTokens));
   router.use('/admin/articles', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+
+  if (dependencies.photos) {
+    const photos = dependencies.photos;
+    router.post('/admin/articles/photos', async (request, response) => {
+      try { response.status(201).json(toSuccessResponse(await photos.upload(response.locals.adminRbacClaims as AccessTokenClaims, request, request.get('content-type') ?? '', context(request)), context(request).requestId)); }
+      catch (error) { sendError(request, response, error); }
+    });
+    for (const path of ['/admin/articles/photos/:assetId', '/public/article-photos/:assetId']) {
+      router.get(path, async (request, response) => {
+        try {
+          const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined);
+          response.setHeader('Cache-Control', 'no-store'); response.type(photo.mime); response.setHeader('X-Content-Type-Options', 'nosniff');
+          photo.stream.on('error', () => response.destroy()); photo.stream.pipe(response);
+        } catch (error) { sendError(request, response, error); }
+      });
+    }
+  }
 
   router.get('/admin/article-categories', async (request, response) => {
     try {

@@ -212,6 +212,7 @@ function publicArticle(item: PublicStoredArticle, locale: SupportedLocale, autho
     ...(item.article.seoDescription ? { seoDescription: localized(item.article.seoDescription, locale) } : {}),
     ...(item.article.coverAssetId ? { coverAssetId: item.article.coverAssetId } : {}),
     ...(item.article.imageUrl ? { imageUrl: item.article.imageUrl } : {}),
+    ...(item.article.galleryAssetIds ? { images: item.article.galleryAssetIds.map(id => ({ id, imageUrl: `/api/v1/public/article-photos/${id}` })) } : {}),
     ...(authorName ? { authorName: { ar: authorName, en: authorName } } : {}),
     readingTimeMinutes,
     ...(item.article.publishedAt ? { publishedAt: item.article.publishedAt.toISOString() } : {}),
@@ -223,6 +224,7 @@ export function createArticleService(dependencies: {
   repository: ArticleRepository;
   authorization: ArticleAuthorization;
   audit: Pick<AuditWriter, 'record'>;
+  validateImage?: (id: string) => Promise<void>;
   resolveAuthorName?: (authorId: string) => Promise<string | undefined>;
   now?: () => Date;
   transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
@@ -352,15 +354,17 @@ export function createArticleService(dependencies: {
       const input = articleCreateSchema.parse(unparsedInput);
       await requirePermission(principal.userId, 'admin:content.manage');
       await requireActiveCategory(input.categoryId);
+      for (const id of [input.coverAssetId, ...(input.galleryAssetIds ?? [])]) { if (id) await dependencies.validateImage?.(id); }
       const at = now();
       const stored = articleResult(await dependencies.repository.createArticle({
         categoryId: input.categoryId,
         slug: input.slug ?? generateIdentifier('article', input.title),
         title: input.title,
         body: input.body,
+        ...(input.galleryAssetIds ? { galleryAssetIds: input.galleryAssetIds } : {}),
         ...(input.seoTitle ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription ? { seoDescription: input.seoDescription } : {}),
-        ...(input.coverAssetId ? { coverAssetId: input.coverAssetId } : {}),
+        ...(input.coverAssetId ? { coverAssetId: input.coverAssetId, imageUrl: `/api/v1/public/article-photos/${input.coverAssetId}` } : {}),
         authorId: principal.userId
       }, principal.userId, at));
       const publish = await allowed(principal.userId, 'admin:content.publish');
@@ -377,15 +381,17 @@ export function createArticleService(dependencies: {
       if (!before) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
       if (before.status !== 'draft') throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
       if (input.categoryId) await requireActiveCategory(input.categoryId);
+      for (const id of [input.coverAssetId !== before.coverAssetId ? input.coverAssetId : undefined, ...(input.galleryAssetIds ?? [])]) { if (id) await dependencies.validateImage?.(id); }
       const at = now();
       const stored = articleResult(await dependencies.repository.updateArticle(id, input.version, {
         ...(input.categoryId !== undefined ? { categoryId: input.categoryId } : {}),
         ...(input.slug !== undefined ? { slug: input.slug } : {}),
         ...(input.title !== undefined ? { title: input.title } : {}),
         ...(input.body !== undefined ? { body: input.body } : {}),
+        ...(input.galleryAssetIds !== undefined ? { galleryAssetIds: input.galleryAssetIds } : {}),
         ...(input.seoTitle !== undefined ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription !== undefined ? { seoDescription: input.seoDescription } : {}),
-        ...(input.coverAssetId !== undefined ? { coverAssetId: input.coverAssetId } : {})
+        ...(input.coverAssetId !== undefined ? { coverAssetId: input.coverAssetId, imageUrl: input.coverAssetId ? `/api/v1/public/article-photos/${input.coverAssetId}` : null } : {})
       }, principal.userId, at));
       const publish = await allowed(principal.userId, 'admin:content.publish');
       const output = articleData(stored, true, publish);
@@ -405,6 +411,7 @@ export function createArticleService(dependencies: {
       if (!ALLOWED_TRANSITIONS[before.status].includes(input.status)) {
         throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
       }
+      if (['pending_review', 'published'].includes(input.status) && !Object.values(before.body).some(value => value?.trim())) throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
       if (input.status === 'published') await requireActiveCategory(before.categoryId);
       const at = now();
       const stored = articleResult(await dependencies.repository.transitionArticle(

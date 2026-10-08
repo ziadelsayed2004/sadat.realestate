@@ -24,6 +24,7 @@ export interface ArticleRecord {
   seoTitle?: LocalizedText;
   seoDescription?: LocalizedText;
   coverAssetId?: Types.ObjectId;
+  galleryAssetIds?: Types.ObjectId[];
   imageUrl?: string;
   readingTimeMinutes?: number;
   authorId: Types.ObjectId;
@@ -105,10 +106,11 @@ const articleSchema = new Schema<ArticleRecord>({
     match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/
   },
   title: { type: localizedSchema, required: true },
-  body: { type: localizedSchema, required: true },
+  body: { type: new Schema({ ar: { type: String, maxlength: 20000 }, en: { type: String, maxlength: 20000 } }, { _id: false, strict: 'throw' }), required: true },
   seoTitle: { type: localizedSchema },
   seoDescription: { type: localizedSchema },
   coverAssetId: { type: Schema.Types.ObjectId },
+  galleryAssetIds: { type: [Schema.Types.ObjectId], default: undefined },
   imageUrl: { type: String, trim: true, maxlength: 2_048 },
   readingTimeMinutes: { type: Number, min: 1, max: 10_000 },
   authorId: { type: Schema.Types.ObjectId, required: true, immutable: true },
@@ -131,7 +133,7 @@ const articleSchema = new Schema<ArticleRecord>({
 
 articleSchema.pre('validate', function validatePublishedArticle() {
   if (!hasLocalizedValue(this.title)) this.invalidate('title', 'At least one localized title is required');
-  if (!hasLocalizedValue(this.body)) this.invalidate('body', 'At least one localized body is required');
+  if (this.status !== 'draft' && !hasLocalizedValue(this.body)) this.invalidate('body', 'At least one localized body is required');
   if (this.status === 'published' && !this.publishedAt) {
     this.invalidate('publishedAt', 'Published articles require a publication timestamp');
   }

@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import mongoose from 'mongoose';
+import sharp from 'sharp';
+import { Readable } from 'node:stream';
+import { randomUUID } from 'node:crypto';
+import { createArticleRuntime } from '../apps/api/src/modules/articles/runtime.ts';
+import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
+import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
+const database = `qa_owner_articles_${randomUUID().replaceAll('-', '')}`;
+const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27031/${database}?replicaSet=adcampaignqa`).asPromise();
+try {
+  const models = createAuditModels(connection); await models.AuditLog.init();
+  const audit = createMongooseAuditWriter(models); const userId = new mongoose.Types.ObjectId().toHexString();
+  const runtime = createArticleRuntime(connection, {}, audit, { authorize: async () => true }, { mode: 'memory', scannerMode: 'deterministic-fake' });
+  const service = runtime.service; const context = { requestId: 'qa-article', traceId: 'b'.repeat(32) }; const principal = { userId };
+  const category = await service.createCategory(principal, { name: { ar: 'أخبار' }, displayOrder: 0, active: true, reason: 'إنشاء تصنيف للاختبار' }, context);
+  const png = await sharp({ create: { width: 160, height: 90, channels: 3, background: '#124b40' } }).png().toBuffer();
+  const photo = await runtime.photos.upload({ sub: userId, role: 'admin', status: 'verified' }, Readable.from(png), 'image/png', context);
+  const draft = await service.createArticle(principal, { categoryId: category.id, title: { ar: 'مسودة مقال', en: 'Article draft' }, body: { ar: '' }, coverAssetId: photo.id, galleryAssetIds: [photo.id], reason: 'حفظ مسودة ناقصة' }, context);
+  assert.equal(draft.status, 'draft'); assert.equal(draft.body.ar, '');
+  await assert.rejects(runtime.photos.open(photo.id), error => error.statusCode === 404);
+  await assert.rejects(service.transitionArticle(principal, draft.id, { version: 0, status: 'pending_review', reason: 'إرسال مقال غير مكتمل' }, context), /ARTICLE_TRANSITION_INVALID/);
+  const revised = await service.updateArticle(principal, draft.id, { version: 0, body: { ar: 'محتوى المقال\n\nفقرة ثانية', en: 'Article body' }, reason: 'تكميل المسودة وتعديلها' }, context);
+  const reviewed = await service.transitionArticle(principal, draft.id, { version: revised.version, status: 'pending_review', reason: 'إرسال المقال للمراجعة' }, context);
+  await service.transitionArticle(principal, draft.id, { version: reviewed.version, status: 'published', reason: 'نشر المقال بعد المراجعة' }, context);
+  const published = await service.getPublicBySlug(draft.slug, 'ar');
+  assert.equal(published.imageUrl, photo.imageUrl); assert.equal(published.images[0].id, photo.id);
+  assert.equal((await runtime.photos.open(photo.id)).mime, 'image/webp');
+  console.log('PASS: real Mongo Arabic/English draft save, scanned upload, private draft image, reopen/edit, incomplete publication blocked, published cover/gallery.');
+} finally { await connection.dropDatabase(); await connection.close(); }
