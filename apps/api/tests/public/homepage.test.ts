@@ -161,7 +161,7 @@ test('includes enabled managed banners ahead of legacy CMS banners using only pu
         aggregate(pipeline: Array<Record<string, unknown>>) {
           assert.equal(name, 'ad_banners');
           assert.ok(pipeline.some(stage => stage.$limit === 5));
-          return { async toArray() { return [{ _id: id, title: localized, altText: { en: 'Description of the banner image' }, targetUrl: '/properties', media: { url: `/api/v1/public/banner-media/${secondId}` }, internalNotes: 'private' }]; } };
+          return { async toArray() { return [{ _id: id, mediaId: secondId, displaySeconds: 8, title: localized, altText: { en: 'Description of the banner image' }, targetUrl: '/properties', media: { url: `/api/v1/public/banner-media/${secondId}` }, internalNotes: 'private' }]; } };
         },
         find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_banners' ? [{ key: 'legacy', title: localized, imageUrl: 'https://cdn.example/legacy.webp', order: 0, status: 'published', active: true }] : []; } }; } }; } }; },
         async countDocuments() { return 0; }
@@ -169,7 +169,8 @@ test('includes enabled managed banners ahead of legacy CMS banners using only pu
     }
   } as unknown as Connection;
   const result = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
-  assert.deepEqual(result.banners.map(banner => banner.key), [`banner_${id}`, 'legacy']);
+  assert.deepEqual(result.banners.map(banner => banner.key), [`banner_${id}_${secondId}`, 'legacy']);
+  assert.equal(result.banners[0]?.displaySeconds, 8);
   assert.equal(result.banners[0]?.targetUrl, '/properties');
   assert.equal(result.banners[0]?.imageUrl, `/api/v1/public/banner-media/${secondId}`);
   assert.deepEqual(result.banners[0]?.altText, { en: 'Description of the banner image' });

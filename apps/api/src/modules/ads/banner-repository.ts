@@ -9,6 +9,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import { AdBannerServiceError, type AdBannerRepository } from './service.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { bannerImageChanges, selectedBannerMediaIds } from './banner-images.js';
 import { validateBannerCampaign } from './banner-campaign.js';
 
 type BannerStatus = AdBanner['status'];
@@ -20,6 +21,8 @@ interface BannerRow {
   title: AdBanner['title'];
   altText?: AdBanner['altText'];
   mediaId?: Types.ObjectId;
+  mediaIds?: Types.ObjectId[];
+  displaySeconds?: number;
   targetUrl?: string;
   startAt: Date;
   endAt: Date;
@@ -86,6 +89,8 @@ function toBanner(row: BannerRow): AdBanner {
     title: row.title,
     ...(row.altText === undefined ? {} : { altText: row.altText }),
     ...(row.mediaId === undefined ? {} : { mediaId: row.mediaId.toHexString() }),
+    ...(row.mediaIds === undefined ? {} : { mediaIds: row.mediaIds.map(value => value.toHexString()) }),
+    ...(row.displaySeconds === undefined ? {} : { displaySeconds: row.displaySeconds }),
     ...(row.targetUrl === undefined ? {} : { targetUrl: row.targetUrl }),
     startAt: row.startAt.toISOString(),
     endAt: row.endAt.toISOString(),
@@ -163,12 +168,12 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
   async function validateLiveBanner(next: AdBanner, placement: PlacementRow, currentAt: Date, session?: ClientSession): Promise<void> {
     const end = new Date(next.endAt).getTime();
     if (next.status === 'ended' && currentAt.getTime() < end) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+    const imageIds = selectedBannerMediaIds(next);
+    const linkedCount = imageIds.length ? await media.countDocuments({ _id: { $in: imageIds.map(value => objectId(value)) }, bannerId: objectId(next.id), active: true }, session ? { session } : {}) : 0;
+    if (linkedCount !== imageIds.length) throw new AdBannerServiceError('BANNER_MEDIA_REQUIRED');
     if (!isLive(next.status)) return;
     await validateCampaign(next, session);
-    const linkedMedia = next.mediaId === undefined
-      ? undefined
-      : await media.findOne({ _id: objectId(next.mediaId), bannerId: objectId(next.id), active: true }, session ? { session } : {});
-    if (!linkedMedia) throw new AdBannerServiceError('BANNER_MEDIA_REQUIRED');
+    if (!linkedCount) throw new AdBannerServiceError('BANNER_MEDIA_REQUIRED');
     if (!placement.active || (placement.targetUrlRequired && next.targetUrl === undefined)) {
       throw new AdBannerServiceError(placement.targetUrlRequired && next.targetUrl === undefined ? 'BANNER_TARGET_REQUIRED' : 'BANNER_INVALID_STATE');
     }
@@ -217,6 +222,8 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     const unset: Record<string, 1> = {};
     if (next.altText === undefined) unset.altText = 1; else set.altText = next.altText;
     if (next.mediaId === undefined) unset.mediaId = 1; else set.mediaId = objectId(next.mediaId);
+    if (next.mediaIds !== undefined) set.mediaIds = next.mediaIds.map(value => objectId(value));
+    if (next.displaySeconds !== undefined) set.displaySeconds = next.displaySeconds;
     if (next.targetUrl === undefined) unset.targetUrl = 1; else set.targetUrl = next.targetUrl;
     return { $set: set, ...(Object.keys(unset).length === 0 ? {} : { $unset: unset }), $inc: { version: 1 } };
   }
@@ -242,6 +249,8 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         title: banner.title,
         ...(banner.altText === undefined ? {} : { altText: banner.altText }),
         ...(banner.mediaId === undefined ? {} : { mediaId: objectId(banner.mediaId) }),
+        ...(banner.mediaIds === undefined ? {} : { mediaIds: banner.mediaIds.map(value => objectId(value)) }),
+        ...(banner.displaySeconds === undefined ? {} : { displaySeconds: banner.displaySeconds }),
         ...(banner.targetUrl === undefined ? {} : { targetUrl: banner.targetUrl }),
         startAt: new Date(banner.startAt),
         endAt: new Date(banner.endAt),
@@ -312,6 +321,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
           ...(input.altText === null ? { altText: undefined } : {}),
           ...(input.mediaId === null ? { mediaId: undefined } : {}),
           ...(input.targetUrl === null ? { targetUrl: undefined } : {}),
+          ...bannerImageChanges(currentValue, input),
           updatedBy: actorId,
           updatedAt: now.toISOString(),
           version: current.version + 1
@@ -341,8 +351,10 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
 
     async previewBanner(bannerId) {
       const banner = await findBanner(bannerId);
-      const linkedMedia = banner.mediaId === undefined ? undefined : await media.findOne({ _id: banner.mediaId, bannerId: banner._id, active: true });
-      return adBannerPreviewSchema.parse({ banner: toBanner(banner), ...(linkedMedia ? { media: toMedia(linkedMedia) } : {}), preview: true });
+      const value = toBanner(banner);
+      const rows = await media.find({ _id: { $in: selectedBannerMediaIds(value).map(id => objectId(id)) }, bannerId: banner._id, active: true }).toArray();
+      const mediaItems = selectedBannerMediaIds(value).flatMap(id => { const row = rows.find(item => item._id.toHexString() === id); return row ? [toMedia(row)] : []; });
+      return adBannerPreviewSchema.parse({ banner: value, ...(mediaItems[0] ? { media: mediaItems[0] } : {}), mediaItems, preview: true });
     },
 
     async createBannerMedia(actorId, bannerId, input, now) {
@@ -392,7 +404,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     async deleteBannerMedia(actorId, mediaId, input, now) {
       const current = await media.findOne({ _id: objectId(mediaId), active: true });
       if (!current) throw new AdBannerServiceError('NOT_FOUND');
-      const inUse = await banners.findOne({ mediaId: current._id, status: { $ne: 'archived' } });
+      const inUse = await banners.findOne({ $or: [{ mediaId: current._id }, { mediaIds: current._id }], status: { $ne: 'archived' } });
       if (inUse) throw new AdBannerServiceError('MEDIA_IN_USE');
       if (input && input.expectedVersion !== current.version) throw new AdBannerServiceError('VERSION_CONFLICT');
       const result = await media.updateOne({ _id: current._id, version: input?.expectedVersion ?? current.version, active: true }, { $set: { active: false, updatedAt: now }, $inc: { version: 1 } });

@@ -104,6 +104,7 @@ export const publicHomepageBannerSchema = z.object({
   highlight: localizedTextSchema.optional(),
   imageUrl: publicUrlSchema.optional(),
   targetUrl: publicUrlSchema.optional(),
+  displaySeconds: z.number().int().min(3).max(60).optional(),
   order: publicOrderSchema
 }).strict();
 

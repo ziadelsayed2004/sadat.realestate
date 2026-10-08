@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { randomUUID } from 'node:crypto';
 import { createMongooseAdBannerRepository } from '../apps/api/src/modules/ads/banner-repository.ts';
 import { readPublishedBannerRows } from '../apps/api/src/modules/ads/banner-management.ts';
+import { createMongoosePublicHomepageRepository, publicHomepageProjection } from '../apps/api/src/modules/public/homepage.ts';
 
 const database = `qa_ad_campaign_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27031/${database}?replicaSet=adcampaignqa`).asPromise();
@@ -49,6 +50,35 @@ try {
   await connection.collection('ad_requests').updateOne({ _id: requestId }, { $set: { status: 'cancelled' } });
   assert.equal((await readPublishedBannerRows(connection, at)).length, 0);
   checks.push('cancelled_request_hides_published_ad');
+  await connection.collection('ad_requests').updateOne({ _id: requestId }, { $set: { status: 'scheduled' } });
+  const extra = await repository.createBannerMedia(actorId, draft.id, { url: 'https://example.com/second.png', mime: 'image/png', width: 1200, height: 400 }, at);
+  const rotating = await repository.updateBanner(actorId, draft.id, { mediaIds: [extra.id, media.id], displaySeconds: 4, expectedVersion: published.version, reason: 'Publish ordered carousel' }, at, metadata);
+  assert.equal(rotating.mediaId, extra.id);
+  assert.deepEqual((await repository.previewBanner(draft.id)).mediaItems.map(item => item.id), [extra.id, media.id]);
+  const slides = await readPublishedBannerRows(connection, at);
+  assert.deepEqual(slides.map(item => item.mediaId.toHexString()), [extra.id, media.id]);
+  assert.deepEqual(slides.map(item => item.displaySeconds), [4, 4]);
+  const homepage = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
+  assert.deepEqual(homepage.banners.map(item => item.imageUrl), [extra.url, media.url]);
+  assert.deepEqual(homepage.banners.map(item => item.displaySeconds), [4, 4]);
+  assert.equal(new Set(homepage.banners.map(item => item.key)).size, 2);
+  await assert.rejects(repository.deleteBannerMedia(actorId, media.id, { expectedVersion: media.version, reason: 'Cannot delete selected slide' }, at), /MEDIA_IN_USE/);
+  await assert.rejects(repository.updateBanner(actorId, draft.id, { mediaIds: [], expectedVersion: rotating.version, reason: 'Clear live carousel' }, at, metadata), /BANNER_MEDIA_REQUIRED/);
+  await assert.rejects(repository.updateBanner(actorId, draft.id, { mediaIds: [media.id], expectedVersion: published.version, reason: 'Reject stale reorder' }, at, metadata), /VERSION_CONFLICT/);
+  const foreignId = ids();
+  await connection.collection('ad_banner_media').insertOne({ _id: foreignId, bannerId: ids(), active: true, url: 'https://example.com/foreign.png' });
+  await assert.rejects(repository.updateBanner(actorId, draft.id, { mediaIds: [extra.id, foreignId.toHexString()], expectedVersion: rotating.version, reason: 'Reject foreign image' }, at, metadata), /BANNER_MEDIA_REQUIRED/);
+  await connection.collection('ad_banner_media').updateOne({ _id: new mongoose.Types.ObjectId(extra.id) }, { $set: { active: false } });
+  assert.equal((await readPublishedBannerRows(connection, at)).length, 0);
+  checks.push('ordered_carousel_persists_with_duration_and_rejects_foreign_stale_empty_or_inactive_images');
+  await connection.collection('ad_banner_media').updateOne({ _id: new mongoose.Types.ObjectId(extra.id) }, { $set: { active: true } });
+  const stopped = await repository.updateBanner(actorId, draft.id, { status: 'draft', expectedVersion: rotating.version, reason: 'Stop carousel before clearing' }, at, metadata);
+  const cleared = await repository.updateBanner(actorId, draft.id, { mediaIds: [], expectedVersion: stopped.version, reason: 'Clear all carousel images' }, at, metadata);
+  assert.equal(cleared.mediaId, undefined);
+  assert.deepEqual((await repository.previewBanner(draft.id)).mediaItems, []);
+  assert.equal((await readPublishedBannerRows(connection, at)).length, 0);
+  checks.push('public_homepage_projects_unique_ordered_slides_and_cleared_draft_has_no_legacy_fallback');
+
   console.log(JSON.stringify({ status: 'PASS', checks, databaseIsolated: true }));
 } finally {
   await connection.dropDatabase();

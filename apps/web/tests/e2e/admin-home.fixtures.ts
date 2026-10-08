@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 export const adminHomeBannerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 export const adminHomeTipId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -61,6 +62,9 @@ function success(data: unknown, requestId: string, meta: Record<string, unknown>
 }
 
 export async function routeAdminHomeApis(page: Page, allow = true): Promise<void> {
+  await page.route('**/api/v1/public/banner-media/**', async route => route.fulfill({
+    contentType: 'image/png', body: await readFile(new URL('../../public/assets/canonical/public/listing-property-rental.png', import.meta.url))
+  }));
   await page.route('**/api/v1/auth/refresh', async route => route.fulfill({
     status: allow ? 200 : 401,
     contentType: 'application/json',
@@ -70,6 +74,7 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
   }));
 
   let storedBanner = adminHomeBannerFixture();
+  const uploaded: Record<string, unknown>[] = [];
   await page.route('**/api/v1/admin/banners**', async route => {
     const url = new URL(route.request().url());
     const method = route.request().method();
@@ -77,11 +82,14 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
     if (method === 'POST' && url.pathname.endsWith('/banners')) { storedBanner = { ...banner, ...route.request().postDataJSON(), status: 'draft', version: 0 }; banner = storedBanner; }
     if (url.pathname.endsWith('/config')) { await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ enabled: true, version: 1, placements: [{ key: 'homepage.hero', label: { ar: '???? ????????', en: 'Homepage banner' }, active: true }] }, 'banner-config')) }); return; }
     if (url.pathname.endsWith('/preview')) {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ banner, preview: true }, 'admin-home-preview')) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ banner, preview: true, mediaItems: ((banner as { mediaIds?: string[] }).mediaIds ?? []).flatMap(id => { const image = uploaded.find(item => item.id === id); return image ? [image] : []; }) }, 'admin-home-preview')) });
       return;
     }
     if (url.pathname.endsWith('/media') || url.pathname.endsWith('/upload')) {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', bannerId: adminHomeBannerId, url: 'https://example.com/banner.png', mime: 'image/png', width: 1200, height: 400, active: true, version: 0, createdBy: adminId, createdAt: '2026-08-19T08:00:00.000Z', updatedAt: '2026-08-19T08:00:00.000Z' }, 'admin-home-media')) });
+      const imageId = (14 + uploaded.length).toString(16).padStart(24, '0');
+      const image = { id: imageId, bannerId: adminHomeBannerId, url: `/api/v1/public/banner-media/${imageId}`, mime: 'image/png', width: 1200, height: 400, active: true, version: 0, createdBy: adminId, createdAt: '2026-08-19T08:00:00.000Z', updatedAt: '2026-08-19T08:00:00.000Z' };
+      uploaded.push(image);
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success(image, 'admin-home-media')) });
       return;
     }
     if (url.pathname.endsWith('/order')) {
@@ -90,7 +98,7 @@ export async function routeAdminHomeApis(page: Page, allow = true): Promise<void
     }
     if (method === 'PATCH') {
       const changes = { ...route.request().postDataJSON() }; delete changes.expectedVersion; delete changes.reason;
-      storedBanner = { ...banner, ...changes, version: banner.version + 1 };
+      storedBanner = { ...banner, ...changes, ...(changes.mediaIds !== undefined ? { mediaId: changes.mediaIds[0] } : {}), version: banner.version + 1 };
       for (const key of ["altText", "targetUrl", "mediaId"]) if (changes[key] === null) Reflect.deleteProperty(storedBanner, key);
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(success(storedBanner, 'admin-home-banner-update')) });
       return;

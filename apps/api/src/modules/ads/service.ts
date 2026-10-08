@@ -1,3 +1,4 @@
+import { bannerImageChanges, selectedBannerMediaIds } from './banner-images.js';
 import { randomBytes } from 'node:crypto';
 import { validateBannerCampaign } from './banner-campaign.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
@@ -321,7 +322,8 @@ export function createAdSettingsService(seed: {
   };
   const validateBannerForStatus = (banner: AdBanner): AdBannerMedia | undefined => {
     const placement = placementByKey(banner.placementKey);
-    const media = checkMediaLink(banner, banner.mediaId);
+    const images = selectedBannerMediaIds(banner).map(id => checkMediaLink(banner, id));
+    const media = images[0];
     if (isBannerLiveState(banner.status)) checkLiveRequirements(banner, placement, media);
     if (banner.status === 'active' && [...banners.values()].filter(item => item.status === 'active' && item.id !== banner.id).length >= settings.maxActiveBanners) throw new AdBannerServiceError('BANNER_CAPACITY');
     return media;
@@ -357,6 +359,7 @@ export function createAdSettingsService(seed: {
     resolvedTitle: resolveLocalizedText(banner.title, locale),
     ...(banner.altText ? { resolvedAltText: resolveLocalizedText(banner.altText, locale) } : {}),
     imageUrl: media.url,
+    displaySeconds: banner.displaySeconds ?? Math.min(60, Math.max(3, settings.defaultDisplaySeconds)),
     ...(banner.targetUrl ? { targetUrl: banner.targetUrl } : {}),
     startAt: banner.startAt,
     endAt: banner.endAt,
@@ -541,7 +544,7 @@ export function createAdSettingsService(seed: {
       if (changes.altText === null) delete nextInput.altText;
       if (changes.mediaId === null) delete nextInput.mediaId;
       if (changes.targetUrl === null) delete nextInput.targetUrl;
-      const next = adBannerSchema.parse(nextInput);
+      const next = adBannerSchema.parse({ ...nextInput, ...bannerImageChanges(current, parsed) });
       if (next.adRequestId && isBannerLiveState(next.status)) validateBannerCampaign(next, seed.requestRepository ? await seed.requestRepository.getRequest(next.adRequestId) : requests.get(next.adRequestId));
       const currentStatus = current.status;
       if (next.status !== currentStatus && !BANNER_TRANSITIONS[currentStatus].includes(next.status)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
@@ -554,8 +557,8 @@ export function createAdSettingsService(seed: {
       await requireBannerPermission(claims, 'admin:banners.view');
       if (seed.bannerRepository) return seed.bannerRepository.previewBanner(bannerId);
       const banner = bannerById(bannerId);
-      const media = banner.mediaId ? bannerMedia.get(banner.mediaId) : undefined;
-      return adBannerPreviewSchema.parse({ banner, ...(media?.active ? { media } : {}), preview: true });
+      const mediaItems = selectedBannerMediaIds(banner).flatMap(id => { const item = bannerMedia.get(id); return item?.active && item.bannerId === banner.id ? [item] : []; });
+      return adBannerPreviewSchema.parse({ banner, ...(mediaItems[0] ? { media: mediaItems[0] } : {}), mediaItems, preview: true });
     },
     async createBannerMedia(claims: AccessTokenClaims, bannerId: string, input: unknown) {
       const parsed = adBannerMediaCreateSchema.parse(input);
@@ -600,7 +603,7 @@ export function createAdSettingsService(seed: {
       await requireBannerPermission(claims, 'admin:banners.manage');
       if (seed.bannerRepository) return seed.bannerRepository.deleteBannerMedia(claims.sub, mediaId, parsedInput, clock());
       const current = mediaById(mediaId);
-      if ([...banners.values()].some(item => item.mediaId === mediaId)) throw new AdBannerServiceError('MEDIA_IN_USE');
+      if ([...banners.values()].some(item => item.status !== 'archived' && selectedBannerMediaIds(item).includes(mediaId))) throw new AdBannerServiceError('MEDIA_IN_USE');
       if (parsedInput && parsedInput.expectedVersion !== current.version) throw new AdBannerServiceError('VERSION_CONFLICT');
       const deleted = adBannerMediaSchema.parse({ ...current, active: false, version: current.version + 1, updatedAt: now() });
       bannerMedia.set(deleted.id, deleted);
@@ -636,8 +639,8 @@ export function createAdSettingsService(seed: {
       const values = [...banners.values()].filter(item => isBannerLiveState(item.status) && currentAt >= new Date(item.startAt).getTime() && currentAt < new Date(item.endAt).getTime()).filter(item => {
         const placement = [...placements.values()].find(candidate => candidate.key === item.placementKey);
         if (!placement || !placement.active || placement.surface !== surface || !placement.allowedLocales.includes(parsedLocale)) return false;
-        const media = item.mediaId ? bannerMedia.get(item.mediaId) : undefined;
-        if (!media?.active) return false;
+        const ids = selectedBannerMediaIds(item);
+        if (!ids.length || ids.some(id => { const media = bannerMedia.get(id); return !media?.active || media.bannerId !== item.id; })) return false;
         if (placement.targetUrlRequired && !item.targetUrl) return false;
         return true;
       }).sort((a, b) => {
@@ -645,7 +648,7 @@ export function createAdSettingsService(seed: {
         const placementB = placementByKey(b.placementKey);
         return placementA.sortOrder - placementB.sortOrder || a.sortOrder - b.sortOrder || a.id.localeCompare(b.id);
       }).slice(0, settings.maxActiveBanners);
-      return values.map(item => publicProjection(item, bannerMedia.get(item.mediaId!)!, parsedLocale));
+      return values.flatMap(item => selectedBannerMediaIds(item).map(id => publicProjection(item, bannerMedia.get(id)!, parsedLocale)));
     },
     async getPublicBanners(surface: string, locale: SupportedLocale, at?: Date) {
       return this.listPublicBanners(surface, locale, at);

@@ -13926,6 +13926,22 @@
             "type": "string",
             "pattern": "^[a-f0-9]{24}$",
             "description": "Immutable advertising request associated with this banner."
+          },
+          "mediaIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "maxItems": 20,
+            "uniqueItems": true,
+            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60,
+            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
           }
         }
       },
@@ -13977,6 +13993,22 @@
             "type": "string",
             "pattern": "^[a-f0-9]{24}$",
             "description": "Immutable advertising request associated with this banner."
+          },
+          "mediaIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "maxItems": 20,
+            "uniqueItems": true,
+            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60,
+            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
           }
         }
       },
@@ -14054,6 +14086,22 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "mediaIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            },
+            "maxItems": 20,
+            "uniqueItems": true,
+            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60,
+            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
           }
         }
       },
@@ -14135,6 +14183,13 @@
           },
           "preview": {
             "const": true
+          },
+          "mediaItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdBannerMedia"
+            },
+            "maxItems": 20
           }
         }
       },
@@ -21019,6 +21074,11 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60
           }
         }
       },

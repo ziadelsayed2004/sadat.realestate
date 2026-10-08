@@ -24,7 +24,7 @@ export interface HomepageMetricSource { key: string; title: unknown; value: numb
 export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; locationName?: unknown; sourceName?: unknown; sourceImageUrl?: string; sourceType?: string; sourceVerified?: boolean; publicCode?: string; viewCount?: number; installmentAvailable?: boolean; featured?: boolean; deliveryStatus?: string; featuredOrder?: number; status: string; active: boolean }
 export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; imageUrl?: string; description?: unknown; kind: string; status: string }
 export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; imageUrl?: string; body?: unknown; order: number; status: string; active?: boolean }
-export interface HomepageBannerSource { key: string; title?: unknown; altText?: unknown; eyebrow?: unknown; body?: unknown; highlight?: unknown; imageUrl?: string; targetUrl?: string; order: number; status: string; active?: boolean }
+export interface HomepageBannerSource { key: string; title?: unknown; altText?: unknown; eyebrow?: unknown; body?: unknown; highlight?: unknown; imageUrl?: string; targetUrl?: string; displaySeconds?: number; order: number; status: string; active?: boolean }
 
 export interface HomepageSources {
   sections: HomepageSectionSource[];
@@ -112,9 +112,9 @@ function publicContent(items: HomepageContentSource[]) {
 
 function publicBanners(items: HomepageBannerSource[]) {
   return stableOrder(items.filter((item) => item.status === 'published' && item.active !== false).flatMap((item) => {
-    const parsed = publicHomepageBannerSchema.safeParse({ key: item.key, ...(item.title !== undefined ? { title: item.title } : {}), ...(item.altText !== undefined ? { altText: item.altText } : {}), ...(item.eyebrow !== undefined ? { eyebrow: item.eyebrow } : {}), ...(item.body !== undefined ? { body: item.body } : {}), ...(item.highlight !== undefined ? { highlight: item.highlight } : {}), ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.targetUrl ? { targetUrl: item.targetUrl } : {}), order: item.order });
+    const parsed = publicHomepageBannerSchema.safeParse({ key: item.key, ...(item.title !== undefined ? { title: item.title } : {}), ...(item.altText !== undefined ? { altText: item.altText } : {}), ...(item.eyebrow !== undefined ? { eyebrow: item.eyebrow } : {}), ...(item.body !== undefined ? { body: item.body } : {}), ...(item.highlight !== undefined ? { highlight: item.highlight } : {}), ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.targetUrl ? { targetUrl: item.targetUrl } : {}), ...(item.displaySeconds !== undefined ? { displaySeconds: item.displaySeconds } : {}), order: item.order });
     return parsed.success ? [parsed.data] : [];
-  }));
+  })).slice(0, 100);
 }
 
 function configuredMetrics(sources: HomepageSources, settings: DisplayRuntimeSettings = {}) {
@@ -219,7 +219,7 @@ async function findRows(connection: Connection, collection: string, filter: Reco
 export function createMongoosePublicHomepageRepository(connection: Connection): PublicHomepageRepository {
   return {
     async read() {
-      const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `banner_${row._id.toString()}`, title: row.title, ...(row.altText !== undefined ? { altText: row.altText } : {}), imageUrl: String(row.media.url), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
+      const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `banner_${row._id.toString()}_${row.mediaId.toString()}`, title: row.title, ...(row.altText !== undefined ? { altText: row.altText } : {}), imageUrl: String(row.media.url), displaySeconds: Number(row.displaySeconds), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
       const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount, population] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),

@@ -24,9 +24,17 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     { $lookup: { from: 'ad_placements', localField: 'placementKey', foreignField: 'key', as: 'placement' } },
     { $unwind: '$placement' },
     { $match: { 'placement.active': true, 'placement.surface': 'homepage' } },
-    { $lookup: { from: 'ad_banner_media', localField: 'mediaId', foreignField: '_id', as: 'media' } },
-    { $unwind: '$media' },
-    { $match: { 'media.active': true, $expr: { $and: [{ $eq: ['$media.bannerId', '$_id'] }, { $or: [{ $ne: ['$placement.targetUrlRequired', true] }, { $gt: [{ $strLenCP: { $ifNull: ['$targetUrl', ''] } }, 0] }] }] } } },
+    { $set: { selectedMediaIds: { $ifNull: ['$mediaIds', { $cond: [{ $ne: [{ $ifNull: ['$mediaId', null] }, null] }, ['$mediaId'], []] }] } } },
+    { $lookup: { from: 'ad_banner_media', let: { imageIds: '$selectedMediaIds', bannerId: '$_id' }, pipeline: [
+      { $match: { active: true, $expr: { $and: [{ $in: ['$_id', '$$imageIds'] }, { $eq: ['$bannerId', '$$bannerId'] }] } } },
+      { $set: { imageOrder: { $indexOfArray: ['$$imageIds', '$_id'] } } },
+      { $sort: { imageOrder: 1 } }
+    ], as: 'media' } },
+    { $match: { $expr: { $and: [
+      { $gt: [{ $size: '$media' }, 0] },
+      { $eq: [{ $size: '$media' }, { $size: '$selectedMediaIds' }] },
+      { $or: [{ $ne: ['$placement.targetUrlRequired', true] }, { $gt: [{ $strLenCP: { $ifNull: ['$targetUrl', ''] } }, 0] }] }
+    ] } } },
     { $lookup: { from: 'ad_requests', localField: 'adRequestId', foreignField: '_id', as: 'campaign' } },
     { $unwind: { path: '$campaign', preserveNullAndEmptyArrays: true } },
     { $lookup: { from: 'payment_proofs', let: { requestId: '$adRequestId', providerId: '$campaign.providerId' }, pipeline: [{ $match: { active: true, status: 'approved', securityState: 'clean', $expr: { $and: [{ $eq: ['$adRequestId', '$$requestId'] }, { $eq: ['$providerId', '$$providerId'] }] } } }, { $limit: 1 }, { $project: { _id: 1 } }], as: 'campaignPayment' } },
@@ -43,7 +51,9 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     ] } } },
     { $sort: { 'placement.sortOrder': 1, sortOrder: 1, _id: 1 } },
     { $limit: Math.min(1000, Math.max(1, Number(settings.maxActiveBanners) || 100)) },
-    { $project: { _id: 1, title: 1, altText: 1, targetUrl: 1, mediaId: 1, 'media.url': 1 } }
+    { $unwind: '$media' },
+    { $limit: 100 },
+    { $project: { _id: 1, title: 1, altText: 1, targetUrl: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
   ]).toArray();
 }
 

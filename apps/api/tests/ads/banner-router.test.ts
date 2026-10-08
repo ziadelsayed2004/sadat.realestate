@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   adBannerMediaSchema,
   adBannerSchema,
+  adBannerPatchSchema,
   adPlacementSchema,
   type AccessTokenClaims
 } from '@sadat-real-estate/contracts';
@@ -116,4 +117,39 @@ test('enforces the separate banner manage permission', async () => {
     const response = await fetch(`${baseUrl}/api/v1/admin/banners`, { method: 'POST', headers: { Authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' }, body: JSON.stringify({ placementKey: placement.key, title: { en: 'Denied banner' }, startAt: '2026-10-01T00:00:00.000Z', endAt: '2026-10-30T00:00:00.000Z' }) });
     assert.equal(response.status, 403);
   });
+});
+
+test('rotates the complete ordered image selection and retains legacy single image behavior', async () => {
+  const second = { ...media, id: 'dddddddddddddddddddddddd', url: 'https://cdn.example.com/second.webp' };
+  const service = createAdSettingsService({ placements: [placement], banners: [banner], bannerMedia: [media, second], now: () => new Date('2026-09-02T00:00:00.000Z'), bannerAuthorization: { authorize: async () => true } });
+  const admin = claims('admin');
+  const settings = await service.getSettings(admin);
+  await service.updateSettings(admin, { expectedVersion: settings.version, reason: 'Enable banner rotation', patch: { enabled: true } });
+  const legacy = await service.updateBanner(admin, banner.id, { status: 'active', expectedVersion: 0, reason: 'Publish legacy image' });
+  assert.deepEqual((await service.getPublicBanners('homepage', 'en')).map(item => item.imageUrl), [media.url]);
+  const multiple = await service.updateBanner(admin, legacy.id, { mediaIds: [second.id, media.id], displaySeconds: 5, expectedVersion: legacy.version, reason: 'Add rotating images' });
+  assert.equal(multiple.mediaId, second.id);
+  assert.deepEqual((await service.previewBanner(admin, banner.id)).mediaItems?.map(item => item.id), [second.id, media.id]);
+  assert.deepEqual((await service.getPublicBanners('homepage', 'en')).map(item => [item.imageUrl, item.displaySeconds]), [[second.url, 5], [media.url, 5]]);
+  await assert.rejects(service.deleteBannerMedia(admin, media.id), /MEDIA_IN_USE/);
+  await assert.rejects(service.updateBanner(admin, banner.id, { mediaIds: [], expectedVersion: multiple.version, reason: 'Remove all live images' }), /BANNER_MEDIA_REQUIRED/);
+  await assert.rejects(service.updateBanner(admin, banner.id, { mediaIds: [media.id], expectedVersion: legacy.version, reason: 'Stale image reorder' }), /VERSION_CONFLICT/);
+  const stopped = await service.updateBanner(admin, banner.id, { status: 'draft', expectedVersion: multiple.version, reason: 'Stop advertisement' });
+  const cleared = await service.updateBanner(admin, banner.id, { mediaIds: [], expectedVersion: stopped.version, reason: 'Clear image selection' });
+  assert.equal(cleared.mediaId, undefined);
+  assert.deepEqual((await service.previewBanner(admin, banner.id)).mediaItems, []);
+  assert.deepEqual(await service.getPublicBanners('homepage', 'en'), []);
+  const replaced = await service.updateBanner(admin, banner.id, { mediaId: second.id, expectedVersion: cleared.version, reason: 'Replace using legacy cover field' });
+  assert.deepEqual(replaced.mediaIds, [second.id]);
+  assert.equal((await service.previewBanner(admin, banner.id)).media?.id, second.id);
+});
+
+test('bounds carousel inputs and rejects another banner image', async () => {
+  const patch = { expectedVersion: 0, reason: 'Configure carousel' };
+  for (const changes of [{ displaySeconds: 2 }, { displaySeconds: 61 }, { displaySeconds: 3.5 }, { mediaIds: [mediaId, mediaId] }, { mediaIds: Array.from({ length: 21 }, (_, i) => i.toString(16).padStart(24, '0')) }]) {
+    assert.equal(adBannerPatchSchema.safeParse({ ...patch, ...changes }).success, false);
+  }
+  const foreign = { ...media, id: 'dddddddddddddddddddddddd', bannerId: '111111111111111111111111' };
+  const service = createAdSettingsService({ placements: [placement], banners: [banner], bannerMedia: [media, foreign], bannerAuthorization: { authorize: async () => true } });
+  await assert.rejects(service.updateBanner(claims('admin'), banner.id, { ...patch, mediaIds: [mediaId, foreign.id] }), /NOT_FOUND/);
 });

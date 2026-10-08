@@ -108,7 +108,7 @@ describe('interactive administrator reference', () => {
   it('expands and collapses sections and individual topics, preserving other filtered sections', () => {
     renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
     fireEvent.change(screen.getByLabelText('القسم'), { target: { value: 'banners' } });
-    const topic = screen.getByRole('button', { name: /إضافة بانر من البداية للنشر/ });
+    const topic = screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ });
     expect(topic).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(screen.getByRole('button', { name: 'فتح الكل' }));
     expect(topic).toHaveAttribute('aria-expanded', 'true');
@@ -121,9 +121,9 @@ describe('interactive administrator reference', () => {
   it('restores valid stored reading state and safely ignores corrupt storage', async () => {
     localStorage.setItem('sadat-admin-user-guide-v1', JSON.stringify({ opened: ['banner-create', 'unknown'], last: 'banner-create', large: true }));
     const view = renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
-    expect(screen.getByRole('button', { name: /إضافة بانر من البداية للنشر/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ })).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('button', { name: 'حجم نص الشرح: كبير' })).toHaveAttribute('aria-pressed', 'true');
-    fireEvent.click(screen.getByRole('button', { name: /إضافة بانر من البداية للنشر/ }));
+    fireEvent.click(screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ }));
     await waitFor(() => expect(JSON.parse(localStorage.getItem('sadat-admin-user-guide-v1') ?? '{}').opened).not.toContain('banner-create'));
     view.unmount(); localStorage.setItem('sadat-admin-user-guide-v1', '{broken');
     renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
@@ -175,7 +175,7 @@ describe('interactive administrator reference', () => {
     const print = vi.spyOn(window, 'print').mockImplementation(() => undefined);
     renderWithLocale(<AdminUserGuide locale="en" session={admin} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText('Section'), { target: { value: 'banners' } });
-    fireEvent.click(screen.getByRole('button', { name: /إضافة بانر من البداية للنشر/ }));
+    fireEvent.click(screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ }));
     const article = document.getElementById('guide-banner-create')!;
     fireEvent.click(within(article).getByRole('button', { name: 'Copy topic link' }));
     await waitFor(() => expect(writeText).toHaveBeenCalledWith(expect.stringContaining('/admin/user-guide?lang=en#guide-banner-create')));

@@ -140,6 +140,9 @@ export const adBannerMediaPatchSchema = z.object({
 }).strict().refine(value => Object.keys(value).some(key => !['expectedVersion', 'reason'].includes(key)), { message: 'At least one media field must be changed' });
 export const adBannerMediaDeleteSchema = z.object({ expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
 
+const bannerMediaIds = z.array(id).max(20).refine(value => new Set(value).size === value.length, 'Image IDs must be unique');
+const bannerDisplaySeconds = z.number().int().min(3).max(60);
+
 export const adBannerSchema = z.object({
   id,
   adRequestId: id.optional(),
@@ -147,6 +150,8 @@ export const adBannerSchema = z.object({
   title: localizedTextSchema,
   altText: localizedTextSchema.optional(),
   mediaId: id.optional(),
+  mediaIds: bannerMediaIds.optional(),
+  displaySeconds: bannerDisplaySeconds.optional(),
   targetUrl: publicHttpsUrl.optional(),
   startAt: z.string().datetime({ offset: true }),
   endAt: z.string().datetime({ offset: true }),
@@ -164,6 +169,8 @@ export const adBannerCreateSchema = z.object({
   title: localizedTextSchema,
   altText: localizedTextSchema.optional(),
   mediaId: id.optional(),
+  mediaIds: bannerMediaIds.optional(),
+  displaySeconds: bannerDisplaySeconds.optional(),
   targetUrl: publicHttpsUrl.optional(),
   startAt: z.string().datetime({ offset: true }),
   endAt: z.string().datetime({ offset: true }),
@@ -176,6 +183,8 @@ export const adBannerPatchSchema = z.object({
   title: localizedTextSchema.optional(),
   altText: localizedTextSchema.nullable().optional(),
   mediaId: id.nullable().optional(),
+  mediaIds: bannerMediaIds.optional(),
+  displaySeconds: bannerDisplaySeconds.optional(),
   targetUrl: publicHttpsUrl.nullable().optional(),
   startAt: z.string().datetime({ offset: true }).optional(),
   endAt: z.string().datetime({ offset: true }).optional(),
@@ -219,6 +228,7 @@ export const adBannerOrderSchema = z.object({
 export const adBannerPreviewSchema = z.object({
   banner: adBannerSchema,
   media: adBannerMediaSchema.optional(),
+  mediaItems: z.array(adBannerMediaSchema).max(20).optional(),
   preview: z.literal(true)
 }).strict();
 export const adBannerPreviewSuccessEnvelopeSchema = successEnvelopeSchema(adBannerPreviewSchema);
@@ -230,6 +240,7 @@ export const adBannerPublicSchema = z.object({
   resolvedTitle: z.string(),
   resolvedAltText: z.string().optional(),
   imageUrl: bannerMediaUrl,
+  displaySeconds: bannerDisplaySeconds.optional(),
   targetUrl: publicHttpsUrl.optional(),
   startAt: z.string().datetime({ offset: true }),
   endAt: z.string().datetime({ offset: true }),

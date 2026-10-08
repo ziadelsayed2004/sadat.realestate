@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent, useRef } from 'react';
 import type {
   AdBanner,
   AdAdminRequest,
@@ -27,6 +27,7 @@ import { getAdminHomeCopy, type AdminHomeCopy, type AdminHomeState } from './cop
 import { BannerDisplayControls, getBannerControlCopy } from './banner-controls.tsx';
 import { RequestBannerContext, BannerDestinationHint } from './request-banner-context.tsx';
 import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptDurationLabel } from '../public/egypt-time.ts';
+import { BannerGallery, type BannerImageSelection } from './banner-gallery.tsx';
 import './styles.css';
 
 type AdminHomeRoute = 'banners' | 'banner_create' | 'tips' | 'homepage' | 'not_found';
@@ -152,14 +153,16 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
   const copy = getAdminHomeCopy(locale);
   const [busyId, setBusyId] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<string | undefined>();
-  const [preview, setPreview] = useState<{ readonly banner: AdBanner; readonly imageUrl?: string } | undefined>();
+  const [preview, setPreview] = useState<{ readonly banner: AdBanner; readonly imageUrls: string[] } | undefined>();
+
+  useEffect(() => () => { preview?.imageUrls.filter(url => url.startsWith('blob:')).forEach(url => URL.revokeObjectURL(url)); }, [preview]);
 
   const controls = getBannerControlCopy(locale);
   const [editing, setEditing] = useState<AdBanner>();
   const [archiveId, setArchiveId] = useState<string>();
   async function transition(item: AdBanner, status: 'draft' | 'active' | 'scheduled' | 'archived') {
     if (status === 'active' || status === 'scheduled') {
-      if (!item.mediaId) { setFeedback(controls.mediaRequired); return; }
+      if (!(item.mediaIds ?? (item.mediaId ? [item.mediaId] : [])).length) { setFeedback(controls.mediaRequired); return; }
       if (new Date(item.endAt).getTime() <= Date.now()) { setFeedback(controls.expired); return; }
     }
     setBusyId(item.id); setFeedback(undefined);
@@ -192,7 +195,8 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
     setBusyId(item.id); setFeedback(undefined);
     try {
       const result = await source.previewBanner(item.id);
-      setPreview({ banner: result.banner, ...(result.media === undefined ? {} : { imageUrl: await source.loadMediaPreview(result.media.url) }) });
+      const items = result.mediaItems ?? (result.media ? [result.media] : []);
+      setPreview({ banner: result.banner, imageUrls: await Promise.all(items.map(item => source.loadMediaPreview(item.url))) });
     } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setBusyId(undefined); }
   }
 
@@ -203,7 +207,7 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
       {feedback ? <p className="admin-home__feedback" role="alert">{feedback}</p> : null}
       {archiveId ? <div className="admin-home__preview" role="alertdialog" aria-label={controls.archive}><p>{controls.archiveNote}</p><Button disabled={busyId !== undefined} onClick={() => { const item = data.items.find(row => row.id === archiveId); if (item) void transition(item, "archived"); }}>{controls.confirm}</Button><Button variant="secondary" onClick={() => setArchiveId(undefined)}>{copy.cancel}</Button></div> : null}
       {editing ? <BannerCreateForm key={editing.id} locale={locale} source={source} initialBanner={editing} onSaved={updated => { if (updated) { onChanged({ ...data, items: data.items.map(row => row.id === updated.id ? updated : row) }); setEditing(updated); } }} /> : null}
-      {preview ? <aside className="admin-home__preview" aria-label={copy.preview}><h3>{copy.preview}</h3><strong>{localeValue(preview.banner.title, locale)}</strong>{preview.imageUrl ? <img src={preview.imageUrl} alt={localeValue(preview.banner.altText ?? preview.banner.title, locale)} /> : <p>{copy.mediaNote}</p>}<p><code>{preview.banner.targetUrl ?? copy.targetUrl}</code></p></aside> : null}
+      {preview ? <aside className="admin-home__preview" aria-label={copy.preview}><h3>{copy.preview}</h3><strong>{localeValue(preview.banner.title, locale)}</strong>{preview.imageUrls.length ? <div className="admin-home__banner-gallery">{preview.imageUrls.map((url, index) => <img key={url} src={url} alt={`${localeValue(preview.banner.altText ?? preview.banner.title, locale)} ${index + 1}`} />)}</div> : <p>{copy.mediaNote}</p>}<p><code>{preview.banner.targetUrl ?? copy.targetUrl}</code></p></aside> : null}
     </section>
   );
 }
@@ -215,8 +219,16 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
   const [dirty, setDirty] = useState(false);
   const [placements, setPlacements] = useState<AdBannerConfig["placements"]>([]);
   useEffect(() => { let active = true; void source.loadBannerConfig().then(config => { if (active) setPlacements(config.placements); }).catch(() => {}); return () => { active = false; }; }, [source]);
-  const [file, setFile] = useState<File>();
-  const [currentImage, setCurrentImage] = useState<string>();
+  const uploadedUrls = useRef<string[]>([]);
+  useEffect(() => () => uploadedUrls.current.forEach(url => URL.revokeObjectURL(url)), []);
+  async function uploadedPreview(url: string) {
+    const preview = await source.loadMediaPreview(url).catch(() => undefined);
+    if (preview?.startsWith('blob:')) uploadedUrls.current.push(preview);
+    return preview;
+  }
+  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<BannerImageSelection[]>((initialBanner?.mediaIds ?? (initialBanner?.mediaId ? [initialBanner.mediaId] : [])).map(id => ({ id })));
+  const [displaySeconds, setDisplaySeconds] = useState(initialBanner?.displaySeconds ?? 8);
   const [title, setTitle] = useState<DraftLocalized>(draftLocalized(initialBanner?.title));
   const [altText, setAltText] = useState<DraftLocalized>(draftLocalized(initialBanner?.altText));
   const linkedRequestId = initialBanner?.adRequestId ?? campaign?.request.id;
@@ -238,10 +250,11 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
     const parsedTitle = localizedInput(title);
     const startAt = linkedRequestId && start ? new Date(start) : scheduleInstant(startDate, startTime);
     const endAt = linkedRequestId && end ? new Date(end) : scheduleInstant(endDate, endTime);
-    if (parsedTitle === undefined || startAt === undefined || endAt === undefined || ((savedBanner || file || media.url.trim() !== '') && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: media.url.trim() !== '' && reason.trim().length < 2 ? copy.reasonRequired : copy.validation }); return; }
+    if (parsedTitle === undefined || startAt === undefined || endAt === undefined || ((savedBanner || files.length || media.url.trim() !== '') && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: media.url.trim() !== '' && reason.trim().length < 2 ? copy.reasonRequired : copy.validation }); return; }
+    if (images.length + files.length + (media.url.trim() ? 1 : 0) > 20) { setFeedback({ tone: 'error', text: controls.uploadHint }); return; }
     if (endAt <= startAt) { setFeedback({ tone: 'error', text: copy.schedule.invalidRange }); return; }
     if (linkedRequestId && !targetUrl.trim()) { setFeedback({ tone: 'error', text: locale === 'ar' ? 'حدد رابط صفحة العقار أو الشركة المطورة.' : 'Set the property or developer page URL.' }); return; }
-    const input: AdBannerCreate = { ...(linkedRequestId ? { adRequestId: linkedRequestId } : {}), placementKey: placementKey.trim(), title: parsedTitle, ...(localizedInput(altText) === undefined ? {} : { altText: localizedInput(altText) }), ...(targetUrl.trim() === '' ? {} : { targetUrl: targetUrl.trim() }), startAt: startAt.toISOString(), endAt: endAt.toISOString() };
+    const input: AdBannerCreate = { ...(linkedRequestId ? { adRequestId: linkedRequestId } : {}), placementKey: placementKey.trim(), displaySeconds, title: parsedTitle, ...(localizedInput(altText) === undefined ? {} : { altText: localizedInput(altText) }), ...(targetUrl.trim() === '' ? {} : { targetUrl: targetUrl.trim() }), startAt: startAt.toISOString(), endAt: endAt.toISOString() };
     const { adRequestId: _linkedId, ...editableInput } = input;
     void _linkedId;
     setSaving(true);
@@ -250,12 +263,20 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
       let created = savedBanner ? await source.updateBanner(savedBanner.id, { ...editableInput, altText: localizedInput(altText) ?? null, targetUrl: targetUrl.trim() || null, expectedVersion: savedBanner.version, reason: reason.trim() }) : await source.createBanner(input);
       setSavedBanner(created);
       creating = false;
-      if (file || media.url.trim() !== '') {
-        const attached = file ? await source.uploadBannerImage(created.id, file) : await source.createBannerMedia(created.id, { ...media, url: media.url.trim() });
-        created = await source.updateBanner(created.id, { expectedVersion: created.version, mediaId: attached.id, reason: reason.trim() });
-        setSavedBanner(created); setFile(undefined); setMedia(current => ({ ...current, url: '' }));
-        setCurrentImage(await source.loadMediaPreview(attached.url).catch(() => undefined));
+      const selected = [...images];
+      for (const file of files) {
+        const attached = await source.uploadBannerImage(created.id, file);
+        selected.push({ id: attached.id, url: await uploadedPreview(attached.url) });
+        setImages([...selected]);
+        setFiles(current => current.filter(item => item !== file));
       }
+      if (media.url.trim()) {
+        const attached = await source.createBannerMedia(created.id, { ...media, url: media.url.trim() });
+        selected.push({ id: attached.id, url: await uploadedPreview(attached.url) });
+        setImages([...selected]); setMedia(current => ({ ...current, url: '' }));
+      }
+      created = await source.updateBanner(created.id, { expectedVersion: created.version, mediaIds: selected.map(item => item.id), reason: reason.trim() || 'Save banner images' });
+      setSavedBanner(created);
       setDirty(false);
       setFeedback({ tone: 'success', text: created.status === 'draft' ? controls.draftSaved : copy.saved });
       onSaved(created);
@@ -263,18 +284,23 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
   }
 
   useEffect(() => {
-    if (!initialBanner?.mediaId) return;
-    let active = true; let objectUrl: string | undefined;
+    if (!initialBanner) return;
+    let active = true;
+    const urls: string[] = [];
     void source.previewBanner(initialBanner.id).then(async result => {
-      if (!result.media) return;
-      const url = await source.loadMediaPreview(result.media.url);
-      if (!active) { if (url.startsWith('blob:')) URL.revokeObjectURL(url); return; }
-      objectUrl = url; setCurrentImage(url);
+      const items = result.mediaItems ?? (result.media ? [result.media] : []);
+      const loaded = await Promise.all(items.map(async item => {
+        const url = await source.loadMediaPreview(item.url).catch(() => undefined);
+        if (url?.startsWith('blob:')) urls.push(url);
+        return { id: item.id, url };
+      }));
+      if (active) setImages(loaded);
+      else urls.forEach(url => URL.revokeObjectURL(url));
     }).catch(() => { if (active) setFeedback({ tone: 'error', text: controls.failed }); });
-    return () => { active = false; if (objectUrl?.startsWith('blob:')) URL.revokeObjectURL(objectUrl); };
-  }, [initialBanner?.id, initialBanner?.mediaId, source, controls.failed]);
+    return () => { active = false; urls.forEach(url => URL.revokeObjectURL(url)); };
+  }, [initialBanner, source, controls.failed]);
   async function publish() {
-    if (!savedBanner?.mediaId) { setFeedback({ tone: 'error', text: controls.mediaRequired }); return; }
+    if (!savedBanner || !(savedBanner.mediaIds ?? (savedBanner.mediaId ? [savedBanner.mediaId] : [])).length) { setFeedback({ tone: 'error', text: controls.mediaRequired }); return; }
     if (new Date(savedBanner.endAt).getTime() <= Date.now()) { setFeedback({ tone: 'error', text: controls.expired }); return; }
     setSaving(true);
     try {
@@ -282,7 +308,13 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
       setSavedBanner(updated); onSaved(updated); setFeedback({ tone: 'success', text: controls.published });
     } catch (error) { setFeedback({ tone: 'error', text: error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy) }); } finally { setSaving(false); }
   }
-  return <section className="admin-home__editor" data-testid="admin-home-banner-editor"><div className="admin-home__editor-heading"><div><h2>{initialBanner ? controls.edit : copy.newBanner}</h2><p>{copy.bannerDescription}</p></div><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div><form onChange={() => setDirty(true)} onSubmit={event => { void submit(event); }}>{linkedRequestId ? <BannerDestinationHint requestId={linkedRequestId} locale={locale} /> : null}<div className="admin-home__form-grid"><label htmlFor="admin-home-banner-placement">{copy.placement}<select id="admin-home-banner-placement" disabled={Boolean(linkedRequestId)} value={placementKey} onChange={event => setPlacementKey(event.target.value)} required>{placements.length ? placements.map(item => <option key={item.key} value={item.key} disabled={!item.active}>{localeValue(item.label, locale)}</option>) : <option value="homepage.hero">{locale === "ar" ? "بانر الصفحة الرئيسية" : "Homepage banner"}</option>}</select></label><label htmlFor="admin-home-banner-target">{copy.targetUrl}<input id="admin-home-banner-target" required={Boolean(linkedRequestId)} type="url" value={targetUrl} onChange={event => setTargetUrl(event.target.value)} placeholder="https://" /></label><label htmlFor="admin-home-banner-start">{copy.schedule.startDate}<input id="admin-home-banner-start" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startDate} onChange={event => setStartDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-start-time">{copy.schedule.startTime}<input id="admin-home-banner-start-time" disabled={Boolean(linkedRequestId)} type="time" lang="en-GB" step="60" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startTime} onChange={event => setStartTime(event.target.value)} required /></label><label htmlFor="admin-home-banner-end">{copy.schedule.endDate}<input id="admin-home-banner-end" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endDate} onChange={event => setEndDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-end-time">{copy.schedule.endTime}<input id="admin-home-banner-end-time" disabled={Boolean(linkedRequestId)} type="time" lang="en-GB" step="60" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endTime} onChange={event => setEndTime(event.target.value)} required /></label></div><p className="admin-home__hint" id="admin-home-banner-schedule-hint">{copy.schedule.hint}</p><BannerSchedulePreview locale={locale} startDate={startDate} startTime={startTime} endDate={endDate} endTime={endTime} /><LocalizedFields prefix="admin-home-banner-title" label={copy.title} value={title} onChange={(key, value) => setTitle(current => ({ ...current, [key]: value }))} copy={copy} /><LocalizedFields prefix="admin-home-banner-alt" label={copy.altText} value={altText} onChange={(key, value) => setAltText(current => ({ ...current, [key]: value }))} copy={copy} /><fieldset className="admin-home__media-fields"><label htmlFor="admin-home-banner-file">{controls.upload}<input id="admin-home-banner-file" type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const selected = event.target.files?.[0]; if (selected && (selected.size > 10 * 1024 * 1024 || !["image/png", "image/jpeg", "image/webp"].includes(selected.type))) { setFeedback({ tone: "error", text: controls.uploadHint }); event.target.value = ""; setFile(undefined); return; } setFile(selected); setMedia(current => ({ ...current, url: "" })); }} /></label><p className="admin-home__hint">{controls.uploadHint}</p>{currentImage ? <img className="admin-home__banner-image" src={currentImage} alt="" /> : null}<legend>{copy.mediaUrl}</legend><p className="admin-home__hint">{copy.mediaNote}</p><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-media-url">{copy.mediaUrl}<input id="admin-home-banner-media-url" type="url" value={media.url} onChange={event => { setFile(undefined); setMedia(current => ({ ...current, url: event.target.value })); }} placeholder="https://" /></label><label htmlFor="admin-home-banner-media-mime">{copy.mediaMime}<select id="admin-home-banner-media-mime" value={media.mime} onChange={event => setMedia(current => ({ ...current, mime: event.target.value as AdBannerMediaCreate['mime'] }))}><option value="image/png">image/png</option><option value="image/jpeg">image/jpeg</option><option value="image/webp">image/webp</option></select></label><label htmlFor="admin-home-banner-media-width">{copy.mediaWidth}<input id="admin-home-banner-media-width" type="number" min="1" value={media.width} onChange={event => setMedia(current => ({ ...current, width: Number(event.target.value) }))} /></label><label htmlFor="admin-home-banner-media-height">{copy.mediaHeight}<input id="admin-home-banner-media-height" type="number" min="1" value={media.height} onChange={event => setMedia(current => ({ ...current, height: Number(event.target.value) }))} /></label></div></fieldset>{savedBanner || file || media.url.trim() !== '' ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
+  return <section className="admin-home__editor" data-testid="admin-home-banner-editor"><div className="admin-home__editor-heading"><div><h2>{initialBanner ? controls.edit : copy.newBanner}</h2><p>{copy.bannerDescription}</p></div><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div><form onChange={() => setDirty(true)} onSubmit={event => { void submit(event); }}>{linkedRequestId ? <BannerDestinationHint requestId={linkedRequestId} locale={locale} /> : null}<div className="admin-home__form-grid"><label htmlFor="admin-home-banner-placement">{copy.placement}<select id="admin-home-banner-placement" disabled={Boolean(linkedRequestId)} value={placementKey} onChange={event => setPlacementKey(event.target.value)} required>{placements.length ? placements.map(item => <option key={item.key} value={item.key} disabled={!item.active}>{localeValue(item.label, locale)}</option>) : <option value="homepage.hero">{locale === "ar" ? "بانر الصفحة الرئيسية" : "Homepage banner"}</option>}</select></label><label htmlFor="admin-home-banner-target">{copy.targetUrl}<input id="admin-home-banner-target" required={Boolean(linkedRequestId)} type="url" value={targetUrl} onChange={event => setTargetUrl(event.target.value)} placeholder="https://" /></label><label htmlFor="admin-home-banner-start">{copy.schedule.startDate}<input id="admin-home-banner-start" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startDate} onChange={event => setStartDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-start-time">{copy.schedule.startTime}<input id="admin-home-banner-start-time" disabled={Boolean(linkedRequestId)} type="time" lang="en-GB" step="60" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startTime} onChange={event => setStartTime(event.target.value)} required /></label><label htmlFor="admin-home-banner-end">{copy.schedule.endDate}<input id="admin-home-banner-end" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endDate} onChange={event => setEndDate(event.target.value)} required /></label><label htmlFor="admin-home-banner-end-time">{copy.schedule.endTime}<input id="admin-home-banner-end-time" disabled={Boolean(linkedRequestId)} type="time" lang="en-GB" step="60" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endTime} onChange={event => setEndTime(event.target.value)} required /></label></div><p className="admin-home__hint" id="admin-home-banner-schedule-hint">{copy.schedule.hint}</p><BannerSchedulePreview locale={locale} startDate={startDate} startTime={startTime} endDate={endDate} endTime={endTime} /><LocalizedFields prefix="admin-home-banner-title" label={copy.title} value={title} onChange={(key, value) => setTitle(current => ({ ...current, [key]: value }))} copy={copy} /><LocalizedFields prefix="admin-home-banner-alt" label={copy.altText} value={altText} onChange={(key, value) => setAltText(current => ({ ...current, [key]: value }))} copy={copy} /><fieldset className="admin-home__media-fields"><legend>{locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}</legend><label htmlFor="admin-home-banner-file">{controls.upload}<input id="admin-home-banner-file" type="file" multiple disabled={saving} accept="image/png,image/jpeg,image/webp" onChange={event => {
+      const selected = Array.from(event.target.files ?? []);
+      if (selected.some(file => file.size > 10 * 1024 * 1024 || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) || images.length + files.length + selected.length > 20) {
+        setFeedback({ tone: 'error', text: controls.uploadHint }); event.target.value = ''; return;
+      }
+      setFiles(current => [...current, ...selected]); event.target.value = '';
+    }} /></label><p className="admin-home__hint">{controls.uploadHint}</p><BannerGallery locale={locale} images={images} files={files} disabled={saving} onChange={value => { setImages(value); setDirty(true); }} onFilesChange={value => { setFiles(value); setDirty(true); }} /><p className="admin-home__hint">{locale === 'ar' ? 'يمكنك إضافة حتى 20 صورة. تتبدّل بالترتيب بعد النشر. المقاس المقترح 1200 × 400 بكسل، ويجب مطابقة المقاسات المسموحة في إعدادات الإعلانات.' : 'Add up to 20 images. They rotate in order after publication. Suggested size: 1200 × 400 px; match the sizes allowed in advertising settings.'}</p><label htmlFor="admin-home-banner-duration">{locale === 'ar' ? 'مدة عرض كل صورة (بالثواني)' : 'Seconds per image'}<input id="admin-home-banner-duration" type="number" min="3" max="60" step="1" required value={displaySeconds} onChange={event => setDisplaySeconds(Number(event.target.value))} /></label><h3>{copy.mediaUrl}</h3><p className="admin-home__hint">{copy.mediaNote}</p><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-media-url">{copy.mediaUrl}<input id="admin-home-banner-media-url" type="url" value={media.url} onChange={event => { setMedia(current => ({ ...current, url: event.target.value })); }} placeholder="https://" /></label><label htmlFor="admin-home-banner-media-mime">{copy.mediaMime}<select id="admin-home-banner-media-mime" value={media.mime} onChange={event => setMedia(current => ({ ...current, mime: event.target.value as AdBannerMediaCreate['mime'] }))}><option value="image/png">image/png</option><option value="image/jpeg">image/jpeg</option><option value="image/webp">image/webp</option></select></label><label htmlFor="admin-home-banner-media-width">{copy.mediaWidth}<input id="admin-home-banner-media-width" type="number" min="1" value={media.width} onChange={event => setMedia(current => ({ ...current, width: Number(event.target.value) }))} /></label><label htmlFor="admin-home-banner-media-height">{copy.mediaHeight}<input id="admin-home-banner-media-height" type="number" min="1" value={media.height} onChange={event => setMedia(current => ({ ...current, height: Number(event.target.value) }))} /></label></div></fieldset>{savedBanner || files.length || media.url.trim() !== '' ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
 }
 
 function ContentForm({ namespace, item, locale, source, onSaved, onCancel }: { readonly namespace: 'tips' | 'homepage'; readonly item?: HomeContentItem; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: (data: AdminHomeCmsContent) => void; readonly onCancel: () => void }) {

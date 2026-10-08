@@ -81,3 +81,25 @@
 .admin-home__banner-settings h2 { margin-block-start: 0; }
 .admin-home__request-context { padding: 24px; overflow-wrap: anywhere; }
 .admin-home__request-context p { line-height: 1.7; }
+.admin-home__banner-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+}
+
+.admin-home__banner-slide {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  padding: .75rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: .75rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-home__banner-slide img {
+  inline-size: 100%;
+  aspect-ratio: 3 / 1;
+  object-fit: contain;
+  background: #f1f5f9;
+}

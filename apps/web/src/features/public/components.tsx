@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
   PublicHomepageCategory,
@@ -733,7 +733,30 @@ function Hero({
   readonly locations: readonly PublicHomepageLocation[];
 }) {
   const section = sections[0];
-  const banner = banners.find(item => !item.key.startsWith('banner-'));
+  const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
+  const [slideKey, setSlideKey] = useState<string>();
+  const [paused, setPaused] = useState(false);
+  const [interacting, setInteracting] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const selectedIndex = slides.findIndex(item => item.key === slideKey);
+  const activeIndex = selectedIndex < 0 ? 0 : selectedIndex;
+  const banner = slides[activeIndex] ?? banners.find(item => !item.key.startsWith('banner-'));
+  const slideKeys = slides.map(item => item.key).join(',');
+  useEffect(() => {
+    const preference = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : undefined;
+    const updateMotion = () => setReducedMotion(preference?.matches === true);
+    const updateVisibility = () => setHidden(document.hidden);
+    updateMotion(); updateVisibility();
+    preference?.addEventListener?.('change', updateMotion);
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => { preference?.removeEventListener?.('change', updateMotion); document.removeEventListener('visibilitychange', updateVisibility); };
+  }, []);
+  useEffect(() => {
+    if (slides.length < 2 || paused || interacting || hidden || reducedMotion) return;
+    const timer = window.setTimeout(() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key), (banner?.displaySeconds ?? 8) * 1000);
+    return () => window.clearTimeout(timer);
+  }, [slides, slideKeys, activeIndex, banner?.displaySeconds, paused, interacting, hidden, reducedMotion]);
   const managed = banner?.key.startsWith('banner_');
   const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
@@ -741,9 +764,9 @@ function Hero({
   const titleLines = title.split('\n');
 
   return (
-    <section className="public-homepage__hero" aria-labelledby="public-homepage-hero-title">
+    <section className="public-homepage__hero" aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
-        <BannerMedia banner={banner} copy={copy} locale={locale} priority />
+        <BannerMedia key={banner?.key ?? 'default-hero'} banner={banner} copy={copy} locale={locale} priority />
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       <div className="public-homepage__hero-content">
@@ -751,6 +774,12 @@ function Hero({
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
+        {slides.length > 1 ? <div className="public-homepage__hero-slider" role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
+          <button type="button" onClick={() => setSlideKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>‹</button>
+          <span aria-live={paused || interacting || reducedMotion ? 'polite' : 'off'}>{activeIndex + 1} / {slides.length}</span>
+          <button type="button" onClick={() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>›</button>
+          <button type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? (locale === 'ar' ? 'تشغيل' : 'Play') : (locale === 'ar' ? 'إيقاف مؤقت' : 'Pause')}</button>
+        </div> : null}
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>
@@ -1091,7 +1120,7 @@ function BannerGrid({
   readonly banners: readonly PublicHomepageBanner[];
 }) {
   const legacyHero = banners.find(item => !item.key.startsWith('banner-'));
-  const dynamicBanners = ordered(banners).filter(item => item !== legacyHero);
+  const dynamicBanners = ordered(banners).filter(item => item !== legacyHero && !item.key.startsWith('banner_'));
   const carouselBanners = dynamicBanners.length > 0 ? dynamicBanners : canonicalPromotionalBanners;
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
