@@ -373,6 +373,9 @@
 }
 
 .provider-dashboard__metric--total { background: #f0f4f9; }
+.provider-dashboard__metric[href] { color: inherit; text-decoration: none; cursor: pointer; }
+.provider-dashboard__metric[href]:hover { box-shadow: inset 0 0 0 2px var(--color-brand-primary); }
+.provider-dashboard__draft-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-brand-primary); text-underline-offset: 3px; }
 .provider-dashboard__metric--published { background: #f0fdf4; }
 .provider-dashboard__metric--pending { background: #eff6ff; }
 .provider-dashboard__metric--needs-changes { background: #fff7ed; }

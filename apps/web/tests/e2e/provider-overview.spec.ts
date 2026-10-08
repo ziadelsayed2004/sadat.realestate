@@ -101,6 +101,55 @@ test('dashboard shows advertising approval and payment alerts with their request
   await expect(page.locator('.provider-dashboard__notification-count')).toHaveCount(0);
 });
 
+test('opens saved drafts from the dashboard card and row, then saves the same property', async ({ page }) => {
+  const locale = localeForProject();
+  const ar = locale === 'ar';
+  await routeProviderSession(page);
+  await routeProviderOverview(page);
+  let draft = {
+    id: 'ffffffffffffffffffffffff', kind: 'property', name: { ar: 'شقة مسودة محفوظة', en: 'Saved apartment draft' }, slug: 'saved-apartment-draft',
+    transactionType: 'sale', source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' },
+    status: 'draft', active: true, version: 2, createdAt: '2026-10-07T08:00:00.000Z', updatedAt: '2026-10-07T08:00:00.000Z', availableActions: ['update', 'submit']
+  };
+  await page.route('**/api/v1/provider/dashboard', route => route.fulfill({ json: { data: {
+    application: { applicationId: 'bbbbbbbbbbbbbbbbbbbbbbbb', providerType: 'individual_broker', status: 'approved', version: 2, availableActions: ['open_dashboard'] },
+    properties: { total: 1, published: 0, pendingReview: 0, needsChanges: 0, drafts: 1, recent: [draft] }, activity: { customerRequests: 0, bookedViewings: 0 }
+  }, ...successMeta('saved-draft-dashboard') } }));
+  await page.route('**/api/v1/provider/properties?**', route => {
+    expect(new URL(route.request().url()).searchParams.get('status')).toBe('draft');
+    return route.fulfill({ json: { data: { items: [draft] }, meta: { requestId: 'saved-draft-list', page: 1, limit: 5, total: 1 } } });
+  });
+  await page.route(`**/api/v1/provider/properties/${draft.id}`, route => route.fulfill({ json: { data: draft, ...successMeta('saved-draft-detail') } }));
+  let saves = 0;
+  await page.route(`**/api/v1/provider/properties/${draft.id}/steps/basic`, route => {
+    expect(route.request().method()).toBe('PATCH');
+    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
+    const body = route.request().postDataJSON();
+    expect(body.version).toBe(2);
+    saves++;
+    draft = { ...draft, name: body.name, version: 3 };
+    return route.fulfill({ json: { data: draft, ...successMeta('saved-draft-updated') } });
+  });
+  let creates = 0;
+  page.on('request', request => { if (request.method() === 'POST' && new URL(request.url()).pathname === '/api/v1/provider/properties') creates++; });
+  await page.goto(`/provider?lang=${locale}`);
+  await page.getByTestId('provider-summary-drafts').click();
+  await expect(page).toHaveURL(`/provider/properties?status=draft&lang=${locale}`);
+  const row = page.getByTestId(`provider-property-${draft.id}`);
+  await expect(row).toBeVisible();
+  await row.getByRole('link', { name: /^(Edit|تعديل):/u }).click();
+  await expect(page.locator('#provider-property-name')).toHaveValue(draft.name[locale]);
+  await page.goto(`/provider?lang=${locale}`);
+  await page.getByRole('link', { name: ar ? 'استكمال المسودة' : 'Continue draft' }).click();
+  await expect(page).toHaveURL(`/provider/properties/${draft.id}/basic?lang=${locale}`);
+  await expect(page.locator('#provider-property-name')).toHaveValue(draft.name[locale]);
+  await page.locator('#provider-property-name').fill(ar ? 'شقة مسودة معدلة' : 'Updated apartment draft');
+  await page.getByRole('button', { name: ar ? 'حفظ المسودة' : 'Save draft', exact: true }).click();
+  await expect.poll(() => saves).toBe(1);
+  expect(creates).toBe(0);
+  await expect(page.locator('.provider-property-wizard__form')).toContainText(ar ? 'تم حفظ المسودة.' : 'Draft saved.');
+});
+
 test.describe('PRV-01 Provider Overview', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-01' });

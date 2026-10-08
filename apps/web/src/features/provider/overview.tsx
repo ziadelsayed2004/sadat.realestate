@@ -200,14 +200,15 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
   );
 }
 
-function MetricCard({ label, detail, value, tone, unavailable, unavailableBody }: { readonly label: string; readonly detail?: string | undefined; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string }) {
+function MetricCard({ label, detail, value, tone, unavailable, unavailableBody, href }: { readonly label: string; readonly detail?: string | undefined; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string; readonly href?: string }) {
+  const Element = href ? 'a' : 'article';
   return (
-    <article className={`provider-dashboard__metric provider-dashboard__metric--${tone}`} data-testid={`provider-summary-${tone}`}>
+    <Element href={href} aria-label={href ? label : undefined} className={`provider-dashboard__metric provider-dashboard__metric--${tone}`} data-testid={`provider-summary-${tone}`}>
       <span className="provider-dashboard__metric-icon" aria-hidden="true">{unavailable ? '—' : '•'}</span>
       <strong>{value}</strong>
       <span>{label}</span>
       {detail ? <small title={unavailableBody}>{detail}</small> : unavailableBody ? <small title={unavailableBody}>{unavailableBody}</small> : null}
-    </article>
+    </Element>
   );
 }
 
@@ -294,16 +295,17 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
     <div className="provider-dashboard__recent-table-wrap provider-properties__table-wrap">
       <table className="provider-dashboard__recent-table provider-properties__table" aria-label={copy.overview.recentTitle}>
         <thead>
-          <tr><th scope="col">{columns.code}</th><th scope="col">{columns.property}</th><th scope="col">{columns.status}</th><th scope="col">{columns.views}</th><th scope="col">{columns.updated}</th></tr>
+          <tr><th scope="col">{columns.code}</th><th scope="col">{columns.property}</th><th scope="col">{columns.status}</th><th scope="col">{columns.views}</th><th scope="col">{columns.updated}</th><th scope="col">{locale === 'ar' ? 'الإجراء' : 'Action'}</th></tr>
         </thead>
         <tbody>
           {data.properties.recent.map(property => (
             <tr key={property.id}>
               <td><code>{/^p-\d+$/iu.test(property.slug) ? property.slug.toUpperCase() : property.slug}</code></td>
-              <td><strong>{localizedValue(property.name, locale)}</strong></td>
+              <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}><strong>{localizedValue(property.name, locale)}</strong></a> : <strong>{localizedValue(property.name, locale)}</strong>}</td>
               <td><Badge tone={toneForStatus(property.status)}>{copy.propertyStatuses[property.status]}</Badge></td>
               <td><span className="provider-dashboard__unavailable-value">{copy.unavailable}</span></td>
               <td><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
+              <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}>{locale === 'ar' ? 'استكمال المسودة' : 'Continue draft'}</a> : '—'}</td>
             </tr>
           ))}
         </tbody>
@@ -336,7 +338,7 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <MetricCard label={copy.overview.cards.pending} detail={details?.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
           <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} detail={details?.needsChanges} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
           <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} detail={details?.booked} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
-          <MetricCard label={copy.overview.cards.drafts} detail={details?.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
+          <MetricCard label={copy.overview.cards.drafts} detail={details?.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" href={localeForProviderPath(locale, '/provider/properties?status=draft')} />
           <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} detail={details?.views} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
           <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} detail={details?.customerRequests} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
         </div>

@@ -42,6 +42,19 @@ function success(data: unknown, requestId: string, meta: { page?: number; limit?
 const pageData: ProviderPropertiesData = { items: rows, page: 1, limit: 5, total: 3 };
 
 describe('Provider properties', () => {
+  it.each([{ requested: 'draft', expected: 'draft' }, { requested: 'invalid-status', expected: undefined }])('honors a valid dashboard filter and rejects unknown status: $requested', async ({ requested, expected }) => {
+    const previous = window.location.href;
+    window.history.replaceState({}, '', `/provider/properties?status=${requested}&lang=en`);
+    try {
+      const load = vi.fn(async (_query: ProviderPropertiesQuery) => ({ ...pageData, items: [rows[2]] }));
+      renderWithLocale(<ProviderProperties locale="en" session={session} load={load} />, { locale: 'en' });
+      await waitFor(() => expect(load).toHaveBeenCalled());
+      expect(load.mock.calls[0]?.[0].status).toBe(expected);
+      const row = await screen.findByTestId(`provider-property-${rows[2].id}`);
+      expect(within(row).getByRole('link', { name: /^Edit:/u })).toHaveAttribute('href', `/provider/properties/${rows[2].id}/basic?lang=en`);
+    } finally { window.history.replaceState({}, '', previous); }
+  });
+
   it('loads the owner-scoped property query with strict filters and authorization', async () => {
     const requests: Array<{ url: string; authorization: string | null }> = [];
     const client = new ApiClient({

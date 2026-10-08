@@ -53,6 +53,15 @@ function success(data: unknown, requestId: string, total?: number): Response {
 }
 
 describe('Provider overview', () => {
+  it.each(['ar', 'en'] as const)('opens the draft list and saved draft editor from the dashboard in %s', locale => {
+    const draft = { ...property, status: 'draft' as const, availableActions: ['update' as const, 'submit' as const] };
+    renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, properties: { ...overview.properties, recent: [draft] } }} />, { locale });
+    expect(screen.getByRole('link', { name: getProviderCopy(locale).overview.cards.drafts })).toHaveAttribute('href', `/provider/properties?status=draft&lang=${locale}`);
+    const href = `/provider/properties/${draft.id}/basic?lang=${locale}`;
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'استكمال المسودة' : 'Continue draft' })).toHaveAttribute('href', href);
+    expect(screen.getByRole('link', { name: draft.name[locale]! })).toHaveAttribute('href', href);
+  });
+
   it('renews stale application claims once and retries using the new token', async () => {
     let token = 'old-token';
     const headers: Array<string | null> = [];

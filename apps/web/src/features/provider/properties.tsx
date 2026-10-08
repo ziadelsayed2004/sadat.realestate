@@ -89,7 +89,7 @@ function PropertyStatusBadge({ status, locale }: { readonly status: PropertyStat
 function PropertyActions({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {
   const copy = getProviderCopy(locale);
   const name = localizedValue(property.name, locale);
-  const editHref = localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/location`);
+  const editHref = localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/${property.status === 'draft' ? 'basic' : 'location'}`);
   const viewHref = localeForProviderPath(locale, statusPath(property));
   return (
     <div className="provider-properties__actions">
@@ -215,7 +215,10 @@ function PropertiesContent({ data, locale, query, onPageChange, onStatusChange, 
 }
 
 export function ProviderProperties({ locale, session, authClient, apiOrigin, load }: ProviderPropertiesProps) {
-  const [status, setStatus] = useState<ProviderPropertyStatusFilter>('all');
+  const [status, setStatus] = useState<ProviderPropertyStatusFilter>(() => {
+    const requested = typeof window === 'undefined' ? null : new URL(window.location.href).searchParams.get('status');
+    return PROPERTY_STATUSES.find(value => value === requested) ?? 'all';
+  });
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
