@@ -283,6 +283,55 @@ test.describe('PRV-08 responsive Figma contract', () => {
   });
 });
 
+test.describe('PRV-09 Egyptian contact regression', () => {
+  test('validates fields then saves Egyptian contact numbers and continues with the saved version', async ({ page }) => {
+    const locale = localeForProject();
+    const copy = getProviderPropertyCompletionCopy(locale);
+    await routeSession(page);
+    let current = propertyFixture();
+    const saved: Record<string, unknown>[] = [];
+    await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}`, async route => {
+      await route.fulfill({ json: { data: current, meta: { requestId: 'contact-reload' } } });
+    });
+    await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/media`, async route => {
+      await route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'contact-media' } } });
+    });
+    await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/steps/contact`, async route => {
+      expect(route.request().method()).toBe('PATCH');
+      expect(route.request().headers().authorization).toBe('Bearer provider.completion.token');
+      const input = route.request().postDataJSON();
+      saved.push(input);
+      expect(input.version).toBe(current.version);
+      expect(input.contact).toMatchObject({ phone: '+201028514572', whatsappNumber: '+201039938831', email: 'owner@example.com', showPhone: true, showWhatsapp: false, showEmail: false, internalNotes: 'Keep my notes' });
+      current = propertyFixture({ contact: input.contact, version: current.version + 1 });
+      await route.fulfill({ json: { data: current, meta: { requestId: 'contact-save' } } });
+    });
+    await page.goto(`/provider/properties/${PROPERTY_ID}/contact?lang=${locale}`);
+    const phone = page.locator('#provider-property-contact-phone');
+    await phone.fill('010285');
+    await page.locator('#provider-property-contact-whatsapp').fill('٠١٠٣٩٩٣٨٨٣١');
+    await page.locator('#provider-property-contact-email').fill('owner@example.com');
+    await page.locator('#provider-property-contact-notes').fill('Keep my notes');
+    await page.getByRole('switch', { name: copy.contact.showWhatsapp }).uncheck();
+    await page.getByRole('switch', { name: copy.contact.showEmail }).uncheck();
+    await page.getByRole('button', { name: copy.continue, exact: true }).click();
+    await expect(phone).toBeFocused();
+    await expect(phone).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByText(copy.contact.errors.phone, { exact: true })).toBeVisible();
+    expect(saved).toHaveLength(0);
+    await expect(page.locator('#provider-property-contact-notes')).toHaveValue('Keep my notes');
+    await phone.fill('01028514572');
+    await page.getByRole('button', { name: copy.saveDraft, exact: true }).click();
+    await expect(page.getByText(copy.saved, { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`/provider/properties/${PROPERTY_ID}/contact`));
+    await expect(phone).toHaveValue('+201028514572');
+    await page.getByRole('button', { name: copy.continue, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/provider/properties/${PROPERTY_ID}/review`));
+    expect(saved).toHaveLength(2);
+    expect(saved.map(input => input.version)).toEqual([2, 3]);
+  });
+});
+
 test.describe('PRV-09 responsive Figma contract', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-09' });

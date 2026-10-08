@@ -7,6 +7,7 @@ import { getProviderPropertyCopy } from '../src/features/provider_property/copy.
 import { ProviderPropertyCompletionWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
 import { deleteProviderPropertyMedia, loadProviderProperty, reorderProviderPropertyMedia, saveProviderPropertyStep, submitProviderProperty, uploadProviderPropertyMedia } from '../src/features/provider_property/data.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import type { ProviderPropertySaveAction } from '../src/features/provider_property/wizard.tsx';
 
 const providerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const propertyId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -63,6 +64,69 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('provider property media, contact, and review completion', () => {
+  it.each([
+    ['01028514572', '01039938831'],
+    ['٠١٠٢٨٥١٤٥٧٢', '۰۱۰۳۹۹۳۸۸۳۱'],
+    ['010 2851-4572', '00201039938831'],
+    ['+201028514572', '+201039938831']
+  ])('saves local and international contact numbers with privacy settings (%s)', async (phone, whatsappNumber) => {
+    const save = vi.fn<ProviderPropertySaveAction>(async (_id, _step, input) => property({ version: 3, ...('contact' in input && input.contact != null ? { contact: input.contact } : {}) }));
+    const copy = getProviderPropertyCompletionCopy('ar');
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="ar" session={session} step="contact" propertyId={propertyId} initialData={property()} save={save} />, { locale: 'ar' });
+    fireEvent.change(screen.getByLabelText(copy.contact.contactName), { target: { value: 'احمد العسس' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.phone), { target: { value: phone } });
+    fireEvent.change(screen.getByLabelText(copy.contact.whatsapp), { target: { value: whatsappNumber } });
+    fireEvent.change(screen.getByLabelText(copy.contact.email), { target: { value: 'ahmedmohuamedassas@gmail.com' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.preferredContactTime), { target: { value: 'صباحا' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.internalNotesTitle), { target: { value: 'ق' } });
+    fireEvent.click(screen.getByLabelText(copy.contact.showWhatsapp));
+    fireEvent.click(screen.getByLabelText(copy.contact.showEmail));
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'contact', {
+      version: 2, reason: 'Provider updated contact details', contact: {
+        contactRole: 'custom', contactName: 'احمد العسس', phone: '+201028514572', whatsappNumber: '+201039938831',
+        email: 'ahmedmohuamedassas@gmail.com', preferredLocale: 'en', preferredContactTime: 'صباحا', internalNotes: 'ق',
+        showPhone: true, showWhatsapp: false, showEmail: false
+      }
+    }));
+    expect(await screen.findByText(copy.saved)).toBeInTheDocument();
+  });
+
+  it.each(['ar', 'en'] as const)('identifies invalid contact fields and keeps the entries in %s', async locale => {
+    const save = vi.fn(async () => property());
+    const copy = getProviderPropertyCompletionCopy(locale);
+    renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} step="contact" propertyId={propertyId} initialData={property()} save={save} />, { locale });
+    const phone = screen.getByLabelText(copy.contact.phone);
+    fireEvent.change(phone, { target: { value: '010285' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.whatsapp), { target: { value: '---' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.email), { target: { value: 'invalid-email' } });
+    fireEvent.change(screen.getByLabelText(copy.contact.internalNotesTitle), { target: { value: 'Keep my note' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
+    expect(save).not.toHaveBeenCalled();
+    expect(phone).toHaveAttribute('aria-invalid', 'true');
+    expect(phone).toHaveFocus();
+    expect(phone).toHaveValue('010285');
+    expect(screen.getByText(copy.contact.errors.phone)).toBeInTheDocument();
+    expect(screen.getByText(copy.contact.errors.whatsappNumber)).toBeInTheDocument();
+    expect(screen.getByText(copy.contact.errors.email)).toBeInTheDocument();
+    expect(screen.getByLabelText(copy.contact.internalNotesTitle)).toHaveValue('Keep my note');
+    fireEvent.change(phone, { target: { value: '01028514572' } });
+    expect(phone).not.toHaveAttribute('aria-invalid', 'true');
+    expect(screen.queryByText(copy.contact.errors.phone)).not.toBeInTheDocument();
+    expect(screen.getByText(copy.contact.errors.email)).toBeInTheDocument();
+  });
+
+  it('still permits a partial contact draft without phone numbers', async () => {
+    const save = vi.fn<ProviderPropertySaveAction>(async () => property());
+    const copy = getProviderPropertyCompletionCopy('en');
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} step="contact" propertyId={propertyId} initialData={property({ contact: undefined })} save={save} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalled());
+    expect(save.mock.calls[0]?.[2]).toMatchObject({ contact: { contactRole: 'account_owner', preferredLocale: 'en' } });
+    expect(save.mock.calls[0]?.[2]).not.toHaveProperty('contact.phone');
+    expect(save.mock.calls[0]?.[2]).not.toHaveProperty('contact.whatsappNumber');
+  });
+
   it('keeps an Arabic form skeleton until contact data resolves, then replaces it with the form', async () => {
     let resolve!: (value: PropertyData) => void;
     const pending = new Promise<PropertyData>(done => { resolve = done; });

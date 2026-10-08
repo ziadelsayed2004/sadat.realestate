@@ -54,6 +54,8 @@ export interface ProviderPropertyCompletionCopy {
     readonly versionConflictBody: string;
   };
   readonly contact: {
+    readonly validationBody: string;
+    readonly errors: Readonly<Record<'contactName' | 'phone' | 'whatsappNumber' | 'email' | 'preferredContactTime' | 'internalNotes', string>>;
     readonly contactRole: string;
     readonly contactRoles: Readonly<Record<'account_owner' | 'sales_agent' | 'custom', string>>;
     readonly preferredContactTime: string;
@@ -126,6 +128,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
       emptyTitle: 'لم يتم رفع وسائط بعد', emptyBody: 'أضف صورة أو فيديو أو مخططاً من الملفات المعتمدة.', existingUnavailableTitle: 'قائمة الوسائط السابقة غير متاحة في العقد الحالي', existingUnavailableBody: 'يعرض هذا المحرر الوسائط التي تم رفعها خلال الجلسة الحالية فقط؛ لا يتم اختلاق روابط أو بيانات لوسائط سابقة.', acceptedTypes: 'الأنواع المدعومة: JPG وPNG للصور، وPDF للمخططات وMP4 للفيديو (يفضل H.264). الحد الأقصى 10 ميجابايت للملف.', privacyNote: 'تظهر الوسائط للزوار بعد مراجعة العقار ونشره. الفيديو لا يُستخدم كصورة غلاف.', invalidFileTitle: 'الملف غير صالح', invalidFileBody: 'اختر ملفاً غير فارغ بامتداد ونوع مدعومين.', tooLargeTitle: 'الملف كبير جداً', tooLargeBody: 'يجب ألا يتجاوز الملف 10 ميجابايت.', uploadErrorTitle: 'تعذر رفع الملف', uploadErrorBody: 'تعذر إكمال الرفع. يمكنك المحاولة مرة أخرى.', storageUnavailableTitle: 'خدمة الوسائط غير متاحة مؤقتاً', storageUnavailableBody: 'لا يمكن إكمال الرفع حتى تصبح خدمة التخزين والفحص متاحة.', permissionTitle: 'لا توجد صلاحية للرفع', permissionBody: 'لا يمكن رفع وسائط لهذه المسودة أو للجلسة الحالية.', versionConflictTitle: 'تعارض في نسخة الوسائط', versionConflictBody: 'تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة.'
     },
     contact: {
+      validationBody: 'راجع الحقول الموضحة أدناه ثم أعد الحفظ. بياناتك لم تُفقد.',
+      errors: {
+        contactName: 'أدخل اسمًا صالحًا لا يزيد عن 160 حرفًا.',
+        phone: 'أدخل رقم هاتف صحيحًا، مثل 01012345678 أو +201012345678.',
+        whatsappNumber: 'أدخل رقم واتساب صحيحًا، مثل 01012345678 أو +201012345678.',
+        email: 'أدخل بريدًا إلكترونيًا صحيحًا، مثل name@example.com.',
+        preferredContactTime: 'اكتب الوقت المناسب للتواصل في 200 حرف كحد أقصى.',
+        internalNotes: 'اكتب الملاحظات الداخلية في 2000 حرف كحد أقصى.'
+      },
       contactName: 'اسم مسؤول التواصل', phone: 'رقم الهاتف', whatsapp: 'رقم واتساب', email: 'البريد الإلكتروني', preferredLocale: 'لغة التواصل', contactNamePlaceholder: 'الاسم الكامل', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'العربية', en: 'English',}, supportedFieldsTitle: 'الحقول المدعومة', supportedFieldsBody: 'أدخل بيانات المسؤول الذي سيتلقى استفسارات العقار.', internalNotesTitle: 'ملاحظات داخلية', internalNotesBody: 'ملاحظات داخلية لا تظهر للمستخدمين...',
       preferredContactTime: 'الوقت المناسب للتواصل',
       contactRole: 'مسؤول التواصل',
@@ -160,6 +171,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
       emptyTitle: 'No media uploaded yet', emptyBody: 'Add an image, video or floor plan from the supported file types.', existingUnavailableTitle: 'Existing media list is not exposed by the current contract', existingUnavailableBody: 'This editor shows media uploaded during the current session only; it does not fabricate old media records or URLs.', acceptedTypes: 'Supported types: JPG and PNG for images, PDF for floor plans and MP4 video (H.264 recommended). Maximum 10 MB per file.', privacyNote: 'Media appears to visitors after the property is reviewed and published. Videos cannot be cover images.', invalidFileTitle: 'File is not valid', invalidFileBody: 'Choose a non-empty file with a supported extension and MIME type.', tooLargeTitle: 'File is too large', tooLargeBody: 'The file must not exceed 10 MB.', uploadErrorTitle: 'File could not be uploaded', uploadErrorBody: 'The upload did not complete. You can retry it.', storageUnavailableTitle: 'Media service is temporarily unavailable', storageUnavailableBody: 'The upload cannot complete until storage and scanning are ready.', permissionTitle: 'Upload permission required', permissionBody: 'Media cannot be uploaded for this draft or session.', versionConflictTitle: 'Media version conflict', versionConflictBody: 'The media order changed. Reload the draft before continuing.'
     },
     contact: {
+      validationBody: 'Check the fields marked below and save again. Your entries have been kept.',
+      errors: {
+        contactName: 'Enter a valid name of up to 160 characters.',
+        phone: 'Enter a valid phone number, such as 01012345678 or +201012345678.',
+        whatsappNumber: 'Enter a valid WhatsApp number, such as 01012345678 or +201012345678.',
+        email: 'Enter a valid email address, such as name@example.com.',
+        preferredContactTime: 'Use up to 200 characters for the preferred contact time.',
+        internalNotes: 'Use up to 2000 characters for internal notes.'
+      },
       contactName: 'Contact name', phone: 'Phone number', whatsapp: 'WhatsApp number', email: 'Email', preferredLocale: 'Contact language', contactNamePlaceholder: 'Full name', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'Arabic', en: 'English',}, supportedFieldsTitle: 'Supported fields', supportedFieldsBody: 'Enter the details of the person receiving property enquiries.', internalNotesTitle: 'Internal notes', internalNotesBody: 'Internal notes are not shown publicly...',
       preferredContactTime: 'Best time to contact',
       contactRole: 'Contact person',

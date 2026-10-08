@@ -3575,6 +3575,15 @@
       "versionConflictBody": "The media order changed. Reload the draft before continuing."
     },
     "contact": {
+      "validationBody": "Check the fields marked below and save again. Your entries have been kept.",
+      "errors": {
+        "contactName": "Enter a valid name of up to 160 characters.",
+        "phone": "Enter a valid phone number, such as 01012345678 or +201012345678.",
+        "whatsappNumber": "Enter a valid WhatsApp number, such as 01012345678 or +201012345678.",
+        "email": "Enter a valid email address, such as name@example.com.",
+        "preferredContactTime": "Use up to 200 characters for the preferred contact time.",
+        "internalNotes": "Use up to 2000 characters for internal notes."
+      },
       "contactName": "Contact name",
       "phone": "Phone number",
       "whatsapp": "WhatsApp number",

@@ -68,6 +68,25 @@ interface Checks {
   readonly review: boolean;
 }
 
+type ContactErrors = Partial<Record<keyof ContactForm, string>>;
+const contactInputIds = {
+  contactName: 'provider-property-contact-name',
+  phone: 'provider-property-contact-phone',
+  whatsappNumber: 'provider-property-contact-whatsapp',
+  email: 'provider-property-contact-email',
+  preferredContactTime: 'provider-property-contact-time',
+  internalNotes: 'provider-property-contact-notes'
+} as const;
+
+// The API stores international numbers; Egyptian mobile numbers can be entered locally.
+function contactPhoneInput(value: string): string {
+  const compact = value.trim()
+    .replace(/[٠-٩]/gu, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+    .replace(/[۰-۹]/gu, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+    .replace(/[\s().-]/gu, '');
+  return /^01[0125]\d{8}$/u.test(compact) ? `+20${compact.slice(1)}` : compact;
+}
+
 export type ProviderPropertyMediaUploadAction = (options: ProviderPropertyMediaUploadOptions) => Promise<PropertyMediaData>;
 export type ProviderPropertyMediaOrderAction = (options: ProviderPropertyMediaOrderOptions) => Promise<readonly PropertyMediaData[]>;
 export type ProviderPropertyMediaDeleteAction = (options: ProviderPropertyMediaDeleteOptions) => Promise<PropertyMediaData>;
@@ -211,7 +230,8 @@ function ContactView({
   onBack,
   mutationState,
   mutationMessage,
-  validationError
+  validationError,
+  errors
 }: {
   readonly locale: SupportedLocale;
   readonly copy: ReturnType<typeof getProviderPropertyCompletionCopy>;
@@ -223,9 +243,11 @@ function ContactView({
   readonly mutationState: MutationState;
   readonly mutationMessage: string | undefined;
   readonly validationError: boolean;
+  readonly errors: ContactErrors;
 }) {
   const fields = copy.contact;
   const saving = mutationState === 'saving';
+  const fieldError = (field: keyof ContactForm) => ({ state: errors[field] === undefined ? 'default' as const : 'error' as const, error: errors[field] });
   return (
     <form className="provider-property-completion__form" data-form-step="contact" onSubmit={onSubmit} noValidate>
       <CompletionPageIntro copy={copy} />
@@ -241,14 +263,15 @@ function ContactView({
           </label>)}
         </fieldset>
         <div className="provider-property-wizard__grid">
-          <Input id="provider-property-contact-name" label={fields.contactName} value={form.contactName} placeholder={fields.contactNamePlaceholder} onChange={event => onChange('contactName', event.target.value)} />
-          <Input id="provider-property-contact-phone" label={fields.phone} value={form.phone} placeholder={fields.phonePlaceholder} onChange={event => onChange('phone', event.target.value)} inputMode="tel" />
-          <Input id="provider-property-contact-whatsapp" label={fields.whatsapp} value={form.whatsappNumber} placeholder={fields.whatsappPlaceholder} onChange={event => onChange('whatsappNumber', event.target.value)} inputMode="tel" />
-          <Input id="provider-property-contact-email" label={fields.email} value={form.email} placeholder={fields.emailPlaceholder} onChange={event => onChange('email', event.target.value)} type="email" />
-          <Input id="provider-property-contact-time" label={fields.preferredContactTime} value={form.preferredContactTime} onChange={event => onChange('preferredContactTime', event.target.value)} />
+          <Input id="provider-property-contact-name" label={fields.contactName} value={form.contactName} placeholder={fields.contactNamePlaceholder} onChange={event => onChange('contactName', event.target.value)} maxLength={160} {...fieldError('contactName')} />
+          <Input id="provider-property-contact-phone" label={fields.phone} value={form.phone} placeholder={fields.phonePlaceholder} onChange={event => onChange('phone', event.target.value)} inputMode="tel" dir="ltr" {...fieldError('phone')} />
+          <Input id="provider-property-contact-whatsapp" label={fields.whatsapp} value={form.whatsappNumber} placeholder={fields.whatsappPlaceholder} onChange={event => onChange('whatsappNumber', event.target.value)} inputMode="tel" dir="ltr" {...fieldError('whatsappNumber')} />
+          <Input id="provider-property-contact-email" label={fields.email} value={form.email} placeholder={fields.emailPlaceholder} onChange={event => onChange('email', event.target.value)} type="email" dir="ltr" {...fieldError('email')} />
+          <Input id="provider-property-contact-time" label={fields.preferredContactTime} value={form.preferredContactTime} onChange={event => onChange('preferredContactTime', event.target.value)} maxLength={200} {...fieldError('preferredContactTime')} />
           <div className="provider-property-completion__field">
             <label htmlFor="provider-property-contact-notes">{fields.internalNotesTitle}</label>
-            <textarea id="provider-property-contact-notes" value={form.internalNotes} maxLength={2000} placeholder={fields.internalNotesBody} onChange={event => onChange('internalNotes', event.target.value)} />
+            <textarea id="provider-property-contact-notes" value={form.internalNotes} maxLength={2000} placeholder={fields.internalNotesBody} onChange={event => onChange('internalNotes', event.target.value)} aria-invalid={errors.internalNotes !== undefined} aria-describedby={errors.internalNotes === undefined ? undefined : 'provider-property-contact-notes-error'} />
+            {errors.internalNotes === undefined ? null : <p id="provider-property-contact-notes-error" className="ui-field__message" data-tone="error" role="alert">{errors.internalNotes}</p>}
           </div>
           <div className="provider-property-completion__field">
             <label htmlFor="provider-property-contact-locale">{fields.preferredLocale}</label>
@@ -265,7 +288,7 @@ function ContactView({
           <input type="checkbox" role="switch" checked={form[field]} onChange={event => onChange(field, event.target.checked)} />
         </label>)}
       </fieldset>
-      {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{copy.validationTitle}</strong> {copy.validationBody}</p> : null}
+      {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{copy.validationTitle}</strong> {fields.validationBody}</p> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
       <div className="provider-property-wizard__actions">
         <Button type="button" variant="secondary" data-action="back" onClick={onBack} disabled={saving}>{copy.back}</Button>
@@ -487,6 +510,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const [mutationMessage, setMutationMessage] = useState<string | undefined>();
   const [mediaMessage, setMediaMessage] = useState<string | undefined>();
   const [validationError, setValidationError] = useState(false);
+  const [contactErrors, setContactErrors] = useState<ContactErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
@@ -539,16 +563,22 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const goBack = () => navigate(locale, propertyId, step === 'media' ? 'features-services' : step === 'contact' ? 'media' : 'contact');
   const goForward = () => { if (step === 'media') navigate(locale, propertyId, 'contact'); else if (step === 'contact') navigate(locale, propertyId, 'review'); };
 
-  const handleContactChange = (field: keyof ContactForm, value: string | boolean) => setContact(current => ({ ...current, [field]: value }));
+  const handleContactChange = (field: keyof ContactForm, value: string | boolean) => {
+    setContact(current => ({ ...current, [field]: value }));
+    setContactErrors(current => { const next = { ...current }; delete next[field]; return next; });
+    setValidationError(false);
+    setMutationMessage(undefined);
+  };
   const saveContact = async (advance: boolean) => {
     if (property === undefined) return;
     setValidationError(false);
+    setContactErrors({});
     setMutationMessage(undefined);
     const contactValue: PropertyContact = {
       contactRole: contact.contactRole,
       ...(optionalValue(contact.contactName) === undefined ? {} : { contactName: optionalValue(contact.contactName) }),
-      ...(optionalValue(contact.phone) === undefined ? {} : { phone: optionalValue(contact.phone) }),
-      ...(optionalValue(contact.whatsappNumber) === undefined ? {} : { whatsappNumber: optionalValue(contact.whatsappNumber) }),
+      ...(optionalValue(contact.phone) === undefined ? {} : { phone: contactPhoneInput(contact.phone) }),
+      ...(optionalValue(contact.whatsappNumber) === undefined ? {} : { whatsappNumber: contactPhoneInput(contact.whatsappNumber) }),
       ...(optionalValue(contact.email) === undefined ? {} : { email: optionalValue(contact.email) }),
       preferredLocale: contact.preferredLocale,
       ...(optionalValue(contact.preferredContactTime) === undefined ? {} : { preferredContactTime: optionalValue(contact.preferredContactTime) }),
@@ -558,7 +588,21 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
       showEmail: contact.showEmail
     };
     const parsed = propertyContactStepSchema.safeParse({ version: property.version, contact: contactValue, reason: contact.reason.trim() });
-    if (!parsed.success) { setValidationError(true); return; }
+    if (!parsed.success) {
+      const errors: ContactErrors = {};
+      for (const issue of parsed.error.issues) {
+        const field = issue.path[0] === 'contact' ? issue.path[1] : undefined;
+        if (typeof field === 'string' && field in contactInputIds) {
+          const key = field as keyof typeof contactInputIds;
+          errors[key] = copy.contact.errors[key];
+        }
+      }
+      setContactErrors(errors);
+      setValidationError(true);
+      const firstField = Object.keys(contactInputIds).find(field => errors[field as keyof ContactForm] !== undefined) as keyof typeof contactInputIds | undefined;
+      if (firstField !== undefined) document.getElementById(contactInputIds[firstField])?.focus();
+      return;
+    }
     setMutationState('saving');
     try {
       const next = await saveAction(propertyId, 'contact', parsed.data);
@@ -661,7 +705,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const validationState = step === 'review' && property !== undefined && (property.status === 'draft' || property.status === 'needs_changes') && validationIssues.length > 0;
   const content = state === 'success' && property !== undefined ? (
     step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving' || mediaLoading} message={mediaMessage} onBack={goBack} onContinue={goForward} />
-      : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onSaveDraft={() => { void saveContact(false); }} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
+      : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onSaveDraft={() => { void saveContact(false); }} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} errors={contactErrors} />
         : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
   ) : null;
 
