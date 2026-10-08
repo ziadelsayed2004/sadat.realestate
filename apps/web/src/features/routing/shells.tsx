@@ -9,6 +9,7 @@ import type { RouteMatch } from '../../routes/route-table.js';
 import { LocaleSwitcher } from '../localization/index.ts';
 import { AdminAttentionBell, AdminAttentionProvider } from './admin-attention.tsx';
 import { DashboardAccountMenu } from '../dashboard_account/menu.tsx';
+import { AdminSectionSearch } from './admin-section-search.tsx';
 
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
@@ -116,10 +117,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
               <span aria-hidden="true" className="admin-shell-header__avatar">م</span>
               <span className="admin-shell-header__identity-copy"><strong>{adminHeader.role}</strong><small>{surfaceLabel}</small></span>
             </DashboardAccountMenu>
-            <label className="admin-shell-header__search">
-              <span className="a11y-visually-hidden">{adminHeader.searchLabel}</span>
-              <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" />
-            </label>
+            <AdminSectionSearch locale={locale} label={adminHeader.searchLabel} placeholder={adminHeader.search} />
             <button
               aria-controls="admin-dashboard-navigation"
               aria-expanded={adminSidebarOpen}

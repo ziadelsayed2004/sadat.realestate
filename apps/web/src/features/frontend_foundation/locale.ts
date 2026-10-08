@@ -47,7 +47,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
     homeLabel: 'العودة إلى الموقع',
     forbiddenTitle: 'هذا القسم غير متاح لحسابك',
     forbiddenBody: 'يمكنك العودة إلى الموقع أو استخدام حساب لديه صلاحية الوصول إلى هذا القسم.',
-    adminHeader: { search: 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب', searchLabel: 'بحث الإدارة', role: 'مدير النظام', menu: 'فتح قائمة الإدارة', closeMenu: 'إغلاق قائمة الإدارة' },
+    adminHeader: { search: 'ابحث عن قسم: المقالات، فريق العمل، العقارات…', searchLabel: 'بحث الإدارة', role: 'مدير النظام', menu: 'فتح قائمة الإدارة', closeMenu: 'إغلاق قائمة الإدارة' },
     surfaceLabels: { public: 'عام', auth: 'تسجيل الدخول', seeker: 'الباحث عن عقار', provider: 'مزود العقار', admin: 'الإدارة' },
     states: {
       loading: { title: 'جارٍ التحميل', body: 'يتم تجهيز الواجهة.' },
@@ -70,7 +70,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
     homeLabel: 'Back to website',
     forbiddenTitle: 'This section is unavailable for your account',
     forbiddenBody: 'Return to the website or use an account with permission to access this section.',
-    adminHeader: { search: 'Search for a user, property, project, article or request', searchLabel: 'Admin search', role: 'System administrator', menu: 'Open admin menu', closeMenu: 'Close admin menu' },
+    adminHeader: { search: 'Find a section: Articles, Team, Properties…', searchLabel: 'Admin search', role: 'System administrator', menu: 'Open admin menu', closeMenu: 'Close admin menu' },
     surfaceLabels: { public: 'Public', auth: 'Authentication', seeker: 'Seeker', provider: 'Provider', admin: 'Administration' },
     states: {
       loading: { title: 'Loading', body: 'Preparing the interface.' },

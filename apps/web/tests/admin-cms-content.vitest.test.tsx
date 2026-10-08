@@ -148,7 +148,7 @@ describe('admin About, Team, and population CMS content', () => {
     fireEvent.click(screen.getByTestId(`admin-cms-team-${aboutId}`).querySelectorAll('button')[1]!);
     expect(screen.getByLabelText('EN ' + copy.name)).toHaveValue('Second member');
     fireEvent.change(screen.getByLabelText('EN ' + copy.name), { target: { value: 'Updated second member' } });
-    fireEvent.change(screen.getByLabelText('EN ' + copy.body), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('EN ' + (locale === 'ar' ? '\u0646\u0628\u0630\u0629 \u0639\u0646 \u0627\u0644\u0634\u062e\u0635' : 'Member bio')), { target: { value: '' } });
     fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Update team profile' } });
     fireEvent.submit(screen.getByTestId('admin-cms-team-editor').querySelector('form')!);
     await waitFor(() => expect(update).toHaveBeenCalledWith('team', expect.objectContaining({ id: aboutId, version: 2, name: expect.objectContaining({ en: 'Updated second member' }), bio: null })));

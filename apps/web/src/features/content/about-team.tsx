@@ -209,7 +209,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
           {ui.values.map(value => <article key={value.label} className="public-about__value"><span className="public-about__icon"><Icon kind={value.icon} /></span><h3>{value.label}</h3><p>{value.detail}</p></article>)}
         </div>
       </section>
-      {stats.length > 0 ? <section className="public-about__stats" aria-labelledby="public-about-stats-title">
+      {stats.length > 0 ? <section id="about-statistics" className="public-about__stats" aria-labelledby="public-about-stats-title">
         <div className="public-about__section-heading"><p>{ui.statsEyebrow}</p><h2 id="public-about-stats-title">{ui.statsTitle}</h2></div>
         <div className="public-about__stat-grid">{stats.map((stat, index) => <article key={index}><strong><bdi dir="ltr">{stat.value}</bdi></strong><span>{localizedText(stat.label, locale)}</span></article>)}</div>
       </section> : null}

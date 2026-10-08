@@ -4856,7 +4856,7 @@
     "forbiddenTitle": "This section is unavailable for your account",
     "forbiddenBody": "Return to the website or use an account with permission to access this section.",
     "adminHeader": {
-      "search": "Search for a user, property, project, article or request",
+      "search": "Find a section: Articles, Team, Properties…",
       "searchLabel": "Admin search",
       "role": "System administrator",
       "menu": "Open admin menu",
