@@ -707,6 +707,13 @@
       "cancelled": "Cancelled",
       "expired": "Expired"
     },
+    "quoteStatus": {
+      "issued": "Price quote sent to customer",
+      "accepted": "Customer accepted the price",
+      "rejected": "Customer rejected the price",
+      "cancelled": "Price quote cancelled",
+      "expired": "Price quote expired"
+    },
     "proofStatus": {
       "uploaded": "Uploaded",
       "pending_review": "Pending review",

@@ -135,6 +135,16 @@ const loaders = {
 };
 
 describe('Admin advertising, payment, calendar, and financial projections', () => {
+  it.each(['ar', 'en'] as const)('explains quote acceptance separately from payment approval in %s', async locale => {
+    const accepted = adAdminRequestSchema.parse({ request, quote: { ...quote, status: 'accepted' } });
+    window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
+    renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => accepted)} />, { locale });
+    await waitFor(() => expect(document.querySelector('.admin-ads__detail-list')).toHaveTextContent(getAdminAdsCopy(locale).quoteStatus.accepted!));
+    expect(screen.getByRole('heading', { name: locale === 'ar' ? 'عرض السعر' : 'Quote' })).toBeInTheDocument();
+    expect(document.querySelector('.admin-ads__detail-list')).not.toHaveTextContent(' · accepted');
+    expect(screen.getByText(locale === 'ar' ? /موافقة العميل على عرض السعر وحدها لا تعني اعتماد الدفع/u : /acceptance of the price quote alone does not approve payment/u)).toBeInTheDocument();
+  });
+
   it('uses the implemented API routes, strict contracts, and admin authorization', async () => {
     const requests: Array<{ method: string; path: string; query: string; authorization: string | null; body: unknown }> = [];
     const client = apiClientFor(requests);

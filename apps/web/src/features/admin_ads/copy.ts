@@ -82,6 +82,7 @@ export interface AdminAdsCopy {
     readonly actions: string;
   };
   readonly requestStatus: Readonly<Record<string, string>>;
+  readonly quoteStatus: Readonly<Record<string, string>>;
   readonly proofStatus: Readonly<Record<string, string>>;
   readonly calendarStatus: Readonly<Record<string, string>>;
   readonly financialState: Readonly<Record<string, string>>;
@@ -120,7 +121,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     eyebrow: 'إدارة الإعلانات والمدفوعات',
     tabs: { requests: 'طلبات الإعلانات', pendingProofs: 'إثباتات قيد المراجعة', approvedProofs: 'إثباتات معتمدة', calendar: 'تقويم الإعلانات', review: 'مراجعة المدفوعات', financial: 'المراجعة المالية' },
     titles: { requests: 'طلبات الإعلانات', pendingProofs: 'إثباتات الدفع المعلقة', approvedProofs: 'إثباتات الدفع المعتمدة', calendar: 'تقويم الإعلانات', review: 'مراجعة المدفوعات', financial: 'المراجعة المالية التشغيلية' },
-    descriptions: { requests: 'راجع الطلبات والاقتباسات اليدوية من الإسقاط الإداري المعتمد.', pendingProofs: 'اعرض إثباتات الدفع التي تنتظر المراجعة اليدوية.', approvedProofs: 'اعرض الإثباتات التي تمت الموافقة عليها يدوياً.', calendar: 'اعرض المواعيد المنشورة في المنطقة الزمنية للقاهرة.', review: 'اتخذ قراراً يسبباً على إثبات قيد المراجعة مع سبب وإصدار متوقع.', financial: 'بيانات تشغيلية للإعلانات وليست نظاماً محاسبياً أو إثباتاً مصرفياً.' },
+    descriptions: { requests: 'راجع طلبات العملاء وعروض الأسعار، واعتمد الدفع ثم حدد موعد عرض الإعلان.', pendingProofs: 'اعرض إثباتات الدفع التي تنتظر المراجعة اليدوية.', approvedProofs: 'اعرض الإثباتات التي تمت الموافقة عليها يدوياً.', calendar: 'اعرض المواعيد المنشورة في المنطقة الزمنية للقاهرة.', review: 'اتخذ قراراً يسبباً على إثبات قيد المراجعة مع سبب وإصدار متوقع.', financial: 'بيانات تشغيلية للإعلانات وليست نظاماً محاسبياً أو إثباتاً مصرفياً.' },
     searchLabel: 'معرّف مقدم الخدمة',
     providerPlaceholder: 'أدخل معرّف مقدم الخدمة',
     statusLabel: 'الحالة',
@@ -132,8 +133,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     page: (page, total) => `الصفحة ${page} من ${total}`,
     count: count => `${count.toLocaleString('ar-EG')} سجل`,
     rowsOnPage: 'سجلات الصفحة',
-    columns: { id: 'المعرّف', request: 'طلب الإعلان', provider: 'مقدم الخدمة', placement: 'الموضع', purpose: 'الغرض', status: 'الحالة', quote: 'الاقتباس', interval: 'الفترة', filename: 'اسم الملف', size: 'الحجم', security: 'الفحص', version: 'الإصدار', uploaded: 'تاريخ الرفع', start: 'البداية', end: 'النهاية', timezone: 'المنطقة الزمنية', state: 'الحالة المالية', occurred: 'حدث في', amount: 'المبلغ', source: 'المصدر', actions: 'الإجراءات' },
-    requestStatus: { draft: 'مسودة', review: 'قيد المراجعة', waiting_pricing: 'بانتظار التسعير', quote_sent: 'تم إرسال الاقتباس', waiting_payment: 'بانتظار الدفع', scheduled: 'مجدول', active: 'نشط', ended: 'منتهٍ', rejected: 'مرفوض', cancelled: 'ملغى', expired: 'منتهي' },
+    columns: { id: 'المعرّف', request: 'طلب الإعلان', provider: 'مقدم الخدمة', placement: 'الموضع', purpose: 'الغرض', status: 'الحالة', quote: 'عرض السعر', interval: 'الفترة', filename: 'اسم الملف', size: 'الحجم', security: 'الفحص', version: 'الإصدار', uploaded: 'تاريخ الرفع', start: 'البداية', end: 'النهاية', timezone: 'المنطقة الزمنية', state: 'الحالة المالية', occurred: 'حدث في', amount: 'المبلغ', source: 'المصدر', actions: 'الإجراءات' },
+    requestStatus: { draft: 'مسودة', review: 'قيد المراجعة', waiting_pricing: 'بانتظار التسعير', quote_sent: 'تم إرسال عرض السعر', waiting_payment: 'بانتظار الدفع', scheduled: 'مجدول', active: 'نشط', ended: 'منتهٍ', rejected: 'مرفوض', cancelled: 'ملغى', expired: 'منتهي' },
+    quoteStatus: { issued: 'عرض السعر مرسل للعميل', accepted: 'وافق العميل على السعر', rejected: 'رفض العميل السعر', cancelled: 'عرض السعر ملغى', expired: 'انتهت صلاحية عرض السعر' },
     proofStatus: { uploaded: 'تم الرفع', pending_review: 'قيد المراجعة', approved: 'معتمد', rejected: 'مرفوض' },
     calendarStatus: { scheduled: 'مجدول', active: 'نشط', ended: 'منتهٍ' },
     financialState: { not_submitted: 'لم يُرسل', quote_only: 'اقتباس فقط', payment_proof_pending_review: 'إثبات قيد المراجعة', payment_proof_approved: 'إثبات معتمد', payment_proof_rejected: 'إثبات مرفوض' },
@@ -184,6 +186,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     rowsOnPage: 'Rows on page',
     columns: { id: 'ID', request: 'Ad request', provider: 'Provider', placement: 'Placement', purpose: 'Purpose', status: 'Status', quote: 'Quote', interval: 'Interval', filename: 'Filename', size: 'Size', security: 'Security', version: 'Version', uploaded: 'Uploaded', start: 'Start', end: 'End', timezone: 'Timezone', state: 'Financial state', occurred: 'Occurred', amount: 'Amount', source: 'Source', actions: 'Actions' },
     requestStatus: { draft: 'Draft', review: 'Under review', waiting_pricing: 'Waiting for pricing', quote_sent: 'Quote sent', waiting_payment: 'Waiting for payment', scheduled: 'Scheduled', active: 'Active', ended: 'Ended', rejected: 'Rejected', cancelled: 'Cancelled', expired: 'Expired' },
+    quoteStatus: { issued: 'Price quote sent to customer', accepted: 'Customer accepted the price', rejected: 'Customer rejected the price', cancelled: 'Price quote cancelled', expired: 'Price quote expired' },
     proofStatus: { uploaded: 'Uploaded', pending_review: 'Pending review', approved: 'Approved', rejected: 'Rejected' },
     calendarStatus: { scheduled: 'Scheduled', active: 'Active', ended: 'Ended' },
     financialState: { not_submitted: 'Not submitted', quote_only: 'Quote only', payment_proof_pending_review: 'Payment proof pending', payment_proof_approved: 'Payment proof approved', payment_proof_rejected: 'Payment proof rejected' },
