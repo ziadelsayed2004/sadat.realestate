@@ -1,5 +1,5 @@
 import { Types, type Connection } from 'mongoose';
-import { notificationAudienceSchema, notificationPermissionSchema } from '@sadat-real-estate/contracts';
+import { notificationAudienceSchema, notificationPermissionSchema, notificationDataSchema } from '@sadat-real-estate/contracts';
 import type { NotificationRepository, NotificationSource } from './service.js';
 
 type Row = Record<string, unknown>;
@@ -22,11 +22,15 @@ function source(row: Row): NotificationSource | undefined {
   const rowPermission = row.requiredPermission === undefined ? undefined : notificationPermissionSchema.safeParse(row.requiredPermission);
   if (rowAudience && !rowAudience.success) return undefined;
   if (rowPermission && !rowPermission.success) return undefined;
+  const localized = (value: unknown) => typeof value === 'string' ? { ar: value } : value;
+  if (!notificationDataSchema.safeParse({ id: rowId, type: row.type, title: localized(row.title),
+    ...(row.message !== undefined ? { message: localized(row.message) } : {}), ...(row.link !== undefined ? { link: row.link } : {}),
+    readAt: readAt?.toISOString() ?? null, createdAt: createdAt.toISOString() }).success) return undefined;
   return {
     id: rowId,
     type: row.type,
-    title: row.title,
-    ...(row.message !== undefined ? { message: row.message } : {}),
+    title: localized(row.title),
+    ...(row.message !== undefined ? { message: localized(row.message) } : {}),
     ...(typeof row.link === 'string' ? { link: row.link } : {}),
     readAt,
     createdAt,
@@ -44,8 +48,8 @@ function audienceFilter(audience: NotificationSource['audience']): Record<string
   // Older seeker records predate the explicit audience field. They remain
   // readable only through the seeker projection; admin records must opt in
   // explicitly so a recipient-owned record cannot cross an audience boundary.
-  return audience === 'seeker'
-    ? { $and: [{ $or: [{ audience: 'seeker' }, { audience: { $exists: false } }] }] }
+  return audience === 'seeker' || audience === 'provider'
+    ? { $and: [{ $or: [{ audience }, { audience: { $exists: false } }] }] }
     : { audience };
 }
 
@@ -68,21 +72,25 @@ export function createMongooseNotificationRepository(connection: Connection): No
   return {
     async list(recipientId, query, audience, permittedPermissions) {
       await ensureIndexes();
-      const filter: Record<string, unknown> = { recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions) };
-      if (query.unreadOnly) Object.assign(filter, unreadFilter());
-      if (query.type) filter.type = query.type;
-      const [rows, total, unreadCount] = await Promise.all([
-        notifications.find(filter, { projection }).sort({ createdAt: -1, _id: -1 }).skip((query.page - 1) * query.limit).limit(query.limit).toArray(),
-        notifications.countDocuments(filter),
-        notifications.countDocuments({ recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions), ...unreadFilter() })
-      ]);
-      return { items: rows.flatMap(row => { const value = source(row as Row); return value ? [value] : []; }), total, unreadCount };
+      const filter = { recipientId: { $in: [new Types.ObjectId(recipientId), recipientId] }, ...audienceFilter(audience), ...permissionFilter(permittedPermissions) };
+      // Count the same validated projection we display. Legacy/broken rows must
+      // never produce a red badge with an empty inbox. Stream per-recipient rows
+      // without retaining the entire inbox in memory.
+      const items: NotificationSource[] = []; let total = 0; let unreadCount = 0;
+      for await (const row of notifications.find(filter, { projection }).sort({ createdAt: -1, _id: -1 })) {
+        const value = source(row as Row); if (!value) continue;
+        if (value.readAt === null) unreadCount += 1;
+        if ((query.unreadOnly && value.readAt !== null) || (query.type && value.type !== query.type)) continue;
+        if (total >= (query.page - 1) * query.limit && items.length < query.limit) items.push(value);
+        total += 1;
+      }
+      return { items, total, unreadCount };
     },
 
     async findById(recipientId, notificationId, audience, permittedPermissions) {
       await ensureIndexes();
       const row = await notifications.findOne(
-        { _id: new Types.ObjectId(notificationId), recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions) },
+        { _id: new Types.ObjectId(notificationId), recipientId: { $in: [new Types.ObjectId(recipientId), recipientId] }, ...audienceFilter(audience), ...permissionFilter(permittedPermissions) },
         { projection }
       );
       return row ? source(row as Row) : undefined;
@@ -90,7 +98,7 @@ export function createMongooseNotificationRepository(connection: Connection): No
 
     async markRead(recipientId, notificationId, now, audience, permittedPermissions) {
       await ensureIndexes();
-      const identity = { _id: new Types.ObjectId(notificationId), recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions) };
+      const identity = { _id: new Types.ObjectId(notificationId), recipientId: { $in: [new Types.ObjectId(recipientId), recipientId] }, ...audienceFilter(audience), ...permissionFilter(permittedPermissions) };
       const row = await notifications.findOneAndUpdate(
         { ...identity, ...unreadFilter() },
         { $set: { readAt: now } },
@@ -104,7 +112,7 @@ export function createMongooseNotificationRepository(connection: Connection): No
     async markRelatedRead(recipientId, itemId, now, permittedPermissions) {
       await ensureIndexes();
       const result = await notifications.updateMany({
-        recipientId: new Types.ObjectId(recipientId), audience: 'admin',
+        recipientId: { $in: [new Types.ObjectId(recipientId), recipientId] }, audience: 'admin',
         ...permissionFilter(permittedPermissions), ...unreadFilter(),
         link: { $regex: `(?:/|=)${itemId}(?:[/?&#]|$)` }
       }, { $set: { readAt: now } });
@@ -114,7 +122,7 @@ export function createMongooseNotificationRepository(connection: Connection): No
     async markAllRead(recipientId, now, audience, permittedPermissions) {
       await ensureIndexes();
       const result = await notifications.updateMany(
-        { recipientId: new Types.ObjectId(recipientId), ...audienceFilter(audience), ...permissionFilter(permittedPermissions), ...unreadFilter() },
+        { recipientId: { $in: [new Types.ObjectId(recipientId), recipientId] }, ...audienceFilter(audience), ...permissionFilter(permittedPermissions), ...unreadFilter() },
         { $set: { readAt: now } }
       );
       return result.modifiedCount;

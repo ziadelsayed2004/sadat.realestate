@@ -116,6 +116,14 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
   const actionSource = useMemo(() => actions ?? createProviderNotificationActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
 
   useEffect(() => {
+    if (sessionRole !== 'provider') return undefined;
+    const refresh = () => { if (document.visibilityState !== 'hidden') setAttempt(value => value + 1); };
+    const timer = window.setInterval(refresh, 30_000);
+    window.addEventListener('focus', refresh);
+    return () => { window.clearInterval(timer); window.removeEventListener('focus', refresh); };
+  }, [sessionRole]);
+
+  useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'provider') {
       setState('permission');
       return undefined;
@@ -167,7 +175,7 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
   const activePath = typeof window === 'undefined' ? '/provider/notifications' : new URL(window.location.href).pathname;
   return (
     <section className="provider-dashboard provider-notifications" data-testid="provider-notifications-page" data-screen-id="PRV-21" data-route="/provider/notifications" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={activePath} authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath={activePath} authClient={authClient} unreadCount={data?.unreadCount ?? 0} />
       <div className="provider-dashboard__content">
         {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {mutationMessage ? <p className="provider-notifications__feedback" data-state={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'success' : mutationFeedback} role={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'status' : 'alert'}>{mutationMessage}</p> : null}
