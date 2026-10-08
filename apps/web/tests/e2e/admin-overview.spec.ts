@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { getAdminContentCopy } from '../../src/features/admin_content/copy.ts';
 
 function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
@@ -49,7 +50,9 @@ async function routeAdminOverview(page: import('@playwright/test').Page): Promis
             verifiedProviders: 318,
             publishedProperties: 1089,
             openRequests: 28,
-            pendingReviews: 23
+            pendingReviews: 23,
+            publishedArticles: 4, communityPosts: 5, communityComments: 6, contentReports: 0,
+            adRequests: 3, paymentProofs: 2, activeAds: 1, approvedAdPaymentsMinor: 50000
           },
           generatedAt: '2026-08-19T09:00:00.000Z'
         },
@@ -58,6 +61,31 @@ async function routeAdminOverview(page: import('@playwright/test').Page): Promis
     });
   });
 }
+
+test('dashboard cards show real values and open their destination pages', async ({ page }) => {
+  const locale = localeForProject();
+  await routeAdminSession(page);
+  await routeAdminOverview(page);
+  await page.route('**/api/v1/admin/articles**', route => route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'dashboard-articles', page: 1, limit: 20, total: 0 } } }));
+  await page.route('**/api/v1/admin/article-categories**', route => route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'dashboard-categories', page: 1, limit: 20, total: 0 } } }));
+  await page.goto(`/admin?lang=${locale}`);
+  await expect(page.getByTestId('admin-metric-adRequests')).toContainText('3');
+  await expect(page.getByTestId('admin-metric-contentReports')).toContainText('0');
+  await expect(page.getByTestId('admin-metric-approvedAdPaymentsMinor')).toContainText(new Intl.NumberFormat(locale, { style: 'currency', currency: 'EGP' }).format(500));
+  await expect(page.locator('.admin-dashboard__extended [data-state="unavailable"]')).toHaveCount(0);
+  for (const [key, path] of Object.entries({ publishedArticles: '/admin/articles', communityPosts: '/admin/community', communityComments: '/admin/community/comments', contentReports: '/admin/community/moderation', adRequests: '/admin/ads/requests', paymentProofs: '/admin/ads/payment-proofs/pending', activeAds: '/admin/ads/calendar', approvedAdPaymentsMinor: '/admin/ads/financial-review' })) {
+    await expect(page.getByTestId(`admin-metric-${key}`)).toHaveAttribute('href', `${path}?lang=${locale}`);
+  }
+  await page.getByTestId('admin-metric-pendingReviews').click();
+  await expect(page.locator('#admin-overview-queue-title')).toBeInViewport();
+  const articleCard = page.getByTestId('admin-metric-publishedArticles');
+  await articleCard.focus();
+  await expect(articleCard).toBeFocused();
+  await articleCard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/admin/articles\\?lang=${locale}`));
+  await expect(page.getByRole('heading', { name: getAdminContentCopy(locale).articlesTitle, exact: true })).toBeVisible();
+  await expect(page.locator('.admin-content [data-state="error"]')).toHaveCount(0);
+});
 
 test.describe('ADM-01 Admin Overview', () => {
   test.beforeEach(async ({ page }, testInfo) => {

@@ -94,8 +94,9 @@
       "platformTitle": "Platform",
       "operationsTitle": "Operations and review",
       "queueTitle": "Requests needing review",
-      "queueBody": "Request details are not available from the current overview contract.",
-      "activityTitle": "Recent activity",
+      "queueBody": "Open the relevant queue to review requests and take action.",
+      "activityTitle": "Administration shortcuts",
+      "openPage": "Open page",
       "actions": {
         "reviewAccounts": "Review accounts",
         "reviewProperties": "Review properties",

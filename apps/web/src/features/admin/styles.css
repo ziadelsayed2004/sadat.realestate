@@ -456,6 +456,26 @@
   background: #fbfaf7;
 }
 
+.admin-dashboard__metric-link {
+  min-inline-size: 0;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.admin-dashboard__metric-link:hover {
+  border-color: #cba35a;
+}
+
+.admin-dashboard__metric-link:focus-visible {
+  outline: 3px solid #cba35a;
+  outline-offset: 3px;
+}
+
+.admin-dashboard__shortcut small {
+  color: #155b4f;
+}
+
 .admin-dashboard__metric--unavailable small,
 .admin-dashboard__unavailable-message {
   color: #9aa4b3;

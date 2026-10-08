@@ -29,6 +29,7 @@ export interface AdminCopy {
     readonly queueTitle: string;
     readonly queueBody: string;
     readonly activityTitle: string;
+    readonly openPage: string;
     readonly actions: Readonly<{ readonly reviewAccounts: string; readonly reviewProperties: string; readonly createArticle: string; readonly reviewAdvertising: string }>;
     readonly metrics: Readonly<Record<AdminMetricKey, string>>;
     readonly placeholderSections: readonly Readonly<{ readonly title: string; readonly labels: readonly string[] }>[];
@@ -136,8 +137,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       platformTitle: 'المنصة',
       operationsTitle: 'التشغيل والمراجعة',
       queueTitle: 'طلبات تحتاج إلى مراجعة',
-      queueBody: 'تفاصيل الطلبات غير متاحة من عقد لوحة المؤشرات الحالي.',
-      activityTitle: 'آخر الإجراءات',
+      queueBody: 'افتح القائمة المناسبة لمراجعة الطلبات واتخاذ الإجراء المطلوب.',
+      activityTitle: 'اختصارات الإدارة',
+      openPage: 'فتح الصفحة',
       actions: { reviewAccounts: 'مراجعة الحسابات', reviewProperties: 'مراجعة العقارات', createArticle: 'إنشاء مقال', reviewAdvertising: 'مراجعة الإعلانات' },
       metrics: {
         users: 'إجمالي المستخدمين',
@@ -261,8 +263,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       platformTitle: 'Platform',
       operationsTitle: 'Operations and review',
       queueTitle: 'Requests needing review',
-      queueBody: 'Request details are not available from the current overview contract.',
-      activityTitle: 'Recent activity',
+      queueBody: 'Open the relevant queue to review requests and take action.',
+      activityTitle: 'Administration shortcuts',
+      openPage: 'Open page',
       actions: { reviewAccounts: 'Review accounts', reviewProperties: 'Review properties', createArticle: 'Create article', reviewAdvertising: 'Review advertising' },
       metrics: {
         users: 'Total users',

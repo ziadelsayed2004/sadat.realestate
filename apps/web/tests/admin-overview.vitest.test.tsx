@@ -66,10 +66,32 @@ describe('Admin overview', () => {
     expect(screen.getByTestId('admin-metric-publishedProperties')).toHaveTextContent('1,089');
     expect(screen.getByTestId('admin-metric-pendingReviews')).toHaveTextContent('23');
     expect(screen.getByTestId('admin-overview-extended')).toBeInTheDocument();
-    expect(screen.getAllByText(copy.unavailable).length).toBeGreaterThan(0);
+    expect(screen.queryByText(copy.unavailable)).not.toBeInTheDocument();
+    expect(screen.getByTestId('admin-metric-users')).toHaveAttribute('href', `/admin/users?lang=${locale}`);
     expect(result.container.querySelector('[data-screen-id="ADM-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);
     result.unmount();
+  });
+
+  it.each(['ar', 'en'] as const)('makes the extended metrics and administrative shortcuts navigable in %s', locale => {
+    const data = { ...overview, metrics: { ...overview.metrics, publishedArticles: 4, communityPosts: 5, communityComments: 6, contentReports: 0, adRequests: 3, paymentProofs: 2, activeAds: 1, approvedAdPaymentsMinor: 50000 } };
+    const result = renderWithLocale(<AdminOverview locale={locale} session={session} initialData={data} />, { locale });
+    const paths = { publishedArticles: '/admin/articles', communityPosts: '/admin/community', communityComments: '/admin/community/comments', contentReports: '/admin/community/moderation', adRequests: '/admin/ads/requests', paymentProofs: '/admin/ads/payment-proofs/pending', activeAds: '/admin/ads/calendar', approvedAdPaymentsMinor: '/admin/ads/financial-review' };
+    for (const [metric, path] of Object.entries(paths)) expect(screen.getByTestId(`admin-metric-${metric}`)).toHaveAttribute('href', `${path}?lang=${locale}`);
+    expect(screen.getByTestId('admin-metric-contentReports')).toHaveTextContent('0');
+    expect(screen.getByTestId('admin-metric-approvedAdPaymentsMinor').querySelector('strong')?.textContent).toBe(new Intl.NumberFormat(locale, { style: 'currency', currency: 'EGP' }).format(500));
+    expect(result.container.querySelectorAll('.admin-dashboard__metric:not(a)')).toHaveLength(0);
+    expect(result.container.querySelector('[data-state="unavailable"]')).toBeNull();
+    for (const path of ['/admin/settings', '/admin/audit-logs', '/admin/notifications']) {
+      expect(result.container.querySelector(`.admin-dashboard__extended a[href="${path}?lang=${locale}"]`)).not.toBeNull();
+    }
+  });
+
+  it('offers a list link without inventing a zero when an optional metric is absent', () => {
+    renderWithLocale(<AdminOverview locale="en" session={session} initialData={overview} />, { locale: 'en' });
+    const card = screen.getByTestId('admin-metric-approvedAdPaymentsMinor');
+    expect(card).toHaveTextContent('Open page');
+    expect(card.querySelector('strong')).toBeNull();
   });
 
   it('renders a truthful empty state without fallback counters', () => {

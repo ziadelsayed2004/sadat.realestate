@@ -1,4 +1,4 @@
-﻿import { AdditionalMetrics } from './additional-metrics.tsx';
+﻿import { getAdditionalMetricGroups, type OverviewGroup } from './additional-metrics.tsx';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -51,7 +51,7 @@ const navigationItems = [
   ['properties', '/admin/properties'],
   ['requests', '/admin/requests'],
   ['content', '/admin/articles'],
-  ['advertising', '/admin/advertising'],
+  ['advertising', '/admin/ads/requests'],
   ['commissions', '/admin/commissions'],
   ['notifications', '/admin/notifications'],
   ['audit', '/admin/audit-logs'],
@@ -328,131 +328,86 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminO
 const platformMetrics: readonly AdminMetricKey[] = ['users', 'seekers', 'providers', 'verifiedProviders'];
 const operationMetrics: readonly AdminMetricKey[] = ['publishedProperties', 'openRequests', 'pendingReviews'];
 
-function MetricCard({ value, label, testId, icon = 'properties' }: { readonly value: number; readonly label: string; readonly testId?: string; readonly icon?: AdminSidebarIcon }) {
+function MetricCard({ value, label, href, testId, icon = 'properties', money = false, locale = 'en' }: { readonly value: number; readonly label: string; readonly href: string; readonly testId?: string; readonly icon?: AdminSidebarIcon; readonly money?: boolean; readonly locale?: SupportedLocale }) {
   return (
-    <article className="admin-dashboard__metric" {...(testId === undefined ? {} : { 'data-testid': testId })}>
+    <a className="admin-dashboard__metric admin-dashboard__metric-link" href={href} {...(testId === undefined ? {} : { 'data-testid': testId })}>
       <span className="admin-dashboard__metric-icon" aria-hidden="true"><img src={navigationIconSources[icon]} alt="" width="20" height="20" /></span>
-      <strong>{new Intl.NumberFormat().format(value)}</strong>
+      <strong>{money ? new Intl.NumberFormat(locale, { style: 'currency', currency: 'EGP' }).format(value / 100) : new Intl.NumberFormat().format(value)}</strong>
       <span>{label}</span>
-    </article>
+    </a>
   );
 }
 
 function MetricSection({ title, metrics, data, locale }: { readonly title: string; readonly metrics: readonly AdminMetricKey[]; readonly data: AdminOverviewMetrics; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
+  const paths: Record<AdminMetricKey, string> = { users: '/admin/users', seekers: '/admin/property-seekers', providers: '/admin/providers', verifiedProviders: '/admin/providers', publishedProperties: '/admin/properties?status=published', openRequests: '/admin/requests', pendingReviews: '/admin#admin-overview-queue-title' };
   return (
     <section className="admin-dashboard__metric-section" aria-labelledby={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>
       <div className="admin-dashboard__section-heading">
         <h2 id={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>{title}</h2>
       </div>
       <div className="admin-dashboard__metric-grid">
-        {metrics.map(metric => <MetricCard key={metric} icon={metric === 'users' || metric === 'seekers' ? 'users' : metric === 'providers' || metric === 'verifiedProviders' ? 'providers' : metric === 'publishedProperties' ? 'properties' : 'requests'} value={data[metric]} label={copy.overview.metrics[metric]} testId={`admin-metric-${metric}`} />)}
+        {metrics.map(metric => <MetricCard key={metric} icon={metric === 'users' || metric === 'seekers' ? 'users' : metric === 'providers' || metric === 'verifiedProviders' ? 'providers' : metric === 'publishedProperties' ? 'properties' : 'requests'} value={data[metric]} label={copy.overview.metrics[metric]} href={localePath(locale, paths[metric])} testId={`admin-metric-${metric}`} />)}
       </div>
     </section>
   );
 }
 
-function UnavailableCard({ label, unavailable }: { readonly label: string; readonly unavailable: string }) {
-  return (
-    <article className="admin-dashboard__metric admin-dashboard__metric--unavailable" data-state="unavailable">
-      <span className="admin-dashboard__metric-icon" aria-hidden="true">&mdash;</span>
-      <strong aria-label={unavailable}>&mdash;</strong>
-      <span>{label}</span>
-      <small>{unavailable}</small>
-    </article>
-  );
+function ShortcutCard({ label, href, icon, locale, testId }: { readonly label: string; readonly href: string; readonly icon: AdminSidebarIcon; readonly locale: SupportedLocale; readonly testId?: string }) {
+  const copy = getAdminCopy(locale);
+  return <a className="admin-dashboard__metric admin-dashboard__metric-link admin-dashboard__shortcut" href={href} {...(testId === undefined ? {} : { 'data-testid': testId })}>
+    <span className="admin-dashboard__metric-icon" aria-hidden="true"><img src={navigationIconSources[icon]} alt="" width="20" height="20" /></span>
+    <span>{label}</span>
+    <small>{copy.overview.openPage} →</small>
+  </a>;
 }
 
 function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
-  const sections = [
-    {
-      title: copy.nav.properties,
-      cards: [
-        { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties },
-        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews },
-        { label: copy.nav.providers },
-        { label: copy.nav.audit }
-      ]
-    },
-    {
-      title: copy.nav.content,
-      cards: [
-        { label: copy.nav.content },
-        { label: copy.nav.notifications },
-        { label: copy.nav.audit },
-        { label: copy.nav.settings }
-      ]
-    },
-    {
-      title: copy.nav.advertising,
-      cards: [
-        { label: copy.nav.advertising },
-        { label: copy.nav.commissions },
-        { label: copy.nav.settings },
-        { label: copy.nav.audit }
-      ]
-    },
-    {
-      title: copy.nav.requests,
-      cards: [
-        { label: copy.overview.metrics.openRequests, value: data.metrics.openRequests },
-        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews },
-        { label: copy.nav.notifications },
-        { label: copy.nav.audit }
-      ]
-    }
+  const sections: readonly OverviewGroup[] = [
+    { title: copy.nav.properties, cards: [
+      { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties, path: '/admin/properties?status=published', icon: 'properties' },
+      { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews, path: '/admin#admin-overview-queue-title', icon: 'requests' },
+      { label: copy.nav.providers, value: data.metrics.providers, path: '/admin/providers', icon: 'providers' },
+      { label: copy.nav.audit, path: '/admin/audit-logs', icon: 'audit' }
+    ] },
+    ...getAdditionalMetricGroups(data.metrics, locale),
+    { title: copy.nav.requests, cards: [
+      { label: copy.overview.metrics.openRequests, value: data.metrics.openRequests, path: '/admin/requests', icon: 'requests' },
+      { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews, path: '/admin#admin-overview-queue-title', icon: 'requests' },
+      { label: copy.nav.notifications, path: '/admin/notifications', icon: 'notifications' },
+      { label: copy.nav.settings, path: '/admin/settings', icon: 'settings' }
+    ] }
+  ];
+  const reviewLinks = [
+    [copy.overview.actions.reviewAccounts, '/admin/verification'],
+    [copy.overview.actions.reviewProperties, '/admin/properties?status=pending_review'],
+    [copy.sidebar.items.projects, '/admin/projects'],
+    [copy.overview.actions.reviewAdvertising, '/admin/ads/requests']
   ] as const;
 
-  const quickActions = navigationItems.slice(1, 9);
-
-  return (
-    <div className="admin-dashboard__extended" data-testid="admin-overview-extended">
-      <section className="admin-dashboard__quick-actions" aria-labelledby="admin-overview-queue-title">
-        <div className="admin-dashboard__section-heading">
-          <h2 id="admin-overview-queue-title">{copy.overview.queueTitle}</h2>
-          <span className="admin-dashboard__metadata">{copy.overview.metrics.openRequests}: {new Intl.NumberFormat(locale).format(data.metrics.openRequests)} · {copy.overview.metrics.pendingReviews}: {new Intl.NumberFormat(locale).format(data.metrics.pendingReviews)}</span>
-        </div>
-        <p className="admin-dashboard__unavailable-message" data-state="unavailable">{copy.overview.queueBody}</p>
-      </section>
-      <div className="admin-dashboard__extended-grid">
-        {sections.map(section => (
-          <section className="admin-dashboard__extended-section" key={section.title} aria-labelledby={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>
-            <div className="admin-dashboard__section-heading">
-              <h2 id={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>{section.title}</h2>
-            </div>
-            <div className="admin-dashboard__metric-grid admin-dashboard__metric-grid--compact">
-              {section.cards.map((card, index) => !('value' in card) ? (
-                <UnavailableCard key={`${section.title}-${index}`} label={card.label} unavailable={copy.unavailable} />
-              ) : (
-                <MetricCard key={`${section.title}-${index}`} value={card.value} label={card.label} />
-              ))}
-            </div>
-          </section>
-        ))}
+  return <div className="admin-dashboard__extended" data-testid="admin-overview-extended">
+    <section className="admin-dashboard__quick-actions" aria-labelledby="admin-overview-queue-title">
+      <div className="admin-dashboard__section-heading">
+        <h2 id="admin-overview-queue-title">{copy.overview.queueTitle}</h2>
+        <span className="admin-dashboard__metadata">{copy.overview.metrics.openRequests}: {new Intl.NumberFormat(locale).format(data.metrics.openRequests)} · {copy.overview.metrics.pendingReviews}: {new Intl.NumberFormat(locale).format(data.metrics.pendingReviews)}</span>
       </div>
-      <div className="admin-dashboard__activity-grid">
-        {[copy.nav.notifications, copy.nav.audit].map(title => (
-          <section className="admin-dashboard__activity-panel" key={title} aria-labelledby={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>
-            <div className="admin-dashboard__section-heading">
-              <h2 id={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>{title}</h2>
-            </div>
-            <p className="admin-dashboard__unavailable-message" data-state="unavailable">{copy.unavailable}</p>
-          </section>
-        ))}
-      </div>
-      <section className="admin-dashboard__quick-actions" aria-labelledby="admin-quick-actions-title">
-        <div className="admin-dashboard__section-heading">
-          <h2 id="admin-quick-actions-title">{copy.overview.activityTitle}</h2>
-        </div>
-        <div className="admin-dashboard__quick-actions-list">
-          {quickActions.map(([id, path]) => (
-            <a key={id} href={localePath(locale, path)}>{copy.nav[id]}</a>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
+      <p>{copy.overview.queueBody}</p>
+      <div className="admin-dashboard__quick-actions-list">{reviewLinks.map(([label, path]) => <a key={path} href={localePath(locale, path)}>{label}</a>)}</div>
+    </section>
+    <div className="admin-dashboard__extended-grid">{sections.map(section => <section className="admin-dashboard__extended-section" key={section.title} aria-labelledby={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>
+      <div className="admin-dashboard__section-heading"><h2 id={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>{section.title}</h2></div>
+      <div className="admin-dashboard__metric-grid admin-dashboard__metric-grid--compact">{section.cards.map((card, index) => {
+        const props = { label: card.label, href: localePath(locale, card.path), icon: card.icon, locale, ...(card.key === undefined ? {} : { testId: `admin-metric-${card.key}` }) };
+        return card.value === undefined ? <ShortcutCard key={index} {...props} /> : <MetricCard key={index} {...props} value={card.value} money={card.money ?? false} />;
+      })}</div>
+      {section.note === undefined ? null : <p className="admin-dashboard__metadata">{section.note}</p>}
+    </section>)}</div>
+    <section className="admin-dashboard__quick-actions" aria-labelledby="admin-quick-actions-title">
+      <div className="admin-dashboard__section-heading"><h2 id="admin-quick-actions-title">{copy.overview.activityTitle}</h2></div>
+      <div className="admin-dashboard__quick-actions-list">{navigationItems.slice(1).map(([id, path]) => <a key={id} href={localePath(locale, path)}>{copy.nav[id]}</a>)}</div>
+    </section>
+  </div>;
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -487,7 +442,6 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
       </div>
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />
       <MetricSection title={copy.overview.operationsTitle} metrics={operationMetrics} data={data.metrics} locale={locale} />
-      <AdditionalMetrics metrics={data.metrics} locale={locale} />
       <ExtendedOverview data={data} locale={locale} />
     </div>
   );
