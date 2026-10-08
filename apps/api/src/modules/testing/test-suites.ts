@@ -83,6 +83,8 @@ export const TEST_SUITES = Object.freeze({
     'tests/community/post-service.test.ts',
     'tests/quality/localization-audit.test.ts',
     'tests/ads/service.test.ts',
+    'tests/ads/banner-campaign.test.ts',
+    'tests/ads/notifications.test.ts',
     'tests/ads/schedule-payment-guard.test.ts',
     'tests/ads/admin-router.test.ts',
     'tests/ads/banner-router.test.ts',
