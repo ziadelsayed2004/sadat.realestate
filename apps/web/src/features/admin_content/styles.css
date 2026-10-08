@@ -97,6 +97,9 @@
 .admin-article-preview p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
 
 .admin-article-list { display: grid; gap: 1rem; padding: 1.25rem; }
+.admin-article-notice { padding: 1rem 1.25rem; margin-block-end: 1rem; border: 1px solid #c7e6d4; border-radius: 14px; background: #f0faf3; color: #145a3c; overflow-wrap: anywhere; }
+.admin-article-notice p { margin: 0.4rem 0; line-height: 1.7; }
+.admin-article-notice a { display: inline-block; padding-block: 0.5rem; color: inherit; text-underline-offset: 0.2rem; }
 .admin-article-card { display: grid; grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr); align-items: start; gap: 1.25rem; padding: 1.25rem; border: 1px solid #e3e5e7; border-radius: 14px; background: #fff; }
 .admin-article-card__image { display: grid; place-items: center; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #f5f3eb; color: #65736c; font-size: 0.8rem; text-align: center; }
 .admin-article-card__image img { width: 100%; height: 100%; object-fit: contain; }

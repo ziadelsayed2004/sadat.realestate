@@ -6,7 +6,8 @@ export const articleIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 export const articleSlugSchema = z.string().trim().min(2).max(120)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export const articleStatusSchema = z.enum(['draft', 'pending_review', 'published', 'archived']);
-export const articleDraftBodySchema = z.object({ ar: z.string().max(20_000).optional(), en: z.string().max(20_000).optional() }).strict().refine(value => value.ar !== undefined || value.en !== undefined);
+const articleBodyTextSchema = z.string().max(20_000).regex(/^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]*$/u);
+export const articleDraftBodySchema = z.object({ ar: articleBodyTextSchema.optional(), en: articleBodyTextSchema.optional() }).strict().refine(value => value.ar !== undefined || value.en !== undefined);
 const articleGallerySchema = z.array(articleIdSchema).max(12).refine(value => new Set(value).size === value.length);
 export const articleAvailableActionSchema = z.enum([
   'update',

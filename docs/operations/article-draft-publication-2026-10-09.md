@@ -1,0 +1,9 @@
+# Article draft and publication flow
+
+Article creation and edits now show a saved-state confirmation. Empty drafts remain valid, with a title in either Arabic or English; the body must be completed before review and publication. Validation identifies title, body, image, category or change-reason problems instead of reporting every error as a language problem. Text remains in the editor on failure. Control characters that cannot be rendered as published content are rejected consistently for draft bodies; ordinary newlines and tabs remain allowed.
+
+After submitting a draft for review, the list switches to the returned review status and clears the old search so the reviewed article and Publish action remain visible. Publication switches the list to Published and shows a website link. Transition forms open the action actually clicked, including Return to draft, and scroll into view. Article reads and mutations refresh an expired authenticated session once on 401; permission denials are not retried.
+
+Validation: nine administrator component tests, including session renewal and field-specific errors; 12 article service/HTTP tests; six browser scenarios in Arabic/English across desktop, tablet and mobile covering empty draft save, reload, premature review rejection, body completion, review and publication; web build, web/API TypeScript, ESLint and OpenAPI validation. A separate isolated local MongoDB replica-set run verified persisted empty drafts, completion, review, public reads and four audit records per article in both languages. The temporary database and owned MongoDB helper were removed/stopped after verification. No production article was created or published during QA.
+
+Update the production server before retesting. Use **Save draft**, then **Submit for review**, then **Publish** after reviewing the completed article. Both language fields do not need to be populated.

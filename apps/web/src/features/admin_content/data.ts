@@ -120,11 +120,11 @@ async function withCurrentSession<T>(options: CommonOptions, request: () => Prom
 
 export async function loadAdminArticles(options: AdminContentLoadOptions = {}): Promise<AdminArticleListData> {
   const query = articleAdminListQuerySchema.parse({ page: 1, limit: 20, sort: 'updatedAt', direction: 'desc', ...options.query });
-  const response = await clientFor(options).request(ADMIN_ARTICLES_ROUTE, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(ADMIN_ARTICLES_ROUTE, {
     responseSchema: articleAdminListSuccessEnvelopeSchema,
     query,
     ...requestOptions(options)
-  });
+  }));
   return {
     ...response.data.data,
     page: response.data.meta.page ?? query.page,
@@ -135,27 +135,27 @@ export async function loadAdminArticles(options: AdminContentLoadOptions = {}): 
 
 export async function createAdminArticle(input: unknown, options: CommonOptions = {}): Promise<Article> {
   const body = articleCreateSchema.parse(input);
-  const response = await clientFor(options).request(ADMIN_ARTICLES_ROUTE, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(ADMIN_ARTICLES_ROUTE, {
     method: 'POST', responseSchema: articleSuccessEnvelopeSchema, json: body, ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 
 export async function updateAdminArticle(articleId: string, input: unknown, options: CommonOptions = {}): Promise<Article> {
   const id = articleParamsSchema.parse({ articleId }).articleId;
   const body = articlePatchSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_ARTICLES_ROUTE}/${id}`, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_ARTICLES_ROUTE}/${id}`, {
     method: 'PATCH', responseSchema: articleSuccessEnvelopeSchema, json: body, ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 
 export async function transitionAdminArticle(articleId: string, input: unknown, options: CommonOptions = {}): Promise<Article> {
   const id = articleParamsSchema.parse({ articleId }).articleId;
   const body = articleTransitionRequestSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_ARTICLES_ROUTE}/${id}/transitions`, {
+  const response = await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_ARTICLES_ROUTE}/${id}/transitions`, {
     method: 'POST', responseSchema: articleSuccessEnvelopeSchema, json: body, ...requestOptions(options)
-  });
+  }));
   return response.data.data;
 }
 

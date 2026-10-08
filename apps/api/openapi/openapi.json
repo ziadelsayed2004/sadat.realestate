@@ -26429,11 +26429,13 @@
         "properties": {
           "ar": {
             "type": "string",
-            "maxLength": 20000
+            "maxLength": 20000,
+            "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
           },
           "en": {
             "type": "string",
-            "maxLength": 20000
+            "maxLength": 20000,
+            "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
           }
         },
         "description": "Drafts may have an empty body. Submission and publication require a nonempty body in at least one language."

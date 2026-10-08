@@ -297,3 +297,18 @@ test('replacing a published cover validates the new image and preserves publicat
   assert.equal(replaced.status, 'published');
   assert.equal((await images.getPublicBySlug(replaced.slug, 'en')).imageUrl, `/api/v1/public/article-photos/${assetId}`);
 });
+
+test('an empty draft can be completed and published in one language without requiring a second language', async () => {
+  const { service } = fixture();
+  const category = await createCategory(service, 'draft-publication');
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { ar: 'مسودة عربية' }, body: { ar: '' }, reason: 'Save unfinished Arabic draft' }, CONTEXT);
+  assert.equal(draft.status, 'draft');
+  assert.equal((await service.listArticles(PRINCIPAL, { status: 'draft', page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' })).data.items[0]?.id, draft.id);
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, { status: 'pending_review', version: draft.version, reason: 'Submit unfinished draft' }, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_TRANSITION_INVALID');
+  const completed = await service.updateArticle(PRINCIPAL, draft.id, { version: draft.version, body: { ar: 'محتوى المقال المكتمل\nفقرة أخرى' }, reason: 'Complete draft body' }, CONTEXT);
+  const review = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'pending_review', version: completed.version, reason: 'Submit completed Arabic article' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { status: 'published', version: review.version, reason: 'Publish reviewed Arabic article' }, CONTEXT);
+  assert.equal(published.status, 'published');
+  assert.equal((await service.getPublicBySlug(published.slug, 'ar')).title.ar, 'مسودة عربية');
+  assert.ok((await service.getPublicBySlug(published.slug, 'en')).body.en);
+});

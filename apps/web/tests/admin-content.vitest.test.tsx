@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { articleCategoryDataSchema, articleDataSchema, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClient } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminContent,
   createAdminArticle,
@@ -53,6 +53,45 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin article and category management contracts and views', () => {
+  it('renews an expired session before retrying article creation, edits and transitions once', async () => {
+    let token = 'stale';
+    const attempts: string[] = [];
+    const refresh = vi.fn(async () => { token = 'renewed'; });
+    const authorization = { getAuthorizationHeader: () => `Bearer ${token}`, refresh };
+    const apiClient = new ApiClient({ fetcher: async (_input, init) => {
+      const header = new Headers(init?.headers).get('authorization') ?? '';
+      attempts.push(header);
+      return header === 'Bearer stale' ? new Response(JSON.stringify({ error: { code: 'UNAUTHENTICATED', messageKey: 'errors.unauthenticated', details: [], requestId: 'expired-editor-session' } }), { status: 401, headers: { 'content-type': 'application/json' } }) : envelope(article);
+    } });
+    const options = { apiClient, authorization };
+    for (const run of [
+      () => createAdminArticle({ categoryId: category.id, title: { ar: 'عنوان' }, body: { ar: '' }, reason: 'Save unfinished draft' }, options),
+      () => updateAdminArticle(article.id, { version: article.version, body: { ar: 'محتوى' }, reason: 'Complete saved draft' }, options),
+      () => transitionAdminArticle(article.id, { version: article.version, status: 'pending_review', reason: 'Submit saved article' }, options)
+    ]) { token = 'stale'; await expect(run()).resolves.toEqual(article); }
+    expect(refresh).toHaveBeenCalledTimes(3);
+    expect(attempts).toEqual(['Bearer stale', 'Bearer renewed', 'Bearer stale', 'Bearer renewed', 'Bearer stale', 'Bearer renewed']);
+  });
+
+  it('reports a server body-field error without blaming populated languages or discarding text', async () => {
+    window.history.pushState({}, '', '/admin/articles');
+    const create = vi.fn().mockRejectedValue(new ApiClientError('Validation failed', { code: 'HTTP_ERROR', status: 400, apiError: { code: 'VALIDATION_FAILED', messageKey: 'errors.invalidInput', requestId: 'article-body-error', details: [{ path: ['body', 'ar'], code: 'VALIDATION_FAILED', messageKey: 'errors.invalidInput' }] } }));
+    renderWithLocale(<AdminContent locale="ar" session={session} initialArticles={{ items: [], page: 1, limit: 20, total: 0 }} initialCategories={categories} createArticle={create} />, { locale: 'ar' });
+    const copy = getAdminContentCopy('ar');
+    fireEvent.click(screen.getByRole('button', { name: copy.createArticle }));
+    fireEvent.change(screen.getByLabelText(`AR ${copy.title}`), { target: { value: 'عنوان المقال' } });
+    fireEvent.change(screen.getByLabelText(`EN ${copy.title}`), { target: { value: 'Article title' } });
+    fireEvent.change(screen.getByLabelText(`AR ${copy.body}`), { target: { value: 'محتوى المقال' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Save article\nwith both languages' } });
+    fireEvent.click(screen.getByRole('button', { name: 'حفظ مسودة' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('راجع محتوى المقال'));
+    expect(screen.getByRole('alert')).not.toHaveTextContent('اكتب عنوانًا');
+    expect(screen.getByLabelText(`AR ${copy.body}`)).toHaveValue('محتوى المقال');
+    expect(create.mock.calls[0]?.[0]).toMatchObject({ title: { ar: 'عنوان المقال', en: 'Article title' }, reason: 'Save article with both languages' });
+    create.mockRejectedValueOnce(new ApiClientError('Invalid request', { code: 'HTTP_ERROR', status: 400, apiError: { code: 'VALIDATION_FAILED', messageKey: 'errors.invalidInput', requestId: 'article-root-error', details: [{ path: [], code: 'VALIDATION_FAILED', messageKey: 'errors.invalidInput' }] } }));
+    fireEvent.click(screen.getByRole('button', { name: 'حفظ مسودة' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('راجع بيانات المقال والتصنيف وسبب التغيير'));
+  });
   it('uses the implemented routes, strict request schemas, and authorization header', async () => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const client = apiClientFor(requests);
