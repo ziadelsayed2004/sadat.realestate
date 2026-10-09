@@ -34,11 +34,14 @@ test('edits a published property twice and removes a photo while retaining admin
   await expect(editor).toBeVisible();
   await editor.getByLabel(ar ? 'سبب التعديل' : 'Edit reason').fill('Correct property details and photos');
   await editor.getByLabel(`${ar ? 'عنوان العقار' : 'Property title'} EN`, { exact: true }).fill('Updated published villa');
-  await editor.getByRole('button', { name: ar ? 'حفظ العنوان' : 'Save title', exact: true }).click();
+  await editor.getByRole('textbox', { name: `${ar ? 'وصف العقار' : 'Property description'} EN`, exact: true }).fill('New property description');
+  await expect(editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true })).toHaveCount(1);
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
   await expect(editor.getByRole('status')).toBeVisible();
-  await editor.getByLabel(`${ar ? 'وصف العقار' : 'Property description'} EN`, { exact: true }).fill('New property description');
-  await editor.getByRole('button', { name: ar ? 'حفظ الوصف' : 'Save description', exact: true }).click();
   await expect.poll(() => property.version).toBe(5);
+  await editor.getByRole('textbox', { name: `${ar ? 'وصف العقار' : 'Property description'} EN`, exact: true }).fill('Updated description again');
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
+  await expect.poll(() => property.version).toBe(6);
   await editor.locator('input[type=file]').setInputFiles({ name: 'new.png', mimeType: 'image/png', buffer: png });
   await expect(editor.locator('article')).toHaveCount(2);
   await editor.getByRole('button', { name: ar ? 'تعيين كغلاف' : 'Use as cover', exact: true }).click();

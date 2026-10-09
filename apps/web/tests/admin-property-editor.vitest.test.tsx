@@ -24,10 +24,10 @@ it('keeps failed title edits, uses the current version, and sends only the selec
   renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={saved} />, { locale: 'en' });
   fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Correct property title' } });
   fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Save title' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('entries are preserved'));
   expect(screen.getByLabelText('Property title EN')).toHaveValue('Updated villa');
-  fireEvent.click(screen.getByRole('button', { name: 'Save title' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(saved).toHaveBeenCalledWith(expect.objectContaining({ status: 'published', version: 4 })));
   expect(bodies).toEqual([expect.objectContaining({ version: 3, name: { ar: 'فيلا منشورة', en: 'Updated villa' } }), expect.objectContaining({ version: 3 })]);
   expect(Object.keys(bodies[0]!).sort()).toEqual(['name', 'reason', 'version']);
@@ -51,4 +51,48 @@ it('removes a photo through the administrative route with a reason and does not 
   fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Remove outdated property photo' } });
   fireEvent.click(screen.getByRole('button', { name: /^Remove$/ }));
   await waitFor(() => expect(screen.queryByRole('button', { name: /^Remove$/ })).not.toBeInTheDocument());
+});
+
+it('validates all changed fields before writing and resumes a partial save with the latest version', async () => {
+  let current = { ...property, price: { amount: 1000, currency: 'EGP' } };
+  let failDetails = true;
+  const writes: { step: string; body: Record<string, unknown> }[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    const step = String(input).split('/').at(-1)!;
+    const body = JSON.parse(String(init.body)); writes.push({ step, body });
+    expect(body.version).toBe(current.version);
+    if (step === 'details' && failDetails) { failDetails = false; return new Response('', { status: 503 }); }
+    const changes = { ...body }; delete changes.version; delete changes.reason;
+    current = { ...current, ...changes, version: current.version + 1 };
+    return response(current);
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={current} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
+  expect(screen.getAllByRole('button', { name: 'Save changes' })).toHaveLength(1);
+  fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Update villa information' } });
+  fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
+  fireEvent.change(screen.getByLabelText('Property description EN'), { target: { value: 'New description' } });
+  fireEvent.change(screen.getByLabelText('Price'), { target: { value: '-1' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Check price'));
+  expect(writes).toHaveLength(0);
+  fireEvent.change(screen.getByLabelText('Price'), { target: { value: '2000' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Some changes were saved'));
+  expect(current.version).toBe(4);
+  expect(screen.getByLabelText('Property description EN')).toHaveValue('New description');
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
+  expect(writes.map(write => [write.step, write.body.version])).toEqual([['basic', 3], ['details', 4], ['details', 4], ['price-payment', 5]]);
+  expect(current).toMatchObject({ version: 6, status: 'published', price: { amount: 2000 }, name: { en: 'Updated villa' } });
+});
+
+it('explains a missing reason immediately without sending changes', async () => {
+  const fetcher = vi.fn<typeof fetch>(async () => response({ items: [] }));
+  vi.stubGlobal('fetch', fetcher);
+  renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
+  fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Enter an edit reason'));
+  expect(fetcher.mock.calls.every(([, init]) => init?.method !== 'PATCH')).toBe(true);
 });
