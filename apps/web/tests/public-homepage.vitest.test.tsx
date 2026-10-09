@@ -85,6 +85,7 @@ describe('public homepage', () => {
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title[locale]);
     expect(screen.getByText(locale === 'ar' ? 'نص الإعلان المعدل' : 'Edited advertisement description')).toBeInTheDocument();
+    expect(result.container.querySelector('.public-homepage__hero')).toHaveClass('public-homepage__hero--advertisement');
     expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('src', 'https://example.com/new-banner.jpg');
     expect(result.container.querySelector('.public-homepage__hero-media img')).toHaveAttribute('alt', 'Description of the banner image');
   });

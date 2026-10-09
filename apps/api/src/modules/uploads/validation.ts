@@ -45,12 +45,16 @@ export function sanitizeDisplayFilename(value: string): string {
 
 export function validateFilenameAndType(
   filenameInput: string,
-  declaredMime: string
+  declaredMime: string,
+  options: { allowTimestampDots?: boolean } = {}
 ): Pick<ValidatedProviderDocument, 'originalFilename' | 'normalizedExtension' | 'detectedMime'> {
   const originalFilename = sanitizeDisplayFilename(filenameInput);
   const normalizedExtension = path.extname(originalFilename).toLowerCase();
   const stem = originalFilename.slice(0, -normalizedExtension.length);
-  if (!stem || stem.includes('.')) throw new UploadValidationError('DOUBLE_EXTENSION_REJECTED');
+  // Receipt names from WhatsApp use numeric time separators, e.g. 10.49.37.
+  // Keep rejecting additional extensions, including receipt.exe.pdf.
+  const checkedStem = options.allowTimestampDots ? stem.replace(/(?<=\d)\.(?=\d)/g, '') : stem;
+  if (!stem || checkedStem.includes('.')) throw new UploadValidationError('DOUBLE_EXTENSION_REJECTED');
 
   const mapping: Record<string, ProviderDocumentMime | undefined> = {
     '.pdf': 'application/pdf',
@@ -79,9 +83,9 @@ export class ProviderDocumentValidationTransform extends Transform {
   private bytes = 0;
   private readonly maxBytes: number;
 
-  constructor(filename: string, declaredMime: string, options: { maxBytes?: number; allowedMimes?: readonly ProviderDocumentMime[] } = {}) {
+  constructor(filename: string, declaredMime: string, options: { maxBytes?: number; allowedMimes?: readonly ProviderDocumentMime[]; allowTimestampDots?: boolean } = {}) {
     super();
-    this.expected = validateFilenameAndType(filename, declaredMime);
+    this.expected = validateFilenameAndType(filename, declaredMime, options);
     this.maxBytes = options.maxBytes ?? MAX_PROVIDER_DOCUMENT_BYTES;
     if (options.allowedMimes && !options.allowedMimes.includes(this.expected.detectedMime)) {
       throw new UploadValidationError('FILE_TYPE_NOT_ALLOWED');

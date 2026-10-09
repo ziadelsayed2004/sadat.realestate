@@ -9,6 +9,7 @@ import {
   parsePublicPropertySearchQuery,
   publicPropertySearchUrl
 } from '../src/features/public/index.ts';
+import { PublicAuthRoleContext } from '../src/features/public/components.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const listingData = publicPropertyListDataSchema.parse({
@@ -31,6 +32,14 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it.each(['admin', 'provider', undefined] as const)('offers a property-specific edit link only in the administrative session: %s', role => {
+    const result = renderWithLocale(<PublicAuthRoleContext.Provider value={role}><PublicPropertyListing locale="en" initialData={listingData} /></PublicAuthRoleContext.Provider>, { locale: 'en' });
+    const link = screen.queryByRole('link', { name: 'Edit property and photos' });
+    if (role === 'admin') expect(link).toHaveAttribute('href', '/admin/properties/review?propertyId=aaaaaaaaaaaaaaaaaaaaaaaa&lang=en');
+    else expect(link).not.toBeInTheDocument();
+    expect(result.container.querySelector('.public-property-listing__card img')).toBeNull();
+  });
+
   it('applies a price range once, preserves the selected category, and rejects reversed prices', async () => {
     window.history.replaceState({}, '', '/properties?lang=en');
     const load = vi.fn().mockResolvedValue(listingData);

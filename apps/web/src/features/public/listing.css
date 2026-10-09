@@ -1098,3 +1098,5 @@
     min-inline-size: 44px;
   }
 }
+
+.public-property-listing__card-actions{display:grid;gap:.5rem;width:100%}

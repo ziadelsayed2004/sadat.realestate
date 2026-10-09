@@ -2613,5 +2613,89 @@
     ],
     "purpose": "updateAdminCommissionException",
     "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/properties/:propertyId/steps/:step",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Edit a property with administrative permission, version and audit reason",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/properties/:propertyId/media",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.view"
+    ],
+    "purpose": "List property media for administrative editing",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/properties/:propertyId/media/:assetId/content",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.view"
+    ],
+    "purpose": "Preview ready property media privately, including unpublished properties",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/properties/:propertyId/media",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Upload scanned property media with administrative reason",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/properties/:propertyId/media/order",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Choose and reorder property cover images",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/properties/:propertyId/media/:assetId",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Remove property media and synchronize the public cover",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/articles/:articleId",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:articles.manage"
+    ],
+    "purpose": "Delete an article with administrative permission and audit reason",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

@@ -172,7 +172,7 @@ test('lists only owned properties with bounded filters and state-derived actions
 test('admin list requires view permission and exposes safe state actions', async () => {
   const { service } = fixture();
   const result = await service.adminList(admin, { status: 'draft', page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
-  assert.deepEqual(result.data.items[0]?.availableActions, ['archive']);
+  assert.deepEqual(result.data.items[0]?.availableActions, ['archive', 'update']);
   await assert.rejects(service.adminList(other, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
 });
 
@@ -180,7 +180,7 @@ test('admin detail requires view permission and returns the requested record wit
   const { service } = fixture();
   const result = await service.adminGet(admin, id);
   assert.equal(result.id, id);
-  assert.deepEqual(result.availableActions, ['archive']);
+  assert.deepEqual(result.availableActions, ['archive', 'update']);
   await assert.rejects(service.adminGet(other, id), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
   await assert.rejects(service.adminGet(admin, '8123456789abcdef01234567'), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_NOT_FOUND');
 });
@@ -268,4 +268,16 @@ test('publishes an approved review immediately when automatic publication is con
   assert.equal(published.status, 'published');
   assert.equal(published.publishedAt, now.toISOString());
   assert.equal(published.expiresAt, '2026-09-13T08:00:00.000Z');
+});
+
+test('administrators edit published properties with management permission while providers remain restricted', async () => {
+  const { service, rows } = fixture(true);
+  rows.set(id, record({ status: 'published', name: { en: 'Original title' } }));
+  const context = { requestId: 'admin-property-edit', traceId: 'a'.repeat(32) };
+  const administrator = { ...claims(admin), role: 'admin' } as AccessTokenClaims;
+  await assert.rejects(service.saveStep(claims(), id, 'basic', { version: 0, name: { en: 'Provider edit' }, reason: 'Edit published listing' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_INVALID_STATE');
+  await assert.rejects(service.saveStep({ ...administrator, sub: other }, id, 'basic', { version: 0, name: { en: 'Unauthorized edit' }, reason: 'Edit published listing' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
+  const saved = await service.saveStep(administrator, id, 'basic', { version: 0, name: { en: 'Revised title' }, reason: 'Correct published title' }, context);
+  assert.equal(saved.status, 'published'); assert.equal(saved.name.en, 'Revised title'); assert.equal(saved.source.providerId, provider);
+  await assert.rejects(service.saveStep(administrator, id, 'basic', { version: 0, name: { en: 'Stale edit' }, reason: 'Replay obsolete version' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VERSION_CONFLICT');
 });

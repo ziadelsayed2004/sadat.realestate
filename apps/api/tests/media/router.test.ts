@@ -36,3 +36,38 @@ test('streams public media with HEAD and byte ranges, rejects invalid ranges and
     assert.equal((await fetch(url.replace(media, 'f'.repeat(24)))).status, 404);
   } finally { await stopApiServer(server); }
 });
+
+
+test('administrative media endpoints require administrative authentication and decode audit reasons safely', async () => run(async url => {
+  const path = `/api/v1/admin/properties/${property}/media`;
+  assert.equal((await fetch(url + path)).status, 401);
+  assert.equal((await request(url, 'GET', path, 'provider')).status, 403);
+  assert.equal((await request(url, 'GET', path, 'admin')).status, 200);
+  assert.equal((await request(url, 'DELETE', `${path}/${media}`, 'admin', undefined, { 'x-edit-reason': '%broken' })).status, 400);
+  const result = await fetch(url + path, { method: 'POST', headers: { Authorization: 'Bearer admin', 'Content-Type': 'image/jpeg', 'x-media-kind': 'image', 'x-file-name': encodeURIComponent('WhatsApp Image 2026-10-08 at 3.16.50 PM.jpeg'), 'x-edit-reason': encodeURIComponent('Correct property cover') }, body: Buffer.from([0xff, 0xd8, 0xff, 0x00, 0xff, 0xd9]) });
+  assert.equal(result.status, 201);
+}));
+
+test('administrative photo previews require authentication and permission and bind the asset to the property', async () => {
+  let reads = 0;
+  const server = createApiServer({ database: { isReady: async () => true }, propertyMedia: {
+    service, accessTokens: tokens,
+    async adminContent() { reads++; return { mime: 'image/jpeg', size: 5, async open() { return Readable.from(Buffer.from('photo')); } }; }
+  } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const base = `http://127.0.0.1:${address.port}`;
+  const path = `/api/v1/admin/properties/${property}/media/${media}/content`;
+  try {
+    assert.equal((await fetch(base + path)).status, 401);
+    assert.equal((await request(base, 'GET', path, 'provider')).status, 403);
+    assert.equal((await request(base, 'GET', path.replace(media, 'f'.repeat(24)), 'admin')).status, 404);
+    assert.equal(reads, 0);
+    const result = await request(base, 'GET', path, 'admin');
+    assert.equal(result.status, 200);
+    assert.equal(result.headers.get('cache-control'), 'no-store');
+    assert.equal(await result.text(), 'photo');
+    const head = await request(base, 'HEAD', path, 'admin');
+    assert.equal(head.headers.get('content-length'), '5');
+    assert.equal(await head.text(), '');
+  } finally { await stopApiServer(server); }
+});

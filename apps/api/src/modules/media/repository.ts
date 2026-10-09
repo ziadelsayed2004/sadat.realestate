@@ -7,11 +7,12 @@ import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface OwnedMediaProperty { id: string; status: string; active: boolean; }
 export interface StoredPropertyMedia extends Omit<PropertyMediaData, 'createdAt' | 'updatedAt'> { storageKey: string; createdAt: Date; updatedAt: Date; }
-export interface MediaMutationMetadata { actorId: string; reason: string; requestId: string; traceId: string; changedAt: Date; }
+export interface MediaMutationMetadata { actorType?: 'admin' | 'provider'; actorId: string; reason: string; requestId: string; traceId: string; changedAt: Date; }
 export type MediaWriteResult = { kind: 'written'; media: StoredPropertyMedia } | { kind: 'not_found' } | { kind: 'version_conflict' } | { kind: 'capacity' } | { kind: 'replay'; media: StoredPropertyMedia };
 export type MediaCreateInput = { propertyId: string; providerId: string; kind: PropertyMediaKind; originalFilename: string; declaredMime: PropertyMediaMime; detectedMime: PropertyMediaMime; byteSize: number; sha256: string; storageKey: string; capacity: number; metadata: MediaMutationMetadata };
 
 export interface PropertyMediaRepository {
+  findAdminProperty?(propertyId: string): Promise<(OwnedMediaProperty & { providerId: string }) | null>;
   findOwnedProperty(providerId: string, propertyId: string): Promise<OwnedMediaProperty | null>;
   create(input: MediaCreateInput): Promise<MediaWriteResult>;
   updateProcessing(input: { providerId: string; mediaId: string; state: PropertyMediaProcessingState; failureCode?: string; metadata: MediaMutationMetadata }): Promise<MediaWriteResult>;
@@ -31,13 +32,23 @@ function duplicate(error: unknown): boolean { return typeof error === 'object' &
 export function createMongoosePropertyMediaRepository(connection: Connection, models: PropertyMediaModels, audit: AuditWriter): PropertyMediaRepository {
   async function tx<T>(run: (session: ClientSession) => Promise<T>): Promise<T> { const session = await connection.startSession(); try { return await session.withTransaction(() => run(session)); } finally { await session.endSession(); } }
   async function auditWrite(action: string, id: string, before: unknown, after: unknown, metadata: MediaMutationMetadata, session?: ClientSession): Promise<void> {
-    await audit.record({ actorType: 'provider', actorId: metadata.actorId, targetType: 'property_media', targetId: id, action, reason: metadata.reason, before, after, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: metadata.changedAt }, session);
+    await audit.record({ actorType: metadata.actorType ?? 'provider', actorId: metadata.actorId, targetType: 'property_media', targetId: id, action, reason: metadata.reason, before, after, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: metadata.changedAt }, session);
+  }
+  async function syncCover(propertyId: string, session: ClientSession) {
+    const cover = await models.PropertyMedia.findOne({ propertyId, active: true, processingState: 'ready', kind: 'image' }).sort({ isCover: -1, sortOrder: 1, _id: 1 }).lean().session(session);
+    if (cover) await connection.collection('properties').updateOne({ _id: new Types.ObjectId(propertyId) }, { $set: { imageUrl: `/api/v1/public/properties/${propertyId}/media/${String(cover._id)}/content` } }, { session });
+    else await connection.collection('properties').updateOne({ _id: new Types.ObjectId(propertyId), imageUrl: /^\/api\/v1\/public\/properties\// }, { $unset: { imageUrl: 1 } }, { session });
   }
   const load = async (filter: Record<string, unknown>, session?: ClientSession): Promise<StoredPropertyMedia | null> => {
     const row = await models.PropertyMedia.findOne(filter).select('+storageKey').lean().session(session ?? null);
     return row ? toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }) : null;
   };
   return {
+    async findAdminProperty(propertyId) {
+      if (!valid(propertyId)) return null;
+      const row = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId) }, { projection: { status: 1, active: 1, providerId: 1 } });
+      return row && row.providerId instanceof Types.ObjectId ? { id: propertyId, providerId: row.providerId.toHexString(), status: String(row.status), active: Boolean(row.active) } : null;
+    },
     async findOwnedProperty(providerId, propertyId) {
       if (!valid(providerId) || !valid(propertyId)) return null;
       const row = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), providerId: new Types.ObjectId(providerId) }, { projection: { status: 1, active: 1 } });
@@ -68,6 +79,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
         if (!row) return null;
         const output = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId });
         await auditWrite('property_media.processing', output.id, current, output, input.metadata, session);
+        await syncCover(output.propertyId, session);
         return output;
       });
       return media ? { kind: 'written' as const, media } : { kind: 'version_conflict' as const };
@@ -85,14 +97,18 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
     async update(input) {
       const changes = Object.fromEntries(Object.entries(input.changes).filter(([key]) => key !== 'version' && key !== 'reason'));
       return tx(async session => {
+        const eligible = await models.PropertyMedia.exists({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId, version: input.expectedVersion, active: true, processingState: 'ready' }).session(session);
+        if (!eligible) return { kind: 'version_conflict' as const };
         if (changes.isCover === true) await models.PropertyMedia.updateMany({ propertyId: input.propertyId, providerId: input.providerId, active: true }, { $set: { isCover: false } }, { session });
         const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId, version: input.expectedVersion, active: true, processingState: 'ready' }, { $set: { ...changes, updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return (await models.PropertyMedia.exists({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId }).session(session)) ? { kind: 'version_conflict' as const } : { kind: 'not_found' as const };
-        const media = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }); await auditWrite('property_media.update', media.id, input.before, media, input.metadata, session); return { kind: 'written' as const, media };
+        const media = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }); await auditWrite('property_media.update', media.id, input.before, media, input.metadata, session); await syncCover(input.propertyId, session); return { kind: 'written' as const, media };
       });
     },
     async reorder(input) {
       return tx(async session => {
+        const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(input.propertyId), version: input.expectedVersion }, { session, projection: { _id: 1 } });
+        if (!property) return [{ kind: 'version_conflict' as const }];
         const ids = input.changes.items.map(item => new Types.ObjectId(item.mediaId));
         const rows = await models.PropertyMedia.find({ _id: { $in: ids }, propertyId: input.propertyId, providerId: input.providerId, active: true, processingState: 'ready' }).select('+storageKey').lean().session(session);
         if (rows.length !== ids.length) return [{ kind: 'not_found' as const }];
@@ -103,6 +119,8 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
           const row = await models.PropertyMedia.findOneAndUpdate({ _id: item.mediaId, propertyId: input.propertyId, providerId: input.providerId, active: true, processingState: 'ready' }, { $set: set, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
           if (row) results.push({ kind: 'written', media: toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }) });
         }
+        await auditWrite('property_media.reorder', input.propertyId, rows.map(row => propertyMediaData(row as PropertyMediaRecord & { _id: Types.ObjectId })), results.filter(result => result.kind === 'written').map(result => result.media), input.metadata, session);
+        await syncCover(input.propertyId, session);
         return results;
       });
     },
@@ -110,7 +128,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
       return tx(async session => {
         const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId, active: true }, { $set: { active: false, isCover: false, processingState: 'deleted', updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return { kind: 'not_found' as const };
-        const media = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }); await auditWrite('property_media.delete', media.id, null, media, input.metadata, session); return { kind: 'written' as const, media };
+        const media = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }); await auditWrite('property_media.delete', media.id, null, media, input.metadata, session); await syncCover(input.propertyId, session); return { kind: 'written' as const, media };
       });
     }
   };

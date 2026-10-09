@@ -74,6 +74,7 @@ export async function routeAdminPropertyApis(page: Page, allow = true): Promise<
       });
       return;
     }
+    if (new URL(url).pathname.endsWith(`/admin/properties/${adminPropertyId}`)) { await route.fulfill({ json: { data: adminPropertyFixture(), meta: { requestId: 'admin-property-detail' } } }); return; }
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [adminPropertyFixture()] }, meta: { requestId: 'admin-property-list', page: 1, limit: 20, total: 1 } }) });
   });
 

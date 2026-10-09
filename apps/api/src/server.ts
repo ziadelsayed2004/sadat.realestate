@@ -193,7 +193,7 @@ async function runEntrypoint(): Promise<void> {
   const features = { accessTokens: auth.accessTokens, service: createFeatureService(database.nativeConnection, auditInfrastructure.writer, rbac.service) };
   const projects = createProjectRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const properties = createPropertyRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
-  const propertyMedia = createPropertyMediaRuntime(database.nativeConnection, auth.accessTokens, parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment), audit.writer);
+  const propertyMedia = createPropertyMediaRuntime(database.nativeConnection, auth.accessTokens, parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment), audit.writer, rbac.service);
   const moderation = createModerationRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const publicHomepage = createPublicRuntime(database.nativeConnection, auth.accessTokens);
   const publicSearch = createPublicSearchRuntime(database.nativeConnection);

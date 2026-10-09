@@ -8478,6 +8478,297 @@
           }
         }
       ]
+    },
+    {
+      "name": "Administrative Property Editing",
+      "item": [
+        {
+          "name": "Admin Upload Property Media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "image/jpeg"
+              },
+              {
+                "key": "x-media-kind",
+                "value": "image"
+              },
+              {
+                "key": "x-file-name",
+                "value": "synthetic-property.jpg"
+              },
+              {
+                "key": "x-edit-reason",
+                "value": "Update%20property%20photos"
+              }
+            ],
+            "body": {
+              "mode": "file"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/media",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "media"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin Reorder Property Media",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-edit-reason",
+                "value": "Update%20property%20photos"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1,\n  \"items\": [{ \"mediaId\": \"000000000000000000000000\", \"sortOrder\": 0, \"isCover\": true }],\n  \"reason\": \"Order property media\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/media/order",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "media",
+                "order"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin Delete Property Media",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-edit-reason",
+                "value": "Update%20property%20photos"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/media/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "media",
+                ":assetId"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                },
+                {
+                  "key": "assetId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin List saved property media",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/media",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "media"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "description": "Lists all saved media owned by the verified provider."
+        },
+        {
+          "name": "Admin Save Property Step",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"mapUrl\": \"https://maps.google.com/?q=Sadat+City\",\n  \"reason\": \"Save property map location\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/steps/:step",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "steps",
+                ":step"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                },
+                {
+                  "key": "step",
+                  "value": "location"
+                }
+              ]
+            },
+            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location accepts an active locationId, coordinates, or an HTTPS mapUrl (up to 2048 characters) and does not fetch or geocode the URL. Contact data contains no provider identity override or secrets.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Preview administrative property media",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/media/:assetId/content",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "media",
+                ":assetId",
+                "content"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "description": "Lists all saved media owned by the verified provider."
+        }
+      ]
     }
   ]
 }

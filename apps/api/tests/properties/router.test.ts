@@ -63,3 +63,13 @@ test('admin review and visibility routes require admin authentication and strict
   assert.equal((await request(url, 'POST', `/api/v1/admin/properties/${propertyId}/visibility`, 'admin', { version: 0, action: 'hide', reason: 'Hide property' })).status, 200);
   assert.equal((await request(url, 'POST', `/api/v1/admin/properties/${propertyId}/visibility`, 'admin', { version: 0, action: 'hide' })).status, 400);
 }));
+
+
+test('administrative property step edits reject providers and preserve strict write contracts', async () => run(async url => {
+  const path = `/api/v1/admin/properties/${propertyId}/steps/basic`;
+  const input = { version: 0, name: { en: 'Corrected apartment' }, reason: 'Correct published title' };
+  assert.equal((await request(url, 'PATCH', path, 'provider', input)).status, 403);
+  assert.equal((await request(url, 'PATCH', path, 'admin', input)).status, 200);
+  assert.equal((await request(url, 'PATCH', path, 'admin', { ...input, providerId: provider })).status, 400);
+  assert.equal((await request(url, 'PATCH', path, 'admin', { ...input, status: 'published' })).status, 400);
+}));

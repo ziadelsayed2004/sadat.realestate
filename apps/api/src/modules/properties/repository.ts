@@ -13,6 +13,7 @@ function propertySearch(search: string): Record<string, unknown>[] {
 }
 
 export interface StoredProperty {
+  imageUrl?: string;
   id: string;
   providerId: string;
   source: PropertySource;
@@ -49,6 +50,8 @@ export interface StoredProperty {
 }
 
 export interface PropertyMutationMetadata {
+  actorType?: 'admin' | 'provider';
+  adminEdit?: boolean;
   actorId: string;
   reason: string;
   requestId: string;
@@ -86,6 +89,7 @@ export interface PropertyRepository {
 function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredProperty {
   return {
     id: record._id.toHexString(),
+    ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     providerId: record.providerId.toHexString(),
     source: {
       providerId: record.providerId.toHexString(),
@@ -149,7 +153,8 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     before: StoredProperty;
     metadata: PropertyMutationMetadata;
   }): Promise<PropertyWriteResult> {
-    if (!['draft', 'needs_changes'].includes(input.before.status)) return { kind: 'invalid_state' };
+    if (input.before.status === 'archived') return { kind: 'invalid_state' };
+    if (!(input.metadata.adminEdit && input.metadata.actorType === 'admin') && !['draft', 'needs_changes'].includes(input.before.status)) return { kind: 'invalid_state' };
     try {
       return await transaction(async (session) => {
         const set: Record<string, unknown> = { ...input.changes, updatedAt: input.metadata.changedAt };
@@ -166,9 +171,9 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         }
         if ('coordinates' in set) set.coordinates = coordinates(set.coordinates as PropertyCoordinates | null);
         const unset: Record<string, 1> = {};
-        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'mapUrl', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (field in set && (set[field] === undefined || set[field] === null)) { delete set[field]; unset[field] = 1; }
+        for (const field of ['imageUrl', 'projectId', 'parentPropertyId', 'locationId', 'mapUrl', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (field in set && (set[field] === undefined || set[field] === null)) { delete set[field]; unset[field] = 1; }
         const result = await models.Property.findOneAndUpdate(
-          { _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion },
+          { _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion, status: input.metadata.adminEdit ? { $ne: 'archived' } : { $in: ['draft', 'needs_changes'] } },
           { $set: set, ...(Object.keys(unset).length ? { $unset: unset } : {}), $inc: { version: 1 } },
           { new: true, runValidators: true, lean: true, session }
         );
@@ -177,7 +182,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
           return exists ? { kind: 'version_conflict' as const } : { kind: 'not_found' as const };
         }
         const output = stored(result as PropertyRecord & { _id: Types.ObjectId });
-        await audit.record({ actorType: 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.update', reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
+        await audit.record({ actorType: input.metadata.actorType ?? 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.update', reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
         return { kind: 'written' as const, property: output };
       });
     } catch (error) {
@@ -304,7 +309,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
           const created = new models.Property(payload);
           await created.save({ session });
           const output = stored(created.toObject() as PropertyRecord & { _id: Types.ObjectId });
-          await audit.record({ actorType: 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.create', reason: input.metadata.reason, before: null, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
+          await audit.record({ actorType: input.metadata.actorType ?? 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.create', reason: input.metadata.reason, before: null, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
           return { kind: 'written' as const, property: output };
         });
       } catch (error) {
@@ -348,7 +353,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
           return { kind: 'invalid_state' as const };
         }
         const output = stored(result as PropertyRecord & { _id: Types.ObjectId });
-        await audit.record({ actorType: 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.submit', reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
+        await audit.record({ actorType: input.metadata.actorType ?? 'provider', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: 'property.submit', reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
         return { kind: 'written' as const, property: output };
       });
     },

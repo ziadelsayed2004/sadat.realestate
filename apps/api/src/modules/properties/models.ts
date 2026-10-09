@@ -2,6 +2,7 @@ import { Schema, type Connection, type Model, type Types } from 'mongoose';
 import type { LocalizedText, PropertyArea, PropertyContact, PropertyDeliveryStatus, PropertyKind, PropertyLayout, PropertyMoney, PropertyPaymentPlan, PropertySource, PropertyStatus, PropertyTransactionType } from '@sadat-real-estate/contracts';
 
 export interface PropertyRecord {
+  imageUrl?: string;
   providerId: Types.ObjectId;
   sourceType: PropertySource['sourceType'];
   organizationId?: Types.ObjectId;
@@ -62,6 +63,7 @@ const contact = new Schema<PropertyContact>({
 }, { _id: false, strict: 'throw' });
 
 export const propertySchema = new Schema<PropertyRecord>({
+  imageUrl: { type: String, maxlength: 2048 },
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
   sourceType: { type: String, required: true, enum: ['individual_broker', 'brokerage_office', 'developer_company'], immutable: true },
   organizationId: { type: Schema.Types.ObjectId, ref: 'Organization', immutable: true },

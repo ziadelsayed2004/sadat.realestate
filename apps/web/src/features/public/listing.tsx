@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, useContext, type FormEvent, type ReactNode } from 'react';
 import type {
   PublicHomepageCategory,
   PublicPropertyListData,
@@ -10,7 +10,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect, Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, canonicalHomepageCategories, fallbackPropertyImage, publicCategoryAsset } from './components.tsx';
+import { PublicAuthRoleContext, PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, canonicalHomepageCategories, publicCategoryAsset } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -325,6 +325,7 @@ function PropertyResults({
   readonly comparedIds: readonly string[];
   readonly onToggleCompare: (id: string) => void;
 }) {
+  const role = useContext(PublicAuthRoleContext);
   const pageCount = Math.ceil(data.total / data.limit);
   const homepageCopy = getPublicHomepageCopy(locale);
   return (
@@ -340,10 +341,10 @@ function PropertyResults({
             source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
             mediaOverlay={<div className="ui-property-card__badges"><span data-badge="transaction">{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.installmentAvailable ? <span data-badge="installment">{copy.installment}</span> : null}{property.featured ? <span data-badge="featured">{copy.featured}</span> : null}<span data-badge="code">{property.publicCode ?? property.slug.toUpperCase()}</span></div>}
             features={[...propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3), ...(property.viewCount === undefined ? [] : [{ label: copy.views, value: property.viewCount.toLocaleString(locale) }])]}
-            image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} />} />}
+            image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<span className="public-homepage__content-media-fallback" />} />}
             imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
-            action={<button type="button" className={`public-property-listing__compare-button${comparedIds.includes(property.id) ? ' is-selected' : ''}`} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? copy.addedToCompare : copy.addToCompare}</button>}
+            action={<div className="public-property-listing__card-actions">{role === 'admin' ? <a className="public-property-listing__compare-button" href={`/admin/properties/review?propertyId=${property.id}&lang=${locale}`}>{locale === 'ar' ? 'تعديل العقار والصور' : 'Edit property and photos'}</a> : null}<button type="button" className={`public-property-listing__compare-button${comparedIds.includes(property.id) ? ' is-selected' : ''}`} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? copy.addedToCompare : copy.addToCompare}</button></div>}
           />
         ))}
       </div>

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { Readable } from 'node:stream';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -25,7 +26,7 @@ function fixture(scanner = createDeterministicMalwareScanner('clean'), settings:
     async reorder(input) { const out = input.changes.items.map(item => { const current = rows.get(item.mediaId); if (!current) return { kind: 'not_found' as const }; const value = { ...current, sortOrder: item.sortOrder, ...(item.isCover !== undefined ? { isCover: item.isCover } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written' as const, media: value }; }); return out; },
     async markDeleted(input) { const current = rows.get(input.mediaId); if (!current) return { kind: 'not_found' }; const value = { ...current, active: false, isCover: false, processingState: 'deleted' as const, version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written', media: value }; }
   };
-  return { service: createPropertyMediaService({ repository, storage, scanner, settings: { async read() { return settings; } }, now: () => now, createObjectKey: () => 'quarantine/' + 'b'.repeat(32) }) };
+  return { repository, storage, scanner, rows, service: createPropertyMediaService({ repository, storage, scanner, settings: { async read() { return settings; } }, now: () => now, createObjectKey: () => 'quarantine/' + 'b'.repeat(32) }) };
 }
 
 test('validates strict media kinds, MIME policy, ordering, and mass-assignment rejection', () => {
@@ -77,4 +78,29 @@ test('enforces the configured image count, MIME, and byte-size policy', async ()
   await oneImage.service.upload(claims(), property, { kind: 'image', filename: 'photo.jpg', contentType: 'image/jpeg' }, Readable.from(bytes), { requestId: 'media-policy-first', traceId: '2'.repeat(32) });
   const secondBytes = Buffer.from([0xff, 0xd8, 0xff, 0x01, 0xff, 0xd9]);
   await assert.rejects(oneImage.service.upload(claims(), property, { kind: 'image', filename: 'second.jpg', contentType: 'image/jpeg' }, Readable.from(secondBytes), { requestId: 'media-policy-capacity', traceId: '3'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_CAPACITY');
+});
+
+
+test('administrative media edits preserve ownership, require manage permission and a reason, and keep provider publication restrictions', async () => {
+  const f = fixture();
+  f.repository.findAdminProperty = async id => id === property ? { id, providerId: provider, status: 'published', active: true } : null;
+  f.repository.findOwnedProperty = async () => ({ id: property, status: 'published', active: true });
+  const admin = { ...(claims() as AccessTokenClaims), sub: '4123456789abcdef01234567', role: 'admin' } as never;
+  const context = { reason: 'Correct property photos', requestId: 'admin-photo-edit', traceId: 'f'.repeat(32) };
+  const attempts: Parameters<PropertyMediaRepository['create']>[0][] = [];
+  const originalCreate = f.repository.create;
+  f.repository.create = async input => { attempts.push(input); return originalCreate(input); };
+  const service = createPropertyMediaService({ ...f, authorization: { async authorize(actor, permission) { return actor === (admin as { sub: string }).sub && ['admin:properties.view', 'admin:properties.manage'].includes(permission); } } });
+  const uploaded = await service.upload(admin, property, { kind: 'image', filename: 'WhatsApp Image 2026-10-08 at 3.16.50 PM.jpeg', contentType: 'image/jpeg' }, Readable.from(bytes), context);
+  assert.equal(attempts[0]?.providerId, provider);
+  assert.equal(attempts[0]?.metadata.actorType, 'admin');
+  assert.equal(attempts[0]?.metadata.actorId, (admin as { sub: string }).sub);
+  assert.equal(attempts[0]?.metadata.reason, context.reason);
+  assert.equal((await service.list(admin, property))[0]?.id, uploaded.id);
+  const readonly = createPropertyMediaService({ ...f, authorization: { async authorize(_actor, permission) { return permission === 'admin:properties.view'; } } });
+  assert.equal((await readonly.list(admin, property)).length, 1);
+  await assert.rejects(readonly.remove(admin, property, uploaded.id, context), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_FORBIDDEN');
+  await assert.rejects(service.remove(admin, property, uploaded.id, { ...context, reason: '' }));
+  await assert.rejects(service.upload(claims(), property, { kind: 'image', filename: 'photo.jpg', contentType: 'image/jpeg' }, Readable.from(bytes), context), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_PROPERTY_NOT_EDITABLE');
+  assert.equal((await service.remove(admin, property, uploaded.id, context)).active, false);
 });

@@ -106,10 +106,9 @@ export async function loadAdminProperties(options: AdminPropertiesLoadOptions = 
 
 export async function loadAdminProperty(propertyId: string, options: CommonOptions = {}): Promise<PropertyData> {
   const id = propertyIdParamsSchema.parse({ propertyId }).propertyId;
-  const properties = await loadAdminProperties({ ...options, query: { page: 1, limit: 100, search: undefined } });
-  const property = properties.items.find(item => item.id === id);
-  if (property === undefined) throw new Error('PROPERTY_NOT_FOUND');
-  return property;
+  const headers = headersFor(options.authorization);
+  const response = await clientFor(options).request(`${ADMIN_PROPERTIES_ROUTE}/${id}`, { responseSchema: propertySuccessEnvelopeSchema, ...(headers ? { headers } : {}), ...(options.signal ? { signal: options.signal } : {}) });
+  return response.data.data;
 }
 
 export async function reviewAdminProperty(propertyId: string, input: PropertyReview, options: CommonOptions = {}): Promise<PropertyData> {

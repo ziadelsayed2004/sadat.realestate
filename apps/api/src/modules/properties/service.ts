@@ -97,6 +97,7 @@ function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'):
   const paymentPlans = compatiblePaymentPlans(record);
   return propertyDataSchema.parse({
     id: record.id,
+    ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     kind: record.kind,
     name: record.name,
     slug: record.slug,
@@ -174,14 +175,16 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       await adminViewPermission(adminId);
       const query = propertyAdminListQuerySchema.parse(unparsedQuery) as PropertyAdminListQuery;
       const result = await dependencies.repository.listAdmin(query);
-      return { data: { items: result.items.map(item => data(item, 'admin')) }, page: query.page, limit: query.limit, total: result.total };
+      const manage = await dependencies.authorization!.authorize(adminId, 'admin:properties.manage');
+      return { data: { items: result.items.map(item => { const output = data(item, 'admin'); return manage && item.status !== 'archived' ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output; }) }, page: query.page, limit: query.limit, total: result.total };
     },
     async adminGet(adminId, id) {
       await adminViewPermission(adminId);
       propertyObjectIdSchema.parse(id);
       const result = await dependencies.repository.findByIdAny(id);
       if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
-      return data(result, 'admin');
+      const output = data(result, 'admin');
+      return result.status !== 'archived' && await dependencies.authorization!.authorize(adminId, 'admin:properties.manage') ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output;
     },
     async duplicates(adminId, unparsedQuery) {
       await adminPermission(adminId, 'admin:properties.review');
@@ -219,34 +222,36 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       return data(result);
     },
     async saveStep(claims, id, unparsedStep, unparsedInput, context) {
-      provider(claims);
+      const admin = claims.role === 'admin' && claims.status === 'verified';
+      if (admin) await adminPermission(claims.sub, 'admin:properties.manage'); else provider(claims);
       propertyObjectIdSchema.parse(id);
       const step = propertyDraftStepSchema.parse(unparsedStep);
-      const before = await dependencies.repository.findOwned(claims.sub, id);
+      const before = admin ? await dependencies.repository.findByIdAny(id) : await dependencies.repository.findOwned(claims.sub, id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
-      if (!['draft', 'needs_changes'].includes(before.status)) throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      if (before.status === 'archived' || (!admin && !['draft', 'needs_changes'].includes(before.status))) throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      const stepData = (result: Parameters<typeof write>[0]) => { const output = data(write(result), admin ? 'admin' : 'provider'); return admin ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output; };
       if (step === 'basic') {
         const input = propertyCoreStepSchema.parse(unparsedInput) as PropertyCoreStep;
-        return data(write(await dependencies.repository.updateCore({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+        return stepData(await dependencies.repository.updateCore({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
       }
       if (step === 'details') {
         const input = propertyDetailsStepSchema.parse(unparsedInput) as PropertyDetailsStep;
-        return data(write(await dependencies.repository.updateDetails({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+        return stepData(await dependencies.repository.updateDetails({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
       }
       if (step === 'price-payment') {
         const input = propertyPricingStepSchema.parse(unparsedInput) as PropertyPricingStep;
-        return data(write(await dependencies.repository.updatePricing({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+        return stepData(await dependencies.repository.updatePricing({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
       }
       if (step === 'features-services') {
         const input = propertyFeaturesServicesStepSchema.parse(unparsedInput) as PropertyFeaturesServicesStep;
-        return data(write(await dependencies.repository.updateFeaturesServices({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+        return stepData(await dependencies.repository.updateFeaturesServices({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
       }
       if (step === 'contact') {
         const input = propertyContactStepSchema.parse(unparsedInput) as PropertyContactStep;
-        return data(write(await dependencies.repository.updateContact({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+        return stepData(await dependencies.repository.updateContact({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
       }
       const input = propertyLocationStepSchema.parse(unparsedInput) as PropertyLocationStep;
-      return data(write(await dependencies.repository.updateLocation({ providerId: claims.sub, id, expectedVersion: input.version, changes: input, before, metadata: metadata(claims, input.reason, context, now()) })));
+      return stepData(await dependencies.repository.updateLocation({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
     },
     async validate(claims, id) {
       provider(claims); propertyObjectIdSchema.parse(id); const result = await dependencies.repository.findOwned(claims.sub, id); if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); return validation(result);

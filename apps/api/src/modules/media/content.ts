@@ -3,9 +3,9 @@ import type { StorageAdapter } from '../uploads/adapters.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import type { PropertyMediaModels } from './models.js';
 
-export function createPropertyMediaContentReader(connection: Connection, models: PropertyMediaModels, storage: StorageAdapter) {
+export function createPropertyMediaContentReader(connection: Connection, models: PropertyMediaModels, storage: StorageAdapter, audience: 'public' | 'admin' = 'public') {
   return async (propertyId: string, mediaId: string) => {
-    const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), active: true, status: 'published', ...unexpiredPropertyFilter() }, { projection: { _id: 1 } });
+    const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), ...(audience === 'public' ? { active: true, status: 'published', ...unexpiredPropertyFilter() } : {}) }, { projection: { _id: 1 } });
     if (!property) return null;
     const media = await models.PropertyMedia.findOne({ _id: mediaId, propertyId, active: true, processingState: 'ready' }).select('+storageKey').lean();
     if (!media) return null;

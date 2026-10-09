@@ -135,6 +135,7 @@ const draftPatch = <T extends z.ZodRawShape>(shape: T) => z.object({
 });
 
 export const propertyCoreStepSchema = draftPatch({
+  imageUrl: z.null().optional(),
   kind: propertyKindSchema.optional(),
   name: localizedTextSchema.optional(),
   slug: propertySlugSchema.optional(),
@@ -232,6 +233,7 @@ export const propertyContactStepSchema = draftPatch({
 export const propertyStepSchema = z.union([propertyCoreStepSchema, propertyLocationStepSchema, propertyDetailsStepSchema, propertyPricingStepSchema, propertyFeaturesServicesStepSchema, propertyContactStepSchema]);
 
 export const propertyDataSchema = z.object({
+  imageUrl: z.union([z.url().max(2048), z.string().max(2048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   id: propertyObjectIdSchema,
   kind: propertyKindSchema,
   name: localizedTextSchema,

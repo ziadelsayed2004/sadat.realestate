@@ -12,7 +12,8 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/provider/properties/:propertyId', operationId: 'getProviderProperty' },
   { method: 'GET', path: '/api/v1/provider/properties', operationId: 'listProviderProperties' },
   { method: 'POST', path: '/api/v1/provider/properties', operationId: 'createProviderProperty' },
-  { method: 'PATCH', path: '/api/v1/provider/properties/:propertyId/steps/:step', operationId: 'saveProviderPropertyStep' }
+  { method: 'PATCH', path: '/api/v1/provider/properties/:propertyId/steps/:step', operationId: 'saveProviderPropertyStep' },
+  { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId/steps/:step', operationId: 'saveAdminPropertyStep' }
   ,{ method: 'POST', path: '/api/v1/provider/properties/:propertyId/submit', operationId: 'submitProviderProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/review', operationId: 'reviewAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/visibility', operationId: 'changeAdminPropertyVisibility' }
@@ -69,8 +70,8 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
     try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.get(claims(response), propertyId), current.requestId)); }
     catch (error) { sendError(request, response, error); }
   });
-  router.patch('/provider/properties/:propertyId/steps/:step', async (request, response) => {
-    try { const { propertyId, step } = propertyStepParamsSchema.parse(request.params); const current = context(request); const input = step === 'basic' ? propertyCoreStepSchema.parse(request.body ?? {}) : step === 'location' ? propertyLocationStepSchema.parse(request.body ?? {}) : step === 'details' ? propertyDetailsStepSchema.parse(request.body ?? {}) : step === 'price-payment' ? propertyPricingStepSchema.parse(request.body ?? {}) : step === 'features-services' ? propertyFeaturesServicesStepSchema.parse(request.body ?? {}) : propertyContactStepSchema.parse(request.body ?? {}); response.status(200).json(toSuccessResponse(await dependencies.service.saveStep(claims(response), propertyId, step, input, current), current.requestId)); }
+  router.patch(['/provider/properties/:propertyId/steps/:step', '/admin/properties/:propertyId/steps/:step'], async (request, response) => {
+    try { const { propertyId, step } = propertyStepParamsSchema.parse(request.params); const current = context(request); const input = step === 'basic' ? propertyCoreStepSchema.parse(request.body ?? {}) : step === 'location' ? propertyLocationStepSchema.parse(request.body ?? {}) : step === 'details' ? propertyDetailsStepSchema.parse(request.body ?? {}) : step === 'price-payment' ? propertyPricingStepSchema.parse(request.body ?? {}) : step === 'features-services' ? propertyFeaturesServicesStepSchema.parse(request.body ?? {}) : propertyContactStepSchema.parse(request.body ?? {}); response.status(200).json(toSuccessResponse(await dependencies.service.saveStep(request.path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : claims(response), propertyId, step, input, current), current.requestId)); }
     catch (error) { sendError(request, response, error); }
   });
   router.post('/provider/properties/:propertyId/submit', async (request, response) => {

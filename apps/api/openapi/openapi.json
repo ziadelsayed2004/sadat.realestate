@@ -11482,6 +11482,536 @@
         "summary": "Create or rename a team department",
         "parameters": []
       }
+    },
+    "/api/v1/admin/properties/{propertyId}/media": {
+      "get": {
+        "operationId": "listAdminPropertyMedia",
+        "summary": "listAdminPropertyMedia",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reordered property media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyMediaListData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Verified administrators with property management permission may edit the selected property. Viewing media requires property view permission. Mutations are audited with the real administrator identity."
+      },
+      "post": {
+        "operationId": "uploadAdminPropertyMedia",
+        "summary": "uploadAdminPropertyMedia",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "x-media-kind",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "image",
+                "floor_plan",
+                "video"
+              ]
+            }
+          },
+          {
+            "name": "x-file-name",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "description": "Display filename; URI-encode non-ASCII characters."
+          },
+          {
+            "name": "x-edit-reason",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "URI-encoded administrative edit reason, 5 to 500 characters."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "application/pdf": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "video/mp4": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Uploaded property media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyMediaData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Verified administrators with property management permission may edit the selected property. Viewing media requires property view permission. Mutations are audited with the real administrator identity."
+      }
+    },
+    "/api/v1/admin/properties/{propertyId}/media/order": {
+      "patch": {
+        "operationId": "reorderAdminPropertyMedia",
+        "summary": "reorderAdminPropertyMedia",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "x-edit-reason",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "URI-encoded administrative edit reason, 5 to 500 characters."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyMediaOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reordered property media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyMediaListData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Verified administrators with property management permission may edit the selected property. Viewing media requires property view permission. Mutations are audited with the real administrator identity."
+      }
+    },
+    "/api/v1/admin/properties/{propertyId}/media/{assetId}": {
+      "delete": {
+        "operationId": "deleteAdminPropertyMedia",
+        "summary": "deleteAdminPropertyMedia",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "x-edit-reason",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "URI-encoded administrative edit reason, 5 to 500 characters."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted property media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyMediaData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Verified administrators with property management permission may edit the selected property. Viewing media requires property view permission. Mutations are audited with the real administrator identity."
+      }
+    },
+    "/api/v1/admin/properties/{propertyId}/steps/{step}": {
+      "patch": {
+        "operationId": "saveAdminPropertyStep",
+        "summary": "saveAdminPropertyStep",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "step",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "basic",
+                "location",
+                "details",
+                "price-payment",
+                "features-services",
+                "contact"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PropertyCoreStep"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PropertyLocationStep"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PropertyDetailsStep"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PropertyPricingStep"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PropertyFeaturesServicesStep"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PropertyContactStep"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated property draft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Verified administrators with property management permission may edit the selected property. Viewing media requires property view permission. Mutations are audited with the real administrator identity."
+      }
+    },
+    "/api/v1/admin/properties/{propertyId}/media/{assetId}/content": {
+      "get": {
+        "operationId": "getAdminPropertyMediaContent",
+        "summary": "Preview ready property media with administrative view permission, including unpublished properties",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full media content",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Administrative property view permission required"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -13921,9 +14451,6 @@
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
           },
-          "body": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
           "altText": {
             "$ref": "#/components/schemas/LocalizedText"
           },
@@ -13990,6 +14517,9 @@
             "minimum": 3,
             "maximum": 60,
             "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
+          },
+          "body": {
+            "$ref": "#/components/schemas/LocalizedText"
           }
         }
       },
@@ -14010,9 +14540,6 @@
             "pattern": "^[a-z][a-z0-9_.-]*$"
           },
           "title": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "body": {
             "$ref": "#/components/schemas/LocalizedText"
           },
           "altText": {
@@ -14060,6 +14587,9 @@
             "minimum": 3,
             "maximum": 60,
             "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
+          },
+          "body": {
+            "$ref": "#/components/schemas/LocalizedText"
           }
         }
       },
@@ -14088,16 +14618,6 @@
           },
           "title": {
             "$ref": "#/components/schemas/LocalizedText"
-          },
-          "body": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/LocalizedText"
-              },
-              {
-                "type": "null"
-              }
-            ]
           },
           "altText": {
             "anyOf": [
@@ -14163,6 +14683,16 @@
             "minimum": 3,
             "maximum": 60,
             "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
+          },
+          "body": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -18535,6 +19065,10 @@
             "type": "string",
             "minLength": 5,
             "maxLength": 500
+          },
+          "imageUrl": {
+            "type": "null",
+            "description": "Clear the previous cover URL."
           }
         }
       },
@@ -18781,6 +19315,11 @@
           },
           "deliveryStatus": {
             "$ref": "#/components/schemas/PropertyDeliveryStatus"
+          },
+          "imageUrl": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Saved image preview URL."
           }
         }
       },
@@ -21759,13 +22298,34 @@
             "type": "object",
             "description": "Counts for all report statuses within the selected post scope, independent of status filtering and pagination.",
             "additionalProperties": false,
-            "required": ["total", "open", "in_review", "resolved", "dismissed"],
+            "required": [
+              "total",
+              "open",
+              "in_review",
+              "resolved",
+              "dismissed"
+            ],
             "properties": {
-              "total": { "type": "integer", "minimum": 0 },
-              "open": { "type": "integer", "minimum": 0 },
-              "in_review": { "type": "integer", "minimum": 0 },
-              "resolved": { "type": "integer", "minimum": 0 },
-              "dismissed": { "type": "integer", "minimum": 0 }
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "open": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "in_review": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "resolved": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "dismissed": {
+                "type": "integer",
+                "minimum": 0
+              }
             }
           }
         }
