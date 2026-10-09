@@ -4121,7 +4121,7 @@
     "submitViewing": "إرسال طلب المعاينة",
     "cancel": "إلغاء",
     "close": "إغلاق",
-    "contactValidation": "اكتب رسالة قبل إرسال الطلب.",
+    "contactValidation": "راجع الاسم ورقم الهاتف وموعد التواصل. الرسالة لا تزيد عن 2000 حرف.",
     "viewingValidation": "اختر تاريخاً ووقتاً في المستقبل خلال السنة القادمة.",
     "actionLoading": "جارٍ الإرسال",
     "actionSuccessTitle": "تم إرسال طلبك بنجاح",

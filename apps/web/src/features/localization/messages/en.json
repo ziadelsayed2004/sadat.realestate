@@ -4121,7 +4121,7 @@
     "submitViewing": "Send viewing request",
     "cancel": "Cancel",
     "close": "Close",
-    "contactValidation": "Write a message before sending the request.",
+    "contactValidation": "Check your name, phone number and contact time. The message must be no longer than 2,000 characters.",
     "viewingValidation": "Choose a future date and time within the next year.",
     "actionLoading": "Sending",
     "actionSuccessTitle": "Your request was sent successfully",

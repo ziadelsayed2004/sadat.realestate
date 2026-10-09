@@ -301,6 +301,39 @@ describe('public property details', () => {
     expect(screen.getByRole('button', { name: copy.submitViewing })).toBeDisabled();
   });
 
+  it.each([
+    [409, 'REQUEST_DUPLICATE', 'This request has already been sent. Check your requests in your account.'],
+    [429, 'REQUEST_RATE_LIMITED', 'You have sent several requests recently. Wait a minute, then try again.'],
+    [404, 'REQUEST_NOT_FOUND', 'The property or contact destination is no longer available. Refresh the page or choose the platform team.'],
+    [400, 'VALIDATION_ERROR', 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.'],
+    [500, 'INTERNAL_ERROR', 'The request could not be recorded right now. Please try again shortly.']
+  ] as const)('explains contact failure %s and retains the lead fields', async (status, code, body) => {
+    const copy = getPublicPropertyDetailsCopy('en');
+    const submitContact = vi.fn().mockRejectedValue(new ApiClientError('Request failed', { code: 'HTTP_ERROR', status, apiError: { code, messageKey: 'errors.requestFailed', details: [], requestId: 'contact-failure' } }));
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Seeker' } });
+    fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: '01039938831' } });
+    fireEvent.change(screen.getByLabelText(copy.contactTime, { selector: 'select' }), { target: { value: 'morning' } });
+    fireEvent.change(screen.getByLabelText(copy.messageLabel), { target: { value: 'Please call me' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
+    expect(await screen.findByText(body)).toBeVisible();
+    expect(screen.getByLabelText(copy.phoneNumber)).toHaveValue('01039938831');
+    expect(screen.getByLabelText(copy.messageLabel)).toHaveValue('Please call me');
+    expect(submitContact).toHaveBeenCalledTimes(1);
+  });
+
+  it('validates a malformed phone before making the contact request', async () => {
+    const copy = getPublicPropertyDetailsCopy('en');
+    const submitContact = vi.fn();
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Seeker' } });
+    fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: 'invalid' } });
+    fireEvent.change(screen.getByLabelText(copy.contactTime, { selector: 'select' }), { target: { value: 'morning' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
+    expect(screen.getByText(copy.contactValidation)).toBeVisible();
+    expect(submitContact).not.toHaveBeenCalled();
+  });
+
   it.each(['2000-01-01T10:00', '2099-01-01T10:00', ''])('rejects an out-of-range viewing date %s without losing the note', async requestedAt => {
     const submitViewing = vi.fn();
     const copy = getPublicPropertyDetailsCopy('en');

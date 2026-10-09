@@ -4,6 +4,7 @@ import type {
   PublicPropertyMedia,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
+import { requestCreateSchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
@@ -490,11 +491,13 @@ function publicOnlyDetails(data: PublicPropertyDetailsData): PublicPropertyDetai
 function ActionFeedback({
   state,
   copy,
-  url
+  url,
+  message
 }: {
   readonly state: Exclude<ActionState, 'idle' | 'submitting'>;
   readonly copy: PublicPropertyDetailsCopy;
   readonly url?: string | undefined;
+  readonly message?: string | undefined;
 }) {
   if (state === 'success') {
     return <UxStateView state="success" title={copy.actionSuccessTitle} message={copy.actionSuccessBody} />;
@@ -502,7 +505,18 @@ function ActionFeedback({
   if (state === 'permission') {
     return <UxStateView state="permission" title={copy.actionPermissionTitle} message={copy.actionPermissionBody}><a href={loginUrl(url)}>{copy.actionPermissionLink}</a></UxStateView>;
   }
-  return <UxStateView state="error" title={copy.actionErrorTitle} message={copy.actionErrorBody} />;
+  return <UxStateView state="error" title={copy.actionErrorTitle} message={message ?? copy.actionErrorBody} />;
+}
+
+function contactFailureMessage(error: unknown, locale: SupportedLocale): string | undefined {
+  if (!(error instanceof ApiClientError)) return undefined;
+  const arabic = locale === 'ar';
+  if (error.apiError?.code === 'REQUEST_DUPLICATE') return arabic ? 'سبق إرسال نفس الطلب. راجع طلباتك من حسابك.' : 'This request has already been sent. Check your requests in your account.';
+  if (error.status === 429) return arabic ? 'أرسلت عدة طلبات في وقت قصير. انتظر دقيقة ثم حاول مرة أخرى.' : 'You have sent several requests recently. Wait a minute, then try again.';
+  if (error.status === 404) return arabic ? 'العقار أو جهة التواصل لم تعد متاحة. حدّث الصفحة أو اختر إدارة المنصة.' : 'The property or contact destination is no longer available. Refresh the page or choose the platform team.';
+  if (error.status === 400 || error.status === 422) return arabic ? 'راجع الاسم ورقم الهاتف وموعد التواصل. الرسالة لا تزيد عن 2000 حرف.' : 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.';
+  if (error.status !== undefined && error.status >= 500) return arabic ? 'تعذر تسجيل الطلب حالياً. حاول مرة أخرى بعد قليل.' : 'The request could not be recorded right now. Please try again shortly.';
+  return undefined;
 }
 
 function RequestPanel({
@@ -527,6 +541,7 @@ function RequestPanel({
   const [contactChannel, setContactChannel] = useState<'platform' | 'provider'>('platform');
   const [contactValidation, setContactValidation] = useState(false);
   const [contactState, setContactState] = useState<ActionState>('idle');
+  const [contactError, setContactError] = useState<string>();
   const [viewingOpen, setViewingOpen] = useState(false);
   const [requestedAt, setRequestedAt] = useState('');
   const timezone = EGYPT_TIME_ZONE;
@@ -558,6 +573,7 @@ function RequestPanel({
       return;
     }
     setContactValidation(false);
+    setContactError(undefined);
     setContactState('submitting');
     const trimmedMessage = message.trim();
     const input: PublicContactRequestInput = {
@@ -571,11 +587,17 @@ function RequestPanel({
       ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
       locale
     };
+    if (!requestCreateSchema.safeParse({ type: 'contact', payload: input }).success) {
+      setContactValidation(true);
+      setContactState('idle');
+      return;
+    }
     try {
       await actions.submitContact(input);
       setContactState('success');
       onContactSubmitted?.();
     } catch (error) {
+      setContactError(contactFailureMessage(error, locale));
       setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
     }
   };
@@ -626,15 +648,16 @@ function RequestPanel({
           {data.source.organizationId ? <CustomSelect name="contactChannel" value={contactChannel} onChange={value => setContactChannel(value as 'platform' | 'provider')} ariaLabel={locale === 'ar' ? 'جهة التواصل' : 'Send inquiry to'} options={[{ value: 'platform', label: locale === 'ar' ? 'إدارة عقارات السادات' : 'Sadat Real Estate team' }, { value: 'provider', label: localizedText(data.source.name, locale) ?? (locale === 'ar' ? 'الشركة مباشرة' : 'Company directly') }]} /> : null}
           <p>{contactChannel === 'provider' ? (locale === 'ar' ? 'يصل طلبك إلى الشركة مباشرة وتتابع حالته من حسابك.' : 'The company receives your inquiry directly. Track it in your account.') : (locale === 'ar' ? 'تستقبل إدارة المنصة طلبك وتتولى المتابعة كوسيط.' : 'The platform team receives your inquiry and follows up as an intermediary.')}</p>
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{copy.fullName}</label>
-          <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
+          <input id="public-property-contact-name" name="fullName" required maxLength={160} value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{copy.phoneNumber}</label>
-          <input id="public-property-contact-phone" name="phone" type="tel" required value={phone} placeholder={copy.phoneNumber} onChange={event => setPhone(event.target.value)} />
+          <input id="public-property-contact-phone" name="phone" type="tel" required maxLength={40} value={phone} placeholder={copy.phoneNumber} onChange={event => setPhone(event.target.value)} />
           <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} required placeholder={copy.contactTime} ariaLabel={copy.contactTime} options={[{ value: 'morning', label: copy.morning }, { value: 'evening', label: copy.evening }]} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-message">{copy.messageLabel}</label>
           <textarea
             id="public-property-contact-message"
             name="message"
             rows={5}
+            maxLength={2000}
             value={message}
             placeholder={copy.extraMessage}
             onChange={event => setMessage(event.target.value)}
@@ -642,7 +665,7 @@ function RequestPanel({
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
           {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
-          {contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
+          {contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} message={contactError} /> : null}
         </form>
 
         {platformContact.whatsappNumber ? <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText, platformContact.whatsappNumber)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><WhatsAppIcon /></span><span>{locale === 'ar' ? 'تواصل مع المنصة عبر واتساب' : 'Contact the platform on WhatsApp'}</span></a> : null}
