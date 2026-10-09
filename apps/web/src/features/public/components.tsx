@@ -472,22 +472,26 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
   inline-size: 3.25rem;
   block-size: 3.25rem;
   border-radius: 50%;
-  background: #146b46;
+  background: #25d366;
   color: #fff;
   box-shadow: 0 4px 14px #17243b33;
   transition: background-color 180ms ease-in-out, transform 180ms ease-in-out;
 }
 .public-site-footer .public-site-footer__floating-whatsapp:hover,
-.public-site-footer .public-site-footer__floating-whatsapp:focus-visible { background: #0d5035; color: #fff; transform: translateY(-2px); }
+.public-site-footer .public-site-footer__floating-whatsapp:focus-visible { background: #25d366; color: #fff; transform: translateY(-2px); }
 .public-site-footer__floating-whatsapp:focus-visible { outline: 3px solid #d3a445; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .public-site-footer__floating-whatsapp { transition: none; } }
 .public-site-footer a:hover,.public-site-footer a:focus-visible{color:#f3d58c}
 .public-site-footer a:focus-visible{outline:2px solid #f3d58c;outline-offset:3px}
-.public-site-footer .public-site-footer__social a{display:inline-flex;align-items:center;justify-content:center;inline-size:2.75rem;block-size:2.75rem}
-.public-site-footer .public-site-footer__social a:hover,.public-site-footer .public-site-footer__social a:focus-visible{background:#365046;color:#fff}
+.public-site-footer .public-site-footer__social a{display:inline-flex;align-items:center;justify-content:center;inline-size:2.75rem;block-size:2.75rem;color:#fff;background:var(--social-brand,#365046);border:0}
+.public-site-footer .public-site-footer__social a:hover,.public-site-footer .public-site-footer__social a:focus-visible{background:var(--social-brand,#365046);color:#fff}
+.public-site-footer .public-site-footer__social a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.public-site-footer .public-site-footer__social a:active{box-shadow:inset 0 0 0 2px rgb(255 255 255/.5)}
+.public-site-footer .public-site-footer__social a[aria-label="Facebook"]{--social-brand:#0866ff}
+.public-site-footer .public-site-footer__social a[aria-label="Instagram"]{--social-brand:radial-gradient(circle at 30% 110%,#ffdc80 0%,#fcaf45 20%,#f77737 35%,#e1306c 55%,#c13584 70%,#833ab4 85%,#405de6 100%)}
+.public-site-footer .public-site-footer__social a[aria-label="WhatsApp"]{--social-brand:#25d366}
 .public-site-footer .public-site-footer__social svg{fill:none;stroke:currentColor}
 .public-site-footer .public-site-footer__social a[aria-label="Facebook"] svg{fill:currentColor;stroke:none}
-.public-site-footer .public-site-footer__social a[aria-label="WhatsApp"]{color:#fff;background:#146b46}
 .public-homepage__whatsapp-action{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-block-size:2.75rem}
 .public-homepage__whatsapp-action svg,.public-property-details__button-icon svg{inline-size:1.25rem;block-size:1.25rem;flex-shrink:0}
 .public-developer-profile__whatsapp-button{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-block-size:2.75rem;text-decoration:none}
