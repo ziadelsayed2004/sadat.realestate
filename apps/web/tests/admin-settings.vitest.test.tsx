@@ -126,4 +126,55 @@ describe('Admin platform, contact, and social settings', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Version conflict' })).toBeInTheDocument());
   });
+
+  it('keeps the saved name visible until the server confirms a change', async () => {
+    let finish: ((value: AdminSettingsData) => void) | undefined;
+    const requests: unknown[] = [];
+    renderWithLocale(<AdminSettings path="/admin/settings" locale="en" session={session} initialData={settings()} update={async (_namespace, input) => { requests.push(input); return new Promise(resolve => { finish = resolve; }); }} />, { locale: 'en' });
+    expect(screen.getByTestId('saved-platform-name-en')).toHaveTextContent('Sadat Real Estate');
+    fireEvent.change(screen.getByLabelText('English', { selector: '#admin-settings-platform_name-en' }), { target: { value: 'New platform name' } });
+    expect(screen.getByTestId('saved-platform-name-en')).toHaveTextContent('Sadat Real Estate');
+    expect(screen.getByRole('status')).toHaveTextContent('changes that have not been saved');
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Rename platform details' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    await waitFor(() => expect(requests).toHaveLength(1));
+    expect(requests[0]).toMatchObject({ expectedVersion: 4, values: { platform_name: { ar: 'منصة سادات', en: 'New platform name' }, approved_unknown_value: 'preserved' } });
+    expect(screen.getByTestId('saved-platform-name-en')).toHaveTextContent('Sadat Real Estate');
+    finish?.(adminSettingsDataSchema.parse({ ...settings(), version: 5, values: { ...settings().values, platform_name: { ar: 'منصة سادات', en: 'New platform name' } } }));
+    await waitFor(() => expect(screen.getByTestId('saved-platform-name-en')).toHaveTextContent('New platform name'));
+    expect(screen.getByRole('status')).toHaveTextContent('Settings saved.');
+  });
+
+  it('offers the original website name explicitly and discards edits without writing settings', () => {
+    let writes = 0;
+    renderWithLocale(<AdminSettings path="/admin/settings" locale="ar" session={session} initialData={settings()} update={async () => { writes += 1; return settings(); }} />, { locale: 'ar' });
+    fireEvent.click(screen.getByRole('button', { name: 'استخدام الاسم الأساسي' }));
+    expect(screen.getByLabelText('العربية', { selector: '#admin-settings-platform_name-ar' })).toHaveValue('عقارات السادات');
+    expect(screen.getByTestId('saved-platform-name-ar')).toHaveTextContent('منصة سادات');
+    fireEvent.click(screen.getByRole('button', { name: 'إلغاء تعديلاتي' }));
+    expect(screen.getByLabelText('العربية', { selector: '#admin-settings-platform_name-ar' })).toHaveValue('منصة سادات');
+    expect(screen.getByRole('button', { name: 'إلغاء تعديلاتي' })).toBeDisabled();
+    expect(writes).toBe(0);
+  });
+
+  it('preserves saved custom choices and other values when editing the name', async () => {
+    const initial = adminSettingsDataSchema.parse({ ...settings(), values: { ...settings().values, currency: 'CUSTOM', timezone: 'Europe/London', default_locale: 'en' } });
+    let input: unknown;
+    renderWithLocale(<AdminSettings path="/admin/settings/platform" locale="en" session={session} initialData={initial} update={async (_namespace, next) => { input = next; return { ...initial, values: next.values, version: 5 }; }} />, { locale: 'en' });
+    expect(screen.getByLabelText('Currency')).not.toBeVisible();
+    expect(screen.getByLabelText('Currency')).toHaveValue('CUSTOM');
+    expect(screen.getByLabelText('Timezone')).toHaveValue('Europe/London');
+    fireEvent.change(screen.getByLabelText('English', { selector: '#admin-settings-platform_name-en' }), { target: { value: 'New name' } });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Rename only' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    await waitFor(() => expect(input).toMatchObject({ values: { currency: 'CUSTOM', timezone: 'Europe/London', default_locale: 'en', approved_unknown_value: 'preserved' } }));
+    expect(screen.getByRole('link', { name: 'Website title in search results' })).toHaveAttribute('href', '/admin/settings/seo?lang=en');
+  });
+
+  it('does not present the original website name as a previously saved setting when none exists', async () => {
+    renderWithLocale(<AdminSettings path="/admin/settings" locale="en" session={session} load={async () => { throw new ApiClientError('missing', { status: 404, code: 'HTTP_ERROR' }); }} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('saved-platform-name-en')).toHaveTextContent('No name has been saved'));
+    expect(screen.getByLabelText('English', { selector: '#admin-settings-platform_name-en' })).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'Use original name' })).toBeEnabled();
+  });
 });

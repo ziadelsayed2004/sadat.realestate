@@ -1,6 +1,7 @@
 import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { AdminSettingsNamespace, SupportedLocale } from '@sadat-real-estate/contracts';
 import type { AdminSettingsState } from './views.tsx';
+import { settingsHelp } from './help.ts';
 
 export interface AdminSettingsCopy {
   readonly eyebrow: string;
@@ -183,7 +184,9 @@ const extendedFieldCopy: Readonly<Record<SupportedLocale, Readonly<Record<string
   }
 };
 
-export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy {
+export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy & ReturnType<typeof settingsHelp> {
   const copy = copyByLocale[locale];
-  return localizeCopy('admin_settings/copy#getAdminSettingsCopy', locale, { ...copy, fields: { ...copy.fields, ...extendedFieldCopy[locale] }, selectPlaceholder: locale === 'ar' ? 'اختر قيمة' : 'Select a value' });
+  const help = settingsHelp(locale);
+  const choices = locale === 'ar' ? { option_cairo: 'توقيت القاهرة', option_riyadh: 'توقيت الرياض', option_dubai: 'توقيت دبي', option_utc: 'التوقيت العالمي', option_egp: 'جنيه مصري', option_usd: 'دولار أمريكي', option_eur: 'يورو', option_sar: 'ريال سعودي', option_aed: 'درهم إماراتي' } : { option_cairo: 'Cairo time', option_riyadh: 'Riyadh time', option_dubai: 'Dubai time', option_utc: 'Universal time', option_egp: 'Egyptian pound', option_usd: 'US dollar', option_eur: 'Euro', option_sar: 'Saudi riyal', option_aed: 'UAE dirham' };
+  return localizeCopy('admin_settings/copy#getAdminSettingsCopy', locale, { ...copy, ...help, fields: { ...copy.fields, ...extendedFieldCopy[locale], ...choices }, selectPlaceholder: locale === 'ar' ? 'اختر قيمة' : 'Select a value', directionNote: help.guide.languageHelp });
 }

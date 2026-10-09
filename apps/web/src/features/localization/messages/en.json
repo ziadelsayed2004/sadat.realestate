@@ -2103,15 +2103,15 @@
       "display": "Display settings"
     },
     "descriptions": {
-      "platform": "Update approved platform data while preserving versioning and auditability.",
-      "contact": "Maintain public contact data from the approved administrative projection.",
-      "social": "Manage optional social links from the approved settings source.",
-      "properties": "Edit only the property settings present in the approved administrative projection.",
-      "requests": "Edit existing request settings without inventing operational rules.",
-      "advertising": "Manage approved advertising values without universal prices or payment claims.",
-      "seo": "Manage approved SEO values while respecting their publication state.",
-      "privacy-security": "Manage approved privacy and security values without exposing secrets or private data.",
-      "display": "Manage approved display values with versioning and auditability."
+      "platform": "Review the saved platform name and office details, edit the fields you need, then save your changes.",
+      "contact": "Contact numbers, map and social links used by visitors.",
+      "social": "Links to the platform’s social media pages.",
+      "properties": "Property review, publication, image limits and contact visibility choices.",
+      "requests": "Review the customer request settings available to your account.",
+      "advertising": "Advertising placements, image sizes, quote validity and payment proof methods.",
+      "seo": "The site title and description in search results, canonical address and indexing settings.",
+      "privacy-security": "Customer data, document privacy and administrator account security settings.",
+      "display": "Language, page direction, result count, population counter and community post settings."
     },
     "fields": {
       "platform_name": "Platform name",
@@ -2185,7 +2185,16 @@
       "option_rtl": "RTL (right to left)",
       "option_ltr": "LTR (left to right)",
       "option_manual_review": "Send to manual review",
-      "option_reject": "Reject automatically"
+      "option_reject": "Reject automatically",
+      "option_cairo": "Cairo time",
+      "option_riyadh": "Riyadh time",
+      "option_dubai": "Dubai time",
+      "option_utc": "Universal time",
+      "option_egp": "Egyptian pound",
+      "option_usd": "US dollar",
+      "option_eur": "Euro",
+      "option_sar": "Saudi riyal",
+      "option_aed": "UAE dirham"
     },
     "locales": {
       "ar": "Arabic",
@@ -2237,7 +2246,44 @@
         "body": "No matching settings namespace exists."
       }
     },
-    "directionNote": "English LTR — platform settings are approved for desktop.",
+    "directionNote": "Enter text in the language you want to use. An empty field means no text is saved in that language.",
+    "guide": {
+      "original": "Original website name",
+      "savedName": "Name saved in settings",
+      "originalHelp": "This is the familiar website name. You can use it in the fields below.",
+      "useOriginal": "Use original name",
+      "savedHelp": "This is the last saved value. It stays visible while you edit the fields.",
+      "noSavedName": "No name has been saved here in this language yet.",
+      "restore": "Discard my edits",
+      "history": "Previous changes",
+      "historyHelp": "For values older than the current saved name, open the action log and select “Platform settings” to compare the data before and after each change.",
+      "unsaved": "You have changes that have not been saved.",
+      "savedStatus": "You are viewing the latest saved values.",
+      "nameSection": "Platform name and description",
+      "officeSection": "Office details",
+      "advanced": "Additional options",
+      "advancedHelp": "Language, currency, timezone and any other saved settings.",
+      "technical": "Save details",
+      "viewSite": "View website",
+      "viewSearch": "Website title in search results",
+      "nameNotice": "This field stores the platform’s descriptive name. It does not replace text inside the logo image. The search result title has separate settings.",
+      "languageHelp": "Enter text in the language you want to use. An empty field means no text is saved in that language.",
+      "before": "Currently saved",
+      "notSet": "Not set",
+      "fieldHelp": {
+        "platform_name": "The full platform name, such as “Sadat Real Estate”.",
+        "short_name": "An optional shorter version of the name, such as “Sadat”.",
+        "description": "A short introduction to the platform and its services.",
+        "city": "The city where the platform operates.",
+        "timezone": "The timezone used for office hours, such as Cairo.",
+        "currency": "The primary price currency, such as Egyptian pounds.",
+        "default_locale": "The preferred starting language stored in settings.",
+        "primary_email": "The administration email stored in platform details.",
+        "primary_phone": "The office number stored here. Public call buttons are managed in Contact information.",
+        "office_address": "The office or company address.",
+        "working_hours": "Working days, opening and closing times."
+      }
+    },
     "selectPlaceholder": "Select a value"
   },
   "admin_user_guide/copy#getUserGuideCopy": {
