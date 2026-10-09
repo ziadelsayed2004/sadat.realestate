@@ -79,6 +79,25 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin request administration contracts and views', () => {
+  it.each(['ar', 'en'] as const)('accepts a reviewed contact request with a reason and updates its displayed state in %s', async locale => {
+    window.history.replaceState({}, '', `/admin/contact-requests?lang=${locale}`);
+    const reviewed = requestDataSchema.parse({ ...request, status: 'under_review', version: 3, availableActions: ['contact', 'start_progress'] });
+    const accepted = requestDataSchema.parse({ ...reviewed, status: 'in_progress', version: 4, availableActions: ['resolve', 'needs_information', 'cancel'] });
+    const transition = vi.fn().mockResolvedValue(accepted);
+    const copy = getAdminRequestsCopy(locale);
+    renderWithLocale(<AdminRequests locale={locale} session={session} initialRequests={{ ...requestList, items: [reviewed] }} transition={transition} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'قبول طلب التواصل وبدء المتابعة' : 'Accept contact request and start follow-up' }));
+    expect(transition).not.toHaveBeenCalled();
+    expect(screen.getByLabelText(copy.transitionReason)).toHaveFocus();
+    expect(screen.getByLabelText(copy.transition)).toHaveValue('start_progress');
+    fireEvent.change(screen.getByLabelText(copy.transitionReason), { target: { value: 'Accept customer follow-up' } });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'قبول الطلب وبدء المتابعة' : 'Accept and start follow-up' }));
+    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_progress', expectedVersion: 3, reason: 'Accept customer follow-up' }, undefined));
+    await waitFor(() => expect(screen.queryByRole('button', { name: locale === 'ar' ? 'قبول طلب التواصل وبدء المتابعة' : 'Accept contact request and start follow-up' })).not.toBeInTheDocument());
+    expect(screen.getByTestId('admin-request-detail')).toHaveTextContent(copy.statusLabel.in_progress);
+  });
+
   it.each(['ar', 'en'] as const)('links directly to the published property and its administrative record in %s', locale => {
     const property = { id: request.propertyId!, slug: 'requested-property', kind: 'property' as const, name: { ar: 'عقار العميل', en: 'Customer property' }, transactionType: 'sale' as const, sourceType: 'individual_broker' as const, publicCode: 'SDT-1234' };
     const copy = getAdminRequestsCopy(locale);

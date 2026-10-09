@@ -31,7 +31,7 @@ test('continues review through contact and resolution while exposing only delibe
   const repository = createInMemoryRequestRepository(); const service = createRequestService({ authorization: { authorize: async () => true }, repository });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Contact please' } });
   const reviewed = await service.transition(admin, created.id, { transition: 'start_review', reason: 'Private administration reason', customerMessage: 'We are reviewing your request', expectedVersion: 0 });
-  assert.deepEqual(reviewed.availableActions, ['contact', 'needs_information', 'cancel']);
+  assert.deepEqual(reviewed.availableActions, ['start_progress', 'contact', 'needs_information', 'cancel']);
   const contacted = await service.transition(admin, created.id, { transition: 'contact', reason: 'Called the customer', customerMessage: 'Our team contacted you', expectedVersion: 1 });
   const resolved = await service.transition(admin, created.id, { transition: 'resolve', reason: 'Follow-up completed', expectedVersion: contacted.version });
   const own = await service.get(seeker, resolved.id);
@@ -68,4 +68,28 @@ test('allows provider-owned customer requests without seeker impersonation or ma
   assert.equal(created.payload.sourceNote, 'Provider showroom lead');
   await assert.rejects(() => service.create(seeker, { type: 'provider_customer', payload: { firstName: 'Mona', lastName: 'Hassan', phone: '+201000000000' } }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
   await assert.rejects(() => service.create(provider, { type: 'provider_customer', payload: { firstName: 'Mona', lastName: 'Hassan', phone: '+201000000000', status: 'resolved' } }), /Unrecognized key/);
+});
+
+test('accepts a contact request under review as follow-up without claiming a call occurred', async () => {
+  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
+  const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
+  const reviewed = await service.transition(admin, created.id, { transition: 'start_review', reason: 'Review started', expectedVersion: created.version });
+  await assert.rejects(service.transition(admin, created.id, { transition: 'start_progress', reason: 'Accepted for follow-up', expectedVersion: created.version }), error => (error as { code?: string }).code === 'REQUEST_VERSION_CONFLICT');
+  const accepted = await service.transition(admin, created.id, { transition: 'start_progress', reason: 'Accepted for follow-up', customerMessage: 'Your request was accepted', expectedVersion: reviewed.version });
+  assert.equal(accepted.status, 'in_progress');
+  assert.deepEqual(accepted.customerUpdates?.map(item => item.status), ['under_review', 'in_progress']);
+  assert.equal((await service.get(seeker, created.id)).customerUpdates?.at(-1)?.message, 'Your request was accepted');
+});
+
+test('contact acceptance remains restricted to administrative management and does not expand other request workflows', async () => {
+  const repository = createInMemoryRequestRepository();
+  const service = createRequestService({ repository, authorization: { authorize: async (_id, permission) => permission !== 'admin:requests.manage' } });
+  const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
+  assert.deepEqual((await service.get(admin, created.id)).availableActions, []);
+  await assert.rejects(service.transition(admin, created.id, { transition: 'start_progress', expectedVersion: created.version, reason: 'Accepted for follow-up' }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
+  const manager = createRequestService({ repository, authorization: { authorize: async () => true } });
+  const search = await manager.create(seeker, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'] } });
+  const reviewed = await manager.transition(admin, search.id, { transition: 'start_review', expectedVersion: search.version, reason: 'Review search criteria' });
+  assert.equal(reviewed.availableActions.includes('start_progress'), false);
+  await assert.rejects(manager.transition(admin, search.id, { transition: 'start_progress', expectedVersion: reviewed.version, reason: 'Start follow-up' }), error => (error as { code?: string }).code === 'REQUEST_INVALID_STATE');
 });
