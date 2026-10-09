@@ -1,7 +1,7 @@
 import { WhatsAppIcon, usePublicContact } from './contact.tsx';
 import { getWhatsAppLink, getWhatsAppUrl } from '../frontend_foundation/config.ts';
 import { createPublicPropertyDetailsActions, type PublicPropertyDetailsActions } from './details-data.ts';
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   PublicOrganizationProfile,
   PublicOrganizationProperty,
@@ -12,7 +12,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
+import { PublicAuthRoleContext, PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   defaultPublicDeveloperProfileLoader,
   publicDeveloperProfileSlugFromUrl,
@@ -366,14 +366,15 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
 }
 
 function ContactSection({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
-  const [state, setState] = useState<'idle' | 'submitting' | 'success' | 'permission' | 'error'>('idle');
+  const [state, setState] = useState<'idle' | 'submitting' | 'success' | 'permission' | 'forbidden' | 'error'>('idle');
+  const role = useContext(PublicAuthRoleContext);
   const [requestId, setRequestId] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const feedback = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
-    if (state === 'success' || state === 'permission' || state === 'error') feedback.current?.scrollIntoView?.({ block: 'nearest' });
+    if (state === 'success' || state === 'permission' || state === 'forbidden' || state === 'error') feedback.current?.scrollIntoView?.({ block: 'nearest' });
   }, [state]);
   const [channel, setChannel] = useState<'provider' | 'platform'>('provider');
   const platform = usePublicContact();
@@ -396,7 +397,7 @@ function ContactSection({ data, locale, copy, actions }: { readonly data: Public
       });
       setRequestId(result.id); setState('success');
     } catch (error) {
-      setState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+      setState(error instanceof ApiClientError && error.status === 401 ? 'permission' : error instanceof ApiClientError && error.status === 403 ? 'forbidden' : 'error');
     }
   }
   return (
@@ -404,7 +405,7 @@ function ContactSection({ data, locale, copy, actions }: { readonly data: Public
       <h2 id="developer-contact-title">{copy.profileInquiryTitle(companyName)}</h2>
       <form className="public-developer-profile__inquiry" onSubmit={event => { void submit(event); }} onChange={() => { if (state === 'success') setState('idle'); }} aria-busy={state === 'submitting'}>
         <label className="public-developer-profile__inquiry-wide"><span>{ar ? 'جهة التواصل' : 'Send inquiry to'}</span><CustomSelect name="contactChannel" value={channel} onChange={value => { setChannel(value as 'provider' | 'platform'); setState('idle'); }} ariaLabel={ar ? 'جهة التواصل' : 'Send inquiry to'} options={[{ value: 'provider', label: companyName }, { value: 'platform', label: ar ? 'إدارة عقارات السادات' : 'Sadat Real Estate team' }]} /></label>
-        <p className="public-developer-profile__inquiry-wide">{channel === 'provider' ? (ar ? 'يصل الطلب إلى الشركة مباشرة، ويمكنك متابعة حالته من حسابك.' : 'The company receives your inquiry directly. Track its progress in your account.') : (ar ? 'تستقبل إدارة المنصة طلبك وتتولى المتابعة مع الشركة كوسيط.' : 'The platform receives your inquiry and follows up with the company as an intermediary.')}</p>
+        <p className="public-developer-profile__inquiry-wide">{channel === 'provider' ? (ar ? 'يصل الاستفسار للشركة. تابع الرد من حسابك.' : 'Your inquiry goes to the company. Track it in your account.') : (ar ? 'تستقبل إدارة المنصة الاستفسار وتتابع مع الشركة.' : 'The platform follows up with the company for you.')}</p>
         <label><span>{copy.fieldName} *</span><input name="name" autoComplete="name" required maxLength={160} value={fullName} onChange={event => setFullName(event.target.value)} /></label>
         <label><span>{copy.fieldPhone} *</span><input name="phone" type="tel" dir="ltr" autoComplete="tel" required maxLength={40} placeholder="010xxxxxxxx" value={phone} onChange={event => setPhone(event.target.value)} /></label>
         {data.projects.length ? <label>{copy.profileProjects}<CustomSelect name="projectId" defaultValue="" placeholder={ar ? 'اختياري' : 'Optional'} ariaLabel={copy.profileProjects} options={data.projects.map(project => ({ value: project.id, label: localizedText(project.name, locale) ?? project.slug }))} /></label> : null}
@@ -414,9 +415,10 @@ function ContactSection({ data, locale, copy, actions }: { readonly data: Public
           <button type="submit" disabled={state === 'submitting' || state === 'success'}>{state === 'submitting' ? (ar ? 'جارٍ الإرسال…' : 'Sending…') : copy.sendInquiry}<ProfileIcon name="arrow" /></button>
           {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="public-developer-profile__whatsapp-button"><ProfileIcon name="whatsapp" />{channel === 'provider' ? copy.contactWhatsapp : (ar ? 'واتساب المنصة' : 'Platform WhatsApp')}</a> : null}
         </div>
-        {state === 'success' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="status" aria-live="polite">{ar ? 'تم إرسال طلبك بنجاح.' : 'Your inquiry was sent successfully.'} <a href={`/seeker/requests/${requestId}?lang=${locale}`}>{ar ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
-        {state === 'permission' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'إرسال الطلب يحتاج حساب باحث عن عقار. يمكنك أيضاً التواصل بالواتساب المتاح.' : 'Use a property seeker account to submit an inquiry, or contact the available WhatsApp number.'} <a href={`/auth/login?lang=${locale}`}>{ar ? 'تسجيل الدخول' : 'Sign in'}</a></p> : null}
-        {state === 'error' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'تعذر إرسال الطلب. تحقق من رقم الهاتف وحاول مرة أخرى؛ بياناتك محفوظة في النموذج.' : 'Unable to send. Check the phone number and retry; your form entries are still here.'}</p> : null}
+        {state === 'success' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="status" aria-live="polite">{ar ? 'تم إرسال طلبك بنجاح.' : 'Your inquiry was sent successfully.'} <a href={`${role === 'provider' ? `/provider/customer-requests?search=${requestId}&` : `/seeker/requests/${requestId}?`}lang=${locale}`}>{ar ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
+        {state === 'permission' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'سجّل الدخول لإرسال الاستفسار، أو تواصل عبر واتساب.' : 'Sign in to send an inquiry, or use WhatsApp.'} <a href={`/auth/login?lang=${locale}`}>{ar ? 'تسجيل الدخول' : 'Sign in'}</a></p> : null}
+        {state === 'forbidden' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'حسابك لا يملك صلاحية إرسال الطلب. لم يتم تسجيل خروجك.' : 'Your account cannot send this inquiry. You are still signed in.'}</p> : null}
+        {state === 'error' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'تعذر الإرسال. راجع الهاتف وحاول مجددًا؛ بياناتك محفوظة.' : 'Could not send. Check the phone and retry; your entries are kept.'}</p> : null}
       </form>
     </section>
   );

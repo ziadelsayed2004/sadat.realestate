@@ -197,3 +197,16 @@ describe('Provider customer requests', () => {
     expect(screen.getByText(getProviderCustomerRequestsCopy('en').emptyBody)).toBeInTheDocument();
   });
 });
+
+it('opens the tracked inquiry by exact ID and distinguishes sent from incoming inquiries', async () => {
+  window.history.replaceState({}, '', `/provider/customer-requests?search=${requestId}&lang=en`);
+  const sent = request({ type: 'contact', creatorId: providerId, providerId: 'c'.repeat(24), payload: { fullName: 'Sender', phone: '01012345678', message: 'Question', contactChannel: 'provider' }, availableActions: ['cancel'], customerUpdates: [{ status: 'under_review', message: 'Company reply', authorRole: 'provider', createdAt: '2026-10-09T09:00:00.000Z' }] });
+  const load = vi.fn().mockResolvedValue({ ...data, items: [sent] });
+  try {
+    renderWithLocale(<ProviderCustomerRequests locale="en" session={session} load={load} />, { locale: 'en' });
+    expect(await screen.findByText('Sent inquiry')).toBeInTheDocument();
+    expect(load).toHaveBeenCalledWith(expect.objectContaining({ search: requestId }), expect.any(AbortSignal));
+    fireEvent.click(screen.getByText('Inquiry details'));
+    expect(screen.getByText('Company reply')).toBeVisible();
+  } finally { window.history.replaceState({}, '', '/'); }
+});

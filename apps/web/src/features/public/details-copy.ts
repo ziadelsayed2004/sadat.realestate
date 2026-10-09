@@ -52,6 +52,7 @@ export interface PublicPropertyDetailsCopy {
   readonly actionSuccessBody: string;
   readonly actionPermissionTitle: string;
   readonly actionPermissionBody: string;
+  readonly actionForbiddenBody: string;
   readonly actionPermissionLink: string;
   readonly actionErrorTitle: string;
   readonly actionErrorBody: string;
@@ -143,7 +144,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     actionSuccessTitle: 'تم إرسال طلبك بنجاح',
     actionSuccessBody: 'تم حفظ طلبك في النظام للمراجعة.',
     actionPermissionTitle: 'يلزم تسجيل الدخول',
-    actionPermissionBody: 'سجّل الدخول بحساب باحث عن عقار لإرسال الطلب.',
+    actionPermissionBody: 'سجّل الدخول لإرسال الطلب.',
+    actionForbiddenBody: 'حسابك لا يملك صلاحية هذا الإجراء. لم يتم تسجيل خروجك.',
     actionPermissionLink: 'تسجيل الدخول',
     actionErrorTitle: 'تعذر إرسال الطلب',
     actionErrorBody: 'تحقق من الاتصال وحاول مرة أخرى.',
@@ -233,7 +235,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     actionSuccessTitle: 'Your request was sent successfully',
     actionSuccessBody: 'Your request was saved for review.',
     actionPermissionTitle: 'Sign-in required',
-    actionPermissionBody: 'Sign in with a property-seeker account to send a request.',
+    actionPermissionBody: 'Sign in to send a request.',
+    actionForbiddenBody: 'Your account cannot perform this action. You are still signed in.',
     actionPermissionLink: 'Sign in',
     actionErrorTitle: 'Request could not be sent',
     actionErrorBody: 'Check the connection and try again.',

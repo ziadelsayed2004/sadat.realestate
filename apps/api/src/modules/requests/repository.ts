@@ -175,7 +175,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
       if (query.source) filter.source = query.source;
       if (query.assignedTo) filter.assignedTo = toObjectId(query.assignedTo);
       if (scope?.seekerId) filter.seekerId = toObjectId(scope.seekerId);
-      if (scope?.providerId) filter.providerId = toObjectId(scope.providerId);
+      if (scope?.providerId) filter.$and = [...(filter.$and as Row[] ?? []), { $or: [{ providerId: toObjectId(scope.providerId) }, { type: 'contact', source: 'provider', creatorId: toObjectId(scope.providerId) }] }];
       const search = query.search?.trim();
       if (search) {
         const matches = await properties.find({ $or: [{ publicCode: escapedSearch(search) }, { 'name.ar': escapedSearch(search) }, { 'name.en': escapedSearch(search) }, { slug: escapedSearch(search) }] }, { projection: { _id: 1 } }).toArray();
@@ -211,7 +211,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
     async get(id, scope) {
       const filter: Record<string, unknown> = { _id: toObjectId(id) };
       if (scope?.seekerId) filter.seekerId = toObjectId(scope.seekerId);
-      if (scope?.providerId) filter.providerId = toObjectId(scope.providerId);
+      if (scope?.providerId) filter.$and = [...(filter.$and as Row[] ?? []), { $or: [{ providerId: toObjectId(scope.providerId) }, { type: 'contact', source: 'provider', creatorId: toObjectId(scope.providerId) }] }];
       return enrichedResult(await requests.findOne(filter));
     },
     async transition(input) {

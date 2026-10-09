@@ -10,6 +10,7 @@ import {
   parsePublicDeveloperDirectoryQuery,
   publicDeveloperDirectoryUrl
 } from '../src/features/public/index.ts';
+import { PublicAuthRoleContext } from '../src/features/public/components.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const directoryData = publicOrganizationListDataSchema.parse({
@@ -160,4 +161,31 @@ describe('public developer directory and profiles', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.notFoundTitle, level: 1 })).toBeInTheDocument());
     expect(screen.getByRole('link', { name: copy.notFoundLink })).toHaveAttribute('href', '/developers');
   });
+});
+
+it('keeps providers browsing the company profile and links their inquiry to their existing account', async () => {
+  const id = 'f'.repeat(24);
+  const submitContact = vi.fn(async payload => requestDataSchema.parse({ id, type: 'contact', source: 'provider', creatorId: 'a'.repeat(24), status: 'new', payload, version: 0, availableActions: ['cancel'], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }));
+  const result = renderWithLocale(<PublicAuthRoleContext.Provider value="provider"><PublicDeveloperProfile locale="en" initialData={profileData} actions={{ submitContact, submitViewing: vi.fn() }} /></PublicAuthRoleContext.Provider>, { locale: 'en' });
+  const form = result.container.querySelector('form.public-developer-profile__inquiry')!;
+  fireEvent.change(form.querySelector('[name=name]')!, { target: { value: 'Example Provider' } });
+  fireEvent.change(form.querySelector('[name=phone]')!, { target: { value: '01012345678' } });
+  fireEvent.change(form.querySelector('[name=message]')!, { target: { value: 'Project inquiry' } });
+  fireEvent.submit(form);
+  expect(await screen.findByRole('link', { name: 'Track inquiry' })).toHaveAttribute('href', `/provider/customer-requests?search=${id}&lang=en`);
+  expect(form.querySelector('[name=name]')).toHaveValue('Example Provider');
+  expect(result.container.querySelector('[data-developer-profile-state]')).toHaveAttribute('data-developer-profile-state', 'success');
+});
+
+it('shows a company inquiry permission denial without asking the signed-in user to log in again', async () => {
+  const submitContact = vi.fn().mockRejectedValue(new ApiClientError('Forbidden', { code: 'HTTP_ERROR', status: 403 }));
+  const result = renderWithLocale(<PublicDeveloperProfile locale="en" initialData={profileData} actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+  const form = result.container.querySelector('form.public-developer-profile__inquiry')!;
+  fireEvent.change(form.querySelector('[name=name]')!, { target: { value: 'Example Provider' } });
+  fireEvent.change(form.querySelector('[name=phone]')!, { target: { value: '01012345678' } });
+  fireEvent.change(form.querySelector('[name=message]')!, { target: { value: 'Retained message' } });
+  fireEvent.submit(form);
+  await waitFor(() => expect(form.querySelector('[role=alert]')).toHaveTextContent('You are still signed in.'));
+  expect(form.querySelector('[role=alert] a')).toBeNull();
+  expect(form.querySelector('[name=message]')).toHaveValue('Retained message');
 });

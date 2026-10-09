@@ -302,11 +302,11 @@ describe('public property details', () => {
   });
 
   it.each([
-    [409, 'REQUEST_DUPLICATE', 'This request has already been sent. Check your requests in your account.'],
-    [429, 'REQUEST_RATE_LIMITED', 'You have sent several requests recently. Wait a minute, then try again.'],
-    [404, 'REQUEST_NOT_FOUND', 'The property or contact destination is no longer available. Refresh the page or choose the platform team.'],
+    [409, 'REQUEST_DUPLICATE', 'Request already sent. Check your requests.'],
+    [429, 'REQUEST_RATE_LIMITED', 'Wait a minute before sending another request.'],
+    [404, 'REQUEST_NOT_FOUND', 'Property or recipient unavailable. Refresh the page.'],
     [400, 'VALIDATION_ERROR', 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.'],
-    [500, 'INTERNAL_ERROR', 'The request could not be recorded right now. Please try again shortly.']
+    [500, 'INTERNAL_ERROR', 'Could not save the request. Try again later.']
   ] as const)('explains contact failure %s and retains the lead fields', async (status, code, body) => {
     const copy = getPublicPropertyDetailsCopy('en');
     const submitContact = vi.fn().mockRejectedValue(new ApiClientError('Request failed', { code: 'HTTP_ERROR', status, apiError: { code, messageKey: 'errors.requestFailed', details: [], requestId: 'contact-failure' } }));
@@ -447,4 +447,37 @@ describe('public property details', () => {
     renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/not a slug" initialState="not_found" />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: copy.notFoundTitle, level: 1 })).toBeInTheDocument();
   });
+});
+
+it('refreshes an expired session once, retries with the fresh token, and does not refresh a role denial', async () => {
+  let token = 'Bearer expired';
+  const calls: Array<{ token: string | null; body: string }> = [];
+  const refreshSession = vi.fn(async () => { token = 'Bearer refreshed'; });
+  const fetcher = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+    calls.push({ token: new Headers(init?.headers).get('authorization'), body: String(init?.body) });
+    if (calls.length === 1) return new Response(JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'expired' } }), { status: 401 });
+    return new Response(JSON.stringify({ data: contactResponse, meta: { requestId: 'retried' } }), { status: 201 });
+  });
+  const actions = createPublicPropertyDetailsActions({ apiClient: new ApiClient({ fetcher }), authorizationHeader: () => token, refreshSession });
+  const input = { fullName: 'Example Customer', phone: '01012345678', preferredContactTime: 'morning' as const, message: 'Keep my draft', propertyId };
+  await expect(actions.submitContact(input)).resolves.toEqual(contactResponse);
+  expect(refreshSession).toHaveBeenCalledTimes(1);
+  expect(calls.map(call => call.token)).toEqual(['Bearer expired', 'Bearer refreshed']);
+  expect(calls[0]?.body).toBe(calls[1]?.body);
+  fetcher.mockResolvedValue(new Response(JSON.stringify({ error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', details: [], requestId: 'denied' } }), { status: 403 }));
+  await expect(actions.submitContact(input)).rejects.toMatchObject({ status: 403 });
+  expect(refreshSession).toHaveBeenCalledTimes(1);
+});
+
+it('explains a contact role denial without a sign-in prompt and retains the draft', async () => {
+  const copy = getPublicPropertyDetailsCopy('en');
+  const submitContact = vi.fn().mockRejectedValue(new ApiClientError('Forbidden', { code: 'HTTP_ERROR', status: 403 }));
+  renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+  fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Provider' } });
+  fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: '01012345678' } });
+  fireEvent.change(screen.getByLabelText(copy.contactTime, { selector: 'select' }), { target: { value: 'morning' } });
+  fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
+  expect(await screen.findByText(copy.actionForbiddenBody)).toBeVisible();
+  expect(screen.queryByRole('link', { name: copy.actionPermissionLink })).not.toBeInTheDocument();
+  expect(screen.getByLabelText(copy.fullName)).toHaveValue('Example Provider');
 });

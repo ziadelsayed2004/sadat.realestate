@@ -15,7 +15,10 @@ async function searchFilter(search: string) {
   const providerId = '2123456789abcdef01234567';
   await createMongooseRequestRepository(connection).list(requestListQuerySchema.parse({ search, status: 'new', type: 'provider_customer', source: 'provider', page: 2, limit: 5 }), { providerId });
   assert.deepEqual(countFilter, listFilter);
-  assert.equal(String(listFilter?.providerId), providerId);
+  assert.deepEqual(listFilter?.$and, [{ $or: [
+    { providerId: new Types.ObjectId(providerId) },
+    { type: 'contact', source: 'provider', creatorId: new Types.ObjectId(providerId) }
+  ] }]);
   assert.equal(listFilter?.status, 'new');
   assert.equal(listFilter?.type, 'provider_customer');
   assert.equal(listFilter?.source, 'provider');

@@ -16,10 +16,28 @@ export const REQUEST_ROUTE_DEFINITIONS = [
 export interface RequestRouterDependencies { service: ReturnType<typeof createRequestService>; accessTokens: AccessTokenService; }
 function context(request: Request): string { return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request'; }
 function claims(response: Response, role: 'seeker' | 'provider' | 'admin'): AccessTokenClaims { return response.locals[role === 'admin' ? 'adminRbacClaims' : `${role}Claims`] as AccessTokenClaims; }
-function bearer(accessTokens: AccessTokenService, role: AccessTokenClaims['role']) { return (request: Request, response: Response, next: () => void): void => { const token = request.get('authorization')?.replace(/^Bearer\s+/i, '').trim(); if (!token) { const body = toApiErrorResponse(new ApiContractError('AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401), context(request)); response.status(401).json(body.body); return; } try { const current = accessTokens.verify(token); if (current.role !== role || current.status !== 'verified') throw new Error('forbidden'); response.locals[`${role}Claims`] = current; next(); } catch { const body = toApiErrorResponse(new ApiContractError('FORBIDDEN', 'errors.forbidden', 403), context(request)); response.status(403).json(body.body); } }; }
+function bearer(accessTokens: AccessTokenService, role: AccessTokenClaims['role'], allowProviderContact = false) {
+  return (request: Request, response: Response, next: () => void): void => {
+    const header = request.get('authorization')?.trim();
+    const token = header && /^Bearer\s+/i.test(header) ? header.replace(/^Bearer\s+/i, '').trim() : undefined;
+    const deny = (status: number, code: string, key: string) => {
+      const body = toApiErrorResponse(new ApiContractError(code, key, status), context(request));
+      response.status(status).json(body.body);
+    };
+    if (!token) { deny(401, 'AUTHENTICATION_REQUIRED', 'errors.authenticationRequired'); return; }
+    let current: AccessTokenClaims;
+    try { current = accessTokens.verify(token); }
+    catch { deny(401, 'AUTHENTICATION_REQUIRED', 'errors.authenticationRequired'); return; }
+    if ((current.role !== role && !(allowProviderContact && current.role === 'provider')) || current.status !== 'verified') { deny(403, 'FORBIDDEN', 'errors.forbidden'); return; }
+    response.locals[`${role}Claims`] = current;
+    next();
+  };
+}
+
 function send(request: Request, response: Response, error: unknown): void { const mapped: Record<string, { status: number; key: string }> = { REQUEST_FORBIDDEN: { status: 403, key: 'errors.forbidden' }, REQUEST_NOT_FOUND: { status: 404, key: 'errors.requests.notFound' }, REQUEST_VERSION_CONFLICT: { status: 409, key: 'errors.requests.versionConflict' }, REQUEST_INVALID_STATE: { status: 409, key: 'errors.requests.invalidState' }, REQUEST_DUPLICATE: { status: 409, key: 'errors.requests.duplicate' }, REQUEST_RATE_LIMITED: { status: 429, key: 'errors.rateLimited' } }; const serviceError = error instanceof RequestServiceError ? error : undefined; const current = serviceError ? mapped[serviceError.code] : undefined; const body = toApiErrorResponse(current && serviceError ? new ApiContractError(serviceError.code, current.key, current.status) : error, context(request)); response.status(body.statusCode).json(body.body); }
 export function createRequestRouter(dependencies: RequestRouterDependencies): Router { const router = Router(); router.use((_request, response, next) => { response.setHeader('Cache-Control', 'no-store'); next(); });
-  router.post('/seeker/contact-requests', bearer(dependencies.accessTokens, 'seeker'), async (req, res) => { try { const data = await dependencies.service.createContact(claims(res, 'seeker'), req.body ?? {}); res.status(201).json(toSuccessResponse(data, context(req))); } catch (e) { send(req, res, e); } });
+  // Keep the existing public inquiry endpoint compatible; the verified claims retain the actual account role.
+  router.post('/seeker/contact-requests', bearer(dependencies.accessTokens, 'seeker', true), async (req, res) => { try { const data = await dependencies.service.createContact(claims(res, 'seeker'), req.body ?? {}); res.status(201).json(toSuccessResponse(data, context(req))); } catch (e) { send(req, res, e); } });
   router.post('/seeker/search-requests', bearer(dependencies.accessTokens, 'seeker'), async (req, res) => { try { const data = await dependencies.service.create(claims(res, 'seeker'), { type: 'property_search', payload: req.body ?? {} }); res.status(201).json(toSuccessResponse(data, context(req))); } catch (e) { send(req, res, e); } });
   router.get('/seeker/requests', bearer(dependencies.accessTokens, 'seeker'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(claims(res, 'seeker'), requestListQuerySchema.parse(req.query)), context(req))); } catch (e) { send(req, res, e); } });
   router.get('/seeker/requests/:requestId', bearer(dependencies.accessTokens, 'seeker'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.get(claims(res, 'seeker'), requestIdParamsSchema.parse(req.params).requestId), context(req))); } catch (e) { send(req, res, e); } });

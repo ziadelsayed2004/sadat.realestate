@@ -12,7 +12,7 @@ const statuses: Record<RequestStatus, { ar: string; en: string }> = {
 
 export function requestCustomerNotification(request: RequestRecord, actorId: string, customerMessage?: string) {
   const recipient = request.seekerId ? { id: request.seekerId, audience: 'seeker' as const }
-    : request.source === 'provider' && request.providerId ? { id: request.providerId, audience: 'provider' as const } : undefined;
+    : request.source === 'provider' && (request.creatorId || request.providerId) ? { id: request.creatorId ?? request.providerId!, audience: 'provider' as const } : undefined;
   if (!recipient || recipient.id === actorId) return undefined;
   const status = statuses[request.status];
   const id = createHash('sha256').update(`request:${request.id}:${request.version}:${recipient.audience}`).digest('hex').slice(0, 24);
@@ -20,7 +20,7 @@ export function requestCustomerNotification(request: RequestRecord, actorId: str
     _id: new Types.ObjectId(id), recipientId: new Types.ObjectId(recipient.id), audience: recipient.audience,
     type: 'request.updated', title: { ar: `تحديث طلبك: ${status.ar}`, en: `Request update: ${status.en}` },
     message: customerMessage ? { ar: customerMessage, en: customerMessage } : { ar: 'تم تحديث حالة طلبك. افتح التفاصيل لمتابعة الطلب.', en: 'Your request status changed. Open the details to follow its progress.' },
-    link: recipient.audience === 'seeker' ? `/seeker/requests/${request.id}` : `/provider/customer-requests/${request.id}`,
+    link: recipient.audience === 'seeker' ? `/seeker/requests/${request.id}` : `/provider/customer-requests?search=${request.id}`,
     readAt: null, createdAt: request.updatedAt
   };
 }

@@ -20,7 +20,7 @@ test('notifies the request owner with a link and explicit message without exposi
   assert.equal(requestCustomerNotification(updated, updated.seekerId!), undefined);
   assert.equal(requestCustomerNotification({ ...updated, seekerId: undefined, source: 'public' }, adminId), undefined);
   const provider = requestCustomerNotification({ ...updated, seekerId: undefined, source: 'provider', providerId: 'c'.repeat(24) }, adminId);
-  assert.equal(provider?.audience, 'provider'); assert.equal(provider?.link, `/provider/customer-requests/${updated.id}`);
+  assert.equal(provider?.audience, 'provider'); assert.equal(provider?.link, `/provider/customer-requests?search=${updated.id}`);
 });
 
 test('accepts multiline customer replies but rejects controls that cannot appear in notifications', () => {
@@ -59,4 +59,13 @@ test('writes status, customer history, audit and notification within the same tr
   conflict = false;
   await repository.addNote({ ...input, note: { id: 'd'.repeat(24), body: 'Private note', authorId: adminId, createdAt: updated.updatedAt } });
   assert.deepEqual(writes.map(write => write.name), ['audit']);
+});
+
+test('company replies notify the provider who sent the inquiry rather than the receiving company', () => {
+  const sender = '8'.repeat(24); const recipient = '9'.repeat(24);
+  const inquiry = { ...updated, type: 'contact' as const, source: 'provider' as const, creatorId: sender, providerId: recipient, seekerId: undefined };
+  const notification = requestCustomerNotification(inquiry, recipient, 'Company reply');
+  assert.equal(notification?.recipientId.toHexString(), sender);
+  assert.equal(notification?.audience, 'provider');
+  assert.equal(requestCustomerNotification(inquiry, sender), undefined);
 });

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   PublicPropertyDetails as PublicPropertyDetailsData,
   PublicPropertyMedia,
@@ -9,7 +9,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader, safePublicUrl } from './components.tsx';
+import { PublicAuthRoleContext, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, safePublicUrl } from './components.tsx';
 import {
   createPublicPropertyDetailsActions,
   createPublicPropertyDetailsLoader,
@@ -476,7 +476,10 @@ function RelatedProperties({
   );
 }
 
-type ActionState = 'idle' | 'submitting' | 'success' | 'permission' | 'error';
+type ActionState = 'idle' | 'submitting' | 'success' | 'permission' | 'forbidden' | 'error';
+function actionFailureState(error: unknown): ActionState {
+  return error instanceof ApiClientError ? error.status === 401 ? 'permission' : error.status === 403 ? 'forbidden' : 'error' : 'error';
+}
 
 const maximumViewingDelay = 366 * 24 * 60 * 60 * 1000;
 
@@ -502,6 +505,7 @@ function ActionFeedback({
   if (state === 'success') {
     return <UxStateView state="success" title={copy.actionSuccessTitle} message={copy.actionSuccessBody} />;
   }
+  if (state === 'forbidden') return <UxStateView state="permission" title={copy.actionErrorTitle} message={copy.actionForbiddenBody} />;
   if (state === 'permission') {
     return <UxStateView state="permission" title={copy.actionPermissionTitle} message={copy.actionPermissionBody}><a href={loginUrl(url)}>{copy.actionPermissionLink}</a></UxStateView>;
   }
@@ -511,11 +515,11 @@ function ActionFeedback({
 function contactFailureMessage(error: unknown, locale: SupportedLocale): string | undefined {
   if (!(error instanceof ApiClientError)) return undefined;
   const arabic = locale === 'ar';
-  if (error.apiError?.code === 'REQUEST_DUPLICATE') return arabic ? 'سبق إرسال نفس الطلب. راجع طلباتك من حسابك.' : 'This request has already been sent. Check your requests in your account.';
-  if (error.status === 429) return arabic ? 'أرسلت عدة طلبات في وقت قصير. انتظر دقيقة ثم حاول مرة أخرى.' : 'You have sent several requests recently. Wait a minute, then try again.';
-  if (error.status === 404) return arabic ? 'العقار أو جهة التواصل لم تعد متاحة. حدّث الصفحة أو اختر إدارة المنصة.' : 'The property or contact destination is no longer available. Refresh the page or choose the platform team.';
+  if (error.apiError?.code === 'REQUEST_DUPLICATE') return arabic ? 'سبق إرسال الطلب. راجع طلباتك.' : 'Request already sent. Check your requests.';
+  if (error.status === 429) return arabic ? 'انتظر دقيقة قبل إرسال طلب آخر.' : 'Wait a minute before sending another request.';
+  if (error.status === 404) return arabic ? 'العقار أو جهة التواصل غير متاحة. حدّث الصفحة.' : 'Property or recipient unavailable. Refresh the page.';
   if (error.status === 400 || error.status === 422) return arabic ? 'راجع الاسم ورقم الهاتف وموعد التواصل. الرسالة لا تزيد عن 2000 حرف.' : 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.';
-  if (error.status !== undefined && error.status >= 500) return arabic ? 'تعذر تسجيل الطلب حالياً. حاول مرة أخرى بعد قليل.' : 'The request could not be recorded right now. Please try again shortly.';
+  if (error.status !== undefined && error.status >= 500) return arabic ? 'تعذر حفظ الطلب. حاول لاحقًا.' : 'Could not save the request. Try again later.';
   return undefined;
 }
 
@@ -541,6 +545,8 @@ function RequestPanel({
   const [contactChannel, setContactChannel] = useState<'platform' | 'provider'>('platform');
   const [contactValidation, setContactValidation] = useState(false);
   const [contactState, setContactState] = useState<ActionState>('idle');
+  const role = useContext(PublicAuthRoleContext);
+  const [contactId, setContactId] = useState('');
   const [contactError, setContactError] = useState<string>();
   const [viewingOpen, setViewingOpen] = useState(false);
   const [requestedAt, setRequestedAt] = useState('');
@@ -551,7 +557,7 @@ function RequestPanel({
   const viewingFeedback = useRef<HTMLDivElement>(null);
   const [saveState, setSaveState] = useState<ActionState>('idle');
   useEffect(() => {
-    if (viewingOpen && ['success', 'error', 'permission'].includes(viewingState)) viewingFeedback.current?.scrollIntoView?.({ block: 'nearest' });
+    if (viewingOpen && ['success', 'error', 'permission', 'forbidden'].includes(viewingState)) viewingFeedback.current?.scrollIntoView?.({ block: 'nearest' });
   }, [viewingOpen, viewingState]);
   const timezoneName = egyptTimeLabel(locale, egyptInstant(requestedAt) ?? new Date());
   const saveProperty = async () => {
@@ -561,7 +567,7 @@ function RequestPanel({
       await actions.saveProperty(data.id);
       setSaveState('success');
     } catch (error) {
-      setSaveState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+      setSaveState(actionFailureState(error));
     }
   };
 
@@ -593,12 +599,13 @@ function RequestPanel({
       return;
     }
     try {
-      await actions.submitContact(input);
+      const result = await actions.submitContact(input);
+      setContactId(result.id);
       setContactState('success');
       onContactSubmitted?.();
     } catch (error) {
       setContactError(contactFailureMessage(error, locale));
-      setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+      setContactState(actionFailureState(error));
     }
   };
 
@@ -629,7 +636,7 @@ function RequestPanel({
       });
       setViewingState('success');
     } catch (error) {
-      setViewingState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+      setViewingState(actionFailureState(error));
     }
   };
 
@@ -639,6 +646,7 @@ function RequestPanel({
         <Button type="button" variant="secondary" fullWidth loading={saveState === 'submitting'} disabled={saveState === 'success'} onClick={() => { void saveProperty(); }}>{saveState === 'success' ? copy.propertySaved : copy.saveProperty}</Button>
         {saveState === 'success' ? <a href={`/seeker/saved?lang=${locale}`}>{copy.viewSavedProperties}</a> : null}
         {saveState === 'permission' ? <p role="alert">{copy.savePermission} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
+        {saveState === 'forbidden' ? <p role="alert">{copy.actionForbiddenBody}</p> : null}
         {saveState === 'error' ? <p role="alert">{copy.saveError}</p> : null}
       </> : null}
       <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { if (viewingState !== 'success') setViewingState('idle'); setViewingValidation(false); setViewingOpen(true); }}>{copy.requestViewing}</Button>
@@ -664,8 +672,8 @@ function RequestPanel({
           />
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
-          {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
-          {contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} message={contactError} /> : null}
+          {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span><a href={`${role === 'provider' ? `/provider/customer-requests?search=${contactId}&` : `/seeker/requests/${contactId}?`}lang=${locale}`}>{locale === 'ar' ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
+          {contactState === 'permission' || contactState === 'forbidden' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} message={contactError} /> : null}
         </form>
 
         {platformContact.whatsappNumber ? <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText, platformContact.whatsappNumber)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><WhatsAppIcon /></span><span>{locale === 'ar' ? 'تواصل مع المنصة عبر واتساب' : 'Contact the platform on WhatsApp'}</span></a> : null}
@@ -687,7 +695,7 @@ function RequestPanel({
         <form id="public-property-viewing-form" className="public-property-details__viewing-form" noValidate onSubmit={submitViewing}>
           <div ref={viewingFeedback}>
             {viewingState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
-            {viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
+            {viewingState === 'permission' || viewingState === 'forbidden' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
           </div>
           <label htmlFor="public-property-viewing-requested-at">{copy.requestedAt}</label>
           <input id="public-property-viewing-requested-at" name="requestedAt" type="datetime-local" dir="ltr" required min={localDateTime(new Date(Date.now() + 60_000))} max={localDateTime(new Date(Date.now() + maximumViewingDelay))} readOnly={viewingState === 'success'} value={requestedAt} onChange={event => { setRequestedAt(event.target.value); setViewingValidation(false); }} />

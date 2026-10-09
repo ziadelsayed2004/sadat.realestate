@@ -7,12 +7,48 @@ const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0
 const provider = { ...seeker, sub: '2123456789abcdef01234567', role: 'provider' } as AccessTokenClaims;
 const admin = { ...seeker, sub: '3123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
 
+test('providers send inquiries as themselves and retain only requester permissions on sent inquiries', async () => {
+  const repository = createInMemoryRequestRepository();
+  const recipient = { ...provider, sub: '4'.repeat(24) };
+  const routedRepository = { ...repository, create: (row: Parameters<typeof repository.create>[0]) => repository.create({ ...row, providerId: recipient.sub }) };
+  const service = createRequestService({ repository: routedRepository, authorization: { authorize: async () => true } });
+  const sent = await service.createContact(provider, { message: 'Interested in your project', contactChannel: 'provider' });
+  assert.equal(sent.source, 'provider');
+  assert.equal(sent.creatorId, provider.sub);
+  assert.equal(sent.seekerId, undefined);
+  assert.equal(sent.providerId, recipient.sub);
+  assert.deepEqual(sent.availableActions, ['cancel']);
+  assert.equal((await service.list(provider, {})).total, 1);
+  const incoming = await service.get(recipient, sent.id);
+  assert.equal(incoming.creatorId, undefined);
+  assert.ok(incoming.availableActions.includes('contact'));
+  await assert.rejects(service.get({ ...provider, sub: '5'.repeat(24) }, sent.id), /REQUEST_NOT_FOUND/u);
+  await assert.rejects(service.transition(provider, sent.id, { transition: 'contact', expectedVersion: 0 }), /REQUEST_INVALID_STATE/u);
+  await service.transition(recipient, sent.id, { transition: 'start_review', expectedVersion: 0 });
+  await service.transition(recipient, sent.id, { transition: 'needs_information', reason: 'Please provide details', customerMessage: 'What is your budget?', expectedVersion: 1 });
+  assert.deepEqual((await service.get(provider, sent.id)).availableActions, ['start_review', 'cancel']);
+  await assert.rejects(service.transition(provider, sent.id, { transition: 'start_review', expectedVersion: 2 }), /REQUEST_INVALID_STATE/u);
+  const updated = await service.transition(provider, sent.id, { transition: 'start_review', customerMessage: 'Two million', expectedVersion: 2 });
+  assert.equal(updated.customerUpdates?.at(-1)?.authorRole, 'provider');
+  assert.deepEqual(updated.availableActions, ['cancel']);
+  assert.equal((await service.get(recipient, sent.id)).customerUpdates?.at(-1)?.message, 'Two million');
+});
+
+test('platform inquiries remain accessible to their provider sender without a direct recipient', async () => {
+  const service = createRequestService({ repository: createInMemoryRequestRepository() });
+  const sent = await service.createContact(provider, { message: 'Please find this property', contactChannel: 'platform' });
+  assert.equal(sent.providerId, undefined);
+  assert.equal((await service.get(provider, sent.id)).id, sent.id);
+  assert.equal((await service.list(provider, {})).total, 1);
+  await assert.rejects(service.createContact(admin, { message: 'Admin inquiry' }), /REQUEST_FORBIDDEN/u);
+});
+
 test('creates discriminated requests and prevents client-controlled state or metadata', async () => {
   const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
   assert.equal(created.type, 'contact'); assert.equal(created.status, 'new'); assert.equal(created.seekerId, seeker.sub); assert.equal(created.version, 0);
   await assert.rejects(() => service.create(seeker, { type: 'contact', payload: { message: 'x' }, status: 'resolved' }), /Unrecognized key/);
-  await assert.rejects(() => service.create(provider, { type: 'contact', payload: { message: 'provider cannot impersonate seeker contact' } }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
+  await assert.rejects(() => service.create(provider, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'] } }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
 });
 
 test('lets the owner supply requested information and return the same request for review', async () => {

@@ -9,6 +9,29 @@ import { createInMemoryRequestRepository, createRequestService } from '../../src
 
 const tokens: AccessTokenService = { issue: () => 'x', verify(token) { const role = token === 'provider' ? 'provider' : token === 'admin' ? 'admin' : 'seeker'; return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role, status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims; } };
 
+test('expired tokens return 401 for refresh while verified providers can submit public inquiries', async () => {
+  const accessTokens: AccessTokenService = { ...tokens, verify(token) {
+    if (token === 'expired') throw new Error('Expired access token');
+    return tokens.verify(token);
+  } };
+  const server = createApiServer({ database: { isReady: async () => true }, requests: { accessTokens, service: createRequestService({ repository: createInMemoryRequestRepository() }) } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const base = `http://127.0.0.1:${address.port}/api/v1`;
+  try {
+    for (const token of ['expired', 'Basic provider']) {
+      const authorization = token === 'expired' ? 'Bearer expired' : token;
+      assert.equal((await fetch(`${base}/seeker/contact-requests`, { method: 'POST', headers: { authorization, 'content-type': 'application/json' }, body: JSON.stringify({ message: 'Inquiry' }) })).status, 401);
+    }
+    const sent = await fetch(`${base}/seeker/contact-requests`, { method: 'POST', headers: { authorization: 'Bearer provider', 'content-type': 'application/json' }, body: JSON.stringify({ message: 'Provider inquiry' }) });
+    assert.equal(sent.status, 201);
+    const body = await sent.json() as { data: { id: string; source: string; availableActions: string[] } };
+    assert.equal(body.data.source, 'provider');
+    assert.deepEqual(body.data.availableActions, ['cancel']);
+    assert.equal((await fetch(`${base}/provider/customer-requests/${body.data.id}`, { headers: { authorization: 'Bearer provider' } })).status, 200);
+    assert.equal((await fetch(`${base}/seeker/search-requests`, { method: 'POST', headers: { authorization: 'Bearer provider' } })).status, 403);
+  } finally { await stopApiServer(server); }
+});
+
 test('request routes enforce role, validate payload, and return safe acknowledgements', async () => {
   const server = createApiServer({ database: { isReady: async () => true }, requests: { accessTokens: tokens, service: createRequestService({ repository: createInMemoryRequestRepository() }) } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 }); const base = `http://127.0.0.1:${address.port}`;
