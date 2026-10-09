@@ -15,6 +15,17 @@
   margin-inline: auto;
 }
 
+.admin-notifications-audit__heading-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-notifications-audit__help { margin-block: 12px 24px; padding: 22px 24px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; }
+.admin-notifications-audit__help h2 { margin: 0 0 18px; font-size: 1.2rem; }
+.admin-notifications-audit__help-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.admin-notifications-audit__help-grid h3 { margin: 0 0 8px; color: #164f40; font-size: 1rem; }
+.admin-notifications-audit__help-grid p { margin: 0; color: #69768b; line-height: 1.8; overflow-wrap: anywhere; }
+@media (max-width: 900px) {
+  .admin-notifications-audit__help-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .admin-notifications-audit__heading-actions { width: 100%; }
+}
+
 .admin-notifications-audit__heading,
 .admin-notifications-audit__panel,
 .admin-notifications-audit__detail {

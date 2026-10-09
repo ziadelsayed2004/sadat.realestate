@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   auditLogDataSchema,
   notificationListDataSchema,
@@ -131,6 +131,27 @@ describe('Admin notifications and audit log', () => {
     renderWithLocale(<AdminNotificationsAudit url="/admin/notifications" locale="en" session={{ status: 'anonymous' }} loadNotifications={async () => { calls += 1; return notifications(); }} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Access is not permitted' })).toBeInTheDocument());
     expect(calls).toBe(0);
+  });
+
+  it('shows real review queues even when the personal inbox is empty and refreshes arrivals', async () => {
+    const empty = { items: [], unreadCount: 0, total: 0, page: 1, limit: 20, attention: { counts: { 'contact-requests': 2 }, total: 2 } };
+    let calls = 0;
+    renderWithLocale(<AdminNotificationsAudit url="/admin/notifications" locale="en" session={adminSession} initialNotifications={empty} loadNotifications={async () => { calls += 1; return notifications(); }} />, { locale: 'en' });
+    expect(within(screen.getByRole('region', { name: 'Needs attention' })).getByRole('link', { name: /Contact requests/u })).toHaveAttribute('href', '/admin/contact-requests?lang=en');
+    expect(screen.getByText(/no direct messages.*review items appear above/u)).toBeInTheDocument();
+    expect(screen.getByText('Read does not mean approved')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh notifications' }));
+    await waitFor(() => expect(screen.getByText('Settings updated')).toBeInTheDocument());
+    expect(calls).toBe(1);
+  });
+
+  it('does not present a failed refresh as an empty inbox or show stale review queues', async () => {
+    const empty = { items: [], unreadCount: 0, total: 0, page: 1, limit: 20, attention: { counts: { 'contact-requests': 2 }, total: 2 } };
+    renderWithLocale(<AdminNotificationsAudit url="/admin/notifications" locale="en" session={adminSession} initialNotifications={empty} loadNotifications={async () => { throw new ApiClientError('offline', { code: 'NETWORK_ERROR' }); }} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh notifications' }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'The service is temporarily unavailable' })).toBeInTheDocument());
+    expect(screen.queryByRole('region', { name: 'Needs attention' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'No notifications' })).not.toBeInTheDocument();
   });
 
   it('maps audit not-found responses to an explicit recovery state', async () => {

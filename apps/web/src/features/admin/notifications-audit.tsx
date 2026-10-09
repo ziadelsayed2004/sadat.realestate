@@ -12,7 +12,8 @@ import { Button, Pagination, StateMessage } from '../design_system/index.ts';
 import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { AdminNavigation } from './overview.tsx';
-import { AdminAttentionQueues } from '../routing/admin-attention.tsx';
+import { AdminAttentionQueues, refreshAdminAttention } from '../routing/admin-attention.tsx';
+import { NotificationHelp, getNotificationHelpCopy } from './notification-help.tsx';
 import {
   ADMIN_AUDIT_LOGS_PAGE_LIMIT,
   ADMIN_AUDIT_LOGS_ROUTE,
@@ -184,6 +185,7 @@ function NotificationsView({ locale, session, authClient, apiOrigin, load, actio
     try {
       const result = await actionSource.markRead(id);
       setData(current => current === undefined ? current : { ...current, items: filter === 'unread' ? current.items.filter(item => item.id !== id) : current.items.map(item => item.id === id ? { ...item, readAt: result.readAt } : item), total: filter === 'unread' ? Math.max(0, current.total - 1) : current.total, unreadCount: Math.max(0, current.unreadCount - 1) });
+      refreshAdminAttention();
       setState(current => current === 'empty' ? 'success' : current); setFeedback({ kind: 'success', text: copy.notifications.mutation.markedRead });
     } catch (error) {
       const kind = error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : error instanceof ApiClientError && error.status === 404 ? 'not_found' : 'error';
@@ -193,7 +195,7 @@ function NotificationsView({ locale, session, authClient, apiOrigin, load, actio
 
   async function markAllRead(): Promise<void> {
     setFeedback(undefined); setMarkingAll(true);
-    try { await actionSource.markAllRead(); setFeedback({ kind: 'success', text: copy.notifications.mutation.markedAll }); setAttempt(value => value + 1); }
+    try { await actionSource.markAllRead(); refreshAdminAttention(); setFeedback({ kind: 'success', text: copy.notifications.mutation.markedAll }); setAttempt(value => value + 1); }
     catch (error) { const kind = error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error'; setFeedback({ kind, text: copy.notifications.mutation[kind] }); }
     finally { setMarkingAll(false); }
   }
@@ -202,11 +204,12 @@ function NotificationsView({ locale, session, authClient, apiOrigin, load, actio
   const pageCount = data === undefined ? 0 : Math.ceil(data.total / data.limit);
   return (
     <Shell locale={locale} path={ADMIN_NOTIFICATIONS_ROUTE} screenId="ADM-65" state={state}>
-      <Heading eyebrow={copy.notifications.eyebrow} title={copy.notifications.title} description={copy.notifications.description} action={<Button variant="secondary" size="sm" loading={markingAll} disabled={((data?.unreadCount ?? 0) + (data?.attention?.total ?? 0)) === 0 || (state !== 'success' && state !== 'empty')} onClick={() => { void markAllRead(); }}>{copy.notifications.markAll}</Button>} />
-      <AdminAttentionQueues locale={locale} attention={data?.attention} />
+      <Heading eyebrow={copy.notifications.eyebrow} title={copy.notifications.title} description={copy.notifications.description} action={<div className="admin-notifications-audit__heading-actions"><Button variant="secondary" size="sm" loading={state === 'loading'} disabled={state === 'loading' || sessionRole !== 'admin'} onClick={() => { setFeedback(undefined); setPage(1); setAttempt(value => value + 1); refreshAdminAttention(); }}>{getNotificationHelpCopy(locale).refresh}</Button><Button variant="secondary" size="sm" loading={markingAll} disabled={((data?.unreadCount ?? 0) + (data?.attention?.total ?? 0)) === 0 || (state !== 'success' && state !== 'empty')} onClick={() => { void markAllRead(); }}>{copy.notifications.markAll}</Button></div>} />
+      <NotificationHelp locale={locale} />
+      {state === 'success' || state === 'empty' ? <AdminAttentionQueues locale={locale} attention={data?.attention} /> : null}
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
       {feedback !== undefined ? <p className="admin-notifications-audit__feedback" data-state={feedback.kind} role={feedback.kind === 'success' ? 'status' : 'alert'}>{feedback.text}</p> : null}
-      {(state === 'success' || state === 'empty') && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-notifications-list-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-notifications-list-title">{copy.notifications.listLabel} <span className="admin-notifications-audit__muted">({data.unreadCount} {copy.notifications.unreadCount})</span></h2><div className="admin-notifications-audit__tabs" aria-label={copy.notifications.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="admin-notifications-audit__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setFeedback(undefined); }}>{copy.notifications.tabs[tab]}</button>)}</div></div>{data.items.length === 0 ? <div className="admin-notifications-audit__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="admin-notifications-audit__list" role="list" aria-label={copy.notifications.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => markRead(item.id)} />)}</div>}<Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setPage(next); setFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}
+      {(state === 'success' || state === 'empty') && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-notifications-list-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-notifications-list-title">{copy.notifications.listLabel} <span className="admin-notifications-audit__muted">({data.unreadCount} {copy.notifications.unreadCount})</span></h2><div className="admin-notifications-audit__tabs" aria-label={copy.notifications.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="admin-notifications-audit__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setFeedback(undefined); }}>{copy.notifications.tabs[tab]}</button>)}</div></div>{data.items.length === 0 ? <div className="admin-notifications-audit__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{filter === 'unread' ? emptyCopy.body : (data.attention?.total ?? 0) > 0 ? getNotificationHelpCopy(locale).emptyWithQueues : getNotificationHelpCopy(locale).emptyWithoutQueues}</p></div> : <div className="admin-notifications-audit__list" role="list" aria-label={copy.notifications.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => markRead(item.id)} />)}</div>}<Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setPage(next); setFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}
     </Shell>
   );
 }
