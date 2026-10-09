@@ -6,6 +6,8 @@ import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerRequestLoader,
+  createSeekerContactRequestCreator,
+  type SeekerContactRequestCreator,
   createSeekerRequestTransition,
   createSeekerRequestsLoader,
   isAuthenticatedSeekerSession,
@@ -17,6 +19,7 @@ import {
 } from './data.ts';
 import { getSeekerRequestsCopy } from './requests-copy.ts';
 import { SeekerNavigation } from './overview.tsx';
+import { NewSeekerRequestAction, RequestInformationForm } from './request-actions.tsx';
 import './styles.css';
 
 export type SeekerRequestsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission' | 'not_found';
@@ -34,6 +37,7 @@ export interface SeekerRequestsProps {
   readonly listLoad?: SeekerRequestsLoader | undefined;
   readonly detailLoad?: SeekerRequestLoader | undefined;
   readonly transition?: SeekerRequestTransition | undefined;
+  readonly createRequest?: SeekerContactRequestCreator | undefined;
 }
 
 function stateForError(error: unknown): Exclude<SeekerRequestsViewState, 'loading' | 'empty' | 'success' | 'not_found'> | 'not_found' {
@@ -59,6 +63,7 @@ function shortRequestId(value: string): string {
 const requestFilterStatuses: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved', 'closed'];
 
 function requestStatusLabel(status: RequestStatus, locale: SupportedLocale): string {
+  if (status === 'needs_information') return locale === 'ar' ? 'بانتظار معلومات منك' : 'Waiting for your information';
   if (status === 'scheduled') return locale === 'ar' ? 'معاينة' : 'Viewing';
   if (status === 'resolved') return locale === 'ar' ? 'مكتمل' : 'Completed';
   return getSeekerRequestsCopy(locale).statuses[status];
@@ -187,7 +192,8 @@ function RequestPropertyValue({ request, locale, label }: { readonly request: Re
   return <div className="seeker-request-detail__value"><dt>{label}</dt><dd>{href === undefined ? (title ?? shortRequestId(request.propertyId ?? '')) : <a href={href}>{title}</a>}{details ? <small>{details}</small> : null}</dd></div>;
 }
 
-function RequestDetailContent({ request, locale, onCancel }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly onCancel?: (reason: string) => Promise<void> }) {
+function RequestDetailContent({ request, locale, onCancel, onReply, create }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly onCancel?: (reason: string) => Promise<void>; readonly onReply: (message: string) => Promise<void>; readonly create: SeekerContactRequestCreator }) {
+  const [informationSent, setInformationSent] = useState(false);
   const copy = getSeekerRequestsCopy(locale);
   const message = safePayloadValue(request, 'message');
   const note = safePayloadValue(request, 'note');
@@ -197,7 +203,8 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
   const hasAdvanced = budget !== undefined || bedrooms !== undefined || propertyTypes.length > 0 || note !== undefined;
   const screenId = requestScreenId(request);
   const lifecycle: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved'];
-  const currentIndex = lifecycle.indexOf(request.status);
+  const currentIndex = lifecycle.indexOf(request.status === 'needs_information' ? 'under_review' : request.status);
+  const informationRequest = [...(request.customerUpdates ?? [])].reverse().find(update => update.status === 'needs_information' && update.authorRole !== 'seeker')?.message;
   return (
     <div className="seeker-request-detail" {...(screenId === undefined ? {} : { 'data-screen-id': screenId })} data-request-status={request.status}>
       <div className="seeker-request-detail__breadcrumb"><a href={localeForSeekerPath(locale, '/seeker/requests')}>{copy.list.title}</a><span>/</span><strong>{shortRequestId(request.id)}</strong></div>
@@ -206,11 +213,18 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
           <div><h1>{copy.detail.title}</h1><RequestStatusBadge status={request.status} locale={locale} /></div>
           <p>{locale === 'ar' ? 'رقم الطلب:' : 'Request number:'} <strong>{shortRequestId(request.id)}</strong> · {requestListDateLabel(request.createdAt, locale)}</p>
         </div>
-        <div className="seeker-request-detail__actions">
+        <div className="seeker-request-detail__actions"><NewSeekerRequestAction locale={locale} create={create} request={request} />
           <a className="seeker-request-detail__top-back" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a>
           {request.availableActions.includes('cancel') && onCancel !== undefined ? <CancelRequestAction locale={locale} onCancel={onCancel} /> : null}
         </div>
       </div>
+      {informationSent ? <p className="seeker-request-detail__reply-success" role="status">{locale === 'ar' ? 'تم إرسال معلوماتك. رجع طلبك للإدارة للمراجعة، وتقدر تتابعه من هنا.' : 'Your information was sent. The team will review your request; follow its progress here.'}</p> : null}
+      {request.status === 'needs_information' && request.availableActions.includes('start_review') ? <section className="seeker-request-detail__card seeker-request-detail__reply" aria-labelledby="seeker-request-reply-title">
+        <h2 id="seeker-request-reply-title">{locale === 'ar' ? 'الإدارة محتاجة معلومات منك' : 'The team needs more information from you'}</h2>
+        <p>{locale === 'ar' ? 'اكتب المعلومات المطلوبة هنا واضغط إرسال. هتكمل نفس الطلب، والإدارة هتراجعه من جديد.' : 'Enter the requested information below and send it. You will continue this request, and the team will review it again.'}</p>
+        {informationRequest ? <blockquote>{informationRequest}</blockquote> : null}
+        <RequestInformationForm locale={locale} onSubmit={async message => { await onReply(message); setInformationSent(true); }} />
+      </section> : null}
       <div className="seeker-request-detail__grid">
         <section className="seeker-request-detail__card seeker-request-detail__card--timeline" aria-labelledby="seeker-request-timeline-title">
           <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
@@ -222,7 +236,7 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
             })}
           </ol>
         </section>
-        <div className="seeker-request-detail__side">{request.customerUpdates?.length ? <section className="seeker-request-detail__card" aria-labelledby="seeker-request-updates-title"><h2 id="seeker-request-updates-title">{locale === 'ar' ? 'تحديثات الإدارة ورسائلها' : 'Administration updates and messages'}</h2><ol className="seeker-request-detail__updates">{[...request.customerUpdates].reverse().map((update, index) => <li key={`${update.createdAt}-${index}`}><strong>{requestStatusLabel(update.status, locale)}</strong><time dateTime={update.createdAt}>{dateLabel(update.createdAt, locale)}</time>{update.message ? <p>{update.message}</p> : null}</li>)}</ol></section> : null}
+        <div className="seeker-request-detail__side">{request.customerUpdates?.length ? <section className="seeker-request-detail__card" aria-labelledby="seeker-request-updates-title"><h2 id="seeker-request-updates-title">{locale === 'ar' ? 'رسائل الطلب' : 'Request messages'}</h2><ol className="seeker-request-detail__updates">{[...request.customerUpdates].reverse().map((update, index) => <li key={`${update.createdAt}-${index}`}><strong>{update.authorRole === 'seeker' ? (locale === 'ar' ? 'ردك على الإدارة' : 'Your reply to the team') : requestStatusLabel(update.status, locale)}</strong><time dateTime={update.createdAt}>{dateLabel(update.createdAt, locale)}</time>{update.message ? <p>{update.message}</p> : null}</li>)}</ol></section> : null}
           <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
             <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
             <dl className="seeker-request-detail__values">
@@ -275,7 +289,7 @@ function CancelRequestAction({ locale, onCancel }: { readonly locale: SupportedL
   </div>;
 }
 
-export function SeekerRequests({ locale, session, authClient, apiOrigin, requestId, listLoad, detailLoad, transition }: SeekerRequestsProps) {
+export function SeekerRequests({ locale, session, authClient, apiOrigin, requestId, listLoad, detailLoad, transition, createRequest }: SeekerRequestsProps) {
   const copy = getSeekerRequestsCopy(locale);
   const isDetail = requestId !== undefined;
   const [page, setPage] = useState(1);
@@ -294,6 +308,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
   const listSource = useMemo(() => listLoad ?? createSeekerRequestsLoader({ apiOrigin, authorization: authClient, query: listQuery }), [apiOrigin, authClient, listLoad, listQuery]);
   const detailSource = useMemo(() => detailLoad ?? (requestId === undefined ? undefined : createSeekerRequestLoader(requestId, { apiOrigin, authorization: authClient })), [apiOrigin, authClient, detailLoad, requestId]);
   const transitionSource = useMemo(() => transition ?? createSeekerRequestTransition({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, transition]);
+  const createSource = useMemo(() => createRequest ?? createSeekerContactRequestCreator({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, createRequest]);
   const activePath = isDetail ? `/seeker/requests/${requestId}` : '/seeker/requests';
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
@@ -330,7 +345,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={isDetail} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}
-        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1 id="seeker-requests-list-title">{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel">
+        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1 id="seeker-requests-list-title">{copy.list.title}</h1><p>{copy.list.description}</p></div><NewSeekerRequestAction locale={locale} create={createSource} /></div><section className="seeker-requests__panel">
           <div className="seeker-requests__toolbar">
             <Input id="seeker-requests-search" type="search" label={requestSearchLabel(locale)} value={search} placeholder={requestSearchPlaceholder(locale)} onChange={event => { setSearch(event.target.value); setPage(1); }} />
             <span className="seeker-requests__count">{listData.total} {copy.list.count}</span>
@@ -344,7 +359,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
           </div>
           <RequestListContent data={listData} locale={locale} onPageChange={setPage} />
         </section></main> : null}
-        {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} onCancel={async reason => { const updated = await transitionSource(detailData.id, { transition: 'cancel', reason, expectedVersion: detailData.version }); setDetailData(updated); }} /></main> : null}
+        {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} create={createSource} onReply={async message => { const updated = await transitionSource(detailData.id, { transition: 'start_review', customerMessage: message, expectedVersion: detailData.version }); setDetailData(updated); }} onCancel={async reason => { const updated = await transitionSource(detailData.id, { transition: 'cancel', reason, expectedVersion: detailData.version }); setDetailData(updated); }} /></main> : null}
       </div>
     </section>
   );

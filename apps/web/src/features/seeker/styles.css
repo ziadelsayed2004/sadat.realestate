@@ -3154,3 +3154,10 @@
 .seeker-request-detail__updates { display: grid; gap: 18px; padding-inline-start: 20px; }
 .seeker-request-detail__updates time { display: block; margin-block: 6px; color: #69768b; }
 .seeker-request-detail__updates p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.seeker-request-detail__reply { margin-block: 20px; }
+.seeker-request-detail__reply > p { line-height: 1.8; }
+.seeker-request-detail__reply blockquote { margin: 16px 0; padding: 16px; border-inline-start: 3px solid var(--color-brand-primary); background: #f7f5ed; white-space: pre-wrap; overflow-wrap: anywhere; }
+.seeker-request-detail__reply-success { padding: 16px; border-radius: 12px; background: #e7f6ed; color: #145644; line-height: 1.8; }
+.seeker-request-form { display: grid; gap: 12px; min-inline-size: 0; }
+.seeker-request-form textarea, .seeker-request-form select { box-sizing: border-box; inline-size: 100%; min-inline-size: 0; padding: 12px; border: 1px solid #d8d3c5; border-radius: 12px; font: inherit; color: inherit; background: #fff; }
+.seeker-request-form textarea { resize: vertical; }

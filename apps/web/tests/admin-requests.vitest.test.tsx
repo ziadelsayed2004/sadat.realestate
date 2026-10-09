@@ -79,6 +79,23 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin request administration contracts and views', () => {
+  it.each(['ar', 'en'] as const)('requires a customer-facing explanation when requesting information in %s', async locale => {
+    window.history.replaceState({}, '', `/admin/contact-requests?lang=${locale}`);
+    const reviewed = requestDataSchema.parse({ ...request, status: 'under_review', availableActions: ['needs_information'], customerUpdates: [{ status: 'under_review', authorRole: 'seeker', message: 'My budget is 2 million', createdAt: request.updatedAt }] });
+    const transition = vi.fn().mockResolvedValue({ ...reviewed, status: 'needs_information', version: 3, availableActions: ['start_review'] });
+    const copy = getAdminRequestsCopy(locale);
+    renderWithLocale(<AdminRequests locale={locale} session={session} initialRequests={{ ...requestList, items: [reviewed] }} transition={transition} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    expect(screen.getByText('My budget is 2 million')).toBeVisible();
+    fireEvent.change(screen.getByLabelText(copy.transitionReason), { target: { value: 'More information needed' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveTransition }));
+    expect(transition).not.toHaveBeenCalled();
+    expect(screen.getByLabelText(copy.customerMessage)).toHaveFocus();
+    fireEvent.change(screen.getByLabelText(copy.customerMessage), { target: { value: 'Which area do you prefer?' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveTransition }));
+    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'needs_information', reason: 'More information needed', customerMessage: 'Which area do you prefer?', expectedVersion: 2 }, undefined));
+  });
+
   it.each(['ar', 'en'] as const)('accepts a reviewed contact request with a reason and updates its displayed state in %s', async locale => {
     window.history.replaceState({}, '', `/admin/contact-requests?lang=${locale}`);
     const reviewed = requestDataSchema.parse({ ...request, status: 'under_review', version: 3, availableActions: ['contact', 'start_progress'] });

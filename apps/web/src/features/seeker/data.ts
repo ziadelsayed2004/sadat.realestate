@@ -12,6 +12,7 @@ import {
   passwordChangeRequestSchema,
   passwordChangeSuccessEnvelopeSchema,
   requestDataSchema,
+  requestCreateSchema,
   requestListDataSchema,
   requestTransitionRequestSchema,
   seekerPreferencesPatchSchema,
@@ -25,6 +26,7 @@ import {
   viewingListDataSchema,
   viewingPatchSchema,
   type RequestData,
+  type RequestCreate,
   type AuthManagedSessionListData,
   type AuthSessionRevocationData,
   type RequestListData,
@@ -206,6 +208,21 @@ export function createSeekerRequestTransition(options: SeekerOverviewLoadOptions
       ...(headers === undefined ? {} : { headers }),
       json: requestTransitionRequestSchema.parse(input),
       ...(signal === undefined ? {} : { signal })
+    });
+    return response.data.data;
+  };
+}
+
+export type SeekerContactRequestCreator = (payload: Extract<RequestCreate, { type: 'contact' }>['payload']) => Promise<RequestData>;
+
+export function createSeekerContactRequestCreator(options: SeekerOverviewLoadOptions = {}): SeekerContactRequestCreator {
+  const client = clientFor(options);
+  return async payload => {
+    const headers = authorizationHeaders(options.authorization);
+    const request = requestCreateSchema.parse({ type: 'contact', payload });
+    const response = await client.request('/seeker/contact-requests', {
+      method: 'POST', responseSchema: successEnvelopeSchema(requestDataSchema),
+      ...(headers === undefined ? {} : { headers }), json: request.payload
     });
     return response.data.data;
   };

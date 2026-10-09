@@ -215,7 +215,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
       return enrichedResult(await requests.findOne(filter));
     },
     async transition(input) {
-      return write(input, { $set: { status: input.status, updatedAt: input.now }, $push: { customerUpdates: { $each: [{ status: input.status, ...(input.customerMessage ? { message: input.customerMessage } : {}), createdAt: input.now }], $slice: -50 } }, $inc: { version: 1 } });
+      return write(input, { $set: { status: input.status, updatedAt: input.now }, $push: { customerUpdates: { $each: [{ status: input.status, ...(input.customerMessage ? { message: input.customerMessage } : {}), ...(input.authorRole ? { authorRole: input.authorRole } : {}), createdAt: input.now }], $slice: -50 } }, $inc: { version: 1 } });
     },
     async assign(input) {
       return write(input, { $set: { assignedTo: toObjectId(input.assigneeId), updatedAt: input.now }, $inc: { version: 1 } });

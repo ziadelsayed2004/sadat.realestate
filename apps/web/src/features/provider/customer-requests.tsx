@@ -238,7 +238,7 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
           <strong>{name}</strong>
           {phone ? request.payload.contactChannel === 'provider' ? <a href={`tel:${phone}`} dir="ltr">{phone}</a> : <span>{maskPhone(phone)}</span> : null}
           {email ? <span>{maskEmail(email)}</span> : null}
-          {request.type === 'contact' ? <details><summary>{locale === 'ar' ? 'تفاصيل الاستفسار' : 'Inquiry details'}</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{payloadText(request, 'message')}</p></details> : null}
+          {request.type === 'contact' ? <details><summary>{locale === 'ar' ? 'تفاصيل الاستفسار' : 'Inquiry details'}</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{payloadText(request, 'message')}</p>{request.customerUpdates?.filter(update => update.authorRole === 'seeker').map((update, index) => <div key={`${update.createdAt}-${index}`}><strong>{locale === 'ar' ? 'معلومات إضافية من العميل' : 'Additional information from the customer'}</strong><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{update.message}</p></div>)}</details> : null}
         </div>
       </td>
       <td><span>{request.type === 'contact' ? (locale === 'ar' ? 'استفسار وارد' : 'Incoming inquiry') : copy.requestType}</span><small>{copy.source}: {request.type === 'contact' ? (locale === 'ar' ? 'الموقع' : 'Website') : payloadText(request, 'sourceNote') ?? copy.providerSource}</small></td>

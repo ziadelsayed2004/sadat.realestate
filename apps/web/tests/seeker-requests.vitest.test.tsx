@@ -1,6 +1,6 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { requestDataSchema, requestListDataSchema } from '@sadat-real-estate/contracts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { SeekerRequests, createSeekerRequestTransition, getSeekerRequestsCopy, loadSeekerRequest, loadSeekerRequests } from '../src/features/seeker/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
@@ -32,6 +32,43 @@ const request = requestDataSchema.parse({
 
 const list = requestListDataSchema.parse({ items: [request], page: 1, limit: 5, total: 1 });
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
+
+describe('seeker information replies and new requests', () => {
+  it('submits information on the same request and refreshes its status', async () => {
+    const pending = { ...request, status: 'needs_information' as const, availableActions: ['start_review' as const, 'cancel' as const], customerUpdates: [{ status: 'needs_information' as const, message: 'What is your budget?', createdAt: request.updatedAt }] };
+    const transition = vi.fn().mockResolvedValue({ ...request, version: 1, customerUpdates: [{ status: 'under_review', authorRole: 'seeker', message: 'Budget: 2 million', createdAt: request.updatedAt }] });
+    renderWithLocale(<SeekerRequests locale="en" session={session} requestId={request.id} detailLoad={async () => pending} transition={transition} />, { locale: 'en' });
+    expect(await screen.findByText('The team needs more information from you')).toBeVisible();
+    fireEvent.change(screen.getByLabelText('Requested information'), { target: { value: 'Budget: 2 million' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send information to the team' }));
+    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_review', customerMessage: 'Budget: 2 million', expectedVersion: 0 }));
+    expect(await screen.findByText('Your reply to the team')).toBeVisible();
+    expect(screen.getByRole('status')).toHaveTextContent('Your information was sent.');
+    expect(screen.queryByLabelText('Requested information')).not.toBeInTheDocument();
+  });
+
+  it('keeps an information reply when saving fails', async () => {
+    const transition = vi.fn().mockRejectedValue(new Error('offline'));
+    renderWithLocale(<SeekerRequests locale="en" session={session} requestId={request.id} detailLoad={async () => ({ ...request, status: 'needs_information', availableActions: ['start_review', 'cancel'] })} transition={transition} />, { locale: 'en' });
+    const input = await screen.findByLabelText('Requested information');
+    fireEvent.change(input, { target: { value: 'Budget: 2 million' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send information to the team' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Your reply is still here');
+    expect(input).toHaveValue('Budget: 2 million');
+  });
+
+  it('opens a new request form on this page and exposes the persisted request link', async () => {
+    const createRequest = vi.fn().mockResolvedValue({ ...request, id: 'f'.repeat(24), status: 'new' });
+    renderWithLocale(<SeekerRequests locale="en" session={session} listLoad={async () => list} createRequest={createRequest} />, { locale: 'en' });
+    fireEvent.click(await screen.findByRole('button', { name: 'New request' }));
+    fireEvent.change(screen.getByLabelText('Full name'), { target: { value: 'Example seeker' } });
+    fireEvent.change(screen.getByLabelText('Phone number'), { target: { value: '01039938831' } });
+    fireEvent.change(screen.getByLabelText('New request details'), { target: { value: 'I need a new property' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send new request' }));
+    await waitFor(() => expect(createRequest).toHaveBeenCalledWith({ fullName: 'Example seeker', phone: '01039938831', preferredContactTime: 'morning', message: 'I need a new property', contactChannel: 'platform', locale: 'en' }));
+    expect(await screen.findByRole('link', { name: 'Track the new request' })).toHaveAttribute('href', `/seeker/requests/${'f'.repeat(24)}?lang=en`);
+  });
+});
 
 describe('Seeker requests', () => {
   it('shows customer messages and status updates in owned request details', async () => {

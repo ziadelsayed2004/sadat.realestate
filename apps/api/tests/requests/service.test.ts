@@ -15,6 +15,28 @@ test('creates discriminated requests and prevents client-controlled state or met
   await assert.rejects(() => service.create(provider, { type: 'contact', payload: { message: 'provider cannot impersonate seeker contact' } }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
 });
 
+test('lets the owner supply requested information and return the same request for review', async () => {
+  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
+  const original = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
+  await service.transition(admin, original.id, { transition: 'start_review', reason: 'Review request', expectedVersion: 0 });
+  await service.transition(admin, original.id, { transition: 'needs_information', reason: 'More details required', customerMessage: 'What is your budget?', expectedVersion: 1 });
+  assert.deepEqual((await service.get(seeker, original.id)).availableActions, ['start_review', 'cancel']);
+  const reply = { transition: 'start_review', customerMessage: 'My budget is 2 million.\nPlease call in the morning.', expectedVersion: 2 };
+  await assert.rejects(service.transition({ ...seeker, sub: '9'.repeat(24) }, original.id, reply), /REQUEST_NOT_FOUND/u);
+  await assert.rejects(service.transition(seeker, original.id, { transition: 'start_review', expectedVersion: 2 }), /REQUEST_INVALID_STATE/u);
+  await assert.rejects(service.transition(seeker, original.id, { ...reply, expectedVersion: 1 }), /REQUEST_VERSION_CONFLICT/u);
+  await assert.rejects(service.transition(seeker, original.id, { ...reply, authorRole: 'admin' }), /Unrecognized key/u);
+  const updated = await service.transition(seeker, original.id, reply);
+  assert.equal(updated.id, original.id);
+  assert.equal(updated.status, 'under_review');
+  assert.equal(updated.version, 3);
+  assert.deepEqual(updated.payload, original.payload);
+  assert.equal(updated.customerUpdates?.at(-1)?.authorRole, 'seeker');
+  assert.equal((await service.get(admin, original.id)).customerUpdates?.at(-1)?.message, reply.customerMessage);
+  assert.deepEqual(updated.availableActions, ['cancel']);
+  await assert.rejects(service.transition(seeker, original.id, { ...reply, expectedVersion: 3 }), /REQUEST_FORBIDDEN/u);
+});
+
 test('enforces ownership, deterministic listing, and optimistic state transitions', async () => {
   const repository = createInMemoryRequestRepository(); const service = createRequestService({ authorization: { authorize: async () => true }, repository, now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'], minBudget: 10, maxBudget: 20 } });
