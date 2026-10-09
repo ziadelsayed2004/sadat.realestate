@@ -464,7 +464,7 @@ function RelatedProperties({
               price={detailsRelatedPrice(property.price, property.transactionType, locale)}
               features={relatedFeatures}
               source={sourceName === undefined ? undefined : <span className="public-property-details__related-source">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="20" height="20" loading="lazy" decoding="async" /> : null}<span>{locale === 'ar' ? '\u0628\u0648\u0627\u0633\u0637\u0629 ' :'By '}{sourceName}</span>{property.sourceVerified || property.sourceType === 'developer_company' ? <b>{locale === 'ar' ? '\u0645\u0648\u062b\u0642' :'Verified'}</b> : null}</span>}
-              mediaOverlay={<><span className={`public-property-details__related-badge public-property-details__related-badge--${property.transactionType}`}>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.publicCode ? <span className="public-property-details__related-code">{property.publicCode}</span> : null}</>}
+              mediaOverlay={<div className="public-property-details__related-badges"><span className={`public-property-details__related-badge public-property-details__related-badge--${property.transactionType}`}>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.publicCode ? <span className="public-property-details__related-code" dir="ltr">{property.publicCode}</span> : null}</div>}
               image={<PublicMediaImage src={property.imageUrl} alt={relatedTitle} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
               imageAlt={copy.imageUnavailable}
             />

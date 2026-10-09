@@ -3,6 +3,42 @@
   overflow-anchor: none;
 }
 
+.public-property-details__related .ui-property-card__media {
+  position: relative;
+}
+
+.public-property-details__related-badges {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-inline-size: calc(100% - 24px);
+}
+
+.public-property-details__related-badge,
+.public-property-details__related-code {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 24px;
+  max-inline-size: 100%;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #17233d;
+  background: #f6ebc9;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.public-property-details__related-code {
+  background: #fff;
+}
+
 .public-property-details__related-source {
   display: flex;
   align-items: center;
@@ -1442,32 +1478,6 @@
     font-size: 9px;
   }
 
-  .public-property-details__related-badge,
-  .public-property-details__related-code {
-    position: absolute;
-    z-index: 1;
-    display: inline-flex;
-    min-height: 22px;
-    align-items: center;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 18px;
-  }
-
-  .public-property-details__related-badge {
-    inset-block-start: 12px;
-    color: var(--color-text-strong);
-    background: #e7f0ff;
-  }
-
-  .public-property-details__related-code {
-    inset-block-end: 12px;
-    color: var(--color-text-strong);
-    background: #ffffff;
-  }
-
   .public-property-details > .public-site-footer {
     min-height: 414px;
     margin-top: 121px;
@@ -1478,16 +1488,6 @@
   .public-property-details__main-column {
     position: relative;
     inset-inline-start: 1px;
-  }
-
-  .public-property-details__related-badge {
-    inset-inline-start: 12px;
-    inset-inline-end: auto;
-  }
-
-  .public-property-details__related-code {
-    inset-inline-end: 12px;
-    inset-inline-start: auto;
   }
 
   .public-property-details__contact .ui-button.public-property-details__contact-submit {
