@@ -5,7 +5,8 @@ export function getUserGuideCopy(locale: SupportedLocale) {
   return localizeCopy('admin_user_guide/copy#getUserGuideCopy', locale, locale === 'ar' ? {
     title: 'دليل الاستخدام', eyebrow: 'مركز المساعدة',
     description: 'خطوات واضحة، شرح الحقول، إجابات للأسئلة وروابط مباشرة لكل مهمة.',
-    language: 'الشرح التفصيلي باللغة العربية • إصدار 8 أكتوبر 2026',
+    language: 'الشرح التفصيلي باللغة العربية • إصدار 9 أكتوبر 2026',
+    quickActions: 'عايز تعمل إيه؟', quickHelp: 'اختر نوع حسابك، ثم افتح شرح المهمة أو انتقل إلى صفحتها مباشرة. الاختصارات تتبع البحث والتصفية.', readSteps: 'شرح الخطوات', openScreen: 'فتح الصفحة',
     accountType: 'نوع الحساب', audienceNote: 'اختيار نوع الحساب يغيّر الشرح فقط ولا يغيّر دورك أو صلاحياتك.',
     download: 'تحميل الشرح بصيغة Markdown (.md)',
     search: 'ابحث في الدليل', placeholder: 'مثال: نشر بانر، عمولة، مستندات، تعديل الفريق…',
@@ -22,7 +23,8 @@ export function getUserGuideCopy(locale: SupportedLocale) {
   } : {
     title: 'User guide', eyebrow: 'Help centre',
     description: 'Task steps, field explanations, answers and direct links to the working screens.',
-    language: 'Detailed reference in Arabic • 8 October 2026 edition',
+    language: 'Detailed reference in Arabic • 9 October 2026 edition',
+    quickActions: 'What would you like to do?', quickHelp: 'Choose your account type, then read the task steps or open its screen directly. Shortcuts follow your search and filters.', readSteps: 'Read steps', openScreen: 'Open screen',
     accountType: 'Account type', audienceNote: 'This selection filters the instructions; it does not change your account role or permissions.',
     download: 'Download guide as Markdown (.md)',
     search: 'Search the guide', placeholder: 'Search a topic or route; Arabic explanations are included…',

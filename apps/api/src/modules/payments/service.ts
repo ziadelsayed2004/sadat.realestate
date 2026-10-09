@@ -241,8 +241,9 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
 
       const objectKey = createObjectKey();
       if (!isObjectKey(objectKey)) throw new PaymentProofServiceError('INVALID_STORAGE_KEY');
-      const validator = new ProviderDocumentValidationTransform(headers.filename, headers.contentType);
+      let validator: ProviderDocumentValidationTransform;
       try {
+        validator = new ProviderDocumentValidationTransform(headers.filename, headers.contentType, { allowTimestampDots: true });
         await dependencies.storage.putPrivateQuarantine(objectKey, source.pipe(validator));
       } catch (error) {
         await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);

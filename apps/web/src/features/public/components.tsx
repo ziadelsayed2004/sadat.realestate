@@ -777,7 +777,7 @@ function Hero({
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       <div className="public-homepage__hero-content">
-        <p className="public-homepage__eyebrow">{copy.heroLabel}</p>
+        <p className="public-homepage__eyebrow">{localizedText(banner?.eyebrow, locale) ?? copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}

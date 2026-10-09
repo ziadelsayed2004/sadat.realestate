@@ -164,6 +164,16 @@ describe('Provider advertising requests and commission', () => {
     expect(upload?.body).toBeInstanceOf(Blob);
   });
 
+  it('sends Arabic receipt filenames as ASCII headers without changing the file bytes', async () => {
+    const filename = '\u0625\u064a\u0635\u0627\u0644 10.49.37.pdf';
+    const bytes = new Blob(['receipt bytes'], { type: 'application/pdf' });
+    let received: RequestInit | undefined;
+    const client = new ApiClient({ fetcher: async (_input, init) => { received = init; return envelope(proof); } });
+    await createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth }).uploadPaymentProof(requestId, bytes, filename, 'vodafone_cash');
+    expect(new Headers(received?.headers).get('x-file-name')).toBe(encodeURIComponent(filename));
+    expect(received?.body).toBe(bytes);
+  });
+
   it.each([{ page: 0 }, { page: 1, limit: 101 }])('rejects invalid advertising pagination before network access: %o', async query => {
     let calls = 0;
     const client = new ApiClient({ fetcher: async () => { calls += 1; return envelope(data); } });

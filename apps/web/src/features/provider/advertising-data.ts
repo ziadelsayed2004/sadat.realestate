@@ -238,7 +238,7 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
         headers: {
           ...(requestHeaders ?? {}),
           'content-type': upload.contentType,
-          'x-file-name': upload.filename,
+          'x-file-name': encodeURIComponent(upload.filename),
           ...(upload.paymentMethod ? { 'x-payment-method': upload.paymentMethod } : {})
         },
         body: file,

@@ -9,6 +9,7 @@ import { GUIDE_SECTIONS, searchGuide } from './content.ts';
 import { GUIDE_AUDIENCES, audienceLabels, sectionsForAudience, type GuideAudience } from './account-guides.ts';
 import { getUserGuideCopy } from './copy.ts';
 import { guideAsMarkdown } from './export.ts';
+import { guideQuickActions, guideQuickTarget } from './quick-actions.ts';
 import './styles.css';
 
 const STORAGE_KEY = 'sadat-admin-user-guide-v1';
@@ -46,6 +47,7 @@ export default function AdminUserGuide({ locale, session, authClient }: { readon
   const panel = useRef<HTMLDivElement>(null);
   const restoreFocus = useRef<HTMLElement | null>(null);
   const visible = useMemo(() => searchGuide(query, category, sections), [query, category, sections]);
+  const quickActions = useMemo(() => guideQuickActions(visible, audience), [visible, audience]);
   const visibleIds = useMemo(() => visible.flatMap(section => section.topics.map(topic => topic.id)), [visible]);
   const opened = new Set(preferences.opened);
 
@@ -163,6 +165,14 @@ export default function AdminUserGuide({ locale, session, authClient }: { readon
     window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#guide-${id}`);
     setJump(id);
   }
+  function chooseAudience(value: GuideAudience) {
+    audienceChosen.current = true;
+    setAudience(value); setCategory('all'); setQuery('');
+    const url = new URL(window.location.href);
+    if (value === 'all') url.searchParams.delete('audience'); else url.searchParams.set('audience', value);
+    url.hash = '';
+    window.history.replaceState(null, '', url);
+  }
   function toggleTopic(id: string) {
     setPreferences(value => ({ ...value, last: id, opened: value.opened.includes(id) ? value.opened.filter(item => item !== id) : [...value.opened, id] }));
   }
@@ -192,7 +202,7 @@ export default function AdminUserGuide({ locale, session, authClient }: { readon
       {minimized ? <p className="user-guide__minimized" role="status">{copy.minimized}</p> : null}
       <div id="user-guide-reading" hidden={minimized}>
         <div className="user-guide__toolbar">
-          <div><label htmlFor="user-guide-audience">{copy.accountType}</label><select id="user-guide-audience" value={audience} onChange={event => { audienceChosen.current = true; setAudience(event.target.value as GuideAudience); setCategory('all'); setQuery(''); }}>{audiences.map(value => <option key={value} value={value}>{audienceLabels[value]}</option>)}</select><small>{copy.audienceNote}</small></div>
+          <div><label htmlFor="user-guide-audience">{copy.accountType}</label><select id="user-guide-audience" value={audience} onChange={event => chooseAudience(event.target.value as GuideAudience)}>{audiences.map(value => <option key={value} value={value}>{audienceLabels[value]}</option>)}</select><small>{copy.audienceNote}</small></div>
           <div className="user-guide__search"><label htmlFor="user-guide-search">{copy.search}</label><input id="user-guide-search" type="search" value={query} placeholder={copy.placeholder} onChange={event => setQuery(event.target.value)} /></div>
           <div><label htmlFor="user-guide-category">{copy.category}</label><select id="user-guide-category" value={category} onChange={event => setCategory(event.target.value)}><option value="all">{copy.all}</option>{sections.map(section => <option key={section.id} value={section.id}>{section.title}</option>)}</select></div>
           <div className="user-guide__actions">
@@ -205,6 +215,14 @@ export default function AdminUserGuide({ locale, session, authClient }: { readon
           </div>
           <p className="user-guide__count" role="status">{visibleIds.length} {copy.count}</p>
         </div>
+        <section className="user-guide__quick" aria-labelledby="guide-quick-title">
+          <h2 id="guide-quick-title">{copy.quickActions}</h2><p>{copy.quickHelp}</p>
+          <div className="user-guide__audiences" role="group" aria-label={`${copy.accountType}: ${copy.quickActions}`}>{audiences.map(value => <button type="button" key={value} aria-pressed={audience === value} onClick={() => chooseAudience(value)}>{audienceLabels[value]}</button>)}</div>
+          {quickActions.length ? <div className="user-guide__quick-grid" lang="ar" dir="rtl">{quickActions.map(topic => <article key={topic.id} data-guide-task={topic.id}>
+            <h3><a href={`#guide-${topic.id}`} onClick={event => { event.preventDefault(); openTopic(topic.id); }}>{topic.title}</a></h3><p>{topic.summary}</p>
+            <div><a href={`#guide-${topic.id}`} onClick={event => { event.preventDefault(); openTopic(topic.id); }}>{copy.readSteps}</a>{guideQuickTarget(topic) ? <a aria-label={`${copy.openScreen}: ${guideQuickTarget(topic)!.label}`} href={taskPath(guideQuickTarget(topic)!.path, locale)} target="_blank" rel="noopener noreferrer">{copy.openScreen}<span aria-hidden="true"> ↗</span></a> : null}</div>
+          </article>)}</div> : null}
+        </section>
         <p className="user-guide__link-note">{copy.tabNote}</p>
         <p className="user-guide__feedback" role="status">{message}</p>
         <div className="user-guide__layout">

@@ -1,15 +1,22 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { GuideSection } from './content.ts';
+import { guideTopicAnchor } from './quick-actions.ts';
 
-export const GUIDE_EDITION = '2026-10-08';
+export const GUIDE_EDITION = '2026-10-09';
 
 /** Markdown uses the same filtered topics as the on-screen operating guide. */
 export function guideAsMarkdown(sections: readonly GuideSection[], locale: SupportedLocale = 'ar'): string {
   const lines = ['# دليل استخدام منصة عقارات السادات', '', `آخر تحديث: ${GUIDE_EDITION}`, '', 'الشرح باللغة العربية. الروابط تتبع لغة الواجهة؛ فتح الرابط لا يمنح صلاحية جديدة.', ''];
+  lines.push('## الوصول السريع', '');
+  for (const section of sections) {
+    lines.push(`**${section.title}**`, '');
+    section.topics.forEach(topic => lines.push(`- [${topic.title}](#${guideTopicAnchor(topic.id)})`));
+    lines.push('');
+  }
   for (const section of sections) {
     lines.push(`## ${section.title}`, '', section.description, '');
     for (const topic of section.topics) {
-      lines.push(`### ${topic.title}`, '', topic.summary, '', `**قبل أن تبدأ:** ${topic.before}`, '', '#### الخطوات', '');
+      lines.push(`<a id="${guideTopicAnchor(topic.id)}"></a>`, '', `### ${topic.title}`, '', topic.summary, '', `**قبل أن تبدأ:** ${topic.before}`, '', '#### الخطوات', '');
       topic.steps.forEach((step, index) => lines.push(`${index + 1}. ${step}`));
       lines.push('', '#### شرح الحقول والمعاني', '');
       topic.fields.forEach(([name, explanation]) => lines.push(`- **${name}:** ${explanation}`));

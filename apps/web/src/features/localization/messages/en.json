@@ -1258,7 +1258,7 @@
     "reason": "Change reason",
     "reasonPlaceholder": "Write a clear reason of at least five characters",
     "reasonRequired": "A change reason is required.",
-    "titleRequired": "Provide a title and body in Arabic or English.",
+    "titleRequired": "Enter a title in Arabic or English.",
     "categoryRequired": "Choose a category.",
     "action": {
       "update": "Edit",
@@ -2291,6 +2291,10 @@
     "eyebrow": "Help centre",
     "description": "Task steps, field explanations, answers and direct links to the working screens.",
     "language": "Detailed reference in Arabic • 8 October 2026 edition",
+    "quickActions": "What would you like to do?",
+    "quickHelp": "Choose your account type, then read the task steps or open its screen directly. Shortcuts follow your search and filters.",
+    "readSteps": "Read steps",
+    "openScreen": "Open screen",
     "accountType": "Account type",
     "audienceNote": "This selection filters the instructions; it does not change your account role or permissions.",
     "download": "Download guide as Markdown (.md)",
@@ -3672,12 +3676,12 @@
         "sales_agent": "Sales agent",
         "custom": "Custom number"
       },
+      "visibilityHelp": "These details are private to the property owner and platform administration. Customer requests go through the platform for the team to follow up.",
+      "visibilityHidden": "Phone, WhatsApp, email and internal notes will not appear on the property page, including after publication.",
       "visibilityTitle": "Contact privacy",
       "showPhone": "Show phone number",
       "showWhatsapp": "Show WhatsApp number",
-      "showEmail": "Show email address",
-      "visibilityHelp": "These details are private to the property owner and platform administration. Customer requests go through the platform for the team to follow up.",
-      "visibilityHidden": "Phone, WhatsApp, email and internal notes will not appear on the property page, including after publication."
+      "showEmail": "Show email address"
     },
     "review": {
       "submit": "Submit property for review",

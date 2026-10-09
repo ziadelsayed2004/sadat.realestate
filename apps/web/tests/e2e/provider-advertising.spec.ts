@@ -83,7 +83,7 @@ test('payment proof is sent only by the send button and can be retried without c
   const copy = getProviderAdvertisingCopy(locale);
   await routeSession(page);
   await routeAdvertisingApi(page);
-  const filename = 'payment-proof-receipt-with-a-long-name-for-mobile-layout.png';
+  const filename = 'WhatsApp Image 2026-10-07 at 10.49.37 PM.png';
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==', 'base64');
   const proof = { id: 'dddddddddddddddddddddddd', adRequestId: REQUEST_ID, providerId: PROVIDER_ID, paymentMethod: 'vodafone_cash', originalFilename: filename, normalizedExtension: '.png', detectedMime: 'image/png', byteSize: image.length, sha256: 'a'.repeat(64), version: 1, securityState: 'scan_pending', status: 'pending_review', reviewHistory: [], uploadedAt: '2026-10-08T08:00:00.000Z', active: true, idempotentReplay: false };
   let sent = false;
@@ -93,7 +93,7 @@ test('payment proof is sent only by the send button and can be retried without c
   await page.route(`**/api/v1/provider/ads/${REQUEST_ID}/payment-proof`, async route => {
     posts += 1;
     expect(route.request().method()).toBe('POST');
-    expect(route.request().headers()).toMatchObject({ authorization: 'Bearer provider.advertising.token', 'x-file-name': filename, 'x-payment-method': 'vodafone_cash', 'content-type': 'image/png' });
+    expect(route.request().headers()).toMatchObject({ authorization: 'Bearer provider.advertising.token', 'x-file-name': encodeURIComponent(filename), 'x-payment-method': 'vodafone_cash', 'content-type': 'image/png' });
     expect(route.request().postDataBuffer()).toEqual(image);
     if (posts === 1) {
       await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'temporarily_unavailable', message: 'Try again.', requestId: 'proof-offline' } }) });
@@ -115,7 +115,7 @@ test('payment proof is sent only by the send button and can be retried without c
   await expect(page.getByText(copy.paymentProofSendHelp)).toBeVisible();
   expect(posts).toBe(0);
   await send.click();
-  await expect(page.getByRole('alert')).toHaveText(copy.mutationFailed);
+  await expect(page.getByRole('alert')).toContainText(locale === 'ar' ? 'غير متاحة' : 'unavailable');
   expect(posts).toBe(1);
   expect(await input.evaluate(element => (element as HTMLInputElement).files?.[0]?.name)).toBe(filename);
   await send.click();
@@ -216,7 +216,7 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(page.locator('body')).not.toContainText(/sourceRecordId|policyId|assignedTo|internalNotes|auditData/u);
     const card = await page.locator('.provider-commission__card').boundingBox();
     const heading = await page.locator('.provider-commission__heading').boundingBox();
-    const notice = await page.locator('.provider-commission__readonly').boundingBox();
+    const notice = await page.locator('.provider-commission__readonly').last().boundingBox();
     const action = await page.locator('.provider-commission__card > .ui-button').boundingBox();
     expect(card!.width).toBeCloseTo(heading!.width, 0);
     expect(card!.x).toBeCloseTo(heading!.x, 0);

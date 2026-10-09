@@ -85,6 +85,12 @@ function contentLength(request: Request): number | undefined {
   return Number(value);
 }
 
+function uploadFilename(request: Request): string | undefined {
+  const raw = request.get('x-file-name');
+  try { return raw === undefined ? undefined : decodeURIComponent(raw); }
+  catch { throw new ApiContractError('INVALID_FILENAME', 'errors.upload.invalidFilename', 400); }
+}
+
 function objectIdPath(value: string | string[] | undefined): string {
   const normalized = typeof value === 'string' ? value : '';
   if (!/^[a-f0-9]{24}$/.test(normalized)) {
@@ -163,7 +169,7 @@ export function createPaymentProofRouter(dependencies: PaymentProofRouterDepende
   router.post('/provider/ads/:adRequestId/payment-proof', providerAuth, uploadRateLimit, async (request, response) => {
     try {
       const headers = paymentProofUploadHeadersSchema.parse({
-        filename: request.get('x-file-name'),
+        filename: uploadFilename(request),
         contentType: request.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase(),
         paymentMethod: request.get('x-payment-method'),
         contentLength: contentLength(request)

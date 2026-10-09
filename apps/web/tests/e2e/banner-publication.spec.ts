@@ -14,6 +14,7 @@ for (const window of [
   test(`saves and schedules a banner in Egypt ${window.season} time from an American device and reopens its exact times`, async ({ page }) => {
     const locale = language();
     const copy = getBannerControlCopy(locale);
+    await page.clock.install({ time: new Date(`${window.date}T10:00:00Z`) });
     await routeAdminHomeApis(page);
     await page.goto(`/admin/banners/new?lang=${locale}`);
     await page.locator('#admin-home-banner-title-ar').fill(title.ar);
@@ -154,16 +155,24 @@ test('rotates managed images on schedule, pauses and navigates without resetting
   await routePublicHomepageApi(page);
   const response = publicHomepageFixture();
   response.data.banners = [
-    { key: 'banner_campaign_first', title, imageUrl: '/assets/canonical/public/listing-property-rental.png', displaySeconds: 3, targetUrl: 'https://example.com/property', order: 0 },
-    { key: 'banner_campaign_second', title, imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png', displaySeconds: 5, targetUrl: 'https://example.com/property', order: 1 }
+    { key: 'banner_campaign_first', title, body: { ar: 'وصف الإعلان الأول', en: 'First campaign description' }, imageUrl: '/assets/canonical/public/listing-property-rental.png', displaySeconds: 3, targetUrl: 'https://example.com/property', order: 0 },
+    { key: 'banner_campaign_second', title: { ar: 'حملة العقار الثاني', en: 'Second property campaign' }, body: { ar: 'وصف الإعلان الثاني', en: 'Second campaign description' }, imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png', displaySeconds: 5, targetUrl: 'https://example.com/property', order: 1 }
   ];
   await page.route('**/api/v1/public/home**', route => route.fulfill({ json: response }));
   await page.goto(`/?lang=${locale}`);
   const hero = page.locator('.public-homepage__hero');
   const image = hero.locator('.public-homepage__hero-media img');
   await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
+  await expect(hero.locator('.public-homepage__hero-body')).toHaveText(response.data.banners[0]!.body![locale]!);
+  if ((page.viewportSize()?.width ?? 1000) < 768) {
+    await expect(image).toHaveCSS('object-fit', 'contain');
+    await expect(image).toHaveCSS('opacity', '1');
+    expect(await image.evaluate(element => element.getBoundingClientRect().height)).toBeGreaterThan(100);
+  }
   await page.clock.runFor(3100);
   await expect(image).toHaveAttribute('src', response.data.banners[1]!.imageUrl!);
+  await expect(hero.getByRole('heading', { level: 1 })).toHaveText(response.data.banners[1]!.title![locale]!);
+  await expect(hero.locator('.public-homepage__hero-body')).toHaveText(response.data.banners[1]!.body![locale]!);
   await hero.getByRole('button', { name: locale === 'ar' ? 'إيقاف مؤقت' : 'Pause', exact: true }).click();
   await page.mouse.move(1, 1);
   await page.clock.runFor(12_000);

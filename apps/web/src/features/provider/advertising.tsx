@@ -1,4 +1,5 @@
-﻿import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { paymentProofError } from './payment-proof-error.ts';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   type AdRequestCreate,
   adRequestCreateSchema,
@@ -370,8 +371,8 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
       setFeedback(copy.paymentProofUploaded);
       setAttempt(value => value + 1);
       return true;
-    } catch {
-      setMutationError(copy.mutationFailed);
+    } catch (error) {
+      setMutationError(paymentProofError(error, locale, copy.mutationFailed));
       return false;
     } finally {
       setMutationBusy(false);

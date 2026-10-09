@@ -10,6 +10,8 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 import { resolveRoute } from '../src/routes/route-table.ts';
 import { audienceLabels, GUIDE_AUDIENCES, sectionsForAudience } from '../src/features/admin_user_guide/account-guides.ts';
 import { guideAsText, guideAsMarkdown, GUIDE_EDITION } from '../src/features/admin_user_guide/export.ts';
+import { guideQuickActions } from '../src/features/admin_user_guide/quick-actions.ts';
+import { guideAsHtml } from '../src/features/admin_user_guide/catalog-export.ts';
 
 const admin = { status: 'authenticated' as const, role: 'admin' as const };
 const topics = GUIDE_SECTIONS.flatMap(section => section.topics);
@@ -22,6 +24,38 @@ beforeEach(() => {
 });
 
 describe('interactive administrator reference', () => {
+  it('keeps each quick action inside its selected audience and opens a filtered topic without leaving the guide', async () => {
+    for (const audience of GUIDE_AUDIENCES) {
+      const sections = sectionsForAudience(GUIDE_SECTIONS, audience);
+      const ids = new Set(sections.flatMap(section => section.topics.map(topic => topic.id)));
+      expect(guideQuickActions(sections, audience).length).toBeGreaterThan(0);
+      expect(guideQuickActions(sections, audience).every(topic => ids.has(topic.id))).toBe(true);
+    }
+    renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
+    fireEvent.click(screen.getByRole('button', { name: audienceLabels['owner-admin'] }));
+    expect(screen.getByLabelText('نوع الحساب')).toHaveValue('owner-admin');
+    const quick = document.querySelector<HTMLElement>('.user-guide__quick')!;
+    const card = within(quick).getByRole('heading', { name: 'طلبات المعاينة: تنظيم زيارة العميل للعقار' }).closest('article')!;
+    expect(within(card).getByRole('link', { name: /فتح الصفحة/ })).toHaveAttribute('href', '/admin/viewing-requests?lang=ar');
+    fireEvent.click(within(card).getByRole('link', { name: 'شرح الخطوات' }));
+    const target = document.getElementById('guide-toggle-viewing-administration')!;
+    await waitFor(() => expect(target).toHaveFocus());
+    expect(target).toHaveAttribute('aria-expanded', 'true');
+    expect(window.location.href).toContain('audience=owner-admin#guide-viewing-administration');
+  });
+  it('exports a searchable catalog and stable internal topic links from the same instructions', () => {
+    const html = guideAsHtml(GUIDE_SECTIONS);
+    const markdown = guideAsMarkdown(GUIDE_SECTIONS);
+    expect(html).toContain(GUIDE_EDITION);
+    for (const topic of topics) {
+      expect(html).toContain(`id="guide-${topic.id}"`);
+      expect(markdown).toContain(`](#guide-${topic.id})`);
+      expect(markdown).toContain(`<a id="guide-${topic.id}"></a>`);
+    }
+    expect(html).toContain('data-quick-audience="developer"');
+    expect(html).toContain('https://elsadatrealestate.com/provider/projects?lang=ar');
+    expect(html).not.toContain('errors.conflict</');
+  });
   it('exports the current financial instructions as Markdown with localized working links', () => {
     const sections = searchGuide('', 'ads-commissions');
     const markdown = guideAsMarkdown(sections, 'en');

@@ -179,6 +179,40 @@ test('payment-proof route rejects malformed object ids and cross-owner requests'
   });
 });
 
+test('payment proofs accept WhatsApp timestamp names and encoded Arabic names without weakening file checks', async () => {
+  for (const filename of ['WhatsApp Image 2026-10-07 at 10.49.37 PM.jpeg', 'إيصال دفع 10.49.37.jpeg']) {
+    await withServer(async baseUrl => {
+      const bytes = Buffer.from([0xff, 0xd8, 0xff, 0x01, 0xff, 0xd9]);
+      const result = await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, {
+        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'image/jpeg', 'X-File-Name': encodeURIComponent(filename) }, body: bytes
+      });
+      assert.equal(result.status, 201);
+      const body = await result.json() as { data: PaymentProofData };
+      assert.equal(body.data.originalFilename, filename);
+      assert.equal(body.data.securityState, 'clean');
+      assert.equal(body.data.status, 'pending_review');
+    });
+  }
+});
+
+test('unsafe receipt names return a useful 400 and timestamps never bypass signature checks', async () => {
+  await withServer(async baseUrl => {
+    for (const [filename, contentType, code] of [
+      ['receipt.exe.pdf', 'application/pdf', 'DOUBLE_EXTENSION_REJECTED'],
+      ['receipt.49.exe.pdf', 'application/pdf', 'DOUBLE_EXTENSION_REJECTED'],
+      ['WhatsApp Image 10.49.37.jpeg', 'image/jpeg', 'INVALID_FILE_SIGNATURE'],
+      ['bad%GG.pdf', 'application/pdf', 'INVALID_FILENAME']
+    ]) {
+      const result = await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, {
+        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': contentType!, 'X-File-Name': filename! }, body: pdf
+      });
+      assert.equal(result.status, 400);
+      const body = await result.json() as { error: { code: string } };
+      assert.equal(body.error.code, code);
+    }
+  });
+});
+
 test('admin payment-proof review route enforces RBAC, reasons, versioning, and redaction', async () => {
   await withServer(async (baseUrl) => {
     assert.equal((await fetch(`${baseUrl}/api/v1/admin/payment-proofs/222222222222222222222222/review`, { method: 'POST' })).status, 401);
