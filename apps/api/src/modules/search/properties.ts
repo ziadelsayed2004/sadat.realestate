@@ -1,3 +1,4 @@
+import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { publicHomepageCategorySchema, publicPropertyAmenitySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicPropertyAmenity, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
@@ -147,6 +148,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         connection.collection('property_taxonomy').find({ kind: { $in: ['category', 'type'] }, active: true }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, kind: 1, categoryId: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(200).toArray() as Promise<TaxonomyMongoRow[]>,
         connection.collection('locations').find({ active: true }, { projection: { _id: 1, name: 1, kind: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(500).toArray() as Promise<NamedMongoRow[]>
       ]);
+      const coveredRows = await attachPublicPropertyCovers(connection, rows);
       const organizationIds = [...new Set(rows.flatMap((row) => { const value = id(row.organizationId); return value ? [value] : []; }))];
       const typeRows = taxonomyRows.filter((row) => row.kind === 'type');
       const taxonomyIds = typeRows.flatMap((row) => { const value = id(row._id); return value ? [value] : []; });
@@ -193,7 +195,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicPropertyAmenitySchema.safeParse({ id: id(row._id), kind: row.kind, groupKey: row.groupKey, name: row.name, ...(row.detail === undefined ? {} : { detail: row.detail }), ...(row.distanceLabel === undefined ? {} : { distanceLabel: row.distanceLabel }), slug: row.slug, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: rows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
+      return { items: coveredRows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
     }
   };
 }

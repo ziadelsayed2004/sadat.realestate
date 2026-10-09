@@ -85,3 +85,12 @@ test('never reveals personal channels through the public endpoint after login or
     for (const account of [undefined, viewer('seeker'), viewer('provider'), viewer('admin')]) assert.equal((await service.get('apartment', account))?.contact, undefined);
   }
 });
+
+
+test('details and listing share the uploaded cover even when its stored property URL is absent or stale', () => {
+  const uploaded = `/api/v1/public/properties/${id}/media/${relatedId}/content`;
+  assert.equal(publicPropertyDetailsProjection(source())?.imageUrl, uploaded);
+  assert.equal(publicPropertyDetailsProjection(source({ imageUrl: 'https://example.com/old-cover.jpg' }))?.imageUrl, uploaded);
+  assert.equal(publicPropertyDetailsProjection(source({ imageUrl: uploaded, media: [] }))?.imageUrl, undefined);
+  assert.equal(publicPropertyDetailsProjection(source({ imageUrl: 'https://example.com/legacy.jpg', media: [] }))?.imageUrl, 'https://example.com/legacy.jpg');
+});

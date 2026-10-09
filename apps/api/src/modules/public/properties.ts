@@ -1,3 +1,4 @@
+import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, unexpiredPropertyFilter, type PropertyRuntimeSettings, type PropertySettingsReader } from '../settings/property-policy.js';
@@ -79,7 +80,11 @@ export function publicPropertyDetailsProjection(
   _contactAuthorized?: boolean
 ): PublicPropertyDetails | null {
   if (source.status !== 'published' || !source.active) return null;
-  const property = card(source);
+  const imageUrl = publicPropertyCoverUrl(source.id, source.media, source.imageUrl);
+  const coveredSource = { ...source };
+  if (imageUrl) coveredSource.imageUrl = imageUrl;
+  else delete coveredSource.imageUrl;
+  const property = card(coveredSource);
   if (!property) return null;
   const relatedProperties = source.relatedProperties.filter((value) => value.status === 'published' && value.active).flatMap((value) => { const result = card(value); return result ? [result] : []; }).sort((left, right) => left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en')).slice(0, 20);
   const media = source.media.filter((value) => value.active && value.processingState === 'ready').flatMap((value) => {
@@ -140,7 +145,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     const amenities=amenityRows.flatMap((value)=>{const amenityId=id(value._id);return amenityId&&typeof value.kind==='string'&&typeof value.groupKey==='string'&&value.name!==undefined&&typeof value.slug==='string'&&typeof value.order==='number'&&typeof value.active==='boolean'?[{id:amenityId,kind:value.kind,groupKey:value.groupKey,name:value.name,...(value.detail!==undefined?{detail:value.detail}:{}),...(value.distanceLabel!==undefined?{distanceLabel:value.distanceLabel}:{}),slug:value.slug,order:value.order,active:value.active}]:[];});
     const relatedCandidates = base.projectId ? await properties.find({ projectId: new Types.ObjectId(base.projectId), _id: { $ne: new Types.ObjectId(base.id) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, propertyTypeId: 1, locationId: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).limit(20).toArray() : [];
     const sameTypeRelated = base.propertyTypeId === undefined ? [] : relatedCandidates.filter((value) => id(value.propertyTypeId) === base.propertyTypeId);
-    const relatedRows = (sameTypeRelated.length > 0 ? sameTypeRelated : relatedCandidates).sort((left, right) => String(left.slug ?? '').localeCompare(String(right.slug ?? ''), 'en') || String(left._id ?? '').localeCompare(String(right._id ?? ''), 'en'));
+    const relatedRows = (await attachPublicPropertyCovers(connection, sameTypeRelated.length > 0 ? sameTypeRelated : relatedCandidates)).sort((left, right) => String(left.slug ?? '').localeCompare(String(right.slug ?? ''), 'en') || String(left._id ?? '').localeCompare(String(right._id ?? ''), 'en'));
     const relatedLocationIds = [...new Set(relatedRows.flatMap((value) => { const valueId = id(value.locationId); return valueId ? [valueId] : []; }))];
     const relatedOrganizationIds = [...new Set(relatedRows.flatMap((value) => { const valueId = id(value.organizationId); return valueId ? [valueId] : []; }))];
     const [relatedLocationRows, relatedOrganizationRows] = await Promise.all([
