@@ -173,6 +173,32 @@ function repository(): CmsAdminContentRepository {
   };
 }
 
+test('stops and resumes homepage content without losing text, with audit, permissions and version checks', async () => {
+  const { service, audits } = createService({ publish: false });
+  const id = '4123456789abcdef01234567';
+  const context = { requestId: 'section-visibility', traceId: 'a'.repeat(32) };
+  const stopped = await service.put({ userId: adminId }, 'homepage', { id, version: 1, status: 'inactive', visible: false, reason: 'Temporarily hide section' }, context);
+  assert.equal(stopped.namespace, 'homepage');
+  if (stopped.namespace !== 'homepage') return;
+  assert.equal(stopped.items[0]?.status, 'inactive');
+  assert.equal(stopped.items[0]?.visible, false);
+  assert.equal(stopped.items[0]?.title.en, 'Featured homes');
+  assert.equal(stopped.items[0]?.body?.en, 'Approved homepage section.');
+  await assert.rejects(service.put({ userId: adminId }, 'homepage', { id, version: 2, status: 'published', visible: true, reason: 'Resume hidden section' }, context),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_PUBLISH_FORBIDDEN');
+  assert.deepEqual(audits, ['cms.homepage.write']);
+
+  const allowed = createService();
+  await allowed.service.put({ userId: adminId }, 'homepage', { id, version: 1, status: 'inactive', visible: false, reason: 'Temporarily hide section' }, context);
+  await assert.rejects(allowed.service.put({ userId: adminId }, 'homepage', { id, version: 1, status: 'published', visible: true, reason: 'Resume stale section' }, context),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_VERSION_CONFLICT');
+  const resumed = await allowed.service.put({ userId: adminId }, 'homepage', { id, version: 2, status: 'published', visible: true, reason: 'Resume hidden section' }, context);
+  if (resumed.namespace !== 'homepage') return;
+  assert.equal(resumed.items[0]?.status, 'published'); assert.equal(resumed.items[0]?.visible, true);
+  assert.equal(resumed.items[0]?.version, 3); assert.equal(resumed.items[0]?.title.en, 'Featured homes');
+  assert.deepEqual(allowed.audits, ['cms.homepage.write', 'cms.homepage.write']);
+});
+
 function createService(options: { manage?: boolean; publish?: boolean } = {}) {
   const audits: string[] = [];
   const created = createCmsAdminContentService({
