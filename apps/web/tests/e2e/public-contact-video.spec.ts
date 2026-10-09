@@ -24,9 +24,17 @@ async function session(page: Page, role: 'provider' | 'admin' | 'seeker' | undef
 test('configured contacts remain aligned on mobile and video plays inside the published property', async ({ page, browserName }) => {
   const locale = language();
   await session(page, undefined);
-  await page.route('**/api/v1/public/properties/tour-property', route => route.fulfill({ json: envelope({ id: propertyId, slug: 'tour-property', kind: 'property', name, transactionType: 'sale', source: { sourceType: 'individual_broker' }, seo: { title: name, slug: 'tour-property' }, project: null, media: [{ ...video, imageUrl: `/api/v1/public/properties/${propertyId}/media/${mediaId}/content` }], features: [], services: [], relatedProperties: [] }) }));
+  await page.route('**/api/v1/public/properties/tour-property', route => route.fulfill({ json: envelope({ id: propertyId, slug: 'tour-property', kind: 'property', name, transactionType: 'sale', source: { sourceType: 'individual_broker' }, seo: { title: name, slug: 'tour-property' }, project: null, media: [{ ...video, id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'image', detectedMime: 'image/png', originalFilename: 'cover.png', isCover: true, imageUrl: '/property-cover.png' }, { ...video, sortOrder: 1, imageUrl: `/api/v1/public/properties/${propertyId}/media/${mediaId}/content` }], features: [], services: [], relatedProperties: [] }) }));
   await page.route(`**/api/v1/public/properties/${propertyId}/media/${mediaId}/content`, route => route.fulfill({ body: videoBytes, contentType: 'video/mp4', headers: { 'accept-ranges': 'bytes' } }));
+  await page.route('**/property-cover.png', route => route.fulfill({ contentType: 'image/png', body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl1sAAAAASUVORK5CYII=', 'base64') }));
   await page.goto(`/properties/tour-property?lang=${locale}`);
+  const gallery = page.locator('.public-property-details__gallery');
+  const videoChoice = gallery.getByRole('listitem', { name: locale === 'ar' ? 'الوسائط 2' : 'Media item 2', exact: true });
+  await videoChoice.scrollIntoViewIfNeeded();
+  await expect(videoChoice).toBeInViewport();
+  const galleryBox = await gallery.boundingBox(); const choiceBox = await videoChoice.boundingBox();
+  expect(choiceBox!.y + choiceBox!.height).toBeLessThanOrEqual(galleryBox!.y + galleryBox!.height);
+  await videoChoice.click();
   const player = page.locator('.public-property-details__gallery-main video');
   await expect(player).toBeVisible();
   await expect(player).toHaveAttribute('controls', '');

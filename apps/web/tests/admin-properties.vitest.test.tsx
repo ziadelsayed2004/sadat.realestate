@@ -165,3 +165,25 @@ describe('Admin property management contracts and views', () => {
     expect(document.querySelector('[data-screen-id="ADM-17"]')?.textContent ?? '').not.toMatch(/reporterId|internalNotes|assignedTo|auditData|storageKey|privateUrl/u);
   });
 });
+
+
+it('uses the review response for publication, the public link and the next visibility version', async () => {
+  const approved = propertyDataSchema.parse({ ...property, status: 'approved', active: false, availableActions: ['publish'] });
+  const published = propertyDataSchema.parse({ ...approved, status: 'published', active: true, version: 4, availableActions: ['hide'] });
+  const review = vi.fn().mockRejectedValueOnce(new Error('Offline')).mockResolvedValueOnce(published);
+  const visibility = vi.fn().mockResolvedValue({ ...published, status: 'hidden', active: false, version: 5, availableActions: ['restore'] });
+  renderWithLocale(<AdminProperties locale="en" session={session} view="review" propertyId={property.id} initialProperties={{ ...properties, items: [approved] }} reviewProperty={review} changeVisibility={visibility} />, { locale: 'en' });
+  await waitFor(() => expect(screen.getByLabelText('Action reason')).toBeInTheDocument());
+  fireEvent.change(screen.getByLabelText('Action reason'), { target: { value: 'Publish after checking the listing' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save action' }));
+  await waitFor(() => expect(screen.getByText(getAdminPropertiesCopy('en').states.error.body)).toBeInTheDocument());
+  expect(screen.queryByRole('link', { name: 'View published property' })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Save action' }));
+  await waitFor(() => expect(screen.getByRole('link', { name: 'View published property' })).toHaveAttribute('href', '/properties/nile-villa?lang=en'));
+  expect(screen.getByText('Property published and visible to visitors.')).toBeInTheDocument();
+  expect(screen.getByLabelText('Actions')).toHaveValue('hide');
+  fireEvent.click(screen.getByRole('button', { name: 'Save action' }));
+  await waitFor(() => expect(visibility).toHaveBeenCalledWith(property.id, { version: 4, action: 'hide', reason: 'Publish after checking the listing' }));
+  await waitFor(() => expect(screen.queryByRole('link', { name: 'View published property' })).not.toBeInTheDocument());
+  expect(screen.getByLabelText('Actions')).toHaveValue('restore');
+});
