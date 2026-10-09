@@ -302,7 +302,7 @@ test.describe('PRV-09 Egyptian contact regression', () => {
       const input = route.request().postDataJSON();
       saved.push(input);
       expect(input.version).toBe(current.version);
-      expect(input.contact).toMatchObject({ phone: '+201028514572', whatsappNumber: '+201039938831', email: 'owner@example.com', showPhone: true, showWhatsapp: false, showEmail: false, internalNotes: 'Keep my notes' });
+      expect(input.contact).toMatchObject({ phone: '+201028514572', whatsappNumber: '+201039938831', email: 'owner@example.com', showPhone: false, showWhatsapp: false, showEmail: false, internalNotes: 'Keep my notes' });
       current = propertyFixture({ contact: input.contact, version: current.version + 1 });
       await route.fulfill({ json: { data: current, meta: { requestId: 'contact-save' } } });
     });
@@ -312,8 +312,8 @@ test.describe('PRV-09 Egyptian contact regression', () => {
     await page.locator('#provider-property-contact-whatsapp').fill('٠١٠٣٩٩٣٨٨٣١');
     await page.locator('#provider-property-contact-email').fill('owner@example.com');
     await page.locator('#provider-property-contact-notes').fill('Keep my notes');
-    await page.getByRole('switch', { name: copy.contact.showWhatsapp }).uncheck();
-    await page.getByRole('switch', { name: copy.contact.showEmail }).uncheck();
+    await expect(page.getByRole('switch')).toHaveCount(0);
+    await expect(page.getByText(copy.contact.visibilityHidden, { exact: true })).toBeVisible();
     await page.getByRole('button', { name: copy.continue, exact: true }).click();
     await expect(phone).toBeFocused();
     await expect(phone).toHaveAttribute('aria-invalid', 'true');
@@ -340,7 +340,7 @@ test.describe('PRV-09 responsive Figma contract', () => {
     await page.setViewportSize(testInfo.project.name.startsWith('tablet-') ? { width: 1024, height: 1200 } : { width: 402, height: 1570 });
   });
 
-  test('keeps contact fields, visibility switches, and actions inside the viewport', async ({ page }) => {
+  test('keeps contact fields, privacy notice, and actions inside the viewport', async ({ page }) => {
     const locale = localeForProject();
     await routeSession(page);
     await routeProperty(page);

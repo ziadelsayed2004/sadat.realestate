@@ -56,9 +56,6 @@ interface ContactForm {
   readonly preferredLocale: SupportedLocale;
   readonly preferredContactTime: string;
   readonly internalNotes: string;
-  readonly showPhone: boolean;
-  readonly showWhatsapp: boolean;
-  readonly showEmail: boolean;
   readonly reason: string;
 }
 
@@ -143,9 +140,6 @@ function contactFromProperty(property: PropertyData | undefined, locale: Support
     preferredLocale: contact?.preferredLocale ?? locale,
     preferredContactTime: contact?.preferredContactTime ?? '',
     internalNotes: contact?.internalNotes ?? '',
-    showPhone: contact?.showPhone ?? true,
-    showWhatsapp: contact?.showWhatsapp ?? true,
-    showEmail: contact?.showEmail ?? true,
     reason: 'Provider updated contact details'
   };
 }
@@ -283,10 +277,8 @@ function ContactView({
       </section>
       <fieldset className="provider-property-completion__visibility">
         <legend>{fields.visibilityTitle}</legend>
-        {(['showPhone', 'showWhatsapp', 'showEmail'] as const).map(field => <label key={field}>
-          <span>{fields[field]}</span>
-          <input type="checkbox" role="switch" checked={form[field]} onChange={event => onChange(field, event.target.checked)} />
-        </label>)}
+        <p>{fields.visibilityHelp}</p>
+        <p role="status">{fields.visibilityHidden}</p>
       </fieldset>
       {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{copy.validationTitle}</strong> {fields.validationBody}</p> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
@@ -583,9 +575,9 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
       preferredLocale: contact.preferredLocale,
       ...(optionalValue(contact.preferredContactTime) === undefined ? {} : { preferredContactTime: optionalValue(contact.preferredContactTime) }),
       ...(optionalValue(contact.internalNotes) === undefined ? {} : { internalNotes: optionalValue(contact.internalNotes) }),
-      showPhone: contact.showPhone,
-      showWhatsapp: contact.showWhatsapp,
-      showEmail: contact.showEmail
+      showPhone: false,
+      showWhatsapp: false,
+      showEmail: false
     };
     const parsed = propertyContactStepSchema.safeParse({ version: property.version, contact: contactValue, reason: contact.reason.trim() });
     if (!parsed.success) {

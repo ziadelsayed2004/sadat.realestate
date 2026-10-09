@@ -644,16 +644,7 @@ function RequestPanel({
           {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span></p> : null}
           {contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
         </form>
-        {data.contact === undefined ? null : (
-          <div className="public-property-details__revealed-contact" data-contact-revealed="true">
-            <strong>{locale === 'ar' ? 'تواصل مباشر مع مقدم العقار' : 'Contact the property provider directly'}</strong>
-            {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
-            {data.contact.preferredContactTime ? <p>{data.contact.preferredContactTime}</p> : null}
-            {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
-            {data.contact.whatsappNumber ? <a href={getWhatsAppLink(whatsappText, data.contact.whatsappNumber)} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
-            {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}
-          </div>
-        )}
+
         {platformContact.whatsappNumber ? <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText, platformContact.whatsappNumber)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><WhatsAppIcon /></span><span>{locale === 'ar' ? 'تواصل مع المنصة عبر واتساب' : 'Contact the platform on WhatsApp'}</span></a> : null}
       </section>
       <Modal

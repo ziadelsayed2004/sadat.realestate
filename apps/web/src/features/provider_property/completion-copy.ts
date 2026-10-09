@@ -60,6 +60,8 @@ export interface ProviderPropertyCompletionCopy {
     readonly contactRoles: Readonly<Record<'account_owner' | 'sales_agent' | 'custom', string>>;
     readonly preferredContactTime: string;
     readonly visibilityTitle: string;
+    readonly visibilityHelp: string;
+    readonly visibilityHidden: string;
     readonly showPhone: string;
     readonly showWhatsapp: string;
     readonly showEmail: string;
@@ -141,7 +143,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
       preferredContactTime: 'الوقت المناسب للتواصل',
       contactRole: 'مسؤول التواصل',
       contactRoles: { account_owner: 'مسؤول الحساب', sales_agent: 'موظف مبيعات', custom: 'رقم مخصص' },
-      visibilityTitle: 'عرض البيانات للمستخدمين',
+      visibilityTitle: 'ظهور بيانات التواصل',
+      visibilityHelp: 'هذه البيانات لصاحب العقار وإدارة المنصة فقط. تصل طلبات العملاء من خلال المنصة لتتولى الإدارة متابعتها.',
+      visibilityHidden: 'لن يظهر رقم الهاتف أو واتساب أو البريد أو الملاحظات الداخلية في صفحة العقار، حتى بعد النشر.',
       showPhone: 'إظهار رقم الهاتف للمستخدمين',
       showWhatsapp: 'إظهار رقم واتساب للمستخدمين',
       showEmail: 'إظهار البريد الإلكتروني للمستخدمين',
@@ -184,7 +188,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionC
       preferredContactTime: 'Best time to contact',
       contactRole: 'Contact person',
       contactRoles: { account_owner: 'Account owner', sales_agent: 'Sales agent', custom: 'Custom number' },
-      visibilityTitle: 'Public contact details',
+      visibilityHelp: 'These details are private to the property owner and platform administration. Customer requests go through the platform for the team to follow up.',
+      visibilityHidden: 'Phone, WhatsApp, email and internal notes will not appear on the property page, including after publication.',
+      visibilityTitle: 'Contact privacy',
       showPhone: 'Show phone number',
       showWhatsapp: 'Show WhatsApp number',
       showEmail: 'Show email address',

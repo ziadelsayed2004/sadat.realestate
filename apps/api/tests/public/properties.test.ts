@@ -18,25 +18,19 @@ test('public response contract rejects private contact fields even if a producer
   assert.equal(schema.safeParse({}).success, false);
 });
 
-test('public contact respects each channel toggle and never exposes provider notes or controls', () => {
-  const settings = { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, hideProviderContact: false, contactVisibility: 'public' as const };
-  const contact = { contactName: 'Sales', phone: '+201234567890', whatsappNumber: '+201234567891', email: 'sales@example.com', preferredContactTime: '9–5', internalNotes: 'Private owner instructions' };
-  for (const [flag, channel] of [['showPhone', 'phone'], ['showWhatsapp', 'whatsappNumber'], ['showEmail', 'email']] as const) {
-    const result = publicPropertyDetailsProjection(source({ contact: { ...contact, [flag]: false } }), settings);
-    assert.ok(result);
-    assert.equal(result.contact?.[channel], undefined);
-    assert.equal('internalNotes' in (result.contact ?? {}), false);
-    assert.equal(flag in (result.contact ?? {}), false);
-    assert.equal(result.contact?.preferredContactTime, '9–5');
+test('public property responses always omit private contact records, including legacy opt-ins', () => {
+  const contact = { showPhone: true, showWhatsapp: true, showEmail: true, contactName: 'Private sales agent', phone: '+201234567890', whatsappNumber: '+201234567891', email: 'private@example.com', preferredContactTime: '9 to 5', internalNotes: 'Private instructions' };
+  for (const visibility of ['public', 'authenticated', 'after_request'] as const) {
+    for (const hideProviderContact of [true, false]) {
+      const settings = { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, hideProviderContact, contactVisibility: visibility };
+      const result = publicPropertyDetailsProjection(source({ contact }), settings, true);
+      assert.ok(result);
+      assert.equal(result.contact, undefined);
+      for (const value of ['Private sales agent', contact.phone, contact.whatsappNumber, contact.email, contact.internalNotes, contact.preferredContactTime]) assert.equal(JSON.stringify(result).includes(value), false);
+    }
   }
-  const hidden = publicPropertyDetailsProjection(source({ contact: { ...contact, showPhone: false, showWhatsapp: false, showEmail: false } }), settings);
-  assert.equal(hidden?.contact?.phone, undefined);
-  assert.equal(hidden?.contact?.whatsappNumber, undefined);
-  assert.equal(hidden?.contact?.email, undefined);
-  assert.equal(publicPropertyDetailsProjection(source({ contact }), { ...settings, hideProviderContact: true })?.contact, undefined);
-  assert.equal(publicPropertyDetailsProjection(source({ contact }), settings, false)?.contact, undefined);
-  assert.equal(publicPropertyDetailsProjection(source({ contact }), settings)?.contact?.phone, contact.phone);
 });
+
 const source = (overrides: Partial<PublicPropertyDetailsSource> = {}): PublicPropertyDetailsSource => ({ id, slug: 'apartment', kind: 'property', name: localized, transactionType: 'sale', sourceType: 'developer_company', organizationId: relatedId, sourceName: localized, sourceImageUrl: 'https://example.com/source.png', sourceVerified: true, status: 'published', active: true, project: { id: relatedId, slug: 'project', name: { en: 'Project' }, status: 'published' }, media: [{ id: relatedId, propertyId: id, kind: 'image', originalFilename: 'cover.png', detectedMime: 'image/png', byteSize: 100, sortOrder: 0, isCover: true, processingState: 'ready', active: true }], features:[{id:relatedId,kind:'feature',groupKey:'interior',name:localized,detail:{en:'Full finish'},slug:'air-conditioning',order:0,active:true}], services:[{id,kind:'service',groupKey:'nearby',name:localized,detail:{en:'Public school'},distanceLabel:{en:'5 minutes'},slug:'school',order:0,active:true}], relatedProperties: [{ id: relatedId, slug: 'related', kind: 'unit', name: localized, transactionType: 'sale', status: 'published', active: true }], ...overrides });
 
 test('projects published property details with SEO, source, map link, media, and related public cards', () => {
@@ -75,51 +69,19 @@ test('details service returns null for an unknown slug without leaking an error'
   assert.equal((await service.get('apartment'))?.slug, 'apartment');
 });
 
-test('exposes property contact only when the saved public-contact policy permits it', () => {
-  const record = source({ contact: { contactName: 'Sales desk', phone: '+201234567890' } });
-  const hidden = publicPropertyDetailsProjection(record);
-  assert.equal(hidden && 'contact' in hidden, false);
-  const visible = publicPropertyDetailsProjection(record, {
-    requiresAdminReview: true,
-    publicationAfterApproval: 'manual',
-    automaticExpiry: 'never',
-    maxImages: 50,
-    acceptedImageMimes: ['image/jpeg', 'image/png'],
-    maxImageBytes: 10 * 1024 * 1024,
-    hideProviderContact: false,
-    contactVisibility: 'public'
-  });
-  assert.equal(visible?.contact?.phone, '+201234567890');
-});
-
 const viewer = (role: AccessTokenClaims['role'], sub = relatedId): AccessTokenClaims => ({
   iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub, sid: id, role,
   status: 'verified', iat: 1, exp: 2, jti: 'test'
 });
 
-test('applies authenticated and after-request contact visibility without leaking to guests', async () => {
-  let allowed = false;
+test('never reveals personal channels through the public endpoint after login or after a request', async () => {
   const repository: PublicPropertyDetailsRepository = {
-    async findBySlug() { return source({ providerId: relatedId, contact: { phone: '+201234567890' } }); },
-    async hasPropertyRequest(seekerId, propertyId) {
-      assert.equal(seekerId, relatedId);
-      assert.equal(propertyId, id);
-      return allowed;
-    }
+    async findBySlug() { return source({ providerId: relatedId, contact: { phone: '+201234567890', email: 'private@example.com', showPhone: true, showEmail: true } }); },
+    async hasPropertyRequest() { return true; }
   };
-  const values: PropertyRuntimeSettings = {
-    requiresAdminReview: true, publicationAfterApproval: 'manual', automaticExpiry: 'never',
-    maxImages: 50, acceptedImageMimes: ['image/jpeg'], maxImageBytes: 10_000_000,
-    hideProviderContact: false, contactVisibility: 'authenticated'
-  };
-  const service = createPublicPropertyDetailsService({ repository, settings: { async read() { return values; } } });
-  assert.equal((await service.get('apartment'))?.contact, undefined);
-  assert.equal((await service.get('apartment', viewer('seeker')))?.contact?.phone, '+201234567890');
-
-  values.contactVisibility = 'after_request';
-  assert.equal((await service.get('apartment', viewer('seeker')))?.contact, undefined);
-  allowed = true;
-  assert.equal((await service.get('apartment', viewer('seeker')))?.contact?.phone, '+201234567890');
-  assert.equal((await service.get('apartment', viewer('provider')))?.contact?.phone, '+201234567890');
-  assert.equal((await service.get('apartment', viewer('admin')))?.contact?.phone, '+201234567890');
+  for (const contactVisibility of ['public', 'authenticated', 'after_request'] as const) {
+    const values: PropertyRuntimeSettings = { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, hideProviderContact: false, contactVisibility };
+    const service = createPublicPropertyDetailsService({ repository, settings: { async read() { return values; } } });
+    for (const account of [undefined, viewer('seeker'), viewer('provider'), viewer('admin')]) assert.equal((await service.get('apartment', account))?.contact, undefined);
+  }
 });

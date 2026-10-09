@@ -64,6 +64,17 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('provider property media, contact, and review completion', () => {
+  it('removes public-sharing controls and clears legacy opt-ins when contact details are saved', async () => {
+    const copy = getProviderPropertyCompletionCopy('en');
+    const save = vi.fn<ProviderPropertySaveAction>(async (_id, _step, input) => property({ version: 3, ...('contact' in input && input.contact != null ? { contact: input.contact } : {}) }));
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} step="contact" propertyId={propertyId} initialData={property({ contact: { phone: '+201000000000', showPhone: true, showWhatsapp: true, showEmail: true } })} save={save} />, { locale: 'en' });
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+    expect(screen.getByText(copy.contact.visibilityHidden)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalled());
+    expect(save.mock.calls[0]?.[2]).toMatchObject({ contact: { phone: '+201000000000', showPhone: false, showWhatsapp: false, showEmail: false } });
+  });
+
   it.each([
     ['01028514572', '01039938831'],
     ['٠١٠٢٨٥١٤٥٧٢', '۰۱۰۳۹۹۳۸۸۳۱'],
@@ -79,14 +90,12 @@ describe('provider property media, contact, and review completion', () => {
     fireEvent.change(screen.getByLabelText(copy.contact.email), { target: { value: 'ahmedmohuamedassas@gmail.com' } });
     fireEvent.change(screen.getByLabelText(copy.contact.preferredContactTime), { target: { value: 'صباحا' } });
     fireEvent.change(screen.getByLabelText(copy.contact.internalNotesTitle), { target: { value: 'ق' } });
-    fireEvent.click(screen.getByLabelText(copy.contact.showWhatsapp));
-    fireEvent.click(screen.getByLabelText(copy.contact.showEmail));
     fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'contact', {
       version: 2, reason: 'Provider updated contact details', contact: {
         contactRole: 'custom', contactName: 'احمد العسس', phone: '+201028514572', whatsappNumber: '+201039938831',
         email: 'ahmedmohuamedassas@gmail.com', preferredLocale: 'en', preferredContactTime: 'صباحا', internalNotes: 'ق',
-        showPhone: true, showWhatsapp: false, showEmail: false
+        showPhone: false, showWhatsapp: false, showEmail: false
       }
     }));
     expect(await screen.findByText(copy.saved)).toBeInTheDocument();
@@ -123,6 +132,7 @@ describe('provider property media, contact, and review completion', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalled());
     expect(save.mock.calls[0]?.[2]).toMatchObject({ contact: { contactRole: 'account_owner', preferredLocale: 'en' } });
+    expect(save.mock.calls[0]?.[2]).toMatchObject({ contact: { showPhone: false, showWhatsapp: false, showEmail: false } });
     expect(save.mock.calls[0]?.[2]).not.toHaveProperty('contact.phone');
     expect(save.mock.calls[0]?.[2]).not.toHaveProperty('contact.whatsappNumber');
   });

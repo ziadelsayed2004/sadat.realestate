@@ -70,8 +70,10 @@ for (const outcome of ['success', 'error'] as const) {
       await expect.poll(() => refreshStarted).toBe(true);
       await expect(form).toHaveAttribute('data-retained-form', 'true');
       expect(Math.abs(await page.evaluate(() => window.scrollY) - previousY)).toBeLessThanOrEqual(5);
+      const refreshed = page.waitForResponse(response => response.url().includes('/api/v1/public/properties/demo-open-view-apartment'));
       releaseRefresh?.();
-      await expect(page.getByRole('link', { name: '+201234567890', exact: true })).toBeAttached();
+      await refreshed;
+      await expect(page.getByRole('link', { name: '+201234567890', exact: true })).toHaveCount(0);
       await expect(form.getByRole('status')).toContainText(copy.actionSuccessTitle);
       expect(Math.abs(await page.evaluate(() => window.scrollY) - previousY)).toBeLessThanOrEqual(5);
     } else {

@@ -3612,10 +3612,12 @@
         "sales_agent": "Sales agent",
         "custom": "Custom number"
       },
-      "visibilityTitle": "Public contact details",
+      "visibilityTitle": "Contact privacy",
       "showPhone": "Show phone number",
       "showWhatsapp": "Show WhatsApp number",
-      "showEmail": "Show email address"
+      "showEmail": "Show email address",
+      "visibilityHelp": "These details are private to the property owner and platform administration. Customer requests go through the platform for the team to follow up.",
+      "visibilityHidden": "Phone, WhatsApp, email and internal notes will not appear on the property page, including after publication."
     },
     "review": {
       "submit": "Submit property for review",

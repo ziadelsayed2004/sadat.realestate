@@ -131,7 +131,7 @@ describe('public property details', () => {
     expect(publicPropertyDetailsUrl(detailsData.slug)).toBe('/properties/published-home');
   });
 
-  it('renders contact details only when the API includes its authorized projection', () => {
+  it('does not render private provider contact details even if a cached API response includes them', () => {
     const authorized = publicPropertyDetailsSchema.parse({
       ...detailsData,
       contact: { contactName: 'Sales desk', phone: '+201234567890', email: 'sales@example.com' }
@@ -140,9 +140,10 @@ describe('public property details', () => {
       <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={authorized} />,
       { locale: 'en' }
     );
-    expect(result.container.querySelector('[data-contact-revealed="true"]')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '+201234567890' })).toHaveAttribute('href', 'tel:+201234567890');
-    expect(screen.getByRole('link', { name: 'sales@example.com' })).toHaveAttribute('href', 'mailto:sales@example.com');
+    expect(result.container.querySelector('[data-contact-revealed="true"]')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'sales@example.com' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Sales desk')).not.toBeInTheDocument();
   });
 
   it('removes authorized contacts immediately on logout and reloads the guest projection', async () => {
@@ -158,7 +159,7 @@ describe('public property details', () => {
       .mockImplementationOnce(() => new Promise<typeof detailsData>(resolve => { finishGuest = resolve; }));
     const page = () => <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={load} />;
     const result = renderWithLocale(page(), { locale: 'en' });
-    await screen.findByRole('link', { name: '+201234567890' });
+    await waitFor(() => expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument());
 
     token = undefined;
     result.rerender(page());
@@ -217,7 +218,7 @@ describe('public property details', () => {
     const authClient = { getAuthorizationHeader: () => 'Bearer seeker' };
     const load = vi.fn().mockResolvedValue(authorized);
     const result = renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={load} />, { locale: 'en' });
-    await screen.findByRole('link', { name: '+201234567890' });
+    await waitFor(() => expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument());
     fireEvent.change(screen.getByLabelText('Full name'), { target: { value: 'Keep this draft' } });
     const revokedLoad = vi.fn().mockRejectedValue(new ApiClientError('forbidden', { code: 'HTTP_ERROR', status: 403 }));
     result.rerender(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} authClient={authClient} load={revokedLoad} />);
@@ -369,7 +370,7 @@ describe('public property details', () => {
     expect(screen.getByRole('form', { name: copy.contactTitle })).toBe(form);
     expect(result.container.querySelector('[data-details-state="success"]')).toBeInTheDocument();
     finishRefresh?.({ ...detailsData, contact: { phone: '+201234567890' } });
-    await screen.findByRole('link', { name: '+201234567890' });
+    await waitFor(() => expect(screen.queryByRole('link', { name: '+201234567890' })).not.toBeInTheDocument());
     expect(screen.getByRole('form', { name: copy.contactTitle })).toBe(form);
     expect(screen.getByLabelText(copy.fullName)).toHaveValue('Example Seeker');
     expect(screen.getByLabelText(copy.phoneNumber)).toHaveValue('01001234567');
