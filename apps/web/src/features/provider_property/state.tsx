@@ -77,14 +77,13 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
   const statusCopy = copy.statuses[status];
   const propertyName = property.name[locale] ?? property.name.en ?? property.name.ar ?? property.slug;
   const reviewDate = property.reviewedAt ?? property.publishedAt;
-  const viewPropertyHref = localePath(locale, `/provider/properties/${encodeURIComponent(property.id)}/review`);
   const publicHref = localePath(locale, `/properties/${encodeURIComponent(property.slug)}`);
 
   if (status === 'pending_review') {
     return (
       <main className="provider-property-state__main provider-property-state__main--submitted" data-state-layout="submitted" aria-labelledby="provider-property-state-title">
         <span className="provider-property-state__submitted-icon" aria-hidden="true">✓</span>
-        <div className="provider-property-state__intro">
+        <div className="provider-property-state__intro" role="status">
           <h1 id="provider-property-state-title">{statusCopy.title}</h1>
           <p>{statusCopy.body}</p>
         </div>
@@ -96,9 +95,14 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
           </dl>
         </section>
         <div className="provider-property-state__actions provider-property-state__submitted-actions">
-          <a className="provider-dashboard__primary-action" data-action="view-property" href={viewPropertyHref}>{copy.actions.viewProperty}</a>
+          <a className="provider-dashboard__primary-action" data-action="browse-properties" href={localePath(locale, '/properties')}>{copy.actions.search}</a>
           <a className="provider-dashboard__secondary-action" data-action="back" href={localePath(locale, '/provider/properties')}>{copy.actions.back}</a>
         </div>
+        <form className="provider-property-state__search" action="/properties" method="get" role="search" aria-label={copy.actions.search}>
+          <input type="hidden" name="lang" value={locale} />
+          <label htmlFor="submitted-property-search">{copy.actions.search}</label>
+          <div><input id="submitted-property-search" type="search" name="search" placeholder={copy.actions.searchPlaceholder} maxLength={80} /><Button type="submit">{copy.actions.search}</Button></div>
+        </form>
       </main>
     );
   }

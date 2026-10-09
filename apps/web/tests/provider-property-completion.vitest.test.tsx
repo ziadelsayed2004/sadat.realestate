@@ -228,8 +228,9 @@ describe('provider property media, contact, and review completion', () => {
 
   it('requires server permission and all review confirmations before submit', async () => {
     const submit = vi.fn(async () => property({ status: 'pending_review', availableActions: [] }));
+    const navigateToSubmitted = vi.fn();
     const copy = getProviderPropertyCompletionCopy('en');
-    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property()} submit={submit} />, { locale: 'en' });
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property()} submit={submit} navigateToSubmitted={navigateToSubmitted} />, { locale: 'en' });
     const submitButton = screen.getByRole('button', { name: copy.review.submit });
     expect(submitButton).toBeDisabled();
     fireEvent.click(screen.getByLabelText(copy.review.accurateData));
@@ -239,6 +240,7 @@ describe('provider property media, contact, and review completion', () => {
     fireEvent.click(submitButton);
     await waitFor(() => expect(submit).toHaveBeenCalledWith({ version: 2, reason: 'Provider submitted property for review' }, expect.objectContaining({ propertyId })));
     expect(screen.getByText(copy.review.submittedTitle)).toBeInTheDocument();
+    await waitFor(() => expect(navigateToSubmitted).toHaveBeenCalledExactlyOnceWith(`/provider/properties/${propertyId}/submitted?lang=en`));
   });
 
   it('fails closed for an anonymous session and provider permission errors', async () => {

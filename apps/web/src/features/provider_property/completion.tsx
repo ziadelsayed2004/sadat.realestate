@@ -103,6 +103,7 @@ export interface ProviderPropertyCompletionWizardProps {
   readonly reorder?: ProviderPropertyMediaOrderAction | undefined;
   readonly remove?: ProviderPropertyMediaDeleteAction | undefined;
   readonly submit?: ProviderPropertySubmitAction | undefined;
+  readonly navigateToSubmitted?: ((path: string) => void) | undefined;
 }
 
 function errorState(error: unknown): Exclude<ViewState, 'loading' | 'success'> {
@@ -116,7 +117,7 @@ function mutationError(error: unknown): MutationState {
   return error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error';
 }
 
-type ProviderPropertyNavigationStep = ProviderPropertyCompletionStep | 'features-services';
+type ProviderPropertyNavigationStep = ProviderPropertyCompletionStep | 'features-services' | 'submitted';
 
 function pathFor(locale: SupportedLocale, propertyId: string, step: ProviderPropertyNavigationStep): string {
   const routeStep = step === 'features-services' ? 'features' : step;
@@ -487,7 +488,7 @@ function ReviewView({
   );
 }
 
-export function ProviderPropertyCompletionWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save, upload, reorder, remove, submit }: ProviderPropertyCompletionWizardProps) {
+export function ProviderPropertyCompletionWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save, upload, reorder, remove, submit, navigateToSubmitted }: ProviderPropertyCompletionWizardProps) {
   const copy = getProviderPropertyCompletionCopy(locale);
   const propertyCopy = getProviderPropertyCopy(locale);
   const [state, setState] = useState<ViewState>('loading');
@@ -512,6 +513,13 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const reorderAction = useMemo(() => reorder ?? ((options: ProviderPropertyMediaOrderOptions) => reorderProviderPropertyMedia(options)), [reorder]);
   const removeAction = useMemo(() => remove ?? ((options: ProviderPropertyMediaDeleteOptions) => deleteProviderPropertyMedia(options)), [remove]);
   const submitAction = useMemo(() => submit ?? ((input: PropertySubmit, options: ProviderPropertySubmitOptions) => submitProviderProperty(input, options)), [submit]);
+
+  useEffect(() => {
+    if (step !== 'review' || state !== 'success' || property?.status !== 'pending_review') return;
+    const path = pathFor(locale, propertyId, 'submitted');
+    if (navigateToSubmitted) navigateToSubmitted(path);
+    else window.location.replace(path);
+  }, [locale, navigateToSubmitted, property?.status, propertyId, state, step]);
 
   useEffect(() => {
     if (session.status !== 'authenticated' || session.role !== 'provider') {

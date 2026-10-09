@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { getProviderPropertyCompletionCopy } from '../../src/features/provider_property/completion-copy.ts';
+import { getProviderPropertyStateCopy } from '../../src/features/provider_property/state-copy.ts';
 
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const PROPERTY_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -98,7 +99,7 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-08; PRV-09; PRV-10' });
     testInfo.annotations.push({ type: 'design-source', description: 'PRV-08 docs/design_sources/final_screens/provider/PRV-08.png SHA-256 d49d11c87ec5544de2ba9b1056860a13b9c57d7bf0b10c5ed53235c89a170021; Figma node 6017:20391; PRV-09 docs/design_sources/final_screens/provider/PRV-09.png SHA-256 fc5b166453e2d9ca35d3706ed1368eb98a30ece3f3eb23f03ee6bdb81c1b8e09; Figma node 6017:20561; PRV-10 docs/design_sources/final_screens/provider/PRV-10.png SHA-256 f34bfb0378ffe6c72625f592ea3c1b108c10cdf05273d53d907ced901aa49497; Figma node 6017:20737; Drive folders 1PTID8nypqLiSrU3-O6cAiXoJdu9hVUi4, 1yW0-rmLNBH19aM5xW3l3q0sm51yARrLS, 1Q4Enn2KDiWVSa3zI_htObrmdyMn4f0WQ' });
-    test.skip(!testInfo.project.name.startsWith('desktop-'), 'Provider Dashboard approved device scope is desktop only.');
+    test.skip(!testInfo.project.name.startsWith('desktop-') && !testInfo.title.includes('submits only'), 'Other completion visual evidence is scoped to desktop.');
     void page;
   });
 
@@ -168,15 +169,18 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await expect(page.getByText(completionCopy.saved)).toBeVisible();
   });
 
-  test('submits only when availableActions and all confirmations permit it', async ({ page }) => {
+  test('submits only when availableActions and all confirmations permit it', async ({ page }, info) => {
     const locale = localeForProject();
     const copy = copyFor(locale);
     await routeSession(page);
     await routeProperty(page);
+    let attempts = 0;
     await page.route(`**/api/v1/provider/properties/${PROPERTY_ID}/submit`, async route => {
       if (route.request().method() === 'GET') { await route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'media-list' } } }); return; }
       expect(route.request().method()).toBe('POST');
       expect(route.request().postDataJSON()).toEqual({ version: 2, reason: locale === 'ar' ? 'إرسال العقار للمراجعة' : 'Provider submitted property for review' });
+      if (++attempts === 1) { await route.fulfill({ status: 503, json: { error: { code: 'UNAVAILABLE', messageKey: 'errors.unavailable', requestId: 'submit-retry' } } }); return; }
+      await routeProperty(page, { status: 'pending_review', availableActions: [], submittedAt: '2026-10-09T10:00:00Z' });
       await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(propertyFixture({ status: 'pending_review', availableActions: [] }), 'completion-submit') });
     });
     await page.goto(`/provider/properties/${PROPERTY_ID}/review?lang=${encodeURIComponent(locale)}`);
@@ -189,10 +193,25 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await page.getByLabel(copy.review).check();
     await expect(submit).toBeEnabled();
     await hideSkipLink(page);
-    await expect(page).toHaveScreenshot(`provider-property-review-${locale}.png`, { fullPage: true });
+    if (info.project.name.startsWith('desktop-')) await expect(page).toHaveScreenshot(`provider-property-review-${locale}.png`, { fullPage: true });
     await submit.click();
-    await expect(page.getByText(getProviderPropertyCompletionCopy(locale).review.submittedTitle)).toBeVisible();
+    await expect(page.getByText(getProviderPropertyCompletionCopy(locale).mutationError)).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`/review\\?lang=${locale}$`));
+    await expect(submit).toBeEnabled();
+    await submit.click();
+    await expect(page).toHaveURL(new RegExp(`/submitted\\?lang=${locale}$`));
+    const stateCopy = getProviderPropertyStateCopy(locale);
+    await expect(page.getByRole('heading', { name: stateCopy.statuses.pending_review.title })).toBeVisible();
+    await expect(page.getByRole('link', { name: stateCopy.actions.back })).toHaveAttribute('href', `/provider/properties?lang=${locale}`);
+    await expect(page.getByRole('button', { name: copy.submit })).toHaveCount(0);
+    await page.reload();
+    await expect(page.getByRole('heading', { name: stateCopy.statuses.pending_review.title })).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/internalNote|assignedTo|auditData|storageKey|refreshToken|accessToken/u);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: info.outputPath('submitted-search.png'), fullPage: true });
+    await page.getByRole('searchbox', { name: stateCopy.actions.search, exact: true }).fill('SDT 567');
+    await page.getByRole('button', { name: stateCopy.actions.search, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/properties\\?lang=${locale}&search=SDT\\+567$`));
   });
 
   test('fails closed for session and property permission denial', async ({ page }) => {

@@ -3857,8 +3857,8 @@
     },
     "statuses": {
       "pending_review": {
-        "title": "Property submitted for review",
-        "body": "The Sadat Real Estate review team will review the property data as soon as possible and notify you of the result.",
+        "title": "Property review request submitted",
+        "body": "Your request is pending review. You will receive a notification with the result and can track its status in My properties. The property becomes visible to visitors after approval and publication.",
         "reasonLabel": "Submission reason",
         "reasonUnavailable": "The server did not provide an additional reason."
       },
@@ -3899,6 +3899,8 @@
       "publishedWarning": "Editing a published property’s core data (price, description, or location) may return it to review."
     },
     "actions": {
+      "search": "Search for a property",
+      "searchPlaceholder": "Property name, area or code",
       "back": "Back to my properties",
       "contactSupport": "Contact support",
       "myProperties": "My properties",

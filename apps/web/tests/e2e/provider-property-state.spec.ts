@@ -98,7 +98,7 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
     await expect(page.locator('[data-screen-id="PRV-12"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-12"]')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
     await expect(page.getByRole('heading', { name: copy.statuses.pending_review.title, level: 1 })).toBeVisible();
-    await expect(page.getByRole('link', { name: copy.actions.viewProperty })).toBeVisible();
+    await expect(page.getByRole('link', { name: copy.actions.search })).toHaveAttribute('href', `/properties?lang=${locale}`);
     await expect(page.locator('[data-provider-nav="addProperty"] a')).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('.provider-property-state__submitted-card dl > div')).toHaveCount(3);
     await expect(page.locator('.provider-property-state__notice, .provider-property-state__safe')).toHaveCount(0);
@@ -115,7 +115,7 @@ test.describe('PRV-11 through PRV-14 provider property states', () => {
         })
       }))).toEqual({ documentWidth: viewport.width, viewportWidth: viewport.width, contained: true });
       if (viewport.width === 402) {
-        const view = page.locator('[data-action="view-property"]');
+        const view = page.locator('[data-action="browse-properties"]');
         const back = page.locator('[data-action="back"]');
         await expect.poll(async () => (await view.boundingBox())?.y ?? 0).toBeLessThan((await back.boundingBox())?.y ?? 0);
       }
