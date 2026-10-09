@@ -12,7 +12,11 @@ describe('configured public contacts', () => {
     await refreshPublicContact();
     render(<PublicSiteFooter locale={locale} />);
     const support = within(screen.getByRole('group', { name: locale === 'ar' ? 'خدمة العملاء' : 'Customer service' }));
-    expect(support.getByRole('link', { name: locale === 'ar' ? 'اتصل بنا' : 'Call us' })).toHaveAttribute('href', `tel:${contact.phone}`);
+    const contactLink = support.getByRole('link', { name: locale === 'ar' ? 'اتصل بنا' : 'Contact us' });
+    expect(contactLink).toHaveAttribute('href', 'https://wa.me/201012345678');
+    expect(contactLink).toHaveAttribute('target', '_blank');
+    expect(contactLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.getByRole('link', { name: '+201098765432' })).toHaveAttribute('href', `tel:${contact.phone}`);
     const complaint = support.getByRole('link', { name: locale === 'ar' ? 'إرسال شكوى' : 'Send a complaint' });
     let link = new URL(complaint.getAttribute('href')!);
     expect(link.origin).toBe('https://wa.me'); expect(link.pathname).toBe('/201012345678');
@@ -22,8 +26,8 @@ describe('configured public contacts', () => {
     contact = { whatsappNumber: '+201011122233' }; await act(async () => { await refreshPublicContact(); });
     link = new URL(complaint.getAttribute('href')!);
     expect(link.pathname).toBe('/201011122233');
-    expect(support.getByRole('link', { name: locale === 'ar' ? 'تواصل معنا' : 'Contact us' })).toHaveAttribute('href', 'https://wa.me/201011122233');
-    contact = {}; await act(async () => { await refreshPublicContact(); });
+    expect(contactLink).toHaveAttribute('href', 'https://wa.me/201011122233');
+    contact = { phone: '+201098765432' }; await act(async () => { await refreshPublicContact(); });
     expect(support.queryByRole('link')).toBeNull();
     expect(support.getByText(locale === 'ar' ? 'بيانات التواصل غير متاحة حاليًا.' : 'Contact details are currently unavailable.')).toBeInTheDocument();
   });

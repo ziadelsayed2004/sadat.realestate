@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { routePublicHomepageApi } from './public-fixtures';
 
-test('footer customer service offers calling and a localized WhatsApp complaint without overflow', async ({ page }) => {
+test('footer contact opens configured WhatsApp and offers a localized complaint without overflow', async ({ page }) => {
   const ar = test.info().project.name.endsWith('-ar');
   await routePublicHomepageApi(page);
   await page.route('**/api/v1/public/bootstrap', route => route.fulfill({ json: {
@@ -15,7 +15,16 @@ test('footer customer service offers calling and a localized WhatsApp complaint 
   await expect(complaint).toBeVisible();
   await complaint.scrollIntoViewIfNeeded();
   await page.evaluate(() => document.fonts.ready);
-  await expect(support.getByRole('link', { name: ar ? 'اتصل بنا' : 'Call us' })).toHaveAttribute('href', 'tel:+201098765432');
+  const contact = support.getByRole('link', { name: ar ? 'اتصل بنا' : 'Contact us' });
+  await expect(contact).toHaveAttribute('href', 'https://wa.me/201012345678');
+  await expect(contact).toHaveAttribute('target', '_blank');
+  await expect(page.getByRole('link', { name: '+201098765432', exact: true })).toHaveAttribute('href', 'tel:+201098765432');
+  await page.context().route('https://wa.me/**', route => route.fulfill({ contentType: 'text/html', body: '<p>WhatsApp destination</p>' }));
+  const popupPromise = page.waitForEvent('popup');
+  await contact.click();
+  const popup = await popupPromise;
+  await expect(popup).toHaveURL('https://wa.me/201012345678');
+  await popup.close();
   const link = new URL((await complaint.getAttribute('href'))!);
   expect(link.origin).toBe('https://wa.me'); expect(link.pathname).toBe('/201012345678');
   expect(link.searchParams.get('text')).toContain(ar ? 'أود تقديم شكوى' : 'submit a complaint');

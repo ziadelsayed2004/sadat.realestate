@@ -530,8 +530,8 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
   const whatsapp = getWhatsAppLink(undefined, contact.whatsappNumber);
   const copy = getPublicHomepageCopy(locale);
   const support = locale === 'ar'
-    ? { title: 'خدمة العملاء', call: 'اتصل بنا', chat: 'تواصل معنا', complaint: 'إرسال شكوى', unavailable: 'بيانات التواصل غير متاحة حاليًا.', message: 'مرحبًا خدمة عملاء عقارات السادات، أود تقديم شكوى.\nالاسم:\nتفاصيل الشكوى:\nرقم العقار أو الطلب (إن وجد):' }
-    : { title: 'Customer service', call: 'Call us', chat: 'Contact us', complaint: 'Send a complaint', unavailable: 'Contact details are currently unavailable.', message: 'Hello Sadat Real Estate customer service, I would like to submit a complaint.\nName:\nComplaint details:\nProperty or request reference (if available):' };
+    ? { title: 'خدمة العملاء', contact: 'اتصل بنا', complaint: 'إرسال شكوى', unavailable: 'بيانات التواصل غير متاحة حاليًا.', message: 'مرحبًا خدمة عملاء عقارات السادات، أود تقديم شكوى.\nالاسم:\nتفاصيل الشكوى:\nرقم العقار أو الطلب (إن وجد):' }
+    : { title: 'Customer service', contact: 'Contact us', complaint: 'Send a complaint', unavailable: 'Contact details are currently unavailable.', message: 'Hello Sadat Real Estate customer service, I would like to submit a complaint.\nName:\nComplaint details:\nProperty or request reference (if available):' };
   const complaintLink = getWhatsAppLink(support.message, contact.whatsappNumber);
   // The approved public design uses one platform-level footer description on every
   // public route. Keep the prop for existing callers, but do not let a
@@ -579,9 +579,9 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
         <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">
           <p id="public-footer-support-title" className="public-homepage__footer-title">{support.title}</p>
           <div className="public-homepage__footer-links public-site-footer__contact-links">
-            {contact.phone ? <a href={`tel:${contact.phone}`}>{support.call}<img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{support.chat}<WhatsAppIcon /></a> : null}
+            {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{support.contact}<WhatsAppIcon /></a> : null}
             {complaintLink ? <a href={complaintLink} target="_blank" rel="noopener noreferrer">{support.complaint}<WhatsAppIcon /></a> : null}
-            {!contact.phone && !whatsapp ? <span>{support.unavailable}</span> : null}
+            {!whatsapp ? <span>{support.unavailable}</span> : null}
           </div>
         </div>
       </div>
