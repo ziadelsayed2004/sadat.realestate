@@ -35,6 +35,7 @@ test('HTML responses expose browser security headers and private pages are not c
     'x-frame-options': 'DENY'
   });
   expect(response?.headers()['content-security-policy']).toContain("object-src 'none'");
+  expect(response?.headers()['content-security-policy']).toMatch(/media-src 'self'[^;]*blob:/);
   expect(response?.headers()['content-security-policy']).toContain("frame-ancestors 'none'");
   expect(response?.headers()['content-security-policy']).toContain("form-action 'self'");
   await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|storageKey|privateUrl/u);
@@ -74,6 +75,7 @@ test('access tokens stay out of browser storage and hostile returnTo values fail
 
 test('protected dashboard routes fail closed for an anonymous browser session', async ({ page }) => {
   const locale = localeForProject();
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({ status: 401, json: { error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'security-anonymous' } } }));
   const response = await page.goto(`/admin/settings/requests?lang=${encodeURIComponent(locale)}`);
 
   expect(response?.status()).toBe(200);

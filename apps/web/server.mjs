@@ -116,6 +116,7 @@ function applySecurityHeaders(response, html = false, development = false, cspNo
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     `img-src ${imageSources}`,
+    `media-src ${connectSources} blob:`,
     `connect-src ${developmentConnectSources}`,
     "worker-src 'self' blob:"
   ].join('; '));
