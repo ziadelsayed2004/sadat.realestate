@@ -1,0 +1,24 @@
+.admin-content .admin-team-departments { max-width: 1320px; margin: 0 auto 24px; border: 1px solid #e3e5e7; border-radius: 20px; overflow: hidden; scroll-margin-block-start: calc(var(--header-height-min, 72px) + 16px); }
+.admin-team-departments > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px; list-style: none; font-size: 1.05rem; }
+.admin-team-departments > summary::-webkit-details-marker { display: none; }
+.admin-team-departments > summary::after { content: '+'; font-size: 1.5rem; font-weight: 500; }
+.admin-team-departments[open] > summary::after { content: '−'; }
+.admin-team-departments > summary:focus-visible { outline: 3px solid #d79a2b; outline-offset: -4px; }
+.admin-team-departments__body { display: grid; gap: 20px; padding: 24px; border-block-start: 1px solid #e3e5e7; }
+.admin-team-departments__body p { margin: 0; line-height: 1.8; overflow-wrap: anywhere; color: #5e6b80; }
+.admin-team-departments__selector { max-width: 620px; }
+.admin-team-departments .admin-team-departments__form { margin: 0; }
+.admin-team-departments__fields { display: grid; gap: 20px; min-width: 0; margin: 0; padding: 20px; border: 1px solid #e5d9bd; border-radius: 14px; background: #fffdf8; }
+.admin-team-departments__fields legend { padding-inline: 8px; color: #155b4f; font-weight: 800; }
+.admin-team-departments input:not([type='checkbox']), .admin-team-departments select { background: #fff; }
+.admin-team-departments__fields .admin-content__checkbox { align-self: center; }
+.admin-team-departments input:focus-visible, .admin-team-departments select:focus-visible, .admin-team-departments textarea:focus-visible { outline: 2px solid #155b4f; outline-offset: 2px; }
+.admin-team-departments__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.admin-team-departments__feedback { padding: 14px 16px; border-radius: 12px; }
+.admin-team-departments .admin-team-departments__feedback[data-tone='success'] { color: #145a3c; background: #f0faf3; }
+.admin-team-departments .admin-team-departments__feedback[data-tone='error'] { color: #a12636; background: #fff2f3; }
+.admin-team-departments__note { font-size: .85rem; }
+@media (max-width: 700px) {
+  .admin-team-departments > summary, .admin-team-departments__body { padding: 18px; }
+  .admin-team-departments__fields { padding: 14px; }
+}

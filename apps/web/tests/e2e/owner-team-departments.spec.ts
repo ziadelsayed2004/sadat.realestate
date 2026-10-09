@@ -44,9 +44,9 @@ test('creates a department, assigns a member and filters the public team with a 
   await expect(manager.locator('input[type=checkbox]')).toHaveCSS('width', '18px');
   await manager.screenshot({ path: info.outputPath('team-department-manager.png') });
   await expect(editor.getByLabel(locale === 'ar' ? 'قسم الفريق' : 'Team department')).toHaveValue('sales');
-  await manager.getByLabel(locale === 'ar' ? 'اسم التصنيف بالعربية' : 'Arabic category name', { exact: true }).fill('التسويق'); await manager.getByLabel(locale === 'ar' ? 'اسم التصنيف بالإنجليزية (اختياري)' : 'English category name (optional)', { exact: true }).fill('Marketing');
-  await manager.getByLabel(locale === 'ar' ? 'سبب تعديل التصنيف' : 'Category change reason').fill('Create marketing department');
-  await manager.getByRole('button', { name: locale === 'ar' ? 'حفظ التصنيف' : 'Save category' }).click();
+  await manager.getByLabel(locale === 'ar' ? 'اسم القسم بالعربية' : 'Arabic department name', { exact: true }).fill('التسويق'); await manager.getByLabel(locale === 'ar' ? 'اسم القسم بالإنجليزية (اختياري)' : 'English department name (optional)', { exact: true }).fill('Marketing');
+  await manager.getByLabel(locale === 'ar' ? 'سبب إضافة أو تعديل القسم' : 'Department change reason').fill('Create marketing department');
+  await manager.getByRole('button', { name: locale === 'ar' ? 'حفظ القسم' : 'Save department' }).click();
   await expect(manager.getByRole('status')).toBeVisible();
   await editor.getByLabel(locale === 'ar' ? 'قسم الفريق' : 'Team department').selectOption('marketing');
   await editor.locator('#admin-cms-team-category').locator('..').locator('..').screenshot({ path: info.outputPath('team-department-field.png') });
@@ -60,8 +60,17 @@ test('creates a department, assigns a member and filters the public team with a 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.goto(`/team?lang=${locale}`); await page.getByRole('button', { name: locale === 'ar' ? 'التسويق' : 'Marketing', exact: true }).click();
   await expect(page.locator('[data-team-category="marketing"]')).toHaveCount(1);
+  await expect(page.locator('[data-team-category="marketing"] .public-team__department')).toHaveText(locale === 'ar' ? 'التسويق' : 'Marketing');
+  await expect(page.locator('[data-team-category="marketing"] .public-team__role')).toHaveText(locale === 'ar' ? 'مدير' : 'Director');
+  expect(await page.locator('[data-team-category="marketing"]').evaluate(card => {
+    const bottom = card.getBoundingClientRect().bottom;
+    return [...card.querySelectorAll('.public-team__card-body > *')].every(child => child.getBoundingClientRect().bottom <= bottom);
+  })).toBe(true);
   await expect(page.locator('.public-team__photo')).toHaveCSS('object-fit', 'cover');
   await page.getByRole('button', { name: locale === 'ar' ? 'إدارة' : 'Management', exact: true }).click(); await expect(page.locator('.public-team__card')).toHaveCount(0);
   await page.getByRole('button', { name: locale === 'ar' ? 'التسويق' : 'Marketing', exact: true }).click();
+  await page.locator('h1').click();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath('custom-team-category.png'), fullPage: true });
 });

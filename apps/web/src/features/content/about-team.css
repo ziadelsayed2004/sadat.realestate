@@ -1,3 +1,5 @@
+.public-team__department { display: inline-block; justify-self: center; width: fit-content; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; margin-block-end: 4px; padding: 6px 14px; border-radius: 999px; background: #edf6f0; color: #155b4f; font-size: .85rem; font-weight: 800; }
+
 .public-about,
 .public-team {
   overflow: clip;
@@ -377,6 +379,7 @@
 
 .public-team__filters {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 0.45rem;
   margin-block-start: 2.5rem;
@@ -456,8 +459,8 @@
 .public-team__card-body {
   display: grid;
   box-sizing: border-box;
-  block-size: 7.672rem;
-  min-block-size: 7.672rem;
+  min-block-size: 9.5rem;
+  overflow-wrap: anywhere;
   align-content: start;
   gap: 0.35rem;
   padding: 1.1rem 1.25rem;

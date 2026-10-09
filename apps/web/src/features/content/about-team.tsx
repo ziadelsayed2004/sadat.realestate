@@ -239,7 +239,7 @@ function teamFilters(locale: SupportedLocale): ReadonlyArray<{ readonly key: str
   ];
 }
 
-function TeamCard({ locale, copy, member, priority }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly member: CmsPublicContent; readonly priority: boolean }) {
+function TeamCard({ locale, copy, member, priority, department }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly member: CmsPublicContent; readonly priority: boolean; readonly department: string }) {
   const presentation = teamPresentation[member.key];
   const name = localizedText(member.name, locale) ?? member.key;
   const role = localizedText(member.role, locale) ?? copy.roleUnavailable;
@@ -250,7 +250,7 @@ function TeamCard({ locale, copy, member, priority }: { readonly locale: Support
       <div className="public-team__media" data-media-state={member.imageUrl === undefined ? 'unavailable' : 'success'}>
         {member.imageUrl === undefined ? fallback : <PublicMediaImage src={member.imageUrl} alt="" fallback={fallback} className="public-team__photo" loading={priority ? 'eager' : 'lazy'} />}
       </div>
-      <div className="public-team__card-body"><h2>{name}</h2><p className="public-team__role">{role}</p><p>{bio}</p></div>
+      <div className="public-team__card-body"><span className="public-team__department">{department}</span><h2>{name}</h2><p className="public-team__role">{role}</p><p>{bio}</p></div>
     </article>
   );
 }
@@ -265,7 +265,7 @@ function TeamContent({ locale, copy, data }: { readonly locale: SupportedLocale;
         <p className="public-team__eyebrow">{copy.teamEyebrow}</p><h1 id="public-team-title">{copy.teamTitle}</h1><p>{copy.teamSubtitle}</p>
         <div className="public-team__filters" aria-label={copy.teamTitle}>{filters.map(filter => <button key={filter.key} type="button" className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}</div>
       </section>
-      <section className="public-team__content" aria-label={copy.teamTitle}><div className="public-team__grid">{visibleMembers.map((member, index) => <TeamCard key={member.key} locale={locale} copy={copy} member={member} priority={index === 0} />)}</div></section>
+      <section className="public-team__content" aria-label={copy.teamTitle}><div className="public-team__grid">{visibleMembers.map((member, index) => <TeamCard key={member.key} locale={locale} copy={copy} member={member} priority={index === 0} department={filters.find(filter => filter.key === (member.category ?? teamPresentation[member.key]?.category))?.label ?? (locale === 'ar' ? 'غير مصنف' : 'Unassigned')} />)}</div></section>
     </>
   );
 }
