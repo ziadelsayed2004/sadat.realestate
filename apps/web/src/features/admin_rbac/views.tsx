@@ -7,6 +7,7 @@ import type { RouteSession } from "../routing/index.ts";
 import { ADMIN_RBAC_ROLES_ROUTE, ADMIN_RBAC_USERS_ROUTE, createAdminRbacSource, type AdminRbacAuthorizationSource, type AdminRbacSource } from "./data.ts";
 import { getAdminRbacCopy } from "./copy.ts";
 import { PermissionChooser, RoleStaff, StaffRoles, RoleAccountGuide, StaffLoginHandoff } from './role-tools.tsx';
+import { userCreateFeedback } from './user-create-feedback.ts';
 import "./styles.css";
 
 export type AdminRbacState = "loading" | "empty" | "error" | "retry" | "permission" | "not_found" | "conflict" | "success";
@@ -141,11 +142,12 @@ function ReasonField({ copy, value, onChange, disabled }: { readonly copy: Retur
   );
 }
 
-function UsersList({ locale, source, authClient }: { readonly locale: SupportedLocale; readonly source: AdminRbacSource; readonly authClient?: AdminRbacAuthorizationSource | undefined }) {
+function UsersList({ locale, source, authClient, initialSearch }: { readonly locale: SupportedLocale; readonly source: AdminRbacSource; readonly authClient?: AdminRbacAuthorizationSource | undefined; readonly initialSearch?: string | undefined }) {
   const copy = getAdminRbacCopy(locale);
   const [query, setQuery] = useState<AdminUserListQuery>({
     page: 1,
     limit: 20,
+    ...(initialSearch ? { search: initialSearch } : {}),
   });
   const [data, setData] = useState<AdminUserListData | undefined>();
   const [state, setState] = useState<AdminRbacState>("loading");
@@ -222,6 +224,7 @@ function UsersList({ locale, source, authClient }: { readonly locale: SupportedL
         ))}
       </div>
       <div className="admin-rbac__filters">
+        <label className="admin-rbac__field" htmlFor="admin-rbac-search">{locale === 'ar' ? 'ابحث بالاسم أو الإيميل' : 'Search by name or email'}<input id="admin-rbac-search" type="search" maxLength={160} value={query.search ?? ''} onChange={event => { const search = event.currentTarget.value; setQuery(current => ({ ...current, page: 1, search: search.trim() ? search : undefined })); }} /></label>
         <label htmlFor="admin-rbac-access">
           {copy.filterAccess}
           <select
@@ -244,7 +247,7 @@ function UsersList({ locale, source, authClient }: { readonly locale: SupportedL
       {state === "loading" || state === "error" || state === "retry" || state === "permission" ? <StatePanel state={state === "loading" ? "loading" : panelState(state)} locale={locale} onRetry={() => setAttempt((value) => value + 1)} /> : null}
       {state === "empty" ? (
         <section className="admin-rbac__state" data-state="empty" aria-label={copy.states.empty.title}>
-          <StateMessage state="empty" title={copy.states.empty.title} message={copy.noUsers} />
+          <StateMessage state="empty" title={copy.states.empty.title} message={query.search ? locale === 'ar' ? 'لا يوجد حساب إداري يطابق البحث. لو الإيميل مستخدم لحساب عميل أو مقدّم عقار، استخدم إيميلًا آخر للموظف.' : 'No administrator matches this search. If the email belongs to a customer or property provider, use another email for the employee.' : copy.noUsers} />
         </section>
       ) : null}
       {state === "success" && data !== undefined ? (
@@ -318,10 +321,12 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
   const [saving, setSaving] = useState(false);
   const [createdId, setCreatedId] = useState<string>();
   const [createdEmail, setCreatedEmail] = useState<string>();
+  const [conflictingEmail, setConflictingEmail] = useState<string>();
   const canCreate = permissionFor(authClient, "admin:staff.manage", true);
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setFeedback(undefined);
+    setConflictingEmail(undefined);
     if (!canCreate) {
       setState("permission");
       return;
@@ -345,7 +350,9 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
       setState("success");
     } catch (error) {
       setState(stateForError(error));
-      setFeedback(validationMessage(error, copy.validation));
+      const result = userCreateFeedback(error, locale);
+      setFeedback(result.message);
+      if (result.emailConflict) setConflictingEmail(parsed.data.email);
     } finally {
       setSaving(false);
     }
@@ -395,6 +402,7 @@ function UserCreate({ locale, source, authClient, initialRoleId }: { readonly lo
               {feedback}
             </p>
           ) : null}
+          {conflictingEmail ? <RbacLink href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}?search=${encodeURIComponent(conflictingEmail)}`)}>{locale === 'ar' ? 'البحث عن الحساب الإداري بهذا الإيميل' : 'Find an administrator with this email'}</RbacLink> : null}
           {createdId ? <RbacLink href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${createdId}`)}>{locale === 'ar' ? 'فتح حساب الموظف' : 'Open employee account'}</RbacLink> : null}
           {createdId && createdEmail ? <StaffLoginHandoff locale={locale} email={createdEmail} /> : null}
         </form>
@@ -914,7 +922,7 @@ export function AdminRbac({ url, locale, session, authClient, apiOrigin, source:
         <StatePanel state="error" locale={locale} onRetry={() => undefined} />
       </Shell>
     );
-  if (view.kind === "users") return <UsersList locale={locale} source={source} authClient={authClient} />;
+  if (view.kind === "users") return <UsersList locale={locale} source={source} authClient={authClient} initialSearch={new URL(url ?? (typeof window !== 'undefined' ? window.location.href : ADMIN_RBAC_USERS_ROUTE), 'http://sadat-real-estate.local').searchParams.get('search')?.trim().slice(0, 160)} />;
   if (view.kind === "user-create") return <UserCreate locale={locale} source={source} authClient={authClient} initialRoleId={new URL(url ?? (typeof window !== 'undefined' ? window.location.href : '/admin/admin-users/new'), 'http://sadat-real-estate.local').searchParams.get('roleId') ?? undefined} />;
   if (view.kind === "user-detail") return <UserDetail id={view.id} locale={locale} source={source} />;
   if (view.kind === "roles") return <RoleList locale={locale} source={source} />;

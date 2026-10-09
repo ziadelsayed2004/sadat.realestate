@@ -10,6 +10,7 @@ import {
 import { describe, expect, it, vi } from 'vitest';
 import { AdminRbac, loadAdminRbacUsers, updateAdminRbacRole, type AdminRbacSource } from '../src/features/admin_rbac/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { ApiClientError } from '../src/features/contracts/index.ts';
 
 const adminSession = { status: 'authenticated' as const, role: 'admin' as const };
 const userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -121,6 +122,40 @@ describe('frontend_075 Administrator Users and Roles', () => {
 });
 
 describe('employee role workflow', () => {
+  it.each(['ar', 'en'] as const)('explains a duplicate email and preserves the employee form for correction in %s', async locale => {
+    const createUser = vi.fn().mockRejectedValueOnce(new ApiClientError('errors.conflict', { code: 'HTTP_ERROR', status: 409, apiError: { code: 'ADMINISTRATOR_EMAIL_CONFLICT', messageKey: 'errors.conflict', details: [], requestId: 'duplicate-email' } })).mockResolvedValueOnce(user({ email: 'new.employee@example.com' }));
+    const backend = source({ createUser });
+    renderWithLocale(<AdminRbac url={`/admin/admin-users/new?roleId=${roleId}`} locale={locale} session={adminSession} source={backend} />, { locale });
+    const ar = locale === 'ar';
+    await waitFor(() => expect(screen.getByRole('checkbox', { name: /Operations reviewer/ })).toBeChecked());
+    const name = screen.getByLabelText(ar ? 'الاسم الظاهر' : 'Display name');
+    const email = screen.getByLabelText(ar ? 'البريد الإلكتروني' : 'Email');
+    const password = screen.getByLabelText(ar ? 'كلمة المرور (مطلوبة)' : 'Password (required)');
+    const save = screen.getByRole('button', { name: ar ? 'حفظ التغييرات' : 'Save changes' });
+    fireEvent.change(name, { target: { value: 'New Employee' } });
+    fireEvent.change(email, { target: { value: 'admin@example.com' } });
+    fireEvent.change(password, { target: { value: 'SyntheticAdmin123!' } });
+    fireEvent.click(save);
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(ar ? 'الإيميل ده مستخدم بالفعل' : 'This email is already used'));
+    expect(screen.getByRole('alert')).not.toHaveTextContent('errors.conflict');
+    expect(name).toHaveValue('New Employee');
+    expect(password).toHaveValue('SyntheticAdmin123!');
+    expect(screen.getByRole('checkbox', { name: /Operations reviewer/ })).toBeChecked();
+    expect(backend.updateUser).not.toHaveBeenCalled();
+    expect(screen.getByRole('link', { name: ar ? 'البحث عن الحساب الإداري بهذا الإيميل' : 'Find an administrator with this email' })).toHaveAttribute('href', `/admin/admin-users?search=admin%40example.com&lang=${locale}`);
+    fireEvent.change(email, { target: { value: 'new.employee@example.com' } });
+    fireEvent.click(save);
+    await waitFor(() => expect(screen.getByRole('link', { name: ar ? 'فتح حساب الموظف' : 'Open employee account' })).toBeInTheDocument());
+    expect(createUser).toHaveBeenCalledTimes(2);
+    expect(password).toHaveValue('');
+  });
+  it('opens duplicate-account search without creating or modifying any account', async () => {
+    const backend = source();
+    renderWithLocale(<AdminRbac url="/admin/admin-users?search=admin%40example.com" locale="en" session={adminSession} source={backend} />, { locale: 'en' });
+    await waitFor(() => expect(backend.loadUsers).toHaveBeenCalledWith({ page: 1, limit: 20, search: 'admin@example.com' }, expect.any(AbortSignal)));
+    expect(backend.createUser).not.toHaveBeenCalled();
+    expect(backend.updateUser).not.toHaveBeenCalled();
+  });
   it('creates a named employee with a password and the role selected from the role page', async () => {
     const createUser = vi.fn(async () => user({ email: 'new@example.com' }));
     renderWithLocale(<AdminRbac url={`/admin/admin-users/new?roleId=${roleId}`} locale="en" session={adminSession} source={source({ createUser })} />, { locale: 'en' });

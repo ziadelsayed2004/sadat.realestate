@@ -31,7 +31,7 @@ test.describe('ADM-25 and ADM-26 article management', () => {
     await editor.getByLabel(/^AR (Body|المحتوى)$/).fill('محتوى المقال باللغة العربية');
     await editor.locator('#admin-article-reason').fill('Create a named article');
     const request = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/articles'));
-    await editor.getByRole('button', { name: /^(Save|حفظ)$/i }).click();
+    await editor.getByRole('button', { name: /^(Save draft|حفظ مسودة)$/i }).click();
     const payload = (await request).postDataJSON();
     expect(payload).not.toHaveProperty('slug');
     expect(payload.title).toEqual({ ar: 'عنوان المقال' });

@@ -24,7 +24,8 @@ describe('simple viewing actions', () => {
   });
 
   it('validates the future appointment and converts Egypt time before sending, preserving input on conflicts', async () => {
-    vi.spyOn(Date, 'now').mockReturnValue(new Date('2026-10-09T08:00:00Z').getTime());
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-09T08:00:00Z'));
     const save = vi.fn().mockRejectedValueOnce(new ApiClientError('errors.conflict', { code: 'HTTP_ERROR', status: 409 }));
     const copy = viewingHelp('en');
     renderWithLocale(<ViewingActions item={item} locale="en" save={save} />, { locale: 'en' });
@@ -41,7 +42,6 @@ describe('simple viewing actions', () => {
     await waitFor(() => expect(save).toHaveBeenCalledWith(expect.objectContaining({ action: 'reschedule', timezone: 'Africa/Cairo', expectedVersion: 3, requestedAt: `${future}T10:30:00.000Z` })));
     expect(screen.getByRole('textbox')).toHaveValue('Customer agreed to the new appointment.');
     expect(screen.getByRole('alert')).toHaveTextContent(copy.conflict);
-    vi.restoreAllMocks();
   });
 
   it('explains read-only access and completed records without offering actions', () => {
