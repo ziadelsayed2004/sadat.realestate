@@ -187,7 +187,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
   const blocks = data.items.filter(item => item !== introItem);
   return (
     <>
-      <section className="public-about__hero" aria-labelledby="public-about-title">
+      <section id="about-block-about_intro" className="public-about__hero" aria-labelledby="public-about-title">
         <PublicMediaImage src="/assets/canonical/public/about-platform-hero.png" alt="" fallback={<div className="public-about__hero-fallback" />} className="public-about__hero-media" loading="eager" />
         <div className="public-about__hero-shade" aria-hidden="true" />
         <div className="public-about__hero-content">
@@ -196,7 +196,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
           <p>{heroBody}</p>
         </div>
       </section>
-      {blocks.length ? <section className="public-about__published-blocks" aria-label={copy.aboutTitle}>{blocks.map(block => <article key={block.key}><h2>{localizedText(block.title, locale) ?? block.key}</h2><p>{localizedText(block.body, locale)}</p></article>)}</section> : null}
+      {blocks.length ? <section className="public-about__published-blocks" aria-label={copy.aboutTitle}>{blocks.map(block => <article id={`about-block-${block.key}`} key={block.key}><h2>{localizedText(block.title, locale) ?? block.key}</h2><p>{localizedText(block.body, locale)}</p></article>)}</section> : null}
       <section className="public-about__how" aria-labelledby="public-about-how-title">
         <div className="public-about__section-heading"><p>{ui.howEyebrow}</p><h2 id="public-about-how-title">{ui.howTitle}</h2></div>
         <div className="public-about__steps">

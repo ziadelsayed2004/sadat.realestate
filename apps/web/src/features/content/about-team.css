@@ -106,6 +106,10 @@
   direction: rtl;
 }
 
+.public-about [id^='about-block-'] {
+  scroll-margin-block-start: calc(var(--header-height-min, 90px) + 20px);
+}
+
 .public-about__published-blocks {
   box-sizing: border-box;
   width: min(100% - 2rem, 72rem);

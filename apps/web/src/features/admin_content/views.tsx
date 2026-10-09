@@ -1,3 +1,4 @@
+import { AboutWebsiteLink } from './about-website-link.tsx';
 import { TeamDepartmentField, teamDepartmentLabel } from './team-department.tsx';
 import { TeamCategoriesManager } from './team-categories.tsx';
 import { ArticleImages, type ArticleImageSelection } from './article-images.tsx';
@@ -495,7 +496,7 @@ function TeamMemberForm({ member, locale, onCancel, onSave, uploadPhoto, loadPho
 
 function AboutBlockList({ items, locale, onEdit, onPreview }: { readonly items: readonly CmsAdminAboutBlock[]; readonly locale: SupportedLocale; readonly onEdit: (item: CmsAdminAboutBlock) => void; readonly onPreview: (item: CmsAdminAboutBlock) => void }) {
   const copy = getAdminCmsCopy(locale);
-  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-about-${item.id}`}><div><strong>{localizedValue(item.title, locale)}</strong><small>{item.key} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.edit}</Button> : null}</div></article>)}</div>;
+  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-about-${item.id}`}><div><strong>{localizedValue(item.title, locale)}</strong><small>{item.key} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><AboutWebsiteLink item={item} locale={locale} /><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.edit}</Button> : null}</div></article>)}</div>;
 }
 
 function TeamMemberList({ items, categories, locale, onEdit, onPreview, onDelete }: { readonly categories: readonly TeamCategory[]; readonly items: readonly CmsAdminTeamMember[]; readonly locale: SupportedLocale; readonly onEdit: (item: CmsAdminTeamMember) => void; readonly onPreview: (item: CmsAdminTeamMember) => void; readonly onDelete: (item: CmsAdminTeamMember) => void }) {
