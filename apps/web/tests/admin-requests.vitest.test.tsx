@@ -146,13 +146,12 @@ describe('Admin request administration contracts and views', () => {
 
   it('opens viewing details with the property, customer note and Egypt time', () => {
     window.history.pushState({}, '', '/admin/viewing-requests');
-    const copy = getAdminRequestsCopy('en');
     const enriched = viewingDataSchema.parse({ ...viewing, customerName: 'Example Customer', note: 'Call before arrival', property: { id: viewing.propertyId, slug: 'requested-property', kind: 'property', transactionType: 'sale', name: { en: 'Requested property' }, publicCode: 'SDT-1234' } });
     renderWithLocale(<AdminRequests locale="en" session={session} initialViewings={{ ...viewingList, items: [enriched] }} />, { locale: 'en' });
     expect(screen.getByRole('link', { name: 'Requested property' })).toHaveAttribute('href', '/properties/requested-property?lang=en');
-    fireEvent.click(screen.getByRole('button', { name: copy.view }));
+    fireEvent.click(screen.getByRole('button', { name: 'Details and action' }));
     expect(screen.getByRole('dialog')).toHaveTextContent('Call before arrival');
-    expect(screen.getByRole('dialog')).toHaveTextContent('Egypt time (GMT+3)');
+    expect(screen.getByRole('dialog')).toHaveTextContent('All appointments use Egypt time');
   });
 
   it('continues review, contact and resolution in the same dialog with current actions and version', async () => {

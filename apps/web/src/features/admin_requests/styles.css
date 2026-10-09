@@ -161,3 +161,45 @@
 }
 .admin-requests__property-links { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 8px; }
 .admin-requests__property-links a { color: #155b4f; text-decoration: underline; overflow-wrap: anywhere; font-weight: 700; }
+
+.admin-viewing__help { max-width: 1420px; margin: 0 auto 24px; padding: 20px 24px; border: 1px solid #e2dbc9; border-radius: 18px; background: #fffdf8; box-sizing: border-box; }
+.admin-viewing__help h2 { margin: 0 0 8px; font-size: 1.15rem; }
+.admin-viewing__help p, .admin-viewing__help li { line-height: 1.8; }
+.admin-viewing__help ol { display: grid; gap: 6px; padding-inline-start: 24px; }
+.admin-viewing__notice { padding: 12px 16px; border-radius: 12px; background: #f8f1df; color: #5f4d22; line-height: 1.8; }
+.admin-viewing__table { min-width: 700px; }
+.admin-viewing__table small, .admin-viewing__facts small { display: block; margin-block-start: 6px; color: #68768b; font-size: .8rem; }
+.admin-viewing__table a, .admin-viewing__modal a { color: #155b4f; text-decoration: underline; overflow-wrap: anywhere; }
+.admin-viewing__list-tools { display: flex; justify-content: end; padding: 12px 20px; }
+.admin-viewing__summary p { margin: 12px 0 18px; line-height: 1.8; color: #68768b; }
+.admin-viewing__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.admin-viewing__facts > div { min-width: 0; padding: 16px; border: 1px solid #e3e8ec; border-radius: 12px; }
+.admin-viewing__facts dt { margin-block-end: 8px; color: #68768b; font-weight: 700; }
+.admin-viewing__facts dd { margin: 0; overflow-wrap: anywhere; }
+.admin-viewing__facts .admin-viewing__appointment { grid-column: 1 / -1; background: #f5f9f7; }
+.admin-viewing__customer-note { padding: 14px 16px; margin-block-start: 16px; border-radius: 12px; background: #f8fafc; }
+.admin-viewing__customer-note h3 { margin: 0 0 8px; font-size: 1rem; }
+.admin-viewing__customer-note p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.admin-viewing__actions { max-width: none; gap: 16px; }
+.admin-viewing__actions fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.admin-viewing__actions legend { margin-block-end: 14px; font-size: 1.1rem; font-weight: 800; }
+.admin-viewing__choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.admin-viewing__actions .admin-viewing__choice { display: flex; align-items: start; gap: 10px; min-width: 0; padding: 14px; border: 1px solid #dbe0e6; border-radius: 12px; cursor: pointer; }
+.admin-viewing__choice[data-selected='true'] { background: #edf7f1; border-color: #155b4f; }
+.admin-viewing__actions .admin-viewing__choice input { min-height: 0; padding: 0; margin: 3px 0 0; width: 18px; height: 18px; flex: 0 0 18px; accent-color: #155b4f; }
+.admin-viewing__choice strong { display: block; color: #1b2942; }
+.admin-viewing__choice small { display: block; margin-block-start: 6px; font-weight: 400; line-height: 1.7; }
+.admin-viewing__actions > label, .admin-viewing__new-time label { display: grid; gap: 8px; min-width: 0; }
+.admin-viewing__actions textarea, .admin-viewing__new-time input { box-sizing: border-box; width: 100%; min-width: 0; }
+.admin-viewing__new-time { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.admin-viewing__new-time p { grid-column: 1 / -1; margin: 0; color: #68768b; }
+.admin-viewing__field-hint { margin: -6px 0 0; line-height: 1.8; color: #68768b; font-size: .85rem; }
+.admin-viewing__feedback { padding: 12px 16px; border-radius: 10px; background: #edf7f1; color: #125345; line-height: 1.8; }
+.admin-viewing__feedback[data-error='true'] { background: #fff1f0; color: #a32129; }
+.admin-viewing__record { margin-block-start: 20px; padding-block-start: 16px; border-block-start: 1px solid #e3e8ec; }
+.admin-viewing__record summary { padding-block: 10px; cursor: pointer; color: #68768b; }
+.admin-viewing__record .admin-requests__details { margin-block-start: 12px; }
+@media (max-width: 620px) {
+  .admin-viewing__facts, .admin-viewing__choices, .admin-viewing__new-time { grid-template-columns: minmax(0, 1fr); }
+  .admin-viewing__help { padding: 16px; }
+}
