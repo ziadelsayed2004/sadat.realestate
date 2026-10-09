@@ -3,6 +3,20 @@ import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 export const AUDIT_ACTOR_TYPES = ['admin', 'provider', 'seeker'] as const;
 
+// Match the last segment of recorded actions; clients never supply a regex.
+export const AUDIT_ACTION_GROUP_SUFFIXES = {
+  create: ['create', 'created', 'administrator_created', 'role_created', 'upload'],
+  update: ['update', 'updated', 'administrator_updated', 'role_updated', 'write', 'reorder', 'banner_display'],
+  delete: ['delete', 'deleted'],
+  review: ['review', 'submit', 'start_review', 'needs_information', 'request_information', 'provide_information', 'transition', 'transitioned', 'start_progress', 'resolve', 'close', 'reopen'],
+  approve: ['approve', 'approved', 'verify', 'accept', 'accepted', 'complete'],
+  reject: ['reject', 'rejected', 'cancel', 'cancelled'],
+  visibility: ['visibility', 'publish', 'unpublish', 'hide', 'restore', 'archive', 'schedule', 'schedule_payment_waived'],
+  access: ['restrict', 'suspend', 'reactivate', 'revoke', 'roles_assigned', 'download_granted'],
+  communication: ['admin_message', 'assigned', 'assign', 'overdue', 'send_message', 'contact']
+} as const;
+export const auditActionGroupSchema = z.enum(Object.keys(AUDIT_ACTION_GROUP_SUFFIXES) as [keyof typeof AUDIT_ACTION_GROUP_SUFFIXES, ...Array<keyof typeof AUDIT_ACTION_GROUP_SUFFIXES>]);
+
 export const auditObjectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 export const auditActorTypeSchema = z.enum(AUDIT_ACTOR_TYPES);
 export const auditTargetTypeSchema = z
@@ -76,6 +90,7 @@ export const auditLogListQuerySchema = z.object({
   targetType: auditTargetTypeSchema.optional(),
   targetId: auditTargetIdSchema.optional(),
   action: auditActionSchema.optional(),
+  actionGroup: auditActionGroupSchema.optional(),
   traceId: auditTraceIdSchema.optional(),
   from: z.string().datetime({ offset: true }).optional(),
   to: z.string().datetime({ offset: true }).optional()

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Types } from 'mongoose';
+import { AUDIT_ACTION_GROUP_SUFFIXES, auditLogListQuerySchema } from '@sadat-real-estate/contracts';
 import type { AuditModels } from '../../src/modules/audit/models.js';
 import { createMongooseAuditRepository } from '../../src/modules/audit/repository.js';
 
@@ -90,4 +91,28 @@ test('returns a projected detail and preserves not-found without a second query'
   assert.equal(await repository.findById('3123456789abcdef01234567'), undefined);
   assert.equal(calls, 2);
   assert.equal('storageKey' in (projection as object), false);
+});
+
+test('filters full audit queries by fixed action groups and intersects exact action filters', async () => {
+  let filter: Record<string, unknown> = {};
+  let counted: unknown;
+  const chain = { select() { return this; }, sort() { return this; }, skip() { return this; }, limit() { return this; }, async lean() { return []; } };
+  const repository = createMongooseAuditRepository({ AuditLog: {
+    find(value: Record<string, unknown>) { filter = value; return chain; },
+    countDocuments(value: unknown) { counted = value; return { async exec() { return 0; } }; }
+  } } as unknown as AuditModels);
+  for (const [group, suffixes] of Object.entries(AUDIT_ACTION_GROUP_SUFFIXES)) {
+    await repository.list(auditLogListQuerySchema.parse({ targetType: 'property', actionGroup: group, page: 3 }));
+    assert.equal(filter.targetType, 'property');
+    assert.deepEqual(counted, filter);
+    const pattern = (filter.action as { $regex: RegExp }).$regex;
+    for (const suffix of suffixes) assert.ok(pattern.test(`any_section.${suffix}`), `${group}: ${suffix}`);
+    assert.equal(pattern.test('property.unknown_action'), false);
+    assert.equal(pattern.test(`property.${suffixes[0]}_extra`), false);
+  }
+  await repository.list({ page: 1, limit: 25, actionGroup: 'update', action: 'settings.update' });
+  assert.equal(filter.action, 'settings.update');
+  const groupPattern = (filter.$and as Array<{ action: { $regex: RegExp } }>)[0]!.action.$regex;
+  assert.ok(groupPattern.test('settings.update'));
+  assert.equal(groupPattern.test('settings.create'), false);
 });

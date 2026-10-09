@@ -410,6 +410,8 @@ export type {
 
 export {
   AUDIT_ACTOR_TYPES,
+  AUDIT_ACTION_GROUP_SUFFIXES,
+  auditActionGroupSchema,
   auditActionSchema,
   auditActorTypeSchema,
   auditJsonValueSchema,

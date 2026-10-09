@@ -2714,6 +2714,25 @@
             }
           },
           {
+            "name": "actionGroup",
+            "in": "query",
+            "description": "Filter by a fixed group of recorded action suffixes. Combined with action using AND when both are supplied.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "create",
+                "update",
+                "delete",
+                "review",
+                "approve",
+                "reject",
+                "visibility",
+                "access",
+                "communication"
+              ]
+            }
+          },
+          {
             "name": "traceId",
             "in": "query",
             "schema": {

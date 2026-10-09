@@ -110,9 +110,9 @@ describe('Admin notifications and audit log', () => {
     const list = renderWithLocale(<AdminNotificationsAudit url="/admin/audit-logs" locale="en" session={adminSession} initialAuditLogs={page} />, { locale: 'en' });
     expect(list.direction).toBe('ltr');
     expect(list.container.querySelector('[data-screen-id="ADM-66"]')).not.toBeNull();
-    expect(screen.getByRole('heading', { name: 'Audit log' })).toBeInTheDocument();
-    expect(screen.getByText('settings.update')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Apply filters' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Action log' })).toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getByText('Update')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show results' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Export log' })).toBeEnabled();
     list.unmount();
 
@@ -124,6 +124,43 @@ describe('Admin notifications and audit log', () => {
     expect(snapshots[1]?.textContent).toContain('"platformName": "New"');
     expect(detail.container.textContent).not.toMatch(/accessToken|refreshToken|storageKey|privateUrl|internalNotes|secret/u);
     detail.unmount();
+  });
+
+  it('uses understandable choices, retains server pagination filters and resets the visible form', async () => {
+    const queries: Array<Record<string, unknown>> = [];
+    const page = { items: [audit()], page: 1, limit: 25, total: 30 };
+    renderWithLocale(<AdminNotificationsAudit url="/admin/audit-logs" locale="en" session={adminSession} initialAuditLogs={page} loadAuditLogs={async query => { queries.push(query); return { ...page, page: query.page }; }} />, { locale: 'en' });
+    expect(screen.getByLabelText('Account ID of the person making the change')).not.toBeVisible();
+    fireEvent.change(screen.getByRole('combobox', { name: 'Section' }), { target: { value: 'property' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Change type' }), { target: { value: 'update' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Show results' }));
+    await waitFor(() => expect(queries.at(-1)).toMatchObject({ targetType: 'property', actionGroup: 'update', page: 1 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await waitFor(() => expect(queries.at(-1)).toMatchObject({ targetType: 'property', actionGroup: 'update', page: 2 }));
+    fireEvent.click(screen.getByRole('button', { name: 'Reset filters' }));
+    await waitFor(() => expect(queries.at(-1)).toEqual({ page: 1, limit: 25 }));
+    expect(screen.getByRole('combobox', { name: 'Section' })).toHaveValue('');
+    expect(screen.getByRole('combobox', { name: 'Change type' })).toHaveValue('');
+  });
+
+  it('explains invalid dates and advanced IDs without issuing a failed search', () => {
+    const queries: unknown[] = [];
+    renderWithLocale(<AdminNotificationsAudit url="/admin/audit-logs" locale="en" session={adminSession} initialAuditLogs={{ items: [], page: 1, limit: 25, total: 0 }} loadAuditLogs={async query => { queries.push(query); return { items: [], page: 1, limit: 25, total: 0 }; }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText('From date'), { target: { value: '2026-10-10' } });
+    fireEvent.change(screen.getByLabelText('To date'), { target: { value: '2026-10-09' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Show results' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('start date must be on or before');
+    fireEvent.change(screen.getByLabelText('From date'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('To date'), { target: { value: '' } });
+    const account = screen.getByLabelText('Account ID of the person making the change');
+    fireEvent.change(account, { target: { value: 'invalid' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Show results' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('account ID must contain 24');
+    fireEvent.change(account, { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('Record ID within the section'), { target: { value: auditId } });
+    fireEvent.click(screen.getByRole('button', { name: 'Show results' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Choose a section');
+    expect(queries).toHaveLength(0);
   });
 
   it('fails closed for anonymous sessions without invoking a loader', async () => {

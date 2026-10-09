@@ -14,6 +14,7 @@ import type { RouteSession } from '../routing/index.ts';
 import { AdminNavigation } from './overview.tsx';
 import { AdminAttentionQueues, refreshAdminAttention } from '../routing/admin-attention.tsx';
 import { NotificationHelp, getNotificationHelpCopy } from './notification-help.tsx';
+import { auditActionGroupOptions, auditActionLabel, auditActorLabel, auditTargetLabel, auditTargetOptions } from './audit-presentation.ts';
 import {
   ADMIN_AUDIT_LOGS_PAGE_LIMIT,
   ADMIN_AUDIT_LOGS_ROUTE,
@@ -57,13 +58,13 @@ type AuditFilters = {
   readonly actorId: string;
   readonly targetType: string;
   readonly targetId: string;
-  readonly action: string;
+  readonly actionGroup: string;
   readonly traceId: string;
   readonly from: string;
   readonly to: string;
 };
 
-const EMPTY_FILTERS: AuditFilters = { actorId: '', targetType: '', targetId: '', action: '', traceId: '', from: '', to: '' };
+const EMPTY_FILTERS: AuditFilters = { actorId: '', targetType: '', targetId: '', actionGroup: '', traceId: '', from: '', to: '' };
 
 function pathnameFrom(url: string | undefined): string {
   if (url !== undefined) return new URL(url, 'http://sadat-real-estate.local').pathname.replace(/\/+$/u, '') || '/';
@@ -221,22 +222,30 @@ function auditQueryFromFilters(filters: AuditFilters): AuditLogListQuery {
     ...(filters.actorId.trim() === '' ? {} : { actorId: filters.actorId.trim() }),
     ...(filters.targetType.trim() === '' ? {} : { targetType: filters.targetType.trim() }),
     ...(filters.targetId.trim() === '' ? {} : { targetId: filters.targetId.trim() }),
-    ...(filters.action.trim() === '' ? {} : { action: filters.action.trim() }),
+    ...(filters.actionGroup === '' ? {} : { actionGroup: filters.actionGroup }),
     ...(filters.traceId.trim() === '' ? {} : { traceId: filters.traceId.trim() }),
-    ...(filters.from === '' ? {} : { from: new Date(`${filters.from}T00:00:00.000Z`).toISOString() }),
-    ...(filters.to === '' ? {} : { to: new Date(`${filters.to}T23:59:59.999Z`).toISOString() })
+    ...(filters.from === '' ? {} : { from: new Date(`${filters.from}T00:00:00.000`).toISOString() }),
+    ...(filters.to === '' ? {} : { to: new Date(`${filters.to}T23:59:59.999`).toISOString() })
   });
 }
 
-function AuditFilterForm({ locale, filters, onSubmit, onClear }: { readonly locale: SupportedLocale; readonly filters: AuditFilters; readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void; readonly onClear: () => void }) {
+function AuditFilterForm({ locale, filters, targetTypes, onChange, onSubmit, onClear }: { readonly locale: SupportedLocale; readonly filters: AuditFilters; readonly targetTypes: readonly string[]; readonly onChange: (filters: AuditFilters) => void; readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void; readonly onClear: () => void }) {
   const copy = getAdminNotificationsAuditCopy(locale);
-  const field = (key: keyof AuditFilters, label: string, type = 'text') => <label key={key} htmlFor={`admin-audit-${key}`}>{label}<input id={`admin-audit-${key}`} name={key} type={type} defaultValue={filters[key]} /></label>;
-  return <div className="admin-notifications-audit__filters"><form className="admin-notifications-audit__filter-form" onSubmit={onSubmit}>{field('actorId', copy.audit.actorId)}{field('targetType', copy.audit.targetType)}{field('targetId', copy.audit.targetId)}{field('action', copy.audit.action)}{field('traceId', copy.audit.traceId)}{field('from', copy.audit.from, 'date')}{field('to', copy.audit.to, 'date')}<div className="admin-notifications-audit__filter-actions"><Button type="submit" size="sm">{copy.audit.apply}</Button><Button type="button" variant="ghost" size="sm" onClick={onClear}>{copy.audit.clear}</Button></div></form></div>;
+  const field = (key: keyof AuditFilters, label: string, type = 'text') => <label key={key} htmlFor={`admin-audit-${key}`}>{label}<input id={`admin-audit-${key}`} name={key} type={type} dir={type === 'text' ? 'ltr' : undefined} value={filters[key]} onChange={event => onChange({ ...filters, [key]: event.target.value })} /></label>;
+  const choice = (key: 'targetType' | 'actionGroup', label: string, all: string, options: readonly { readonly value: string; readonly label: string }[]) => <label htmlFor={`admin-audit-${key}`}>{label}<select id={`admin-audit-${key}`} name={key} value={filters[key]} onChange={event => onChange({ ...filters, [key]: event.target.value })}><option value="">{all}</option>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
+  return <div className="admin-notifications-audit__filters"><form className="admin-notifications-audit__filter-form" onSubmit={onSubmit}>
+    <p className="admin-notifications-audit__filter-hint">{copy.audit.example}</p>
+    {choice('targetType', copy.audit.targetType, copy.audit.allSections, auditTargetOptions(locale, targetTypes))}
+    {choice('actionGroup', copy.audit.actionGroup, copy.audit.allActions, auditActionGroupOptions(locale))}
+    {field('from', copy.audit.from, 'date')}{field('to', copy.audit.to, 'date')}
+    <details className="admin-notifications-audit__advanced"><summary>{copy.audit.advanced}</summary><p>{copy.audit.advancedHelp}</p><div className="admin-notifications-audit__advanced-fields">{field('actorId', copy.audit.actorId)}{field('targetId', copy.audit.targetId)}{field('traceId', copy.audit.traceId)}</div></details>
+    <div className="admin-notifications-audit__filter-actions"><Button type="submit" size="sm">{copy.audit.apply}</Button><Button type="button" variant="ghost" size="sm" onClick={onClear}>{copy.audit.clear}</Button></div>
+  </form></div>;
 }
 
 function AuditTable({ locale, data }: { readonly locale: SupportedLocale; readonly data: AdminAuditLogPage }) {
   const copy = getAdminNotificationsAuditCopy(locale);
-  return <div className="admin-notifications-audit__table-wrap"><table className="admin-notifications-audit__table"><caption className="a11y-visually-hidden">{copy.audit.tableLabel}</caption><thead><tr><th scope="col">{copy.audit.date}</th><th scope="col">{copy.audit.actor}</th><th scope="col">{copy.audit.target}</th><th scope="col">{copy.audit.actionLabel}</th><th scope="col">{copy.audit.reason}</th><th scope="col">{copy.audit.details}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.id}><td><time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time></td><td><strong>{item.actorType}</strong><br /><code>{item.actorId}</code></td><td><strong>{item.targetType}</strong><br /><code>{item.targetId}</code></td><td>{item.action}</td><td>{item.reason}</td><td><a className="admin-notifications-audit__row-link" href={localePath(locale, `${ADMIN_AUDIT_LOGS_ROUTE}/${item.id}`)}>{copy.audit.view}</a></td></tr>)}</tbody></table></div>;
+  return <div className="admin-notifications-audit__table-wrap"><table className="admin-notifications-audit__table"><caption className="a11y-visually-hidden">{copy.audit.tableLabel}</caption><thead><tr><th scope="col">{copy.audit.date}</th><th scope="col">{copy.audit.actor}</th><th scope="col">{copy.audit.target}</th><th scope="col">{copy.audit.actionLabel}</th><th scope="col">{copy.audit.reason}</th><th scope="col">{copy.audit.details}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.id}><td><time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time></td><td><strong>{auditActorLabel(item.actorType, locale)}</strong><br /><code>{item.actorId}</code></td><td><strong>{auditTargetLabel(item.targetType, locale)}</strong><br /><code>{item.targetId}</code></td><td>{auditActionLabel(item.action, locale)}</td><td>{item.reason}</td><td><a className="admin-notifications-audit__row-link" href={localePath(locale, `${ADMIN_AUDIT_LOGS_ROUTE}/${item.id}`)}>{copy.audit.view}</a></td></tr>)}</tbody></table></div>;
 }
 
 function AuditMetricStrip({ locale, data }: { readonly locale: SupportedLocale; readonly data: AdminAuditLogPage }) {
@@ -280,9 +289,12 @@ function AuditListView({ locale, session, apiOrigin, authClient, load, initialDa
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const next: AuditFilters = { actorId: String(form.get('actorId') ?? ''), targetType: String(form.get('targetType') ?? ''), targetId: String(form.get('targetId') ?? ''), action: String(form.get('action') ?? ''), traceId: String(form.get('traceId') ?? ''), from: String(form.get('from') ?? ''), to: String(form.get('to') ?? '') };
+    const next: AuditFilters = { actorId: String(form.get('actorId') ?? ''), targetType: String(form.get('targetType') ?? ''), targetId: String(form.get('targetId') ?? ''), actionGroup: String(form.get('actionGroup') ?? ''), traceId: String(form.get('traceId') ?? ''), from: String(form.get('from') ?? ''), to: String(form.get('to') ?? '') };
+    if (next.from && next.to && next.from > next.to) { setFilterError(copy.audit.invalidDates); return; }
+    if (next.actorId.trim() && !/^[a-f0-9]{24}$/u.test(next.actorId.trim())) { setFilterError(copy.audit.invalidActor); return; }
+    if (next.targetId.trim() && !next.targetType) { setFilterError(copy.audit.missingSection); return; }
     try { setQuery(auditQueryFromFilters(next)); setFilters(next); setFilterError(undefined); setAttempt(value => value + 1); }
-    catch { setFilterError(copy.audit.noEntries); }
+    catch { setFilterError(copy.audit.invalidFilters); }
   }
   function clear(): void { setFilters(EMPTY_FILTERS); setQuery({ page: 1, limit: ADMIN_AUDIT_LOGS_PAGE_LIMIT }); setFilterError(undefined); setAttempt(value => value + 1); }
   const pageCount = data === undefined ? 0 : Math.ceil(data.total / data.limit);
@@ -291,7 +303,7 @@ function AuditListView({ locale, session, apiOrigin, authClient, load, initialDa
       <Heading eyebrow={copy.audit.eyebrow} title={copy.audit.title} description={copy.audit.description} action={<Button type="button" variant="secondary" disabled={data === undefined || data.items.length === 0} onClick={() => { if (data !== undefined) exportAuditPage(data); }}>{copy.audit.exportLog}</Button>} />
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
       {data !== undefined ? <><aside role="note" data-testid="admin-audit-redaction-note" style={{ marginBlockStart: 18, padding: '12px 16px', border: '1px solid #f3c64f', borderRadius: 12, background: '#fff9e7', color: '#a45b00', lineHeight: 1.6 }}>{copy.audit.snapshotNotice}</aside><AuditMetricStrip locale={locale} data={data} /></> : null}
-      <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__toolbar"><h2>{copy.audit.filters}</h2></div><AuditFilterForm locale={locale} filters={filters} onSubmit={submit} onClear={clear} />{filterError !== undefined ? <p className="admin-notifications-audit__feedback" role="alert">{filterError}</p> : null}</section>
+      <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__toolbar"><h2>{copy.audit.filters}</h2></div><AuditFilterForm locale={locale} filters={filters} targetTypes={data?.items.map(item => item.targetType) ?? []} onChange={setFilters} onSubmit={submit} onClear={clear} />{filterError !== undefined ? <p className="admin-notifications-audit__feedback" role="alert">{filterError}</p> : null}</section>
       {state === 'empty' ? <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.audit.noEntries}</p></div></section> : null}
       {state === 'success' && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-audit-table-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-audit-table-title">{copy.audit.tableLabel}</h2></div><AuditTable locale={locale} data={data} /><Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setQuery(current => ({ ...current, page: next })); setAttempt(value => value + 1); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}
     </Shell>
@@ -313,7 +325,7 @@ function AuditDetailView({ locale, session, apiOrigin, authClient, load, id, ini
     return () => controller.abort();
   }, [attempt, id, initialData, sessionRole, source]);
   if (state !== 'success' || data === undefined) return <Shell locale={locale} path={`${ADMIN_AUDIT_LOGS_ROUTE}/${id}`} screenId="ADM-66" state={state}><StatePanel state={state === 'success' || state === 'empty' ? 'error' : state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /></Shell>;
-  return <Shell locale={locale} path={`${ADMIN_AUDIT_LOGS_ROUTE}/${id}`} screenId="ADM-66" state={state}><section className="admin-notifications-audit__detail"><div className="admin-notifications-audit__detail-heading"><div><p className="admin-notifications-audit__eyebrow">{copy.audit.eyebrow}</p><h2>{copy.audit.title}: {data.action}</h2><p className="admin-notifications-audit__muted"><time dateTime={data.createdAt}>{dateLabel(data.createdAt, locale)}</time></p></div><a className="admin-notifications-audit__row-link" href={localePath(locale, ADMIN_AUDIT_LOGS_ROUTE)}>{copy.audit.back}</a></div><div className="admin-notifications-audit__detail-body"><dl className="admin-notifications-audit__detail-grid"><div><dt>{copy.audit.actor}</dt><dd>{data.actorType}<br /><code>{data.actorId}</code></dd></div><div><dt>{copy.audit.target}</dt><dd>{data.targetType}<br /><code>{data.targetId}</code></dd></div><div><dt>{copy.audit.reason}</dt><dd>{data.reason}</dd></div><div><dt>{copy.audit.requestId}</dt><dd><code>{data.requestId}</code></dd></div><div><dt>{copy.audit.trace}</dt><dd><code>{data.traceId}</code></dd></div></dl><div className="admin-notifications-audit__snapshots"><section className="admin-notifications-audit__snapshot"><h3>{copy.audit.before}</h3><pre>{JSON.stringify(data.before, null, 2)}</pre></section><section className="admin-notifications-audit__snapshot"><h3>{copy.audit.after}</h3><pre>{JSON.stringify(data.after, null, 2)}</pre></section></div></div></section></Shell>;
+  return <Shell locale={locale} path={`${ADMIN_AUDIT_LOGS_ROUTE}/${id}`} screenId="ADM-66" state={state}><section className="admin-notifications-audit__detail"><div className="admin-notifications-audit__detail-heading"><div><p className="admin-notifications-audit__eyebrow">{copy.audit.eyebrow}</p><h2>{copy.audit.title}: {auditActionLabel(data.action, locale)}</h2><p className="admin-notifications-audit__muted"><time dateTime={data.createdAt}>{dateLabel(data.createdAt, locale)}</time></p></div><a className="admin-notifications-audit__row-link" href={localePath(locale, ADMIN_AUDIT_LOGS_ROUTE)}>{copy.audit.back}</a></div><div className="admin-notifications-audit__detail-body"><dl className="admin-notifications-audit__detail-grid"><div><dt>{copy.audit.actor}</dt><dd>{auditActorLabel(data.actorType, locale)}<br /><code>{data.actorId}</code></dd></div><div><dt>{copy.audit.target}</dt><dd>{auditTargetLabel(data.targetType, locale)}<br /><code>{data.targetId}</code></dd></div><div><dt>{copy.audit.actionLabel}</dt><dd>{auditActionLabel(data.action, locale)}<br /><code>{data.action}</code></dd></div><div><dt>{copy.audit.reason}</dt><dd>{data.reason}</dd></div><div><dt>{copy.audit.requestId}</dt><dd><code>{data.requestId}</code></dd></div><div><dt>{copy.audit.trace}</dt><dd><code>{data.traceId}</code></dd></div></dl><div className="admin-notifications-audit__snapshots"><section className="admin-notifications-audit__snapshot"><h3>{copy.audit.before}</h3><pre>{JSON.stringify(data.before, null, 2)}</pre></section><section className="admin-notifications-audit__snapshot"><h3>{copy.audit.after}</h3><pre>{JSON.stringify(data.after, null, 2)}</pre></section></div></div></section></Shell>;
 }
 
 export function AdminNotificationsAudit({ url, locale, session, authClient, apiOrigin, loadNotifications, notificationActions, loadAuditLogs, loadAuditLog, initialNotifications, initialAuditLogs, initialAuditLog }: AdminNotificationsAuditProps) {

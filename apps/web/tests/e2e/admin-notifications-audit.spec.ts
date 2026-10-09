@@ -43,9 +43,9 @@ test.describe('ADM-65 and ADM-66 notifications and audit log', () => {
     await page.getByRole('button', { name: /export log|تصدير السجل/iu }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('admin-audit-page-1.csv');
-    await page.getByLabel(/action|الإجراء|操作/iu).fill('settings.update');
+    await page.locator('#admin-audit-actionGroup').selectOption('update');
     const auditRequestPromise = page.waitForRequest(request => request.method() === 'GET' && request.url().includes('/api/v1/admin/audit-logs?'));
-    await page.getByRole('button', { name: /apply filters|تطبيق الفلاتر|应用筛选/iu }).click();
+    await page.getByRole('button', { name: /show results|عرض النتائج/iu }).click();
     await auditRequestPromise;
     await expect(page.locator('[data-screen-id="ADM-66"]')).toBeVisible();
   });

@@ -1,4 +1,5 @@
 import { Types, type QueryFilter } from 'mongoose';
+import { AUDIT_ACTION_GROUP_SUFFIXES } from '@sadat-real-estate/contracts';
 import type {
   AuditActorType,
   AuditLogListQuery,
@@ -62,6 +63,11 @@ export function createMongooseAuditRepository(models: AuditModels): AuditReposit
       if (query.targetType) filter.targetType = query.targetType;
       if (query.targetId) filter.targetId = query.targetId;
       if (query.action) filter.action = query.action;
+      if (query.actionGroup) {
+        const actionPattern = new RegExp(`\\.(${AUDIT_ACTION_GROUP_SUFFIXES[query.actionGroup].join('|')})$`, 'u');
+        if (query.action) filter.$and = [{ action: { $regex: actionPattern } }];
+        else filter.action = { $regex: actionPattern };
+      }
       if (query.traceId) filter.traceId = query.traceId;
       if (query.from || query.to) {
         filter.createdAt = {

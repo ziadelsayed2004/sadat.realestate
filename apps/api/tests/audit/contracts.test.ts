@@ -29,11 +29,13 @@ test('parses bounded allowlisted audit filters and pagination defaults', () => {
     targetType: 'provider_application',
     targetId: '2123456789abcdef01234567',
     action: 'provider.verify',
+    actionGroup: 'approve',
     from: '2026-08-01T00:00:00.000Z',
     to: '2026-08-14T00:00:00.000Z'
   });
   assert.equal(query.page, 2);
   assert.equal(query.limit, 50);
+  assert.equal(query.actionGroup, 'approve');
 });
 
 test('rejects unsafe, unbounded, ambiguous, and mass-assigned audit filters', () => {
@@ -43,6 +45,8 @@ test('rejects unsafe, unbounded, ambiguous, and mass-assigned audit filters', ()
     { targetId: '2123456789abcdef01234567' },
     { targetType: { $ne: 'user' } },
     { action: 'Account Restrict' },
+    { actionGroup: '.*' },
+    { actionGroup: { $ne: 'update' } },
     { from: '2026-08-15T00:00:00.000Z', to: '2026-08-14T00:00:00.000Z' },
     { includeSecrets: 'true' }
   ]) assert.equal(auditLogListQuerySchema.safeParse(query).success, false);

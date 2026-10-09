@@ -1,5 +1,6 @@
 import { localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
+import { getSimpleAuditCopy } from './audit-presentation.ts';
 
 export type AdminNotificationsAuditState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'not_found' | 'success';
 export type AdminNotificationFilter = 'all' | 'unread';
@@ -93,6 +94,10 @@ const copy: Readonly<Record<SupportedLocale, AdminNotificationsAuditCopy>> = {
     retry: 'Retry', previous: 'Previous', next: 'Next', pagination: 'Result pages'
   },};
 
-export function getAdminNotificationsAuditCopy(locale: SupportedLocale): AdminNotificationsAuditCopy {
-  return localizeCopy('admin/notifications-audit-copy#getAdminNotificationsAuditCopy', locale, copy[locale]);
+export function getAdminNotificationsAuditCopy(locale: SupportedLocale) {
+  const simple = getSimpleAuditCopy(locale);
+  const fallback = { ...copy[locale], audit: { ...copy[locale].audit, ...simple, metrics: {
+    total: simple.total, onPage: simple.onPage, administrators: simple.administrators, redactedSnapshots: simple.redactedSnapshots
+  } } };
+  return localizeCopy('admin/notifications-audit-copy#getAdminNotificationsAuditCopy', locale, fallback);
 }
