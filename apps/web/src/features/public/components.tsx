@@ -537,46 +537,31 @@ function BannerMedia({
   banner,
   copy,
   locale,
-  className,
-  priority = false
+  hidden,
+  onLoad
 }: {
   readonly banner: PublicHomepageBanner | undefined;
   readonly copy: PublicHomepageCopy;
   readonly locale: SupportedLocale;
-  readonly className?: string | undefined;
-  readonly priority?: boolean;
+  readonly hidden: boolean;
+  readonly onLoad: () => void;
 }) {
   const [failed, setFailed] = useState(false);
   const fallbackHero = '/assets/canonical/public/home-hero-sadat-city.png';
-  const fallbackBanner = '/assets/canonical/public/banner-elite-compound-figma.png';
-  const canonicalBanner = priority ? undefined : ({
-    city_banner: fallbackBanner,
-    elite_compound: fallbackBanner,
-    local_preview_banner: fallbackBanner
-  } as const)[banner?.key as 'city_banner' | 'elite_compound' | 'local_preview_banner'];
-  const rawUrl = canonicalBanner ?? banner?.imageUrl ?? (priority ? fallbackHero : fallbackBanner);
-  const imageUrl = safePublicUrl(rawUrl);
+  const imageUrl = safePublicUrl(banner?.imageUrl ?? fallbackHero);
   const imageAlt = localizedText(banner?.altText, locale) ?? localizedText(banner?.title, locale) ?? copy.brand;
-
-  if (imageUrl === undefined || failed) {
-    return (
-      <img
-        className={'public-homepage__hero-image' + (className === undefined ? '' : ' ' + className)}
-        src={priority ? fallbackHero : fallbackBanner}
-        alt={imageAlt}
-        decoding="async"
-        loading={priority ? 'eager' : 'lazy'}
-      />
-    );
-  }
 
   return (
     <img
-      className={'public-homepage__hero-image' + (className === undefined ? '' : ' ' + className)}
-      src={imageUrl}
+      className="public-homepage__hero-image"
+      src={failed || !imageUrl ? fallbackHero : imageUrl}
       alt={imageAlt}
       decoding="async"
-      loading={priority ? 'eager' : 'lazy'}
+      loading="eager"
+      fetchPriority={hidden ? 'low' : 'high'}
+      hidden={hidden}
+      style={hidden ? { display: 'none' } : undefined}
+      onLoad={event => { const image = event.currentTarget; if (image.decode) void image.decode().then(onLoad, onLoad); else onLoad(); }}
       onError={() => setFailed(true)}
     />
   );
@@ -668,12 +653,23 @@ function Hero({
   const section = sections.find(item => item.key === 'hero') ?? sections[0];
   const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
   const [slideKey, setSlideKey] = useState<string>();
+  const [requestedKey, setRequestedKey] = useState<string>();
+  const [ready, setReady] = useState<readonly string[]>([]);
   const [hidden, setHidden] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const selectedIndex = slides.findIndex(item => item.key === slideKey);
   const activeIndex = selectedIndex < 0 ? 0 : selectedIndex;
   const banner = slides[activeIndex] ?? banners.find(item => !item.key.startsWith('banner-'));
+  const imageKey = (item: PublicHomepageBanner | undefined) => item?.imageUrl ?? '';
+  // Keep URL-keyed image nodes mounted so no-store media is not requested again on every slide.
+  const media = [...new Map((slides.length ? slides : [banner]).map(item => [imageKey(item), item])).entries()];
   const slideKeys = slides.map(item => item.key).join(',');
+  useEffect(() => {
+    if (!requestedKey) return;
+    const target = slides.find(item => item.key === requestedKey);
+    if (!target) { setRequestedKey(undefined); return; }
+    if (ready.includes(target.imageUrl ?? '')) { setSlideKey(requestedKey); setRequestedKey(undefined); }
+  }, [requestedKey, ready, slides]);
   useEffect(() => {
     const preference = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : undefined;
     const updateMotion = () => setReducedMotion(preference?.matches === true);
@@ -686,7 +682,7 @@ function Hero({
   useEffect(() => {
     const keys = slideKeys.split(',');
     if (keys.length < 2 || hidden || reducedMotion) return;
-    const timer = window.setTimeout(() => setSlideKey(keys[(activeIndex + 1) % keys.length]), (banner?.displaySeconds ?? 8) * 1000);
+    const timer = window.setTimeout(() => setRequestedKey(keys[(activeIndex + 1) % keys.length]), (banner?.displaySeconds ?? 8) * 1000);
     return () => window.clearTimeout(timer);
   }, [slideKeys, activeIndex, banner?.displaySeconds, hidden, reducedMotion]);
   const managed = banner?.key.startsWith('banner_');
@@ -699,12 +695,12 @@ function Hero({
     <section id="homepage-hero" className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
       <div className="public-homepage__hero-visual">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
-        <BannerMedia key={banner?.key ?? 'default-hero'} banner={banner} copy={copy} locale={locale} priority />
+        {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       {slides.length > 1 ? <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
-        <button type="button" onClick={() => setSlideKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>{locale === 'ar' ? '›' : '‹'}</button>
-        <button type="button" onClick={() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>{locale === 'ar' ? '‹' : '›'}</button>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>{locale === 'ar' ? '›' : '‹'}</button>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>{locale === 'ar' ? '‹' : '›'}</button>
       </div> : null}
       </div>
       <div className="public-homepage__hero-content">

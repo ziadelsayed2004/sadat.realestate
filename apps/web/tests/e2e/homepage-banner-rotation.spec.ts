@@ -41,7 +41,7 @@ test('publishes overlapping homepage banners and rotates their image and copy fo
   await page.route('**/api/v1/public/home**', route => route.fulfill({ json: response }));
   await page.goto(`/?lang=${locale}`);
   const hero = page.locator('.public-homepage__hero');
-  const image = hero.locator('.public-homepage__hero-media img');
+  const image = hero.locator('.public-homepage__hero-media img:not([hidden])');
   const verifyMobileImage = async () => {
     if (page.viewportSize()!.width >= 768) return;
     await expect(hero).toHaveClass(/public-homepage__hero--advertisement/u);

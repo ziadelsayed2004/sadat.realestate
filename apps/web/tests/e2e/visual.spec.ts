@@ -232,7 +232,7 @@ test('public homepage renders its SSR shell across approved locales and devices'
   await expect(logo).toHaveJSProperty('complete', true);
   await expect(logo).toHaveJSProperty('naturalWidth', 636);
   await expect(homepage).toHaveAttribute('data-homepage-state', 'success');
-  const heroImage = homepage.locator('.public-homepage__hero-media img');
+  const heroImage = homepage.locator('.public-homepage__hero-media img:not([hidden])');
   await expect(heroImage).toBeVisible();
   // The server may emit the canonical asset as a same-origin relative URL;
   // browsers resolve it to the same clone asset as the absolute fixture URL.

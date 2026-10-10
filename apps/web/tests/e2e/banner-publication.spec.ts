@@ -66,8 +66,8 @@ test('shows the published localized title over its image and refreshes the open 
   phase = 'published';
   await page.clock.runFor(30_000);
   await expect(heading).toHaveText(title[locale]);
-  await expect(page.locator('.public-homepage__hero-media img')).toHaveAttribute('alt', locale === 'ar' ? 'صورة الحملة' : 'Campaign image');
-  await expect(page.locator('.public-homepage__hero-media img')).toHaveAttribute('src', '/assets/canonical/public/listing-property-rental.png');
+  await expect(page.locator('.public-homepage__hero-media img:not([hidden])')).toHaveAttribute('alt', locale === 'ar' ? 'صورة الحملة' : 'Campaign image');
+  await expect(page.locator('.public-homepage__hero-media img:not([hidden])')).toHaveAttribute('src', '/assets/canonical/public/listing-property-rental.png');
   await expect(rent).toHaveAttribute('aria-selected', 'true');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: test.info().outputPath(`managed-banner-${locale}.png`) });
@@ -165,7 +165,7 @@ test('rotates managed images on schedule with side arrows and keeps search uncha
   await page.route('**/api/v1/public/home**', route => route.fulfill({ json: response }));
   await page.goto(`/?lang=${locale}`);
   const hero = page.locator('.public-homepage__hero');
-  const image = hero.locator('.public-homepage__hero-media img');
+  const image = hero.locator('.public-homepage__hero-media img:not([hidden])');
   await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
   await expect(hero.locator('.public-homepage__hero-body')).toHaveText(response.data.banners[0]!.body![locale]!);
   if ((page.viewportSize()?.width ?? 1000) < 768) {
