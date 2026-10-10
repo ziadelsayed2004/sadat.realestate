@@ -137,8 +137,58 @@ const loaders = {
 };
 
 describe('Admin advertising, payment, calendar, and financial projections', () => {
+  it('refreshes an expired advertising session once and reloads requests with the current token', async () => {
+    let token = 'Bearer expired';
+    const headers: Array<string | null> = [];
+    const refresh = vi.fn(async () => { token = 'Bearer renewed'; });
+    const client = new ApiClient({ fetcher: async (_input, init) => {
+      headers.push(new Headers(init?.headers).get('authorization'));
+      return headers.length === 1
+        ? new Response(JSON.stringify({ error: { code: 'UNAUTHORIZED', messageKey: 'errors.unauthorized', requestId: 'expired' } }), { status: 401 })
+        : envelope(requestList);
+    } });
+    await expect(loadAdminAdRequests({ apiClient: client, authorization: { getAuthorizationHeader: () => token, refresh } })).resolves.toEqual(requestList);
+    expect(headers).toEqual(['Bearer expired', 'Bearer renewed']);
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([403, 503])('does not refresh or bypass a %s advertising denial', async status => {
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', requestId: 'denied' } }), { status }));
+    const refresh = vi.fn();
+    await expect(loadAdminAdRequests({ apiClient: new ApiClient({ fetcher }), authorization: { ...authorization, refresh } })).rejects.toMatchObject({ status });
+    expect(refresh).not.toHaveBeenCalled();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('stops after one unsuccessful advertising renewal instead of looping', async () => {
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ error: { code: 'UNAUTHORIZED', messageKey: 'errors.unauthorized', requestId: 'expired' } }), { status: 401 }));
+    const refresh = vi.fn(async () => undefined);
+    await expect(loadAdminAdRequests({ apiClient: new ApiClient({ fetcher }), authorization: { ...authorization, refresh } })).rejects.toMatchObject({ status: 401 });
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it.each(['logout', 'abort'] as const)('does not reload advertising after %s during session renewal', async outcome => {
+    const controller = new AbortController();
+    let token: string | undefined = 'Bearer expired';
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ error: { code: 'UNAUTHORIZED', messageKey: 'errors.unauthorized', requestId: 'expired' } }), { status: 401 }));
+    const refresh = vi.fn(async () => { if (outcome === 'logout') token = undefined; else controller.abort(); });
+    await expect(loadAdminAdRequests({ apiClient: new ApiClient({ fetcher }), signal: controller.signal, authorization: { getAuthorizationHeader: () => token, refresh } })).rejects.toMatchObject({ status: 401 });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   beforeEach(() => {
     server.use(http.get('/api/v1/admin/banners', () => HttpResponse.json({ data: { items: [], page: 1, limit: 20, total: 0 }, meta: { requestId: 'ads-banner-context' } })));
+  });
+
+  it.each(['ar', 'en'] as const)('explains missing advertising viewing and reloads after role correction in %s', async locale => {
+    window.history.pushState({}, '', '/admin/ads/requests');
+    const load = vi.fn().mockRejectedValueOnce(new ApiClientError('Forbidden', { code: 'HTTP_ERROR', status: 403 })).mockResolvedValue(requestList);
+    renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} loadRequests={load} />, { locale });
+    expect(await screen.findByText(locale === 'ar' ? /راجع مع المسؤول الأعلى تفعيل/u : /Ask the Super Admin to enable View advertising/u)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'إعادة المحاولة' : 'Retry' }));
+    await waitFor(() => expect(document.querySelector('.admin-ads')).toHaveAttribute('data-admin-ads-state', 'success'));
+    expect(load).toHaveBeenCalledTimes(2);
   });
 
   it('loads the request brief on financial details while preserving the financial projection', async () => {

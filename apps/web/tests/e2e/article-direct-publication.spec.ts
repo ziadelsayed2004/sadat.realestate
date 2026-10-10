@@ -27,7 +27,7 @@ test('publishes from the editor, keeps failed publication as the same draft and 
     } else if (route.request().method() === 'POST') {
       const input = articleCreateSchema.parse(data);
       creates++;
-      article = { ...adminArticleFixture(), status: 'draft', title: input.title, body: input.body, version: 0, availableActions: ['update', 'submit', 'publish', 'delete'] };
+      article = { ...adminArticleFixture(), status: 'draft', title: input.title, body: input.body, version: 0, availableActions: ['update', 'publish', 'delete'] };
     } else {
       const input = articlePatchSchema.parse(data);
       expect(input.version).toBe(article!.version);
@@ -60,6 +60,7 @@ test('publishes from the editor, keeps failed publication as the same draft and 
   expect(creates).toBe(1); expect(article!.body).toEqual({ [locale]: body });
   await expect(bodyInput).toHaveValue(body + '\u0000');
   await expect(publish).toBeEnabled();
+  await expect(page.getByRole('button', { name: copy.action.submit, exact: true })).toHaveCount(0);
   const layout = await editor.evaluate(element => {
     const bounds = element.getBoundingClientRect();
     return { width: element.clientWidth, scroll: element.scrollWidth, overflowing: [...element.querySelectorAll('*')].filter(child => {

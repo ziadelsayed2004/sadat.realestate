@@ -104,10 +104,25 @@ export type AdminAdsFinancialReviewLoader = (query: AdFinancialReviewQuery, sign
 export type AdminAdsFinancialDetailLoader = (requestId: string, signal?: AbortSignal) => Promise<AdFinancialReviewRow>;
 export type AdminAdsLedgerLoader = (query: AdLedgerQuery, signal?: AbortSignal) => Promise<AdminAdsLedgerData>;
 
-function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
-  if (options.apiClient !== undefined) return options.apiClient;
+function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin' | 'authorization'>): Pick<ApiClient, 'request'> {
   const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  return new ApiClient(clientOptions);
+  const client = options.apiClient ?? new ApiClient(clientOptions);
+  return {
+    async request(path, request) {
+      try {
+        return await client.request(path, request);
+      } catch (error) {
+        const source = options.authorization;
+        if (!(error instanceof ApiClientError) || error.status !== 401 || !source?.refresh || !source.getAuthorizationHeader() || request.signal?.aborted) throw error;
+        await source.refresh();
+        const authorization = source.getAuthorizationHeader();
+        if (!authorization || request.signal?.aborted) throw error;
+        const headers = new Headers(request.headers);
+        headers.set('authorization', authorization);
+        return client.request(path, { ...request, headers });
+      }
+    }
+  };
 }
 
 function headersFor(source: AdminAdsAuthorizationSource | undefined): HeadersInit | undefined {

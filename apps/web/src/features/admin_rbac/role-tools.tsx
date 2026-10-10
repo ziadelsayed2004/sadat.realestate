@@ -11,20 +11,30 @@ const actions: Record<string, [string, string]> = { view: ['عرض', 'View'], ma
 export function PermissionChooser({ locale, catalog, value, mode, disabled, change, applyPreset }: { readonly locale: SupportedLocale; readonly catalog: readonly RbacPermission[]; readonly value: readonly RbacPermission[]; readonly mode: 'custom' | 'view_only'; readonly disabled: boolean; readonly change: (permissions: RbacPermission[]) => void; readonly applyPreset: (name: string, permissions: RbacPermission[], mode: 'custom' | 'view_only') => void }) {
   const ar = locale === 'ar'; const index = ar ? 0 : 1;
   const allowed = catalog.filter(permission => mode !== 'view_only' || permission.endsWith('.view'));
+  const needsAdsView = value.includes('admin:ads.price') || value.includes('admin:ads.schedule');
+  useEffect(() => {
+    if (!disabled && mode === 'custom' && needsAdsView && !value.includes('admin:ads.view') && catalog.includes('admin:ads.view')) change([...value, 'admin:ads.view']);
+  }, [catalog, change, disabled, mode, needsAdsView, value]);
+  const selectPermissions = (permissions: RbacPermission[]) => change(
+    (permissions.includes('admin:ads.price') || permissions.includes('admin:ads.schedule')) && catalog.includes('admin:ads.view')
+      ? [...new Set([...permissions, 'admin:ads.view' as const])] : permissions
+  );
   const presets = [
     { name: ar ? 'مدير المنصة — كل الصلاحيات' : 'Platform manager — all permissions', mode: 'custom' as const, permissions: [...catalog] },
     { name: ar ? 'مسؤول العقارات والعارضين' : 'Property and provider reviewer', mode: 'custom' as const, permissions: catalog.filter(item => /^admin:(overview|properties|providers|projects|documents|features|locations|taxonomy)\./.test(item)) },
     { name: ar ? 'مسؤول العملاء والمعاينات' : 'Customer and viewing coordinator', mode: 'custom' as const, permissions: catalog.filter(item => /^admin:(overview|requests|viewings|users)\./.test(item)) },
     { name: ar ? 'مسؤول المحتوى والإعلانات' : 'Content and advertising manager', mode: 'custom' as const, permissions: catalog.filter(item => /^admin:(overview|content|banners|ads|community)\./.test(item)) },
+    { name: ar ? 'مسؤول الإعلانات' : 'Advertising manager', mode: 'custom' as const, permissions: catalog.filter(item => /^admin:ads\./.test(item)) },
     { name: ar ? 'عرض فقط' : 'View only', mode: 'view_only' as const, permissions: catalog.filter(item => item.endsWith('.view')) }
   ];
   return <section className="admin-rbac__role-tools">
     <label className="admin-rbac__field">{ar ? 'منصب جاهز (اختياري)' : 'Role preset (optional)'}<select value="" disabled={disabled} onChange={event => { if (event.currentTarget.value === '') return; const preset = presets[Number(event.currentTarget.value)]; if (preset) applyPreset(preset.name, [...preset.permissions], preset.mode); }}><option value="">{ar ? 'اختر منصبًا أو حدد الصلاحيات بنفسك' : 'Choose a preset or customize permissions'}</option>{presets.map((preset, position) => <option key={preset.name} value={position}>{preset.name}</option>)}</select></label>
     <p className="admin-rbac__muted">{ar ? 'المنصب مجموعة صلاحيات تُربط بموظف. الاختيار الجاهز يعبّئ الصلاحيات ويمكنك تعديلها قبل الحفظ. مدير المنصة هنا يحصل على الصلاحيات الحالية؛ المسؤول الأعلى يمتلك وصولًا كاملًا دائمًا.' : 'A role groups permissions assigned to an employee. Presets fill the selection and remain editable before saving. Platform manager selects the current catalog; Super Admin always has full access.'}</p>
+    <p className="admin-rbac__muted">{ar ? 'التسعير والجدولة يحددان «عرض الإعلانات» تلقائيًا لفتح الطلبات. مراجعة المدفوعات تحتاج صلاحيتها المنفصلة. احفظ المنصب واربطه بحساب الموظف.' : 'Pricing and scheduling automatically select View advertising to open requests. Payment review needs its separate permission. Save the role and assign it to the employee.'}</p>
     <div className="admin-rbac__actions"><Button type="button" size="sm" variant="secondary" disabled={disabled} onClick={() => change([...allowed])}>{ar ? 'تحديد الكل' : 'Select all'}</Button><Button type="button" size="sm" variant="secondary" disabled={disabled} onClick={() => change([])}>{ar ? 'إلغاء تحديد الكل' : 'Clear selection'}</Button><span role="status">{ar ? 'الصلاحيات المحددة' : 'Selected permissions'}: {value.length} / {catalog.length}</span></div>
     <fieldset className="admin-rbac__permissions"><legend>{ar ? 'الصلاحيات' : 'Permissions'}</legend>{catalog.map(permission => {
       const [resource, action] = permission.slice(6).split('.');
-      return <label key={permission}><input type="checkbox" checked={value.includes(permission)} disabled={disabled || !allowed.includes(permission)} onChange={() => change(value.includes(permission) ? value.filter(item => item !== permission) : [...value, permission])} /><span>{resources[resource ?? '']?.[index] ?? resource} — {actions[action ?? '']?.[index] ?? action}<small dir="ltr">{permission}</small></span></label>;
+      return <label key={permission}><input type="checkbox" checked={value.includes(permission)} disabled={disabled || !allowed.includes(permission) || (permission === 'admin:ads.view' && needsAdsView && value.includes(permission))} onChange={() => selectPermissions(value.includes(permission) ? value.filter(item => item !== permission) : [...value, permission])} /><span>{resources[resource ?? '']?.[index] ?? resource} — {actions[action ?? '']?.[index] ?? action}<small dir="ltr">{permission}</small></span></label>;
     })}</fieldset>
   </section>;
 }

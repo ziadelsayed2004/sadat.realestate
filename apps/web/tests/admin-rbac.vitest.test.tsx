@@ -11,6 +11,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { AdminRbac, loadAdminRbacUsers, updateAdminRbacRole, type AdminRbacSource } from '../src/features/admin_rbac/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { ApiClientError } from '../src/features/contracts/index.ts';
+import { PermissionChooser } from '../src/features/admin_rbac/role-tools.tsx';
 
 const adminSession = { status: 'authenticated' as const, role: 'admin' as const };
 const userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -218,6 +219,30 @@ describe('employee role workflow', () => {
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'edited@example.com' } });
     expect(screen.getByRole('status')).toHaveTextContent('new@example.com');
   });
+  it('adds advertising viewing when pricing or scheduling is selected and offers a dedicated restricted preset', () => {
+    const change = vi.fn();
+    const applyPreset = vi.fn();
+    const result = renderWithLocale(<PermissionChooser locale="en" catalog={RBAC_PERMISSIONS} value={[]} mode="custom" disabled={false} change={change} applyPreset={applyPreset} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('checkbox', { name: /Advertising — Price/ }));
+    expect(change).toHaveBeenLastCalledWith(['admin:ads.price', 'admin:ads.view']);
+    fireEvent.click(screen.getByRole('checkbox', { name: /Advertising — Schedule/ }));
+    expect(change).toHaveBeenLastCalledWith(['admin:ads.schedule', 'admin:ads.view']);
+    fireEvent.change(screen.getByLabelText('Role preset (optional)'), { target: { value: '4' } });
+    expect(applyPreset).toHaveBeenCalledWith('Advertising manager', ['admin:ads.price', 'admin:ads.schedule', 'admin:ads.view'], 'custom');
+    result.rerender(<PermissionChooser locale="en" catalog={RBAC_PERMISSIONS} value={['admin:ads.price', 'admin:ads.view']} mode="custom" disabled={false} change={change} applyPreset={applyPreset} />);
+    expect(screen.getByRole('checkbox', { name: /Advertising — View/ })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /Advertising — View/ })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Clear selection' }));
+    expect(change).toHaveBeenLastCalledWith([]);
+  });
+
+  it('prepares an existing advertising role missing viewing for an explicit corrected save', () => {
+    const change = vi.fn();
+    renderWithLocale(<PermissionChooser locale="en" catalog={RBAC_PERMISSIONS} value={['admin:ads.price']} mode="custom" disabled={false} change={change} applyPreset={vi.fn()} />, { locale: 'en' });
+    expect(change).toHaveBeenCalledWith(['admin:ads.price', 'admin:ads.view']);
+    expect(screen.getByText(/Save the role and assign it to the employee/)).toBeInTheDocument();
+  });
+
   it('selects all allowed permissions, excludes edits in View Only, and assigns an existing employee', async () => {
     const updateUser = vi.fn(async () => user({ roleIds: [roleId], version: 4 }));
     renderWithLocale(<AdminRbac url={`/admin/roles/${roleId}`} locale="en" session={adminSession} source={source({ updateUser })} />, { locale: 'en' });

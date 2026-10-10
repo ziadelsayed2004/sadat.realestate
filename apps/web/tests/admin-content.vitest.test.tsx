@@ -16,6 +16,8 @@ import {
 } from '../src/features/admin_content/index.ts';
 import type { AdminArticleListData, AdminCategoryListData } from '../src/features/admin_content/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { ArticleList } from '../src/features/admin_content/article-list.tsx';
+import { ArticleNotice } from '../src/features/admin_content/article-notice.tsx';
 
 const category = articleCategoryDataSchema.parse({
   id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying-tips', name: { ar: 'نصائح الشراء', en: 'Buying tips',}, description: { en: 'Guides' }, displayOrder: 1, active: true, version: 2,
@@ -53,6 +55,23 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin article and category management contracts and views', () => {
+  it.each(['ar', 'en'] as const)('shows direct publication for Super Admin and review submission for assigned authors in %s', locale => {
+    const copy = getAdminContentCopy(locale);
+    const onTransition = vi.fn();
+    const props = { categories: [category], locale, load: vi.fn(), onEdit: vi.fn(), onTransition, onDelete: vi.fn() };
+    const result = renderWithLocale(<ArticleList {...props} articles={[{ ...article, availableActions: ['update', 'publish', 'delete'] }]} />, { locale });
+    expect(screen.queryByRole('button', { name: copy.action.submit })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.action.publish }));
+    expect(onTransition).toHaveBeenLastCalledWith(expect.objectContaining({ id: article.id }), 'publish');
+    result.rerender(<ArticleList {...props} articles={[{ ...article, availableActions: ['update', 'submit', 'delete'] }]} />);
+    expect(screen.queryByRole('button', { name: copy.action.publish })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.action.submit }));
+    expect(onTransition).toHaveBeenLastCalledWith(expect.objectContaining({ id: article.id }), 'submit');
+    result.rerender(<ArticleNotice locale={locale} article={{ ...article, status: 'pending_review', availableActions: [] }} />);
+    expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'سيظهر للزوار بعد اعتماد الإدارة ونشره' : 'after an administrator approves and publishes it');
+    expect(screen.getByRole('status')).not.toHaveTextContent(locale === 'ar' ? 'يمكنك نشره' : 'You can publish');
+  });
+
   it.each(['ar', 'en'] as const)('saves and publishes in %s, retaining the saved draft and its version when publication fails', async locale => {
     window.history.pushState({}, '', '/admin/articles');
     let stored = { ...article, version: 0, availableActions: ['update', 'submit', 'publish', 'delete'] as typeof article.availableActions };

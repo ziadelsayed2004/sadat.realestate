@@ -1,7 +1,36 @@
 import { expect, test } from '@playwright/test';
-import { articleCreateSchema, articlePatchSchema, articleTransitionRequestSchema } from '@sadat-real-estate/contracts';
+import { articleCreateSchema, articlePatchSchema, articleTransitionRequestSchema, type Article } from '@sadat-real-estate/contracts';
 import { adminArticleCategoryFixture, adminArticleFixture, adminArticleId } from './admin-content.fixtures.ts';
 import { getAdminContentCopy } from '../../src/features/admin_content/copy.ts';
+
+test('assigned article authors submit for review and wait for administrator publication', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  const copy = getAdminContentCopy(locale);
+  let article: Article = { ...adminArticleFixture(), status: 'draft', availableActions: ['update', 'submit', 'delete'] };
+  const envelope = (data: unknown) => ({ data, meta: { requestId: 'staff-review', page: 1, limit: 20, total: 1 } });
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({ json: envelope({ accessToken: 'author.staff.qa', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: adminArticleId, roleType: 'admin', status: 'verified' } }) }));
+  await page.route('**/api/v1/admin/article-categories**', route => route.fulfill({ json: envelope({ items: [adminArticleCategoryFixture()] }) }));
+  await page.route('**/api/v1/admin/articles**', route => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: envelope({ items: [article] }) });
+    expect(route.request().url()).toContain('/transitions');
+    const input = articleTransitionRequestSchema.parse(route.request().postDataJSON());
+    expect(input.status).toBe('pending_review');
+    expect(input.version).toBe(article.version);
+    article = { ...article, status: 'pending_review', version: article.version + 1, availableActions: [] };
+    return route.fulfill({ json: envelope(article) });
+  });
+  await page.goto(`/admin/articles?lang=${locale}`);
+  const card = page.getByTestId(`admin-article-${adminArticleId}`);
+  await expect(card.getByRole('button', { name: copy.action.publish, exact: true })).toHaveCount(0);
+  await card.getByRole('button', { name: copy.action.submit, exact: true }).click();
+  const action = page.getByTestId('admin-article-transition');
+  await action.locator('#admin-article-action-reason').fill('Submit completed article for review');
+  await action.getByRole('button', { name: copy.save, exact: true }).click();
+  await expect(card).toContainText(copy.status.pending_review);
+  await expect(card.getByRole('button')).toHaveCount(0);
+  await expect(page.locator('.admin-article-notice')).toContainText(locale === 'ar' ? 'سيظهر للزوار بعد اعتماد الإدارة ونشره' : 'after an administrator approves and publishes it');
+  await page.screenshot({ path: info.outputPath('staff-article-pending-review.png'), fullPage: true });
+});
 
 test('saves a first empty draft, reopens it, completes it and follows the review and publication filters', async ({ page }, info) => {
   const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';

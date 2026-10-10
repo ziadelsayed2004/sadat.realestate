@@ -29,7 +29,7 @@ test('generates distinct article/category links and preserves them when titles c
   assert.equal(revisedCategory.slug, category.slug);
 });
 
-function fixture(options: { readonly permissions?: readonly string[] } = {}) {
+function fixture(options: { readonly permissions?: readonly string[]; readonly superAdmin?: boolean } = {}) {
   const permissions = new Set(options.permissions ?? [
     'admin:content.view',
     'admin:content.manage',
@@ -37,6 +37,7 @@ function fixture(options: { readonly permissions?: readonly string[] } = {}) {
   ]);
   const auditRecords: AuditRecordInput[] = [];
   const authorization: ArticleAuthorization = {
+    async authorizationFor(userId) { return { isSuperAdmin: userId === ADMIN_ID && options.superAdmin === true }; },
     async authorize(userId, permission) {
       return userId === ADMIN_ID && permissions.has(permission);
     }
@@ -332,4 +333,37 @@ test('direct draft publication requires management and publishing permissions, c
   assert.equal((await service.getPublicBySlug(published.slug, 'ar')).body.ar, body);
   assert.equal(auditRecords.at(-1)?.action, 'article.transition');
   assert.equal(auditRecords.at(-1)?.after?.status, 'published');
+});
+
+test('Super Admin drafts offer direct publishing throughout create, edit and list without a review submission', async () => {
+  const { service, repository, auditRecords } = fixture({ superAdmin: true });
+  const category = await createCategory(service);
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { ar: 'مقال المدير' }, body: { ar: 'محتوى مكتمل' }, reason: 'Owner creates complete article' }, CONTEXT);
+  assert.deepEqual(draft.availableActions, ['update', 'publish', 'delete']);
+  const updated = await service.updateArticle(PRINCIPAL, draft.id, { version: draft.version, title: { ar: 'تعديل المدير' }, reason: 'Owner updates article title' }, CONTEXT);
+  assert.deepEqual(updated.availableActions, ['update', 'publish', 'delete']);
+  const listed = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.deepEqual(listed.data.items[0]?.availableActions, ['update', 'publish', 'delete']);
+  const count = auditRecords.length;
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, { version: updated.version, status: 'pending_review', reason: 'Owner cannot submit for review' }, CONTEXT), /ARTICLE_TRANSITION_INVALID/);
+  assert.equal((await repository.findArticle(draft.id))?.status, 'draft');
+  assert.equal(auditRecords.length, count);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { version: updated.version, status: 'published', reason: 'Owner publishes article directly' }, CONTEXT);
+  assert.equal(published.status, 'published');
+});
+
+test('assigned article authors retain submission and receive no publisher actions after review submission', async () => {
+  const { service, repository } = fixture({ permissions: ['admin:content.view', 'admin:content.manage'] });
+  const category = await createCategory(service);
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { ar: 'مقال الموظف' }, body: { ar: 'محتوى مكتمل' }, reason: 'Employee creates article' }, CONTEXT);
+  assert.deepEqual(draft.availableActions, ['update', 'submit', 'delete']);
+  const review = await service.transitionArticle(PRINCIPAL, draft.id, { version: draft.version, status: 'pending_review', reason: 'Employee submits article for review' }, CONTEXT);
+  assert.deepEqual(review.availableActions, []);
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, { version: review.version, status: 'published', reason: 'Employee cannot publish article' }, CONTEXT), /ARTICLE_FORBIDDEN/);
+  const owner = createArticleService({ repository, authorization: { async authorize() { return true; }, async authorizationFor() { return { isSuperAdmin: true }; } }, audit: { async record() { return 'audit'; } } });
+  assert.ok((await owner.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' })).data.items[0]?.availableActions.includes('publish'));
+  const returned = await owner.transitionArticle(PRINCIPAL, draft.id, { version: review.version, status: 'draft', reason: 'Owner returns article for correction' }, CONTEXT);
+  assert.deepEqual(returned.availableActions, ['update', 'publish', 'delete']);
+  const employeeView = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.deepEqual(employeeView.data.items[0]?.availableActions, ['update', 'submit', 'delete']);
 });

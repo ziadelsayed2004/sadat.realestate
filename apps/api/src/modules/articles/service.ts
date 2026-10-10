@@ -53,6 +53,7 @@ export interface ArticlePrincipal { userId: string }
 export interface ArticleMutationContext { requestId: string; traceId: string }
 export interface ArticleAuthorization {
   authorize(userId: string, permission: RbacPermission): Promise<boolean>;
+  authorizationFor?(userId: string): Promise<{ isSuperAdmin: boolean }>;
 }
 
 export class ArticleServiceError extends Error {
@@ -126,9 +127,9 @@ function categoryActions(manage: boolean): ArticleCategory['availableActions'] {
   return manage ? ['update', 'delete'] : [];
 }
 
-function articleActions(status: ArticleStatus, manage: boolean, publish: boolean): Article['availableActions'] {
+function articleActions(status: ArticleStatus, manage: boolean, publish: boolean, superAdmin: boolean): Article['availableActions'] {
   const actions: Article['availableActions'] = [];
-  if (manage && status === 'draft') actions.push('update', 'submit');
+  if (manage && status === 'draft') { actions.push('update'); if (!superAdmin) actions.push('submit'); }
   if (manage && publish && status === 'draft') actions.push('publish');
   if (publish) {
     if (status === 'pending_review') actions.push('publish', 'return_to_draft');
@@ -148,7 +149,7 @@ function categoryData(item: StoredArticleCategory, manage: boolean): ArticleCate
   });
 }
 
-function articleData(item: StoredArticle, manage: boolean, publish: boolean): Article {
+function articleData(item: StoredArticle, manage: boolean, publish: boolean, superAdmin = false): Article {
   const adminFields = { ...item };
   // Include the saved cover URL so administrators can see legacy article images.
   delete adminFields.readingTimeMinutes;
@@ -157,7 +158,7 @@ function articleData(item: StoredArticle, manage: boolean, publish: boolean): Ar
     ...(item.publishedAt ? { publishedAt: item.publishedAt.toISOString() } : {}),
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
-    availableActions: articleActions(item.status, manage, publish)
+    availableActions: articleActions(item.status, manage, publish, superAdmin)
   });
 }
 
@@ -237,6 +238,7 @@ export function createArticleService(dependencies: {
 }): ArticleService {
   const now = dependencies.now ?? (() => new Date());
   const allowed = (userId: string, permission: RbacPermission) => dependencies.authorization.authorize(userId, permission);
+  const isSuperAdmin = async (userId: string) => (await dependencies.authorization.authorizationFor?.(userId))?.isSuperAdmin ?? false;
   const requirePermission = async (userId: string, permission: RbacPermission) => {
     if (!await allowed(userId, permission)) throw new ArticleServiceError('ARTICLE_FORBIDDEN');
   };
@@ -343,13 +345,14 @@ export function createArticleService(dependencies: {
     async listArticles(principal, unparsedQuery) {
       const query = articleAdminListQuerySchema.parse(unparsedQuery);
       await requirePermission(principal.userId, 'admin:content.view');
-      const [manage, publish] = await Promise.all([
+      const [manage, publish, superAdmin] = await Promise.all([
         allowed(principal.userId, 'admin:content.manage'),
-        allowed(principal.userId, 'admin:content.publish')
+        allowed(principal.userId, 'admin:content.publish'),
+        isSuperAdmin(principal.userId)
       ]);
       const result = await dependencies.repository.listArticles(query);
       return {
-        data: { items: result.items.map((item) => articleData(item, manage, publish)) },
+        data: { items: result.items.map((item) => articleData(item, manage, publish, superAdmin)) },
         page: query.page,
         limit: query.limit,
         total: result.total
@@ -374,7 +377,7 @@ export function createArticleService(dependencies: {
         authorId: principal.userId
       }, principal.userId, at));
       const publish = await allowed(principal.userId, 'admin:content.publish');
-      const output = articleData(stored, true, publish);
+      const output = articleData(stored, true, publish, await isSuperAdmin(principal.userId));
       await audit('article.create', 'article', stored.id, principal, input.reason, null, articleAuditSnapshot(output), context, at);
       return output;
     },
@@ -404,7 +407,7 @@ export function createArticleService(dependencies: {
         ...(input.coverAssetId !== undefined ? { coverAssetId: input.coverAssetId, imageUrl: input.coverAssetId ? `/api/v1/public/article-photos/${input.coverAssetId}` : null } : {})
       }, principal.userId, at));
       const publish = await allowed(principal.userId, 'admin:content.publish');
-      const output = articleData(stored, true, publish);
+      const output = articleData(stored, true, publish, await isSuperAdmin(principal.userId));
       await audit('article.update', 'article', id, principal, input.reason, articleAuditSnapshot(articleData(before, true, publish)), articleAuditSnapshot(output), context, at);
       return output;
     },
@@ -418,6 +421,8 @@ export function createArticleService(dependencies: {
       );
       const before = await dependencies.repository.findArticle(id);
       if (!before) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
+      const superAdmin = await isSuperAdmin(principal.userId);
+      if (superAdmin && input.status === 'pending_review') throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
       const directPublish = before.status === 'draft' && input.status === 'published';
       if (directPublish) await requirePermission(principal.userId, 'admin:content.manage');
       if (!directPublish && !ALLOWED_TRANSITIONS[before.status].includes(input.status)) {
@@ -434,8 +439,9 @@ export function createArticleService(dependencies: {
         at
       ));
       const manage = await allowed(principal.userId, 'admin:content.manage');
-      const output = articleData(stored, manage, true);
-      await audit('article.transition', 'article', id, principal, input.reason, articleAuditSnapshot(articleData(before, manage, true)), articleAuditSnapshot(output), context, at);
+      const publish = await allowed(principal.userId, 'admin:content.publish');
+      const output = articleData(stored, manage, publish, superAdmin);
+      await audit('article.transition', 'article', id, principal, input.reason, articleAuditSnapshot(articleData(before, manage, publish, superAdmin)), articleAuditSnapshot(output), context, at);
       return output;
     },
 

@@ -14,7 +14,7 @@ export function createArticleRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
   audit: AuditWriter,
-  authorization: Pick<RbacService, 'authorize'>,
+  authorization: Pick<RbacService, 'authorize' | 'authorizationFor'>,
   environment?: UploadEnvironment
 ): ArticleRouterDependencies {
   connection.base.set('transactionAsyncLocalStorage', true);
