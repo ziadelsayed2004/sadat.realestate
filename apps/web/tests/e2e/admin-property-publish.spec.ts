@@ -18,14 +18,15 @@ test('publication updates the status and exposes its public destination without 
   const destination = page.getByRole('link', { name: ar ? 'فتح العقار المنشور' : 'View published property', exact: true });
   await expect(page.locator('#admin-property-action')).toHaveValue('publish');
   await expect(destination).toHaveCount(0);
-  await page.locator('#admin-property-reason').fill('Publish the reviewed property');
-  await page.locator('.admin-properties__action-card button[type=submit]').click();
+  await page.getByRole('button', { name: ar ? 'نشر العقار' : 'Publish property', exact: true }).click();
   await expect(page.locator('[data-status=published]')).toBeVisible();
   await expect(destination).toHaveAttribute('href', `/properties/${property.slug}?lang=${ar ? 'ar' : 'en'}`);
   await destination.scrollIntoViewIfNeeded();
   await expect(destination).toBeInViewport();
   await page.locator('.admin-properties__review').screenshot({ path: info.outputPath('published-property-link.png') });
   await expect(page.locator('#admin-property-action')).toHaveValue('hide');
+  expect(writes[0]).toMatchObject({ reason: 'Administrative property publish' });
+  await page.locator('#admin-property-reason').fill('Hide the published property');
   await page.locator('.admin-properties__action-card button[type=submit]').click();
   await expect(page.locator('[data-status=hidden]')).toBeVisible();
   await expect(destination).toHaveCount(0);

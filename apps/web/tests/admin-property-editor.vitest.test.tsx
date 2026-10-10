@@ -22,7 +22,7 @@ it('keeps failed title edits, uses the current version, and sends only the selec
   vi.stubGlobal('fetch', fetcher);
   const saved = vi.fn();
   renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={saved} />, { locale: 'en' });
-  fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Correct property title' } });
+  fireEvent.change(screen.getByLabelText('Edit reason (optional)'), { target: { value: 'Correct property title' } });
   fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('entries are preserved'));
@@ -48,7 +48,7 @@ it('removes a photo through the administrative route with a reason and does not 
   renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
   await screen.findByRole('button', { name: /^Remove$/ });
   expect(screen.queryByText('deleted.jpg')).not.toBeInTheDocument();
-  fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Remove outdated property photo' } });
+  fireEvent.change(screen.getByLabelText('Edit reason (optional)'), { target: { value: 'Remove outdated property photo' } });
   fireEvent.click(screen.getByRole('button', { name: /^Remove$/ }));
   await waitFor(() => expect(screen.queryByRole('button', { name: /^Remove$/ })).not.toBeInTheDocument());
 });
@@ -69,7 +69,7 @@ it('validates all changed fields before writing and resumes a partial save with 
   }));
   renderWithLocale(<AdminPropertyEditor initialProperty={current} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
   expect(screen.getAllByRole('button', { name: 'Save changes' })).toHaveLength(1);
-  fireEvent.change(screen.getByLabelText('Edit reason'), { target: { value: 'Update villa information' } });
+  fireEvent.change(screen.getByLabelText('Edit reason (optional)'), { target: { value: 'Update villa information' } });
   fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
   fireEvent.change(screen.getByLabelText('Property description EN'), { target: { value: 'New description' } });
   fireEvent.change(screen.getByLabelText('Price'), { target: { value: '-1' } });
@@ -87,12 +87,40 @@ it('validates all changed fields before writing and resumes a partial save with 
   expect(current).toMatchObject({ version: 6, status: 'published', price: { amount: 2000 }, name: { en: 'Updated villa' } });
 });
 
-it('explains a missing reason immediately without sending changes', async () => {
-  const fetcher = vi.fn<typeof fetch>(async () => response({ items: [] }));
+it('saves without a typed reason and records an automatic administrative edit reason', async () => {
+  const fetcher = vi.fn<typeof fetch>(async (_input, init) => init?.method === 'PATCH' ? response({ ...property, name: { en: 'Updated villa' }, version: 4 }) : response({ items: [] }));
   vi.stubGlobal('fetch', fetcher);
   renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
   fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated villa' } });
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
-  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Enter an edit reason'));
-  expect(fetcher.mock.calls.every(([, init]) => init?.method !== 'PATCH')).toBe(true);
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
+  const write = fetcher.mock.calls.find(([, init]) => init?.method === 'PATCH')!;
+  expect(JSON.parse(String(write[1]?.body))).toMatchObject({ version: 3, reason: 'Administrative property edit', name: { en: 'Updated villa' } });
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+});
+
+it('uploads a cover without a typed reason and refreshes the persisted public image URL', async () => {
+  const media = { id: 'c'.repeat(24), propertyId: property.id, kind: 'image', originalFilename: 'new-cover.png', detectedMime: 'image/png', byteSize: 12, sha256: 'd'.repeat(64), sortOrder: 0, isCover: true, processingState: 'ready', active: true, version: 1, createdAt: property.createdAt, updatedAt: property.updatedAt };
+  const imageUrl = `/api/v1/public/properties/${property.id}/media/${media.id}/content`;
+  const saved = vi.fn();
+  let uploads = 0;
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input, init) => {
+    if (init?.method === 'POST') {
+      uploads++;
+      expect(String(input)).toBe(`/api/v1/admin/properties/${property.id}/media`);
+      expect(decodeURIComponent(new Headers(init.headers).get('x-edit-reason')!)).toBe('Administrative property edit');
+      expect(init.body).toBeInstanceOf(File);
+      return response(media);
+    }
+    if (String(input).endsWith(property.id)) return response({ ...property, imageUrl });
+    if (String(input).endsWith('/content')) return new Response('', { status: 404 });
+    return response({ items: [] });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={saved} />, { locale: 'en' });
+  const input = screen.getByLabelText('Add image (JPG / PNG, up to 10 MB)');
+  await waitFor(() => expect(input).toBeEnabled());
+  fireEvent.change(input, { target: { files: [new File(['image bytes'], media.originalFilename, { type: 'image/png' })] } });
+  await waitFor(() => expect(saved).toHaveBeenCalledWith(expect.objectContaining({ imageUrl, status: 'published', active: true })));
+  expect(uploads).toBe(1);
+  expect(screen.getByText('Cover image')).toBeVisible();
 });

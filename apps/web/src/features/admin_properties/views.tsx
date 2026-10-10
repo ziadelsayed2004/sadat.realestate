@@ -214,7 +214,8 @@ function PropertyActionPanel({ locale, property, review, visibility }: { readonl
   const [feedback, setFeedback] = useState<string | undefined>();
 
   async function submit(): Promise<void> {
-    if (action === '' || reason.trim().length < 5) {
+    const actionReason = reason.trim() || (action === 'publish' ? 'Administrative property publish' : '');
+    if (action === '' || actionReason.length < 5) {
       setMutationState('error');
       setFeedback(copy.reasonRequired);
       return;
@@ -222,8 +223,8 @@ function PropertyActionPanel({ locale, property, review, visibility }: { readonl
     setMutationState('saving');
     setFeedback(undefined);
     try {
-      if (isReviewAction(action)) await review(property.id, { version: property.version, action, reason: reason.trim() });
-      else await visibility(property.id, { version: property.version, action, reason: reason.trim() });
+      if (isReviewAction(action)) await review(property.id, { version: property.version, action, reason: actionReason });
+      else await visibility(property.id, { version: property.version, action, reason: actionReason });
       setMutationState('idle');
       setFeedback(copy.actionSaved);
     } catch (error) {
@@ -232,7 +233,7 @@ function PropertyActionPanel({ locale, property, review, visibility }: { readonl
     }
   }
 
-  return <form className="admin-properties__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}><h2>{copy.titles.review}</h2>{allowedActions.length === 0 ? <p className="admin-properties__muted">{copy.noActions}</p> : <fieldset disabled={mutationState === 'saving'}><legend>{copy.columns.actions}</legend><label className="admin-properties__field" htmlFor="admin-property-action">{copy.columns.actions}</label><select id="admin-property-action" value={action} onChange={event => setAction(event.target.value as PropertyMutationAction)}>{allowedActions.map(value => <option key={value} value={value}>{isReviewAction(value) ? copy.availableAction[value] : copy.visibilityAction[value]}</option>)}</select><label className="admin-properties__field" htmlFor="admin-property-reason">{copy.reasonLabel}</label><textarea id="admin-property-reason" value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} minLength={5} maxLength={500} aria-required="true" /><Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.saving : copy.saveAction}</Button></fieldset>}{feedback !== undefined ? <p className="admin-properties__feedback" data-tone={mutationState === 'error' || mutationState === 'permission' ? 'error' : 'success'} role="status">{feedback}</p> : null}</form>;
+  return <form className="admin-properties__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}><h2>{copy.titles.review}</h2>{allowedActions.length === 0 ? <p className="admin-properties__muted">{copy.noActions}</p> : <fieldset disabled={mutationState === 'saving'}><legend>{copy.columns.actions}</legend><label className="admin-properties__field" htmlFor="admin-property-action">{copy.columns.actions}</label><select id="admin-property-action" value={action} onChange={event => setAction(event.target.value as PropertyMutationAction)}>{allowedActions.map(value => <option key={value} value={value}>{isReviewAction(value) ? copy.availableAction[value] : copy.visibilityAction[value]}</option>)}</select><label className="admin-properties__field" htmlFor="admin-property-reason">{copy.reasonLabel}{action === 'publish' ? (locale === 'ar' ? ' (اختياري)' : ' (optional)') : null}</label><textarea id="admin-property-reason" value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} minLength={5} maxLength={500} aria-required={action !== 'publish'} /><Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.saving : action === 'publish' ? copy.availableAction.publish : copy.saveAction}</Button></fieldset>}{feedback !== undefined ? <p className="admin-properties__feedback" data-tone={mutationState === 'error' || mutationState === 'permission' ? 'error' : 'success'} role="status">{feedback}</p> : null}</form>;
 }
 
 function PropertyReviewPanel({ locale, property, review, visibility }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly review: AdminPropertyReviewMutation; readonly visibility: AdminPropertyVisibilityMutation }) {

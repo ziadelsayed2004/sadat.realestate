@@ -47,3 +47,13 @@ test('listing reads one batch of public covers without a stored imageUrl or leak
   assert.equal((await attachPublicPropertyCovers(emptyConnection, [deleted]))[0]?.imageUrl, undefined);
   assert.equal(deleted.imageUrl, url());
 });
+
+test('a real uploaded cover replaces a duplicate demo cover without overriding an explicitly selected legacy photo', () => {
+  const demo = image({ id: '6700000000000000000000ce', imageUrl: '/assets/canonical/public/listing-property-home.png', isCover: true });
+  const uploaded = image({ id: '6ac950e5f8569b197eb47b0c', sortOrder: 1, isCover: true });
+  assert.equal(publicPropertyCoverUrl(property, [demo, uploaded], demo.imageUrl), url(uploaded.id));
+  assert.equal(publicPropertyCoverUrl(property, [uploaded, demo], demo.imageUrl), url(uploaded.id));
+  assert.equal(publicPropertyCoverUrl(property, [demo, { ...uploaded, imageUrl: url(uploaded.id) }]), url(uploaded.id));
+  assert.equal(publicPropertyCoverUrl(property, [demo, { ...uploaded, isCover: false }]), demo.imageUrl);
+  assert.equal(publicPropertyCoverUrl(property, [demo, { ...uploaded, processingState: 'failed' }]), demo.imageUrl);
+});

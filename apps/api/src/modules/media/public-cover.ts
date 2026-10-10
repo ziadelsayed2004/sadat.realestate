@@ -13,7 +13,10 @@ export interface PublicCoverMedia {
 /** Uploaded, ready images are authoritative; a video can never become a card cover. */
 export function publicPropertyCoverUrl(propertyId: string, media: readonly PublicCoverMedia[], legacyUrl?: string): string | undefined {
   const cover = media.filter(item => item.kind === 'image' && item.active && item.processingState === 'ready')
-    .sort((left, right) => Number(right.isCover) - Number(left.isCover) || left.sortOrder - right.sortOrder || left.id.localeCompare(right.id, 'en'))[0];
+    // Old demo records may retain a cover flag after a real photo is uploaded.
+    .sort((left, right) => Number(right.isCover) - Number(left.isCover)
+      || Number(!!left.imageUrl && !left.imageUrl.startsWith('/api/v1/public/properties/')) - Number(!!right.imageUrl && !right.imageUrl.startsWith('/api/v1/public/properties/'))
+      || left.sortOrder - right.sortOrder || left.id.localeCompare(right.id, 'en'))[0];
   if (cover) return cover.imageUrl ?? `/api/v1/public/properties/${propertyId}/media/${cover.id}/content`;
   // Do not resurrect an old uploaded cover after its last ready image was removed.
   return legacyUrl?.startsWith('/api/v1/public/properties/') ? undefined : legacyUrl;

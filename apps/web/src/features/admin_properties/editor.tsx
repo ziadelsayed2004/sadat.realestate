@@ -29,7 +29,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
   useEffect(() => { if (failed && feedback) feedbackRef.current?.focus(); }, [failed, feedback]);
   const client = useMemo(() => new ApiClient(apiOrigin ? { baseUrl: apiOrigin } : {}), [apiOrigin]);
   const path = `/admin/properties/${property.id}`;
-  const changeReason = () => reason.trim().replace(/\s+/gu, ' ');
+  const changeReason = () => reason.trim().replace(/\s+/gu, ' ') || 'Administrative property edit';
   const headers = () => { const token = authorization?.getAuthorizationHeader(); return { ...(token ? { authorization: token } : {}), 'x-edit-reason': encodeURIComponent(changeReason()) }; };
   const localize = (value: { ar: string; en: string }) => Object.fromEntries(Object.entries(value).filter(([, text]) => text.trim()).map(([key, text]) => [key, text.trim()]));
   useEffect(() => { setProperty(initialProperty); }, [initialProperty]);
@@ -42,7 +42,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
   }, [client, path, authorization, ar, mediaAttempt]);
   async function run(action: () => Promise<void | string>) {
     if (busy) return;
-    if (changeReason().length < 5) { setFailed(true); setFeedback(ar ? 'سبب التعديل مطلوب: 5 أحرف على الأقل.' : 'Enter an edit reason: at least 5 characters.'); reasonRef.current?.focus(); return; }
+    if (changeReason().length < 5) { setFailed(true); setFeedback(ar ? 'اكتب 5 أحرف أو اترك السبب فارغًا.' : 'Use 5 characters or leave the reason blank.'); reasonRef.current?.focus(); return; }
     setBusy(true); setFeedback(''); setFailed(false);
     try { const message = await action(); setFeedback(message ?? (ar ? 'تم حفظ التعديل.' : 'Changes saved.')); }
     catch (error) { setFailed(true); setFeedback(errorMessage(error)); }
@@ -113,7 +113,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     setMedia(current => [...current.filter(item => item.id !== result.data.data.id), result.data.data]);
     return refreshPropertyAfterMedia();
   }
-  return <section className="admin-property-editor"><h2>{ar ? 'تعديل العقار والصور' : 'Edit property and photos'}</h2><p>{ar ? 'تعديلات العقار المنشور تظهر بعد الحفظ.' : 'Published property changes appear after saving.'}</p><p>{ar ? 'اكتب سبب التعديل، ثم احفظ كل الحقول بزر واحد.' : 'Enter a reason and save all fields together.'}</p>{feedback ? <p ref={feedbackRef} tabIndex={-1} role={failed ? 'alert' : 'status'} style={{ color: failed ? '#b42318' : '#145649' }}>{feedback}</p> : null}<fieldset disabled={busy}><label>{ar ? 'سبب التعديل' : 'Edit reason'}<textarea ref={reasonRef} minLength={5} value={reason} maxLength={500} onChange={event => setReason(event.target.value)} /></label>
+  return <section className="admin-property-editor"><h2>{ar ? 'تعديل العقار والصور' : 'Edit property and photos'}</h2><p>{ar ? 'تعديلات العقار المنشور تظهر بعد الحفظ.' : 'Published property changes appear after saving.'}</p>{feedback ? <p ref={feedbackRef} tabIndex={-1} role={failed ? 'alert' : 'status'} style={{ color: failed ? '#b42318' : '#145649' }}>{feedback}</p> : null}<fieldset disabled={busy}><label>{ar ? 'سبب التعديل (اختياري)' : 'Edit reason (optional)'}<textarea ref={reasonRef} minLength={5} value={reason} maxLength={500} onChange={event => setReason(event.target.value)} /></label>
     <div className="admin-property-editor__grid">{(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'عنوان العقار' : 'Property title'} {language.toUpperCase()}<input value={name[language]} onChange={event => setName(current => ({ ...current, [language]: event.target.value }))} /></label>)}</div>
     <div className="admin-property-editor__grid">{(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'وصف العقار' : 'Property description'} {language.toUpperCase()}<textarea value={description[language]} onChange={event => setDescription(current => ({ ...current, [language]: event.target.value }))} /></label>)}</div>
     <label>{ar ? 'السعر' : 'Price'}<input type="number" min="1" value={amount} onChange={event => setAmount(event.target.value)} /></label>

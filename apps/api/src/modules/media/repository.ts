@@ -4,6 +4,7 @@ import type { AuditWriter } from '../audit/writer.js';
 import type { PropertyMediaModels, PropertyMediaRecord } from './models.js';
 import { propertyMediaData } from './models.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
+import { publicPropertyCoverUrl } from './public-cover.js';
 
 export interface OwnedMediaProperty { id: string; status: string; active: boolean; }
 export interface StoredPropertyMedia extends Omit<PropertyMediaData, 'createdAt' | 'updatedAt'> { storageKey: string; createdAt: Date; updatedAt: Date; }
@@ -35,8 +36,9 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
     await audit.record({ actorType: metadata.actorType ?? 'provider', actorId: metadata.actorId, targetType: 'property_media', targetId: id, action, reason: metadata.reason, before, after, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: metadata.changedAt }, session);
   }
   async function syncCover(propertyId: string, session: ClientSession) {
-    const cover = await models.PropertyMedia.findOne({ propertyId, active: true, processingState: 'ready', kind: 'image' }).sort({ isCover: -1, sortOrder: 1, _id: 1 }).lean().session(session);
-    if (cover) await connection.collection('properties').updateOne({ _id: new Types.ObjectId(propertyId) }, { $set: { imageUrl: `/api/v1/public/properties/${propertyId}/media/${String(cover._id)}/content` } }, { session });
+    const covers = await connection.collection('property_media').find({ propertyId: new Types.ObjectId(propertyId), active: true, processingState: 'ready', kind: 'image' }, { session, projection: { _id: 1, imageUrl: 1, kind: 1, active: 1, processingState: 1, isCover: 1, sortOrder: 1 } }).toArray();
+    const imageUrl = publicPropertyCoverUrl(propertyId, covers.map(cover => ({ id: String(cover._id), ...(typeof cover.imageUrl === 'string' ? { imageUrl: cover.imageUrl } : {}), kind: cover.kind, active: cover.active, processingState: cover.processingState, isCover: cover.isCover, sortOrder: cover.sortOrder })));
+    if (imageUrl) await connection.collection('properties').updateOne({ _id: new Types.ObjectId(propertyId) }, { $set: { imageUrl } }, { session });
     else await connection.collection('properties').updateOne({ _id: new Types.ObjectId(propertyId), imageUrl: /^\/api\/v1\/public\/properties\// }, { $unset: { imageUrl: 1 } }, { session });
   }
   const load = async (filter: Record<string, unknown>, session?: ClientSession): Promise<StoredPropertyMedia | null> => {
@@ -77,6 +79,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
         const hasCover = input.state === 'ready' && await models.PropertyMedia.exists({ propertyId: current.propertyId, providerId: input.providerId, isCover: true, active: true, processingState: 'ready' }).session(session);
         const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, providerId: input.providerId, processingState: current.processingState, active: true }, { $set: { processingState: input.state, ...(input.state === 'ready' && current.kind === 'image' && !hasCover ? { isCover: true } : {}), ...(input.failureCode ? { failureCode: input.failureCode } : { failureCode: null }), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return null;
+        if (input.state === 'ready' && current.kind === 'image' && !hasCover) await models.PropertyMedia.updateMany({ propertyId: current.propertyId, _id: { $ne: row._id }, active: true }, { $set: { isCover: false } }, { session });
         const output = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId });
         await auditWrite('property_media.processing', output.id, current, output, input.metadata, session);
         await syncCover(output.propertyId, session);
@@ -99,7 +102,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
       return tx(async session => {
         const eligible = await models.PropertyMedia.exists({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId, version: input.expectedVersion, active: true, processingState: 'ready' }).session(session);
         if (!eligible) return { kind: 'version_conflict' as const };
-        if (changes.isCover === true) await models.PropertyMedia.updateMany({ propertyId: input.propertyId, providerId: input.providerId, active: true }, { $set: { isCover: false } }, { session });
+        if (changes.isCover === true) await models.PropertyMedia.updateMany({ propertyId: input.propertyId, active: true }, { $set: { isCover: false } }, { session });
         const row = await models.PropertyMedia.findOneAndUpdate({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId, version: input.expectedVersion, active: true, processingState: 'ready' }, { $set: { ...changes, updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!row) return (await models.PropertyMedia.exists({ _id: input.mediaId, propertyId: input.propertyId, providerId: input.providerId }).session(session)) ? { kind: 'version_conflict' as const } : { kind: 'not_found' as const };
         const media = toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }); await auditWrite('property_media.update', media.id, input.before, media, input.metadata, session); await syncCover(input.propertyId, session); return { kind: 'written' as const, media };
@@ -115,7 +118,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
         const results: MediaWriteResult[] = [];
         for (const item of input.changes.items) {
           const set: Record<string, unknown> = { sortOrder: item.sortOrder, ...(item.isCover !== undefined ? { isCover: item.isCover } : {}), updatedAt: input.metadata.changedAt };
-          if (item.isCover) await models.PropertyMedia.updateMany({ propertyId: input.propertyId, providerId: input.providerId, active: true }, { $set: { isCover: false } }, { session });
+          if (item.isCover) await models.PropertyMedia.updateMany({ propertyId: input.propertyId, active: true }, { $set: { isCover: false } }, { session });
           const row = await models.PropertyMedia.findOneAndUpdate({ _id: item.mediaId, propertyId: input.propertyId, providerId: input.providerId, active: true, processingState: 'ready' }, { $set: set, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
           if (row) results.push({ kind: 'written', media: toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }) });
         }

@@ -1724,7 +1724,7 @@
       "needs_changes": "Request changes",
       "approve": "Approve",
       "reject": "Reject",
-      "publish": "Publish",
+      "publish": "Publish property",
       "hide": "Hide",
       "restore": "Restore",
       "archive": "Archive"

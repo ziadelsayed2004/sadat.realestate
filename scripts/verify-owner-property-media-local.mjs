@@ -6,6 +6,7 @@ import { createMongoosePropertyMediaRepository } from '../apps/api/src/modules/m
 import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
 import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
 import { createPropertyMediaContentReader } from '../apps/api/src/modules/media/content.ts';
+import { attachPublicPropertyCovers } from '../apps/api/src/modules/media/public-cover.ts';
 
 const database = `qa_owner_property_media_${randomUUID().replaceAll('-', '')}`;
 const connection = await mongoose.createConnection(`mongodb://127.0.0.1:27031/${database}?replicaSet=adcampaignqa`).asPromise();
@@ -31,7 +32,14 @@ try {
     assert.equal(ready.kind, 'written');
     return ready.media;
   }
+  // Seed media can retain a different provider after the property changes owner.
+  // Selecting an administrative cover must clear that property's old cover too.
+  const legacy = await models.PropertyMedia.create({ propertyId, providerId: new mongoose.Types.ObjectId(), kind: 'image', originalFilename: 'demo.png', declaredMime: 'image/png', detectedMime: 'image/png', byteSize: 1, sha256: 'c'.repeat(64), storageKey: 'quarantine/legacy-demo', sortOrder: 0, isCover: true, processingState: 'ready', active: true });
+  await connection.collection('property_media').updateOne({ _id: legacy._id }, { $set: { imageUrl: '/assets/demo.png' } });
   const first = await photo('a'); const second = await photo('b');
+  assert.equal((await models.PropertyMedia.findById(legacy._id).lean()).isCover, false);
+  assert.equal(await models.PropertyMedia.countDocuments({ propertyId, isCover: true }), 1);
+  await models.PropertyMedia.updateOne({ _id: legacy._id }, { $set: { isCover: true } });
   const storage = { openPrivate: async () => { throw new Error('Only metadata is read in this check'); } };
   const publicContent = createPropertyMediaContentReader(connection, models, storage);
   const adminContent = createPropertyMediaContentReader(connection, models, storage, 'admin');
@@ -44,6 +52,7 @@ try {
   const coverUrl = id => `/api/v1/public/properties/${propertyId}/media/${id}/content`;
   const saved = () => connection.collection('properties').findOne({ _id: propertyId });
   assert.equal((await saved()).imageUrl, coverUrl(first.id));
+  assert.equal((await attachPublicPropertyCovers(connection, [await saved()]))[0].imageUrl, coverUrl(first.id));
   const owner = { providerId: providerId.toHexString(), propertyId: propertyId.toHexString(), metadata };
   const stale = await repository.update({ ...owner, mediaId: second.id, expectedVersion: 999, changes: { version: 999, reason: metadata.reason, isCover: true }, before: second });
   assert.equal(stale.kind, 'version_conflict');
@@ -51,8 +60,19 @@ try {
   const items = [{ mediaId: first.id, sortOrder: 1, isCover: false }, { mediaId: second.id, sortOrder: 0, isCover: true }];
   assert.equal((await repository.reorder({ ...owner, expectedVersion: 999, changes: { version: 999, reason: metadata.reason, items } }))[0].kind, 'version_conflict');
   await repository.reorder({ ...owner, expectedVersion: 2, changes: { version: 2, reason: metadata.reason, items } });
+  assert.equal((await models.PropertyMedia.findById(legacy._id).lean()).isCover, false);
+  assert.equal(await models.PropertyMedia.countDocuments({ propertyId, isCover: true }), 1);
   assert.equal((await saved()).imageUrl, coverUrl(second.id));
   assert.equal(await auditModels.AuditLog.countDocuments({ action: 'property_media.reorder', actorType: 'admin' }), 1);
+  for (const id of [first.id, second.id]) {
+    await models.PropertyMedia.updateOne({ _id: legacy._id }, { $set: { isCover: true } });
+    const current = (await repository.listOwned(owner.providerId, owner.propertyId)).find(item => item.id === id);
+    const changed = await repository.update({ ...owner, mediaId: id, expectedVersion: current.version, changes: { version: current.version, reason: metadata.reason, isCover: true }, before: current });
+    assert.equal(changed.kind, 'written');
+    assert.equal((await saved()).imageUrl, coverUrl(id));
+    assert.equal((await models.PropertyMedia.findById(legacy._id).lean()).isCover, false);
+    assert.equal(await models.PropertyMedia.countDocuments({ propertyId, isCover: true }), 1);
+  }
   fail = true;
   await assert.rejects(repository.markDeleted({ ...owner, mediaId: second.id }), /QA_AUDIT_FAILURE/);
   assert.equal((await saved()).imageUrl, coverUrl(second.id));
@@ -60,6 +80,7 @@ try {
   fail = false;
   await repository.markDeleted({ ...owner, mediaId: second.id });
   assert.equal((await saved()).imageUrl, coverUrl(first.id));
+  await models.PropertyMedia.updateOne({ _id: legacy._id }, { $set: { active: false, processingState: 'deleted' } });
   await repository.markDeleted({ ...owner, mediaId: first.id });
   assert.equal((await saved()).imageUrl, undefined);
   assert.equal((await repository.listPublic(propertyId.toHexString())).length, 0);
