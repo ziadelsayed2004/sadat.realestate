@@ -15,6 +15,7 @@ import {
   transitionAdminRequest
 } from '../src/features/admin_requests/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { AdminAttentionContext } from '../src/features/routing/admin-attention.tsx';
 
 const request = requestDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
@@ -79,6 +80,64 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin request administration contracts and views', () => {
+  it.each(['ar', 'en'] as const)('filters types and keeps authoritative unread badges until details open in %s', async locale => {
+    window.history.replaceState({}, '', '/admin/requests');
+    const loadRequests = vi.fn().mockResolvedValue({ ...requestList, total: 40 });
+    const markRead = vi.fn().mockResolvedValue(undefined);
+    const copy = getAdminRequestsCopy(locale);
+    renderWithLocale(<AdminAttentionContext.Provider value={{ attention: { counts: { 'contact-requests': 2, 'viewing-requests': 3, 'search-requests': 4, 'customer-requests': 5 }, total: 14 }, unread: 0, ready: true, refresh: vi.fn(), markRead }}><AdminRequests locale={locale} session={session} initialRequests={requestList} loadRequests={loadRequests} /></AdminAttentionContext.Provider>, { locale });
+    expect(screen.getByTestId('admin-attention-filter-requests')).toHaveTextContent(new Intl.NumberFormat(locale).format(14));
+    for (const [type, queue, count] of [['contact', 'contact-requests', 2], ['property_search', 'search-requests', 4], ['provider_customer', 'customer-requests', 5]] as const) {
+      fireEvent.click(screen.getByTestId(`request-type-${type}`));
+      await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20, type }, expect.any(AbortSignal)));
+      expect(screen.getByTestId(`request-type-${type}`)).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByTestId(`admin-attention-filter-${queue}`)).toHaveTextContent(new Intl.NumberFormat(locale).format(count));
+      fireEvent.click(screen.getByRole('button', { name: copy.next }));
+      await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 2, limit: 20, type }, expect.any(AbortSignal)));
+      fireEvent.click(screen.getByRole('button', { name: copy.clear }));
+      await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20, type }, expect.any(AbortSignal)));
+    }
+    expect(markRead).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId('request-type-all'));
+    await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20 }, expect.any(AbortSignal)));
+    fireEvent.click(screen.getByTestId(`admin-request-${request.id}`).querySelector('button')!);
+    await waitFor(() => expect(markRead).toHaveBeenCalledWith({ queueKey: 'contact-requests', itemId: request.id }));
+  });
+
+  it('uses real viewings with their own status filters inside all requests and returns to the normal list', async () => {
+    window.history.replaceState({}, '', '/admin/requests');
+    const loadRequests = vi.fn().mockResolvedValue(requestList);
+    const loadViewings = vi.fn().mockResolvedValue(viewingList);
+    renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={requestList} loadRequests={loadRequests} loadViewings={loadViewings} />, { locale: 'en' });
+    fireEvent.click(screen.getByTestId('request-type-viewing'));
+    expect(await screen.findByTestId(`admin-viewing-${viewing.id}`)).toBeVisible();
+    expect(loadViewings).toHaveBeenLastCalledWith({ page: 1, limit: 20 }, expect.any(AbortSignal));
+    expect(loadRequests).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('tab', { name: getAdminRequestsCopy('en').viewingStatusLabel.cancelled }));
+    await waitFor(() => expect(loadViewings).toHaveBeenLastCalledWith({ page: 1, limit: 20, status: 'cancelled' }, expect.any(AbortSignal)));
+    fireEvent.click(screen.getByTestId('request-type-contact'));
+    expect(await screen.findByTestId(`admin-request-${request.id}`)).toBeVisible();
+    expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20, type: 'contact' }, expect.any(AbortSignal));
+    expect(screen.queryByTestId(`admin-viewing-${viewing.id}`)).not.toBeInTheDocument();
+    expect(screen.getByTestId('request-type-all')).toBeVisible();
+  });
+
+  it('keeps type filters available on empty or denied results and ignores stale responses after switching', async () => {
+    window.history.replaceState({}, '', '/admin/requests');
+    let finishOld!: (data: typeof requestList) => void;
+    const loadRequests = vi.fn().mockImplementationOnce(() => new Promise(resolve => { finishOld = resolve; })).mockResolvedValue({ ...requestList, items: [], total: 0 });
+    const loadViewings = vi.fn().mockRejectedValue(new ApiClientError('Denied', { code: 'HTTP_ERROR', status: 403 }));
+    renderWithLocale(<AdminRequests locale="en" session={session} initialRequests={requestList} loadRequests={loadRequests} loadViewings={loadViewings} />, { locale: 'en' });
+    fireEvent.click(screen.getByTestId('request-type-contact'));
+    fireEvent.click(screen.getByTestId('request-type-property_search'));
+    expect(await screen.findByText(getAdminRequestsCopy('en').states.empty.title)).toBeVisible();
+    finishOld(requestList);
+    await waitFor(() => expect(screen.queryByTestId(`admin-request-${request.id}`)).not.toBeInTheDocument());
+    fireEvent.click(screen.getByTestId('request-type-viewing'));
+    expect(await screen.findByText(getAdminRequestsCopy('en').states.permission.title)).toBeVisible();
+    expect(screen.getByTestId('request-type-all')).toBeVisible();
+  });
+
   it.each(['ar', 'en'] as const)('requires a customer-facing explanation when requesting information in %s', async locale => {
     window.history.replaceState({}, '', `/admin/contact-requests?lang=${locale}`);
     const reviewed = requestDataSchema.parse({ ...request, status: 'under_review', availableActions: ['needs_information'], customerUpdates: [{ status: 'under_review', authorRole: 'seeker', message: 'My budget is 2 million', createdAt: request.updatedAt }] });
