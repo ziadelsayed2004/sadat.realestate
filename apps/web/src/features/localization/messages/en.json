@@ -1410,7 +1410,7 @@
       "draft": "Draft",
       "scheduled": "Scheduled",
       "active": "Active",
-      "ended": "Ended",
+      "ended": "Stopped",
       "archived": "Archived",
       "published": "Published",
       "inactive": "Inactive"
