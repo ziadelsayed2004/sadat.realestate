@@ -53,6 +53,51 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin article and category management contracts and views', () => {
+  it.each(['ar', 'en'] as const)('saves and publishes in %s, retaining the saved draft and its version when publication fails', async locale => {
+    window.history.pushState({}, '', '/admin/articles');
+    let stored = { ...article, version: 0, availableActions: ['update', 'submit', 'publish', 'delete'] as typeof article.availableActions };
+    const create = vi.fn(async input => { stored = { ...stored, title: input.title, body: input.body }; return stored; });
+    const update = vi.fn(async (_id, input) => { expect(input.version).toBe(stored.version); stored = { ...stored, title: input.title, body: input.body, version: stored.version + 1 }; return stored; });
+    let fail = true;
+    const transition = vi.fn(async (_id, input) => {
+      expect(input.status).toBe('published'); expect(input.version).toBe(stored.version);
+      if (fail) throw new ApiClientError('Unavailable', { code: 'HTTP_ERROR', status: 503 });
+      stored = { ...stored, status: 'published', version: stored.version + 1, availableActions: ['update', 'archive', 'delete'] };
+      return stored;
+    });
+    const copy = getAdminContentCopy(locale);
+    renderWithLocale(<AdminContent locale={locale} session={session} initialArticles={{ items: [], page: 1, limit: 20, total: 0 }} initialCategories={categories} createArticle={create} updateArticle={update} transitionArticle={transition} loadCategories={async () => categories} loadArticles={async () => ({ items: [stored], page: 1, limit: 20, total: 1 })} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.createArticle }));
+    fireEvent.change(screen.getByLabelText(`${locale.toUpperCase()} ${copy.title}`), { target: { value: 'Article title' } });
+    const body = 'First paragraph\n\nSecond paragraph\twith detail';
+    fireEvent.change(screen.getByLabelText(`${locale.toUpperCase()} ${copy.body}`), { target: { value: body + '\u0000' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Save and publish this article' } });
+    const publish = locale === 'ar' ? 'حفظ ونشر المقال' : 'Save and publish article';
+    fireEvent.click(screen.getByRole('button', { name: publish }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(locale === 'ar' ? 'تم حفظ المقال كمسودة' : 'saved as a draft'));
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(stored.body).toEqual({ [locale]: body });
+    expect(screen.getByLabelText(`${locale.toUpperCase()} ${copy.body}`)).toHaveValue(body + '\u0000');
+    fail = false;
+    fireEvent.click(screen.getByRole('button', { name: publish }));
+    await waitFor(() => expect(screen.queryByTestId('admin-article-editor')).not.toBeInTheDocument());
+    expect(create).toHaveBeenCalledTimes(1); expect(update).toHaveBeenCalledTimes(1); expect(transition).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole('status').querySelector('a')).toHaveAttribute('href', `/articles/${stored.slug}?lang=${locale}`);
+  });
+
+  it('keeps an empty article editable and focuses its body before publication', () => {
+    window.history.pushState({}, '', '/admin/articles');
+    const create = vi.fn();
+    renderWithLocale(<AdminContent locale="en" session={session} initialArticles={{ items: [], page: 1, limit: 20, total: 0 }} initialCategories={categories} createArticle={create} />, { locale: 'en' });
+    const copy = getAdminContentCopy('en');
+    fireEvent.click(screen.getByRole('button', { name: copy.createArticle }));
+    fireEvent.change(screen.getByLabelText(`EN ${copy.title}`), { target: { value: 'Empty article' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Publish the article' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save and publish article' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter article content before publishing');
+    expect(screen.getByLabelText(`EN ${copy.body}`)).toHaveFocus();
+    expect(create).not.toHaveBeenCalled();
+  });
   it('renews an expired session before retrying article creation, edits and transitions once', async () => {
     let token = 'stale';
     const attempts: string[] = [];

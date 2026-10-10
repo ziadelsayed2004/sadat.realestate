@@ -105,7 +105,7 @@ test('article-category administration enforces permissions, strict input, orderi
   );
 });
 
-test('article lifecycle keeps drafts private, derives the author, requires ordered review transitions, and exposes a safe localized projection', async () => {
+test('article lifecycle keeps drafts private, derives the author, supports review transitions, and exposes a safe localized projection', async () => {
   const { service, auditRecords } = fixture();
   const category = await createCategory(service, 'market-guides');
   const draft = await service.createArticle(PRINCIPAL, {
@@ -121,12 +121,7 @@ test('article lifecycle keeps drafts private, derives the author, requires order
   assert.equal(draft.authorId, ADMIN_ID);
   assert.deepEqual((await service.listPublic({ locale: 'en', page: 1, limit: 20 })).data, []);
 
-  await assert.rejects(
-    service.transitionArticle(PRINCIPAL, draft.id, {
-      status: 'published', version: 0, reason: 'Attempt to skip editorial review'
-    }, CONTEXT),
-    (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_TRANSITION_INVALID'
-  );
+  assert.ok(draft.availableActions.includes('publish'));
   const submitted = await service.transitionArticle(PRINCIPAL, draft.id, {
     status: 'pending_review', version: 0, reason: 'Submit the article for review'
   }, CONTEXT);
@@ -311,4 +306,30 @@ test('an empty draft can be completed and published in one language without requ
   assert.equal(published.status, 'published');
   assert.equal((await service.getPublicBySlug(published.slug, 'ar')).title.ar, 'مسودة عربية');
   assert.ok((await service.getPublicBySlug(published.slug, 'en')).body.en);
+});
+
+test('direct draft publication requires management and publishing permissions, complete content, an active category and the latest version', async () => {
+  const { service, repository, auditRecords } = fixture();
+  const category = await createCategory(service, 'direct-publication');
+  const draft = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { ar: 'نشر مباشر' }, body: { ar: '' }, reason: 'Create direct publication draft' }, CONTEXT);
+  const publish = { status: 'published' as const, version: draft.version, reason: 'Publish the completed article' };
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, publish, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_TRANSITION_INVALID');
+  for (const permission of ['admin:content.manage', 'admin:content.publish']) {
+    const limited = createArticleService({ repository, authorization: { authorize: async (_id, requested) => requested === permission }, audit: { record: async () => 'audit' } });
+    await assert.rejects(limited.transitionArticle(PRINCIPAL, draft.id, publish, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_FORBIDDEN');
+    const listed = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+    assert.equal(listed.data.items[0]?.status, 'draft');
+  }
+  const body = 'فقرة أولى\n\nفقرة ثانية\tمعلومة أخرى';
+  const ready = await service.updateArticle(PRINCIPAL, draft.id, { version: draft.version, body: { ar: body }, reason: 'Complete article paragraphs' }, CONTEXT);
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, publish, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_VERSION_CONFLICT');
+  const inactive = await service.updateCategory(PRINCIPAL, category.id, { version: category.version, active: false, reason: 'Hide the article category' }, CONTEXT);
+  await assert.rejects(service.transitionArticle(PRINCIPAL, draft.id, { ...publish, version: ready.version }, CONTEXT), (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_CATEGORY_INACTIVE');
+  await service.updateCategory(PRINCIPAL, category.id, { version: inactive.version, active: true, reason: 'Restore the article category' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, draft.id, { ...publish, version: ready.version }, CONTEXT);
+  assert.equal(published.status, 'published');
+  assert.equal(published.publishedAt, NOW.toISOString());
+  assert.equal((await service.getPublicBySlug(published.slug, 'ar')).body.ar, body);
+  assert.equal(auditRecords.at(-1)?.action, 'article.transition');
+  assert.equal(auditRecords.at(-1)?.after?.status, 'published');
 });

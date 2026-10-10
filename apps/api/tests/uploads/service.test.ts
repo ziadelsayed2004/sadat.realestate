@@ -134,6 +134,21 @@ const headers = {
   contentLength: pdf.byteLength
 };
 
+test('scans Arabic and timestamped WhatsApp documents while rejecting additional extensions and encrypted content', async () => {
+  for (const filename of ['السجل التجاري.pdf', 'WhatsApp Document 2026-10-10 at 11.16.39 AM.pdf']) {
+    const state = fixture();
+    const document = await state.service.upload(claims, { ...headers, filename }, Readable.from(pdf));
+    assert.equal(document.originalFilename, filename);
+    assert.equal(document.securityState, 'clean');
+    assert.equal(document.sha256.length, 64);
+  }
+  const state = fixture();
+  await assert.rejects(state.service.upload(claims, { ...headers, filename: 'document.exe.11.16.39.pdf' }, Readable.from(pdf)), /DOUBLE_EXTENSION_REJECTED/);
+  const encrypted = Buffer.from('%PDF-1.7\n/Encrypt\n%%EOF');
+  await assert.rejects(state.service.upload(claims, { ...headers, filename: 'document 11.16.39.pdf', contentLength: encrypted.length }, Readable.from(encrypted)), /ENCRYPTED_PDF_REJECTED/);
+  assert.equal(state.documents.size, 0);
+});
+
 test('owned document listing restores active metadata without private storage details', async () => {
   const state = fixture();
   const uploaded = await state.service.upload(claims, headers, Readable.from(pdf));

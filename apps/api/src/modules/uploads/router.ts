@@ -80,6 +80,16 @@ function contentLength(request: Request): number | undefined {
   return Number(value);
 }
 
+function documentFilename(request: Request): string | undefined {
+  const value = request.get('x-file-name');
+  if (value === undefined) return undefined;
+  let decoded: string;
+  try { decoded = decodeURIComponent(value); }
+  catch { throw new UploadServiceError('INVALID_FILENAME'); }
+  if (/[\\/\u0000-\u001f\u007f]/u.test(decoded)) throw new UploadServiceError('INVALID_FILENAME');
+  return decoded;
+}
+
 function pathParameter(value: string | string[] | undefined): string {
   return typeof value === 'string' ? value : '';
 }
@@ -139,7 +149,7 @@ export function createUploadRouter(dependencies: UploadRouterDependencies): Rout
         }
         const headers = providerDocumentUploadHeadersSchema.parse({
           category: request.get('x-document-category'),
-          filename: request.get('x-file-name'),
+          filename: documentFilename(request),
           contentType: type,
           contentLength: length
         });

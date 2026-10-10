@@ -4,7 +4,7 @@
 
 ## Runtime surface
 
-- `POST /api/v1/provider/application/documents` accepts one authenticated provider-owned raw binary stream. `Content-Type`, `X-Document-Category`, and `X-File-Name` carry strict request metadata. Supported bodies are PDF, JPEG, and PNG, up to 10 MiB.
+- `POST /api/v1/provider/application/documents` accepts one authenticated provider-owned raw binary stream. `Content-Type`, `X-Document-Category`, and `X-File-Name` carry strict request metadata. The browser URI-encodes the filename, allowing Arabic names; the server decodes it once before validation. Plain ASCII names remain accepted. Supported bodies are PDF, JPEG, and PNG, up to 10 MiB.
 - `POST /api/v1/provider/application/documents/:documentId/access` performs a fresh provider ownership and clean-state check and returns a GET-only exact-document bearer URL that expires after 300 seconds.
 - `GET /api/v1/admin/provider-documents/:documentId/access?purpose=document_review` requires a verified Admin with `admin:documents.review`, checks the active clean document, and returns the same 300-second exact-document grant without provider-ownership leakage.
 - `DELETE /api/v1/provider/application/documents/:documentId` deletes an owned document only while its application is editable. The operation marks the record deleted before idempotently deleting the binary, so no later access grant can be honored.
@@ -14,7 +14,7 @@ The runtime mounts `/api/v1` once. OpenAPI uses `{documentId}` while the Express
 
 ## Validation and persistence
 
-The server strips path components and control characters from the display filename, caps it at 120 characters, rejects double-extension bypasses, and never derives a storage key from user input. It streams through a 10 MiB guard while calculating the actual size and SHA-256 checksum. The normalized extension, declared MIME, and detected signature must agree. PDF header/trailer and encrypted marker checks, JPEG start/end checks, and PNG signature/IEND checks reject zero-byte, malformed, truncated, encrypted, mismatched, and unsupported inputs.
+The request boundary rejects malformed URI encoding, path separators and control characters before storage. The display filename sanitizer also strips path components and control characters, caps it at 120 characters, accepts numeric timestamp separators used in WhatsApp filenames while rejecting double-extension bypasses, and never derives a storage key from user input. It streams through a 10 MiB guard while calculating the actual size and SHA-256 checksum. The normalized extension, declared MIME, and detected signature must agree. PDF header/trailer and encrypted marker checks, JPEG start/end checks, and PNG signature/IEND checks reject zero-byte, malformed, truncated, encrypted, mismatched, and unsupported inputs.
 
 The strict `provider_documents` model stores ownership, application/category, requirement-version snapshot, safe display metadata, actual type/size/checksum, a private generated key, upload actor/time, version/replacement links, independent security and business-review states, retention scheduling, deletion state, and reason-bearing legal-hold metadata. The key is excluded from normal queries and API projections.
 

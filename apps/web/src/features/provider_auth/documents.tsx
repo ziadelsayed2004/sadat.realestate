@@ -90,10 +90,13 @@ function loadError(error: unknown, copy: ProviderDocumentsCopy): DocumentUiError
   return { state: 'error', title: copy.unavailableTitle, message: copy.unavailableBody };
 }
 
-function uploadError(error: unknown, copy: ProviderDocumentsCopy): DocumentUiError {
+function uploadError(error: unknown, copy: ProviderDocumentsCopy, locale: SupportedLocale = 'en'): DocumentUiError {
   const code = error instanceof ApiClientError ? error.apiError?.code : undefined;
-  if (code === 'FILE_TOO_LARGE') return { state: 'error', title: copy.fileTooLargeTitle, message: copy.fileTooLargeBody };
-  if (code === 'FILE_TYPE_NOT_ALLOWED' || code === 'INVALID_FILE_SIGNATURE' || code === 'INVALID_FILENAME' || code === 'DOUBLE_EXTENSION_REJECTED') {
+  if (code === 'FILE_TOO_LARGE' || (error instanceof ApiClientError && error.status === 413)) return { state: 'error', title: copy.fileTooLargeTitle, message: copy.fileTooLargeBody };
+  if (code === 'DOUBLE_EXTENSION_REJECTED' || code === 'INVALID_FILENAME') return { state: 'error', title: copy.invalidFileTitle, message: locale === 'ar' ? 'غيّر اسم الملف إلى اسم بسيط، مثل «السجل التجاري.pdf»، بدون امتدادات إضافية، ثم ارفعه مرة أخرى.' : 'Rename the file to a simple name such as commercial-registration.pdf, without extra extensions, then upload it again.' };
+  if (code === 'ENCRYPTED_PDF_REJECTED') return { state: 'error', title: copy.invalidFileTitle, message: locale === 'ar' ? 'ملف PDF محمي بكلمة مرور. ارفع نسخة بدون كلمة مرور أو صورة واضحة بصيغة JPG أو PNG.' : 'This PDF is password protected. Upload a copy without a password or a clear JPG or PNG image.' };
+  if (code === 'UPLOAD_CAPABILITY_UNAVAILABLE' || code === 'MALWARE_SCAN_FAILED') return { state: 'retry', title: copy.uploadErrorTitle, message: locale === 'ar' ? 'خدمة رفع أو فحص المستندات غير متاحة الآن. حاول لاحقًا، وإذا استمرت المشكلة تواصل مع إدارة المنصة.' : 'Document upload or scanning is unavailable right now. Try later, and contact platform support if the problem continues.' };
+  if (code === 'FILE_TYPE_NOT_ALLOWED' || code === 'INVALID_FILE_SIGNATURE') {
     return { state: 'error', title: copy.fileTypeTitle, message: copy.fileTypeBody };
   }
   if (code === 'PROVIDER_APPLICATION_NOT_EDITABLE' || (error instanceof ApiClientError && (error.status === 401 || error.status === 403))) {
@@ -306,9 +309,9 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
       setUploadStates(previous => ({ ...previous, [category]: 'success' }));
     } catch (requestError: unknown) {
       setUploadStates(previous => ({ ...previous, [category]: 'idle' }));
-      setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy) }));
+      setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy, locale) }));
     }
-  }, [client, copy, providerType]);
+  }, [client, copy, locale, providerType]);
 
   const remove = useCallback(async (category: ProviderDocumentCategory) => {
     const document = documents[category];
@@ -347,9 +350,9 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
       }
     } catch (requestError: unknown) {
       setUploadStates(previous => ({ ...previous, [category]: 'idle' }));
-      setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy) }));
+      setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy, locale) }));
     }
-  }, [client, copy, documents, providerType, requirements]);
+  }, [client, copy, documents, locale, providerType, requirements]);
 
   if (loadState === 'loading') {
     return <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} loadingVariant="form" /></div></div></section>;

@@ -2341,8 +2341,9 @@
             "schema": {
               "type": "string",
               "minLength": 1,
-              "maxLength": 512
-            }
+              "maxLength": 1440
+            },
+            "description": "Original filename encoded with encodeURIComponent. Decoded once before validation; Arabic names and numeric WhatsApp timestamp separators are supported. Extra extensions, malformed encoding, paths and control characters are rejected."
           }
         ],
         "requestBody": {
@@ -10406,6 +10407,79 @@
             "$ref": "#/components/responses/ProviderError"
           }
         }
+      },
+      "patch": {
+        "operationId": "editAdminProperty",
+        "summary": "Save administrative property edits atomically",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyAdminEdit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated property with its new version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Requires property management permission and the current optimistic version. A rejected field or stale version writes no edits. The dashboard supplies an audit reason automatically."
       }
     },
     "/api/v1/public/bootstrap": {
@@ -12030,6 +12104,279 @@
             "description": "Administrative property view permission required"
           }
         }
+      }
+    },
+    "/api/v1/admin/property-categories/photos": {
+      "post": {
+        "operationId": "uploadTaxonomyPhoto",
+        "summary": "Upload and scan a property category or type image, up to 10 MiB",
+        "responses": {
+          "201": {
+            "description": "Scanned image stored; save the category or type to attach it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsTeamPhotoSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          },
+          "503": {
+            "description": "Storage or scanner unavailable"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/property-categories/photos/{assetId}": {
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "previewTaxonomyPhoto",
+        "summary": "Preview a category image with property taxonomy viewing permission",
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/public/taxonomy-photos/{assetId}": {
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "downloadTaxonomyPhoto",
+        "summary": "Download an image attached to an active property category or type",
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/projects/{projectId}": {
+      "get": {
+        "operationId": "getAdminProject",
+        "summary": "View project details as an authorized administrator",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Administrative project details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ProjectData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Requires administrative project viewing permission; returns explicit editable fields and permitted actions."
+      },
+      "patch": {
+        "operationId": "updateAdminProject",
+        "summary": "Edit a project as an authorized administrator",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ProjectData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "description": "Requires administrative project management permission and current optimistic version. An administrative edit updates the project fields atomically and audits the real administrator; it does not publish a draft or change the owner."
       }
     }
   },
@@ -27026,6 +27373,107 @@
           }
         },
         "description": "Drafts may have an empty body. Submission and publication require a nonempty body in at least one language."
+      },
+      "PropertyAdminEdit": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "reason"
+        ],
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 500
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "imageUrl": {
+            "type": "null",
+            "description": "Clear the previous cover URL."
+          },
+          "description": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "area": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000
+                  },
+                  "unit": {
+                    "const": "sqm"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "layout": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "bedrooms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "bathrooms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "floor": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "totalFloors": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000
+              }
+            }
+          },
+          "transactionType": {
+            "$ref": "#/components/schemas/PropertyTransactionType"
+          },
+          "price": {
+            "$ref": "#/components/schemas/PropertyMoney"
+          },
+          "paymentPlans": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/PropertyPaymentPlan"
+            }
+          }
+        },
+        "description": "At least one edited field is required. Payment plans require a supplied price and matching currencies. All selected fields are validated and saved atomically; media and publication are separate operations."
       }
     }
   }

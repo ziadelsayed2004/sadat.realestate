@@ -320,6 +320,7 @@ test('private document cards validate raw uploads, show server review state, and
   const locale = localeForProject();
   const copy = copyForLocale(locale);
   const current = application('developer_company');
+  const filename = 'السجل التجاري 11.16.39.pdf';
   let uploaded = false;
   await page.route('**/api/v1/provider/application', async route => {
     expect(route.request().method()).toBe('GET');
@@ -333,7 +334,7 @@ test('private document cards validate raw uploads, show server review state, and
     expect(route.request().method()).toBe('POST');
     expect(route.request().headers()['authorization']).toBeUndefined();
     expect(route.request().headers()['x-document-category']).toBe('commercial_registration');
-    expect(route.request().headers()['x-file-name']).toBe('commercial-registration.pdf');
+    expect(route.request().headers()['x-file-name']).toBe(encodeURIComponent(filename));
     expect(route.request().headers()['content-type']).toBe('application/pdf');
     expect(route.request().postDataBuffer()?.length).toBeGreaterThan(0);
     uploaded = true;
@@ -345,7 +346,7 @@ test('private document cards validate raw uploads, show server review state, and
         applicationId: APPLICATION_ID,
         category: 'commercial_registration',
         requirementVersion: '2026-08-13.1',
-        originalFilename: 'commercial-registration.pdf',
+        originalFilename: filename,
         normalizedExtension: '.pdf',
         detectedMime: 'application/pdf',
         byteSize: 4,
@@ -374,8 +375,8 @@ test('private document cards validate raw uploads, show server review state, and
   await expect(page.locator('input[type="file"]').first()).toHaveAttribute('accept', /application\/pdf/iu);
 
   const input = page.locator('#provider-document-input-commercial_registration');
-  await input.setInputFiles({ name: 'commercial-registration.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF') });
-  await expect(page.locator('[data-testid="provider-document-file-commercial_registration"]')).toContainText('commercial-registration.pdf');
+  await input.setInputFiles({ name: filename, mimeType: 'application/pdf', buffer: Buffer.from('%PDF') });
+  await expect(page.locator('[data-testid="provider-document-file-commercial_registration"]')).toContainText(filename);
   await expect(page.locator('[data-testid="provider-document-commercial_registration"] .provider-document-card__status')).toContainText(copy.pending);
   expect(uploaded).toBe(true);
   await expect(page.locator('body')).not.toContainText('/api/v1/private/provider-documents/');

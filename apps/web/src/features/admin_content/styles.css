@@ -41,7 +41,7 @@
 .admin-content__state h2, .admin-content__state p { margin: 0; }
 .admin-content__editor, .admin-content__action-panel { margin-block-start: 24px; overflow: hidden; }
 .admin-cms-content .admin-content__editor, .admin-cms-content .admin-content__action-panel { scroll-margin-block-start: 96px; }
-.admin-content__editor form, .admin-content__action-panel form { display: grid; gap: 18px; padding: 24px 26px 30px; }
+.admin-content__editor form, .admin-content__action-panel form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 24px 26px 30px; }
 .admin-content__form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .admin-content__localized-fields { display: grid; min-inline-size: 0; gap: 8px; margin: 0; padding: 0; border: 0; }
 .admin-content__field-label { color: #5e6b80; font-size: .85rem; font-weight: 800; }
@@ -89,6 +89,8 @@
 .admin-content__field-hint { color: #7e8999; font-weight: 500; }
 .admin-content__muted { color: #7e8999; font-size: .86rem; }
 @media (max-width: 800px) { .admin-cms__record-card { grid-template-columns: 1fr; align-items: flex-start; } .admin-cms__tabs { margin-inline: 0; } }
+.admin-article-images { min-inline-size: 0; }
+.admin-article-images input { inline-size: 100%; min-inline-size: 0; box-sizing: border-box; }
 .admin-article-images__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
 .admin-article-images__grid > div { display: flex; flex-direction: column; gap: 8px; }
 .admin-article-images__grid img { width: 100%; height: 160px; object-fit: contain; background: #f8f7f1; border-radius: 12px; }

@@ -32,7 +32,7 @@ function service(): ProviderDocumentService {
       for await (const chunk of source) void chunk;
       return {
         id: documentId, applicationId: '3'.repeat(24), category: headers.category,
-        requirementVersion: '2026-08-13.1', originalFilename: 'identity.pdf',
+        requirementVersion: '2026-08-13.1', originalFilename: headers.filename,
         normalizedExtension: '.pdf', detectedMime: 'application/pdf', byteSize: pdf.byteLength,
         sha256: 'a'.repeat(64), version: 1, securityState: 'clean', reviewState: 'uploaded',
         uploadedAt: '2026-08-13T00:00:00.000Z', active: true, idempotentReplay: false
@@ -111,6 +111,23 @@ test('uploads an authenticated provider stream with explicit metadata and no sto
     assert.equal(body.data?.securityState, 'clean');
     assert.equal('storageKey' in (body.data ?? {}), false);
     assert.equal(response.headers.get('cache-control'), 'no-store');
+  });
+});
+
+test('decodes Arabic document filenames once and rejects malformed or unsafe encoded metadata', async () => {
+  await withServer(async baseUrl => {
+    const url = `${baseUrl}/api/v1/provider/application/documents`;
+    const send = (filename: string) => fetch(url, { method: 'POST', headers: {
+      Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf',
+      'X-Document-Category': 'commercial_registration', 'X-File-Name': filename
+    }, body: pdf });
+    const filename = 'السجل التجاري 100%.pdf';
+    const response = await send(encodeURIComponent(filename));
+    assert.equal(response.status, 201);
+    assert.equal((await response.json() as { data: { originalFilename: string } }).data.originalFilename, filename);
+    for (const invalid of ['%E0%A4%A', encodeURIComponent('../private.pdf'), encodeURIComponent('bad\u0000.pdf')]) {
+      assert.equal((await send(invalid)).status, 400);
+    }
   });
 });
 

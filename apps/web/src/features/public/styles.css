@@ -792,7 +792,7 @@
 
 .public-homepage__summary-primary {
   margin-block: var(--space-sm);
-  color: var(--color-on-brand);
+  color: var(--color-accent-text);
   font-size: clamp(3rem, 7vw, 5.25rem);
   line-height: 1;
 }
@@ -818,7 +818,6 @@
 }
 
 .public-homepage__summary-item strong {
-  color: var(--color-on-brand);
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1;
 }

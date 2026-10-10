@@ -207,7 +207,7 @@ export function createProviderDocumentService(
       }
 
       const objectKey = createObjectKey();
-      const validator = new ProviderDocumentValidationTransform(headers.filename, headers.contentType);
+      const validator = new ProviderDocumentValidationTransform(headers.filename, headers.contentType, { allowTimestampDots: true });
       try {
         await dependencies.storage.putPrivateQuarantine(objectKey, source.pipe(validator));
       } catch (error) {

@@ -401,7 +401,7 @@ describe('provider private documents', () => {
     const client = new AuthClient({ apiClient });
     await client.updateProviderBusiness({ version: 0, legalBusinessName: 'Nile Brokerage' });
     await client.updateProviderCompany({ version: 0, legalCompanyName: 'Nile Developments' });
-    const file = new File([new Uint8Array([37, 80, 68, 70])], 'registration.pdf', { type: 'application/pdf' });
+    const file = new File([new Uint8Array([37, 80, 68, 70])], 'السجل التجاري 100%.pdf', { type: 'application/pdf' });
     await client.uploadProviderDocument('commercial_registration', file);
     await client.deleteProviderDocument(documentId);
 
@@ -409,7 +409,8 @@ describe('provider private documents', () => {
     expect(apiClient.request).toHaveBeenNthCalledWith(2, '/provider/application/company', expect.objectContaining({ method: 'PATCH', json: { version: 0, legalCompanyName: 'Nile Developments' } }));
     const uploadOptions = apiClient.request.mock.calls[2]?.[1] as { body?: unknown; headers?: Record<string, string> };
     expect(uploadOptions.body).toBe(file);
-    expect(uploadOptions.headers).toMatchObject({ 'content-type': 'application/pdf', 'x-document-category': 'commercial_registration', 'x-file-name': 'registration.pdf' });
+    expect(uploadOptions.headers).toMatchObject({ 'content-type': 'application/pdf', 'x-document-category': 'commercial_registration', 'x-file-name': encodeURIComponent(file.name) });
+    expect(() => new Headers(uploadOptions.headers)).not.toThrow();
     expect(apiClient.request).toHaveBeenNthCalledWith(4, `/provider/application/documents/${documentId}`, expect.objectContaining({ method: 'DELETE' }));
   });
 
@@ -492,6 +493,24 @@ describe('provider private documents', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.removeAction }));
     await waitFor(() => expect(deleteProviderDocument).toHaveBeenCalledWith(documentId));
     await waitFor(() => expect(screen.queryByText('commercial-registration.pdf')).not.toBeInTheDocument());
+  });
+
+  it.each(['ar', 'en'] as const)('explains a document scanner outage and allows a successful retry in %s', async locale => {
+    const copy = getProviderDocumentsCopy(locale);
+    const uploadProviderDocument = vi.fn().mockRejectedValueOnce(new ApiClientError('Unavailable', {
+      code: 'HTTP_ERROR', status: 503, apiError: { code: 'UPLOAD_CAPABILITY_UNAVAILABLE', messageKey: 'errors.upload.capabilityUnavailable', details: [], requestId: 'scanner-outage' }
+    })).mockResolvedValue({ ...documentData('commercial_registration'), securityState: 'clean', reviewState: 'uploaded' });
+    renderWithLocale(<ProviderDocumentsPage client={{ uploadProviderDocument }} locale={locale} providerType="developer_company" initialApplication={application('developer_company')} onBack={vi.fn()} />, { locale });
+    const filename = 'السجل التجاري.pdf';
+    const input = await screen.findByLabelText(`${copy.chooseFileAction}: ${copy.categoryLabels.commercial_registration}`);
+    const file = new File(['%PDF'], filename, { type: 'application/pdf' });
+    fireEvent.change(input, { target: { files: [file] } });
+    expect(await screen.findByText(locale === 'ar' ? /خدمة رفع أو فحص المستندات غير متاحة/ : /Document upload or scanning is unavailable/)).toBeVisible();
+    expect(screen.getByTestId('provider-documents')).toHaveAttribute('data-state', 'ready');
+    fireEvent.change(input, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByTestId('provider-document-commercial_registration')).toHaveAttribute('data-upload-state', 'success'));
+    expect(uploadProviderDocument).toHaveBeenCalledTimes(2);
+    expect(screen.queryByText(locale === 'ar' ? /خدمة رفع أو فحص المستندات غير متاحة/ : /Document upload or scanning is unavailable/)).not.toBeInTheDocument();
   });
 
   it('does not block review when the API reports an optional document as missing', async () => {

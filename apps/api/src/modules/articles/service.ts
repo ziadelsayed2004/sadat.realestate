@@ -129,6 +129,7 @@ function categoryActions(manage: boolean): ArticleCategory['availableActions'] {
 function articleActions(status: ArticleStatus, manage: boolean, publish: boolean): Article['availableActions'] {
   const actions: Article['availableActions'] = [];
   if (manage && status === 'draft') actions.push('update', 'submit');
+  if (manage && publish && status === 'draft') actions.push('publish');
   if (publish) {
     if (status === 'pending_review') actions.push('publish', 'return_to_draft');
     if (status === 'published') { if (manage) actions.push('update'); actions.push('archive'); }
@@ -417,7 +418,9 @@ export function createArticleService(dependencies: {
       );
       const before = await dependencies.repository.findArticle(id);
       if (!before) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
-      if (!ALLOWED_TRANSITIONS[before.status].includes(input.status)) {
+      const directPublish = before.status === 'draft' && input.status === 'published';
+      if (directPublish) await requirePermission(principal.userId, 'admin:content.manage');
+      if (!directPublish && !ALLOWED_TRANSITIONS[before.status].includes(input.status)) {
         throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');
       }
       if (['pending_review', 'published'].includes(input.status) && !Object.values(before.body).some(value => value?.trim())) throw new ArticleServiceError('ARTICLE_TRANSITION_INVALID');

@@ -3619,7 +3619,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"Ø¹Ù†ÙˆØ§Ù†\", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
+                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¹ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â \", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -8769,6 +8769,238 @@
           "description": "Lists all saved media owned by the verified provider."
         }
       ]
+    },
+    {
+      "name": "Admin Save All Property Edits",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"name\": {\n    \"en\": \"Updated property title\"\n  },\n  \"area\": {\n    \"value\": 145,\n    \"unit\": \"sqm\"\n  },\n  \"layout\": {\n    \"bedrooms\": 3,\n    \"bathrooms\": 2,\n    \"floor\": 4,\n    \"totalFloors\": 9\n  },\n  \"price\": {\n    \"amount\": 3300000,\n    \"currency\": \"EGP\"\n  },\n  \"reason\": \"Save property edits\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "properties",
+            ":propertyId"
+          ],
+          "variable": [
+            {
+              "key": "propertyId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires property management permission and the current optimistic version. A rejected field or stale version writes no edits. The dashboard supplies an audit reason automatically.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Upload Taxonomy Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "image/png"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories/photos",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories",
+            "photos"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": ""
+          }
+        },
+        "description": "Select an isolated PNG, JPEG or WebP image no larger than 10 MiB. Save the returned imageUrl on an active property category or type."
+      }
+    },
+    {
+      "name": "Admin Preview Taxonomy Image",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories/photos/:assetId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories",
+            "photos",
+            ":assetId"
+          ],
+          "variable": [
+            {
+              "key": "assetId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Public Download Taxonomy Image",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/taxonomy-photos/:assetId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "taxonomy-photos",
+            ":assetId"
+          ],
+          "variable": [
+            {
+              "key": "assetId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin View Project",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/projects/:projectId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "projects",
+            ":projectId"
+          ],
+          "variable": [
+            {
+              "key": "projectId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires administrative project viewing permission; returns explicit editable fields and permitted actions.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Edit Project",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic project\" },\n  \"reason\": \"Update synthetic project draft\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/projects/:projectId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "projects",
+            ":projectId"
+          ],
+          "variable": [
+            {
+              "key": "projectId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires administrative project management permission and current optimistic version. An administrative edit updates the project fields atomically and audits the real administrator; it does not publish a draft or change the owner.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      }
     }
   ]
 }

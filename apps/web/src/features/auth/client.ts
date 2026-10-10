@@ -358,7 +358,7 @@ export class AuthClient {
           ...(authorization ?? {}),
           'content-type': contentType,
           'x-document-category': category,
-          'x-file-name': file.name
+            'x-file-name': encodeURIComponent(file.name)
         },
         body: file,
         responseSchema: providerDocumentSuccessEnvelopeSchema

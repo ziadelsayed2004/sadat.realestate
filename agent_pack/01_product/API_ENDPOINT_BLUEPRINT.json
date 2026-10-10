@@ -2697,5 +2697,77 @@
     "purpose": "Delete an article with administrative permission and audit reason",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/property-categories/photos",
+    "module": "taxonomy",
+    "auth": "access-token",
+    "roles": [
+      "admin:taxonomy.manage"
+    ],
+    "purpose": "Upload and scan a property taxonomy image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/property-categories/photos/:assetId",
+    "module": "taxonomy",
+    "auth": "access-token",
+    "roles": [
+      "admin:taxonomy.view"
+    ],
+    "purpose": "Preview a property taxonomy image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/taxonomy-photos/:assetId",
+    "module": "taxonomy",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Download an image attached to active property taxonomy",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/projects/:projectId",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "admin:projects.view"
+    ],
+    "purpose": "View administrative project details",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/projects/:projectId",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "admin:projects.manage"
+    ],
+    "purpose": "Edit project fields atomically with the current version",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/properties/:propertyId",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Save all property editor fields atomically with the current version",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

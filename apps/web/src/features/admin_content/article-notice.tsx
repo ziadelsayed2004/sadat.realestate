@@ -2,7 +2,7 @@ import type { Article, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export function ArticleNotice({ article, locale }: { article: Article; locale: SupportedLocale }) {
   const ar = locale === 'ar';
-  const text = article.status === 'draft' ? ar ? 'تم حفظ المقال كمسودة. يمكنك استكماله أو إرساله للمراجعة من بطاقته بالأسفل.' : 'Article saved as a draft. Continue editing or submit it for review using the card below.'
+  const text = article.status === 'draft' ? article.availableActions.includes('publish') ? ar ? 'تم حفظ المقال كمسودة. بعد اكتمال المحتوى اضغط «نشر» من بطاقته أو «حفظ ونشر المقال» أثناء التعديل.' : 'Article saved as a draft. Complete its content, then use Publish on its card or Save and publish article in the editor.' : ar ? 'تم حفظ المقال كمسودة. يمكنك استكماله أو إرساله للمراجعة من بطاقته بالأسفل.' : 'Article saved as a draft. Continue editing or submit it for review using the card below.'
     : article.status === 'pending_review' ? ar ? 'تم إرسال المقال للمراجعة. بعد مراجعته، اضغط «نشر» من بطاقة المقال بالأسفل.' : 'Article submitted for review. After reviewing it, use Publish on the card below.'
       : article.status === 'published' ? ar ? 'المقال منشور وتم حفظ آخر تغيير بنجاح.' : 'The article is published and the latest change was saved successfully.'
         : ar ? 'تمت أرشفة المقال وإزالته من الموقع. يمكنك استعادته من بطاقته بالأسفل.' : 'Article archived and removed from the website. Restore it using the card below.';
