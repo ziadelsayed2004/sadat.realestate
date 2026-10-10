@@ -23,10 +23,42 @@ import type {
   StoredTeamMember
 } from '../../src/modules/cms/admin-content-repository.js';
 import { createCmsAdminContentService, CmsAdminContentServiceError } from '../../src/modules/cms/admin-content-service.js';
+import { createMongooseCmsAdminContentRepository, type CmsAdminContentModels } from '../../src/modules/cms/admin-content-repository.js';
+import { Types } from 'mongoose';
 
 const adminId = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const changedAt = new Date('2026-08-19T11:00:00.000Z');
+
+test('accepts omitted tip order, preserves order on editing and honors explicit order', async () => {
+  const { service } = createService();
+  const context = { requestId: 'tip-order', traceId: 'a'.repeat(32) };
+  const created = await service.put({ userId: adminId }, 'tips', { title: { en: 'New tip' }, body: { en: 'Review documents.' }, reason: 'Create without order' }, context);
+  assert.equal(created.namespace, 'tips');
+  const row = created.items[0]!;
+  assert.equal('order' in row && row.order, 2);
+  const edited = await service.put({ userId: adminId }, 'tips', { id: row.id, version: row.version, title: { en: 'Edited tip' }, reason: 'Keep existing order' }, context);
+  assert.equal('order' in edited.items[0]! && edited.items[0].order, 2);
+  const explicit = await service.put({ userId: adminId }, 'tips', { id: row.id, version: row.version + 1, order: 0, reason: 'Move to the beginning' }, context);
+  assert.equal('order' in explicit.items[0]! && explicit.items[0].order, 0);
+});
+
+test('automatic tip order uses the largest stored order outside the limited list, while explicit zero bypasses it', async () => {
+  let lookups = 0;
+  const models = { tips: {
+    findOne() { lookups++; return { sort(value: unknown) { assert.deepEqual(value, { order: -1, _id: -1 }); return { select(fields: unknown) { assert.deepEqual(fields, { order: 1 }); return { async lean() { return lookups === 1 ? { order: 420 } : null; } }; } }; } }; },
+    async create(input: Record<string, unknown>) { return { toObject: () => ({ ...input, _id: new Types.ObjectId(secondId), version: 0 }) }; }
+  } } as unknown as CmsAdminContentModels;
+  const store = createMongooseCmsAdminContentRepository(models);
+  const input = { key: 'last_tip', title: { en: 'Tip' }, body: { en: 'Body' }, active: true, status: 'draft' as const };
+  const result = await store.createTip(input, adminId, changedAt);
+  assert.equal(result.kind === 'written' && result.item.order, 421);
+  const explicit = await store.createTip({ ...input, order: 0 }, adminId, changedAt);
+  assert.equal(explicit.kind === 'written' && explicit.item.order, 0);
+  assert.equal(lookups, 1);
+  const first = await store.createTip(input, adminId, changedAt);
+  assert.equal(first.kind === 'written' && first.item.order, 0);
+});
 
 test('persists About statistics with version checks, audit and preservation on unrelated edits', async () => {
   const { service, audits } = createService();
@@ -139,7 +171,7 @@ function repository(): CmsAdminContentRepository {
     },
     async listTips() { return [tip]; },
     async createTip(input, actorId, at) {
-      tip = { id: tip.id, ...input, updatedBy: actorId, version: 0, updatedAt: at };
+      tip = { id: tip.id, ...input, order: input.order ?? tip.order + 1, updatedBy: actorId, version: 0, updatedAt: at };
       return { kind: 'written', item: tip };
     },
     async updateTip(id, version, input, actorId, at) {

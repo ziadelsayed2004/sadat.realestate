@@ -24550,7 +24550,6 @@
         "required": [
           "title",
           "body",
-          "order",
           "reason"
         ],
         "properties": {
@@ -24568,7 +24567,8 @@
           "order": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 100000
+            "maximum": 100000,
+            "description": "Optional. Omit to append after the largest stored tip order; smaller numbers appear first."
           },
           "active": {
             "type": "boolean",
@@ -24615,7 +24615,8 @@
           "order": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 100000
+            "maximum": 100000,
+            "description": "Optional. Omit to keep the current order."
           },
           "active": {
             "type": "boolean"

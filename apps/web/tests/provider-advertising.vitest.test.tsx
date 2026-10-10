@@ -230,7 +230,7 @@ describe('Provider advertising requests and commission', () => {
 
     view.rerender(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={detail} loadDetail={loadDetail} />);
     await waitFor(() => expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').requestDetails, level: 1 })).toBeInTheDocument());
-    expect(screen.getByText(detail.placementKey!)).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'Ad location on the page' }).querySelector('[data-selected]')).toHaveTextContent('Homepage hero banner');
     expect(loadDetail).not.toHaveBeenCalled();
   });
 

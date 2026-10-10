@@ -283,7 +283,7 @@ export const tipCreateSchema = z
     key: safeKey.optional(),
     title: localizedTextSchema,
     body: localizedTextSchema,
-    order,
+    order: order.optional(),
     active: z.boolean().default(true),
     status: cmsSettingStatusSchema.default("draft"),
     reason,

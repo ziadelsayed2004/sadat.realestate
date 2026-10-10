@@ -229,6 +229,10 @@ describe('Admin banners, tips, and homepage administration', () => {
     renderWithLocale(<AdminHome url="/admin/content/tips" locale="en" session={session} initialContent={tips} source={source} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId(`admin-home-tips-${tipId}`)).toBeInTheDocument());
     fireEvent.click(Array.from(screen.getByTestId(`admin-home-tips-${tipId}`).querySelectorAll('button')).find(button => button.textContent === 'Edit')!);
+    const order = screen.getByLabelText('Display order (optional)');
+    expect(order).not.toBeRequired();
+    expect(order).toHaveValue(null);
+    expect(order).toHaveAttribute('placeholder', '1');
     fireEvent.change(within(screen.getByRole('group', { name: 'Title' })).getByLabelText('English'), { target: { value: 'Unsaved tip title' } });
     fireEvent.change(within(screen.getByRole('group', { name: getAdminHomeCopy('en').body })).getByLabelText('English'), { target: { value: 'Unsaved preview text' } });
     expect(screen.getByRole('complementary', { name: 'Content preview' })).toHaveTextContent('Unsaved tip title');
@@ -239,5 +243,26 @@ describe('Admin banners, tips, and homepage administration', () => {
     fireEvent.click(screen.getByTestId('admin-home-tips-editor').querySelector('button[type="submit"]')!);
     await waitFor(() => expect(requests.some(request => request.method === 'PUT' && request.path.endsWith('/admin/content/tips'))).toBe(true));
     expect(requests.find(request => request.method === 'PUT')?.body).toMatchObject({ id: tipId, version: 3, reason: 'Update approved tip' });
+    expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('order');
+  });
+
+  it.each([undefined, 0, 10])('leaves new tip order optional and honors a manual value %s', async chosenOrder => {
+    const requests: Array<{ method: string; path: string; body: unknown }> = [];
+    renderWithLocale(<AdminHome url="/admin/content/tips" locale="en" session={session} initialContent={tips} source={createAdminHomeSource({ apiClient: apiClientFor(requests) })} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getAdminHomeCopy('en').add }));
+    const editor = screen.getByTestId('admin-home-tips-editor');
+    const order = within(editor).getByLabelText('Display order (optional)');
+    expect(order).toHaveValue(null);
+    expect(order).not.toBeRequired();
+    expect(editor).toHaveTextContent('Leave blank to add at the end automatically.');
+    if (chosenOrder !== undefined) fireEvent.change(order, { target: { value: String(chosenOrder) } });
+    fireEvent.change(within(editor).getByLabelText(getAdminHomeCopy('en').key), { target: { value: 'new_tip' } });
+    fireEvent.change(within(editor).getByRole('group', { name: 'Title' }).querySelector('#admin-home-tips-title-en')!, { target: { value: 'New advice' } });
+    fireEvent.change(editor.querySelector('#admin-home-tips-body-en')!, { target: { value: 'Review the property documents.' } });
+    fireEvent.change(within(editor).getByLabelText('Change reason'), { target: { value: 'Add useful advice' } });
+    fireEvent.submit(editor.querySelector('form')!);
+    await waitFor(() => expect(requests.find(request => request.method === 'PUT')).toBeDefined());
+    if (chosenOrder === undefined) expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('order');
+    else expect(requests.find(request => request.method === 'PUT')?.body).toHaveProperty('order', chosenOrder);
   });
 });

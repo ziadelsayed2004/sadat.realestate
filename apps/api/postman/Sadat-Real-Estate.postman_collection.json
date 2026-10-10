@@ -1073,7 +1073,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"key\":\"buying_safely\",\"title\":{\"en\":\"Buying safely\"},\"body\":{\"en\":\"Review the source before paying.\"},\"order\":0,\"status\":\"draft\",\"reason\":\"Create a reviewed tip draft\"}"
+          "raw": "{\"key\":\"buying_safely\",\"title\":{\"en\":\"Buying safely\"},\"body\":{\"en\":\"Review the source before paying.\"},\"status\":\"draft\",\"reason\":\"Create a reviewed tip draft\"}"
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/content/:namespace",
@@ -1085,7 +1085,8 @@
             "content",
             ":namespace"
           ]
-        }
+        },
+        "description": "For namespace=tips, order is optional. Omit it to append a new tip automatically or preserve an existing tip order; set a non-negative integer to choose the position. Homepage section order remains required on creation."
       }
     },
     {

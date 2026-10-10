@@ -417,11 +417,13 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
     },
     async createTip(input, actorId, at) {
       try {
+        // Query the whole collection, including drafts and rows beyond the admin page.
+        const last = input.order === undefined ? await models.tips.findOne().sort({ order: -1, _id: -1 }).select({ order: 1 }).lean() : null;
         const row = await models.tips.create({
           key: input.key,
           title: input.title,
           body: input.body,
-          order: input.order,
+          order: input.order ?? Math.min(100000, (last?.order ?? -1) + 1),
           active: input.active,
           status: input.status,
           updatedBy: new Types.ObjectId(actorId),
