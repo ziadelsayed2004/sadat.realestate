@@ -265,6 +265,31 @@ test('SSR renders the public developer directory with the implemented query', as
   assert.deepEqual(result.developerListData?.items.map(item => item.slug), ['approved-builder']);
 });
 
+test('SSR renders a project detail route with project metadata and only its linked units', async () => {
+  const data = { ...developerProfileData, properties: [...developerProfileData.properties, { ...developerProfileData.properties[0], id: 'd'.repeat(24), slug: 'unrelated-unit', name: { en: 'Other project unit' }, projectId: 'e'.repeat(24) }] };
+  const result = await render('/developers/approved-builder/projects/central-project?lang=en', { developerProfileData: data });
+  assert.equal(result.statusCode, 200);
+  assert.equal(result.title, 'Central project');
+  assert.equal(result.seo?.canonicalPath, '/developers/approved-builder/projects/central-project');
+  assert.equal(result.seo?.description, 'Project description.');
+  assert.equal(result.seo?.jsonLd['@type'], 'WebPage');
+  assert.match(result.html, /data-page="public-project-details"/);
+  assert.match(result.html, /<h1>Central project<\/h1>/);
+  assert.match(result.html, /Published home/);
+  assert.doesNotMatch(result.html, /Other project unit/);
+});
+
+test('SSR returns 404 and noindex when the project is absent from the published developer projection', async () => {
+  for (const slug of ['unpublished-project', '%2fetc']) {
+    const result = await render(`/developers/approved-builder/projects/${slug}?lang=en`, { developerProfileData });
+    assert.equal(result.statusCode, 404);
+    assert.equal(result.title, 'Project unavailable');
+    assert.equal(result.seo?.robots, 'noindex,follow');
+    assert.match(result.html, /Project unavailable/);
+    assert.doesNotMatch(result.html, /Published home|Project description\./);
+  }
+});
+
 test('SSR renders the public developer profile and truthful profile projection', async () => {
   const result = await render('/developers/approved-builder?lang=en', { developerProfileData });
   assert.equal(result.statusCode, 200);

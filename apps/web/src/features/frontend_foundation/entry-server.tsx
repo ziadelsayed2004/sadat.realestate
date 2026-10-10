@@ -2,7 +2,7 @@ import { renderToString } from 'react-dom/server';
 import { type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationDirectoryQuery, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type PublicPropertySearchQuery, type PublicSeoSettings, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
 import { ApiClientError } from '../contracts/index.ts';
-import { getPublicDevelopersCopy, getPublicHomepageCopy, getPublicPropertyComparisonCopy, getPublicPropertyDetailsCopy, getPublicPropertyListingCopy, loadPublicDeveloperDirectory, loadPublicDeveloperProfile, loadPublicHomepage, loadPublicPropertyComparison, loadPublicPropertyDetails, loadPublicPropertyList, localizedText, parsePublicDeveloperDirectoryQuery, parsePublicPropertyComparisonIds, parsePublicPropertySearchQuery, propertyDetailsSlugFromUrl, publicDeveloperProfileSlugFromUrl, publicDeveloperProfileUrl, publicPropertyDetailsUrl } from '../public/index.ts';
+import { getPublicDevelopersCopy, getPublicHomepageCopy, getPublicPropertyComparisonCopy, getPublicPropertyDetailsCopy, getPublicPropertyListingCopy, loadPublicDeveloperDirectory, loadPublicDeveloperProfile, loadPublicHomepage, loadPublicPropertyComparison, loadPublicPropertyDetails, loadPublicPropertyList, localizedText, parsePublicDeveloperDirectoryQuery, parsePublicPropertyComparisonIds, parsePublicPropertySearchQuery, propertyDetailsSlugFromUrl, publicDeveloperProfileSlugFromUrl, publicDeveloperProfileUrl, publicDeveloperProjectSlugFromUrl, publicDeveloperProjectUrl, publicPropertyDetailsUrl } from '../public/index.ts';
 import { getPublicAboutTeamCopy, getPublicArticlesCopy, loadPublicAbout, loadPublicArticleDetails, loadPublicArticles, loadPublicTeam, parsePublicArticleListQuery, publicArticleSlugFromUrl, publicArticleUrl, type PublicArticleDetailsViewState } from '../content/index.ts';
 import { getCommunityCopy, loadPublicCommunity, parseCommunityListQuery } from '../community/index.ts';
 import { canonicalPathForUrl, createPublicSeo, loadPublicSeoSettings, normalizePublicOrigin, type PublicSeoMetadata } from '../seo/index.ts';
@@ -126,19 +126,20 @@ function articleSeo(data: ArticlePublic, locale: SupportedLocale, url: string): 
 }
 
 function developerProfileSeo(data: PublicOrganizationProfile, locale: SupportedLocale, url: string): ServerRenderSeo {
-  const canonicalPath = publicDeveloperProfileUrl(data.slug);
-  const title = localizedText(data.name, locale) ?? data.slug;
-  const description = localizedText(data.description, locale);
+  const project = data.projects.find(value => value.slug === publicDeveloperProjectSlugFromUrl(url));
+  const canonicalPath = project ? publicDeveloperProjectUrl(data.slug, project.slug) : publicDeveloperProfileUrl(data.slug);
+  const title = localizedText((project ?? data).name, locale) ?? (project ?? data).slug;
+  const description = localizedText((project ?? data).description, locale);
   return createPublicSeo({
     title,
     locale,
     ...(description === undefined ? {} : { description }),
     canonicalPath,
     robots: hasQueryVariants(url) ? 'noindex,follow' : 'index,follow',
-    openGraphType: 'profile',
+    openGraphType: project ? 'website' : 'profile',
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'Organization',
+      '@type': project ? 'WebPage' : 'Organization',
       name: title,
       ...(description === undefined ? {} : { description }),
       url: canonicalPath
@@ -192,8 +193,9 @@ function unavailableDetailSeo(routeId: string, locale: SupportedLocale, url: str
     const copy = getPublicPropertyDetailsCopy(locale);
     return createPublicSeo({ title: notFound ? copy.notFoundTitle : copy.loadingTitle, locale, canonicalPath, description: notFound ? copy.notFoundBody : copy.loadingBody, robots: 'noindex,follow' });
   }
-  if (routeId === 'public-developer-profile') {
+  if (routeId === 'public-developer-profile' || routeId === 'public-project-details') {
     const copy = getPublicDevelopersCopy(locale);
+    if (routeId === 'public-project-details' && notFound) return createPublicSeo({ title: locale === 'ar' ? 'المشروع غير متاح' : 'Project unavailable', locale, canonicalPath, robots: 'noindex,follow' });
     return createPublicSeo({ title: notFound ? copy.notFoundTitle : copy.loadingTitle, locale, canonicalPath, description: notFound ? copy.notFoundBody : copy.loadingBody, robots: 'noindex,follow' });
   }
   const copy = getPublicArticlesCopy(locale);
@@ -375,7 +377,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     }
   }
 
-  if (route.kind === 'matched' && route.id === 'public-developer-profile') {
+  if (route.kind === 'matched' && (route.id === 'public-developer-profile' || route.id === 'public-project-details')) {
     const slug = publicDeveloperProfileSlugFromUrl(url);
     if (slug === undefined) {
       developerProfileInitialState = 'not_found';
@@ -392,8 +394,12 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
         }
       }
       if (developerProfileData !== undefined) {
-        developerProfileInitialState = undefined;
-        seo = developerProfileSeo(developerProfileData, locale, url);
+        if (route.id === 'public-project-details' && !developerProfileData.projects.some(value => value.slug === publicDeveloperProjectSlugFromUrl(url))) {
+          developerProfileInitialState = 'not_found';
+        } else {
+          developerProfileInitialState = undefined;
+          seo = developerProfileSeo(developerProfileData, locale, url);
+        }
       }
     }
   }
@@ -451,7 +457,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
 
   if (seo === undefined) {
     if (route.kind === 'matched' && route.surface === 'public') {
-      if (route.id === 'public-property-details' || route.id === 'public-developer-profile' || route.id === 'public-article-details') {
+      if (route.id === 'public-property-details' || route.id === 'public-developer-profile' || route.id === 'public-project-details' || route.id === 'public-article-details') {
         seo = unavailableDetailSeo(
           route.id,
           locale,

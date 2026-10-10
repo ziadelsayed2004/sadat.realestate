@@ -422,7 +422,7 @@
             }
           ]
         },
-        "description": "Unauthenticated approved organization profile with published projects and active properties only."
+        "description": "Unauthenticated approved organization profile with published projects and active properties only. Published project publicPath and View project links open /developers/:developerSlug/projects/:projectSlug as an independent web page. The page reuses the public developer projection and shows only this project's published active units."
       }
     },
     {
@@ -9015,7 +9015,7 @@
             }
           ]
         },
-        "description": "Requires administrative project viewing permission; returns explicit editable fields and permitted actions.",
+        "description": "Requires administrative project viewing permission; returns explicit editable fields and permitted actions. Published project publicPath and View project links open /developers/:developerSlug/projects/:projectSlug as an independent web page. The page reuses the public developer projection and shows only this project's published active units.",
         "auth": {
           "type": "bearer",
           "bearer": [

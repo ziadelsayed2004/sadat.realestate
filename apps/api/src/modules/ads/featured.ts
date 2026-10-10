@@ -39,7 +39,7 @@ async function featuredDestinations(connection: Connection, advertiser: NonNulla
   return featuredOptionsSchema.shape.destinations.parse([
     { kind: 'organization', id: orgId.toString(), name: advertiser.organization.name, href: `/developers/${advertiser.organization.slug}` },
     ...properties.flatMap(row => id(row._id) && typeof row.slug === 'string' ? [{ kind: 'property', id: row._id.toString(), name: row.name, href: `/properties/${row.slug}` }] : []),
-    ...projects.flatMap(row => id(row._id) && typeof row.slug === 'string' ? [{ kind: 'project', id: row._id.toString(), name: row.name, href: `/developers/${advertiser.organization.slug}#project-${row.slug}` }] : [])
+    ...projects.flatMap(row => id(row._id) && typeof row.slug === 'string' ? [{ kind: 'project', id: row._id.toString(), name: row.name, href: `/developers/${advertiser.organization.slug}/projects/${row.slug}` }] : [])
   ]);
 }
 export async function resolveFeatured(connection: Connection, creative: FeaturedCreative) {

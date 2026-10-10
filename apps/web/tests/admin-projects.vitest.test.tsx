@@ -50,7 +50,7 @@ function apiClientFor(requests: Array<{ method: string; path: string; authorizat
 describe('Admin project management contracts and views', () => {
   it.each(['ar', 'en'] as const)('confirms versioned archive without offering project creation for %s', async locale => {
     window.history.pushState({}, '', `/admin/projects/review?projectId=${project.id}&action=archive`);
-    const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer#project-nile-heights', availableActions: ['archive' as const] };
+    const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer/projects/nile-heights', availableActions: ['archive' as const] };
     const saved = { ...published, publicPath: undefined };
     const review = vi.fn().mockResolvedValue({ ...saved, status: 'archived', version: 4, availableActions: [] });
     const result = renderWithLocale(<AdminProjects locale={locale} session={session} initialData={{ ...listData, items: [published] }} review={review} />, { locale });
@@ -69,11 +69,11 @@ describe('Admin project management contracts and views', () => {
   });
   it('opens published projects even when no moderation actions are available', async () => {
     window.history.pushState({}, '', '/admin/projects');
-    const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer#project-nile-heights', availableActions: ['update' as const] };
+    const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer/projects/nile-heights', availableActions: ['update' as const] };
     renderWithLocale(<AdminProjects locale="en" session={session} initialData={{ ...listData, items: [published] }} />, { locale: 'en' });
     expect(screen.getByRole('link', { name: 'View details' })).toHaveAttribute('href', `/admin/projects/review?projectId=${project.id}&lang=en`);
     expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute('href', `/admin/projects/review?projectId=${project.id}&lang=en#project-edit`);
-    expect(screen.getByRole('link', { name: 'View on site' })).toHaveAttribute('href', '/developers/qa-developer?lang=en#project-nile-heights');
+    expect(screen.getByRole('link', { name: 'View on site' })).toHaveAttribute('href', '/developers/qa-developer/projects/nile-heights?lang=en');
   });
   it('uses a table skeleton while the project list is loading', () => {
     const result = renderWithLocale(<AdminProjects locale="ar" session={session} load={() => new Promise(() => undefined)} />, { locale: 'ar' });

@@ -27,6 +27,7 @@ const routeDefinitions = [
   { id: 'public-compare', pattern: '/compare', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
   { id: 'public-developers', pattern: '/developers', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
   { id: 'public-developer-profile', pattern: '/developers/:slug', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
+  { id: 'public-project-details', pattern: '/developers/:slug/projects/:projectSlug', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
   { id: 'public-articles', pattern: '/articles', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
   { id: 'public-article-details', pattern: '/articles/:slug', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },
   { id: 'public-community', pattern: '/community', surface: 'public', requiresAuthentication: false, deviceScope: 'desktop/tablet/mobile' },

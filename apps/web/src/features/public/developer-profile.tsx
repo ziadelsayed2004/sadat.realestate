@@ -16,6 +16,8 @@ import { PublicAuthRoleContext, PublicMediaImage, PublicSiteFooter, PublicSiteHe
 import {
   defaultPublicDeveloperProfileLoader,
   publicDeveloperProfileSlugFromUrl,
+  publicDeveloperProjectSlugFromUrl,
+  publicDeveloperProjectUrl,
   type PublicDeveloperProfileLoader
 } from './developers-data.ts';
 import { getPublicDevelopersCopy, type PublicDevelopersCopy } from './developers-copy.ts';
@@ -126,14 +128,13 @@ function StateNotice({
   );
 }
 
-function NotFoundNotice({ copy }: { readonly copy: PublicDevelopersCopy }) {
-  return (
-    <section className="public-developer-profile__state" data-state="not_found" role="alert">
-      <h1>{copy.notFoundTitle}</h1>
-      <p>{copy.notFoundBody}</p>
-      <a className="public-developer-profile__state-link" href="/developers">{copy.notFoundLink}</a>
-    </section>
-  );
+function NotFoundNotice({ copy, locale, projectPage, slug }: { readonly copy: PublicDevelopersCopy; readonly locale: SupportedLocale; readonly projectPage: boolean; readonly slug: string | undefined }) {
+  const ar = locale === 'ar';
+  return <section className="public-developer-profile__state" data-state="not_found" role="alert">
+    <h1>{projectPage ? ar ? 'المشروع غير متاح' : 'Project unavailable' : copy.notFoundTitle}</h1>
+    <p>{projectPage ? ar ? 'المشروع غير منشور أو لم يعد متاحًا للعرض.' : 'This project is unpublished or no longer available.' : copy.notFoundBody}</p>
+    <a className="public-developer-profile__state-link" href={projectPage && slug ? `/developers/${slug}?lang=${locale}` : '/developers'}>{projectPage ? ar ? 'العودة للمطور' : 'Back to developer' : copy.notFoundLink}</a>
+  </section>;
 }
 
 function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
@@ -223,20 +224,8 @@ function ProfileMetric({ value, label, icon }: { readonly value: number; readonl
 }
 
 
-function ProjectCard({ project, locale, copy }: { readonly project: PublicOrganizationProject; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+function ProjectCard({ project, developerSlug, detail = false, locale, copy }: { readonly project: PublicOrganizationProject; readonly developerSlug: string; readonly detail?: boolean; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   const anchorId = `project-${project.slug}`;
-  useEffect(() => {
-    const reveal = () => {
-      if (window.location.hash !== `#${anchorId}`) return;
-      const card = document.getElementById(anchorId);
-      const details = card?.querySelector('details');
-      if (details) details.open = true;
-      card?.scrollIntoView({ block: 'start' });
-    };
-    reveal();
-    window.addEventListener('hashchange', reveal);
-    return () => window.removeEventListener('hashchange', reveal);
-  }, [anchorId]);
   const name = localizedText(project.name, locale) ?? project.slug;
   const description = localizedText(project.description, locale);
   const website = safePublicUrl(project.website);
@@ -247,25 +236,23 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
     ['', projectType]
   ];
   return (
-    <article className="public-developer-profile__project-card" id={anchorId}>
+    <article className="public-developer-profile__project-card" id={anchorId} data-project-detail={detail || undefined}>
       <div className="public-developer-profile__project-media">
         <PublicMediaImage src={project.imageUrl} alt={name} fallback={<span className="public-developer-profile__project-media-fallback" />} />
         {localizedText(project.statusLabel, locale) ? <span className="public-developer-profile__project-status">{localizedText(project.statusLabel, locale)}</span> : null}
       </div>
       <div className="public-developer-profile__project-content">
         {localizedText(project.locationName, locale) ? <span className="public-developer-profile__project-location"><ProfileIcon name="location" />{localizedText(project.locationName, locale)}</span> : null}
-        <h3>{name}</h3>
+        {detail ? <h1>{name}</h1> : <h3>{name}</h3>}
         <div className="public-developer-profile__project-meta">
           {meta.map(([label, value], index) => value ? <span key={`${label}-${index}`}><strong>{value}</strong>{label ? <small>{label}</small> : null}</span> : null)}
         </div>
         {localizedText(project.deliveryLabel, locale) ? <p className="public-developer-profile__project-delivery"><ProfileIcon name="calendar" />{localizedText(project.deliveryLabel, locale)}</p> : null}
         {localizedText(project.priceLabel, locale) ? <p className="public-developer-profile__project-price">{localizedText(project.priceLabel, locale)}</p> : null}
-        <details className="public-developer-profile__project-details">
-          <summary className="public-developer-profile__project-link">{copy.viewProject}<ProfileIcon name="arrow" /></summary>
-          {description ? <p>{description}</p> : null}
+        {detail ? <div className="public-developer-profile__overview-content">
+          {description ? <p>{description}</p> : <p>{copy.noDescription}</p>}
           {website ? <a href={website} rel="noopener noreferrer" target="_blank">{copy.openWebsite}</a> : null}
-          <a href="#developer-contact">{copy.sendInquiry}</a>
-        </details>
+        </div> : <a className="public-developer-profile__project-link" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}>{copy.viewProject}<ProfileIcon name="arrow" /></a>}
       </div>
     </article>
   );
@@ -275,7 +262,7 @@ function ProjectsSection({ data, locale, copy }: { readonly data: PublicOrganiza
   return (
     <section className="public-developer-profile__section public-developer-profile__projects-section" id="developer-projects" aria-labelledby="public-developer-projects-title">
       <h2 id="public-developer-projects-title">{copy.projectsSectionTitle}</h2>
-      {data.projects.length === 0 ? <p className="public-developer-profile__empty">{copy.noProjects}</p> : <div className="public-developer-profile__project-grid">{data.projects.map(project => <ProjectCard key={project.id} project={project} locale={locale} copy={copy} />)}</div>}
+      {data.projects.length === 0 ? <p className="public-developer-profile__empty">{copy.noProjects}</p> : <div className="public-developer-profile__project-grid">{data.projects.map(project => <ProjectCard key={project.id} project={project} developerSlug={data.slug} locale={locale} copy={copy} />)}</div>}
     </section>
   );
 }
@@ -329,7 +316,7 @@ function ProfileOverview({ data, locale, copy }: { readonly data: PublicOrganiza
   );
 }
 
-function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile; readonly copy: PublicDevelopersCopy }) {
+function ProfileAside({ data, copy, compact = false }: { readonly data: PublicOrganizationProfile; readonly copy: PublicDevelopersCopy; readonly compact?: boolean }) {
   const stats = data.stats;
   const areas = stats.activeAreas ?? data.activeAreas?.length ?? 0;
   const metricRows: ReadonlyArray<readonly [number, string, IconName]> = [
@@ -345,7 +332,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
   const hasContactDetails = Boolean(phone || data.contactAddress || whatsapp);
   return (
     <aside className="public-developer-profile__aside">
-      <section className="public-developer-profile__activity" aria-labelledby="developer-activity-title">
+      {compact ? null : <section className="public-developer-profile__activity" aria-labelledby="developer-activity-title">
         <h2 id="developer-activity-title"><ProfileIcon name="project" />{copy.activitySummary}</h2>
         <div className="public-developer-profile__metrics">{metricRows.map(([value, label, icon]) => <ProfileMetric key={label} value={value} label={label} icon={icon} />)}</div>
         <dl className="public-developer-profile__activity-meta">
@@ -353,7 +340,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
           <div><dt>{copy.profileKind}</dt><dd>{kindLabel(data.kind, copy)}</dd></div>
           <div><dt>{copy.verified}</dt><dd className="public-developer-profile__verified-mini"><ProfileIcon name="check" />{copy.verified}</dd></div>
         </dl>
-      </section>
+      </section>}
       <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
         {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
@@ -365,7 +352,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
   );
 }
 
-function ContactSection({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+function ContactSection({ data, locale, copy, actions, projectId = '' }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions; readonly projectId?: string }) {
   const [state, setState] = useState<'idle' | 'submitting' | 'success' | 'permission' | 'forbidden' | 'error'>('idle');
   const role = useContext(PublicAuthRoleContext);
   const [requestId, setRequestId] = useState('');
@@ -408,7 +395,7 @@ function ContactSection({ data, locale, copy, actions }: { readonly data: Public
         <p className="public-developer-profile__inquiry-wide">{channel === 'provider' ? (ar ? 'يصل الاستفسار للشركة. تابع الرد من حسابك.' : 'Your inquiry goes to the company. Track it in your account.') : (ar ? 'تستقبل إدارة المنصة الاستفسار وتتابع مع الشركة.' : 'The platform follows up with the company for you.')}</p>
         <label><span>{copy.fieldName} *</span><input name="name" autoComplete="name" required maxLength={160} value={fullName} onChange={event => setFullName(event.target.value)} /></label>
         <label><span>{copy.fieldPhone} *</span><input name="phone" type="tel" dir="ltr" autoComplete="tel" required maxLength={40} placeholder="010xxxxxxxx" value={phone} onChange={event => setPhone(event.target.value)} /></label>
-        {data.projects.length ? <label>{copy.profileProjects}<CustomSelect name="projectId" defaultValue="" placeholder={ar ? 'اختياري' : 'Optional'} ariaLabel={copy.profileProjects} options={data.projects.map(project => ({ value: project.id, label: localizedText(project.name, locale) ?? project.slug }))} /></label> : null}
+        {data.projects.length ? <label>{copy.profileProjects}<CustomSelect name="projectId" defaultValue={projectId} placeholder={ar ? 'اختياري' : 'Optional'} ariaLabel={copy.profileProjects} options={data.projects.map(project => ({ value: project.id, label: localizedText(project.name, locale) ?? project.slug }))} /></label> : null}
         <label>{copy.fieldPreferredTime}<CustomSelect name="preferredTime" defaultValue="morning" ariaLabel={copy.fieldPreferredTime} options={[{ value: 'morning', label: ar ? 'صباحاً' : 'Morning' }, { value: 'evening', label: ar ? 'مساءً' : 'Evening' }]} /></label>
         <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required maxLength={2000} placeholder={copy.messagePlaceholder} value={message} onChange={event => setMessage(event.target.value)} /></label>
         <div className="public-developer-profile__inquiry-actions">
@@ -442,6 +429,25 @@ function ProfileSuccess({ data, locale, copy, actions }: { readonly data: Public
   );
 }
 
+function ProjectSuccess({ data, project, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly project: PublicOrganizationProject; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+  const projectData = { ...data, projects: [project], properties: data.properties.filter(property => property.projectId === project.id) };
+  return <div className="public-developer-profile__content">
+    <nav className="public-developer-profile__tabs" aria-label={copy.profileProjects}>
+      <a href={`/developers/${data.slug}?lang=${locale}#developer-projects`}>{localizedText(data.name, locale) ?? data.slug}</a>
+      <a href="#developer-properties">{copy.availableUnitsTitle}</a>
+      <a href="#developer-contact">{copy.profileContact}</a>
+    </nav>
+    <div className="public-developer-profile__layout">
+      <ProfileAside data={data} copy={copy} compact />
+      <div className="public-developer-profile__main">
+        <ProjectCard project={project} developerSlug={data.slug} detail locale={locale} copy={copy} />
+        <PropertiesSection data={projectData} locale={locale} copy={copy} />
+        <ContactSection data={projectData} projectId={project.id} locale={locale} copy={copy} actions={actions} />
+      </div>
+    </div>
+  </div>;
+}
+
 function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   return <PublicSiteFooter locale={locale} description={copy.footerDescription} />;
 }
@@ -459,6 +465,8 @@ export function PublicDeveloperProfile({
   const copy = getPublicDevelopersCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? '/developers' : window.location.href);
   const slug = publicDeveloperProfileSlugFromUrl(sourceUrl);
+  const projectPage = new URL(sourceUrl, 'http://sadat-real-estate.local').pathname.split('/').filter(Boolean).length === 4;
+  const projectSlug = publicDeveloperProjectSlugFromUrl(sourceUrl);
   const initialView: PublicDeveloperProfileViewState = initialData !== undefined ? 'success' : initialState ?? 'loading';
   const [data, setData] = useState<PublicOrganizationProfile | undefined>(initialData);
   const [view, setView] = useState<PublicDeveloperProfileViewState>(initialView);
@@ -486,11 +494,13 @@ export function PublicDeveloperProfile({
   }, [attempt, initialData, load, slug]);
 
   const retry = () => setAttempt(value => value + 1);
+  const project = data?.projects.find(value => value.slug === projectSlug);
+  const missingProject = projectPage && view === 'success' && project === undefined;
 
   return (
-    <div className="public-developer-profile" data-page="public-developer-profile" data-developer-profile-state={view}>
+    <div className="public-developer-profile" data-page={projectPage ? 'public-project-details' : 'public-developer-profile'} data-developer-profile-state={missingProject ? 'not_found' : view}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/developers" />
-      {view === 'success' && data !== undefined ? <ProfileSuccess data={data} locale={locale} copy={copy} actions={resolvedActions} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retry} /> : <StateNotice state={view} copy={copy} onRetry={retry} />}
+      {view === 'not_found' || missingProject ? <NotFoundNotice copy={copy} locale={locale} projectPage={projectPage} slug={slug} /> : view === 'success' && data !== undefined ? projectPage && project ? <ProjectSuccess data={data} project={project} locale={locale} copy={copy} actions={resolvedActions} /> : <ProfileSuccess data={data} locale={locale} copy={copy} actions={resolvedActions} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={retry} /> : <StateNotice state={view} copy={copy} onRetry={retry} />}
       <Footer locale={locale} copy={copy} />
     </div>
   );

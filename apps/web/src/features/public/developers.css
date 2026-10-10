@@ -2017,28 +2017,16 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   margin-block-start: 0.25rem;
 }
 
-.public-developer-profile__project-details {
-  margin-block-start: 0.5rem;
-}
-
-.public-developer-profile__project-details > summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 2.25rem;
-  padding-inline: 0.75rem;
-  background: #faf8f2;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  cursor: pointer;
-  list-style: none;
-}
-
-.public-developer-profile__project-details > summary::-webkit-details-marker { display: none; }
 .public-developer-profile__project-card .public-developer-profile__project-link::after { display: none; }
-.public-developer-profile__project-details[open] > summary { margin-block-end: 0.625rem; }
-.public-developer-profile__project-details > p { margin-block: 0 0.625rem; -webkit-line-clamp: unset; }
-.public-developer-profile__project-details > a { display: inline-block; margin-inline-end: 1rem; color: var(--color-brand-primary); }
+.public-developer-profile__project-card[data-project-detail] { grid-template-rows: clamp(12rem, 35vw, 26rem) auto; padding: 0; }
+.public-developer-profile__project-content h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.public-developer-profile__project-content .public-developer-profile__overview-content { display: block; white-space: pre-line; min-block-size: 0; }
+[data-project-detail] .public-developer-profile__project-content { padding: 1.25rem; }
+[data-project-detail] :is(.public-developer-profile__project-meta span,.public-developer-profile__project-content > p) { font-size: 0.875rem; }
+@media (max-width: 64rem) {
+  [data-page="public-project-details"] .public-developer-profile__aside { order: 1; }
+}
+[data-page="public-project-details"]:dir(ltr) :is(.public-developer-profile__main,.public-developer-profile__aside,.public-developer-profile__tabs) { direction: ltr; text-align: start; }
 
 @media (max-width: 48rem) {
   .public-developer-directory__card { min-block-size: 0; grid-template-rows: 9rem minmax(0, auto); }

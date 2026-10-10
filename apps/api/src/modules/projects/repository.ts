@@ -136,7 +136,7 @@ export function createMongooseProjectRepository(connection: Connection, models: 
       const organization = await connection.collection('organizations').findOne({ _id: new Types.ObjectId(project.organizationId), status: 'approved' }, { projection: { slug: 1, providerId: 1 } });
       if (!organization || typeof organization.slug !== 'string' || !/^[a-z0-9-]+$/.test(organization.slug) || !organization.providerId) return undefined;
       const provider = await connection.collection('provider_profiles').findOne({ _id: organization.providerId, status: 'approved' }, { projection: { _id: 1 } });
-      return provider ? `/developers/${organization.slug}#project-${project.slug}` : undefined;
+      return provider ? `/developers/${organization.slug}/projects/${project.slug}` : undefined;
     },
 
     async list(providerId, query) {

@@ -20075,6 +20075,11 @@
             },
             "uniqueItems": true,
             "maxItems": 7
+          },
+          "publicPath": {
+            "type": "string",
+            "pattern": "^\\/developers\\/[a-z0-9-]+(?:\\/projects\\/|#project-)[a-z0-9-]+$",
+            "description": "Published projects belonging to an approved developer open their independent project detail page. Legacy developer-card anchors remain readable."
           }
         }
       },

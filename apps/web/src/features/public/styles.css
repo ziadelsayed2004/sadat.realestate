@@ -15,6 +15,7 @@
 .route-shell[data-route-id="public-compare"]>.route-shell__header,
 .route-shell[data-route-id="public-developers"]>.route-shell__header,
 .route-shell[data-route-id="public-developer-profile"]>.route-shell__header,
+.route-shell[data-route-id="public-project-details"]>.route-shell__header,
 .public-homepage__section--about .public-homepage__content-card:last-child> :not(img) {
   display: none;
 }
@@ -28,7 +29,8 @@
 .route-shell[data-route-id="public-property-details"]>.app-main,
 .route-shell[data-route-id="public-compare"]>.app-main,
 .route-shell[data-route-id="public-developers"]>.app-main,
-.route-shell[data-route-id="public-developer-profile"]>.app-main {
+.route-shell[data-route-id="public-developer-profile"]>.app-main,
+.route-shell[data-route-id="public-project-details"]>.app-main {
   width: 100%;
   max-width: none;
   padding: 0;

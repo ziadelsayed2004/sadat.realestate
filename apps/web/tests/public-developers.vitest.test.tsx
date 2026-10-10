@@ -10,6 +10,7 @@ import {
   parsePublicDeveloperDirectoryQuery,
   publicDeveloperDirectoryUrl
 } from '../src/features/public/index.ts';
+import { publicDeveloperProjectSlugFromUrl, publicDeveloperProfileSlugFromUrl } from '../src/features/public/developers-data.ts';
 import { PublicAuthRoleContext } from '../src/features/public/components.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
@@ -99,18 +100,37 @@ describe('public developer directory and profiles', () => {
 
     expect(screen.getByRole('heading', { name: 'Approved builder', level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Central project', level: 3 })).toBeInTheDocument();
-    const projectDetails = result.container.querySelector('.public-developer-profile__project-details');
-    expect(projectDetails?.querySelector('summary')).toHaveTextContent('View project');
-    fireEvent.click(projectDetails!.querySelector('summary')!);
-    expect(projectDetails).toHaveAttribute('open');
-    expect(screen.getByText('Project description.')).toBeInTheDocument();
-    expect(projectDetails?.querySelector('a[href="https://example.com/central-project"]')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'View project' })).toHaveAttribute('href', '/developers/approved-builder/projects/central-project?lang=en');
+    expect(result.container.querySelector('details.public-developer-profile__project-details')).toBeNull();
     expect(result.container.querySelector('a[href*="/properties?projectId="]')).toBeNull();
     expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home?lang=en');
     expect(screen.getByRole('button', { name: 'Send inquiry' })).toBeInTheDocument();
     expect(result.container.querySelector('form[action="/auth/login"]')).toBeNull();
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('organizationId');
+  });
+
+  it.each(['ar', 'en'] as const)('opens one project with its description and only its published units in %s', locale => {
+    const data = { ...profileData, properties: [...profileData.properties, { ...profileData.properties[0]!, id: 'd'.repeat(24), slug: 'other-home', name: { en: 'Other project home' }, projectId: 'e'.repeat(24) }] };
+    const result = renderWithLocale(<PublicDeveloperProfile locale={locale} url={`/developers/approved-builder/projects/central-project?lang=${locale}`} initialData={data} />, { locale });
+    expect(screen.getByRole('heading', { name: 'Central project', level: 1 })).toBeInTheDocument();
+    expect(screen.getByText('Project description.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', `/properties/published-home?lang=${locale}`);
+    expect(screen.queryByText('Other project home')).not.toBeInTheDocument();
+    expect(result.container.querySelector('[name=projectId]')).toHaveValue('bbbbbbbbbbbbbbbbbbbbbbbb');
+    expect(result.container.querySelector('.public-developer-profile__tabs a')).toHaveAttribute('href', `/developers/approved-builder?lang=${locale}#developer-projects`);
+    expect(result.container.querySelector('[data-page="public-project-details"]')).toBeInTheDocument();
+  });
+
+  it('does not substitute another project for an unavailable or malformed project', () => {
+    const url = '/developers/approved-builder/projects/unpublished';
+    renderWithLocale(<PublicDeveloperProfile locale="en" url={url} initialData={profileData} />, { locale: 'en' });
+    expect(screen.getByRole('heading', { name: 'Project unavailable' })).toBeInTheDocument();
+    expect(screen.queryByText('Central project')).not.toBeInTheDocument();
+    expect(publicDeveloperProfileSlugFromUrl(url)).toBe('approved-builder');
+    expect(publicDeveloperProjectSlugFromUrl(url)).toBe('unpublished');
+    expect(publicDeveloperProjectSlugFromUrl('/developers/approved-builder/projects/%2fetc')).toBeUndefined();
+    expect(publicDeveloperProfileSlugFromUrl('/developers/approved-builder/projects')).toBeUndefined();
   });
 
   it('supports directory filtering and retries network failures', async () => {

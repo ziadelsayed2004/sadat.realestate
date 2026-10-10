@@ -97,6 +97,7 @@ export {
   publicDeveloperProfileSlugFromUrl,
   publicDeveloperProfileUrl
 } from './developers-data.ts';
+export { publicDeveloperProjectSlugFromUrl, publicDeveloperProjectUrl } from './developers-data.ts';
 export type {
   PublicDeveloperDirectoryLoadOptions,
   PublicDeveloperDirectoryLoader,

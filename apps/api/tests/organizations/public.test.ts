@@ -21,6 +21,20 @@ test('projects approved organizations with only published projects and active pr
   assert.equal('status' in (profile ?? {}), false);
 });
 
+test('project detail data excludes every unpublished project state and inactive linked unit', async () => {
+  const row = source();
+  const published = row.projects[0]!;
+  row.projects = [published, ...['draft', 'pending_review', 'needs_changes', 'approved', 'hidden', 'archived', 'rejected'].map((status, index) => ({ ...published, id: (index + 2).toString().repeat(24), slug: `${status.replace('_', '-')}-project`, status }))];
+  row.properties[0]!.projectId = published.id;
+  row.properties[1]!.projectId = published.id;
+  const service = createPublicOrganizationService({ repository: { async list() { return { items: [row], total: 1 }; }, async findBySlug() { return row; } } });
+  const profile = await service.get('trusted-company');
+  assert.deepEqual(profile?.projects.map(project => project.slug), ['published-project']);
+  assert.deepEqual(profile?.properties.map(property => property.slug), ['published-home']);
+  assert.equal(profile?.properties[0]?.projectId, published.id);
+  assert.equal('providerId' in (profile ?? {}), false);
+});
+
 test('rejects unsafe directory queries and unapproved provider identity', async () => {
   const service = createPublicOrganizationService({ repository: { async list() { return { items: [source({ providerStatus: 'pending_review' })], total: 1 }; }, async findBySlug() { return source({ providerStatus: 'pending_review' }); } } });
   assert.deepEqual((await service.list({})).items, []);

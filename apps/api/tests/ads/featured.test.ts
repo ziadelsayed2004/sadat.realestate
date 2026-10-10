@@ -26,6 +26,8 @@ test('featured destination options only expose an eligible real advertiser and i
   const db = fixture(); const value = await featuredOptions(db.connection, application.toHexString());
   assert.equal(value.advertisers[0]?.name.en, 'Actual company');
   assert.deepEqual(value.destinations.map(item => item.kind), ['organization', 'property', 'project']);
+  assert.equal(value.destinations.find(item => item.kind === 'project')?.href, '/developers/actual-company/projects/owned-project');
+  assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: application.toHexString(), destination: { kind: 'project', id: 'a'.repeat(24) } })).targetPath, '/developers/actual-company/projects/owned-project');
   assert.equal(value.destinations.some(item => item.id === foreign.toHexString()), false);
   assert.ok(value.destinations.every(item => item.href.startsWith('/') && !item.href.startsWith('//')));
   const creative = { advertiserProviderId: application.toHexString(), destination: { kind: 'property' as const, id: owned.toHexString() } };

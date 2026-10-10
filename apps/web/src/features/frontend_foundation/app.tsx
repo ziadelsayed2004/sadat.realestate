@@ -154,7 +154,7 @@ export function App({
   const isPublicPropertyDetails = route.kind === 'matched' && route.id === 'public-property-details';
   const isPublicPropertyComparison = route.kind === 'matched' && route.id === 'public-compare';
   const isPublicDevelopers = route.kind === 'matched' && route.id === 'public-developers';
-  const isPublicDeveloperProfile = route.kind === 'matched' && route.id === 'public-developer-profile';
+  const isPublicDeveloperProfile = route.kind === 'matched' && (route.id === 'public-developer-profile' || route.id === 'public-project-details');
   const isPublicArticles = route.kind === 'matched' && route.id === 'public-articles';
   const isPublicArticleDetails = route.kind === 'matched' && route.id === 'public-article-details';
   const isPublicCommunity = route.kind === 'matched' && route.id === 'public-community';

@@ -53,6 +53,25 @@ test('archives projects with review permission and the current version while kee
   await assert.rejects(fixture(true, false).service.create(claims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
 });
 
+test('public project links open an independent page only for published projects and approved developers', async () => {
+  let unavailable: string | undefined;
+  let lookups = 0;
+  const connection = { collection: (name: string) => ({ findOne: async (filter: { status: string }) => {
+    lookups += 1;
+    assert.equal(filter.status, 'approved');
+    return unavailable === name ? null : name === 'organizations' ? { slug: 'approved-builder', providerId: new Types.ObjectId(provider) } : { _id: new Types.ObjectId(provider) };
+  } }) } as unknown as Connection;
+  const repository = createMongooseProjectRepository(connection, {} as ProjectModels, {} as AuditWriter);
+  const project = record({ status: 'published', organizationId: 'c'.repeat(24) });
+  assert.equal(await repository.publicPath(project), '/developers/approved-builder/projects/project');
+  for (unavailable of ['organizations', 'provider_profiles']) assert.equal(await repository.publicPath(project), undefined);
+  const previous = lookups;
+  for (const status of ['draft', 'pending_review', 'approved', 'hidden', 'archived', 'rejected'] as const) {
+    assert.equal(await repository.publicPath({ ...project, status }), undefined);
+  }
+  assert.equal(lookups, previous);
+});
+
 test('project archive stores one atomic versioned change and audit before/after without deleting documents', async () => {
   let current = { ...record({ status: 'published', version: 3 }), _id: new Types.ObjectId(id), providerId: new Types.ObjectId(provider) };
   const audits: Array<Parameters<AuditWriter['record']>[0]> = [];
@@ -88,7 +107,7 @@ test('administrators open and edit published projects without republishing and p
   rows.set(id, record({ status: 'published', organizationId: '6123456789abcdef01234567', version: 3 }));
   const detail = await service.adminGet(admin, id);
   assert.ok(detail.availableActions.includes('update'));
-  assert.equal(detail.publicPath, '/developers/qa-developer#project-project');
+  assert.equal(detail.publicPath, '/developers/qa-developer/projects/project');
   const input = { version: 3, reason: 'Administrative project edit', name: { en: 'Updated project' }, description: { en: 'Previewed description' }, slug: 'updated-project' };
   const context = { requestId: 'admin-project-edit', traceId: 'a'.repeat(32) };
   await assert.rejects(service.adminGet(other, id), error => error.code === 'PROJECT_FORBIDDEN');
@@ -99,7 +118,7 @@ test('administrators open and edit published projects without republishing and p
   assert.equal(saved.status, 'published');
   assert.equal(saved.name.en, input.name.en);
   assert.equal(saved.description.en, input.description.en);
-  assert.equal(saved.publicPath, '/developers/qa-developer#project-updated-project');
+  assert.equal(saved.publicPath, '/developers/qa-developer/projects/updated-project');
   await assert.rejects(service.adminUpdate(admin, id, input, context), error => error.code === 'PROJECT_VERSION_CONFLICT');
   rows.set(id, record({ status: 'archived', version: 4 }));
   assert.ok(!(await service.adminGet(admin, id)).availableActions.includes('update'));
@@ -113,7 +132,7 @@ function record(overrides: Partial<StoredProject> = {}): StoredProject {
 function fixture(allowProjectView = true, canManageProjects = true, allowProjectReview = true) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
-    async publicPath(project) { return project.status === 'published' && project.organizationId ? `/developers/qa-developer#project-${project.slug}` : undefined; },
+    async publicPath(project) { return project.status === 'published' && project.organizationId ? `/developers/qa-developer/projects/${project.slug}` : undefined; },
     async list(owner, query) {
       const items = [...rows.values()].filter(project => project.providerId === owner && (!query.status || project.status === query.status));
       return { items, total: items.length };

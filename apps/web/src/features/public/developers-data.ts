@@ -98,7 +98,7 @@ export function publicDeveloperProfileSlugFromUrl(source: URL | string): string 
     return undefined;
   }
   const segments = url.pathname.split('/').filter(Boolean);
-  if (segments.length !== 2 || segments[0] !== PUBLIC_DEVELOPERS_PATH.slice(1)) return undefined;
+  if ((segments.length !== 2 && (segments.length !== 4 || segments[2] !== 'projects')) || segments[0] !== PUBLIC_DEVELOPERS_PATH.slice(1)) return undefined;
   try {
     const parsed = organizationSlugSchema.safeParse(decodeURIComponent(segments[1] ?? ''));
     return parsed.success ? parsed.data : undefined;
@@ -110,6 +110,19 @@ export function publicDeveloperProfileSlugFromUrl(source: URL | string): string 
 export function publicDeveloperProfileUrl(slug: string): string {
   const parsedSlug = organizationSlugSchema.parse(slug);
   return `${PUBLIC_DEVELOPERS_PATH}/${encodeURIComponent(parsedSlug)}`;
+}
+
+export function publicDeveloperProjectSlugFromUrl(source: string): string | undefined {
+  try {
+    const segments = new URL(source, 'http://sadat-real-estate.local').pathname.split('/').filter(Boolean);
+    if (segments.length !== 4 || segments[0] !== 'developers' || segments[2] !== 'projects') return undefined;
+    const parsed = organizationSlugSchema.safeParse(decodeURIComponent(segments[3] ?? ''));
+    return parsed.success ? parsed.data : undefined;
+  } catch { return undefined; }
+}
+
+export function publicDeveloperProjectUrl(developerSlug: string, projectSlug: string): string {
+  return `${publicDeveloperProfileUrl(developerSlug)}/projects/${organizationSlugSchema.parse(projectSlug)}`;
 }
 
 export async function loadPublicDeveloperDirectory(options: PublicDeveloperDirectoryLoadOptions): Promise<PublicOrganizationListData> {
