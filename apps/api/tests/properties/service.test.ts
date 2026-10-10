@@ -13,6 +13,26 @@ import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import type { PropertyRepository, StoredProperty } from '../../src/modules/properties/repository.js';
 import { createPropertyService, PropertyServiceError } from '../../src/modules/properties/service.js';
 
+test('admin actions match permissions in lists, details and saved review/visibility responses', async () => {
+  const viewer = fixture(false, undefined, ['admin:properties.view']);
+  viewer.rows.set(id, record({ status: 'published' }));
+  assert.deepEqual((await viewer.service.adminGet(admin, id)).availableActions, []);
+  assert.deepEqual((await viewer.service.adminList(admin, {})).data.items[0]?.availableActions, []);
+  await assert.rejects(viewer.service.visibility(admin, id, { version: 0, action: 'archive', reason: 'Remove displayed listing' }, { requestId: 'view-only', traceId: 'a'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
+  const manager = fixture();
+  manager.rows.set(id, record({ status: 'approved' }));
+  const context = { requestId: 'admin-actions', traceId: 'a'.repeat(32) };
+  const published = await manager.service.review(admin, id, { version: 0, action: 'publish', reason: 'Publish reviewed property' }, context);
+  assert.deepEqual(published.availableActions, ['hide', 'archive', 'update']);
+  const hidden = await manager.service.visibility(admin, id, { version: 1, action: 'hide', reason: 'Temporarily hide listing' }, context);
+  assert.deepEqual(hidden.availableActions, ['restore', 'archive', 'update']);
+  const archived = await manager.service.visibility(admin, id, { version: 2, action: 'archive', reason: 'Remove displayed listing' }, context);
+  assert.equal(archived.active, false);
+  assert.deepEqual(archived.availableActions, []);
+  manager.rows.set(id, record({ status: 'pending_review' }));
+  assert.ok((await manager.service.adminGet(admin, id)).availableActions.includes('archive'));
+});
+
 const provider = '0123456789abcdef01234567';
 const other = '1123456789abcdef01234567';
 const id = '2123456789abcdef01234567';
@@ -49,7 +69,7 @@ function record(overrides: Partial<StoredProperty> = {}): StoredProperty {
   return { id, providerId: provider, source: { providerId: provider, sourceType: 'individual_broker' }, kind: 'property', name: { en: 'Apartment' }, slug: 'apartment', transactionType: 'sale', status: 'draft', active: true, version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }) {
+function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }, permissions = ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage']) {
   const rows = new Map([[id, record(ready ? { locationId: location, price: { amount: 1000000, currency: 'EGP' }, contact: { phone: '+201234567890' } } : {})]]);
   const repository: PropertyRepository = {
     async updateAdministrative(input) {
@@ -153,7 +173,7 @@ function fixture(ready = false, settings?: { requiresAdminReview: boolean; publi
       return { kind: 'written', property: next };
     }
   };
-  return { service: createPropertyService({ repository, authorization: { async authorize(id, permission) { return id === admin && ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage'].includes(permission); } }, ...(settings ? { settings: { async read() { return { requiresAdminReview: settings.requiresAdminReview, publicationAfterApproval: settings.publicationAfterApproval, automaticExpiry: settings.automaticExpiry ?? 'never', maxImages: 50, acceptedImageMimes: ['image/jpeg' as const, 'image/png' as const], maxImageBytes: 10 * 1024 * 1024, hideProviderContact: true, contactVisibility: 'authenticated' as const }; } } } : {}), now: () => now }), rows };
+  return { service: createPropertyService({ repository, authorization: { async authorize(id, permission) { return id === admin && permissions.includes(permission); } }, ...(settings ? { settings: { async read() { return { requiresAdminReview: settings.requiresAdminReview, publicationAfterApproval: settings.publicationAfterApproval, automaticExpiry: settings.automaticExpiry ?? 'never', maxImages: 50, acceptedImageMimes: ['image/jpeg' as const, 'image/png' as const], maxImageBytes: 10 * 1024 * 1024, hideProviderContact: true, contactVisibility: 'authenticated' as const }; } } } : {}), now: () => now }), rows };
 }
 
 test('creates provider-owned drafts and saves core/location steps with optimistic versions', async () => {

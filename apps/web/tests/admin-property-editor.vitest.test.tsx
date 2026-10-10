@@ -2,12 +2,25 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { propertyDataSchema } from '@sadat-real-estate/contracts';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminPropertyEditor } from '../src/features/admin_properties/editor.tsx';
+import { AdminPropertyCover } from '../src/features/admin_properties/photo.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const property = propertyDataSchema.parse({ id: 'a'.repeat(24), kind: 'property', name: { en: 'Published villa', ar: 'فيلا منشورة' }, slug: 'published-villa', transactionType: 'sale', source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, status: 'published', active: true, version: 3, createdAt: '2026-10-08T10:00:00Z', updatedAt: '2026-10-08T10:00:00Z', availableActions: ['update'] });
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.editor.test' };
 const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { requestId: 'editor-test' } }), { headers: { 'content-type': 'application/json' } });
 afterEach(() => vi.unstubAllGlobals());
+
+it('previews a non-public cover through authenticated admin media without requesting public bytes', async () => {
+  const fetcher = vi.fn<typeof fetch>(async () => new Response('', { status: 403 }));
+  vi.stubGlobal('fetch', fetcher);
+  renderWithLocale(<AdminPropertyCover property={{ ...property, status: 'pending_review', imageUrl: `/api/v1/public/properties/${property.id}/media/${'c'.repeat(24)}/content` }} locale="en" authorization={authorization} />, { locale: 'en' });
+  await screen.findByText('Image preview unavailable');
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  const [url, init] = fetcher.mock.calls[0]!;
+  expect(String(url)).toBe(`/api/v1/admin/properties/${property.id}/media/${'c'.repeat(24)}/content`);
+  expect(new Headers(init?.headers).get('authorization')).toBe('Bearer admin.editor.test');
+  expect(init?.credentials).toBe('include');
+});
 
 it('keeps short-reason validation visible and never writes until it is corrected or cleared', async () => {
   const fetcher = vi.fn<typeof fetch>(async () => response({ items: [] }));

@@ -178,6 +178,7 @@ describe('empty account filter recovery', () => {
     expect(screen.getByTestId('admin-accounts-metric-1')).toHaveTextContent('0');
     expect(screen.getByTestId('admin-accounts-metric-2')).toHaveTextContent('30');
     expect(screen.getByTestId('admin-accounts-metric-4')).toHaveTextContent('40');
+    expect(screen.getByTestId('admin-accounts-metric-5')).toHaveTextContent('3');
     fireEvent.click(screen.getByRole('button', { name: 'All' }));
     await waitFor(() => expect(screen.getByTestId(`admin-user-${user.id}`)).toBeInTheDocument());
     expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45');
@@ -191,6 +192,7 @@ describe('empty account filter recovery', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Next' }));
     await waitFor(() => expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('44'));
     expect(screen.getByTestId('admin-accounts-metric-4')).toHaveTextContent('39');
+    expect(screen.getByTestId('admin-accounts-metric-5')).toHaveTextContent('3');
     expect(loadUsers).toHaveBeenLastCalledWith({ page: 2, limit: 20 }, expect.any(AbortSignal));
   });
 

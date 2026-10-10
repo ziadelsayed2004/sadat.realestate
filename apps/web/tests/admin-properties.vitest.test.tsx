@@ -62,6 +62,26 @@ function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
 }
 
 describe('Admin property management contracts and views', () => {
+  it.each(['ar', 'en'] as const)('opens published details, photos, editing, public view and archive for %s', async locale => {
+    const published = { ...property, status: 'published' as const, imageUrl: 'https://example.com/cover.jpg', availableActions: ['hide', 'archive', 'update'] as const };
+    const result = renderWithLocale(<AdminProperties locale={locale} session={session} view="review" initialProperties={{ ...properties, items: [{ ...published, availableActions: [...published.availableActions] }] }} />, { locale });
+    const row = await screen.findByTestId(`admin-property-${property.id}`);
+    expect(row.querySelector('img')).toHaveAttribute('src', published.imageUrl);
+    expect(row.querySelector('a[href$="#admin-property-editor"]')).toBeInTheDocument();
+    expect(row.querySelector('a[href$="#admin-property-actions"]')).toHaveAttribute('href', `/admin/properties/review?propertyId=${property.id}&action=archive&lang=${locale}#admin-property-actions`);
+    expect(row.querySelector(`a[href="/properties/nile-villa?lang=${locale}"]`)).toBeInTheDocument();
+    result.unmount();
+    renderWithLocale(<AdminProperties locale={locale} session={session} view="review" propertyId={property.id} url={`/admin/properties/review?action=archive`} initialProperties={{ ...properties, items: [{ ...published, availableActions: ['hide', 'archive'] }] }} />, { locale });
+    expect(document.querySelector('#admin-property-action')).toHaveValue('archive');
+  });
+
+  it('keeps details accessible to viewers and omits edit, archive and expired public links', async () => {
+    renderWithLocale(<AdminProperties locale="en" session={session} view="list" initialProperties={{ ...properties, items: [{ ...property, status: 'published', expiresAt: '2020-01-01T00:00:00.000Z', availableActions: [] }] }} />, { locale: 'en' });
+    const row = await screen.findByTestId(`admin-property-${property.id}`);
+    expect(row.innerHTML).toContain(`/admin/properties/review?propertyId=${property.id}&amp;lang=en`);
+    expect(row.querySelector('a[href*="#admin-property"]')).toBeNull();
+    expect(row.querySelector('a[href^="/properties/"]')).toBeNull();
+  });
   it('uses a table skeleton while property rows are loading', () => {
     const result = renderWithLocale(<AdminProperties locale="ar" session={session} view="list" loadProperties={() => new Promise(() => undefined)} />, { locale: 'ar' });
     expect(result.container.querySelector('.ui-skeleton[data-variant="table"]')).not.toBeNull();

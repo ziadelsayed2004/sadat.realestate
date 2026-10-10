@@ -32,6 +32,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/accounts/access-guard.test.ts',
     'tests/accounts/models.test.ts',
     'tests/accounts/service.test.ts',
+    'tests/accounts/repository-counts.test.ts',
     'tests/accounts/read-router.test.ts',
     'tests/audit/contracts.test.ts',
     'tests/audit/actor-names.test.ts',

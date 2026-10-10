@@ -166,6 +166,21 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
   async function adminViewPermission(adminId: string): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, 'admin:properties.view')) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
   }
+  async function adminProjection(adminId: string): Promise<(record: StoredProperty) => PropertyData> {
+    const [canReview, canManage] = await Promise.all([
+      dependencies.authorization!.authorize(adminId, 'admin:properties.review'),
+      dependencies.authorization!.authorize(adminId, 'admin:properties.manage')
+    ]);
+    return record => {
+      const output = data(record, 'admin');
+      const availableActions = output.availableActions.filter(action => ['hide', 'restore', 'archive'].includes(action) ? canManage : canReview);
+      if (canManage && record.status !== 'archived') {
+        if (!availableActions.includes('archive')) availableActions.push('archive');
+        availableActions.push('update');
+      }
+      return { ...output, availableActions };
+    };
+  }
   return {
     async list(claims, unparsedQuery) {
       provider(claims);
@@ -177,16 +192,15 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       await adminViewPermission(adminId);
       const query = propertyAdminListQuerySchema.parse(unparsedQuery) as PropertyAdminListQuery;
       const result = await dependencies.repository.listAdmin(query);
-      const manage = await dependencies.authorization!.authorize(adminId, 'admin:properties.manage');
-      return { data: { items: result.items.map(item => { const output = data(item, 'admin'); return manage && item.status !== 'archived' ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output; }) }, page: query.page, limit: query.limit, total: result.total };
+      const project = await adminProjection(adminId);
+      return { data: { items: result.items.map(project) }, page: query.page, limit: query.limit, total: result.total };
     },
     async adminGet(adminId, id) {
       await adminViewPermission(adminId);
       propertyObjectIdSchema.parse(id);
       const result = await dependencies.repository.findByIdAny(id);
       if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
-      const output = data(result, 'admin');
-      return result.status !== 'archived' && await dependencies.authorization!.authorize(adminId, 'admin:properties.manage') ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output;
+      return (await adminProjection(adminId))(result);
     },
     async duplicates(adminId, unparsedQuery) {
       await adminPermission(adminId, 'admin:properties.review');
@@ -231,7 +245,8 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const before = admin ? await dependencies.repository.findByIdAny(id) : await dependencies.repository.findOwned(claims.sub, id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
       if (before.status === 'archived' || (!admin && !['draft', 'needs_changes'].includes(before.status))) throw new PropertyServiceError('PROPERTY_INVALID_STATE');
-      const stepData = (result: Parameters<typeof write>[0]) => { const output = data(write(result), admin ? 'admin' : 'provider'); return admin ? { ...output, availableActions: [...output.availableActions, 'update' as const] } : output; };
+      const project = admin ? await adminProjection(claims.sub) : data;
+      const stepData = (result: Parameters<typeof write>[0]) => project(write(result));
       if (step === 'basic') {
         const input = propertyCoreStepSchema.parse(unparsedInput) as PropertyCoreStep;
         return stepData(await dependencies.repository.updateCore({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
@@ -262,8 +277,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
       if (before.status === 'archived') throw new PropertyServiceError('PROPERTY_INVALID_STATE');
-      const output = data(write(await dependencies.repository.updateAdministrative({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { actorId: adminId, actorType: 'admin', adminEdit: true, reason: input.reason, changedAt: now(), ...context } })), 'admin');
-      return { ...output, availableActions: [...output.availableActions, 'update'] };
+      return (await adminProjection(adminId))(write(await dependencies.repository.updateAdministrative({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { actorId: adminId, actorType: 'admin', adminEdit: true, reason: input.reason, changedAt: now(), ...context } })));
     },
     async validate(claims, id) {
       provider(claims); propertyObjectIdSchema.parse(id); const result = await dependencies.repository.findOwned(claims.sub, id); if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); return validation(result);
@@ -281,7 +295,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const toStatus = input.action === 'needs_changes' ? 'needs_changes' : input.action === 'approve' ? (settings.publicationAfterApproval === 'automatic' ? 'published' : 'approved') : input.action === 'reject' ? 'rejected' : 'published';
       const changedAt = now();
       const expiresAt = toStatus === 'published' ? expiryAt(changedAt, settings) : undefined;
-      return data(write(await dependencies.repository.review({ id, expectedVersion: input.version, toStatus, reviewerId: adminId, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
+      return (await adminProjection(adminId))(write(await dependencies.repository.review({ id, expectedVersion: input.version, toStatus, reviewerId: adminId, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
     },
     async visibility(adminId, id, unparsedInput, context) {
       await adminPermission(adminId, 'admin:properties.manage');
@@ -292,7 +306,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
       const changedAt = now();
       const expiresAt = input.action === 'restore' ? expiryAt(changedAt, settings) : undefined;
-      return data(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: input.action, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
+      return (await adminProjection(adminId))(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: input.action, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
     }
   };
 }
