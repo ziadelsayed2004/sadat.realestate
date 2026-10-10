@@ -297,4 +297,26 @@ describe('Admin banners, tips, and homepage administration', () => {
     if (chosenOrder === undefined) expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('order');
     else expect(requests.find(request => request.method === 'PUT')?.body).toHaveProperty('order', chosenOrder);
   });
+
+  it.each([undefined, 0, 10])('automatically chooses the homepage key and default list order without requiring a description (%s)', async chosenOrder => {
+    const requests: Array<{ method: string; path: string; body: unknown }> = [];
+    renderWithLocale(<AdminHome url="/admin/content/homepage" locale="en" session={session} initialContent={homepage} source={createAdminHomeSource({ apiClient: apiClientFor(requests) })} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getAdminHomeCopy('en').add }));
+    const editor = screen.getByTestId('admin-home-homepage-editor');
+    const picker = within(editor).getByLabelText('Section to customize');
+    expect(picker.tagName).toBe('SELECT');
+    expect(within(picker).getByRole('option', { name: /Featured properties/u })).toBeDisabled();
+    fireEvent.change(picker, { target: { value: 'articles' } });
+    const order = within(editor).getByLabelText('List order (optional)');
+    expect(order).not.toBeRequired();
+    expect(order).toHaveValue(null);
+    if (chosenOrder !== undefined) fireEvent.change(order, { target: { value: String(chosenOrder) } });
+    fireEvent.change(editor.querySelector('#admin-home-homepage-title-en')!, { target: { value: 'Market articles' } });
+    fireEvent.change(editor.querySelector('#admin-home-homepage-status')!, { target: { value: 'published' } });
+    fireEvent.change(within(editor).getByLabelText('Change reason'), { target: { value: 'Customize the articles heading' } });
+    fireEvent.submit(editor.querySelector('form')!);
+    await waitFor(() => expect(requests.find(request => request.method === 'PUT')).toBeDefined());
+    expect(requests.find(request => request.method === 'PUT')?.body).toMatchObject({ key: 'articles', order: chosenOrder ?? 3, status: 'published', visible: true });
+    expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('body');
+  });
 });

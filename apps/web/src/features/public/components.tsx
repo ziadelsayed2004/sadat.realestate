@@ -650,7 +650,7 @@ function Hero({
   readonly categories: readonly PublicHomepageCategory[];
   readonly locations: readonly PublicHomepageLocation[];
 }) {
-  const section = sections.find(item => item.key === 'hero') ?? sections[0];
+  const section = sections.find(item => item.key === 'hero');
   const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
   const [slideKey, setSlideKey] = useState<string>();
   const [requestedKey, setRequestedKey] = useState<string>();
@@ -692,7 +692,7 @@ function Hero({
   const titleLines = title.split('\n');
 
   return (
-    <section id="homepage-hero" className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
+    <section id="homepage-hero" style={{ scrollMarginTop: '8rem' }} className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
       <div className="public-homepage__hero-visual">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
         {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
@@ -729,7 +729,7 @@ function SectionHeading({
     <div className="public-homepage__section-heading">
       <div>
         {eyebrow === undefined ? null : <p className="public-homepage__eyebrow">{eyebrow}</p>}
-        <h2 id={id}>{title}</h2>
+        <h2 id={id} style={{ scrollMarginTop: '8rem' }}>{title}</h2>
       </div>
       {action}
     </div>
@@ -887,12 +887,14 @@ function ContentGrid({
   locale,
   copy,
   type,
-  content
+  content,
+  introduction
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly type: PublicHomepageContent['type'];
   readonly content: readonly PublicHomepageContent[];
+  readonly introduction?: string | undefined;
 }) {
   const items = ordered(content.filter(item => item.type === type));
   if (items.length === 0) return null;
@@ -924,6 +926,7 @@ function ContentGrid({
         title={title}
         {...(action === undefined ? {} : { action })}
       />
+      {introduction ? <p className="public-homepage__section-description">{introduction}</p> : null}
       <div className="public-homepage__content-grid">
         {items.map(item => {
           const body = localizedText(item.body, locale);
@@ -980,7 +983,7 @@ function ContentGrid({
   );
 }
 
-function HomepageAbout({ locale, copy, content }: { readonly locale: SupportedLocale; readonly copy: PublicHomepageCopy; readonly content: readonly PublicHomepageContent[] }) {
+function HomepageAbout({ locale, copy, content, section }: { readonly locale: SupportedLocale; readonly copy: PublicHomepageCopy; readonly content: readonly PublicHomepageContent[]; readonly section?: PublicHomepageSection | undefined }) {
   const item = content.find(c => c.type === 'about');
   if (item === undefined) return null;
   const body = localizedText(item.body, locale);
@@ -1019,8 +1022,8 @@ function HomepageAbout({ locale, copy, content }: { readonly locale: SupportedLo
     <section className="public-homepage__section public-homepage__section--about" aria-labelledby="public-homepage-about">
       <div className="public-homepage__about-content">
         <p className="public-homepage__eyebrow">{copy.aboutEyebrow}</p>
-        <h2 id="public-homepage-about" className="public-homepage__about-title">{localizedText(item.title, locale) ?? item.key}</h2>
-        {bodyLines[0] && <p className="public-homepage__about-body">{bodyLines[0]}</p>}
+        <h2 id="public-homepage-about" style={{ scrollMarginTop: '8rem' }} className="public-homepage__about-title">{localizedText(section?.title ?? item.title, locale) ?? item.key}</h2>
+        {(localizedText(section?.body, locale) ?? bodyLines[0]) && <p className="public-homepage__about-body">{localizedText(section?.body, locale) ?? bodyLines[0]}</p>}
         <div className="public-homepage__about-grid">
           {aboutPoints.map((point, i) => (
             <div className="public-homepage__about-feature" key={point.title}>
@@ -1120,6 +1123,8 @@ function HomepageContent({
   readonly data: PublicHomepageData;
 }) {
   const sections = ordered(data.sections);
+  const sectionText = (key: string, field: 'title' | 'body') => localizedText(sections.find(item => item.key === key)?.[field], locale);
+  const sectionCopy = { ...copy, propertiesTitle: sectionText('featured_properties', 'title') ?? copy.propertiesTitle, articlesTitle: sectionText('articles', 'title') ?? copy.articlesTitle, communityTitle: sectionText('community', 'title') ?? copy.communityTitle, tips: sectionText('tips', 'title') ?? copy.tips };
   const content = withCanonicalHomepageContent(data.content);
   const categories = withCanonicalHomepageCategories(data.categories);
   const locations = data.locations ?? [];
@@ -1131,14 +1136,15 @@ function HomepageContent({
       <HomepageCategoryRail locale={locale} copy={copy} categories={categories} totalPropertyCount={data.totalPropertyCount} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
-          <SectionHeading eyebrow={copy.propertiesEyebrow} id="public-homepage-properties" title={copy.propertiesTitle} action={<a href="/properties">{copy.viewAll}</a>} />
+          <SectionHeading eyebrow={copy.propertiesEyebrow} id="public-homepage-properties" title={sectionCopy.propertiesTitle} action={<a href="/properties">{copy.viewAll}</a>} />
+          {sectionText('featured_properties', 'body') ? <p className="public-homepage__section-description">{sectionText('featured_properties', 'body')}</p> : null}
           <PropertyGrid locale={locale} copy={copy} properties={data.properties.slice(0, 3)} />
         </section>
       )}
-      <ContentGrid locale={locale} copy={copy} type="article" content={content} />
-      <ContentGrid locale={locale} copy={copy} type="community" content={content} />
-      <ContentGrid locale={locale} copy={copy} type="tip" content={content} />
-      <HomepageAbout locale={locale} copy={copy} content={content} />
+      <ContentGrid locale={locale} copy={sectionCopy} type="article" content={content} introduction={sectionText('articles', 'body')} />
+      <ContentGrid locale={locale} copy={sectionCopy} type="community" content={content} introduction={sectionText('community', 'body')} />
+      <ContentGrid locale={locale} copy={sectionCopy} type="tip" content={content} introduction={sectionText('tips', 'body')} />
+      <HomepageAbout locale={locale} copy={copy} content={content} section={sections.find(item => item.key === 'about')} />
       <PlatformCallout copy={copy} />
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
