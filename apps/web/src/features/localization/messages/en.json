@@ -1403,7 +1403,7 @@
     "mediaMime": "Media MIME",
     "mediaWidth": "Width",
     "mediaHeight": "Height",
-    "mediaNote": "Only approved HTTPS media URLs are accepted; storage keys and permanent private links are never displayed.",
+    "mediaNote": "No saved images for this banner. Upload an image or choose from the media library, then save.",
     "saved": "Saved.",
     "validation": "Check the required fields.",
     "statuses": {

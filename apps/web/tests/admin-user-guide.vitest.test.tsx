@@ -149,7 +149,7 @@ describe('interactive administrator reference', () => {
     fireEvent.click(topic);
     expect(topic).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(screen.getByRole('button', { name: 'طي الكل' }));
-    expect(screen.getByRole('button', { name: /الصورة: الملف أو الرابط والأبعاد/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: /الصورة: رفع من الجهاز أو مكتبة الوسائط/ })).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('restores valid stored reading state and safely ignores corrupt storage', async () => {

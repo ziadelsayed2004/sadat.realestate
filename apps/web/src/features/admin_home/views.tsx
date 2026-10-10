@@ -1,3 +1,4 @@
+import { BannerMediaLibrary } from './banner-media-library.tsx';
 import { AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
 import { BannerPlacementOptions } from './banner-placement-options.tsx';
 import { BannerRotationHint } from './banner-rotation-hint.tsx';
@@ -10,7 +11,6 @@ import type {
   AdBannerConfig,
   AdBannerCreate,
   AdBannerListData,
-  AdBannerMediaCreate,
   CmsAdminHomepageSection,
   CmsAdminTip,
   LocalizedText,
@@ -268,7 +268,7 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
   const [startTime, setStartTime] = useState(() => bannerTimeDraft(start ? localDateParts(start)[1] : ''));
   const [endDate, setEndDate] = useState(end ? localDateParts(end)[0] : '');
   const [endTime, setEndTime] = useState(() => bannerTimeDraft(end ? localDateParts(end)[1] : ''));
-  const [media, setMedia] = useState<Pick<AdBannerMediaCreate, 'url' | 'mime' | 'width' | 'height'>>({ url: '', mime: 'image/png', width: 1200, height: 400 });
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ readonly tone: 'error' | 'success'; readonly text: string } | undefined>();
@@ -278,8 +278,8 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
     const parsedTitle = localizedInput(title);
     const startAt = linkedRequestId && start ? new Date(start) : scheduleInstant(startDate, startTime);
     const endAt = linkedRequestId && end ? new Date(end) : scheduleInstant(endDate, endTime);
-    if (parsedTitle === undefined || startAt === undefined || endAt === undefined || ((savedBanner || files.length || media.url.trim() !== '') && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: media.url.trim() !== '' && reason.trim().length < 2 ? copy.reasonRequired : copy.validation }); return; }
-    if (images.length + files.length + (media.url.trim() ? 1 : 0) > 20) { setFeedback({ tone: 'error', text: controls.uploadHint }); return; }
+    if (parsedTitle === undefined || startAt === undefined || endAt === undefined || ((savedBanner || files.length) && reason.trim().length < 2)) { setFeedback({ tone: 'error', text: copy.validation }); return; }
+    if (images.length + files.length > 20) { setFeedback({ tone: 'error', text: controls.uploadHint }); return; }
     if (endAt <= startAt) { setFeedback({ tone: 'error', text: copy.schedule.invalidRange }); return; }
     if (linkedRequestId && !targetUrl.trim()) { setFeedback({ tone: 'error', text: locale === 'ar' ? 'حدد رابط صفحة العقار أو الشركة المطورة.' : 'Set the property or developer page URL.' }); return; }
     const input: AdBannerCreate = { ...(linkedRequestId ? { adRequestId: linkedRequestId } : {}), placementKey: placementKey.trim(), displaySeconds, title: parsedTitle, ...(localizedInput(bannerBody) ? { body: localizedInput(bannerBody) } : {}), ...(localizedInput(altText) === undefined ? {} : { altText: localizedInput(altText) }), ...(targetUrl.trim() === '' ? {} : { targetUrl: targetUrl.trim() }), startAt: startAt.toISOString(), endAt: endAt.toISOString() };
@@ -297,11 +297,6 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
         selected.push({ id: attached.id, url: await uploadedPreview(attached.url) });
         setImages([...selected]);
         setFiles(current => current.filter(item => item !== file));
-      }
-      if (media.url.trim()) {
-        const attached = await source.createBannerMedia(created.id, { ...media, url: media.url.trim() });
-        selected.push({ id: attached.id, url: await uploadedPreview(attached.url) });
-        setImages([...selected]); setMedia(current => ({ ...current, url: '' }));
       }
       created = await source.updateBanner(created.id, { expectedVersion: created.version, mediaIds: selected.map(item => item.id), reason: reason.trim() || 'Save banner images' });
       setSavedBanner(created);
@@ -342,7 +337,7 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
         setFeedback({ tone: 'error', text: controls.uploadHint }); event.target.value = ''; return;
       }
       setFiles(current => [...current, ...selected]); event.target.value = '';
-    }} /></label><p className="admin-home__hint">{controls.uploadHint}</p><BannerGallery locale={locale} images={images} files={files} disabled={saving} onChange={value => { setImages(value); setDirty(true); }} onFilesChange={value => { setFiles(value); setDirty(true); }} /><p className="admin-home__hint">{locale === 'ar' ? 'يمكنك إضافة حتى 20 صورة. تتبدّل بالترتيب بعد النشر. المقاس المقترح 1200 × 400 بكسل، ويجب مطابقة المقاسات المسموحة في إعدادات الإعلانات.' : 'Add up to 20 images. They rotate in order after publication. Suggested size: 1200 × 400 px; match the sizes allowed in advertising settings.'}</p><label htmlFor="admin-home-banner-duration">{locale === 'ar' ? 'مدة عرض كل صورة (بالثواني)' : 'Seconds per image'}<input id="admin-home-banner-duration" type="number" min="3" max="60" step="1" required value={displaySeconds} onChange={event => setDisplaySeconds(Number(event.target.value))} /></label><h3>{copy.mediaUrl}</h3><p className="admin-home__hint">{copy.mediaNote}</p><div className="admin-home__form-grid"><label htmlFor="admin-home-banner-media-url">{copy.mediaUrl}<input id="admin-home-banner-media-url" type="url" value={media.url} onChange={event => { setMedia(current => ({ ...current, url: event.target.value })); }} placeholder="https://" /></label><label htmlFor="admin-home-banner-media-mime">{copy.mediaMime}<select id="admin-home-banner-media-mime" value={media.mime} onChange={event => setMedia(current => ({ ...current, mime: event.target.value as AdBannerMediaCreate['mime'] }))}><option value="image/png">image/png</option><option value="image/jpeg">image/jpeg</option><option value="image/webp">image/webp</option></select></label><label htmlFor="admin-home-banner-media-width">{copy.mediaWidth}<input id="admin-home-banner-media-width" type="number" min="1" value={media.width} onChange={event => setMedia(current => ({ ...current, width: Number(event.target.value) }))} /></label><label htmlFor="admin-home-banner-media-height">{copy.mediaHeight}<input id="admin-home-banner-media-height" type="number" min="1" value={media.height} onChange={event => setMedia(current => ({ ...current, height: Number(event.target.value) }))} /></label></div></fieldset>{savedBanner || files.length || media.url.trim() !== '' ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
+    }} /></label><p className="admin-home__hint">{controls.uploadHint}</p><Button type="button" variant="secondary" disabled={saving} aria-expanded={libraryOpen} onClick={() => setLibraryOpen(value => !value)}>{locale === 'ar' ? 'اختيار من مكتبة الوسائط' : 'Choose from media library'}</Button>{libraryOpen ? <BannerMediaLibrary source={source} locale={locale} disabled={saving || images.length + files.length >= 20} onPick={file => { setFiles(current => current.length + images.length >= 20 ? current : [...current, file]); setDirty(true); }} /> : null}<BannerGallery locale={locale} images={images} files={files} disabled={saving} onChange={value => { setImages(value); setDirty(true); }} onFilesChange={value => { setFiles(value); setDirty(true); }} /><p className="admin-home__hint">{locale === 'ar' ? 'يمكنك إضافة حتى 20 صورة. تتبدّل بالترتيب بعد النشر. المقاس المقترح 1200 × 400 بكسل، ويجب مطابقة المقاسات المسموحة في إعدادات الإعلانات.' : 'Add up to 20 images. They rotate in order after publication. Suggested size: 1200 × 400 px; match the sizes allowed in advertising settings.'}</p><label htmlFor="admin-home-banner-duration">{locale === 'ar' ? 'مدة عرض كل صورة (بالثواني)' : 'Seconds per image'}<input id="admin-home-banner-duration" type="number" min="3" max="60" step="1" required value={displaySeconds} onChange={event => setDisplaySeconds(Number(event.target.value))} /></label></fieldset>{savedBanner || files.length ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
 }
 
 function ContentForm({ namespace, item, locale, source, onSaved, onCancel }: { readonly namespace: 'tips' | 'homepage'; readonly item?: HomeContentItem; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: (data: AdminHomeCmsContent) => void; readonly onCancel: () => void }) {

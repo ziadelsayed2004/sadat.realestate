@@ -1,0 +1,67 @@
+import { expect, test } from '@playwright/test';
+import { adminHomeBannerId, adminHomeBannerFixture, routeAdminHomeApis } from './admin-home.fixtures.ts';
+
+test('reuses a saved uploaded image as an independent banner upload and retains it after failure', async ({ page }, info) => {
+  const ar = !info.project.name.endsWith('-en');
+  const locale = ar ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  const sourceId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
+  const imageId = 'dddddddddddddddddddddddd';
+  const imageUrl = `/api/v1/public/banner-media/${imageId}`;
+  await page.route('**/api/v1/admin/banners?**', route => route.fulfill({ json: { data: { items: [{ ...adminHomeBannerFixture(), id: sourceId, title: { ar: 'بانر محفوظ', en: 'Saved banner' }, mediaIds: [imageId] }], page: 1, limit: 20, total: 1 }, meta: { requestId: 'library-banners' } } }));
+  await page.route(`**/api/v1/admin/banners/${sourceId}/media`, route => route.fulfill({ json: { data: { items: [{ id: imageId, bannerId: sourceId, url: imageUrl, mime: 'image/png', width: 1200, height: 400, active: true, version: 0, createdBy: 'cccccccccccccccccccccccc', createdAt: '2026-08-19T08:00:00.000Z', updatedAt: '2026-08-19T08:00:00.000Z' }] }, meta: { requestId: 'library-images' } } }));
+  await page.goto(`/admin/banners/new?lang=${locale}`);
+  await expect(page.locator('#admin-home-banner-file')).toBeVisible();
+  await expect(page.locator('#admin-home-banner-media-url')).toHaveCount(0);
+  await expect(page.locator('#admin-home-banner-media-mime')).toHaveCount(0);
+  await page.getByRole('button', { name: ar ? 'اختيار من مكتبة الوسائط' : 'Choose from media library', exact: true }).click();
+  const library = page.getByTestId('banner-media-library');
+  await library.getByRole('combobox').selectOption(sourceId);
+  const choose = library.getByRole('button', { name: ar ? 'إضافة هذه الصورة' : 'Add this image', exact: true });
+  await expect(choose).toBeEnabled();
+  await expect(library.getByRole('img')).toBeVisible();
+  await library.screenshot({ path: info.outputPath('banner-image-library.png') });
+  await choose.click();
+  await expect(page.getByTestId('banner-pending-image')).toHaveCount(1);
+  await page.locator('#admin-home-banner-title-en').fill('Library image campaign');
+  await page.locator('#admin-home-banner-start').fill('2027-01-05');
+  await page.locator('#admin-home-banner-end').fill('2027-01-06');
+  await page.locator('#admin-home-banner-reason').fill('Reuse saved banner image');
+  let uploads = 0;
+  const bodies: Buffer[] = [];
+  await page.route(`**/api/v1/admin/banners/${adminHomeBannerId}/upload`, async route => {
+    uploads++;
+    bodies.push(route.request().postDataBuffer()!);
+    if (uploads === 1) await route.fulfill({ status: 503, json: { error: { code: 'SERVICE_UNAVAILABLE', messageKey: 'errors.serviceUnavailable', requestId: 'upload-unavailable', details: [] } } });
+    else await route.fallback();
+  });
+  await page.locator('.admin-home__editor button[type=submit]').click();
+  await expect(page.locator('.admin-home__feedback[role=alert]')).toBeVisible();
+  await expect(page.getByTestId('banner-pending-image')).toHaveCount(1);
+  await expect(page.locator('#admin-home-banner-title-en')).toHaveValue('Library image campaign');
+  const attach = page.waitForRequest(request => request.method() === 'PATCH' && request.postDataJSON()?.mediaIds?.length === 1);
+  await page.locator('.admin-home__editor button[type=submit]').click();
+  const attached = (await attach).postDataJSON().mediaIds;
+  expect(attached).not.toContain(imageId);
+  expect(uploads).toBe(2);
+  expect(bodies[0]!.length).toBeGreaterThan(0);
+  expect(bodies[0]!.equals(bodies[1]!)).toBe(true);
+  await expect(page.getByTestId('banner-pending-image')).toHaveCount(0);
+  await expect(page.getByTestId('banner-saved-image')).toHaveCount(1);
+});
+
+test('keeps device upload usable when the library is empty or denied', async ({ page }, info) => {
+  const ar = !info.project.name.endsWith('-en');
+  await routeAdminHomeApis(page);
+  let denied = false;
+  await page.route('**/api/v1/admin/banners?**', route => route.fulfill(denied ? { status: 403, json: { error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', requestId: 'library-denied', details: [] } } } : { json: { data: { items: [], total: 0, page: 1, limit: 20 }, meta: { requestId: 'empty-library' } } }));
+  await page.goto(`/admin/banners/new?lang=${ar ? 'ar' : 'en'}`);
+  const toggle = page.getByRole('button', { name: ar ? 'اختيار من مكتبة الوسائط' : 'Choose from media library', exact: true });
+  await toggle.click();
+  await expect(page.getByTestId('banner-media-library')).toContainText(ar ? 'لا توجد بانرات محفوظة' : 'No saved banners yet');
+  await toggle.click();
+  denied = true;
+  await toggle.click();
+  await expect(page.getByTestId('banner-media-library').getByRole('alert')).toBeVisible();
+  await expect(page.locator('#admin-home-banner-file')).toBeEnabled();
+});
