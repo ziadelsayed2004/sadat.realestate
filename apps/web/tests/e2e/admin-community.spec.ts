@@ -7,6 +7,32 @@ function localeForCommunity(): 'ar' | 'en' {
   return project.endsWith('-en') ? 'en' : 'ar';
 }
 
+test('review immediately reveals and focuses the selected report below a long table', async ({ page }) => {
+  await routeAdminCommunityApis(page);
+  const rows = Array.from({ length: 20 }, (_, index) => ({ ...adminCommunityReportFixture(), id: (index + 1).toString(16).padStart(24, '0'), details: `Report details ${index + 1}` }));
+  await page.route('**/api/v1/admin/community/reports**', route => route.fulfill({ json: { data: { items: rows, page: 1, limit: 20, total: 20, summary: { total: 20, open: 20, in_review: 0, resolved: 0, dismissed: 0 } }, meta: { requestId: 'long-report-list' } } }));
+  const locale = localeForCommunity();
+  const copy = getAdminCommunityCopy(locale);
+  await page.goto(`/admin/community/moderation?lang=${locale}`);
+  const review = page.getByTestId(`admin-community-report-${rows[0]!.id}`).getByRole('button', { name: copy.action.review });
+  await review.click();
+  const panel = page.getByTestId('admin-community-resolution');
+  await expect(panel).toBeFocused();
+  await expect(panel.getByText('Report details 1', { exact: true })).toBeInViewport();
+  const bounds = await panel.boundingBox();
+  expect(bounds!.y).toBeGreaterThanOrEqual(80);
+  expect(bounds!.y).toBeLessThan(page.viewportSize()!.height);
+  await panel.getByRole('textbox', { name: copy.reason, exact: true }).fill('Keep this draft reason');
+  await review.click();
+  await expect(panel).toBeFocused();
+  await expect(panel.getByText('Report details 1', { exact: true })).toBeInViewport();
+  await expect(panel.getByRole('textbox', { name: copy.reason, exact: true })).toHaveValue('Keep this draft reason');
+  await page.getByTestId(`admin-community-report-${rows[1]!.id}`).getByRole('button', { name: copy.action.review }).click();
+  await expect(panel.getByText('Report details 2', { exact: true })).toBeInViewport();
+  await expect(panel.getByRole('textbox', { name: copy.reason, exact: true })).toHaveValue('');
+  await page.screenshot({ path: test.info().outputPath('report-review-jump.png') });
+});
+
 test('report totals stay visible when filtering to an empty status', async ({ page }) => {
   await routeAdminCommunityApis(page);
   const summary = { total: 2, open: 0, in_review: 0, resolved: 1, dismissed: 1 };

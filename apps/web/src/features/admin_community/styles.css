@@ -42,7 +42,7 @@
 .admin-community__badge[data-tone="neutral"] { background: #eef1f5; color: #56647a; }
 .admin-community__pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; }
 .admin-community__pagination > div, .admin-community__inline-actions { display: flex; gap: 10px; }
-.admin-community__resolution { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, .75fr); gap: 28px; margin-block-start: 22px; padding: 28px 32px; }
+.admin-community__resolution { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, .75fr); gap: 28px; margin-block-start: 22px; padding: 28px 32px; scroll-margin-top: 6rem; }
 .admin-community__resolution h2 { margin-block-start: 0; }
 .admin-community__resolution dl { display: grid; gap: 12px; }
 .admin-community__resolution dl div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 14px; }
