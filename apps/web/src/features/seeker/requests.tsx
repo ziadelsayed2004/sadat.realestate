@@ -202,9 +202,20 @@ function RequestDetailContent({ request, locale, onCancel, onReply, create }: { 
   const propertyTypes = safePayloadStrings(request, 'propertyTypes');
   const hasAdvanced = budget !== undefined || bedrooms !== undefined || propertyTypes.length > 0 || note !== undefined;
   const screenId = requestScreenId(request);
-  const lifecycle: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved'];
-  const currentIndex = lifecycle.indexOf(request.status === 'needs_information' ? 'under_review' : request.status);
-  const informationRequest = [...(request.customerUpdates ?? [])].reverse().find(update => update.status === 'needs_information' && update.authorRole !== 'seeker')?.message;
+  const updates = [...(request.customerUpdates ?? [])].reverse();
+  const canReply = request.status === 'needs_information' && request.availableActions.includes('start_review');
+  const informationRequest = updates.find(update => update.status === 'needs_information' && update.authorRole !== 'seeker')?.message;
+  const nextStep = {
+    new: ['استلمنا طلبك. تابع هنا رد الفريق.', 'Your request was received. Check here for a reply.'],
+    under_review: ['الفريق بيراجع طلبك. مش محتاج ترسله تاني.', 'The team is reviewing your request. No need to resend it.'],
+    contacted: ['تم تسجيل التواصل معك. تابع هنا أي تحديث جديد.', 'Contact with you was recorded. Check here for updates.'],
+    needs_information: ['راجع المعلومات المطلوبة في رسالة الفريق.', 'Check the team’s message for the information needed.'],
+    scheduled: ['تمت جدولة طلبك. راجع الرسائل لتفاصيل الموعد.', 'Your request was scheduled. Check the messages for appointment details.'],
+    in_progress: ['الفريق بيتابع تنفيذ طلبك. تابع الرسائل هنا.', 'The team is working on your request. Follow the messages here.'],
+    resolved: ['اكتمل طلبك. لو عندك استفسار آخر، ابدأ طلبًا جديدًا.', 'Your request is complete. Start a new request for another inquiry.'],
+    cancelled: ['تم إلغاء الطلب. تقدر تبدأ طلبًا جديدًا.', 'Your request was cancelled. You can start a new request.'],
+    closed: ['تم إغلاق الطلب. تقدر تبدأ طلبًا جديدًا.', 'Your request was closed. You can start a new request.']
+  }[request.status][locale === 'ar' ? 0 : 1];
   return (
     <div className="seeker-request-detail" {...(screenId === undefined ? {} : { 'data-screen-id': screenId })} data-request-status={request.status}>
       <div className="seeker-request-detail__breadcrumb"><a href={localeForSeekerPath(locale, '/seeker/requests')}>{copy.list.title}</a><span>/</span><strong>{shortRequestId(request.id)}</strong></div>
@@ -219,7 +230,7 @@ function RequestDetailContent({ request, locale, onCancel, onReply, create }: { 
         </div>
       </div>
       {informationSent ? <p className="seeker-request-detail__reply-success" role="status">{locale === 'ar' ? 'تم إرسال معلوماتك. رجع طلبك للإدارة للمراجعة، وتقدر تتابعه من هنا.' : 'Your information was sent. The team will review your request; follow its progress here.'}</p> : null}
-      {request.status === 'needs_information' && request.availableActions.includes('start_review') ? <section className="seeker-request-detail__card seeker-request-detail__reply" aria-labelledby="seeker-request-reply-title">
+      {canReply ? <section className="seeker-request-detail__card seeker-request-detail__reply" aria-labelledby="seeker-request-reply-title">
         <h2 id="seeker-request-reply-title">{locale === 'ar' ? 'الإدارة محتاجة معلومات منك' : 'The team needs more information from you'}</h2>
         <p>{locale === 'ar' ? 'اكتب المعلومات المطلوبة هنا واضغط إرسال. هتكمل نفس الطلب، والإدارة هتراجعه من جديد.' : 'Enter the requested information below and send it. You will continue this request, and the team will review it again.'}</p>
         {informationRequest ? <blockquote>{informationRequest}</blockquote> : null}
@@ -227,16 +238,12 @@ function RequestDetailContent({ request, locale, onCancel, onReply, create }: { 
       </section> : null}
       <div className="seeker-request-detail__grid">
         <section className="seeker-request-detail__card seeker-request-detail__card--timeline" aria-labelledby="seeker-request-timeline-title">
-          <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
-          <ol className="seeker-request-detail__timeline">
-            {lifecycle.map((status, index) => {
-              const stepState = currentIndex < 0 ? 'pending' : index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'pending';
-              const timestamp = index === 0 ? request.createdAt : stepState === 'current' ? request.updatedAt : undefined;
-              return <li key={status} data-state={stepState} data-current={stepState === 'current' || undefined}><span aria-hidden="true">{stepState === 'complete' ? '✓' : stepState === 'current' ? '•' : ''}</span><div><strong>{requestStatusLabel(status, locale)}</strong>{timestamp === undefined ? null : <time dateTime={timestamp}>{dateLabel(timestamp, locale)}</time>}</div></li>;
-            })}
-          </ol>
+          <h2 id="seeker-request-timeline-title">{copy.detail.status}</h2>
+          <RequestStatusBadge status={request.status} locale={locale} />
+          <p>{nextStep}</p>
+          {updates[0] ? <div className="seeker-request-detail__payload"><h3>{updates[0].authorRole === 'seeker' ? (locale === 'ar' ? 'ردك على الإدارة' : 'Your reply to the team') : copy.detail.updated}</h3><time dateTime={updates[0].createdAt}>{dateLabel(updates[0].createdAt, locale)}</time>{updates[0].message && !canReply ? <p>{updates[0].message}</p> : null}</div> : null}
         </section>
-        <div className="seeker-request-detail__side">{request.customerUpdates?.length ? <section className="seeker-request-detail__card" aria-labelledby="seeker-request-updates-title"><h2 id="seeker-request-updates-title">{locale === 'ar' ? 'رسائل الطلب' : 'Request messages'}</h2><ol className="seeker-request-detail__updates">{[...request.customerUpdates].reverse().map((update, index) => <li key={`${update.createdAt}-${index}`}><strong>{update.authorRole === 'seeker' ? (locale === 'ar' ? 'ردك على الإدارة' : 'Your reply to the team') : requestStatusLabel(update.status, locale)}</strong><time dateTime={update.createdAt}>{dateLabel(update.createdAt, locale)}</time>{update.message ? <p>{update.message}</p> : null}</li>)}</ol></section> : null}
+        <div className="seeker-request-detail__side">{updates.length > 1 ? <details className="seeker-request-detail__card"><summary>{locale === 'ar' ? 'الرسائل السابقة' : 'Previous messages'}</summary><ol className="seeker-request-detail__updates">{updates.slice(1).map((update, index) => <li key={`${update.createdAt}-${index}`}><strong>{update.authorRole === 'seeker' ? (locale === 'ar' ? 'ردك على الإدارة' : 'Your reply to the team') : requestStatusLabel(update.status, locale)}</strong><time dateTime={update.createdAt}>{dateLabel(update.createdAt, locale)}</time>{update.message ? <p>{update.message}</p> : null}</li>)}</ol></details> : null}
           <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
             <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
             <dl className="seeker-request-detail__values">
@@ -255,7 +262,6 @@ function RequestDetailContent({ request, locale, onCancel, onReply, create }: { 
             <strong>{localizedText(request.property.sourceName, locale)}</strong>
             <small>{locale === 'ar' ? 'شركة تطوير' : 'Development company'}</small>
           </section>}
-          {request.status === 'under_review' ? <p className="seeker-request-detail__provider-note">{locale === 'ar' ? 'سيتم تحديد المزود بعد مراجعة الطلب' : 'A provider will be assigned after the request is reviewed'}</p> : null}
         </div>
         {hasAdvanced ? <section className="seeker-request-detail__card seeker-request-detail__card--advanced" aria-labelledby="seeker-request-advanced-title">
           <h2 id="seeker-request-advanced-title">{copy.detail.advanced}</h2>

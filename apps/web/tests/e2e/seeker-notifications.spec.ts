@@ -141,7 +141,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'SEK-07' });
     testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/seeker/SEK-07.png; Figma node 6027-3579' });
-    test.skip(!testInfo.project.name.includes('desktop') && !/filters unread notifications|truthful empty state/u.test(testInfo.title), 'Visual baseline coverage remains desktop only.');
+    test.skip(!testInfo.project.name.includes('desktop') && !/filters unread notifications|truthful empty state|opens notification details/u.test(testInfo.title), 'Visual baseline coverage remains desktop only.');
     await routeSession(page);
     await routeNotifications(page);
   });
@@ -160,7 +160,7 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await expect(page.locator('.seeker-notifications__reference')).toHaveText(['VIEW-201', 'REQ-4798', 'REQ-4766', 'P002', 'REQ-4821', 'VIEW-160']);
     await expect(page.locator('body')).not.toContainText(/recipientId|internalNote|accessToken|refreshToken|providerDocument/u);
     await expect(page.locator('.seeker-notifications__count')).toContainText(`4 ${copy.unreadCount}`);
-    await expect(page.getByRole('link', { name: locale === 'ar' ? 'تذكير بموعد معاينة' : 'Viewing appointment reminder' })).toHaveAttribute('href', `/seeker/viewings?viewing=${firstId}&ref=VIEW-201&lang=${locale}`);
+    await expect(page.getByRole('link', { name: `${copy.openLink}: ${locale === 'ar' ? 'تذكير بموعد معاينة' : 'Viewing appointment reminder'}` })).toHaveAttribute('href', `/seeker/viewings?viewing=${firstId}&ref=VIEW-201&lang=${locale}`);
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.locator('.seeker-notifications__tab').first().focus();
@@ -232,6 +232,40 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await expect(page.locator('.seeker-notifications__feedback[data-state="success"]')).toContainText(copy.mutation.markedAll);
     await expect(page.getByTestId('seeker-notifications-indicator')).toHaveCount(0);
     await expect(page.locator('.seeker-notifications__count')).toContainText('0');
+  });
+
+  test('opens notification details from the icon, card, action, and keyboard with a simple request summary', async ({ page }) => {
+    const locale = localeForProject();
+    const ar = locale === 'ar';
+    await page.route(`**/api/v1/seeker/requests/${secondId}`, route => route.fulfill({ json: {
+      data: { id: secondId, type: 'contact', source: 'seeker', seekerId: 'a'.repeat(24), status: 'under_review', version: 2, payload: { message: 'Original inquiry' }, availableActions: ['cancel'], createdAt: '2026-10-08T10:00:00.000Z', updatedAt: '2026-10-09T10:00:00.000Z', customerUpdates: [
+        { status: 'new', message: 'Earlier reply', createdAt: '2026-10-08T10:00:00.000Z' },
+        { status: 'under_review', message: 'We will call tomorrow', createdAt: '2026-10-09T10:00:00.000Z' }
+      ] }, ...successMeta('simple-request')
+    } }));
+    for (const target of ['icon', 'card', 'action', 'keyboard']) {
+      await page.goto(`/seeker/notifications?lang=${locale}`);
+      const row = page.getByTestId(`seeker-notification-${secondId}`);
+      const link = row.getByRole('link', { name: new RegExp(getSeekerNotificationsCopy(locale).openLink) });
+      await expect(link).toBeVisible();
+      await row.scrollIntoViewIfNeeded();
+      if (target === 'icon') await row.screenshot({ path: test.info().outputPath('notification-open.png') });
+      if (target === 'keyboard') { await link.focus(); await page.keyboard.press('Enter'); }
+      else if (target === 'action') await link.click();
+      else {
+        const box = await (target === 'icon' ? row.locator('.seeker-notifications__icon') : row).boundingBox();
+        expect(box).not.toBeNull();
+        await page.mouse.click(box!.x + (target === 'icon' ? box!.width / 2 : 8), box!.y + box!.height / 2);
+      }
+      await expect(page).toHaveURL(new RegExp(`/seeker/requests/${secondId}.*lang=${locale}`));
+      await expect(page.getByText(ar ? 'الفريق بيراجع طلبك. مش محتاج ترسله تاني.' : 'The team is reviewing your request. No need to resend it.')).toBeVisible();
+      await expect(page.getByText('We will call tomorrow')).toBeVisible();
+      if (target === 'icon') await page.screenshot({ path: test.info().outputPath('simple-request.png'), fullPage: true });
+      await expect(page.getByText('Earlier reply')).toBeHidden();
+      await page.locator('summary').filter({ hasText: ar ? 'الرسائل السابقة' : 'Previous messages' }).click();
+      await expect(page.getByText('Earlier reply')).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+    }
   });
 
   test('renders the truthful empty state and fails closed when refresh is denied', async ({ page }) => {

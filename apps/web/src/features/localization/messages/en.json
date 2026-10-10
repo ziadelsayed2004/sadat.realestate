@@ -4474,9 +4474,7 @@
       "all": "All",
       "unread": "Unread"
     },
-    "unreadLabel": "Unread",
     "markRead": "Mark as read",
-    "markedRead": "Notification marked as read.",
     "openLink": "Open details",
     "previous": "Previous page",
     "next": "Next page",
@@ -4515,13 +4513,6 @@
       "notFound": "This notification is no longer available to your account.",
       "permission": "Your session has expired. Sign in and try again.",
       "error": "The notification could not be updated. Try again."
-    },
-    "typeLabels": {
-      "viewing.reminder": "Viewing reminder",
-      "request.updated": "Request update",
-      "community.reply": "Community reply",
-      "property.saved": "Saved property update",
-      "profile.updated": "Profile update"
     },
     "retry": "Retry"
   },

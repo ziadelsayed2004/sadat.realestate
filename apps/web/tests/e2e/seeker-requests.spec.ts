@@ -208,7 +208,7 @@ test('request details keep cards contained and reflow across viewport widths', a
       }
       const cardsOverlap = !(geometry.timeline.right <= geometry.summary.left || geometry.summary.right <= geometry.timeline.left || geometry.timeline.bottom <= geometry.summary.top || geometry.summary.bottom <= geometry.timeline.top);
       expect(cardsOverlap).toBe(false);
-      if (width <= 1100) expect(geometry.summary.top).toBeLessThanOrEqual(geometry.timeline.top);
+      if (width <= 1100) expect(geometry.timeline.top).toBeLessThanOrEqual(geometry.summary.top);
       else expect(Math.abs(geometry.summary.top - geometry.timeline.top)).toBeLessThanOrEqual(1);
     }
   }

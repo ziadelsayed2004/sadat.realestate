@@ -10,9 +10,7 @@ export interface SeekerNotificationsCopy {
   readonly markAll: string;
   readonly markingAll: string;
   readonly tabs: { readonly all: string; readonly unread: string };
-  readonly unreadLabel: string;
   readonly markRead: string;
-  readonly markedRead: string;
   readonly openLink: string;
   readonly previous: string;
   readonly next: string;
@@ -31,7 +29,6 @@ export interface SeekerNotificationsCopy {
     readonly permission: string;
     readonly error: string;
   };
-  readonly typeLabels: Readonly<Record<string, string>>;
   readonly retry: string;
 }
 
@@ -45,9 +42,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerNotificationsCopy>> = {
     markAll: 'تعليم الكل كمقروء',
     markingAll: 'جارٍ التعليم كمقروء…',
     tabs: { all: 'الكل', unread: 'غير مقروء' },
-    unreadLabel: 'غير مقروء',
     markRead: 'تعليم كمقروء',
-    markedRead: 'تم تعليم الإشعار كمقروء.',
     openLink: 'فتح التفاصيل',
     previous: 'الصفحة السابقة',
     next: 'الصفحة التالية',
@@ -69,13 +64,6 @@ const copy: Readonly<Record<SupportedLocale, SeekerNotificationsCopy>> = {
       permission: 'انتهت صلاحية الجلسة. سجّل الدخول وحاول مرة أخرى.',
       error: 'تعذر تحديث الإشعار. حاول مرة أخرى.'
     },
-    typeLabels: {
-      'viewing.reminder': 'تذكير بموعد معاينة',
-      'request.updated': 'تحديث على طلب',
-      'community.reply': 'رد على منشور',
-      'property.saved': 'تحديث على عقار محفوظ',
-      'profile.updated': 'تحديث الملف الشخصي'
-    },
     retry: 'إعادة المحاولة'
   },
   en: {
@@ -87,9 +75,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerNotificationsCopy>> = {
     markAll: 'Mark all as read',
     markingAll: 'Marking as read…',
     tabs: { all: 'All', unread: 'Unread' },
-    unreadLabel: 'Unread',
     markRead: 'Mark as read',
-    markedRead: 'Notification marked as read.',
     openLink: 'Open details',
     previous: 'Previous page',
     next: 'Next page',
@@ -110,13 +96,6 @@ const copy: Readonly<Record<SupportedLocale, SeekerNotificationsCopy>> = {
       notFound: 'This notification is no longer available to your account.',
       permission: 'Your session has expired. Sign in and try again.',
       error: 'The notification could not be updated. Try again.'
-    },
-    typeLabels: {
-      'viewing.reminder': 'Viewing reminder',
-      'request.updated': 'Request update',
-      'community.reply': 'Community reply',
-      'property.saved': 'Saved property update',
-      'profile.updated': 'Profile update'
     },
     retry: 'Retry'
   },};

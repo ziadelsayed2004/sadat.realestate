@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { notificationDataSchema, notificationListDataSchema, type NotificationReadAllData, type NotificationReadData } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
@@ -31,6 +31,14 @@ const unreadList = notificationListDataSchema.parse({ items: [reminder], unreadC
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker notifications', () => {
+  it('keeps an informational notification readable without an invented details link', async () => {
+    const informational = notificationDataSchema.parse({ ...reminder, link: undefined });
+    renderWithLocale(<SeekerNotifications locale="en" session={session} load={async () => ({ ...list, items: [informational], total: 1 })} actions={emptyActions()} />, { locale: 'en' });
+    const row = await screen.findByTestId(`seeker-notification-${reminder.id}`);
+    expect(within(row).getByRole('heading', { name: 'Viewing reminder' })).toBeVisible();
+    expect(within(row).queryByRole('link')).not.toBeInTheDocument();
+    expect(within(row).getByRole('button', { name: 'Mark as read' })).toBeEnabled();
+  });
   it('loads the implemented list and read routes with contract-shaped requests', async () => {
     const calls: Array<{ url: string; method: string; authorization: string | null }> = [];
     const client = new ApiClient({
@@ -67,7 +75,7 @@ describe('Seeker notifications', () => {
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByTestId('seeker-notifications-unread-count')).toHaveTextContent(`1 ${copy.unreadCount}`);
     const reminderTitle = (locale === 'ar' ? reminder.title.ar : reminder.title.en) ?? reminder.type;
-    expect(screen.getByRole('link', { name: reminderTitle })).toHaveAttribute('href', `/seeker/viewings?viewing=${reminder.id}&lang=${locale}`);
+    expect(screen.getByRole('link', { name: `${copy.openLink}: ${reminderTitle}` })).toHaveAttribute('href', `/seeker/viewings?viewing=${reminder.id}&lang=${locale}`);
     expect(result.container.querySelector('[data-screen-id="SEK-07"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('recipientId');
     expect(result.container.textContent).not.toContain('internalNote');

@@ -107,11 +107,12 @@ function NotificationRow({
       <span className="seeker-notifications__icon" data-type={item.type.split('.')[0]} aria-hidden="true"><SeekerIcon name={iconForType(item.type)} /></span>
       <div className="seeker-notifications__body">
         <div className="seeker-notifications__meta">
-          <h2>{href === undefined ? title : <a href={href}>{title}</a>}</h2>
+          <h2>{title}</h2>
           <time dateTime={item.createdAt}>{relativeTimeLabel(item.createdAt, locale)}</time>
         </div>
         {message !== undefined ? <p>{message}</p> : null}
         {reference ? <code className="seeker-notifications__reference">{reference}</code> : null}
+        {href === undefined ? null : <a className="seeker-notifications__open" href={href} aria-label={`${copy.openLink}: ${title}`}>{copy.openLink} <span aria-hidden="true">←</span></a>}
       </div>
       {!read ? <button type="button" className="seeker-notifications__unread-dot" aria-label={copy.markRead} disabled={marking} onClick={onMarkRead} /> : null}
     </article>
