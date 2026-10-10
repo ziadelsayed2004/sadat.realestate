@@ -2,6 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import type { ViewingData } from '@sadat-real-estate/contracts';
 import { ViewingActions } from '../src/features/admin_requests/viewing-actions.tsx';
+import { ViewingTable } from '../src/features/admin_requests/viewing-table.tsx';
+import { getAdminRequestsCopy } from '../src/features/admin_requests/copy.ts';
 import { viewingHelp } from '../src/features/admin_requests/viewing-help.tsx';
 import { ApiClientError } from '../src/features/contracts/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
@@ -10,6 +12,22 @@ const item: ViewingData = { id: 'a'.repeat(24), propertyId: 'b'.repeat(24), seek
 afterEach(() => vi.useRealTimers());
 
 describe('simple viewing actions', () => {
+  it('opens undated details and displays the optional WhatsApp contact to an administrator', () => {
+    const undated = { ...item, customerPhone: '+201012345678', customerContactMethod: 'whatsapp' as const }; delete undated.requestedAt;
+    renderWithLocale(<ViewingTable data={{ items: [undated], page: 1, limit: 20, total: 1 }} locale="en" copy={getAdminRequestsCopy('en')} save={vi.fn()} />, { locale: 'en' });
+    expect(screen.getByText('To be arranged')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: viewingHelp('en').open }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('To be arranged');
+    expect(screen.getByRole('link', { name: /201012345678/ })).toHaveAttribute('href', 'https://wa.me/201012345678');
+  });
+  it('starts an undated request with empty scheduling fields and cannot confirm it', () => {
+    const undated = { ...item }; delete undated.requestedAt;
+    const copy = viewingHelp('en');
+    renderWithLocale(<ViewingActions item={undated} locale="en" save={vi.fn()} />, { locale: 'en' });
+    expect(screen.queryByRole('radio', { name: new RegExp(copy.actions.confirm) })).toBeNull();
+    expect(screen.getByLabelText(copy.date)).toHaveValue('');
+    expect(screen.getByLabelText(copy.clock)).toHaveValue('');
+  });
   it.each(['ar', 'en'] as const)('explains who sees the message and sends only the selected available action in %s', async locale => {
     const save = vi.fn().mockResolvedValue(undefined); const copy = viewingHelp(locale);
     renderWithLocale(<ViewingActions item={item} locale={locale} save={save} />, { locale });

@@ -80,6 +80,16 @@ describe('Provider viewing appointments', () => {
     expect(requests).toEqual([{ url: `/api/v1/provider/viewings/${viewingId}/transitions`, method: 'POST', body: { action: 'confirm', expectedVersion: 2 }, authorization: 'Bearer provider.viewings.token' }]);
   });
 
+  it('renders an undated WhatsApp request without confirmation and respects server action permissions', async () => {
+    const undated = { ...row, customerPhone: '+201012345678', customerContactMethod: 'whatsapp' as const, availableActions: ['reschedule', 'cancel'] as const };
+    delete undated.requestedAt;
+    renderWithLocale(<ProviderViewings locale="en" session={session} load={async () => ({ ...data, items: [{ ...undated, availableActions: [...undated.availableActions] }] })} />, { locale: 'en' });
+    await screen.findByTestId('provider-viewing-row');
+    expect(screen.getAllByText('To be arranged').length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: /201012345678/ })).toHaveAttribute('href', 'https://wa.me/201012345678');
+    expect(screen.queryByRole('button', { name: /^Confirm/ })).toBeNull();
+  });
+
   it.each([
     { locale: 'ar' as const, enriched: false },
     { locale: 'en' as const, enriched: false },

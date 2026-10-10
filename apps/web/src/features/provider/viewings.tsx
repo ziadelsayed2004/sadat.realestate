@@ -58,7 +58,8 @@ function stateForError(error: unknown): Exclude<ProviderViewingsViewState, 'load
   return 'error';
 }
 
-function dateLabel(value: string, _timezone: string, locale: SupportedLocale): string {
+function dateLabel(value: string | undefined, _timezone: string, locale: SupportedLocale): string {
+  if (!value) return locale === 'ar' ? 'الموعد لم يُحدد بعد' : 'To be arranged';
   try {
     return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
   } catch {
@@ -66,7 +67,8 @@ function dateLabel(value: string, _timezone: string, locale: SupportedLocale): s
   }
 }
 
-function dateTimeInputValue(value: string): string {
+function dateTimeInputValue(value: string | undefined): string {
+  if (!value) return '';
   try {
     const date = new Date(value);
     if (!Number.isFinite(date.getTime())) return '';
@@ -85,7 +87,8 @@ function safeReference(value: string | undefined): string {
   return value.length > 6 ? `…${value.slice(-6)}` : value;
 }
 
-function dateGroupLabel(value: string, _timezone: string, locale: SupportedLocale): string {
+function dateGroupLabel(value: string | undefined, _timezone: string, locale: SupportedLocale): string {
+  if (!value) return dateLabel(value, _timezone, locale);
   try {
     return new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
   } catch {
@@ -183,6 +186,7 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
 }
 
 function ViewingTime({ viewing, locale }: { readonly viewing: ViewingData; readonly locale: SupportedLocale }) {
+  if (!viewing.requestedAt) return <span className="provider-viewings__clock">{dateLabel(undefined, viewing.timezone, locale)}</span>;
   let clock = '—';
   let period = '';
   try {
@@ -194,7 +198,7 @@ function ViewingTime({ viewing, locale }: { readonly viewing: ViewingData; reado
 }
 
 function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {
-  const actions = ACTIONS_BY_STATUS[viewing.status];
+  const actions = (viewing.availableActions ?? (viewing.customerVisibility === 'hidden' ? [] : ACTIONS_BY_STATUS[viewing.status])).filter(action => Boolean(viewing.requestedAt) || !['confirm', 'complete'].includes(action));
   const propertyLabel = localizedText(viewing.property?.name, locale) ?? `${copy.propertyReference} ${safeReference(viewing.propertyId)}`;
   const location = localizedText(viewing.property?.locationName, locale);
   return (
@@ -208,7 +212,7 @@ function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: Vi
         </div>
         <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
       </div>
-      {viewing.customerPhone ? <a href={`tel:${viewing.customerPhone}`}>{viewing.customerPhone}</a> : null}
+      {viewing.customerPhone ? <a href={viewing.customerContactMethod === 'whatsapp' ? `https://wa.me/${viewing.customerPhone.slice(1)}` : `tel:${viewing.customerPhone}`}>{viewing.customerContactMethod === 'whatsapp' ? 'WhatsApp: ' : ''}{viewing.customerPhone}</a> : null}
       {viewing.customerVisibility === 'hidden' ? <p>{locale === 'ar' ? 'التواصل وترتيب الطلب من خلال الإدارة. شركة التطوير تحتاج موافقة سياسة العمولة السارية لإدارة طلباتها.' : 'Contact and arrangements are handled by the administration. Developers must accept the current commission policy to manage their requests.'} <a href={`/provider/commission?lang=${locale}`}>{locale === 'ar' ? 'سياسة العمولة' : 'Commission policy'}</a></p> : null}
       {viewing.note ? <p className="provider-viewings__note">{copy.note}: {viewing.note}</p> : null}
       <div className="provider-viewings__actions">

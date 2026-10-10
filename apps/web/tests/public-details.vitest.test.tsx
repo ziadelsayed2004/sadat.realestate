@@ -305,7 +305,7 @@ describe('public property details', () => {
     [409, 'REQUEST_DUPLICATE', 'Request already sent. Check your requests.'],
     [429, 'REQUEST_RATE_LIMITED', 'Wait a minute before sending another request.'],
     [404, 'REQUEST_NOT_FOUND', 'Property or recipient unavailable. Refresh the page.'],
-    [400, 'VALIDATION_ERROR', 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.'],
+    [400, 'VALIDATION_ERROR', 'Check your name and any contact number entered. The message must be no longer than 2,000 characters.'],
     [500, 'INTERNAL_ERROR', 'Could not save the request. Try again later.']
   ] as const)('explains contact failure %s and retains the lead fields', async (status, code, body) => {
     const copy = getPublicPropertyDetailsCopy('en');
@@ -334,7 +334,41 @@ describe('public property details', () => {
     expect(submitContact).not.toHaveBeenCalled();
   });
 
-  it.each(['2000-01-01T10:00', '2099-01-01T10:00', ''])('rejects an out-of-range viewing date %s without losing the note', async requestedAt => {
+  it.each(['ar', 'en'] as const)('submits an undated viewing with optional WhatsApp contact in %s and preserves inputs on failure', async locale => {
+    const undated = { ...viewingResponse }; delete undated.requestedAt;
+    const submitViewing = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue(undated);
+    const copy = getPublicPropertyDetailsCopy(locale);
+    renderWithLocale(<PublicPropertyDetails locale={locale} initialData={detailsData} url="/properties/published-home" actions={{ submitContact: vi.fn(), submitViewing }} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: copy.requestViewing }));
+    const phone = screen.getByLabelText(locale === 'ar' ? 'رقم التواصل (اختياري)' : 'Contact number (optional)');
+    fireEvent.change(phone, { target: { value: 'invalid' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitViewing }));
+    expect(submitViewing).not.toHaveBeenCalled();
+    fireEvent.change(phone, { target: { value: '01012345678' } });
+    fireEvent.change(screen.getByRole('combobox', { name: locale === 'ar' ? 'طريقة التواصل' : 'Contact method' }), { target: { value: 'whatsapp' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitViewing }));
+    await waitFor(() => expect(submitViewing).toHaveBeenCalledWith({ propertyId, timezone: 'Africa/Cairo', contactPhone: '+201012345678', contactMethod: 'whatsapp' }));
+    expect(await screen.findByText(copy.actionErrorTitle)).toBeVisible();
+    expect(phone).toHaveValue('01012345678');
+    expect(screen.getByLabelText(copy.requestedAt)).toHaveValue('');
+    fireEvent.change(phone, { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitViewing }));
+    await waitFor(() => expect(submitViewing).toHaveBeenLastCalledWith({ propertyId, timezone: 'Africa/Cairo' }));
+    expect(await screen.findByText(copy.actionSuccessTitle)).toBeVisible();
+  });
+
+  it('allows a contact inquiry without a phone or contact time', async () => {
+    const submitContact = vi.fn().mockResolvedValue(contactResponse);
+    const copy = getPublicPropertyDetailsCopy('en');
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Seeker' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
+    await waitFor(() => expect(submitContact).toHaveBeenCalledWith(expect.not.objectContaining({ phone: expect.anything(), preferredContactTime: expect.anything() })));
+    expect(submitContact.mock.calls[0]?.[0]).not.toHaveProperty('phone');
+    expect(submitContact.mock.calls[0]?.[0]).not.toHaveProperty('preferredContactTime');
+  });
+
+  it.each(['2000-01-01T10:00', '2099-01-01T10:00'])('rejects an out-of-range viewing date %s without losing the note', async requestedAt => {
     const submitViewing = vi.fn();
     const copy = getPublicPropertyDetailsCopy('en');
     renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home" actions={{ submitContact: vi.fn(), submitViewing }} />, { locale: 'en' });

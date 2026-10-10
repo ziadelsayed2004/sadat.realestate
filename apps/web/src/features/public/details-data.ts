@@ -36,8 +36,8 @@ export type PublicPropertyDetailsLoader = (
 export interface PublicContactRequestInput {
   readonly message: string;
   readonly fullName: string;
-  readonly phone: string;
-  readonly preferredContactTime: 'morning' | 'evening';
+  readonly phone?: string;
+  readonly preferredContactTime?: 'morning' | 'evening';
   readonly propertyId?: string | undefined;
   readonly organizationId?: string | undefined;
   readonly contactChannel?: 'platform' | 'provider' | undefined;

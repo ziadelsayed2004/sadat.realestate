@@ -7,14 +7,14 @@ import { viewingHelp } from './viewing-help.tsx';
 
 export function ViewingActions({ item, locale, save }: { readonly item: ViewingData; readonly locale: SupportedLocale; readonly save: (input: ViewingTransition) => Promise<unknown> }) {
   const copy = viewingHelp(locale);
-  const initialDate = egyptLocalDateTime(new Date(item.requestedAt));
+  const initialDate = item.requestedAt ? egyptLocalDateTime(new Date(item.requestedAt)) : '';
   const [action, setAction] = useState<ViewingTransition['action']>('confirm');
   const [date, setDate] = useState(initialDate.slice(0, 10));
   const [time, setTime] = useState(initialDate.slice(11, 16));
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<{ text: string; error: boolean }>();
-  const actions = item.availableActions ?? [];
+  const actions = (item.availableActions ?? []).filter(value => Boolean(item.requestedAt) || !['confirm', 'complete'].includes(value));
   const currentAction = actions.includes(action) ? action : actions[0];
   const appointment = date && time ? egyptInstant(`${date}T${time}`) : undefined;
   const id = `admin-viewing-${item.id}`;

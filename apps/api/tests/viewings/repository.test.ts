@@ -16,7 +16,7 @@ function fixture(property: Record<string, unknown> | null, profileUserId?: strin
   const connection = { async transaction(work: (session: object) => Promise<unknown>) { return work({}); }, collection(_name: string) {
     return {
       async updateOne() {},
-      async findOne(filter: Record<string, unknown>) { if (_name === 'provider_profiles' && profileUserId) return { userId: new Types.ObjectId(profileUserId) }; if (_name === 'users') return { _id: new Types.ObjectId(owner) }; if (_name !== 'properties') return null; lookup = filter; return property; },
+      async findOne(filter: Record<string, unknown>) { if (_name === 'viewings' && filter._id) return inserted.find(value => String(value._id) === String(filter._id)) ?? null; if (_name === 'provider_profiles' && profileUserId) return { userId: new Types.ObjectId(profileUserId) }; if (_name === 'users') return { _id: new Types.ObjectId(owner) }; if (_name !== 'properties') return null; lookup = filter; return property; },
       async createIndex() {},
       async insertOne(value: Record<string, unknown>) { inserted.push(value); },
       find() { return { async toArray() { return []; } }; }
@@ -35,6 +35,25 @@ test('persists the published property owner, overriding any supplied recipient',
   assert.equal(setup.inserted.length, 2);
   assert.equal(setup.inserted[1]?.audience, 'provider');
   assert.equal(String(setup.inserted[1]?.recipientId), owner);
+});
+
+test('persists an undated request with optional contact and sends an undated notification', async () => {
+  const { requestedAt: _appointment, ...undated } = row;
+  assert.ok(_appointment);
+  const setup = fixture({ providerId: new Types.ObjectId(owner) });
+  const created = await setup.repository.create({ ...undated, contactPhone: '+201012345678', contactMethod: 'whatsapp' });
+  assert.equal(Object.hasOwn(setup.inserted[0]!, 'requestedAt'), false);
+  assert.equal(Object.hasOwn(created, 'requestedAt'), false);
+  assert.equal(setup.inserted[0]?.contactPhone, '+201012345678');
+  assert.equal(setup.inserted[0]?.contactMethod, 'whatsapp');
+  const loaded = await setup.repository.get(row.id, { seekerId: row.seekerId });
+  assert.ok(loaded);
+  assert.equal(Object.hasOwn(loaded, 'requestedAt'), false);
+  assert.equal(loaded.contactPhone, '+201012345678');
+  assert.equal(loaded.contactMethod, 'whatsapp');
+  const [notification] = viewingNotifications(created, row.seekerId);
+  assert.match(notification!.message.en, /To be arranged/);
+  assert.doesNotMatch(JSON.stringify(notification), /201012345678|2026-09-05T10:00.*Egypt/);
 });
 
 test('viewing confirmation, reschedule and cancellation notify the other participant with Egypt time and stable IDs', () => {

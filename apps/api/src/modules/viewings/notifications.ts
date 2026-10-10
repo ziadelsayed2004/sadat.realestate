@@ -13,12 +13,12 @@ const labels = {
 export function viewingNotifications(row: ViewingRecord, actorId: string, reason?: string) {
   const recipients = [{ id: row.seekerId, audience: 'seeker' }, ...(row.providerId ? [{ id: row.providerId, audience: 'provider' }] : [])];
   return recipients.filter(recipient => recipient.id !== actorId).map(recipient => {
-    const date = (locale: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Cairo' }).format(row.requestedAt);
+    const date = (locale: string) => row.requestedAt ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Cairo' }).format(row.requestedAt) : (locale === 'ar' ? 'الموعد لم يُحدد بعد' : 'To be arranged');
     const id = createHash('sha256').update(`viewing:${row.id}:${row.version}:${recipient.audience}`).digest('hex').slice(0, 24);
     return {
       _id: new Types.ObjectId(id), recipientId: new Types.ObjectId(recipient.id), audience: recipient.audience,
       type: `viewing.${row.status}`, title: labels[row.status],
-      message: { ar: `${date('ar')} بتوقيت مصر. ${reason ?? 'افتح طلبات المعاينة للاطلاع على التفاصيل.'}`, en: `${date('en')} Egypt time. ${reason ?? 'Open your viewings to see the details.'}` },
+      message: { ar: `${date('ar')}${row.requestedAt ? ' بتوقيت مصر' : ''}. ${reason ?? 'افتح طلبات المعاينة للاطلاع على التفاصيل.'}`, en: `${date('en')}${row.requestedAt ? ' Egypt time' : ''}. ${reason ?? 'Open your viewings to see the details.'}` },
       link: `/${recipient.audience}/viewings`, readAt: null, createdAt: row.updatedAt
     };
   });

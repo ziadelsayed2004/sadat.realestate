@@ -67,12 +67,12 @@ function viewingProjection(row: Row): SeekerOverviewViewing | undefined {
   const viewingId = id(row._id);
   const propertyId = id(row.propertyId);
   const requestedAt = date(row.requestedAt);
-  if (!viewingId || !propertyId || !requestedAt || typeof row.status !== 'string' || typeof row.timezone !== 'string') return undefined;
+  if (!viewingId || !propertyId || (row.requestedAt !== undefined && !requestedAt) || typeof row.status !== 'string' || typeof row.timezone !== 'string') return undefined;
   const parsed = seekerOverviewViewingSchema.safeParse({
     id: viewingId,
     propertyId,
     status: row.status,
-    requestedAt,
+    ...(requestedAt ? { requestedAt } : {}),
     timezone: row.timezone,
     ...(typeof row.note === 'string' ? { note: row.note } : {})
   });

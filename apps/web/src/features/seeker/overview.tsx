@@ -324,7 +324,7 @@ function ViewingsActivity({ data, locale }: { readonly data: readonly SeekerOver
             <a className="seeker-overview__activity-row" role="listitem" key={viewing.id} href={localeForSeekerPath(locale, '/seeker/viewings')}>
               <span className={`seeker-overview__status seeker-overview__status--${viewing.status}`}>{viewingStatusLabel(viewing.status, locale)}</span>
               <span className="seeker-overview__activity-row-main"><strong>{shortActivityId(viewing.propertyId, 'PROP')}</strong><small>{copy.overview.recent.appointment}: {viewing.timezone}</small></span>
-              <span className="seeker-overview__activity-row-meta"><time dateTime={viewing.requestedAt}>{activityDate(viewing.requestedAt, locale)}</time></span>
+              <span className="seeker-overview__activity-row-meta"><time dateTime={viewing.requestedAt}>{viewing.requestedAt ? activityDate(viewing.requestedAt, locale) : (locale === 'ar' ? 'الموعد لم يُحدد بعد' : 'To be arranged')}</time></span>
             </a>
           ))}
         </div>

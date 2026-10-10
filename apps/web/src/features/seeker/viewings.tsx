@@ -59,11 +59,13 @@ function mutationErrorFor(error: unknown): MutationError {
   return 'error';
 }
 
-function dateLabel(value: string, locale: SupportedLocale): string {
+function dateLabel(value: string | undefined, locale: SupportedLocale): string {
+  if (!value) return locale === 'ar' ? 'الموعد لم يُحدد بعد' : 'To be arranged';
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
 }
 
-function timeLabel(value: string, locale: SupportedLocale): string {
+function timeLabel(value: string | undefined, locale: SupportedLocale): string {
+  if (!value) return '—';
   return new Intl.DateTimeFormat(locale, { timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
 }
 
@@ -138,15 +140,15 @@ function ViewingForm({ locale, mode, viewing, onClose, onSubmit }: ViewingFormPr
     const date = egyptInstant(requestedAt);
     const isoRequestedAt = date?.toISOString();
     if (mode === 'create' && !/^[a-f0-9]{24}$/u.test(propertyId)) nextErrors.push(copy.invalidProperty);
-    if (isoRequestedAt === undefined) nextErrors.push(copy.invalidDate);
+    if ((mode === 'reschedule' || requestedAt) && isoRequestedAt === undefined) nextErrors.push(copy.invalidDate);
     if (!/^[A-Za-z_]+(?:\/[A-Za-z0-9_+\-]+)*$/u.test(timezone.trim())) nextErrors.push(copy.invalidTimezone);
     if (note.length > 1_000) nextErrors.push(copy.invalidNote);
-    if (nextErrors.length > 0 || isoRequestedAt === undefined) {
+    if (nextErrors.length > 0) {
       setErrors(nextErrors.length > 0 ? nextErrors : [copy.required]);
       return undefined;
     }
     if (mode === 'create') {
-      const parsed = viewingCreateSchema.safeParse({ propertyId, requestedAt: isoRequestedAt, timezone: timezone.trim(), ...(note.trim() === '' ? {} : { note: note.trim() }) });
+      const parsed = viewingCreateSchema.safeParse({ propertyId, ...(isoRequestedAt ? { requestedAt: isoRequestedAt } : {}), timezone: timezone.trim(), ...(note.trim() === '' ? {} : { note: note.trim() }) });
       if (!parsed.success) {
         setErrors([copy.invalidDate]);
         return undefined;
@@ -182,7 +184,7 @@ function ViewingForm({ locale, mode, viewing, onClose, onSubmit }: ViewingFormPr
       </div>
       {errors.length > 0 ? <div className="seeker-viewing-form__errors" role="alert" aria-live="assertive">{errors.map(error => <p key={error}>{error}</p>)}</div> : null}
       {mode === 'create' ? <Input id="seeker-viewing-property-id" label={copy.propertyId} value={propertyId} onChange={event => setPropertyId(event.target.value.trim().toLowerCase())} autoComplete="off" inputMode="text" /> : <Input label={copy.propertyId} value={shortId(viewing?.propertyId ?? '', 'PROP')} disabled readOnly />}
-      <Input id={mode === 'create' ? 'seeker-viewing-requested-at' : `seeker-viewing-requested-at-${viewing?.id ?? 'edit'}`} label={copy.requestedAt} type="datetime-local" value={requestedAt} onChange={event => setRequestedAt(event.target.value)} />
+      <Input id={mode === 'create' ? 'seeker-viewing-requested-at' : `seeker-viewing-requested-at-${viewing?.id ?? 'edit'}`} label={mode === 'create' ? `${copy.requestedAt} (${locale === 'ar' ? 'اختياري' : 'optional'})` : copy.requestedAt} type="datetime-local" value={requestedAt} onChange={event => setRequestedAt(event.target.value)} />
       <Input id={mode === 'create' ? 'seeker-viewing-timezone' : `seeker-viewing-timezone-${viewing?.id ?? 'edit'}`} label={copy.formTimezone} value={egyptTimeLabel(locale, egyptInstant(requestedAt) ?? new Date())} readOnly />
       {mode === 'create' ? <label className="seeker-viewing-form__textarea-label" htmlFor="seeker-viewing-note">{copy.formNote}<textarea id="seeker-viewing-note" className="ui-field__control" value={note} onChange={event => setNote(event.target.value)} maxLength={1000} rows={3} /></label> : null}
       <div className="seeker-viewing-form__actions">
@@ -248,7 +250,7 @@ function ViewingCard({
           <div><dt>{copy.time}</dt><dd>{timeLabel(viewing.requestedAt, locale)}</dd></div>
         </dl>
         {providerName ? <div className="seeker-viewing-card__property-meta"><span className="seeker-viewing-card__provider"><strong>{providerName}</strong><small>{property?.sourceType === 'brokerage_office' ? (locale === 'ar' ? 'مكتب سمسرة' : 'Brokerage office') : (locale === 'ar' ? 'شركة تطوير' : 'Development company')}</small></span></div> : null}
-        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p><p><strong>{copy.timezone}:</strong> {egyptTimeLabel(locale, new Date(viewing.requestedAt))}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
+        {expanded ? <div className="seeker-viewing-card__details"><p><strong>{copy.property}:</strong> {shortId(viewing.propertyId, 'PROP')}</p><p><strong>{copy.timezone}:</strong> {egyptTimeLabel(locale, viewing.requestedAt ? new Date(viewing.requestedAt) : new Date())}</p>{viewing.note ? <p><strong>{copy.note}:</strong> {viewing.note}</p> : null}</div> : null}
         {editing ? <ViewingForm locale={locale} mode="reschedule" viewing={viewing} onClose={onCloseForm} onSubmit={input => onReschedule(input as ViewingPatch)} /> : (
           <div className="seeker-viewing-card__actions">
             <Button variant="ghost" size="sm" aria-expanded={expanded} onClick={onToggleDetails}>{expanded ? copy.hideDetails : copy.details}</Button>
@@ -277,7 +279,7 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
   const loadSource = useMemo(() => load ?? createSeekerViewingsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const actionSource = useMemo(() => actions ?? createSeekerViewingActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
   const query = useMemo(() => queryForTab(tab), [tab]);
-  const visibleItems = useMemo(() => (data?.items ?? []).filter(item => matchesTab(item, tab)).sort((left, right) => new Date(left.requestedAt).getTime() - new Date(right.requestedAt).getTime()), [data, tab]);
+  const visibleItems = useMemo(() => (data?.items ?? []).filter(item => matchesTab(item, tab)).sort((left, right) => new Date(left.requestedAt ?? left.createdAt).getTime() - new Date(right.requestedAt ?? right.createdAt).getTime()), [data, tab]);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {

@@ -15,7 +15,7 @@ function ViewingRow({ item, copy, locale, save }: Props & { readonly item: Viewi
   const help = viewingHelp(locale);
   const name = item.property?.name[locale] ?? item.property?.name.en ?? item.property?.name.ar ?? help.unnamed;
   const customer = item.customerName ?? help.unavailable;
-  const date = (value: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value));
+  const date = (value: string | undefined) => value ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: EGYPT_TIME_ZONE }).format(new Date(value)) : (locale === 'ar' ? 'الموعد لم يُحدد بعد' : 'To be arranged');
   const propertyLink = item.property?.slug ? `/properties/${item.property.slug}?lang=${locale}` : `/admin/properties/${item.propertyId}?lang=${locale}`;
   const badge = <span className="admin-requests__badge" data-tone={item.status === 'confirmed' || item.status === 'completed' ? 'success' : item.status === 'cancelled' ? 'neutral' : 'warning'}>{help.statuses[item.status]}</span>;
   return <tr data-testid={`admin-viewing-${item.id}`}>
@@ -26,10 +26,10 @@ function ViewingRow({ item, copy, locale, save }: Props & { readonly item: Viewi
         <div className="admin-viewing__summary">{badge}<p>{help.stateHelp[item.status]}</p></div>
         <dl className="admin-viewing__facts">
           <div><dt>{copy.property}</dt><dd><a href={propertyLink} target="_blank" rel="noopener noreferrer">{name}</a>{item.property?.publicCode ? <small>{item.property.publicCode}</small> : null}</dd></div>
-          <div><dt>{help.customer}</dt><dd>{customer}</dd></div>
+          <div><dt>{help.customer}</dt><dd>{customer}{item.customerPhone ? <a href={item.customerContactMethod === 'whatsapp' ? `https://wa.me/${item.customerPhone.slice(1)}` : `tel:${item.customerPhone}`}>{item.customerContactMethod === 'whatsapp' ? 'WhatsApp: ' : ''}{item.customerPhone}</a> : null}</dd></div>
           <div className="admin-viewing__appointment"><dt>{help.proposed}</dt><dd><strong>{date(item.requestedAt)}</strong><small>{help.time}</small></dd></div>
         </dl>
-        {['requested', 'rescheduled'].includes(item.status) && new Date(item.requestedAt) < new Date() ? <p className="admin-viewing__notice">{help.past}</p> : null}
+        {item.requestedAt && ['requested', 'rescheduled'].includes(item.status) && new Date(item.requestedAt) < new Date() ? <p className="admin-viewing__notice">{help.past}</p> : null}
         {item.note ? <section className="admin-viewing__customer-note"><h3>{locale === 'ar' ? 'ملاحظة العميل' : 'Customer note'}</h3><p>{item.note}</p></section> : null}
         {item.providerId ? <p><a href={`/admin/users/${item.providerId}?lang=${locale}`}>{locale === 'ar' ? 'عرض حساب مقدّم العقار' : 'Open property provider account'}</a></p> : null}
         <ViewingActions item={item} locale={locale} save={input => save(item.id, input)} />

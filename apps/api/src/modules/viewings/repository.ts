@@ -23,14 +23,16 @@ function oid(value: string): Types.ObjectId {
 
 function parse(value: Row): ViewingRecord | undefined {
   const viewingId = value._id instanceof Types.ObjectId ? value._id.toHexString() : undefined;
-  if (!viewingId || !(value.requestedAt instanceof Date) || !(value.createdAt instanceof Date) || !(value.updatedAt instanceof Date) || typeof value.propertyId !== 'string' || !(value.seekerId instanceof Types.ObjectId) || typeof value.status !== 'string' || typeof value.timezone !== 'string' || typeof value.version !== 'number') return undefined;
+  if (!viewingId || (value.requestedAt !== undefined && !(value.requestedAt instanceof Date)) || !(value.createdAt instanceof Date) || !(value.updatedAt instanceof Date) || typeof value.propertyId !== 'string' || !(value.seekerId instanceof Types.ObjectId) || typeof value.status !== 'string' || typeof value.timezone !== 'string' || typeof value.version !== 'number') return undefined;
   return {
     id: viewingId,
     propertyId: value.propertyId,
     seekerId: value.seekerId.toHexString(),
     ...(value.providerId instanceof Types.ObjectId ? { providerId: value.providerId.toHexString() } : {}),
     status: value.status as ViewingRecord['status'],
-    requestedAt: value.requestedAt,
+    ...(value.requestedAt instanceof Date ? { requestedAt: value.requestedAt } : {}),
+    ...(typeof value.contactPhone === 'string' ? { contactPhone: value.contactPhone } : {}),
+    ...(value.contactMethod === 'phone' || value.contactMethod === 'whatsapp' ? { contactMethod: value.contactMethod } : {}),
     timezone: value.timezone,
     ...(typeof value.note === 'string' ? { note: value.note } : {}),
     version: value.version,
@@ -150,14 +152,15 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       await prepareLock(row.propertyId);
       await connection.transaction(async session => {
       await lockSchedule(row.propertyId, session);
-      if (await occupied(row.propertyId, row.requestedAt, session)) throw new ViewingServiceError('VIEWING_CONFLICT');
+      if (row.requestedAt && await occupied(row.propertyId, row.requestedAt, session)) throw new ViewingServiceError('VIEWING_CONFLICT');
       await collection.insertOne({
         _id: oid(row.id),
         propertyId: row.propertyId,
         seekerId: oid(row.seekerId),
         ...(row.providerId ? { providerId: oid(row.providerId) } : {}),
         status: row.status,
-        requestedAt: row.requestedAt,
+        ...(row.requestedAt ? { requestedAt: row.requestedAt } : {}),
+        ...(row.contactPhone ? { contactPhone: row.contactPhone, contactMethod: row.contactMethod ?? 'phone' } : {}),
         timezone: row.timezone,
         ...(row.note ? { note: row.note } : {}),
         version: row.version,
@@ -203,8 +206,9 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       await lockSchedule(existing.propertyId as string, session);
       const current = await collection.findOne({ _id: oid(input.id), version: input.expectedVersion }, { session });
       if (!current) return null;
-      if (!['cancelled', 'completed'].includes(input.status ?? String(current.status))
-        && await occupied(existing.propertyId as string, input.requestedAt ?? current.requestedAt as Date, session, input.id)) {
+      const appointment = input.requestedAt ?? (current.requestedAt instanceof Date ? current.requestedAt : undefined);
+      if (appointment && !['cancelled', 'completed'].includes(input.status ?? String(current.status))
+        && await occupied(existing.propertyId as string, appointment, session, input.id)) {
         throw new ViewingServiceError('VIEWING_CONFLICT');
       }
       const updated = await collection.findOneAndUpdate(

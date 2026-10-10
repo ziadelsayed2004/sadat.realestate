@@ -103,7 +103,7 @@ export const seekerOverviewViewingSchema = z.object({
   id: overviewObjectId,
   propertyId: overviewObjectId,
   status: overviewViewingStatus,
-  requestedAt: overviewDate,
+  requestedAt: overviewDate.optional(),
   timezone: z.string().trim().min(1).max(80),
   note: z.string().trim().max(1_000).optional()
 }).strict();

@@ -6129,7 +6129,67 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "propertyId"
+                ],
+                "properties": {
+                  "propertyId": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{24}$"
+                  },
+                  "requestedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Optional future appointment, within 366 days. Omit to arrange later."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "default": "Africa/Cairo"
+                  },
+                  "contactPhone": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "description": "Optional phone or WhatsApp number. Egyptian mobile numbers or international numbers are normalized to E.164."
+                  },
+                  "contactMethod": {
+                    "type": "string",
+                    "enum": [
+                      "phone",
+                      "whatsapp"
+                    ],
+                    "description": "Used only when contactPhone is provided; defaults to phone."
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                }
+              },
+              "examples": {
+                "arrangeLater": {
+                  "value": {
+                    "propertyId": "3123456789abcdef01234567"
+                  }
+                },
+                "whatsapp": {
+                  "value": {
+                    "propertyId": "3123456789abcdef01234567",
+                    "contactPhone": "01012345678",
+                    "contactMethod": "whatsapp"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/seeker/viewings/{viewingId}": {
@@ -29581,13 +29641,19 @@
             "type": "string",
             "format": "date-time",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "customerContactMethod": {
+            "type": "string",
+            "enum": [
+              "phone",
+              "whatsapp"
+            ]
           }
         },
         "required": [
           "id",
           "propertyId",
           "status",
-          "requestedAt",
           "timezone",
           "version",
           "createdAt",

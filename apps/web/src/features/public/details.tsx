@@ -4,7 +4,7 @@ import type {
   PublicPropertyMedia,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { requestCreateSchema } from '@sadat-real-estate/contracts';
+import { requestCreateSchema, viewingCreateSchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
@@ -518,7 +518,7 @@ function contactFailureMessage(error: unknown, locale: SupportedLocale): string 
   if (error.apiError?.code === 'REQUEST_DUPLICATE') return arabic ? 'سبق إرسال الطلب. راجع طلباتك.' : 'Request already sent. Check your requests.';
   if (error.status === 429) return arabic ? 'انتظر دقيقة قبل إرسال طلب آخر.' : 'Wait a minute before sending another request.';
   if (error.status === 404) return arabic ? 'العقار أو جهة التواصل غير متاحة. حدّث الصفحة.' : 'Property or recipient unavailable. Refresh the page.';
-  if (error.status === 400 || error.status === 422) return arabic ? 'راجع الاسم ورقم الهاتف وموعد التواصل. الرسالة لا تزيد عن 2000 حرف.' : 'Check your name, phone number and contact time. The message must be no longer than 2,000 characters.';
+  if (error.status === 400 || error.status === 422) return arabic ? 'راجع الاسم ورقم التواصل إن أدخلته. الرسالة لا تزيد عن 2000 حرف.' : 'Check your name and any contact number entered. The message must be no longer than 2,000 characters.';
   if (error.status !== undefined && error.status >= 500) return arabic ? 'تعذر حفظ الطلب. حاول لاحقًا.' : 'Could not save the request. Try again later.';
   return undefined;
 }
@@ -550,6 +550,8 @@ function RequestPanel({
   const [contactError, setContactError] = useState<string>();
   const [viewingOpen, setViewingOpen] = useState(false);
   const [requestedAt, setRequestedAt] = useState('');
+  const [viewingPhone, setViewingPhone] = useState('');
+  const [viewingContactMethod, setViewingContactMethod] = useState<'phone' | 'whatsapp'>('phone');
   const timezone = EGYPT_TIME_ZONE;
   const [note, setNote] = useState('');
   const [viewingValidation, setViewingValidation] = useState(false);
@@ -574,7 +576,7 @@ function RequestPanel({
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (contactState === 'submitting') return;
-    if (fullName.trim().length === 0 || phone.trim().length === 0 || contactTime.trim().length === 0) {
+    if (fullName.trim().length === 0) {
       setContactValidation(true);
       return;
     }
@@ -585,8 +587,8 @@ function RequestPanel({
     const input: PublicContactRequestInput = {
       message: trimmedMessage.length > 0 ? trimmedMessage : copy.defaultContactMessage,
       fullName: fullName.trim(),
-      phone: phone.trim(),
-      preferredContactTime: contactTime as 'morning' | 'evening',
+      ...(phone.trim() ? { phone: phone.trim() } : {}),
+      ...(contactTime ? { preferredContactTime: contactTime as 'morning' | 'evening' } : {}),
       propertyId: data.id,
       contactChannel,
       ...(data.source.organizationId ? { organizationId: data.source.organizationId } : {}),
@@ -621,19 +623,21 @@ function RequestPanel({
     if (viewingState === 'submitting' || viewingState === 'success') return;
     const parsedDate = egyptInstant(requestedAt);
     const now = Date.now();
-    if (!requestedAt || parsedDate === undefined || parsedDate.getTime() <= now || parsedDate.getTime() > now + maximumViewingDelay) {
+    const input = viewingCreateSchema.safeParse({
+      propertyId: data.id,
+      ...(requestedAt && parsedDate ? { requestedAt: parsedDate.toISOString() } : {}),
+      timezone,
+      ...(viewingPhone.trim() ? { contactPhone: viewingPhone.trim(), contactMethod: viewingContactMethod } : {}),
+      ...(note.trim() ? { note: note.trim() } : {})
+    });
+    if (!input.success || (requestedAt && (parsedDate === undefined || parsedDate.getTime() <= now || parsedDate.getTime() > now + maximumViewingDelay))) {
       setViewingValidation(true);
       return;
     }
     setViewingValidation(false);
     setViewingState('submitting');
     try {
-      await actions.submitViewing({
-        propertyId: data.id,
-        requestedAt: parsedDate.toISOString(),
-        timezone: timezone.trim(),
-        ...(note.trim().length === 0 ? {} : { note: note.trim() })
-      });
+      await actions.submitViewing(input.data);
       setViewingState('success');
     } catch (error) {
       setViewingState(actionFailureState(error));
@@ -658,8 +662,8 @@ function RequestPanel({
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{copy.fullName}</label>
           <input id="public-property-contact-name" name="fullName" required maxLength={160} value={fullName} placeholder={copy.fullName} onChange={event => setFullName(event.target.value)} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{copy.phoneNumber}</label>
-          <input id="public-property-contact-phone" name="phone" type="tel" required maxLength={40} value={phone} placeholder={copy.phoneNumber} onChange={event => setPhone(event.target.value)} />
-          <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} required placeholder={copy.contactTime} ariaLabel={copy.contactTime} options={[{ value: 'morning', label: copy.morning }, { value: 'evening', label: copy.evening }]} />
+          <input id="public-property-contact-phone" name="phone" type="tel" maxLength={40} value={phone} placeholder={`${copy.phoneNumber} (${locale === 'ar' ? 'اختياري' : 'optional'})`} onChange={event => setPhone(event.target.value)} />
+          <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} placeholder={`${copy.contactTime} (${locale === 'ar' ? 'اختياري' : 'optional'})`} ariaLabel={copy.contactTime} options={[{ value: 'morning', label: copy.morning }, { value: 'evening', label: copy.evening }]} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-message">{copy.messageLabel}</label>
           <textarea
             id="public-property-contact-message"
@@ -698,10 +702,13 @@ function RequestPanel({
             {viewingState === 'permission' || viewingState === 'forbidden' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
           </div>
           <label htmlFor="public-property-viewing-requested-at">{copy.requestedAt}</label>
-          <input id="public-property-viewing-requested-at" name="requestedAt" type="datetime-local" dir="ltr" required min={localDateTime(new Date(Date.now() + 60_000))} max={localDateTime(new Date(Date.now() + maximumViewingDelay))} readOnly={viewingState === 'success'} value={requestedAt} onChange={event => { setRequestedAt(event.target.value); setViewingValidation(false); }} />
+          <input id="public-property-viewing-requested-at" name="requestedAt" type="datetime-local" dir="ltr" min={localDateTime(new Date(Date.now() + 60_000))} max={localDateTime(new Date(Date.now() + maximumViewingDelay))} readOnly={viewingState === 'success'} value={requestedAt} onChange={event => { setRequestedAt(event.target.value); setViewingValidation(false); }} />
           <label htmlFor="public-property-viewing-timezone">{copy.timezone}</label>
           <input id="public-property-viewing-timezone" name="timezone" type="text" readOnly value={timezoneName} aria-describedby="public-property-viewing-timezone-help" />
           <small id="public-property-viewing-timezone-help">{copy.timezonePlaceholder}</small>
+          <label htmlFor="public-property-viewing-phone">{locale === 'ar' ? 'رقم التواصل (اختياري)' : 'Contact number (optional)'}</label>
+          <input id="public-property-viewing-phone" name="contactPhone" type="tel" dir="ltr" autoComplete="tel" maxLength={32} readOnly={viewingState === 'success'} value={viewingPhone} placeholder="01012345678" onChange={event => { setViewingPhone(event.target.value); setViewingValidation(false); }} />
+          {viewingPhone.trim() ? <CustomSelect id="public-property-viewing-contact-method" value={viewingContactMethod} onChange={value => setViewingContactMethod(value as 'phone' | 'whatsapp')} disabled={viewingState === 'success'} ariaLabel={locale === 'ar' ? 'طريقة التواصل' : 'Contact method'} options={[{ value: 'phone', label: locale === 'ar' ? 'مكالمة هاتفية' : 'Phone call' }, { value: 'whatsapp', label: locale === 'ar' ? 'واتساب' : 'WhatsApp' }]} /> : null}
           <label htmlFor="public-property-viewing-note">{copy.note}</label>
           <textarea id="public-property-viewing-note" name="note" rows={3} readOnly={viewingState === 'success'} placeholder={copy.notePlaceholder} value={note} onChange={event => setNote(event.target.value)} />
           {viewingValidation ? <p className="public-property-details__validation" role="alert">{copy.viewingValidation}</p> : null}

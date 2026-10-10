@@ -39,6 +39,12 @@ const list = viewingListDataSchema.parse({ items: [requested, confirmed, complet
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker viewing appointments', () => {
+  it('keeps an undated request visible and shows that its appointment is yet to be arranged', async () => {
+    const undated = { ...requested }; delete undated.requestedAt;
+    renderWithLocale(<SeekerViewings locale="en" session={session} load={async () => ({ ...list, items: [undated], total: 1 })} actions={emptyActions()} />, { locale: 'en' });
+    await screen.findByTestId(`seeker-viewing-${requested.id}`);
+    expect(screen.getByText('To be arranged')).toBeVisible();
+  });
   it('loads the implemented list and mutation routes with contract-shaped requests', async () => {
     const calls: Array<{ url: string; method: string; body: string | undefined; authorization: string | null }> = [];
     const client = new ApiClient({

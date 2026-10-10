@@ -19,6 +19,37 @@ const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0
 const provider = { ...seeker, sub: '2123456789abcdef01234567', role: 'provider' } as AccessTokenClaims;
 const admin = { ...seeker, sub: '6123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
 const property = '3123456789abcdef01234567'; const viewingId = '4123456789abcdef01234567'; const stamp = new Date('2026-08-14T10:00:00.000Z');
+
+test('undated requests stay undated and require an appointment before confirmation', async () => {
+  const repository = createInMemoryViewingRepository();
+  const service = createViewingService({ repository, now: () => stamp, authorization: { authorize: async () => true } });
+  const created = await service.create(seeker, { propertyId: property });
+  assert.equal(created.timezone, 'Africa/Cairo');
+  assert.equal(Object.hasOwn(created, 'requestedAt'), false);
+  assert.equal(Object.hasOwn((await repository.get(created.id, {}))!, 'requestedAt'), false);
+  assert.deepEqual((await service.list(admin, {})).items[0]?.availableActions, ['reschedule', 'cancel']);
+  await service.create(seeker, { propertyId: property });
+  await assert.rejects(() => service.transition(admin, created.id, { action: 'confirm', expectedVersion: 0 }), /VIEWING_INVALID_STATE/);
+  const scheduled = await service.transition(admin, created.id, { action: 'reschedule', requestedAt: '2026-08-15T10:00:00Z', timezone: 'Africa/Cairo', expectedVersion: 0 });
+  assert.equal(scheduled.requestedAt, '2026-08-15T10:00:00.000Z');
+  assert.equal((await service.transition(admin, created.id, { action: 'confirm', expectedVersion: 1 })).status, 'confirmed');
+});
+
+test('optional viewing contact is normalized, validated, retained, and hidden from unauthorized providers', async () => {
+  const repository = createInMemoryViewingRepository();
+  const service = createViewingService({ repository, now: () => stamp });
+  const created = await service.create(seeker, { propertyId: property, contactPhone: '010 1234 5678', contactMethod: 'whatsapp' });
+  assert.equal(created.customerPhone, '+201012345678');
+  assert.equal(created.customerContactMethod, 'whatsapp');
+  const stored = (await repository.get(created.id, {}))!;
+  const hidden = createViewingService({ repository: createInMemoryViewingRepository([{ ...stored, providerId: provider.sub }]), now: () => stamp });
+  const result = await hidden.get(provider, created.id);
+  for (const key of ['contactPhone', 'contactMethod', 'customerPhone', 'customerContactMethod', 'seekerId']) assert.equal(Object.hasOwn(result, key), false);
+  assert.equal(result.customerVisibility, 'hidden');
+  assert.equal((await service.cancel(seeker, created.id, 0)).status, 'cancelled');
+  for (const contactPhone of ['invalid', '123', '+000000000']) await assert.rejects(() => service.create(seeker, { propertyId: property, contactPhone }));
+  await assert.rejects(() => service.create(seeker, { propertyId: property, timezone: 'Mars/Olympus' }), /VIEWING_INVALID_STATE/);
+});
 test('exposes customer names only through owned appointment access', async () => {
   const seed: ViewingRecord = { id: viewingId, propertyId: property, seekerId: seeker.sub, providerId: provider.sub, customerName: 'Local Customer', status: 'requested', requestedAt: stamp, timezone: 'UTC', version: 0, createdAt: stamp, updatedAt: stamp };
   const service = createViewingService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryViewingRepository([seed]) });

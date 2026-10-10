@@ -3,7 +3,7 @@ import { getPublicPropertyDetailsCopy } from '../../src/features/public/details-
 
 test.use({ timezoneId: 'Africa/Cairo' });
 
-for (const outcome of ['success', 'error'] as const) {
+for (const outcome of ['success', 'error', 'undated', 'whatsapp'] as const) {
   test(`viewing ${outcome} uses the device time zone and retains the form`, async ({ page }) => {
     const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
     const copy = getPublicPropertyDetailsCopy(locale);
@@ -26,15 +26,17 @@ for (const outcome of ['success', 'error'] as const) {
     });
     let sends = 0;
     let expectedIso = '';
+    const undated = outcome === 'undated' || outcome === 'whatsapp';
+    const phoneContact = outcome === 'whatsapp' || outcome === 'error';
     let releaseSend: (() => void) | undefined;
     const gate = new Promise<void>(resolve => { releaseSend = resolve; });
     await page.route('**/api/v1/seeker/viewings', async route => {
       sends += 1;
       expect(route.request().headers().authorization).toBe('Bearer viewing.seeker.token');
-      expect(route.request().postDataJSON()).toEqual({ propertyId, requestedAt: expectedIso, timezone: 'Africa/Cairo', note: 'Keep my viewing note' });
+      expect(route.request().postDataJSON()).toEqual({ propertyId, ...(undated ? {} : { requestedAt: expectedIso }), timezone: 'Africa/Cairo', ...(phoneContact ? { contactPhone: '+201012345678', contactMethod: 'whatsapp' } : {}), note: 'Keep my viewing note' });
       await gate;
       await route.fulfill(outcome === 'error' ? { status: 500, json: { error: { code: 'INTERNAL_ERROR', messageKey: 'errors.internalError', details: [], requestId: 'viewing-error' } } } : {
-        status: 201, json: { data: { id: 'cccccccccccccccccccccccc', propertyId, seekerId, status: 'requested', requestedAt: expectedIso, timezone: 'Africa/Cairo', note: 'Keep my viewing note', version: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }, meta: { requestId: 'viewing-created' } }
+        status: 201, json: { data: { id: 'cccccccccccccccccccccccc', propertyId, seekerId, status: 'requested', ...(undated ? {} : { requestedAt: expectedIso }), timezone: 'Africa/Cairo', note: 'Keep my viewing note', version: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }, meta: { requestId: 'viewing-created' } }
       });
     });
     await page.goto(`/properties/demo-rental-apartment?lang=${locale}`);
@@ -57,14 +59,19 @@ for (const outcome of ['success', 'error'] as const) {
       return { local: `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T10:00`, iso: date.toISOString() };
     });
     expectedIso = appointment.iso;
-    await dialog.getByLabel(copy.requestedAt).fill(appointment.local);
+    await dialog.getByLabel(copy.requestedAt).fill(undated ? '' : appointment.local);
+    if (phoneContact) {
+      await dialog.locator('#public-property-viewing-phone').fill('01012345678');
+      await dialog.locator('#public-property-viewing-contact-method').click();
+      await dialog.getByRole('listbox').getByRole('option', { name: locale === 'ar' ? 'واتساب' : 'WhatsApp', exact: true }).click();
+    }
     await expect(dialog.getByRole('alert')).toHaveCount(0);
     await dialog.locator('form').evaluate(form => form.setAttribute('data-retained-form', 'true'));
     await submit.click();
     await expect.poll(() => sends).toBe(1);
     await expect(submit).toBeDisabled();
     releaseSend?.();
-    if (outcome === 'success') {
+    if (outcome !== 'error') {
       await expect(dialog.getByRole('status')).toContainText(copy.actionSuccessTitle);
       await expect(dialog.getByRole('status')).toBeInViewport();
       await expect(submit).toBeDisabled();
@@ -74,7 +81,11 @@ for (const outcome of ['success', 'error'] as const) {
       await expect(submit).toBeEnabled();
     }
     await expect(dialog.locator('form')).toHaveAttribute('data-retained-form', 'true');
-    await expect(dialog.getByLabel(copy.requestedAt)).toHaveValue(appointment.local);
+    await expect(dialog.getByLabel(copy.requestedAt)).toHaveValue(undated ? '' : appointment.local);
+    if (phoneContact) {
+      await expect(dialog.locator('#public-property-viewing-phone')).toHaveValue('01012345678');
+      await expect(dialog.locator('#public-property-viewing-contact-method')).toHaveText(locale === 'ar' ? 'واتساب' : 'WhatsApp');
+    }
     await expect(dialog.getByLabel(copy.note)).toHaveValue('Keep my viewing note');
     await expect(submit).toBeInViewport();
     const bounds = await dialog.boundingBox();
