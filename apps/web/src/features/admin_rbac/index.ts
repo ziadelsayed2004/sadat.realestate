@@ -4,6 +4,7 @@ export {
   createAdminRbacSource,
   createAdminRbacRole,
   createAdminRbacUser,
+  deleteAdminRbacUser,
   loadAdminRbacRoles,
   loadAdminRbacUser,
   loadAdminRbacUsers,

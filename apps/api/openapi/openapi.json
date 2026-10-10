@@ -10182,6 +10182,82 @@
             "$ref": "#/components/responses/RbacError"
           }
         }
+      },
+      "delete": {
+        "operationId": "deleteAdminAdministrator",
+        "summary": "Delete an administrator account",
+        "description": "Requires admin:staff.manage and expectedVersion. Tombstones the identity, revokes sessions, removes credentials and role assignments, and retains audit history. Self deletion and last active Super Admin removal are blocked; concurrent removal/demotion is serialized in the transaction.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserDelete"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Administrator deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminUserDeleteData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "403": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "404": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "409": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "500": {
+            "$ref": "#/components/responses/RbacError"
+          }
+        }
       }
     },
     "/api/v1/admin/community/posts/{postId}/moderate": {
@@ -25412,7 +25488,8 @@
         "enum": [
           "update",
           "disable",
-          "enable"
+          "enable",
+          "delete"
         ]
       },
       "AdminUserCreate": {
@@ -27474,6 +27551,41 @@
           }
         },
         "description": "At least one edited field is required. Payment plans require a supplied price and matching currencies. All selected fields are validated and saved atomically; media and publication are separate operations."
+      },
+      "AdminUserDelete": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedVersion"
+        ],
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "AdminUserDeleteData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "deleted",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "deleted": {
+            "const": true
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
       }
     }
   }

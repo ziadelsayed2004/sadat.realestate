@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "re
 import { adminUserCreateSchema, adminUserPatchSchema, rbacRoleCreateRequestSchema, rbacRolePatchRequestSchema, type AdminUserCreate, type AdminUserData, type AdminUserListData, type AdminUserListQuery, type AdminUserPatch, type RbacPermission, type RbacRoleData, type RbacRoleListData, type SupportedLocale } from "@sadat-real-estate/contracts";
 import { ApiClientError } from "../contracts/index.ts";
 import { AdminNavigation } from "../admin/index.ts";
-import { Button, StateMessage } from "../design_system/index.ts";
+import { Button, Modal, StateMessage } from "../design_system/index.ts";
 import type { RouteSession } from "../routing/index.ts";
 import { ADMIN_RBAC_ROLES_ROUTE, ADMIN_RBAC_USERS_ROUTE, createAdminRbacSource, type AdminRbacAuthorizationSource, type AdminRbacSource } from "./data.ts";
 import { getAdminRbacCopy } from "./copy.ts";
@@ -152,6 +152,26 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
   const [data, setData] = useState<AdminUserListData | undefined>();
   const [state, setState] = useState<AdminRbacState>("loading");
   const [attempt, setAttempt] = useState(0);
+  const [deleting, setDeleting] = useState<AdminUserData>();
+  const [busy, setBusy] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+  const [deleted, setDeleted] = useState(false);
+  const ar = locale === 'ar';
+  async function confirmDelete(): Promise<void> {
+    if (!deleting || busy) return;
+    setBusy(true); setDeleteError('');
+    try {
+      await source.deleteUser(deleting.id, { expectedVersion: deleting.version });
+      setDeleting(undefined); setDeleted(true);
+      setQuery(current => ({ ...current, page: 1 }));
+    } catch (error) {
+      const code = error instanceof ApiClientError ? error.apiError?.code : '';
+      setDeleteError(code === 'ADMINISTRATOR_SELF_LOCKOUT' ? (ar ? 'لا يمكنك حذف حسابك الحالي.' : 'You cannot delete your current account.')
+        : code === 'ADMINISTRATOR_LAST_SUPER_ADMIN' ? (ar ? 'لا يمكن حذف آخر مسؤول أعلى نشط.' : 'The last active Super Admin cannot be deleted.')
+        : code === 'ADMINISTRATOR_VERSION_CONFLICT' ? (ar ? 'الحساب اتغير. أغلق التأكيد وحدّث القائمة قبل الحذف.' : 'The account changed. Close this confirmation and refresh the list before deleting.')
+        : ar ? 'تعذر تأكيد الحذف. راجع اتصالك وصلاحياتك وحدّث القائمة قبل المحاولة.' : 'Could not confirm deletion. Check your connection and permissions, then refresh the list.');
+    } finally { setBusy(false); }
+  }
   const canCreate = permissionFor(authClient, "admin:staff.manage", true);
   useEffect(() => {
     const controller = new AbortController();
@@ -197,6 +217,12 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
         </div>
       }
     >
+      {deleted ? <p role="status">{ar ? 'تم حذف حساب الإدارة وإيقاف دخوله.' : 'Administrator deleted and access revoked.'}</p> : null}
+      <Modal open={Boolean(deleting)} title={ar ? 'تأكيد حذف حساب الإدارة' : 'Confirm administrator deletion'} closeLabel={ar ? 'إلغاء' : 'Cancel'} onClose={() => { if (!busy) setDeleting(undefined); }} footer={<><Button variant="secondary" disabled={busy} onClick={() => setDeleting(undefined)}>{ar ? 'إلغاء' : 'Cancel'}</Button><Button variant="danger" disabled={busy || Boolean(deleteError)} onClick={() => { void confirmDelete(); }}>{busy ? copy.saving : ar ? 'تأكيد الحذف' : 'Confirm delete'}</Button></>}>
+        <p><strong>{deleting?.displayName}</strong><br />{deleting?.email}</p>
+        <p>{ar ? 'سيُزال الحساب من القائمة وتتوقف جلساته ودخوله. يظل سجل إجراءاته محفوظًا. لإيقافه مؤقتًا اختَر تعطيل من التعديل.' : 'The account will leave this list and lose all sessions and login access. Its activity history is retained. To suspend it temporarily, use Disable under Edit.'}</p>
+        {deleteError ? <p role="alert">{deleteError}<Button variant="secondary" onClick={() => { setDeleting(undefined); setAttempt(value => value + 1); }}>{ar ? 'تحديث القائمة' : 'Refresh list'}</Button></p> : null}
+      </Modal>
       <section className="admin-rbac__metrics" aria-label={locale === "ar" ? "ملخص المستخدمين" : "User summary"}>
         {metrics.map(([label, value]) => (
           <article key={label}>
@@ -261,7 +287,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                 <th scope="col">{copy.accessLevel}</th>
                 <th scope="col">{copy.status}</th>
                 <th scope="col">{copy.version}</th>
-                <th scope="col">{copy.edit}</th>
+                <th scope="col">{ar ? 'الإجراءات' : 'Actions'}</th>
               </tr>
             </thead>
             <tbody>
@@ -285,6 +311,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                     ) : (
                       <span className="admin-rbac__muted">{copy.noActions}</span>
                     )}
+                    {canCreate && user.availableActions.includes('delete') ? <Button size="sm" variant="danger" aria-label={`${ar ? 'حذف' : 'Delete'} ${user.displayName}`} onClick={() => { setDeleting(user); setDeleteError(''); setDeleted(false); }}>{ar ? 'حذف' : 'Delete'}</Button> : null}
                   </td>
                 </tr>
               ))}

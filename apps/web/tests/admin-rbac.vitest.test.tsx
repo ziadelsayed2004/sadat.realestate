@@ -58,6 +58,7 @@ function roles(overrides: Partial<RbacRoleListData> = {}): RbacRoleListData {
 
 function source(overrides: Partial<AdminRbacSource> = {}): AdminRbacSource {
   return {
+    deleteUser: vi.fn(async () => ({ id: userId, deleted: true as const, version: 4 })),
     loadUsers: vi.fn(async () => userList()),
     loadUser: vi.fn(async () => user()),
     createUser: vi.fn(async () => user()),
@@ -70,6 +71,38 @@ function source(overrides: Partial<AdminRbacSource> = {}): AdminRbacSource {
 }
 
 describe('frontend_075 Administrator Users and Roles', () => {
+  it.each(['ar', 'en'] as const)('confirms deletion by name, supports cancellation and removes the row in %s', async locale => {
+    let removed = false;
+    const current = user({ availableActions: ['update', 'disable', 'delete'] });
+    const api = source({ loadUsers: vi.fn(async () => userList(removed ? [] : [current])), deleteUser: vi.fn(async (id: string, input: { expectedVersion: number }) => { expect(input).toEqual({ expectedVersion: 3 }); removed = true; return { id, deleted: true as const, version: 4 }; }) });
+    renderWithLocale(<AdminRbac url="/admin/admin-users" locale={locale} session={adminSession} source={api} />, { locale });
+    const label = `${locale === 'ar' ? 'حذف' : 'Delete'} Operations Admin`;
+    fireEvent.click(await screen.findByRole('button', { name: label }));
+    expect(screen.getByRole('dialog').textContent).toContain('admin@example.com');
+    fireEvent.click(screen.getAllByRole('button', { name: locale === 'ar' ? 'إلغاء' : 'Cancel' }).at(-1)!);
+    expect(api.deleteUser).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: label }));
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تأكيد الحذف' : 'Confirm delete' }));
+    await waitFor(() => expect(screen.queryByRole('button', { name: label })).toBeNull());
+    expect(screen.getByText(locale === 'ar' ? 'تم حذف حساب الإدارة وإيقاف دخوله.' : 'Administrator deleted and access revoked.')).toBeInTheDocument();
+  });
+
+  it('retains the row after a protected deletion fails and hides deletion without an allowed action', async () => {
+    const api = source({ loadUsers: vi.fn(async () => userList([user({ availableActions: ['update', 'disable', 'delete'] })])), deleteUser: vi.fn(async () => { throw new ApiClientError('errors.conflict', { code: 'HTTP_ERROR', status: 409, apiError: { code: 'ADMINISTRATOR_LAST_SUPER_ADMIN', messageKey: 'errors.conflict', details: [], requestId: 'delete-guard' } }); }) });
+    renderWithLocale(<AdminRbac url="/admin/admin-users" locale="en" session={adminSession} source={api} />, { locale: 'en' });
+    fireEvent.click(await screen.findByRole('button', { name: 'Delete Operations Admin' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('last active Super Admin');
+    expect(screen.getByRole('button', { name: 'Delete Operations Admin' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm delete' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh list' }));
+  });
+
+  it('does not offer deletion when the server excludes it', async () => {
+    renderWithLocale(<AdminRbac url="/admin/admin-users" locale="en" session={adminSession} source={source()} />, { locale: 'en' });
+    await screen.findByText('Operations Admin');
+    expect(screen.queryByRole('button', { name: 'Delete Operations Admin' })).toBeNull();
+  });
   it.each([
     ['ar', '/admin/admin-users', 'ADM-59'],
     ['en', '/admin/admin-users/new', 'ADM-60'],

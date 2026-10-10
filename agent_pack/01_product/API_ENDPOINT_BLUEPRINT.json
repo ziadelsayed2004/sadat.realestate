@@ -2769,5 +2769,17 @@
     "purpose": "Save all property editor fields atomically with the current version",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/admin-users/:adminId",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:staff.manage"
+    ],
+    "purpose": "Delete administrator with version, self/last-Super-Admin safeguards, session revocation and retained audit history",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

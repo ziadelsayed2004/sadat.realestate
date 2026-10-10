@@ -62,6 +62,13 @@ function service(): ReturnType<typeof createAdministratorService> {
     [staffId, record()]
   ]);
   const repository: AdministratorRepository = {
+    async remove(input) {
+      const current = records.get(input.id);
+      if (!current) return { kind: 'not_found' };
+      if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
+      records.delete(input.id);
+      return { kind: 'deleted', data: { id: input.id, deleted: true, version: current.version + 1 } };
+    },
     async list() { return [...records.values()]; },
     async findById(id) { return records.get(id); },
     async countActiveSuperAdmins() {
@@ -174,5 +181,26 @@ test('rejects malformed targets, unknown fields, and stale mutations', async () 
     assert.equal((await fetch(`${baseUrl}/api/v1/admin/admin-users/${staffId}`, {
       method: 'PATCH', headers, body: JSON.stringify({ expectedVersion: 9, status: 'disabled', reason: 'Stale administrator update' })
     })).status, 409);
+  });
+});
+
+test('administrator DELETE requires authentication, permission and current version, rejects self deletion, then removes the row', async () => {
+  await withServer(async baseUrl => {
+    const url = `${baseUrl}/api/v1/admin/admin-users/${staffId}`;
+    const headers = { Authorization: 'Bearer admin-token', 'Content-Type': 'application/json' };
+    const remove = (body: unknown, target = url, authorization = headers.Authorization) => fetch(target, { method: 'DELETE', headers: { ...headers, Authorization: authorization }, body: JSON.stringify(body) });
+    assert.equal((await remove({ expectedVersion: 0 }, url, '')).status, 401);
+    assert.equal((await remove({ expectedVersion: 0 }, url, 'Bearer seeker-token')).status, 403);
+    assert.equal((await remove({ expectedVersion: 0 }, url, 'Bearer view-token')).status, 403);
+    assert.equal((await remove({ expectedVersion: 0, status: 'disabled' })).status, 400);
+    assert.equal((await remove({ expectedVersion: 99 })).status, 409);
+    assert.equal((await remove({ expectedVersion: 0 }, `${baseUrl}/api/v1/admin/admin-users/${adminId}`)).status, 409);
+    const response = await remove({ expectedVersion: 0 });
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json() as { data: unknown }).data, { id: staffId, deleted: true, version: 1 });
+    assert.equal((await fetch(url, { headers })).status, 404);
+    assert.equal((await remove({ expectedVersion: 0 })).status, 404);
+    const remaining = await fetch(`${baseUrl}/api/v1/admin/admin-users`, { headers });
+    assert.equal((await remaining.json() as { data: { total: number } }).data.total, 1);
   });
 });

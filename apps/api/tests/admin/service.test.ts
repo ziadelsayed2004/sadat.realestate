@@ -150,6 +150,13 @@ function adminRecord(overrides: Partial<AdminUserData> = {}): AdminUserData {
 function administratorFixture(initial: AdminUserData[] = [adminRecord(), adminRecord({ id: '1123456789abcdef01234567', email: 'staff@example.com', displayName: 'Staff Admin', accessLevel: 'standard_admin' })]) {
   const records = new Map(initial.map((record) => [record.id, record]));
   const repository: AdministratorRepository = {
+    async remove(input) {
+      const current = records.get(input.id);
+      if (!current) return { kind: 'not_found' };
+      if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
+      records.delete(input.id);
+      return { kind: 'deleted', data: { id: input.id, deleted: true, version: current.version + 1 } };
+    },
     async list() { return [...records.values()]; },
     async findById(id) { return records.get(id); },
     async countActiveSuperAdmins() { return [...records.values()].filter((record) => record.status === 'active' && record.accessLevel === 'super_admin').length; },
@@ -220,4 +227,21 @@ test('hashes employee passwords without passing plaintext to persistence and pro
   await assert.rejects(() => staffOnly.create('0123456789abcdef01234567', input), error => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_FORBIDDEN');
   await assert.rejects(() => staffOnly.update('0123456789abcdef01234567', result.id, { expectedVersion: 0, reason: 'Assign role', roleIds: input.roleIds }), error => error instanceof AdministratorServiceError && error.code === 'ADMINISTRATOR_FORBIDDEN');
   assert.equal((await service.list('0123456789abcdef01234567', { search: 'EMPLOYEE@', page: 1, limit: 20 })).total, 1);
+});
+
+
+test('delete actions exclude self and the last active Super Admin, and deletion never bypasses the guard', async () => {
+  const actor = '0123456789abcdef01234567';
+  const target = '1123456789abcdef01234567';
+  const f = administratorFixture();
+  const rows = await f.service.list(actor, {});
+  assert.equal(rows.items.find(row => row.id === actor)?.availableActions.includes('delete'), false);
+  assert.equal(rows.items.find(row => row.id === target)?.availableActions.includes('delete'), true);
+  await assert.rejects(() => f.service.remove(actor, actor, { expectedVersion: 0 }), /ADMINISTRATOR_SELF_LOCKOUT/);
+  await assert.rejects(() => f.service.remove(actor, target, { expectedVersion: 99 }), /ADMINISTRATOR_VERSION_CONFLICT/);
+  assert.equal((await f.service.remove(actor, target, { expectedVersion: 0 })).deleted, true);
+  assert.equal((await f.service.list(actor, {})).total, 1);
+  const last = administratorFixture([adminRecord({ accessLevel: 'standard_admin' }), adminRecord({ id: target, email: 'last-root@example.com' })]);
+  assert.equal((await last.service.list(actor, {})).items.find(row => row.id === target)?.availableActions.includes('delete'), false);
+  await assert.rejects(() => last.service.remove(actor, target, { expectedVersion: 0 }), /ADMINISTRATOR_LAST_SUPER_ADMIN/);
 });

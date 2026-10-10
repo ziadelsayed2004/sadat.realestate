@@ -3619,7 +3619,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¹ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â \", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
+                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"ÃƒÆ’Ã†â€™Ãƒâ€¹Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã†â€™Ãƒâ€¹Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â \", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -7640,6 +7640,42 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"expectedVersion\": 0,\n  \"status\": \"disabled\",\n  \"reason\": \"Disable a synthetic administrator\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/admin-users/:adminId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "admin-users",
+                ":adminId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Administrator Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0\n}",
               "options": {
                 "raw": {
                   "language": "json"

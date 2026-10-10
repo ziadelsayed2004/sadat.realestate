@@ -1,5 +1,9 @@
 import {
   adminUserCreateSchema,
+  adminUserDeleteSchema,
+  adminUserDeleteSuccessEnvelopeSchema,
+  type AdminUserDelete,
+  type AdminUserDeleteData,
   adminUserIdParamsSchema,
   adminUserListQuerySchema,
   adminUserListSuccessEnvelopeSchema,
@@ -45,6 +49,7 @@ export type AdminRbacRoleCreateMutation = (input: RbacRoleCreateRequest, signal?
 export type AdminRbacRolePatchMutation = (roleId: string, input: RbacRolePatchRequest, signal?: AbortSignal) => Promise<RbacRoleData>;
 
 export interface AdminRbacSource {
+  readonly deleteUser: (adminId: string, input: AdminUserDelete) => Promise<AdminUserDeleteData>;
   readonly loadUsers: AdminRbacUsersLoader;
   readonly loadUser: AdminRbacUserLoader;
   readonly createUser: AdminRbacUserCreateMutation;
@@ -110,6 +115,15 @@ export async function updateAdminRbacUser(adminId: string, input: unknown, optio
   return response.data.data;
 }
 
+export async function deleteAdminRbacUser(adminId: string, input: unknown, options: CommonOptions = {}): Promise<AdminUserDeleteData> {
+  const id = adminUserIdParamsSchema.parse({ adminId }).adminId;
+  const response = await clientFor(options).request(`${ADMIN_RBAC_USERS_ROUTE}/${id}`, {
+    method: 'DELETE', responseSchema: adminUserDeleteSuccessEnvelopeSchema,
+    json: adminUserDeleteSchema.parse(input), ...requestOptions(options)
+  });
+  return response.data.data;
+}
+
 export async function loadAdminRbacRoles(options: CommonOptions = {}): Promise<RbacRoleListData> {
   const response = await clientFor(options).request(ADMIN_RBAC_ROLES_ROUTE, {
     responseSchema: rbacRoleListSuccessEnvelopeSchema,
@@ -143,6 +157,7 @@ export async function updateAdminRbacRole(roleId: string, input: unknown, option
 
 export function createAdminRbacSource(options: Omit<CommonOptions, 'signal'> = {}): AdminRbacSource {
   return {
+    deleteUser: (adminId, input) => deleteAdminRbacUser(adminId, input, options),
     loadUsers: (query, signal) => loadAdminRbacUsers(query, { ...options, ...(signal === undefined ? {} : { signal }) }),
     loadUser: (adminId, signal) => loadAdminRbacUser(adminId, { ...options, ...(signal === undefined ? {} : { signal }) }),
     createUser: (input, signal) => createAdminRbacUser(input, { ...options, ...(signal === undefined ? {} : { signal }) }),

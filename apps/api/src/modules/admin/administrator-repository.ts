@@ -92,7 +92,7 @@ async function readAdministrators(
   dependencies: AdministratorRepositoryDependencies,
   session?: ClientSession
 ): Promise<AdminUserData[]> {
-  const userQuery = dependencies.identityModels.User.find({ roleType: 'admin' })
+  const userQuery = dependencies.identityModels.User.find({ roleType: 'admin', deletedAt: null })
     .select({ normalizedEmail: 1, roleType: 1, status: 1, statusChangedAt: 1, createdAt: 1, updatedAt: 1, version: 1 });
   const accountQuery = dependencies.adminModels.AdminAccount.find({})
     .select({ userId: 1, displayName: 1, accessLevel: 1, createdAt: 1, updatedAt: 1, version: 1 });
@@ -130,7 +130,7 @@ async function readAdministrator(
 ): Promise<AdminUserData | undefined> {
   const userId = objectId(id);
   if (!userId) return undefined;
-  const userQuery = dependencies.identityModels.User.findOne({ _id: userId, roleType: 'admin' })
+  const userQuery = dependencies.identityModels.User.findOne({ _id: userId, roleType: 'admin', deletedAt: null })
     .select({ normalizedEmail: 1, roleType: 1, status: 1, statusChangedAt: 1, createdAt: 1, updatedAt: 1, version: 1 });
   const accountQuery = dependencies.adminModels.AdminAccount.findOne({ userId })
     .select({ userId: 1, displayName: 1, accessLevel: 1, createdAt: 1, updatedAt: 1, version: 1 });
@@ -203,6 +203,19 @@ export function createMongooseAdministratorRepository(
   dependencies: AdministratorRepositoryDependencies
 ): AdministratorRepository {
   const { connection, identityModels, adminModels, auditWriter } = dependencies;
+  // All removals/demotions write the singleton bootstrap record first. Transaction
+  // retries then see the other decision, preventing concurrent last-admin loss.
+  async function lockStaff(session: ClientSession): Promise<boolean> {
+    const result = await adminModels.AdminBootstrap.updateOne({}, { $inc: { version: 1 } }, { session });
+    return result.matchedCount === 1;
+  }
+  async function protectSuperAdmin(before: AdminUserData, locked: boolean, session: ClientSession): Promise<void> {
+    if (before.accessLevel !== 'super_admin' || before.status !== 'active') return;
+    const values = await readAdministrators(dependencies, session);
+    if (!locked || values.filter(value => value.status === 'active' && value.accessLevel === 'super_admin').length <= 1) {
+      throw new AdministratorServiceError('ADMINISTRATOR_LAST_SUPER_ADMIN');
+    }
+  }
   async function saveRoles(adminId: Types.ObjectId, roleIds: string[] | undefined, session: ClientSession, now: Date, actorId: string): Promise<void> {
     if (!roleIds) return;
     const models = createRbacModels(connection);
@@ -213,6 +226,31 @@ export function createMongooseAdministratorRepository(
     }, { upsert: true, runValidators: true, session });
   }
   return {
+    async remove(input) {
+      const userId = objectId(input.id);
+      if (!userId) return { kind: 'not_found' };
+      if (input.id === input.actorId) throw new AdministratorServiceError('ADMINISTRATOR_SELF_LOCKOUT');
+      return connection.transaction(async session => {
+        const locked = await lockStaff(session);
+        const before = await readAdministrator(dependencies, input.id, session);
+        if (!before) return { kind: 'not_found' as const };
+        if (before.version !== input.expectedVersion) return { kind: 'version_conflict' as const };
+        await protectSuperAdmin(before, locked, session);
+        const stamp = new Date(input.now);
+        const changed = await identityModels.User.updateOne(
+          { _id: userId, roleType: 'admin', deletedAt: null, version: input.expectedVersion },
+          { $set: { status: 'suspended', deletedAt: stamp, deletedBy: new Types.ObjectId(input.actorId), statusChangedAt: stamp, updatedAt: stamp }, $inc: { version: 1 } },
+          { runValidators: true, session }
+        );
+        if (changed.modifiedCount !== 1) return { kind: 'version_conflict' as const };
+        await identityModels.Session.updateMany({ userId, revokedAt: { $exists: false } }, { $set: { revokedAt: stamp, lastUsedAt: stamp } }, { session });
+        await createAuthModels(connection).AdminCredential.deleteOne({ userId }, { session });
+        await createRbacModels(connection).AdminRoleAssignment.deleteOne({ adminUserId: userId }, { session });
+        const data = { id: input.id, deleted: true as const, version: before.version + 1 };
+        await recordAudit(auditWriter, { actorId: input.actorId, targetId: input.id, action: 'admin.administrator_deleted', reason: 'Administrator deletion confirmed', before: auditProjection(before), after: data, requestId: input.requestId, traceId: input.traceId, occurredAt: stamp }, session);
+        return { kind: 'deleted' as const, data };
+      });
+    },
     async list() {
       return readAdministrators(dependencies);
     },
@@ -284,8 +322,11 @@ export function createMongooseAdministratorRepository(
       if (!userId) return { kind: 'not_found' };
       try {
         return await connection.transaction(async (session) => {
+          const locked = await lockStaff(session);
           const before = await readAdministrator(dependencies, input.id, session);
           if (!before) return { kind: 'not_found' as const };
+          if (input.id === input.actorId && (input.patch.roleIds || input.patch.status === 'disabled' || (input.patch.accessLevel && input.patch.accessLevel !== before.accessLevel))) throw new AdministratorServiceError('ADMINISTRATOR_SELF_LOCKOUT');
+          if (input.patch.status === 'disabled' || (input.patch.accessLevel && input.patch.accessLevel !== 'super_admin')) await protectSuperAdmin(before, locked, session);
           if (input.patch.email) {
             const duplicate = await identityModels.User.exists({
               _id: { $ne: userId },
@@ -300,7 +341,7 @@ export function createMongooseAdministratorRepository(
             userChanges.statusChangedAt = new Date(input.now);
           }
           const updatedUser = await identityModels.User.findOneAndUpdate(
-            { _id: userId, roleType: 'admin', version: input.expectedVersion },
+            { _id: userId, roleType: 'admin', deletedAt: null, version: input.expectedVersion },
             { $set: userChanges, $inc: { version: 1 } },
             { new: true, runValidators: true, session }
           ).lean<LeanUser | null>();

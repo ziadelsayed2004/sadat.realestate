@@ -1,5 +1,6 @@
 import type {
   AdminUserCreate,
+  AdminUserDeleteData,
   AdminUserData,
   AdminUserListData,
   AdminUserListQuery,
@@ -8,6 +9,7 @@ import type {
 import { createArgon2PasswordHasher, type PasswordHasher } from '../auth/crypto.js';
 import {
   adminUserCreateSchema,
+  adminUserDeleteSchema,
   adminUserDataSchema,
   adminUserListQuerySchema,
   adminUserPatchSchema
@@ -30,6 +32,7 @@ export interface AdministratorMutationContext {
 }
 
 export interface AdministratorRepository {
+  remove(input: AdministratorMutationContext & { actorId: string; id: string; expectedVersion: number; now: string }): Promise<{ kind: 'deleted'; data: AdminUserDeleteData } | { kind: 'not_found' | 'version_conflict' }>;
   list(): Promise<readonly AdminUserData[]>;
   findById(id: string): Promise<AdminUserData | undefined>;
   countActiveSuperAdmins(): Promise<number>;
@@ -54,6 +57,7 @@ export interface AdministratorRepository {
 }
 
 export interface AdministratorService {
+  remove(adminId: string, id: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserDeleteData>;
   list(adminId: string, input: unknown): Promise<AdminUserListData>;
   listAdministrators(adminId: string, input: unknown): Promise<AdminUserListData>;
   get(adminId: string, id: string): Promise<AdminUserData>;
@@ -121,8 +125,11 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
   const list = async (adminId: string, input: unknown): Promise<AdminUserListData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.view');
     const query = adminUserListQuerySchema.parse(input) as AdminUserListQuery;
-    const values = (await dependencies.repository.list())
-      .map((value) => output(value, adminId))
+    const records = await dependencies.repository.list();
+    const canDelete = await dependencies.authorization.authorize(adminId, 'admin:staff.manage');
+    const superCount = records.filter(value => value.status === 'active' && value.accessLevel === 'super_admin').length;
+    const values = records
+      .map((value) => ({ ...output(value, adminId), availableActions: [...actions(value, adminId), ...(canDelete && value.id !== adminId && !(value.accessLevel === 'super_admin' && value.status === 'active' && superCount <= 1) ? ['delete' as const] : [])] }))
       .filter((value) => (!query.status || value.status === query.status) && (!query.accessLevel || value.accessLevel === query.accessLevel)
         && (!query.search || `${value.displayName} ${value.email}`.toLocaleLowerCase().includes(query.search.toLocaleLowerCase())))
       .sort((left, right) => left.email.localeCompare(right.email) || left.id.localeCompare(right.id));
@@ -193,7 +200,22 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     if (result.kind !== 'updated') throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
     return output(result.administrator, adminId);
   };
+  const remove = async (adminId: string, id: string, input: unknown, context = defaultMutationContext): Promise<AdminUserDeleteData> => {
+    await requirePermission(dependencies, adminId, 'admin:staff.manage');
+    const data = adminUserDeleteSchema.parse(input);
+    if (id === adminId) throw new AdministratorServiceError('ADMINISTRATOR_SELF_LOCKOUT');
+    const current = objectId(id) ? await dependencies.repository.findById(id) : undefined;
+    if (!current) throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
+    if (current.accessLevel === 'super_admin' && current.status === 'active' && await dependencies.repository.countActiveSuperAdmins() <= 1) {
+      throw new AdministratorServiceError('ADMINISTRATOR_LAST_SUPER_ADMIN');
+    }
+    const result = await dependencies.repository.remove({ actorId: adminId, id, expectedVersion: data.expectedVersion, now: clock().toISOString(), ...context });
+    if (result.kind === 'version_conflict') throw new AdministratorServiceError('ADMINISTRATOR_VERSION_CONFLICT');
+    if (result.kind !== 'deleted') throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
+    return result.data;
+  };
   return {
+    remove,
     list,
     listAdministrators: list,
     get,

@@ -74,7 +74,7 @@ export type AdminOverviewMetrics = z.infer<typeof adminOverviewMetricsSchema>;
 export type AdminOverviewData = z.infer<typeof adminOverviewDataSchema>;
 
 export const ADMIN_USER_STATUSES = ['active', 'disabled'] as const;
-export const ADMIN_USER_AVAILABLE_ACTIONS = ['update', 'disable', 'enable'] as const;
+export const ADMIN_USER_AVAILABLE_ACTIONS = ['update', 'disable', 'enable', 'delete'] as const;
 export const adminUserStatusSchema = z.enum(ADMIN_USER_STATUSES);
 export const adminUserAvailableActionSchema = z.enum(ADMIN_USER_AVAILABLE_ACTIONS);
 const adminUserDisplayNameSchema = z.string().trim().min(2).max(160).refine((value) => !/[\u0000-\u001f\u007f]/.test(value), { message: 'Display name must not contain control characters' });
@@ -100,6 +100,18 @@ export const adminUserCreateSchema = z.object({
   password: accountPasswordSchema.optional(),
   roleIds: adminRoleIdsSchema.optional()
 }).strict();
+
+export const adminUserDeleteSchema = z.object({
+  expectedVersion: z.number().int().nonnegative()
+}).strict();
+export const adminUserDeleteDataSchema = z.object({
+  id: adminUserObjectIdSchema,
+  deleted: z.literal(true),
+  version: z.number().int().positive()
+}).strict();
+export const adminUserDeleteSuccessEnvelopeSchema = successEnvelopeSchema(adminUserDeleteDataSchema);
+export type AdminUserDelete = z.infer<typeof adminUserDeleteSchema>;
+export type AdminUserDeleteData = z.infer<typeof adminUserDeleteDataSchema>;
 
 export const adminUserPatchSchema = z.object({
   expectedVersion: z.number().int().nonnegative(),

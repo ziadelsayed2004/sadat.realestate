@@ -15,7 +15,8 @@ export const ADMINISTRATOR_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/admin-users', operationId: 'listAdminAdministrators' },
   { method: 'GET', path: '/api/v1/admin/admin-users/:adminId', operationId: 'getAdminAdministrator' },
   { method: 'POST', path: '/api/v1/admin/admin-users', operationId: 'createAdminAdministrator' },
-  { method: 'PATCH', path: '/api/v1/admin/admin-users/:adminId', operationId: 'updateAdminAdministrator' }
+  { method: 'PATCH', path: '/api/v1/admin/admin-users/:adminId', operationId: 'updateAdminAdministrator' },
+  { method: 'DELETE', path: '/api/v1/admin/admin-users/:adminId', operationId: 'deleteAdminAdministrator' }
 ] as const;
 
 export interface AdministratorRouterDependencies {
@@ -70,6 +71,14 @@ export function createAdministratorRouter(
     next();
   });
   router.use('/admin/admin-users', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+
+  router.delete('/admin/admin-users/:adminId', async (request, response) => {
+    try {
+      const { adminId } = adminUserIdParamsSchema.parse(request.params);
+      const data = await dependencies.service.remove(claims(response).sub, adminId, request.body ?? {}, mutationContext(request));
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
 
   router.get('/admin/admin-users', async (request, response) => {
     try {
