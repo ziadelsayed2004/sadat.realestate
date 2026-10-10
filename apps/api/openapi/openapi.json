@@ -17678,6 +17678,13 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "actorDisplayName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 160,
+            "description": "Current stored administrator display name, when available. Resolved after audit authorization; historical snapshots remain immutable.",
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
           }
         }
       },

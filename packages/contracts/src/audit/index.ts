@@ -113,6 +113,7 @@ export const auditLogDataSchema = z.object({
   id: auditObjectIdSchema,
   actorType: auditActorTypeSchema,
   actorId: auditObjectIdSchema,
+  actorDisplayName: z.string().trim().min(2).max(160).refine(value => !/[\u0000-\u001f\u007f]/.test(value)).optional(),
   targetType: auditTargetTypeSchema,
   targetId: auditTargetIdSchema,
   action: auditActionSchema,

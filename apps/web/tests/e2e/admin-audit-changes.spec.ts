@@ -1,0 +1,36 @@
+import { expect, test } from '@playwright/test';
+import { auditLogDataSchema } from '@sadat-real-estate/contracts';
+
+test('identifies the employee and explains changed role permissions before optional technical details', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  const ar = locale === 'ar';
+  const id = '222222222222222222222222';
+  const actorId = '333333333333333333333333';
+  const name = ar ? 'طارق' : 'Tarek';
+  const roleName = ar ? 'مسؤول الإعلانات' : 'Advertising manager';
+  const log = auditLogDataSchema.parse({ id, actorId, actorType: 'admin', actorDisplayName: name, targetType: 'rbac_role', targetId: '444444444444444444444444', action: 'rbac.role_updated', reason: 'Adjust advertising responsibilities', before: { name: roleName, active: true, accessMode: 'custom', permissions: ['admin:ads.view', 'admin:content.manage'] }, after: { name: roleName, active: false, accessMode: 'custom', permissions: ['admin:ads.view', 'admin:ads.price'] }, requestId: 'audit-human-comparison', traceId: 'a'.repeat(32), createdAt: '2026-10-10T09:00:00.000Z' });
+  const envelope = (data: unknown) => ({ data, meta: { requestId: 'audit-changes', page: 1, limit: 25, total: 1 } });
+  await page.route('**/api/v1/auth/refresh', route => route.fulfill({ json: envelope({ accessToken: 'audit.viewer.qa', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: actorId, roleType: 'admin', status: 'verified' } }) }));
+  await page.route('**/api/v1/admin/account/presence', route => route.fulfill({ json: envelope({ id: actorId, displayName: name }) }));
+  await page.route('**/api/v1/admin/audit-logs**', route => route.fulfill({ json: envelope(new URL(route.request().url()).pathname.endsWith(id) ? log : { items: [log] }) }));
+  await page.goto(`/admin/audit-logs?lang=${locale}`);
+  await expect(page.getByRole('table').getByText(name, { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: ar ? 'عرض التفاصيل' : 'View details', exact: true }).click();
+  await expect(page.getByTestId('audit-identity')).toContainText(name);
+  await expect(page.getByTestId('audit-identity')).toContainText(roleName);
+  const changes = page.getByRole('region', { name: ar ? 'إيه اللي اتعدل؟' : 'What changed?' });
+  await expect(changes).toContainText(ar ? 'الإعلانات — تسعير' : 'Advertising — Price');
+  await expect(changes).toContainText(ar ? 'محتوى الموقع — إدارة وتعديل' : 'Website content — Manage');
+  await expect(changes).not.toContainText('admin:');
+  await expect(changes).not.toContainText(ar ? 'مستوى الصلاحيات' : 'Access mode');
+  await expect(changes).toContainText(ar ? 'نعم' : 'Yes');
+  await expect(changes).toContainText(ar ? 'لا' : 'No');
+  await expect(page.locator('pre').first()).toBeHidden();
+  const width = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, width: innerWidth }));
+  expect(width.scroll).toBeLessThanOrEqual(width.width);
+  await page.screenshot({ path: info.outputPath('audit-changes-readable.png'), fullPage: true });
+  await page.getByText(ar ? 'تفاصيل تقنية (اختياري)' : 'Technical details (optional)', { exact: true }).click();
+  await expect(page.locator('pre').first()).toContainText('admin:content.manage');
+  await expect(page.locator('pre').last()).toContainText('admin:ads.price');
+  await expect(page.locator('pre').first()).toHaveAttribute('dir', 'ltr');
+});

@@ -27,6 +27,7 @@ export interface AuditAuthorization {
 export interface AuditServiceDependencies {
   repository: AuditRepository;
   authorization: AuditAuthorization;
+  resolveActorNames?: (actorIds: readonly string[]) => Promise<ReadonlyMap<string, string>>;
 }
 
 export interface AuditListResult {
@@ -41,11 +42,12 @@ export interface AuditService {
   findById(principal: AuditPrincipal, auditId: string): Promise<AuditLogData>;
 }
 
-function data(record: StoredAuditLog): AuditLogData {
+function data(record: StoredAuditLog, actorDisplayName?: string): AuditLogData {
   return {
     id: record.id,
     actorType: record.actorType,
     actorId: record.actorId,
+    ...(record.actorType === 'admin' && actorDisplayName ? { actorDisplayName } : {}),
     targetType: record.targetType,
     targetId: record.targetId,
     action: record.action,
@@ -59,6 +61,10 @@ function data(record: StoredAuditLog): AuditLogData {
 }
 
 export function createAuditService(dependencies: AuditServiceDependencies): AuditService {
+  async function actorNames(records: readonly StoredAuditLog[]): Promise<ReadonlyMap<string, string>> {
+    const ids = [...new Set(records.filter(record => record.actorType === 'admin').map(record => record.actorId))];
+    return ids.length && dependencies.resolveActorNames ? dependencies.resolveActorNames(ids) : new Map();
+  }
   async function requireView(adminId: string): Promise<void> {
     if (!await dependencies.authorization.authorize(adminId, 'admin:audit.view')) {
       throw new AuditServiceError('AUDIT_FORBIDDEN');
@@ -70,8 +76,9 @@ export function createAuditService(dependencies: AuditServiceDependencies): Audi
       await requireView(principal.userId);
       const query = auditLogListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.list(query);
+      const names = await actorNames(result.items);
       return {
-        data: { items: result.items.map(data) },
+        data: { items: result.items.map(record => data(record, names.get(record.actorId))) },
         page: query.page,
         limit: query.limit,
         total: result.total
@@ -83,7 +90,8 @@ export function createAuditService(dependencies: AuditServiceDependencies): Audi
       const auditId = auditObjectIdSchema.parse(unparsedAuditId);
       const result = await dependencies.repository.findById(auditId);
       if (!result) throw new AuditServiceError('AUDIT_LOG_NOT_FOUND');
-      return data(result);
+      const names = await actorNames([result]);
+      return data(result, names.get(result.actorId));
     }
   };
 }

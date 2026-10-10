@@ -3,13 +3,10 @@ import type { AdminUserData, AdminUserListData, RbacPermission, RbacRoleData, Su
 import { Button } from '../design_system/index.ts';
 import type { AdminRbacSource } from './data.ts';
 
-const resources: Record<string, [string, string]> = {
-  'account-reports': ['بلاغات الحسابات', 'Account reports'], ads: ['الإعلانات', 'Advertising'], audit: ['سجل التدقيق', 'Audit log'], banners: ['البانرات', 'Banners'], commissions: ['العمولات', 'Commissions'], community: ['المجتمع', 'Community'], content: ['محتوى الموقع', 'Website content'], documents: ['المستندات', 'Documents'], features: ['المميزات والخدمات', 'Amenities'], locations: ['المواقع', 'Locations'], overview: ['لوحة التحكم', 'Dashboard'], payments: ['المدفوعات', 'Payments'], projects: ['المشاريع', 'Projects'], properties: ['العقارات', 'Properties'], 'property-reports': ['بلاغات العقارات', 'Property reports'], providers: ['عارضو العقارات', 'Providers'], 'request-issues': ['مشكلات الطلبات', 'Request issues'], requests: ['طلبات العملاء', 'Customer requests'], roles: ['المناصب والصلاحيات', 'Roles'], settings: ['الإعدادات', 'Settings'], staff: ['موظفو الإدارة', 'Administrator staff'], taxonomy: ['أنواع العقارات', 'Property types'], users: ['الحسابات', 'Accounts'], viewings: ['المعاينات', 'Viewings']
-};
-const actions: Record<string, [string, string]> = { view: ['عرض', 'View'], manage: ['إدارة وتعديل', 'Manage'], review: ['مراجعة واعتماد', 'Review'], publish: ['نشر', 'Publish'], price: ['تسعير', 'Price'], schedule: ['جدولة', 'Schedule'], moderate: ['مراجعة المحتوى', 'Moderate'], assign: ['تعيين مسؤول', 'Assign'], notes: ['إضافة ملاحظات', 'Add notes'] };
+import { permissionLabel } from './permission-label.ts';
 
 export function PermissionChooser({ locale, catalog, value, mode, disabled, change, applyPreset }: { readonly locale: SupportedLocale; readonly catalog: readonly RbacPermission[]; readonly value: readonly RbacPermission[]; readonly mode: 'custom' | 'view_only'; readonly disabled: boolean; readonly change: (permissions: RbacPermission[]) => void; readonly applyPreset: (name: string, permissions: RbacPermission[], mode: 'custom' | 'view_only') => void }) {
-  const ar = locale === 'ar'; const index = ar ? 0 : 1;
+  const ar = locale === 'ar';
   const allowed = catalog.filter(permission => mode !== 'view_only' || permission.endsWith('.view'));
   const needsAdsView = value.includes('admin:ads.price') || value.includes('admin:ads.schedule');
   useEffect(() => {
@@ -33,8 +30,7 @@ export function PermissionChooser({ locale, catalog, value, mode, disabled, chan
     <p className="admin-rbac__muted">{ar ? 'التسعير والجدولة يحددان «عرض الإعلانات» تلقائيًا لفتح الطلبات. مراجعة المدفوعات تحتاج صلاحيتها المنفصلة. احفظ المنصب واربطه بحساب الموظف.' : 'Pricing and scheduling automatically select View advertising to open requests. Payment review needs its separate permission. Save the role and assign it to the employee.'}</p>
     <div className="admin-rbac__actions"><Button type="button" size="sm" variant="secondary" disabled={disabled} onClick={() => change([...allowed])}>{ar ? 'تحديد الكل' : 'Select all'}</Button><Button type="button" size="sm" variant="secondary" disabled={disabled} onClick={() => change([])}>{ar ? 'إلغاء تحديد الكل' : 'Clear selection'}</Button><span role="status">{ar ? 'الصلاحيات المحددة' : 'Selected permissions'}: {value.length} / {catalog.length}</span></div>
     <fieldset className="admin-rbac__permissions"><legend>{ar ? 'الصلاحيات' : 'Permissions'}</legend>{catalog.map(permission => {
-      const [resource, action] = permission.slice(6).split('.');
-      return <label key={permission}><input type="checkbox" checked={value.includes(permission)} disabled={disabled || !allowed.includes(permission) || (permission === 'admin:ads.view' && needsAdsView && value.includes(permission))} onChange={() => selectPermissions(value.includes(permission) ? value.filter(item => item !== permission) : [...value, permission])} /><span>{resources[resource ?? '']?.[index] ?? resource} — {actions[action ?? '']?.[index] ?? action}<small dir="ltr">{permission}</small></span></label>;
+      return <label key={permission}><input type="checkbox" checked={value.includes(permission)} disabled={disabled || !allowed.includes(permission) || (permission === 'admin:ads.view' && needsAdsView && value.includes(permission))} onChange={() => selectPermissions(value.includes(permission) ? value.filter(item => item !== permission) : [...value, permission])} /><span>{permissionLabel(permission, locale)}<small dir="ltr">{permission}</small></span></label>;
     })}</fieldset>
   </section>;
 }

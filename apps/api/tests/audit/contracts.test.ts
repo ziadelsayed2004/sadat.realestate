@@ -63,3 +63,10 @@ test('exposes strict redacted audit projections and paginated envelopes', () => 
     data: { items: [item] }, meta: { requestId: 'audit-contract-3' }
   }).success, false);
 });
+
+test('accepts only a bounded safe optional actor name without changing legacy projections', () => {
+  assert.equal(auditLogDataSchema.parse({ ...item, actorDisplayName: 'طارق' }).actorDisplayName, 'طارق');
+  for (const actorDisplayName of ['', 'x', 'x'.repeat(161), 'Name\ncontrol', { password: 'private' }]) {
+    assert.equal(auditLogDataSchema.safeParse({ ...item, actorDisplayName }).success, false);
+  }
+});

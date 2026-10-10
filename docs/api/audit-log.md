@@ -9,6 +9,10 @@
 
 Both routes require a verified Admin bearer session and the explicit `admin:audit.view` capability, return `Cache-Control: no-store`, and use explicit response projections. Public, Seeker, Provider, suspended Admin, unassigned Admin, and insufficient-capability callers fail closed. A missing detail is returned as not found without leaking other administrative data.
 
+Administrator events may include `actorDisplayName`, resolved from the stored administrative account only after audit authorization. List reads resolve distinct actor IDs in one bounded query selecting only account ID and display name. Missing profiles omit the name, and provider/seeker actor names are not resolved. The name is the currently stored name, including retained historical account profiles; it is not a claim about the name at the event time. Audit records and snapshots are never rewritten to enrich them.
+
+The administrative detail view compares only recorded snapshot fields. Permission changes show localized added and removed capabilities; permission order alone is not a change. Unchanged fields are omitted, absent values are explicit, and unchanged or hidden snapshots do not fabricate a change. Original redacted JSON remains available in collapsed technical details. Employee names also appear in the audit list and its CSV export.
+
 ## Transaction and redaction policy
 
 The current writers cover reason-bearing account transitions, Provider review decisions, RBAC role creation/update/assignment, and successful private-provider-document access grants. Sensitive database mutations and their audit records share the same MongoDB transaction; an audit write failure aborts the mutation. Private access grants are not issued when their audit write fails.

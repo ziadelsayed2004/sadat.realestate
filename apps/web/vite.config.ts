@@ -30,7 +30,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             if (normalizedId.includes('/node_modules/zod/')) return 'vendor-validation';
             if (normalizedId.includes('/src/features/localization/copy-catalog') || normalizedId.includes('/src/features/localization/messages/')) return 'locale-copy';
             if (normalizedId.includes('/src/features/admin_user_guide')) return 'feature-user-guide';
-            if (normalizedId.includes('/src/features/admin/audit-presentation') || normalizedId.includes('/src/features/admin/notifications-audit-copy')) return 'feature-admin-audit-copy';
+            if (normalizedId.includes('/src/features/admin/audit-presentation') || normalizedId.includes('/src/features/admin/notifications-audit-copy') || normalizedId.includes('/src/features/admin/audit-changes') || normalizedId.includes('/src/features/admin_rbac/permission-label')) return 'feature-admin-audit-copy';
             if (normalizedId.includes('/src/features/admin_settings/copy') || normalizedId.includes('/src/features/admin_settings/help')) return 'feature-admin-settings-copy';
             if (normalizedId.includes('/src/features/admin_properties/video') || normalizedId.includes('/src/features/admin_properties/photo')) return 'feature-admin-property-media';
             if (normalizedId.includes('/src/features/admin')) return 'feature-admin';

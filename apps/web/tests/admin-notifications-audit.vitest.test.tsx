@@ -14,6 +14,7 @@ import {
   loadAdminNotifications
 } from '../src/features/admin/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { auditChanges } from '../src/features/admin/audit-changes.tsx';
 
 const adminSession = { status: 'authenticated' as const, role: 'admin' as const };
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.notifications.test' };
@@ -37,6 +38,7 @@ function audit(): AuditLogData {
     id: auditId,
     actorType: 'admin',
     actorId,
+    actorDisplayName: 'Tarek',
     targetType: 'settings',
     targetId: 'platform',
     action: 'settings.update',
@@ -66,6 +68,46 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin notifications and audit log', () => {
+  it('compares nested fields and actual permission membership without claiming reordered permissions changed', () => {
+    expect(auditChanges({ permissions: ['admin:ads.view', 'admin:ads.price'], name: 'Ads', active: true }, { active: true, name: 'Ads', permissions: ['admin:ads.price', 'admin:ads.view'] })).toEqual([]);
+    expect(auditChanges({ title: { ar: 'قديم', en: 'Same' }, flag: false, removed: 'Old' }, { title: { en: 'Same', ar: 'جديد' }, flag: true, added: 0 }).map(change => change.path)).toEqual(['added', 'flag', 'removed', 'title.ar']);
+    expect(auditChanges({ hidden: '[REDACTED]' }, { hidden: '[REDACTED]' })).toEqual([]);
+  });
+
+  it.each(['ar', 'en'] as const)('shows the employee, role name and added/removed permissions clearly in %s', locale => {
+    const log = { ...audit(), actorDisplayName: 'طارق', targetType: 'rbac_role', action: 'rbac.role_updated', before: { name: 'Advertising', active: true, permissions: ['admin:ads.view', 'admin:content.manage'] }, after: { name: 'Advertising', active: false, permissions: ['admin:ads.view', 'admin:ads.price'] } };
+    const result = renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale={locale} session={adminSession} initialAuditLog={log} />, { locale });
+    expect(screen.getByText('طارق')).toBeVisible();
+    expect(screen.getByText('Advertising', { exact: true })).toBeVisible();
+    const changes = screen.getByRole('region', { name: locale === 'ar' ? 'إيه اللي اتعدل؟' : 'What changed?' });
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'صلاحيات اتشالت' : 'Permissions removed');
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'صلاحيات اتضافت' : 'Permissions added');
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'الإعلانات — تسعير' : 'Advertising — Price');
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'محتوى الموقع — إدارة وتعديل' : 'Website content — Manage');
+    expect(changes).not.toHaveTextContent('admin:ads.view');
+    expect(changes).not.toHaveTextContent(locale === 'ar' ? 'الإعلانات — عرض' : 'Advertising — View');
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'نعم' : 'Yes');
+    expect(changes).toHaveTextContent(locale === 'ar' ? 'لا' : 'No');
+    const technical = screen.getByText(locale === 'ar' ? 'تفاصيل تقنية (اختياري)' : 'Technical details (optional)').closest('details');
+    expect(technical).not.toHaveAttribute('open');
+    fireEvent.click(technical!.querySelector('summary')!);
+    expect(result.container.querySelector('pre')).toBeVisible();
+  });
+
+  it('states when the saved snapshots contain no visible differences instead of inventing a change', () => {
+    const log = { ...audit(), after: audit().before };
+    renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale="en" session={adminSession} initialAuditLog={log} />, { locale: 'en' });
+    expect(screen.getByText('No visible differences in the recorded data for this action.')).toBeVisible();
+  });
+
+  it('preserves small numeric differences in the visible comparison', () => {
+    const log = { ...audit(), before: { price: 1.23456 }, after: { price: 1.23457 } };
+    renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale="en" session={adminSession} initialAuditLog={log} />, { locale: 'en' });
+    const comparison = screen.getByRole('region', { name: 'What changed?' });
+    expect(within(comparison).getByText('1.23456', { exact: true })).toBeVisible();
+    expect(within(comparison).getByText('1.23457', { exact: true })).toBeVisible();
+  });
+
   it('uses the implemented strict routes, queries, IDs, and admin authorization', async () => {
     const requests: Array<{ method: string; path: string; query: string; authorization: string | null }> = [];
     const client = apiClientFor(requests, notifications(), audit());
