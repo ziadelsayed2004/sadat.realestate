@@ -24,6 +24,7 @@ export interface StoredProject {
 }
 
 export interface ProjectMutationMetadata {
+  adminEdit?: boolean;
   actorId: string;
   reason: string;
   requestId: string;
@@ -48,6 +49,7 @@ export type ProjectChanges = {
 };
 
 export interface ProjectRepository {
+  publicPath(project: StoredProject): Promise<string | undefined>;
   list(providerId: string, q: ProjectListQuery): Promise<{ items: StoredProject[]; total: number }>;
   listAll(q: ProjectListQuery): Promise<{ items: StoredProject[]; total: number }>;
   findById(providerId: string, id: string): Promise<StoredProject | null>;
@@ -129,6 +131,14 @@ export function createMongooseProjectRepository(connection: Connection, models: 
   }
 
   return {
+    async publicPath(project) {
+      if (project.status !== 'published' || !project.organizationId) return undefined;
+      const organization = await connection.collection('organizations').findOne({ _id: new Types.ObjectId(project.organizationId), status: 'approved' }, { projection: { slug: 1, providerId: 1 } });
+      if (!organization || typeof organization.slug !== 'string' || !/^[a-z0-9-]+$/.test(organization.slug) || !organization.providerId) return undefined;
+      const provider = await connection.collection('provider_profiles').findOne({ _id: organization.providerId, status: 'approved' }, { projection: { _id: 1 } });
+      return provider ? `/developers/${organization.slug}#project-${project.slug}` : undefined;
+    },
+
     async list(providerId, query) {
       return listProjects({ providerId: new Types.ObjectId(providerId) }, query);
     },
@@ -172,10 +182,10 @@ export function createMongooseProjectRepository(connection: Connection, models: 
           for (const key of ['name', 'slug', 'description', 'website'] as const) if (input.changes[key] !== undefined) set[key] = input.changes[key];
           if (input.changes.locationId !== undefined) set.locationId = input.changes.locationId === null ? null : new Types.ObjectId(input.changes.locationId);
           if (input.changes.organizationId !== undefined) set.organizationId = input.changes.organizationId === null ? null : new Types.ObjectId(input.changes.organizationId);
-          const result = await models.Project.findOneAndUpdate({ _id: input.id, providerId: input.providerId, version: input.expectedVersion }, { $set: set, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
+          const result = await models.Project.findOneAndUpdate({ _id: input.id, providerId: input.providerId, version: input.expectedVersion, status: input.metadata.adminEdit ? { $ne: 'archived' } : { $in: ['draft', 'needs_changes'] } }, { $set: set, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
           if (!result) return await models.Project.exists({ _id: input.id, providerId: input.providerId }).session(session) ? { kind: 'version_conflict' } : { kind: 'not_found' };
           const output = stored(result as ProjectRecord & { _id: Types.ObjectId });
-          await auditWrite('project.update', output.id, input.before, output, input.metadata, session);
+          await auditWrite('project.update', output.id, input.before, output, input.metadata, session, input.metadata.adminEdit ? 'admin' : 'provider');
           return { kind: 'written', project: output };
         });
       } catch (error) {

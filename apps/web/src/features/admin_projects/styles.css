@@ -88,6 +88,7 @@
 .admin-projects__detail-card dt { color: #68768b; font-weight: 800; }
 .admin-projects__detail-card dd { margin: 0; text-align: end; }
 .admin-projects__action-card fieldset { display: grid; gap: 16px; padding: 0; border: 0; }
+.admin-projects__row-actions a{display:inline-flex;align-items:center;min-height:40px;padding:.5rem .75rem;border:1px solid #dbe0e6;border-radius:10px;color:#155b4f;font-weight:700}#project-edit label{display:grid;gap:.5rem}.admin-projects__action-card input:not([type=radio]){min-width:0;width:100%;box-sizing:border-box;padding:.75rem;border:1px solid #dbe0e6;border-radius:10px;font:inherit}#project-edit{margin-top:1rem;scroll-margin-top:100px}
 .admin-projects__action-card legend { margin-block-end: 12px; color: #5e6b80; font-weight: 800; }
 .admin-projects__action-list { display: flex; flex-wrap: wrap; gap: 10px; }
 .admin-projects__action-option { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 12px; border: 1px solid #dbe0e6; border-radius: 10px; color: #1b2942; font-weight: 700; }

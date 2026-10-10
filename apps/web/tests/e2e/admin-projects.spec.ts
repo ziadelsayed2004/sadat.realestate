@@ -20,7 +20,8 @@ async function routeAdminApis(page: import('@playwright/test').Page, allow = tru
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { ...adminProjectFixture(), status: 'approved', availableActions: ['publish'] }, meta: { requestId: 'admin-project-review' } }) });
       return;
     }
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { items: [adminProjectFixture()] }, meta: { requestId: 'admin-project-list', page: 1, limit: 20, total: 1 } }) });
+    const data = new URL(route.request().url()).pathname.endsWith(adminProjectId) ? adminProjectFixture() : { items: [adminProjectFixture()] };
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data, meta: { requestId: 'admin-project-list', page: 1, limit: 20, total: 1 } }) });
   });
 }
 

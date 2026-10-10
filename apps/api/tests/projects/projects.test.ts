@@ -21,6 +21,29 @@ const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 const adminClaims = (sub = admin) => ({ sub, role: 'admin', status: 'verified', iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 
+test('administrators open and edit published projects without republishing and providers cannot overwrite them', async () => {
+  const { service, rows } = fixture();
+  rows.set(id, record({ status: 'published', organizationId: '6123456789abcdef01234567', version: 3 }));
+  const detail = await service.adminGet(admin, id);
+  assert.ok(detail.availableActions.includes('update'));
+  assert.equal(detail.publicPath, '/developers/qa-developer#project-project');
+  const input = { version: 3, reason: 'Administrative project edit', name: { en: 'Updated project' }, description: { en: 'Previewed description' }, slug: 'updated-project' };
+  const context = { requestId: 'admin-project-edit', traceId: 'a'.repeat(32) };
+  await assert.rejects(service.adminGet(other, id), error => error.code === 'PROJECT_FORBIDDEN');
+  await assert.rejects(service.adminUpdate(other, id, input, context), error => error.code === 'PROJECT_FORBIDDEN');
+  await assert.rejects(service.update(claims(), id, input, context), error => error.code === 'PROJECT_TRANSITION_INVALID');
+  const saved = await service.adminUpdate(admin, id, input, context);
+  assert.equal(saved.version, 4);
+  assert.equal(saved.status, 'published');
+  assert.equal(saved.name.en, input.name.en);
+  assert.equal(saved.description.en, input.description.en);
+  assert.equal(saved.publicPath, '/developers/qa-developer#project-updated-project');
+  await assert.rejects(service.adminUpdate(admin, id, input, context), error => error.code === 'PROJECT_VERSION_CONFLICT');
+  rows.set(id, record({ status: 'archived', version: 4 }));
+  assert.ok(!(await service.adminGet(admin, id)).availableActions.includes('update'));
+  await assert.rejects(service.adminUpdate(admin, id, { ...input, version: 4 }, context), error => error.code === 'PROJECT_TRANSITION_INVALID');
+});
+
 function record(overrides: Partial<StoredProject> = {}): StoredProject {
   return { id, providerId: provider, name: { en: 'Project' }, slug: 'project', status: 'draft', version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
@@ -28,6 +51,7 @@ function record(overrides: Partial<StoredProject> = {}): StoredProject {
 function fixture(allowProjectView = true, canManageProjects = true) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
+    async publicPath(project) { return project.status === 'published' && project.organizationId ? `/developers/qa-developer#project-${project.slug}` : undefined; },
     async list(owner, query) {
       const items = [...rows.values()].filter(project => project.providerId === owner && (!query.status || project.status === query.status));
       return { items, total: items.length };

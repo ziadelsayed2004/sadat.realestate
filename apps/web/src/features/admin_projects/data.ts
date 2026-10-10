@@ -1,6 +1,7 @@
 import {
   projectIdParamsSchema,
   projectListQuerySchema,
+  projectPatchSchema,
   projectListSuccessEnvelopeSchema,
   projectReviewRequestSchema,
   projectSuccessEnvelopeSchema,
@@ -42,6 +43,19 @@ function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin'>): Api
 function headersFor(source: AdminProjectsAuthorizationSource | undefined): HeadersInit | undefined {
   const authorization = source?.getAuthorizationHeader();
   return authorization === undefined ? undefined : { authorization };
+}
+
+export async function loadAdminProject(id: string, options: CommonOptions = {}): Promise<ProjectData> {
+  projectIdParamsSchema.parse({ projectId: id });
+  const headers = headersFor(options.authorization);
+  const result = await clientFor(options).request(`${ADMIN_PROJECTS_ROUTE}/${id}`, { responseSchema: projectSuccessEnvelopeSchema, ...(headers ? { headers } : {}), ...(options.signal ? { signal: options.signal } : {}) });
+  return result.data.data;
+}
+export async function updateAdminProject(id: string, input: unknown, options: CommonOptions = {}): Promise<ProjectData> {
+  projectIdParamsSchema.parse({ projectId: id });
+  const headers = headersFor(options.authorization);
+  const result = await clientFor(options).request(`${ADMIN_PROJECTS_ROUTE}/${id}`, { method: 'PATCH', json: projectPatchSchema.parse(input), responseSchema: projectSuccessEnvelopeSchema, ...(headers ? { headers } : {}) });
+  return result.data.data;
 }
 
 export async function loadAdminProjects(options: AdminProjectsLoadOptions = {}): Promise<AdminProjectListData> {

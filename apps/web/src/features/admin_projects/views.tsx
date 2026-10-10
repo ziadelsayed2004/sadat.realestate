@@ -1,4 +1,6 @@
 import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
+import { ProjectEditor } from './editor.tsx';
+import { loadAdminProject } from './data.ts';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectData, ProjectListQuery, ProjectReviewAction, ProjectStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -144,7 +146,8 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
               <td>{dateLabel(project.updatedAt, locale)}</td>
               <td>
                 <div className="admin-projects__row-actions">
-                  {project.availableActions.some(action => actions.includes(action as ProjectReviewAction)) ? <Button size="sm" variant="secondary" onClick={() => onReview(project.id)}>{copy.review}</Button> : <span className="admin-projects__muted">{copy.noActions}</span>}
+                  <ProjectLinks project={project} locale={locale} />
+                  {project.availableActions.some(action => actions.includes(action as ProjectReviewAction)) ? <Button size="sm" variant="secondary" onClick={() => onReview(project.id)}>{copy.review}</Button> : null}
                 </div>
               </td>
             </tr>
@@ -155,6 +158,11 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
   );
 }
 
+function ProjectLinks({ project, locale }: { project: ProjectData; locale: SupportedLocale }) {
+  const path = localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}`);
+  return <><a href={path}>{locale === 'ar' ? 'عرض التفاصيل' : 'View details'}</a>{project.availableActions.includes('update') ? <a href={`${path}#project-edit`}>{locale === 'ar' ? 'تعديل' : 'Edit'}</a> : null}{project.publicPath ? <a href={localePath(locale, project.publicPath)} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'عرض في الموقع' : 'View on site'}</a> : null}</>;
+}
+
 function ReviewPanel({ project, locale, onBack, review }: { readonly project: ProjectData; readonly locale: SupportedLocale; readonly onBack: () => void; readonly review: AdminProjectReviewMutation }) {
   useAdminAttentionRead('project-review', project.id);
   const copy = getAdminProjectsCopy(locale);
@@ -163,6 +171,7 @@ function ReviewPanel({ project, locale, onBack, review }: { readonly project: Pr
   const [reason, setReason] = useState('');
   const [mutationState, setMutationState] = useState<'idle' | 'saving' | 'error' | 'permission'>('idle');
   const [feedback, setFeedback] = useState<string | undefined>();
+  useEffect(() => setAction(availableActions[0] ?? ''), [project.version]);
 
   async function submit(): Promise<void> {
     if (action === '' || reason.trim().length < 5) {
@@ -196,6 +205,9 @@ function ReviewPanel({ project, locale, onBack, review }: { readonly project: Pr
         <article className="admin-projects__detail-card">
           <p className="admin-projects__eyebrow">{project.slug}</p>
           <h2>{localizedValue(project.name, locale)}</h2>
+          <div className="admin-projects__row-actions"><ProjectLinks project={project} locale={locale} /></div>
+          {project.description ? <p>{localizedValue(project.description, locale)}</p> : null}
+          {project.website ? <p>{project.website}</p> : null}
           <dl>
             <div><dt>{copy.columns.id}</dt><dd><code>{project.id}</code></dd></div>
             <div><dt>{copy.columns.status}</dt><dd><StatusBadge status={project.status} locale={locale} /></dd></div>
@@ -205,7 +217,7 @@ function ReviewPanel({ project, locale, onBack, review }: { readonly project: Pr
           </dl>
         </article>
         <form className="admin-projects__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}>
-          <h2>{copy.reviewTitle}</h2>
+          <h2>{copy.review}</h2>
           {availableActions.length > 0 ? (
             <fieldset disabled={mutationState === 'saving'}>
               <legend>{copy.columns.actions}</legend>
@@ -252,7 +264,8 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
     }
     const controller = new AbortController();
     setState('loading');
-    void source({ page: query.page ?? 1, limit: query.limit ?? 20, sort: query.sort ?? 'updatedAt', direction: query.direction ?? 'desc', ...(query.search === undefined ? {} : { search: query.search }), ...(query.status === undefined ? {} : { status: query.status }) }, controller.signal).then(nextData => {
+    const request = isReview && selectedProjectId ? loadAdminProject(selectedProjectId, { authorization: authClient, apiOrigin, signal: controller.signal }).then(project => ({ items: [project], page: 1, limit: 1, total: 1 })) : source({ page: query.page ?? 1, limit: query.limit ?? 20, sort: query.sort ?? 'updatedAt', direction: query.direction ?? 'desc', ...(query.search === undefined ? {} : { search: query.search }), ...(query.status === undefined ? {} : { status: query.status }) }, controller.signal);
+    void request.then(nextData => {
       if (controller.signal.aborted) return;
       setData(nextData);
       setState(isReview && selectedProjectId !== undefined && !nextData.items.some(item => item.id === selectedProjectId) ? 'not_found' : nextData.items.length === 0 ? 'empty' : 'success');
@@ -260,7 +273,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
       if (!controller.signal.aborted) setState(stateForError(error, isReview));
     });
     return () => controller.abort();
-  }, [attempt, initialData, isReview, query, selectedProjectId, sessionAllowed, source]);
+  }, [attempt, initialData, isReview, query, selectedProjectId, sessionAllowed, source, authClient, apiOrigin]);
 
   function applyFilters(): void {
     setQuery(current => ({ ...current, page: 1, ...(searchInput.trim() === '' ? { search: undefined } : { search: searchInput.trim() }), ...(statusInput === '' ? { status: undefined } : { status: statusInput }) }));
@@ -279,6 +292,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const reviewPath = (id: string) => localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${encodeURIComponent(id)}`);
+  const updateProject = (project: ProjectData) => setData(current => current ? { ...current, items: current.items.map(item => item.id === project.id ? project : item) } : current);
 
   return (
     <section className="admin-projects" data-screen-id={isReview ? 'ADM-13' : 'ADM-12'} data-route={isReview ? ADMIN_PROJECT_REVIEW_ROUTE : ADMIN_PROJECTS_ROUTE} data-device-scope="desktop" data-admin-projects-state={state}>
@@ -314,7 +328,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
           </section>
         </> : null}
         {isReview && !showProjectList && state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} review /> : null}
-        {isReview && state === 'success' && selectedProject !== undefined ? <ReviewPanel project={selectedProject} locale={locale} review={reviewMutation} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} /> : null}
+        {isReview && state === 'success' && selectedProject !== undefined ? <><ReviewPanel project={selectedProject} locale={locale} review={async (...args) => { const next = await reviewMutation(...args); updateProject(next); return next; }} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} />{selectedProject.availableActions.includes('update') ? <ProjectEditor key={selectedProject.id} project={selectedProject} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onSaved={updateProject} /> : null}</> : null}
       </div>
     </section>
   );

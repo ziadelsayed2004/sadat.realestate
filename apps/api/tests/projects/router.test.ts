@@ -15,6 +15,8 @@ const tokens: AccessTokenService = {
   }
 };
 const service: ProjectRouterDependencies['service'] = {
+  async adminGet() { return project; },
+  async adminUpdate(_adminId, _id, input) { return { ...project, ...input, description: input.description ?? undefined, locationId: input.locationId ?? undefined, organizationId: input.organizationId ?? undefined, website: input.website ?? undefined, version: input.version + 1 }; },
   async list() { return { data: { items: [project] }, page: 1, limit: 20, total: 1 }; },
   async listAdmin() { return { data: { items: [{ ...project, availableActions: ['approve' as const] }] }, page: 1, limit: 20, total: 1 }; },
   async create() { return project; },
@@ -30,6 +32,16 @@ async function run(fn: (url: string) => Promise<void>): Promise<void> {
 }
 
 const request = (url: string, method: string, path: string, token: string, body?: unknown) => fetch(url + path, { method, headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+
+test('administrative project detail and edit routes reject provider access and ownership or publication fields', async () => run(async url => {
+  const path = `/api/v1/admin/projects/${projectId}`;
+  const input = { version: 0, name: { en: 'Updated project' }, reason: 'Administrative project edit' };
+  assert.equal((await request(url, 'GET', path, 'admin')).status, 200);
+  assert.equal((await request(url, 'GET', path, 'provider')).status, 403);
+  assert.equal((await request(url, 'PATCH', path, 'provider', input)).status, 403);
+  assert.equal((await request(url, 'PATCH', path, 'admin', input)).status, 200);
+  for (const forbidden of [{ providerId: provider }, { status: 'published' }]) assert.equal((await request(url, 'PATCH', path, 'admin', { ...input, ...forbidden })).status, 400);
+}));
 
 test('project routes require provider/admin authentication and reject unauthorized roles', async () => run(async url => {
   assert.equal((await fetch(url + '/api/v1/provider/projects')).status, 401);

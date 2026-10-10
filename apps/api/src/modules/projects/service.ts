@@ -96,6 +96,11 @@ export function createProjectService(dependencies: { repository: ProjectReposito
   function metadata(actorId: string, reason: string, context: ProjectMutationContext): ProjectMutationMetadata {
     return { actorId, reason, requestId: context.requestId, traceId: context.traceId, changedAt: now() };
   }
+  async function adminData(project: StoredProject, canEdit: boolean): Promise<ProjectData> {
+    const publicPath = await dependencies.repository.publicPath(project);
+    const output = data(project, 'admin');
+    return { ...output, ...(publicPath ? { publicPath } : {}), availableActions: canEdit ? [...output.availableActions, ...(project.status !== 'archived' ? ['update' as const] : [])] : [] };
+  }
 
   return {
     async list(claims: AccessTokenClaims, query: ProjectListQuery): Promise<{ data: ProjectListData; page: number; limit: number; total: number }> {
@@ -109,7 +114,26 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const parsed = projectListQuerySchema.parse(query);
       if (!dependencies.authorization || !await dependencies.authorization.authorize(claims.sub, 'admin:projects.view')) throw new ProjectServiceError('PROJECT_FORBIDDEN');
       const result = await dependencies.repository.listAll(parsed);
-      return { data: { items: result.items.map(project => data(project, 'admin')) }, page: parsed.page, limit: parsed.limit, total: result.total };
+      const canEdit = await dependencies.authorization.authorize(claims.sub, 'admin:projects.review');
+      return { data: { items: await Promise.all(result.items.map(project => adminData(project, canEdit))) }, page: parsed.page, limit: parsed.limit, total: result.total };
+    },
+    async adminGet(adminId: string, id: string): Promise<ProjectData> {
+      if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, 'admin:projects.view')) throw new ProjectServiceError('PROJECT_FORBIDDEN');
+      projectObjectIdSchema.parse(id);
+      const project = await dependencies.repository.findByIdAny(id);
+      if (!project) throw new ProjectServiceError('PROJECT_NOT_FOUND');
+      return adminData(project, await dependencies.authorization.authorize(adminId, 'admin:projects.review'));
+    },
+    async adminUpdate(adminId: string, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData> {
+      await reviewPermission(adminId);
+      projectObjectIdSchema.parse(id);
+      const parsed = projectPatchSchema.parse(input);
+      const before = await dependencies.repository.findByIdAny(id);
+      if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
+      if (before.status === 'archived') throw new ProjectServiceError('PROJECT_TRANSITION_INVALID');
+      const { version, reason, ...fields } = parsed;
+      const changes = Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined)) as ProjectChanges;
+      return adminData(write(await dependencies.repository.update({ providerId: before.providerId, id, expectedVersion: version, changes, before, metadata: { ...metadata(adminId, reason, context), adminEdit: true } })), true);
     },
     async create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData> {
       await provider(claims);
@@ -123,6 +147,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const parsed = projectPatchSchema.parse(input);
       const before = await dependencies.repository.findById(claims.sub, id);
       if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
+      if (!['draft', 'needs_changes'].includes(before.status)) throw new ProjectServiceError('PROJECT_TRANSITION_INVALID');
       const changes: ProjectChanges = {};
       if (parsed.name !== undefined) changes.name = parsed.name;
       if (parsed.slug !== undefined) changes.slug = parsed.slug;
@@ -147,7 +172,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
       const toStatus = parsed.action === 'needs_changes' ? 'needs_changes' : parsed.action === 'approve' ? 'approved' : parsed.action === 'reject' ? 'rejected' : 'published';
-      return data(write(await dependencies.repository.review({ id, expectedVersion: parsed.version, toStatus, reviewerId: adminId, metadata: metadata(adminId, parsed.reason, context), before })), 'admin');
+      return adminData(write(await dependencies.repository.review({ id, expectedVersion: parsed.version, toStatus, reviewerId: adminId, metadata: metadata(adminId, parsed.reason, context), before })), true);
     }
   };
 }

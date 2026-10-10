@@ -38,6 +38,7 @@ export const projectListQuerySchema = z.object({
 }).strict();
 export const projectIdParamsSchema = z.object({ projectId: projectObjectIdSchema }).strict();
 export const projectDataSchema = z.object({
+  publicPath: z.string().regex(/^\/developers\/[a-z0-9-]+#project-[a-z0-9-]+$/).optional(),
   id: projectObjectIdSchema, providerId: projectObjectIdSchema, name: localizedTextSchema, slug: projectSlugSchema,
   description: localizedTextSchema.optional(), locationId: projectObjectIdSchema.optional(), organizationId: projectObjectIdSchema.optional(),
   website: z.url().max(2048).optional(), status: projectStatusSchema, version: z.number().int().nonnegative(),

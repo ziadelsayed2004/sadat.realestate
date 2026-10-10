@@ -13,7 +13,7 @@ test('ADM-12 and ADM-13 match the approved desktop visual baseline', async ({ pa
   await page.route('**/api/v1/admin/projects**', async route => {
     const body = route.request().method() === 'POST'
       ? { data: { ...adminProjectFixture(), status: 'approved', availableActions: ['publish'] }, meta: { requestId: 'admin-projects-visual-review' } }
-      : { data: { items: [adminProjectFixture()] }, meta: { requestId: 'admin-projects-visual-list', page: 1, limit: 20, total: 1 } };
+      : { data: new URL(route.request().url()).pathname.endsWith(adminProjectFixture().id) ? adminProjectFixture() : { items: [adminProjectFixture()] }, meta: { requestId: 'admin-projects-visual-list', page: 1, limit: 20, total: 1 } };
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
   });
 

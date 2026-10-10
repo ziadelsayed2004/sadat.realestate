@@ -9,6 +9,8 @@ import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { ProjectServiceError, type ProjectMutationContext } from './service.js';
 
 export const PROJECT_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/admin/projects/:projectId', operationId: 'getAdminProject' },
+  { method: 'PATCH', path: '/api/v1/admin/projects/:projectId', operationId: 'updateAdminProject' },
   { method: 'GET', path: '/api/v1/provider/projects', operationId: 'listProviderProjects' },
   { method: 'POST', path: '/api/v1/provider/projects', operationId: 'createProviderProject' },
   { method: 'PATCH', path: '/api/v1/provider/projects/:projectId', operationId: 'updateProviderProject' },
@@ -19,6 +21,8 @@ export const PROJECT_ROUTE_DEFINITIONS = [
 
 export interface ProjectRouterDependencies {
   service: {
+    adminGet(adminId: string, id: string): Promise<ProjectData>;
+    adminUpdate(adminId: string, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData>;
     list(claims: AccessTokenClaims, query: ProjectListQuery): Promise<{ data: ProjectListData; page: number; limit: number; total: number }>;
     listAdmin(claims: AccessTokenClaims, query: ProjectListQuery): Promise<{ data: ProjectListData; page: number; limit: number; total: number }>;
     create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData>;
@@ -61,6 +65,14 @@ export function createProjectRouter(dependencies: ProjectRouterDependencies): Ro
     next();
   });
   router.use('/admin/projects', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.get('/admin/projects/:projectId', async (request, response) => {
+    try { const { projectId } = projectIdParamsSchema.parse(request.params); response.status(200).json(toSuccessResponse(await dependencies.service.adminGet(adminId(response), projectId), context(request).requestId)); }
+    catch (error) { sendError(request, response, error); }
+  });
+  router.patch('/admin/projects/:projectId', async (request, response) => {
+    try { const { projectId } = projectIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.adminUpdate(adminId(response), projectId, projectPatchSchema.parse(request.body ?? {}), current), current.requestId)); }
+    catch (error) { sendError(request, response, error); }
+  });
 
   router.get('/provider/projects', async (request, response) => {
     try {
