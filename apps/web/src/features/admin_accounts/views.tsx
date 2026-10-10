@@ -118,7 +118,7 @@ function accountMetricLabels(locale: SupportedLocale, view: AdminAccountsView): 
   if (view === 'seekers') return [labels.totalSeekers, labels.matched, labels.verified, labels.pending, labels.restricted];
   if (view === 'providers') return [labels.totalProviders, labels.loaded, labels.pending, labels.approved, labels.rejected, labels.suspended];
   if (view === 'verification') return [labels.totalRequests, labels.loaded, labels.pending, labels.needsInformation, labels.approved, labels.rejected];
-  return [labels.totalAccounts, labels.matched, labels.seekers, labels.providers, labels.verified, labels.pending];
+  return [labels.totalAccounts, labels.matched, labels.seekers, labels.providers, labels.verified];
 }
 
 function accountMetrics(view: AdminAccountsView, data: AdminAccountUserListData | AdminProviderListData): ReadonlyArray<AccountMetricDefinition> {
@@ -128,7 +128,7 @@ function accountMetrics(view: AdminAccountsView, data: AdminAccountUserListData 
     const count = (predicate: (item: AdminAccountUserListData['items'][number]) => boolean) => items.filter(predicate).length;
     const values = view === 'seekers'
       ? [summary?.total ?? data.total, data.total, summary?.verified ?? count(item => item.status === 'verified'), summary?.pending ?? count(item => item.status === 'pending_review'), summary?.restricted ?? count(item => item.status === 'restricted')]
-      : [summary?.total ?? data.total, data.total, summary?.seekers ?? count(item => item.roleType === 'seeker'), summary?.providers ?? count(item => item.roleType === 'provider'), summary?.verified ?? count(item => item.status === 'verified'), summary?.pending ?? count(item => item.status === 'pending_review')];
+      : [summary?.total ?? data.total, data.total, summary?.seekers ?? count(item => item.roleType === 'seeker'), summary?.providers ?? count(item => item.roleType === 'provider'), summary?.verified ?? count(item => item.status === 'verified')];
     return values.map((value, index) => ({ label: accountMetricLabels('en', view)[index] ?? '', value, color: ['#1b2942', '#2f68c9', '#00854a', '#155b4f', '#00854a', '#bf6500'][index] ?? '#1b2942' }));
   }
   const items = (data as AdminProviderListData).items;
