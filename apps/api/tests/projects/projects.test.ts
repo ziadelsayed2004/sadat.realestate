@@ -12,6 +12,10 @@ test('generates a project link without user input and keeps it on name changes',
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import type { ProjectRepository, StoredProject } from '../../src/modules/projects/repository.js';
 import { createProjectService, ProjectServiceError, publicProjectProjection } from '../../src/modules/projects/service.js';
+import { Types, type Connection } from 'mongoose';
+import { createMongooseProjectRepository } from '../../src/modules/projects/repository.js';
+import type { ProjectModels } from '../../src/modules/projects/models.js';
+import type { AuditWriter } from '../../src/modules/audit/writer.js';
 
 const provider = '0123456789abcdef01234567';
 const other = '1123456789abcdef01234567';
@@ -20,6 +24,64 @@ const id = '2123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 const adminClaims = (sub = admin) => ({ sub, role: 'admin', status: 'verified', iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
+
+test('archives projects with review permission and the current version while keeping creation developer-only', async () => {
+  const context = { requestId: 'archive-project', traceId: 'a'.repeat(32) };
+  const input = { version: 3, action: 'archive' as const, reason: 'Remove project from display' };
+  const { service, rows } = fixture();
+  for (const status of ['draft', 'pending_review', 'approved', 'needs_changes', 'published', 'hidden', 'rejected'] as const) {
+    rows.set(id, record({ status, version: 3, organizationId: other }));
+    assert.ok((await service.adminGet(admin, id)).availableActions.includes('archive'));
+    await assert.rejects(service.review(other, id, input, context), error => error.code === 'PROJECT_FORBIDDEN');
+    await assert.rejects(service.review(admin, id, { ...input, version: 2 }, context), error => error.code === 'PROJECT_VERSION_CONFLICT');
+    const archived = await service.review(admin, id, input, context);
+    assert.equal(archived.status, 'archived');
+    assert.equal(archived.version, 4);
+    assert.deepEqual(archived.availableActions, []);
+    assert.equal(archived.publicPath, undefined);
+    assert.equal(publicProjectProjection(rows.get(id)!), null);
+    assert.equal(archived.reviewedBy, admin);
+    assert.equal(archived.reviewReason, input.reason);
+    await assert.rejects(service.review(admin, id, { ...input, version: 4 }, context), error => error.code === 'PROJECT_TRANSITION_INVALID');
+  }
+  const viewer = fixture(true, true, false);
+  assert.deepEqual((await viewer.service.adminGet(admin, id)).availableActions, []);
+  await assert.rejects(viewer.service.review(admin, id, input, context), error => error.code === 'PROJECT_FORBIDDEN');
+  const create = { name: { en: 'Owner project' }, reason: 'Create project draft' };
+  await assert.rejects(service.create(adminClaims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
+  await assert.rejects(service.create(claims(provider, 'pending_review'), create, context), error => error.code === 'PROJECT_FORBIDDEN');
+  await assert.rejects(fixture(true, false).service.create(claims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
+});
+
+test('project archive stores one atomic versioned change and audit before/after without deleting documents', async () => {
+  let current = { ...record({ status: 'published', version: 3 }), _id: new Types.ObjectId(id), providerId: new Types.ObjectId(provider) };
+  const audits: Array<Parameters<AuditWriter['record']>[0]> = [];
+  const session = { withTransaction: async (run: (session?: unknown) => unknown) => run(), endSession: async () => undefined };
+  const models = { Project: {
+    async findOneAndUpdate(filter: { _id: string; version: number; status: unknown }, update: { $set: typeof current; $inc: { version: number } }) {
+      assert.deepEqual(filter.status, { $ne: 'archived' });
+      assert.equal(filter._id, id);
+      if (current.status === 'archived' || current.version !== filter.version) return null;
+      current = { ...current, ...update.$set, version: current.version + update.$inc.version };
+      return current;
+    },
+    findById() { const query = { lean: () => query, session: async () => current }; return query; }
+  } } as unknown as ProjectModels;
+  const repository = createMongooseProjectRepository({ startSession: async () => session } as unknown as Connection, models, { record: async input => { audits.push(input); } } as AuditWriter);
+  const input = { id, expectedVersion: 3, toStatus: 'archived' as const, reviewerId: admin, before: record({ status: 'published', version: 3 }), metadata: { actorId: admin, reason: 'Remove displayed project', requestId: 'archive-project', traceId: 'a'.repeat(32), changedAt: now } };
+  const saved = await repository.review(input);
+  assert.equal(saved.kind, 'written');
+  assert.equal(current.status, 'archived');
+  assert.equal(current.version, 4);
+  assert.equal((await repository.review(input)).kind, 'version_conflict');
+  assert.equal((await repository.review({ ...input, expectedVersion: 4 })).kind, 'invalid_state');
+  assert.equal(audits.length, 1);
+  assert.equal(audits[0]?.action, 'project.archive');
+  assert.equal(audits[0]?.actorId, admin);
+  assert.equal(audits[0]?.actorType, 'admin');
+  assert.equal((audits[0]?.before as StoredProject).status, 'published');
+  assert.equal((audits[0]?.after as StoredProject).status, 'archived');
+});
 
 test('administrators open and edit published projects without republishing and providers cannot overwrite them', async () => {
   const { service, rows } = fixture();
@@ -48,7 +110,7 @@ function record(overrides: Partial<StoredProject> = {}): StoredProject {
   return { id, providerId: provider, name: { en: 'Project' }, slug: 'project', status: 'draft', version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(allowProjectView = true, canManageProjects = true) {
+function fixture(allowProjectView = true, canManageProjects = true, allowProjectReview = true) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
     async publicPath(project) { return project.status === 'published' && project.organizationId ? `/developers/qa-developer#project-${project.slug}` : undefined; },
@@ -89,13 +151,13 @@ function fixture(allowProjectView = true, canManageProjects = true) {
       const project = rows.get(input.id);
       if (!project) return { kind: 'not_found' };
       if (project.version !== input.expectedVersion) return { kind: 'version_conflict' };
-      if (input.toStatus === 'published' ? project.status !== 'approved' : project.status !== 'pending_review') return { kind: 'invalid_state' };
+      if (input.toStatus === 'archived' ? project.status === 'archived' : input.toStatus === 'published' ? project.status !== 'approved' : project.status !== 'pending_review') return { kind: 'invalid_state' };
       const next = { ...project, status: input.toStatus, reviewedBy: input.reviewerId, reviewedAt: input.metadata.changedAt, reviewReason: input.metadata.reason, ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt } : {}), version: project.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(project.id, next);
       return { kind: 'written', project: next };
     }
   };
-  return { service: createProjectService({ repository, providerPolicy: { canManageProjects: async () => canManageProjects }, authorization: { authorize: async (actor, permission) => actor === admin && (permission === 'admin:projects.review' || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
+  return { service: createProjectService({ repository, providerPolicy: { canManageProjects: async () => canManageProjects }, authorization: { authorize: async (actor, permission) => actor === admin && ((allowProjectReview && permission === 'admin:projects.review') || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
 }
 
 test('creates and lists only provider-owned localized drafts with safe projections', async () => {

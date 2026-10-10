@@ -48,6 +48,25 @@ function apiClientFor(requests: Array<{ method: string; path: string; authorizat
 }
 
 describe('Admin project management contracts and views', () => {
+  it.each(['ar', 'en'] as const)('confirms versioned archive without offering project creation for %s', async locale => {
+    window.history.pushState({}, '', `/admin/projects/review?projectId=${project.id}&action=archive`);
+    const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer#project-nile-heights', availableActions: ['archive' as const] };
+    const saved = { ...published, publicPath: undefined };
+    const review = vi.fn().mockResolvedValue({ ...saved, status: 'archived', version: 4, availableActions: [] });
+    const result = renderWithLocale(<AdminProjects locale={locale} session={session} initialData={{ ...listData, items: [published] }} review={review} />, { locale });
+    const copy = getAdminProjectsCopy(locale);
+    expect(screen.getByRole('radio', { name: copy.action.archive })).toBeChecked();
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تأكيد الأرشفة' : 'Confirm archive' }));
+    expect(review).not.toHaveBeenCalled();
+    expect(screen.getByRole('status')).toHaveTextContent(copy.reasonRequired);
+    fireEvent.change(screen.getByLabelText(copy.reasonLabel), { target: { value: 'Remove displayed project' } });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تأكيد الأرشفة' : 'Confirm archive' }));
+    await waitFor(() => expect(review).toHaveBeenCalledWith(project.id, { version: 3, action: 'archive', reason: 'Remove displayed project' }));
+    await waitFor(() => expect(screen.queryByRole('radio')).toBeNull());
+    expect(result.container.querySelector('a[href*="/developers/"]')).toBeNull();
+    result.unmount();
+    window.history.pushState({}, '', '/admin/projects');
+  });
   it('opens published projects even when no moderation actions are available', async () => {
     window.history.pushState({}, '', '/admin/projects');
     const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer#project-nile-heights', availableActions: ['update' as const] };

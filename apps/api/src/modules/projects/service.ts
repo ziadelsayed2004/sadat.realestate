@@ -49,8 +49,8 @@ export function publicProjectProjection(project: StoredProject, developer: Proje
 
 function actions(project: StoredProject, actor: 'provider' | 'admin'): ProjectData['availableActions'] {
   if (actor === 'provider') return project.status === 'draft' || project.status === 'needs_changes' ? ['update', 'submit'] : [];
-  if (project.status === 'pending_review') return ['needs_changes', 'approve', 'reject'];
-  return project.status === 'approved' ? ['publish'] : [];
+  if (project.status === 'pending_review') return ['needs_changes', 'approve', 'reject', 'archive'];
+  return project.status === 'archived' ? [] : project.status === 'approved' ? ['publish', 'archive'] : ['archive'];
 }
 
 function data(project: StoredProject, actor: 'provider' | 'admin' = 'provider'): ProjectData {
@@ -171,7 +171,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const parsed = projectReviewRequestSchema.parse(input);
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
-      const toStatus = parsed.action === 'needs_changes' ? 'needs_changes' : parsed.action === 'approve' ? 'approved' : parsed.action === 'reject' ? 'rejected' : 'published';
+      const toStatus = parsed.action === 'archive' ? 'archived' : parsed.action === 'needs_changes' ? 'needs_changes' : parsed.action === 'approve' ? 'approved' : parsed.action === 'reject' ? 'rejected' : 'published';
       return adminData(write(await dependencies.repository.review({ id, expectedVersion: parsed.version, toStatus, reviewerId: adminId, metadata: metadata(adminId, parsed.reason, context), before })), true);
     }
   };

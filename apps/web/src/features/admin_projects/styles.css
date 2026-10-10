@@ -53,7 +53,17 @@
 .admin-projects__panel-heading h2 { color: #1b2942; font-size: 1.25rem; }
 .admin-projects__panel-heading p,
 .admin-projects__direction-note { margin-block-start: 5px; color: #7e8999; font-size: .86rem; }
-.admin-projects__table-wrap { overflow-x: auto; }
+.admin-projects__table-wrap { overflow-x: auto; container-type: inline-size; }
+@container (max-width: 1100px) {
+  .admin-projects__table-wrap .admin-projects__table { display: block; min-width: 0; }
+  .admin-projects__table thead { display: none; }
+  .admin-projects__table tbody { display: block; }
+  .admin-projects__table tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; border-block-end: 1px solid #eee; }
+  .admin-projects__table td { display: block; min-width: 0; border: 0; }
+  .admin-projects__table td:nth-child(1), .admin-projects__table td:nth-child(3), .admin-projects__table td:nth-child(5), .admin-projects__table td:nth-child(6) { display: none; }
+  .admin-projects__table td:nth-child(7) { grid-column: 1 / -1; }
+}
+#project-actions { scroll-margin-block-start: 100px; }
 .admin-projects__table { width: 100%; min-width: 980px; border-collapse: collapse; color: #1b2942; }
 .admin-projects__table th,
 .admin-projects__table td { padding: 16px 18px; border-block-end: 1px solid #eef0f3; text-align: start; vertical-align: middle; }

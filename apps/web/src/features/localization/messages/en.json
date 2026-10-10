@@ -1564,7 +1564,7 @@
   "admin_projects/copy#getAdminProjectsCopy": {
     "eyebrow": "Project administration",
     "listTitle": "Projects management",
-    "listDescription": "Review projects and their state before approval and publication.",
+    "listDescription": "Review projects and their state before approval and publication. Projects are created only from the verified developer account.",
     "reviewTitle": "Project details",
     "reviewDescription": "View, edit and review this project.",
     "navigationLabel": "Project administration",
@@ -1603,7 +1603,8 @@
       "needs_changes": "Request changes",
       "approve": "Approve",
       "reject": "Reject",
-      "publish": "Publish"
+      "publish": "Publish",
+      "archive": "Remove from display (archive)"
     },
     "reasonLabel": "Action reason",
     "reasonPlaceholder": "Write a clear reason of at least five characters",

@@ -57,7 +57,7 @@ export interface ProjectRepository {
   create(input: { project: Omit<StoredProject, 'id' | 'version' | 'createdAt' | 'updatedAt'>; metadata: ProjectMutationMetadata }): Promise<ProjectWriteResult>;
   update(input: { providerId: string; id: string; expectedVersion: number; changes: ProjectChanges; metadata: ProjectMutationMetadata; before: StoredProject }): Promise<ProjectWriteResult>;
   submit(input: { providerId: string; id: string; expectedVersion: number; metadata: ProjectMutationMetadata; before: StoredProject }): Promise<ProjectWriteResult>;
-  review(input: { id: string; expectedVersion: number; toStatus: Extract<ProjectStatus, 'needs_changes' | 'approved' | 'rejected' | 'published'>; reviewerId: string; metadata: ProjectMutationMetadata; before: StoredProject }): Promise<ProjectWriteResult>;
+  review(input: { id: string; expectedVersion: number; toStatus: Extract<ProjectStatus, 'needs_changes' | 'approved' | 'rejected' | 'published' | 'archived'>; reviewerId: string; metadata: ProjectMutationMetadata; before: StoredProject }): Promise<ProjectWriteResult>;
 }
 
 function stored(r: ProjectRecord & { _id: Types.ObjectId }): StoredProject {
@@ -199,7 +199,7 @@ export function createMongooseProjectRepository(connection: Connection, models: 
     async review(input) {
       const set: Record<string, unknown> = { status: input.toStatus, reviewedBy: new Types.ObjectId(input.reviewerId), reviewedAt: input.metadata.changedAt, reviewReason: input.metadata.reason, updatedAt: input.metadata.changedAt };
       if (input.toStatus === 'published') set.publishedAt = input.metadata.changedAt;
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'published' ? 'approved' : 'pending_review' }, set, metadata: input.metadata, before: input.before, auditAction: 'project.review', actorType: 'admin' });
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'archived' ? { $ne: 'archived' } : input.toStatus === 'published' ? 'approved' : 'pending_review' }, set, metadata: input.metadata, before: input.before, auditAction: input.toStatus === 'archived' ? 'project.archive' : 'project.review', actorType: 'admin' });
     }
   };
 }

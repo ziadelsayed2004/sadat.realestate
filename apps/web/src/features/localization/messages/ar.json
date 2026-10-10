@@ -1564,7 +1564,7 @@
   "admin_projects/copy#getAdminProjectsCopy": {
     "eyebrow": "إدارة المشاريع",
     "listTitle": "إدارة المشاريع",
-    "listDescription": "راجع المشاريع وتحقق من حالتها قبل اعتمادها ونشرها.",
+    "listDescription": "راجع المشاريع وتحقق من حالتها قبل اعتمادها ونشرها. إضافة المشاريع من حساب المطور الموثق فقط.",
     "reviewTitle": "تفاصيل المشروع",
     "reviewDescription": "عرض المشروع وتعديله ومراجعة حالته.",
     "navigationLabel": "إدارة المشاريع",
@@ -1603,7 +1603,8 @@
       "needs_changes": "طلب تعديلات",
       "approve": "اعتماد",
       "reject": "رفض",
-      "publish": "نشر"
+      "publish": "نشر",
+      "archive": "حذف من العرض (أرشفة)"
     },
     "reasonLabel": "سبب الإجراء",
     "reasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن خمسة أحرف",

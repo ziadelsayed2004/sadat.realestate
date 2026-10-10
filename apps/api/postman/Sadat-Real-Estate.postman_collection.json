@@ -7175,7 +7175,7 @@
                 }
               ]
             },
-            "description": "Requires an isolated verified admin session with admin:projects.review.",
+            "description": "Requires an isolated verified admin session with admin:projects.review. Approve/reject/request changes only pending projects; publish approved projects. To remove a project from display, send action=archive with the current version and a reason (5-500 characters). Archive preserves the record and linked properties and requires the same review permission. It does not create a project or developer account.",
             "auth": {
               "type": "bearer",
               "bearer": [

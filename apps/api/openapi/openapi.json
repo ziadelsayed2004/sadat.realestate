@@ -4208,7 +4208,7 @@
     "/api/v1/admin/projects/{projectId}/review": {
       "post": {
         "operationId": "reviewAdminProject",
-        "summary": "Review and publish a project",
+        "summary": "Review, publish or archive a project",
         "security": [
           {
             "bearerAuth": []
@@ -4273,7 +4273,8 @@
           "409": {
             "$ref": "#/components/responses/ProviderError"
           }
-        }
+        },
+        "description": "Archiving removes the project from public projections, preserves linked properties and records before/after values in the audit log. Project creation remains exclusive to verified developer accounts."
       }
     },
     "/api/v1/provider/properties": {
@@ -20068,10 +20069,12 @@
                 "needs_changes",
                 "approve",
                 "reject",
-                "publish"
+                "publish",
+                "archive"
               ]
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "maxItems": 7
           }
         }
       },
@@ -20127,8 +20130,10 @@
               "needs_changes",
               "approve",
               "reject",
-              "publish"
-            ]
+              "publish",
+              "archive"
+            ],
+            "description": "Approve, reject or request changes while pending review; publish only approved projects; archive any non-archived project with a reason and current version. Requires admin:projects.review."
           },
           "reason": {
             "type": "string",

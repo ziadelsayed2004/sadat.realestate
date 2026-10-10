@@ -27,7 +27,7 @@ export const projectPatchSchema = z.object({
   reason: projectReasonSchema
 }).strict().refine(v => Object.keys(v).some(k => !['version', 'reason'].includes(k)), { message: 'At least one project field must be changed' });
 export const projectSubmitRequestSchema = z.object({ version: z.number().int().nonnegative(), reason: projectReasonSchema }).strict();
-export const PROJECT_REVIEW_ACTIONS = ['needs_changes', 'approve', 'reject', 'publish'] as const;
+export const PROJECT_REVIEW_ACTIONS = ['needs_changes', 'approve', 'reject', 'publish', 'archive'] as const;
 export const projectReviewActionSchema = z.enum(PROJECT_REVIEW_ACTIONS);
 export const projectReviewRequestSchema = z.object({ version: z.number().int().nonnegative(), action: projectReviewActionSchema, reason: projectReasonSchema }).strict();
 const positiveQuery = (fallback: number, max: number) => z.preprocess(v => v === undefined ? fallback : Number(v), z.number().int().positive().max(max));
@@ -44,7 +44,7 @@ export const projectDataSchema = z.object({
   website: z.url().max(2048).optional(), status: projectStatusSchema, version: z.number().int().nonnegative(),
   submittedAt: z.string().datetime({ offset: true }).optional(), reviewedBy: projectObjectIdSchema.optional(), reviewedAt: z.string().datetime({ offset: true }).optional(), reviewReason: projectReasonSchema.optional(), publishedAt: z.string().datetime({ offset: true }).optional(),
   createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }),
-  availableActions: z.array(z.enum(['update', 'submit', 'needs_changes', 'approve', 'reject', 'publish'])).max(6)
+  availableActions: z.array(z.enum(['update', 'submit', 'needs_changes', 'approve', 'reject', 'publish', 'archive'])).max(7)
 }).strict();
 export const projectListDataSchema = z.object({ items: z.array(projectDataSchema) }).strict();
 export const projectPublicDeveloperSchema = z.object({ id: projectObjectIdSchema, slug: projectSlugSchema, name: localizedTextSchema }).strict();

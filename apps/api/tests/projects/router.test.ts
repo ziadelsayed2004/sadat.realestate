@@ -22,7 +22,7 @@ const service: ProjectRouterDependencies['service'] = {
   async create() { return project; },
   async update() { return project; },
   async submit() { return { ...project, status: 'pending_review' as const, availableActions: [] }; },
-  async review(_adminId, _id, input) { return { ...project, status: input.action === 'approve' ? 'approved' as const : input.action === 'publish' ? 'published' as const : input.action === 'reject' ? 'rejected' as const : 'needs_changes' as const, availableActions: [] }; }
+  async review(_adminId, _id, input) { return { ...project, status: input.action === 'archive' ? 'archived' as const : input.action === 'approve' ? 'approved' as const : input.action === 'publish' ? 'published' as const : input.action === 'reject' ? 'rejected' as const : 'needs_changes' as const, availableActions: [] }; }
 };
 
 async function run(fn: (url: string) => Promise<void>): Promise<void> {
@@ -55,6 +55,11 @@ test('project routes require provider/admin authentication and reject unauthoriz
 }));
 
 test('project routes expose strict CRUD, submit, and review envelopes', async () => run(async url => {
+  assert.equal((await request(url, 'POST', '/api/v1/provider/projects', 'admin', { name: { en: 'Admin project' }, reason: 'Create project' })).status, 403);
+  assert.equal((await request(url, 'POST', `/api/v1/admin/projects/${projectId}/review`, 'provider', { version: 0, action: 'archive', reason: 'Remove displayed project' })).status, 403);
+  const archived = await request(url, 'POST', `/api/v1/admin/projects/${projectId}/review`, 'admin', { version: 0, action: 'archive', reason: 'Remove displayed project' });
+  assert.equal(archived.status, 200);
+  assert.equal((await archived.json()).data.status, 'archived');
   assert.equal((await request(url, 'GET', '/api/v1/provider/projects', 'provider')).status, 200);
   assert.equal((await request(url, 'GET', '/api/v1/admin/projects?page=1&limit=20', 'admin')).status, 200);
   assert.equal((await request(url, 'POST', '/api/v1/provider/projects', 'provider', { name: { en: 'Project' }, slug: 'project', reason: 'Create project' })).status, 201);

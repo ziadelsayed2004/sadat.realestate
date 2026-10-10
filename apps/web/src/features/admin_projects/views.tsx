@@ -33,7 +33,7 @@ export interface AdminProjectsProps {
 }
 
 const statuses: readonly ProjectStatus[] = ['draft', 'pending_review', 'needs_changes', 'approved', 'published', 'rejected', 'hidden', 'archived'];
-const actions: readonly ProjectReviewAction[] = ['needs_changes', 'approve', 'reject', 'publish'];
+const actions: readonly ProjectReviewAction[] = ['needs_changes', 'approve', 'reject', 'publish', 'archive'];
 
 function localePath(locale: SupportedLocale, path: string): string {
   const url = new URL(path, 'http://sadat-real-estate.local');
@@ -160,18 +160,18 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
 
 function ProjectLinks({ project, locale }: { project: ProjectData; locale: SupportedLocale }) {
   const path = localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}`);
-  return <><a href={path}>{locale === 'ar' ? 'عرض التفاصيل' : 'View details'}</a>{project.availableActions.includes('update') ? <a href={`${path}#project-edit`}>{locale === 'ar' ? 'تعديل' : 'Edit'}</a> : null}{project.publicPath ? <a href={localePath(locale, project.publicPath)} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'عرض في الموقع' : 'View on site'}</a> : null}</>;
+  return <><a href={path}>{locale === 'ar' ? 'عرض التفاصيل' : 'View details'}</a>{project.availableActions.includes('update') ? <a href={`${path}#project-edit`}>{locale === 'ar' ? 'تعديل' : 'Edit'}</a> : null}{project.availableActions.includes('archive') ? <a href={`${localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}&action=archive`)}#project-actions`}>{getAdminProjectsCopy(locale).action.archive}</a> : null}{project.publicPath ? <a href={localePath(locale, project.publicPath)} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'عرض في الموقع' : 'View on site'}</a> : null}</>;
 }
 
-function ReviewPanel({ project, locale, onBack, review }: { readonly project: ProjectData; readonly locale: SupportedLocale; readonly onBack: () => void; readonly review: AdminProjectReviewMutation }) {
+function ReviewPanel({ project, locale, onBack, review, initialAction }: { readonly project: ProjectData; readonly locale: SupportedLocale; readonly onBack: () => void; readonly review: AdminProjectReviewMutation; readonly initialAction?: string | undefined }) {
   useAdminAttentionRead('project-review', project.id);
   const copy = getAdminProjectsCopy(locale);
   const availableActions = actions.filter(action => project.availableActions.includes(action));
-  const [action, setAction] = useState<ProjectReviewAction | ''>(availableActions[0] ?? '');
+  const [action, setAction] = useState<ProjectReviewAction | ''>(availableActions.find(value => value === initialAction) ?? availableActions[0] ?? '');
   const [reason, setReason] = useState('');
   const [mutationState, setMutationState] = useState<'idle' | 'saving' | 'error' | 'permission'>('idle');
   const [feedback, setFeedback] = useState<string | undefined>();
-  useEffect(() => setAction(availableActions[0] ?? ''), [project.version]);
+  useEffect(() => setAction(availableActions.find(value => value === initialAction) ?? availableActions[0] ?? ''), [project.version]);
 
   async function submit(): Promise<void> {
     if (action === '' || reason.trim().length < 5) {
@@ -216,7 +216,7 @@ function ReviewPanel({ project, locale, onBack, review }: { readonly project: Pr
             {project.reviewReason !== undefined ? <div><dt>{copy.reasonLabel}</dt><dd>{project.reviewReason}</dd></div> : null}
           </dl>
         </article>
-        <form className="admin-projects__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}>
+        <form id="project-actions" className="admin-projects__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}>
           <h2>{copy.review}</h2>
           {availableActions.length > 0 ? (
             <fieldset disabled={mutationState === 'saving'}>
@@ -224,9 +224,10 @@ function ReviewPanel({ project, locale, onBack, review }: { readonly project: Pr
               <div className="admin-projects__action-list">
                 {availableActions.map(option => <label key={option} className="admin-projects__action-option"><input type="radio" name="project-review-action" value={option} checked={action === option} onChange={() => setAction(option)} />{copy.action[option]}</label>)}
               </div>
+              {action === 'archive' ? <p>{locale === 'ar' ? 'الأرشفة تخفي المشروع من الموقع وتحفظ سجله وعقاراته المرتبطة. اكتب السبب ثم أكّد الإجراء.' : 'Archiving hides the project and preserves its record and linked properties. Enter a reason, then confirm.'}</p> : null}
               <label className="admin-projects__field" htmlFor="admin-project-review-reason">{copy.reasonLabel}</label>
               <textarea id="admin-project-review-reason" value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} minLength={5} maxLength={500} aria-required="true" />
-              <Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.reviewing : copy.submitReview}</Button>
+              <Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.reviewing : action === 'archive' ? (locale === 'ar' ? 'تأكيد الأرشفة' : 'Confirm archive') : copy.submitReview}</Button>
             </fieldset>
           ) : <p className="admin-projects__muted">{copy.noActions}</p>}
           {feedback !== undefined ? <p className="admin-projects__feedback" data-tone={mutationState === 'error' || mutationState === 'permission' ? 'error' : 'success'} role="status">{feedback}</p> : null}
@@ -328,7 +329,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
           </section>
         </> : null}
         {isReview && !showProjectList && state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} review /> : null}
-        {isReview && state === 'success' && selectedProject !== undefined ? <><ReviewPanel project={selectedProject} locale={locale} review={async (...args) => { const next = await reviewMutation(...args); updateProject(next); return next; }} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} />{selectedProject.availableActions.includes('update') ? <ProjectEditor key={selectedProject.id} project={selectedProject} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onSaved={updateProject} /> : null}</> : null}
+        {isReview && state === 'success' && selectedProject !== undefined ? <><ReviewPanel project={selectedProject} locale={locale} initialAction={typeof window === "undefined" ? undefined : new URL(window.location.href).searchParams.get("action") ?? undefined} review={async (...args) => { const next = await reviewMutation(...args); updateProject(next); return next; }} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} />{selectedProject.availableActions.includes('update') ? <ProjectEditor key={selectedProject.id} project={selectedProject} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onSaved={updateProject} /> : null}</> : null}
       </div>
     </section>
   );
