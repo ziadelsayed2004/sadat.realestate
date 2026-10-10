@@ -1,4 +1,5 @@
 import { Router, type Request, type Response } from 'express';
+import { z } from 'zod';
 import {
   adBannerIdParamsSchema,
   adBannerListQuerySchema,
@@ -13,6 +14,8 @@ import { AdBannerServiceError, type AdBannerService } from './service.js';
 import type { BannerManagement } from './banner-management.js';
 
 export const ADMIN_BANNER_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/admin/banners/featured-options', operationId: 'getFeaturedBannerOptions' },
+  { method: 'POST', path: '/api/v1/admin/banners/featured-import', operationId: 'importLegacyFeaturedBanners' },
   { method: 'GET', path: '/api/v1/admin/banners/config', operationId: 'getAdminBannerConfig' },
   { method: 'PUT', path: '/api/v1/admin/banners/config', operationId: 'updateAdminBannerConfig' },
   { method: 'POST', path: '/api/v1/admin/banners/:bannerId/upload', operationId: 'uploadAdminBannerImage' },
@@ -83,6 +86,14 @@ export function createAdminBannerRouter(dependencies: AdminBannerRouterDependenc
 
   if (dependencies.management) {
     const management = dependencies.management;
+    router.get('/admin/banners/featured-options', async (request, response) => {
+      try { const query = z.object({ providerId: z.string().regex(/^[a-f0-9]{24}$/).optional() }).strict().parse(request.query); response.json(toSuccessResponse(await management.featuredOptions(claims(response), query.providerId), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.post('/admin/banners/featured-import', async (request, response) => {
+      try { z.object({}).strict().parse(request.body ?? {}); response.json(toSuccessResponse(await management.importFeatured(claims(response), mutationContext(request)), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
     router.get('/admin/banners/config', async (request, response) => {
       try { response.json(toSuccessResponse(await management.readConfig(claims(response)), requestId(request))); }
       catch (error) { sendError(request, response, error); }

@@ -7,6 +7,6 @@ export function BannerPlacementOptions({ placements, placementKey, campaign, loc
   const fallback = campaign ? adPlacementLabel(campaign, locale) : placementKey === 'homepage.hero' ? (locale === 'ar' ? 'بانر الصفحة الرئيسية' : 'Homepage banner') : placementKey;
   return <>
     {!placements.some(item => item.key === placementKey) ? <option value={placementKey}>{fallback}</option> : null}
-    {placements.map(item => <option key={item.key} value={item.key} disabled={!item.active}>{item.label[locale] || item.label.ar || item.label.en || item.key}</option>)}
+    {placements.filter(item => item.key !== 'homepage.featured').map(item => <option key={item.key} value={item.key} disabled={!item.active}>{item.label[locale] || item.label.ar || item.label.en || item.key}</option>)}
   </>;
 }

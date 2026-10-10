@@ -9075,6 +9075,111 @@
           ]
         }
       }
+    },
+    {
+      "name": "Featured homepage ads and office identity",
+      "item": [
+        {
+          "name": "Read office identity subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/public-identity-subscription",
+              "variable": [
+                {
+                  "key": "providerId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set paid office identity period",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/public-identity-subscription",
+              "variable": [
+                {
+                  "key": "providerId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\",\n  \"paymentConfirmed\": true,\n  \"startAt\": \"2026-10-10T00:00:00Z\",\n  \"endAt\": \"2026-11-10T00:00:00Z\",\n  \"expectedVersion\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "List eligible advertisers and owned destinations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/banners/featured-options?providerId={{providerId}}"
+            }
+          }
+        },
+        {
+          "name": "Import legacy cards as reviewable drafts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/banners/featured-import"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }

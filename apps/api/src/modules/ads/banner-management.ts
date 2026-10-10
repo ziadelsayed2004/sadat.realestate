@@ -2,13 +2,15 @@ import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import { Types, type Connection } from 'mongoose';
 import sharp, { type OutputInfo } from 'sharp';
-import { adBannerConfigPutSchema, adBannerConfigSchema, adBannerMediaSchema } from '@sadat-real-estate/contracts';
+import { adBannerConfigPutSchema, adBannerConfigSchema, adBannerMediaSchema, featuredCreativeSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { RbacService } from '../rbac/service.js';
 import type { AuditWriter } from '../audit/writer.js';
 import type { StorageAdapter, MalwareScannerAdapter } from '../uploads/adapters.js';
 import type { AdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { ApiContractError } from '../contracts/error-boundary.js';
+import { featuredOptions, resolveFeatured } from './featured.js';
+import { importLegacyFeatured } from './featured-migration.js';
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const invalid = () => new ApiContractError('BANNER_UPLOAD_INVALID', 'errors.validation', 400);
@@ -19,7 +21,7 @@ const notFound = () => new ApiContractError('NOT_FOUND', 'errors.notFound', 404)
 export async function readPublishedBannerRows(connection: Connection, at = new Date()) {
   const settings = await connection.collection('ad_settings').findOne({ enabled: true, allowedSurfaces: 'homepage' });
   if (!settings) return [];
-  return connection.collection('ad_banners').aggregate([
+  const rows = await connection.collection('ad_banners').aggregate([
     { $match: { status: { $in: ['scheduled', 'active'] }, startAt: { $lte: at }, endAt: { $gt: at } } },
     { $lookup: { from: 'ad_placements', localField: 'placementKey', foreignField: 'key', as: 'placement' } },
     { $unwind: '$placement' },
@@ -53,8 +55,19 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     { $limit: Math.min(1000, Math.max(1, Number(settings.maxActiveBanners) || 100)) },
     { $unwind: '$media' },
     { $limit: 100 },
-    { $project: { _id: 1, title: 1, altText: 1, body: 1, targetUrl: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
+    { $project: { _id: 1, title: 1, altText: 1, body: 1, targetUrl: 1, placementKey: 1, featured: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
   ]).toArray();
+  const published: typeof rows = [];
+  for (const row of rows) {
+    if (row.placementKey !== 'homepage.featured') { published.push(row); continue; }
+    const creative = featuredCreativeSchema.safeParse(row.featured);
+    if (!creative.success) continue;
+    try {
+      const resolved = await resolveFeatured(connection, creative.data);
+      published.push({ ...row, targetUrl: resolved.targetPath, advertiserName: resolved.advertiser.name, advertiserImageUrl: resolved.advertiser.imageUrl, advertiserVerified: resolved.advertiser.verified });
+    } catch (error) { if (!(error instanceof ApiContractError)) throw error; }
+  }
+  return published;
 }
 
 export function createBannerManagement(dependencies: {
@@ -77,6 +90,8 @@ export function createBannerManagement(dependencies: {
     return adBannerConfigSchema.parse({ enabled: settings?.enabled === true && settings.allowedSurfaces?.includes('homepage') === true, version: settings?.version ?? 0, placements: placements.map(row => ({ key: row.key, label: row.label ?? { ar: row.key, en: row.key }, active: row.active === true })) });
   }
   return {
+    async featuredOptions(claims: AccessTokenClaims, providerId?: string) { await authorize(claims, 'admin:banners.view'); return { ...await featuredOptions(connection, providerId), canManage: await authorization.authorize(claims.sub, 'admin:banners.manage') }; },
+    async importFeatured(claims: AccessTokenClaims, context: { requestId: string; traceId: string }) { await authorize(claims, 'admin:banners.manage'); await importLegacyFeatured(connection, audit, claims.sub, context); return { imported: true }; },
     async readConfig(claims: AccessTokenClaims) { await authorize(claims, 'admin:banners.view'); return config(); },
     async updateConfig(claims: AccessTokenClaims, input: unknown, context: { requestId: string; traceId: string }) {
       await authorize(claims, 'admin:banners.manage');
@@ -93,6 +108,7 @@ export function createBannerManagement(dependencies: {
           else await settings.insertOne({ _id: new Types.ObjectId('00000000000000000000ba01'), ...after }, { session });
           // Explicit setup action only; never silently re-enable an existing placement.
           await connection.collection('ad_placements').updateOne({ key: 'homepage.hero' }, { $setOnInsert: { surface: 'homepage', label: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['ar', 'en'], targetUrlRequired: false, version: 0, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now } }, { upsert: true, session });
+          await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $setOnInsert: { surface: 'homepage', label: { ar: 'إعلانات الرئيسية المميزة', en: 'Featured homepage cards' }, width: 1200, height: 800, active: true, sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: true, version: 0, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now } }, { upsert: true, session });
           await audit.record({ actorType: 'admin', actorId: claims.sub, targetType: 'ad_settings', targetId: 'homepage', action: 'ad_settings.banner_display', reason: parsed.reason, before: { enabled: before?.enabled ?? false, version: before?.version ?? 0 }, after: { enabled: parsed.enabled, version: after.version }, ...context, occurredAt: now }, session);
         });
       } finally { await session.endSession(); }
@@ -119,7 +135,7 @@ export function createBannerManagement(dependencies: {
         processed = await image.rotate().toFormat(expectedFormat).toBuffer({ resolveWithObject: true });
       } catch { throw invalid(); }
       const rules = await policy.read();
-      if ((rules.acceptedFileFormats.length && !rules.acceptedFileFormats.includes(mime as 'image/png')) || (rules.dimensions.length && !rules.dimensions.some(size => size.width === processed.info.width && size.height === processed.info.height))) throw invalid();
+      if ((rules.acceptedFileFormats.length && !rules.acceptedFileFormats.includes(mime as 'image/png')) || (banner.placementKey !== 'homepage.featured' && rules.dimensions.length && !rules.dimensions.some(size => size.width === processed.info.width && size.height === processed.info.height))) throw invalid();
       if (processed.data.length > MAX_BYTES) throw invalid();
       const mediaId = new Types.ObjectId(); const now = new Date();
       const media = adBannerMediaSchema.parse({ id: mediaId.toHexString(), bannerId, url: `/api/v1/public/banner-media/${mediaId.toHexString()}`, mime, width: processed.info.width, height: processed.info.height, active: true, version: 0, createdBy: claims.sub, createdAt: now.toISOString(), updatedAt: now.toISOString() });

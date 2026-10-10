@@ -8545,7 +8545,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessEnvelope"
+                  "$ref": "#/components/schemas/ArticlePublicListSuccessEnvelope"
                 }
               }
             }
@@ -8589,7 +8589,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessEnvelope"
+                  "$ref": "#/components/schemas/ArticlePublicSuccessEnvelope"
                 }
               }
             }
@@ -11554,6 +11554,9 @@
           }
         },
         "responses": {
+          "200": {
+            "$ref": "#/components/responses/CommissionExceptionSuccess"
+          },
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
@@ -11565,9 +11568,6 @@
           },
           "409": {
             "$ref": "#/components/responses/CommissionExceptionError"
-          },
-          "200": {
-            "$ref": "#/components/responses/CommissionExceptionSuccess"
           }
         }
       }
@@ -12170,14 +12170,14 @@
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
-          "404": {
-            "$ref": "#/components/responses/ProviderError"
-          },
           "401": {
             "description": "Authentication required"
           },
           "403": {
             "description": "Administrative property view permission required"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
           }
         }
       }
@@ -12514,6 +12514,217 @@
                 "maxProperties": 0
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/providers/{providerId}/public-identity-subscription": {
+      "get": {
+        "operationId": "getProviderIdentitySubscription",
+        "summary": "Read office identity subscription; requires admin:providers.view",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicIdentitySubscriptionSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Account or destination unavailable"
+          },
+          "409": {
+            "description": "Expected version is stale"
+          }
+        }
+      },
+      "put": {
+        "operationId": "putProviderIdentitySubscription",
+        "summary": "Confirm external payment and activate, renew or stop office identity; requires admin:providers.visibility.manage and optimistic version",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicIdentitySubscriptionPut"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful authorized response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicIdentitySubscriptionSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Account or destination unavailable"
+          },
+          "409": {
+            "description": "Expected version is stale"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/banners/featured-options": {
+      "get": {
+        "operationId": "getFeaturedBannerOptions",
+        "summary": "List eligible advertisers and their own published internal destinations; requires admin:banners.view",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturedOptionsSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Account or destination unavailable"
+          },
+          "409": {
+            "description": "Expected version is stale"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/banners/featured-import": {
+      "post": {
+        "operationId": "importLegacyFeaturedBanners",
+        "summary": "Idempotently import legacy cards as unlinked drafts for review; requires admin:banners.manage",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "imported": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "imported"
+                      ]
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Account or destination unavailable"
+          },
+          "409": {
+            "description": "Expected version is stale"
           }
         }
       }
@@ -14928,7 +15139,250 @@
       },
       "AdBanner": {
         "type": "object",
-        "additionalProperties": false,
+        "properties": {
+          "featured": {
+            "type": "object",
+            "properties": {
+              "advertiserProviderId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "property",
+                      "project",
+                      "organization"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{24}$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "highlight": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "installment": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "eyebrow": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "ctaLabel": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "adRequestId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "placementKey": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[a-z][a-z0-9_.-]*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "altText": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "mediaId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "mediaIds": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60
+          },
+          "targetUrl": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "scheduled",
+              "active",
+              "ended",
+              "archived"
+            ]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "createdBy": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "updatedBy": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
         "required": [
           "id",
           "placementKey",
@@ -14943,9 +15397,118 @@
           "createdAt",
           "updatedAt"
         ],
+        "additionalProperties": false
+      },
+      "AdBannerCreate": {
+        "type": "object",
         "properties": {
-          "id": {
-            "$ref": "#/components/schemas/AdObjectId"
+          "featured": {
+            "type": "object",
+            "properties": {
+              "advertiserProviderId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "property",
+                      "project",
+                      "organization"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{24}$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "highlight": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "installment": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "eyebrow": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "ctaLabel": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "adRequestId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
           },
           "placementKey": {
             "type": "string",
@@ -14954,161 +15517,216 @@
             "pattern": "^[a-z][a-z0-9_.-]*$"
           },
           "title": {
-            "$ref": "#/components/schemas/LocalizedText"
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
           },
           "altText": {
-            "$ref": "#/components/schemas/LocalizedText"
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
           },
           "mediaId": {
-            "$ref": "#/components/schemas/AdObjectId"
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "mediaIds": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60
           },
           "targetUrl": {
             "type": "string",
-            "format": "uri",
-            "pattern": "^https://",
-            "maxLength": 2048
+            "maxLength": 2048,
+            "format": "uri"
           },
           "startAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "endAt": {
             "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "$ref": "#/components/schemas/AdBannerStatus"
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "sortOrder": {
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
-          },
-          "version": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "createdBy": {
-            "$ref": "#/components/schemas/AdObjectId"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/AdObjectId"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "adRequestId": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{24}$",
-            "description": "Immutable advertising request associated with this banner."
-          },
-          "mediaIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "pattern": "^[a-f0-9]{24}$"
-            },
-            "maxItems": 20,
-            "uniqueItems": true,
-            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
-          },
-          "displaySeconds": {
-            "type": "integer",
-            "minimum": 3,
-            "maximum": 60,
-            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
-          },
-          "body": {
-            "$ref": "#/components/schemas/LocalizedText"
           }
-        }
-      },
-      "AdBannerCreate": {
-        "type": "object",
-        "additionalProperties": false,
+        },
         "required": [
           "placementKey",
           "title",
           "startAt",
           "endAt"
         ],
-        "properties": {
-          "placementKey": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 80,
-            "pattern": "^[a-z][a-z0-9_.-]*$"
-          },
-          "title": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "altText": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "mediaId": {
-            "$ref": "#/components/schemas/AdObjectId"
-          },
-          "targetUrl": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https://",
-            "maxLength": 2048
-          },
-          "startAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 100000
-          },
-          "adRequestId": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{24}$",
-            "description": "Immutable advertising request associated with this banner."
-          },
-          "mediaIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "pattern": "^[a-f0-9]{24}$"
-            },
-            "maxItems": 20,
-            "uniqueItems": true,
-            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
-          },
-          "displaySeconds": {
-            "type": "integer",
-            "minimum": 3,
-            "maximum": 60,
-            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
-          },
-          "body": {
-            "$ref": "#/components/schemas/LocalizedText"
-          }
-        }
+        "additionalProperties": false
       },
       "AdBannerPatch": {
         "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "expectedVersion",
-          "reason"
-        ],
         "properties": {
+          "featured": {
+            "type": "object",
+            "properties": {
+              "advertiserProviderId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "property",
+                      "project",
+                      "organization"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{24}$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "highlight": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "installment": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "eyebrow": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "ctaLabel": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
           "expectedVersion": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "maximum": 9007199254740991
           },
           "reason": {
             "type": "string",
@@ -15122,12 +15740,67 @@
             "pattern": "^[a-z][a-z0-9_.-]*$"
           },
           "title": {
-            "$ref": "#/components/schemas/LocalizedText"
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
           },
           "altText": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/LocalizedText"
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
               },
               {
                 "type": "null"
@@ -15137,20 +15810,33 @@
           "mediaId": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/AdObjectId"
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
               },
               {
                 "type": "null"
               }
             ]
           },
+          "mediaIds": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "displaySeconds": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 60
+          },
           "targetUrl": {
             "anyOf": [
               {
                 "type": "string",
-                "format": "uri",
-                "pattern": "^https://",
-                "maxLength": 2048
+                "maxLength": 2048,
+                "format": "uri"
               },
               {
                 "type": "null"
@@ -15159,47 +15845,35 @@
           },
           "startAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "endAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
           },
           "status": {
-            "$ref": "#/components/schemas/AdBannerStatus"
+            "type": "string",
+            "enum": [
+              "draft",
+              "scheduled",
+              "active",
+              "ended",
+              "archived"
+            ]
           },
           "sortOrder": {
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
-          },
-          "mediaIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "pattern": "^[a-f0-9]{24}$"
-            },
-            "maxItems": 20,
-            "uniqueItems": true,
-            "description": "Ordered image selection. An empty array clears all selected images; absent retains legacy mediaId behavior."
-          },
-          "displaySeconds": {
-            "type": "integer",
-            "minimum": 3,
-            "maximum": 60,
-            "description": "Seconds per slide; defaults to the banner display setting (8 seconds)."
-          },
-          "body": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/LocalizedText"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
-        }
+        },
+        "required": [
+          "expectedVersion",
+          "reason"
+        ],
+        "additionalProperties": false
       },
       "AdBannerListData": {
         "type": "object",
@@ -15711,122 +16385,247 @@
       },
       "ArticleCreate": {
         "type": "object",
-        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoTitle": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoDescription": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "coverAssetId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "galleryAssetIds": {
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          }
+        },
         "required": [
           "categoryId",
           "title",
           "body",
           "reason"
         ],
-        "properties": {
-          "categoryId": {
-            "$ref": "#/components/schemas/ArticleObjectId"
-          },
-          "slug": {
-            "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
-            "minLength": 2,
-            "maxLength": 120,
-            "description": "Optional for creation. The server generates a unique identifier when omitted. Existing identifiers are preserved on name/title edits."
-          },
-          "title": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "body": {
-            "$ref": "#/components/schemas/ArticleDraftBody"
-          },
-          "seoTitle": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "seoDescription": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "coverAssetId": {
-            "$ref": "#/components/schemas/ArticleObjectId"
-          },
-          "reason": {
-            "$ref": "#/components/schemas/ArticleReason"
-          },
-          "galleryAssetIds": {
-            "type": "array",
-            "uniqueItems": true,
-            "maxItems": 12,
-            "items": {
-              "$ref": "#/components/schemas/ArticleObjectId"
-            }
-          }
-        }
+        "additionalProperties": false
       },
       "ArticlePatch": {
         "type": "object",
-        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "categoryId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoTitle": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "seoDescription": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "coverAssetId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "galleryAssetIds": {
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          }
+        },
         "required": [
           "version",
           "reason"
         ],
-        "minProperties": 3,
-        "properties": {
-          "version": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "categoryId": {
-            "$ref": "#/components/schemas/ArticleObjectId"
-          },
-          "slug": {
-            "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
-            "minLength": 2,
-            "maxLength": 120
-          },
-          "title": {
-            "$ref": "#/components/schemas/LocalizedText"
-          },
-          "body": {
-            "$ref": "#/components/schemas/ArticleDraftBody"
-          },
-          "seoTitle": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/LocalizedText"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "seoDescription": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/LocalizedText"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "coverAssetId": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ArticleObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "reason": {
-            "$ref": "#/components/schemas/ArticleReason"
-          },
-          "galleryAssetIds": {
-            "type": "array",
-            "uniqueItems": true,
-            "maxItems": 12,
-            "items": {
-              "$ref": "#/components/schemas/ArticleObjectId"
-            }
-          }
-        }
+        "additionalProperties": false
       },
       "ArticleTransitionRequest": {
         "type": "object",
@@ -17352,6 +18151,7 @@
           "admin:property-reports.view",
           "admin:providers.review",
           "admin:providers.view",
+          "admin:providers.visibility.manage",
           "admin:request-issues.manage",
           "admin:request-issues.view",
           "admin:requests.assign",
@@ -22159,40 +22959,228 @@
       },
       "PublicHomepageBanner": {
         "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "key",
-          "order"
-        ],
         "properties": {
           "key": {
             "type": "string",
+            "minLength": 2,
+            "maxLength": 64,
             "pattern": "^[a-z][a-z0-9_]*$"
           },
           "title": {
-            "$ref": "#/components/schemas/LocalizedText"
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "altText": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "eyebrow": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "highlight": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "presentation": {
+            "type": "string",
+            "enum": [
+              "hero",
+              "featured"
+            ]
+          },
+          "advertiserName": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "advertiserImageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)[^\\s]*$"
+              }
+            ]
+          },
+          "advertiserVerified": {
+            "type": "boolean"
+          },
+          "installment": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "ctaLabel": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
           },
           "imageUrl": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 2048
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)[^\\s]*$"
+              }
+            ]
           },
           "targetUrl": {
-            "type": "string",
-            "format": "uri",
-            "maxLength": 2048
-          },
-          "order": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 100000
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)[^\\s]*$"
+              }
+            ]
           },
           "displaySeconds": {
             "type": "integer",
             "minimum": 3,
             "maximum": 60
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
           }
-        }
+        },
+        "required": [
+          "key",
+          "order"
+        ],
+        "additionalProperties": false
       },
       "CommunityObjectId": {
         "type": "string",
@@ -26485,6 +27473,21 @@
               "admin"
             ]
           },
+          "customerVisibility": {
+            "type": "string",
+            "enum": [
+              "hidden",
+              "visible"
+            ]
+          },
+          "customerPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{7,14}$"
+          },
+          "customerImageUrl": {
+            "type": "string",
+            "maxLength": 2048
+          },
           "creatorId": {
             "type": "string",
             "pattern": "^[a-f0-9]{24}$"
@@ -26788,11 +27791,6 @@
                   "maxLength": 2000,
                   "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
                 },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                },
                 "authorRole": {
                   "type": "string",
                   "enum": [
@@ -26800,6 +27798,11 @@
                     "admin",
                     "provider"
                   ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
                 }
               },
               "required": [
@@ -27508,21 +28511,19 @@
       },
       "ArticleDraftBody": {
         "type": "object",
-        "additionalProperties": false,
-        "minProperties": 1,
         "properties": {
           "ar": {
             "type": "string",
-            "maxLength": 20000,
+            "maxLength": 300000,
             "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
           },
           "en": {
             "type": "string",
-            "maxLength": 20000,
+            "maxLength": 300000,
             "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
           }
         },
-        "description": "Drafts may have an empty body. Submission and publication require a nonempty body in at least one language."
+        "additionalProperties": false
       },
       "PropertyAdminEdit": {
         "type": "object",
@@ -27698,6 +28699,1821 @@
             "maxLength": 160
           }
         }
+      },
+      "FeaturedCreative": {
+        "type": "object",
+        "properties": {
+          "advertiserProviderId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "destination": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "property",
+                  "project",
+                  "organization"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              }
+            },
+            "required": [
+              "kind",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "highlight": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "installment": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "eyebrow": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "ctaLabel": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeaturedOptions": {
+        "type": "object",
+        "properties": {
+          "canManage": {
+            "default": false,
+            "type": "boolean"
+          },
+          "advertisers": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "name": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                "verified": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "verified"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "destinations": {
+            "maxItems": 300,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "property",
+                    "project",
+                    "organization"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "name": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "href": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "pattern": "^\\/(?!\\/)"
+                }
+              },
+              "required": [
+                "kind",
+                "id",
+                "name",
+                "href"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "canManage",
+          "advertisers",
+          "destinations"
+        ],
+        "additionalProperties": false
+      },
+      "FeaturedOptionsSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "canManage": {
+                "default": false,
+                "type": "boolean"
+              },
+              "advertisers": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{24}$"
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "ar": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        },
+                        "en": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "imageUrl": {
+                      "type": "string",
+                      "maxLength": 2048
+                    },
+                    "verified": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "verified"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "destinations": {
+                "maxItems": 300,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "property",
+                        "project",
+                        "organization"
+                      ]
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{24}$"
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "ar": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        },
+                        "en": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "href": {
+                      "type": "string",
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "id",
+                    "name",
+                    "href"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "canManage",
+              "advertisers",
+              "destinations"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "PublicIdentitySubscription": {
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "inactive",
+              "active"
+            ]
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "paymentConfirmed": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "canManage": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "providerId",
+          "status",
+          "paymentConfirmed",
+          "version",
+          "visible",
+          "canManage"
+        ],
+        "additionalProperties": false
+      },
+      "PublicIdentitySubscriptionPut": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "inactive",
+              "active"
+            ]
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          },
+          "paymentConfirmed": {
+            "type": "boolean"
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "status",
+          "paymentConfirmed",
+          "expectedVersion"
+        ],
+        "additionalProperties": false
+      },
+      "PublicIdentitySubscriptionSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "providerId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "inactive",
+                  "active"
+                ]
+              },
+              "startAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "endAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "paymentConfirmed": {
+                "type": "boolean"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "visible": {
+                "type": "boolean"
+              },
+              "canManage": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "providerId",
+              "status",
+              "paymentConfirmed",
+              "version",
+              "visible",
+              "canManage"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "ViewingData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "propertyId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "seekerId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "customerVisibility": {
+            "type": "string",
+            "enum": [
+              "hidden",
+              "visible"
+            ]
+          },
+          "customerPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{7,14}$"
+          },
+          "customerImageUrl": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "customerName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 401
+          },
+          "providerId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "property": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "slug": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "property",
+                  "unit"
+                ]
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "transactionType": {
+                "type": "string",
+                "enum": [
+                  "sale",
+                  "rent"
+                ]
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)[^\\s]*$"
+                  }
+                ]
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "area": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000
+                  },
+                  "unit": {
+                    "type": "string",
+                    "const": "sqm"
+                  }
+                },
+                "required": [
+                  "value",
+                  "unit"
+                ],
+                "additionalProperties": false
+              },
+              "layout": {
+                "type": "object",
+                "properties": {
+                  "bedrooms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "bathrooms": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "floor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "totalFloors": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000
+                  }
+                },
+                "additionalProperties": false
+              },
+              "price": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000000000000
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "additionalProperties": false
+              },
+              "locationName": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "sourceName": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "sourceImageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)[^\\s]*$"
+                  }
+                ]
+              },
+              "sourceType": {
+                "type": "string",
+                "enum": [
+                  "individual_broker",
+                  "brokerage_office",
+                  "developer_company"
+                ]
+              },
+              "sourceVerified": {
+                "type": "boolean"
+              },
+              "publicCode": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "viewCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "installmentAvailable": {
+                "type": "boolean"
+              },
+              "featured": {
+                "type": "boolean"
+              },
+              "deliveryStatus": {
+                "type": "string",
+                "enum": [
+                  "ready_to_move",
+                  "under_construction",
+                  "future_delivery"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "kind",
+              "name",
+              "transactionType"
+            ],
+            "additionalProperties": false
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "requested",
+              "confirmed",
+              "rescheduled",
+              "cancelled",
+              "completed"
+            ]
+          },
+          "availableActions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "confirm",
+                "reschedule",
+                "cancel",
+                "complete"
+              ]
+            }
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "pattern": "^[A-Za-z_]+(?:\\/[A-Za-z0-9_+\\-]+)*$"
+          },
+          "note": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "id",
+          "propertyId",
+          "status",
+          "requestedAt",
+          "timezone",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "Article": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "categoryId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoTitle": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoDescription": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "coverAssetId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "galleryAssetIds": {
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          "imageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)[^\\s]*$"
+              }
+            ]
+          },
+          "authorId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "pending_review",
+              "published",
+              "archived"
+            ]
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "availableActions": {
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "update",
+                "submit",
+                "publish",
+                "return_to_draft",
+                "archive",
+                "restore",
+                "delete"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "categoryId",
+          "slug",
+          "title",
+          "body",
+          "authorId",
+          "status",
+          "version",
+          "createdAt",
+          "updatedAt",
+          "availableActions"
+        ],
+        "additionalProperties": false
+      },
+      "ArticlePublic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "categoryId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 300000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoTitle": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "seoDescription": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "coverAssetId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "images": {
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "pattern": "^\\/api\\/v1\\/public\\/article-photos\\/[a-f0-9]{24}$"
+                }
+              },
+              "required": [
+                "id",
+                "imageUrl"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "imageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)[^\\s]*$"
+              }
+            ]
+          },
+          "category": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "slug": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "authorName": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "readingTimeMinutes": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 1500
+          }
+        },
+        "required": [
+          "id",
+          "categoryId",
+          "slug",
+          "title",
+          "body"
+        ],
+        "additionalProperties": false
+      },
+      "ArticlePublicSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "categoryId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "slug": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "title": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "body": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "maxLength": 300000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "maxLength": 300000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "seoTitle": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "seoDescription": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coverAssetId": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "images": {
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{24}$"
+                    },
+                    "imageUrl": {
+                      "type": "string",
+                      "pattern": "^\\/api\\/v1\\/public\\/article-photos\\/[a-f0-9]{24}$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "imageUrl"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)[^\\s]*$"
+                  }
+                ]
+              },
+              "category": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{24}$"
+                  },
+                  "slug": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120,
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "name": {
+                    "type": "object",
+                    "properties": {
+                      "ar": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20000,
+                        "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                      },
+                      "en": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20000,
+                        "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "description": {
+                    "type": "object",
+                    "properties": {
+                      "ar": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20000,
+                        "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                      },
+                      "en": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20000,
+                        "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "authorName": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000,
+                    "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "readingTimeMinutes": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 1500
+              }
+            },
+            "required": [
+              "id",
+              "categoryId",
+              "slug",
+              "title",
+              "body"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
+      },
+      "ArticlePublicListSuccessEnvelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "categoryId": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "slug": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120,
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "title": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "body": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "maxLength": 300000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "maxLength": 300000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "seoTitle": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "seoDescription": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "coverAssetId": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "images": {
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{24}$"
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "pattern": "^\\/api\\/v1\\/public\\/article-photos\\/[a-f0-9]{24}$"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "imageUrl"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "imageUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2048,
+                      "format": "uri"
+                    },
+                    {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)[^\\s]*$"
+                    }
+                  ]
+                },
+                "category": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{24}$"
+                    },
+                    "slug": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 120,
+                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "ar": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        },
+                        "en": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "description": {
+                      "type": "object",
+                      "properties": {
+                        "ar": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        },
+                        "en": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000,
+                          "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                "authorName": {
+                  "type": "object",
+                  "properties": {
+                    "ar": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000,
+                      "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]*$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "readingTimeMinutes": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1500
+                }
+              },
+              "required": [
+                "id",
+                "categoryId",
+                "slug",
+                "title",
+                "body"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"
+              },
+              "page": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "additionalProperties": false
       }
     }
   }

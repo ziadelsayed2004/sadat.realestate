@@ -1,3 +1,4 @@
+import { visiblePublicOrganizations } from '../public/identity.js';
 import { createHash } from 'node:crypto';
 import { Types, type Connection } from 'mongoose';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
@@ -77,13 +78,13 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
     }));
     const [locationRows, organizationRows] = await Promise.all([
       locationIds.length === 0 ? [] : connection.collection('locations').find({ _id: { $in: publicRelatedObjectIds(locationIds) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray(),
-      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1 } }).toArray()
+      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray()
     ]);
     const locations = new Map(locationRows.flatMap(value => {
       const id = publicRelatedId(value._id);
       return id && value.name !== undefined ? [[id, value.name] as const] : [];
     }));
-    const organizations = new Map(organizationRows.flatMap(value => {
+    const organizations = new Map((await visiblePublicOrganizations(connection, organizationRows)).flatMap(value => {
       const id = publicRelatedId(value._id);
       return id && value.name !== undefined ? [[id, { name: value.name, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}) }] as const] : [];
     }));
@@ -182,6 +183,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
         const clauses: Record<string, unknown>[] = [
           { type: escapedSearch(search) },
           { status: escapedSearch(search) },
+          ...(!scope?.providerId ? [
           { 'payload.fullName': escapedSearch(search) },
           { 'payload.firstName': escapedSearch(search) },
           { 'payload.lastName': escapedSearch(search) },
@@ -193,6 +195,7 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
           } } },
           { 'payload.message': escapedSearch(search) },
           { 'payload.note': escapedSearch(search) }
+          ] : [])
         ];
         if (matches.length) clauses.push({ propertyId: { $in: matches.map(match => match._id) } });
         if (/^[a-f0-9]{24}$/iu.test(search)) clauses.unshift({ _id: toObjectId(search) }, { propertyId: toObjectId(search) });

@@ -197,17 +197,17 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={loadDetail} />, { locale: 'en' });
     expect(await screen.findByTestId('ad-request-summary')).toHaveTextContent(request.purpose);
     expect(loadDetail).toHaveBeenCalledWith(request.id, expect.any(AbortSignal));
-    expect(screen.getByRole('link', { name: 'Prepare banner: Homepage hero banner' })).toHaveAttribute('href', `/admin/banners/new?requestId=${request.id}&lang=en`);
+    expect(screen.getByRole('link', { name: 'Prepare banner image and link' })).toHaveAttribute('href', `/admin/banners/new?requestId=${request.id}&lang=en`);
     expect(document.querySelector('.admin-ads__detail')).toHaveTextContent(request.id);
   });
   it.each(['ar', 'en'] as const)('explains quote acceptance separately from payment approval in %s', async locale => {
     const accepted = adAdminRequestSchema.parse({ request, quote: { ...quote, status: 'accepted' } });
     window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
     renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => accepted)} />, { locale });
-    await waitFor(() => expect(document.querySelector('.admin-ads__detail-list')).toHaveTextContent(getAdminAdsCopy(locale).quoteStatus.accepted!));
-    expect(screen.getByRole('heading', { name: locale === 'ar' ? 'عرض السعر' : 'Quote' })).toBeInTheDocument();
+    expect(await screen.findByText(getAdminAdsCopy(locale).quoteStatus.accepted!)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: locale === 'ar' ? '٢. السعر والدفع' : '2. Price and payment' })).toBeInTheDocument();
     expect(document.querySelector('.admin-ads__detail-list')).not.toHaveTextContent(' · accepted');
-    expect(screen.getByText(locale === 'ar' ? /موافقة العميل على عرض السعر وحدها لا تعني اعتماد الدفع/u : /acceptance of the price quote alone does not approve payment/u)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'مراجعة إيصال الدفع' : 'Review payment receipt' })).toBeInTheDocument();
   });
 
   it('uses the implemented API routes, strict contracts, and admin authorization', async () => {

@@ -1,3 +1,4 @@
+import { resolveFeatured } from './featured.js';
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   adBannerMediaSchema,
@@ -18,6 +19,7 @@ interface BannerRow {
   _id: Types.ObjectId;
   adRequestId?: Types.ObjectId;
   placementKey: AdBanner['placementKey'];
+  featured?: AdBanner['featured'];
   title: AdBanner['title'];
   altText?: AdBanner['altText'];
   body?: AdBanner['body'];
@@ -88,6 +90,7 @@ function toBanner(row: BannerRow): AdBanner {
     ...(row.adRequestId ? { adRequestId: row.adRequestId.toHexString() } : {}),
     placementKey: row.placementKey,
     title: row.title,
+    ...(row.featured ? { featured: row.featured } : {}),
     ...(row.altText === undefined ? {} : { altText: row.altText }),
     ...(row.body === undefined ? {} : { body: row.body }),
     ...(row.mediaId === undefined ? {} : { mediaId: row.mediaId.toHexString() }),
@@ -186,7 +189,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     const start = new Date(next.startAt).getTime();
     if (next.status === 'scheduled' && currentAt.getTime() >= start) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (next.status === 'active' && (currentAt.getTime() < start || currentAt.getTime() >= end)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
-    const overlap = next.placementKey === 'homepage.hero' ? null : await banners.findOne({
+    const overlap = ['homepage.hero', 'homepage.featured'].includes(next.placementKey) ? null : await banners.findOne({
       _id: { $ne: objectId(next.id) },
       placementKey: next.placementKey,
       status: { $in: LIVE_STATUSES },
@@ -204,6 +207,11 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     if (!banner.adRequestId) return;
     const request = await connection.collection('ad_requests').findOne({ _id: objectId(banner.adRequestId) }, session ? { session } : {});
     validateBannerCampaign(banner, request ? { id: request._id.toHexString(), status: request.status, placementKey: request.placementKey, intervalStart: request.intervalStart?.toISOString(), intervalEnd: request.intervalEnd?.toISOString() } : undefined);
+    if (banner.featured && request) {
+      const { featuredAdvertiser } = await import('./featured.js');
+      const owner = banner.featured.advertiserProviderId && await featuredAdvertiser(connection, banner.featured.advertiserProviderId);
+      if (!owner || !owner.ownerIds.some(value => value.toString() === request.providerId?.toString())) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+    }
     if (isLive(banner.status) && request && !request.paymentWaiver) {
       const proof = await connection.collection('payment_proofs').findOne({ adRequestId: request._id, providerId: request.providerId, active: true, status: 'approved', securityState: 'clean' }, session ? { session, projection: { _id: 1 } } : { projection: { _id: 1 } });
       if (!proof) throw new AdBannerServiceError('BANNER_INVALID_STATE');
@@ -223,6 +231,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
     };
     const unset: Record<string, 1> = {};
     if (next.altText === undefined) unset.altText = 1; else set.altText = next.altText;
+    if (next.featured === undefined) unset.featured = 1; else set.featured = next.featured;
     if (next.body === undefined) unset.body = 1; else set.body = next.body;
     if (next.mediaId === undefined) unset.mediaId = 1; else set.mediaId = objectId(next.mediaId);
     if (next.mediaIds !== undefined) set.mediaIds = next.mediaIds.map(value => objectId(value));
@@ -233,10 +242,13 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
 
   return {
     async createBanner(actorId, input, now, metadata) {
+      if (input.placementKey === 'homepage.featured' && !input.featured || input.featured && input.placementKey !== 'homepage.featured') throw new AdBannerServiceError('BANNER_INVALID_STATE');
+      if (input.featured) { const resolved = await resolveFeatured(connection, input.featured); input = { ...input, targetUrl: `https://elsadatrealestate.com${resolved.targetPath}` }; }
       if (audit && !metadata) throw new AdBannerServiceError('FORBIDDEN');
       const banner = adBannerSchema.parse({
         id: new Types.ObjectId().toHexString(),
         ...input,
+        ...(input.placementKey === 'homepage.featured' ? { displaySeconds: input.displaySeconds ?? 6 } : {}),
         sortOrder: input.sortOrder ?? 0,
         status: 'draft',
         version: 0,
@@ -250,6 +262,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         ...(banner.adRequestId ? { adRequestId: objectId(banner.adRequestId) } : {}),
         placementKey: banner.placementKey,
         title: banner.title,
+        ...(banner.featured ? { featured: banner.featured } : {}),
         ...(banner.altText === undefined ? {} : { altText: banner.altText }),
         ...(banner.body === undefined ? {} : { body: banner.body }),
         ...(banner.mediaId === undefined ? {} : { mediaId: objectId(banner.mediaId) }),
@@ -316,8 +329,13 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         const current = await findBanner(bannerId, session);
         if (current.version !== input.expectedVersion) throw new AdBannerServiceError('VERSION_CONFLICT');
         const currentValue = toBanner(current);
+        const creative = input.featured ?? currentValue.featured;
+        if (creative && (input.placementKey ?? currentValue.placementKey) !== 'homepage.featured') throw new AdBannerServiceError('BANNER_INVALID_STATE');
+        if ((input.placementKey ?? currentValue.placementKey) === 'homepage.featured' && !creative) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+        if (creative && !(input.status === 'draft' && !input.featured) && !['archived', 'ended'].includes(input.status ?? '') && (creative.advertiserProviderId || ['active', 'scheduled'].includes(input.status ?? currentValue.status))) { const resolved = await resolveFeatured(connection, creative); input = { ...input, targetUrl: `https://elsadatrealestate.com${resolved.targetPath}` }; }
         const nextValue = adBannerSchema.parse({
           ...currentValue,
+          ...(input.featured ? { featured: input.featured } : {}),
           ...(input.altText === null ? {} : input.altText === undefined ? {} : { altText: input.altText }),
           ...(input.mediaId === null ? {} : input.mediaId === undefined ? {} : { mediaId: input.mediaId }),
           ...(input.targetUrl === null ? {} : input.targetUrl === undefined ? {} : { targetUrl: input.targetUrl }),

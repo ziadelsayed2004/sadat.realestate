@@ -80,7 +80,8 @@ function isoFromDateTimeInput(value: string): string | undefined {
   return egyptInstant(value)?.toISOString();
 }
 
-function safeReference(value: string): string {
+function safeReference(value: string | undefined): string {
+  if (!value) return '';
   return value.length > 6 ? `…${value.slice(-6)}` : value;
 }
 
@@ -201,12 +202,14 @@ function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: Vi
       <div className="provider-viewings__card-heading">
         <ViewingTime viewing={viewing} locale={locale} />
         <div>
-          <strong>{viewing.customerName ?? `${copy.customerReference} ${safeReference(viewing.seekerId)}`}</strong>
+          <strong>{viewing.customerName ?? (viewing.customerVisibility === 'hidden' ? (locale === 'ar' ? 'عميل — التواصل من خلال الإدارة' : 'Customer ? contact through administration') : `${copy.customerReference} ${safeReference(viewing.seekerId)}`)}</strong>
           <span>{propertyLabel}</span>
           {location ? <span className="provider-viewings__location"><img src="/assets/canonical/provider/viewings/location.svg" width="10" height="10" alt="" />{location}</span> : null}
         </div>
         <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
       </div>
+      {viewing.customerPhone ? <a href={`tel:${viewing.customerPhone}`}>{viewing.customerPhone}</a> : null}
+      {viewing.customerVisibility === 'hidden' ? <p>{locale === 'ar' ? 'التواصل وترتيب الطلب من خلال الإدارة. شركة التطوير تحتاج موافقة سياسة العمولة السارية لإدارة طلباتها.' : 'Contact and arrangements are handled by the administration. Developers must accept the current commission policy to manage their requests.'} <a href={`/provider/commission?lang=${locale}`}>{locale === 'ar' ? 'سياسة العمولة' : 'Commission policy'}</a></p> : null}
       {viewing.note ? <p className="provider-viewings__note">{copy.note}: {viewing.note}</p> : null}
       <div className="provider-viewings__actions">
         {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${propertyLabel}`}>{copy.actions[action]}</Button>)}

@@ -1,3 +1,4 @@
+import { visiblePublicOrganizations } from '../public/identity.js';
 import { Types, type Connection } from 'mongoose';
 import type { FavoritePropertySource, FavoriteRecord, FavoriteRepository } from './service.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
@@ -92,10 +93,10 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
       const organizationIds = propertyRows.flatMap(row => { const value = id(row.organizationId); return value ? [new Types.ObjectId(value)] : []; });
       const [locationRows, organizationRows] = await Promise.all([
         locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
-        organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1 } }).toArray() : []
+        organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray() : []
       ]);
       const locations = new Map(locationRows.flatMap(row => { const value = id(row._id); return value && row.name !== undefined ? [[value, row.name] as const] : []; }));
-      const organizations = new Map(organizationRows.flatMap(row => { const value = id(row._id); return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}) }] as const] : []; }));
+      const organizations = new Map((await visiblePublicOrganizations(connection, organizationRows)).flatMap(row => { const value = id(row._id); return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}) }] as const] : []; }));
       const propertiesById = new Map(propertyRows.flatMap(row => {
         const locationId = id(row.locationId); const organizationId = id(row.organizationId); const organization = organizationId ? organizations.get(organizationId) : undefined;
         const value = property({ ...row, ...(locationId && locations.has(locationId) ? { locationName: locations.get(locationId) } : {}), ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceVerified: true } : {}), installmentAvailable: Array.isArray(row.paymentPlans) && row.paymentPlans.length > 0 });

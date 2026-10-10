@@ -26,7 +26,7 @@ export interface ResolvedSecurityOptions {
 
 const DEFAULT_SECURITY_OPTIONS: ResolvedSecurityOptions = Object.freeze({
   allowedOrigins: [],
-  jsonBodyLimit: '1mb',
+  jsonBodyLimit: '2mb',
   urlEncodedBodyLimit: '100kb',
   rateLimit: Object.freeze({ windowMs: 60_000, max: 100 }),
   trustProxy: false

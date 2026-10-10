@@ -1,3 +1,4 @@
+import { visiblePublicOrganizations } from '../public/identity.js';
 import type { AuditWriter } from '../audit/writer.js';
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import { type ViewingListQuery } from '@sadat-real-estate/contracts';
@@ -74,9 +75,11 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
       const name = [profile.firstName, profile.lastName].filter((part): part is string => typeof part === 'string').map(part => part.trim()).filter(Boolean).join(' ');
       return userId && name && name.length <= 401 ? [[userId, name] as const] : [];
     }));
+    const accounts = await connection.collection('users').find({ _id: { $in: publicRelatedObjectIds(publicRelatedUnique(records.map(item => item.seekerId))) }, roleType: 'seeker' }, { projection: { normalizedPhone: 1 } }).toArray();
+    const phones = new Map(accounts.flatMap(row => row._id instanceof Types.ObjectId && typeof row.normalizedPhone === 'string' ? [[row._id.toHexString(), row.normalizedPhone] as const] : []));
     const items = records.map(item => {
       const customerName = names.get(item.seekerId);
-      return customerName ? { ...item, customerName } : item;
+      return { ...item, ...(customerName ? { customerName } : {}), ...(phones.get(item.seekerId) ? { customerPhone: phones.get(item.seekerId)! } : {}) };
     });
     const propertyIds = publicRelatedUnique(items.map(item => item.propertyId));
     const propertyObjectIds = publicRelatedObjectIds(propertyIds);
@@ -101,13 +104,13 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     }));
     const [locationRows, organizationRows] = await Promise.all([
       locationIds.length === 0 ? [] : connection.collection('locations').find({ _id: { $in: publicRelatedObjectIds(locationIds) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray(),
-      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1 } }).toArray()
+      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray()
     ]);
     const locations = new Map(locationRows.flatMap(row => {
       const value = publicRelatedId(row._id);
       return value && row.name !== undefined ? [[value, row.name] as const] : [];
     }));
-    const organizations = new Map(organizationRows.flatMap(row => {
+    const organizations = new Map((await visiblePublicOrganizations(connection, organizationRows)).flatMap(row => {
       const value = publicRelatedId(row._id);
       return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}) } satisfies PublicRelatedOrganization] as const] : [];
     }));

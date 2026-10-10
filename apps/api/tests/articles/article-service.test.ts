@@ -14,6 +14,19 @@ const NOW = new Date('2026-08-17T08:00:00.000Z');
 const PRINCIPAL = { userId: ADMIN_ID };
 const CONTEXT = { requestId: 'article-test-request', traceId: 'a'.repeat(32) };
 
+test('creates and publishes more than twenty thousand words without losing either translation', async () => {
+  const { service } = fixture();
+  const category = await service.createCategory(PRINCIPAL, { name: { en: 'Long guides' }, reason: 'Create guide category' }, CONTEXT);
+  const body = { en: 'investment '.repeat(21000).trim(), ar: 'استثمار '.repeat(21000).trim() };
+  const article = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'English guide', ar: 'دليل عربي' }, body, reason: 'Create long translated guide' }, CONTEXT);
+  await service.transitionArticle(PRINCIPAL, article.id, { status: 'published', version: article.version, reason: 'Publish long translated guide' }, CONTEXT);
+  assert.equal((await service.getPublicBySlug(article.slug, 'en')).body.en, body.en);
+  assert.equal((await service.getPublicBySlug(article.slug, 'ar')).body.ar, body.ar);
+  const longer = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Sixty thousand words' }, body: { en: 'word '.repeat(60000).trim() }, reason: 'Create a longer article' }, CONTEXT);
+  await service.transitionArticle(PRINCIPAL, longer.id, { status: 'published', version: longer.version, reason: 'Publish sixty thousand words' }, CONTEXT);
+  assert.equal((await service.getPublicBySlug(longer.slug, 'en')).readingTimeMinutes, 300);
+});
+
 test('generates distinct article/category links and preserves them when titles change', async () => {
   const { service } = fixture();
   const category = await service.createCategory(PRINCIPAL, { name: { ar: 'سكن' }, displayOrder: 0, active: true, reason: 'Create category automatically' }, CONTEXT);

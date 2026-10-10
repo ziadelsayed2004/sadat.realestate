@@ -1,3 +1,4 @@
+import { acknowledgedDeveloperVisibility } from '../helpers/acknowledged-developer.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Types, type Connection } from 'mongoose';
@@ -34,7 +35,7 @@ test('platform-mediated inquiries stay out of the provider inbox, and unapproved
 });
 test('only the receiving provider can read, update and send customer replies for a direct inquiry', async () => {
   const routed = await routeContact(connection(), base);
-  const service = createRequestService({ repository: createInMemoryRequestRepository([routed]) });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, repository: createInMemoryRequestRepository([routed]) });
   const provider = { sub: 'c'.repeat(24), role: 'provider', status: 'verified' } as const;
   assert.equal((await service.list(provider, {})).total, 1);
   await assert.rejects(service.get({ ...provider, sub: 'e'.repeat(24) }, base.id), /REQUEST_NOT_FOUND/u);

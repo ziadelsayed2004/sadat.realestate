@@ -1,3 +1,4 @@
+import { visiblePublicOrganizations } from '../public/identity.js';
 import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { publicHomepageCategorySchema, publicPropertyAmenitySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicPropertyAmenity, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
@@ -99,7 +100,7 @@ type MongoPropertyRow = {
   active?: boolean;
 };
 
-type NamedMongoRow = { _id?: unknown; name?: unknown; status?: string; active?: boolean; imageUrl?: string; kind?: string; slug?: string; order?: number; parentLocationId?: unknown };
+type NamedMongoRow = { providerId?: unknown; _id?: unknown; name?: unknown; status?: string; active?: boolean; imageUrl?: string; kind?: string; slug?: string; order?: number; parentLocationId?: unknown };
 type TaxonomyMongoRow = NamedMongoRow & { slug?: string; imageUrl?: string; order?: number; kind?: string; categoryId?: unknown };
 
 function id(value: unknown): string | undefined {
@@ -154,7 +155,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const taxonomyIds = typeRows.flatMap((row) => { const value = id(row._id); return value ? [value] : []; });
       const now = new Date();
       const [organizationRows, categoryCounts, featuredRows] = await Promise.all([
-        organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
+        organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1, kind: 1, status: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
         taxonomyIds.length ? collection.aggregate<{ _id: unknown; count: number }>([{ $match: { status: 'published', active: true, ...unexpiredPropertyFilter(now), propertyTypeId: { $in: taxonomyIds.map((value) => new Types.ObjectId(value)) } } }, { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }]).toArray() : [],
         rows.length ? connection.collection('ad_banners').find({ status: 'active', startAt: { $lte: now }, endAt: { $gt: now }, $or: rows.map((row) => ({ targetUrl: { $regex: `/properties/${row.slug}$` } })) }, { projection: { targetUrl: 1 } }).limit(100).toArray() as Promise<Array<{ targetUrl?: string }>> : []
       ]);
@@ -166,7 +167,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicPropertyLocationSchema.safeParse({ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      const organizations = new Map(organizationRows.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, { name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.kind ? { kind: row.kind } : {}) }] as const] : []; }));
+      const organizations = new Map((await visiblePublicOrganizations(connection, organizationRows)).flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, { name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.kind ? { kind: row.kind } : {}) }] as const] : []; }));
       const featuredSlugs = new Set(featuredRows.flatMap((row) => typeof row.targetUrl === 'string' ? [row.targetUrl.split('/').at(-1)!] : []));
       const countById = new Map(categoryCounts.flatMap((row) => { const rowId = id(row._id); return rowId ? [[rowId, row.count] as const] : []; }));
       const propertyTypes = typeRows.flatMap((row) => {

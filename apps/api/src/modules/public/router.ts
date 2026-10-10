@@ -52,7 +52,7 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
   router.get('/public/sitemap', async (request, response) => {
     try {
       if (!dependencies.sitemap) throw new ApiContractError('PUBLIC_SITEMAP_UNAVAILABLE', 'errors.internal', 503);
-      response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(await dependencies.sitemap.read(), requestId(request)));
     } catch (error) {
       const mapped = toApiErrorResponse(error, requestId(request));
@@ -77,7 +77,7 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
       const viewer = optionalViewer(request, dependencies.accessTokens);
       const details = await dependencies.details.get(slug, viewer);
       if (!details) throw new ApiContractError('PROPERTY_NOT_FOUND', 'errors.properties.notFound', 404);
-      response.setHeader('Cache-Control', viewer ? 'private, no-store' : 'public, max-age=60, stale-while-revalidate=300');
+      response.setHeader('Cache-Control', viewer ? 'private, no-store' : 'no-store');
       response.status(200).json(toSuccessResponse(details, currentRequestId));
     } catch (error) {
       const mapped = toApiErrorResponse(error, currentRequestId);

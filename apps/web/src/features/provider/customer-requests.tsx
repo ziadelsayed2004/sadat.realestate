@@ -71,7 +71,8 @@ function maskEmail(value: string): string {
   return `${normalized.slice(0, 1)}•••${normalized.slice(separator)}`;
 }
 
-function customerName(request: RequestData, unavailable: string): string {
+function customerName(request: RequestData, unavailable: string, locale: SupportedLocale): string {
+  if (request.customerVisibility === 'hidden') return locale === 'en' ? 'Customer - contact through administration' : 'عميل — التواصل من خلال الإدارة';
   const directName = payloadText(request, 'fullName');
   if (directName) return directName;
   const name = [payloadText(request, 'firstName'), payloadText(request, 'lastName')].filter((value): value is string => value !== undefined).join(' ').trim();
@@ -217,7 +218,7 @@ function TransitionModal({ request, action, copy, locale, saving, error, onClose
     )}>
       <form id={formId} className="provider-customer-requests__form" onSubmit={event => { void submit(event); }} noValidate>
         {validationError || error ? <p className="provider-customer-requests__form-error" role="alert">{validationError ?? error}</p> : null}
-        <p className="provider-customer-requests__transition-summary"><strong>{customerName(request, copy.unavailable)}</strong><span>{copy.statuses[request.status]} → {copy.transitions[action]}</span></p>
+        <p className="provider-customer-requests__transition-summary"><strong>{customerName(request, copy.unavailable, locale)}</strong><span>{copy.statuses[request.status]} → {copy.transitions[action]}</span></p>
         <label className="provider-customer-requests__textarea-label" htmlFor={`${formId}-reason`}>{copy.transition.reason}</label>
         <textarea id={`${formId}-reason`} value={reason} onChange={event => setReason(event.target.value)} rows={4} aria-describedby={`${formId}-reason-help`} />
         <p id={`${formId}-reason-help`} className="provider-customer-requests__help">{copy.transition.reasonHelp}</p>
@@ -228,7 +229,7 @@ function TransitionModal({ request, action, copy, locale, saving, error, onClose
 }
 
 function RequestRow({ request, locale, copy, onTransition }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly copy: ProviderCustomerRequestsCopy; readonly onTransition: (request: RequestData, action: RequestTransition) => void }) {
-  const name = customerName(request, copy.unavailable);
+  const name = customerName(request, copy.unavailable, locale);
   const phone = payloadText(request, 'phone');
   const email = payloadText(request, 'email');
   return (
@@ -291,6 +292,7 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
         </div>
       </div>
       <section className="provider-customer-requests__panel" aria-labelledby="provider-customer-requests-list-title">
+        {data.items.some(request => request.customerVisibility === 'hidden') ? <p>{locale === 'ar' ? 'التواصل وترتيب الطلب من خلال الإدارة. لشركة التطوير: وافق على نسخة سياسة العمولة السارية لكشف بيانات طلباتك وإدارتها.' : 'Contact and arrangements are handled by the administration. Developers: accept the current commission policy to view and manage your own customer requests.'} <a href={`/provider/commission?lang=${locale}`}>{locale === 'ar' ? 'مراجعة سياسة العمولة' : 'Review commission policy'}</a></p> : null}
         <div className="provider-dashboard__section-heading">
           <h2 id="provider-customer-requests-list-title" className="a11y-visually-hidden">{copy.title}</h2>
           <span className="provider-customer-requests__count" data-testid="provider-customer-requests-count">{numberFormat.format(data.total)} {copy.countSuffix}</span>

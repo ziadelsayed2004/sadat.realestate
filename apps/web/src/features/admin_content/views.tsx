@@ -160,10 +160,10 @@ function articleValidationMessage(error: unknown, locale: SupportedLocale): stri
   const issues = error instanceof ApiClientError ? error.apiError?.details ?? [] : error && typeof error === 'object' && 'issues' in error && Array.isArray(error.issues) ? error.issues as Array<{ path?: unknown[]; code?: string }> : [];
   const field = issues[0]?.path?.[0];
   const ar = locale === 'ar';
-  if (field === 'body' && issues[0]?.code === 'too_big') return ar ? 'محتوى المقال أطول من الحد المسموح: 20000 حرف لكل لغة. اختصره أو قسّمه إلى أكثر من مقال؛ النص الحالي محفوظ في النموذج.' : 'Article content exceeds 20000 characters per language. Shorten it or split it into multiple articles; your text remains in the editor.';
+  if (field === 'body' && issues[0]?.code === 'too_big') return ar ? 'محتوى المقال أطول من الحد المسموح: 300000 حرف لكل لغة. اختصره أو قسّمه إلى أكثر من مقال؛ النص الحالي محفوظ في النموذج.' : 'Article content exceeds 300000 characters per language. Shorten it or split it into multiple articles; your text remains in the editor.';
   if (field === 'reason') return ar ? 'اكتب سببًا من 5 إلى 1000 حرف.' : 'Enter a change reason between 5 and 1000 characters.';
   if (field === 'categoryId') return getAdminContentCopy(locale).categoryRequired;
-  if (field === 'body') return ar ? 'راجع محتوى المقال: نص صالح بحد أقصى 20000 حرف لكل لغة. يمكن حفظ المحتوى الفارغ كمسودة.' : 'Check the article body: valid text up to 20000 characters per language. Empty content can be saved as a draft.';
+  if (field === 'body') return ar ? 'راجع محتوى المقال: نص صالح بحد أقصى 300000 حرف لكل لغة. يمكن حفظ المحتوى الفارغ كمسودة.' : 'Check the article body: valid text up to 300000 characters per language. Empty content can be saved as a draft.';
   if (field === 'title') return ar ? 'اكتب عنوانًا بالعربية أو الإنجليزية بحد أقصى 20000 حرف. لا يشترط إدخال اللغتين.' : 'Enter a title in Arabic or English up to 20000 characters. Both languages are not required.';
   if (field === 'coverAssetId' || field === 'galleryAssetIds') return ar ? 'راجع صور المقال وانتظر اكتمال رفعها قبل الحفظ.' : 'Check the article images and wait for uploads to finish before saving.';
   if (error instanceof ApiClientError && error.status === 400) return ar ? 'تعذر تنفيذ الإجراء. راجع بيانات المقال والتصنيف وسبب التغيير، ثم حاول مرة أخرى.' : 'The action could not be completed. Check the article fields, category and change reason, then try again.';

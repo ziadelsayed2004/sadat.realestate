@@ -1,3 +1,4 @@
+import { FeaturedCard } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type {
@@ -132,81 +133,6 @@ const communityPresentation: Readonly<Record<string, {
     views: '87'
   }
 });
-
-const bannerPresentation: Readonly<Record<string, {
-  readonly provider: PublicHomepageLocaleText;
-  readonly installment: PublicHomepageLocaleText;
-  readonly providerImage: string;
-}>> = Object.freeze({
-  city_banner: {
-    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
-    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
-    providerImage: '/assets/canonical/public/developer-sadat.png'
-  },
-  elite_compound: {
-    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
-    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
-    providerImage: '/assets/canonical/public/developer-sadat.png'
-  },
-  safwa_tower: {
-    provider: { ar: 'شركة النيل للاستثمار العقاري', en: 'Nile Real Estate Investment' },
-    installment: { ar: 'تسهيلات سداد حتى 7 سنوات بدون فوائد', en: 'Payment plans up to 7 years with 0% interest' },
-    providerImage: '/assets/canonical/public/developer-sadat.png'
-  },
-  palm_oasis: {
-    provider: { ar: 'مجموعة الأهرام للتعمير', en: 'Al Ahram Construction Group' },
-    installment: { ar: 'استلام فوري بمقدم 20% وأطول فترة سداد', en: 'Immediate delivery with 20% down payment' },
-    providerImage: '/assets/canonical/public/developer-sadat.png'
-  },
-  local_preview_banner: {
-    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
-    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
-    providerImage: '/assets/canonical/public/developer-sadat.png'
-  }
-});
-
-const eliteProjectPage = '/developers/as-real-estate-development#project-elite-compound';
-const canonicalPromotionalBanners: ReadonlyArray<PublicHomepageBanner> = Object.freeze([
-  {
-    key: 'elite_compound',
-    title: { ar: 'كمبوند النخبة — الحي الأول', en: 'Elite Compound — 1st District' },
-    eyebrow: { ar: 'إعلان مميز', en: 'Featured Opportunity' },
-    body: {
-      ar: 'وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات مع إطلالات مفتوحة وخدمات متكاملة.',
-      en: 'Luxury residential units with super lux finishing in prime locations of Sadat City with open views and full amenities.'
-    },
-    highlight: { ar: 'تبدأ من 1.2 مليون جنيه', en: 'Starting from 1.2M EGP' },
-    imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png',
-    targetUrl: eliteProjectPage,
-    order: 1
-  },
-  {
-    key: 'safwa_tower',
-    title: { ar: 'برج الصفوة التجاري — المنطقة المركزية', en: 'Al Safwa Commercial Tower — Central Hub' },
-    eyebrow: { ar: 'إعلان مميز', en: 'Featured Commercial' },
-    body: {
-      ar: 'مكاتب وعيادات ومحلات تجارية بمساحات متنوعة وتسهيلات سداد ميسرة في قلب المركز التجاري والخدمي.',
-      en: 'Offices, clinics, and retail spaces with flexible sizes and convenient payment terms in the commercial center.'
-    },
-    highlight: { ar: 'عائد استثماري مضمون 15%', en: 'Guaranteed 15% ROI' },
-    imageUrl: '/assets/canonical/public/category-full-commercial-building.png',
-    targetUrl: '/properties',
-    order: 2
-  },
-  {
-    key: 'palm_oasis',
-    title: { ar: 'واحة النخيل السكنية — الحي الخامس', en: 'Palm Oasis Residential — 5th District' },
-    eyebrow: { ar: 'إعلان مميز', en: 'Featured Living' },
-    body: {
-      ar: 'تاون هاوس وفيلات مستقلة بتصميم عصري ومساحات خضراء واسعة وبحيرات صناعية ومسارات رياضية.',
-      en: 'Townhouses and standalone villas with modern design, spacious green areas, artificial lakes, and jogging tracks.'
-    },
-    highlight: { ar: 'مساحات تبدأ من 220 م²', en: 'Sizes starting from 220 sqm' },
-    imageUrl: '/assets/canonical/public/category-villa.png',
-    targetUrl: '/properties',
-    order: 3
-  }
-]);
 
 const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.freeze([
   {
@@ -771,7 +697,7 @@ function Hero({
   const titleLines = title.split('\n');
 
   return (
-    <section className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+    <section id="homepage-hero" className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
         <BannerMedia key={banner?.key ?? 'default-hero'} banner={banner} copy={copy} locale={locale} priority />
       </div>
@@ -1121,45 +1047,33 @@ function HomepageAbout({ locale, copy, content }: { readonly locale: SupportedLo
 
 function BannerGrid({
   locale,
-  copy,
   banners
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly banners: readonly PublicHomepageBanner[];
 }) {
-  const legacyHero = banners.find(item => !item.key.startsWith('banner-'));
-  const dynamicBanners = ordered(banners).filter(item => item !== legacyHero && !item.key.startsWith('banner_'));
-  const carouselBanners = dynamicBanners.length > 0 ? dynamicBanners : canonicalPromotionalBanners;
+  const carouselBanners = ordered(banners).filter(item => item.presentation === 'featured');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  useEffect(() => { setActiveIndex(index => Math.min(index, Math.max(0, carouselBanners.length - 1))); }, [carouselBanners.length]);
 
   useEffect(() => {
     if (carouselBanners.length < 2 || isPaused) return;
     const timer = setInterval(() => {
       setActiveIndex(index => (index + 1) % carouselBanners.length);
-    }, 6000);
+    }, (carouselBanners[activeIndex]?.displaySeconds ?? 6) * 1000);
     return () => clearInterval(timer);
-  }, [carouselBanners.length, isPaused]);
+  }, [carouselBanners, activeIndex, isPaused]);
 
   const banner = carouselBanners[activeIndex] ?? carouselBanners[0];
   if (banner === undefined) return null;
-  const title = localizedText(banner.title, locale) ?? banner.key;
-  const eyebrow = localizedText(banner.eyebrow, locale) ?? (locale === 'ar' ? 'إعلان مميز' : 'Featured Ad');
-  const body = localizedText(banner.body, locale);
-  const highlight = localizedText(banner.highlight, locale);
-  const configuredTarget = safePublicUrl(banner.targetUrl);
-  // Repair the original seeded promotion without overriding administrator-chosen links.
-  const destination = banner.key === 'city_banner' && configuredTarget === '/properties/demo-open-view-apartment'
-    ? eliteProjectPage : configuredTarget ?? '/properties';
-  const targetUrl = destination.startsWith('/') && !destination.startsWith('//') ? replaceLocaleInUrl(destination, locale) : destination;
-  const presentation = bannerPresentation[banner.key] ?? bannerPresentation.city_banner;
   const previousLabel = locale === 'ar' ? 'الإعلان السابق' : 'Previous banner';
   const nextLabel = locale === 'ar' ? 'الإعلان التالي' : 'Next banner';
 
   return (
     <section
-      className="public-homepage__section public-homepage__section--banners"
+      id="homepage-featured" className="public-homepage__section public-homepage__section--banners"
       aria-label={locale === 'ar' ? 'الإعلانات المميزة' : 'Featured promotions'}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -1167,40 +1081,7 @@ function BannerGrid({
       onBlur={() => setIsPaused(false)}
     >
       <div className="public-homepage__banner-card">
-        <div className="public-homepage__banner-layout">
-          <div className="public-homepage__banner-media-wrapper">
-            <BannerMedia banner={banner} copy={copy} locale={locale} />
-          </div>
-          <div className="public-homepage__banner-copy">
-            <div className="public-homepage__banner-kicker-row">
-              <span className="public-homepage__banner-badge">
-                <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true" className="public-homepage__banner-star"><path d="M10 2l2.4 5 5.6.8-4 4 1 5.6-5-2.6-5 2.6 1-5.6-4-4 5.6-.8z" fill="currentColor"/></svg>
-                {eyebrow}
-              </span>
-            </div>
-            {presentation === undefined ? null : (
-              <div className="public-homepage__banner-provider">
-                <img src={presentation.providerImage} alt="" width="40" height="40" />
-                <span className="public-homepage__banner-provider-name">{presentation.provider[locale]}</span>
-                <span className="public-homepage__banner-verified" aria-label={locale === 'ar' ? 'موثق' : 'Verified'}>✓</span>
-              </div>
-            )}
-            <h2 className="public-homepage__banner-title">{title}</h2>
-            {body === undefined ? null : <p className="public-homepage__banner-body">{body}</p>}
-            {highlight === undefined ? null : (
-              <div className="public-homepage__banner-highlight-group">
-                <strong className="public-homepage__banner-highlight">{highlight}</strong>
-                {presentation === undefined ? null : <span className="public-homepage__banner-installment">{presentation.installment[locale]}</span>}
-              </div>
-            )}
-            <a className="public-homepage__banner-cta" href={targetUrl}>
-              {copy.discoverProject}
-              <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true" className="public-homepage__banner-cta-icon">
-                <path d={locale === 'ar' ? 'M13 15l-5-5 5-5' : 'M7 5l5 5-5 5'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-          </div>
-        </div>
+        <FeaturedCard banner={banner} locale={locale} />
         <button
           className="public-homepage__banner-control public-homepage__banner-control--previous"
           type="button"

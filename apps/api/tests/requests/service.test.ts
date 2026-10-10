@@ -1,3 +1,4 @@
+import { acknowledgedDeveloperVisibility } from '../helpers/acknowledged-developer.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
@@ -11,7 +12,7 @@ test('providers send inquiries as themselves and retain only requester permissio
   const repository = createInMemoryRequestRepository();
   const recipient = { ...provider, sub: '4'.repeat(24) };
   const routedRepository = { ...repository, create: (row: Parameters<typeof repository.create>[0]) => repository.create({ ...row, providerId: recipient.sub }) };
-  const service = createRequestService({ repository: routedRepository, authorization: { authorize: async () => true } });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, repository: routedRepository, authorization: { authorize: async () => true } });
   const sent = await service.createContact(provider, { message: 'Interested in your project', contactChannel: 'provider' });
   assert.equal(sent.source, 'provider');
   assert.equal(sent.creatorId, provider.sub);
@@ -35,7 +36,7 @@ test('providers send inquiries as themselves and retain only requester permissio
 });
 
 test('platform inquiries remain accessible to their provider sender without a direct recipient', async () => {
-  const service = createRequestService({ repository: createInMemoryRequestRepository() });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, repository: createInMemoryRequestRepository() });
   const sent = await service.createContact(provider, { message: 'Please find this property', contactChannel: 'platform' });
   assert.equal(sent.providerId, undefined);
   assert.equal((await service.get(provider, sent.id)).id, sent.id);
@@ -44,7 +45,7 @@ test('platform inquiries remain accessible to their provider sender without a di
 });
 
 test('creates discriminated requests and prevents client-controlled state or metadata', async () => {
-  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
   assert.equal(created.type, 'contact'); assert.equal(created.status, 'new'); assert.equal(created.seekerId, seeker.sub); assert.equal(created.version, 0);
   await assert.rejects(() => service.create(seeker, { type: 'contact', payload: { message: 'x' }, status: 'resolved' }), /Unrecognized key/);
@@ -52,7 +53,7 @@ test('creates discriminated requests and prevents client-controlled state or met
 });
 
 test('lets the owner supply requested information and return the same request for review', async () => {
-  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
   const original = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
   await service.transition(admin, original.id, { transition: 'start_review', reason: 'Review request', expectedVersion: 0 });
   await service.transition(admin, original.id, { transition: 'needs_information', reason: 'More details required', customerMessage: 'What is your budget?', expectedVersion: 1 });
@@ -74,7 +75,7 @@ test('lets the owner supply requested information and return the same request fo
 });
 
 test('enforces ownership, deterministic listing, and optimistic state transitions', async () => {
-  const repository = createInMemoryRequestRepository(); const service = createRequestService({ authorization: { authorize: async () => true }, repository, now: () => new Date('2026-08-14T10:00:00.000Z') });
+  const repository = createInMemoryRequestRepository(); const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository, now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'], minBudget: 10, maxBudget: 20 } });
   assert.equal((await service.list(seeker, { page: 1, limit: 20 })).total, 1);
   await assert.rejects(() => service.get(provider, created.id), error => (error as { code?: string }).code === 'REQUEST_NOT_FOUND');
@@ -86,7 +87,7 @@ test('enforces ownership, deterministic listing, and optimistic state transition
 });
 
 test('continues review through contact and resolution while exposing only deliberate customer messages', async () => {
-  const repository = createInMemoryRequestRepository(); const service = createRequestService({ authorization: { authorize: async () => true }, repository });
+  const repository = createInMemoryRequestRepository(); const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Contact please' } });
   const reviewed = await service.transition(admin, created.id, { transition: 'start_review', reason: 'Private administration reason', customerMessage: 'We are reviewing your request', expectedVersion: 0 });
   assert.deepEqual(reviewed.availableActions, ['start_progress', 'contact', 'needs_information', 'cancel']);
@@ -100,7 +101,7 @@ test('continues review through contact and resolution while exposing only delibe
 });
 
 test('stores bounded locale-neutral search criteria without fabricating matches', async () => {
-  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(seeker, { type: 'property_search', payload: { locations: ['4123456789abcdef01234567'], propertyTypes: ['apartment'], minBudget: 100, maxBudget: 500, minBedrooms: 1, maxBedrooms: 3, locale: 'ar' } });
   assert.deepEqual(created.payload, { locations: ['4123456789abcdef01234567'], propertyTypes: ['apartment'], minBudget: 100, maxBudget: 500, minBedrooms: 1, maxBedrooms: 3, locale: 'ar' });
   await assert.rejects(() => service.create(seeker, { type: 'property_search', payload: { locations: [], propertyTypes: [], minBudget: 900, maxBudget: 100 } }), /maxBudget/);
@@ -108,7 +109,7 @@ test('stores bounded locale-neutral search criteria without fabricating matches'
 });
 
 test('allows provider-owned customer requests without seeker impersonation or mass assignment', async () => {
-  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository(), now: () => new Date('2026-08-14T10:00:00.000Z') });
   const created = await service.create(provider, {
     type: 'provider_customer',
     payload: {
@@ -129,7 +130,7 @@ test('allows provider-owned customer requests without seeker impersonation or ma
 });
 
 test('accepts a contact request under review as follow-up without claiming a call occurred', async () => {
-  const service = createRequestService({ authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, authorization: { authorize: async () => true }, repository: createInMemoryRequestRepository() });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
   const reviewed = await service.transition(admin, created.id, { transition: 'start_review', reason: 'Review started', expectedVersion: created.version });
   await assert.rejects(service.transition(admin, created.id, { transition: 'start_progress', reason: 'Accepted for follow-up', expectedVersion: created.version }), error => (error as { code?: string }).code === 'REQUEST_VERSION_CONFLICT');
@@ -141,11 +142,11 @@ test('accepts a contact request under review as follow-up without claiming a cal
 
 test('contact acceptance remains restricted to administrative management and does not expand other request workflows', async () => {
   const repository = createInMemoryRequestRepository();
-  const service = createRequestService({ repository, authorization: { authorize: async (_id, permission) => permission !== 'admin:requests.manage' } });
+  const service = createRequestService({ visibility: acknowledgedDeveloperVisibility, repository, authorization: { authorize: async (_id, permission) => permission !== 'admin:requests.manage' } });
   const created = await service.create(seeker, { type: 'contact', payload: { message: 'Please contact me' } });
   assert.deepEqual((await service.get(admin, created.id)).availableActions, []);
   await assert.rejects(service.transition(admin, created.id, { transition: 'start_progress', expectedVersion: created.version, reason: 'Accepted for follow-up' }), error => (error as { code?: string }).code === 'REQUEST_FORBIDDEN');
-  const manager = createRequestService({ repository, authorization: { authorize: async () => true } });
+  const manager = createRequestService({ visibility: acknowledgedDeveloperVisibility, repository, authorization: { authorize: async () => true } });
   const search = await manager.create(seeker, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'] } });
   const reviewed = await manager.transition(admin, search.id, { transition: 'start_review', expectedVersion: search.version, reason: 'Review search criteria' });
   assert.equal(reviewed.availableActions.includes('start_progress'), false);

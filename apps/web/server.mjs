@@ -298,7 +298,7 @@ function renderDocument(template, result, cspNonce) {
 function sendCrawlerDocument(request, response, body, contentType) {
   applySecurityHeaders(response);
   response.statusCode = 200;
-  response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+  response.setHeader('Cache-Control', 'no-store');
   response.setHeader('Content-Type', contentType);
   response.end(request.method === 'HEAD' ? undefined : body);
 }
@@ -326,7 +326,7 @@ async function serveCrawlerDocument(request, response, seoHelpers) {
   if (!sitemapActive) {
     applySecurityHeaders(response);
     response.statusCode = 404;
-    response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    response.setHeader('Cache-Control', 'no-store');
     response.end();
     return true;
   }

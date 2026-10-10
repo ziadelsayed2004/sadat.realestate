@@ -1,3 +1,4 @@
+import { featuredCreativeSchema } from './featured.js';
 import { z } from 'zod';
 import { localizedTextSchema, supportedLocaleSchema } from '../localization/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
@@ -144,6 +145,7 @@ const bannerMediaIds = z.array(id).max(20).refine(value => new Set(value).size =
 const bannerDisplaySeconds = z.number().int().min(3).max(60);
 
 export const adBannerSchema = z.object({
+  featured: featuredCreativeSchema.optional(),
   id,
   adRequestId: id.optional(),
   placementKey,
@@ -165,6 +167,7 @@ export const adBannerSchema = z.object({
   updatedAt: z.string().datetime({ offset: true })
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerCreateSchema = z.object({
+  featured: featuredCreativeSchema.optional(),
   adRequestId: id.optional(),
   placementKey,
   title: localizedTextSchema,
@@ -179,6 +182,7 @@ export const adBannerCreateSchema = z.object({
   sortOrder: z.number().int().nonnegative().max(100_000).optional()
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerPatchSchema = z.object({
+  featured: featuredCreativeSchema.optional(),
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(2).max(500),
   placementKey: placementKey.optional(),
@@ -269,3 +273,5 @@ export const adBannerConfigSchema = z.object({ enabled: z.boolean(), version: z.
 export const adBannerConfigPutSchema = z.object({ enabled: z.boolean(), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
 export const adBannerConfigSuccessEnvelopeSchema = successEnvelopeSchema(adBannerConfigSchema);
 export type AdBannerConfig = z.infer<typeof adBannerConfigSchema>;
+
+export * from './featured.js';

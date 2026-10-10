@@ -1,3 +1,4 @@
+import type { createIdentitySubscriptionService } from '../provider/identity-subscription.js';
 import { Router, type Request, type RequestHandler, type Response } from 'express';
 import {
   accountTransitionRequestSchema,
@@ -17,6 +18,8 @@ import type { createAccountCommunicator } from './communication.js';
 import type { createAccountDeleter } from './deletion.js';
 
 export const ACCOUNT_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'getProviderIdentitySubscription' },
+  { method: 'PUT', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'putProviderIdentitySubscription' },
   { method: 'DELETE', path: '/api/v1/admin/users/:userId', operationId: 'deleteAdminUser' },
   { method: 'POST', path: '/api/v1/admin/users/:userId/communication', operationId: 'communicateAdminUser' },
   {
@@ -52,6 +55,7 @@ export const ACCOUNT_ROUTE_DEFINITIONS = [
 ] as const;
 
 export interface AccountRouterDependencies {
+  identitySubscription?: ReturnType<typeof createIdentitySubscriptionService>;
   deleteUser?: ReturnType<typeof createAccountDeleter>;
   communicate?: ReturnType<typeof createAccountCommunicator>;
   service: AccountService;
@@ -127,6 +131,18 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
   const authenticate = createAdminRbacAuthMiddleware(dependencies.accessTokens);
   router.use('/admin/users', authenticate);
   router.use('/admin/providers', authenticate);
+
+  if (dependencies.identitySubscription) {
+    const subscription = dependencies.identitySubscription;
+    router.get('/admin/providers/:providerId/public-identity-subscription', async (request, response) => {
+      try { const { providerId } = providerReviewIdParamsSchema.parse(request.params); response.json(toSuccessResponse(await subscription.read(principal(response).userId, providerId), requestContext(request).requestId)); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.put('/admin/providers/:providerId/public-identity-subscription', async (request, response) => {
+      try { const { providerId } = providerReviewIdParamsSchema.parse(request.params); response.json(toSuccessResponse(await subscription.put(principal(response).userId, providerId, request.body, requestContext(request)), requestContext(request).requestId)); }
+      catch (error) { sendError(request, response, error); }
+    });
+  }
 
   router.get('/admin/users', async (request, response) => {
     try {

@@ -14,6 +14,17 @@ const providerClaims: AccessTokenClaims = {
   ...claims, sub: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified'
 };
 
+test('provider notifications redact historic customer text, identifiers and links while retaining the request number', async () => {
+  const requestId = '1234567890abcdef12345678';
+  const notice: NotificationSource = { id: 'abcdefabcdefabcdefabcdef', type: 'viewing.created', title: { en: 'Alice booked' }, message: { en: 'Alice alice@example.invalid +201012345678 customer-account-secret' }, link: `/provider/viewings?viewingId=${requestId}&seekerId=customer-account-secret`, readAt: null, createdAt: new Date(), audience: 'provider' };
+  const service = createNotificationService({ isActiveAccount, repository: repository({ async list() { return { items: [notice], total: 1, unreadCount: 1 }; } }) });
+  const result = await service.listProvider(providerClaims, {});
+  const json = JSON.stringify(result);
+  for (const secret of ['Alice', 'alice@example', '+201012345678', 'customer-account-secret', 'seekerId']) assert.equal(json.includes(secret), false);
+  assert.ok(json.includes(requestId));
+  assert.equal(result.items[0]?.link, '/provider/viewings');
+});
+
 test('marks queue attention read for active administrators without exposing it to other roles', async () => {
   let calls = 0;
   let pending = 2;

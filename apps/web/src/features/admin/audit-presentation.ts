@@ -2,6 +2,7 @@ import { AUDIT_ACTION_GROUP_SUFFIXES, type SupportedLocale } from '@sadat-real-e
 
 type Labels = Readonly<Record<string, readonly [string, string]>>;
 const targets: Labels = {
+  provider: ['مقدّمو العقارات', 'Property providers'],
   property: ['العقارات', 'Properties'], property_media: ['صور العقارات', 'Property images'],
   project: ['المشروعات', 'Projects'], user: ['حسابات المستخدمين', 'User accounts'],
   admin_user: ['حسابات الموظفين', 'Staff accounts'], provider_application: ['طلبات تسجيل المزوّدين', 'Provider applications'],
@@ -32,6 +33,8 @@ const groups: Labels = {
   communication: ['تواصل وتعيين مسؤول', 'Communication and assignment']
 };
 const actions: Labels = {
+  identity_subscription_updated: ['تعديل اشتراك ظهور المكتب', 'Update office identity subscription'],
+  legacy_import: ['نقل إعلان قديم للمراجعة', 'Import legacy ad for review'],
   create: ['إضافة', 'Create'], created: ['إضافة', 'Create'], upload: ['رفع صورة أو ملف', 'Upload image or file'],
   update: ['تعديل', 'Update'], updated: ['تعديل', 'Update'], write: ['حفظ المحتوى', 'Save content'],
   delete: ['حذف', 'Delete'], reorder: ['تغيير الترتيب', 'Reorder'], review: ['مراجعة الطلب', 'Review submission'],

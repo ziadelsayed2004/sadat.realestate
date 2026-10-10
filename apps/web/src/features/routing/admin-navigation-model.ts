@@ -83,6 +83,8 @@ export const sidebarGroups: readonly AdminSidebarGroup[] = [
     label: { ar: 'الإعلانات والمدفوعات', en: 'Advertising and payments' },
     items: [
       sidebarItem('advertising', '/admin/ads/requests', 'advertising', 'طلبات الإعلانات', 'Ad requests', ['/admin/ads/requests', '/admin/advertising']),
+      sidebarItem('featured-ads', '/admin/ads/featured', 'advertising', 'إعلانات الرئيسية المميزة', 'Featured homepage ads'),
+      sidebarItem('banners', '/admin/banners', 'advertising', 'بانرات أعلى الصفحة', 'Homepage hero banners'),
       sidebarItem('approved-proofs', '/admin/ads/payment-proofs/approved', 'advertising', 'إثباتات الدفع المعتمدة', 'Approved payment proofs'),
       sidebarItem('payment-review', '/admin/ads/payments/pending-review', 'advertising', 'مراجعة المدفوعات', 'Payment review'),
       sidebarItem('ad-calendar', '/admin/ads/calendar', 'advertising', 'تقويم الإعلانات', 'Ad calendar'),
@@ -98,7 +100,6 @@ export const sidebarGroups: readonly AdminSidebarGroup[] = [
     id: 'experience',
     label: { ar: 'تجربة المنصة', en: 'Platform experience' },
     items: [
-      sidebarItem('banners', '/admin/banners', 'advertising', 'البانرات الإعلانية', 'Banners'),
       sidebarItem('tips', '/admin/content/tips', 'content', 'نصائح عقارات السادات', 'Property tips'),
       sidebarItem('homepage', '/admin/content/homepage', 'overview', 'إدارة الصفحة الرئيسية', 'Homepage management'),
       sidebarItem('contact-social', '/admin/settings/contact', 'notifications', 'بيانات التواصل والسوشيال', 'Contact and social'),

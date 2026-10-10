@@ -1,3 +1,4 @@
+import type { ProviderVisibilityReader } from '../provider/visibility.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import {
   adminNotificationListDataSchema,
@@ -49,6 +50,7 @@ export interface NotificationAuthorization {
 }
 
 export interface NotificationServiceDependencies {
+  visibility?: ProviderVisibilityReader;
   repository: NotificationRepository;
   isActiveAccount: (claims: AccessTokenClaims) => Promise<boolean>;
   authorization?: NotificationAuthorization;
@@ -143,8 +145,14 @@ export function createNotificationService(dependencies: NotificationServiceDepen
       await authorizeProvider(claims, dependencies);
       const query = notificationListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.list(claims.sub, query, 'provider');
+      const visible = (await dependencies.visibility?.read(claims.sub))?.customerIdentity === true;
       const items = result.items.flatMap(item => {
-        const value = project(item);
+        const customerNotice = /^(?:request|viewing|contact)[._]/.test(item.type) || /\/provider\/(?:viewings|customer-requests)/.test(item.link ?? '');
+        const requestId = item.link?.match(/[?&](?:requestId|viewingId)=([a-f0-9]{24})(?:&|$)/i)?.[1];
+        const value = project(customerNotice ? { ...item, title: { ar: 'تحديث طلب', en: 'Request update' }, message: { ar: 'التواصل وترتيب الطلب من خلال الإدارة.', en: 'Contact and arrangements are handled by the administration.' }, link: item.type.startsWith('viewing') ? '/provider/viewings' : '/provider/customer-requests' } : item);
+        if (value && customerNotice && visible) value.message = { ar: 'راجع حالة الطلب ومواعيده من قائمة طلباتك.', en: 'Review the request status and dates in your request list.' };
+        if (value && customerNotice && requestId) value.message = { ar: `طلب ${requestId} — التواصل وترتيب الطلب من خلال الإدارة.`, en: `Request ${requestId} — contact and arrangements are handled by the administration.` };
+        if (value && customerNotice && requestId && visible) value.message = { ar: `طلب ${requestId} — راجع قائمة طلباتك.`, en: `Request ${requestId} — review your request list.` };
         return value ? [value] : [];
       });
       return notificationListDataSchema.parse({ items, unreadCount: result.unreadCount, page: query.page, limit: query.limit, total: result.total });

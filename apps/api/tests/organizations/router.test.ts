@@ -6,13 +6,13 @@ import type { PublicOrganizationRouterDependencies } from '../../src/modules/org
 const profile = { id: '0123456789abcdef01234567', kind: 'developer_company' as const, slug: 'trusted-company', name: { en: 'Trusted Company' }, verified: true as const, projectCount: 0, propertyCount: 0, projects: [], properties: [] };
 const service: PublicOrganizationRouterDependencies['service'] = { async list() { return { items: [profile], page: 1, limit: 20, total: 1 }; }, async get(slug) { return slug === 'trusted-company' ? profile : null; } };
 
-test('directory and profile are unauthenticated, cacheable, and strict', async () => {
+test('directory and profile are unauthenticated, without caching private identity, and strict', async () => {
   const server = createApiServer({ database: { isReady: async () => true }, publicOrganizations: { service } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try {
     const list = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/developers?kind=developer_company`);
     assert.equal(list.status, 200);
-    assert.equal(list.headers.get('cache-control'), 'public, max-age=60, stale-while-revalidate=300');
+    assert.equal(list.headers.get('cache-control'), 'no-store');
     assert.equal((await list.json() as { data: { items: unknown[] } }).data.items.length, 1);
     const detail = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/developers/trusted-company`);
     assert.equal(detail.status, 200);

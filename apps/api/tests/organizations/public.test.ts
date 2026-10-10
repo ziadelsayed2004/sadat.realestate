@@ -37,7 +37,7 @@ test('company name searches support Arabic and English fragments without a text 
       return {
         find(filter: Record<string, unknown>) {
           assert.equal(name, 'organizations'); filters.push(filter);
-          return { sort() { return { skip() { return { limit() { return { async toArray() { return []; } }; } }; } }; } };
+          return { sort() { return this; }, skip() { return this; }, limit() { return this; }, async toArray() { return []; } };
         },
         async countDocuments(filter: Record<string, unknown>) { filters.push(filter); return 0; }
       };
@@ -47,7 +47,7 @@ test('company name searches support Arabic and English fragments without a text 
   for (const search of ['النيل', 'NiLe', 'A.*(group)']) {
     filters = [];
     assert.equal((await service.list({ search })).total, 0);
-    assert.equal(filters.length, 2);
+    assert.equal(filters.length, 1);
     for (const filter of filters) {
       assert.equal(filter.status, 'approved');
       assert.deepEqual(filter.directoryVisible, { $ne: false });

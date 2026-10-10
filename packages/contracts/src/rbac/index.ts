@@ -32,6 +32,7 @@ export const RBAC_PERMISSIONS = [
   'admin:property-reports.view',
   'admin:providers.review',
   'admin:providers.view',
+  'admin:providers.visibility.manage',
   'admin:request-issues.manage',
   'admin:request-issues.view',
   'admin:requests.assign',

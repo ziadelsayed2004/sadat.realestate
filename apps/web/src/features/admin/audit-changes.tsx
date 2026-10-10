@@ -2,6 +2,7 @@ import type { AuditJsonValue, AuditLogData, SupportedLocale } from '@sadat-real-
 import { permissionLabel } from '../admin_rbac/permission-label.ts';
 
 const fields: Record<string, readonly [string, string]> = {
+  paymentConfirmed: ['تأكيد استلام الدفع', 'Payment receipt confirmed'], startAt: ['بداية الظهور', 'Display starts'], endAt: ['نهاية الظهور', 'Display ends'],
   name: ['الاسم', 'Name'], displayName: ['اسم الحساب', 'Account name'], description: ['الوصف', 'Description'],
   active: ['نشط', 'Active'], status: ['الحالة', 'Status'], accessMode: ['مستوى الصلاحيات', 'Access mode'],
   accessLevel: ['نوع حساب الإدارة', 'Administrator type'], permissions: ['الصلاحيات', 'Permissions'],

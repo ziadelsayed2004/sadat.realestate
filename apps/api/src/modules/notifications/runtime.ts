@@ -1,3 +1,4 @@
+import { createProviderVisibilityReader } from '../provider/visibility.js';
 import { Types, type Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { RbacService } from '../rbac/service.js';
@@ -13,6 +14,7 @@ export function createNotificationRuntime(
 ): NotificationRouterDependencies {
   return {
     service: createNotificationService({
+      visibility: createProviderVisibilityReader(connection),
       repository: createMongooseNotificationRepository(connection),
       ...(authorization ? { attention: createMongooseAdminAttentionSource(connection, authorization.authorize) } : {}),
       ...(authorization ? {

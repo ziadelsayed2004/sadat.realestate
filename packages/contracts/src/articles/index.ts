@@ -6,7 +6,7 @@ export const articleIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 export const articleSlugSchema = z.string().trim().min(2).max(120)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export const articleStatusSchema = z.enum(['draft', 'pending_review', 'published', 'archived']);
-const articleBodyTextSchema = z.string().max(20_000).regex(/^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]*$/u);
+const articleBodyTextSchema = z.string().max(300_000).regex(/^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]*$/u);
 export const articleDraftBodySchema = z.object({ ar: articleBodyTextSchema.optional(), en: articleBodyTextSchema.optional() }).strict().refine(value => value.ar !== undefined || value.en !== undefined);
 const articleGallerySchema = z.array(articleIdSchema).max(12).refine(value => new Set(value).size === value.length);
 export const articleAvailableActionSchema = z.enum([
@@ -183,12 +183,12 @@ export const articlePublicSchema = articleDataSchema.pick({
   coverAssetId: true,
   publishedAt: true
 }).extend({
-  body: localizedTextSchema,
+  body: articleDraftBodySchema,
   images: z.array(z.object({ id: articleIdSchema, imageUrl: z.string().regex(/^\/api\/v1\/public\/article-photos\/[a-f0-9]{24}$/) }).strict()).max(12).optional(),
   imageUrl: z.union([z.url().max(2_048), z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   category: articlePublicCategorySchema.optional(),
   authorName: localizedTextSchema.optional(),
-  readingTimeMinutes: z.number().int().positive().max(240).optional()
+  readingTimeMinutes: z.number().int().positive().max(1500).optional()
 }).strict();
 
 export const articleListQuerySchema = z.object({

@@ -106,7 +106,7 @@ const articleSchema = new Schema<ArticleRecord>({
     match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/
   },
   title: { type: localizedSchema, required: true },
-  body: { type: new Schema({ ar: { type: String, maxlength: 20000 }, en: { type: String, maxlength: 20000 } }, { _id: false, strict: 'throw' }), required: true },
+  body: { type: new Schema({ ar: { type: String, maxlength: 300000 }, en: { type: String, maxlength: 300000 } }, { _id: false, strict: 'throw' }), required: true },
   seoTitle: { type: localizedSchema },
   seoDescription: { type: localizedSchema },
   coverAssetId: { type: Schema.Types.ObjectId },

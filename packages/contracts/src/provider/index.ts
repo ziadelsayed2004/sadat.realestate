@@ -395,3 +395,5 @@ export type ProviderAdvertisingRequest = ProviderAdRequestProjection;
 export type ProviderCommissionProjection = z.infer<typeof providerCommissionProjectionSchema>;
 export type ProviderCommissionConfirmationRequest = z.infer<typeof providerCommissionConfirmationRequestSchema>;
 export type ProviderCommissionConfirmation = z.infer<typeof providerCommissionConfirmationSchema>;
+
+export * from './visibility.js';

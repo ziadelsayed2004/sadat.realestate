@@ -75,20 +75,36 @@ describe('public homepage', () => {
     expect(cards[1]?.querySelector('img')).toHaveAttribute('src', 'https://example.com/custom.jpg');
     expect(screen.getByRole('link', { name: /Sadat gate photo/ })).toHaveAttribute('href', '/assets/canonical/public/sadat-city-entrance.html');
   });
-  it.each(['ar', 'en'] as const)('makes only the promotion CTA a link and repairs the seeded project destination in %s', locale => {
-    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'city_banner', title: { en: 'Elite Compound' }, targetUrl: '/properties/demo-open-view-apartment', order: 1 }] });
+  it.each(['ar', 'en'] as const)('makes only the promotion CTA a link and preserves its selected owned project destination in %s', locale => {
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'featured_project', presentation: 'featured', title: { en: 'Published project' }, targetUrl: '/developers/approved-builder#project-owned-project', order: 1 }] });
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
     const card = result.container.querySelector('.public-homepage__banner-card')!;
     expect(card.querySelectorAll('a')).toHaveLength(1);
-    expect(card.querySelector('a')).toHaveAttribute('href', `/developers/as-real-estate-development?lang=${locale}#project-elite-compound`);
+    expect(card.querySelector('a')).toHaveAttribute('href', `/developers/approved-builder?lang=${locale}#project-owned-project`);
     expect(card.querySelector('h2')?.closest('a')).toBeNull();
     expect(card.querySelector('.public-homepage__banner-media-wrapper')?.closest('a')).toBeNull();
   });
   it.each(['/developers/approved-builder?source=ad#developer-projects', 'https://example.com/campaign?source=ad'])('preserves administrator-selected promotional destinations: %s', targetUrl => {
-    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'city_banner', title: { en: 'Custom promotion' }, targetUrl, order: 1 }] });
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'featured_custom', presentation: 'featured', title: { en: 'Custom promotion' }, targetUrl, order: 1 }] });
     const result = renderWithLocale(<PublicHomepage locale="ar" initialData={data} />, { locale: 'ar' });
-    const expected = targetUrl.startsWith('/') ? '/developers/approved-builder?source=ad&lang=ar#developer-projects' : targetUrl;
-    expect(result.container.querySelector('.public-homepage__banner-cta')).toHaveAttribute('href', expected);
+    if (targetUrl.startsWith('/')) expect(result.container.querySelector('.public-homepage__banner-cta')).toHaveAttribute('href', '/developers/approved-builder?source=ad&lang=ar#developer-projects');
+    else expect(result.container.querySelector('.public-homepage__banner-cta')).toBeNull();
+  });
+  it('rotates multiple featured cards on their timer, supports arrows and dots, and renders no demo replacement', async () => {
+    vi.useFakeTimers();
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'featured_first', presentation: 'featured', title: { en: 'First card' }, order: 0, displaySeconds: 3 }, { key: 'featured_second', presentation: 'featured', title: { en: 'Second card' }, order: 1, displaySeconds: 6 }] });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+    try {
+      expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
+      await act(() => vi.advanceTimersByTimeAsync(3000));
+      expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Previous banner' }));
+      expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('tab', { name: 'Slide 2' }));
+      expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
+    } finally { result.unmount(); vi.useRealTimers(); }
+    const empty = renderWithLocale(<PublicHomepage locale="en" initialData={{ ...homepageData, banners: [] }} />, { locale: 'en' });
+    expect(empty.container.querySelector('#homepage-featured')).toBeNull();
   });
   it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
     const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };

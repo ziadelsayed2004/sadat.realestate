@@ -6,6 +6,7 @@ const resources: Record<string, [string, string]> = {
 const actions: Record<string, [string, string]> = { view: ['عرض', 'View'], manage: ['إدارة وتعديل', 'Manage'], review: ['مراجعة واعتماد', 'Review'], publish: ['نشر', 'Publish'], price: ['تسعير', 'Price'], schedule: ['جدولة', 'Schedule'], moderate: ['مراجعة المحتوى', 'Moderate'], assign: ['تعيين مسؤول', 'Assign'], notes: ['إضافة ملاحظات', 'Add notes'] };
 
 export function permissionLabel(permission: string, locale: SupportedLocale): string {
+  if (permission === 'admin:providers.visibility.manage') return locale === 'ar' ? 'إدارة اشتراك ظهور المكاتب' : 'Manage office identity subscriptions';
   const [resource, action] = permission.replace(/^admin:/, '').split('.');
   const index = locale === 'ar' ? 0 : 1;
   return `${resources[resource ?? '']?.[index] ?? resource} — ${actions[action ?? '']?.[index] ?? action}`;

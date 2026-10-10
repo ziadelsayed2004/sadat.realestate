@@ -1,3 +1,4 @@
+import { AdminFeatured } from '../admin_featured/views.tsx';
 import { authCompletionHref } from '../auth/redirect.ts';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicContentListData, CommunityPublicPostListData, PublicHomepageData, PublicOrganizationDirectoryQuery, PublicOrganizationListData, PublicOrganizationProfile, PublicPropertyComparisonData, PublicPropertyDetails, PublicPropertyListData, PublicPropertySearchQuery, SupportedLocale } from '@sadat-real-estate/contracts';
@@ -322,6 +323,8 @@ export function App({
       <AdminMasterData locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isAdminProjects || isAdminProjectReview ? (
       <AdminProjects locale={locale} session={effectiveSession} authClient={authClient} />
+    ) : isAdminAds && seekerPathname === '/admin/ads/featured' ? (
+      <AdminFeatured locale={locale} session={effectiveSession} authClient={authClient} url={url} />
     ) : isAdminAds ? (
       <AdminAds locale={locale} session={effectiveSession} authClient={authClient} url={url} />
     ) : isAdminHome ? (

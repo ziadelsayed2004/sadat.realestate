@@ -398,7 +398,7 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
     if ((route === 'banners' && initialBannersMatch && attempt === 0 && page === 1) || (route === 'tips' && initialContentMatch && attempt === 0) || (route === 'homepage' && initialContentMatch && attempt === 0)) return undefined;
     const controller = new AbortController();
     setState('loading');
-    const request = route === 'banners' ? source.loadBanners({ page, limit: 20, ...(adRequestId ? { adRequestId } : {}) }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
+    const request = route === 'banners' ? source.loadBanners({ page, limit: 20, placementKey: 'homepage.hero', ...(adRequestId ? { adRequestId } : {}) }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
     void request.then(next => {
       if (controller.signal.aborted) return;
       if (route === 'banners') { const nextBanners = next as AdBannerListData; setBanners(nextBanners); setState(stateForItems(nextBanners.items)); }

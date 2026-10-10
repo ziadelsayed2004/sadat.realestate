@@ -316,7 +316,7 @@ export function createAdSettingsService(seed: {
     if (banner.status === 'active' && (currentAt < startsAt || currentAt >= endsAt)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (banner.status === 'ended' && currentAt < endsAt) throw new AdBannerServiceError('BANNER_INVALID_STATE');
     if (isBannerLiveState(banner.status)) {
-      const overlap = banner.placementKey !== 'homepage.hero' && [...banners.values()].some(item => item.id !== banner.id && item.placementKey === banner.placementKey && isBannerLiveState(item.status) && startsAt < new Date(item.endAt).getTime() && endsAt > new Date(item.startAt).getTime());
+      const overlap = !['homepage.hero', 'homepage.featured'].includes(banner.placementKey) && [...banners.values()].some(item => item.id !== banner.id && item.placementKey === banner.placementKey && isBannerLiveState(item.status) && startsAt < new Date(item.endAt).getTime() && endsAt > new Date(item.startAt).getTime());
       if (overlap) throw new AdBannerServiceError('PLACEMENT_CONFLICT');
     }
   };
@@ -519,7 +519,7 @@ export function createAdSettingsService(seed: {
       placementByKey(parsed.placementKey);
       if ([...banners.values()].some(item => item.placementKey === parsed.placementKey && item.sortOrder === parsed.sortOrder && item.status !== 'archived')) throw new AdBannerServiceError('DUPLICATE');
       const stamp = now();
-      const banner = adBannerSchema.parse({ id: id(), ...parsed, sortOrder: parsed.sortOrder ?? Math.max(-1, ...[...banners.values()].filter(item => item.placementKey === parsed.placementKey).map(item => item.sortOrder)) + 1, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
+      const banner = adBannerSchema.parse({ id: id(), ...parsed, ...(parsed.placementKey === 'homepage.featured' ? { displaySeconds: parsed.displaySeconds ?? 6 } : {}), sortOrder: parsed.sortOrder ?? Math.max(-1, ...[...banners.values()].filter(item => item.placementKey === parsed.placementKey).map(item => item.sortOrder)) + 1, status: 'draft', version: 0, createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
       if (banner.adRequestId) validateBannerCampaign(banner, seed.requestRepository ? await seed.requestRepository.getRequest(banner.adRequestId) : requests.get(banner.adRequestId));
       banners.set(banner.id, banner);
       return banner;

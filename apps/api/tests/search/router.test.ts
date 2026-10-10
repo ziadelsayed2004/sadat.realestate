@@ -12,7 +12,7 @@ test('public property listing is unauthenticated and returns pagination metadata
   try {
     const response = await fetch(`http://127.0.0.1:${address.port}/api/v1/public/properties?page=1&limit=20`);
     assert.equal(response.status, 200);
-    assert.equal(response.headers.get('cache-control'), 'public, max-age=30, stale-while-revalidate=120');
+    assert.equal(response.headers.get('cache-control'), 'no-store');
     const body = await response.json() as { data: typeof result; meta: { total: number } };
     assert.deepEqual(body.data, result);
     assert.equal(body.meta.total, 0);

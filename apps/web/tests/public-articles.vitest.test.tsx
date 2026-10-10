@@ -43,6 +43,17 @@ const categories: readonly PublicArticleCategoryOption[] = [
 const emptyRelatedProperties = { items: [], categories: [], propertyTypes: [], page: 1, limit: 3, total: 0 };
 
 describe('public article listing and details', () => {
+  it('reloads the saved translation when language changes without replacing the SSR bootstrap', async () => {
+    const arabic = { ...article, title: { ar: 'العنوان العربي' }, body: { ar: 'المحتوى العربي' } };
+    const english = { ...article, title: { en: 'English translation' }, body: { en: 'English body' } };
+    const load = vi.fn().mockResolvedValue(english);
+    const result = renderWithLocale(<PublicArticleDetails locale="ar" url="/articles/buying-in-sadat" initialData={arabic} load={load} relatedArticles={[]} relatedProperties={emptyRelatedProperties} />, { locale: 'ar' });
+    expect(screen.getByRole('heading', { name: 'العنوان العربي', level: 1 })).toBeInTheDocument();
+    result.rerender(<PublicArticleDetails locale="en" url="/articles/buying-in-sadat?lang=en" initialData={arabic} load={load} relatedArticles={[]} relatedProperties={emptyRelatedProperties} />);
+    await screen.findByRole('heading', { name: 'English translation', level: 1 });
+    expect(load).toHaveBeenCalledWith('buying-in-sadat', 'en', expect.any(AbortSignal));
+    expect(screen.queryByText('المحتوى العربي')).not.toBeInTheDocument();
+  });
   it('parses the bounded query and keeps category/page controls on the public route', () => {
     const query = parsePublicArticleListQuery('/articles?categoryId=bbbbbbbbbbbbbbbbbbbbbbbb&page=2&limit=40&%24where=true', 'en');
 

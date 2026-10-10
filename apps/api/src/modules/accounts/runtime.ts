@@ -1,3 +1,4 @@
+import { createIdentitySubscriptionService } from '../provider/identity-subscription.js';
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
@@ -28,6 +29,7 @@ export function createAccountRuntime(
     auditWriter
   );
   return {
+    identitySubscription: createIdentitySubscriptionService(connection, authorization, auditWriter),
     deleteUser: createAccountDeleter(connection, authorization, auditWriter),
     communicate: createAccountCommunicator(connection, authorization, auditWriter),
     accessTokens,

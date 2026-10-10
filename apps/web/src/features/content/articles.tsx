@@ -218,6 +218,7 @@ export function PublicArticles({
   const homepageCopy = getPublicHomepageCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? PUBLIC_ARTICLES_PATH : window.location.href);
   const [query, setQuery] = useState<ArticleListQuery>(() => initialQuery ?? parsePublicArticleListQuery(sourceUrl, locale));
+  const [bootstrapLocale] = useState(locale);
   const [data, setData] = useState<ArticlePublicListData | undefined>(initialData);
   const [view, setView] = useState<PublicArticlesViewState>(initialData === undefined ? initialState : initialData.length === 0 ? 'empty' : 'success');
   const [attempt, setAttempt] = useState(0);
@@ -243,10 +244,10 @@ export function PublicArticles({
   }, [categories, loadCategories, locale]);
 
   useEffect(() => {
-    if (initialData !== undefined && attempt === 0) return;
+    if (initialData !== undefined && attempt === 0 && (initialQuery?.locale ?? bootstrapLocale) === locale) { setData(initialData); setView(initialData.length ? 'success' : 'empty'); return; }
     const controller = new AbortController();
     setView('loading');
-    void load(query, controller.signal)
+    void load({ ...query, locale }, controller.signal)
       .then(nextData => {
         if (controller.signal.aborted) return;
         setData(nextData);
@@ -257,7 +258,7 @@ export function PublicArticles({
         setView(errorState(error));
       });
     return () => controller.abort();
-  }, [attempt, initialData, load, query]);
+  }, [attempt, initialData, initialQuery?.locale, bootstrapLocale, load, query, locale]);
 
   const filteredArticles = useMemo(() => {
     if (data === undefined || search.trim().length === 0) return data ?? [];
@@ -444,6 +445,7 @@ export function PublicArticleDetails({
   const homepageCopy = getPublicHomepageCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? PUBLIC_ARTICLES_PATH : window.location.href);
   const slug = publicArticleSlugFromUrl(sourceUrl);
+  const [bootstrapLocale] = useState(locale);
   const [data, setData] = useState<ArticlePublic | undefined>(initialData);
   const [relatedData, setRelatedData] = useState<ArticlePublicListData | undefined>(relatedArticles);
   const [relatedPropertyData, setRelatedPropertyData] = useState<PublicPropertyListData | undefined>(relatedProperties);
@@ -451,7 +453,7 @@ export function PublicArticleDetails({
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (initialData !== undefined && attempt === 0) return;
+    if (initialData !== undefined && attempt === 0 && bootstrapLocale === locale) { setData(initialData); setView('success'); return; }
     if (slug === undefined) {
       setView('not_found');
       return;
@@ -470,10 +472,10 @@ export function PublicArticleDetails({
         else setView(errorState(error));
       });
     return () => controller.abort();
-  }, [attempt, initialData, load, locale, slug]);
+  }, [attempt, initialData, bootstrapLocale, load, locale, slug]);
 
   useEffect(() => {
-    if (loadRelated === undefined || relatedArticles !== undefined || slug === undefined) return;
+    if (loadRelated === undefined || (relatedArticles !== undefined && bootstrapLocale === locale) || slug === undefined) return;
     const controller = new AbortController();
     void loadRelated({ locale, page: 1, limit: 20 }, controller.signal)
       .then(nextData => {
@@ -481,7 +483,7 @@ export function PublicArticleDetails({
       })
       .catch(() => undefined);
     return () => controller.abort();
-  }, [loadRelated, locale, relatedArticles, slug]);
+  }, [bootstrapLocale, loadRelated, locale, relatedArticles, slug]);
 
   useEffect(() => {
     if (relatedProperties !== undefined || loadRelatedProperties === undefined || slug === undefined) return;

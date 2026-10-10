@@ -560,7 +560,7 @@ export {
   articlePublicCategoryListDataSchema, articlePublicCategoryListQuerySchema,
   articlePublicCategoryListSuccessEnvelopeSchema, articlePublicCategorySchema,
   articlePublicListDataSchema, articlePublicListSuccessEnvelopeSchema, articlePublicSchema,
-  articlePublicSuccessEnvelopeSchema, articleSchema, articleSlugSchema, articleStatusSchema,
+  articlePublicSuccessEnvelopeSchema, articleSchema, articleSlugSchema, articleStatusSchema, articleDraftBodySchema,
   articleSuccessEnvelopeSchema, articleTransitionRequestSchema
 } from '../articles/index.js';
 export type {
@@ -824,3 +824,7 @@ export type { CommunityPostModeration } from '../community/index.js';
 
 export { adBannerConfigSchema, adBannerConfigPutSchema, adBannerConfigSuccessEnvelopeSchema } from '../ads/index.js';
 export type { AdBannerConfig } from '../ads/index.js';
+
+export * from '../provider/visibility.js';
+
+export * from '../ads/featured.js';

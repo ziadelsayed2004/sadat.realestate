@@ -339,7 +339,7 @@ export function createMongooseAdCalendarRepository(
         if (!Number.isFinite(request.intervalStart.getTime()) || !Number.isFinite(request.intervalEnd.getTime()) || request.intervalEnd <= request.intervalStart || now.getTime() >= request.intervalEnd.getTime()) {
           throw new AdSettingsServiceError('VERSION_CONFLICT');
         }
-        const conflict = request.placementKey === 'homepage.hero' ? null : await models.AdRequest.findOne({
+        const conflict = ['homepage.hero', 'homepage.featured'].includes(request.placementKey) ? null : await models.AdRequest.findOne({
           _id: { $ne: request._id },
           placementKey: request.placementKey,
           status: { $in: ['scheduled', 'active'] },

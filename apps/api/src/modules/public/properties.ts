@@ -1,3 +1,5 @@
+import { createProviderVisibilityReader } from '../provider/visibility.js';
+import { visiblePublicOrganizations } from '../public/identity.js';
 import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
@@ -31,6 +33,7 @@ export interface PublicPropertyDetailsSource {
   layout?: unknown;
   price?: unknown;
   contact?: unknown;
+  contactVisible?: boolean;
   status: string;
   active: boolean;
   project?: { id: string; slug: string; name: unknown; description?: unknown; status: string } | null;
@@ -111,7 +114,7 @@ export function publicPropertyDetailsProjection(
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {}),
   };
-  return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
+  return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, ...(source.contactVisible && source.contact ? { contact: source.contact } : {}), seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
 }
 
 export function createPublicPropertyDetailsService(dependencies: { repository: PublicPropertyDetailsRepository; settings?: PropertySettingsReader }) {
@@ -137,6 +140,14 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     const properties = connection.collection('properties');
     const row = await properties.findOne({ slug, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, source: 1, providerId: 1, organizationId: 1, projectId: 1, propertyTypeId: 1, locationId: 1, mapUrl: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } });
     const base = property(row as Row | null ?? {}); if (!base) return null;
+    const organization = base.organizationId ? await connection.collection('organizations').findOne({ _id: new Types.ObjectId(base.organizationId), status: 'approved' }, { projection: { providerId: 1, name: 1, imageUrl: 1, contactPhone: 1, whatsappUrl: 1, contactAddress: 1 } }) : null;
+    const owner = base.providerId ?? id(organization?.providerId);
+    const policy = owner ? await createProviderVisibilityReader(connection).read(owner) : undefined;
+    if (policy?.publicIdentity && organization) {
+      base.sourceName = organization.name; if (typeof organization.imageUrl === 'string') base.sourceImageUrl = organization.imageUrl;
+      base.sourceVerified = policy.approved;
+    } else { delete base.organizationId; delete base.providerId; }
+    if (policy?.contact && typeof organization?.contactPhone === 'string') { base.contact = { phone: organization.contactPhone }; base.contactVisible = true; }
     const project = base.projectId ? await connection.collection('projects').findOne({ _id: new Types.ObjectId(base.projectId), status: 'published' }, { projection: { _id: 1, slug: 1, name: 1, description: 1, status: 1 } }) : null;
     const location = base.locationId ? await connection.collection('locations').findOne({ _id: new Types.ObjectId(base.locationId), active: true }, { projection: { name: 1, active: 1 } }) : null;
     const media = await connection.collection('property_media').find({ propertyId: new Types.ObjectId(base.id), active: true, processingState: 'ready' }, { projection: { _id: 1, propertyId: 1, kind: 1, imageUrl: 1, originalFilename: 1, detectedMime: 1, byteSize: 1, sortOrder: 1, isCover: 1, processingState: 1, active: 1 } }).sort({ sortOrder: 1, _id: 1 }).limit(50).toArray();
@@ -150,10 +161,10 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     const relatedOrganizationIds = [...new Set(relatedRows.flatMap((value) => { const valueId = id(value.organizationId); return valueId ? [valueId] : []; }))];
     const [relatedLocationRows, relatedOrganizationRows] = await Promise.all([
       relatedLocationIds.length ? connection.collection('locations').find({ _id: { $in: relatedLocationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
-      relatedOrganizationIds.length ? connection.collection('organizations').find({ _id: { $in: relatedOrganizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1, status: 1 } }).toArray() : []
+      relatedOrganizationIds.length ? connection.collection('organizations').find({ _id: { $in: relatedOrganizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1, status: 1 } }).toArray() : []
     ]);
     const relatedLocations = new Map<string, unknown>(relatedLocationRows.flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, value.name] as const] : []; }));
-    const relatedOrganizations = new Map<string, { name: unknown; imageUrl?: string }>(relatedOrganizationRows.flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, { name: value.name, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}) }] as const] : []; }));
+    const relatedOrganizations = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, relatedOrganizationRows)).flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, { name: value.name, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}) }] as const] : []; }));
     const mappedProject = project ? { id: id(project._id) ?? '', slug: String(project.slug ?? ''), name: project.name, ...(project.description !== undefined ? { description: project.description } : {}), status: String(project.status ?? '') } : null;
     const mappedMedia = media.flatMap((value) => { const mediaId = id(value._id); const propertyId = id(value.propertyId); return mediaId && propertyId && typeof value.kind === 'string' && typeof value.originalFilename === 'string' && typeof value.detectedMime === 'string' && typeof value.byteSize === 'number' && typeof value.sortOrder === 'number' && typeof value.isCover === 'boolean' && typeof value.processingState === 'string' && typeof value.active === 'boolean' ? [{ id: mediaId, propertyId, kind: value.kind, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}), originalFilename: value.originalFilename, detectedMime: value.detectedMime, byteSize: value.byteSize, sortOrder: value.sortOrder, isCover: value.isCover, processingState: value.processingState, active: value.active }] : []; });
     const relatedProperties = relatedRows.flatMap((value) => {
@@ -174,7 +185,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
         ...(mapped.deliveryStatus ? { deliveryStatus: mapped.deliveryStatus } : {}),
         ...(mapped.installmentAvailable !== undefined ? { installmentAvailable: mapped.installmentAvailable } : {}),
         ...(mapped.sourceType ? { sourceType: mapped.sourceType } : {}),
-        ...(mapped.organizationId ? { organizationId: mapped.organizationId } : {}),
+        ...(mapped.organizationId && relatedOrganization ? { organizationId: mapped.organizationId } : {}),
         ...(relatedOrganization ? { sourceName: relatedOrganization.name, ...(relatedOrganization.imageUrl ? { sourceImageUrl: relatedOrganization.imageUrl } : {}), sourceVerified: true } : {}),
         ...(mapped.projectId ? { projectId: mapped.projectId } : {}),
         ...(mapped.description !== undefined ? { description: mapped.description } : {}),
@@ -185,8 +196,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
         active: mapped.active
       }];
     });
-    const organization = base.organizationId ? await connection.collection('organizations').findOne({ _id: new Types.ObjectId(base.organizationId), status: 'approved' }, { projection: { name: 1, imageUrl: 1, status: 1 } }) : null;
-    return { ...base, ...(location?.name !== undefined ? { locationName: location.name } : {}), ...(organization?.name !== undefined ? { sourceName: organization.name, sourceVerified: true } : {}), ...(typeof organization?.imageUrl === 'string' ? { sourceImageUrl: organization.imageUrl } : {}), project: mappedProject, media: mappedMedia, features:amenities.filter((value)=>value.kind==='feature'), services:amenities.filter((value)=>value.kind==='service'), relatedProperties };
+    return { ...base, ...(location?.name !== undefined ? { locationName: location.name } : {}), project: mappedProject, media: mappedMedia, features:amenities.filter((value)=>value.kind==='feature'), services:amenities.filter((value)=>value.kind==='service'), relatedProperties };
   }, async hasPropertyRequest(seekerId, propertyId) {
     return await connection.collection('requests').findOne(
       { seekerId: new Types.ObjectId(seekerId), propertyId: new Types.ObjectId(propertyId) },

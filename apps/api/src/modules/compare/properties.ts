@@ -1,3 +1,4 @@
+import { visiblePublicOrganizations } from '../public/identity.js';
 import { Types, type Connection } from 'mongoose';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonItemSchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
@@ -79,11 +80,11 @@ export function createMongoosePublicPropertyComparisonRepository(connection: Con
     const locationIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).locationId); return value ? [value] : []; }))];
     const propertyTypeIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).propertyTypeId); return value ? [value] : []; }))];
     const [organizations, locations, propertyTypes] = await Promise.all([
-      organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1 } }).toArray() : [],
+      organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray() : [],
       locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
       propertyTypeIds.length ? connection.collection('property_taxonomy').find({ _id: { $in: propertyTypeIds.map((value) => new Types.ObjectId(value)) }, kind: 'type', active: true }, { projection: { _id: 1, name: 1 } }).toArray() : []
     ]);
-    const organizationById = new Map<string, { name: unknown; imageUrl?: string }>(organizations.flatMap((row) => {
+    const organizationById = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => {
       const value = id((row as Row)._id);
       return value && (row as Row).name !== undefined ? [[value, { name: (row as Row).name, ...(typeof (row as Row).imageUrl === 'string' ? { imageUrl: (row as Row).imageUrl as string } : {}) }] as const] : [];
     }));

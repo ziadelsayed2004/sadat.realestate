@@ -37,8 +37,8 @@ export function advertisingRuntimeSettings(values: Record<string, unknown> | und
   if (!values) return DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
   const quoteValidityDays = values.quote_validity_days;
   return {
-    supportedPlacements: identifiers(values.supported_placements),
-    supportedAdTypes: identifiers(values.supported_ad_types),
+    supportedPlacements: [...new Set([...identifiers(values.supported_placements), 'homepage.featured'])],
+    supportedAdTypes: [...new Set([...identifiers(values.supported_ad_types), 'featured_card'])],
     acceptedFileFormats: formats(values.accepted_file_formats),
     dimensions: [...dimensions(values.desktop_dimensions), ...dimensions(values.mobile_dimensions)].filter((item, index, all) => all.findIndex((candidate) => candidate.width === item.width && candidate.height === item.height) === index),
     ...(typeof quoteValidityDays === 'number' && Number.isSafeInteger(quoteValidityDays) && quoteValidityDays >= 1 && quoteValidityDays <= 90 ? { quoteValidityDays } : {}),

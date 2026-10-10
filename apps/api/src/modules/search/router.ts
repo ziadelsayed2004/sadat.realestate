@@ -18,7 +18,7 @@ export function createPublicSearchRouter(dependencies: PublicSearchRouterDepende
     try {
       const query = publicPropertySearchQuerySchema.parse(request.query);
       const result = await dependencies.service.list(query);
-      response.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(result, currentRequestId, { page: result.page, limit: result.limit, total: result.total }));
     } catch (error) {
       const mapped = toApiErrorResponse(error, currentRequestId);

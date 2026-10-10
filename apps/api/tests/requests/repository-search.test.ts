@@ -25,21 +25,18 @@ async function searchFilter(search: string) {
   return listFilter?.$or as Array<Record<string, unknown>>;
 }
 
-test('searches customer identity fields using the same owned filter for rows and total', async () => {
+test('provider search excludes customer identity fields while preserving owned row and count filters', async () => {
   for (const field of ['firstName', 'lastName', 'phone', 'email']) {
     const clauses = await searchFilter('Mona+literal');
     const regex = clauses.find(clause => clause[`payload.${field}`])?.[`payload.${field}`];
-    assert.ok(regex instanceof RegExp);
-    assert.equal(regex.test('MONA+literal'), true);
-    assert.equal(regex.test('Monaaaaaaliteral'), false);
+    assert.equal(regex, undefined);
   }
 });
 
-test('supports combined customer names without moving ownership inside the search OR', async () => {
+test('provider search cannot infer customer names through concatenated expressions', async () => {
   const clauses = await searchFilter('Mona Hassan');
   const expression = clauses.find(clause => clause.$expr)?.$expr as { $regexMatch: { input: unknown; regex: RegExp } };
-  assert.deepEqual(expression.$regexMatch.input, { $concat: [{ $convert: { input: '$payload.firstName', to: 'string', onError: '', onNull: '' } }, ' ', { $convert: { input: '$payload.lastName', to: 'string', onError: '', onNull: '' } }] });
-  assert.equal(expression.$regexMatch.regex.test('Mona Hassan'), true);
+  assert.equal(expression, undefined);
   assert.equal(clauses.some(clause => clause.providerId), false);
 });
 
