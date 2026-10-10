@@ -64,6 +64,17 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it('gives new property types a Sadat entrance photo and preserves supplied images', () => {
+    const categories = [
+      { id: 'c'.repeat(24), slug: 'new-type', name: { en: 'New type' }, propertyCount: 0, order: 100 },
+      { id: 'd'.repeat(24), slug: 'custom-type', name: { en: 'Custom type' }, imageUrl: 'https://example.com/custom.jpg', propertyCount: 0, order: 101 }
+    ];
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={publicHomepageDataSchema.parse({ ...homepageData, categories })} />, { locale: 'en' });
+    const cards = result.container.querySelectorAll('.public-homepage__category-card:not(.public-homepage__category-card--all)');
+    expect(cards[0]?.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/sadat-city-entrance.jpg');
+    expect(cards[1]?.querySelector('img')).toHaveAttribute('src', 'https://example.com/custom.jpg');
+    expect(screen.getByRole('link', { name: /Sadat gate photo/ })).toHaveAttribute('href', '/assets/canonical/public/sadat-city-entrance.html');
+  });
   it.each(['ar', 'en'] as const)('makes only the promotion CTA a link and repairs the seeded project destination in %s', locale => {
     const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'city_banner', title: { en: 'Elite Compound' }, targetUrl: '/properties/demo-open-view-apartment', order: 1 }] });
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });

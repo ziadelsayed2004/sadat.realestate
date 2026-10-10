@@ -189,7 +189,7 @@ async function runEntrypoint(): Promise<void> {
     auditInfrastructure.writer,
     rbac.service
   );
-  const taxonomy = createTaxonomyRuntime(database.nativeConnection, auth.accessTokens, auditInfrastructure.writer, rbac.service);
+  const taxonomy = createTaxonomyRuntime(database.nativeConnection, auth.accessTokens, auditInfrastructure.writer, rbac.service, uploadEnvironment);
   const features = { accessTokens: auth.accessTokens, service: createFeatureService(database.nativeConnection, auditInfrastructure.writer, rbac.service) };
   const projects = createProjectRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const properties = createPropertyRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);

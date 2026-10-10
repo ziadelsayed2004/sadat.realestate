@@ -7,6 +7,7 @@ export const taxonomyKindSchema = z.enum(TAXONOMY_KINDS);
 export const taxonomyIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 export const taxonomySlugSchema = z.string().trim().min(2).max(80).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const reason = z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/);
+const taxonomyImageUrl = z.union([z.url().max(2048).regex(/^https?:\/\//), z.string().max(2048).regex(/^\/(?:assets\/[^\s]+|api\/v1\/public\/taxonomy-photos\/[a-f0-9]{24})$/)]).nullable().optional();
 const hierarchy = (value: { kind: 'category' | 'type'; categoryId?: string | undefined }, context: z.RefinementCtx) => {
   if (value.kind === 'type' && !value.categoryId) context.addIssue({ code: 'custom', path: ['categoryId'], message: 'Property type category is required' });
   if (value.kind === 'category' && value.categoryId) context.addIssue({ code: 'custom', path: ['categoryId'], message: 'Category cannot have a parent category' });
@@ -14,12 +15,12 @@ const hierarchy = (value: { kind: 'category' | 'type'; categoryId?: string | und
 export const taxonomyCreateSchema = z.object({
   kind: taxonomyKindSchema, categoryId: taxonomyIdSchema.optional(), name: localizedTextSchema,
   slug: taxonomySlugSchema.optional(), order: z.number().int().min(0).max(1_000_000).default(0),
-  active: z.boolean().default(true), reason
+  active: z.boolean().default(true), imageUrl: taxonomyImageUrl, reason
 }).strict().superRefine(hierarchy);
 export const taxonomyPatchSchema = z.object({
   version: z.number().int().nonnegative(), categoryId: taxonomyIdSchema.optional(), name: localizedTextSchema.optional(),
   slug: taxonomySlugSchema.optional(), order: z.number().int().min(0).max(1_000_000).optional(),
-  active: z.boolean().optional(), reason
+  active: z.boolean().optional(), imageUrl: taxonomyImageUrl, reason
 }).strict().refine((value) => Object.keys(value).some((key) => !['version', 'reason'].includes(key)), { message: 'At least one mutable field is required' });
 export const taxonomyDeleteSchema = z.object({ version: z.number().int().nonnegative(), reason }).strict();
 export const taxonomyParamsSchema = z.object({ categoryId: taxonomyIdSchema }).strict();
@@ -32,7 +33,7 @@ export const taxonomyListQuerySchema = z.object({
 }).strict();
 export const taxonomyDataSchema = z.object({
   id: taxonomyIdSchema, kind: taxonomyKindSchema, categoryId: taxonomyIdSchema.optional(), name: localizedTextSchema,
-  slug: taxonomySlugSchema, order: z.number().int().nonnegative(), active: z.boolean(), version: z.number().int().nonnegative(),
+  slug: taxonomySlugSchema, order: z.number().int().nonnegative(), active: z.boolean(), imageUrl: taxonomyImageUrl, version: z.number().int().nonnegative(),
   createdAt: z.string().datetime(), updatedAt: z.string().datetime(), availableActions: z.array(z.enum(['update', 'delete'])).max(2)
 }).strict();
 export const taxonomyListDataSchema = z.object({ items: z.array(taxonomyDataSchema) }).strict();

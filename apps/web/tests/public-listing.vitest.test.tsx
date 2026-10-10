@@ -32,6 +32,16 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it('shows the entrance image for an added type and filters by its real ID', async () => {
+    const type = { id: 'f'.repeat(24), slug: 'new-custom-type', name: { en: 'New custom type' }, propertyCount: 0, order: 20 };
+    const data = publicPropertyListDataSchema.parse({ ...listingData, propertyTypes: [...listingData.propertyTypes, type] });
+    const load = vi.fn().mockResolvedValue(data);
+    const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} load={load} />, { locale: 'en' });
+    const card = result.container.querySelector('.public-property-listing__category-rail button:last-child')!;
+    expect(card.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/sadat-city-entrance.jpg');
+    fireEvent.click(card);
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyTypeId: type.id }), expect.anything()));
+  });
   it.each(['admin', 'provider', undefined] as const)('offers a property-specific edit link only in the administrative session: %s', role => {
     const result = renderWithLocale(<PublicAuthRoleContext.Provider value={role}><PublicPropertyListing locale="en" initialData={listingData} /></PublicAuthRoleContext.Provider>, { locale: 'en' });
     const link = screen.queryByRole('link', { name: 'Edit property and photos' });

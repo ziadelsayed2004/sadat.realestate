@@ -3,6 +3,18 @@ import {taxonomyCreateSchema,taxonomyListQuerySchema,taxonomyPatchSchema} from '
 import {createTaxonomyService,TaxonomyError,type StoredTaxonomy,type TaxonomyStore} from '../../src/modules/taxonomy/module.js';
 const admin='0123456789abcdef01234567',viewer='1123456789abcdef01234567',category='2123456789abcdef01234567',typeId='3123456789abcdef01234567',at=new Date('2026-08-14T08:00:00Z');
 const base=(o:Partial<StoredTaxonomy>={}):StoredTaxonomy=>({id:category,kind:'category',name:{en:'Residential'},slug:'residential',order:0,active:true,version:0,createdAt:at,updatedAt:at,...o});
+test('persists, replaces and resets taxonomy images without changing hierarchy', async () => {
+  const service = fixture(); const context = { requestId: 'taxonomy-photo', traceId: 'a'.repeat(32) };
+  const imageUrl = `/api/v1/public/taxonomy-photos/${'f'.repeat(24)}`;
+  const created = await service.create({ userId: admin }, taxonomyCreateSchema.parse({ kind: 'type', categoryId: category, name: { en: 'New type' }, imageUrl, reason: 'Create with image' }), context);
+  assert.equal(created.imageUrl, imageUrl);
+  const updated = await service.update({ userId: admin }, created.id, { version: created.version, imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg', reason: 'Restore gate image' }, context);
+  assert.equal(updated.imageUrl, '/assets/canonical/public/sadat-city-entrance.jpg');
+  assert.equal(updated.categoryId, category);
+  const reset = await service.update({ userId: admin }, updated.id, { version: updated.version, imageUrl: null, reason: 'Reset image field' }, context);
+  assert.equal(reset.imageUrl, null);
+  for (const imageUrl of ['javascript:alert(1)', 'data:image/svg+xml,x', '//evil.example/photo.jpg', '/api/v1/private/photos/example']) assert.equal(taxonomyCreateSchema.safeParse({ kind: 'category', name: { en: 'Invalid' }, imageUrl, reason: 'Reject invalid image' }).success, false);
+});
 test('generates taxonomy slugs without input and preserves them on rename', async () => {
   const service = fixture(); const context = { requestId: 'automatic-taxonomy', traceId: 'a'.repeat(32) };
   const created = await service.create({ userId: admin }, taxonomyCreateSchema.parse({ kind: 'category', name: { en: 'Residential' }, reason: 'Create automatic category' }), context);

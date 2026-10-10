@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   FeatureData,
   LocalizedText,
@@ -30,6 +30,7 @@ export interface AdminMasterDataProps {
 }
 
 interface FormState {
+  readonly imageUrl: string;
   readonly kind: string;
   readonly nameAr: string;
   readonly nameEn: string;
@@ -88,6 +89,7 @@ function isFeature(item: MasterDataItem): item is FeatureData {
 function formFromItem(item: MasterDataItem | undefined, tab: AdminMasterDataTab): FormState {
   const name = item?.name;
   return {
+    imageUrl: item && isTaxonomy(item) ? item.imageUrl ?? '/assets/canonical/public/sadat-city-entrance.jpg' : '/assets/canonical/public/sadat-city-entrance.jpg',
     kind: item?.kind ?? (tab === 'categories' ? 'category' : tab === 'locations' ? 'location' : 'feature'),
     nameAr: name?.ar ?? '',
     nameEn: name?.en ?? '',
@@ -113,8 +115,8 @@ function nameFromForm(form: FormState): LocalizedText {
 function buildPayload(tab: AdminMasterDataTab, form: FormState, item: MasterDataItem | undefined): unknown {
   const common = { name: nameFromForm(form), order: Number(form.order), active: form.active, reason: form.reason.trim() };
   if (tab === 'categories') {
-    if (item === undefined) return { ...common, kind: form.kind, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
-    return { ...common, version: item.version, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
+    if (item === undefined) return { ...common, imageUrl: form.imageUrl, kind: form.kind, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
+    return { ...common, imageUrl: form.imageUrl, version: item.version, ...(form.kind === 'type' && form.categoryId.trim() !== '' ? { categoryId: form.categoryId.trim() } : {}) };
   }
   if (tab === 'locations') {
     const coordinates = form.latitude.trim() !== '' && form.longitude.trim() !== '' ? { latitude: Number(form.latitude), longitude: Number(form.longitude) } : undefined;
@@ -205,22 +207,31 @@ function FormField({ id, label, value, placeholder, onChange, type = 'text', req
   return <label className="admin-master-data__field" htmlFor={id}><span>{label}{required ? ' *' : ''}</span><input id={id} type={type} value={value} placeholder={placeholder} required={required} disabled={disabled} min={min} max={max} step={step} onChange={event => onChange(event.target.value)} /></label>;
 }
 
-function SelectField({ id, label, value, options, onChange, disabled = false }: { readonly id: string; readonly label: string; readonly value: string; readonly options: readonly { readonly value: string; readonly label: string }[]; readonly onChange: (value: string) => void; readonly disabled?: boolean }) {
-  return <label className="admin-master-data__field" htmlFor={id}><span>{label}</span><select id={id} value={value} disabled={disabled} onChange={event => onChange(event.target.value)}>{options.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select></label>;
+function SelectField({ id, label, value, options, onChange, disabled = false, required = false }: { readonly id: string; readonly label: string; readonly value: string; readonly options: readonly { readonly value: string; readonly label: string }[]; readonly onChange: (value: string) => void; readonly disabled?: boolean; readonly required?: boolean }) {
+  return <label className="admin-master-data__field" htmlFor={id}><span>{label}{required ? ' *' : ''}</span><select id={id} value={value} required={required} disabled={disabled} onChange={event => onChange(event.target.value)}>{options.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select></label>;
 }
 
-function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit, onClose, busy, error }: { readonly tab: AdminMasterDataTab; readonly form: FormState; readonly copy: ReturnType<typeof getAdminMasterDataCopy>; readonly editing: boolean; readonly data: MasterDataList | undefined; readonly locale: SupportedLocale; readonly onChange: (next: Partial<FormState>) => void; readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void; readonly onClose: () => void; readonly busy: boolean; readonly error: string | undefined }) {
+function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit, onClose, busy, error, previewUrl, onImage }: { readonly tab: AdminMasterDataTab; readonly form: FormState; readonly copy: ReturnType<typeof getAdminMasterDataCopy>; readonly editing: boolean; readonly data: MasterDataList | undefined; readonly locale: SupportedLocale; readonly onChange: (next: Partial<FormState>) => void; readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void; readonly onClose: () => void; readonly busy: boolean; readonly error: string | undefined; readonly previewUrl: string | undefined; readonly onImage: (file: File) => void }) {
   const kindOptions = tab === 'categories' ? [{ value: 'category', label: copy.kinds.category }, { value: 'type', label: copy.kinds.type }] : tab === 'locations' ? [{ value: 'location', label: copy.kinds.location }, { value: 'neighborhood', label: copy.kinds.neighborhood }] : [{ value: 'feature', label: copy.kinds.feature }, { value: 'service', label: copy.kinds.service }];
   const parentOptions = data?.items.filter(item => tab === 'locations' ? item.kind === 'location' : item.kind === 'category').map(item => ({ value: item.id, label: localizedValue(item.name, locale) })) ?? [];
   return (
     <form className="admin-master-data__form" onSubmit={onSubmit}>
       <div className="admin-master-data__form-grid">
-        <SelectField id="admin-master-data-kind" label={copy.labels.kind} value={form.kind} options={kindOptions} disabled={editing} onChange={kind => onChange({ kind })} />
+        <SelectField id="admin-master-data-kind" label={copy.labels.kind} value={form.kind} options={kindOptions} disabled={editing} onChange={kind => onChange({ kind, categoryId: kind === 'type' && parentOptions.length === 1 ? parentOptions[0]!.value : form.categoryId })} />
         <p>{locale === 'ar' ? 'المعرّف يتولد تلقائيًا عند الإنشاء ويظل ثابتًا عند التعديل.' : 'The identifier is generated automatically on creation and stays unchanged on edits.'}</p>
         <FormField id="admin-master-data-name-ar" label={copy.labels.nameAr} value={form.nameAr} placeholder={copy.placeholders.nameAr} onChange={nameAr => onChange({ nameAr })} />
         <FormField id="admin-master-data-name-en" label={copy.labels.nameEn} value={form.nameEn} placeholder={copy.placeholders.nameEn} onChange={nameEn => onChange({ nameEn })} />
-        <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" step="1" required onChange={order => onChange({ order })} />
-        {tab === 'categories' && form.kind === 'type' ? <SelectField id="admin-master-data-category" label={copy.labels.category} value={form.categoryId} options={[{ value: '', label: copy.placeholders.category }, ...parentOptions]} onChange={categoryId => onChange({ categoryId })} /> : null}
+        {tab === 'categories' ? <div className="admin-master-data__field--wide">
+          <img src={previewUrl ?? (form.imageUrl.startsWith('/api/') ? undefined : form.imageUrl)} alt={locale === 'ar' ? 'معاينة صورة النوع' : 'Property type image preview'} style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
+          <label className="admin-master-data__field">{locale === 'ar' ? 'تغيير الصورة من جهازك' : 'Change image from your device'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) onImage(file); }} /></label>
+          <p>{locale === 'ar' ? 'JPG أو PNG أو WebP حتى 10 ميجابايت. بعد رفع الصورة اضغط حفظ لتظهر في الموقع.' : 'JPG, PNG or WebP, up to 10 MB. After uploading, save to display it on the website.'}</p>
+          <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg' })}>{locale === 'ar' ? 'استخدام صورة بوابة السادات' : 'Use the Sadat gate image'}</Button>
+        </div> : null}
+        {tab === 'categories' ? <>
+          <p className="admin-master-data__field--wide">{locale === 'ar' ? 'التصنيف مجموعة مثل «سكني»، ونوع العقار مثل «شقة» يتبع هذه المجموعة.' : 'A category is a group such as Residential. A property type such as Apartment belongs to that group.'}</p>
+          <details className="admin-master-data__field--wide"><summary>{locale === 'ar' ? 'ترتيب الظهور (اختياري)' : 'Display order (optional)'}</summary><p>{locale === 'ar' ? 'الجديد يُضاف آخر القائمة تلقائيًا. الرقم الأصغر يظهر أولًا؛ لا تحتاج تغييره.' : 'New entries go at the end automatically. Smaller numbers appear first; no change is needed.'}</p><FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} /></details>
+        </> : <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} />}
+        {tab === 'categories' && form.kind === 'type' ? <><SelectField id="admin-master-data-category" label={locale === 'ar' ? 'التصنيف الذي يتبعه النوع' : 'Category for this property type'} value={form.categoryId} required options={[{ value: '', label: copy.placeholders.category }, ...parentOptions]} onChange={categoryId => onChange({ categoryId })} />{parentOptions.length === 0 ? <div><p>{locale === 'ar' ? 'أضف تصنيفًا أولًا، ثم أضف نوع العقار داخله.' : 'Add a category first, then add a property type to it.'}</p><Button type="button" variant="secondary" onClick={() => onChange({ kind: 'category' })}>{locale === 'ar' ? 'إضافة تصنيف أولًا' : 'Add a category first'}</Button></div> : null}</> : null}
         {tab === 'locations' && form.kind === 'neighborhood' ? <SelectField id="admin-master-data-parent" label={copy.labels.parent} value={form.parentId} options={[{ value: '', label: copy.placeholders.parent }, ...parentOptions]} onChange={parentId => onChange({ parentId })} /> : null}
         {tab === 'features' ? <FormField id="admin-master-data-group" label={copy.labels.group} value={form.groupKey} placeholder={copy.placeholders.group} required onChange={groupKey => onChange({ groupKey })} /> : null}
         {tab === 'locations' ? <><FormField id="admin-master-data-latitude" label={copy.labels.latitude} value={form.latitude} placeholder={copy.placeholders.latitude} type="number" step="any" onChange={latitude => onChange({ latitude })} /><FormField id="admin-master-data-longitude" label={copy.labels.longitude} value={form.longitude} placeholder={copy.placeholders.longitude} type="number" step="any" onChange={longitude => onChange({ longitude })} /></> : null}
@@ -243,12 +254,35 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   const [modal, setModal] = useState<ModalState>();
   const [form, setForm] = useState<FormState>(() => formFromItem(undefined, initialTab));
   const [busy, setBusy] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>();
+  const previewVersion = useRef(0);
   const [mutationError, setMutationError] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<string | undefined>();
   const source: AdminMasterDataSource = useMemo(() => createAdminMasterDataSource({ apiClient, apiOrigin, authorization: authClient }), [apiClient, apiOrigin, authClient]);
   const path = currentPath();
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const screenId = tab === 'categories' ? 'ADM-09' : tab === 'locations' ? 'ADM-10' : 'ADM-11';
+  useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
+  useEffect(() => {
+    const version = ++previewVersion.current;
+    setPreviewUrl(undefined);
+    const image = modal?.item && isTaxonomy(modal.item) ? modal.item.imageUrl : undefined;
+    if (!image?.startsWith('/api/v1/public/taxonomy-photos/')) return;
+    let cancelled = false;
+    void source.loadTaxonomyPhoto(image.split('/').at(-1)!).then(blob => { if (!cancelled && version === previewVersion.current) setPreviewUrl(URL.createObjectURL(blob)); }).catch(() => { if (!cancelled && version === previewVersion.current) setMutationError(copy.mutation.failed); });
+    return () => { cancelled = true; };
+  }, [modal, source, copy.mutation.failed]);
+
+  async function uploadImage(file: File): Promise<void> {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size === 0 || file.size > 10 * 1024 * 1024) {
+      setMutationError(locale === 'ar' ? 'اختر صورة JPG أو PNG أو WebP حتى 10 ميجابايت.' : 'Choose a JPG, PNG or WebP image up to 10 MB.'); return;
+    }
+    ++previewVersion.current;
+    setBusy(true); setMutationError(undefined);
+    try { const photo = await source.uploadTaxonomyPhoto(file); setForm(current => ({ ...current, imageUrl: photo.imageUrl })); setPreviewUrl(URL.createObjectURL(file)); }
+    catch { setMutationError(copy.mutation.failed); }
+    finally { setBusy(false); }
+  }
 
   useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'admin') {
@@ -276,7 +310,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   }
 
   function openCreate(): void {
-    setForm(formFromItem(undefined, tab));
+    setForm({ ...formFromItem(undefined, tab), order: tab === 'categories' ? String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(item => item.order) ?? [])) + 1)) : '0' });
     setMutationError(undefined);
     setModal({ mode: 'create' });
   }
@@ -294,6 +328,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   }
 
   function patchForm(next: Partial<FormState>): void {
+    if (next.imageUrl !== undefined) { ++previewVersion.current; setPreviewUrl(undefined); }
     setForm(current => ({ ...current, ...next }));
     setMutationError(undefined);
   }
@@ -301,9 +336,10 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   function applyItem(nextItem: MasterDataItem, editing: boolean): void {
     setData(current => current === undefined ? current : {
       ...current,
-      items: editing ? current.items.map(item => item.id === nextItem.id ? nextItem : item) : [nextItem, ...current.items],
+      items: (editing ? current.items.map(item => item.id === nextItem.id ? nextItem : item) : [...current.items, nextItem]).sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug)),
       total: editing ? current.total : current.total + 1
     });
+    setState('success');
   }
 
   function removeItem(id: string): void {
@@ -312,7 +348,13 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
 
   async function submitEditor(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (busy) return;
     if (modal === undefined || modal.mode === 'delete') return;
+    if (tab === 'categories' && form.kind === 'type' && !form.categoryId) {
+      setMutationError(locale === 'ar' ? 'اختر التصنيف الذي يتبعه نوع العقار أولًا.' : 'Select a category for this property type first.');
+      document.getElementById('admin-master-data-category')?.focus();
+      return;
+    }
     if (nameFromForm(form).ar === undefined && nameFromForm(form).en === undefined) {
       setMutationError(copy.mutation.validation);
       return;
@@ -334,7 +376,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
       setFeedback(modal.mode === 'create' ? copy.mutation.created : copy.mutation.updated);
       setModal(undefined);
     } catch (error) {
-      setMutationError(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.states.permission.body : error instanceof Error && error.message.length > 0 ? error.message : copy.mutation.failed);
+      setMutationError(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.states.permission.body : error instanceof ApiClientError && error.status === 409 ? (locale === 'ar' ? 'تغيرت البيانات أو العنصر مستخدم بالفعل. حدّث القائمة ثم حاول مرة أخرى.' : 'The data changed or the item is already in use. Refresh the list and retry.') : copy.mutation.failed);
     } finally {
       setBusy(false);
     }
@@ -357,7 +399,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
       setFeedback(copy.mutation.deleted);
       setModal(undefined);
     } catch (error) {
-      setMutationError(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.states.permission.body : error instanceof Error && error.message.length > 0 ? error.message : copy.mutation.failed);
+      setMutationError(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.states.permission.body : copy.mutation.failed);
     } finally {
       setBusy(false);
     }
@@ -382,8 +424,8 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
           {state === 'success' && data !== undefined ? <section className="admin-master-data__panel" aria-labelledby="admin-master-data-list-title"><div className="admin-master-data__panel-heading"><div><h2 id="admin-master-data-list-title">{title}</h2><p data-testid="admin-master-data-total">{copy.count(data.total)}</p></div><Button variant="secondary" size="sm" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button></div><MasterDataTable tab={tab} data={data} locale={locale} copy={copy} onEdit={openEdit} onDelete={openDelete} /></section> : null}
         </div>
       </div>
-      {modal?.mode === 'create' || modal?.mode === 'edit' ? <Modal open title={modal.mode === 'create' ? copy.add : copy.edit} description={title} closeLabel={copy.close} onClose={() => setModal(undefined)}><EditorForm tab={tab} form={form} copy={copy} editing={modal.mode === 'edit'} data={data} locale={locale} onChange={patchForm} onSubmit={event => { void submitEditor(event); }} onClose={() => setModal(undefined)} busy={busy} error={mutationError} /></Modal> : null}
-      {modal?.mode === 'delete' ? <Modal open title={copy.confirmDelete} description={localizedValue(modal.item.name, locale)} closeLabel={copy.close} onClose={() => setModal(undefined)}><form className="admin-master-data__delete-form" onSubmit={event => { void submitDelete(event); }}><p>{copy.mutation.deleted}</p><label className="admin-master-data__field" htmlFor="admin-master-data-delete-reason"><span>{copy.labels.reason} *</span><textarea id="admin-master-data-delete-reason" value={form.reason} minLength={5} maxLength={500} required rows={3} placeholder={copy.placeholders.reason} onChange={event => patchForm({ reason: event.target.value })} /></label>{mutationError !== undefined ? <p className="admin-master-data__form-error" role="alert">{mutationError}</p> : null}<div className="admin-master-data__form-actions"><Button type="submit" loading={busy}>{copy.delete}</Button><Button type="button" variant="secondary" disabled={busy} onClick={() => setModal(undefined)}>{copy.cancel}</Button></div></form></Modal> : null}
+      {modal?.mode === 'create' || modal?.mode === 'edit' ? <Modal open title={modal.mode === 'create' ? copy.add : copy.edit} description={title} closeLabel={copy.close} onClose={() => { if (!busy) setModal(undefined); }}><EditorForm tab={tab} form={form} copy={copy} editing={modal.mode === 'edit'} data={data} locale={locale} onChange={patchForm} onSubmit={event => { void submitEditor(event); }} onClose={() => { if (!busy) setModal(undefined); }} busy={busy} error={mutationError} previewUrl={previewUrl} onImage={file => { void uploadImage(file); }} /></Modal> : null}
+      {modal?.mode === 'delete' ? <Modal open title={copy.confirmDelete} description={localizedValue(modal.item.name, locale)} closeLabel={copy.close} onClose={() => { if (!busy) setModal(undefined); }}><form className="admin-master-data__delete-form" onSubmit={event => { void submitDelete(event); }}><p>{copy.mutation.deleted}</p><label className="admin-master-data__field" htmlFor="admin-master-data-delete-reason"><span>{copy.labels.reason} *</span><textarea id="admin-master-data-delete-reason" value={form.reason} minLength={5} maxLength={500} required rows={3} placeholder={copy.placeholders.reason} onChange={event => patchForm({ reason: event.target.value })} /></label>{mutationError !== undefined ? <p className="admin-master-data__form-error" role="alert">{mutationError}</p> : null}<div className="admin-master-data__form-actions"><Button type="submit" loading={busy}>{copy.delete}</Button><Button type="button" variant="secondary" disabled={busy} onClick={() => setModal(undefined)}>{copy.cancel}</Button></div></form></Modal> : null}
     </section>
   );
 }

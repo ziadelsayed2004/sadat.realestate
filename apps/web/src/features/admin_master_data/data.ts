@@ -1,4 +1,5 @@
 import {
+  cmsTeamPhotoSuccessEnvelopeSchema,
   featureCreateSchema,
   featureDeleteSchema,
   featureDeleteSuccessEnvelopeSchema,
@@ -37,7 +38,7 @@ import {
   type TaxonomyQuery,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, buildApiUrl, type ApiClientOptions } from '../contracts/index.ts';
 import type { AdminMasterDataTab } from './copy.ts';
 
 export const ADMIN_PROPERTY_CATEGORIES_ROUTE = '/admin/property-categories' as const;
@@ -182,7 +183,25 @@ export async function deleteAdminFeature(featureId: string, input: unknown, opti
 
 export function createAdminMasterDataSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
-    load: (tab: AdminMasterDataTab, signal?: AbortSignal) => loadAdminMasterData(tab, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    uploadTaxonomyPhoto: async (file: File) => (await clientFor(options).request(`${ADMIN_PROPERTY_CATEGORIES_ROUTE}/photos`, { method: 'POST', body: await file.arrayBuffer(), responseSchema: cmsTeamPhotoSuccessEnvelopeSchema, headers: { ...headersFor(options.authorization), 'content-type': file.type } })).data.data,
+    loadTaxonomyPhoto: async (id: string) => {
+      if (!/^[a-f0-9]{24}$/.test(id)) throw new Error('Invalid photo');
+      const headers = headersFor(options.authorization);
+      const response = await fetch(buildApiUrl(options.apiOrigin, `${ADMIN_PROPERTY_CATEGORIES_ROUTE}/photos/${id}`), { ...(headers ? { headers } : {}), credentials: 'include' });
+      if (!response.ok) throw new Error('Photo unavailable');
+      return response.blob();
+    },
+    load: async (tab: AdminMasterDataTab, signal?: AbortSignal): Promise<MasterDataList> => {
+      const request = { ...options, ...(signal === undefined ? {} : { signal }) };
+      if (tab !== 'categories') return loadAdminMasterData(tab, request);
+      let result = await loadAdminTaxonomy({ ...request, query: { limit: 100 } });
+      for (let page = 2; (page - 1) * result.limit < result.total; page++) {
+        const next = await loadAdminTaxonomy({ ...request, query: { limit: 100, page } });
+        if (!next.items.length) break;
+        result = { ...result, items: [...result.items, ...next.items], total: next.total };
+      }
+      return result;
+    },
     createLocation: (input: unknown, signal?: AbortSignal) => createAdminLocation(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     updateLocation: (id: string, input: unknown, signal?: AbortSignal) => updateAdminLocation(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     deleteLocation: (id: string, input: unknown, signal?: AbortSignal) => deleteAdminLocation(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),

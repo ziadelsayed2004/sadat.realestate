@@ -14,12 +14,16 @@ import {
   type TaxonomyStore,
 } from "./module.js";
 import type { TaxonomyRouterDependencies } from "./router.js";
+import { createTeamPhotos } from '../cms/team-photos.js';
+import type { UploadEnvironment } from '../uploads/environment.js';
+import { createInMemoryStorageAdapter, createLocalFilesystemStorageAdapter, createUnavailableStorageAdapter, createClamAvMalwareScanner, createDeterministicMalwareScanner, createUnavailableMalwareScanner } from '../uploads/adapters.js';
 
 interface Rec {
   kind: "category" | "type";
   categoryId?: Types.ObjectId;
   name: { ar?: string; en?: string };
   slug: string;
+  imageUrl?: string | null;
   order: number;
   active: boolean;
   createdBy: Types.ObjectId;
@@ -42,6 +46,7 @@ const schema = new Schema<Rec>(
     },
     categoryId: { type: Schema.Types.ObjectId, ref: "PropertyTaxonomy" },
     name: { type: names, required: true },
+    imageUrl: { type: String, maxlength: 2048 },
     slug: {
       type: String,
       required: true,
@@ -84,6 +89,7 @@ const map = (x: Rec & { _id: Types.ObjectId }): StoredTaxonomy => ({
   kind: x.kind,
   ...(x.categoryId ? { categoryId: x.categoryId.toHexString() } : {}),
   name: x.name,
+  ...(x.imageUrl !== undefined ? { imageUrl: x.imageUrl } : {}),
   slug: x.slug,
   order: x.order,
   active: x.active,
@@ -96,7 +102,11 @@ export function createTaxonomyRuntime(
   accessTokens: AccessTokenService,
   audit: AuditWriter,
   authorization: RbacService,
+  environment?: UploadEnvironment,
 ): TaxonomyRouterDependencies {
+  const photos = createTeamPhotos({ connection, authorization, audit, kind: 'taxonomy',
+    storage: environment?.mode === 'memory' ? createInMemoryStorageAdapter() : environment?.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter(),
+    scanner: environment?.scannerMode === 'clamav' && environment.clamav ? createClamAvMalwareScanner(environment.clamav) : environment?.scannerMode === 'deterministic-fake' ? createDeterministicMalwareScanner('clean') : createUnavailableMalwareScanner() });
   const model =
     (connection.models.PropertyTaxonomy as Model<Rec> | undefined) ??
     connection.model<Rec>("PropertyTaxonomy", schema);
@@ -267,7 +277,8 @@ export function createTaxonomyRuntime(
   };
   return {
     accessTokens,
-    service: createTaxonomyService({ store, authorization }),
+    photos,
+    service: createTaxonomyService({ store, authorization, validateImage: async url => { if (url.startsWith('/api/v1/public/taxonomy-photos/')) await photos.validateAttach(url.split('/').at(-1)!); } }),
   };
 }
 

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import { Types, type Connection } from 'mongoose';
 import sharp from 'sharp';
-import { cmsTeamPhotoSchema } from '@sadat-real-estate/contracts';
+import { cmsTeamPhotoSchema, type RbacPermission } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
 import type { RbacService } from '../rbac/service.js';
@@ -20,12 +20,13 @@ export function createTeamPhotos(dependencies: {
   audit: Pick<AuditWriter, 'record'>;
   storage: StorageAdapter;
   scanner: MalwareScannerAdapter;
-  kind?: 'article';
+  kind?: 'article' | 'taxonomy';
 }) {
   const { connection, authorization, audit, storage, scanner } = dependencies;
   const article = dependencies.kind === 'article';
-  const photos = connection.collection(article ? 'cms_article_photos' : 'cms_team_photos');
-  async function authorize(claims: AccessTokenClaims, permission: 'admin:content.view' | 'admin:content.manage') {
+  const taxonomy = dependencies.kind === 'taxonomy';
+  const photos = connection.collection(taxonomy ? 'taxonomy_photos' : article ? 'cms_article_photos' : 'cms_team_photos');
+  async function authorize(claims: AccessTokenClaims, permission: RbacPermission) {
     if (claims.role !== 'admin' || claims.status !== 'verified' || !await authorization.authorize(claims.sub, permission)) {
       throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
     }
@@ -39,7 +40,7 @@ export function createTeamPhotos(dependencies: {
   return {
     async validateAttach(id: string) { await find(id); },
     async upload(claims: AccessTokenClaims, source: AsyncIterable<Uint8Array>, mime: string, context: { requestId: string; traceId: string }) {
-      await authorize(claims, 'admin:content.manage');
+      await authorize(claims, taxonomy ? 'admin:taxonomy.manage' : 'admin:content.manage');
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(mime)) throw invalid();
       if (!await storage.isReady() || !await scanner.isReady()) throw unavailable();
       const chunks: Buffer[] = []; let bytes = 0;
@@ -60,24 +61,25 @@ export function createTeamPhotos(dependencies: {
       } catch { throw invalid(); }
       if (image.length > maxBytes) throw invalid();
       const id = new Types.ObjectId(); const at = new Date();
-      const photo = cmsTeamPhotoSchema.parse({ id: id.toHexString(), imageUrl: `/api/v1/public/${article ? 'article' : 'team'}-photos/${id.toHexString()}` });
+      const photo = cmsTeamPhotoSchema.parse({ id: id.toHexString(), imageUrl: `/api/v1/public/${taxonomy ? 'taxonomy' : article ? 'article' : 'team'}-photos/${id.toHexString()}` });
       const storageKey = `quarantine/${randomUUID().replaceAll('-', '')}`;
       const session = await connection.startSession();
       try {
         await storage.putPrivateQuarantine(storageKey, Readable.from(image));
         await session.withTransaction(async () => {
           await photos.insertOne({ _id: id, storageKey, mime: 'image/webp', createdBy: new Types.ObjectId(claims.sub), createdAt: at }, { session });
-          await audit.record({ actorType: 'admin', actorId: claims.sub, action: article ? 'article.photo.upload' : 'cms.team.photo.upload', targetType: article ? 'article_photo' : 'cms_team_photo', targetId: photo.id, reason: article ? 'Upload scanned article image' : 'Upload scanned team portrait', before: {}, after: { mime: 'image/webp', bytes: image.length }, ...context, occurredAt: at }, session);
+          await audit.record({ actorType: 'admin', actorId: claims.sub, action: taxonomy ? 'taxonomy.photo.upload' : article ? 'article.photo.upload' : 'cms.team.photo.upload', targetType: taxonomy ? 'taxonomy_photo' : article ? 'article_photo' : 'cms_team_photo', targetId: photo.id, reason: taxonomy ? 'Upload scanned taxonomy image' : article ? 'Upload scanned article image' : 'Upload scanned team portrait', before: {}, after: { mime: 'image/webp', bytes: image.length }, ...context, occurredAt: at }, session);
         });
       } catch (error) { await storage.deletePrivate(storageKey); throw error; }
       finally { await session.endSession(); }
       return photo;
     },
     async open(id: string, claims?: AccessTokenClaims) {
-      if (claims) await authorize(claims, 'admin:content.view');
+      if (claims) await authorize(claims, taxonomy ? 'admin:taxonomy.view' : 'admin:content.view');
       const photo = await find(id);
-      if (!claims && !await connection.collection(article ? 'articles' : 'cms_team_members').findOne(article
-        ? { status: 'published', $or: [{ coverAssetId: photo._id }, { galleryAssetIds: photo._id }] }
+      if (!claims && !await connection.collection(taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(taxonomy
+        ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }
+        : article ? { status: 'published', $or: [{ coverAssetId: photo._id }, { galleryAssetIds: photo._id }] }
         : { photoAssetId: photo._id, active: true, status: 'published' })) throw missing();
       return { mime: 'image/webp', stream: await storage.openPrivate(String(photo.storageKey)) };
     }

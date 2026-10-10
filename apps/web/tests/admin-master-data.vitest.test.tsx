@@ -118,11 +118,65 @@ describe('Admin master-data contracts and views', () => {
     fireEvent.change(screen.getByLabelText(`${getAdminMasterDataCopy('en').labels.reason} *`), { target: { value: 'Approved category' } });
     fireEvent.click(screen.getByRole('button', { name: getAdminMasterDataCopy('en').save }));
     await waitFor(() => expect(screen.getByText(getAdminMasterDataCopy('en').mutation.created)).toBeInTheDocument());
+    expect(screen.getByTestId(`admin-master-data-item-${category.id}`)).toBeInTheDocument();
     expect(requests.some(request => request.method === 'POST' && request.path === '/api/v1/admin/property-categories')).toBe(true);
     result.unmount();
     const load = vi.fn();
     renderWithLocale(<AdminMasterData locale="en" session={{ status: 'anonymous' }} initialData={{ items: [category], page: 1, limit: 20, total: 1 }} apiClient={new ApiClient({ fetcher: async () => { load(); return envelope({ items: [category] }, 1); } })} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: getAdminMasterDataCopy('en').states.permission.title })).toBeInTheDocument());
     expect(load).not.toHaveBeenCalled();
+  });
+
+  it('loads later taxonomy pages so every parent is selectable', async () => {
+    const pages: number[] = [];
+    const client = new ApiClient({ fetcher: async input => {
+      const page = Number(new URL(String(input), 'http://localhost').searchParams.get('page')); pages.push(page);
+      const items = page === 1 ? Array.from({ length: 100 }, (_, index) => ({ ...category, id: index.toString(16).padStart(24, '0'), kind: 'type', categoryId: category.id })) : [category];
+      return new Response(JSON.stringify({ data: { items }, meta: { requestId: 'all-parents', page, limit: 100, total: 101 } }), { headers: { 'content-type': 'application/json' } });
+    } });
+    const result = await createAdminMasterDataSource({ apiClient: client, authorization }).load('categories');
+    expect(pages).toEqual([1, 2]);
+    expect(result.items).toHaveLength(101);
+    expect(result.items.at(-1)).toEqual(category);
+  });
+
+  it('explains and focuses the required parent instead of submitting an invalid type', () => {
+    window.history.pushState({}, '', '/admin/property-categories');
+    const fetcher = vi.fn();
+    const result = renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={new ApiClient({ fetcher })} initialData={{ items: [], page: 1, limit: 100, total: 0 }} />, { locale: 'en' });
+    fireEvent.click(screen.getAllByRole('button', { name: getAdminMasterDataCopy('en').add })[0]!);
+    fireEvent.change(screen.getByLabelText(getAdminMasterDataCopy('en').labels.kind), { target: { value: 'type' } });
+    fireEvent.submit(result.container.querySelector('.admin-master-data__form')!);
+    expect(screen.getByRole('alert')).toHaveTextContent('Select a category for this property type first.');
+    expect(screen.getByLabelText('Category for this property type *')).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Add a category first' })).toBeInTheDocument();
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('creates a type with its category and automatic order, and keeps inputs on failure', async () => {
+    window.history.pushState({}, '', '/admin/property-categories');
+    const inputs: unknown[] = [];
+    let fail = true;
+    const client = new ApiClient({ fetcher: async (_url, init) => {
+      const body = JSON.parse(String(init?.body)); inputs.push(body);
+      if (fail) throw new Error('internal database secret');
+      return envelope({ ...category, kind: body.kind, categoryId: body.categoryId, name: body.name, order: body.order, slug: 'new-type', id: 'd'.repeat(24), version: 0 });
+    } });
+    renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={client} initialData={{ items: [category], page: 1, limit: 100, total: 1 }} />, { locale: 'en' });
+    const copy = getAdminMasterDataCopy('en');
+    fireEvent.click(screen.getByRole('button', { name: copy.add }));
+    fireEvent.change(screen.getByLabelText(copy.labels.kind), { target: { value: 'type' } });
+    expect(screen.getByLabelText('Category for this property type *')).toHaveValue(category.id);
+    expect(screen.getByLabelText(`${copy.labels.order} *`)).toHaveValue(2);
+    fireEvent.change(screen.getByLabelText(copy.labels.nameEn), { target: { value: 'New property type' } });
+    fireEvent.change(screen.getByLabelText(`${copy.labels.reason} *`), { target: { value: 'Add new type' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.save }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(copy.mutation.failed));
+    expect(screen.getByLabelText(copy.labels.nameEn)).toHaveValue('New property type');
+    expect(screen.queryByText(/internal database secret/)).not.toBeInTheDocument();
+    fail = false;
+    fireEvent.click(screen.getByRole('button', { name: copy.save }));
+    await waitFor(() => expect(screen.getByText(copy.mutation.created)).toBeInTheDocument());
+    expect(inputs).toEqual(Array(2).fill({ kind: 'type', imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg', categoryId: category.id, name: { en: 'New property type' }, order: 2, active: true, reason: 'Add new type' }));
   });
 });

@@ -11,20 +11,21 @@ import { createInMemoryStorageAdapter, createDeterministicMalwareScanner } from 
 const claims: AccessTokenClaims = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: 'a'.repeat(24), sid: 'b'.repeat(24), role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'team-photo-test' };
 const context = { requestId: 'team-photo-test', traceId: 'a'.repeat(32) };
 const fails = (status: number) => (error: unknown) => error instanceof ApiContractError && error.statusCode === status;
-function harness(options: { allowed?: boolean; infected?: boolean; auditFails?: boolean } = {}) {
+function harness(options: { allowed?: boolean; infected?: boolean; auditFails?: boolean; taxonomy?: boolean } = {}) {
   let row: Record<string, unknown> | undefined;
   let published = false;
   const storage = createInMemoryStorageAdapter();
   const audits: string[] = [];
   const connection = {
     collection(name: string) {
-      return name === 'cms_team_photos' ? {
+      return name === (options.taxonomy ? 'taxonomy_photos' : 'cms_team_photos') ? {
         async insertOne(value: Record<string, unknown>) { row = value; },
         async findOne(filter: Record<string, unknown>) { return row && String(filter._id) === String(row._id) && storage.has(String(row.storageKey)) ? row : null; }
       } : {
         async findOne(filter: Record<string, unknown>) {
-          assert.equal(filter.status, 'published'); assert.equal(filter.active, true);
-          assert.equal(String(filter.photoAssetId), String(row?._id));
+          assert.equal(filter.active, true);
+          if (options.taxonomy) assert.equal(filter.imageUrl, `/api/v1/public/taxonomy-photos/${row?._id}`);
+          else { assert.equal(filter.status, 'published'); assert.equal(String(filter.photoAssetId), String(row?._id)); }
           return published ? { _id: 'team' } : null;
         }
       };
@@ -32,8 +33,9 @@ function harness(options: { allowed?: boolean; infected?: boolean; auditFails?: 
     async startSession() { return { async withTransaction(operation: () => Promise<void>) { await operation(); }, async endSession() {} }; }
   } as unknown as Connection;
   const service = createTeamPhotos({ connection, storage,
+    ...(options.taxonomy ? { kind: 'taxonomy' as const } : {}),
     scanner: createDeterministicMalwareScanner(options.infected ? 'infected' : 'clean'),
-    authorization: { async authorize() { return options.allowed ?? true; } },
+    authorization: { async authorize(_id, permission) { if (options.taxonomy) assert.match(permission, /^admin:taxonomy\.(manage|view)$/); return options.allowed ?? true; } },
     audit: { async record(input) { if (options.auditFails) throw new Error('Audit failed'); audits.push(input.action); return 'audit'; } }
   });
   return { service, audits, storage, row: () => row, publish: (value: boolean) => { published = value; } };
@@ -54,6 +56,22 @@ test('uploads a scanned portrait and allows public downloads only while attached
   fixture.publish(false);
   await assert.rejects(fixture.service.open(photo.id), fails(404));
   assert.deepEqual(fixture.audits, ['cms.team.photo.upload']);
+});
+
+test('uploads taxonomy photos with taxonomy permissions and publishes only attached active photos', async () => {
+  const fixture = harness({ taxonomy: true });
+  const photo = await fixture.service.upload(claims, Readable.from(await png()), 'image/png', context);
+  assert.equal(photo.imageUrl, `/api/v1/public/taxonomy-photos/${photo.id}`);
+  await fixture.service.validateAttach(photo.id);
+  await assert.rejects(fixture.service.open(photo.id), fails(404));
+  assert.equal((await fixture.service.open(photo.id, claims)).mime, 'image/webp');
+  fixture.publish(true);
+  assert.equal((await fixture.service.open(photo.id)).mime, 'image/webp');
+  fixture.publish(false);
+  await assert.rejects(fixture.service.open(photo.id), fails(404));
+  assert.deepEqual(fixture.audits, ['taxonomy.photo.upload']);
+  await assert.rejects(harness({ taxonomy: true, allowed: false }).service.upload(claims, Readable.from(await png()), 'image/png', context), fails(403));
+  await assert.rejects(harness({ taxonomy: true, infected: true }).service.upload(claims, Readable.from(await png()), 'image/png', context), fails(400));
 });
 test('rejects unsupported, corrupt, oversized, mismatched and infected files before storing them', async () => {
   const fixture = harness();

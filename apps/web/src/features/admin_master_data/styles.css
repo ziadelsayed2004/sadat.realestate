@@ -226,8 +226,11 @@
 }
 
 .admin-master-data__form {
-  min-width: min(680px, 80vw);
+  min-width: 0;
+  width: 100%;
 }
+
+.admin-master-data .ui-modal-backdrop { z-index: 110; }
 
 .admin-master-data__form-grid {
   display: grid;
@@ -237,6 +240,7 @@
 
 .admin-master-data__field {
   display: grid;
+  min-width: 0;
   gap: 7px;
   color: #5f6c80;
   font-size: .84rem;
@@ -292,6 +296,7 @@
   margin-block: 16px 0;
   color: #b42318;
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .admin-master-data__form-actions {
@@ -302,7 +307,7 @@
 }
 
 .admin-master-data__delete-form {
-  min-width: min(540px, 80vw);
+  min-width: 0;
 }
 
 .admin-master-data__delete-form > p {
@@ -320,4 +325,5 @@
   .admin-master-data {
     min-width: 0;
   }
+  .admin-master-data__form-grid { grid-template-columns: minmax(0, 1fr); }
 }

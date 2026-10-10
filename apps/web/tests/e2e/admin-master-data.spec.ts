@@ -48,6 +48,7 @@ test.describe('ADM-09 through ADM-11 admin master data', () => {
     await expect(page.locator('[data-screen-id="ADM-09"]')).toBeVisible();
     await page.getByRole('button', { name: /Add item|إضافة عنصر|添加项目/u }).first().click();
     await page.locator('#admin-master-data-name-en').fill('Projects');
+    await page.locator('.admin-master-data__form details summary').click();
     await page.locator('#admin-master-data-order').fill('2');
     await page.locator('#admin-master-data-reason').fill('Approved category');
     const request = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/property-categories'));

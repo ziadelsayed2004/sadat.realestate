@@ -282,8 +282,8 @@ function withCanonicalHomepageContent(content: readonly PublicHomepageContent[])
   return result;
 }
 
-export function publicCategoryAsset(slug: string): string | undefined {
-  return publicCategoryAssets[slug.trim().toLowerCase()];
+export function publicCategoryAsset(slug: string): string {
+  return publicCategoryAssets[slug.trim().toLowerCase()] ?? '/assets/canonical/public/sadat-city-entrance.jpg';
 }
 
 export function fallbackPropertyImage(slug?: string, kind?: string): string {
@@ -922,7 +922,7 @@ function HomepageCategoryRail({
   const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
     <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
-      <PublicMediaImage className="public-homepage__category-image" src={publicCategoryAsset(category.slug) ?? category.imageUrl} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
+      <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
       <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
       <small>{new Intl.NumberFormat(locale).format(category.propertyCount)} {allPropertiesLabel}</small>
     </a>
@@ -942,6 +942,7 @@ function HomepageCategoryRail({
         </a>
         {categories.slice(1).map(renderCategory)}
       </div>
+      {categories.some(category => (category.imageUrl ?? publicCategoryAsset(category.slug)).endsWith('/sadat-city-entrance.jpg')) ? <small><a href="/assets/canonical/public/sadat-city-entrance.html">{locale === 'ar' ? 'صورة بوابة السادات: فارس الجويلي — CC BY-SA 4.0' : 'Sadat gate photo: Faris El-Gwely — CC BY-SA 4.0'}</a></small> : null}
     </section>
   );
 }
