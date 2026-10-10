@@ -32,7 +32,7 @@ function ViewingRow({ item, copy, locale, save }: Props & { readonly item: Viewi
         {item.requestedAt && ['requested', 'rescheduled'].includes(item.status) && new Date(item.requestedAt) < new Date() ? <p className="admin-viewing__notice">{help.past}</p> : null}
         {item.note ? <section className="admin-viewing__customer-note"><h3>{locale === 'ar' ? 'ملاحظة العميل' : 'Customer note'}</h3><p>{item.note}</p></section> : null}
         {item.providerId ? <p><a href={`/admin/users/${item.providerId}?lang=${locale}`}>{locale === 'ar' ? 'عرض حساب مقدّم العقار' : 'Open property provider account'}</a></p> : null}
-        <ViewingActions item={item} locale={locale} save={input => save(item.id, input)} />
+        <ViewingActions item={item} locale={locale} save={async input => { await save(item.id, input); if (input.action === 'confirm') setOpen(false); }} />
         <details className="admin-viewing__record"><summary>{help.technical}</summary><dl className="admin-requests__details">
           <div><dt>{copy.requestId}</dt><dd><bdi>{item.id}</bdi></dd></div><div><dt>{copy.seeker}</dt><dd><bdi>{item.seekerId}</bdi></dd></div>
           <div><dt>{copy.created}</dt><dd>{date(item.createdAt)}</dd></div><div><dt>{copy.updated}</dt><dd>{date(item.updatedAt)}</dd></div>

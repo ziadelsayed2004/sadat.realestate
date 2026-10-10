@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import type { ViewingData } from '@sadat-real-estate/contracts';
 import { ViewingActions } from '../src/features/admin_requests/viewing-actions.tsx';
@@ -12,6 +12,32 @@ const item: ViewingData = { id: 'a'.repeat(24), propertyId: 'b'.repeat(24), seek
 afterEach(() => vi.useRealTimers());
 
 describe('simple viewing actions', () => {
+  it.each(['ar', 'en'] as const)('closes confirmation only after a successful save and preserves the dialog on failure in %s', async locale => {
+    let rejectSave!: (error: unknown) => void;
+    const pending = new Promise<void>((_, reject) => { rejectSave = reject; });
+    const save = vi.fn().mockReturnValueOnce(pending).mockResolvedValue(undefined);
+    const copy = viewingHelp(locale);
+    renderWithLocale(<ViewingTable data={{ items: [item], page: 1, limit: 20, total: 1 }} locale={locale} copy={getAdminRequestsCopy(locale)} save={save} />, { locale });
+    const opener = screen.getByRole('button', { name: copy.open });
+    opener.focus();
+    fireEvent.click(opener);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Appointment agreed with the customer' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.actions.confirm }));
+    expect(save).toHaveBeenCalledWith(item.id, { action: 'confirm', expectedVersion: 3, reason: 'Appointment agreed with the customer' });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: copy.actions.confirm })).toBeDisabled();
+    await act(async () => { rejectSave(new ApiClientError('errors.conflict', { code: 'HTTP_ERROR', status: 409 })); });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.conflict);
+    expect(screen.getByRole('textbox')).toHaveValue('Appointment agreed with the customer');
+    fireEvent.click(screen.getByRole('button', { name: copy.actions.confirm }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(save).toHaveBeenCalledTimes(2);
+    expect(opener).toHaveFocus();
+    fireEvent.click(opener);
+    expect(screen.getByRole('textbox')).toHaveValue('');
+  });
+
   it('opens undated details and displays the optional WhatsApp contact to an administrator', () => {
     const undated = { ...item, customerPhone: '+201012345678', customerContactMethod: 'whatsapp' as const }; delete undated.requestedAt;
     renderWithLocale(<ViewingTable data={{ items: [undated], page: 1, limit: 20, total: 1 }} locale="en" copy={getAdminRequestsCopy('en')} save={vi.fn()} />, { locale: 'en' });

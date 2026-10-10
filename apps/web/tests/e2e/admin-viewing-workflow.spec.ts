@@ -36,6 +36,9 @@ test('viewing appointments stay usable and persist actions with the current vers
   await dialog.getByRole('button', { name: ar ? 'تأكيد الموعد' : 'Confirm appointment', exact: true }).click();
   await expect.poll(() => posts.length).toBe(1);
   expect(posts[0]).toEqual({ action: 'confirm', expectedVersion: 1, reason: 'Appointment agreed with customer' });
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByTestId(`admin-viewing-${adminViewingId}`)).toContainText(ar ? 'موعد مؤكد' : 'Appointment confirmed');
+  await page.getByTestId(`admin-viewing-${adminViewingId}`).getByRole('button').click();
   await dialog.getByRole('radio', { name: ar ? /تغيير الموعد/ : /Change appointment/ }).check();
   await dialog.getByLabel(ar ? 'التاريخ الجديد' : 'New date', { exact: true }).fill('2026-10-11');
   await dialog.getByLabel(ar ? 'الساعة بتوقيت مصر' : 'Time in Egypt', { exact: true }).fill('14:30');
@@ -46,6 +49,8 @@ test('viewing appointments stay usable and persist actions with the current vers
   await message.fill('New appointment agreed with customer');
   await dialog.getByRole('button', { name: ar ? 'تأكيد الموعد' : 'Confirm appointment', exact: true }).click();
   await expect.poll(() => posts.length).toBe(3);
+  await expect(dialog).toHaveCount(0);
+  await page.getByTestId(`admin-viewing-${adminViewingId}`).getByRole('button').click();
   await dialog.getByRole('radio', { name: ar ? /تمت المعاينة/ : /Viewing completed/ }).check();
   await message.fill('The customer visited the property');
   await dialog.getByRole('button', { name: ar ? 'تمت المعاينة' : 'Viewing completed', exact: true }).click();
