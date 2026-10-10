@@ -123,7 +123,7 @@ function buildPayload(tab: AdminMasterDataTab, form: FormState, item: MasterData
     if (item === undefined) return { ...common, kind: form.kind, ...(form.kind === 'neighborhood' && form.parentId.trim() !== '' ? { parentLocationId: form.parentId.trim() } : {}), ...(coordinates === undefined ? {} : { coordinates }) };
     return { ...common, version: item.version, ...(form.parentId.trim() === '' ? {} : { parentLocationId: form.parentId.trim() }), ...(coordinates === undefined ? {} : { coordinates }) };
   }
-  if (item === undefined) return { ...common, kind: form.kind, groupKey: form.groupKey.trim() };
+  if (item === undefined) return { ...common, kind: form.kind, groupKey: form.kind === 'service' ? 'nearby' : 'property_feature' };
   return { ...common, version: item.version, groupKey: form.groupKey.trim() };
 }
 
@@ -176,7 +176,7 @@ function MasterDataTable({ tab, data, locale, copy, onEdit, onDelete }: { readon
     <div className="admin-master-data__table-wrap">
       <table className="admin-master-data__table">
         <caption className="sr-only">{copy.titles[tab]}</caption>
-        <thead><tr><th scope="col">{copy.columns.name}</th><th scope="col">{copy.columns.kind}</th><th scope="col">{copy.columns.parent}</th><th scope="col">{copy.columns.order}</th><th scope="col">{copy.columns.active}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead>
+        <thead><tr><th scope="col">{copy.columns.name}</th><th scope="col">{copy.columns.kind}</th>{tab !== 'features' ? <th scope="col">{copy.columns.parent}</th> : null}<th scope="col">{copy.columns.order}</th><th scope="col">{copy.columns.active}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead>
         <tbody>
           {data.items.map(item => {
             const canEdit = item.availableActions.includes('update');
@@ -185,7 +185,7 @@ function MasterDataTable({ tab, data, locale, copy, onEdit, onDelete }: { readon
               <tr key={item.id} data-testid={`admin-master-data-item-${item.id}`}>
                 <td><div className="admin-master-data__identity"><strong>{localizedValue(item.name, locale)}</strong><small>{item.slug}</small></div></td>
                 <td><span className="admin-master-data__kind">{copy.kinds[item.kind] ?? item.kind}</span></td>
-                <td>{parentLabel(item, data, tab, locale, copy)}</td>
+                {tab !== 'features' ? <td>{parentLabel(item, data, tab, locale, copy)}</td> : null}
                 <td className="admin-master-data__number">{new Intl.NumberFormat(locale).format(item.order)}</td>
                 <td><span className={`admin-master-data__status admin-master-data__status--${item.active ? 'active' : 'inactive'}`}>{item.active ? copy.active : copy.inactive}</span></td>
                 <td>{dateLabel(item.updatedAt, locale)}</td>
@@ -227,13 +227,13 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
           <p>{locale === 'ar' ? 'JPG أو PNG أو WebP حتى 10 ميجابايت. بعد رفع الصورة اضغط حفظ لتظهر في الموقع.' : 'JPG, PNG or WebP, up to 10 MB. After uploading, save to display it on the website.'}</p>
           <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg' })}>{locale === 'ar' ? 'استخدام صورة بوابة السادات' : 'Use the Sadat gate image'}</Button>
         </div> : null}
-        {tab === 'categories' ? <>
-          <p className="admin-master-data__field--wide">{locale === 'ar' ? 'التصنيف مجموعة مثل «سكني»، ونوع العقار مثل «شقة» يتبع هذه المجموعة.' : 'A category is a group such as Residential. A property type such as Apartment belongs to that group.'}</p>
+        {tab === 'categories' ? <p className="admin-master-data__field--wide">{locale === 'ar' ? 'التصنيف مجموعة مثل «سكني»، ونوع العقار مثل «شقة» يتبع هذه المجموعة.' : 'A category is a group such as Residential. A property type such as Apartment belongs to that group.'}</p> : null}
+        {tab !== 'locations' ?
           <details className="admin-master-data__field--wide"><summary>{locale === 'ar' ? 'ترتيب الظهور (اختياري)' : 'Display order (optional)'}</summary><p>{locale === 'ar' ? 'الجديد يُضاف آخر القائمة تلقائيًا. الرقم الأصغر يظهر أولًا؛ لا تحتاج تغييره.' : 'New entries go at the end automatically. Smaller numbers appear first; no change is needed.'}</p><FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} /></details>
-        </> : <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} />}
+        : <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} />}
         {tab === 'categories' && form.kind === 'type' ? <><SelectField id="admin-master-data-category" label={locale === 'ar' ? 'التصنيف الذي يتبعه النوع' : 'Category for this property type'} value={form.categoryId} required options={[{ value: '', label: copy.placeholders.category }, ...parentOptions]} onChange={categoryId => onChange({ categoryId })} />{parentOptions.length === 0 ? <div><p>{locale === 'ar' ? 'أضف تصنيفًا أولًا، ثم أضف نوع العقار داخله.' : 'Add a category first, then add a property type to it.'}</p><Button type="button" variant="secondary" onClick={() => onChange({ kind: 'category' })}>{locale === 'ar' ? 'إضافة تصنيف أولًا' : 'Add a category first'}</Button></div> : null}</> : null}
         {tab === 'locations' && form.kind === 'neighborhood' ? <SelectField id="admin-master-data-parent" label={copy.labels.parent} value={form.parentId} options={[{ value: '', label: copy.placeholders.parent }, ...parentOptions]} onChange={parentId => onChange({ parentId })} /> : null}
-        {tab === 'features' ? <FormField id="admin-master-data-group" label={copy.labels.group} value={form.groupKey} placeholder={copy.placeholders.group} required onChange={groupKey => onChange({ groupKey })} /> : null}
+        {tab === 'features' ? <p className="admin-master-data__field--wide">{locale === 'ar' ? 'الميزة شيء داخل العقار مثل مصعد أو موقف سيارات. الخدمة مكان قريب مثل مدرسة أو مستشفى. المجموعة تُحدد تلقائيًا حسب النوع؛ لا تحتاج لكتابة كود.' : 'A feature is part of the property, such as an elevator or parking. A service is a nearby place, such as a school or hospital. The group is assigned automatically by type; no code is needed.'}</p> : null}
         {tab === 'locations' ? <><FormField id="admin-master-data-latitude" label={copy.labels.latitude} value={form.latitude} placeholder={copy.placeholders.latitude} type="number" step="any" onChange={latitude => onChange({ latitude })} /><FormField id="admin-master-data-longitude" label={copy.labels.longitude} value={form.longitude} placeholder={copy.placeholders.longitude} type="number" step="any" onChange={longitude => onChange({ longitude })} /></> : null}
         <label className="admin-master-data__checkbox"><input type="checkbox" checked={form.active} onChange={event => onChange({ active: event.target.checked })} /> <span>{copy.labels.active}</span></label>
         <label className="admin-master-data__field admin-master-data__field--wide" htmlFor="admin-master-data-reason"><span>{copy.labels.reason} *</span><textarea id="admin-master-data-reason" value={form.reason} placeholder={copy.placeholders.reason} minLength={5} maxLength={500} required rows={3} onChange={event => onChange({ reason: event.target.value })} /></label>
@@ -310,7 +310,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   }
 
   function openCreate(): void {
-    setForm({ ...formFromItem(undefined, tab), order: tab === 'categories' ? String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(item => item.order) ?? [])) + 1)) : '0' });
+    setForm({ ...formFromItem(undefined, tab), order: tab !== 'locations' ? String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(item => item.order) ?? [])) + 1)) : '0' });
     setMutationError(undefined);
     setModal({ mode: 'create' });
   }

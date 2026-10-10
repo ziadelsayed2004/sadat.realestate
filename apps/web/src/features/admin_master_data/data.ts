@@ -193,10 +193,11 @@ export function createAdminMasterDataSource(options: Omit<CommonOptions, 'signal
     },
     load: async (tab: AdminMasterDataTab, signal?: AbortSignal): Promise<MasterDataList> => {
       const request = { ...options, ...(signal === undefined ? {} : { signal }) };
-      if (tab !== 'categories') return loadAdminMasterData(tab, request);
-      let result = await loadAdminTaxonomy({ ...request, query: { limit: 100 } });
+      if (tab === 'locations') return loadAdminMasterData(tab, request);
+      const load = tab === 'categories' ? loadAdminTaxonomy : loadAdminFeatures;
+      let result: MasterDataList = await load({ ...request, query: { limit: 100 } });
       for (let page = 2; (page - 1) * result.limit < result.total; page++) {
-        const next = await loadAdminTaxonomy({ ...request, query: { limit: 100, page } });
+        const next = await load({ ...request, query: { limit: 100, page } });
         if (!next.items.length) break;
         result = { ...result, items: [...result.items, ...next.items], total: next.total };
       }

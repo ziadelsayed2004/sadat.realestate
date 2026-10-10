@@ -140,6 +140,57 @@ describe('Admin master-data contracts and views', () => {
     expect(result.items.at(-1)).toEqual(category);
   });
 
+  it('loads all feature pages including the final display order', async () => {
+    const pages: number[] = [];
+    const client = new ApiClient({ fetcher: async input => {
+      const page = Number(new URL(String(input), 'http://localhost').searchParams.get('page')); pages.push(page);
+      const items = page === 1 ? Array.from({ length: 100 }, (_, index) => ({ ...feature, id: index.toString(16).padStart(24, '0'), order: index })) : [{ ...feature, order: 500 }];
+      return new Response(JSON.stringify({ data: { items }, meta: { requestId: 'feature-pages', page, limit: 100, total: 101 } }), { headers: { 'content-type': 'application/json' } });
+    } });
+    const result = await createAdminMasterDataSource({ apiClient: client, authorization }).load('features');
+    expect(pages).toEqual([1, 2]);
+    expect(result.items).toHaveLength(101);
+    expect(result.items.at(-1)?.order).toBe(500);
+  });
+
+  it.each(['feature', 'service'] as const)('creates a %s without asking for a group code or order', async kind => {
+    window.history.pushState({}, '', '/admin/features');
+    const inputs: unknown[] = [];
+    const client = new ApiClient({ fetcher: async (_url, init) => {
+      const body = JSON.parse(String(init?.body)); inputs.push(body);
+      return envelope({ ...feature, kind: body.kind, name: body.name, groupKey: body.groupKey, order: body.order, id: 'd'.repeat(24), slug: 'new-option', version: 0 });
+    } });
+    const result = renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={client} initialData={{ items: [feature, { ...feature, id: 'e'.repeat(24), order: 12 }], page: 1, limit: 100, total: 2 }} />, { locale: 'en' });
+    const copy = getAdminMasterDataCopy('en');
+    fireEvent.click(screen.getByRole('button', { name: copy.add }));
+    fireEvent.change(screen.getByLabelText(copy.labels.kind), { target: { value: kind } });
+    expect(result.container.querySelector('#admin-master-data-group')).toBeNull();
+    expect(result.container.querySelector('details')).not.toHaveAttribute('open');
+    fireEvent.change(screen.getByLabelText(copy.labels.nameEn), { target: { value: 'New option' } });
+    fireEvent.change(screen.getByLabelText(`${copy.labels.reason} *`), { target: { value: 'Add property option' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.save }));
+    await waitFor(() => expect(screen.getByText(copy.mutation.created)).toBeInTheDocument());
+    expect(inputs).toEqual([{ kind, name: { en: 'New option' }, groupKey: kind === 'service' ? 'nearby' : 'property_feature', order: 13, active: true, reason: 'Add property option' }]);
+  });
+
+  it('preserves a specialized existing feature group and display order while editing its name', async () => {
+    window.history.pushState({}, '', '/admin/features');
+    const inputs: unknown[] = [];
+    const existing = { ...feature, groupKey: 'finishing', order: 7 };
+    const client = new ApiClient({ fetcher: async (_url, init) => {
+      const body = JSON.parse(String(init?.body)); inputs.push(body);
+      return envelope({ ...existing, name: body.name, version: 2 });
+    } });
+    renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={client} initialData={{ items: [existing], page: 1, limit: 100, total: 1 }} />, { locale: 'en' });
+    const copy = getAdminMasterDataCopy('en');
+    fireEvent.click(screen.getByRole('button', { name: /Edit:/ }));
+    fireEvent.change(screen.getByLabelText(copy.labels.nameEn), { target: { value: 'Full finishing' } });
+    fireEvent.change(screen.getByLabelText(`${copy.labels.reason} *`), { target: { value: 'Clarify feature name' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.save }));
+    await waitFor(() => expect(screen.getByText(copy.mutation.updated)).toBeInTheDocument());
+    expect(inputs).toEqual([{ version: 1, name: { ar: 'مصعد', en: 'Full finishing' }, groupKey: 'finishing', order: 7, active: true, reason: 'Clarify feature name' }]);
+  });
+
   it('explains and focuses the required parent instead of submitting an invalid type', () => {
     window.history.pushState({}, '', '/admin/property-categories');
     const fetcher = vi.fn();
