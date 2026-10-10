@@ -1,4 +1,4 @@
-import { FeaturedCard } from './featured-card.tsx';
+import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type {
@@ -1053,18 +1053,17 @@ function BannerGrid({
   readonly copy: PublicHomepageCopy;
   readonly banners: readonly PublicHomepageBanner[];
 }) {
-  const carouselBanners = ordered(banners).filter(item => item.presentation === 'featured');
+  const carouselBanners = useMemo(() => ordered(banners).filter(item => item.presentation === 'featured'), [banners]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   useEffect(() => { setActiveIndex(index => Math.min(index, Math.max(0, carouselBanners.length - 1))); }, [carouselBanners.length]);
 
   useEffect(() => {
-    if (carouselBanners.length < 2 || isPaused) return;
-    const timer = setInterval(() => {
+    if (carouselBanners.length < 2) return;
+    const timer = setTimeout(() => {
       setActiveIndex(index => (index + 1) % carouselBanners.length);
-    }, (carouselBanners[activeIndex]?.displaySeconds ?? 6) * 1000);
-    return () => clearInterval(timer);
-  }, [carouselBanners, activeIndex, isPaused]);
+    }, FEATURED_CARD_SECONDS * 1000);
+    return () => clearTimeout(timer);
+  }, [carouselBanners.length, activeIndex]);
 
   const banner = carouselBanners[activeIndex] ?? carouselBanners[0];
   if (banner === undefined) return null;
@@ -1075,13 +1074,10 @@ function BannerGrid({
     <section
       id="homepage-featured" className="public-homepage__section public-homepage__section--banners"
       aria-label={locale === 'ar' ? 'الإعلانات المميزة' : 'Featured promotions'}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
     >
       <div className="public-homepage__banner-card">
         <FeaturedCard banner={banner} locale={locale} />
+        {carouselBanners.length > 1 ? <>
         <button
           className="public-homepage__banner-control public-homepage__banner-control--previous"
           type="button"
@@ -1100,8 +1096,9 @@ function BannerGrid({
         >
           <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
+        </> : null}
       </div>
-      <div className="public-homepage__banner-dots" role="tablist" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
+      {carouselBanners.length > 1 ? <div className="public-homepage__banner-dots" role="tablist" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
         {carouselBanners.map((item, index) => (
           <button
             key={item.key}
@@ -1113,7 +1110,7 @@ function BannerGrid({
             onClick={() => setActiveIndex(index)}
           />
         ))}
-      </div>
+      </div> : null}
     </section>
   );
 }

@@ -2,6 +2,7 @@ import type { PublicHomepageBanner, SupportedLocale } from '@sadat-real-estate/c
 import { replaceLocaleInUrl } from '../localization/index.ts';
 import './featured-card.css';
 
+export const FEATURED_CARD_SECONDS = 10;
 export function featuredText(value: PublicHomepageBanner['title'], locale: SupportedLocale) { return value?.[locale] ?? value?.ar ?? value?.en; }
 export function FeaturedCard({ banner, locale, preview = false }: { readonly banner: PublicHomepageBanner; readonly locale: SupportedLocale; readonly preview?: boolean }) {
   const text = (value: PublicHomepageBanner['title']) => featuredText(value, locale);

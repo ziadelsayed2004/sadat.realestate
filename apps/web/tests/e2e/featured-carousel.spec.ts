@@ -1,0 +1,53 @@
+import { expect, test } from '@playwright/test';
+import { publicHomepageFixture, routePublicHomepageApi } from './public-fixtures.ts';
+
+test('featured arrows remain responsive and automatic rotation resumes after every click or tap', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  await page.clock.install({ time: new Date('2026-10-11T12:00:00Z') });
+  await page.clock.pauseAt(new Date('2026-10-11T12:00:01Z'));
+  await routePublicHomepageApi(page);
+  const response = publicHomepageFixture();
+  response.data.banners = [0, 1, 2].map(index => ({ key: `featured_${index}`, presentation: 'featured', title: { ar: `إعلان ${index + 1}`, en: `Featured ${index + 1}` }, imageUrl: '/assets/canonical/public/listing-property-rental.png', displaySeconds: 6, order: index }));
+  await page.route('**/api/v1/public/home**', route => route.fulfill({ json: response }));
+  await page.goto(`/?lang=${locale}`);
+  const featured = page.locator('#homepage-featured');
+  const heading = featured.getByRole('heading');
+  const title = (index: number) => response.data.banners[index]!.title![locale]!;
+  const next = featured.getByRole('button', { name: locale === 'ar' ? 'الإعلان التالي' : 'Next banner', exact: true });
+  const previous = featured.getByRole('button', { name: locale === 'ar' ? 'الإعلان السابق' : 'Previous banner', exact: true });
+  await expect(heading).toHaveText(title(0));
+  await page.clock.runFor(9999);
+  await expect(heading).toHaveText(title(0));
+  await page.clock.runFor(1);
+  await expect(heading).toHaveText(title(1));
+  await next.click();
+  await expect(heading).toHaveText(title(2));
+  await page.clock.runFor(9999);
+  await expect(heading).toHaveText(title(2));
+  await page.clock.runFor(1);
+  await expect(heading).toHaveText(title(0));
+  await previous.click();
+  await expect(heading).toHaveText(title(2));
+  await previous.click();
+  await expect(heading).toHaveText(title(1));
+  await next.click();
+  await expect(heading).toHaveText(title(2));
+  await featured.getByRole('tab', { name: locale === 'ar' ? 'الإعلان 2' : 'Slide 2', exact: true }).click();
+  await expect(heading).toHaveText(title(1));
+  await page.clock.runFor(10_000);
+  await expect(heading).toHaveText(title(2));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await featured.screenshot({ path: info.outputPath('featured-carousel.png') });
+});
+
+test('a single featured ad has no inactive navigation controls', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  await routePublicHomepageApi(page);
+  const response = publicHomepageFixture();
+  response.data.banners = [{ key: 'featured_single', presentation: 'featured', title: { ar: 'إعلان واحد', en: 'One featured ad' }, imageUrl: '/assets/canonical/public/listing-property-rental.png', order: 0 }];
+  await page.route('**/api/v1/public/home**', route => route.fulfill({ json: response }));
+  await page.goto(`/?lang=${locale}`);
+  const featured = page.locator('#homepage-featured');
+  await expect(featured.getByRole('heading')).toHaveText(response.data.banners[0]!.title![locale]!);
+  await expect(featured.getByRole('button')).toHaveCount(0);
+});

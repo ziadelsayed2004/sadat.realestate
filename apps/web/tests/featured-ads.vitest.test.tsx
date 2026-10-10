@@ -31,7 +31,7 @@ describe('Featured homepage advertising', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save and publish' }));
     await waitFor(() => expect(calls).toEqual(['text', 'upload', 'image', 'publish']));
     expect(source.updateBanner).toHaveBeenLastCalledWith(bannerId, expect.objectContaining({ status: 'active', expectedVersion: 2 }));
-    expect(source.updateBanner).toHaveBeenNthCalledWith(1, bannerId, expect.objectContaining({ title: { ar: 'الإعلان', en: 'Edited title' } }));
+    expect(source.updateBanner).toHaveBeenNthCalledWith(1, bannerId, expect.objectContaining({ title: { ar: 'الإعلان', en: 'Edited title' }, displaySeconds: 10 }));
     expect(screen.getAllByText('Edited title').length).toBeGreaterThan(0);
   });
   it('keeps the selected image and all typed text after an upload failure, and never publishes', async () => {

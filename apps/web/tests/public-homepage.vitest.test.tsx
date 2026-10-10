@@ -93,18 +93,45 @@ describe('public homepage', () => {
   it('rotates multiple featured cards on their timer, supports arrows and dots, and renders no demo replacement', async () => {
     vi.useFakeTimers();
     const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'featured_first', presentation: 'featured', title: { en: 'First card' }, order: 0, displaySeconds: 3 }, { key: 'featured_second', presentation: 'featured', title: { en: 'Second card' }, order: 1, displaySeconds: 6 }] });
-    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} load={async () => data} />, { locale: 'en' });
     try {
       expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
-      await act(() => vi.advanceTimersByTimeAsync(3000));
+      await act(() => vi.advanceTimersByTimeAsync(9999));
+      expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
+      await act(() => vi.advanceTimersByTimeAsync(1));
       expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: 'Previous banner' }));
       expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
       fireEvent.click(screen.getByRole('tab', { name: 'Slide 2' }));
       expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
+      fireEvent.mouseEnter(result.container.querySelector('#homepage-featured')!);
+      fireEvent.focus(screen.getByRole('button', { name: 'Next banner' }));
+      await act(() => vi.advanceTimersByTimeAsync(10_000));
+      expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
+      await act(() => vi.advanceTimersByTimeAsync(10_000));
+      expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Next banner' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Next banner' }));
+      expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
     } finally { result.unmount(); vi.useRealTimers(); }
     const empty = renderWithLocale(<PublicHomepage locale="en" initialData={{ ...homepageData, banners: [] }} />, { locale: 'en' });
     expect(empty.container.querySelector('#homepage-featured')).toBeNull();
+  });
+  it('keeps the featured timer running across background data refreshes and hides controls for one card', async () => {
+    vi.useFakeTimers();
+    const banners = [{ key: 'featured_first', presentation: 'featured' as const, title: { en: 'First card' }, order: 0 }, { key: 'featured_second', presentation: 'featured' as const, title: { en: 'Second card' }, order: 1 }];
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={{ ...homepageData, banners }} />, { locale: 'en' });
+    try {
+      await act(() => vi.advanceTimersByTimeAsync(5000));
+      result.rerender(<PublicHomepage locale="en" initialData={{ ...homepageData, banners: [...banners] }} />);
+      await act(() => vi.advanceTimersByTimeAsync(5000));
+      expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
+    } finally { result.unmount(); vi.useRealTimers(); }
+    const single = renderWithLocale(<PublicHomepage locale="en" initialData={{ ...homepageData, banners: banners.slice(0, 1) }} />, { locale: 'en' });
+    expect(single.container.querySelector('#homepage-featured')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next banner' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Previous banner' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tablist', { name: 'Banner selection' })).not.toBeInTheDocument();
   });
   it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
     const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };
