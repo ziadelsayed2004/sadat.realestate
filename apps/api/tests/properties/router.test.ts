@@ -12,6 +12,7 @@ const tokens: AccessTokenService = {
   verify(token) { return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: provider, sid: '4123456789abcdef01234567', role: token === 'admin' ? 'admin' : 'provider', status: token === 'pending' ? 'pending_review' : 'verified', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims; }
 };
 const service: PropertyRouterDependencies['service'] = {
+  async adminEdit(_adminId, _id, input) { return { ...property, ...(input as object), version: 1, availableActions: ['update'] }; },
   async list() { return { data: { items: [{ ...property, availableActions: ['update', 'submit'] as const }] }, page: 1, limit: 20, total: 1 }; },
   async adminList() { return { data: { items: [{ ...property, availableActions: ['archive'] as const }] }, page: 1, limit: 20, total: 1 }; },
   async adminGet() { return { ...property, availableActions: ['archive'] as const }; },
@@ -31,6 +32,18 @@ async function run(fn: (url: string) => Promise<void>): Promise<void> {
   try { await fn(`http://127.0.0.1:${address.port}`); } finally { await stopApiServer(server); }
 }
 const request = (url: string, method: string, path: string, token: string, body?: unknown) => fetch(url + path, { method, headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+
+test('the unified edit route authenticates administrators and rejects publication and ownership fields', async () => run(async url => {
+  const path = `/api/v1/admin/properties/${propertyId}`;
+  const input = { version: 0, reason: 'Administrative property edit', name: { en: 'Updated apartment' }, price: { amount: 2000, currency: 'EGP' }, area: { value: 145, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 9 } };
+  assert.equal((await request(url, 'PATCH', path, 'provider', input)).status, 403);
+  const saved = await request(url, 'PATCH', path, 'admin', input);
+  assert.equal(saved.status, 200);
+  assert.deepEqual((await saved.json() as { data: { layout: unknown } }).data.layout, input.layout);
+  for (const invalid of [{ ...input, status: 'published' }, { ...input, providerId: provider }, { ...input, price: { amount: -1, currency: 'EGP' } }, { version: 0, reason: input.reason }]) {
+    assert.equal((await request(url, 'PATCH', path, 'admin', invalid)).status, 400);
+  }
+}));
 
 test('property draft routes require verified provider authentication', async () => run(async url => {
   assert.equal((await fetch(url + '/api/v1/provider/properties/' + propertyId)).status, 401);

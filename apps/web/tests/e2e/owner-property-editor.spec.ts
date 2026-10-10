@@ -16,10 +16,11 @@ test('edits a published property twice and removes a photo while retaining admin
     if (path.includes('/media')) {
       if (request.method() === 'DELETE') { photos = photos.filter(item => !path.endsWith(item.id)); syncCover(); await route.fulfill({ json: envelope({ ...photo, active: false, processingState: 'deleted' }) }); }
       else if (request.method() === 'POST') { const added = { ...photo, id: 'e'.repeat(24), isCover: false, originalFilename: 'new.png' }; photos.push(added); syncCover(); await route.fulfill({ status: 201, json: envelope(added) }); }
-      else { if (request.method() === 'PATCH') { const body = request.postDataJSON(); photos = photos.map(item => ({ ...item, ...body.items.find((entry: { mediaId: string }) => entry.mediaId === item.id) })); syncCover(); } await route.fulfill({ json: envelope({ items: photos }) }); }
+      else { if (request.method() === 'PATCH') { const body = request.postDataJSON(); expect(body.version).toBe(property.version); const coverId = body.items.find((entry: { isCover: boolean }) => entry.isCover)?.mediaId; photos = photos.map(item => ({ ...item, isCover: item.id === coverId })); syncCover(); } await route.fulfill({ json: envelope({ items: photos }) }); }
       return;
     }
     if (request.method() === 'PATCH') {
+      expect(path).toBe(`/api/v1/admin/properties/${property.id}`);
       const input = request.postDataJSON();
       expect(input.version).toBe(property.version);
       expect(input.providerId).toBeUndefined();
@@ -38,20 +39,27 @@ test('edits a published property twice and removes a photo while retaining admin
   await expect(editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true })).toHaveCount(1);
   await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
   await expect(editor.getByRole('status')).toBeVisible();
-  await expect.poll(() => property.version).toBe(5);
+  await expect.poll(() => property.version).toBe(4);
   await editor.getByRole('textbox', { name: `${ar ? 'وصف العقار' : 'Property description'} EN`, exact: true }).fill('Updated description again');
   await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
-  await expect.poll(() => property.version).toBe(6);
+  await expect.poll(() => property.version).toBe(5);
   await editor.locator('input[type=file]').setInputFiles({ name: 'new.png', mimeType: 'image/png', buffer: png });
+  await expect(editor.locator('article')).toHaveCount(1);
+  expect(photos).toHaveLength(1);
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
   await expect(editor.locator('article')).toHaveCount(2);
-  await editor.getByRole('button', { name: ar ? 'تعيين كغلاف' : 'Use as cover', exact: true }).click();
+  await editor.getByRole('button', { name: ar ? 'تعيين كغلاف' : 'Use as cover', exact: true }).last().click();
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
   await expect.poll(() => (property as Record<string, unknown>).imageUrl).toContain('/media/' + 'e'.repeat(24));
   await editor.getByRole('button', { name: ar ? 'إزالة' : 'Remove', exact: true }).last().click();
   await expect(editor.locator('article')).toHaveCount(1);
+  expect(photos).toHaveLength(2);
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
   await expect.poll(() => (property as Record<string, unknown>).imageUrl).toContain('/media/' + photo.id);
   await editor.getByRole('button', { name: ar ? 'إزالة' : 'Remove', exact: true }).click();
   await expect(editor.locator('article')).toHaveCount(0);
-  expect((property as Record<string, unknown>).imageUrl).toBeUndefined();
+  await editor.getByRole('button', { name: ar ? 'حفظ التعديلات' : 'Save changes', exact: true }).click();
+  await expect.poll(() => (property as Record<string, unknown>).imageUrl).toBeUndefined();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await editor.locator('h2').click();
   await page.evaluate(() => window.scrollTo(0, 0));

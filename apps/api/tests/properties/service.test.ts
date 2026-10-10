@@ -21,6 +21,30 @@ const admin = '4123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 
+test('saves all administrative editor fields together with one version and rejects invalid or stale writes', async () => {
+  const { service, rows } = fixture();
+  rows.set(id, record({ status: 'published', version: 3 }));
+  const context = { requestId: 'unified-admin-edit', traceId: 'a'.repeat(32) };
+  const input = { version: 3, reason: 'Administrative property edit', name: { en: 'Updated apartment' }, description: { en: 'Updated description' }, transactionType: 'rent', area: { value: 145, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 9 }, price: { amount: 2000, currency: 'EGP' } };
+  await assert.rejects(service.adminEdit(other, id, input, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
+  await assert.rejects(service.adminEdit(admin, id, { ...input, price: { amount: -1, currency: 'EGP' } }, context));
+  assert.equal(rows.get(id)?.version, 3);
+  assert.equal(rows.get(id)?.name.en, 'Apartment');
+  const saved = await service.adminEdit(admin, id, input, context);
+  assert.equal(saved.version, 4);
+  assert.equal(saved.name.en, 'Updated apartment');
+  assert.deepEqual(saved.layout, input.layout);
+  assert.deepEqual(saved.area, input.area);
+  assert.deepEqual(saved.price, input.price);
+  assert.equal(saved.description?.en, input.description.en);
+  assert.equal(saved.status, 'published');
+  assert.ok(saved.availableActions.includes('update'));
+  await assert.rejects(service.adminEdit(admin, id, { ...input, name: { en: 'Stale overwrite' } }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VERSION_CONFLICT');
+  assert.equal(rows.get(id)?.name.en, 'Updated apartment');
+  rows.set(id, record({ status: 'archived', version: 4 }));
+  await assert.rejects(service.adminEdit(admin, id, { ...input, version: 4 }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_INVALID_STATE');
+});
+
 function record(overrides: Partial<StoredProperty> = {}): StoredProperty {
   return { id, providerId: provider, source: { providerId: provider, sourceType: 'individual_broker' }, kind: 'property', name: { en: 'Apartment' }, slug: 'apartment', transactionType: 'sale', status: 'draft', active: true, version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
@@ -28,6 +52,15 @@ function record(overrides: Partial<StoredProperty> = {}): StoredProperty {
 function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }) {
   const rows = new Map([[id, record(ready ? { locationId: location, price: { amount: 1000000, currency: 'EGP' }, contact: { phone: '+201234567890' } } : {})]]);
   const repository: PropertyRepository = {
+    async updateAdministrative(input) {
+      const current = rows.get(input.id);
+      if (!current || current.providerId !== input.providerId) return { kind: 'not_found' };
+      if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
+      const changes = Object.fromEntries(Object.entries(input.changes).filter(([key]) => key !== 'version' && key !== 'reason'));
+      const next = { ...current, ...changes, version: current.version + 1, updatedAt: input.metadata.changedAt };
+      rows.set(input.id, next);
+      return { kind: 'written', property: next };
+    },
     async findOwned(owner, target) { const property = rows.get(target); return property?.providerId === owner ? property : null; },
     async findByIdAny(target) { return rows.get(target) ?? null; },
     async listOwned(owner, query) { const items = [...rows.values()].filter(property => property.providerId === owner && (!query.status || property.status === query.status)); return { items: items.slice((query.page - 1) * query.limit, query.page * query.limit), total: items.length }; },

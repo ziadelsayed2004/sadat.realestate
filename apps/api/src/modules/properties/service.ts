@@ -1,6 +1,7 @@
 import { generateIdentifier } from '../shared/identifiers.js';
 import {
   propertyCoreStepSchema,
+  propertyAdminEditSchema,
   propertyCreateSchema,
   propertyDataSchema,
   propertyDetailsStepSchema,
@@ -55,6 +56,7 @@ export class PropertyServiceError extends Error {
 export interface PropertyMutationContext { requestId: string; traceId: string }
 export interface PropertyAuthorization { authorize(adminId: string, permission: 'admin:properties.view' | 'admin:properties.review' | 'admin:properties.manage'): Promise<boolean>; }
 export interface PropertyService {
+  adminEdit(adminId: string, id: string, input: unknown, context: PropertyMutationContext): Promise<PropertyData>;
   list(claims: AccessTokenClaims, query: unknown): Promise<{ data: PropertyListData; page: number; limit: number; total: number }>;
   adminList(adminId: string, query: unknown): Promise<{ data: PropertyListData; page: number; limit: number; total: number }>;
   adminGet(adminId: string, id: string): Promise<PropertyData>;
@@ -252,6 +254,16 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       }
       const input = propertyLocationStepSchema.parse(unparsedInput) as PropertyLocationStep;
       return stepData(await dependencies.repository.updateLocation({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { ...metadata(claims, input.reason, context, now()), ...(admin ? { actorType: 'admin', adminEdit: true } : {}) } }));
+    },
+    async adminEdit(adminId, id, unparsedInput, context) {
+      await adminPermission(adminId, 'admin:properties.manage');
+      propertyObjectIdSchema.parse(id);
+      const input = propertyAdminEditSchema.parse(unparsedInput);
+      const before = await dependencies.repository.findByIdAny(id);
+      if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
+      if (before.status === 'archived') throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      const output = data(write(await dependencies.repository.updateAdministrative({ providerId: before.providerId, id, expectedVersion: input.version, changes: input, before, metadata: { actorId: adminId, actorType: 'admin', adminEdit: true, reason: input.reason, changedAt: now(), ...context } })), 'admin');
+      return { ...output, availableActions: [...output.availableActions, 'update'] };
     },
     async validate(claims, id) {
       provider(claims); propertyObjectIdSchema.parse(id); const result = await dependencies.repository.findOwned(claims.sub, id); if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); return validation(result);

@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { propertyAdminListQuerySchema, propertyContactStepSchema, propertyCoreStepSchema, propertyCreateSchema, propertyDetailsStepSchema, propertyDuplicateQuerySchema, propertyFeaturesServicesStepSchema, propertyIdParamsSchema, propertyListQuerySchema, propertyLocationStepSchema, propertyPricingStepSchema, propertyReviewSchema, propertyStepParamsSchema, propertySubmitSchema, propertyVisibilitySchema } from '@sadat-real-estate/contracts';
+import { propertyAdminEditSchema, propertyAdminListQuerySchema, propertyContactStepSchema, propertyCoreStepSchema, propertyCreateSchema, propertyDetailsStepSchema, propertyDuplicateQuerySchema, propertyFeaturesServicesStepSchema, propertyIdParamsSchema, propertyListQuerySchema, propertyLocationStepSchema, propertyPricingStepSchema, propertyReviewSchema, propertyStepParamsSchema, propertySubmitSchema, propertyVisibilitySchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -13,7 +13,8 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/provider/properties', operationId: 'listProviderProperties' },
   { method: 'POST', path: '/api/v1/provider/properties', operationId: 'createProviderProperty' },
   { method: 'PATCH', path: '/api/v1/provider/properties/:propertyId/steps/:step', operationId: 'saveProviderPropertyStep' },
-  { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId/steps/:step', operationId: 'saveAdminPropertyStep' }
+  { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId/steps/:step', operationId: 'saveAdminPropertyStep' },
+  { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId', operationId: 'editAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/provider/properties/:propertyId/submit', operationId: 'submitProviderProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/review', operationId: 'reviewAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/visibility', operationId: 'changeAdminPropertyVisibility' }
@@ -68,6 +69,10 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
   });
   router.get('/provider/properties/:propertyId', async (request, response) => {
     try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.get(claims(response), propertyId), current.requestId)); }
+    catch (error) { sendError(request, response, error); }
+  });
+  router.patch('/admin/properties/:propertyId', async (request, response) => {
+    try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.adminEdit(adminId(response), propertyId, propertyAdminEditSchema.parse(request.body ?? {}), current), current.requestId)); }
     catch (error) { sendError(request, response, error); }
   });
   router.patch(['/provider/properties/:propertyId/steps/:step', '/admin/properties/:propertyId/steps/:step'], async (request, response) => {

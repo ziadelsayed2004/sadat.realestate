@@ -184,11 +184,12 @@ export const propertyPaymentPlanSchema = z.object({
   downPayment: propertyMoneySchema.optional(),
   installmentAmount: propertyMoneySchema
 }).strict();
-export const propertyPricingStepSchema = draftPatch({
+const pricingFields = {
   transactionType: propertyTransactionTypeSchema.optional(),
   price: propertyMoneySchema.optional(),
   paymentPlans: z.array(propertyPaymentPlanSchema).max(20).optional()
-}).superRefine((value, context) => {
+};
+function validatePricing(value: { price?: PropertyMoney | undefined; paymentPlans?: PropertyPaymentPlan[] | undefined }, context: z.RefinementCtx) {
   if (value.paymentPlans && value.paymentPlans.length > 0 && !value.price) {
     context.addIssue({ code: 'custom', path: ['price'], message: 'A price is required when payment plans are supplied' });
   }
@@ -196,7 +197,19 @@ export const propertyPricingStepSchema = draftPatch({
     const currencies = new Set([value.price.currency, ...value.paymentPlans.flatMap(plan => [plan.downPayment?.currency, plan.installmentAmount.currency]).filter((currency): currency is string => Boolean(currency))]);
     if (currencies.size > 1) context.addIssue({ code: 'custom', path: ['paymentPlans'], message: 'Payment plan currencies must match the property price currency' });
   }
-});
+}
+export const propertyPricingStepSchema = draftPatch(pricingFields).superRefine(validatePricing);
+
+// One administrative write validates the whole editor before committing it.
+// Publication, ownership, and moderation remain separate guarded operations.
+export const propertyAdminEditSchema = draftPatch({
+  name: localizedTextSchema.optional(),
+  description: propertyDescriptionSchema.nullable().optional(),
+  area: propertyAreaSchema.nullable().optional(),
+  layout: propertyLayoutSchema.optional(),
+  imageUrl: z.null().optional(),
+  ...pricingFields
+}).superRefine(validatePricing);
 
 const propertyReferenceIdsSchema = z.array(propertyObjectIdSchema).max(50).refine(
   (values) => new Set(values).size === values.length,
@@ -291,6 +304,7 @@ export type PropertyDetailsStep = z.infer<typeof propertyDetailsStepSchema>;
 export type PropertyMoney = z.infer<typeof propertyMoneySchema>;
 export type PropertyPaymentPlan = z.infer<typeof propertyPaymentPlanSchema>;
 export type PropertyPricingStep = z.infer<typeof propertyPricingStepSchema>;
+export type PropertyAdminEdit = z.infer<typeof propertyAdminEditSchema>;
 export type PropertyFeaturesServicesStep = z.infer<typeof propertyFeaturesServicesStepSchema>;
 export type PropertyContact = z.infer<typeof propertyContactSchema>;
 export type PropertyContactStep = z.infer<typeof propertyContactStepSchema>;

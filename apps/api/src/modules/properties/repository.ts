@@ -69,6 +69,7 @@ export type PropertyWriteResult =
   | { kind: 'already_submitted'; property: StoredProperty };
 
 export interface PropertyRepository {
+  updateAdministrative(input: Omit<Parameters<PropertyRepository['updateCore']>[0], 'changes'> & { changes: import('@sadat-real-estate/contracts').PropertyAdminEdit }): Promise<PropertyWriteResult>;
   findOwned(providerId: string, id: string): Promise<StoredProperty | null>;
   findByIdAny(id: string): Promise<StoredProperty | null>;
   listOwned(providerId: string, query: PropertyListQuery): Promise<{ items: StoredProperty[]; total: number }>;
@@ -318,6 +319,10 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       }
     },
     async updateCore(input) {
+      const changes = Object.fromEntries(Object.entries(input.changes).filter(([key]) => key !== 'version' && key !== 'reason'));
+      return update({ ...input, changes });
+    },
+    async updateAdministrative(input) {
       const changes = Object.fromEntries(Object.entries(input.changes).filter(([key]) => key !== 'version' && key !== 'reason'));
       return update({ ...input, changes });
     },
