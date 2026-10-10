@@ -72,10 +72,24 @@ test('publishes overlapping homepage banners and rotates their image and copy fo
   await expect(hero.getByRole('heading', { level: 1 })).toHaveText(banners[0]!.title[locale]!);
   await expect(hero.locator('.public-homepage__hero-body')).toHaveText(banners[0]!.body![locale]!);
   await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
-  await hero.getByRole('button', { name: locale === 'ar' ? 'إيقاف مؤقت' : 'Pause', exact: true }).click();
-  await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
-  await page.mouse.move(1, 1);
-  await page.clock.runFor(10000);
+  await expect(hero.getByRole('button', { name: locale === 'ar' ? 'إيقاف مؤقت' : 'Pause', exact: true })).toHaveCount(0);
+  const next = hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true });
+  const previous = hero.getByRole('button', { name: locale === 'ar' ? 'الصورة السابقة' : 'Previous image', exact: true });
+  await expect(hero.locator('.public-homepage__hero-slider button')).toHaveCount(2);
+  const imageBounds = (await image.boundingBox())!;
+  expect((await previous.boundingBox())!.x > (await next.boundingBox())!.x).toBe(locale === 'ar');
+  for (const arrow of [next, previous]) {
+    const bounds = (await arrow.boundingBox())!;
+    expect(bounds.y + bounds.height / 2).toBeCloseTo(imageBounds.y + imageBounds.height / 2, 0);
+    expect(Math.min(Math.abs(bounds.x - imageBounds.x), Math.abs(bounds.x + bounds.width - imageBounds.x - imageBounds.width))).toBeLessThan(20);
+  }
+  await next.click();
+  await expect(image).toHaveAttribute('src', response.data.banners[1]!.imageUrl!);
+  await page.clock.runFor(5100);
+  await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
+  await previous.click();
+  await expect(image).toHaveAttribute('src', response.data.banners[1]!.imageUrl!);
+  await page.clock.runFor(5100);
   await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
   await page.screenshot({ path: testInfo.outputPath('rotating-homepage.png') });
 });

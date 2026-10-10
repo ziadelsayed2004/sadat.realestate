@@ -668,8 +668,6 @@ function Hero({
   const section = sections.find(item => item.key === 'hero') ?? sections[0];
   const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
   const [slideKey, setSlideKey] = useState<string>();
-  const [paused, setPaused] = useState(false);
-  const [interacting, setInteracting] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const selectedIndex = slides.findIndex(item => item.key === slideKey);
@@ -686,10 +684,11 @@ function Hero({
     return () => { preference?.removeEventListener?.('change', updateMotion); document.removeEventListener('visibilitychange', updateVisibility); };
   }, []);
   useEffect(() => {
-    if (slides.length < 2 || paused || interacting || hidden || reducedMotion) return;
-    const timer = window.setTimeout(() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key), (banner?.displaySeconds ?? 8) * 1000);
+    const keys = slideKeys.split(',');
+    if (keys.length < 2 || hidden || reducedMotion) return;
+    const timer = window.setTimeout(() => setSlideKey(keys[(activeIndex + 1) % keys.length]), (banner?.displaySeconds ?? 8) * 1000);
     return () => window.clearTimeout(timer);
-  }, [slides, slideKeys, activeIndex, banner?.displaySeconds, paused, interacting, hidden, reducedMotion]);
+  }, [slideKeys, activeIndex, banner?.displaySeconds, hidden, reducedMotion]);
   const managed = banner?.key.startsWith('banner_');
   const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
@@ -697,22 +696,22 @@ function Hero({
   const titleLines = title.split('\n');
 
   return (
-    <section id="homepage-hero" className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+    <section id="homepage-hero" className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
+      <div className="public-homepage__hero-visual">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
         <BannerMedia key={banner?.key ?? 'default-hero'} banner={banner} copy={copy} locale={locale} priority />
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
+      {slides.length > 1 ? <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
+        <button type="button" onClick={() => setSlideKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>{locale === 'ar' ? '›' : '‹'}</button>
+        <button type="button" onClick={() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>{locale === 'ar' ? '‹' : '›'}</button>
+      </div> : null}
+      </div>
       <div className="public-homepage__hero-content">
         <p className="public-homepage__eyebrow">{localizedText(banner?.eyebrow, locale) ?? copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
-        {slides.length > 1 ? <div className="public-homepage__hero-slider" role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
-          <button type="button" onClick={() => setSlideKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>‹</button>
-          <span aria-live={paused || interacting || reducedMotion ? 'polite' : 'off'}>{activeIndex + 1} / {slides.length}</span>
-          <button type="button" onClick={() => setSlideKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>›</button>
-          <button type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? (locale === 'ar' ? 'تشغيل' : 'Play') : (locale === 'ar' ? 'إيقاف مؤقت' : 'Pause')}</button>
-        </div> : null}
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>

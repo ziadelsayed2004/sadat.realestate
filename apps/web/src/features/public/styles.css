@@ -268,7 +268,8 @@
 }
 
 .public-homepage__hero-media,
-.public-homepage__hero-shade {
+.public-homepage__hero-shade,
+.public-homepage__hero-visual {
   position: absolute;
   inset: 0;
 }
@@ -2472,25 +2473,27 @@
 @media (max-width: 560px) { .homepage-price-range__panel { inline-size: 100%; } }
 @media (prefers-reduced-motion: reduce) { .homepage-price-range__panel { animation: none; } .homepage-price-range__trigger, .homepage-price-range__trigger svg, .homepage-price-range__panel footer button { transition: none; } }
 .public-homepage__hero-slider {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 2;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  margin-block: .75rem;
-  color: white;
+  justify-content: space-between;
+  padding-inline: .75rem;
+  pointer-events: none;
 }
 
 .public-homepage__hero-slider button {
-  min-inline-size: 2.75rem;
-  min-block-size: 2.75rem;
-  padding: .5rem .75rem;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  padding: 0;
   border: 1px solid #ffffff80;
-  border-radius: .5rem;
+  border-radius: 50%;
   background: #18243ee6;
   color: white;
+  font-size: 2rem;
+  line-height: 1;
+  pointer-events: auto;
   cursor: pointer;
 }
 
@@ -2500,6 +2503,7 @@
 }
 
 @media (max-width: 767px) {
+  .public-homepage__hero--advertisement .public-homepage__hero-visual { position: relative; }
   .public-homepage__hero--advertisement {
     display: block;
     block-size: auto;

@@ -152,7 +152,7 @@ test('retries a failed second image without uploading the first image again or p
   await expect(page.getByTestId('banner-pending-image')).toHaveCount(0);
 });
 
-test('rotates managed images on schedule, pauses and navigates without resetting search', async ({ page }) => {
+test('rotates managed images on schedule with side arrows and keeps search unchanged', async ({ page }) => {
   const locale = language();
   await page.clock.install();
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -177,10 +177,9 @@ test('rotates managed images on schedule, pauses and navigates without resetting
   await expect(image).toHaveAttribute('src', response.data.banners[1]!.imageUrl!);
   await expect(hero.getByRole('heading', { level: 1 })).toHaveText(response.data.banners[1]!.title![locale]!);
   await expect(hero.locator('.public-homepage__hero-body')).toHaveText(response.data.banners[1]!.body![locale]!);
-  await hero.getByRole('button', { name: locale === 'ar' ? 'إيقاف مؤقت' : 'Pause', exact: true }).click();
-  await page.mouse.move(1, 1);
-  await page.clock.runFor(12_000);
-  await expect(image).toHaveAttribute('src', response.data.banners[1]!.imageUrl!);
+  await expect(hero.getByRole('button', { name: locale === 'ar' ? 'إيقاف مؤقت' : 'Pause', exact: true })).toHaveCount(0);
+  await expect(hero.locator('.public-homepage__hero-slider button')).toHaveCount(2);
+  await expect(hero.locator('.public-homepage__hero-content .public-homepage__hero-slider')).toHaveCount(0);
   await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).click();
   await expect(image).toHaveAttribute('src', response.data.banners[0]!.imageUrl!);
   await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة السابقة' : 'Previous image', exact: true }).click();
@@ -188,7 +187,6 @@ test('rotates managed images on schedule, pauses and navigates without resetting
   const rent = hero.getByRole('tab', { name: locale === 'ar' ? 'للإيجار' : 'For rent', exact: true });
   await rent.click();
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await hero.getByRole('button', { name: locale === 'ar' ? 'تشغيل' : 'Play', exact: true }).click();
   await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
   await page.mouse.move(1, 1);
   await page.clock.runFor(12_000);
