@@ -13,6 +13,7 @@ import {
   updateAdminSettings
 } from '../src/features/admin_settings/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { mergeSettingsDraft } from '../src/features/admin_settings/data.ts';
 
 const adminId = 'cccccccccccccccccccccccc';
 const session = { status: 'authenticated' as const, role: 'admin' as const };
@@ -54,6 +55,65 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin platform, contact, and social settings', () => {
+  it.each(['ar', 'en'] as const)('retains the name and reason through conflict recovery and saves with fresh versions in %s', async locale => {
+    const original = settings();
+    const latest = { ...original, version: 5, values: { ...original.values, platform_name: { ar: 'اسم محفوظ جديد', en: 'Another admin English name' }, primary_email: 'new-office@example.com', concurrent_extra: 'keep-latest' } };
+    const writes: Array<{ expectedVersion: number; values: AdminSettingsData['values'] }> = [];
+    renderWithLocale(<AdminSettings path="/admin/settings" locale={locale} session={session} initialData={original} load={async () => latest} update={async (_namespace, input) => {
+      writes.push(input);
+      if (writes.length === 1) throw new ApiClientError('conflict', { code: 'HTTP_ERROR', status: 409 });
+      return { ...latest, version: input.expectedVersion + 1, values: input.values };
+    }} />, { locale });
+    const name = screen.getByLabelText(locale === 'ar' ? 'العربية' : 'Arabic', { selector: '#admin-settings-platform_name-ar' });
+    fireEvent.change(name, { target: { value: 'اسم المنصة الذي اخترته' } });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'سبب التغيير' : 'Change reason'), { target: { value: 'Rename platform' } });
+    const save = () => screen.getByRole('button', { name: locale === 'ar' ? 'حفظ التغييرات' : 'Save changes' });
+    fireEvent.click(save());
+    await screen.findByRole('heading', { name: locale === 'ar' ? 'تعارض في الإصدار' : 'Version conflict' });
+    expect(name).toHaveValue('اسم المنصة الذي اخترته');
+    expect(save()).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تحميل آخر نسخة مع الاحتفاظ بتعديلاتي' : 'Load latest and keep my edits' }));
+    await waitFor(() => expect(save()).toBeEnabled());
+    expect(writes).toHaveLength(1);
+    expect(name).toHaveValue('اسم المنصة الذي اخترته');
+    expect(screen.getByTestId('saved-platform-name-ar')).toHaveTextContent('اسم محفوظ جديد');
+    expect(screen.getByLabelText(locale === 'ar' ? 'سبب التغيير' : 'Change reason')).toHaveValue('Rename platform');
+    fireEvent.click(save());
+    await waitFor(() => expect(screen.getByTestId('saved-platform-name-ar')).toHaveTextContent('اسم المنصة الذي اخترته'));
+    expect(writes[1]).toMatchObject({ expectedVersion: 5, values: { platform_name: { ar: 'اسم المنصة الذي اخترته', en: 'Another admin English name' }, primary_email: 'new-office@example.com', concurrent_extra: 'keep-latest' } });
+    fireEvent.change(name, { target: { value: 'اسم آخر للمنصة' } });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'سبب التغيير' : 'Change reason'), { target: { value: 'Rename again' } });
+    fireEvent.click(save());
+    await waitFor(() => expect(writes).toHaveLength(3));
+    expect(writes[2]?.expectedVersion).toBe(6);
+  });
+
+  it('keeps saving blocked and the draft visible if latest settings cannot be loaded', async () => {
+    renderWithLocale(<AdminSettings path="/admin/settings" locale="en" session={session} initialData={settings()} load={async () => { throw new Error('offline'); }} update={async () => { throw new ApiClientError('conflict', { code: 'HTTP_ERROR', status: 409 }); }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText('English', { selector: '#admin-settings-platform_name-en' }), { target: { value: 'Retained name' } });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Rename platform' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Load latest and keep my edits' }));
+    await screen.findByText(/Could not load the latest settings/);
+    expect(screen.getByLabelText('English', { selector: '#admin-settings-platform_name-en' })).toHaveValue('Retained name');
+    expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+  });
+
+  it('merges only edited fields and languages, preserving concurrent changes and deliberate removals', () => {
+    expect(mergeSettingsDraft({ platform_name: { ar: 'old', en: 'old-en' }, currency: 'EGP', primary_phone: '+201000000000' }, { platform_name: { ar: 'edited' }, currency: 'EGP' }, { platform_name: { ar: 'server', en: 'server-en' }, currency: 'USD', primary_phone: '+201111111111', extra: true })).toEqual({ platform_name: { ar: 'edited' }, currency: 'USD', extra: true });
+  });
+
+  it('sends one save when the form is submitted twice while awaiting the server', async () => {
+    let finish: ((value: AdminSettingsData) => void) | undefined;
+    let writes = 0;
+    const rendered = renderWithLocale(<AdminSettings path="/admin/settings" locale="en" session={session} initialData={settings()} update={async () => { writes++; return new Promise(resolve => { finish = resolve; }); }} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Rename platform' } });
+    fireEvent.submit(rendered.container.querySelector('form')!);
+    fireEvent.submit(rendered.container.querySelector('form')!);
+    expect(writes).toBe(1);
+    finish?.(settings('platform', 5));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Save changes' })).toBeEnabled());
+  });
   it('uses only the implemented versioned settings routes and rejects unsafe payloads', async () => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const client = apiClientFor(requests);

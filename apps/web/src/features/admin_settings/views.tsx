@@ -26,6 +26,7 @@ import {
   copySettingsValues,
   createAdminSettingsSource,
   localizedDraft,
+  mergeSettingsDraft,
   numberDraft,
   setArrayValue,
   setBooleanValue,
@@ -231,7 +232,7 @@ function PrimitiveField({ field, values, copy, hint, onChangeText, onChangeArray
   return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} aria-label={label} aria-describedby={hint ? `admin-settings-${field.key}-hint` : undefined} type={field.kind === 'url' ? 'url' : field.key.endsWith('phone') || field.key === 'whatsapp_number' ? 'tel' : 'text'} dir={field.kind === 'url' || field.key === 'whatsapp_number' || field.key.endsWith('phone') ? 'ltr' : undefined} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)} />{hint ? <small id={`admin-settings-${field.key}-hint`} className="admin-settings__hint">{hint}</small> : null}</label>;
 }
 
-function SettingsForm({ namespace, data, values, locale, saving, onChangeText, onChangeLocalized, onChangeArray, onChangeNumber, onChangeBoolean, onSave, onReset }: { readonly namespace: SettingsNamespace; readonly data?: AdminSettingsData; readonly values: DraftValues; readonly locale: SupportedLocale; readonly saving: boolean; readonly onChangeText: (key: string, value: string) => void; readonly onChangeLocalized: (key: string, language: LocalizedLocale, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void; readonly onSave: (input: AdminSettingsUpdate) => Promise<boolean>; readonly onReset: () => void }) {
+function SettingsForm({ namespace, data, values, locale, saving, blocked, onChangeText, onChangeLocalized, onChangeArray, onChangeNumber, onChangeBoolean, onSave, onReset }: { readonly namespace: SettingsNamespace; readonly data?: AdminSettingsData; readonly values: DraftValues; readonly locale: SupportedLocale; readonly saving: boolean; readonly blocked?: boolean; readonly onChangeText: (key: string, value: string) => void; readonly onChangeLocalized: (key: string, language: LocalizedLocale, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void; readonly onSave: (input: AdminSettingsUpdate) => Promise<boolean>; readonly onReset: () => void }) {
   const copy = getAdminSettingsCopy(locale);
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | undefined>();
@@ -247,6 +248,7 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (saving || blocked) return;
     setError(undefined);
     const trimmedReason = reason.trim();
     if (trimmedReason.length < 3) { setError(copy.reasonRequired); return; }
@@ -286,7 +288,7 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
       {namespace === 'contact' || namespace === 'social' ? <p className="admin-settings__hint">{locale === 'ar' ? 'يظهر الرقم والروابط المحفوظة في أزرار الموقع والفوتر. اترك الحقل فارغًا لإخفاء الزر. رقم مصري: 01012345678 أو +201012345678. روابط التواصل: فيسبوك وإنستجرام فقط.' : 'Saved contacts appear on the site and footer. Leave a field empty to hide its button. Use an international phone number. Social links support Facebook and Instagram only.'}</p> : null}
       <p className="admin-settings__hint" role="status">{dirty ? copy.guide.unsaved : saved ? copy.saved : data ? copy.guide.savedStatus : copy.states.empty.title}</p>
       <label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label>
-      <div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button><Button type="button" variant="secondary" disabled={saving || !dirty} onClick={() => { onReset(); setReason(''); setError(undefined); setSaved(false); }}>{copy.guide.restore}</Button></div>
+      <div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving || blocked}>{saving ? copy.saving : copy.save}</Button><Button type="button" variant="secondary" disabled={saving || !dirty} onClick={() => { onReset(); setReason(''); setError(undefined); setSaved(false); }}>{copy.guide.restore}</Button></div>
       {error ? <p className="admin-settings__feedback" role="alert">{error}</p> : null}
       <details className="admin-settings__technical"><summary>{copy.guide.technical}</summary><p className="admin-settings__hint">{copy.version}: {data?.version ?? 0} ? {copy.schemaVersion}: {data?.schemaVersion ?? 1}</p><p className="admin-settings__hint">{copy.preservedValues}</p></details>
     </form>
@@ -316,6 +318,9 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
   const [values, setValues] = useState<DraftValues>(() => initialMatches ? copySettingsValues(initialData.values) : {});
   const [attempt, setAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
+  const inFlight = useRef(false);
+  const [reviewed, setReviewed] = useState(false);
+  const [recoveryError, setRecoveryError] = useState('');
   const sessionAllowed = session.status === 'authenticated' && session.role === 'admin';
   const settingsTabsRef = useRef<HTMLElement>(null);
 
@@ -365,21 +370,49 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
   if (namespace === undefined) return <section className="admin-settings" data-device-scope="desktop" data-admin-settings-state="not_found"><AdminNavigation locale={locale} activePath={path} />{stateMessage('not_found', locale, () => undefined)}</section>;
 
   const activeNamespace = namespace;
+  const recovery = locale === 'ar' ? {
+    changed: 'تغيّرت الإعدادات منذ فتح الصفحة. تعديلاتك محفوظة هنا؛ حمّل آخر نسخة ثم راجع الاسم والبيانات قبل الحفظ.',
+    load: 'تحميل آخر نسخة مع الاحتفاظ بتعديلاتي',
+    review: 'تم تحميل آخر نسخة. راجع البيانات المحفوظة وتعديلاتك، ثم اضغط حفظ التغييرات لتأكيدها.',
+    failed: 'تعذر تحميل آخر نسخة. تعديلاتك كما هي؛ راجع الاتصال وحاول مرة أخرى.'
+  } : {
+    changed: 'Settings changed since this page opened. Your edits are still here. Load the latest settings, then review the name and fields before saving.',
+    load: 'Load latest and keep my edits',
+    review: 'Latest settings loaded. Review the saved values and your edits, then save to confirm them.',
+    failed: 'Could not load the latest settings. Your edits are retained; check the connection and retry.'
+  };
   const activePath = SETTINGS_ROUTES[activeNamespace];
   const refresh = () => setAttempt(value => value + 1);
 
+  async function reviewLatest(): Promise<void> {
+    if (inFlight.current) return;
+    inFlight.current = true; setSaving(true); setRecoveryError('');
+    try {
+      const loader = load ?? source.load;
+      let latest = await loader(activeNamespace);
+      if (activeNamespace === 'contact') {
+        const social = await loader('social').catch(error => { if (error instanceof ApiClientError && error.status === 404) return undefined; throw error; });
+        latest = { ...latest, values: { ...(social?.values ?? {}), ...latest.values } };
+      }
+      setValues(current => mergeSettingsDraft(data?.values ?? {}, current, latest.values));
+      setData(latest); setState('success'); setReviewed(true);
+    } catch { setRecoveryError(recovery.failed); }
+    finally { inFlight.current = false; setSaving(false); }
+  }
+
   async function save(input: AdminSettingsUpdate): Promise<boolean> {
-    setSaving(true);
+    if (inFlight.current || state === 'conflict') return false;
+    inFlight.current = true; setSaving(true);
     try {
       const mutation = update ?? source.update;
       const next = await mutation(activeNamespace, input);
-      setData(next); setValues(copySettingsValues(next.values)); setState('success');
+      setData(next); setValues(copySettingsValues(next.values)); setState('success'); setReviewed(false);
       return true;
     } catch (error) {
       setState(stateForError(error));
       return false;
-    } finally { setSaving(false); }
+    } finally { inFlight.current = false; setSaving(false); }
   }
 
-  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div>{activeNamespace === 'requests' ? <p className="admin-settings__eyebrow">{copy.eyebrow}</p> : null}<h1>{copy.labels[activeNamespace]}</h1><p>{activeNamespace === 'contact' ? (locale === 'ar' ? 'التليفون وواتساب والخريطة وفيسبوك وإنستجرام في مكان واحد. استبدل بيانات العرض التجريبية ببيانات المنصة الفعلية.' : 'Manage phone, WhatsApp, map, Facebook and Instagram in one place. Replace demo contacts with your real platform details.') : copy.descriptions[activeNamespace]}</p></div></header><nav ref={settingsTabsRef} className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.filter(tab => tab !== 'social').map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} aria-current={activeNamespace === tab ? 'page' : undefined} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} loadingVariant="form" /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' || state === 'conflict' ? stateMessage(state, locale, refresh) : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{state === 'success' || state === 'empty' ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} onReset={() => setValues(copySettingsValues(data?.values ?? {}))} /> : null}{activeNamespace === 'contact' && !saving ? <Button variant="secondary" onClick={() => setValues(current => ({ ...current, primary_phone: '+201001234567', whatsapp_number: '+201001234567', facebook_url: 'https://www.facebook.com/', instagram_url: 'https://www.instagram.com/', map_url: 'https://www.google.com/maps/search/?api=1&query=Sadat+City+Egypt' }))}>{locale === 'ar' ? 'تعبئة بيانات تجريبية' : 'Fill demo contacts'}</Button> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
+  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div>{activeNamespace === 'requests' ? <p className="admin-settings__eyebrow">{copy.eyebrow}</p> : null}<h1>{copy.labels[activeNamespace]}</h1><p>{activeNamespace === 'contact' ? (locale === 'ar' ? 'التليفون وواتساب والخريطة وفيسبوك وإنستجرام في مكان واحد. استبدل بيانات العرض التجريبية ببيانات المنصة الفعلية.' : 'Manage phone, WhatsApp, map, Facebook and Instagram in one place. Replace demo contacts with your real platform details.') : copy.descriptions[activeNamespace]}</p></div></header><nav ref={settingsTabsRef} className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.filter(tab => tab !== 'social').map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} aria-current={activeNamespace === tab ? 'page' : undefined} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} loadingVariant="form" /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' ? stateMessage(state, locale, refresh) : null}{state === 'conflict' ? <section className="admin-settings__state" role="alert"><h2>{copy.states.conflict.title}</h2>{recoveryError ? <p>{recoveryError}</p> : null}<p>{recovery.changed}</p><Button disabled={saving} onClick={() => { void reviewLatest(); }}>{recovery.load}</Button></section> : null}{reviewed ? <p role="status">{recovery.review}</p> : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{sessionAllowed && (state === 'success' || state === 'empty' || state === 'conflict' || (Boolean(data) && (state === 'error' || state === 'retry'))) ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} blocked={state === 'conflict'} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} onReset={() => setValues(copySettingsValues(data?.values ?? {}))} /> : null}{activeNamespace === 'contact' && !saving ? <Button variant="secondary" onClick={() => setValues(current => ({ ...current, primary_phone: '+201001234567', whatsapp_number: '+201001234567', facebook_url: 'https://www.facebook.com/', instagram_url: 'https://www.instagram.com/', map_url: 'https://www.google.com/maps/search/?api=1&query=Sadat+City+Egypt' }))}>{locale === 'ar' ? 'تعبئة بيانات تجريبية' : 'Fill demo contacts'}</Button> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
 }

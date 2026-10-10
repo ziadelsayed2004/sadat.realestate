@@ -86,6 +86,7 @@ const updates: Readonly<Record<string, Partial<GuideTopic>>> = {
 };
 export function updatedOwnerTopic(topic: GuideTopic): GuideTopic {
   const updated = { ...topic, ...updates[topic.id] };
+  if (topic.id === 'platform-contact') return { ...updated, steps: [...updated.steps, 'لو ظهر تعارض عند حفظ اسم المنصة، اضغط «تحميل آخر نسخة مع الاحتفاظ بتعديلاتي». راجع الاسم المحفوظ وتعديلك ثم احفظ؛ الاسم والسبب يظلان في الفورم، والتحميل وحده لا يحفظ.'] };
   if (topic.id === 'admin-users-roles') return { ...updated, steps: [...updated.steps, 'لحذف موظف افتح مستخدمي الإدارة واضغط «حذف» بجوار حسابه. راجع الاسم والإيميل ثم «تأكيد الحذف»؛ لا تحتاج كتابة سبب. يختفي الحساب ويتوقف دخوله وجلساته، ويظل سجل إجراءاته محفوظًا. لا يمكنك حذف حسابك الحالي أو آخر مسؤول أعلى نشط. للتوقف المؤقت استخدم تعطيل من التعديل.'] };
   return updated;
 }

@@ -125,6 +125,27 @@ export function copySettingsValues(values: AdminSettingsValues | SettingsDraft):
   ])) as SettingsDraft;
 }
 
+/** Keep only the user's edits over a fresh snapshot, including each name language. */
+export function mergeSettingsDraft(base: SettingsDraft, draft: SettingsDraft, latest: SettingsDraft): SettingsDraft {
+  const merged = copySettingsValues(latest);
+  for (const key of new Set([...Object.keys(base), ...Object.keys(draft)])) {
+    if (isLocalizedText(base[key]) || isLocalizedText(draft[key])) {
+      const before = localizedDraft(base[key]);
+      const edited = localizedDraft(draft[key]);
+      if (before.ar === edited.ar && before.en === edited.en) continue;
+      const value = localizedDraft(latest[key]);
+      for (const language of ['ar', 'en'] as const) if (before[language] !== edited[language]) value[language] = edited[language];
+      const entries = Object.entries(value).filter(([, text]) => text !== '');
+      if (entries.length) merged[key] = Object.fromEntries(entries) as LocalizedText;
+      else delete merged[key];
+    } else if (JSON.stringify(base[key]) !== JSON.stringify(draft[key])) {
+      if (draft[key] === undefined) delete merged[key];
+      else merged[key] = draft[key];
+    }
+  }
+  return merged;
+}
+
 export function setTextValue(values: SettingsDraft, key: string, value: string): SettingsDraft {
   const next = { ...values };
   if (value.trim() === '') delete next[key];
