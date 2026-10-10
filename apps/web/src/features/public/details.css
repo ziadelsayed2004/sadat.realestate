@@ -1615,17 +1615,17 @@
 .public-property-details__gallery-badges {
   position: absolute;
   z-index: 1;
-  inset-block-start: 12px;
+  inset: 12px 12px auto;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  inset-inline: 12px;
+}
+
+.public-property-details__gallery:has(video) > .public-property-details__gallery-badges {
+  top: 52px;
 }
 
 .public-property-details__gallery-badge {
-  display: inline-flex;
-  min-height: 22px;
-  align-items: center;
   padding: 2px 10px;
   border-radius: 999px;
   font-size: 12px;
