@@ -11,7 +11,7 @@
 .admin-shell-header__identity.dashboard-account__trigger { display: flex; }
 .seeker-dashboard__account-copy { display: grid; }
 .dashboard-account .provider-dashboard__topbar-avatar { display: grid; }
-@media (max-width: 760px) { .admin-shell-header__identity.dashboard-account__trigger .admin-shell-header__identity-copy { display: none; } }
+@media (max-width: 760px) { .admin-shell-header__identity-copy { max-inline-size: 5rem; white-space: normal; } }
 @media (max-width: 640px) { .seeker-dashboard__topbar-profile .seeker-dashboard__account-copy { display: none; } }
 @media (max-width: 760px) {
   .route-shell--admin .admin-shell-header { gap: 6px; }

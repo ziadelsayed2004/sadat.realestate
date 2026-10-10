@@ -2781,5 +2781,17 @@
     "purpose": "Delete administrator with version, self/last-Super-Admin safeguards, session revocation and retained audit history",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/account/presence",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Current verified administrator own name and live-session dashboard heartbeat; allowed to view-only staff",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

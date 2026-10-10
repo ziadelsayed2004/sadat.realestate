@@ -176,7 +176,11 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
   useEffect(() => {
     const controller = new AbortController();
     setState("loading");
-    void source
+    let inFlight = false;
+    const refresh = () => {
+      if (inFlight || document.visibilityState === 'hidden') return;
+      inFlight = true;
+      void source
       .loadUsers(query, controller.signal)
       .then((next) => {
         if (controller.signal.aborted) return;
@@ -185,8 +189,13 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
       })
       .catch((error) => {
         if (!controller.signal.aborted) setState(stateForError(error));
-      });
-    return () => controller.abort();
+      }).finally(() => { inFlight = false; });
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 30_000);
+    document.addEventListener('visibilitychange', refresh);
+    window.addEventListener('focus', refresh);
+    return () => { controller.abort(); window.clearInterval(timer); document.removeEventListener('visibilitychange', refresh); window.removeEventListener('focus', refresh); };
   }, [attempt, query, source]);
   const pageCount = data === undefined ? 1 : Math.max(1, Math.ceil(data.total / data.limit));
   const visible = data?.items ?? [];
@@ -278,6 +287,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
       ) : null}
       {state === "success" && data !== undefined ? (
         <section className="admin-rbac__panel">
+          <p>{ar ? 'متصل الآن: لوحة الإدارة مفتوحة مع نشاط خلال آخر دقيقتين. تتحدث الحالة تلقائيًا كل ٣٠ ثانية.' : 'Online now means an open admin dashboard with activity in the last two minutes. Status refreshes every 30 seconds.'}</p>
           <table className="admin-rbac__table">
             <caption className="a11y-visually-hidden">{copy.users}</caption>
             <thead>
@@ -298,6 +308,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                     <small>
                       <code>{user.id}</code>
                     </small>
+                    <small>{user.presence ? user.presence.online ? (ar ? '🟢 متصل الآن' : '🟢 Online now') : user.presence.lastActiveAt ? `${ar ? 'آخر نشاط: ' : 'Last active: '}${new Date(user.presence.lastActiveAt).toLocaleString(ar ? 'ar-EG' : 'en-GB', { timeZone: 'Africa/Cairo' })}` : (ar ? 'غير متصل — لا يوجد نشاط مسجل' : 'Offline — no activity recorded') : (ar ? 'حالة الاتصال غير متاحة' : 'Presence unavailable')}</small>
                   </td>
                   <td>{user.email}</td>
                   <td>{user.accessLevel === "super_admin" ? copy.superAdmin : copy.standardAdmin}</td>

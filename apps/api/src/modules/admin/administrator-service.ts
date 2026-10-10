@@ -6,6 +6,7 @@ import type {
   AdminUserListQuery,
   AdminUserPatch
 } from '@sadat-real-estate/contracts';
+import { adminAccountPresenceDataSchema, type AdminAccountPresenceData, type AdminPresence } from '@sadat-real-estate/contracts';
 import { createArgon2PasswordHasher, type PasswordHasher } from '../auth/crypto.js';
 import {
   adminUserCreateSchema,
@@ -32,6 +33,8 @@ export interface AdministratorMutationContext {
 }
 
 export interface AdministratorRepository {
+  heartbeat(userId: string, sessionId: string, now: Date, expiresAt: Date): Promise<boolean>;
+  presence(userIds: readonly string[], now: Date): Promise<Readonly<Record<string, AdminPresence>>>;
   remove(input: AdministratorMutationContext & { actorId: string; id: string; expectedVersion: number; now: string }): Promise<{ kind: 'deleted'; data: AdminUserDeleteData } | { kind: 'not_found' | 'version_conflict' }>;
   list(): Promise<readonly AdminUserData[]>;
   findById(id: string): Promise<AdminUserData | undefined>;
@@ -57,6 +60,7 @@ export interface AdministratorRepository {
 }
 
 export interface AdministratorService {
+  heartbeat(adminId: string, sessionId: string, sessionExpiresAt: number): Promise<AdminAccountPresenceData>;
   remove(adminId: string, id: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserDeleteData>;
   list(adminId: string, input: unknown): Promise<AdminUserListData>;
   listAdministrators(adminId: string, input: unknown): Promise<AdminUserListData>;
@@ -77,6 +81,7 @@ export interface AdministratorServiceDependencies {
 }
 
 export type AdministratorServiceErrorCode =
+  | 'AUTHENTICATION_REQUIRED'
   | 'ADMINISTRATOR_FORBIDDEN'
   | 'ADMINISTRATOR_NOT_FOUND'
   | 'ADMINISTRATOR_EMAIL_CONFLICT'
@@ -122,6 +127,16 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     requestId: 'administrator-management',
     traceId: '0'.repeat(32)
   };
+  const heartbeat = async (adminId: string, sessionId: string, sessionExpiresAt: number): Promise<AdminAccountPresenceData> => {
+    const now = clock();
+    const value = objectId(adminId) ? await dependencies.repository.findById(adminId) : undefined;
+    const expiresAt = new Date(Math.min(now.getTime() + 120_000, sessionExpiresAt));
+    if (!value || value.status !== 'active' || !objectId(sessionId) || !Number.isFinite(sessionExpiresAt) || expiresAt <= now
+      || !await dependencies.repository.heartbeat(adminId, sessionId, now, expiresAt)) {
+      throw new AdministratorServiceError('AUTHENTICATION_REQUIRED');
+    }
+    return adminAccountPresenceDataSchema.parse({ id: value.id, displayName: value.displayName });
+  };
   const list = async (adminId: string, input: unknown): Promise<AdminUserListData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.view');
     const query = adminUserListQuerySchema.parse(input) as AdminUserListQuery;
@@ -133,7 +148,9 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
       .filter((value) => (!query.status || value.status === query.status) && (!query.accessLevel || value.accessLevel === query.accessLevel)
         && (!query.search || `${value.displayName} ${value.email}`.toLocaleLowerCase().includes(query.search.toLocaleLowerCase())))
       .sort((left, right) => left.email.localeCompare(right.email) || left.id.localeCompare(right.id));
-    return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
+    const page = values.slice((query.page - 1) * query.limit, query.page * query.limit);
+    const presence = await dependencies.repository.presence(page.map(value => value.id), clock());
+    return { items: page.map(value => ({ ...value, presence: { online: value.status === 'active' && (presence[value.id]?.online ?? false), lastActiveAt: presence[value.id]?.lastActiveAt ?? null } })), page: query.page, limit: query.limit, total: values.length };
   };
   const get = async (adminId: string, id: string): Promise<AdminUserData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.view');
@@ -215,6 +232,7 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     return result.data;
   };
   return {
+    heartbeat,
     remove,
     list,
     listAdministrators: list,

@@ -1,5 +1,5 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import { createContext, type ReactNode, useEffect, useState } from 'react';
+import { createContext, useContext, type ReactNode, useEffect, useState } from 'react';
 import { BrandMark, type DesignAssetCatalog } from '../design_system/index.ts';
 import { getAccessibilityCopy, SkipLink } from '../accessibility/index.ts';
 import type { FoundationCopy } from '../frontend_foundation/locale.js';
@@ -10,6 +10,8 @@ import { LocaleSwitcher } from '../localization/index.ts';
 import { AdminAttentionBell, AdminAttentionProvider } from './admin-attention.tsx';
 import { DashboardAccountMenu } from '../dashboard_account/menu.tsx';
 import { AdminSectionSearch } from './admin-section-search.tsx';
+import { AdminAccountContext, AdminAccountProvider } from './admin-account.tsx';
+import type { AuthSnapshot } from '../auth/store.ts';
 
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
@@ -24,6 +26,7 @@ export interface RouteShellProps {
 }
 
 export interface RouteShellAuthClient {
+  readonly subscribe?: ((listener: (snapshot: AuthSnapshot) => void) => () => void) | undefined;
   readonly refresh?: (() => Promise<unknown>) | undefined;
   readonly getAuthorizationHeader?: (() => string | undefined) | undefined;
   readonly getSnapshot?: (() => unknown) | undefined;
@@ -52,6 +55,7 @@ function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
 function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
   const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const account = useContext(AdminAccountContext);
   const signOut = () => {
     if (signingOut) return;
     setSigningOut(true);
@@ -114,8 +118,8 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
         ) : (
           <div className="admin-shell-header" data-admin-header="true">
             <DashboardAccountMenu locale={locale} triggerClassName="admin-shell-header__identity" settingsHref={`/admin/settings?lang=${locale}`} settingsLabel={locale === 'ar' ? 'الإعدادات العامة' : 'General settings'} guideHref={`/admin/user-guide?lang=${locale}`} signingOut={signingOut} onSignOut={signOut}>
-              <span aria-hidden="true" className="admin-shell-header__avatar">م</span>
-              <span className="admin-shell-header__identity-copy"><strong>{adminHeader.role}</strong><small>{surfaceLabel}</small></span>
+              <span aria-hidden="true" className="admin-shell-header__avatar">{account?.displayName.slice(0, 1) ?? 'م'}</span>
+              <span className="admin-shell-header__identity-copy"><strong>{account?.displayName ?? adminHeader.role}</strong><small>{surfaceLabel}</small></span>
             </DashboardAccountMenu>
             <AdminSectionSearch locale={locale} label={adminHeader.searchLabel} placeholder={adminHeader.search} />
             <button
@@ -166,7 +170,7 @@ export function ProviderShell(props: RouteShellProps) {
 }
 
 export function AdminShell(props: RouteShellProps) {
-  return <ShellFrame {...props} kind="admin" />;
+  return <AdminAccountProvider enabled={true} authorization={props.authClient}><ShellFrame {...props} kind="admin" /></AdminAccountProvider>;
 }
 
 export function shellKindForRoute(route: RouteMatch): ShellKind {

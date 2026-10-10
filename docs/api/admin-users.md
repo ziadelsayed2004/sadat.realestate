@@ -7,8 +7,13 @@ The administrator account boundary is implemented by:
 - `POST /api/v1/admin/admin-users`
 - `PATCH /api/v1/admin/admin-users/:adminId`
 - `DELETE /api/v1/admin/admin-users/:adminId`
+- `POST /api/v1/admin/account/presence`
 
 List/detail reads require `admin:staff.view`; mutations require `admin:staff.manage`. Responses contain normalized email, display name, access level, lifecycle status, version, timestamps, and safe available actions only. Optional creation/password updates are hashed before persistence; credential material is never returned.
+
+The presence endpoint is self-scoped and does not require staff viewing or management permission. It accepts an empty body, rejects query/body identity overrides, enforces Admin authentication/session timeout/MFA, checks the current account is active and the bearer session belongs to it and is unrevoked/unexpired, then returns only `{ id, displayName }`. The name appears in the header and navigation footer, including mobile layouts.
+
+Visible admin dashboards send a heartbeat every 30 seconds. Staff lists refresh on the same interval and expose `presence: { online, lastActiveAt }` for their authorized current page. Online means dashboard activity within the last two minutes and is bounded by token expiry, configured Admin timeout, and the underlying session expiry. Logout/revocation or account disabling prevents online status immediately on the next list refresh. Closing/backgrounding a tab ages out within two minutes; an active second session still counts. `lastActiveAt` is the last dashboard heartbeat in Cairo-local presentation, or null when none has been recorded. It does not represent a log of page views, and no session identifier, token hash or other storage data is exposed.
 
 The repository persists the user identity, an admin profile, and an administrator projection in one transaction. New accounts start as verified, with an optional administrator credential and validated role assignments.
 

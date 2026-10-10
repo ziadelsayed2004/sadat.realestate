@@ -7694,6 +7694,44 @@
               ]
             }
           }
+        },
+        {
+          "name": "Heartbeat and current administrator name",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account/presence",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account",
+                "presence"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates the bearer account owned live session only, returning its display name. Send every 30 seconds from visible admin dashboards. No staff management permission is required."
+          },
+          "response": []
         }
       ]
     },

@@ -1,7 +1,8 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   adminUserDataSchema,
-  type AdminUserData
+  type AdminUserData,
+  type AdminPresence
 } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { IdentityModels } from '../identity/models.js';
@@ -253,6 +254,32 @@ export function createMongooseAdministratorRepository(
     },
     async list() {
       return readAdministrators(dependencies);
+    },
+
+    async heartbeat(userId, sessionId, now, expiresAt) {
+      const user = objectId(userId);
+      const session = objectId(sessionId);
+      if (!user || !session) return false;
+      const result = await identityModels.Session.updateOne({ _id: session, userId: user, revokedAt: { $exists: false }, expiresAt: { $gt: now } }, {
+        $set: { adminPresenceAt: now, adminPresenceExpiresAt: expiresAt }
+      }).exec();
+      return result.matchedCount === 1;
+    },
+
+    async presence(userIds, now) {
+      if (userIds.length === 0) return {};
+      const rows = await identityModels.Session.aggregate<{ _id: Types.ObjectId; lastActiveAt: Date; online: number }>([
+        { $match: { userId: { $in: userIds.flatMap(id => objectId(id) ?? []) }, adminPresenceAt: { $lte: now }, adminPresenceExpiresAt: { $exists: true } } },
+        { $group: {
+          _id: '$userId', lastActiveAt: { $max: '$adminPresenceAt' },
+          online: { $max: { $cond: [{ $and: [
+            { $eq: [{ $ifNull: ['$revokedAt', null] }, null] },
+            { $gt: ['$expiresAt', now] }, { $gt: ['$adminPresenceExpiresAt', now] },
+            { $gt: ['$adminPresenceAt', new Date(now.getTime() - 120_000)] }
+          ] }, 1, 0] } }
+        } }
+      ]).exec();
+      return Object.fromEntries(rows.map(row => [row._id.toHexString(), { online: row.online === 1, lastActiveAt: row.lastActiveAt.toISOString() } satisfies AdminPresence]));
     },
 
     async findById(id) {

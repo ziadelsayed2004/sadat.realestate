@@ -14,6 +14,7 @@ import './styles.css';
 import { UserGuideIcon } from '../dashboard_account/menu.tsx';
 import { sidebarGroups, type AdminSidebarIcon } from '../routing/admin-navigation-model.ts';
 import { AdminAttentionContext, AdminAttentionBadge, adminAttentionCount } from '../routing/admin-attention.tsx';
+import { AdminAccountContext } from '../routing/admin-account.tsx';
 
 export interface AdminOverviewProps {
   readonly locale: SupportedLocale;
@@ -74,6 +75,7 @@ const navigationIconSources: Readonly<Record<(typeof navigationItems)[number][0]
 };
 
 export function AdminNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
+  const account = useContext(AdminAccountContext);
   const copy = getAdminCopy(locale);
   const authClient = useContext(RouteShellAuthContext);
   const sidebarController = useContext(AdminSidebarContext);
@@ -180,8 +182,8 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
       </div>
       <div className="admin-dashboard__navigation-footer">
         <div className="admin-dashboard__navigation-profile">
-          <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{copy.sidebar.avatar}</span>
-          <span><strong>{copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>
+          <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{account?.displayName.slice(0, 1) ?? copy.sidebar.avatar}</span>
+          <span><strong>{account?.displayName ?? copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>
         </div>
         <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">
           <span className="admin-dashboard__navigation-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z" /></svg></span>

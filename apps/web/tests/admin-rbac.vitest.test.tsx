@@ -70,6 +70,19 @@ function source(overrides: Partial<AdminRbacSource> = {}): AdminRbacSource {
   };
 }
 
+it('shows staff connectivity and last activity separately from account activation', async () => {
+  const api = source({ loadUsers: vi.fn(async () => userList([
+    user({ displayName: 'Tarek Admin', presence: { online: true, lastActiveAt: '2026-10-10T12:00:00Z' } }),
+    user({ id: 'cccccccccccccccccccccccc', displayName: 'Offline Admin', presence: { online: false, lastActiveAt: '2026-10-09T12:00:00Z' } }),
+    user({ id: 'dddddddddddddddddddddddd', displayName: 'New Admin', presence: { online: false, lastActiveAt: null } })
+  ])) });
+  renderWithLocale(<AdminRbac locale="ar" session={adminSession} source={api} url="/admin/admin-users?lang=ar" />);
+  expect(await screen.findByText('🟢 متصل الآن')).toBeVisible();
+  expect(screen.getByText(/آخر نشاط:/)).toBeVisible();
+  expect(screen.getByText('غير متصل — لا يوجد نشاط مسجل')).toBeVisible();
+  expect(screen.getByText(/تتحدث الحالة تلقائيًا/)).toBeVisible();
+});
+
 describe('frontend_075 Administrator Users and Roles', () => {
   it.each(['ar', 'en'] as const)('confirms deletion by name, supports cancellation and removes the row in %s', async locale => {
     let removed = false;

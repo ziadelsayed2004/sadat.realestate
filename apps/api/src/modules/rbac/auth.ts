@@ -51,8 +51,10 @@ export function createAdminRbacAuthMiddleware(accessTokens: AccessTokenService):
         return;
       }
       const reader = privacyPolicies.get(accessTokens);
+      let sessionExpiresAt = claims.exp * 1_000;
       if (reader) {
         const policy = await reader.read();
+        if (policy.adminSessionTimeoutMinutes !== undefined) sessionExpiresAt = Math.min(sessionExpiresAt, (claims.iat + policy.adminSessionTimeoutMinutes * 60) * 1_000);
         const nowSeconds = Math.floor(Date.now() / 1_000);
         if (
           (policy.adminSessionTimeoutMinutes !== undefined
@@ -64,6 +66,7 @@ export function createAdminRbacAuthMiddleware(accessTokens: AccessTokenService):
         }
       }
       response.locals.adminRbacClaims = claims;
+      response.locals.adminSessionExpiresAt = sessionExpiresAt;
       next();
     } catch {
       sendError(request, response, 'AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);

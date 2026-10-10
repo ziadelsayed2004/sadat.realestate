@@ -76,6 +76,8 @@ export interface SessionRecord {
   tokenHash: string;
   expiresAt: Date;
   lastUsedAt?: Date;
+  adminPresenceAt?: Date;
+  adminPresenceExpiresAt?: Date;
   revokedAt?: Date;
   replacedBySessionId?: Types.ObjectId;
   authenticationMethod: 'password' | 'otp' | 'mfa';
@@ -219,6 +221,8 @@ const sessionSchema = new Schema<SessionRecord>(
     },
     expiresAt: { type: Date, required: true },
     lastUsedAt: Date,
+    adminPresenceAt: Date,
+    adminPresenceExpiresAt: Date,
     revokedAt: Date,
     replacedBySessionId: { type: Schema.Types.ObjectId, ref: 'Session' },
     authenticationMethod: { type: String, enum: ['password', 'otp', 'mfa'], required: true, default: 'password' }

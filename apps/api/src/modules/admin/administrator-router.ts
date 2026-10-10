@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { adminUserIdParamsSchema } from '@sadat-real-estate/contracts';
+import { adminUserIdParamsSchema, emptyAuthRequestSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -12,6 +12,7 @@ import {
 } from './administrator-service.js';
 
 export const ADMINISTRATOR_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/admin/account/presence', operationId: 'updateAdminAccountPresence' },
   { method: 'GET', path: '/api/v1/admin/admin-users', operationId: 'listAdminAdministrators' },
   { method: 'GET', path: '/api/v1/admin/admin-users/:adminId', operationId: 'getAdminAdministrator' },
   { method: 'POST', path: '/api/v1/admin/admin-users', operationId: 'createAdminAdministrator' },
@@ -25,6 +26,7 @@ export interface AdministratorRouterDependencies {
 }
 
 const ADMINISTRATOR_ERROR_MAP = Object.freeze({
+  AUTHENTICATION_REQUIRED: { statusCode: 401, messageKey: 'errors.authenticationRequired' },
   ADMINISTRATOR_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
   ADMINISTRATOR_NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
   ADMINISTRATOR_EMAIL_CONFLICT: { statusCode: 409, messageKey: 'errors.conflict' },
@@ -71,6 +73,15 @@ export function createAdministratorRouter(
     next();
   });
   router.use('/admin/admin-users', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.use('/admin/account', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.post('/admin/account/presence', async (request, response) => {
+    try {
+      emptyAuthRequestSchema.parse(request.body ?? {});
+      emptyAuthRequestSchema.parse(request.query);
+      const identity = claims(response);
+      response.status(200).json(toSuccessResponse(await dependencies.service.heartbeat(identity.sub, identity.sid, response.locals.adminSessionExpiresAt as number), requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
 
   router.delete('/admin/admin-users/:adminId', async (request, response) => {
     try {

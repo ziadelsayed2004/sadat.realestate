@@ -9888,7 +9888,7 @@
       "get": {
         "operationId": "listAdminAdministrators",
         "summary": "List administrator accounts for an authorized administrator",
-        "description": "Requires admin:staff.view. The response is a safe administrator projection and never contains credentials or password material.",
+        "description": "Requires admin:staff.view. The response is a safe administrator projection and never contains credentials or password material. Each listed account includes recent dashboard presence and last activity; revoked or expired sessions and disabled accounts are offline. Only current-page accounts are included.",
         "security": [
           {
             "bearerAuth": []
@@ -12453,6 +12453,69 @@
           }
         },
         "description": "Requires administrative project management permission and current optimistic version. An administrative edit updates the project fields atomically and audits the real administrator; it does not publish a draft or change the owner."
+      }
+    },
+    "/api/v1/admin/account/presence": {
+      "post": {
+        "operationId": "updateAdminAccountPresence",
+        "summary": "Update current administrator presence and return own display name",
+        "description": "Verified administrators, including view-only staff, may update only their own live session. No staff permission is needed. An empty body and no query parameters are accepted. Presence lasts up to two minutes, bounded by access-token and configured administrator session expiry. Disabled, deleted, revoked and expired sessions cannot appear online.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current administrator name; no permissions, sessions or credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminAccountPresenceData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "403": {
+            "$ref": "#/components/responses/RbacError"
+          },
+          "500": {
+            "$ref": "#/components/responses/RbacError"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "maxProperties": 0
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -25685,6 +25748,9 @@
             "maxItems": 10,
             "uniqueItems": true,
             "description": "Roles assigned to this employee, including inactive roles for review."
+          },
+          "presence": {
+            "$ref": "#/components/schemas/AdminPresence"
           }
         }
       },
@@ -27584,6 +27650,45 @@
           "version": {
             "type": "integer",
             "minimum": 1
+          }
+        }
+      },
+      "AdminPresence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "online",
+          "lastActiveAt"
+        ],
+        "properties": {
+          "online": {
+            "type": "boolean"
+          },
+          "lastActiveAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "AdminAccountPresenceData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "displayName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 160
           }
         }
       }

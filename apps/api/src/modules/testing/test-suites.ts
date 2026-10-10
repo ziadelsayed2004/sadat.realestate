@@ -17,6 +17,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/auth/session-service.test.ts',
     'tests/admin/contracts.test.ts',
     'tests/admin/administrator-delete.test.ts',
+    'tests/admin/administrator-presence.test.ts',
     'tests/admin/models.test.ts',
     'tests/admin/repository.test.ts',
     'tests/admin/service.test.ts',

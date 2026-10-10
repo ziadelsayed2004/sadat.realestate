@@ -62,6 +62,8 @@ function service(): ReturnType<typeof createAdministratorService> {
     [staffId, record()]
   ]);
   const repository: AdministratorRepository = {
+    async heartbeat() { return true; },
+    async presence() { return {}; },
     async remove(input) {
       const current = records.get(input.id);
       if (!current) return { kind: 'not_found' };
@@ -202,5 +204,21 @@ test('administrator DELETE requires authentication, permission and current versi
     assert.equal((await remove({ expectedVersion: 0 })).status, 404);
     const remaining = await fetch(`${baseUrl}/api/v1/admin/admin-users`, { headers });
     assert.equal((await remaining.json() as { data: { total: number } }).data.total, 1);
+  });
+});
+
+test('current administrator presence returns own name without staff permissions and rejects cross-role or injected identity', async () => {
+  await withServer(async baseUrl => {
+    const url = `${baseUrl}/api/v1/admin/account/presence`;
+    assert.equal((await fetch(url, { method: 'POST' })).status, 401);
+    assert.equal((await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer seeker-token' } })).status, 403);
+    const headers = { Authorization: 'Bearer view-token', 'content-type': 'application/json' };
+    const response = await fetch(url, { method: 'POST', headers, body: '{}' });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.deepEqual((await response.json() as { data: unknown }).data, { id: staffId, displayName: 'Staff Admin' });
+    assert.equal((await fetch(url, { method: 'POST', headers, body: JSON.stringify({ userId: adminId }) })).status, 400);
+    assert.equal((await fetch(`${url}?userId=${adminId}`, { method: 'POST', headers, body: '{}' })).status, 400);
+    assert.equal((await fetch(`${baseUrl}/api/v1/admin/admin-users`, { headers })).status, 403);
   });
 });

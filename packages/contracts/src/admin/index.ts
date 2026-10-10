@@ -124,7 +124,20 @@ export const adminUserPatchSchema = z.object({
   status: adminUserStatusSchema.optional()
 }).strict().refine((value) => Object.keys(value).some((key) => !['expectedVersion', 'reason'].includes(key)), { message: 'At least one administrator field must be changed' });
 
+export const adminPresenceSchema = z.object({
+  online: z.boolean(),
+  lastActiveAt: adminUserDateSchema.nullable()
+}).strict();
+export const adminAccountPresenceDataSchema = z.object({
+  id: adminUserObjectIdSchema,
+  displayName: adminUserDisplayNameSchema
+}).strict();
+export const adminAccountPresenceSuccessEnvelopeSchema = successEnvelopeSchema(adminAccountPresenceDataSchema);
+export type AdminPresence = z.infer<typeof adminPresenceSchema>;
+export type AdminAccountPresenceData = z.infer<typeof adminAccountPresenceDataSchema>;
+
 export const adminUserDataSchema = z.object({
+  presence: adminPresenceSchema.optional(),
   roleIds: z.array(adminUserObjectIdSchema).max(10).optional(),
   id: adminUserObjectIdSchema,
   email: normalizedEmailSchema,

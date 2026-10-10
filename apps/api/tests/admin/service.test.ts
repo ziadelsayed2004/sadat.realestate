@@ -150,6 +150,8 @@ function adminRecord(overrides: Partial<AdminUserData> = {}): AdminUserData {
 function administratorFixture(initial: AdminUserData[] = [adminRecord(), adminRecord({ id: '1123456789abcdef01234567', email: 'staff@example.com', displayName: 'Staff Admin', accessLevel: 'standard_admin' })]) {
   const records = new Map(initial.map((record) => [record.id, record]));
   const repository: AdministratorRepository = {
+    async heartbeat() { return true; },
+    async presence() { return {}; },
     async remove(input) {
       const current = records.get(input.id);
       if (!current) return { kind: 'not_found' };
@@ -182,6 +184,44 @@ function administratorFixture(initial: AdminUserData[] = [adminRecord(), adminRe
   const authorization = { async authorize(adminId: string, permission: 'admin:staff.view' | 'admin:staff.manage') { return adminId === '0123456789abcdef01234567' && permission === 'admin:staff.view' || permission === 'admin:staff.manage'; } };
   return { repository, service: createAdministratorService({ authorization, repository, now: () => new Date('2026-08-14T01:00:00.000Z') }) };
 }
+
+test('administrator heartbeat is self scoped, requires a live session and bounds presence by access expiry', async () => {
+  const { repository } = administratorFixture();
+  const now = new Date('2026-10-10T12:00:00Z');
+  const actor = adminRecord().id;
+  const session = '2123456789abcdef01234567';
+  const writes: unknown[][] = [];
+  let active = true;
+  repository.heartbeat = async (...args) => { writes.push(args); return active; };
+  const service = createAdministratorService({ repository, authorization: { async authorize() { return false; } }, now: () => now });
+  assert.deepEqual(await service.heartbeat(actor, session, now.getTime() + 60_000), { id: actor, displayName: 'Root Admin' });
+  assert.deepEqual(writes[0], [actor, session, now, new Date(now.getTime() + 60_000)]);
+  await service.heartbeat(actor, session, now.getTime() + 600_000);
+  assert.equal((writes[1]?.[3] as Date).getTime(), now.getTime() + 120_000);
+  for (const input of [[actor, session, now.getTime()], [actor, session, NaN], [actor, 'invalid', now.getTime() + 1000], ['ffffffffffffffffffffffff', session, now.getTime() + 1000]] as const) {
+    await assert.rejects(() => service.heartbeat(...input), error => error instanceof AdministratorServiceError && error.code === 'AUTHENTICATION_REQUIRED');
+  }
+  assert.equal(writes.length, 2);
+  active = false;
+  await assert.rejects(() => service.heartbeat(actor, session, now.getTime() + 1000), /AUTHENTICATION_REQUIRED/);
+  const disabled = createAdministratorService({ repository: { ...repository, async findById() { return adminRecord({ status: 'disabled', disabledAt: now.toISOString() }); } }, authorization: { async authorize() { return true; } }, now: () => now });
+  await assert.rejects(() => disabled.heartbeat(actor, session, now.getTime() + 1000), /AUTHENTICATION_REQUIRED/);
+});
+
+test('staff presence reads only the authorized page and disabled accounts cannot appear online', async () => {
+  const now = new Date('2026-10-10T12:00:00Z');
+  const actor = adminRecord().id;
+  const { repository } = administratorFixture([adminRecord(), adminRecord({ id: '1123456789abcdef01234567', email: 'z@example.com', status: 'disabled', disabledAt: now.toISOString() })]);
+  const pages: readonly string[][] = [];
+  repository.presence = async ids => { (pages as string[][]).push([...ids]); return Object.fromEntries(ids.map(id => [id, { online: true, lastActiveAt: now.toISOString() }])); };
+  const service = createAdministratorService({ repository, authorization: { async authorize() { return true; } }, now: () => now });
+  const page = await service.list(actor, { page: 2, limit: 1 });
+  assert.deepEqual(pages[0], [page.items[0]?.id]);
+  assert.deepEqual(page.items[0]?.presence, { online: false, lastActiveAt: now.toISOString() });
+  const denied = createAdministratorService({ repository, authorization: { async authorize() { return false; } } });
+  await assert.rejects(() => denied.list(actor, {}), /ADMINISTRATOR_FORBIDDEN/);
+  assert.equal(pages.length, 1);
+});
 
 test('lists, creates, updates, and disables administrators with safe projections and permission boundaries', async () => {
   const { service } = administratorFixture();

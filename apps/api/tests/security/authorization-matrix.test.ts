@@ -119,6 +119,13 @@ test('derives a complete negative-authorization matrix from every implemented ro
       assert.ok(policy.negativeCases.includes('ownership-boundary'));
     } else if (policy.requiredRole === 'admin') {
       assert.ok(policy.negativeCases.includes('wrong-role'));
+      if (policy.path === '/api/v1/admin/account/presence') {
+        assert.equal(policy.scope, 'self');
+        assert.ok(policy.negativeCases.includes('unverified-admin'));
+        assert.ok(policy.negativeCases.includes('invalid-session'));
+        assert.deepEqual(policy.adminRoleModes, ADMINISTRATIVE_ROLE_MODES);
+        continue;
+      }
       assert.equal(policy.scope, 'permission');
       assert.ok(policy.negativeCases.includes('unverified-admin'));
       assert.ok(policy.negativeCases.includes('permission-boundary'));
@@ -215,5 +222,9 @@ test('admin RBAC middleware enforces configured session age and a completed seco
 
   assert.equal((await invokeAsync(middleware, 'password')).status, 401);
   assert.equal((await invokeAsync(middleware, 'stale')).status, 401);
-  assert.equal((await invokeAsync(middleware, 'mfa')).next, true);
+  const verified = await invokeAsync(middleware, 'mfa');
+  assert.equal(verified.next, true);
+  assert.equal(verified.locals.adminSessionExpiresAt, (now + 600) * 1_000);
+  const shortToken = tokenService({ mfa: { ...claims('admin'), iat: now, exp: now + 20, amr: 'mfa' } });
+  assert.equal((await invokeAsync(createAdminRbacAuthMiddleware(shortToken), 'mfa')).locals.adminSessionExpiresAt, (now + 20) * 1_000);
 });

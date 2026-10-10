@@ -125,6 +125,9 @@ function classifyRoute(route: (typeof IMPLEMENTED_ROUTE_DEFINITIONS)[number]): A
     };
   }
 
+  if (route.path === '/api/v1/admin/account/presence') {
+    return { ...route, access: 'role', requiredRole: 'admin', scope: 'self', negativeCases: ['unauthenticated', 'wrong-role', 'unverified-admin', 'invalid-session'], adminRoleModes: ADMINISTRATIVE_ROLE_MODES };
+  }
   if (route.path.startsWith('/api/v1/admin/')) {
     return {
       ...route,
