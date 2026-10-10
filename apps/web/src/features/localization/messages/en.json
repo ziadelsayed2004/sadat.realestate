@@ -1358,10 +1358,10 @@
     },
     "schedule": {
       "startDate": "Start date",
-      "startTime": "Start time",
+      "startTime": "Start time (optional)",
       "endDate": "End date",
-      "endTime": "End time",
-      "hint": "Dates and times use Egypt time, including summer/winter changes. 00:00 means midnight at the start of the day. Save, then select “Publish / schedule”; saving alone does not publish.",
+      "endTime": "End time (optional)",
+      "hint": "Dates are required; times are optional and use Egypt time. Enter a time such as 02:30 and choose AM or PM. Blank means the start of that day; 12 AM is midnight and 12 PM is noon. Save, then select “Publish / schedule”; saving alone does not publish.",
       "invalidRange": "The end date and time must be later than the start date and time."
     },
     "eyebrow": "Homepage administration",

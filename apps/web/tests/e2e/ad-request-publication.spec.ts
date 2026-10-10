@@ -15,12 +15,16 @@ for (const destination of ['properties/customer-property', 'developers/customer-
     await page.route(`**/api/v1/admin/ad-requests/${adminAdsRequestId}`, route => route.fulfill({ json: { data: { request }, meta: { requestId: 'linked-ad-request' } } }));
     await page.goto(`/admin/ads/financial-review?requestId=${adminAdsRequestId}&lang=${locale}`);
     const actions = page.locator('.admin-ads__delivery');
-    const prepare = actions.getByRole('link', { name: locale === 'ar' ? 'إعداد صورة الإعلان ورابط العقار' : 'Prepare ad image and destination', exact: true });
+    const prepare = actions.getByRole('link', { name: locale === 'ar' ? 'تجهيز صورة البانر ورابطه' : 'Prepare banner image and link', exact: true });
     await expect(prepare).toHaveAttribute('href', `/admin/banners/new?requestId=${adminAdsRequestId}&lang=${locale}`);
     await prepare.click();
     await expect(page.locator('.admin-home__request-context')).toContainText(request.purpose);
     await expect(page.locator('#admin-home-banner-start')).toHaveValue('2027-01-08');
-    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('16:00');
+    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('04:00');
+    await expect(page.locator('#admin-home-banner-start-time-period')).toHaveValue('pm');
+    await expect(page.locator('#admin-home-banner-start-time')).toBeDisabled();
+    await expect(page.locator('#admin-home-banner-start-time-period')).toBeDisabled();
+    await expect(page.locator('#admin-home-banner-end-time-period')).toBeDisabled();
     await expect(page.locator('#admin-home-banner-placement')).toBeDisabled();
     await expect(page.locator('#admin-home-banner-target')).toHaveAttribute('required', '');
     await page.locator('#admin-home-banner-title-ar').fill('إعلان عقار العميل');

@@ -128,7 +128,7 @@ describe('Admin banners, tips, and homepage administration', () => {
     expect(screen.queryByText('errors.notFound')).not.toBeInTheDocument();
     expect(document.getElementById('admin-home-banner-title-en')).toHaveValue('New banner');
   });
-  it.each(['ar', 'en'] as const)('saves separate banner dates with complete midnight defaults in %s', async locale => {
+  it.each(['ar', 'en'] as const)('saves required banner dates with optional blank times in %s', async locale => {
     const copy = getAdminHomeCopy(locale);
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const source = createAdminHomeSource({ apiClient: apiClientFor(requests) });
@@ -138,9 +138,13 @@ describe('Admin banners, tips, and homepage administration', () => {
     const startDate = screen.getByLabelText(copy.schedule.startDate);
     const endDate = screen.getByLabelText(copy.schedule.endDate);
     expect(startDate).toHaveAttribute('type', 'date');
-    expect(screen.getByLabelText(copy.schedule.startTime)).toHaveAttribute('type', 'time');
-    expect(screen.getByLabelText(copy.schedule.startTime)).toHaveValue('00:00');
-    expect(screen.getByLabelText(copy.schedule.endTime)).toHaveValue('00:00');
+    expect(screen.getByLabelText(copy.schedule.startTime)).toHaveAttribute('type', 'text');
+    expect(screen.getByLabelText(copy.schedule.startTime)).toHaveValue('');
+    expect(screen.getByLabelText(copy.schedule.endTime)).toHaveValue('');
+    expect(screen.getByLabelText(copy.schedule.startTime)).not.toBeRequired();
+    expect(screen.getByLabelText(copy.schedule.endTime)).not.toBeRequired();
+    expect(startDate).toBeRequired();
+    expect(endDate).toBeRequired();
     fireEvent.change(startDate, { target: { value: '2026-10-05' } });
     fireEvent.change(endDate, { target: { value: '2026-10-06' } });
     const form = screen.getByTestId('admin-home-banner-editor').querySelector('form')!;
@@ -150,6 +154,28 @@ describe('Admin banners, tips, and homepage administration', () => {
     expect(requests.find(request => request.method === 'POST')?.body).toMatchObject({
       startAt: '2026-10-04T21:00:00.000Z', endAt: '2026-10-05T21:00:00.000Z'
     });
+  });
+
+  it.each([
+    ['2026-10-05', '12:00', 'am', '12:00', 'pm', '2026-10-04T21:00:00.000Z', '2026-10-05T09:00:00.000Z'],
+    ['2027-01-05', '12', 'am', '12', 'pm', '2027-01-04T22:00:00.000Z', '2027-01-05T10:00:00.000Z'],
+    ['2027-01-05', '02:30', 'am', '02:30', 'pm', '2027-01-05T00:30:00.000Z', '2027-01-05T12:30:00.000Z'],
+    ['2027-01-05', '', 'pm', '02:30', 'pm', '2027-01-04T22:00:00.000Z', '2027-01-05T12:30:00.000Z'],
+    ['2027-01-05', '٠٢:٣٠', 'am', '٠٢:٣٠', 'pm', '2027-01-05T00:30:00.000Z', '2027-01-05T12:30:00.000Z']
+  ])('converts optional 12-hour times to Cairo instants (%s %s %s)', async (date, startClock, startPeriod, endClock, endPeriod, startAt, endAt) => {
+    const requests: Array<{ method: string; path: string; body: unknown }> = [];
+    renderWithLocale(<AdminHome url="/admin/banners/new" locale="en" session={session} source={createAdminHomeSource({ apiClient: apiClientFor(requests) })} />, { locale: 'en' });
+    await screen.findByTestId('admin-home-banner-editor');
+    fireEvent.change(document.getElementById('admin-home-banner-title-en')!, { target: { value: 'Optional clock' } });
+    for (const [side, clock, period] of [['start', startClock, startPeriod], ['end', endClock, endPeriod]]) {
+      fireEvent.change(document.getElementById(`admin-home-banner-${side}`)!, { target: { value: date } });
+      fireEvent.change(document.getElementById(`admin-home-banner-${side}-time`)!, { target: { value: clock } });
+      fireEvent.change(document.getElementById(`admin-home-banner-${side}-time-period`)!, { target: { value: period } });
+    }
+    const form = screen.getByTestId('admin-home-banner-editor').querySelector('form')!;
+    expect(form.checkValidity()).toBe(true);
+    fireEvent.submit(form);
+    await waitFor(() => expect(requests.find(request => request.method === 'POST')?.body).toMatchObject({ startAt, endAt }));
   });
 
   it('rejects incomplete and reversed schedules and saves precise times on the same day', async () => {
@@ -163,17 +189,23 @@ describe('Admin banners, tips, and homepage administration', () => {
     fireEvent.submit(form);
     expect(document.querySelector('.admin-home__editor [role="alert"]')).toHaveTextContent(copy.validation);
     for (const label of [copy.schedule.startDate, copy.schedule.endDate]) fireEvent.change(screen.getByLabelText(label), { target: { value: '2026-10-05' } });
-    fireEvent.change(screen.getByLabelText(copy.schedule.startTime), { target: { value: '14:30' } });
-    for (const endTime of ['14:29', '14:30']) {
+    fireEvent.change(screen.getByLabelText(copy.schedule.startTime), { target: { value: '02:30' } });
+    fireEvent.change(document.getElementById('admin-home-banner-start-time-period')!, { target: { value: 'pm' } });
+    fireEvent.change(document.getElementById('admin-home-banner-end-time-period')!, { target: { value: 'pm' } });
+    for (const endTime of ['02:29', '02:30']) {
       fireEvent.change(screen.getByLabelText(copy.schedule.endTime), { target: { value: endTime } });
       fireEvent.submit(form);
       expect(document.querySelector('.admin-home__editor [role="alert"]')).toHaveTextContent(copy.schedule.invalidRange);
     }
     fireEvent.change(screen.getByLabelText(copy.schedule.endTime), { target: { value: '' } });
     fireEvent.submit(form);
+    expect(document.querySelector('.admin-home__editor [role="alert"]')).toHaveTextContent(copy.schedule.invalidRange);
+    fireEvent.change(screen.getByLabelText(copy.schedule.endTime), { target: { value: '13:00' } });
+    expect(form.checkValidity()).toBe(false);
+    fireEvent.submit(form);
     expect(document.querySelector('.admin-home__editor [role="alert"]')).toHaveTextContent(copy.validation);
     expect(requests.some(request => request.method === 'POST')).toBe(false);
-    fireEvent.change(screen.getByLabelText(copy.schedule.endTime), { target: { value: '16:45' } });
+    fireEvent.change(screen.getByLabelText(copy.schedule.endTime), { target: { value: '04:45' } });
     fireEvent.submit(form);
     await waitFor(() => expect(document.querySelector('.admin-home__feedback[role="status"]')).toHaveTextContent(copy.saved));
     expect(requests.find(request => request.method === 'POST')?.body).toMatchObject({

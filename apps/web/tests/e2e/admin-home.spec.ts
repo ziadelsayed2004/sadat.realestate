@@ -98,8 +98,8 @@ test.describe('ADM-46 through ADM-49 homepage administration', () => {
     await page.locator('#admin-home-banner-title-en').fill('Date picker banner');
     await page.locator('#admin-home-banner-start').fill('2026-10-05');
     await page.locator('#admin-home-banner-end').fill('2026-10-06');
-    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('00:00');
-    await expect(page.locator('#admin-home-banner-end-time')).toHaveValue('00:00');
+    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('');
+    await expect(page.locator('#admin-home-banner-end-time')).toHaveValue('');
     const create = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/banners'));
     await page.getByRole('button', { name: /save|حفظ/iu }).click();
     await create;

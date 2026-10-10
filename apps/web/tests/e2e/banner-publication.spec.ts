@@ -20,9 +20,11 @@ for (const window of [
     await page.locator('#admin-home-banner-title-ar').fill(title.ar);
     await page.locator('#admin-home-banner-title-en').fill(title.en);
     await page.locator('#admin-home-banner-start').fill(window.date);
-    await page.locator('#admin-home-banner-start-time').fill('16:00');
+    await page.locator('#admin-home-banner-start-time').fill('04:00');
+    await page.locator('#admin-home-banner-start-time-period').selectOption('pm');
     await page.locator('#admin-home-banner-end').fill(window.date);
-    await page.locator('#admin-home-banner-end-time').fill('17:00');
+    await page.locator('#admin-home-banner-end-time').fill('05:00');
+    await page.locator('#admin-home-banner-end-time-period').selectOption('pm');
     await page.locator('#admin-home-banner-file').setInputFiles({ name: 'banner.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', 'base64') });
     await page.locator('#admin-home-banner-reason').fill('Set the correct Egypt display window');
     const creation = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/v1/admin/banners'));
@@ -37,8 +39,10 @@ for (const window of [
     await expect(row).toContainText(title[locale]);
     await row.getByRole('button', { name: copy.edit, exact: true }).click();
     await expect(page.locator('#admin-home-banner-start')).toHaveValue(window.date);
-    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('16:00');
-    await expect(page.locator('#admin-home-banner-end-time')).toHaveValue('17:00');
+    await expect(page.locator('#admin-home-banner-start-time')).toHaveValue('04:00');
+    await expect(page.locator('#admin-home-banner-start-time-period')).toHaveValue('pm');
+    await expect(page.locator('#admin-home-banner-end-time')).toHaveValue('05:00');
+    await expect(page.locator('#admin-home-banner-end-time-period')).toHaveValue('pm');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
