@@ -20,6 +20,38 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it('selects the sole eligible account and loads its pages automatically', async () => {
+    const loadOptions = vi.fn(async () => options);
+    renderWithLocale(<FeaturedEditor options={options} loadOptions={loadOptions} source={sourceFor().source} locale="en" onSaved={() => {}} onClose={() => {}} />, { locale: 'en' });
+    expect(screen.getByLabelText('Advertiser account')).toHaveValue(providerId);
+    await screen.findByRole('option', { name: 'Published property' });
+    expect(loadOptions).toHaveBeenCalledWith(providerId);
+  });
+  it.each(['ar', 'en'] as const)('validates an unselected account in the page language rather than a browser popup (%s)', async locale => {
+    const choices = { ...options, advertisers: [...options.advertisers, { id: 'b'.repeat(24), name: { en: 'Other company' }, verified: true }] };
+    const { source } = sourceFor();
+    renderWithLocale(<FeaturedEditor options={choices} loadOptions={async () => choices} source={source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
+    expect(screen.getByLabelText(locale === 'ar' ? 'المعلن من حسابات المنصة' : 'Advertiser account')).toHaveValue('');
+    const form = document.querySelector('form')!;
+    expect(form.noValidate).toBe(true);
+    fireEvent.submit(form);
+    expect(await screen.findByRole('alert')).toHaveTextContent(locale === 'ar' ? 'راجع الحساب' : 'Check advertiser');
+    expect(source.updateBanner).not.toHaveBeenCalled();
+  });
+  it('removes the previous account pages while another account is loading', async () => {
+    const other = 'b'.repeat(24);
+    const choices = { ...options, advertisers: [...options.advertisers, { id: other, name: { en: 'Other company' }, verified: true }] };
+    let finish: (value: FeaturedOptions) => void = () => {};
+    const pending = new Promise<FeaturedOptions>(resolve => { finish = resolve; });
+    renderWithLocale(<FeaturedEditor item={item} options={choices} loadOptions={async id => id === other ? pending : choices} source={sourceFor().source} locale="en" onSaved={() => {}} onClose={() => {}} />, { locale: 'en' });
+    await screen.findByRole('option', { name: 'Published property' });
+    fireEvent.change(screen.getByLabelText('Advertiser account'), { target: { value: other } });
+    await waitFor(() => expect(screen.queryByRole('option', { name: 'Published property' })).not.toBeInTheDocument());
+    expect(screen.getByRole('button', { name: 'Save and publish' })).toBeDisabled();
+    finish({ ...choices, destinations: [{ kind: 'property', id: 'c'.repeat(24), name: { en: 'Other property' }, href: '/properties/other' }] });
+    await screen.findByRole('option', { name: 'Other property' });
+    expect(screen.queryByRole('option', { name: 'Published property' })).not.toBeInTheDocument();
+  });
   it('selects the canonical account when editing a legacy application-linked card', async () => {
     const alias = 'a'.repeat(24);
     const choices = { ...options, advertisers: options.advertisers.map(value => ({ ...value, aliases: [alias] })) };

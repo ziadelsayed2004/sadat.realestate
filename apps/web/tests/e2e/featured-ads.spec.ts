@@ -9,6 +9,12 @@ test('creates the complete featured card, previews both sizes and saves fields a
   await page.goto(`/admin/ads/featured?lang=${lang}`);
   await page.getByRole('button', { name: ar ? 'إضافة إعلان مميز' : 'Add featured ad', exact: true }).click();
   const editor = page.getByRole('region', { name: ar ? 'تعديل الإعلان المميز' : 'Featured ad editor' });
+  await expect(editor.locator('select').first()).toHaveValue(providerId);
+  const account = editor.locator('.admin-featured__account');
+  const accountSelect = await account.locator('select').boundingBox();
+  const accountHint = await account.locator('p').boundingBox();
+  expect(accountHint!.y).toBeGreaterThanOrEqual(accountSelect!.y + accountSelect!.height + 10);
+  expect(await account.locator('select').evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(16);
   await editor.locator('select').nth(0).selectOption(providerId);
   await editor.getByRole('option', { name: ar ? 'عقار منشور' : 'Published property' }).waitFor({ state: 'attached' });
   await editor.locator('select').nth(1).selectOption(`property:${propertyId}`);
@@ -60,7 +66,26 @@ test('shows actionable empty advertiser guidance without an empty table or unusa
   await expect(editor.getByRole('status')).toContainText(ar ? 'لا توجد حسابات' : 'No eligible advertisers');
   await expect(editor.getByRole('link', { name: ar ? 'إدارة مقدمي العقارات' : 'Manage providers' })).toHaveAttribute('href', `/admin/providers?lang=${lang}`);
   await expect(editor.locator('select').first()).toBeDisabled();
+  await expect(editor.locator('select').first()).toContainText(ar ? 'لا توجد حسابات' : 'No eligible accounts');
   await expect(editor.getByRole('button', { name: ar ? 'حفظ ونشر' : 'Save and publish', exact: true })).toBeDisabled();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath('featured-empty-advertisers.png'), fullPage: true });
+});
+
+test('submitting without an advertiser shows localized validation and makes no save request', async ({ page }, info) => {
+  const ar = info.project.name.endsWith('-ar'), lang = ar ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  await page.route('**/api/v1/admin/banners/featured-options*', route => route.fulfill({ json: { data: { canManage: true, advertisers: ['1', '2'].map(value => ({ id: value.repeat(24), name: { ar: `شركة ${value}`, en: `Company ${value}` }, verified: true })), destinations: [] }, meta: { requestId: 'unselected-account' } } }));
+  await page.goto(`/admin/ads/featured?lang=${lang}`);
+  await page.getByRole('button', { name: ar ? 'إضافة إعلان مميز' : 'Add featured ad', exact: true }).click();
+  const editor = page.getByRole('region', { name: ar ? 'تعديل الإعلان المميز' : 'Featured ad editor' });
+  const title = editor.locator('.admin-featured__texts input').first();
+  await title.fill('عنوان محفوظ');
+  const writes: string[] = [];
+  page.on('request', request => { if (request.url().includes('/api/v1/admin/banners') && ['POST', 'PATCH'].includes(request.method())) writes.push(request.url()); });
+  await editor.locator('form').evaluate(form => (form as HTMLFormElement).requestSubmit());
+  await expect(editor.getByRole('alert')).toContainText(ar ? 'راجع الحساب' : 'Check advertiser');
+  await expect(title).toHaveValue('عنوان محفوظ');
+  expect(writes).toEqual([]);
+  await expect(editor.locator('form')).toHaveAttribute('novalidate', '');
 });
