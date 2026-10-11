@@ -24,14 +24,16 @@ import './compare.css';
 type PublicComparisonProperty = PublicPropertyComparisonData['items'][number];
 
 const COMPARISON_STICKY_TRAY_CSS = `
-.public-property-comparison__sticky-items{display:flex;gap:.5rem;min-inline-size:0}
-.public-property-comparison__sticky-item{display:flex;align-items:center;gap:.5rem;inline-size:15rem;min-inline-size:0;padding:.35rem .5rem;background:#f8efd9;border-radius:var(--radius-pill)}
-.public-property-comparison__sticky-item>img{inline-size:2rem;block-size:2rem;object-fit:cover;border-radius:50%}
+.public-property-comparison__sticky-actions{gap:.75rem;padding:.75rem 1rem;flex-wrap:wrap}
+.public-property-comparison__sticky-title{white-space:nowrap;font-size:.875rem}
+.public-property-comparison__sticky-items{display:flex;gap:.5rem;min-inline-size:0;max-inline-size:36rem;flex:1}
+.public-property-comparison__sticky-item{display:flex;align-items:center;gap:.5rem;flex:1;min-inline-size:0;padding:.25rem .5rem;background:#f8efd9;border-radius:.75rem}
+.public-property-comparison__sticky-item>img{inline-size:2.25rem;block-size:2.25rem;object-fit:cover;border-radius:.5rem;flex-shrink:0}
 .public-property-comparison__sticky-item>span{overflow:hidden;flex:1;font-size:.75rem;font-weight:var(--font-weight-semibold);text-overflow:ellipsis;white-space:nowrap}
-.public-property-comparison__sticky-item button{min-block-size:1.5rem;padding-inline:.25rem;color:var(--color-text-muted);background:transparent}
-.public-property-comparison__sticky-clear{color:var(--color-text-muted)!important;background:transparent!important}
-@media(max-width:700px){.public-property-comparison__sticky-actions{justify-content:center;gap:.4rem;min-block-size:4rem;padding:.5rem}.public-property-comparison__sticky-title,.public-property-comparison__sticky-item>span,.public-property-comparison__sticky-clear-long{position:absolute;inline-size:1px;block-size:1px;overflow:hidden;clip-path:inset(50%)}.public-property-comparison__sticky-items{gap:.35rem}.public-property-comparison__sticky-item{position:relative;inline-size:3.25rem;flex:0 0 3.25rem;padding:.2rem;background:transparent}.public-property-comparison__sticky-item>img{inline-size:2.75rem;block-size:2.75rem}.public-property-comparison__sticky-item button{position:absolute;inset-block-start:-.15rem;inset-inline-end:-.15rem;display:grid;place-items:center;inline-size:1.1rem;min-block-size:1.1rem;padding:0;color:#fff;background:var(--color-text-strong);border-radius:50%;font-size:.75rem}.public-property-comparison__sticky-actions>button{flex:0 0 auto;min-block-size:2.5rem;padding-inline:.75rem}.public-property-comparison__sticky-clear-short{display:inline}}
-@media(min-width:701px){.public-property-comparison__sticky-clear-short{display:none}}
+.public-property-comparison__sticky-actions .public-property-comparison__sticky-item button{min-inline-size:2.75rem;padding:0;color:var(--color-text-strong);background:transparent}
+.public-property-comparison__sticky-actions>button{white-space:nowrap;flex-shrink:0}
+.public-property-comparison__sticky-clear{color:var(--color-text-strong)!important;background:transparent!important}
+@media(max-width:700px){.public-property-comparison__sticky-title{display:none}.public-property-comparison__sticky-items{flex-basis:100%;max-inline-size:none}.public-property-comparison__sticky-actions{justify-content:flex-end;padding:.5rem 1rem calc(.5rem + env(safe-area-inset-bottom));gap:.5rem}.public-property-comparison__sticky-compare{flex:1}.public-property-comparison{padding-block-end:8rem}}
 `;
 
 export type PublicPropertyComparisonInitialState = 'loading' | 'retry' | 'empty' | 'unavailable';
@@ -351,15 +353,15 @@ function ComparisonContent({
       </section>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
       <style>{COMPARISON_STICKY_TRAY_CSS}</style>
-      <div className="public-property-comparison__sticky-actions" aria-label={copy.title}>
-        <strong className="public-property-comparison__sticky-title">{copy.title}</strong>
+      <aside className="public-property-comparison__sticky-actions" aria-label={copy.title}>
+        <strong className="public-property-comparison__sticky-title">{copy.selectedCount(data.items.length)}</strong>
         <div className="public-property-comparison__sticky-items">
           {data.items.map(property => {
             const title = localizedText(property.name, locale) ?? property.slug;
             return (
               <span className="public-property-comparison__sticky-item" key={property.id}>
                 <PublicMediaImage src={property.imageUrl} alt="" fallback={<span aria-hidden="true">⌂</span>} />
-                <span>{title}</span>
+                <span title={title}>{title}</span>
                 <button type="button" aria-label={`${copy.remove}: ${title}`} onClick={() => onRemove(property.id)}>×</button>
               </span>
             );
@@ -368,15 +370,14 @@ function ComparisonContent({
         <button
           type="button"
           className="public-property-comparison__sticky-compare"
-          onClick={() => document.querySelector('.public-property-comparison__selection')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          onClick={() => document.querySelector('.public-property-comparison__details')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
         >
           {copy.compareNow}
         </button>
         <button type="button" className="public-property-comparison__sticky-clear" aria-label={copy.clearAll} onClick={onClear}>
-          <span className="public-property-comparison__sticky-clear-long">{copy.clearAll}</span>
-          <span className="public-property-comparison__sticky-clear-short" aria-hidden="true">{copy.clearShort}</span>
+          {copy.clearAll}
         </button>
-      </div>
+      </aside>
     </>
   );
 }
