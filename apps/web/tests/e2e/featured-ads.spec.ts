@@ -13,6 +13,15 @@ test('creates the complete featured card, previews both sizes and saves fields a
   await editor.getByRole('option', { name: ar ? 'عقار منشور' : 'Published property' }).waitFor({ state: 'attached' });
   await editor.locator('select').nth(1).selectOption(`property:${propertyId}`);
   const fields = editor.locator('.admin-featured__texts');
+  for (const label of await fields.locator('label').all()) {
+    const caption = await label.locator('span').boundingBox();
+    const control = await label.locator('input,textarea').boundingBox();
+    const bounds = await label.boundingBox();
+    expect(caption).not.toBeNull(); expect(control).not.toBeNull(); expect(bounds).not.toBeNull();
+    expect(caption!.y + caption!.height).toBeLessThanOrEqual(control!.y - 6);
+    expect(control!.x).toBeGreaterThanOrEqual(bounds!.x - 1);
+    expect(control!.x + control!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width + 1);
+  }
   const texts = [['عنوان الإعلان', 'Featured property'], ['وصف الإعلان', 'Modern homes with gardens'], ['مساحات تبدأ من 220 م²', 'From 220 sqm'], ['مقدم 10% وتقسيط', '10% deposit and installments'], ['اكتشف العقار', 'Explore property']];
   for (let i = 0; i < texts.length; i++) {
     const inputs = fields.nth(i).locator('input,textarea');
