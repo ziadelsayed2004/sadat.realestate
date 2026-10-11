@@ -67,6 +67,9 @@ describe('Admin property management contracts and views', () => {
     const result = renderWithLocale(<AdminProperties locale={locale} session={session} view="review" initialProperties={{ ...properties, items: [{ ...published, availableActions: [...published.availableActions] }] }} />, { locale });
     const row = await screen.findByTestId(`admin-property-${property.id}`);
     expect(row.querySelector('img')).toHaveAttribute('src', published.imageUrl);
+    expect(row).toHaveTextContent(locale === 'ar' ? 'عقار · بيع' : 'Property · Sale');
+    expect(row.querySelector(`a[href="/admin/providers/${property.source.providerId}?lang=${locale}"]`)).toHaveTextContent(locale === 'ar' ? 'شركة مطوّرة' : 'Developer company');
+    expect(row).not.toHaveTextContent('developer_company');
     expect(row.querySelector('a[href$="#admin-property-editor"]')).toBeInTheDocument();
     expect(row.querySelector('a[href$="#admin-property-actions"]')).toHaveAttribute('href', `/admin/properties/review?propertyId=${property.id}&action=archive&lang=${locale}#admin-property-actions`);
     expect(row.querySelector(`a[href="/properties/nile-villa?lang=${locale}"]`)).toBeInTheDocument();

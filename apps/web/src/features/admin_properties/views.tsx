@@ -147,6 +147,16 @@ function PageHeading({ copy, view }: { readonly copy: AdminPropertiesCopy; reado
   return <div className="admin-properties__heading"><div><p className="admin-properties__eyebrow">{copy.eyebrow}</p><h1>{copy.titles[view]}</h1><p>{copy.descriptions[view]}</p></div></div>;
 }
 
+function propertyLabels(locale: SupportedLocale) {
+  return locale === 'ar'
+    ? { source: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' }, kind: { property: 'عقار', unit: 'وحدة' }, transaction: { sale: 'بيع', rent: 'إيجار' } }
+    : { source: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' }, kind: { property: 'Property', unit: 'Unit' }, transaction: { sale: 'Sale', rent: 'Rent' } };
+}
+
+function PropertySource({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {
+  return <div className="admin-properties__source"><a className="admin-properties__action-link" href={localePath(locale, `/admin/providers/${property.source.providerId}`)}>{propertyLabels(locale).source[property.source.sourceType]}</a><code dir="ltr">{property.source.providerId}</code></div>;
+}
+
 function safeSource(property: PropertyData): string {
   return `${property.source.sourceType} · ${property.source.providerId}`;
 }
@@ -212,8 +222,15 @@ function PropertyTable({ locale, data, onPage, authorization, apiOrigin }: { rea
   return (
     <section className="admin-properties__panel" aria-labelledby="admin-properties-table-title">
       <div className="admin-properties__panel-heading"><div><h2 id="admin-properties-table-title">{copy.allProperties}</h2><p>{copy.count(data.total)}</p></div></div>
-      <div className="admin-properties__table-wrap"><table className="admin-properties__table admin-properties__table--properties"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.name}</th><th scope="col">{copy.columns.source}</th><th scope="col">{copy.columns.kind}</th><th scope="col">{copy.columns.transaction}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.active}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(property => {
-        return <tr key={property.id} data-testid={`admin-property-${property.id}`}><td><code>{property.id}</code></td><td><div className="admin-properties__thumbnail"><AdminPropertyCover property={property} locale={locale} authorization={authorization} apiOrigin={apiOrigin} /></div><strong>{localizedValue(property.name, locale)}</strong><small>{property.slug}</small></td><td>{safeSource(property)}</td><td>{property.kind}</td><td>{property.transactionType}</td><td><StatusBadge status={property.status} locale={locale} /></td><td>{property.active ? copy.active : copy.inactive}</td><td>{dateLabel(property.updatedAt, locale)}</td><td><PropertyLinks locale={locale} property={property} /></td></tr>;
+      <div className="admin-properties__table-wrap"><table className="admin-properties__table admin-properties__table--properties"><thead><tr><th scope="col">{copy.columns.name}</th><th scope="col">{copy.columns.source}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(property => {
+        const labels = propertyLabels(locale);
+        return <tr key={property.id} data-testid={`admin-property-${property.id}`}>
+          <td><div className="admin-properties__listing"><div className="admin-properties__thumbnail"><AdminPropertyCover property={property} locale={locale} authorization={authorization} apiOrigin={apiOrigin} /></div><div className="admin-properties__listing-copy"><strong>{localizedValue(property.name, locale)}</strong><small>{labels.kind[property.kind]} · {labels.transaction[property.transactionType]}</small><code dir="ltr" title={copy.columns.id}>{property.id}</code></div></div></td>
+          <td data-label={copy.columns.source}><PropertySource property={property} locale={locale} /></td>
+          <td><StatusBadge status={property.status} locale={locale} /><small>{property.active ? copy.active : copy.inactive}</small></td>
+          <td data-label={copy.columns.updated}>{dateLabel(property.updatedAt, locale)}</td>
+          <td><PropertyLinks locale={locale} property={property} /></td>
+        </tr>;
       })}</tbody></table></div>
       <div className="admin-properties__pagination"><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => onPage(page - 1)}>{copy.previous}</Button><span>{copy.page(page, totalPages)}</span><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => onPage(page + 1)}>{copy.next}</Button></div>
     </section>
