@@ -167,11 +167,31 @@ describe('Admin account and verification views', () => {
 
 
 describe('empty account filter recovery', () => {
+  it.each(['ar', 'en'] as const)('gives seekers their own page and retains seeker scope through status filters and clearing in %s', async locale => {
+    const copy = getAdminAccountsCopy(locale);
+    const summary = { total: 30, seekers: 30, providers: 0, verified: 28, pending: 1, restricted: 1 };
+    const loadUsers = vi.fn().mockResolvedValueOnce({ ...userList, total: 30, summary })
+      .mockResolvedValueOnce({ ...userList, items: [], total: 0, summary })
+      .mockResolvedValue({ ...userList, total: 30, summary });
+    renderWithLocale(<AdminAccounts locale={locale} session={session} view="seekers" loadUsers={loadUsers} />, { locale });
+    expect(await screen.findByRole('heading', { name: copy.seekers.title, level: 1 })).toBeInTheDocument();
+    expect(document.querySelector('.admin-dashboard__navigation a[aria-current="page"]')).toHaveAttribute('href', `/admin/property-seekers?lang=${locale}`);
+    expect(screen.queryByLabelText(copy.users.roleLabel)).not.toBeInTheDocument();
+    expect(loadUsers).toHaveBeenLastCalledWith({ page: 1, limit: 20, roleType: 'seeker' }, expect.any(AbortSignal));
+    fireEvent.change(screen.getByLabelText(copy.users.statusLabel), { target: { value: 'suspended' } });
+    expect(await screen.findByRole('heading', { name: copy.seekers.emptyTitle })).toBeInTheDocument();
+    expect(loadUsers).toHaveBeenLastCalledWith({ page: 1, limit: 20, roleType: 'seeker', status: 'suspended' }, expect.any(AbortSignal));
+    expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('30');
+    fireEvent.click(screen.getByRole('button', { name: copy.common.clear }));
+    await waitFor(() => expect(screen.getByTestId(`admin-user-${user.id}`)).toBeInTheDocument());
+    expect(loadUsers).toHaveBeenLastCalledWith({ page: 1, limit: 20, roleType: 'seeker' }, expect.any(AbortSignal));
+  });
+
   it('keeps all-page account totals when a status is empty and restores initial rows on All', async () => {
     const summary = { total: 45, seekers: 30, providers: 15, verified: 40, pending: 3, restricted: 2 };
     const loadUsers = vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, limit: 20, summary });
     renderWithLocale(<AdminAccounts locale="en" session={session} view="users" initialListData={{ ...userList, total: 45, summary }} loadUsers={loadUsers} />, { locale: 'en' });
-    fireEvent.click(screen.getByRole('button', { name: 'Pending review' }));
+    fireEvent.change(screen.getByLabelText(getAdminAccountsCopy('en').users.statusLabel), { target: { value: 'pending_review' } });
     await waitFor(() => expect(document.querySelector('[data-admin-accounts-state="empty"]')).not.toBeNull());
     expect(loadUsers).toHaveBeenCalledWith({ page: 1, limit: 20, status: 'pending_review' }, expect.any(AbortSignal));
     expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45');
@@ -179,7 +199,7 @@ describe('empty account filter recovery', () => {
     expect(screen.getByTestId('admin-accounts-metric-2')).toHaveTextContent('30');
     expect(screen.getByTestId('admin-accounts-metric-4')).toHaveTextContent('40');
     expect(screen.getByTestId('admin-accounts-metric-5')).toHaveTextContent('3');
-    fireEvent.click(screen.getByRole('button', { name: 'All' }));
+    fireEvent.change(screen.getByLabelText(getAdminAccountsCopy('en').users.statusLabel), { target: { value: 'all' } });
     await waitFor(() => expect(screen.getByTestId(`admin-user-${user.id}`)).toBeInTheDocument());
     expect(screen.getByTestId('admin-accounts-total')).toHaveTextContent('45');
   });

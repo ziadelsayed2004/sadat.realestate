@@ -48,6 +48,7 @@
 .admin-accounts__field {
   display: grid;
   flex: 1 1 220px;
+  min-inline-size: 0;
   gap: 6px;
 }
 
@@ -66,6 +67,9 @@
   background: #fff;
   color: #1b2942;
 }
+
+.admin-accounts__filters input { box-sizing: border-box; block-size: 44px; min-inline-size: 0; inline-size: 100%; }
+.admin-accounts__filter-actions .ui-button { min-block-size: 44px; }
 
 .admin-accounts__field select {
   box-sizing: border-box;

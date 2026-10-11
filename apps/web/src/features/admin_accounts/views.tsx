@@ -179,7 +179,7 @@ function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, o
   return (
     <>
       {view === 'providers' ? strip(copy.common.providerTypeFilter, typeEntries, providerTypeFilter, value => onProviderTypeChange(value as ProviderTypeFilter)) : null}
-      {view !== 'seekers' ? strip(copy.common.recordStatusFilter, statusEntries, statusFilter, value => onStatusChange(value as UserStatusFilter | ProviderStatusFilter)) : null}
+      {view === 'providers' || view === 'verification' ? strip(copy.common.recordStatusFilter, statusEntries, statusFilter, value => onStatusChange(value as UserStatusFilter | ProviderStatusFilter)) : null}
     </>
   );
 }
@@ -223,7 +223,7 @@ function FilterBar({
   readonly onClear: () => void;
 }) {
   const copy = getAdminAccountsCopy(locale);
-  const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users;
+  const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : view === 'seekers' ? { ...copy.users, ...copy.seekers } : copy.users;
   const isUsers = view === 'users' || view === 'seekers';
   return (
     <form className="admin-accounts__filters" role="search" aria-label={viewCopy.searchLabel} onSubmit={event => { event.preventDefault(); onSubmit(); }}>
@@ -231,7 +231,7 @@ function FilterBar({
         <label htmlFor="admin-accounts-search">{viewCopy.searchLabel}</label>
         <input id="admin-accounts-search" type="search" value={searchInput} onChange={event => onSearchChange(event.target.value)} placeholder={viewCopy.searchPlaceholder} />
       </div>
-      {isUsers ? (
+      {view === 'users' ? (
         <div className="admin-accounts__field">
           <label htmlFor="admin-accounts-role">{copy.users.roleLabel}</label>
           <select id="admin-accounts-role" value={roleFilter} onChange={event => onRoleChange(event.target.value as UserRoleFilter)}>
@@ -240,15 +240,16 @@ function FilterBar({
             <option value="provider">{getAdminAccountsCopy(locale).roleLabels.provider}</option>
           </select>
         </div>
-      ) : (
+      ) : null}
+      <div className="admin-accounts__field">
+        <label htmlFor="admin-accounts-status">{viewCopy.statusLabel}</label>
+        <select id="admin-accounts-status" value={statusFilter} onChange={event => onStatusChange(event.target.value as UserStatusFilter | ProviderStatusFilter)}>
+          <option value="all">{viewCopy.all}</option>
+          {(isUsers ? Object.entries(copy.accountStatusLabels) : Object.entries(copy.statusLabels)).map(([status, label]) => <option key={status} value={status}>{label}</option>)}
+        </select>
+      </div>
+      {!isUsers ? (
         <>
-          <div className="admin-accounts__field">
-            <label htmlFor="admin-accounts-status">{viewCopy.statusLabel}</label>
-            <select id="admin-accounts-status" value={statusFilter} onChange={event => onStatusChange(event.target.value as UserStatusFilter | ProviderStatusFilter)}>
-              <option value="all">{viewCopy.all}</option>
-              {(isUsers ? Object.entries(copy.accountStatusLabels) : Object.entries(copy.statusLabels)).map(([status, label]) => <option key={status} value={status}>{label}</option>)}
-            </select>
-          </div>
           <div className="admin-accounts__field">
             <label htmlFor="admin-accounts-provider-type">{viewCopy.typeLabel}</label>
             <select id="admin-accounts-provider-type" value={providerTypeFilter} onChange={event => onProviderTypeChange(event.target.value as ProviderTypeFilter)}>
@@ -257,7 +258,7 @@ function FilterBar({
             </select>
           </div>
         </>
-      )}
+      ) : null}
       <div className="admin-accounts__filter-actions">
         <Button type="submit" size="sm">{copy.common.apply}</Button>
         <Button type="button" variant="secondary" size="sm" onClick={onClear}>{copy.common.clear}</Button>
@@ -266,8 +267,9 @@ function FilterBar({
   );
 }
 
-function UsersTable({ data, locale, search, onPageChange, authorization, apiOrigin, onDeleted }: { readonly data: AdminAccountUserListData; readonly locale: SupportedLocale; readonly search: string; readonly onPageChange: (page: number) => void; readonly authorization: AdminAccountsAuthorizationSource | undefined; readonly apiOrigin: string | undefined; readonly onDeleted: () => void }) {
-  const copy = getAdminAccountsCopy(locale).users;
+function UsersTable({ data, locale, search, onPageChange, authorization, apiOrigin, onDeleted, view }: { readonly data: AdminAccountUserListData; readonly locale: SupportedLocale; readonly search: string; readonly onPageChange: (page: number) => void; readonly authorization: AdminAccountsAuthorizationSource | undefined; readonly apiOrigin: string | undefined; readonly onDeleted: () => void; readonly view: 'users' | 'seekers' }) {
+  const allCopy = getAdminAccountsCopy(locale);
+  const copy = view === 'seekers' ? { ...allCopy.users, ...allCopy.seekers } : allCopy.users;
   const filteredItems = data.items.filter(user => {
     const value = `${userName(user)} ${user.email ?? ''} ${user.phone ?? ''} ${user.id}`.toLocaleLowerCase(locale);
     return value.includes(search.toLocaleLowerCase(locale));
@@ -409,9 +411,10 @@ function ListContent({
   readonly onClear: () => void;
 }) {
   const copy = getAdminAccountsCopy(locale);
-  const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users;
+  const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : view === 'seekers' ? { ...copy.users, ...copy.seekers } : copy.users;
   const headingLinks: ReadonlyArray<readonly [string, string]> = [
     [copy.common.addUser, '/admin/admin-users/new'],
+    [copy.users.title, '/admin/users'],
     [copy.common.seekers, '/admin/property-seekers'],
     [copy.common.propertyProviders, '/admin/providers']
   ];
@@ -424,7 +427,7 @@ function ListContent({
           <p className="admin-accounts__description">{viewCopy.description}</p>
         </div>
         <nav className="admin-accounts__heading-actions" aria-label={copy.common.headingActionsLabel}>
-          {headingLinks.map(([label, path], index) => <a className={index === 0 ? 'admin-accounts__primary-link' : undefined} href={localePath(locale, path)} key={path}>{label}</a>)}
+          {headingLinks.filter(([, path]) => path !== (view === 'seekers' ? '/admin/property-seekers' : view === 'users' ? '/admin/users' : view === 'providers' ? '/admin/providers' : '/admin/verification')).map(([label, path], index) => <a className={index === 0 ? 'admin-accounts__primary-link' : undefined} href={localePath(locale, path)} key={path}>{label}</a>)}
         </nav>
       </div>
       <AccountMetricStrip view={view} data={data} locale={locale} />
@@ -432,7 +435,7 @@ function ListContent({
       <FilterBar locale={locale} view={view} searchInput={searchInput} roleFilter={roleFilter} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={onSearchChange} onRoleChange={onRoleChange} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} onSubmit={onSubmit} onClear={onClear} />
       <section className="admin-accounts__panel" aria-labelledby="admin-accounts-list-title">
         <h2 id="admin-accounts-list-title" className="a11y-visually-hidden">{viewCopy.title}</h2>
-        {view === 'users' || view === 'seekers' ? <UsersTable data={data as AdminAccountUserListData} locale={locale} search={search} onPageChange={onPageChange} authorization={authorization} apiOrigin={apiOrigin} onDeleted={onDeleted} /> : <ProvidersTable data={data as AdminProviderListData} locale={locale} view={view} search={search} onPageChange={onPageChange} />}
+        {view === 'users' || view === 'seekers' ? <UsersTable view={view} data={data as AdminAccountUserListData} locale={locale} search={search} onPageChange={onPageChange} authorization={authorization} apiOrigin={apiOrigin} onDeleted={onDeleted} /> : <ProvidersTable data={data as AdminProviderListData} locale={locale} view={view} search={search} onPageChange={onPageChange} />}
       </section>
     </main>
   );
@@ -569,7 +572,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
   const providerLoader = useMemo(() => loadProvider ?? createAdminProviderLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadProvider]);
   const documentAccessLoader = useMemo(() => loadDocumentAccess ?? createAdminDocumentAccessLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadDocumentAccess]);
   const providerReviewer = useMemo(() => reviewProvider ?? createAdminProviderReviewer({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, reviewProvider]);
-  const activePath = isUserView ? '/admin/users' : '/admin/providers';
+  const activePath = view === 'seekers' ? '/admin/property-seekers' : isUserView ? '/admin/users' : '/admin/providers';
   const backPath = localePath(locale, view === 'seekers' ? '/admin/property-seekers' : view === 'verification' ? '/admin/verification' : activePath);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 

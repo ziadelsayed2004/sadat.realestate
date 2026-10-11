@@ -34,6 +34,7 @@ export interface AdminAccountsCopy {
     readonly emptyBody: string;
     readonly columns: Readonly<Record<'name' | 'type' | 'status' | 'accountStatus' | 'company' | 'updated' | 'actions', string>>;
   };
+  readonly seekers: Readonly<Pick<AdminAccountsCopy['users'], 'title' | 'description' | 'searchLabel' | 'emptyTitle' | 'emptyBody'>>;
   readonly verification: {
     readonly eyebrow: string;
     readonly title: string;

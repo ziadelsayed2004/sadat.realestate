@@ -286,7 +286,7 @@
   "admin_accounts/copy#getAdminAccountsCopy": {
     "users": {
       "eyebrow": "Account administration",
-      "title": "Users and accounts",
+      "title": "All users",
       "description": "Review seeker and provider accounts using the server projection approved for administrators.",
       "searchLabel": "Search the loaded page",
       "searchPlaceholder": "Name, email, phone, or account ID",
@@ -307,6 +307,13 @@
         "updated": "Updated",
         "actions": "Actions"
       }
+    },
+    "seekers": {
+      "title": "Property seekers",
+      "description": "Review property seeker accounts, search their details, and filter by account status.",
+      "searchLabel": "Search the displayed seekers",
+      "emptyTitle": "No property seekers",
+      "emptyBody": "No seeker accounts match the current filters."
     },
     "providers": {
       "eyebrow": "Account administration",
