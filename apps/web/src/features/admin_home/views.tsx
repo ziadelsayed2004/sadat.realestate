@@ -26,6 +26,7 @@ import {
   ADMIN_CMS_HOMEPAGE_ROUTE,
   ADMIN_CMS_TIPS_ROUTE,
   createAdminHomeSource,
+  type AdminHomeAuthorizationSource,
   type AdminHomeCmsContent,
   type AdminHomeSource
 } from './data.ts';
@@ -40,11 +41,12 @@ type AdminHomeRoute = 'banners' | 'banner_create' | 'tips' | 'homepage' | 'not_f
 type DraftLocalized = Partial<Record<SupportedLocale, string>>;
 type HomeContentItem = CmsAdminTip | CmsAdminHomepageSection;
 
-function mutationMessage(error: unknown, copy: AdminHomeCopy, creating = false): string {
+function mutationMessage(error: unknown, copy: AdminHomeCopy, locale: SupportedLocale, creating = false): string {
   if (error instanceof ApiClientError) {
     if (error.status === 404) return creating ? copy.mutation.placementNotFound : copy.mutation.notFound;
     if (error.status === 409) return copy.mutation.conflict;
-    if (error.status === 401 || error.status === 403) return copy.states.permission.body;
+    if (error.status === 401) return locale === 'ar' ? 'انتهت جلسة الإدارة؛ سجّل دخولك.' : 'Admin session expired; sign in again.';
+    if (error.status === 403) return copy.states.permission.body;
     if (error.status === 400) return copy.validation;
     if (error.code === 'NETWORK_ERROR' || error.code === 'ABORTED') return copy.states.retry.body;
   }
@@ -55,7 +57,7 @@ export interface AdminHomeProps {
   readonly url?: string | undefined;
   readonly locale: SupportedLocale;
   readonly session: RouteSession;
-  readonly authClient?: { readonly getAuthorizationHeader: () => string | undefined } | undefined;
+  readonly authClient?: AdminHomeAuthorizationSource | undefined;
   readonly apiOrigin?: string | undefined;
   readonly initialBanners?: AdBannerListData | undefined;
   readonly initialContent?: AdminHomeCmsContent | undefined;
@@ -200,17 +202,22 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
   const controls = getBannerControlCopy(locale);
   const [editing, setEditing] = useState<AdBanner>();
   const [archiveId, setArchiveId] = useState<string>();
+  async function run(item: AdBanner, task: () => Promise<void>, conflict = copy.mutation.conflict) {
+    setBusyId(item.id); setFeedback(undefined);
+    try { await task(); }
+    catch (error) { setFeedback(error instanceof ApiClientError && error.status === 409 ? conflict : mutationMessage(error, copy, locale)); }
+    finally { setBusyId(undefined); }
+  }
   async function transition(item: AdBanner, status: 'draft' | 'active' | 'scheduled' | 'archived') {
     if (status === 'active' || status === 'scheduled') {
       if (!(item.mediaIds ?? (item.mediaId ? [item.mediaId] : [])).length) { setFeedback(controls.mediaRequired); return; }
       if (new Date(item.endAt).getTime() <= Date.now()) { setFeedback(controls.expired); return; }
     }
-    setBusyId(item.id); setFeedback(undefined);
-    try {
+    await run(item, async () => {
       const updated = await source.updateBanner(item.id, { expectedVersion: item.version, status, reason: `Banner display: ${status}` });
       onChanged({ ...data, items: data.items.map(row => row.id === item.id ? updated : row) });
       setArchiveId(undefined); setEditing(undefined);
-    } catch (error) { setFeedback(error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy)); } finally { setBusyId(undefined); }
+    }, controls.conflict);
   }
 
   async function reorder(item: AdBanner, direction: -1 | 1): Promise<void> {
@@ -223,21 +230,19 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
     const adjacent = reorderedItems[nextIndex]!;
     reorderedItems[index] = adjacent;
     reorderedItems[nextIndex] = current;
-    setBusyId(item.id); setFeedback(undefined);
-    try {
+    await run(item, async () => {
       const reordered = await source.reorderBanners({ placementKey: item.placementKey, items: reorderedItems.map((candidate, order) => ({ bannerId: candidate.id, sortOrder: placementItems[order]!.sortOrder, expectedVersion: candidate.version })), reason: 'Reorder approved homepage banners' });
       let placementCursor = 0;
       onChanged({ ...data, items: data.items.map(candidate => candidate.placementKey === item.placementKey ? reordered[placementCursor++] ?? candidate : candidate) });
-    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setBusyId(undefined); }
+    });
   }
 
   async function showPreview(item: AdBanner): Promise<void> {
-    setBusyId(item.id); setFeedback(undefined);
-    try {
+    await run(item, async () => {
       const result = await source.previewBanner(item.id);
       const items = result.mediaItems ?? (result.media ? [result.media] : []);
       setPreview({ banner: result.banner, imageUrls: await Promise.all(items.map(item => source.loadMediaPreview(item.url))) });
-    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setBusyId(undefined); }
+    });
   }
 
   return (
@@ -318,7 +323,7 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
       setDirty(false);
       setFeedback({ tone: 'success', text: created.status === 'draft' ? controls.draftSaved : copy.saved });
       onSaved(created);
-    } catch (error) { setFeedback({ tone: 'error', text: mutationMessage(error, copy, creating) }); } finally { setSaving(false); }
+    } catch (error) { setFeedback({ tone: 'error', text: mutationMessage(error, copy, locale, creating) }); } finally { setSaving(false); }
   }
 
   useEffect(() => {
@@ -344,7 +349,7 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
     try {
       const updated = await source.updateBanner(savedBanner.id, { expectedVersion: savedBanner.version, status: new Date(savedBanner.startAt).getTime() > Date.now() ? 'scheduled' : 'active', reason: 'Publish saved banner' });
       setSavedBanner(updated); onSaved(updated); setFeedback({ tone: 'success', text: controls.published });
-    } catch (error) { setFeedback({ tone: 'error', text: error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy) }); } finally { setSaving(false); }
+    } catch (error) { setFeedback({ tone: 'error', text: error instanceof ApiClientError && error.status === 409 ? controls.conflict : mutationMessage(error, copy, locale) }); } finally { setSaving(false); }
   }
   return <section className="admin-home__editor" data-testid="admin-home-banner-editor"><div className="admin-home__editor-heading"><div><h2>{initialBanner ? controls.edit : copy.newBanner}</h2><p>{copy.bannerDescription}</p></div><a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div><form onChange={() => setDirty(true)} onSubmit={event => { void submit(event); }}>{linkedRequestId ? <BannerDestinationHint requestId={linkedRequestId} locale={locale} /> : null}<div className="admin-home__form-grid"><label htmlFor="admin-home-banner-placement">{copy.placement}<select id="admin-home-banner-placement" disabled={Boolean(linkedRequestId)} value={placementKey} onChange={event => setPlacementKey(event.target.value)} required><BannerPlacementOptions placements={placements} placementKey={placementKey} campaign={campaign} locale={locale} /></select></label><label htmlFor="admin-home-banner-target">{copy.targetUrl}<input id="admin-home-banner-target" required={Boolean(linkedRequestId)} type="url" value={targetUrl} onChange={event => setTargetUrl(event.target.value)} placeholder="https://" /></label><label htmlFor="admin-home-banner-start">{copy.schedule.startDate}<input id="admin-home-banner-start" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={startDate} onChange={event => setStartDate(event.target.value)} required /></label><BannerTimeField id="admin-home-banner-start-time" label={copy.schedule.startTime} locale={locale} value={startTime} disabled={Boolean(linkedRequestId)} onChange={setStartTime} /><label htmlFor="admin-home-banner-end">{copy.schedule.endDate}<input id="admin-home-banner-end" disabled={Boolean(linkedRequestId)} type="date" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={endDate} onChange={event => setEndDate(event.target.value)} required /></label><BannerTimeField id="admin-home-banner-end-time" label={copy.schedule.endTime} locale={locale} value={endTime} disabled={Boolean(linkedRequestId)} onChange={setEndTime} /></div><AdPlacementGuide placementKey={placementKey} locale={locale} /><p className="admin-home__hint" id="admin-home-banner-schedule-hint">{copy.schedule.hint}</p><BannerSchedulePreview locale={locale} startDate={startDate} startTime={startTime} endDate={endDate} endTime={endTime} /><LocalizedFields prefix="admin-home-banner-title" label={copy.title} value={title} onChange={(key, value) => setTitle(current => ({ ...current, [key]: value }))} copy={copy} /><LocalizedFields prefix="admin-home-banner-body" label={copy.body} value={bannerBody} onChange={(key, value) => setBannerBody(current => ({ ...current, [key]: value }))} multiline copy={copy} /><p className="admin-home__hint">{bannerContentHint}</p><LocalizedFields prefix="admin-home-banner-alt" label={copy.altText} value={altText} onChange={(key, value) => setAltText(current => ({ ...current, [key]: value }))} copy={copy} /><fieldset className="admin-home__media-fields"><legend>{locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}</legend><label htmlFor="admin-home-banner-file">{controls.upload}<input id="admin-home-banner-file" type="file" multiple disabled={saving} accept="image/png,image/jpeg,image/webp" onChange={event => {
       const selected = Array.from(event.target.files ?? []);
@@ -384,7 +389,7 @@ function ContentForm({ namespace, item, items, locale, source, onSaved, onCancel
     try {
       const next = item === undefined ? await source.updateContent(namespace, common) : await source.updateContent(namespace, { id: item.id, version: item.version, ...changes });
       onSaved(next); onCancel();
-    } catch (error) { setFeedback(mutationMessage(error, copy)); } finally { setSaving(false); }
+    } catch (error) { setFeedback(mutationMessage(error, copy, locale)); } finally { setSaving(false); }
   }
 
   return <section className="admin-home__editor" data-testid={`admin-home-${namespace}-editor`}><div className="admin-home__editor-heading"><div><h2>{item === undefined ? `${copy.add}: ${isTip ? copy.tips : copy.homepage}` : `${copy.save}: ${localeValue(item.title, locale)}`}</h2><p>{isTip ? copy.tipsDescription : copy.homepageDescription}</p></div><Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div><div className={isTip ? "admin-home__tip-workspace" : undefined}><form onSubmit={event => { void submit(event); }}><div className="admin-home__form-grid">{isTip ? <label htmlFor={`admin-home-${namespace}-key`}>{copy.key}<input id={`admin-home-${namespace}-key`} value={key} onChange={event => setKey(event.target.value)} pattern="[a-z][a-z0-9_]{1,63}" disabled={item !== undefined} required /></label> : <HomepageSectionPicker value={key} locale={locale} existingKeys={items.map(row => row.key)} editing={item !== undefined} onChange={setKey} />}<label htmlFor={`admin-home-${namespace}-order`}><span id={`admin-home-${namespace}-order-label`}>{isTip ? (locale === 'ar' ? 'ترتيب الظهور (اختياري)' : 'Display order (optional)') : (locale === 'ar' ? 'ترتيب القائمة (اختياري)' : 'List order (optional)')}</span><input aria-labelledby={`admin-home-${namespace}-order-label`} id={`admin-home-${namespace}-order`} type="number" min="0" max="100000" step="1" value={order} onChange={event => setOrder(event.target.value)} aria-describedby="tip-order-help" placeholder={item ? String(item.order) : undefined} />{<small id="tip-order-help">{locale === 'ar' ? item ? 'سيبه فاضي للاحتفاظ بالترتيب الحالي. الرقم الأصغر يظهر أولاً.' : 'سيبه فاضي وهتتضاف آخر القائمة تلقائيًا. الرقم الأصغر يظهر أولاً.' : item ? 'Leave blank to keep the current order. Smaller numbers appear first.' : 'Leave blank to add at the end automatically. Smaller numbers appear first.'}</small>}</label></div><LocalizedFields prefix={`admin-home-${namespace}-title`} label={copy.title} value={title} onChange={(localeKey, value) => setTitle(current => ({ ...current, [localeKey]: value }))} copy={copy} /><LocalizedFields prefix={`admin-home-${namespace}-body`} label={isTip ? copy.body : (locale === 'ar' ? 'وصف القسم (اختياري)' : 'Section description (optional)')} value={body} onChange={(localeKey, value) => setBody(current => ({ ...current, [localeKey]: value }))} multiline copy={copy} /><div className="admin-home__form-grid"><label htmlFor={`admin-home-${namespace}-status`}>{copy.status}<select id={`admin-home-${namespace}-status`} value={status} onChange={event => { setStatus(event.target.value as typeof status); if (!isTip) setVisible(event.target.value === "published"); }}><option value="draft">{copy.statuses.draft}</option><option value="published">{isTip ? copy.statuses.published : (locale === "ar" ? "عرض النص في الرئيسية" : "Show text on the homepage")}</option><option value="inactive">{isTip ? copy.statuses.inactive : (locale === "ar" ? "إيقاف النص المخصص" : "Stop custom text")}</option></select></label>{isTip ? <label className="admin-home__checkbox" htmlFor={`admin-home-${namespace}-${isTip ? 'active' : 'visible'}`}><input id={`admin-home-${namespace}-${isTip ? 'active' : 'visible'}`} type="checkbox" checked={isTip ? active : visible} onChange={event => isTip ? setActive(event.target.checked) : setVisible(event.target.checked)} />{copy.active}</label> : null}</div><label htmlFor={`admin-home-${namespace}-reason`}>{copy.reason}<textarea id={`admin-home-${namespace}-reason`} value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label><div className="admin-home__inline-actions">{canUpdate ? <Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button> : <span className="admin-home__muted">{copy.states.permission.title}</span>}<Button type="button" variant="secondary" onClick={onCancel}>{copy.cancel}</Button></div>{feedback ? <p className="admin-home__feedback" data-tone="error" role="alert">{feedback}</p> : null}</form>{isTip ? <ContentPreview locale={locale} title={title} body={body} status={status} active={active} /> : null}</div></section>;

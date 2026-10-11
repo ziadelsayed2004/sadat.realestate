@@ -182,41 +182,42 @@ export function App({
   const isProviderCommission = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/commission';
   const isProviderNotifications = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/notifications';
   const isProviderSettings = route.kind === 'matched' && route.id === 'provider-dashboard' && seekerPathname === '/provider/settings';
-  const isAdminOverview = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin' || seekerPathname === '/admin/overview');
+  const isAdminRoute = route.kind === 'matched' && route.id === 'admin-dashboard';
+  const isAdminOverview = isAdminRoute && (seekerPathname === '/admin' || seekerPathname === '/admin/overview');
   const isAdminUserGuide = route.kind === 'matched' && ['/admin/user-guide', '/seeker/user-guide', '/provider/user-guide'].includes(seekerPathname);
-  const isAdminUsers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/users';
-  const isAdminSeekers = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-seekers';
-  const isAdminProviders = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/providers';
-  const isAdminVerification = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/verification';
-  const isAdminContent = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/articles', '/admin/article-categories', '/admin/content', '/admin/content/articles'].includes(seekerPathname);
-  const isAdminCmsContent = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/content/about', '/admin/content/team', '/admin/content/population-counter'].includes(seekerPathname);
-  const isAdminCommunity = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/community';
-  const isAdminCommunityComments = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/community/comments';
-  const isAdminCommunityModeration = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/community/moderation';
-  const isAdminAccountReports = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/account-reports';
-  const isAdminAccountRestrictions = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/account-restrictions';
-  const isAdminPropertyCategories = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-categories';
-  const isAdminLocations = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/locations';
-  const isAdminFeatures = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/features';
-  const isAdminProjects = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/projects';
-  const isAdminProjectReview = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/projects/review';
-  const isAdminProperties = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/properties';
-  const isAdminPropertyReview = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/properties/review';
-  const isAdminPropertyDuplicates = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/properties/possible-duplicates';
-  const isAdminPropertyReports = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/property-reports';
-  const isAdminRequests = route.kind === 'matched' && route.id === 'admin-dashboard' && ['/admin/requests', '/admin/customer-requests', '/admin/overdue-requests', '/admin/contact-requests', '/admin/viewing-requests', '/admin/search-requests', '/admin/request-issues'].includes(seekerPathname);
-  const isAdminAds = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/advertising' || seekerPathname.startsWith('/admin/ads'));
-  const isAdminCommissions = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/commissions' || seekerPathname.startsWith('/admin/commissions/'));
-  const isAdminHome = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/banners' || seekerPathname === '/admin/banners/new' || seekerPathname === '/admin/content/tips' || seekerPathname === '/admin/content/homepage');
-  const isAdminSettings = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/settings' || seekerPathname === '/admin/settings/platform' || seekerPathname === '/admin/settings/contact' || seekerPathname === '/admin/settings/social' || seekerPathname === '/admin/settings/properties' || seekerPathname === '/admin/settings/requests' || seekerPathname === '/admin/settings/advertising' || seekerPathname === '/admin/settings/seo' || seekerPathname === '/admin/settings/privacy-security' || seekerPathname === '/admin/settings/display');
-  const isAdminNotifications = route.kind === 'matched' && route.id === 'admin-dashboard' && seekerPathname === '/admin/notifications';
-  const adminAuditDetailMatch = route.kind === 'matched' && route.id === 'admin-dashboard' ? seekerPathname.match(/^\/admin\/audit-logs\/([a-f0-9]{24})$/u) : null;
-  const isAdminAudit = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/audit-logs' || adminAuditDetailMatch !== null);
-  const isAdminRbacUsers = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/admin-users' || seekerPathname === '/admin/admin-users/new' || /^\/admin\/admin-users\/[a-f0-9]{24}$/u.test(seekerPathname));
-  const isAdminRbacRoles = route.kind === 'matched' && route.id === 'admin-dashboard' && (seekerPathname === '/admin/roles' || /^\/admin\/roles\/[a-f0-9]{24}$/u.test(seekerPathname));
+  const isAdminUsers = isAdminRoute && seekerPathname === '/admin/users';
+  const isAdminSeekers = isAdminRoute && seekerPathname === '/admin/property-seekers';
+  const isAdminProviders = isAdminRoute && seekerPathname === '/admin/providers';
+  const isAdminVerification = isAdminRoute && seekerPathname === '/admin/verification';
+  const isAdminContent = isAdminRoute && ['/admin/articles', '/admin/article-categories', '/admin/content', '/admin/content/articles'].includes(seekerPathname);
+  const isAdminCmsContent = isAdminRoute && ['/admin/content/about', '/admin/content/team', '/admin/content/population-counter'].includes(seekerPathname);
+  const isAdminCommunity = isAdminRoute && seekerPathname === '/admin/community';
+  const isAdminCommunityComments = isAdminRoute && seekerPathname === '/admin/community/comments';
+  const isAdminCommunityModeration = isAdminRoute && seekerPathname === '/admin/community/moderation';
+  const isAdminAccountReports = isAdminRoute && seekerPathname === '/admin/account-reports';
+  const isAdminAccountRestrictions = isAdminRoute && seekerPathname === '/admin/account-restrictions';
+  const isAdminPropertyCategories = isAdminRoute && seekerPathname === '/admin/property-categories';
+  const isAdminLocations = isAdminRoute && seekerPathname === '/admin/locations';
+  const isAdminFeatures = isAdminRoute && seekerPathname === '/admin/features';
+  const isAdminProjects = isAdminRoute && seekerPathname === '/admin/projects';
+  const isAdminProjectReview = isAdminRoute && seekerPathname === '/admin/projects/review';
+  const isAdminProperties = isAdminRoute && seekerPathname === '/admin/properties';
+  const isAdminPropertyReview = isAdminRoute && seekerPathname === '/admin/properties/review';
+  const isAdminPropertyDuplicates = isAdminRoute && seekerPathname === '/admin/properties/possible-duplicates';
+  const isAdminPropertyReports = isAdminRoute && seekerPathname === '/admin/property-reports';
+  const isAdminRequests = isAdminRoute && ['/admin/requests', '/admin/customer-requests', '/admin/overdue-requests', '/admin/contact-requests', '/admin/viewing-requests', '/admin/search-requests', '/admin/request-issues'].includes(seekerPathname);
+  const isAdminAds = isAdminRoute && (seekerPathname === '/admin/advertising' || seekerPathname.startsWith('/admin/ads'));
+  const isAdminCommissions = isAdminRoute && (seekerPathname === '/admin/commissions' || seekerPathname.startsWith('/admin/commissions/'));
+  const isAdminHome = isAdminRoute && ['/admin/banners', '/admin/banners/new', '/admin/content/tips', '/admin/content/homepage'].includes(seekerPathname);
+  const isAdminSettings = isAdminRoute && ['/admin/settings', '/admin/settings/platform', '/admin/settings/contact', '/admin/settings/social', '/admin/settings/properties', '/admin/settings/requests', '/admin/settings/advertising', '/admin/settings/seo', '/admin/settings/privacy-security', '/admin/settings/display'].includes(seekerPathname);
+  const isAdminNotifications = isAdminRoute && seekerPathname === '/admin/notifications';
+  const adminAuditDetailMatch = isAdminRoute ? seekerPathname.match(/^\/admin\/audit-logs\/([a-f0-9]{24})$/u) : null;
+  const isAdminAudit = isAdminRoute && (seekerPathname === '/admin/audit-logs' || adminAuditDetailMatch !== null);
+  const isAdminRbacUsers = isAdminRoute && (seekerPathname === '/admin/admin-users' || seekerPathname === '/admin/admin-users/new' || /^\/admin\/admin-users\/[a-f0-9]{24}$/u.test(seekerPathname));
+  const isAdminRbacRoles = isAdminRoute && (seekerPathname === '/admin/roles' || /^\/admin\/roles\/[a-f0-9]{24}$/u.test(seekerPathname));
   const isAdminRbac = isAdminRbacUsers || isAdminRbacRoles;
-  const adminUserDetailMatch = route.kind === 'matched' && route.id === 'admin-dashboard' ? seekerPathname.match(/^\/admin\/users\/([a-f0-9]{24})$/u) : null;
-  const adminProviderDetailMatch = route.kind === 'matched' && route.id === 'admin-dashboard' ? seekerPathname.match(/^\/admin\/providers\/([a-f0-9]{24})$/u) : null;
+  const adminUserDetailMatch = isAdminRoute ? seekerPathname.match(/^\/admin\/users\/([a-f0-9]{24})$/u) : null;
+  const adminProviderDetailMatch = isAdminRoute ? seekerPathname.match(/^\/admin\/providers\/([a-f0-9]{24})$/u) : null;
   const isAdminUserDetail = adminUserDetailMatch !== null;
   const isAdminProviderDetail = adminProviderDetailMatch !== null;
   const providerPropertyBasicMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/(?:new\/basic|([a-f0-9]{24})\/basic)$/u) : null;
@@ -365,7 +366,7 @@ export function App({
   ) : guard.reason === 'not_found' ? (
     <NotFoundPage copy={copy} url={url} />
   ) : guard.reason === 'forbidden' ? (
-    <ForbiddenPage copy={copy} />
+    providerAdvertisingMatch?.[1] && effectiveSession.status === 'authenticated' && effectiveSession.role === 'admin' ? <main id="main-content"><p>{locale === 'ar' ? 'هذا رابط مقدم العقار؛ افتح الطلب من الإدارة.' : 'This is a provider link; open the request in administration.'}</p><a href={`/admin/ads/requests?requestId=${providerAdvertisingMatch[1]}&lang=${locale}`}>{locale === 'ar' ? 'إدارة طلب الإعلان' : 'Manage ad request'}</a></main> : <ForbiddenPage copy={copy} />
   ) : (
     <AuthenticationRequiredPage copy={copy} url={url} />
   );

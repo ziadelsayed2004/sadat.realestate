@@ -1443,7 +1443,7 @@
       },
       "permission": {
         "title": "Access is not permitted",
-        "body": "This page requires an authenticated administrator session and the matching permission."
+        "body": "Your account does not have permission for this action."
       },
       "not_found": {
         "title": "Route not found",

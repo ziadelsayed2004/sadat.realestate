@@ -52,6 +52,70 @@ test.describe('ADM-46 through ADM-49 homepage administration', () => {
     await routeAdminHomeApis(page);
   });
 
+  test('keeps the banner editor and selected file mounted while renewing an expired administrator save', async ({ page }) => {
+    const locale = localeForProject(), copy = getBannerControlCopy(locale);
+    let refreshes = 0, releaseRenewal!: () => void;
+    const renewal = new Promise<void>(resolve => { releaseRenewal = resolve; });
+    await page.route('**/api/v1/auth/refresh', async route => {
+      refreshes++;
+      if (refreshes === 2) await renewal;
+      return route.fulfill({ json: { data: { accessToken: refreshes === 1 ? 'admin.expired.qa' : 'admin.renewed.qa', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'c'.repeat(24), roleType: 'admin', status: 'verified' } }, meta: { requestId: 'renew-save' } } });
+    });
+    const writes: Array<{ header: string | undefined; body: unknown }> = [];
+    await page.route(`**/api/v1/admin/banners/${adminHomeBannerId}`, async route => {
+      if (route.request().method() !== 'PATCH') return route.fallback();
+      writes.push({ header: route.request().headers().authorization, body: route.request().postDataJSON() });
+      if (writes.length === 1) return route.fulfill({ status: 401, json: { error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'expired-save' } } });
+      return route.fallback();
+    });
+    await page.goto(`/admin/banners?lang=${locale}`);
+    await page.getByTestId(`admin-home-banner-${adminHomeBannerId}`).getByRole('button', { name: copy.edit, exact: true }).click();
+    await page.locator('#admin-home-banner-title-en').fill('Preserved ad title');
+    await page.locator('#admin-home-banner-reason').fill('Update existing advertisement');
+    await page.locator('#admin-home-banner-file').setInputFiles('apps/web/public/assets/canonical/public/listing-property-rental.png');
+    await page.locator('button[type="submit"]').click();
+    await expect.poll(() => refreshes).toBe(2);
+    await expect(page.locator('#admin-home-banner-title-en')).toHaveValue('Preserved ad title');
+    await expect(page.locator('#admin-home-banner-reason')).toHaveValue('Update existing advertisement');
+    await expect(page.getByTestId('banner-pending-image')).toContainText('listing-property-rental.png');
+    releaseRenewal();
+    await expect(page.locator('.admin-home__feedback[role="status"]')).toContainText(/saved|حفظ/iu);
+    expect(refreshes).toBe(2);
+    expect(writes.slice(0, 2).map(value => value.header)).toEqual(['Bearer admin.expired.qa', 'Bearer admin.renewed.qa']);
+    expect(writes[0]?.body).toEqual(writes[1]?.body);
+    await expect(page.locator('.admin-home__feedback[role="alert"]')).toHaveCount(0);
+  });
+
+  for (const status of [401, 403]) test(`explains a rejected banner save accurately (${status}) and preserves the selected image`, async ({ page }) => {
+    const locale = localeForProject(), copy = getBannerControlCopy(locale);
+    let writes = 0;
+    await page.route(`**/api/v1/admin/banners/${adminHomeBannerId}`, async route => {
+      if (route.request().method() !== 'PATCH') return route.fallback();
+      writes++;
+      return route.fulfill({ status, json: { error: { code: status === 401 ? 'AUTHENTICATION_REQUIRED' : 'FORBIDDEN', messageKey: status === 401 ? 'errors.authenticationRequired' : 'errors.forbidden', details: [], requestId: 'rejected-save' } } });
+    });
+    await page.goto(`/admin/banners?lang=${locale}`);
+    await page.getByTestId(`admin-home-banner-${adminHomeBannerId}`).getByRole('button', { name: copy.edit, exact: true }).click();
+    await page.locator('#admin-home-banner-title-en').fill('Keep this title');
+    await page.locator('#admin-home-banner-reason').fill('Keep this reason');
+    await page.locator('#admin-home-banner-file').setInputFiles('apps/web/public/assets/canonical/public/listing-property-rental.png');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('.admin-home__feedback[role="alert"]')).toContainText(status === 401 ? locale === 'ar' ? 'انتهت جلسة الإدارة' : 'Admin session expired' : locale === 'ar' ? 'حسابك لا يملك صلاحية هذا الإجراء' : 'Your account does not have permission');
+    expect(writes).toBe(status === 401 ? 2 : 1);
+    await expect(page.locator('#admin-home-banner-title-en')).toHaveValue('Keep this title');
+    await expect(page.getByTestId('banner-pending-image')).toContainText('listing-property-rental.png');
+  });
+
+  test('offers the matching administrator request when an administrator opens a provider advertisement link', async ({ page }) => {
+    const locale = localeForProject(), requestId = '6acba92bba782a617d3e5c24';
+    const providerCalls: string[] = [];
+    page.on('request', request => { if (request.url().includes('/api/v1/provider/')) providerCalls.push(request.url()); });
+    await page.goto(`/provider/ads/${requestId}?lang=${locale}`);
+    await expect(page.getByText(locale === 'ar' ? 'هذا رابط مقدم العقار؛ افتح الطلب من الإدارة.' : 'This is a provider link; open the request in administration.')).toBeVisible();
+    await expect(page.getByRole('link', { name: locale === 'ar' ? 'إدارة طلب الإعلان' : 'Manage ad request', exact: true })).toHaveAttribute('href', `/admin/ads/requests?requestId=${requestId}&lang=${locale}`);
+    expect(providerCalls).toEqual([]);
+  });
+
   test('renders each approved route with locale direction and safe projections', async ({ page }) => {
     const locale = localeForProject();
     const routes = [
