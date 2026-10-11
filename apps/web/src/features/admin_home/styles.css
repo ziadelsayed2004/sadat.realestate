@@ -13,7 +13,22 @@
 .admin-home__tabs a { min-height: 42px; padding: 10px 18px; border: 1px solid #d9cfba; border-radius: 999px; color: #155b4f; font-weight: 800; text-decoration: none; }
 .admin-home__tabs a[data-active='true'], .admin-home__tabs a:hover, .admin-home__tabs a:focus-visible { background: #0e5849; color: #fff; }
 .admin-home__panel { overflow: hidden; }
-.admin-home__banner-settings { padding: 24px; }
+.admin-home__banner-settings { padding: 24px; margin-block-start: 24px; }
+.admin-home__request-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; max-width: 1320px; margin: 0 auto 24px; padding: 16px 20px; border: 1px solid #d9cfba; border-radius: 12px; background: #fffdf8; overflow-wrap: anywhere; }
+.admin-home__request-filter a { color: #155b4f; line-height: 1.8; }
+.admin-home__banner-list { container-type: inline-size; }
+.admin-home__banner-list .admin-home__table { min-width: 0; }
+.admin-home__banner-list tbody { display: grid; gap: 16px; padding: 20px; }
+.admin-home__banner-list tbody tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 20px; border: 1px solid #e3e5e7; border-radius: 14px; background: #fffdf8; }
+.admin-home__banner-list .admin-home__table td { min-width: 0; padding: 0; border: 0; overflow-wrap: anywhere; line-height: 1.8; }
+.admin-home__banner-list td:first-child, .admin-home__banner-list td:last-child { grid-column: 1 / -1; }
+.admin-home__banner-list td:first-child { grid-row: 1; }
+.admin-home__banner-list td:first-child strong { font-size: 1.1rem; }
+.admin-home__banner-list td:last-child { grid-row: 2; padding-block-end: 16px; border-block-end: 1px solid #e3e5e7; }
+.admin-home__banner-list td[data-label]::before { content: attr(data-label); display: block; margin-block-end: 6px; font-size: .8rem; font-weight: 700; color: #6d788b; }
+.admin-home__banner-list .admin-home__row-actions { min-width: 0; gap: 10px; }
+.admin-home__banner-list .admin-home__row-actions button { min-height: 42px; border-radius: 10px; }
+@container (max-width: 650px) { .admin-home__banner-list tbody tr { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px; } .admin-home__banner-list tbody { padding: 16px; } }
 .admin-home__banner-settings h2 { margin-block-start: 0; }
 #banner-placements { margin-block-start: 24px; scroll-margin-block-start: 80px; }
 .admin-home__panel-heading, .admin-home__editor-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 26px; border-block-end: 1px solid #eceff3; background: #fffdf8; }
