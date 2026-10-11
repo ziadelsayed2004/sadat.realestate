@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import { Types, type Connection } from 'mongoose';
+import { featuredHomepagePlacementFields } from './homepage-placements.js';
 import sharp, { type OutputInfo } from 'sharp';
 import { adBannerConfigPutSchema, adBannerConfigSchema, adBannerMediaSchema, featuredCreativeSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
@@ -108,7 +109,7 @@ export function createBannerManagement(dependencies: {
           else await settings.insertOne({ _id: new Types.ObjectId('00000000000000000000ba01'), ...after }, { session });
           // Explicit setup action only; never silently re-enable an existing placement.
           await connection.collection('ad_placements').updateOne({ key: 'homepage.hero' }, { $setOnInsert: { surface: 'homepage', label: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['ar', 'en'], targetUrlRequired: false, version: 0, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now } }, { upsert: true, session });
-          await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $setOnInsert: { surface: 'homepage', label: { ar: 'إعلانات الرئيسية المميزة', en: 'Featured homepage cards' }, width: 1200, height: 800, active: true, sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: true, version: 0, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now } }, { upsert: true, session });
+          await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $setOnInsert: featuredHomepagePlacementFields(new Types.ObjectId(claims.sub), now) }, { upsert: true, session });
           await audit.record({ actorType: 'admin', actorId: claims.sub, targetType: 'ad_settings', targetId: 'homepage', action: 'ad_settings.banner_display', reason: parsed.reason, before: { enabled: before?.enabled ?? false, version: before?.version ?? 0 }, after: { enabled: parsed.enabled, version: after.version }, ...context, occurredAt: now }, session);
         });
       } finally { await session.endSession(); }

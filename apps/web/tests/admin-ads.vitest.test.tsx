@@ -321,15 +321,16 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(load).not.toHaveBeenCalled();
   });
 
-  it('prices an assisted request using named placements, EGP and Egypt civil times', async () => {
-    const waiting = adAdminRequestSchema.parse({ request: { ...request, requestMode: 'assisted', contactPhone: '+201234567890', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined, status: 'waiting_pricing' }, pricingOptions: { placements: [{ key: 'homepage.hero', label: { en: 'Homepage banner', ar: 'بانر الرئيسية' } }], adTypes: [] } });
+  it.each(['homepage.hero', 'homepage.featured'] as const)('prices an assisted request at %s using named placements, EGP and Egypt civil times', async placementKey => {
+    const waiting = adAdminRequestSchema.parse({ request: { ...request, requestMode: 'assisted', contactPhone: '+201234567890', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined, status: 'waiting_pricing' }, pricingOptions: { placements: [{ key: 'homepage.hero', label: { en: 'Homepage banner', ar: 'بانر الرئيسية' } }, { key: 'homepage.featured', label: { en: 'Featured homepage card', ar: 'كارت الرئيسية المميز' } }], adTypes: [] } });
     const issue = vi.fn(async () => quote);
     window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
     renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => waiting)} issueQuote={issue} />, { locale: 'en' });
     const placement = await screen.findByLabelText('Advertising placement');
     expect(screen.getByRole('option', { name: 'Homepage banner' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Featured homepage card' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '+201234567890' })).toHaveAttribute('href', 'tel:+201234567890');
-    fireEvent.change(placement, { target: { value: 'homepage.hero' } });
+    fireEvent.change(placement, { target: { value: placementKey } });
     fireEvent.change(screen.getByLabelText('Campaign start — Egypt time'), { target: { value: '2026-10-10T12:00' } });
     fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-20T12:00' } });
     fireEvent.change(screen.getByLabelText('Price in EGP'), { target: { value: '1250.50' } });
@@ -342,6 +343,6 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(screen.getByText(/Campaign end must be after its start/u)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-20T12:00' } });
     fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
-    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, expect.objectContaining({ campaign: { placementKey: 'homepage.hero', intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' }, lineItems: [{ description: request.purpose, quantity: 1, unitAmountMinor: 125050 }] })));
+    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, expect.objectContaining({ campaign: { placementKey, intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' }, lineItems: [{ description: request.purpose, quantity: 1, unitAmountMinor: 125050 }] })));
   });
 });

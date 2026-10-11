@@ -8,6 +8,39 @@ const providerId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const localeForProject = () => test.info().project.name.endsWith('-en') ? 'en' : 'ar';
 const success = (data: unknown) => ({ data, meta: { requestId: 'assisted-ad-test' } });
 
+test('administrator selects the featured homepage card and sends its exact placement with the quote', async ({ page }) => {
+  const locale = localeForProject();
+  const copy = getAdminAdsCopy(locale);
+  await routeAdminAdsApis(page);
+  const request = { ...adminAdsRequestFixture(), requestMode: 'assisted', contactPhone: '+201234567890', status: 'waiting_pricing', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined };
+  await page.route(`**/api/v1/admin/ad-requests/${adminAdsRequestId}`, route => route.fulfill({ json: success({ request, pricingOptions: { placements: [
+    { key: 'homepage.hero', label: { ar: 'بانر الرئيسية', en: 'Homepage banner' } },
+    { key: 'homepage.featured', label: { ar: 'كارت الرئيسية المميز', en: 'Featured homepage card' } }
+  ], adTypes: [] } }) }));
+  let campaign: unknown;
+  await page.route(`**/api/v1/admin/ad-requests/${adminAdsRequestId}/quote`, route => {
+    campaign = route.request().postDataJSON().campaign;
+    return route.fulfill({ status: 503, json: { error: { code: 'SERVICE_UNAVAILABLE', messageKey: 'errors.serviceUnavailable', details: [], requestId: 'featured-quote-test' } } });
+  });
+  await page.goto(`/admin/ads/requests?lang=${locale}&requestId=${adminAdsRequestId}`);
+  const placement = page.locator('#admin-ad-placement');
+  await expect(placement.locator('option[value="homepage.featured"]')).toHaveText(locale === 'ar' ? 'كارت الرئيسية المميز' : 'Featured homepage card');
+  await placement.selectOption('homepage.featured');
+  const form = page.locator('form').filter({ has: placement });
+  await expect(form.locator('.ad-placement-guide li[data-selected="true"]')).toContainText(locale === 'ar' ? 'كارت أسفل البانر والبحث' : 'Card below the hero and search');
+  await expect(form.locator('a[href*="#homepage-featured"]')).toHaveAttribute('href', `/?lang=${locale}#homepage-featured`);
+  await page.locator('#admin-ad-start').fill('2030-11-10T12:00');
+  await page.locator('#admin-ad-end').fill('2030-11-20T12:00');
+  await page.locator('#admin-ad-quote-amount').fill('1250.50');
+  await page.locator('#admin-ad-quote-valid').fill('2030-11-09T12:00');
+  await page.locator('#admin-ad-quote-terms').fill('Featured homepage card for ten days');
+  await page.getByRole('button', { name: copy.quoteIssue.submit, exact: true }).click();
+  await expect(form.getByText(copy.quoteIssue.error)).toBeVisible();
+  expect(campaign).toEqual({ placementKey: 'homepage.featured', intervalStart: '2030-11-10T10:00:00.000Z', intervalEnd: '2030-11-20T10:00:00.000Z' });
+  await expect(placement).toHaveValue('homepage.featured');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('provider sends a two-field advertising request without technical codes or dates and retains inputs after failure', async ({ page }) => {
   const locale = localeForProject();
   const copy = getProviderAdvertisingCopy(locale);

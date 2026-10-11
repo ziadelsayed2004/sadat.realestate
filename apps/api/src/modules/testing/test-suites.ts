@@ -91,6 +91,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/quality/localization-audit.test.ts',
     'tests/ads/service.test.ts',
     'tests/ads/banner-campaign.test.ts',
+    'tests/ads/homepage-placements.test.ts',
     'tests/ads/banner-content.test.ts',
     'tests/ads/featured.test.ts',
     'tests/ads/notifications.test.ts',

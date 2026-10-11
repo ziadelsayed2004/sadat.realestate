@@ -49,6 +49,7 @@ import { createPublicAboutTeamRuntime } from './modules/cms/public-runtime.js';
 import { createCmsAdminContentRuntime } from './modules/cms/admin-content-runtime.js';
 import { createAdminOverviewRuntime, createAdministratorRuntime } from './modules/admin/runtime.js';
 import { createAdminAdsRuntime, createAdminBannersRuntime } from './modules/ads/runtime.js';
+import { initializeFeaturedHomepagePlacement } from './modules/ads/homepage-placements.js';
 import { createAdvertisingLedgerRuntime } from './modules/reports/advertising-ledger-runtime.js';
 import { createCommissionPolicyRuntime } from './modules/commissions/runtime.js';
 import { createCommissionAccountRuntime } from './modules/commissions/account-runtime.js';
@@ -127,6 +128,7 @@ async function runEntrypoint(): Promise<void> {
   const authEnvironment = parseAuthEnvironment(process.env, runtimeEnvironment.appEnvironment);
   const database = createDatabaseConnection(databaseEnvironment, runtimeEnvironment.appEnvironment);
   await database.connect();
+  await initializeFeaturedHomepagePlacement(database.nativeConnection);
   const auth = createAuthRuntime(database.nativeConnection, authEnvironment);
   if (!auth.accessTokens) throw new Error('Auth access-token verifier is required for product routes');
   const seeker = createSeekerRuntime(
