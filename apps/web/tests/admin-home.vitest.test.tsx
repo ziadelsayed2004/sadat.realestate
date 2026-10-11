@@ -4,7 +4,7 @@ import {
   cmsAdminContentDataSchema,
   type CmsAdminContentData
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminHome,
@@ -106,6 +106,28 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it('renews an expired administrator token once and retries the same banner changes with the renewed token', async () => {
+    let token = 'Bearer expired';
+    const calls: Array<{ header: string | null; body: unknown }> = [];
+    const authorization = { getAuthorizationHeader: () => token, refresh: vi.fn(async () => { token = 'Bearer renewed'; }) };
+    const client = new ApiClient({ fetcher: async (_url, init) => {
+      calls.push({ header: new Headers(init?.headers).get('authorization'), body: JSON.parse(String(init?.body)) });
+      if (calls.length === 1) throw new ApiClientError('errors.unauthorized', { code: 'HTTP_ERROR', status: 401 });
+      return envelope(banners.items[0]);
+    } });
+    const input = { title: { en: 'Kept title' }, expectedVersion: 2, reason: 'Update banner title' };
+    await createAdminHomeSource({ apiClient: client, authorization }).updateBanner(bannerId, input);
+    expect(authorization.refresh).toHaveBeenCalledTimes(1);
+    expect(calls).toEqual([{ header: 'Bearer expired', body: input }, { header: 'Bearer renewed', body: input }]);
+  });
+  it.each([401, 403])('does not repeatedly renew or bypass a rejected banner save (%s)', async status => {
+    const failure = new ApiClientError('errors.forbidden', { code: 'HTTP_ERROR', status });
+    const fetcher = vi.fn(async () => { throw failure; });
+    const authorization = { getAuthorizationHeader: () => 'Bearer admin', refresh: vi.fn(async () => {}) };
+    await expect(createAdminHomeSource({ apiClient: new ApiClient({ fetcher }), authorization }).updateBanner(bannerId, { expectedVersion: 2, reason: 'Update title', title: { en: 'Kept title' } })).rejects.toBe(failure);
+    expect(authorization.refresh).toHaveBeenCalledTimes(status === 401 ? 1 : 0);
+    expect(fetcher).toHaveBeenCalledTimes(status === 401 ? 2 : 1);
+  });
   it('does not load a linked customer request before an administrator is authenticated', async () => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     const source = createAdminHomeSource({ apiClient: apiClientFor(requests) });

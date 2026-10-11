@@ -10,7 +10,7 @@ export const featuredCreativeSchema = z.object({
 }).strict();
 export const featuredOptionsSchema = z.object({
   canManage: z.boolean().default(false),
-  advertisers: z.array(z.object({ id, name: localizedTextSchema, imageUrl: z.string().max(2048).optional(), verified: z.boolean() }).strict()).max(100),
+  advertisers: z.array(z.object({ id, aliases: z.array(id).max(100).optional(), name: localizedTextSchema, imageUrl: z.string().max(2048).optional(), verified: z.boolean() }).strict()).max(100),
   destinations: z.array(featuredDestinationSchema.extend({ name: localizedTextSchema, href: z.string().regex(/^\/(?!\/)/).max(2048) }).strict()).max(300)
 }).strict();
 export const featuredOptionsSuccessEnvelopeSchema = successEnvelopeSchema(featuredOptionsSchema);

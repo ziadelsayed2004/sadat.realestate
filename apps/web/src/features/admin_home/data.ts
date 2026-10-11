@@ -37,8 +37,8 @@ import {
   type CmsAdminContentData,
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
-import { loadAdminAdRequest } from '../admin_ads/data.ts';
+import type { ApiClient } from '../contracts/index.ts';
+import { createAdminSessionClient as clientFor, adminSessionOptions as requestOptions, loadAdminAdRequest, type AdminAdsAuthorizationSource } from '../admin_ads/data.ts';
 
 export const ADMIN_BANNERS_ROUTE = '/admin/banners' as const;
 export const ADMIN_BANNER_MEDIA_ROUTE = '/admin/banner-media' as const;
@@ -47,9 +47,7 @@ export const ADMIN_CMS_HOMEPAGE_ROUTE = '/admin/content/homepage' as const;
 
 export type AdminHomeCmsNamespace = Extract<CmsAdminContentNamespace, 'tips' | 'homepage' | 'display'>;
 
-export interface AdminHomeAuthorizationSource {
-  readonly getAuthorizationHeader: () => string | undefined;
-}
+export type AdminHomeAuthorizationSource = AdminAdsAuthorizationSource;
 
 interface CommonOptions {
   readonly apiClient?: ApiClient | undefined;
@@ -63,20 +61,6 @@ export interface AdminBannerLoadOptions extends CommonOptions {
 }
 
 export type AdminHomeCmsContent = Extract<CmsAdminContentData, { namespace: AdminHomeCmsNamespace }>;
-
-function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
-  if (options.apiClient !== undefined) return options.apiClient;
-  const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  return new ApiClient(clientOptions);
-}
-
-function requestOptions(options: CommonOptions): { readonly headers?: HeadersInit; readonly signal?: AbortSignal } {
-  const authorization = options.authorization?.getAuthorizationHeader();
-  return {
-    ...(authorization === undefined ? {} : { headers: { authorization } }),
-    ...(options.signal === undefined ? {} : { signal: options.signal })
-  };
-}
 
 function bannerId(value: string): string {
   return adBannerIdParamsSchema.parse({ bannerId: value }).bannerId;

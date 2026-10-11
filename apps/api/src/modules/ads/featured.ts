@@ -1,5 +1,5 @@
 import { Types, type Connection } from 'mongoose';
-import { featuredOptionsSchema, type FeaturedCreative } from '@sadat-real-estate/contracts';
+import { featuredOptionsSchema, type FeaturedCreative, type FeaturedOptions } from '@sadat-real-estate/contracts';
 import { createProviderVisibilityReader } from '../provider/visibility.js';
 import { ApiContractError } from '../contracts/error-boundary.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
@@ -11,18 +11,21 @@ export async function featuredAdvertiser(connection: Connection, providerId: str
   if (!policy.publicIdentity || !policy.accountId) return undefined;
   const account = new Types.ObjectId(policy.accountId);
   const profiles = await connection.collection('provider_profiles').find({ userId: account }, { projection: { _id: 1 } }).toArray();
-  const applications = await connection.collection('provider_applications').find({ userId: account }, { projection: { _id: 1 } }).toArray();
+  const applications = await connection.collection('provider_applications').find({ userId: account }, { projection: { _id: 1, status: 1, displayName: 1, tradeName: 1, brandName: 1, legalBusinessName: 1, legalCompanyName: 1 } }).toArray();
   const ownerIds = [account, ...profiles.map(row => row._id), ...applications.map(row => row._id)];
   const organization = await connection.collection('organizations').findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, status: 'approved' }, { projection: { _id: 1, name: 1, slug: 1, imageUrl: 1 } });
-  if (!organization || !organization.name || typeof organization.slug !== 'string') return undefined;
-  return { policy, ownerIds, organization, identity: { id: providerId, name: organization.name, ...(typeof organization.imageUrl === 'string' ? { imageUrl: organization.imageUrl } : {}), verified: policy.approved } };
+  const business = applications.find(value => value.status === 'approved');
+  const businessName = [business?.brandName, business?.tradeName, business?.displayName, business?.legalCompanyName, business?.legalBusinessName].find(value => typeof value === 'string' && value.trim());
+  const name = organization?.name ?? (typeof businessName === 'string' ? { ar: businessName.trim(), en: businessName.trim() } : undefined);
+  if (!name) return undefined;
+  return { policy, ownerIds, organization, identity: { id: policy.accountId, aliases: ownerIds.map(value => value.toString()), name, ...(typeof organization?.imageUrl === 'string' ? { imageUrl: organization.imageUrl } : {}), verified: policy.approved } };
 }
 export async function featuredOptions(connection: Connection, providerId?: string) {
   const rows = await connection.collection('provider_applications').find({ status: 'approved' }, { projection: { _id: 1 } }).sort({ _id: 1 }).limit(100).toArray();
-  const advertisers = [];
+  const advertisers: FeaturedOptions['advertisers'] = [];
   for (let offset = 0; offset < rows.length; offset += 8) {
     const group = await Promise.all(rows.slice(offset, offset + 8).map(row => featuredAdvertiser(connection, row._id.toString())));
-    advertisers.push(...group.flatMap(value => value ? [value.identity] : []));
+    for (const value of group) if (value && !advertisers.some(item => item.id === value.identity.id)) advertisers.push(value.identity);
   }
   if (!providerId) return featuredOptionsSchema.parse({ advertisers, destinations: [] });
   const advertiser = await featuredAdvertiser(connection, providerId);
@@ -30,16 +33,17 @@ export async function featuredOptions(connection: Connection, providerId?: strin
   return featuredOptionsSchema.parse({ advertisers, destinations: await featuredDestinations(connection, advertiser) });
 }
 async function featuredDestinations(connection: Connection, advertiser: NonNullable<Awaited<ReturnType<typeof featuredAdvertiser>>>) {
-  const orgId = advertiser.organization._id;
-  const ownership = { $or: [{ organizationId: { $in: [orgId, orgId.toString()] } }, { providerId: { $in: [...advertiser.ownerIds, ...advertiser.ownerIds.map(value => value.toString())] } }] };
+  const organization = advertiser.organization;
+  const orgId = organization?._id;
+  const ownership = { $or: [...(orgId ? [{ organizationId: { $in: [orgId, orgId.toString()] } }] : []), { providerId: { $in: [...advertiser.ownerIds, ...advertiser.ownerIds.map(value => value.toString())] } }] };
   const [properties, projects] = await Promise.all([
     connection.collection('properties').find({ $and: [ownership, unexpiredPropertyFilter()], status: 'published', active: true }, { projection: { name: 1, slug: 1 } }).sort({ slug: 1 }).limit(100).toArray(),
     connection.collection('projects').find({ ...ownership, status: 'published' }, { projection: { name: 1, slug: 1 } }).sort({ slug: 1 }).limit(100).toArray()
   ]);
   return featuredOptionsSchema.shape.destinations.parse([
-    { kind: 'organization', id: orgId.toString(), name: advertiser.organization.name, href: `/developers/${advertiser.organization.slug}` },
+    ...(organization && orgId && typeof organization.slug === 'string' ? [{ kind: 'organization', id: orgId.toString(), name: organization.name, href: `/developers/${organization.slug}` }] : []),
     ...properties.flatMap(row => id(row._id) && typeof row.slug === 'string' ? [{ kind: 'property', id: row._id.toString(), name: row.name, href: `/properties/${row.slug}` }] : []),
-    ...projects.flatMap(row => id(row._id) && typeof row.slug === 'string' ? [{ kind: 'project', id: row._id.toString(), name: row.name, href: `/developers/${advertiser.organization.slug}/projects/${row.slug}` }] : [])
+    ...projects.flatMap(row => organization && typeof organization.slug === 'string' && id(row._id) && typeof row.slug === 'string' ? [{ kind: 'project', id: row._id.toString(), name: row.name, href: `/developers/${organization.slug}/projects/${row.slug}` }] : [])
   ]);
 }
 export async function resolveFeatured(connection: Connection, creative: FeaturedCreative) {

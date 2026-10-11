@@ -38,3 +38,20 @@ test('creates the complete featured card, previews both sizes and saves fields a
   expect(writes.at(-1)?.body.expectedVersion).toBe(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('shows actionable empty advertiser guidance without an empty table or unusable save buttons', async ({ page }, info) => {
+  const ar = info.project.name.endsWith('-ar'), lang = ar ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  await page.route('**/api/v1/admin/banners?*', route => route.fulfill({ json: { data: { items: [], page: 1, limit: 100, total: 0 }, meta: { requestId: 'empty-featured' } } }));
+  await page.route('**/api/v1/admin/banners/featured-options*', route => route.fulfill({ json: { data: { canManage: true, advertisers: [], destinations: [] }, meta: { requestId: 'empty-advertisers' } } }));
+  await page.goto(`/admin/ads/featured?lang=${lang}`);
+  await expect(page.getByRole('table')).toHaveCount(0);
+  await page.getByRole('button', { name: ar ? 'إضافة إعلان مميز' : 'Add featured ad', exact: true }).click();
+  const editor = page.getByRole('region', { name: ar ? 'تعديل الإعلان المميز' : 'Featured ad editor' });
+  await expect(editor.getByRole('status')).toContainText(ar ? 'لا توجد حسابات' : 'No eligible advertisers');
+  await expect(editor.getByRole('link', { name: ar ? 'إدارة مقدمي العقارات' : 'Manage providers' })).toHaveAttribute('href', `/admin/providers?lang=${lang}`);
+  await expect(editor.locator('select').first()).toBeDisabled();
+  await expect(editor.getByRole('button', { name: ar ? 'حفظ ونشر' : 'Save and publish', exact: true })).toBeDisabled();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: info.outputPath('featured-empty-advertisers.png'), fullPage: true });
+});

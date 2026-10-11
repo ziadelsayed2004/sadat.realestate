@@ -104,6 +104,7 @@ export type AdminAdsFinancialReviewLoader = (query: AdFinancialReviewQuery, sign
 export type AdminAdsFinancialDetailLoader = (requestId: string, signal?: AbortSignal) => Promise<AdFinancialReviewRow>;
 export type AdminAdsLedgerLoader = (query: AdLedgerQuery, signal?: AbortSignal) => Promise<AdminAdsLedgerData>;
 
+export { clientFor as createAdminSessionClient, requestOptions as adminSessionOptions };
 function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin' | 'authorization'>): Pick<ApiClient, 'request'> {
   const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
   const client = options.apiClient ?? new ApiClient(clientOptions);

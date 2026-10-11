@@ -25,6 +25,9 @@ function fixture() {
 test('featured destination options only expose an eligible real advertiser and its own published internal pages', async () => {
   const db = fixture(); const value = await featuredOptions(db.connection, application.toHexString());
   assert.equal(value.advertisers[0]?.name.en, 'Actual company');
+  assert.equal(value.advertisers[0]?.id, account.toHexString());
+  assert.deepEqual(value.advertisers[0]?.aliases, [account, profile, application].map(value => value.toHexString()));
+  assert.deepEqual((await featuredOptions(db.connection, account.toHexString())).destinations, value.destinations);
   assert.deepEqual(value.destinations.map(item => item.kind), ['organization', 'property', 'project']);
   assert.equal(value.destinations.find(item => item.kind === 'project')?.href, '/developers/actual-company/projects/owned-project');
   assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: application.toHexString(), destination: { kind: 'project', id: 'a'.repeat(24) } })).targetPath, '/developers/actual-company/projects/owned-project');
@@ -38,7 +41,32 @@ test('featured destination options only expose an eligible real advertiser and i
 test('a hidden or unapproved advertiser cannot publish; external links cannot be a featured destination', async () => {
   const db = fixture(); db.rows.commission_confirmations![0]!.status = 'revoked';
   await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: application.toHexString(), destination: { kind: 'organization', id: organization.toHexString() } }), { code: 'FEATURED_ADVERTISER_UNAVAILABLE' });
+  assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
   assert.equal(adBannerCreateSchema.safeParse({ placementKey: 'homepage.featured', title: { en: 'Ad' }, startAt: '2026-10-10T00:00:00Z', endAt: '2026-10-11T00:00:00Z', featured: { advertiserProviderId: application.toHexString(), destination: { kind: 'external', id: 'https://outside.invalid' } } }).success, false);
+});
+test('an eligible office can advertise its published property without a separate organization page', async () => {
+  const db = fixture();
+  db.rows.organizations = [];
+  db.rows.provider_applications![0]!.providerType = 'brokerage_office';
+  db.rows.provider_applications![0]!.tradeName = 'Actual office';
+  db.rows.provider_applications![0]!.accountOwnerFullName = 'Private owner';
+  db.rows.provider_profiles![0]!.providerType = 'brokerage_office';
+  db.rows.provider_identity_subscriptions!.push({ _id: account, status: 'active', paymentConfirmed: true, startAt: new Date('2020-01-01'), endAt: new Date('2099-01-01') });
+  const value = await featuredOptions(db.connection, account.toHexString());
+  assert.deepEqual(value.advertisers[0]?.name, { ar: 'Actual office', en: 'Actual office' });
+  assert.deepEqual(value.destinations.map(item => item.kind), ['property']);
+  assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: account.toHexString(), destination: { kind: 'property', id: owned.toHexString() } })).targetPath, '/properties/owned-property');
+  db.rows.provider_identity_subscriptions![0]!.paymentConfirmed = false;
+  assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
+  await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: account.toHexString(), destination: { kind: 'property', id: owned.toHexString() } }), { code: 'FEATURED_ADVERTISER_UNAVAILABLE' });
+});
+test('advertiser options deduplicate account aliases and never substitute the private owner for a business name', async () => {
+  const db = fixture();
+  db.rows.provider_applications!.push({ ...db.rows.provider_applications![0], _id: new Types.ObjectId('b'.repeat(24)) });
+  assert.equal((await featuredOptions(db.connection)).advertisers.length, 1);
+  db.rows.organizations = [];
+  db.rows.provider_applications![0]!.accountOwnerFullName = 'Private owner';
+  assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
 });
 test('legacy import is idempotent, preserves creative fields as drafts and never invents a company association', async () => {
   const db = fixture(); db.rows.cms_banners = [{ _id: new Types.ObjectId(), key: 'old_card', title: { en: 'Old card' }, body: { en: 'Saved description' }, highlight: { en: 'Saved highlight' }, imageUrl: '/old-image.png', order: 1, status: 'published', active: true }];

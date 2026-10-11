@@ -20,6 +20,22 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it('selects the canonical account when editing a legacy application-linked card', async () => {
+    const alias = 'a'.repeat(24);
+    const choices = { ...options, advertisers: options.advertisers.map(value => ({ ...value, aliases: [alias] })) };
+    const loadOptions = vi.fn(async () => choices);
+    renderWithLocale(<FeaturedEditor item={{ ...item, featured: { ...item.featured, advertiserProviderId: alias } }} options={choices} loadOptions={loadOptions} source={sourceFor().source} locale="en" onSaved={() => {}} onClose={() => {}} />, { locale: 'en' });
+    expect(screen.getByLabelText('Advertiser account')).toHaveValue(providerId);
+    await screen.findByRole('option', { name: 'Published property' });
+    expect(loadOptions).toHaveBeenCalledWith(providerId);
+  });
+  it.each(['ar', 'en'] as const)('explains unavailable advertisers and links to account management in %s', locale => {
+    renderWithLocale(<FeaturedEditor options={{ canManage: true, advertisers: [], destinations: [] }} loadOptions={async () => options} source={sourceFor().source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
+    expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'لا توجد حسابات' : 'No eligible advertisers');
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'إدارة مقدمي العقارات' : 'Manage providers' })).toHaveAttribute('href', `/admin/providers?lang=${locale}`);
+    expect(screen.getByLabelText(locale === 'ar' ? 'المعلن من حسابات المنصة' : 'Advertiser account')).toBeDisabled();
+    expect(screen.getByRole('button', { name: locale === 'ar' ? 'حفظ ونشر' : 'Save and publish' })).toBeDisabled();
+  });
   it('saves edited text and uploaded image before publishing in one click', async () => {
     vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:local-preview'); vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
     const { source, calls } = sourceFor();
