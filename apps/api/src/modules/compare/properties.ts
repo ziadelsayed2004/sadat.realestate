@@ -1,4 +1,5 @@
 import { visiblePublicOrganizations } from '../public/identity.js';
+import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonItemSchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
@@ -74,7 +75,8 @@ function mapRow(row: Row): PublicPropertyComparisonSource | null {
 
 export function createMongoosePublicPropertyComparisonRepository(connection: Connection): PublicPropertyComparisonRepository {
   return { async findPublished(ids) {
-    const rows = await connection.collection('properties').find({ _id: { $in: ids.map((value) => new Types.ObjectId(value)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).toArray();
+    const storedRows = await connection.collection('properties').find({ _id: { $in: ids.map((value) => new Types.ObjectId(value)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).toArray();
+    const rows = await attachPublicPropertyCovers(connection, storedRows);
     const mapped = rows.flatMap((row) => { const value = mapRow(row as Row); return value ? [value] : []; });
     const organizationIds = [...new Set(mapped.flatMap((value) => value.organizationId ? [value.organizationId] : []))];
     const locationIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).locationId); return value ? [value] : []; }))];
