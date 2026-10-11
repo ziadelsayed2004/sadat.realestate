@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { propertyDataSchema } from '@sadat-real-estate/contracts';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminPropertyEditor } from '../src/features/admin_properties/editor.tsx';
@@ -8,7 +8,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const property = propertyDataSchema.parse({ id: 'a'.repeat(24), kind: 'property', name: { en: 'Published villa', ar: 'فيلا منشورة' }, slug: 'published-villa', transactionType: 'sale', source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, status: 'published', active: true, version: 3, createdAt: '2026-10-08T10:00:00Z', updatedAt: '2026-10-08T10:00:00Z', availableActions: ['update'] });
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.editor.test' };
 const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { requestId: 'editor-test' } }), { headers: { 'content-type': 'application/json' } });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 it('previews a non-public cover through authenticated admin media without requesting public bytes', async () => {
   const fetcher = vi.fn<typeof fetch>(async () => new Response('', { status: 403 }));
@@ -67,6 +67,7 @@ it('queues media and uses the returned field version for the cover, without uplo
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Some changes were saved'));
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
+  await waitFor(() => expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/media/${'2'.repeat(24)}/content`))).toBe(true));
   expect(uploaded).toEqual([files[0], files[1], files[1]]);
   expect(fetcher.mock.calls.filter(([url, init]) => init?.method === 'PATCH' && String(url).endsWith(property.id))).toHaveLength(1);
 });
