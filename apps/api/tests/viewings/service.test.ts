@@ -3,6 +3,29 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createInMemoryViewingRepository, createViewingService, type ViewingRecord } from '../../src/modules/viewings/service.js';
+import { createAdminAttentionSource } from '../../src/modules/notifications/attention.js';
+
+test('processing a viewing removes its new-request badge for every administrator, while merely reading affects only the reader', async () => {
+  for (const action of ['confirm', 'reschedule', 'cancel'] as const) {
+    const repository = createInMemoryViewingRepository([{ id: viewingId, propertyId: property, seekerId: seeker.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00Z'), timezone: 'Africa/Cairo', version: 0, createdAt: stamp, updatedAt: stamp }]);
+    const service = createViewingService({ visibility: acknowledgedDeveloperVisibility, repository, now: () => stamp, authorization: { authorize: async () => true } });
+    const receipts = new Set<string>();
+    const attention = createAdminAttentionSource(async (collection, filter, adminId) => {
+      if (collection !== 'viewings' || receipts.has(adminId)) return 0;
+      const rows = await service.list(admin, {});
+      return rows.items.filter(item => item.status === filter.status).length;
+    }, async () => true, async (_collection, _filter, adminId) => { receipts.add(adminId); return 1; });
+    assert.equal((await attention.read('admin-a')).counts['viewing-requests'], 1);
+    assert.equal((await attention.read('admin-b')).counts['viewing-requests'], 1);
+    await attention.markRead('admin-a', { queueKey: 'viewing-requests', itemId: viewingId });
+    assert.equal((await attention.read('admin-a')).counts['viewing-requests'], 0);
+    assert.equal((await attention.read('admin-b')).counts['viewing-requests'], 1);
+    await service.transition(admin, viewingId, { action, expectedVersion: 0, ...(action === 'reschedule' ? { requestedAt: '2026-08-15T10:00:00Z', timezone: 'Africa/Cairo' } : {}), ...(action === 'cancel' ? { reason: 'Customer requested cancellation' } : {}) });
+    assert.equal((await attention.read('admin-a')).counts['viewing-requests'], 0);
+    assert.equal((await attention.read('admin-b')).counts['viewing-requests'], 0);
+    assert.equal((await service.list(admin, {})).items[0]?.status, action === 'confirm' ? 'confirmed' : action === 'cancel' ? 'cancelled' : 'rescheduled');
+  }
+});
 test('admin viewing decisions require manage permission and reject stale versions', async () => {
   const admin = { ...seeker, role: 'admin' as const };
   const repository = createInMemoryViewingRepository([{ id: viewingId, propertyId: property, seekerId: seeker.sub, status: 'requested', requestedAt: new Date('2026-08-15T10:00:00Z'), timezone: 'Africa/Cairo', version: 0, createdAt: stamp, updatedAt: stamp }]);

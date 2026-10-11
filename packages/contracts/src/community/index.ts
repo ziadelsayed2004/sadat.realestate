@@ -180,6 +180,8 @@ export const communityAdminReportSchema = z.object({
   id,
   postId: id,
   reporterId: id,
+  reporterName: z.string().trim().min(1).max(300).optional(),
+  reporterAccountAvailable: z.boolean().optional(),
   reason: communityReportReasonSchema,
   details: z.string().trim().min(2).max(1_000).regex(/^[^\u0000-\u001f\u007f]*$/u),
   status: communityReportStatusSchema,
@@ -212,7 +214,7 @@ export type CommunityAdminReport = z.infer<typeof communityAdminReportSchema>;
 export type CommunityAdminReportListData = z.infer<typeof communityAdminReportListDataSchema>;
 
 export const communityPostModerationSchema = z.object({
-  action: z.enum(['publish', 'hide', 'reject']),
+  action: z.enum(['publish', 'hide', 'reject', 'remove']),
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/u)
 }).strict();

@@ -1,6 +1,34 @@
 import assert from 'node:assert/strict'; import test from 'node:test'; import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js'; import { createCommunityService, createMemoryCommunityRepository } from '../../src/modules/community/service.js';
 const seeker = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims; const admin = { ...seeker, role: 'admin' } as AccessTokenClaims;
 
+test('administrators remove posts from every live status with a reason, current version, permission, and audit', async () => {
+  for (const status of ['draft', 'published', 'hidden', 'rejected'] as const) {
+    const entries: unknown[] = [];
+    const repo = createMemoryCommunityRepository([], { record: async entry => { entries.push(entry); return 'audit'; } });
+    let permitted = true;
+    const service = createCommunityService([], repo, { authorize: async () => permitted });
+    const post = await service.create(seeker, { title: 'Post to remove', body: 'Stored content for administrators' });
+    await repo.savePost({ ...post, status });
+    const input = { action: 'remove', reason: 'Duplicate community content', expectedVersion: 0 };
+    const context = { requestId: 'remove-test', traceId: 'remove-test' };
+    await assert.rejects(() => service.moderate(seeker, post.id, input, context), /FORBIDDEN/);
+    permitted = false;
+    await assert.rejects(() => service.moderate(admin, post.id, input, context), /FORBIDDEN/);
+    permitted = true;
+    await assert.rejects(() => service.moderate(admin, post.id, { ...input, reason: '' }, context));
+    await assert.rejects(() => service.moderate(admin, post.id, { ...input, expectedVersion: 2 }, context), /VERSION_CONFLICT/);
+    const removed = await service.moderate(admin, post.id, input, context);
+    assert.equal(removed.status, 'removed');
+    assert.equal(await service.publicDetail(post.id), undefined);
+    assert.equal((await service.publicList()).length, 0);
+    assert.equal((await repo.getPost(post.id))?.body, post.body);
+    assert.equal(entries.length, 1);
+    assert.equal((entries[0] as { action: string }).action, 'community_post.remove');
+    await assert.rejects(() => service.moderate(admin, post.id, { ...input, expectedVersion: 1 }, context), /INVALID_STATE/);
+    await assert.rejects(() => service.moderate(admin, post.id, { ...input, action: 'publish', expectedVersion: 1 }, context), /INVALID_STATE/);
+  }
+});
+
 test('removing another author comment requires current moderation permission', async () => {
   const repository = createMemoryCommunityRepository([], { record: async () => 'audit-id' });
   let allowed = true;

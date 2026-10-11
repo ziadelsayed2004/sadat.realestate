@@ -53,6 +53,24 @@ const comments = communityAdminCommentListDataSchema.parse({ items: [comment], p
 const reports = communityAdminReportListDataSchema.parse({ items: [report], page: 1, limit: 20, total: 1, summary: { total: 1, open: 1, in_review: 0, resolved: 0, dismissed: 0 } });
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 
+it.each(['ar', 'en'] as const)('shows real reporter names and account links in the table and review for %s', async locale => {
+  window.history.pushState({}, '', '/admin/community/moderation');
+  const namedReports = { ...reports, items: [{ ...report, reporterName: 'Reporter account', reporterAccountAvailable: true }] };
+  renderWithLocale(<AdminCommunity locale={locale} session={session} initialReports={namedReports} />, { locale });
+  const href = `/admin/users/${report.reporterId}?lang=${locale}`;
+  expect(screen.getByRole('link', { name: 'Reporter account' })).toHaveAttribute('href', href);
+  fireEvent.click(screen.getByRole('button', { name: getAdminCommunityCopy(locale).action.review }));
+  expect(screen.getAllByRole('link', { name: 'Reporter account' })).toHaveLength(2);
+  expect(screen.getAllByRole('link', { name: 'Reporter account' })[1]).toHaveAttribute('href', href);
+});
+
+it('does not link to a deleted reporter account or invent a name', () => {
+  window.history.pushState({}, '', '/admin/community/moderation');
+  renderWithLocale(<AdminCommunity locale="en" session={session} initialReports={{ ...reports, items: [{ ...report, reporterAccountAvailable: false }] }} />, { locale: 'en' });
+  expect(screen.getByText('Account name unavailable')).toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Account name unavailable' })).not.toBeInTheDocument();
+});
+
 function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
   return new Response(JSON.stringify({ data, meta: { requestId: 'admin-community-test', ...meta } }), { status: 200, headers: { 'content-type': 'application/json' } });
 }

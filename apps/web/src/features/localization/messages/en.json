@@ -1077,7 +1077,8 @@
       "close": "Close",
       "publishPost": "Publish post",
       "hidePost": "Hide post",
-      "rejectPost": "Reject post"
+      "rejectPost": "Reject post",
+      "removePost": "Delete post"
     },
     "reason": "Decision reason",
     "reasonPlaceholder": "Write a clear reason of at least five characters",

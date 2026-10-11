@@ -50,6 +50,43 @@ test('MongoDB report summary groups every status before pagination and preserves
   assert.deepEqual(pipeline, [{ $match: { postId: POST_ID } }, { $group: { _id: { $ifNull: ['$status', 'open'] }, count: { $sum: 1 } } }]);
 });
 
+test('admin reports join current account names in batches without exposing contact details or deleted identities', async () => {
+  const accounts = [SEEKER_ID, PROVIDER_ID];
+  const rows = [...accounts, 'aaaaaaaaaaaaaaaaaaaaaaaa'].map((reporterId, index) => ({ id: String(index).padStart(24, '1'), postId: POST_ID, reporterId, reason: 'other', details: 'Please review this post', status: 'open', version: 0, createdAt: NOW, updatedAt: NOW }));
+  const calls: string[] = [];
+  let firstName = 'Current';
+  const cursor = (items: unknown[]) => ({ sort() { return this; }, skip() { return this; }, limit() { return this; }, toArray: async () => items });
+  const connection = { collection: (name: string) => ({
+    createIndex: async () => 'index', countDocuments: async () => rows.length,
+    aggregate: () => cursor([{ _id: 'open', count: rows.length }]),
+    find: (filter: unknown, options: unknown) => {
+      calls.push(name);
+      if (name === 'community_reports') return cursor(rows);
+      if (name === 'users') {
+        assert.equal((filter as { deletedAt: null }).deletedAt, null);
+        assert.deepEqual(options, { projection: { _id: 1, roleType: 1 } });
+        return cursor(accounts.map((id, index) => ({ _id: id, roleType: index === 0 ? 'seeker' : 'provider' })));
+      }
+      if (name === 'seeker_profiles') return cursor([{ userId: SEEKER_ID, firstName, lastName: 'Reporter' }]);
+      if (name === 'provider_applications') return cursor([{ userId: PROVIDER_ID, displayName: 'Real provider' }]);
+      throw new Error(`Unexpected collection ${name}`);
+    }
+  }) } as unknown as Connection;
+  const service = createMongooseCommunityReportService(connection, { authorize: async () => true });
+  const listed = await service.adminList(accessTokens.verify('admin'), { page: 1, limit: 20 });
+  assert.equal(listed.items[0]?.reporterName, 'Current Reporter');
+  assert.equal(listed.items[1]?.reporterName, 'Real provider');
+  assert.equal(listed.items[2]?.reporterAccountAvailable, false);
+  assert.equal(listed.items[2]?.reporterName, undefined);
+  assert.deepEqual(calls, ['community_reports', 'users', 'seeker_profiles', 'provider_applications']);
+  firstName = 'Updated';
+  assert.equal((await service.adminList(accessTokens.verify('admin'), {})).items[0]?.reporterName, 'Updated Reporter');
+  assert.equal(JSON.stringify(listed).includes('email'), false);
+  calls.length = 0;
+  await assert.rejects(() => service.adminList(accessTokens.verify('seeker'), {}), /FORBIDDEN/);
+  assert.deepEqual(calls, []);
+});
+
 const accessTokens: AccessTokenService = {
   issue() { return 'unused'; },
   verify(token) {

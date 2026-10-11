@@ -1768,12 +1768,6 @@
     gap: 1.5rem;
   }
 
-  .public-homepage .ui-property-card__media,
-  .public-homepage .ui-property-card__media>img {
-    min-block-size: 13rem;
-    block-size: 13rem;
-  }
-
   .public-homepage__content-card>img {
     block-size: 13rem;
   }
@@ -2503,6 +2497,9 @@
 }
 
 @media (max-width: 767px) {
+  .public-homepage .public-homepage__property-card .ui-property-card__media>img {
+    object-fit: contain;
+  }
   .public-homepage__hero--advertisement .public-homepage__hero-visual { position: relative; }
   .public-homepage__hero--advertisement {
     display: block;

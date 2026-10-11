@@ -1,4 +1,4 @@
-import { localizeCopy } from '../localization/copy-catalog.ts';
+import { getEditableCopyCatalog, localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type AdminCommunityView = 'posts' | 'comments' | 'reports';
@@ -39,7 +39,7 @@ export interface AdminCommunityCopy {
   readonly commentStatus: Record<'visible' | 'hidden' | 'removed', string>;
   readonly reportStatus: Record<'open' | 'in_review' | 'resolved' | 'dismissed', string>;
   readonly reportReason: Record<'spam' | 'abuse' | 'misinformation' | 'other', string>;
-  readonly action: { readonly review: string; readonly resolve: string; readonly dismiss: string; readonly close: string; readonly publishPost: string; readonly hidePost: string; readonly rejectPost: string };
+  readonly action: { readonly review: string; readonly resolve: string; readonly dismiss: string; readonly close: string; readonly publishPost: string; readonly hidePost: string; readonly rejectPost: string; readonly removePost: string };
   readonly reason: string;
   readonly reasonPlaceholder: string;
   readonly reasonRequired: string;
@@ -61,36 +61,9 @@ export interface AdminCommunityCopy {
   readonly directionNote: string;
 }
 
-const copyByLocale: Record<SupportedLocale, AdminCommunityCopy> = {
-  ar: {
-    reportSummaryNote: 'الملخص يشمل كل حالات البلاغات للمنشور المحدد أو لكل المنشورات. فلتر الحالة يغيّر الجدول فقط.',
-    summaryUnavailable: 'العدد الإجمالي غير متاح حاليًا',
-    eyebrow: 'إدارة المجتمع',
-    title: { posts: 'إدارة المجتمع', comments: 'أرشيف التعليقات', reports: 'البلاغات والإشراف' },
-    description: { posts: 'راجع منشورات مجتمع مدينة السادات من الإسقاط المعتمد للخادم.', comments: 'التعليقات متوقفة. هذا أرشيف التعليقات السابقة المتاح للإدارة فقط.', reports: 'راجع البلاغات الواردة واتخذ القرار بسبب واضح وإصدار متوقع.' },
-    tab: { posts: 'المنشورات', comments: 'أرشيف التعليقات', reports: 'بلاغات المجتمع' },
-    search: 'بحث', searchPlaceholder: 'ابحث في العنوان أو المحتوى', status: 'الحالة', postId: 'معرّف المنشور', all: 'الكل', apply: 'تطبيق', clear: 'مسح', retry: 'إعادة المحاولة', previous: 'السابق', next: 'التالي', page: (page, totalPages) => `صفحة ${page} من ${totalPages}`,
-    columns: { id: 'المعرّف', title: 'العنوان', body: 'المحتوى', post: 'المنشور', author: 'الكاتب', reporter: 'المبلّغ', reason: 'السبب', details: 'التفاصيل', status: 'الحالة', comments: 'التعليقات', created: 'تاريخ الإنشاء', updated: 'آخر تحديث', actions: 'الإجراءات' },
-    postStatus: { draft: 'مسودة', published: 'منشور', hidden: 'مخفي', rejected: 'مرفوض', removed: 'محذوف' }, commentStatus: { visible: 'ظاهر', hidden: 'مخفي', removed: 'محذوف' }, reportStatus: { open: 'مفتوح', in_review: 'قيد المراجعة', resolved: 'تم الحل', dismissed: 'مرفوض' }, reportReason: { spam: 'رسائل مزعجة', abuse: 'إساءة', misinformation: 'معلومات مضللة', other: 'أخرى' },
-    action: { review: 'مراجعة', resolve: 'حل البلاغ', dismiss: 'رفض البلاغ', close: 'إغلاق', publishPost: 'نشر المنشور', hidePost: 'إخفاء المنشور', rejectPost: 'رفض المنشور' }, reason: 'سبب القرار', reasonPlaceholder: 'اكتب سبباً واضحاً من خمسة أحرف على الأقل', reasonRequired: 'سبب القرار مطلوب.', confirm: 'تأكيد', records: 'إجمالي السجلات', visible: 'في الصفحة الحالية', pageLabel: 'الصفحة', pageSize: 'حجم الصفحة', noActions: 'لا توجد إجراءات متاحة', idPrefix: 'معرّف', totalPosts: 'إجمالي المنشورات', totalReports: 'إجمالي البلاغات', statusSummary: 'ملخص الحالة', stalePost: 'تم تغيير المنشور. أعد تحميل بياناته قبل اتخاذ القرار.',
-    states: { loading: { title: 'جارٍ تحميل المجتمع', body: 'يتم جلب السجلات من المصدر المعتمد.' }, error: { title: 'تعذر تحميل المجتمع', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الاتصال غير متاح مؤقتاً', body: 'أعد المحاولة دون تغيير الفلاتر الحالية.' }, permission: { title: 'الوصول غير متاح', body: 'تحتاج هذه الصفحة إلى جلسة مدير وصلاحية المجتمع المناسبة.' } },
-    empty: { title: 'لا توجد سجلات', body: 'لا توجد بيانات مطابقة للفلاتر الحالية.' }, directionNote: 'العربية RTL — إدارة المجتمع متاحة لسطح المكتب.'
-  },
-  en: {
-    reportSummaryNote: 'The summary covers every report status for the selected post or all posts. The status filter only changes the table.',
-    summaryUnavailable: 'The overall count is currently unavailable',
-    eyebrow: 'Community administration',
-    title: { posts: 'Community management', comments: 'Archived comments', reports: 'Reports and moderation' },
-    description: { posts: 'Review community posts from the server-approved projection.', comments: 'Comments are disabled. Previous comments remain in this admin-only archive.', reports: 'Review incoming reports and resolve them with a clear reason and version.' },
-    tab: { posts: 'Posts', comments: 'Archived comments', reports: 'Community reports' },
-    search: 'Search', searchPlaceholder: 'Search title or content', status: 'Status', postId: 'Post ID', all: 'All', apply: 'Apply', clear: 'Clear', retry: 'Retry', previous: 'Previous', next: 'Next', page: (page, totalPages) => `Page ${page} of ${totalPages}`,
-    columns: { id: 'ID', title: 'Title', body: 'Content', post: 'Post', author: 'Author', reporter: 'Reporter', reason: 'Reason', details: 'Details', status: 'Status', comments: 'Comments', created: 'Created', updated: 'Updated', actions: 'Actions' },
-    postStatus: { draft: 'Draft', published: 'Published', hidden: 'Hidden', rejected: 'Rejected', removed: 'Removed' }, commentStatus: { visible: 'Visible', hidden: 'Hidden', removed: 'Removed' }, reportStatus: { open: 'Open', in_review: 'In review', resolved: 'Resolved', dismissed: 'Dismissed' }, reportReason: { spam: 'Spam', abuse: 'Abuse', misinformation: 'Misinformation', other: 'Other' },
-    action: { review: 'Review', resolve: 'Resolve report', dismiss: 'Dismiss report', close: 'Close', publishPost: 'Publish post', hidePost: 'Hide post', rejectPost: 'Reject post' }, reason: 'Decision reason', reasonPlaceholder: 'Write a clear reason of at least five characters', reasonRequired: 'A decision reason is required.', confirm: 'Confirm', records: 'Total records', visible: 'Visible on page', pageLabel: 'Page', pageSize: 'Page size', noActions: 'No actions available', idPrefix: 'ID', totalPosts: 'Total posts', totalReports: 'Total reports', statusSummary: 'Status summary', stalePost: 'The post changed. Reload it before making a decision.',
-    states: { loading: { title: 'Loading community data', body: 'Fetching records from the approved source.' }, error: { title: 'Community data could not load', body: 'Check the connection and try again.' }, retry: { title: 'Connection temporarily unavailable', body: 'Retry without changing the current filters.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator session and the matching community permission.' } },
-    empty: { title: 'No records found', body: 'No records match the current filters.' }, directionNote: 'English LTR — community administration is approved for desktop.'
-  },};
-
 export function getAdminCommunityCopy(locale: SupportedLocale): AdminCommunityCopy {
-  return localizeCopy('admin_community/copy#getAdminCommunityCopy', locale, copyByLocale[locale]);
+  const copy = getEditableCopyCatalog(locale)['admin_community/copy#getAdminCommunityCopy'] as unknown as AdminCommunityCopy;
+  return localizeCopy('admin_community/copy#getAdminCommunityCopy', locale, { ...copy,
+    page: (page: number, totalPages: number) => locale === 'ar' ? `صفحة ${page} من ${totalPages}` : `Page ${page} of ${totalPages}`
+  });
 }

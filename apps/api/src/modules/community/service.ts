@@ -201,8 +201,8 @@ export function createCommunityService(
       const post = await repository.getPost(postId);
       if (!post) throw new Error('NOT_FOUND');
       if (post.version !== parsed.expectedVersion) throw new Error('VERSION_CONFLICT');
-      const status = parsed.action === 'publish' ? 'published' : parsed.action === 'hide' ? 'hidden' : 'rejected';
-      const allowed = parsed.action === 'publish' ? ['draft', 'hidden', 'rejected'] : parsed.action === 'hide' ? ['published'] : ['draft', 'hidden'];
+      const status = parsed.action === 'publish' ? 'published' : parsed.action === 'hide' ? 'hidden' : parsed.action === 'remove' ? 'removed' : 'rejected';
+      const allowed = parsed.action === 'publish' ? ['draft', 'hidden', 'rejected'] : parsed.action === 'hide' ? ['published'] : parsed.action === 'remove' ? ['draft', 'published', 'hidden', 'rejected'] : ['draft', 'hidden'];
       if (!allowed.includes(post.status)) throw new Error('INVALID_STATE');
       const updatedAt = new Date(Math.max(Date.now(), Date.parse(post.updatedAt) + 1)).toISOString();
       const updated = { ...post, status, version: post.version + 1, updatedAt } as CommunityPost;

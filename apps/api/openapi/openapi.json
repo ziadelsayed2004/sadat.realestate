@@ -23832,6 +23832,14 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "reporterName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "reporterAccountAvailable": {
+            "type": "boolean"
           }
         }
       },
@@ -27030,7 +27038,7 @@
         "additionalProperties": false,
         "required": [
           "action",
-          "expectedUpdatedAt",
+          "expectedVersion",
           "reason"
         ],
         "properties": {
@@ -27038,18 +27046,20 @@
             "type": "string",
             "enum": [
               "publish",
-              "hide"
+              "hide",
+              "reject",
+              "remove"
             ]
-          },
-          "expectedUpdatedAt": {
-            "type": "string",
-            "format": "date-time"
           },
           "reason": {
             "type": "string",
             "minLength": 5,
             "maxLength": 500,
             "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
           }
         }
       },

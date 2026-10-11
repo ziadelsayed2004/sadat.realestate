@@ -12,15 +12,21 @@ test('shares a published property notification and requires confirmation for ses
   const writes: Record<string, unknown>[] = [];
   await page.route(`**/api/v1/admin/users/${ADMIN_USER_ID}/communication`, async route => { writes.push(route.request().postDataJSON()); await route.fulfill({ json: envelope({ id: 'a'.repeat(24), action: writes.at(-1)?.action }) }); });
   await page.goto(`/admin/users/${ADMIN_USER_ID}?lang=${locale}`);
-  const actions = page.locator('.admin-account-reports'); await expect(actions).toBeVisible();
+  const actions = page.locator('.admin-account-reports').filter({ has: page.getByRole('heading', { name: locale === 'ar' ? 'إرسال رسالة لصاحب الحساب' : 'Message the account holder', exact: true }) }); await expect(actions).toBeVisible();
   await actions.locator('textarea').fill('Please review the suggested apartment');
+  await actions.locator('summary').click();
   await actions.locator('input[placeholder="SDT-1234"]').fill('SDT-1234');
-  await actions.getByRole('button', { name: locale === 'ar' ? 'إرسال إشعار' : 'Send notification', exact: true }).click();
+  await actions.getByRole('button', { name: locale === 'ar' ? 'إرسال الرسالة' : 'Send message', exact: true }).click();
   await expect.poll(() => writes.length).toBe(1); expect(writes[0]?.propertyCode).toBe('SDT-1234');
-  const logout = actions.getByRole('button', { name: locale === 'ar' ? 'إنهاء الجلسات الحالية' : 'End current sessions' });
-  await actions.locator('textarea').fill('Customer asked to reset sessions'); await expect(logout).toBeDisabled();
-  await actions.locator('input[type="checkbox"]').check(); await logout.click();
+  const account = page.locator('.admin-account-reports').filter({ has: page.getByRole('heading', { name: locale === 'ar' ? 'إجراءات الحساب' : 'Account actions', exact: true }) });
+  await account.locator('summary').first().click();
+  const logout = account.getByRole('button', { name: locale === 'ar' ? 'إنهاء الجلسات الحالية' : 'End current sessions' });
+  await account.locator('textarea').first().fill('Customer asked to reset sessions'); await expect(logout).toBeDisabled();
+  await account.locator('input[type="checkbox"]').first().check(); await logout.click();
   await expect.poll(() => writes.length).toBe(2); expect(writes[1]?.action).toBe('logout'); expect(writes[1]?.propertyCode).toBeUndefined();
+  await actions.screenshot({ path: test.info().outputPath('account-message-form.png') });
+  await account.screenshot({ path: test.info().outputPath('account-actions.png') });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   if (test.info().project.name === 'safari-ar') await page.screenshot({ path: '.local/owner-queue-safari-account.png', fullPage: true });
 });
 

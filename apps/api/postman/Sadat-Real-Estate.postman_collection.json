@@ -6921,7 +6921,7 @@
                 }
               ]
             },
-            "description": "Requires a transient verified Admin bearer token with admin:community.moderate. Reporter identity and moderation fields are available only inside this permission-protected projection."
+            "description": "Requires a transient verified Admin bearer token with admin:community.moderate. Reporter identity and moderation fields are available only inside this permission-protected projection. Admin responses include the current reporterName when available and reporterAccountAvailable. Deleted accounts have no name or account link. Public report creation does not disclose reporter identity."
           }
         },
         {
@@ -6966,7 +6966,7 @@
                 }
               ]
             },
-            "description": "Requires admin:community.moderate, a current report version, and a reason of at least five characters. Transitions are optimistic-concurrency guarded."
+            "description": "Requires admin:community.moderate, a current report version, and a reason of at least five characters. Transitions are optimistic-concurrency guarded. Admin responses include the current reporterName when available and reporterAccountAvailable. Deleted accounts have no name or account link. Public report creation does not disclose reporter identity."
           }
         }
       ]
@@ -7771,7 +7771,7 @@
             }
           ]
         },
-        "description": "Requires admin:community.moderate. Uses expectedUpdatedAt from the current admin list. Audit and mutation commit together.",
+        "description": "Requires admin:community.moderate. Actions: publish, hide, reject, remove (delete from public view while retaining the admin record). Send expectedVersion from the current admin list and a reason. Audit and mutation commit together.",
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/community/posts/:postId/moderate",
           "host": [
@@ -7793,7 +7793,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"action\": \"publish\",\n  \"expectedUpdatedAt\": \"2026-09-08T00:00:00.000Z\",\n  \"reason\": \"Reviewed community content\"\n}",
+          "raw": "{\n  \"action\": \"publish\",\n  \"expectedVersion\": 0,\n  \"reason\": \"Reviewed community content\"\n}",
           "options": {
             "raw": {
               "language": "json"

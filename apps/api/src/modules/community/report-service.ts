@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import type { ClientSession, Connection } from 'mongoose';
+import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   communityAdminReportListDataSchema,
   communityAdminReportListQuerySchema,
@@ -192,6 +192,33 @@ export function createMongooseCommunityReportService(
     return parsed.success ? parsed.data : undefined;
   }
 
+  async function withReporters(items: CommunityAdminReport[]): Promise<CommunityAdminReport[]> {
+    if (items.length === 0) return items;
+    const ids = [...new Set(items.map(item => item.reporterId))].map(value => new Types.ObjectId(value));
+    const users = await connection.collection('users').find(
+      { _id: { $in: ids }, deletedAt: null }, { projection: { _id: 1, roleType: 1 } }
+    ).toArray();
+    const seekerIds = users.filter(user => user.roleType === 'seeker').map(user => user._id);
+    const providerIds = users.filter(user => user.roleType === 'provider').map(user => user._id);
+    const [seekers, providers] = await Promise.all([
+      seekerIds.length ? connection.collection('seeker_profiles').find({ userId: { $in: seekerIds } }, { projection: { userId: 1, firstName: 1, lastName: 1 } }).toArray() : [],
+      providerIds.length ? connection.collection('provider_applications').find({ userId: { $in: providerIds } }, { projection: { userId: 1, displayName: 1 } }).toArray() : []
+    ]);
+    const names = new Map<string, string>();
+    for (const profile of seekers) {
+      const name = [profile.firstName, profile.lastName].filter(value => typeof value === 'string').join(' ').trim();
+      if (name) names.set(String(profile.userId), name);
+    }
+    for (const provider of providers) {
+      if (typeof provider.displayName === 'string' && provider.displayName.trim()) names.set(String(provider.userId), provider.displayName.trim());
+    }
+    const available = new Set(users.map(user => String(user._id)));
+    return items.map(item => adminReportData({ ...item,
+      reporterAccountAvailable: available.has(item.reporterId),
+      ...(names.has(item.reporterId) ? { reporterName: names.get(item.reporterId) } : {})
+    }));
+  }
+
   return {
     async create(claims, input, context) {
       assertReporter(claims);
@@ -243,10 +270,10 @@ export function createMongooseCommunityReportService(
         }
       }
       return communityAdminReportListDataSchema.parse({
-        items: rows.flatMap(row => {
+        items: await withReporters(rows.flatMap(row => {
           const parsed = parseRow(row);
           return parsed === undefined ? [] : [parsed];
-        }),
+        })),
         page: query.page,
         limit: query.limit,
         total,
@@ -257,7 +284,7 @@ export function createMongooseCommunityReportService(
       await requireModeration(claims, authorization);
       const parsed: CommunityReportResolve = communityReportResolveSchema.parse(input);
       const targetStatus = parsed.action === 'resolve' ? 'resolved' : 'dismissed';
-      return connection.transaction(async session => {
+      const resolved = await connection.transaction(async session => {
         const options = { session, projection: { status: 1, version: 1 } };
         const before = await reports.findOne({ id: reportId }, options);
         if (before === null) throw new Error('NOT_FOUND');
@@ -278,6 +305,7 @@ export function createMongooseCommunityReportService(
         await recordAudit(audit, claims, context, reportId, `community_report.${parsed.action}`, parsed.reason, { status: before.status, version: parsed.version }, { status: result.status, version: result.version }, session);
         return result;
       });
+      return (await withReporters([resolved]))[0]!;
     }
   };
 }
