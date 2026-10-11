@@ -130,7 +130,7 @@ function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'
 describe('Provider advertising requests and commission', () => {
   it.each(['ar', 'en'] as const)('shows only the selected method recipient and never substitutes the customer contact in %s', async locale => {
     const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, contactPhone: '+201111111111', paymentInstructions: {
-      vodafone_cash: ['Test beneficiary', '+201000000001'], instapay: ['test-beneficiary@instapay']
+      vodafone_cash: ['Test beneficiary', '+201000000001'], instapay: ['Test beneficiary', 'test-beneficiary@instapay']
     } });
     const copy = getProviderAdvertisingCopy(locale);
     renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={waiting} loadDetail={vi.fn(async () => waiting)} />, { locale });
@@ -176,7 +176,7 @@ describe('Provider advertising requests and commission', () => {
     const mutations = createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth });
     await expect(mutations.createRequest({ placementKey: 'homepage.hero', purpose: 'Promote an approved property campaign.', intervalStart: '2026-09-01T08:00:00.000Z', intervalEnd: '2026-09-30T08:00:00.000Z' })).resolves.toEqual(request);
     await expect(mutations.acceptQuote(requestId, { action: 'accept', expectedVersion: 2 })).resolves.toEqual(quote);
-    await expect(mutations.uploadPaymentProof(requestId, new Blob(['test'], { type: 'application/pdf' }), 'receipt.pdf', 'bank_transfer')).resolves.toEqual(proof);
+    await expect(mutations.uploadPaymentProof(requestId, new Blob(['test'], { type: 'application/pdf' }), 'receipt.pdf', 'bank_transfer', { sender: { name: 'Test sender', account: 'EG1234567890' } })).resolves.toEqual(proof);
 
     expect(calls[0]).toMatchObject({ path: '/api/v1/provider/ads', method: 'GET', query: '?status=quote_sent&page=2&limit=5', authorization: 'Bearer provider.advertising.token' });
     expect(calls.some(call => call.path === `/api/v1/provider/ads/${requestId}` && call.method === 'GET')).toBe(true);
@@ -192,8 +192,10 @@ describe('Provider advertising requests and commission', () => {
     const bytes = new Blob(['receipt bytes'], { type: 'application/pdf' });
     let received: RequestInit | undefined;
     const client = new ApiClient({ fetcher: async (_input, init) => { received = init; return envelope(proof); } });
-    await createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth }).uploadPaymentProof(requestId, bytes, filename, 'vodafone_cash');
+    await createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth }).uploadPaymentProof(requestId, bytes, filename, 'vodafone_cash', { sender: { name: 'محوّل الاختبار', account: '+201111111111' }, recipient: { name: 'مستفيد الاختبار', account: '+201000000001' } });
     expect(new Headers(received?.headers).get('x-file-name')).toBe(encodeURIComponent(filename));
+    expect(new Headers(received?.headers).get('x-payment-sender-name')).toBe(encodeURIComponent('محوّل الاختبار'));
+    expect(new Headers(received?.headers).get('x-payment-recipient-name')).toBe(encodeURIComponent('مستفيد الاختبار'));
     expect(received?.body).toBe(bytes);
   });
 
@@ -216,7 +218,7 @@ describe('Provider advertising requests and commission', () => {
     const pdf = new Blob(['test'], { type: 'application/pdf' });
 
     await expect(api.uploadPaymentProof(requestId, pdf, '../receipt.pdf')).rejects.toThrow('unsafe characters');
-    await expect(api.uploadPaymentProof(requestId, pdf, 'receipt.png')).rejects.toThrow('does not match content type');
+    await expect(api.uploadPaymentProof(requestId, pdf, 'receipt.png', 'cash')).rejects.toThrow('does not match content type');
     expect(calls).toBe(0);
   });
 
@@ -294,7 +296,7 @@ describe('Provider advertising requests and commission', () => {
   });
 
   it.each(['ar', 'en'] as const)('offers configured payment methods and requires a valid selection before sending for %s', async locale => {
-    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentMethods: ['instapay'] });
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentMethods: ['instapay'], paymentInstructions: { instapay: ['Test beneficiary', 'recipient@instapay'] } });
     const copy = getProviderAdvertisingCopy(locale);
     const upload = vi.fn(async () => proof);
     const mutations: ProviderAdvertisingMutationApi = { createRequest: vi.fn(async () => request), submitRequest: vi.fn(async () => request), acceptQuote: vi.fn(async () => quote), uploadPaymentProof: upload };
@@ -311,12 +313,16 @@ describe('Provider advertising requests and commission', () => {
     fireEvent.submit(send.closest('form')!);
     expect(upload).not.toHaveBeenCalled();
     fireEvent.change(select, { target: { value: 'instapay' } });
+    expect(send).toBeDisabled();
+    fireEvent.change(screen.getByLabelText(copy.accountName), { target: { value: 'Test sender' } });
+    expect(send).toBeDisabled();
+    fireEvent.change(screen.getByLabelText(copy.accountNumber), { target: { value: 'sender@instapay' } });
     fireEvent.click(send);
-    await waitFor(() => expect(upload).toHaveBeenCalledWith(requestId, file, 'receipt.png', 'instapay'));
+    await waitFor(() => expect(upload).toHaveBeenCalledWith(requestId, file, 'receipt.png', 'instapay', { sender: { name: 'Test sender', account: 'sender@instapay' }, recipient: { name: 'Test beneficiary', account: 'recipient@instapay' } }));
   });
 
   it.each(['ar', 'en'] as const)('waits for explicit payment-proof submission and retains the file after failure for %s', async locale => {
-    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' } });
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentInstructions: { vodafone_cash: ['Test beneficiary', '+201000000001'] } });
     const copy = getProviderAdvertisingCopy(locale);
     let finishUpload: ((value: typeof proof) => void) | undefined;
     const upload = vi.fn().mockRejectedValueOnce(new Error('offline')).mockImplementationOnce(() => new Promise<typeof proof>(resolve => { finishUpload = resolve; }));
@@ -330,11 +336,13 @@ describe('Provider advertising requests and commission', () => {
     fireEvent.change(input, { target: { files: [firstFile] } });
     fireEvent.change(input, { target: { files: [chosenFile] } });
     fireEvent.change(screen.getByLabelText(copy.paymentMethod), { target: { value: 'vodafone_cash' } });
+    fireEvent.change(screen.getByLabelText(copy.accountName), { target: { value: 'Test sender' } });
+    fireEvent.change(screen.getByLabelText(copy.accountNumber), { target: { value: '+201111111111' } });
     expect(upload).not.toHaveBeenCalled();
     expect(send).toBeEnabled();
     fireEvent.click(send);
     await screen.findByRole('alert');
-    expect(upload).toHaveBeenNthCalledWith(1, requestId, chosenFile, chosenFile.name, 'vodafone_cash');
+    expect(upload).toHaveBeenNthCalledWith(1, requestId, chosenFile, chosenFile.name, 'vodafone_cash', { sender: { name: 'Test sender', account: '+201111111111' }, recipient: { name: 'Test beneficiary', account: '+201000000001' } });
     expect(input.files?.[0]).toBe(chosenFile);
     expect(send).toBeEnabled();
     fireEvent.click(send);
@@ -360,6 +368,8 @@ describe('Provider advertising requests and commission', () => {
     renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={waiting} mutations={mutations} />, { locale: 'en' });
     fireEvent.change(screen.getByLabelText(copy.uploadPaymentProof), { target: { files: [file] } });
     fireEvent.change(screen.getByLabelText(copy.paymentMethod), { target: { value: 'bank_transfer' } });
+    fireEvent.change(screen.getByLabelText(copy.accountName), { target: { value: 'Test sender' } });
+    fireEvent.change(screen.getByLabelText(copy.accountNumber), { target: { value: 'EG1234567890' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendPaymentProof }));
     expect(await screen.findByRole('alert')).toHaveTextContent(copy.paymentProofInvalidFile);
     expect(upload).not.toHaveBeenCalled();

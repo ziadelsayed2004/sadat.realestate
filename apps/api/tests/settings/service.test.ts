@@ -56,6 +56,10 @@ test('advertising recipient settings validate before persistence and retain only
     await assert.rejects(service.update(adminClaims, 'advertising', { ...input, values: { vodafone_cash_payment_details: invalid } }, context));
     assert.equal(await repo.find('advertising'), undefined);
   }
+  for (const values of [{ payment_proof_methods: ['vodafone_cash'] }, { vodafone_cash_recipient_name: 'Test beneficiary' }, { vodafone_cash_recipient_name: 'Test beneficiary', vodafone_cash_recipient_account: 'invalid number' }, { instapay_recipient_account: 'recipient@instapay' }]) {
+    await assert.rejects(service.update(adminClaims, 'advertising', { ...input, values }, context));
+    assert.equal(await repo.find('advertising'), undefined);
+  }
   const saved = await service.update(adminClaims, 'advertising', input, context);
   assert.deepEqual(saved.values, input.values);
 });

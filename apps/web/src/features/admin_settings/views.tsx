@@ -36,6 +36,8 @@ import {
   stringDraft
 } from './data.ts';
 import { getAdminSettingsCopy } from './copy.ts';
+import { getAdminAdsCopy } from '../admin_ads/copy.ts';
+import { paymentAccountSchema, walletPaymentAccountSchema } from '@sadat-real-estate/contracts';
 import './styles.css';
 import '../dashboard_account/settings-mobile.css';
 
@@ -172,7 +174,7 @@ function fieldsForValues(namespace: SettingsNamespace, values: DraftValues): rea
   const known = FIELD_MAP[namespace];
   const knownKeys = new Set(known.map(field => field.key));
   if (namespace === 'social' || namespace === 'contact') return known;
-  const dynamic = Object.keys(values).filter(key => !knownKeys.has(key)).map(key => {
+  const dynamic = Object.keys(values).filter(key => !knownKeys.has(key) && !(namespace === 'advertising' && /^(vodafone_cash|instapay)_recipient_(name|account)$/u.test(key))).map(key => {
     const value = values[key];
     if (value !== undefined && typeof value === 'object' && !Array.isArray(value)) return { key, kind: 'localized' as const, labelKey: key };
     if (Array.isArray(value)) return { key, kind: 'array' as const, labelKey: key };
@@ -223,8 +225,15 @@ function LocalizedField({ field, values, copy, onChange }: { readonly field: Fie
   return <fieldset className="admin-settings__localized-field"><legend>{label}</legend><p id={`admin-settings-${field.key}-hint`} className="admin-settings__hint">{hint}</p><div className="admin-settings__localized-grid">{LOCALES.map(language => <label key={language} htmlFor={`admin-settings-${field.key}-${language}`}>{copy.locales[language]}{singleLine ? <input id={`admin-settings-${field.key}-${language}`} aria-describedby={`admin-settings-${field.key}-hint`} dir={language === 'ar' ? 'rtl' : 'ltr'} value={value[language]} onChange={event => onChange(language, event.target.value)} /> : <textarea id={`admin-settings-${field.key}-${language}`} aria-describedby={`admin-settings-${field.key}-hint`} dir={language === 'ar' ? 'rtl' : 'ltr'} value={value[language]} onChange={event => onChange(language, event.target.value)} />}</label>)}</div></fieldset>;
 }
 
-function PrimitiveField({ field, values, copy, hint, onChangeText, onChangeArray, onChangeNumber, onChangeBoolean }: { readonly field: Field; readonly values: DraftValues; readonly copy: ReturnType<typeof getAdminSettingsCopy>; readonly hint?: string | undefined; readonly onChangeText: (key: string, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void }) {
+function PrimitiveField({ field, values, copy, locale, hint, onChangeText, onChangeArray, onChangeNumber, onChangeBoolean }: { readonly field: Field; readonly values: DraftValues; readonly copy: ReturnType<typeof getAdminSettingsCopy>; readonly locale: SupportedLocale; readonly hint?: string | undefined; readonly onChangeText: (key: string, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void }) {
   const label = copy.fields[field.labelKey] ?? field.key;
+  if (field.key === 'payment_proof_methods') {
+    const methods = getAdminAdsCopy(locale).paymentMethodLabels, selected = Array.isArray(values[field.key]) ? values[field.key] as string[] : [];
+    return <fieldset className="admin-settings__payment-fields"><legend>{label}</legend>{Object.entries(methods).map(([method, caption]) => <label className="admin-settings__boolean" key={method}><span>{caption}</span><input type="checkbox" checked={selected.includes(method)} onChange={event => onChangeArray(field.key, (event.target.checked ? [...selected, method] : selected.filter(value => value !== method)).join('\n'))} /></label>)}</fieldset>;
+  }
+  const method = field.key.match(/^(vodafone_cash|instapay)_payment_details$/u)?.[1];
+  const legacy = Array.isArray(values[field.key]) ? values[field.key] as string[] : [];
+  if (method) return <fieldset className="admin-settings__payment-fields"><legend>{label}</legend>{['name', 'account'].map((part, index) => { const key = `${method}_recipient_${part}`; return <label key={part} htmlFor={`admin-settings-${key}`}>{copy.fields[`payment_recipient_${part}`]}<input id={`admin-settings-${key}`} value={stringDraft(values[key] ?? (legacy.length >= 2 ? legacy[index] : undefined))} type={part === 'account' && method === 'vodafone_cash' ? 'tel' : 'text'} maxLength={part === 'name' ? 120 : method === 'vodafone_cash' ? 16 : 160} minLength={part === 'name' ? 2 : 3} dir={part === 'account' ? 'ltr' : undefined} required={Array.isArray(values.payment_proof_methods) && values.payment_proof_methods.includes(method)} onChange={event => onChangeText(key, event.target.value)} /></label>; })}{legacy.length === 1 ? <p style={{ gridColumn: '1 / -1' }}>{copy.fields.payment_recipient_legacy}: <bdi>{legacy[0]}</bdi></p> : null}</fieldset>;
   if (field.kind === 'boolean') return <label className="admin-settings__boolean" htmlFor={`admin-settings-${field.key}`}><span>{label}</span><input id={`admin-settings-${field.key}`} type="checkbox" checked={booleanDraft(values[field.key])} onChange={event => onChangeBoolean(field.key, event.target.checked)} /></label>;
   if (field.kind === 'select') return <label htmlFor={`admin-settings-${field.key}`}>{label}<select id={`admin-settings-${field.key}`} aria-label={label} aria-describedby={hint ? `admin-settings-${field.key}-hint` : undefined} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)}><option value="">{copy.selectPlaceholder}</option>{stringDraft(values[field.key]) && !field.options?.some(option => option.value === values[field.key]) ? <option value={stringDraft(values[field.key])}>{stringDraft(values[field.key])}</option> : null}{field.options?.map(option => <option key={option.value} value={option.value}>{copy.fields[option.labelKey] ?? option.value}</option>)}</select>{hint ? <small id={`admin-settings-${field.key}-hint`} className="admin-settings__hint">{hint}</small> : null}</label>;
   if (field.kind === 'array') return <label style={{ gridColumn: '1 / -1' }} htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} /></label>;
@@ -241,7 +250,7 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
   const emptyValues = emptyValuesCopy(locale);
   const showEmptyValues = namespace === 'requests' && fields.length === 0;
   const dirty = JSON.stringify(values) !== JSON.stringify(data?.values ?? {});
-  const renderField = (field: Field) => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField key={field.key} field={field} values={values} copy={copy} hint={namespace === 'platform' ? (copy.guide.fieldHelp as Readonly<Record<string, string>>)[field.key] : undefined} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />;
+  const renderField = (field: Field) => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField locale={locale} key={field.key} field={field} values={values} copy={copy} hint={namespace === 'platform' ? (copy.guide.fieldHelp as Readonly<Record<string, string>>)[field.key] : undefined} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />;
   const nameKeys = ['platform_name', 'short_name', 'description'];
   const officeKeys = ['city', 'primary_email', 'primary_phone', 'office_address', 'working_hours'];
   const savedName = localizedDraft(data?.values.platform_name);
@@ -252,6 +261,11 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
     setError(undefined);
     const trimmedReason = reason.trim();
     if (trimmedReason.length < 3) { setError(copy.reasonRequired); return; }
+    if (namespace === 'advertising') for (const method of ['vodafone_cash', 'instapay']) {
+      const legacy = Array.isArray(values[`${method}_payment_details`]) ? values[`${method}_payment_details`] as unknown[] : [];
+      const name = values[`${method}_recipient_name`] ?? (legacy.length >= 2 ? legacy[0] : undefined), account = values[`${method}_recipient_account`] ?? (legacy.length >= 2 ? legacy[1] : undefined);
+      if ((name || account || (Array.isArray(values.payment_proof_methods) && values.payment_proof_methods.includes(method))) && !(method === 'vodafone_cash' ? walletPaymentAccountSchema : paymentAccountSchema).safeParse({ name, account }).success) { setError(`${copy.fields[`${method}_payment_details`]}: ${copy.validation}`); return; }
+    }
     if (namespace === 'contact') {
       for (const key of ['primary_phone', 'whatsapp_number']) {
         const value = stringDraft(values[key]).trim();

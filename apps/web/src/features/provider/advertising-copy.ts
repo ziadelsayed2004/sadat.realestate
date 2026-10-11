@@ -1,4 +1,4 @@
-import { localizeCopy } from '../localization/copy-catalog.ts';
+import { getEditableCopyCatalog, localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { ProviderAdvertisingStatus } from './advertising-data.ts';
 
@@ -43,6 +43,9 @@ export interface ProviderAdvertisingCopy {
   readonly paymentMethod: string;
   readonly choosePaymentMethod: string;
   readonly paymentRecipient: string;
+  readonly senderAccount: string;
+  readonly accountName: string;
+  readonly accountNumber: string;
   readonly missingPaymentRecipient: string;
   readonly paymentMethodLabels: Readonly<Record<'vodafone_cash' | 'instapay' | 'bank_transfer' | 'cash', string>>;
   readonly paymentProofUploaded: string;
@@ -94,116 +97,6 @@ export interface ProviderAdvertisingCopy {
   readonly mutationFailed: string;
 }
 
-const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> = {
-  ar: {
-    eyebrow: 'الإعلانات',
-    title: 'طلبات الإعلانات',
-    description: 'أرسل طلبك ورقم التواصل. الإدارة تتفق معك على السعر والفترة، ثم تفعّل الإعلان بعد اعتماد الدفع.',
-    create: 'طلب إعلان جديد',
-    refresh: 'تحديث',
-    filtersLabel: 'تصفية الطلبات',
-    statusLabel: 'الحالة',
-    allStatuses: 'كل الحالات',
-    apply: 'تطبيق',
-    clear: 'مسح',
-    count: 'طلب إعلان',
-    columns: { request: 'رقم الطلب', placement: 'الموضع والغرض', period: 'الفترة', status: 'الحالة', quote: 'السعر الإداري', payment: 'إثبات الدفع', actions: 'الإجراءات' },
-    statuses: { draft: 'مسودة', review: 'قيد المراجعة', waiting_pricing: 'في انتظار التسعير', quote_sent: 'تم إرسال العرض', waiting_payment: 'في انتظار الدفع', scheduled: 'مجدول', active: 'نشط', ended: 'منتهٍ', rejected: 'مرفوض', cancelled: 'ملغى', expired: 'منتهي الصلاحية' },
-    quoteStatuses: { issued: 'متاح للقبول', accepted: 'مقبول', rejected: 'مرفوض', cancelled: 'ملغى', expired: 'منتهي الصلاحية' },
-    paymentStatuses: { uploaded: 'تم الرفع', pending_review: 'قيد المراجعة', approved: 'تمت الموافقة', rejected: 'مرفوض' },
-    open: 'عرض التفاصيل',
-    backToList: 'العودة إلى الطلبات',
-    requestDetails: 'تفاصيل طلب الإعلان',
-    purpose: 'الغرض',
-    interval: 'الفترة',
-    history: 'سجل الحالة',
-    quote: 'العرض الإداري',
-    quoteTotal: 'الإجمالي',
-    quoteValidUntil: 'صالح حتى',
-    quoteTerms: 'الشروط',
-    acceptQuote: 'قبول العرض',
-    submitRequest: 'إرسال للمراجعة',
-    paymentProof: 'إثبات الدفع',
-    paymentProofHelp: 'ارفع ملف PDF أو JPG أو PNG بحجم لا يتجاوز 10 ميجابايت. يتم فحص الملف ومراجعته يدويًا؛ لا يعني الرفع التحقق البنكي.',
-    uploadPaymentProof: 'رفع إثبات الدفع',
-    sendPaymentProof: 'إرسال الطلب',
-    paymentProofSendHelp: 'اختيار الملف لا يرسله تلقائيًا. اضغط «إرسال الطلب» لإرسال إثبات الدفع للمراجعة.',
-    paymentProofInvalidFile: 'اختر ملف PDF أو JPG أو PNG غير فارغ بحجم لا يتجاوز 10 ميجابايت.',
-    paymentMethod: 'طريقة الدفع',
-    choosePaymentMethod: 'اختر طريقة الدفع',
-    paymentRecipient: 'بيانات التحويل',
-    missingPaymentRecipient: 'اطلب بيانات التحويل من الإدارة قبل الدفع.',
-    paymentMethodLabels: { vodafone_cash: 'فودافون كاش', instapay: 'إنستا باي', bank_transfer: 'تحويل بنكي', cash: 'نقدًا' },
-    paymentProofUploaded: 'تم إرسال إثبات الدفع للمراجعة.',
-    noPaymentProof: 'لم يتم إرسال إثبات دفع.',
-    schedule: 'الجدولة',
-    noSchedule: 'لا توجد جدولة متاحة بعد.',
-    noQuote: 'لا يوجد عرض إداري بعد.',
-    noHistory: 'لا يوجد سجل تغييرات.',
-    createForm: { title: 'طلب إعلان جديد', description: 'اكتب ما تريد الإعلان عنه ورقم التواصل؛ سيصل الطلب مباشرة إلى الإدارة لمراجعته والتواصل معك.', placementKey: 'كود موضع الإعلان', placementKeyHelp: 'اكتب اسم العقار أو المشروع أو الشركة، وأي تفاصيل تساعدنا. الإدارة تحدد مكان العرض والفترة والسعر في عرض واضح، ثم تعتمد الدفع وتفعّل الإعلان.', contactPhone: 'رقم التواصل', contactPhoneHelp: 'رقم يمكن للإدارة الاتصال بك عليه لترتيب الإعلان والدفع.', purpose: 'ماذا تريد الإعلان عنه؟', start: 'بداية الفترة', end: 'نهاية الفترة', cancel: 'إلغاء', save: 'إرسال طلب الإعلان', validation: 'أدخل رقم تواصل صحيحًا ووصفًا للإعلان من حرفين إلى 500 حرف.', close: 'إغلاق نموذج الطلب' },
-    commission: { eyebrow: 'العمولة', title: 'العمولة', description: 'سياسة العمولة المطبقة على حسابك في منصة عقارات السادات.', appliedPolicy: 'السياسة الحالية', source: 'المصدر', effectiveAt: 'سارية من', version: 'إصدار السياسة', kind: 'نوع العمولة', percentage: 'نسبة مئوية', fixed: 'مبلغ ثابت', noneTitle: 'لا توجد سياسة عمولة متاحة', noneBody: 'لم يتم تحديد سياسة عمولة لحسابك حاليًا. لا يتم افتراض نسبة عامة.', readOnly: 'هذه البيانات للعرض فقط ولا يمكن تغييرها من حساب المزود.', unavailable: 'غير متاح', confirm: 'تأكيد الاطلاع على سياسة العمولة', confirmed: 'تم تأكيد السياسة.', confirmFailed: 'تعذر تأكيد السياسة.', versionChanged: 'تغير إصدار السياسة. حدّث الصفحة وراجعها مرة أخرى.' },
-    states: { loading: { title: 'جارٍ التحميل', body: 'يتم تحميل بيانات الإعلانات.' }, empty: { title: 'لا توجد طلبات إعلان', body: 'ستظهر طلبات الإعلان الخاصة بحسابك هنا عند توفرها.' }, error: { title: 'تعذر تحميل الإعلانات', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الإعلانات غير متاحة مؤقتًا', body: 'يمكنك إعادة المحاولة عند توفر الاتصال.' }, permission: { title: 'يلزم تسجيل الدخول', body: 'لا يتم عرض بيانات الإعلانات قبل التحقق من جلسة المزود.' }, notFound: { title: 'طلب الإعلان غير موجود', body: 'لا يمكن العثور على هذا الطلب ضمن بيانات حسابك.' }, success: { title: 'تم تحميل الإعلانات', body: 'تم تحميل بيانات الإعلانات بنجاح.' } },
-    retry: 'إعادة المحاولة',
-    notFound: 'طلب الإعلان غير موجود',
-    unavailable: 'غير متاح',
-    success: 'تم تنفيذ الإجراء بنجاح.',
-    mutationFailed: 'تعذر تنفيذ الإجراء. حاول مرة أخرى.'
-  },
-  en: {
-    eyebrow: 'Advertising',
-    title: 'Advertising requests',
-    description: 'Send your request and contact number. Administration agrees the price and period with you, then activates the ad after approving payment.',
-    create: 'New advertising request',
-    refresh: 'Refresh',
-    filtersLabel: 'Filter requests',
-    statusLabel: 'Status',
-    allStatuses: 'All statuses',
-    apply: 'Apply',
-    clear: 'Clear',
-    count: 'advertising requests',
-    columns: { request: 'Request', placement: 'Placement and purpose', period: 'Period', status: 'Status', quote: 'Administrative quote', payment: 'Payment proof', actions: 'Actions' },
-    statuses: { draft: 'Draft', review: 'Under review', waiting_pricing: 'Waiting for pricing', quote_sent: 'Quote sent', waiting_payment: 'Waiting for payment', scheduled: 'Scheduled', active: 'Active', ended: 'Ended', rejected: 'Rejected', cancelled: 'Cancelled', expired: 'Expired' },
-    quoteStatuses: { issued: 'Ready to accept', accepted: 'Accepted', rejected: 'Rejected', cancelled: 'Cancelled', expired: 'Expired' },
-    paymentStatuses: { uploaded: 'Uploaded', pending_review: 'Under review', approved: 'Approved', rejected: 'Rejected' },
-    open: 'View details',
-    backToList: 'Back to requests',
-    requestDetails: 'Advertising request details',
-    purpose: 'Purpose',
-    interval: 'Period',
-    history: 'Status history',
-    quote: 'Administrative quote',
-    quoteTotal: 'Total',
-    quoteValidUntil: 'Valid until',
-    quoteTerms: 'Terms',
-    acceptQuote: 'Accept quote',
-    submitRequest: 'Submit for review',
-    paymentProof: 'Payment proof',
-    paymentProofHelp: 'Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.',
-    uploadPaymentProof: 'Upload payment proof',
-    sendPaymentProof: 'Send request',
-    paymentProofSendHelp: 'Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.',
-    paymentProofInvalidFile: 'Choose a non-empty PDF, JPG, or PNG file up to 10 MB.',
-    paymentMethod: 'Payment method',
-    choosePaymentMethod: 'Choose payment method',
-    paymentRecipient: 'Transfer details',
-    missingPaymentRecipient: 'Ask administration where to pay.',
-    paymentMethodLabels: { vodafone_cash: 'Vodafone Cash', instapay: 'InstaPay', bank_transfer: 'Bank transfer', cash: 'Cash' },
-    paymentProofUploaded: 'Payment proof was submitted for review.',
-    noPaymentProof: 'No payment proof submitted.',
-    schedule: 'Schedule',
-    noSchedule: 'No schedule is available yet.',
-    noQuote: 'No administrative quote is available yet.',
-    noHistory: 'No status history is available.',
-    createForm: { title: 'New advertising request', description: 'Describe your advertisement and add your contact number. Your request goes directly to administration for review and follow-up.', placementKey: 'Advertising placement code', placementKeyHelp: 'Include the property, project or company name and useful details. Administration sets the placement, period and price in a clear quote, then approves payment and activates the advertisement.', contactPhone: 'Contact number', contactPhoneHelp: 'A number administration can call to arrange your advertisement and payment.', purpose: 'What would you like to advertise?', start: 'Period start', end: 'Period end', cancel: 'Cancel', save: 'Send advertising request', validation: 'Enter a valid contact number and an advertising description of 2–500 characters.', close: 'Close request form' },
-    commission: { eyebrow: 'Commission', title: 'Commission', description: 'The commission policy applied to your account on Sadat Real Estate.', appliedPolicy: 'Current policy', source: 'Source', effectiveAt: 'Effective from', version: 'Policy version', kind: 'Commission type', percentage: 'Percentage', fixed: 'Fixed amount', noneTitle: 'No commission policy available', noneBody: 'No commission policy is currently assigned to your account. No universal rate is assumed.', readOnly: 'This information is read-only and cannot be changed by the provider.', unavailable: 'Unavailable', confirm: 'Confirm review of the commission policy', confirmed: 'Policy confirmed.', confirmFailed: 'The policy could not be confirmed.', versionChanged: 'The policy version changed. Refresh and review it again.' },
-    states: { loading: { title: 'Loading', body: 'Advertising data is loading.' }, empty: { title: 'No advertising requests', body: 'Advertising requests owned by your account will appear here when available.' }, error: { title: 'Advertising data could not load', body: 'Check the connection and try again.' }, retry: { title: 'Advertising is temporarily unavailable', body: 'You can retry when the connection is available.' }, permission: { title: 'Authentication required', body: 'Provider advertising data is not rendered before the session is verified.' }, notFound: { title: 'Advertising request not found', body: 'This request is not available in your account projection.' }, success: { title: 'Advertising data loaded', body: 'Advertising data loaded successfully.' } },
-    retry: 'Retry',
-    notFound: 'Advertising request not found',
-    unavailable: 'Unavailable',
-    success: 'Action completed successfully.',
-    mutationFailed: 'The action could not be completed. Try again.'
-  },};
-
 export function getProviderAdvertisingCopy(locale: SupportedLocale): ProviderAdvertisingCopy {
-  return localizeCopy('provider/advertising-copy#getProviderAdvertisingCopy', locale, copyByLocale[locale]);
+  return localizeCopy('provider/advertising-copy#getProviderAdvertisingCopy', locale, getEditableCopyCatalog(locale)['provider/advertising-copy#getProviderAdvertisingCopy'] as unknown as ProviderAdvertisingCopy);
 }

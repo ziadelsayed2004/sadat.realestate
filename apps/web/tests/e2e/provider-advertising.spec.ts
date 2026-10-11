@@ -78,22 +78,23 @@ async function routeAdvertisingApi(page: import('@playwright/test').Page): Promi
   });
 }
 
-test('payment proof is sent only by the send button and can be retried without choosing it again', async ({ page }) => {
+test('payment proof is sent only by the send button and can be retried without choosing it again', async ({ page }, testInfo) => {
   const locale = localeForProject();
   const copy = getProviderAdvertisingCopy(locale);
   await routeSession(page);
   await routeAdvertisingApi(page);
   const filename = 'WhatsApp Image 2026-10-07 at 10.49.37 PM.png';
+  const transfer = { sender: { name: 'Test sender', account: '+201111111111' }, recipient: { name: 'Test beneficiary', account: '+201000000001' } };
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==', 'base64');
-  const proof = { id: 'dddddddddddddddddddddddd', adRequestId: REQUEST_ID, providerId: PROVIDER_ID, paymentMethod: 'vodafone_cash', originalFilename: filename, normalizedExtension: '.png', detectedMime: 'image/png', byteSize: image.length, sha256: 'a'.repeat(64), version: 1, securityState: 'scan_pending', status: 'pending_review', reviewHistory: [], uploadedAt: '2026-10-08T08:00:00.000Z', active: true, idempotentReplay: false };
+  const proof = { id: 'dddddddddddddddddddddddd', adRequestId: REQUEST_ID, providerId: PROVIDER_ID, ...transfer, paymentMethod: 'vodafone_cash', originalFilename: filename, normalizedExtension: '.png', detectedMime: 'image/png', byteSize: image.length, sha256: 'a'.repeat(64), version: 1, securityState: 'scan_pending', status: 'pending_review', reviewHistory: [], uploadedAt: '2026-10-08T08:00:00.000Z', active: true, idempotentReplay: false };
   let sent = false;
   let posts = 0;
-  const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, paymentMethod: proof.paymentMethod, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
+  const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, ...transfer, paymentMethod: proof.paymentMethod, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
   await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentMethods: ['vodafone_cash', 'bank_transfer', `custom_${'method_'.repeat(10)}`], paymentInstructions: { vodafone_cash: ['Test beneficiary', '+201000000001'], bank_transfer: ['Test bank', 'Test bank account'] }, paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
   await page.route(`**/api/v1/provider/ads/${REQUEST_ID}/payment-proof`, async route => {
     posts += 1;
     expect(route.request().method()).toBe('POST');
-    expect(route.request().headers()).toMatchObject({ authorization: 'Bearer provider.advertising.token', 'x-file-name': encodeURIComponent(filename), 'x-payment-method': 'vodafone_cash', 'content-type': 'image/png' });
+    expect(route.request().headers()).toMatchObject({ authorization: 'Bearer provider.advertising.token', 'x-file-name': encodeURIComponent(filename), 'x-payment-method': 'vodafone_cash', 'content-type': 'image/png', 'x-payment-sender-name': encodeURIComponent(transfer.sender.name), 'x-payment-sender-account': encodeURIComponent(transfer.sender.account), 'x-payment-recipient-name': encodeURIComponent(transfer.recipient.name), 'x-payment-recipient-account': encodeURIComponent(transfer.recipient.account) });
     expect(route.request().postDataBuffer()).toEqual(image);
     if (posts === 1) {
       await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'temporarily_unavailable', message: 'Try again.', requestId: 'proof-offline' } }) });
@@ -108,24 +109,33 @@ test('payment proof is sent only by the send button and can be retried without c
   await expect(send).toBeDisabled();
   const method = page.getByRole('combobox', { name: copy.paymentMethod });
   await expect(method).toHaveAttribute('required', '');
-  await expect(method.locator('option')).toHaveCount(4);
+  await expect(method.locator('option')).toHaveCount(3);
   await method.selectOption('vodafone_cash');
   const recipient = page.locator('.provider-advertising__nested-card').filter({ has: page.getByRole('heading', { name: copy.paymentRecipient, exact: true }) });
   await expect(recipient).toContainText('+201000000001');
   await method.selectOption('bank_transfer');
   await expect(recipient).toContainText('Test bank account');
   await expect(recipient).not.toContainText('+201000000001');
-  await method.selectOption(`custom_${'method_'.repeat(10)}`);
-  await expect(recipient).toContainText(copy.missingPaymentRecipient);
+  await expect(method.locator(`option[value="custom_${'method_'.repeat(10)}"]`)).toHaveCount(0);
   await method.selectOption('vodafone_cash');
   await input.setInputFiles({ name: filename, mimeType: 'image/png', buffer: image });
+  await expect(send).toBeDisabled();
+  await page.getByLabel(copy.accountName, { exact: true }).fill(transfer.sender.name);
+  await expect(send).toBeDisabled();
+  await page.getByLabel(copy.accountNumber, { exact: true }).fill('not a wallet number');
+  await expect(send).toBeDisabled();
+  await page.getByLabel(copy.accountNumber, { exact: true }).fill(transfer.sender.account);
   await expect(send).toBeEnabled();
+  await page.locator('.provider-advertising__proof-form').screenshot({ path: testInfo.outputPath('sender-and-recipient.png') });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByText(copy.paymentProofSendHelp)).toBeVisible();
   expect(posts).toBe(0);
   await send.click();
   await expect(page.getByRole('alert')).toContainText(locale === 'ar' ? 'غير متاحة' : 'unavailable');
   expect(posts).toBe(1);
   expect(await input.evaluate(element => (element as HTMLInputElement).files?.[0]?.name)).toBe(filename);
+  await expect(page.getByLabel(copy.accountName, { exact: true })).toHaveValue(transfer.sender.name);
+  await expect(page.getByLabel(copy.accountNumber, { exact: true })).toHaveValue(transfer.sender.account);
   await send.click();
   await expect(page.getByRole('status').filter({ hasText: copy.paymentProofUploaded })).toBeVisible();
   expect(posts).toBe(2);

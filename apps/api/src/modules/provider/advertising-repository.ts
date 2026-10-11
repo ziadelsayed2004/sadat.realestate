@@ -100,6 +100,8 @@ function paymentProofFromRow(row: PaymentProofRecord & { _id: Types.ObjectId }):
     adRequestId: identifier(row.adRequestId),
     providerId: identifier(row.providerId),
     ...(row.paymentMethod ? { paymentMethod: row.paymentMethod } : {}),
+    ...(row.sender ? { sender: row.sender } : {}),
+    ...(row.recipient ? { recipient: row.recipient } : {}),
     originalFilename: row.originalFilename,
     normalizedExtension: row.normalizedExtension,
     detectedMime: row.detectedMime,

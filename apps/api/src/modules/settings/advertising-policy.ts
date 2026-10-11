@@ -1,5 +1,5 @@
 import type { Connection } from 'mongoose';
-import { providerAdRequestProjectionSchema, type ProviderAdRequestProjection } from '@sadat-real-estate/contracts';
+import { paymentAccountSchema, walletPaymentAccountSchema, providerAdRequestProjectionSchema, type ProviderAdRequestProjection } from '@sadat-real-estate/contracts';
 
 export type AdvertisingMime = 'image/jpeg' | 'image/png' | 'image/webp';
 export interface AdvertisingDimensions { width: number; height: number }
@@ -39,6 +39,11 @@ export function advertisingRuntimeSettings(values: Record<string, unknown> | und
   if (!values) return DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
   const quoteValidityDays = values.quote_validity_days;
   const instructions = Object.fromEntries(['vodafone_cash', 'instapay', 'bank_transfer', 'cash'].flatMap(method => {
+    if (method === 'vodafone_cash' || method === 'instapay') {
+      const legacy = Array.isArray(values[`${method}_payment_details`]) ? values[`${method}_payment_details`] as unknown[] : [];
+      const account = (method === 'vodafone_cash' ? walletPaymentAccountSchema : paymentAccountSchema).safeParse({ name: values[`${method}_recipient_name`] ?? (legacy.length >= 2 ? legacy[0] : undefined), account: values[`${method}_recipient_account`] ?? (legacy.length >= 2 ? legacy[1] : undefined) });
+      return account.success ? [[method, [account.data.name, account.data.account]]] : [];
+    }
     const parsed = providerAdRequestProjectionSchema.shape.paymentInstructions.safeParse({ [method]: values[`${method}_payment_details`] });
     return parsed.success && parsed.data ? Object.entries(parsed.data) : [];
   }));
@@ -48,7 +53,7 @@ export function advertisingRuntimeSettings(values: Record<string, unknown> | und
     acceptedFileFormats: formats(values.accepted_file_formats),
     dimensions: [...dimensions(values.desktop_dimensions), ...dimensions(values.mobile_dimensions)].filter((item, index, all) => all.findIndex((candidate) => candidate.width === item.width && candidate.height === item.height) === index),
     ...(typeof quoteValidityDays === 'number' && Number.isSafeInteger(quoteValidityDays) && quoteValidityDays >= 1 && quoteValidityDays <= 90 ? { quoteValidityDays } : {}),
-    paymentProofMethods: identifiers(values.payment_proof_methods),
+    paymentProofMethods: identifiers(values.payment_proof_methods).filter(method => ['vodafone_cash', 'instapay', 'bank_transfer', 'cash'].includes(method)),
     ...(Object.keys(instructions).length ? { paymentInstructions: instructions } : {})
   };
 }

@@ -1,11 +1,16 @@
 import { AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
 import { paymentProofError } from './payment-proof-error.ts';
+import { PaymentAccounts } from './payment-accounts.tsx';
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   type AdRequestCreate,
   adRequestCreateSchema,
   PAYMENT_PROOF_MAX_BYTES,
   paymentProofMimeSchema,
+  paymentAccountSchema,
+  walletPaymentAccountSchema,
+  type PaymentAccount,
+  type PaymentProofUploadHeaders,
   type ProviderAdRequestProjection,
   type ProviderCommissionProjection,
   type SupportedLocale
@@ -199,12 +204,17 @@ function FilterBar({ copy, draftStatus, onDraftStatus, onApply, onClear }: { rea
   );
 }
 
-function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string) => Promise<boolean> }) {
+function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string, transfer: Pick<PaymentProofUploadHeaders, 'sender' | 'recipient'>) => Promise<boolean> }) {
   const payment = detail.paymentProofs.find(proof => proof.active) ?? detail.paymentProofs.at(-1);
   const [paymentMethod, setPaymentMethod] = useState('');
-  const paymentMethods = detail.paymentMethods?.length ? detail.paymentMethods : Object.keys(copy.paymentMethodLabels);
+  const paymentMethods = (detail.paymentMethods ?? Object.keys(copy.paymentMethodLabels)).filter(method => method in copy.paymentMethodLabels);
   const validPaymentMethod = paymentMethods.includes(paymentMethod);
   const recipient = detail.paymentInstructions?.[paymentMethod as keyof NonNullable<ProviderAdRequestProjection['paymentInstructions']>];
+  const [sender, setSender] = useState<PaymentAccount>({ name: '', account: '' });
+  const accountSchema = paymentMethod === 'vodafone_cash' ? walletPaymentAccountSchema : paymentAccountSchema;
+  const validSender = paymentMethod === 'cash' || accountSchema.safeParse(sender).success;
+  const recipientAccount = accountSchema.safeParse({ name: recipient?.[0], account: recipient?.[1] });
+  const validRecipient = !['vodafone_cash', 'instapay'].includes(paymentMethod) || recipientAccount.success;
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -213,14 +223,14 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
   const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
   async function sendProof(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    if (!selectedFile || busy || sendingProof.current || !canUpload || !validPaymentMethod) return;
+    if (!selectedFile || busy || sendingProof.current || !canUpload || !validPaymentMethod || !validSender || !validRecipient) return;
     if (selectedFile.size === 0 || selectedFile.size > PAYMENT_PROOF_MAX_BYTES || !paymentProofMimeSchema.safeParse(selectedFile.type.toLowerCase()).success) {
       setFileError(true);
       return;
     }
     sendingProof.current = true;
     try {
-      if (await onUpload(selectedFile, paymentMethod)) {
+      if (await onUpload(selectedFile, paymentMethod, { ...(paymentMethod !== 'cash' ? { sender } : {}), ...(['vodafone_cash', 'instapay'].includes(paymentMethod) && recipientAccount.success ? { recipient: recipientAccount.data } : {}) })) {
         setSelectedFile(undefined);
         if (fileInput.current) fileInput.current.value = '';
       }
@@ -240,13 +250,16 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
         <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2><p className="provider-advertising__muted">{copy.paymentProofHelp}</p>
         {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span><span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span></div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
+        {payment ? <PaymentAccounts {...payment} locale={locale} /> : null}
         {canUpload ? <form className="provider-advertising__proof-form" onSubmit={event => { void sendProof(event); }}>
-          <label className="provider-advertising__field" htmlFor="provider-advertising-payment-method"><span>{copy.paymentMethod}</span><select id="provider-advertising-payment-method" value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} required disabled={busy}><option value="" disabled>{copy.choosePaymentMethod}</option>{paymentMethods.map(method => <option key={method} value={method}>{copy.paymentMethodLabels[method as keyof typeof copy.paymentMethodLabels] ?? method.replace(/[_.-]/gu, ' ')}</option>)}</select></label>
-          {paymentMethod ? <section className="provider-advertising__nested-card" aria-live="polite"><h3>{copy.paymentRecipient}</h3>{recipient ? <ul>{recipient.map((line, index) => <li key={index}><bdi>{line}</bdi></li>)}</ul> : <p>{copy.missingPaymentRecipient}</p>}</section> : null}
+          <label className="provider-advertising__field" htmlFor="provider-advertising-payment-method"><span>{copy.paymentMethod}</span><select id="provider-advertising-payment-method" value={paymentMethod} onChange={event => { setPaymentMethod(event.target.value); setSender({ name: '', account: '' }); setFileError(false); }} required disabled={busy}><option value="" disabled>{copy.choosePaymentMethod}</option>{paymentMethods.map(method => <option key={method} value={method}>{copy.paymentMethodLabels[method as keyof typeof copy.paymentMethodLabels] ?? method.replace(/[_.-]/gu, ' ')}</option>)}</select></label>
+          {paymentMethods.length === 0 ? <p className="provider-advertising__help">{copy.missingPaymentRecipient}</p> : null}
+          {paymentMethod ? <section className="provider-advertising__nested-card" aria-live="polite"><h3>{copy.paymentRecipient}</h3>{recipient && validRecipient ? <ul>{recipient.map((line, index) => <li key={index}><bdi>{line}</bdi></li>)}</ul> : <p>{copy.missingPaymentRecipient}</p>}</section> : null}
+          {paymentMethod && paymentMethod !== 'cash' ? <fieldset className="provider-advertising__sender"><legend>{copy.senderAccount}</legend>{(['name', 'account'] as const).map(part => <label className="provider-advertising__field" key={part}><span>{part === 'name' ? copy.accountName : copy.accountNumber}</span><input value={sender[part]} type={part === 'account' && paymentMethod === 'vodafone_cash' ? 'tel' : 'text'} required minLength={part === 'name' ? 2 : 3} maxLength={part === 'name' ? 120 : paymentMethod === 'vodafone_cash' ? 16 : 160} dir={part === 'account' ? 'ltr' : undefined} disabled={busy} onChange={event => setSender(current => ({ ...current, [part]: event.target.value }))} /></label>)}</fieldset> : null}
           <label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input ref={fileInput} type="file" accept="application/pdf,image/jpeg,image/png" aria-describedby="provider-advertising-proof-help" onChange={(event: ChangeEvent<HTMLInputElement>) => { setSelectedFile(event.target.files?.[0]); setFileError(false); }} disabled={busy} /></label>
           <p id="provider-advertising-proof-help" className="provider-advertising__help">{copy.paymentProofSendHelp}</p>
           {fileError ? <p className="provider-advertising__form-error" role="alert">{copy.paymentProofInvalidFile}</p> : null}
-          <Button type="submit" loading={busy} disabled={!selectedFile || busy || fileError || !validPaymentMethod}>{copy.sendPaymentProof}</Button>
+          <Button type="submit" loading={busy} disabled={!selectedFile || busy || fileError || !validPaymentMethod || !validSender || !validRecipient}>{copy.sendPaymentProof}</Button>
         </form> : null}
         <section className="provider-advertising__nested-card"><h2>{copy.schedule}</h2>{detail.schedule ? <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{detail.schedule.status}</dd></div><div><dt>{copy.interval}</dt><dd>{detail.schedule.localStart} — {detail.schedule.localEnd} ({detail.schedule.timezone})</dd></div></dl> : <p className="provider-advertising__muted">{copy.noSchedule}</p>}</section>
       </section>
@@ -361,7 +374,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     }
   }
 
-  async function uploadPaymentProof(file: File, paymentMethod: string): Promise<boolean> {
+  async function uploadPaymentProof(file: File, paymentMethod: string, transfer: Pick<PaymentProofUploadHeaders, 'sender' | 'recipient'>): Promise<boolean> {
     if (detail === undefined || mutationBusy) return false;
     if (!isProvider || detail.status !== 'waiting_payment' || detail.quote?.status !== 'accepted') {
       setMutationError(copy.mutationFailed);
@@ -371,7 +384,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     setMutationError(undefined);
     try {
       setFeedback(undefined);
-      await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod);
+      await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod, transfer);
       setFeedback(copy.paymentProofUploaded);
       setAttempt(value => value + 1);
       return true;

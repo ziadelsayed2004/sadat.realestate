@@ -23,6 +23,7 @@ export type PaymentProofServiceErrorCode =
   | 'PAYMENT_PROOF_CAPABILITY_UNAVAILABLE'
   | 'AD_REQUEST_NOT_FOUND'
   | 'AD_REQUEST_NOT_PAYABLE'
+  | 'PAYMENT_RECIPIENT_CHANGED'
   | 'DUPLICATE'
   | 'MALWARE_SCAN_FAILED'
   | 'PAYMENT_PROOF_AUDIT_UNAVAILABLE'
@@ -60,6 +61,8 @@ export interface PaymentProofRegistrationInput extends ValidatedProviderDocument
   adRequestId: string;
   providerId: string;
   paymentMethod?: string;
+  sender?: PaymentProofData['sender'];
+  recipient?: PaymentProofData['recipient'];
   storageKey: string;
   uploadedAt: Date;
 }
@@ -227,13 +230,17 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
       }
       const headers = paymentProofUploadHeadersSchema.parse(input);
       const policy = dependencies.runtimeSettings ? await dependencies.runtimeSettings.read() : DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
-      if (policy.paymentProofMethods.length > 0 && (headers.paymentMethod === undefined || !policy.paymentProofMethods.includes(headers.paymentMethod))) throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
+      if (dependencies.runtimeSettings && !policy.paymentProofMethods.includes(headers.paymentMethod)) throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
       const request = await (dependencies.repository
         ? dependencies.repository.findPayableAdRequest(claims.sub, adRequestId)
         : dependencies.findPayableAdRequest?.(claims.sub, adRequestId));
       if (!request) throw new PaymentProofServiceError('AD_REQUEST_NOT_FOUND');
       if (request.providerId !== claims.sub) throw new PaymentProofServiceError('FORBIDDEN');
       if (request.status !== 'waiting_payment') throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
+      if (headers.paymentMethod === 'vodafone_cash' || headers.paymentMethod === 'instapay') {
+        const recipient = policy.paymentInstructions?.[headers.paymentMethod];
+        if (!recipient || recipient[0] !== headers.recipient?.name || recipient[1] !== headers.recipient?.account) throw new PaymentProofServiceError('PAYMENT_RECIPIENT_CHANGED');
+      }
       if (headers.contentLength !== undefined && headers.contentLength > PAYMENT_PROOF_MAX_BYTES) {
         throw new PaymentProofServiceError('FILE_TOO_LARGE');
       }
@@ -266,6 +273,8 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
             adRequestId: request.id,
             providerId: claims.sub,
             ...(headers.paymentMethod ? { paymentMethod: headers.paymentMethod } : {}),
+            ...(headers.sender ? { sender: headers.sender } : {}),
+            ...(headers.recipient ? { recipient: headers.recipient } : {}),
             ...validated,
             storageKey: objectKey,
             uploadedAt
@@ -276,6 +285,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         }
         if (registered.kind === 'replay') {
           await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);
+          if (registered.proof.paymentMethod !== headers.paymentMethod || JSON.stringify(registered.proof.sender) !== JSON.stringify(headers.sender) || JSON.stringify(registered.proof.recipient) !== JSON.stringify(headers.recipient)) throw new PaymentProofServiceError('DUPLICATE');
           return project(registered.proof, true);
         }
 
@@ -317,6 +327,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
       ));
       if (replay) {
         await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);
+        if (replay.paymentMethod !== headers.paymentMethod || JSON.stringify(replay.sender) !== JSON.stringify(headers.sender) || JSON.stringify(replay.recipient) !== JSON.stringify(headers.recipient)) throw new PaymentProofServiceError('DUPLICATE');
         return project(replay, true);
       }
 
@@ -325,6 +336,8 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         adRequestId: request.id,
         providerId: claims.sub,
         ...(headers.paymentMethod ? { paymentMethod: headers.paymentMethod } : {}),
+        ...(headers.sender ? { sender: headers.sender } : {}),
+        ...(headers.recipient ? { recipient: headers.recipient } : {}),
         ...validated,
         version: 1,
         securityState: 'scan_pending',

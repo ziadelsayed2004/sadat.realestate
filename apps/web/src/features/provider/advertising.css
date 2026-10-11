@@ -752,3 +752,5 @@
     justify-content: center;
   }
 }
+.provider-advertising__sender { display: grid; gap: 18px; margin: 0; padding: 18px; min-inline-size: 0; border: 1px solid #dbe0e6; border-radius: 12px; }
+.provider-advertising__sender legend { padding-inline: 8px; font-weight: 700; }

@@ -6,6 +6,8 @@ import {
   adminSettingsNamespaceSchema,
   adminSettingsUpdateSchema,
   providerAdRequestProjectionSchema,
+  paymentAccountSchema,
+  walletPaymentAccountSchema,
   publicSeoSettingsSchema,
   type AdminSettingsData,
   type AdminSettingsNamespace,
@@ -177,6 +179,11 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
       for (const method of ['vodafone_cash', 'instapay', 'bank_transfer', 'cash']) {
         const key = `${method}_payment_details`;
         if (data.values[key] !== undefined) providerAdRequestProjectionSchema.shape.paymentInstructions.parse({ [method]: data.values[key] });
+        if (method === 'vodafone_cash' || method === 'instapay') {
+          const legacy = Array.isArray(data.values[key]) ? data.values[key] as unknown[] : [];
+          const name = data.values[`${method}_recipient_name`] ?? (legacy.length >= 2 ? legacy[0] : undefined), account = data.values[`${method}_recipient_account`] ?? (legacy.length >= 2 ? legacy[1] : undefined);
+          if (name || account || (Array.isArray(data.values.payment_proof_methods) && data.values.payment_proof_methods.includes(method))) (method === 'vodafone_cash' ? walletPaymentAccountSchema : paymentAccountSchema).parse({ name, account });
+        }
       }
     }
     if (target === 'contact' || target === 'social') {

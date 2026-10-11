@@ -6538,12 +6538,70 @@
             "minLength": 1,
             "maxLength": 512
           }
+        },
+        {
+          "name": "X-Payment-Method",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "vodafone_cash",
+              "instapay",
+              "bank_transfer",
+              "cash"
+            ]
+          }
+        },
+        {
+          "name": "X-Payment-Sender-Name",
+          "in": "header",
+          "required": false,
+          "description": "URI-encoded UTF-8. Required for transfers; identifies the account that sent the payment. These headers do not apply to cash.",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1440
+          }
+        },
+        {
+          "name": "X-Payment-Sender-Account",
+          "in": "header",
+          "required": false,
+          "description": "URI-encoded UTF-8. Required for transfers; identifies the account that sent the payment. These headers do not apply to cash.",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1440
+          }
+        },
+        {
+          "name": "X-Payment-Recipient-Name",
+          "in": "header",
+          "required": false,
+          "description": "URI-encoded UTF-8. Required for Vodafone Cash and InstaPay; must match the currently configured recipient shown to the provider. These headers are accepted only for Vodafone Cash and InstaPay.",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1440
+          }
+        },
+        {
+          "name": "X-Payment-Recipient-Account",
+          "in": "header",
+          "required": false,
+          "description": "URI-encoded UTF-8. Required for Vodafone Cash and InstaPay; must match the currently configured recipient shown to the provider. These headers are accepted only for Vodafone Cash and InstaPay.",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1440
+          }
         }
       ],
       "post": {
         "operationId": "uploadProviderPaymentProof",
         "summary": "Stream an owned advertising payment proof into private quarantine",
-        "description": "The proof is stored privately, scanned, and exposed only as redacted metadata. A pending proof is not bank verification.",
+        "description": "The proof is stored privately, scanned, and exposed only as redacted metadata. A pending proof is not bank verification. Transfer proofs require sender details. Wallet and InstaPay proofs require a matching recipient snapshot; changed destination details and conflicting duplicate receipts return 409. These details are declared by the provider and require manual review.",
         "security": [
           {
             "bearerAuth": []
@@ -18016,6 +18074,12 @@
           },
           "idempotentReplay": {
             "type": "boolean"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/PaymentAccount"
+          },
+          "recipient": {
+            "$ref": "#/components/schemas/PaymentAccount"
           }
         }
       },
@@ -30643,6 +30707,28 @@
           "meta"
         ],
         "additionalProperties": false
+      },
+      "PaymentAccount": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "account"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[^\\u0000-\\u001f\\u007f<>]+$"
+          },
+          "account": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f<>]+$"
+          }
+        }
       }
     }
   }

@@ -9,4 +9,9 @@ describe('receipt upload errors', () => {
     expect(paymentProofError(error('INVALID_FILE_SIGNATURE'), locale, 'fallback')).not.toBe('fallback');
     expect(paymentProofError(new ApiClientError('unavailable', { code: 'HTTP_ERROR', status: 503 }), locale, 'fallback')).not.toBe('fallback');
   });
+  it.each(['ar', 'en'] as const)('distinguishes changed recipients and conflicting transfer details in %s', locale => {
+    const error = (code: string) => new ApiClientError('internal message', { code: 'HTTP_ERROR', status: 409, apiError: { code, messageKey: 'errors.conflict', details: [], requestId: 'transfer-error' } });
+    expect(paymentProofError(error('PAYMENT_RECIPIENT_CHANGED'), locale, 'fallback')).toMatch(locale === 'ar' ? /الاستلام/u : /Recipient/);
+    expect(paymentProofError(error('DUPLICATE'), locale, 'fallback')).toMatch(locale === 'ar' ? /الإدارة/u : /administration/);
+  });
 });

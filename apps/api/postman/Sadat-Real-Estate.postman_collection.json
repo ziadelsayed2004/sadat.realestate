@@ -5517,6 +5517,10 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "X-Payment-Method",
+                "value": "cash"
               }
             ],
             "body": {
@@ -5541,7 +5545,7 @@
                 }
               ]
             },
-            "description": "Streams a private provider-owned proof. The response exposes only redacted metadata; upload is not bank verification."
+            "description": "Streams a private provider-owned proof. The response exposes only redacted metadata; upload is not bank verification. For wallet/InstaPay transfers, choose the matching method and send URI-encoded X-Payment-Sender-Name, X-Payment-Sender-Account, X-Payment-Recipient-Name and X-Payment-Recipient-Account headers. Recipient details must match current administration settings. Sender details are required for bank transfers too. Cash has no source account."
           }
         },
         {

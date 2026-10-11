@@ -87,6 +87,8 @@ function paymentProjection(proof: PaymentProofData, request: AdRequest): Provide
     id: proof.id,
     adRequestId: proof.adRequestId,
     ...(proof.paymentMethod ? { paymentMethod: proof.paymentMethod } : {}),
+    ...(proof.sender ? { sender: proof.sender } : {}),
+    ...(proof.recipient ? { recipient: proof.recipient } : {}),
     status: proof.status,
     securityState: proof.securityState,
     version: proof.version,

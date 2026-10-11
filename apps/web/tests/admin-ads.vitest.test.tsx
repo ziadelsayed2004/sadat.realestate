@@ -67,6 +67,8 @@ const proof = paymentProofDataSchema.parse({
   adRequestId: request.id,
   providerId: request.providerId,
   originalFilename: 'payment-proof.pdf',
+  sender: { name: 'Test sender', account: '+201111111111' },
+  recipient: { name: 'Test beneficiary', account: '+201000000001' },
   normalizedExtension: '.pdf',
   detectedMime: 'application/pdf',
   byteSize: 128_000,
@@ -281,6 +283,10 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     const reasonField = screen.getByLabelText(copy.reasonLabel);
     const reviewForm = reasonField.closest('form');
     expect(reviewForm).not.toBeNull();
+    expect(reviewForm).toHaveTextContent('Test sender');
+    expect(reviewForm).toHaveTextContent('+201111111111');
+    expect(reviewForm).toHaveTextContent('Test beneficiary');
+    expect(reviewForm).toHaveTextContent('+201000000001');
     fireEvent.submit(reviewForm!);
     expect(review).not.toHaveBeenCalled();
     expect(screen.getByText(copy.reasonRequired)).toBeInTheDocument();

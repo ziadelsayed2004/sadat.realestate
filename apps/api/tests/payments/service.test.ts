@@ -5,13 +5,45 @@ import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createDeterministicMalwareScanner, createInMemoryStorageAdapter, createUnavailableMalwareScanner } from '../../src/modules/uploads/adapters.js';
 import { PaymentProofServiceError, createPaymentProofService } from '../../src/modules/payments/service.js';
 import type { PaymentProofRepository, StoredPaymentProof } from '../../src/modules/payments/service.js';
+import { DEFAULT_ADVERTISING_RUNTIME_SETTINGS } from '../../src/modules/settings/advertising-policy.js';
 
 const provider = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '2123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'provider', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const admin = { ...provider, sub: '3123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
 const seeker = { ...provider, role: 'seeker' } as AccessTokenClaims;
 const adRequestId = '4123456789abcdef01234567';
 const validPdf = Buffer.from('%PDF-1.7\nprivate proof\n%%EOF', 'ascii');
-const headers = { filename: 'receipt.pdf', contentType: 'application/pdf' as const, contentLength: validPdf.byteLength };
+const headers = { filename: 'receipt.pdf', contentType: 'application/pdf' as const, contentLength: validPdf.byteLength, paymentMethod: 'cash' as const };
+
+test('transfer proofs require both accounts, preserve the recipient snapshot and reject changed details or conflicting replay', async () => {
+  let recipient = { name: 'Test beneficiary', account: '+201000000001' };
+  const sender = { name: 'Test sender', account: '+201111111111' };
+  const storage = createInMemoryStorageAdapter();
+  let writes = 0;
+  const put = storage.putPrivateQuarantine.bind(storage);
+  storage.putPrivateQuarantine = async (key, source) => { writes++; return put(key, source); };
+  const service = createPaymentProofService({ storage, scanner: createDeterministicMalwareScanner('clean'), authorization: { authorize: async () => true }, findPayableAdRequest: (_owner, id) => id === adRequestId ? requestFor(provider.sub) : undefined, runtimeSettings: { read: async () => ({ ...DEFAULT_ADVERTISING_RUNTIME_SETTINGS, paymentProofMethods: ['vodafone_cash'], paymentInstructions: { vodafone_cash: [recipient.name, recipient.account] } }) } });
+  const input = { ...headers, paymentMethod: 'vodafone_cash', sender, recipient };
+  for (const invalid of [{ ...input, paymentMethod: 'cash' }, { ...input, paymentMethod: 'bank_transfer' }, { ...input, sender: undefined }, { ...input, recipient: undefined }, { ...input, sender: { name: '', account: sender.account } }, { ...input, sender: { name: sender.name, account: 'not a number' } }, { ...input, sender: { name: 'unsafe\nname', account: sender.account } }]) await assert.rejects(service.upload(provider, adRequestId, invalid, Readable.from(validPdf)));
+  assert.equal(writes, 0);
+  const proof = await service.upload(provider, adRequestId, input, Readable.from(validPdf));
+  assert.equal(proof.status, 'pending_review');
+  assert.deepEqual(proof.sender, sender); assert.deepEqual(proof.recipient, recipient);
+  const replay = await service.upload(provider, adRequestId, input, Readable.from(validPdf));
+  assert.equal(replay.id, proof.id); assert.equal(replay.idempotentReplay, true);
+  await assert.rejects(service.upload(provider, adRequestId, { ...input, sender: { ...sender, name: 'Other sender' } }, Readable.from(validPdf)), (error) => error instanceof PaymentProofServiceError && error.code === 'DUPLICATE');
+  recipient = { ...recipient, account: '+201222222222' };
+  const before = writes;
+  await assert.rejects(service.upload(provider, adRequestId, input, Readable.from(validPdf)), (error) => error instanceof PaymentProofServiceError && error.code === 'PAYMENT_RECIPIENT_CHANGED');
+  await assert.rejects(service.upload(provider, 'missing-request', input, Readable.from(validPdf)), (error) => error instanceof PaymentProofServiceError && error.code === 'AD_REQUEST_NOT_FOUND');
+  assert.equal(writes, before);
+  const saved = await service.getAdmin(admin, proof.id);
+  assert.deepEqual(saved.sender, sender); assert.deepEqual(saved.recipient, input.recipient);
+});
+
+test('explicitly disabled payment methods cannot upload a receipt', async () => {
+  const service = createPaymentProofService({ storage: createInMemoryStorageAdapter(), scanner: createDeterministicMalwareScanner('clean'), findPayableAdRequest: () => requestFor(provider.sub), runtimeSettings: { read: async () => DEFAULT_ADVERTISING_RUNTIME_SETTINGS } });
+  await assert.rejects(service.upload(provider, adRequestId, headers, Readable.from(validPdf)), (error) => error instanceof PaymentProofServiceError && error.code === 'AD_REQUEST_NOT_PAYABLE');
+});
 
 test('receipt preview requires payment-review permission and rejects unsafe, altered or missing private files', async () => {
   const storage = createInMemoryStorageAdapter();
@@ -135,7 +167,7 @@ test('payment-proof upload enforces the configured payment method and stores the
     (error) => error instanceof PaymentProofServiceError && error.code === 'AD_REQUEST_NOT_PAYABLE'
   );
 
-  const proof = await service.upload(provider, adRequestId, { ...headers, paymentMethod: 'bank_transfer' }, Readable.from(validPdf));
+  const proof = await service.upload(provider, adRequestId, { ...headers, paymentMethod: 'bank_transfer', sender: { name: 'Test sender', account: 'EG1234567890' } }, Readable.from(validPdf));
   assert.equal(proof.paymentMethod, 'bank_transfer');
 });
 

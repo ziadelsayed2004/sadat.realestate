@@ -4,6 +4,7 @@ import { accountPasswordSchema, authSessionDataSchema, normalizedEmailSchema, no
 import { commissionPolicyKindSchema, commissionResolutionSourceSchema } from '../commissions/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 import { propertyDataSchema } from '../properties/index.js';
+import { paymentAccountSchema } from '../payments/index.js';
 
 export const PROVIDER_TYPES = [
   'individual_broker',
@@ -266,6 +267,8 @@ export const providerAdPaymentProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
   adRequestId: providerAdvertisingObjectIdSchema,
   paymentMethod: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
+  sender: paymentAccountSchema.optional(),
+  recipient: paymentAccountSchema.optional(),
   status: z.enum(['uploaded', 'pending_review', 'approved', 'rejected']),
   securityState: z.enum(['quarantined', 'scan_pending', 'clean', 'infected', 'scan_failed', 'deleted']),
   version: z.number().int().positive(),

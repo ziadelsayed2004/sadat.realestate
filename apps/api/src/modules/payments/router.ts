@@ -29,6 +29,7 @@ const ERROR_MAP: Readonly<Record<string, { statusCode: number; messageKey: strin
   PAYMENT_PROOF_CAPABILITY_UNAVAILABLE: { statusCode: 503, messageKey: 'errors.upload.capabilityUnavailable' },
   AD_REQUEST_NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
   AD_REQUEST_NOT_PAYABLE: { statusCode: 409, messageKey: 'errors.conflict' },
+  PAYMENT_RECIPIENT_CHANGED: { statusCode: 409, messageKey: 'errors.conflict' },
   DUPLICATE: { statusCode: 409, messageKey: 'errors.conflict' },
   NOT_FOUND: { statusCode: 404, messageKey: 'errors.notFound' },
   FILE_NOT_READY: { statusCode: 409, messageKey: 'errors.conflict' },
@@ -89,6 +90,13 @@ function uploadFilename(request: Request): string | undefined {
   const raw = request.get('x-file-name');
   try { return raw === undefined ? undefined : decodeURIComponent(raw); }
   catch { throw new ApiContractError('INVALID_FILENAME', 'errors.upload.invalidFilename', 400); }
+}
+
+function transferAccount(request: Request, kind: 'sender' | 'recipient') {
+  const name = request.get(`x-payment-${kind}-name`), account = request.get(`x-payment-${kind}-account`);
+  if (name === undefined && account === undefined) return undefined;
+  try { return { name: name === undefined ? undefined : decodeURIComponent(name), account: account === undefined ? undefined : decodeURIComponent(account) }; }
+  catch { throw new ApiContractError('VALIDATION_FAILED', 'errors.invalidInput', 400); }
 }
 
 function objectIdPath(value: string | string[] | undefined): string {
@@ -172,6 +180,8 @@ export function createPaymentProofRouter(dependencies: PaymentProofRouterDepende
         filename: uploadFilename(request),
         contentType: request.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase(),
         paymentMethod: request.get('x-payment-method'),
+        sender: transferAccount(request, 'sender'),
+        recipient: transferAccount(request, 'recipient'),
         contentLength: contentLength(request)
       });
       const result = await dependencies.service.upload(

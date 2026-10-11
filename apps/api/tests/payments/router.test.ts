@@ -4,6 +4,8 @@ import { paymentProofDataSchema, type PaymentProofData } from '@sadat-real-estat
 import type { AccessTokenService } from '../../src/modules/auth/crypto.js';
 import { createInMemoryStorageAdapter, createDeterministicMalwareScanner } from '../../src/modules/uploads/adapters.js';
 import { createPaymentProofService, type PaymentProofRepository, type StoredPaymentProof } from '../../src/modules/payments/service.js';
+import type { PaymentProofServiceDependencies } from '../../src/modules/payments/service.js';
+import { DEFAULT_ADVERTISING_RUNTIME_SETTINGS } from '../../src/modules/settings/advertising-policy.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const providerId = '0123456789abcdef01234567';
@@ -65,6 +67,9 @@ function createRepository(): PaymentProofRepository {
         id: '222222222222222222222222',
         adRequestId: input.adRequestId,
         providerId: input.providerId,
+        ...(input.paymentMethod ? { paymentMethod: input.paymentMethod } : {}),
+        ...(input.sender ? { sender: input.sender } : {}),
+        ...(input.recipient ? { recipient: input.recipient } : {}),
         originalFilename: input.originalFilename,
         normalizedExtension: input.normalizedExtension,
         detectedMime: input.detectedMime,
@@ -118,8 +123,9 @@ const accessTokens: AccessTokenService = {
   }
 };
 
-async function withServer(run: (baseUrl: string) => Promise<void>) {
+async function withServer(run: (baseUrl: string) => Promise<void>, runtimeSettings?: PaymentProofServiceDependencies['runtimeSettings']) {
   const service = createPaymentProofService({
+    ...(runtimeSettings ? { runtimeSettings } : {}),
     repository: createRepository(),
     storage: createInMemoryStorageAdapter(),
     scanner: createDeterministicMalwareScanner('clean'),
@@ -139,13 +145,32 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
   }
 }
 
+test('transfer headers preserve Arabic account names and expose both parties only to an authorized reviewer', async () => {
+  const sender = { name: 'اسم المحوّل', account: 'sender@instapay' }, recipient = { name: 'حساب المنصة', account: 'platform@instapay' };
+  await withServer(async baseUrl => {
+    const headers = { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf', 'X-File-Name': 'receipt.pdf', 'X-Payment-Method': 'instapay', 'X-Payment-Sender-Name': encodeURIComponent(sender.name), 'X-Payment-Sender-Account': encodeURIComponent(sender.account), 'X-Payment-Recipient-Name': encodeURIComponent(recipient.name), 'X-Payment-Recipient-Account': encodeURIComponent(recipient.account) };
+    const incomplete = { ...headers }; Reflect.deleteProperty(incomplete, 'X-Payment-Sender-Account');
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, { method: 'POST', headers: incomplete, body: pdf })).status, 400);
+    const uploaded = await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, { method: 'POST', headers, body: pdf });
+    assert.equal(uploaded.status, 201);
+    const { data: proof } = await uploaded.json() as { data: PaymentProofData };
+    assert.deepEqual(proof.sender, sender); assert.deepEqual(proof.recipient, recipient);
+    assert.equal(proof.status, 'pending_review');
+    const detailUrl = `${baseUrl}/api/v1/admin/payment-proofs/${proof.id}`;
+    assert.equal((await fetch(detailUrl, { headers: { Authorization: `Bearer ${providerToken}` } })).status, 403);
+    const { data: detail } = await (await fetch(detailUrl, { headers: { Authorization: `Bearer ${adminToken}` } })).json() as { data: PaymentProofData };
+    assert.deepEqual(detail.sender, sender); assert.deepEqual(detail.recipient, recipient);
+  }, { read: async () => ({ ...DEFAULT_ADVERTISING_RUNTIME_SETTINGS, paymentProofMethods: ['instapay'], paymentInstructions: { instapay: [recipient.name, recipient.account] } }) });
+});
+
 function upload(baseUrl: string, token = providerToken) {
   return fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/pdf',
-      'X-File-Name': 'receipt.pdf'
+      'X-File-Name': 'receipt.pdf',
+      'X-Payment-Method': 'cash'
     },
     body: pdf
   });
@@ -174,8 +199,8 @@ test('provider payment-proof route is owner-scoped, private, scanned, and replay
 
 test('payment-proof route rejects malformed object ids and cross-owner requests', async () => {
   await withServer(async (baseUrl) => {
-    assert.equal((await fetch(`${baseUrl}/api/v1/provider/ads/not-an-id/payment-proof`, { method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf', 'X-File-Name': 'receipt.pdf' }, body: pdf })).status, 400);
-    assert.equal((await fetch(`${baseUrl}/api/v1/provider/ads/${'111111111111111111111111'}/payment-proof`, { method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf', 'X-File-Name': 'receipt.pdf' }, body: pdf })).status, 404);
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/ads/not-an-id/payment-proof`, { method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf', 'X-File-Name': 'receipt.pdf', 'X-Payment-Method': 'cash' }, body: pdf })).status, 400);
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/ads/${'111111111111111111111111'}/payment-proof`, { method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/pdf', 'X-File-Name': 'receipt.pdf', 'X-Payment-Method': 'cash' }, body: pdf })).status, 404);
   });
 });
 
@@ -184,7 +209,7 @@ test('payment proofs accept WhatsApp timestamp names and encoded Arabic names wi
     await withServer(async baseUrl => {
       const bytes = Buffer.from([0xff, 0xd8, 0xff, 0x01, 0xff, 0xd9]);
       const result = await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, {
-        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'image/jpeg', 'X-File-Name': encodeURIComponent(filename) }, body: bytes
+        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'image/jpeg', 'X-File-Name': encodeURIComponent(filename), 'X-Payment-Method': 'cash' }, body: bytes
       });
       assert.equal(result.status, 201);
       const body = await result.json() as { data: PaymentProofData };
@@ -204,7 +229,7 @@ test('unsafe receipt names return a useful 400 and timestamps never bypass signa
       ['bad%GG.pdf', 'application/pdf', 'INVALID_FILENAME']
     ]) {
       const result = await fetch(`${baseUrl}/api/v1/provider/ads/${adRequestId}/payment-proof`, {
-        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': contentType!, 'X-File-Name': filename! }, body: pdf
+        method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': contentType!, 'X-File-Name': filename!, 'X-Payment-Method': 'cash' }, body: pdf
       });
       assert.equal(result.status, 400);
       const body = await result.json() as { error: { code: string } };

@@ -72,6 +72,8 @@ export interface PaymentProofRecord {
   adRequestId: Types.ObjectId;
   providerId: Types.ObjectId;
   paymentMethod?: PaymentProofData['paymentMethod'];
+  sender?: PaymentProofData['sender'];
+  recipient?: PaymentProofData['recipient'];
   originalFilename: PaymentProofData['originalFilename'];
   normalizedExtension: PaymentProofData['normalizedExtension'];
   detectedMime: PaymentProofData['detectedMime'];
@@ -205,6 +207,8 @@ const paymentProofSchema = new Schema<PaymentProofRecord>({
   adRequestId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'AdRequest' },
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
   paymentMethod: { type: String, trim: true, maxlength: 80 },
+  sender: { type: new Schema({ name: { type: String, required: true, maxlength: 120 }, account: { type: String, required: true, maxlength: 160 } }, { _id: false, strict: 'throw' }), immutable: true },
+  recipient: { type: new Schema({ name: { type: String, required: true, maxlength: 120 }, account: { type: String, required: true, maxlength: 160 } }, { _id: false, strict: 'throw' }), immutable: true },
   originalFilename: { type: String, required: true, maxlength: 120 },
   normalizedExtension: { type: String, enum: ['.pdf', '.jpg', '.jpeg', '.png'], required: true },
   detectedMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png'], required: true },

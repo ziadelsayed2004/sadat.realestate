@@ -5,6 +5,8 @@ export function paymentProofError(error: unknown, locale: SupportedLocale, fallb
   if (!(error instanceof ApiClientError)) return fallback;
   const ar = locale === 'ar';
   const code = error.apiError?.code ?? error.code;
+  if (code === 'PAYMENT_RECIPIENT_CHANGED') return ar ? 'بيانات الاستلام تغيّرت أو لم تعد متاحة. حدّث الطلب وراجع اسم ورقم حساب الاستلام قبل الإرسال.' : 'Recipient details changed or are unavailable. Refresh the request and check the recipient name and account before submitting.';
+  if (code === 'DUPLICATE') return ar ? 'الإثبات مسجّل ببيانات تحويل مختلفة. راجع الإدارة لتصحيح البيانات.' : 'The receipt already exists with different transfer details. Contact administration to correct them.';
   if (code === 'DOUBLE_EXTENSION_REJECTED' || code === 'INVALID_FILENAME') return ar ? 'اسم الملف غير مقبول. استخدم اسمًا بسيطًا بامتداد PDF أو JPG أو PNG ثم أعد الإرسال.' : 'The filename is not accepted. Use a simple name ending in PDF, JPG or PNG and resend.';
   if (['INVALID_FILE_SIGNATURE', 'FILE_TYPE_NOT_ALLOWED', 'ENCRYPTED_PDF_REJECTED', 'EMPTY_FILE'].includes(code)) return ar ? 'الملف غير صالح أو نوعه لا يطابق امتداده. اختر صورة JPG أو PNG سليمة أو PDF غير محمي بكلمة مرور.' : 'The file is invalid or does not match its extension. Choose a valid JPG, PNG or a PDF without password protection.';
   if (error.status === 413 || code === 'FILE_TOO_LARGE') return ar ? 'حجم الملف أكبر من ١٠ ميجابايت. اختر ملفًا أصغر وأعد الإرسال.' : 'The file exceeds 10 MB. Choose a smaller file and resend.';

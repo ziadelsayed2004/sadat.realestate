@@ -19,6 +19,7 @@ import {
   type AdRequest,
   type AdRequestCreate,
   type PaymentProofData,
+  type PaymentProofUploadHeaders,
   type ProviderAdRequestListData,
   type ProviderAdRequestProjection,
   type ProviderCommissionProjection,
@@ -76,7 +77,7 @@ export interface ProviderAdvertisingMutationApi {
   createRequest(input: AdRequestCreate, signal?: AbortSignal): Promise<AdRequest>;
   submitRequest(requestId: string, expectedVersion: number, signal?: AbortSignal): Promise<AdRequest>;
   acceptQuote(requestId: string, input: AdQuoteDecision, signal?: AbortSignal): Promise<AdQuote>;
-  uploadPaymentProof(requestId: string, file: Blob, filename: string, paymentMethod?: string, signal?: AbortSignal): Promise<PaymentProofData>;
+  uploadPaymentProof(requestId: string, file: Blob, filename: string, paymentMethod?: string, transfer?: Pick<PaymentProofUploadHeaders, 'sender' | 'recipient'>, signal?: AbortSignal): Promise<PaymentProofData>;
 }
 
 function clientFor(options: Pick<ProviderAdvertisingLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -218,13 +219,14 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
       });
       return response.data.data;
     },
-    async uploadPaymentProof(id, file, filename, paymentMethod, signal) {
+    async uploadPaymentProof(id, file, filename, paymentMethod, transfer, signal) {
       const normalizedFilename = filename.trim();
       if (/[/\\\u0000-\u001f\u007f]/u.test(normalizedFilename)) throw new Error('Payment proof filename contains unsafe characters');
       const upload = paymentProofUploadHeadersSchema.parse({
         filename: normalizedFilename,
         contentType: file.type.toLowerCase(),
         ...(paymentMethod?.trim() ? { paymentMethod: paymentMethod.trim() } : {}),
+        ...transfer,
         contentLength: file.size
       });
       const extensionStart = upload.filename.lastIndexOf('.');
@@ -239,7 +241,8 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
           ...(requestHeaders ?? {}),
           'content-type': upload.contentType,
           'x-file-name': encodeURIComponent(upload.filename),
-          ...(upload.paymentMethod ? { 'x-payment-method': upload.paymentMethod } : {})
+          'x-payment-method': upload.paymentMethod,
+          ...Object.fromEntries((['sender', 'recipient'] as const).flatMap(kind => upload[kind] ? Object.entries(upload[kind]).map(([key, value]) => [`x-payment-${kind}-${key}`, encodeURIComponent(value)]) : []))
         },
         body: file,
         ...requestOptions(signal)
