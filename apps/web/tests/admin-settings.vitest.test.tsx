@@ -2,14 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import {
   adminSettingsDataSchema,
   type AdminSettingsData,
-  type AdminSettingsNamespace
+  type AdminSettingsNamespace,
+  type AdminSettingsUpdate
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   AdminSettings,
   createAdminSettingsSource,
   loadAdminSettings,
+  getAdminSettingsCopy,
   updateAdminSettings
 } from '../src/features/admin_settings/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
@@ -55,6 +57,19 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin platform, contact, and social settings', () => {
+  it.each(['ar', 'en'] as const)('saves explicit transfer recipients independently of platform contact numbers in %s', async locale => {
+    const original = { ...settings('advertising'), values: { payment_proof_methods: ['vodafone_cash', 'instapay'], primary_phone: '+201999999999' } };
+    const update = vi.fn(async (_namespace: AdminSettingsNamespace, input: AdminSettingsUpdate) => ({ ...original, values: input.values, version: 5 }));
+    renderWithLocale(<AdminSettings path="/admin/settings/advertising" locale={locale} session={session} initialData={original} load={async () => original} update={update} />, { locale });
+    const copy = getAdminSettingsCopy(locale);
+    fireEvent.change(screen.getByLabelText(copy.fields.vodafone_cash_payment_details!), { target: { value: 'Test beneficiary\n+201000000001' } });
+    fireEvent.change(screen.getByLabelText(copy.fields.instapay_payment_details!), { target: { value: 'test-beneficiary@instapay' } });
+    fireEvent.change(screen.getByLabelText(copy.reason), { target: { value: 'Set advertising payment recipients' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.save }));
+    await waitFor(() => expect(update).toHaveBeenCalledWith('advertising', expect.objectContaining({ values: {
+      ...original.values, vodafone_cash_payment_details: ['Test beneficiary', '+201000000001'], instapay_payment_details: ['test-beneficiary@instapay']
+    }, expectedVersion: 4 })));
+  });
   it.each(['ar', 'en'] as const)('retains the name and reason through conflict recovery and saves with fresh versions in %s', async locale => {
     const original = settings();
     const latest = { ...original, version: 5, values: { ...original.values, platform_name: { ar: 'اسم محفوظ جديد', en: 'Another admin English name' }, primary_email: 'new-office@example.com', concurrent_extra: 'keep-latest' } };

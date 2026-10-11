@@ -268,7 +268,8 @@ test('projects provider-owned advertising history, quote, payment, and schedule 
     schedule: { requestId: request.id, placementKey: request.placementKey, providerId, status: 'scheduled', startsAt: request.intervalStart, endsAt: request.intervalEnd, timezone: 'Africa/Cairo', localStart: '2026-09-01T12:00:00', localEnd: '2026-09-02T12:00:00', version: 5 }
   };
   let policyReads = 0;
-  const projection = createProviderAdvertisingProjectionService({ source: { listForProvider: async (ownerId) => ownerId === providerId ? [record] : [], findForProvider: async (ownerId, requestId) => ownerId === providerId && requestId === request.id ? record : undefined }, settings: { async read() { policyReads++; return { supportedPlacements: [], supportedAdTypes: [], acceptedFileFormats: [], dimensions: [], paymentProofMethods: ['instapay', 'vodafone_cash'] }; } } });
+  const paymentInstructions = { instapay: ['Test beneficiary', 'test-beneficiary@instapay'] };
+  const projection = createProviderAdvertisingProjectionService({ source: { listForProvider: async (ownerId) => ownerId === providerId ? [record] : [], findForProvider: async (ownerId, requestId) => ownerId === providerId && requestId === request.id ? record : undefined }, settings: { async read() { policyReads++; return { supportedPlacements: [], supportedAdTypes: [], acceptedFileFormats: [], dimensions: [], paymentProofMethods: ['instapay', 'vodafone_cash'], paymentInstructions }; } } });
   const list = await projection.list(verifiedClaims, { page: 1, limit: 10 });
   assert.equal(list.total, 1);
   assert.equal(list.items[0]?.quote?.totalMinor, 1000);
@@ -279,6 +280,8 @@ test('projects provider-owned advertising history, quote, payment, and schedule 
   const detail = await projection.get(verifiedClaims, request.id);
   assert.equal(detail.history.length, 2);
   assert.deepEqual(detail.paymentMethods, ['instapay', 'vodafone_cash']);
+  assert.deepEqual(detail.paymentInstructions, paymentInstructions);
+  assert.equal('paymentInstructions' in list.items[0]!, false);
   await assert.rejects(() => projection.list(claims, {}), (error) => error instanceof ProviderAdvertisingProjectionError && error.code === 'PROVIDER_AD_FORBIDDEN');
   await assert.rejects(() => projection.get(verifiedClaims, 'ffffffffffffffffffffffff'), (error) => error instanceof ProviderAdvertisingProjectionError && error.code === 'PROVIDER_AD_NOT_FOUND');
   assert.equal(policyReads, 1);

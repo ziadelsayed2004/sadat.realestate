@@ -11,3 +11,21 @@ test('maps advertising placements, formats, dimensions, quote validity, and paym
 test('ignores malformed advertising settings', () => {
   assert.deepEqual(advertisingRuntimeSettings({ supported_placements: ['bad value'], desktop_dimensions: 'huge', quote_validity_days: 0 }), { supportedPlacements: ['homepage.featured'], supportedAdTypes: ['featured_card'], acceptedFileFormats: [], dimensions: [], paymentProofMethods: [] });
 });
+
+test('payment recipients come only from the explicit method settings, with bounded safe lines', () => {
+  const policy = advertisingRuntimeSettings({
+    vodafone_cash_payment_details: ['  Test beneficiary  ', '+201000000001'],
+    instapay_payment_details: ['test-beneficiary@instapay'],
+    bank_transfer_payment_details: ['Test bank', 'Test beneficiary', 'EG120000000000000000000000001'],
+    cash_payment_details: ['At the platform office'],
+    primary_phone: '+201999999999', unsupported_payment_details: ['Do not project']
+  });
+  assert.deepEqual(policy.paymentInstructions, {
+    vodafone_cash: ['Test beneficiary', '+201000000001'], instapay: ['test-beneficiary@instapay'],
+    bank_transfer: ['Test bank', 'Test beneficiary', 'EG120000000000000000000000001'], cash: ['At the platform office']
+  });
+  assert.equal(advertisingRuntimeSettings({ primary_phone: '+201999999999' }).paymentInstructions, undefined);
+  for (const invalid of [[], ['bad\nline'], [42], Array(11).fill('line'), ['x'.repeat(501)]]) {
+    assert.equal(advertisingRuntimeSettings({ vodafone_cash_payment_details: invalid }).paymentInstructions, undefined);
+  }
+});

@@ -5,6 +5,7 @@ import {
   adminSettingsDataSchema,
   adminSettingsNamespaceSchema,
   adminSettingsUpdateSchema,
+  providerAdRequestProjectionSchema,
   publicSeoSettingsSchema,
   type AdminSettingsData,
   type AdminSettingsNamespace,
@@ -172,6 +173,12 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     await requirePermission(dependencies, claims.sub, 'admin:settings.manage');
     const target = namespace(unparsedNamespace);
     const data = adminSettingsUpdateSchema.parse(unparsedInput);
+    if (target === 'advertising') {
+      for (const method of ['vodafone_cash', 'instapay', 'bank_transfer', 'cash']) {
+        const key = `${method}_payment_details`;
+        if (data.values[key] !== undefined) providerAdRequestProjectionSchema.shape.paymentInstructions.parse({ [method]: data.values[key] });
+      }
+    }
     if (target === 'contact' || target === 'social') {
       const projected = contactSettingsProjection(target === 'contact' ? data.values : {}, target === 'social' ? data.values : {});
       const fields = target === 'contact' ? [['primary_phone', 'phone'], ['whatsapp_number', 'whatsappNumber'], ['facebook_url', 'facebookUrl'], ['instagram_url', 'instagramUrl'], ['map_url', 'mapUrl']] as const : [['facebook_url', 'facebookUrl'], ['instagram_url', 'instagramUrl']] as const;

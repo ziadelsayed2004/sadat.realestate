@@ -120,7 +120,8 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'mobile_dimensions', kind: 'text', labelKey: 'mobile_dimensions' },
     { key: 'accepted_file_formats', kind: 'array', labelKey: 'accepted_file_formats' },
     { key: 'quote_validity_days', kind: 'number', labelKey: 'quote_validity_days' },
-    { key: 'payment_proof_methods', kind: 'array', labelKey: 'payment_proof_methods' }
+    { key: 'payment_proof_methods', kind: 'array', labelKey: 'payment_proof_methods' },
+    ...['vodafone_cash', 'instapay', 'bank_transfer', 'cash'].map(method => ({ key: `${method}_payment_details`, kind: 'array' as const, labelKey: `${method}_payment_details` }))
   ],
   seo: [
     { key: 'default_seo_title', kind: 'localized', labelKey: 'default_seo_title' },

@@ -146,7 +146,7 @@ export function createProviderAdvertisingProjectionService(dependencies: Provide
     const result = projection(ownerRecord(record, claims.sub));
     if (!dependencies.settings) return result;
     const policy = await dependencies.settings.read();
-    return providerAdRequestProjectionSchema.parse({ ...result, paymentMethods: policy.paymentProofMethods });
+    return providerAdRequestProjectionSchema.parse({ ...result, paymentMethods: policy.paymentProofMethods, ...(policy.paymentInstructions ? { paymentInstructions: policy.paymentInstructions } : {}) });
   };
   return {
     list,

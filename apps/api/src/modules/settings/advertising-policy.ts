@@ -1,4 +1,5 @@
 import type { Connection } from 'mongoose';
+import { providerAdRequestProjectionSchema, type ProviderAdRequestProjection } from '@sadat-real-estate/contracts';
 
 export type AdvertisingMime = 'image/jpeg' | 'image/png' | 'image/webp';
 export interface AdvertisingDimensions { width: number; height: number }
@@ -9,6 +10,7 @@ export interface AdvertisingRuntimeSettings {
   dimensions: AdvertisingDimensions[];
   quoteValidityDays?: number;
   paymentProofMethods: string[];
+  paymentInstructions?: ProviderAdRequestProjection['paymentInstructions'];
 }
 export interface AdvertisingSettingsReader { read(): Promise<AdvertisingRuntimeSettings> }
 
@@ -36,13 +38,18 @@ function formats(value: unknown): AdvertisingMime[] {
 export function advertisingRuntimeSettings(values: Record<string, unknown> | undefined): AdvertisingRuntimeSettings {
   if (!values) return DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
   const quoteValidityDays = values.quote_validity_days;
+  const instructions = Object.fromEntries(['vodafone_cash', 'instapay', 'bank_transfer', 'cash'].flatMap(method => {
+    const parsed = providerAdRequestProjectionSchema.shape.paymentInstructions.safeParse({ [method]: values[`${method}_payment_details`] });
+    return parsed.success && parsed.data ? Object.entries(parsed.data) : [];
+  }));
   return {
     supportedPlacements: [...new Set([...identifiers(values.supported_placements), 'homepage.featured'])],
     supportedAdTypes: [...new Set([...identifiers(values.supported_ad_types), 'featured_card'])],
     acceptedFileFormats: formats(values.accepted_file_formats),
     dimensions: [...dimensions(values.desktop_dimensions), ...dimensions(values.mobile_dimensions)].filter((item, index, all) => all.findIndex((candidate) => candidate.width === item.width && candidate.height === item.height) === index),
     ...(typeof quoteValidityDays === 'number' && Number.isSafeInteger(quoteValidityDays) && quoteValidityDays >= 1 && quoteValidityDays <= 90 ? { quoteValidityDays } : {}),
-    paymentProofMethods: identifiers(values.payment_proof_methods)
+    paymentProofMethods: identifiers(values.payment_proof_methods),
+    ...(Object.keys(instructions).length ? { paymentInstructions: instructions } : {})
   };
 }
 

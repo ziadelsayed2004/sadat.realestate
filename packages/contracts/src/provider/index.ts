@@ -300,6 +300,7 @@ export const providerAdRequestProjectionSchema = z.object({
   quote: providerAdQuoteProjectionSchema.optional(),
   paymentProofs: z.array(providerAdPaymentProjectionSchema).max(20),
   paymentMethods: z.array(z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/)).max(100).optional(),
+  paymentInstructions: z.record(z.string().regex(/^(vodafone_cash|instapay|bank_transfer|cash)$/), z.array(safeTextSchema).min(1).max(10)).optional(),
   schedule: providerAdScheduleProjectionSchema.optional()
 }).strict();
 export const providerAdRequestListQuerySchema = z.object({

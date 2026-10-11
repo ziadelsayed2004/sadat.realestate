@@ -334,6 +334,8 @@
   background: #fffaf0;
 }
 
+.provider-advertising__nested-card li { overflow-wrap: anywhere; }
+
 .provider-advertising__nested-card h2 {
   font-size: 1.05rem;
 }

@@ -47,6 +47,19 @@ function repository(): SettingsRepository {
   };
 }
 
+test('advertising recipient settings validate before persistence and retain only explicit destination data', async () => {
+  const repo = repository();
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: repo, audit: { async record() { return 'audit-id'; } } });
+  const input = { schemaVersion: 1, expectedVersion: 0, reason: 'Set payment recipients', values: { vodafone_cash_payment_details: ['Test beneficiary', '+201000000001'] } };
+  const context = { requestId: 'payment-settings-test', traceId: 'payment-settings-test' };
+  for (const invalid of [[], ['x'.repeat(201)], Array(11).fill('line'), 'not a list']) {
+    await assert.rejects(service.update(adminClaims, 'advertising', { ...input, values: { vodafone_cash_payment_details: invalid } }, context));
+    assert.equal(await repo.find('advertising'), undefined);
+  }
+  const saved = await service.update(adminClaims, 'advertising', input, context);
+  assert.deepEqual(saved.values, input.values);
+});
+
 test('creates, reads, updates, and audits a strict versioned settings namespace', async () => {
   const events: unknown[] = [];
   const service = createSettingsService({

@@ -89,7 +89,7 @@ test('payment proof is sent only by the send button and can be retried without c
   let sent = false;
   let posts = 0;
   const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, paymentMethod: proof.paymentMethod, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
-  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentMethods: ['vodafone_cash', 'bank_transfer', `custom_${'method_'.repeat(10)}`], paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
+  await page.route(`**/api/v1/provider/ads/${REQUEST_ID}`, route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ ...advertisingRequest('waiting_payment'), paymentMethods: ['vodafone_cash', 'bank_transfer', `custom_${'method_'.repeat(10)}`], paymentInstructions: { vodafone_cash: ['Test beneficiary', '+201000000001'], bank_transfer: ['Test bank', 'Test bank account'] }, paymentProofs: sent ? [proofProjection] : [] }, 'provider-proof-detail') }));
   await page.route(`**/api/v1/provider/ads/${REQUEST_ID}/payment-proof`, async route => {
     posts += 1;
     expect(route.request().method()).toBe('POST');
@@ -109,6 +109,14 @@ test('payment proof is sent only by the send button and can be retried without c
   const method = page.getByRole('combobox', { name: copy.paymentMethod });
   await expect(method).toHaveAttribute('required', '');
   await expect(method.locator('option')).toHaveCount(4);
+  await method.selectOption('vodafone_cash');
+  const recipient = page.locator('.provider-advertising__nested-card').filter({ has: page.getByRole('heading', { name: copy.paymentRecipient, exact: true }) });
+  await expect(recipient).toContainText('+201000000001');
+  await method.selectOption('bank_transfer');
+  await expect(recipient).toContainText('Test bank account');
+  await expect(recipient).not.toContainText('+201000000001');
+  await method.selectOption(`custom_${'method_'.repeat(10)}`);
+  await expect(recipient).toContainText(copy.missingPaymentRecipient);
   await method.selectOption('vodafone_cash');
   await input.setInputFiles({ name: filename, mimeType: 'image/png', buffer: image });
   await expect(send).toBeEnabled();

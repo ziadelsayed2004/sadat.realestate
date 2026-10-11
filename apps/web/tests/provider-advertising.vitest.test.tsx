@@ -128,6 +128,29 @@ function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'
 }
 
 describe('Provider advertising requests and commission', () => {
+  it.each(['ar', 'en'] as const)('shows only the selected method recipient and never substitutes the customer contact in %s', async locale => {
+    const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, contactPhone: '+201111111111', paymentInstructions: {
+      vodafone_cash: ['Test beneficiary', '+201000000001'], instapay: ['test-beneficiary@instapay']
+    } });
+    const copy = getProviderAdvertisingCopy(locale);
+    renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={waiting} loadDetail={vi.fn(async () => waiting)} />, { locale });
+    expect(screen.queryByRole('heading', { name: copy.paymentRecipient })).not.toBeInTheDocument();
+    const select = screen.getByLabelText(copy.paymentMethod);
+    fireEvent.change(select, { target: { value: 'vodafone_cash' } });
+    const recipient = screen.getByRole('heading', { name: copy.paymentRecipient }).closest('section')!;
+    expect(recipient).toHaveTextContent('Test beneficiary');
+    expect(recipient).toHaveTextContent('+201000000001');
+    expect(recipient).not.toHaveTextContent('+201111111111');
+    expect(recipient).not.toHaveTextContent('test-beneficiary@instapay');
+    fireEvent.change(select, { target: { value: 'instapay' } });
+    expect(recipient).toHaveTextContent('test-beneficiary@instapay');
+    expect(recipient).not.toHaveTextContent('+201000000001');
+    fireEvent.change(select, { target: { value: 'bank_transfer' } });
+    expect(recipient).toHaveTextContent(copy.missingPaymentRecipient);
+    expect(recipient).not.toHaveTextContent('+201111111111');
+    fireEvent.change(select, { target: { value: 'cash' } });
+    expect(recipient).toHaveTextContent(copy.missingPaymentRecipient);
+  });
   it('uses the implemented owner-scoped routes, strict query, and private upload headers', async () => {
     const calls: Array<{ path: string; method: string; query: string; authorization: string | null; body?: unknown; contentType: string | null; filename: string | null; paymentMethod: string | null }> = [];
     const client = new ApiClient({
