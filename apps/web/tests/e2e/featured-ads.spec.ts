@@ -1,6 +1,66 @@
 import { expect, test } from '@playwright/test';
 import { routeAdminHomeApis } from './admin-home.fixtures.ts';
 
+test('featured toolbar explains actions, retries the failed mutation and reports import counts without duplicates', async ({ page }, info) => {
+  const ar = info.project.name.endsWith('-ar'), lang = ar ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  await page.route('**/api/v1/admin/banners/featured-options*', route => route.fulfill({ json: { data: { canManage: true, advertisers: [], destinations: [] }, meta: { requestId: 'toolbar-options' } } }));
+  let version = 4, writes = 0, reads = 0, imports = 0;
+  await page.route('**/api/v1/admin/banners/config', route => {
+    if (route.request().method() === 'PUT') {
+      writes++;
+      expect(route.request().postDataJSON()).toMatchObject({ enabled: true, featuredActive: true, expectedVersion: version });
+      if (writes === 1) return route.fulfill({ status: 409, json: { error: { code: 'VERSION_CONFLICT', messageKey: 'errors.conflict', details: [], requestId: 'conflict' } } });
+      version++;
+    } else reads++;
+    return route.fulfill({ json: { data: { enabled: writes > 1, version, placements: [{ key: 'homepage.featured', label: { ar: 'كروت', en: 'Cards' }, active: writes > 1 }] }, meta: { requestId: 'toolbar-config' } } });
+  });
+  await page.route('**/api/v1/admin/banners/featured-import', route => {
+    expect(route.request().method()).toBe('POST');
+    imports++;
+    return route.fulfill({ json: { data: { imported: true, count: imports === 1 ? 2 : 0 }, meta: { requestId: 'toolbar-import' } } });
+  });
+  await page.goto(`/admin/ads/featured?lang=${lang}`);
+  const actions = page.locator('.admin-featured__actions');
+  await expect(actions).toContainText(ar ? 'المسودات تحتاج نشرًا' : 'drafts still need publishing');
+  await expect(actions).toContainText(ar ? 'يوقف عرضه' : 'hiding them');
+  await actions.getByRole('button', { name: ar ? 'تشغيل عرض الكروت' : 'Enable card display', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText(ar ? 'السجل تغيّر' : 'Record changed');
+  await page.getByRole('button', { name: ar ? 'إعادة المحاولة' : 'Retry', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText(ar ? 'تم تشغيل العرض' : 'Display enabled');
+  expect(writes).toBe(2); expect(reads).toBe(2);
+  const importButton = actions.getByRole('button', { name: ar ? 'استيراد الكروت القديمة' : 'Import legacy cards', exact: true });
+  await importButton.click();
+  await expect(page.getByRole('status')).toContainText(ar ? 'تم استيراد 2 كارت كمسودة' : '2 cards imported as drafts');
+  await importButton.click();
+  await expect(page.getByRole('status')).toContainText(ar ? 'لا توجد كروت قديمة جديدة' : 'No new legacy cards');
+  expect(imports).toBe(2);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await actions.screenshot({ path: info.outputPath('featured-actions.png') });
+  await page.evaluate(() => { (document.activeElement as HTMLElement)?.blur(); window.scrollTo({ top: 0, behavior: 'instant' }); });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await page.screenshot({ path: info.outputPath('featured-actions-page.png'), fullPage: true });
+});
+
+test('featured actions explain denied management permission without showing a success message', async ({ page }, info) => {
+  const ar = info.project.name.endsWith('-ar'), lang = ar ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  await page.route('**/api/v1/admin/banners/featured-options*', route => route.fulfill({ json: { data: { canManage: true, advertisers: [], destinations: [] }, meta: { requestId: 'stale-permission' } } }));
+  let writes = 0;
+  await page.route('**/api/v1/admin/banners/config', route => {
+    if (route.request().method() === 'PUT') writes++;
+    return route.fulfill({ status: 403, json: { error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', details: [], requestId: 'denied-config' } } });
+  });
+  await page.route('**/api/v1/admin/banners/featured-import', route => route.fulfill({ status: 403, json: { error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', details: [], requestId: 'denied-import' } } }));
+  await page.goto(`/admin/ads/featured?lang=${lang}`);
+  await page.getByRole('button', { name: ar ? 'تشغيل عرض الكروت' : 'Enable card display', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText(ar ? 'تحتاج صلاحية إدارة الإعلانات' : 'Ad management permission required');
+  expect(writes).toBe(0);
+  await page.getByRole('button', { name: ar ? 'استيراد الكروت القديمة' : 'Import legacy cards', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText(ar ? 'تحتاج صلاحية إدارة الإعلانات' : 'Ad management permission required');
+  await expect(page.getByRole('status')).toHaveCount(0);
+});
+
 test('creates the complete featured card, previews both sizes and saves fields and image before publication', async ({ page }, info) => {
   const ar = info.project.name.endsWith('-ar'), lang = ar ? 'ar' : 'en';
   const providerId = '1234567890abcdef12345678', propertyId = 'abcdef1234567890abcdef12';

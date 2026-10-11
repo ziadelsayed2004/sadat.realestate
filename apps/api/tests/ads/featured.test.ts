@@ -5,6 +5,7 @@ import { adBannerCreateSchema } from '@sadat-real-estate/contracts';
 import { featuredOptions, resolveFeatured } from '../../src/modules/ads/featured.js';
 import { importLegacyFeatured } from '../../src/modules/ads/featured-migration.js';
 import { createAdSettingsService } from '../../src/modules/ads/service.js';
+import { createBannerManagement } from '../../src/modules/ads/banner-management.js';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import type { AuditWriter } from '../../src/modules/audit/writer.js';
 import { database, account, application, profile, policyId } from '../helpers/provider-identity-db.js';
@@ -71,12 +72,37 @@ test('advertiser options deduplicate account aliases and never substitute the pr
 test('legacy import is idempotent, preserves creative fields as drafts and never invents a company association', async () => {
   const db = fixture(); db.rows.cms_banners = [{ _id: new Types.ObjectId(), key: 'old_card', title: { en: 'Old card' }, body: { en: 'Saved description' }, highlight: { en: 'Saved highlight' }, imageUrl: '/old-image.png', order: 1, status: 'published', active: true }];
   const events: unknown[] = []; const audit = { record: async (event: unknown) => { events.push(event); } } as unknown as AuditWriter;
-  for (let run = 0; run < 2; run++) await importLegacyFeatured(db.connection, audit, account.toHexString(), { requestId: 'test', traceId: '0'.repeat(32) });
+  assert.equal(await importLegacyFeatured(db.connection, audit, account.toHexString(), { requestId: 'test', traceId: '0'.repeat(32) }), 1);
+  assert.equal(await importLegacyFeatured(db.connection, audit, account.toHexString(), { requestId: 'test', traceId: '0'.repeat(32) }), 0);
   assert.equal(db.rows.ad_banners?.length, 1); const row = db.rows.ad_banners![0]!;
   assert.equal(row.status, 'draft'); assert.deepEqual(row.featured, { highlight: { en: 'Saved highlight' } });
   assert.equal((row.featured as Record<string, unknown>).advertiserProviderId, undefined);
   assert.equal(db.rows.cms_banners[0]?.active, false); assert.equal(events.length, 1);
   assert.equal(db.rows.ad_banner_media?.[0]?.url, '/old-image.png');
+});
+test('explicit featured setup activates its disabled placement without publishing drafts or changing the hero, and enforces permission and version', async () => {
+  const db = fixture(), claims = { sub: account.toHexString(), role: 'admin', status: 'verified' } as AccessTokenClaims;
+  db.rows.ad_settings = [{ _id: account, enabled: false, allowedSurfaces: ['homepage'], version: 0 }];
+  db.rows.ad_placements = [{ key: 'homepage.hero', surface: 'homepage', active: false, version: 3 }, { key: 'homepage.featured', surface: 'homepage', active: false, version: 2 }];
+  db.rows.ad_banners = [{ _id: owned, placementKey: 'homepage.featured', status: 'draft' }];
+  let allowed = true;
+  const events: Array<Record<string, unknown>> = [];
+  const management = createBannerManagement({ connection: db.connection, authorization: { authorize: async () => allowed }, audit: { record: async (event: Record<string, unknown>) => { events.push(event); } } as unknown as AuditWriter, storage: {} as never, scanner: {} as never, policy: {} as never });
+  const context = { requestId: 'setup-test', traceId: '0'.repeat(32) };
+  const globalOnly = await management.updateConfig(claims, { enabled: true, expectedVersion: 0, reason: 'Enable global display' }, context);
+  assert.equal(globalOnly.placements.find(value => value.key === 'homepage.featured')?.active, false);
+  allowed = false;
+  await assert.rejects(management.updateConfig(claims, { enabled: true, featuredActive: true, expectedVersion: 1, reason: 'Enable cards' }, context), { statusCode: 403 });
+  allowed = true;
+  const value = await management.updateConfig(claims, { enabled: true, featuredActive: true, expectedVersion: 1, reason: 'Enable cards' }, context);
+  assert.equal(value.enabled, true);
+  assert.equal(value.placements.find(value => value.key === 'homepage.featured')?.active, true);
+  assert.equal(value.placements.find(value => value.key === 'homepage.hero')?.active, false);
+  assert.equal(db.rows.ad_banners[0]?.status, 'draft');
+  assert.deepEqual(events.at(-1)?.before, { enabled: true, version: 1, featuredActive: false });
+  assert.deepEqual(events.at(-1)?.after, { enabled: true, version: 2, featuredActive: true });
+  await assert.rejects(management.updateConfig(claims, { enabled: true, featuredActive: false, expectedVersion: 1, reason: 'Stale setup' }, context), { statusCode: 409 });
+  assert.equal(db.rows.ad_placements[1]?.active, true);
 });
 test('several featured cards can overlap, preserve content, stop and restart without replacing the hero placement', async () => {
   const now = new Date('2026-10-10T10:00:00Z'), admin = { sub: account.toHexString(), role: 'admin', status: 'verified' } as AccessTokenClaims;

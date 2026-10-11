@@ -3,13 +3,11 @@ import {
   adBannerConfigSuccessEnvelopeSchema,
   adBannerConfigPutSchema,
   adBannerIdParamsSchema,
-  adBannerListDataSchema,
   adBannerListQuerySchema,
   adBannerListSuccessEnvelopeSchema,
   adBannerMediaCreateSchema,
   adBannerMediaDeleteSchema,
   adBannerMediaIdParamsSchema,
-  adBannerMediaListDataSchema,
   adBannerMediaListSuccessEnvelopeSchema,
   adBannerMediaPatchSchema,
   adBannerMediaSuccessEnvelopeSchema,
@@ -37,7 +35,7 @@ import {
   type CmsAdminContentData,
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
-import type { ApiClient } from '../contracts/index.ts';
+import type { ApiClient, ApiRequestOptions, ContractSchema } from '../contracts/index.ts';
 import { createAdminSessionClient as clientFor, adminSessionOptions as requestOptions, loadAdminAdRequest, type AdminAdsAuthorizationSource } from '../admin_ads/data.ts';
 
 export const ADMIN_BANNERS_ROUTE = '/admin/banners' as const;
@@ -74,105 +72,50 @@ function cmsNamespace(value: AdminHomeCmsNamespace): AdminHomeCmsNamespace {
   return cmsAdminContentNamespaceSchema.parse(value) as AdminHomeCmsNamespace;
 }
 
+async function homeRequest<T>(path: string, responseSchema: ContractSchema<{ data: T }>, options: CommonOptions, request: Omit<ApiRequestOptions<unknown>, 'responseSchema'> = {}): Promise<T> {
+  return (await clientFor(options).request(path, { ...requestOptions(options), ...request, responseSchema })).data.data;
+}
+
 export async function loadAdminBanners(options: AdminBannerLoadOptions = {}): Promise<AdBannerListData> {
   const query = adBannerListQuerySchema.parse({ page: 1, limit: 20, ...options.query });
-  const response = await clientFor(options).request(ADMIN_BANNERS_ROUTE, {
-    responseSchema: adBannerListSuccessEnvelopeSchema,
-    query,
-    ...requestOptions(options)
-  });
-  return adBannerListDataSchema.parse(response.data.data);
+  return homeRequest(ADMIN_BANNERS_ROUTE, adBannerListSuccessEnvelopeSchema, options, { query });
 }
 
 export async function createAdminBanner(input: unknown, options: CommonOptions = {}): Promise<AdBanner> {
-  const body = adBannerCreateSchema.parse(input);
-  const response = await clientFor(options).request(ADMIN_BANNERS_ROUTE, {
-    method: 'POST',
-    responseSchema: adBannerSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(ADMIN_BANNERS_ROUTE, adBannerSuccessEnvelopeSchema, options, { method: 'POST', json: adBannerCreateSchema.parse(input) });
 }
 
 export async function updateAdminBanner(id: string, input: unknown, options: CommonOptions = {}): Promise<AdBanner> {
-  const body = adBannerPatchSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}`, {
-    method: 'PATCH',
-    responseSchema: adBannerSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}`, adBannerSuccessEnvelopeSchema, options, { method: 'PATCH', json: adBannerPatchSchema.parse(input) });
 }
 
 export async function previewAdminBanner(id: string, options: CommonOptions = {}): Promise<AdBannerPreview> {
-  const response = await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/preview`, {
-    responseSchema: adBannerPreviewSuccessEnvelopeSchema,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/preview`, adBannerPreviewSuccessEnvelopeSchema, options);
 }
 
 export async function loadAdminBannerMedia(id: string, options: CommonOptions = {}): Promise<readonly AdBannerMedia[]> {
-  const response = await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/media`, {
-    responseSchema: adBannerMediaListSuccessEnvelopeSchema,
-    ...requestOptions(options)
-  });
-  return adBannerMediaListDataSchema.parse(response.data.data).items;
+  return (await homeRequest(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/media`, adBannerMediaListSuccessEnvelopeSchema, options)).items;
 }
 
 export async function createAdminBannerMedia(id: string, input: unknown, options: CommonOptions = {}): Promise<AdBannerMedia> {
-  const body = adBannerMediaCreateSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/media`, {
-    method: 'POST',
-    responseSchema: adBannerMediaSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/media`, adBannerMediaSuccessEnvelopeSchema, options, { method: 'POST', json: adBannerMediaCreateSchema.parse(input) });
 }
 
 export async function updateAdminBannerMedia(id: string, input: unknown, options: CommonOptions = {}): Promise<AdBannerMedia> {
-  const body = adBannerMediaPatchSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_BANNER_MEDIA_ROUTE}/${mediaId(id)}`, {
-    method: 'PATCH',
-    responseSchema: adBannerMediaSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNER_MEDIA_ROUTE}/${mediaId(id)}`, adBannerMediaSuccessEnvelopeSchema, options, { method: 'PATCH', json: adBannerMediaPatchSchema.parse(input) });
 }
 
 export async function deleteAdminBannerMedia(id: string, input: unknown, options: CommonOptions = {}): Promise<AdBannerMedia> {
-  const body = adBannerMediaDeleteSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_BANNER_MEDIA_ROUTE}/${mediaId(id)}`, {
-    method: 'DELETE',
-    responseSchema: adBannerMediaSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNER_MEDIA_ROUTE}/${mediaId(id)}`, adBannerMediaSuccessEnvelopeSchema, options, { method: 'DELETE', json: adBannerMediaDeleteSchema.parse(input) });
 }
 
 export async function reorderAdminBanners(input: unknown, options: CommonOptions = {}): Promise<readonly AdBanner[]> {
-  const body = adBannerOrderSchema.parse(input);
-  const response = await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/order`, {
-    method: 'POST',
-    responseSchema: adBannerOrderSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data;
+  return homeRequest(`${ADMIN_BANNERS_ROUTE}/order`, adBannerOrderSuccessEnvelopeSchema, options, { method: 'POST', json: adBannerOrderSchema.parse(input) });
 }
 
 export async function loadAdminHomeContent(namespace: AdminHomeCmsNamespace, options: CommonOptions = {}): Promise<AdminHomeCmsContent> {
   const parsedNamespace = cmsNamespace(namespace);
-  const response = await clientFor(options).request(`/admin/content/${parsedNamespace}`, {
-    responseSchema: cmsAdminContentSuccessEnvelopeSchema,
-    ...requestOptions(options)
-  });
-  return response.data.data as AdminHomeCmsContent;
+  return await homeRequest(`/admin/content/${parsedNamespace}`, cmsAdminContentSuccessEnvelopeSchema, options) as AdminHomeCmsContent;
 }
 
 function cmsPutSchema(namespace: AdminHomeCmsNamespace) {
@@ -183,17 +126,11 @@ function cmsPutSchema(namespace: AdminHomeCmsNamespace) {
 
 export async function updateAdminHomeContent(namespace: AdminHomeCmsNamespace, input: unknown, options: CommonOptions = {}): Promise<AdminHomeCmsContent> {
   const parsedNamespace = cmsNamespace(namespace);
-  const body = cmsPutSchema(parsedNamespace).parse(input);
-  const response = await clientFor(options).request(`/admin/content/${parsedNamespace}`, {
-    method: 'PUT',
-    responseSchema: cmsAdminContentSuccessEnvelopeSchema,
-    json: body,
-    ...requestOptions(options)
-  });
-  return response.data.data as AdminHomeCmsContent;
+  return await homeRequest(`/admin/content/${parsedNamespace}`, cmsAdminContentSuccessEnvelopeSchema, options, { method: 'PUT', json: cmsPutSchema(parsedNamespace).parse(input) }) as AdminHomeCmsContent;
 }
 
 export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {}) {
+  const withSignal = (signal?: AbortSignal) => ({ ...options, signal });
   const loadMediaBlob = async (url: string) => {
     if (!/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/u.test(url)) throw new Error('INVALID_BANNER_IMAGE');
     const origin = options.apiOrigin ? new URL(options.apiOrigin, window.location.origin).origin : window.location.origin;
@@ -203,26 +140,26 @@ export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {
   };
   return {
     loadMediaBlob,
-    loadAdRequest: (id: string, signal?: AbortSignal) => loadAdminAdRequest(id, { ...options, ...(signal ? { signal } : {}) }),
-    loadBannerConfig: async () => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
-    updateBannerConfig: async (input: unknown) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/config`, { method: 'PUT', json: adBannerConfigPutSchema.parse(input), responseSchema: adBannerConfigSuccessEnvelopeSchema, ...requestOptions(options) })).data.data,
-    uploadBannerImage: async (id: string, file: File) => (await clientFor(options).request(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/upload`, { method: 'POST', body: file, responseSchema: adBannerMediaSuccessEnvelopeSchema, ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type } })).data.data,
+    loadAdRequest: (id: string, signal?: AbortSignal) => loadAdminAdRequest(id, withSignal(signal)),
+    loadBannerConfig: () => homeRequest(`${ADMIN_BANNERS_ROUTE}/config`, adBannerConfigSuccessEnvelopeSchema, options),
+    updateBannerConfig: (input: unknown) => homeRequest(`${ADMIN_BANNERS_ROUTE}/config`, adBannerConfigSuccessEnvelopeSchema, options, { method: 'PUT', json: adBannerConfigPutSchema.parse(input) }),
+    uploadBannerImage: (id: string, file: File) => homeRequest(`${ADMIN_BANNERS_ROUTE}/${bannerId(id)}/upload`, adBannerMediaSuccessEnvelopeSchema, options, { method: 'POST', body: file, headers: { ...requestOptions(options).headers, 'content-type': file.type } }),
     loadMediaPreview: async (url: string) => {
       if (!/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/u.test(url)) return url;
       return URL.createObjectURL(await loadMediaBlob(url));
     },
 
-    loadBanners: (query: AdBannerListQuery, signal?: AbortSignal) => loadAdminBanners({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
-    createBanner: (input: AdBannerCreate, signal?: AbortSignal) => createAdminBanner(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    updateBanner: (id: string, input: AdBannerPatch, signal?: AbortSignal) => updateAdminBanner(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    previewBanner: (id: string, signal?: AbortSignal) => previewAdminBanner(id, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    loadBannerMedia: (id: string, signal?: AbortSignal) => loadAdminBannerMedia(id, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    createBannerMedia: (id: string, input: AdBannerMediaCreate, signal?: AbortSignal) => createAdminBannerMedia(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    updateBannerMedia: (id: string, input: AdBannerMediaPatch, signal?: AbortSignal) => updateAdminBannerMedia(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    deleteBannerMedia: (id: string, input: AdBannerMediaDelete, signal?: AbortSignal) => deleteAdminBannerMedia(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    reorderBanners: (input: AdBannerOrder, signal?: AbortSignal) => reorderAdminBanners(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    loadContent: (namespace: AdminHomeCmsNamespace, signal?: AbortSignal) => loadAdminHomeContent(namespace, { ...options, ...(signal === undefined ? {} : { signal }) }),
-    updateContent: (namespace: AdminHomeCmsNamespace, input: unknown, signal?: AbortSignal) => updateAdminHomeContent(namespace, input, { ...options, ...(signal === undefined ? {} : { signal }) })
+    loadBanners: (query: AdBannerListQuery, signal?: AbortSignal) => loadAdminBanners({ ...withSignal(signal), query }),
+    createBanner: (input: AdBannerCreate, signal?: AbortSignal) => createAdminBanner(input, withSignal(signal)),
+    updateBanner: (id: string, input: AdBannerPatch, signal?: AbortSignal) => updateAdminBanner(id, input, withSignal(signal)),
+    previewBanner: (id: string, signal?: AbortSignal) => previewAdminBanner(id, withSignal(signal)),
+    loadBannerMedia: (id: string, signal?: AbortSignal) => loadAdminBannerMedia(id, withSignal(signal)),
+    createBannerMedia: (id: string, input: AdBannerMediaCreate, signal?: AbortSignal) => createAdminBannerMedia(id, input, withSignal(signal)),
+    updateBannerMedia: (id: string, input: AdBannerMediaPatch, signal?: AbortSignal) => updateAdminBannerMedia(id, input, withSignal(signal)),
+    deleteBannerMedia: (id: string, input: AdBannerMediaDelete, signal?: AbortSignal) => deleteAdminBannerMedia(id, input, withSignal(signal)),
+    reorderBanners: (input: AdBannerOrder, signal?: AbortSignal) => reorderAdminBanners(input, withSignal(signal)),
+    loadContent: (namespace: AdminHomeCmsNamespace, signal?: AbortSignal) => loadAdminHomeContent(namespace, withSignal(signal)),
+    updateContent: (namespace: AdminHomeCmsNamespace, input: unknown, signal?: AbortSignal) => updateAdminHomeContent(namespace, input, withSignal(signal))
   };
 }
 

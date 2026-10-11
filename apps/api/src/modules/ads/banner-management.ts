@@ -92,7 +92,7 @@ export function createBannerManagement(dependencies: {
   }
   return {
     async featuredOptions(claims: AccessTokenClaims, providerId?: string) { await authorize(claims, 'admin:banners.view'); return { ...await featuredOptions(connection, providerId), canManage: await authorization.authorize(claims.sub, 'admin:banners.manage') }; },
-    async importFeatured(claims: AccessTokenClaims, context: { requestId: string; traceId: string }) { await authorize(claims, 'admin:banners.manage'); await importLegacyFeatured(connection, audit, claims.sub, context); return { imported: true }; },
+    async importFeatured(claims: AccessTokenClaims, context: { requestId: string; traceId: string }) { await authorize(claims, 'admin:banners.manage'); return { imported: true, count: await importLegacyFeatured(connection, audit, claims.sub, context) }; },
     async readConfig(claims: AccessTokenClaims) { await authorize(claims, 'admin:banners.view'); return config(); },
     async updateConfig(claims: AccessTokenClaims, input: unknown, context: { requestId: string; traceId: string }) {
       await authorize(claims, 'admin:banners.manage');
@@ -102,6 +102,7 @@ export function createBannerManagement(dependencies: {
         await session.withTransaction(async () => {
           const settings = connection.collection('ad_settings');
           const before = await settings.findOne({}, { session });
+          const featuredBefore = await connection.collection('ad_placements').findOne({ key: 'homepage.featured' }, { session });
           if ((before?.version ?? 0) !== parsed.expectedVersion) throw new ApiContractError('VERSION_CONFLICT', 'errors.conflict', 409);
           const now = new Date();
           const after = { enabled: parsed.enabled, allowedSurfaces: [...new Set([...(before?.allowedSurfaces ?? []), 'homepage'])], maxActiveBanners: before?.maxActiveBanners ?? 100, defaultDisplaySeconds: before?.defaultDisplaySeconds ?? 8, version: parsed.expectedVersion + 1, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now };
@@ -110,7 +111,8 @@ export function createBannerManagement(dependencies: {
           // Explicit setup action only; never silently re-enable an existing placement.
           await connection.collection('ad_placements').updateOne({ key: 'homepage.hero' }, { $setOnInsert: { surface: 'homepage', label: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['ar', 'en'], targetUrlRequired: false, version: 0, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now } }, { upsert: true, session });
           await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $setOnInsert: featuredHomepagePlacementFields(new Types.ObjectId(claims.sub), now) }, { upsert: true, session });
-          await audit.record({ actorType: 'admin', actorId: claims.sub, targetType: 'ad_settings', targetId: 'homepage', action: 'ad_settings.banner_display', reason: parsed.reason, before: { enabled: before?.enabled ?? false, version: before?.version ?? 0 }, after: { enabled: parsed.enabled, version: after.version }, ...context, occurredAt: now }, session);
+          if (parsed.featuredActive !== undefined) await connection.collection('ad_placements').updateOne({ key: 'homepage.featured', active: { $ne: parsed.featuredActive } }, { $set: { active: parsed.featuredActive, updatedBy: new Types.ObjectId(claims.sub), updatedAt: now }, $inc: { version: 1 } }, { session });
+          await audit.record({ actorType: 'admin', actorId: claims.sub, targetType: 'ad_settings', targetId: 'homepage', action: 'ad_settings.banner_display', reason: parsed.reason, before: { enabled: before?.enabled ?? false, version: before?.version ?? 0, ...(parsed.featuredActive !== undefined ? { featuredActive: featuredBefore?.active === true } : {}) }, after: { enabled: parsed.enabled, version: after.version, ...(parsed.featuredActive !== undefined ? { featuredActive: parsed.featuredActive } : {}) }, ...context, occurredAt: now }, session);
         });
       } finally { await session.endSession(); }
       return config();

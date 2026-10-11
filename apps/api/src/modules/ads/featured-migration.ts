@@ -5,8 +5,10 @@ import type { AuditWriter } from '../audit/writer.js';
 /** Imported records are reviewable drafts. Never infer an advertiser from copy. */
 export async function importLegacyFeatured(connection: Connection, audit: AuditWriter, actorId: string, context: { requestId: string; traceId: string }) {
   const session = await connection.startSession();
+  let count = 0;
   try {
     await session.withTransaction(async () => {
+      count = 0;
       await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $inc: { bannerWriteVersion: 1 } }, { session });
       const rows = await connection.collection('cms_banners').find({ key: { $not: /^banner_/ }, migratedBannerId: { $exists: false } }, { session }).sort({ order: 1, _id: 1 }).limit(100).toArray();
       const last = await connection.collection('ad_banners').find({ placementKey: 'homepage.featured' }, { session }).sort({ sortOrder: -1 }).limit(1).next();
@@ -23,7 +25,9 @@ export async function importLegacyFeatured(connection: Connection, audit: AuditW
         if (hasImage) await connection.collection('ad_banner_media').insertOne({ _id: mediaId, bannerId, url: row.imageUrl, mime: 'image/png', width: 1200, height: 800, active: true, version: 0, createdBy: new Types.ObjectId(actorId), createdAt: now, updatedAt: now }, { session });
         await connection.collection('cms_banners').updateOne({ _id: row._id, migratedBannerId: { $exists: false } }, { $set: { active: false, migratedBannerId: bannerId } }, { session });
         await audit.record({ actorType: 'admin', actorId, targetType: 'ad_banner', targetId: bannerId.toHexString(), action: 'ad_banner.legacy_import', reason: 'Import legacy featured card for advertiser review', before: {}, after: { legacyKey: row.key, status: 'draft', sortOrder: after.sortOrder }, ...context, occurredAt: now }, session);
+        count++;
       }
     });
   } finally { await session.endSession(); }
+  return count;
 }
