@@ -6,12 +6,20 @@ import {
   adminProviderListDataSchema,
   providerReviewDataSchema
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { AdminAccounts, getAdminAccountsCopy, loadAdminDocumentAccess, loadAdminProviders, loadAdminUsers, reviewAdminProvider } from '../src/features/admin_accounts/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
+beforeEach(() => {
+  server.use(http.get('*/api/v1/admin/providers/:providerId/public-identity-subscription', () => HttpResponse.json({
+    data: { providerId: provider.id, status: 'inactive', paymentConfirmed: false, version: 0, visible: false, canManage: false },
+    meta: { requestId: 'test-account-office-identity' }
+  })));
+});
 const user = adminAccountUserDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
   roleType: 'seeker',

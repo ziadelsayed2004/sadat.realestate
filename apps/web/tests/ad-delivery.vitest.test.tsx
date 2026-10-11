@@ -27,10 +27,13 @@ describe('Request delivery context', () => {
     expect(screen.getByTestId('ad-request-summary')).toHaveTextContent(data.request.purpose);
     expect(screen.getByTestId('ad-request-summary')).toHaveTextContent('property_promotion');
     expect(screen.getByRole('link', { name: data.request.contactPhone! })).toHaveAttribute('href', `tel:${data.request.contactPhone}`);
-    expect(screen.getByRole('link', { name: locale === 'ar' ? 'إعداد بانر: بانر صفحة البحث' : 'Prepare banner: Search page banner' })).toHaveAttribute('href', `/admin/banners/new?requestId=${id}&lang=${locale}`);
+    const prepare = screen.getByTestId('ad-prepare-creative');
+    expect(prepare).toHaveAccessibleName();
+    expect(prepare.tagName).toBe('A');
+    expect(prepare).toHaveAttribute('href', `/admin/banners/new?requestId=${id}&lang=${locale}`);
+    expect(screen.getByTestId('ad-request-summary')).toHaveTextContent(data.pricingOptions!.placements[0]!.label[locale]!);
     expect(bannerSource.loadBanners).toHaveBeenCalledWith({ adRequestId: id, page: 1, limit: 20 }, expect.any(AbortSignal));
     expect(await screen.findByText(locale === 'ar' ? /لا توجد بانرات أو صور إعلان مرتبطة/u : /No banners or advertising images are linked/u)).toBeInTheDocument();
-    expect(screen.getByText(locale === 'ar' ? /لا يضع هذه العلامة تلقائيًا/u : /does not add that badge automatically/u)).toBeInTheDocument();
   });
 
   it('shows only the selected banner images and destination, never a receipt', async () => {
@@ -49,20 +52,32 @@ describe('Request delivery context', () => {
   it('does not offer banner preparation when context failed and retries without affecting finance', async () => {
     const loader = vi.fn().mockRejectedValueOnce(new Error('permission')).mockResolvedValue(data);
     show('en', source(), loader);
-    await screen.findByText(/Could not load the advertising brief/u);
-    expect(screen.queryByRole('link', { name: /Prepare banner/u })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    const error = await screen.findByRole('alert');
+    expect(error).not.toBeEmptyDOMElement();
+    expect(screen.queryByTestId('ad-prepare-creative')).not.toBeInTheDocument();
+    fireEvent.click(within(error).getByRole('button'));
     await screen.findByTestId('ad-request-summary');
     expect(loader).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.getByTestId('ad-prepare-creative')).toHaveAttribute('href', `/admin/banners/new?requestId=${id}&lang=en`);
   });
 
   it('keeps missing campaign and missing images explicit and does not guess a property', async () => {
     const assisted = adAdminRequestSchema.parse({ request: { ...data.request, requestMode: 'assisted', placementKey: undefined, intervalStart: undefined, intervalEnd: undefined, status: 'review' } });
     show('en', source(), vi.fn(async () => assisted));
     await screen.findByTestId('ad-request-summary');
-    expect(screen.queryByRole('link', { name: /Prepare banner/u })).not.toBeInTheDocument();
+    expect(screen.queryByTestId('ad-prepare-creative')).not.toBeInTheDocument();
     expect(screen.getByTestId('ad-request-summary')).toHaveTextContent('Display placement not assigned yet');
-    expect(screen.getByText(/request does not identify a specific property/u)).toBeInTheDocument();
+    expect(screen.getByTestId('ad-request-delivery').querySelector('a[href*="/properties/"]')).toBeNull();
+  });
+
+  it.each(['ar', 'en'] as const)('prepares a featured request in its own editor without guessing a property in %s', async locale => {
+    const featured = adAdminRequestSchema.parse({ ...data, request: { ...data.request, placementKey: 'homepage.featured' } });
+    show(locale, source(), vi.fn(async () => featured));
+    await screen.findByTestId('ad-request-summary');
+    expect(screen.getByTestId('ad-prepare-creative')).toHaveAccessibleName();
+    expect(screen.getByTestId('ad-prepare-creative')).toHaveAttribute('href', `/admin/ads/featured?requestId=${id}&lang=${locale}`);
+    expect(screen.getByTestId('ad-request-delivery').querySelector('a[href*="/properties/"]')).toBeNull();
   });
 
   it('reports unavailable banner permission instead of pretending there are no images', async () => {

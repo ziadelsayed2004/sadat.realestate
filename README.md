@@ -36,6 +36,12 @@ If `.env.local` came from an earlier release, delete only that generated file an
 
 See [`docs/deployment/LOCAL_PREVIEW.md`](docs/deployment/LOCAL_PREVIEW.md).
 
+## Checks before pushing changes
+
+`npm ci` enables the tracked Git pre-push hook in a development checkout. Every push runs `npm run verify:push`: lint, TypeScript checks, and the complete server and web test suites, including the production web build and bundle budgets. A failed check blocks the push. Commit pending changes first so the checked code matches the uploaded commit. Run the same command manually while fixing errors. Release folders without a Git checkout skip hook installation; an existing custom hook configuration is preserved and must invoke the same check.
+
+Behavior tests should assert routes, saved data, permissions, and state transitions; use accessible controls and stable identifiers when the exact wording is not part of the requirement. Every API call made by a UI test needs an explicit MSW fixture. Missing handlers fail the test even when the component catches the request error. Keep the full CI `quality` check enabled as an independent safeguard.
+
 ## Hostinger Ubuntu VPS
 
 Production uses:
