@@ -220,6 +220,30 @@ describe('Provider property wizard', () => {
     expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ version: 2, locationId: 'eeeeeeeeeeeeeeeeeeeeeeee', coordinates: { latitude: 30.63, longitude: 30.74 } }));
   });
 
+  it.each(['ar', 'en'] as const)('recovers from an unmatched region search without clearing the saved selection in %s', async locale => {
+    const catalog = [
+      publicPropertyLocationSchema.parse({ id: 'dddddddddddddddddddddddd', kind: 'neighborhood', name: { ar: 'الحي الأول', en: 'First District' }, slug: 'first-district', order: 1 }),
+      publicPropertyLocationSchema.parse({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'neighborhood', name: { ar: 'الحي السابع', en: 'Seventh District' }, slug: 'seventh-district', order: 2 })
+    ];
+    const current = property({ locationId: catalog[1]!.id });
+    const save = vi.fn(async () => current);
+    const copy = getProviderPropertyCopy(locale).wizard;
+    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={current} save={save} loadLocations={async () => catalog} />, { locale });
+    const picker = screen.getByRole('combobox', { name: copy.labels.locationId });
+    await waitFor(() => expect(picker).toBeEnabled());
+    fireEvent.change(screen.getByRole('searchbox', { name: copy.locationSearchLabel }), { target: { value: 'السباعه' } });
+    expect(screen.getByRole('option', { name: locale === 'ar' ? 'الحي السابع' : 'Seventh District' })).toBeInTheDocument();
+    expect(screen.queryByText(copy.locationSearchEmpty)).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole('searchbox', { name: copy.locationSearchLabel }), { target: { value: 'منطقة غير مسجلة' } });
+    expect(screen.getByText(copy.locationSearchEmpty)).toBeInTheDocument();
+    expect(picker).toHaveValue(current.locationId);
+    fireEvent.click(screen.getByRole('button', { name: copy.clearLocationSearch }));
+    expect(screen.getByRole('option', { name: locale === 'ar' ? 'الحي الأول' : 'First District' })).toBeInTheDocument();
+    expect(picker).toHaveValue(current.locationId);
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ locationId: current.locationId })));
+  });
+
   it('fails closed for anonymous and forbidden property access without fallback data', async () => {
     const copy = getProviderPropertyCopy('en');
     renderWithLocale(<ProviderPropertyWizard locale="en" session={{ status: 'anonymous' }} step="location" propertyId={propertyId} load={vi.fn()} />, { locale: 'en' });

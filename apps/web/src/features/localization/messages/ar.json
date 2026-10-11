@@ -3738,7 +3738,7 @@
         "projectId": "معرّف المشروع",
         "parentPropertyId": "معرّف العقار الأب",
         "reason": "سبب حفظ المسودة",
-        "locationId": "معرّف الموقع الرئيسي",
+        "locationId": "المنطقة أو الحي",
         "mapUrl": "رابط موقع الخريطة",
         "latitude": "خط العرض",
         "longitude": "خط الطول"
@@ -3804,6 +3804,8 @@
       "locationSearchLabel": "البحث عن المنطقة",
       "locationSearchPlaceholder": "اكتب اسم المدينة أو المنطقة",
       "locationSelectPlaceholder": "اختر المنطقة",
+      "locationSearchEmpty": "لا توجد مناطق تطابق البحث. امسح البحث لعرض كل المناطق المتاحة.",
+      "clearLocationSearch": "مسح البحث وعرض كل المناطق",
       "contractBoundaryTitle": "حقول غير مدعومة حالياً",
       "contractBoundaryBody": "حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.",
       "coordinateHelp": "يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.",

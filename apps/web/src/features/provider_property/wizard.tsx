@@ -18,6 +18,7 @@ import {
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertySourceType, type ProviderPropertyWizardState } from './copy.ts';
 import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
+import { filterProviderLocations } from './location-search.ts';
 
 export interface ProviderPropertyAuthClient extends ProviderAuthorizationSource {
   readonly getSnapshot: () => AuthSnapshot;
@@ -270,11 +271,9 @@ function LocationFormView({
   const wizard = copy.wizard;
   const saving = mutationState === 'saving';
   const [locationSearch, setLocationSearch] = useState('');
-  const normalizedSearch = locationSearch.trim().toLocaleLowerCase(locale);
-  const visibleLocations = normalizedSearch === '' ? locations : locations.filter(location => {
-    const name = location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug;
-    return `${name} ${location.slug}`.toLocaleLowerCase(locale).includes(normalizedSearch);
-  });
+  const matches = filterProviderLocations(locations, locationSearch);
+  const selected = locations.find(item => item.id === form.locationId);
+  const visibleLocations = selected && !matches.includes(selected) ? [selected, ...matches] : matches;
   return (
     <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
       <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{wizard.createTitle}</h1><p>{wizard.createDescription}</p></div>
@@ -290,6 +289,10 @@ function LocationFormView({
               <option value="">{locationsState === 'loading' ? wizard.locationCatalogLoading : wizard.locationSelectPlaceholder}</option>
               {visibleLocations.map(location => <option key={location.id} value={location.id}>{location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug}</option>)}
             </select>}
+            {locationsState === 'success' && locationSearch.trim() !== '' && locations.length > 0 ? <div className="provider-property-wizard__help">
+              {matches.length === 0 ? <p role="status">{wizard.locationSearchEmpty}</p> : null}
+              <Button type="button" variant="secondary" size="sm" onClick={() => setLocationSearch('')}>{wizard.clearLocationSearch}</Button>
+            </div> : null}
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
           <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" aria-invalid={validationError || undefined} />

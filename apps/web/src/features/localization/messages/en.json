@@ -3738,7 +3738,7 @@
         "projectId": "Project ID",
         "parentPropertyId": "Parent property ID",
         "reason": "Draft save reason",
-        "locationId": "Master location ID",
+        "locationId": "Area or district",
         "mapUrl": "Map location link",
         "latitude": "Latitude",
         "longitude": "Longitude"
@@ -3804,6 +3804,8 @@
       "locationSearchLabel": "Search locations",
       "locationSearchPlaceholder": "Type a city or area name",
       "locationSelectPlaceholder": "Select a location",
+      "locationSearchEmpty": "No areas match your search. Clear the search to see all available areas.",
+      "clearLocationSearch": "Clear search and show all areas",
       "contractBoundaryTitle": "Fields not supported by the current contract",
       "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
       "coordinateHelp": "A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.",

@@ -38,6 +38,8 @@ export interface ProviderPropertyCopy {
     readonly locationSearchLabel: string;
     readonly locationSearchPlaceholder: string;
     readonly locationSelectPlaceholder: string;
+    readonly locationSearchEmpty: string;
+    readonly clearLocationSearch: string;
     readonly contractBoundaryTitle: string;
     readonly contractBoundaryBody: string;
     readonly coordinateHelp: string;
@@ -65,7 +67,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       labels: {
         name: 'اسم العقار', slug: 'المعرّف المختصر', kind: 'نوع السجل', transaction: 'نوع المعاملة', sourceType: 'نوع مصدر العقار',
         organizationId: 'معرّف المؤسسة', projectId: 'معرّف المشروع', parentPropertyId: 'معرّف العقار الأب', reason: 'سبب حفظ المسودة',
-         locationId: 'معرّف الموقع الرئيسي', mapUrl: 'رابط موقع الخريطة', latitude: 'خط العرض', longitude: 'خط الطول'
+         locationId: 'المنطقة أو الحي', mapUrl: 'رابط موقع الخريطة', latitude: 'خط العرض', longitude: 'خط الطول'
       },
       placeholders: {
         name: 'مثال: شقة في مدينة السادات', slug: 'apartment-sadat-city', organizationId: '24 حرفاً سداسياً عشرينياً',
@@ -95,6 +97,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogEmptyTitle: 'لا توجد مناطق نشطة',
       locationCatalogEmptyBody: 'أضف منطقة نشطة من لوحة الإدارة أو استخدم الإحداثيات لحين توفرها.',
       locationSearchLabel: 'البحث عن المنطقة', locationSearchPlaceholder: 'اكتب اسم المدينة أو المنطقة', locationSelectPlaceholder: 'اختر المنطقة',
+      locationSearchEmpty: 'لا توجد مناطق تطابق البحث. امسح البحث لعرض كل المناطق المتاحة.', clearLocationSearch: 'مسح البحث وعرض كل المناطق',
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
       coordinateHelp: 'يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.',
@@ -125,7 +128,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       labels: {
         name: 'Property name', slug: 'Short identifier', kind: 'Record type', transaction: 'Transaction type', sourceType: 'Property source type',
         organizationId: 'Organization ID', projectId: 'Project ID', parentPropertyId: 'Parent property ID', reason: 'Draft save reason',
-        locationId: 'Master location ID', mapUrl: 'Map location link', latitude: 'Latitude', longitude: 'Longitude'
+        locationId: 'Area or district', mapUrl: 'Map location link', latitude: 'Latitude', longitude: 'Longitude'
       },
       placeholders: {
         name: 'Example: Sadat City apartment', slug: 'apartment-sadat-city', organizationId: '24 hexadecimal characters',
@@ -155,6 +158,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogEmptyTitle: 'No active locations',
       locationCatalogEmptyBody: 'Add an active location from the admin dashboard, or use coordinates until one is available.',
       locationSearchLabel: 'Search locations', locationSearchPlaceholder: 'Type a city or area name', locationSelectPlaceholder: 'Select a location',
+      locationSearchEmpty: 'No areas match your search. Clear the search to see all available areas.', clearLocationSearch: 'Clear search and show all areas',
       contractBoundaryTitle: 'Fields not supported by the current contract',
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
       coordinateHelp: 'A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.',
