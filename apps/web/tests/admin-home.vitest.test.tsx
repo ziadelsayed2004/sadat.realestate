@@ -300,7 +300,7 @@ describe('Admin banners, tips, and homepage administration', () => {
     expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('order');
   });
 
-  it.each([undefined, 0, 10])('leaves new tip order optional and honors a manual value %s', async chosenOrder => {
+  it.each([undefined, 0, 10])('creates a tip without a manual key and honors optional display order %s', async chosenOrder => {
     const requests: Array<{ method: string; path: string; body: unknown }> = [];
     renderWithLocale(<AdminHome url="/admin/content/tips" locale="en" session={session} initialContent={tips} source={createAdminHomeSource({ apiClient: apiClientFor(requests) })} />, { locale: 'en' });
     fireEvent.click(screen.getByRole('button', { name: getAdminHomeCopy('en').add }));
@@ -310,12 +310,13 @@ describe('Admin banners, tips, and homepage administration', () => {
     expect(order).not.toBeRequired();
     expect(editor).toHaveTextContent('Leave blank to add at the end automatically.');
     if (chosenOrder !== undefined) fireEvent.change(order, { target: { value: String(chosenOrder) } });
-    fireEvent.change(within(editor).getByLabelText(getAdminHomeCopy('en').key), { target: { value: 'new_tip' } });
+    expect(within(editor).queryByLabelText(getAdminHomeCopy('en').key)).not.toBeInTheDocument();
     fireEvent.change(within(editor).getByRole('group', { name: 'Title' }).querySelector('#admin-home-tips-title-en')!, { target: { value: 'New advice' } });
     fireEvent.change(editor.querySelector('#admin-home-tips-body-en')!, { target: { value: 'Review the property documents.' } });
     fireEvent.change(within(editor).getByLabelText('Change reason'), { target: { value: 'Add useful advice' } });
     fireEvent.submit(editor.querySelector('form')!);
     await waitFor(() => expect(requests.find(request => request.method === 'PUT')).toBeDefined());
+    expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('key');
     if (chosenOrder === undefined) expect(requests.find(request => request.method === 'PUT')?.body).not.toHaveProperty('order');
     else expect(requests.find(request => request.method === 'PUT')?.body).toHaveProperty('order', chosenOrder);
   });

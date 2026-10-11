@@ -1,6 +1,39 @@
 import { expect, test } from '@playwright/test';
 import { adminHomeTipFixture, adminHomeTipId, routeAdminHomeApis } from './admin-home.fixtures.ts';
 import { publicHomepageFixture, routePublicHomepageApi } from './public-fixtures.ts';
+import { getAdminHomeCopy } from '../../src/features/admin_home/copy.ts';
+
+test('creates a tip without entering a key and displays the server-generated identifier', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  const copy = getAdminHomeCopy(locale);
+  const key = `tip_${'1'.repeat(32)}`;
+  let stored: Array<ReturnType<typeof adminHomeTipFixture>> = [];
+  let writes = 0;
+  await routeAdminHomeApis(page);
+  await page.route('**/api/v1/admin/content/tips', async route => {
+    if (route.request().method() === 'PUT') {
+      const input = route.request().postDataJSON();
+      expect(input).not.toHaveProperty('key');
+      expect(input).not.toHaveProperty('id');
+      expect(input).not.toHaveProperty('order');
+      writes += 1;
+      stored = [{ ...adminHomeTipFixture(), key, title: input.title, body: input.body, status: input.status, active: input.active, version: 0 }];
+    }
+    await route.fulfill({ json: { data: { namespace: 'tips', items: stored }, meta: { requestId: 'automatic-tip-key' } } });
+  });
+  await page.goto(`/admin/content/tips?lang=${locale}`);
+  await page.getByRole('button', { name: copy.add, exact: true }).first().click();
+  const editor = page.getByTestId('admin-home-tips-editor');
+  await expect(editor.locator('#admin-home-tips-key')).toHaveCount(0);
+  await editor.locator(`#admin-home-tips-title-${locale}`).fill(locale === 'ar' ? 'نصيحة جديدة' : 'New property advice');
+  await editor.locator(`#admin-home-tips-body-${locale}`).fill(locale === 'ar' ? 'راجع المستندات قبل شراء العقار.' : 'Check the documents before buying.');
+  await editor.locator('#admin-home-tips-reason').fill('Add advice without a manual identifier');
+  await editor.screenshot({ path: info.outputPath('automatic-tip-key-form.png') });
+  await editor.locator('button[type=submit]').click();
+  await expect(editor).toHaveCount(0);
+  expect(writes).toBe(1);
+  await expect(page.getByTestId(`admin-home-tips-${adminHomeTipId}`)).toContainText(key);
+});
 
 test('previews saved and unsaved tip translations, then displays the same published card on the homepage', async ({ page }, info) => {
   const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';

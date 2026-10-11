@@ -337,6 +337,22 @@ test('returns ordered admin About/Team projections with permission-derived actio
   assert.equal(display.items[0]?.key, 'show_search');
 });
 
+test('automatically assigns a new tip key and preserves it when its title changes', async () => {
+  const { service } = createService();
+  const context = { requestId: 'automatic-tip-key', traceId: 'f'.repeat(32) };
+  const created = await service.put({ userId: adminId }, 'tips', {
+    title: { ar: 'نصيحة جديدة' }, body: { ar: 'راجع المستندات قبل شراء العقار.' }, status: 'draft', reason: 'Create advice without a manual key'
+  }, context);
+  assert.ok(created.namespace === 'tips');
+  const item = created.items.find(candidate => candidate.title.ar === 'نصيحة جديدة');
+  assert.ok(item);
+  assert.match(item.key, /^tip_[a-f0-9]{32}$/u);
+  const updated = await service.put({ userId: adminId }, 'tips', {
+    id: item.id, version: item.version, title: { ar: 'عنوان النصيحة بعد التعديل' }, reason: 'Change advice title'
+  }, context);
+  assert.equal(updated.items.find(candidate => candidate.id === item.id)?.key, item.key);
+});
+
 test('creates and updates a reason-bearing published tip with optimistic versioning', async () => {
   const { service, audits } = createService();
   const created = await service.put({ userId: adminId }, 'tips', {
