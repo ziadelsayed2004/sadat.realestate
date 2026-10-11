@@ -48,6 +48,9 @@ export const publicHomepageMetricSchema = z.object({
   title: localizedTextSchema,
   value: z.number().finite().nonnegative().max(1_000_000_000_000),
   unit: localizedTextSchema.optional(),
+  sourceUrl: z.string().url().max(2048).optional(),
+  sourceYear: z.number().int().min(1900).max(2200).optional(),
+  checkedAt: z.string().datetime().optional(),
   order: publicOrderSchema
 }).strict();
 

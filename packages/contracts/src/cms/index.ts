@@ -440,6 +440,10 @@ export const cmsTeamPhotoSuccessEnvelopeSchema = successEnvelopeSchema(cmsTeamPh
 export const cmsAdminPopulationValueSchema = z
   .object({
     ...cmsAdminRecordFields,
+    updatedBy: objectId.optional(),
+    automatic: z.boolean().optional(),
+    sourceYear: z.number().int().min(1900).max(2200).optional(),
+    checkedAt: z.string().datetime().optional(),
     status: populationValueSchema.shape.status,
     value: populationValueSchema.shape.value,
     sourceLabel: populationValueSchema.shape.sourceLabel,
@@ -447,7 +451,9 @@ export const cmsAdminPopulationValueSchema = z
     asOf: populationValueSchema.shape.asOf,
     reason,
   })
-  .strict();
+  .strict().refine(value => value.automatic === true || value.updatedBy !== undefined, {
+    path: ['updatedBy'], message: 'Manual population records require an administrator'
+  });
 export const cmsAdminTipSchema = z
   .object({
     ...cmsAdminRecordFields,

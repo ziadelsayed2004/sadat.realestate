@@ -8,11 +8,12 @@ import { createMongoosePublicContactSettingsReader } from '../settings/contact-p
 import type { AccessTokenService } from '../auth/crypto.js';
 import { createPublicBootstrapService } from './bootstrap.js';
 import { createMongoosePublicSitemapSource, createPublicSitemapService } from './sitemap.js';
+import { mongooseAutomaticPopulationReader } from '../cms/automatic-population.js';
 
 export function createPublicRuntime(connection: Connection, accessTokens?: AccessTokenService): PublicRouterDependencies {
   const displaySettings = createMongooseDisplaySettingsReader(connection);
   return {
-    service: createPublicHomepageService({ repository: createMongoosePublicHomepageRepository(connection), displaySettings }),
+    service: createPublicHomepageService({ repository: createMongoosePublicHomepageRepository(connection), displaySettings, automaticPopulation: mongooseAutomaticPopulationReader(connection) }),
     details: createPublicPropertyDetailsService({ repository: createMongoosePublicPropertyDetailsRepository(connection), settings: createMongoosePropertySettingsReader(connection) }),
     bootstrap: createPublicBootstrapService(displaySettings, createMongoosePublicContactSettingsReader(connection)),
     sitemap: createPublicSitemapService(createMongoosePublicSitemapSource(connection)),

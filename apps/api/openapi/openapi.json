@@ -24324,7 +24324,6 @@
           "status",
           "reason",
           "version",
-          "updatedBy",
           "updatedAt",
           "availableActions"
         ],
@@ -24380,8 +24379,37 @@
             "items": {
               "$ref": "#/components/schemas/CmsAdminContentAction"
             }
+          },
+          "automatic": {
+            "type": "boolean"
+          },
+          "sourceYear": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2200
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
           }
-        }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "automatic"
+            ],
+            "properties": {
+              "automatic": {
+                "const": true
+              }
+            }
+          },
+          {
+            "required": [
+              "updatedBy"
+            ]
+          }
+        ]
       },
       "CmsAdminTip": {
         "type": "object",
@@ -26948,6 +26976,20 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "sourceUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "sourceYear": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2200
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

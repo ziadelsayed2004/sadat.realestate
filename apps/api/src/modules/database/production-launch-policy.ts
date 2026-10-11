@@ -9,7 +9,7 @@ export const LAUNCH_REFERENCE_COLLECTIONS = new Set([
   'roles', 'admin_settings', 'cms_settings', 'cms_display_settings',
   'settings_seo', 'settings_privacy_policies', 'commission_policies',
   'locations', 'property_taxonomy', 'features_services', 'article_categories',
-  'ad_placements', 'ad_settings'
+  'ad_placements', 'ad_settings', 'cms_population_source_cache'
 ]);
 
 export const LAUNCH_PURGED_COLLECTIONS = new Set([

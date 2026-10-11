@@ -1,76 +1,76 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { cmsAdminContentDataSchema, type CmsAdminContentData } from '@sadat-real-estate/contracts';
+import { cmsAdminContentDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { AdminCmsContent, getAdminCmsCopy, updateAdminCmsContent } from '../src/features/admin_content/index.ts';
-import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
+import { AdminCmsContent } from '../src/features/admin_content/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 const path = '/admin/content/population-counter';
-function data(value = 44000, version = 0): CmsAdminContentData {
+const sourceUrl = 'https://worldpopulationreview.com/cities/egypt/sadat-city';
+function data(available: boolean) {
   return cmsAdminContentDataSchema.parse({ namespace: 'population', items: [{
-    id: 'dddddddddddddddddddddddd', status: 'available', value, version,
-    sourceLabel: { ar: 'جهاز مدينة السادات', en: 'Sadat City authority' }, sourceUrl: 'https://example.com/report', asOf: '2026-10-07T00:00:00.000Z',
-    reason: 'Approved sourced statement', updatedBy: 'cccccccccccccccccccccccc', updatedAt: '2026-10-07T10:00:00.000Z', availableActions: ['update']
+    id: '000000000000000000000001', status: available ? 'available' : 'unavailable', version: 0,
+    automatic: true, ...(available ? { value: 79120, sourceYear: 2026, sourceLabel: { en: 'World Population Review' }, sourceUrl, asOf: '2026-01-01T00:00:00.000Z', checkedAt: '2026-10-11T10:00:00.000Z' } : {}),
+    reason: 'Automatic source estimate', updatedAt: '2026-10-11T10:00:00.000Z', availableActions: []
   }] });
 }
-function input(id: string, value: string) {
-  fireEvent.change(document.getElementById(`admin-cms-population-${id}`)!, { target: { value } });
-}
-function submit() { fireEvent.submit(screen.getByTestId('admin-cms-population-editor').querySelector('form')!); }
 
-describe('population counter save feedback and validation', () => {
-  it.each(['ar', 'en'] as const)('saves an existing statement twice through the real request schema with the latest version in %s', async locale => {
-    const requests: Array<Record<string, unknown>> = [];
-    const apiClient = new ApiClient({ fetcher: async (_url, init) => {
-      const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
-      requests.push(body);
-      return new Response(JSON.stringify({ data: data(Number(body.value), Number(body.version) + 1), meta: { requestId: 'population-save' } }), { status: 200, headers: { 'content-type': 'application/json' } });
-    } });
-    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data()} update={(namespace, payload) => updateAdminCmsContent(namespace, payload, { apiClient })} />, { locale });
-    input('value', '45000'); input('reason', 'Update sourced count'); submit();
-    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'تم حفظ عداد السكان بنجاح' : 'saved successfully'));
-    expect(requests[0]).toMatchObject({ version: 0, value: 45000, asOf: '2026-10-07T00:00:00.000Z' });
-    expect(document.getElementById('admin-cms-population-value')).toHaveValue(45000);
-    input('value', '46000'); submit();
-    await waitFor(() => expect(requests).toHaveLength(2));
-    expect(requests[1]).toMatchObject({ version: 1, value: 46000 });
+describe('automatic population reference', () => {
+  it.each(['ar', 'en'] as const)('saves a manual city count with the latest version and keeps population unchanged in %s', async locale => {
+    let display = cmsAdminContentDataSchema.parse({ namespace: 'display', items: [{
+      id: 'dddddddddddddddddddddddd', key: 'city_metric_buildings', value: { kind: 'number', value: 50 }, status: 'published',
+      version: 2, updatedBy: 'cccccccccccccccccccccccc', updatedAt: '2026-10-11T10:00:00.000Z', availableActions: ['update', 'publish']
+    }] });
+    const update = vi.fn(async (_namespace: string, input: unknown) => {
+      const body = input as { version: number; value: { kind: string; value: number } };
+      display = cmsAdminContentDataSchema.parse({ namespace: 'display', items: [{ ...display.items[0], value: body.value, version: body.version + 1 }] });
+      return display;
+    });
+    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(true)} load={async () => display} update={update} />, { locale });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تعديل إحصاءات المدينة' : 'Edit city statistics' }));
+    const count = await screen.findByLabelText(locale === 'ar' ? 'العدد' : 'Count');
+    expect(count).toHaveValue(50);
+    fireEvent.change(count, { target: { value: '123' } });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'سبب التعديل' : 'Change reason'), { target: { value: 'Update approved building count' } });
+    fireEvent.submit(count.closest('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('display', expect.objectContaining({ id: 'dddddddddddddddddddddddd', version: 2, value: { kind: 'number', value: 123 } })));
     await waitFor(() => expect(screen.getByRole('status')).toBeVisible());
+    expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent(new Intl.NumberFormat(locale).format(79120));
+    fireEvent.change(count, { target: { value: '124' } }); fireEvent.submit(count.closest('form')!);
+    await waitFor(() => expect(update).toHaveBeenLastCalledWith('display', expect.objectContaining({ version: 3, value: { kind: 'number', value: 124 } })));
   });
 
-  it.each(['ar', 'en'] as const)('identifies a missing date, retains the entered count and sends nothing in %s', async locale => {
-    const update = vi.fn(async () => data());
-    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data()} update={update} />, { locale });
-    input('value', '44000'); input('as-of', ''); input('reason', 'Update population'); submit();
+  it('preserves manual input on save failure and sends no invalid counts', async () => {
+    const display = cmsAdminContentDataSchema.parse({ namespace: 'display', items: [] });
+    const update = vi.fn(async () => { throw new Error('failed'); });
+    renderWithLocale(<AdminCmsContent path={path} locale="en" session={session} initialData={data(true)} load={async () => display} update={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Edit city statistics' }));
+    const count = await screen.findByLabelText('Count');
+    fireEvent.change(count, { target: { value: '-1' } });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Update approved building count' } });
+    fireEvent.submit(count.closest('form')!); expect(update).not.toHaveBeenCalled();
+    fireEvent.change(count, { target: { value: '100' } }); fireEvent.submit(count.closest('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('display', expect.objectContaining({ key: 'city_metric_buildings', status: 'published', value: { kind: 'number', value: 100 } })));
+    await waitFor(() => expect(screen.getByRole('alert')).toBeVisible());
+    expect(count).toHaveValue(100); expect(screen.getByLabelText('Change reason')).toHaveValue('Update approved building count');
+  });
+  it.each(['ar', 'en'] as const)('shows the verified number, estimate year and source without editable fields in %s', locale => {
+    const update = vi.fn();
+    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(true)} update={update} />, { locale });
+    expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent(new Intl.NumberFormat(locale).format(79120));
+    expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent('2026');
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض مصدر عدد السكان' : 'View population source' })).toHaveAttribute('href', sourceUrl);
+    expect(screen.getByTestId('admin-cms-population-editor').querySelector('time')).toHaveAttribute('datetime', '2026-10-11T10:00:00.000Z');
+    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.getByTestId('admin-cms-population-editor').querySelector('form')).toBeNull();
     expect(update).not.toHaveBeenCalled();
-    expect(document.getElementById('admin-cms-population-as-of')).toHaveAttribute('aria-invalid', 'true');
-    expect(document.getElementById('admin-cms-population-as-of')).toHaveFocus();
-    expect(screen.getByText(locale === 'ar' ? 'اختر تاريخ البيان كاملًا: يوم وشهر وسنة.' : 'Choose the complete statement date: day, month and year.')).toBeVisible();
-    expect(document.getElementById('admin-cms-population-value')).toHaveValue(44000);
   });
 
-  it('lists all required publishing fields and preserves the draft after a server failure', async () => {
-    const update = vi.fn(async () => { throw new ApiClientError('Conflict', { status: 409, code: 'HTTP_ERROR' }); });
-    renderWithLocale(<AdminCmsContent path={path} locale="en" session={session} initialData={{ namespace: 'population', items: [] }} update={update} />, { locale: 'en' });
-    input('status', 'available'); input('reason', 'Publish new statement'); submit();
-    expect(update).not.toHaveBeenCalled();
-    expect(document.getElementById('admin-cms-population-value')).toHaveAttribute('aria-invalid', 'true');
-    expect(document.getElementById('admin-cms-population-source-ar')).toHaveAttribute('aria-invalid', 'true');
-    expect(document.getElementById('admin-cms-population-url')).toHaveAttribute('aria-invalid', 'true');
-    expect(document.getElementById('admin-cms-population-as-of')).toHaveAttribute('aria-invalid', 'true');
-    input('value', '44000'); input('source-ar', 'جهاز المدينة'); input('url', 'https://example.com/report'); input('as-of', '2026-10-07'); submit();
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(getAdminCmsCopy('en').mutation.conflict));
-    expect(document.getElementById('admin-cms-population-value')).toHaveValue(44000);
-    expect(document.getElementById('admin-cms-population-source-ar')).toHaveValue('جهاز المدينة');
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
-  });
-
-  it('hides a previously published count without submitting its disabled value', async () => {
-    const hidden = cmsAdminContentDataSchema.parse({ namespace: 'population', items: [{ ...data().items[0], status: 'unavailable', value: undefined, version: 1 }] });
-    const update = vi.fn(async (_namespace: string, _input: unknown) => hidden);
-    renderWithLocale(<AdminCmsContent path={path} locale="en" session={session} initialData={data()} update={update} />, { locale: 'en' });
-    input('status', 'unavailable'); input('reason', 'Withdraw statement'); submit();
-    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('The count is hidden'));
-    expect(update.mock.calls[0]?.[1]).not.toHaveProperty('value');
+  it.each(['ar', 'en'] as const)('explains an unavailable first retrieval without presenting a fabricated number in %s', locale => {
+    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(false)} />, { locale });
+    expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'لم يتم جلب تقدير السكان' : 'has not been retrieved');
+    expect(screen.getByTestId('admin-cms-population-editor')).not.toHaveTextContent('79,120');
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض مصدر عدد السكان' : 'View population source' })).toHaveAttribute('href', sourceUrl);
   });
 });

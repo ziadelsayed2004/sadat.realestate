@@ -805,7 +805,7 @@ function HomepageSummary({
 }) {
   const primary = metrics[0];
   if (primary === undefined) return null;
-  const secondary = (locale === 'ar' ? metrics.slice(1, 4).reverse() : metrics.slice(1, 4));
+  const secondary = (locale === 'ar' ? metrics.slice(1, 5).reverse() : metrics.slice(1, 5));
 
   return (
     <section className="public-homepage__summary" aria-label={localizedText(primary.title, locale) ?? primary.key} data-homepage-summary="data-backed">
@@ -813,11 +813,13 @@ function HomepageSummary({
       <h2>{localizedText(primary.title, locale) ?? primary.key}</h2>
       <strong className="public-homepage__summary-primary">{new Intl.NumberFormat(locale).format(primary.value)}</strong>
       {localizedText(primary.unit, locale) === undefined ? null : <p className="public-homepage__summary-unit">{localizedText(primary.unit, locale)}</p>}
+      {primary.key === 'population' && primary.sourceUrl ? <p className="public-homepage__summary-unit"><a href={primary.sourceUrl} target="_blank" rel="noreferrer">World Population Review</a>{primary.sourceYear ? ` · ${locale === 'ar' ? 'تقدير' : 'Estimate'} ${primary.sourceYear}` : ''}</p> : null}
       <div className="public-homepage__summary-grid">
         {secondary.map(metric => (
           <article className="public-homepage__summary-item" key={metric.key}>
             <strong>{metric.key === 'annual_growth' ? '+' : ''}{new Intl.NumberFormat(locale).format(metric.value)}</strong>
             <span>{localizedText(metric.title, locale) ?? metric.key}</span>
+            {metric.key === 'population' && metric.sourceUrl ? <a href={metric.sourceUrl} target="_blank" rel="noreferrer">World Population Review{metric.sourceYear ? ` · ${metric.sourceYear}` : ''}</a> : null}
           </article>
         ))}
       </div>

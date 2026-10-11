@@ -12,6 +12,7 @@ import type { UploadEnvironment } from '../uploads/environment.js';
 import { createInMemoryStorageAdapter, createLocalFilesystemStorageAdapter, createUnavailableStorageAdapter, createClamAvMalwareScanner, createDeterministicMalwareScanner, createUnavailableMalwareScanner } from '../uploads/adapters.js';
 import { createTeamPhotos } from './team-photos.js';
 import { createTeamCategories } from './team-categories.js';
+import { mongooseAutomaticPopulationReader } from './automatic-population.js';
 
 export function createCmsAdminContentRuntime(
   connection: Connection,
@@ -43,6 +44,7 @@ export function createCmsAdminContentRuntime(
       }),
       authorization,
       audit,
+      automaticPopulation: mongooseAutomaticPopulationReader(connection),
       validateTeamPhoto: photos.validateAttach,
       validateTeamCategory: categories.validate,
       transaction: operation => connection.transaction(operation)

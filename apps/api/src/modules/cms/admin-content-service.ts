@@ -1,4 +1,5 @@
 import { generateIdentifier } from '../shared/identifiers.js';
+import { populationStatement, type AutomaticPopulationReader } from './automatic-population.js';
 import {
   cmsAdminAboutBlockPutSchema,
   cmsAdminAboutBlockSchema,
@@ -144,6 +145,7 @@ export function createCmsAdminContentService(dependencies: {
   transaction?: <T>(operation: () => Promise<T>) => Promise<T>;
   validateTeamCategory?: (key: string) => Promise<void>;
   validateTeamPhoto?: (id: string) => Promise<void>;
+  automaticPopulation?: AutomaticPopulationReader;
 }): CmsAdminContentService {
   const now = dependencies.now ?? (() => new Date());
   const allowed = (userId: string, permission: RbacPermission) => dependencies.authorization.authorize(userId, permission);
@@ -245,6 +247,14 @@ export function createCmsAdminContentService(dependencies: {
     }
     if (namespace === 'display') {
       return cmsAdminContentDataSchema.parse({ namespace, items: (await dependencies.repository.listDisplaySettings()).map(row => displaySettingData(row, authorization.manage, authorization.publish)) });
+    }
+    if (dependencies.automaticPopulation) {
+      const snapshot = await dependencies.automaticPopulation();
+      return cmsAdminContentDataSchema.parse({ namespace, items: [{
+        id: '000000000000000000000001', version: 0, automatic: true, availableActions: [],
+        ...populationStatement(snapshot), updatedAt: snapshot?.checkedAt ?? now().toISOString(),
+        reason: 'Automatic World Population Review estimate'
+      }] });
     }
     const row = await dependencies.repository.getPopulation();
     return cmsAdminContentDataSchema.parse({ namespace, items: row ? [populationData(row, authorization.manage, authorization.publish)] : [] });
@@ -399,6 +409,7 @@ export function createCmsAdminContentService(dependencies: {
         return read(principal, namespace);
       }
       const input = cmsAdminPopulationValuePutSchema.parse(unparsedInput) as CmsAdminPopulationValuePut;
+      if (dependencies.automaticPopulation) throw new CmsAdminContentServiceError('CMS_CONTENT_FORBIDDEN');
       const current = await dependencies.repository.getPopulation();
       requirePublish(input.status, authorization.publish);
       if (current !== null && input.version === undefined) {

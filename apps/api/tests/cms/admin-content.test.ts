@@ -231,10 +231,11 @@ test('stops and resumes homepage content without losing text, with audit, permis
   assert.deepEqual(allowed.audits, ['cms.homepage.write', 'cms.homepage.write']);
 });
 
-function createService(options: { manage?: boolean; publish?: boolean } = {}) {
+function createService(options: { manage?: boolean; publish?: boolean; automaticPopulation?: () => Promise<import('../../src/modules/cms/automatic-population.js').PopulationSnapshot | null> } = {}) {
   const audits: string[] = [];
   const created = createCmsAdminContentService({
     repository: repository(),
+    ...(options.automaticPopulation ? { automaticPopulation: options.automaticPopulation } : {}),
     authorization: {
       async authorize(_userId, permission) {
         if (permission === 'admin:content.manage') return options.manage ?? true;
@@ -247,6 +248,25 @@ function createService(options: { manage?: boolean; publish?: boolean } = {}) {
   });
   return { service: created, audits };
 }
+
+test('automatic population is read-only and does not overwrite manual About statistics', async () => {
+  const { service, audits } = createService({ automaticPopulation: async () => ({ value: 79120, year: 2026, checkedAt: '2026-10-11T10:00:00.000Z' }) });
+  const output = await service.get({ userId: adminId }, 'population');
+  assert.equal(output.namespace, 'population');
+  if (output.namespace !== 'population') return;
+  assert.equal(output.items[0]?.automatic, true);
+  assert.equal(output.items[0]?.value, 79120);
+  assert.equal(output.items[0]?.updatedBy, undefined);
+  assert.deepEqual(output.items[0]?.availableActions, []);
+  await assert.rejects(service.put({ userId: adminId }, 'population', { status: 'unavailable', reason: 'Attempt manual override' }, { requestId: 'population', traceId: 'a'.repeat(32) }),
+    (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_FORBIDDEN');
+  assert.deepEqual(audits, []);
+  const context = { requestId: 'manual-buildings', traceId: 'a'.repeat(32) };
+  const stats = [{ value: '123', label: { ar: 'المباني', en: 'Buildings' }, visible: true }];
+  const about = await service.put({ userId: adminId }, 'about', { id: adminId, version: 2, order: 0, stats, reason: 'Update manual building count' }, context);
+  assert.equal(about.namespace, 'about');
+  if (about.namespace === 'about') assert.deepEqual(about.items[0]?.stats, stats);
+});
 
 test('attaches a verified uploaded portrait and clears both the photo ID and displayed URL on removal', async () => {
   const id = 'd'.repeat(24); const checked: string[] = [];

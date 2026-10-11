@@ -142,7 +142,6 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'default_locale', kind: 'select', labelKey: 'default_locale', options: [{ value: 'ar', labelKey: 'option_arabic' }, { value: 'en', labelKey: 'option_english' }] },
     { key: 'page_direction', kind: 'select', labelKey: 'page_direction', options: [{ value: 'rtl', labelKey: 'option_rtl' }, { value: 'ltr', labelKey: 'option_ltr' }] },
     { key: 'page_size', kind: 'number', labelKey: 'page_size' },
-    { key: 'population_count', kind: 'number', labelKey: 'population_count' },
     { key: 'population_label', kind: 'localized', labelKey: 'population_label' },
     { key: 'show_population_counter', kind: 'boolean', labelKey: 'show_population_counter' },
     { key: 'blocked_word_review', kind: 'boolean', labelKey: 'blocked_word_review' },

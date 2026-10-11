@@ -22,6 +22,7 @@ import {
   cmsAdminContentNamespaceSchema,
   cmsAdminContentSuccessEnvelopeSchema,
   cmsAdminPopulationValuePutSchema,
+  cmsAdminDisplaySettingPutSchema,
   cmsAdminTeamMemberPutSchema,
   cmsAdminTeamMemberDeleteSchema,
   cmsTeamPhotoSuccessEnvelopeSchema,
@@ -213,7 +214,8 @@ export async function updateAdminCmsContent(namespace: CmsAdminContentNamespace,
     ? cmsAdminAboutBlockPutSchema.parse(input)
     : parsedNamespace === 'team'
       ? cmsAdminTeamMemberPutSchema.parse(input)
-      : cmsAdminPopulationValuePutSchema.parse(input);
+      : parsedNamespace === 'display' ? cmsAdminDisplaySettingPutSchema.parse(input)
+        : cmsAdminPopulationValuePutSchema.parse(input);
   const response = await withCurrentSession(options, () => clientFor(options).request(`${ADMIN_CMS_CONTENT_ROUTE}/${parsedNamespace}`, {
     method: 'PUT',
     responseSchema: cmsAdminContentSuccessEnvelopeSchema,

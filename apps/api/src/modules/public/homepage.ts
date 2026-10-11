@@ -18,11 +18,13 @@ import {
 import { readPublishedBannerRows } from '../ads/banner-management.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import type { DisplayRuntimeSettings, DisplaySettingsReader } from '../settings/display-policy.js';
+import { populationStatement, type AutomaticPopulationReader } from '../cms/automatic-population.js';
+import { CITY_STATISTICS, manualCityMetrics } from '../cms/city-statistics.js';
 
 export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
 export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
 export interface HomepageLocationSource { id: string; kind: string; name: unknown; slug: string; parentLocationId?: string; order: number; active: boolean }
-export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean }
+export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean; sourceUrl?: string; sourceYear?: number; checkedAt?: string }
 export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; locationName?: unknown; sourceName?: unknown; sourceImageUrl?: string; sourceType?: string; sourceVerified?: boolean; publicCode?: string; viewCount?: number; installmentAvailable?: boolean; featured?: boolean; deliveryStatus?: string; featuredOrder?: number; status: string; active: boolean }
 export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; imageUrl?: string; description?: unknown; kind: string; status: string }
 export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; imageUrl?: string; body?: unknown; order: number; status: string; active?: boolean }
@@ -34,7 +36,8 @@ export interface HomepageSources {
   totalPropertyCount?: number;
   locations?: HomepageLocationSource[];
   metrics?: HomepageMetricSource[];
-  population?: { status: string; value?: number; sourceLabel?: unknown; sourceUrl?: string; asOf?: string };
+  manualMetrics?: HomepageMetricSource[];
+  population?: { status: string; value?: number; sourceLabel?: unknown; sourceUrl?: string; asOf?: string; sourceYear?: number; checkedAt?: string };
   properties: HomepagePropertySource[];
   developers: HomepageDeveloperSource[];
   content: HomepageContentSource[];
@@ -67,7 +70,8 @@ function publicLocations(items: HomepageLocationSource[] = []): PublicHomepageLo
 
 function publicMetrics(items: HomepageMetricSource[] = []) {
   return stableOrder(items.filter((item) => item.status === 'published' && item.visible).flatMap((item) => {
-    const parsed=publicHomepageMetricSchema.safeParse({key:item.key,title:item.title,value:item.value,...(item.unit!==undefined?{unit:item.unit}:{}),order:item.order});
+    const parsed=publicHomepageMetricSchema.safeParse({key:item.key,title:item.title,value:item.value,...(item.unit!==undefined?{unit:item.unit}:{}),order:item.order,
+      ...(item.sourceUrl ? { sourceUrl: item.sourceUrl } : {}), ...(item.sourceYear ? { sourceYear: item.sourceYear } : {}), ...(item.checkedAt ? { checkedAt: item.checkedAt } : {}) });
     return parsed.success ? [parsed.data] : [];
   }));
 }
@@ -120,19 +124,23 @@ function publicBanners(items: HomepageBannerSource[]) {
 }
 
 function configuredMetrics(sources: HomepageSources, settings: DisplayRuntimeSettings = {}) {
-  const metrics = [...(sources.metrics ?? [])];
+  const overrides = (sources.manualMetrics ?? []).filter(item => item.status === 'published' && item.visible && item.key !== 'population');
+  const overrideKeys = new Set(overrides.map(item => item.key));
+  const metrics = [...(sources.metrics ?? []).filter(item => !overrideKeys.has(item.key)).map(item => item.key === 'annual_growth' && overrideKeys.has('buildings') ? { ...item, order: 4 } : item), ...overrides];
   const index = metrics.findIndex((metric) => metric.key === 'population');
   if (settings.showPopulationCounter === false) return metrics.filter((metric) => metric.key !== 'population');
   // Once a CMS statement exists, its publication state and sourced value win
   // over older metrics or display settings, including when the count is hidden.
   if (sources.population !== undefined) {
-    const statement = populationValueSchema.safeParse({ ...sources.population, reason: 'Public population statement' });
+    const { sourceYear, checkedAt, ...statementFields } = sources.population;
+    const statement = populationValueSchema.safeParse({ ...statementFields, reason: 'Public population statement' });
     const others = metrics.filter(metric => metric.key !== 'population');
     if (!statement.success || statement.data.status !== 'available') return others;
     const current = index >= 0 ? metrics[index] : undefined;
     const population: HomepageMetricSource = {
       key: 'population', title: settings.populationLabel ?? current?.title ?? { ar: 'عدد سكان مدينة السادات', en: 'Sadat City population' },
-      value: statement.data.value!, unit: current?.unit ?? { ar: 'نسمة', en: 'residents' }, order: current?.order ?? 0, status: 'published', visible: true
+      value: statement.data.value!, unit: current?.unit ?? { ar: 'نسمة', en: 'residents' }, order: current?.order ?? 0, status: 'published', visible: true,
+      sourceUrl: statement.data.sourceUrl!, ...(sourceYear ? { sourceYear } : {}), ...(checkedAt ? { checkedAt } : {})
     };
     return [...others, population];
   }
@@ -166,8 +174,11 @@ export function publicHomepageProjection(sources: HomepageSources, settings: Dis
   });
 }
 
-export function createPublicHomepageService(dependencies: { repository: PublicHomepageRepository; displaySettings?: DisplaySettingsReader }) {
-  return { read: async (): Promise<PublicHomepageData> => publicHomepageProjection(await dependencies.repository.read(), dependencies.displaySettings ? await dependencies.displaySettings.read() : {}) };
+export function createPublicHomepageService(dependencies: { repository: PublicHomepageRepository; displaySettings?: DisplaySettingsReader; automaticPopulation?: AutomaticPopulationReader }) {
+  return { read: async (): Promise<PublicHomepageData> => {
+    const [sources, settings, snapshot] = await Promise.all([dependencies.repository.read(), dependencies.displaySettings?.read() ?? {}, dependencies.automaticPopulation?.()]);
+    return publicHomepageProjection({ ...sources, ...(dependencies.automaticPopulation ? { population: populationStatement(snapshot ?? null) } : {}) }, settings);
+  } };
 }
 
 type MongoRow = {
@@ -202,7 +213,7 @@ type MongoRow = {
   targetUrl?: string;
   propertyTypeId?: unknown;
   parentLocationId?: unknown;
-  value?: number;
+  value?: number | { kind?: string; value?: number };
   unit?: unknown;
   sourceLabel?: unknown;
   sourceUrl?: string;
@@ -222,7 +233,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
   return {
     async read() {
       const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `${row.placementKey === 'homepage.featured' ? 'featured' : 'banner'}_${row._id.toString()}_${row.mediaId.toString()}`, presentation: row.placementKey === 'homepage.featured' ? 'featured' as const : 'hero' as const, ...(row.placementKey === 'homepage.featured' ? { advertiserName: row.advertiserName, advertiserImageUrl: row.advertiserImageUrl, advertiserVerified: row.advertiserVerified, ...Object.fromEntries(['highlight', 'installment', 'eyebrow', 'ctaLabel'].flatMap(key => row.featured?.[key] === undefined ? [] : [[key, row.featured[key]]])) } : {}), title: row.title, ...(row.altText !== undefined ? { altText: row.altText } : {}), ...(row.body !== undefined ? { body: row.body } : {}), imageUrl: String(row.media.url), displaySeconds: Number(row.displaySeconds), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
-      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount, population] = await Promise.all([
+      const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount, population, cityStatistics] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, providerId: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
@@ -234,7 +245,8 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500),
         findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, providerId: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
         connection.collection('properties').countDocuments({ status: 'published', active: true, ...unexpiredPropertyFilter() }),
-        findRows(connection, 'cms_population_values', {}, { _id: 0, status: 1, value: 1, sourceLabel: 1, sourceUrl: 1, asOf: 1 }, { updatedAt: -1, _id: 1 }, 1)
+        findRows(connection, 'cms_population_values', {}, { _id: 0, status: 1, value: 1, sourceLabel: 1, sourceUrl: 1, asOf: 1 }, { updatedAt: -1, _id: 1 }, 1),
+        findRows(connection, 'cms_display_settings', { key: { $in: CITY_STATISTICS.map(item => `city_metric_${item.key}`) }, status: 'published' }, { _id: 0, key: 1, value: 1, status: 1 }, { key: 1 }, 4)
       ]);
       const coveredProperties = await attachPublicPropertyCovers(connection, properties);
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
@@ -248,9 +260,10 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       const organizationById = new Map((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), kind: row.kind }] as const] : []; }));
       return {
         totalPropertyCount,
+        manualMetrics: manualCityMetrics(cityStatistics),
         ...(population[0] ? { population: {
           status: population[0].status ?? '',
-          ...(population[0].value !== undefined ? { value: population[0].value } : {}),
+          ...(typeof population[0].value === 'number' ? { value: population[0].value } : {}),
           ...(population[0].sourceLabel !== undefined ? { sourceLabel: population[0].sourceLabel } : {}),
           ...(population[0].sourceUrl !== undefined ? { sourceUrl: population[0].sourceUrl } : {}),
           ...(population[0].asOf instanceof Date && Number.isFinite(population[0].asOf.getTime()) ? { asOf: population[0].asOf.toISOString() } : typeof population[0].asOf === 'string' ? { asOf: population[0].asOf } : {})
