@@ -154,12 +154,15 @@ test('executes real advertising, payment-proof, and commission service boundarie
     findPayableAdRequest: (providerId, requestId) => requestId === adRequest.id && providerId === provider.sub
       ? { id: adRequest.id, providerId, status: payable?.status ?? 'draft' } : undefined,
     authorization: { authorize: async (_adminId, permission) => permission === 'admin:payments.review' },
+    runtimeSettings: { read: async () => ({ supportedPlacements: [], supportedAdTypes: [], acceptedFileFormats: [], dimensions: [], paymentProofMethods: ['instapay'], paymentInstructions: { instapay: ['Journey beneficiary', 'journey@instapay'] } }) },
     audit: { record: async () => undefined }
   });
   const proof = await payment.upload(provider, adRequest.id, {
-    filename: 'journey-proof.pdf', contentType: 'application/pdf', contentLength: 28
+    filename: 'journey-proof.pdf', contentType: 'application/pdf', contentLength: 28, paymentMethod: 'instapay', sender: { name: 'Journey sender', account: 'sender@instapay' }, recipient: { name: 'Journey beneficiary', account: 'journey@instapay' }
   }, Readable.from(Buffer.from('%PDF-1.7\njourney\n%%EOF', 'ascii')));
   assert.equal(proof.status, 'pending_review');
+  assert.equal(proof.sender?.name, 'Journey sender');
+  assert.equal(proof.recipient?.account, 'journey@instapay');
   const approved = await payment.review(admin, proof.id, {
     action: 'approve', expectedVersion: proof.version, reason: 'Synthetic proof review'
   }, { requestId: 'journey-payment-review', traceId: 'j'.repeat(32) });
