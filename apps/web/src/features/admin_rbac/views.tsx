@@ -315,14 +315,16 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                   <td>{user.status === "active" ? copy.activeStatus : copy.disabledStatus}</td>
                   <td>{user.version}</td>
                   <td>
-                    {user.availableActions.includes("update") ? (
-                      <a className="admin-rbac__row-link" href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${user.id}`)}>
-                        {copy.edit}
-                      </a>
-                    ) : (
-                      <span className="admin-rbac__muted">{copy.noActions}</span>
-                    )}
-                    {canCreate && user.availableActions.includes('delete') ? <Button size="sm" variant="danger" aria-label={`${ar ? 'حذف' : 'Delete'} ${user.displayName}`} onClick={() => { setDeleting(user); setDeleteError(''); setDeleted(false); }}>{ar ? 'حذف' : 'Delete'}</Button> : null}
+                    <div className="admin-rbac__row-actions">
+                      {user.availableActions.includes("update") ? (
+                        <a className="admin-rbac__row-link" href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${user.id}`)}>
+                          {copy.edit}
+                        </a>
+                      ) : (
+                        <span className="admin-rbac__muted">{copy.noActions}</span>
+                      )}
+                      {canCreate && user.availableActions.includes('delete') ? <Button size="sm" variant="danger" aria-label={`${ar ? 'حذف' : 'Delete'} ${user.displayName}`} onClick={() => { setDeleting(user); setDeleteError(''); setDeleted(false); }}>{ar ? 'حذف' : 'Delete'}</Button> : null}
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -7,7 +7,7 @@
 .admin-rbac__heading h1, .admin-rbac__panel-heading h2 { margin: 0; color: #1b2942; letter-spacing: -.03em; }
 .admin-rbac__heading h1 { font-size: clamp(1.75rem, 2.2vw, 2rem); }
 .admin-rbac__heading p, .admin-rbac__panel-heading p, .admin-rbac__muted { margin: 6px 0 0; color: #68768b; line-height: 1.6; }
-.admin-rbac__heading-actions, .admin-rbac__actions, .admin-rbac__pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.admin-rbac__heading-actions, .admin-rbac__row-actions, .admin-rbac__actions, .admin-rbac__pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .admin-rbac__secondary-link, .admin-rbac__row-link { color: #0e5849; font-weight: 800; text-decoration: none; }
 .admin-rbac__secondary-link { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border: 1px solid #d8cbaa; border-radius: 12px; background: transparent; }
 .admin-rbac__metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
