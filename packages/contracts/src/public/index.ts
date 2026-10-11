@@ -4,6 +4,7 @@ import { propertyAreaSchema, propertyContactSchema, propertyDeliveryStatusSchema
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 import { locationKindSchema, locationObjectIdSchema, locationSlugSchema } from '../locations/index.js';
 import { supportedLocaleSchema, textDirectionSchema } from '../localization/index.js';
+import { organizationSlugSchema } from '../organizations/index.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
 // Public media can be an external CDN URL or a same-origin repository asset.
@@ -162,6 +163,7 @@ export const publicSitemapSuccessEnvelopeSchema = successEnvelopeSchema(publicSi
 export const publicPropertySourceSchema = z.object({
   sourceType: z.enum(['individual_broker', 'brokerage_office', 'developer_company']),
   organizationId: propertyObjectIdSchema.optional(),
+  organizationSlug: organizationSlugSchema.optional(),
   name: localizedTextSchema.optional(),
   imageUrl: publicUrlSchema.optional(),
   verified: z.boolean().optional()

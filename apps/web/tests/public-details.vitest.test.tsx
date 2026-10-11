@@ -94,6 +94,32 @@ const viewingResponse = viewingDataSchema.parse({
 });
 
 describe('public property details', () => {
+  it.each(['ar', 'en'] as const)('links an office to its public slug with the selected language in %s', locale => {
+    const data = publicPropertyDetailsSchema.parse({ ...detailsData, source: { sourceType: 'brokerage_office', organizationId: projectId, organizationSlug: 'sadat-office', name: { ar: 'مكتب السادات', en: 'Sadat office' }, verified: true } });
+    renderWithLocale(<PublicPropertyDetails locale={locale} initialData={data} url={`/properties/published-home?lang=${locale}`} />, { locale });
+    const copy = getPublicPropertyDetailsCopy(locale);
+    expect(screen.getByText(copy.sourceTypes.brokerage_office)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: copy.viewOfficeProfile })).toHaveAttribute('href', `/developers/sadat-office?lang=${locale}`);
+    expect(screen.queryByRole('link', { name: copy.viewDeveloperProfile })).not.toBeInTheDocument();
+  });
+
+  it('uses the developer slug rather than its database identifier', () => {
+    const data = publicPropertyDetailsSchema.parse({ ...detailsData, source: { ...detailsData.source, organizationSlug: 'sadat-developer', verified: true } });
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={data} url="/properties/published-home?lang=en" />, { locale: 'en' });
+    expect(screen.getByRole('link', { name: 'View developer profile' })).toHaveAttribute('href', '/developers/sadat-developer?lang=en');
+  });
+
+  it.each([
+    { sourceType: 'individual_broker', organizationSlug: 'individual', verified: true },
+    { sourceType: 'brokerage_office', organizationId: projectId },
+    { sourceType: 'brokerage_office', organizationSlug: 'hidden-office', verified: false },
+    { sourceType: 'developer_company', organizationId: projectId, verified: true }
+  ])('omits an unavailable source profile link: %j', source => {
+    const data = publicPropertyDetailsSchema.parse({ ...detailsData, source });
+    const result = renderWithLocale(<PublicPropertyDetails locale="en" initialData={data} url="/properties/published-home" />, { locale: 'en' });
+    expect(result.container.querySelector('.public-property-details__profile-link')).not.toBeInTheDocument();
+  });
+
   it('saves the property through the authenticated API and exposes the saved-properties destination', async () => {
     const fetcher = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
       expect(init?.method).toBe('PUT');

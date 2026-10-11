@@ -2,7 +2,7 @@ import { createProviderVisibilityReader } from '../provider/visibility.js';
 import { visiblePublicOrganizations } from '../public/identity.js';
 import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
-import { propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
+import { organizationSlugSchema, propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, unexpiredPropertyFilter, type PropertyRuntimeSettings, type PropertySettingsReader } from '../settings/property-policy.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 
@@ -23,6 +23,7 @@ export interface PublicPropertyDetailsSource {
   installmentAvailable?: boolean;
   sourceType: string;
   organizationId?: string;
+  organizationSlug?: string;
   providerId?: string;
   sourceName?: unknown;
   sourceImageUrl?: string;
@@ -114,7 +115,7 @@ export function publicPropertyDetailsProjection(
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {}),
   };
-  return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, ...(source.contactVisible && source.contact ? { contact: source.contact } : {}), seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
+  return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.organizationSlug ? { organizationSlug: source.organizationSlug } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, ...(source.contactVisible && source.contact ? { contact: source.contact } : {}), seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
 }
 
 export function createPublicPropertyDetailsService(dependencies: { repository: PublicPropertyDetailsRepository; settings?: PropertySettingsReader }) {
@@ -140,13 +141,32 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     const properties = connection.collection('properties');
     const row = await properties.findOne({ slug, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, source: 1, providerId: 1, organizationId: 1, projectId: 1, propertyTypeId: 1, locationId: 1, mapUrl: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } });
     const base = property(row as Row | null ?? {}); if (!base) return null;
-    const organization = base.organizationId ? await connection.collection('organizations').findOne({ _id: new Types.ObjectId(base.organizationId), status: 'approved' }, { projection: { providerId: 1, name: 1, imageUrl: 1, contactPhone: 1, whatsappUrl: 1, contactAddress: 1 } }) : null;
-    const owner = base.providerId ?? id(organization?.providerId);
+    const organizations = connection.collection('organizations');
+    const linkedOrganization = base.organizationId ? await organizations.findOne({ _id: new Types.ObjectId(base.organizationId), status: 'approved' }, { projection: { providerId: 1 } }) : null;
+    const owner = base.providerId ?? id(linkedOrganization?.providerId);
     const policy = owner ? await createProviderVisibilityReader(connection).read(owner) : undefined;
-    if (policy?.publicIdentity && organization) {
+    // The account type is authoritative even for legacy drafts saved as an individual source.
+    if (policy?.providerType) base.sourceType = policy.providerType;
+    let organization: Row | null = null;
+    if (policy?.publicIdentity && policy.accountId) {
+      const account = new Types.ObjectId(policy.accountId);
+      const [profiles, applications] = await Promise.all([
+        connection.collection('provider_profiles').find({ userId: account }, { projection: { _id: 1 } }).toArray(),
+        connection.collection('provider_applications').find({ userId: account }, { projection: { _id: 1 } }).toArray()
+      ]);
+      const ownerIds = [account, ...profiles.map(value => value._id), ...applications.map(value => value._id)];
+      organization = await organizations.findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, kind: policy.providerType, status: 'approved' }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, contactPhone: 1 } });
+    }
+    delete base.organizationId;
+    delete base.providerId;
+    if (organization) {
+      const organizationId = id(organization._id);
+      if (organizationId) base.organizationId = organizationId;
+      const slug = organizationSlugSchema.safeParse(organization.slug);
+      if (slug.success) base.organizationSlug = slug.data;
       base.sourceName = organization.name; if (typeof organization.imageUrl === 'string') base.sourceImageUrl = organization.imageUrl;
-      base.sourceVerified = policy.approved;
-    } else { delete base.organizationId; delete base.providerId; }
+      base.sourceVerified = policy?.approved === true;
+    }
     if (policy?.contact && typeof organization?.contactPhone === 'string') { base.contact = { phone: organization.contactPhone }; base.contactVisible = true; }
     const project = base.projectId ? await connection.collection('projects').findOne({ _id: new Types.ObjectId(base.projectId), status: 'published' }, { projection: { _id: 1, slug: 1, name: 1, description: 1, status: 1 } }) : null;
     const location = base.locationId ? await connection.collection('locations').findOne({ _id: new Types.ObjectId(base.locationId), active: true }, { projection: { name: 1, active: 1 } }) : null;

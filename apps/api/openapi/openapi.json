@@ -22642,6 +22642,13 @@
                   "organizationId": {
                     "type": "string",
                     "pattern": "^[a-f0-9]{24}$"
+                  },
+                  "organizationSlug": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120,
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "description": "Approved public source profile slug; use /developers/{slug}, preserving the selected language. Omitted when public identity is unavailable."
                   }
                 }
               },

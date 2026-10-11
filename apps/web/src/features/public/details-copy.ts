@@ -74,6 +74,7 @@ export interface PublicPropertyDetailsCopy {
   readonly installments: string;
   readonly verified: string;
   readonly viewDeveloperProfile: string;
+  readonly viewOfficeProfile: string;
   readonly defaultContactMessage: string;
   readonly saveProperty: string;
   readonly propertySaved: string;
@@ -167,6 +168,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     installments: 'تقسيط',
     verified: 'موثق',
     viewDeveloperProfile: 'عرض ملف المطور',
+    viewOfficeProfile: 'عرض ملف المكتب',
     defaultContactMessage: 'طلب تواصل واستفسار',
     saveProperty: 'حفظ العقار',
     propertySaved: 'تم حفظ العقار',
@@ -258,6 +260,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     installments: 'Installments',
     verified: 'Verified',
     viewDeveloperProfile: 'View developer profile',
+    viewOfficeProfile: 'View office profile',
     defaultContactMessage: 'Contact inquiry request',
     saveProperty: 'Save property',
     propertySaved: 'Property saved',

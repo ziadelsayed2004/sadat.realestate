@@ -379,7 +379,7 @@ function SourceAndProject({
         </div>
         {data.source.verified ? <span className="public-property-details__verified">{copy.verified}</span> : null}
       </div>
-      <a className="public-property-details__profile-link" href={data.source.organizationId ? `/developers/${data.source.organizationId}` : '/developers'}>{copy.viewDeveloperProfile}</a>
+      {data.source.verified && data.source.organizationSlug && data.source.sourceType !== 'individual_broker' ? <a className="public-property-details__profile-link" href={`/developers/${data.source.organizationSlug}?lang=${locale}`}>{data.source.sourceType === 'brokerage_office' ? copy.viewOfficeProfile : copy.viewDeveloperProfile}</a> : null}
     </section>
   );
 }
