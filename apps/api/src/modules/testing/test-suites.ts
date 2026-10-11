@@ -136,6 +136,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/public/router.test.ts',
     'tests/public/bootstrap-sitemap.test.ts',
     'tests/public/properties.test.ts',
+    'tests/public/property-source.test.ts',
     'tests/public/details-router.test.ts',
     'tests/search/properties.test.ts',
     'tests/search/router.test.ts',
