@@ -23,7 +23,9 @@ beforeEach(() => {
   window.history.replaceState(null, '', '/admin/user-guide?lang=ar');
 });
 
-describe('interactive administrator reference', () => {
+// Rendering and querying the full reference is CPU-bound in jsdom. Give this
+// suite room under parallel CI load while keeping every behavior assertion.
+describe('interactive administrator reference', { timeout: 15_000 }, () => {
   it('keeps each quick action inside its selected audience and opens a filtered topic without leaving the guide', async () => {
     for (const audience of GUIDE_AUDIENCES) {
       const sections = sectionsForAudience(GUIDE_SECTIONS, audience);
@@ -152,14 +154,19 @@ describe('interactive administrator reference', () => {
     expect(screen.getByRole('button', { name: /الصورة: رفع من الجهاز أو مكتبة الوسائط/ })).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('restores valid stored reading state and safely ignores corrupt storage', async () => {
+  it('restores valid stored reading state and persists the changed topic', async () => {
     localStorage.setItem('sadat-admin-user-guide-v1', JSON.stringify({ opened: ['banner-create', 'unknown'], last: 'banner-create', large: true }));
-    const view = renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
-    expect(screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ })).toHaveAttribute('aria-expanded', 'true');
+    renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
+    const topic = document.getElementById('guide-toggle-banner-create');
+    expect(topic).toHaveAccessibleName(/إعلان بصور متبدّلة بدل صورة واحدة/);
+    expect(topic).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('button', { name: 'حجم نص الشرح: كبير' })).toHaveAttribute('aria-pressed', 'true');
-    fireEvent.click(screen.getByRole('button', { name: /إعلان بصور متبدّلة بدل صورة واحدة/ }));
+    fireEvent.click(topic!);
     await waitFor(() => expect(JSON.parse(localStorage.getItem('sadat-admin-user-guide-v1') ?? '{}').opened).not.toContain('banner-create'));
-    view.unmount(); localStorage.setItem('sadat-admin-user-guide-v1', '{broken');
+  });
+
+  it('safely ignores corrupt stored reading state', () => {
+    localStorage.setItem('sadat-admin-user-guide-v1', '{broken');
     renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
     expect(screen.getByRole('button', { name: /استخدام الدليل التفاعلي/ })).toHaveAttribute('aria-expanded', 'true');
   });

@@ -33,7 +33,7 @@ describe('simple viewing actions', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.actions.confirm }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(save).toHaveBeenCalledTimes(2);
-    expect(opener).toHaveFocus();
+    await waitFor(() => expect(opener).toHaveFocus());
     fireEvent.click(opener);
     expect(screen.getByRole('textbox')).toHaveValue('');
   });
