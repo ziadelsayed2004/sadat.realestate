@@ -6,6 +6,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { propertyMapUrlSchema, requestCreateSchema, viewingCreateSchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
+import type { AuthSnapshot } from '../auth/store.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
@@ -38,7 +39,7 @@ export interface PublicPropertyDetailsProps {
   readonly initialState?: PublicPropertyDetailsInitialState | undefined;
   readonly load?: PublicPropertyDetailsLoader | undefined;
   readonly actions?: PublicPropertyDetailsActions | undefined;
-  readonly authClient?: { getAuthorizationHeader(): string | undefined; refresh?(): Promise<unknown> } | undefined;
+  readonly authClient?: { getAuthorizationHeader(): string | undefined; refresh?(): Promise<unknown>; getSnapshot?(): AuthSnapshot; hasSessionHint?(): boolean | undefined; subscribe?(listener: (snapshot: AuthSnapshot) => void): () => void } | undefined;
 }
 
 function errorState(error: unknown): PublicPropertyDetailsViewState {
@@ -785,6 +786,7 @@ export function PublicPropertyDetails({
   const [contactRefresh, setContactRefresh] = useState<{ slug: string; authorizationHeader: string }>();
   const authorizationHeader = authClient?.getAuthorizationHeader();
   const hasRequestedData = useRef(false);
+  const viewedSlug = useRef<string | undefined>(undefined);
   const [dataScope, setDataScope] = useState({ slug, authorizationHeader: undefined as string | undefined });
   const currentPage = useRef({ slug: dataScope.slug, view });
   currentPage.current = { slug: dataScope.slug, view };
@@ -800,6 +802,22 @@ export function PublicPropertyDetails({
       : createPublicPropertyDetailsActions({ authorizationHeader: () => authClient.getAuthorizationHeader(), refreshSession: authClient.refresh ? () => authClient.refresh!() : undefined })),
     [actions, authClient]
   );
+
+  useEffect(() => {
+    if (view !== 'success' || !slug || data?.slug !== slug || !resolvedActions.recordView) return undefined;
+    const record = () => {
+      if (document.visibilityState === 'hidden' || viewedSlug.current === slug) return;
+      // Restore a hinted session before counting, so an owner's first page load stays excluded.
+      if (authClient?.getSnapshot?.().status === 'refreshing' || (authClient?.hasSessionHint?.() === true && !authClient.getAuthorizationHeader())) return;
+      viewedSlug.current = slug;
+      // Analytics failure must never interrupt the gallery or the enquiry form.
+      void resolvedActions.recordView!(slug).catch(() => undefined);
+    };
+    record();
+    const unsubscribe = authClient?.subscribe?.(record);
+    document.addEventListener('visibilitychange', record);
+    return () => { unsubscribe?.(); document.removeEventListener('visibilitychange', record); };
+  }, [authClient, data?.slug, resolvedActions, slug, view]);
 
   useEffect(() => {
     if (initialData?.slug === slug && attempt === 0 && authorizationHeader === undefined && !hasRequestedData.current) return;

@@ -36,6 +36,8 @@ export interface ProviderOverviewData {
   readonly activity: {
     readonly customerRequests: number;
     readonly bookedViewings: number;
+    readonly monthlyViews?: number | undefined;
+    readonly propertyMonthlyViews?: Readonly<Record<string, number>> | undefined;
   };
 }
 

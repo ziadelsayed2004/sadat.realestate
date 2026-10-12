@@ -20,6 +20,9 @@ export const publicHomeHandler = http.get(
 );
 
 export const handlers = [publicHomeHandler,
+  http.post('*/api/v1/public/properties/:slug/views', () => HttpResponse.json({
+    data: { recorded: true }, meta: { requestId: 'test-property-view' }
+  })),
   http.get('*/api/v1/public/bootstrap', () => HttpResponse.json({
     data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact: {} },
     meta: { requestId: 'test-public-bootstrap' }

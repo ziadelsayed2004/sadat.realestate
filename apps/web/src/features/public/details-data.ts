@@ -3,6 +3,7 @@ import {
   favoritePropertyParamsSchema,
   propertySlugSchema,
   publicPropertyDetailsSuccessEnvelopeSchema,
+  publicPropertyViewDataSchema,
   requestCreateSchema,
   requestDataSchema,
   successEnvelopeSchema,
@@ -46,6 +47,7 @@ export interface PublicContactRequestInput {
 }
 
 export interface PublicPropertyDetailsActions {
+  recordView?(slug: string): Promise<void>;
   saveProperty?(propertyId: string): Promise<FavoriteSaveData>;
   submitContact(input: PublicContactRequestInput): Promise<RequestData>;
   submitViewing(input: ViewingCreate): Promise<ViewingData>;
@@ -117,6 +119,13 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
   const viewingResponseSchema = successEnvelopeSchema(viewingDataSchema);
 
   const actions: PublicPropertyDetailsActions = {
+    async recordView(slug) {
+      const headers = actionHeaders(options);
+      await client.request(`${PUBLIC_PROPERTY_DETAILS_ROUTE_PREFIX}/${encodeURIComponent(propertySlugSchema.parse(slug))}/views`, {
+        method: 'POST', ...(headers === undefined ? {} : { headers }),
+        responseSchema: successEnvelopeSchema(publicPropertyViewDataSchema)
+      });
+    },
     async saveProperty(propertyId) {
       const id = favoritePropertyParamsSchema.parse({ propertyId }).propertyId;
       const headers = actionHeaders(options);
@@ -171,6 +180,7 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
     }
   }
   return {
+    recordView: slug => withSession(() => actions.recordView!(slug)),
     saveProperty: propertyId => withSession(() => actions.saveProperty!(propertyId)),
     submitContact: input => withSession(() => actions.submitContact(input)),
     submitViewing: input => withSession(() => actions.submitViewing(input))

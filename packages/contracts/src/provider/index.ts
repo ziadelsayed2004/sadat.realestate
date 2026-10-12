@@ -225,7 +225,9 @@ export const providerDashboardDataSchema = z.object({
   }).strict(),
   activity: z.object({
     customerRequests: z.number().int().nonnegative(),
-    bookedViewings: z.number().int().nonnegative()
+    bookedViewings: z.number().int().nonnegative(),
+    monthlyViews: z.number().int().nonnegative().optional(),
+    propertyMonthlyViews: z.record(z.string().regex(/^[a-f0-9]{24}$/), z.number().int().nonnegative()).optional()
   }).strict()
 }).strict();
 export const providerDashboardSuccessEnvelopeSchema = successEnvelopeSchema(providerDashboardDataSchema);

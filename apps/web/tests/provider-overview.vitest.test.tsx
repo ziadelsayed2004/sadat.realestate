@@ -53,6 +53,16 @@ function success(data: unknown, requestId: string, total?: number): Response {
 }
 
 describe('Provider overview', () => {
+  it.each(['ar', 'en'] as const)('renders recorded monthly views, including a genuine zero, in %s', locale => {
+    const { rerender } = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, activity: { ...overview.activity, monthlyViews: 9, propertyMonthlyViews: { [property.id]: 4 } } }} />, { locale });
+    const card = screen.getByTestId('provider-summary-views');
+    expect(card).toHaveTextContent(new Intl.NumberFormat(locale).format(9));
+    expect(card).not.toHaveTextContent(getProviderCopy(locale).unavailable);
+    expect(card).toHaveAttribute('href', `/provider/user-guide?lang=${locale}#guide-provider-access`);
+    expect(screen.getByRole('cell', { name: new Intl.NumberFormat(locale).format(4) })).toBeInTheDocument();
+    rerender(<ProviderOverview key="zero" locale={locale} session={session} initialData={{ ...overview, activity: { ...overview.activity, monthlyViews: 0 } }} />);
+    expect(screen.getByTestId('provider-summary-views')).toHaveTextContent(new Intl.NumberFormat(locale).format(0));
+  });
   it.each(['ar', 'en'] as const)('opens the draft list and saved draft editor from the dashboard in %s', locale => {
     const draft = { ...property, status: 'draft' as const, availableActions: ['update' as const, 'submit' as const] };
     renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, properties: { ...overview.properties, recent: [draft] } }} />, { locale });

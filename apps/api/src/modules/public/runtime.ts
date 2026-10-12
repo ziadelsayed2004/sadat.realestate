@@ -9,10 +9,12 @@ import type { AccessTokenService } from '../auth/crypto.js';
 import { createPublicBootstrapService } from './bootstrap.js';
 import { createMongoosePublicSitemapSource, createPublicSitemapService } from './sitemap.js';
 import { mongooseAutomaticPopulationReader } from '../cms/automatic-population.js';
+import { createMongoosePropertyViews } from './property-views.js';
 
 export function createPublicRuntime(connection: Connection, accessTokens?: AccessTokenService): PublicRouterDependencies {
   const displaySettings = createMongooseDisplaySettingsReader(connection);
   return {
+    views: createMongoosePropertyViews(connection),
     service: createPublicHomepageService({ repository: createMongoosePublicHomepageRepository(connection), displaySettings, automaticPopulation: mongooseAutomaticPopulationReader(connection) }),
     details: createPublicPropertyDetailsService({ repository: createMongoosePublicPropertyDetailsRepository(connection), settings: createMongoosePropertySettingsReader(connection) }),
     bootstrap: createPublicBootstrapService(displaySettings, createMongoosePublicContactSettingsReader(connection)),

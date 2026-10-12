@@ -16,11 +16,12 @@ test('provider dashboard aggregates owner-scoped KPIs and recent properties', as
     application: { async getStatus() { return application; } },
     properties: { async list(_claims, input) { const status = (input as { status?: string }).status ?? 'all'; return { data: { items: status === 'all' ? [property] : [] }, page: 1, limit: 5, total: totals[status] ?? 0 }; } },
     requests: { async list() { return { items: [], page: 1, limit: 1, total: 4 }; } },
-    viewings: { async list() { return { items: [], page: 1, limit: 1, total: 2 }; } }
+    viewings: { async list() { return { items: [], page: 1, limit: 1, total: 2 }; } },
+    views: { async read(providerId, ids) { assert.equal(providerId, claims.sub); assert.deepEqual(ids, [property.id]); return { monthlyViews: 9, propertyMonthlyViews: { [property.id]: 3 } }; } }
   });
   const result = await service.read(claims);
   assert.deepEqual(result.properties, { total: 7, published: 3, pendingReview: 1, needsChanges: 1, drafts: 2, recent: [property] });
-  assert.deepEqual(result.activity, { customerRequests: 4, bookedViewings: 2 });
+  assert.deepEqual(result.activity, { customerRequests: 4, bookedViewings: 2, monthlyViews: 9, propertyMonthlyViews: { [property.id]: 3 } });
 });
 
 test('provider dashboard exposes zero business metrics before approval without querying owned data', async () => {
@@ -29,10 +30,22 @@ test('provider dashboard exposes zero business metrics before approval without q
     application: { async getStatus() { return { ...application, status: 'pending_review' as const, availableActions: ['view_status' as const] }; } },
     properties: { async list() { queried = true; throw new Error('must not query'); } },
     requests: { async list() { queried = true; throw new Error('must not query'); } },
-    viewings: { async list() { queried = true; throw new Error('must not query'); } }
+    viewings: { async list() { queried = true; throw new Error('must not query'); } },
+    views: { async read() { queried = true; throw new Error('must not query'); } }
   });
   const result = await service.read(claims);
   assert.equal(result.properties.total, 0);
   assert.equal(result.activity.customerRequests, 0);
   assert.equal(queried, false);
+});
+
+test('analytics failures leave dashboard usable without fabricating a zero view count', async () => {
+  const service = createProviderDashboardService({
+    application: { async getStatus() { return application; } },
+    properties: { async list() { return { data: { items: [] }, page: 1, limit: 1, total: 0 }; } },
+    requests: { async list() { return { items: [], page: 1, limit: 1, total: 0 }; } },
+    viewings: { async list() { return { items: [], page: 1, limit: 1, total: 0 }; } },
+    views: { async read() { throw new Error('unavailable'); } }
+  });
+  assert.equal((await service.read(claims)).activity.monthlyViews, undefined);
 });

@@ -7,6 +7,7 @@ import { supportedLocaleSchema, textDirectionSchema } from '../localization/inde
 import { organizationSlugSchema } from '../organizations/index.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
+export const publicPropertyViewDataSchema = z.object({ recorded: z.boolean() }).strict();
 // Public media can be an external CDN URL or a same-origin repository asset.
 // Root-relative paths keep local/UAT seed media portable across environments.
 const publicUrlSchema = z.union([

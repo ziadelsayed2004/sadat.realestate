@@ -2793,5 +2793,65 @@
     "purpose": "Current verified administrator own name and live-session dashboard heartbeat; allowed to view-only staff",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/public/properties/:slug/views",
+    "module": "properties",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Record a deduplicated public property page visit",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/providers/:providerId/public-identity-subscription",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:providers.view"
+    ],
+    "purpose": "Read office public identity subscription",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/providers/:providerId/public-identity-subscription",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:providers.visibility.manage"
+    ],
+    "purpose": "Update office public identity subscription",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/banners/featured-options",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.view"
+    ],
+    "purpose": "List eligible featured advertisers and published destinations",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/banners/featured-import",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Import legacy featured cards as reviewable drafts",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

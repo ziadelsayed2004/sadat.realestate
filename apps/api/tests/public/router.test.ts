@@ -7,6 +7,30 @@ import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 const data = { sections: [], properties: [], developers: [], content: [], banners: [] };
 const service: PublicRouterDependencies['service'] = { async read() { return data; } };
 
+test('view recording reuses an HttpOnly browser cookie and excludes crawlers and cross-site requests', async () => {
+  const visitors: string[] = [];
+  const server = createApiServer({ database: { isReady: async () => true }, publicHomepage: { service,
+    views: { async record(_slug, visitor) { visitors.push(visitor); return true; } }
+  } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const url = `http://127.0.0.1:${address.port}/api/v1/public/properties/public-home/views`;
+  try {
+    const first = await fetch(url, { method: 'POST' });
+    assert.equal(first.status, 200);
+    assert.equal(first.headers.get('cache-control'), 'no-store');
+    const cookie = first.headers.get('set-cookie')!;
+    assert.match(cookie, /HttpOnly/u); assert.match(cookie, /SameSite=Lax/u);
+    await fetch(url, { method: 'POST', headers: { cookie: cookie.split(';')[0]! } });
+    assert.equal(visitors.length, 2); assert.equal(visitors[0], visitors[1]);
+    await fetch(url, { method: 'POST', headers: { 'user-agent': 'Googlebot' } });
+    await fetch(url, { method: 'POST', headers: { 'sec-fetch-site': 'cross-site' } });
+    assert.equal(visitors.length, 2);
+    const invalid = await fetch(url.replace('public-home', 'bad_slug'), { method: 'POST' });
+    assert.equal(invalid.status, 400);
+    assert.equal(visitors.length, 2);
+  } finally { await stopApiServer(server); }
+});
+
 test('homepage is unauthenticated and returns an uncached public envelope for scheduled banners', async () => {
   const server = createApiServer({ database: { isReady: async () => true }, publicHomepage: { service } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });

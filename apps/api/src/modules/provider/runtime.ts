@@ -26,6 +26,7 @@ import type { ProviderRouterDependencies } from './router.js';
 import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { createProviderService } from './service.js';
 import { createProviderDashboardService, type ProviderDashboardDependencies } from './dashboard.js';
+import { createMongoosePropertyViews } from '../public/property-views.js';
 
 export function createProviderRuntime(
   connection: Connection,
@@ -80,7 +81,7 @@ export function createProviderRuntime(
   });
   return {
     service,
-    ...(dashboardDependencies ? { dashboard: createProviderDashboardService({ application: service, ...dashboardDependencies }) } : {}),
+    ...(dashboardDependencies ? { dashboard: createProviderDashboardService({ application: service, views: createMongoosePropertyViews(connection), ...dashboardDependencies }) } : {}),
     advertisingProjection: createProviderAdvertisingProjectionService({
       settings: createMongooseAdvertisingSettingsReader(connection),
       source: createMongooseProviderAdvertisingSource(

@@ -16,6 +16,7 @@ import {
   type PublicPropertyDetailsActions
 } from '../src/features/public/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import type { AuthSnapshot } from '../src/features/auth/store.ts';
 
 const propertyId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const projectId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -94,6 +95,38 @@ const viewingResponse = viewingDataSchema.parse({
 });
 
 describe('public property details', () => {
+  it('waits for a hinted session before recording a visitor', async () => {
+    const session = { token: undefined as string | undefined, hint: true };
+    let notify: (() => void) | undefined;
+    const recordView = vi.fn(async () => undefined);
+    const authClient = { getAuthorizationHeader: () => session.token, hasSessionHint: () => session.hint,
+      subscribe: (listener: (snapshot: AuthSnapshot) => void) => { notify = () => listener({ status: 'authenticated', availableActions: [] }); return () => undefined; } };
+    renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home?lang=en" authClient={authClient} actions={{ recordView, submitContact: vi.fn(), submitViewing: vi.fn() }} />, { locale: 'en' });
+    expect(recordView).not.toHaveBeenCalled();
+    session.token = 'Bearer restored-owner'; session.hint = false;
+    notify!();
+    await waitFor(() => expect(recordView).toHaveBeenCalledTimes(1));
+  });
+  it('the real action client posts view recording with the current authorization', async () => {
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ data: { recorded: true }, meta: { requestId: 'record-views' } }), { status: 200 }));
+    const actions = createPublicPropertyDetailsActions({ apiClient: new ApiClient({ fetcher }), authorizationHeader: () => 'Bearer owner-token' });
+    await actions.recordView!('published-home');
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    const [url, init] = fetcher.mock.calls[0] as unknown as [string, RequestInit];
+    expect(String(url)).toBe('/api/v1/public/properties/published-home/views');
+    expect(init.method).toBe('POST');
+    expect(new Headers(init.headers).get('authorization')).toBe('Bearer owner-token');
+    expect(init.credentials).toBe('include');
+  });
+  it('records a successful page once and keeps the page usable when analytics fails', async () => {
+    const recordView = vi.fn(async () => { throw new Error('analytics unavailable'); });
+    const actions = { recordView, submitContact: vi.fn(), submitViewing: vi.fn() };
+    const { rerender } = renderWithLocale(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home?lang=en" actions={actions} />, { locale: 'en' });
+    await waitFor(() => expect(recordView).toHaveBeenCalledWith('published-home'));
+    rerender(<PublicPropertyDetails locale="en" initialData={detailsData} url="/properties/published-home?lang=en" actions={{ ...actions }} />);
+    expect(recordView).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('heading', { name: 'Published home', level: 1 })).toBeInTheDocument();
+  });
   it.each(['ar', 'en'] as const)('links an office to its public slug with the selected language in %s', locale => {
     const data = publicPropertyDetailsSchema.parse({ ...detailsData, source: { sourceType: 'brokerage_office', organizationId: projectId, organizationSlug: 'sadat-office', name: { ar: 'مكتب السادات', en: 'Sadat office' }, verified: true } });
     renderWithLocale(<PublicPropertyDetails locale={locale} initialData={data} url={`/properties/published-home?lang=${locale}`} />, { locale });

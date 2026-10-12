@@ -13,6 +13,7 @@ export interface ProviderDashboardDependencies {
   properties: Pick<PropertyService, 'list'>;
   requests: Pick<ReturnType<typeof createRequestService>, 'list'>;
   viewings: Pick<ReturnType<typeof createViewingService>, 'list'>;
+  views?: { read(providerId: string, propertyIds: readonly string[]): Promise<{ monthlyViews: number; propertyMonthlyViews: Record<string, number> }> };
 }
 
 const emptyProperties = Object.freeze({ total: 0, published: 0, pendingReview: 0, needsChanges: 0, drafts: 0, recent: [] });
@@ -36,6 +37,8 @@ export function createProviderDashboardService(dependencies: ProviderDashboardDe
         dependencies.requests.list(claims, { page: 1, limit: 1, source: 'provider', type: 'provider_customer' }),
         dependencies.viewings.list(claims, { page: 1, limit: 1, status: 'confirmed' })
       ]);
+      // A failed analytics read must not disguise missing data as zero or hide the dashboard.
+      const views = await dependencies.views?.read(claims.sub, all.data.items.map(item => item.id)).catch(() => undefined);
       return providerDashboardDataSchema.parse({
         application,
         properties: {
@@ -46,7 +49,7 @@ export function createProviderDashboardService(dependencies: ProviderDashboardDe
           drafts: drafts.total,
           recent: all.data.items
         },
-        activity: { customerRequests: customerRequests.total, bookedViewings: bookedViewings.total }
+        activity: { customerRequests: customerRequests.total, bookedViewings: bookedViewings.total, ...views }
       });
     }
   };

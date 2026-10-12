@@ -200,10 +200,10 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
   );
 }
 
-function MetricCard({ label, detail, value, tone, unavailable, unavailableBody, href }: { readonly label: string; readonly detail?: string | undefined; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string; readonly href?: string }) {
+function MetricCard({ label, detail, value, tone, unavailable, unavailableBody, href }: { readonly label: string; readonly detail?: string | undefined; readonly value: number | string; readonly tone: string; readonly unavailable?: boolean; readonly unavailableBody?: string | undefined; readonly href?: string }) {
   const Element = href ? 'a' : 'article';
   return (
-    <Element href={href} aria-label={href ? label : undefined} className={`provider-dashboard__metric provider-dashboard__metric--${tone}`} data-testid={`provider-summary-${tone}`}>
+    <Element href={href} aria-label={href ? label : undefined} style={href ? { color: 'inherit', textDecoration: 'none' } : undefined} className={`provider-dashboard__metric provider-dashboard__metric--${tone}`} data-testid={`provider-summary-${tone}`}>
       <span className="provider-dashboard__metric-icon" aria-hidden="true">{unavailable ? '—' : '•'}</span>
       <strong>{value}</strong>
       <span>{label}</span>
@@ -303,7 +303,7 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
               <td><code>{/^p-\d+$/iu.test(property.slug) ? property.slug.toUpperCase() : property.slug}</code></td>
               <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}><strong>{localizedValue(property.name, locale)}</strong></a> : <strong>{localizedValue(property.name, locale)}</strong>}</td>
               <td><Badge tone={toneForStatus(property.status)}>{copy.propertyStatuses[property.status]}</Badge></td>
-              <td><span className="provider-dashboard__unavailable-value">{copy.unavailable}</span></td>
+              <td>{data.activity.propertyMonthlyViews?.[property.id] === undefined ? <span className="provider-dashboard__unavailable-value">{copy.unavailable}</span> : new Intl.NumberFormat(locale).format(data.activity.propertyMonthlyViews[property.id]!)}</td>
               <td><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
               <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}>{locale === 'ar' ? 'استكمال المسودة' : 'Continue draft'}</a> : '—'}</td>
             </tr>
@@ -339,7 +339,7 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} detail={details?.needsChanges} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
           <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} detail={details?.booked} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
           <MetricCard label={copy.overview.cards.drafts} detail={details?.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" href={localeForProviderPath(locale, '/provider/properties?status=draft')} />
-          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} detail={details?.views} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} detail={details?.views} value={data.activity.monthlyViews === undefined ? copy.unavailable : numberFormat.format(data.activity.monthlyViews)} tone="views" unavailable={data.activity.monthlyViews === undefined} unavailableBody={data.activity.monthlyViews === undefined ? copy.overview.unavailableMetricBody : undefined} href={localeForProviderPath(locale, '/provider/user-guide#guide-provider-access')} />
           <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} detail={details?.customerRequests} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
         </div>
       </section>

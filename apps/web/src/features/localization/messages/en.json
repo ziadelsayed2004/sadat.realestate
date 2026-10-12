@@ -2784,7 +2784,7 @@
         "booked": "Booked"
       },
       "unavailableMetric": "Unavailable",
-      "unavailableMetricBody": "This metric is not provided by the current provider contract.",
+      "unavailableMetricBody": "The statistic could not load. Refresh the page to retry.",
       "chart": {
         "title": "Views and requests — last 6 months",
         "unavailable": "Historical dashboard data is not provided by the current provider contract."

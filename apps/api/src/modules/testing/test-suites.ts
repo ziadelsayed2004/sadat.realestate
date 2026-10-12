@@ -1,5 +1,6 @@
 export const TEST_SUITES = Object.freeze({
   unit: Object.freeze([
+    'tests/public/property-views.test.ts',
     'tests/requests/contact-routing.test.ts',
     'tests/settings/contact-policy.test.ts',
     'tests/media/public-cover.test.ts',

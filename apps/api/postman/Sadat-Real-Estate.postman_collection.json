@@ -9200,6 +9200,32 @@
           }
         }
       ]
+    },
+    {
+      "name": "Record public property view",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/properties/:slug/views",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "properties",
+            ":slug",
+            "views"
+          ],
+          "variable": [
+            {
+              "key": "slug",
+              "value": "synthetic-apartment"
+            }
+          ]
+        },
+        "description": "Counts one browser visit per property per Cairo day. Reuses the response HttpOnly cookie; excludes private listings and owner visits."
+      }
     }
   ]
 }

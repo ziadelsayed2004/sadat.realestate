@@ -12889,6 +12889,80 @@
           }
         }
       }
+    },
+    "/api/v1/public/properties/{slug}/views": {
+      "post": {
+        "operationId": "recordPublicPropertyView",
+        "summary": "Record one browser visit per published property per Cairo day",
+        "description": "Called after displaying a property page. Deduplicated by an anonymous HttpOnly cookie; no IP address or user agent is stored. Owner, administrator and obvious crawler visits are excluded. Entries expire after 40 days.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "minLength": 2,
+              "maxLength": 120
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Visit counted or skipped",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "recorded"
+                      ],
+                      "properties": {
+                        "recorded": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "required": [
+                        "requestId"
+                      ],
+                      "properties": {
+                        "requestId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/SeekerError"
+          },
+          "503": {
+            "$ref": "#/components/responses/SeekerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SeekerError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -27661,6 +27735,17 @@
               "bookedViewings": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "monthlyViews": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "propertyMonthlyViews": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             }
           }
