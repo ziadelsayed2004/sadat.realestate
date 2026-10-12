@@ -93,6 +93,19 @@ test('dashboard shows advertising approval and payment alerts with their request
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
   }
   await expect(page.locator('[data-provider-nav="notifications"] .provider-dashboard__notification-count')).toHaveText(new Intl.NumberFormat(locale).format(2));
+  const bell = page.locator('.provider-dashboard__topbar-notifications');
+  await expect(bell).toBeVisible();
+  await expect(bell).toHaveAttribute('href', `/provider/notifications?lang=${locale}`);
+  await expect(bell.locator('.provider-dashboard__notification-count')).toHaveText(new Intl.NumberFormat(locale).format(2));
+  if (page.viewportSize()!.width <= 620) {
+    const bellBounds = (await bell.boundingBox())!;
+    expect(bellBounds.width).toBeGreaterThanOrEqual(44);
+    expect(bellBounds.height).toBeGreaterThanOrEqual(44);
+    await expect(page.locator('.provider-dashboard__menu-button')).toHaveAttribute('aria-expanded', 'false');
+    const menuBounds = (await page.locator('.provider-dashboard__menu-button').boundingBox())!;
+    expect(Math.abs(bellBounds.y - menuBounds.y)).toBeLessThanOrEqual(1);
+    expect(bellBounds.x + bellBounds.width <= menuBounds.x || menuBounds.x + menuBounds.width <= bellBounds.x).toBe(true);
+  }
   await panel.screenshot({ path: test.info().outputPath(`provider-ad-alerts-${locale}.png`) });
   unread = false;
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));

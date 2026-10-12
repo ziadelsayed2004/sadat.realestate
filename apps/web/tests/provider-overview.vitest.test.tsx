@@ -191,6 +191,8 @@ describe('Provider overview', () => {
     await screen.findByText(locale === 'ar' ? 'مطلوب دفع قيمة إعلانك' : 'Payment required for your advertisement');
     expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض التفاصيل' : 'View details' })).toHaveAttribute('href', `/provider/ads/eeeeeeeeeeeeeeeeeeeeeeee?lang=${locale}`);
     expect(result.container.querySelector('[data-provider-nav="notifications"] .provider-dashboard__notification-count')).toHaveTextContent(new Intl.NumberFormat(locale).format(1));
+    expect(result.container.querySelector('.provider-dashboard__topbar-notifications')).toHaveAttribute('href', `/provider/notifications?lang=${locale}`);
+    expect(result.container.querySelector('.provider-dashboard__topbar-notifications .provider-dashboard__notification-count')).toHaveTextContent(new Intl.NumberFormat(locale).format(1));
     expect(loadNotifications).toHaveBeenCalledWith({ page: 1, limit: 3, unreadOnly: true }, expect.any(AbortSignal));
     window.dispatchEvent(new Event('focus'));
     await waitFor(() => expect(result.container.querySelector('.provider-dashboard__notifications-preview')).toBeNull());

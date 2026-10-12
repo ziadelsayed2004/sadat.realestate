@@ -93,6 +93,8 @@
 .provider-dashboard__topbar-notifications img { display: block; }
 .provider-dashboard__notification-count {
   display: inline-grid;
+  flex: 0 0 auto;
+  white-space: nowrap;
   place-items: center;
   min-width: 22px;
   min-height: 22px;
@@ -559,24 +561,29 @@
     grid-column: 1;
     height: 56px;
     justify-content: space-between;
+    gap: 6px;
+    padding-inline: 12px;
   }
 
   .provider-dashboard__menu-button {
     display: grid;
-    width: 32px;
-    height: 32px;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
     padding: 6px;
     place-items: center;
     border: 0;
     background: transparent;
   }
 
-  .provider-dashboard__mobile-brand { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-  .provider-dashboard__mobile-brand img { object-fit: contain; }
+  .provider-dashboard__mobile-brand { display: flex; flex: 1 1 auto; min-width: 0; order: 2; justify-content: center; align-items: center; gap: 6px; font-size: 12px; }
+  .provider-dashboard__mobile-brand strong { min-width: 0; overflow-wrap: anywhere; }
+  .provider-dashboard__mobile-brand img { object-fit: contain; flex: 0 0 24px; }
+  .provider-dashboard__topbar > .dashboard-account { order: 3; }
+  .provider-dashboard__topbar-notifications { display: grid; flex: 0 0 44px; order: 1; width: 44px; height: 44px; border: 1px solid #e5d9bd; border-radius: 12px; }
   .provider-dashboard__topbar-arrow,
   .provider-dashboard__topbar-spacer,
-  .provider-dashboard__topbar-avatar,
-  .provider-dashboard__topbar-notifications { display: none; }
+  .provider-dashboard__topbar-avatar { display: none; }
 
   .provider-dashboard__navigation {
     position: fixed;
