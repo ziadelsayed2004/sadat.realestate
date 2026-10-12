@@ -53,6 +53,23 @@ function success(data: unknown, requestId: string, total?: number): Response {
 }
 
 describe('Provider overview', () => {
+  it.each(['ar', 'en'] as const)('opens recent properties by name and status without exposing their codes in %s', locale => {
+    const routes = { draft: 'basic', pending_review: 'submitted', needs_changes: 'review', rejected: 'rejected', approved: 'published', published: 'published', hidden: 'published', archived: 'review' } as const;
+    const recent = Object.entries(routes).map(([status], index) => ({ ...property, id: index.toString(16).padStart(24, '0'), slug: `property-${index.toString(16).padStart(32, '0')}`, name: { ar: `عقار ${index + 1}`, en: `Property ${index + 1}` }, status: status as typeof property.status }));
+    recent.push({ ...property, id: '999999999999999999999999', slug: 'property-99999999999999999999999999999999', active: false, name: { ar: 'عقار غير متاح', en: 'Inactive property' } });
+    const result = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, properties: { ...overview.properties, total: recent.length, recent } }} />, { locale });
+    const table = result.container.querySelector('.provider-dashboard__recent-table')!;
+    expect(table.querySelector('code')).toBeNull();
+    for (const item of recent) {
+      expect(table.textContent).not.toContain(item.slug);
+      const href = item.status === 'published' && item.active ? `/properties/${item.slug}?lang=${locale}` : `/provider/properties/${item.id}/${routes[item.status as keyof typeof routes]}?lang=${locale}`;
+      expect(screen.getByRole('link', { name: item.name[locale] })).toHaveAttribute('href', href);
+      const row = screen.getByRole('link', { name: item.name[locale] }).closest('tr')!;
+      const action = row.querySelector('td:last-child a')!;
+      expect(action).toHaveAttribute('href', href);
+      expect(action).toHaveTextContent(item.status === 'draft' ? locale === 'ar' ? 'استكمال المسودة' : 'Continue draft' : getProviderCopy(locale).overview.openProperty);
+    }
+  });
   it.each(['ar', 'en'] as const)('renders recorded monthly views, including a genuine zero, in %s', locale => {
     const { rerender } = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, activity: { ...overview.activity, monthlyViews: 9, propertyMonthlyViews: { [property.id]: 4 } } }} />, { locale });
     const card = screen.getByTestId('provider-summary-views');

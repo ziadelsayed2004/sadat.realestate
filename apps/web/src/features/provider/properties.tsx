@@ -12,6 +12,7 @@ import {
   type ProviderPropertiesQuery
 } from './data.ts';
 import { ProviderNavigation } from './overview.tsx';
+import { providerPropertyStatusPath } from './property-path.ts';
 import './styles.css';
 
 export type ProviderPropertiesViewState = ProviderOverviewBaseState;
@@ -62,14 +63,6 @@ function statusTone(status: PropertyStatus): BadgeTone {
   return 'neutral';
 }
 
-function statusPath(property: PropertyData): string {
-  const propertyId = encodeURIComponent(property.id);
-  if (property.status === 'rejected') return `/provider/properties/${propertyId}/rejected`;
-  if (property.status === 'pending_review') return `/provider/properties/${propertyId}/submitted`;
-  if (property.status === 'approved' || property.status === 'published' || property.status === 'hidden') return `/provider/properties/${propertyId}/published`;
-  return `/provider/properties/${propertyId}/review`;
-}
-
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ProviderPropertiesViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getProviderCopy(locale);
   const message = copy.states[state];
@@ -90,7 +83,7 @@ function PropertyActions({ property, locale }: { readonly property: PropertyData
   const copy = getProviderCopy(locale);
   const name = localizedValue(property.name, locale);
   const editHref = localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/${property.status === 'draft' ? 'basic' : 'location'}`);
-  const viewHref = localeForProviderPath(locale, statusPath(property));
+  const viewHref = localeForProviderPath(locale, providerPropertyStatusPath(property));
   return (
     <div className="provider-properties__actions">
       <a href={viewHref} aria-label={`${copy.properties.view}: ${name}`}>{copy.properties.view}</a>
@@ -108,7 +101,7 @@ function PropertyRow({ property, locale }: { readonly property: PropertyData; re
     <tr role="row" data-testid={`provider-property-${property.id}`} data-property-status={property.status}>
       <td role="cell" data-label={copy.properties.columns.property}>
         <div className="provider-properties__identity">
-          <strong><a href={localeForProviderPath(locale, statusPath(property))}>{name}</a></strong>
+          <strong><a href={localeForProviderPath(locale, providerPropertyStatusPath(property))}>{name}</a></strong>
           <span>{property.slug}</span>
           {hasReviewReason ? <small className="provider-properties__reason"><strong>{copy.properties.reason}</strong> {property.reviewReason}</small> : null}
         </div>

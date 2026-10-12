@@ -14,6 +14,7 @@ import './styles.css';
 import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.tsx';
 import { createProviderNotificationsLoader, type ProviderNotificationsLoader } from './notifications-data.ts';
 import type { NotificationListData } from '@sadat-real-estate/contracts';
+import { providerPropertyOpenPath } from './property-path.ts';
 
 export type ProviderOverviewViewState = ProviderOverviewBaseState;
 
@@ -295,19 +296,21 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
     <div className="provider-dashboard__recent-table-wrap provider-properties__table-wrap">
       <table className="provider-dashboard__recent-table provider-properties__table" aria-label={copy.overview.recentTitle}>
         <thead>
-          <tr><th scope="col">{columns.code}</th><th scope="col">{columns.property}</th><th scope="col">{columns.status}</th><th scope="col">{columns.views}</th><th scope="col">{columns.updated}</th><th scope="col">{locale === 'ar' ? 'الإجراء' : 'Action'}</th></tr>
+          <tr><th scope="col">{columns.property}</th><th scope="col">{columns.status}</th><th scope="col">{columns.views}</th><th scope="col">{columns.updated}</th><th scope="col">{locale === 'ar' ? 'الإجراء' : 'Action'}</th></tr>
         </thead>
         <tbody>
-          {data.properties.recent.map(property => (
-            <tr key={property.id}>
-              <td><code>{/^p-\d+$/iu.test(property.slug) ? property.slug.toUpperCase() : property.slug}</code></td>
-              <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}><strong>{localizedValue(property.name, locale)}</strong></a> : <strong>{localizedValue(property.name, locale)}</strong>}</td>
-              <td><Badge tone={toneForStatus(property.status)}>{copy.propertyStatuses[property.status]}</Badge></td>
-              <td>{data.activity.propertyMonthlyViews?.[property.id] === undefined ? <span className="provider-dashboard__unavailable-value">{copy.unavailable}</span> : new Intl.NumberFormat(locale).format(data.activity.propertyMonthlyViews[property.id]!)}</td>
-              <td><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
-              <td>{property.status === 'draft' ? <a className="provider-dashboard__draft-link" href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/basic`)}>{locale === 'ar' ? 'استكمال المسودة' : 'Continue draft'}</a> : '—'}</td>
-            </tr>
-          ))}
+          {data.properties.recent.map(property => {
+            const href = localeForProviderPath(locale, providerPropertyOpenPath(property));
+            return (
+              <tr key={property.id}>
+                <td><a className="provider-dashboard__draft-link" href={href}><strong>{localizedValue(property.name, locale)}</strong></a></td>
+                <td data-label={columns.status}><Badge tone={toneForStatus(property.status)}>{copy.propertyStatuses[property.status]}</Badge></td>
+                <td data-label={columns.views}>{data.activity.propertyMonthlyViews?.[property.id] === undefined ? <span className="provider-dashboard__unavailable-value">{copy.unavailable}</span> : new Intl.NumberFormat(locale).format(data.activity.propertyMonthlyViews[property.id]!)}</td>
+                <td data-label={columns.updated}><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
+                <td><a className="provider-dashboard__draft-link" href={href}>{property.status === 'draft' ? locale === 'ar' ? 'استكمال المسودة' : 'Continue draft' : copy.overview.openProperty}</a></td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

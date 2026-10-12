@@ -277,6 +277,13 @@ test.describe('PRV-01 Provider Overview', () => {
     }));
     expect(geometry.innerWidth).toBe(viewportWidth);
     expect(geometry.documentWidth).toBeLessThanOrEqual(viewportWidth);
+    const recent = page.locator('.provider-dashboard__recent-table');
+    await expect(recent.locator('code')).toHaveCount(0);
+    const publishedRow = recent.locator('tbody tr').first();
+    const publishedHref = `/properties/p-1041?lang=${locale}`;
+    await expect(publishedRow.locator('td:first-child a')).toHaveAttribute('href', publishedHref);
+    await expect(publishedRow.locator('td:last-child a')).toHaveAttribute('href', publishedHref);
+    await expect(publishedRow.locator('td:last-child a')).toHaveText(locale === 'ar' ? 'فتح العقار' : 'Open property');
 
     if (testInfo.project.name.includes('mobile')) {
       await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '56px');
