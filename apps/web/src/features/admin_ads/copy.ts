@@ -95,6 +95,7 @@ export interface AdminAdsCopy {
   readonly approve: string;
   readonly reject: string;
   readonly reasonLabel: string;
+  readonly approvalReason: string;
   readonly reasonPlaceholder: string;
   readonly reasonRequired: string;
   readonly reviewSaved: string;
@@ -146,6 +147,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     paymentMethodLabels: { vodafone_cash: 'فودافون كاش', instapay: 'إنستا باي', bank_transfer: 'تحويل بنكي', cash: 'نقدًا' },
     reviewAction: 'إجراء المراجعة',
     approve: 'اعتماد',
+    approvalReason: 'تم اعتماده',
     reject: 'رفض',
     reasonLabel: 'سبب الإجراء',
     reasonPlaceholder: 'اكتب سبباً واضحاً لا يقل عن حرفين',
@@ -197,6 +199,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     paymentMethodLabels: { vodafone_cash: 'Vodafone Cash', instapay: 'InstaPay', bank_transfer: 'Bank transfer', cash: 'Cash' },
     reviewAction: 'Review action',
     approve: 'Approve',
+    approvalReason: 'Approved',
     reject: 'Reject',
     reasonLabel: 'Action reason',
     reasonPlaceholder: 'Write a clear reason of at least two characters',

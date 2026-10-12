@@ -780,6 +780,7 @@
       "cash": "Cash"
     },
     "reviewAction": "Review action",
+    "approvalReason": "Approved",
     "approve": "Approve",
     "reject": "Reject",
     "reasonLabel": "Action reason",

@@ -321,7 +321,9 @@ function ReviewPanel({ proof, locale, review, onSaved, loadFile }: { readonly pr
   useAdminAttentionRead('payment-review', proof.id);
   const copy = getAdminAdsCopy(locale);
   const [action, setAction] = useState<'approve' | 'reject'>('approve');
-  const [reason, setReason] = useState('');
+  const [approvalReason, setApprovalReason] = useState(copy.approvalReason);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const reason = action === 'approve' ? approvalReason : rejectionReason;
   const [state, setState] = useState<'idle' | 'saving' | 'permission' | 'error'>('idle');
   const [feedback, setFeedback] = useState<string | undefined>(undefined);
 
@@ -357,7 +359,7 @@ function ReviewPanel({ proof, locale, review, onSaved, loadFile }: { readonly pr
       <div><dt>{copy.columns.security}</dt><dd>{proof.securityState}</dd></div>
       <div><dt>{copy.columns.version}</dt><dd>{proof.version}</dd></div>
     </dl>
-    <PaymentAccounts {...proof} locale={locale} /><PaymentProofPreview key={proof.id} proof={proof} locale={locale} load={loadFile} /><fieldset disabled={state === 'saving' || state === 'permission' || proof.status !== 'pending_review'}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ads-review-action" value="approve" checked={action === 'approve'} onChange={() => setAction('approve')} />{copy.approve}</label><label><input type="radio" name="admin-ads-review-action" value="reject" checked={action === 'reject'} onChange={() => setAction('reject')} />{copy.reject}</label></div><label className="admin-ads__field" htmlFor="admin-ads-review-reason">{copy.reasonLabel}<textarea id="admin-ads-review-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={state === 'saving'} disabled={state === 'permission'}>{state === 'saving' ? copy.reviewing : copy.reviewAction}</Button></fieldset>{feedback !== undefined ? <p className="admin-ads__feedback" data-tone={state === 'error' || state === 'permission' ? 'error' : 'success'} role={state === 'error' || state === 'permission' ? 'alert' : 'status'}>{feedback}</p> : null}</form>;
+    <PaymentAccounts {...proof} locale={locale} /><PaymentProofPreview key={proof.id} proof={proof} locale={locale} load={loadFile} /><fieldset disabled={state === 'saving' || state === 'permission' || proof.status !== 'pending_review'}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ads-review-action" value="approve" checked={action === 'approve'} onChange={() => { setAction('approve'); setFeedback(undefined); }} />{copy.approve}</label><label><input type="radio" name="admin-ads-review-action" value="reject" checked={action === 'reject'} onChange={() => { setAction('reject'); setFeedback(undefined); }} />{copy.reject}</label></div><label className="admin-ads__field" htmlFor="admin-ads-review-reason">{copy.reasonLabel}<textarea id="admin-ads-review-reason" value={reason} onChange={event => action === 'approve' ? setApprovalReason(event.target.value) : setRejectionReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={state === 'saving'} disabled={state === 'permission'}>{state === 'saving' ? copy.reviewing : copy.reviewAction}</Button></fieldset>{feedback !== undefined ? <p className="admin-ads__feedback" data-tone={state === 'error' || state === 'permission' ? 'error' : 'success'} role={state === 'error' || state === 'permission' ? 'alert' : 'status'}>{feedback}</p> : null}</form>;
 }
 
 function CalendarTable({ data, locale }: { readonly data: AdCalendarListData; readonly locale: SupportedLocale }) {

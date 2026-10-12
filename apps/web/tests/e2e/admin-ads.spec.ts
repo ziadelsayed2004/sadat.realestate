@@ -52,15 +52,25 @@ test.describe('ADM-33 through ADM-38 advertising administration', () => {
     await expectNoPrivateAdminAdsFields(page);
   });
 
-  test('requires a reason and sends the expected proof version for manual review', async ({ page }) => {
+  test('prefills approval while keeping rejection reasons separate and submits only on confirmation', async ({ page }) => {
     const locale = localeForProject();
     await page.goto(`/admin/ads/payments/pending-review?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     const row = page.getByTestId(`admin-payment-proof-${adminAdsProofId}`);
     await expect(row).toBeVisible();
     await row.getByRole('button', { name: getAdminAdsCopy(locale).viewPaymentReview }).click();
     await expect(page.locator('.admin-ads__review-card')).toBeVisible();
-    await page.locator('#admin-ads-review-reason').fill('Reviewed against the submitted proof');
+    const copy = getAdminAdsCopy(locale);
+    const form = page.locator('.admin-ads__review-card');
+    const reason = page.locator('#admin-ads-review-reason');
+    await expect(reason).toHaveValue(copy.approvalReason);
+    await form.getByRole('radio', { name: copy.reject, exact: true }).check();
+    await expect(reason).toHaveValue('');
+    await form.getByRole('radio', { name: copy.approve, exact: true }).check();
+    await expect(reason).toHaveValue(copy.approvalReason);
+    await form.locator('fieldset').screenshot({ path: test.info().outputPath('default-approval-reason.png') });
+    const submitted = page.waitForRequest(request => request.method() === 'POST' && request.url().includes(`/payment-proofs/${adminAdsProofId}/review`));
     await page.locator('.admin-ads__review-card button[type="submit"]').click();
+    expect((await submitted).postDataJSON()).toMatchObject({ action: 'approve', reason: copy.approvalReason });
     await expect(page.locator('.admin-ads__feedback[data-tone="success"]')).toBeVisible();
     await expectNoPrivateAdminAdsFields(page);
   });

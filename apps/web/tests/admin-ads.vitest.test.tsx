@@ -287,12 +287,48 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(reviewForm).toHaveTextContent('+201111111111');
     expect(reviewForm).toHaveTextContent('Test beneficiary');
     expect(reviewForm).toHaveTextContent('+201000000001');
+    expect(reasonField).toHaveValue(copy.approvalReason);
+    fireEvent.change(reasonField, { target: { value: '' } });
     fireEvent.submit(reviewForm!);
     expect(review).not.toHaveBeenCalled();
     expect(screen.getByText(copy.reasonRequired)).toBeInTheDocument();
     fireEvent.change(reasonField, { target: { value: 'Reviewed against the submitted proof' } });
     fireEvent.submit(reviewForm!);
     await waitFor(() => expect(review).toHaveBeenCalledWith(proof.id, { action: 'approve', expectedVersion: proof.version, reason: 'Reviewed against the submitted proof' }));
+  });
+
+  it.each(['ar', 'en'] as const)('prefills an editable approval reason without submitting automatically in %s', async locale => {
+    window.history.pushState({}, '', `/admin/ads/payments/pending-review?proofId=${proof.id}&lang=${locale}`);
+    const review = vi.fn(async () => proof);
+    renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} loadPaymentProofFile={async () => { throw new ApiClientError('Missing test receipt', { code: 'HTTP_ERROR', status: 404 }); }} reviewPaymentProof={review} />, { locale });
+    const copy = getAdminAdsCopy(locale);
+    const reason = await screen.findByLabelText(copy.reasonLabel);
+    expect(reason).toHaveValue(copy.approvalReason);
+    expect(review).not.toHaveBeenCalled();
+    fireEvent.submit(reason.closest('form')!);
+    await waitFor(() => expect(review).toHaveBeenCalledWith(proof.id, { action: 'approve', expectedVersion: proof.version, reason: copy.approvalReason }));
+  });
+
+  it('requires a separate rejection reason and preserves both reasons when switching decisions', async () => {
+    window.history.pushState({}, '', `/admin/ads/payments/pending-review?proofId=${proof.id}`);
+    const review = vi.fn(async () => proof);
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadPaymentProofFile={async () => { throw new ApiClientError('Missing test receipt', { code: 'HTTP_ERROR', status: 404 }); }} reviewPaymentProof={review} />, { locale: 'en' });
+    const copy = getAdminAdsCopy('en');
+    const reason = await screen.findByLabelText(copy.reasonLabel);
+    fireEvent.change(reason, { target: { value: 'Reviewed manually and approved' } });
+    fireEvent.click(screen.getByRole('radio', { name: copy.reject }));
+    expect(reason).toHaveValue('');
+    fireEvent.submit(reason.closest('form')!);
+    expect(review).not.toHaveBeenCalled();
+    expect(screen.getByText(copy.reasonRequired)).toBeInTheDocument();
+    fireEvent.change(reason, { target: { value: 'The receipt amount does not match' } });
+    fireEvent.click(screen.getByRole('radio', { name: copy.approve }));
+    expect(reason).toHaveValue('Reviewed manually and approved');
+    expect(screen.queryByText(copy.reasonRequired)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('radio', { name: copy.reject }));
+    expect(reason).toHaveValue('The receipt amount does not match');
+    fireEvent.submit(reason.closest('form')!);
+    await waitFor(() => expect(review).toHaveBeenCalledWith(proof.id, { action: 'reject', expectedVersion: proof.version, reason: 'The receipt amount does not match' }));
   });
 
   it('reviews a submitted advertising request from the detail screen with a reason and version', async () => {

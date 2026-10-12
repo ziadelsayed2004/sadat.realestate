@@ -780,6 +780,7 @@
       "cash": "نقدًا"
     },
     "reviewAction": "إجراء المراجعة",
+    "approvalReason": "تم اعتماده",
     "approve": "اعتماد",
     "reject": "رفض",
     "reasonLabel": "سبب الإجراء",
