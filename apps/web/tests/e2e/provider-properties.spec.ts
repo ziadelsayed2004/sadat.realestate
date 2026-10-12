@@ -125,11 +125,51 @@ test('keeps property filters separate and usable when the provider list is empty
   await expect(page.getByTestId('provider-properties-count')).toContainText(/7|٧/u);
 });
 
+test('opens property cards without hiding their actions on narrow screens', async ({ page }, info) => {
+  const locale = localeForProject();
+  await routeProviderSession(page);
+  await routeProviderProperties(page);
+  await page.route('**/api/v1/provider/properties**', async route => {
+    await route.fulfill({ json: { data: { items: [
+      propertyFixture('cccccccccccccccccccccccc', 'published', { ar: 'فيلا المزود', en: 'Provider villa' }),
+      { ...propertyFixture('dddddddddddddddddddddddd', 'needs_changes', { ar: 'عقار يحتاج تعديلاً', en: 'Needs changes property' }, ['update', 'submit']), reviewReason: 'Add the missing location details.' },
+      { ...propertyFixture('eeeeeeeeeeeeeeeeeeeeeeee', 'draft', { ar: 'مسودة المزود', en: 'Provider draft' }, ['update', 'submit']), slug: 'property-d75bfc28c0a04c6383e59274c5ef43b9' }
+    ] }, ...successMeta('mobile-property-cards', 3, 1, 5) } });
+  });
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/provider/properties?lang=${locale}`);
+    const draft = page.getByTestId('provider-property-eeeeeeeeeeeeeeeeeeeeeeee');
+    await expect(draft).toBeVisible();
+    await draft.evaluate(element => element.scrollIntoView({ block: 'center' }));
+    const card = (await draft.boundingBox())!;
+    const links = draft.locator('.provider-properties__actions a');
+    await expect(links).toHaveCount(3);
+    for (const link of await links.all()) {
+      await expect(link).toBeVisible();
+      const box = (await link.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(card.x);
+      expect(box.x + box.width).toBeLessThanOrEqual(card.x + card.width + 1);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(await link.evaluate(element => {
+        const rect = element.getBoundingClientRect();
+        return element.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+      })).toBe(true);
+    }
+    await expect(draft.locator('.provider-properties__identity a')).toHaveAttribute('href', `/provider/properties/eeeeeeeeeeeeeeeeeeeeeeee/review?lang=${locale}`);
+    await expect(links.filter({ hasText: /^(Edit|تعديل)$/u })).toHaveAttribute('href', `/provider/properties/eeeeeeeeeeeeeeeeeeeeeeee/basic?lang=${locale}`);
+    await expect(page.getByTestId('provider-property-cccccccccccccccccccccccc').locator('.provider-properties__actions a')).toHaveCount(1);
+    await expect(page.getByTestId('provider-property-dddddddddddddddddddddddd')).toContainText('Add the missing location details.');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+    await draft.screenshot({ path: info.outputPath(`property-card-${width}.png`) });
+  }
+});
+
 test.describe('PRV-02 My Properties', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-02' });
     testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-02.png; local SHA-256 2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738; Figma node 6017:19308; Drive folder 1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Provider dashboard is approved for desktop only.');
+    test.skip(!testInfo.project.name.includes('desktop'), 'The desktop table baseline is checked in desktop projects.');
     void page;
   });
 

@@ -85,6 +85,11 @@ describe('Provider properties', () => {
     expect(screen.getByTestId('provider-property-cccccccccccccccccccccccc')).toBeInTheDocument();
     expect(within(screen.getByTestId('provider-property-dddddddddddddddddddddddd')).getByText(copy.propertyStatuses.needs_changes)).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: new RegExp(copy.properties.edit, 'u') })).toHaveLength(2);
+    const published = screen.getByTestId(`provider-property-${rows[0].id}`);
+    expect(within(published).getByRole('link', { name: rows[0].name[locale] ?? '' })).toHaveAttribute('href', `/provider/properties/${rows[0].id}/published?lang=${locale}`);
+    expect(within(published).queryByRole('link', { name: new RegExp(`^${copy.properties.edit}:`, 'u') })).not.toBeInTheDocument();
+    const draft = screen.getByTestId(`provider-property-${rows[2].id}`);
+    expect(within(draft).getByRole('link', { name: rows[2].name[locale] ?? '' })).toHaveAttribute('href', `/provider/properties/${rows[2].id}/review?lang=${locale}`);
     expect(result.container.querySelector('[data-screen-id="PRV-02"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(providerId);
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);

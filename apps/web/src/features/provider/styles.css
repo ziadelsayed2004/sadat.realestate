@@ -761,6 +761,11 @@
   font-size: 0.98rem;
 }
 
+.provider-properties__identity > strong a { color: inherit; text-decoration: none; }
+.provider-properties__identity > strong a:hover { text-decoration: underline; }
+.provider-properties__identity > strong a:focus-visible,
+.provider-properties__actions a:focus-visible { outline: 2px solid #2f68c9; outline-offset: 3px; }
+
 .provider-properties__actions {
   display: flex;
   flex-wrap: wrap;
@@ -790,4 +795,21 @@
   .provider-properties__filters { grid-template-columns: minmax(0, 1fr); }
   .provider-properties__field input, .provider-properties__field select { font-size: 16px; }
   .provider-properties__filter-actions .ui-button { flex: 1 1 120px; min-height: 44px; }
+}
+
+@media (max-width: 1000px) {
+  .provider-properties__table-wrap { overflow: visible; border: 0; }
+  .provider-properties__table,
+  .provider-properties__table tbody { display: block; min-width: 0; }
+  .provider-properties__table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .provider-properties__table tbody { display: grid; gap: 16px; }
+  .provider-properties__table tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 18px; border: 1px solid #e2e8f2; border-radius: 14px; }
+  .provider-properties__table td { min-width: 0; padding: 0; border: 0; overflow-wrap: anywhere; }
+  .provider-properties__table td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 6px; color: #63718b; font-size: .78rem; font-weight: 700; }
+  .provider-properties__table td:first-child,
+  .provider-properties__table td:last-child { grid-column: 1 / -1; }
+  .provider-properties__identity,
+  .provider-properties__actions { min-width: 0; }
+  .provider-properties__identity > span { display: none; }
+  .provider-properties__actions a { display: flex; justify-content: center; align-items: center; min-height: 44px; flex: 1 1 90px; padding: 6px 12px; box-sizing: border-box; border: 1px solid #cfd8e7; border-radius: 10px; white-space: normal; text-align: center; }
 }

@@ -105,19 +105,19 @@ function PropertyRow({ property, locale }: { readonly property: PropertyData; re
   const name = localizedValue(property.name, locale);
   const hasReviewReason = property.reviewReason !== undefined && (property.status === 'needs_changes' || property.status === 'rejected');
   return (
-    <tr data-testid={`provider-property-${property.id}`} data-property-status={property.status}>
-      <td>
+    <tr role="row" data-testid={`provider-property-${property.id}`} data-property-status={property.status}>
+      <td role="cell" data-label={copy.properties.columns.property}>
         <div className="provider-properties__identity">
-          <strong>{name}</strong>
+          <strong><a href={localeForProviderPath(locale, statusPath(property))}>{name}</a></strong>
           <span>{property.slug}</span>
           {hasReviewReason ? <small className="provider-properties__reason"><strong>{copy.properties.reason}</strong> {property.reviewReason}</small> : null}
         </div>
       </td>
-      <td><PropertyStatusBadge status={property.status} locale={locale} /></td>
-      <td>{copy.properties.kindLabels[property.kind]} / {copy.properties.transactionLabels[property.transactionType]}</td>
-      <td>{priceLabel(property, locale, copy.unavailable)}</td>
-      <td><time dateTime={property.updatedAt}>{dateLabel(property.updatedAt, locale)}</time></td>
-      <td><PropertyActions property={property} locale={locale} /></td>
+      <td role="cell" data-label={copy.properties.columns.status}><PropertyStatusBadge status={property.status} locale={locale} /></td>
+      <td role="cell" data-label={copy.properties.columns.type}>{copy.properties.kindLabels[property.kind]} / {copy.properties.transactionLabels[property.transactionType]}</td>
+      <td role="cell" data-label={copy.properties.columns.price}>{priceLabel(property, locale, copy.unavailable)}</td>
+      <td role="cell" data-label={copy.properties.columns.updated}><time dateTime={property.updatedAt}>{dateLabel(property.updatedAt, locale)}</time></td>
+      <td role="cell" data-label={copy.properties.columns.actions}><PropertyActions property={property} locale={locale} /></td>
     </tr>
   );
 }
@@ -192,7 +192,7 @@ function PropertiesContent({ data, locale, query, onPageChange, onStatusChange, 
           </div>
         ) : (
           <div className="provider-properties__table-wrap">
-            <table className="provider-properties__table">
+            <table role="table" className="provider-properties__table">
               <caption className="a11y-visually-hidden">{copy.properties.title}</caption>
               <thead>
                 <tr>
@@ -204,7 +204,7 @@ function PropertiesContent({ data, locale, query, onPageChange, onStatusChange, 
                   <th scope="col">{copy.properties.columns.actions}</th>
                 </tr>
               </thead>
-              <tbody>{data.items.map(property => <PropertyRow key={property.id} property={property} locale={locale} />)}</tbody>
+              <tbody role="rowgroup">{data.items.map(property => <PropertyRow key={property.id} property={property} locale={locale} />)}</tbody>
             </table>
           </div>
         )}
