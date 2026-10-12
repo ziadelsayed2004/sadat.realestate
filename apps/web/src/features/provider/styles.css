@@ -95,6 +95,7 @@
   display: inline-grid;
   flex: 0 0 auto;
   white-space: nowrap;
+  box-sizing: border-box;
   place-items: center;
   min-width: 22px;
   min-height: 22px;
@@ -110,6 +111,7 @@
   inset-block-start: -4px;
   inset-inline-end: -6px;
 }
+.provider-dashboard__navigation .provider-dashboard__notification-count { margin-inline-start: auto; }
 .provider-dashboard__notifications-preview {
   margin-block-end: 24px;
   padding: 20px;
@@ -541,7 +543,9 @@
     border-radius: 12px;
   }
 
-  .provider-dashboard__navigation a > span:last-child { display: none; }
+  .provider-dashboard__navigation a > span:not([class]) { display: none; }
+  .provider-dashboard__navigation li[data-provider-nav='notifications'] a { position: relative; }
+  .provider-dashboard__navigation .provider-dashboard__notification-count { position: absolute; top: 0; inset-inline-end: 0; margin: 0; }
 
   .provider-dashboard__content {
     grid-column: 2;
@@ -614,7 +618,7 @@
   .provider-dashboard__navigation li[data-provider-nav='requests'],
   .provider-dashboard__navigation li[data-provider-nav='settings'] { display: block; }
   .provider-dashboard__navigation a { min-height: 54px; gap: 2px; flex-direction: column; padding: 5px 2px; font-size: 11px; }
-  .provider-dashboard__navigation a > span:last-child { display: block; }
+  .provider-dashboard__navigation a > span:not([class]) { display: block; }
 
   .provider-dashboard__navigation[data-mobile-open='true'] {
     inset: 56px 12px auto;
@@ -632,6 +636,7 @@
   .provider-dashboard__navigation[data-mobile-open='true'] .provider-dashboard__navigation-title { display: block; }
   .provider-dashboard__navigation[data-mobile-open='true'] li { display: block; }
   .provider-dashboard__navigation[data-mobile-open='true'] a { min-height: 44px; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 8px 12px; font-size: 14px; }
+  .provider-dashboard__navigation[data-mobile-open='true'] .provider-dashboard__notification-count { position: static; margin-inline-start: auto; }
   .provider-dashboard__navigation[data-mobile-open='true'] .provider-dashboard__mobile-logout { display: block; }
   .provider-dashboard__navigation[data-mobile-open='true'] .provider-dashboard__mobile-logout button {
     display: flex;

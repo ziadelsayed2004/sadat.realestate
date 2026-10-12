@@ -105,6 +105,19 @@ test('dashboard shows advertising approval and payment alerts with their request
     const menuBounds = (await page.locator('.provider-dashboard__menu-button').boundingBox())!;
     expect(Math.abs(bellBounds.y - menuBounds.y)).toBeLessThanOrEqual(1);
     expect(bellBounds.x + bellBounds.width <= menuBounds.x || menuBounds.x + menuBounds.width <= bellBounds.x).toBe(true);
+    const menuButton = page.locator('.provider-dashboard__menu-button');
+    await menuButton.click();
+    const notificationLink = page.locator('[data-provider-nav="notifications"] a');
+    const badge = notificationLink.locator('.provider-dashboard__notification-count');
+    await expect(badge).toBeVisible();
+    const badgeBounds = (await badge.boundingBox())!;
+    const rowBounds = (await notificationLink.boundingBox())!;
+    const labelBounds = (await notificationLink.locator('span:not([class])').boundingBox())!;
+    expect(Math.abs(badgeBounds.y + badgeBounds.height / 2 - rowBounds.y - rowBounds.height / 2)).toBeLessThanOrEqual(1);
+    expect(locale === 'ar' ? badgeBounds.x + badgeBounds.width <= labelBounds.x : badgeBounds.x >= labelBounds.x + labelBounds.width).toBe(true);
+    expect(badgeBounds.x).toBeGreaterThanOrEqual(rowBounds.x);
+    expect(badgeBounds.x + badgeBounds.width).toBeLessThanOrEqual(rowBounds.x + rowBounds.width);
+    await menuButton.click();
   }
   await panel.screenshot({ path: test.info().outputPath(`provider-ad-alerts-${locale}.png`) });
   unread = false;
