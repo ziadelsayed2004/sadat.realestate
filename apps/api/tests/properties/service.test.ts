@@ -20,7 +20,7 @@ test('admin actions match permissions in lists, details and saved review/visibil
   assert.deepEqual((await viewer.service.adminList(admin, {})).data.items[0]?.availableActions, []);
   await assert.rejects(viewer.service.visibility(admin, id, { version: 0, action: 'archive', reason: 'Remove displayed listing' }, { requestId: 'view-only', traceId: 'a'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
   const manager = fixture();
-  manager.rows.set(id, record({ status: 'approved' }));
+  manager.rows.set(id, record({ status: 'approved', locationId: location, price: { amount: 100, currency: 'EGP' }, contact: { phone: '+201234567890' } }));
   const context = { requestId: 'admin-actions', traceId: 'a'.repeat(32) };
   const published = await manager.service.review(admin, id, { version: 0, action: 'publish', reason: 'Publish reviewed property' }, context);
   assert.deepEqual(published.availableActions, ['hide', 'archive', 'update']);
@@ -28,7 +28,7 @@ test('admin actions match permissions in lists, details and saved review/visibil
   assert.deepEqual(hidden.availableActions, ['restore', 'archive', 'update']);
   const archived = await manager.service.visibility(admin, id, { version: 2, action: 'archive', reason: 'Remove displayed listing' }, context);
   assert.equal(archived.active, false);
-  assert.deepEqual(archived.availableActions, []);
+  assert.deepEqual(archived.availableActions, ['restore']);
   manager.rows.set(id, record({ status: 'pending_review' }));
   assert.ok((await manager.service.adminGet(admin, id)).availableActions.includes('archive'));
 });
@@ -40,6 +40,26 @@ const location = '3123456789abcdef01234567';
 const admin = '4123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
+
+test('reconsiders rejected and returned properties while keeping permissions, readiness and versions enforced', async () => {
+  const context = { requestId: 'reconsider-property', traceId: 'a'.repeat(32) };
+  for (const status of ['rejected', 'needs_changes'] as const) {
+    const { service, rows } = fixture(true);
+    rows.set(id, { ...rows.get(id)!, status, version: 4 });
+    assert.ok((await service.adminGet(admin, id)).availableActions.includes('approve'));
+    await assert.rejects(service.review(admin, id, { version: 3, action: 'approve', reason: 'Review corrected property' }, context), /PROPERTY_VERSION_CONFLICT/);
+    const accepted = await service.review(admin, id, { version: 4, action: 'approve', reason: 'Review corrected property' }, context);
+    assert.equal(accepted.status, 'approved');
+    assert.ok(accepted.availableActions.includes('publish'));
+  }
+  const incomplete = fixture();
+  incomplete.rows.set(id, record({ status: 'rejected' }));
+  await assert.rejects(incomplete.service.review(admin, id, { version: 0, action: 'approve', reason: 'Cannot approve incomplete data' }, context), /PROPERTY_VALIDATION_FAILED/);
+  const viewer = fixture(true, undefined, ['admin:properties.view']);
+  viewer.rows.set(id, record({ status: 'archived' }));
+  assert.deepEqual((await viewer.service.adminGet(admin, id)).availableActions, []);
+  await assert.rejects(viewer.service.visibility(admin, id, { version: 0, action: 'restore', reason: 'No management permission' }, context), /PROPERTY_FORBIDDEN/);
+});
 
 test('saves all administrative editor fields together with one version and rejects invalid or stale writes', async () => {
   const { service, rows } = fixture();
@@ -156,7 +176,7 @@ function fixture(ready = false, settings?: { requiresAdminReview: boolean; publi
       const current = rows.get(input.id);
       if (!current) return { kind: 'not_found' };
       if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
-      if ((input.toStatus === 'published' && !['approved', 'pending_review'].includes(current.status)) || (input.toStatus !== 'published' && current.status !== 'pending_review')) return { kind: 'invalid_state' };
+      if ((input.toStatus === 'published' && !['approved', 'pending_review', 'needs_changes', 'rejected'].includes(current.status)) || (input.toStatus === 'approved' && !['pending_review', 'needs_changes', 'rejected'].includes(current.status)) || (!['published', 'approved'].includes(input.toStatus) && current.status !== 'pending_review')) return { kind: 'invalid_state' };
       const next = { ...current, status: input.toStatus, active: input.toStatus === 'published', reviewedBy: input.reviewerId, reviewedAt: input.metadata.changedAt, reviewReason: input.metadata.reason, ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(input.id, next);
       return { kind: 'written', property: next };
@@ -165,10 +185,10 @@ function fixture(ready = false, settings?: { requiresAdminReview: boolean; publi
       const current = rows.get(input.id);
       if (!current) return { kind: 'not_found' };
       if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
-      const valid = input.action === 'hide' ? ['published', 'approved'].includes(current.status) : input.action === 'restore' ? current.status === 'hidden' : current.status !== 'archived';
+      const valid = input.action === 'hide' ? ['published', 'approved'].includes(current.status) : input.action === 'restore' ? ['hidden', 'archived'].includes(current.status) : current.status !== 'archived';
       if (!valid) return { kind: 'invalid_state' };
-      const status = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? 'published' : 'archived';
-      const next = { ...current, status: status as StoredProperty['status'], active: input.action === 'restore', ...(input.action === 'restore' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
+      const status = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? (current.status === 'archived' ? 'pending_review' : 'published') : 'archived';
+      const next = { ...current, status: status as StoredProperty['status'], active: status === 'published', ...(status === 'published' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(input.id, next);
       return { kind: 'written', property: next };
     }
@@ -308,7 +328,13 @@ test('admin review and visibility transitions require authorization, versions, a
   assert.equal(restored.status, 'published');
   const archived = await service.visibility(admin, id, { version: restored.version, action: 'archive', reason: 'Archive property record' }, context);
   assert.equal(archived.status, 'archived');
-  await assert.rejects(service.visibility(admin, id, { version: archived.version, action: 'restore', reason: 'Restore archived property' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_INVALID_STATE');
+  const recovered = await service.visibility(admin, id, { version: archived.version, action: 'restore', reason: 'Restore archived property' }, context);
+  assert.equal(recovered.status, 'pending_review');
+  assert.equal(recovered.active, false);
+  assert.ok(recovered.availableActions.includes('approve'));
+  const reapproved = await service.review(admin, id, { version: recovered.version, action: 'approve', reason: 'Review restored property' }, context);
+  const republished = await service.review(admin, id, { version: reapproved.version, action: 'publish', reason: 'Publish restored property' }, context);
+  assert.equal(republished.status, 'published');
 });
 
 test('preserves the current published version by rejecting provider edits outside revision states', async () => {
@@ -330,7 +356,7 @@ test('publishes a valid provider submission when administrative review is disabl
 test('publishes an approved review immediately when automatic publication is configured', async () => {
   const { service, rows } = fixture(true, { requiresAdminReview: true, publicationAfterApproval: 'automatic', automaticExpiry: '30_days' });
   const context = { requestId: 'property-policy-review', traceId: '9'.repeat(32) };
-  rows.set(id, record({ status: 'pending_review', active: false }));
+  rows.set(id, record({ status: 'pending_review', active: false, locationId: location, price: { amount: 100, currency: 'EGP' }, contact: { phone: '+201234567890' } }));
   const published = await service.review(admin, id, { version: 0, action: 'approve', reason: 'Approve and publish under policy' }, context);
   assert.equal(published.status, 'published');
   assert.equal(published.publishedAt, now.toISOString());

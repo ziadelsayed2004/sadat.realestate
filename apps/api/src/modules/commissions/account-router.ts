@@ -106,7 +106,8 @@ export function createCommissionAccountRouter(
         claims(response),
         accountId(request.params.accountId),
         request.body ?? {},
-        mutationContext(request)
+        mutationContext(request),
+        true
       );
       response.status(201).json(toSuccessResponse(data, requestId(request)));
     } catch (error) {

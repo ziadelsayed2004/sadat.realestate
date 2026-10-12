@@ -78,11 +78,12 @@ function provider(claims: AccessTokenClaims): void {
 function actions(record: StoredProperty, actor: 'provider' | 'admin'): PropertyData['availableActions'] {
   if (actor === 'provider') return record.status === 'draft' || record.status === 'needs_changes' ? ['update', 'submit'] : [];
   if (record.status === 'pending_review') return ['needs_changes', 'approve', 'reject'];
+  if (record.status === 'needs_changes' || record.status === 'rejected') return ['approve', 'archive'];
   if (record.status === 'approved') return ['publish', 'archive'];
   if (record.status === 'published') return ['hide', 'archive'];
   if (record.status === 'hidden') return ['restore', 'archive'];
-  if (record.status !== 'archived') return ['archive'];
-  return [];
+  if (record.status === 'archived') return ['restore'];
+  return ['archive'];
 }
 
 function compatiblePaymentPlans(record: StoredProperty): StoredProperty['paymentPlans'] | undefined {
@@ -293,6 +294,11 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const input = propertyReviewSchema.parse(unparsedInput) as PropertyReview;
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
+      if (!actions(before, 'admin').includes(input.action)) throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      if (input.action === 'approve' || input.action === 'publish') {
+        const ready = validation({ ...before, status: 'draft', active: true });
+        if (!ready.valid) throw new PropertyServiceError('PROPERTY_VALIDATION_FAILED', ready);
+      }
       const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
       const toStatus = input.action === 'needs_changes' ? 'needs_changes' : input.action === 'approve' ? (settings.publicationAfterApproval === 'automatic' ? 'published' : 'approved') : input.action === 'reject' ? 'rejected' : 'published';
       const changedAt = now();
@@ -307,7 +313,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
       const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
       const changedAt = now();
-      const expiresAt = input.action === 'restore' ? expiryAt(changedAt, settings) : undefined;
+      const expiresAt = input.action === 'restore' && before.status === 'hidden' ? expiryAt(changedAt, settings) : undefined;
       return (await adminProjection(adminId))(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: input.action, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
     }
   };

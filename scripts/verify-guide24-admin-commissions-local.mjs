@@ -71,8 +71,10 @@ try {
   await expectStatus(() => context.request.post(`${base}/api/v1/admin/commission-exceptions`, { headers, data: exceptionInput }), 409);
   const overrideInput = { kind: 'exempt', effectiveFrom };
   const override = await data(await expectStatus(() => context.request.put(`${base}/api/v1/admin/account-commissions/${provider._id.toHexString()}`, { headers, data: overrideInput }), 201)); ids.override = override.id;
-  await expectStatus(() => context.request.put(`${base}/api/v1/admin/account-commissions/${provider._id.toHexString()}`, { headers, data: overrideInput }), 409);
-  report.checks.push('policy_exception_override_create_and_duplicate_409');
+  assert.equal(override.status, 'active');
+  const retriedOverride = await data(await expectStatus(() => context.request.put(`${base}/api/v1/admin/account-commissions/${provider._id.toHexString()}`, { headers, data: overrideInput }), 201));
+  assert.equal(retriedOverride.id, override.id);
+  report.checks.push('policy_exception_duplicate_409_and_active_override_idempotent_save');
 
   stage = 'change-log-audit';
   for (const [targetType, targetId] of [['commission_policy', ids.policy], ['commission_exception', ids.exception], ['commission_account_override', ids.override]]) {

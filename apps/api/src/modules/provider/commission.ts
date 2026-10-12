@@ -11,7 +11,7 @@ import {
  * not expose any acknowledge, revoke, or mutation operation.
  */
 export interface ProviderCommissionSource {
-  getForProvider(providerId: string): Promise<CommissionResolution | undefined>;
+  getForProvider(providerId: string, at?: Date): Promise<CommissionResolution | undefined>;
 }
 
 export interface ProviderCommissionProjectionDependencies {

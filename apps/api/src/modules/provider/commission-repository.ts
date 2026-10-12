@@ -120,10 +120,10 @@ function resolve(accountId: string, selected: CommissionCandidate): CommissionRe
 
 export function createMongooseProviderCommissionSource(connection: Connection): ProviderCommissionSource {
   return {
-    async getForProvider(providerId: string): Promise<CommissionResolution | undefined> {
+    async getForProvider(providerId: string, at: Date = new Date()): Promise<CommissionResolution | undefined> {
       const accountId = new Types.ObjectId(providerId);
       const accountFilter = { $in: [providerId, accountId] };
-      const now = new Date();
+      const now = at;
       const [exceptionRows, overrideRows, policyRows] = await Promise.all([
         connection.collection('commission_exceptions').find(
           { accountId: accountFilter, status: 'active' },

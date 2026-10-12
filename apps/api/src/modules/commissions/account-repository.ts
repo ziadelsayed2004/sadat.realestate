@@ -23,6 +23,7 @@ export interface CommissionAccountOverrideRepository {
     override: CommissionAccountOverride,
     expectedVersion: number
   ): Promise<CommissionAccountOverrideReplaceResult>;
+  replaceWithAudit?(override: CommissionAccountOverride, expectedVersion: number, event: AuditRecordInput): Promise<CommissionAccountOverrideReplaceResult>;
 }
 
 function document(value: unknown): Record<string, unknown> {
@@ -85,7 +86,7 @@ export function createMongooseCommissionAccountOverrideRepository(
   async function insert(override: CommissionAccountOverride, session?: ClientSession): Promise<CommissionAccountOverrideWriteResult> {
     await ensureIndexes();
     try {
-      await collection.insertOne(override, session ? { session } : {});
+      await collection.insertOne({ ...override }, session ? { session } : {});
       return { kind: 'written' };
     } catch (error) {
       if (!session && error && typeof error === 'object' && 'code' in error && error.code === 11000) return { kind: 'duplicate' };
@@ -123,6 +124,23 @@ export function createMongooseCommissionAccountOverrideRepository(
       } finally {
         await session.endSession();
       }
+    },
+
+    async replaceWithAudit(override, expectedVersion, event) {
+      if (!audit) throw new Error('COMMISSION_ACCOUNT_AUDIT_UNAVAILABLE');
+      await ensureIndexes();
+      const session = await connection.startSession();
+      try {
+        return await session.withTransaction(async () => {
+          const result = await collection.replaceOne({ id: override.id, version: expectedVersion }, { ...override }, { session });
+          if (result.matchedCount === 1) {
+            await audit.record(event, session);
+            return { kind: 'written' } as const;
+          }
+          const current = await collection.findOne({ id: override.id }, { session, projection: { id: 1 } });
+          return current ? { kind: 'version_conflict' } as const : { kind: 'not_found' } as const;
+        });
+      } finally { await session.endSession(); }
     },
 
     async replace(override, expectedVersion) {

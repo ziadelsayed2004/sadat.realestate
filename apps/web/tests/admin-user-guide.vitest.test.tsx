@@ -200,13 +200,13 @@ describe('interactive administrator reference', { timeout: 15_000 }, () => {
     expect(screen.getByRole('button', { name: /استخدام الدليل التفاعلي/ })).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('opens a shared deep link and exposes honest limits for draft commission workflows', async () => {
+  it('opens a shared deep link and explains effective account commissions', async () => {
     window.history.replaceState(null, '', '/admin/user-guide?lang=ar#guide-commission-account');
     renderWithLocale(<AdminUserGuide locale="ar" session={admin} />);
     const topic = screen.getByRole('button', { name: /عمولة حساب معين والتعارض عند الحفظ/ });
     expect(topic).toHaveAttribute('aria-expanded', 'true');
     await waitFor(() => expect(topic).toHaveFocus());
-    expect(screen.getByText(/صفحة تخصيص الحساب الحالية لا توفر تعديل سجل سابق/)).toBeVisible();
+    expect(screen.getByText(/الحفظ يعتمد التخصيص من تاريخ البداية/)).toBeVisible();
   });
 
   it('maximizes with focus containment, Escape restores focus and scroll, and minimizes independently', () => {

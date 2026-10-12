@@ -373,12 +373,14 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         updatedAt: input.metadata.changedAt,
         ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : { active: input.toStatus === 'needs_changes' })
       };
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'published' ? (input.before.status === 'pending_review' ? 'pending_review' : 'approved') : 'pending_review' }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
+      const reviewable = ['pending_review', 'needs_changes', 'rejected'];
+      const allowed = input.toStatus === 'approved' ? reviewable : input.toStatus === 'published' ? [...reviewable, 'approved'] : ['pending_review'];
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: { $in: allowed } }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
     },
     async visibility(input) {
-      const target = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? 'published' : 'archived';
-      const filter = input.action === 'hide' ? { status: { $in: ['published', 'approved'] } } : input.action === 'restore' ? { status: 'hidden' } : { status: { $ne: 'archived' } };
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: input.action === 'restore', ...(input.action === 'restore' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null } : {}), updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
+      const target = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? (input.before.status === 'archived' ? 'pending_review' : 'published') : 'archived';
+      const filter = input.action === 'hide' ? { status: { $in: ['published', 'approved'] } } : input.action === 'restore' ? { status: input.before.status === 'archived' ? 'archived' : 'hidden' } : { status: { $ne: 'archived' } };
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: target === 'published', ...(target === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null } : {}), updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
     }
   };
 }

@@ -4,6 +4,7 @@ import { commissionAccountCommissionSchema, commissionAccountOverrideCreateSchem
 import type { CommissionAccountOverrideRepository } from './account-repository.js';
 import type { CommissionPolicyRepository } from './policy-repository.js';
 import type { AuditRecordInput } from '../audit/writer.js';
+import type { ProviderCommissionSource } from '../provider/commission.js';
 
 type CommissionAccountErrorCode = 'COMMISSION_FORBIDDEN' | 'COMMISSION_ACCOUNT_NOT_FOUND' | 'COMMISSION_ACCOUNT_DUPLICATE' | 'COMMISSION_ACCOUNT_VERSION_CONFLICT' | 'COMMISSION_ACCOUNT_INVALID_STATE' | 'COMMISSION_ACCOUNT_OVERLAP';
 export class CommissionAccountServiceError extends Error {
@@ -15,13 +16,13 @@ const admin = (claims: AccessTokenClaims) => { if (claims.role !== 'admin' || cl
 const overlaps = (left: { effectiveFrom: string; effectiveTo?: string | undefined }, right: { effectiveFrom: string; effectiveTo?: string | undefined }): boolean => left.effectiveFrom < (right.effectiveTo ?? '9999-12-31T23:59:59.999Z') && right.effectiveFrom < (left.effectiveTo ?? '9999-12-31T23:59:59.999Z');
 const applies = (item: { effectiveFrom: string; effectiveTo?: string | undefined; status: string }, at: Date) => item.status === 'active' && new Date(item.effectiveFrom) <= at && (!item.effectiveTo || new Date(item.effectiveTo) > at);
 // A retry of the same draft must not create another record or overwrite a change.
-function retryDraft(existing: CommissionAccountOverride, input: CommissionAccountOverrideCreate): CommissionAccountOverride {
+function retryDraft(existing: CommissionAccountOverride, input: CommissionAccountOverrideCreate, activate = false): CommissionAccountOverride {
   const fields = ['kind', 'percentageBps', 'fixedAmountMinor', 'currency', 'effectiveFrom', 'effectiveTo'] as const;
-  if (existing.status === 'draft' && fields.every(field => existing[field] === input[field])) return existing;
+  if ((existing.status === 'draft' || (activate && existing.status === 'active')) && fields.every(field => existing[field] === input[field])) return existing;
   throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_DUPLICATE');
 }
 
-export function createCommissionAccountService(seed: { overrides?: CommissionAccountOverride[]; policies?: CommissionPolicy[]; now?: () => Date; repository?: CommissionAccountOverrideRepository; policyRepository?: CommissionPolicyRepository } = {}) {
+export function createCommissionAccountService(seed: { overrides?: CommissionAccountOverride[]; policies?: CommissionPolicy[]; now?: () => Date; repository?: CommissionAccountOverrideRepository; policyRepository?: CommissionPolicyRepository; resolutionSource?: ProviderCommissionSource } = {}) {
   const overrides = new Map((seed.overrides ?? []).map(item => [item.id, item]));
   const policies = seed.policies ?? [];
   const repository = seed.repository;
@@ -34,10 +35,15 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
   const validateActive = async (override: CommissionAccountOverride, existing: readonly CommissionAccountOverride[]) => {
     if (override.status !== 'active') return;
     const current = clock();
-    if (!applies(override, current)) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_INVALID_STATE');
+    // Approved future arrangements stay inactive in the read model until their start.
+    if (override.effectiveTo && new Date(override.effectiveTo) <= current) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_INVALID_STATE');
     if (existing.some(item => item.id !== override.id && item.accountId === override.accountId && item.status === 'active' && overlaps(item, override))) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_OVERLAP');
   };
   const toReadModel = async (accountId: string, at: Date): Promise<CommissionAccountCommission> => {
+    if (seed.resolutionSource) {
+      const selected = await seed.resolutionSource.getForProvider(accountId, at);
+      return commissionAccountCommissionSchema.parse({ accountId, source: selected?.source ?? 'none', effectiveAt: selected?.effectiveAt ?? at.toISOString(), ...(selected?.source === 'policy' ? { policyId: selected.policyId } : {}), ...(selected?.sourceVersion !== undefined ? { policyVersion: selected.sourceVersion } : {}), ...(selected?.kind ? { kind: selected.kind } : {}), ...(selected?.percentageBps !== undefined ? { percentageBps: selected.percentageBps } : {}), ...(selected?.fixedAmountMinor !== undefined ? { fixedAmountMinor: selected.fixedAmountMinor } : {}), ...(selected?.currency ? { currency: selected.currency } : {}) });
+    }
     const override = (await allOverrides()).filter(item => item.accountId === accountId && applies(item, at)).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || b.version - a.version || b.id.localeCompare(a.id))[0];
     if (override) return commissionAccountCommissionSchema.parse({ accountId, source: 'account_override', effectiveAt: at.toISOString(), kind: override.kind, ...(override.percentageBps !== undefined ? { percentageBps: override.percentageBps } : {}), ...(override.fixedAmountMinor !== undefined ? { fixedAmountMinor: override.fixedAmountMinor } : {}), ...(override.currency ? { currency: override.currency } : {}) });
     const policy = (await allPolicies()).filter(item => item.scope.kind === 'default' && applies(item, at)).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || b.version - a.version || b.id.localeCompare(a.id))[0];
@@ -45,14 +51,22 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
     return commissionAccountCommissionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), policyId: policy.id, policyVersion: policy.version, kind: policy.kind, ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
   };
   return {
-    async createOverride(claims: AccessTokenClaims, accountId: string, input: unknown, context?: { requestId: string; traceId: string }) {
+    async createOverride(claims: AccessTokenClaims, accountId: string, input: unknown, context?: { requestId: string; traceId: string }, activate = false): Promise<CommissionAccountOverride> {
       admin(claims);
       if (!/^[a-f0-9]{24}$/.test(accountId)) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_NOT_FOUND');
       const parsed = commissionAccountOverrideCreateSchema.parse(input);
       const existing = (await allOverrides()).find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
-      if (existing) return retryDraft(existing, parsed);
+      if (existing) {
+        const retried = retryDraft(existing, parsed, activate);
+        if (!activate || retried.status === 'active') return retried;
+        return this.updateOverride(claims, existing.id, { expectedVersion: existing.version, reason: `Apply commission for account ${accountId}`, status: 'active' }, context);
+      }
+      if (activate) {
+        if (parsed.effectiveTo && new Date(parsed.effectiveTo) <= clock()) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_INVALID_STATE');
+        if ((await allOverrides()).some(item => item.accountId === accountId && item.status === 'active' && overlaps(item, parsed))) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_OVERLAP');
+      }
       const stamp = now();
-      const override = commissionAccountOverrideSchema.parse({ id: id(), accountId, ...parsed, status: 'draft', version: 0, source: 'account_override', createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
+      const override = commissionAccountOverrideSchema.parse({ id: id(), accountId, ...parsed, status: activate ? 'active' : 'draft', version: 0, source: 'account_override', createdBy: claims.sub, updatedBy: claims.sub, createdAt: stamp, updatedAt: stamp });
       if (repository) {
         const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_account_override', targetId: override.id,
           action: 'commission_account_override.create', reason: `Create commission override for account ${accountId}`, before: {}, after: override,
@@ -60,12 +74,12 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
         const result = repository.insertWithAudit ? await repository.insertWithAudit(override, event) : await repository.insert(override);
         if (result.kind === 'duplicate') {
           const winner = (await allOverrides()).find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
-          if (winner) return retryDraft(winner, parsed);
+          if (winner) return retryDraft(winner, parsed, activate);
           throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_DUPLICATE');
         }
       } else {
         const winner = [...overrides.values()].find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
-        if (winner) return retryDraft(winner, parsed);
+        if (winner) return retryDraft(winner, parsed, activate);
         overrides.set(override.id, override);
       }
       return override;
@@ -78,7 +92,7 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
       const values = (await allOverrides()).filter(item => (!query.accountId || item.accountId === query.accountId) && (!query.status || item.status === query.status) && (!at || applies(item, at))).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || a.accountId.localeCompare(b.accountId) || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
-    async updateOverride(claims: AccessTokenClaims, overrideId: string, input: unknown) {
+    async updateOverride(claims: AccessTokenClaims, overrideId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const current = await get(overrideId);
       const parsed = commissionAccountOverridePatchSchema.parse(input);
@@ -93,7 +107,8 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
       const next = commissionAccountOverrideSchema.parse(nextInput);
       await validateActive(next, await allOverrides());
       if (repository) {
-        const result = await repository.replace(next, current.version);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_account_override', targetId: next.id, action: 'commission_account_override.update', reason: parsed.reason, before: current, after: next, requestId: context?.requestId ?? 'commission-account-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(next.updatedAt) };
+        const result = repository.replaceWithAudit ? await repository.replaceWithAudit(next, current.version, event) : await repository.replace(next, current.version);
         if (result.kind === 'not_found') throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_NOT_FOUND');
         if (result.kind === 'version_conflict') throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_VERSION_CONFLICT');
       } else {

@@ -12,6 +12,34 @@ import { CommissionChangeLogServiceError, createCommissionChangeLogService, type
 const admin = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '3123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const seeker = { ...admin, role: 'seeker' } as AccessTokenClaims;
 
+test('account saves apply immediately, retry safely, promote earlier drafts, and retain exception precedence', async () => {
+  const accountId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+  const now = new Date('2026-10-12T12:00:00.000Z');
+  const service = createCommissionAccountService({ now: () => now });
+  const input = { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-10-12T00:00:00.000Z', effectiveTo: '2026-10-13T00:00:00.000Z' };
+  const draft = await service.createOverride(admin, accountId, input);
+  const applied = await service.createOverride(admin, accountId, input, undefined, true);
+  assert.equal(applied.id, draft.id);
+  assert.equal(applied.status, 'active');
+  assert.deepEqual(await service.createOverride(admin, accountId, input, undefined, true), applied);
+  assert.equal((await service.getAccountCommission(admin, accountId)).percentageBps, 300);
+  await assert.rejects(service.createOverride(admin, accountId, { ...input, effectiveFrom: '2026-10-12T01:00:00.000Z' }, undefined, true), /COMMISSION_ACCOUNT_OVERLAP/);
+  await assert.rejects(service.createOverride(admin, accountId, { kind: 'exempt', effectiveFrom: '2026-10-10T00:00:00.000Z', effectiveTo: '2026-10-11T00:00:00.000Z' }, undefined, true), /COMMISSION_ACCOUNT_INVALID_STATE/);
+  const futureInput = { kind: 'exempt', effectiveFrom: '2026-10-14T00:00:00.000Z' };
+  const futureDraft = await service.createOverride(admin, accountId, futureInput);
+  const scheduled = await service.createOverride(admin, accountId, futureInput, undefined, true);
+  assert.equal(scheduled.id, futureDraft.id);
+  assert.equal(scheduled.status, 'active');
+  assert.equal((await service.getAccountCommission(admin, accountId)).percentageBps, 300);
+  assert.equal((await service.getAccountCommission(admin, accountId, new Date('2026-10-14T00:00:00.000Z'))).kind, 'exempt');
+  const resolved = createCommissionAccountService({ now: () => now, resolutionSource: { async getForProvider(id, at) {
+    assert.equal(id, accountId); assert.equal(at, now);
+    return { accountId, source: 'exception', effectiveAt: input.effectiveFrom, sourceRecordId: 'eeeeeeeeeeeeeeeeeeeeeeee', exceptionId: 'eeeeeeeeeeeeeeeeeeeeeeee', sourceVersion: 1, kind: 'percentage', percentageBps: 600 };
+  } } });
+  assert.equal((await resolved.getAccountCommission(admin, accountId)).source, 'exception');
+  assert.equal((await resolved.getAccountCommission(admin, accountId)).percentageBps, 600);
+});
+
 test('generates distinct policy keys on the server and keeps them when labels change', async () => {
   const service = createCommissionPolicyService();
   const input = { label: 'Standard commission', kind: 'percentage', scope: { kind: 'default' }, percentageBps: 250, effectiveFrom: '2026-08-14T00:00:00.000Z' };

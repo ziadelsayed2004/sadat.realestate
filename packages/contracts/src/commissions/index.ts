@@ -133,7 +133,7 @@ export const commissionAccountOverrideListQuerySchema = z.object({ accountId: ob
 export const commissionAccountOverrideListDataSchema = z.object({ items: z.array(commissionAccountOverrideSchema).max(100), page: z.number().int().positive(), limit: z.number().int().positive(), total: z.number().int().nonnegative() }).strict();
 export const commissionAccountCommissionSchema = z.object({
   accountId: objectIdSchema,
-  source: z.enum(['account_override', 'policy', 'none']),
+  source: z.enum(['exception', 'account_override', 'policy', 'none']),
   effectiveAt: dateSchema,
   policyId: objectIdSchema.optional(),
   policyVersion: z.number().int().nonnegative().optional(),

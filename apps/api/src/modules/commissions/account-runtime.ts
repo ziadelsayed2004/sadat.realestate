@@ -6,6 +6,7 @@ import { createCommissionAccountService } from './account-service.js';
 import type { CommissionAccountRouterDependencies } from './account-router.js';
 import { createMongooseCommissionPolicyRepository } from './policy-repository.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { createMongooseProviderCommissionSource } from '../provider/commission-repository.js';
 
 export function createCommissionAccountRuntime(
   connection: Connection,
@@ -18,6 +19,7 @@ export function createCommissionAccountRuntime(
     authorization,
     service: createCommissionAccountService({
       repository: createMongooseCommissionAccountOverrideRepository(connection, audit),
+      resolutionSource: createMongooseProviderCommissionSource(connection),
       policyRepository: createMongooseCommissionPolicyRepository(connection)
     })
   };

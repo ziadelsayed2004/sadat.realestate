@@ -248,18 +248,21 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     expect(create).toHaveBeenCalledWith(accountId, { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-10-05T00:00:00.000Z', effectiveTo: '2026-10-06T00:00:00.000Z' });
   });
 
-  it('shows a draft confirmation on repeated saves rather than claiming the active commission changed', async () => {
+  it('refreshes the effective commission after saving without a draft warning', async () => {
     const copy = getAdminCommissionsCopy('ar');
-    const create = vi.fn(async () => override);
+    const create = vi.fn(async () => ({ ...override, status: 'active' as const }));
+    const loadAccount = vi.fn().mockResolvedValueOnce(account).mockResolvedValue({ ...account, source: 'account_override', percentageBps: 300 });
     window.history.pushState({}, '', `/admin/commissions/account?accountId=${accountId}`);
-    const result = renderWithLocale(<AdminCommissions locale="ar" session={session} {...loaders} createAccountOverride={create} />, { locale: 'ar' });
+    const result = renderWithLocale(<AdminCommissions locale="ar" session={session} {...loaders} loadAccount={loadAccount} createAccountOverride={create} />, { locale: 'ar' });
     fireEvent.change(await screen.findByLabelText(copy.labels.percentageBps!), { target: { value: '3' } });
     const form = result.container.querySelector('form.admin-commissions__form')!;
     fireEvent.submit(form);
-    await waitFor(() => expect(result.container).toHaveTextContent(copy.mutation.savedDraft));
+    await waitFor(() => expect(result.container).toHaveTextContent(copy.saved));
+    expect(result.container.querySelector('.admin-commissions__details')).toHaveTextContent('3.00%');
+    expect(result.container).not.toHaveTextContent(copy.mutation.savedDraft);
     fireEvent.submit(form);
     await waitFor(() => expect(create).toHaveBeenCalledTimes(2));
-    await waitFor(() => expect(result.container).toHaveTextContent(copy.mutation.savedDraft));
+    await waitFor(() => expect(result.container).toHaveTextContent(copy.saved));
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 

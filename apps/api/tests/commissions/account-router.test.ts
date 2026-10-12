@@ -135,9 +135,13 @@ test('protects account commission reads and writes with strict projections and p
     assert.equal(write.status, 201);
     const writeBody = await write.json() as { data: Record<string, unknown> };
     assert.equal(writeBody.data.accountId, accountId);
-    assert.equal(writeBody.data.status, 'draft');
+    assert.equal(writeBody.data.status, 'active');
     assert.equal(writeBody.data.source, 'account_override');
     assert.equal('storageKey' in writeBody.data, false);
+    const futureRead = await fetch(`${path}?at=2026-09-01T00:00:00.000Z`, { headers: { authorization: `Bearer ${adminToken}` } });
+    const futureBody = await futureRead.json() as { data: Record<string, unknown> };
+    assert.equal(futureBody.data.source, 'account_override');
+    assert.equal(futureBody.data.fixedAmountMinor, 7500);
   });
 });
 
@@ -152,7 +156,7 @@ test('retries identical concurrent saves without duplicate drafts and keeps chan
     for (const response of responses) assert.equal(response.status, 201);
     const [first, repeated] = await Promise.all(responses.map(response => response.json())) as Array<{ data: CommissionAccountOverride }>;
     assert.deepEqual(first?.data, repeated?.data);
-    assert.equal(first?.data.status, 'draft');
+    assert.equal(first?.data.status, 'active');
     const changed = await save({ ...input, percentageBps: 400 });
     assert.equal(changed.status, 409);
     assert.equal((await changed.json() as { error: { code: string } }).error.code, 'COMMISSION_ACCOUNT_DUPLICATE');
