@@ -13,7 +13,7 @@ import {
 import './styles.css';
 import { UserGuideIcon } from '../dashboard_account/menu.tsx';
 import { sidebarGroups, type AdminSidebarIcon } from '../routing/admin-navigation-model.ts';
-import { AdminAttentionContext, AdminAttentionBadge, adminAttentionCount } from '../routing/admin-attention.tsx';
+import { AdminAttentionContext, AdminAttentionBadge, AdminAttentionQueues, adminAttentionCount } from '../routing/admin-attention.tsx';
 import { AdminAccountContext } from '../routing/admin-account.tsx';
 
 export interface AdminOverviewProps {
@@ -303,6 +303,24 @@ function dateLabel(value: string, locale: SupportedLocale): string {
   }
 }
 
+function OverviewAttention({ locale }: { readonly locale: SupportedLocale }) {
+  const state = useContext(AdminAttentionContext);
+  const hasRequests = (['contact-requests', 'viewing-requests', 'search-requests', 'customer-requests'] as const).some(key => state.attention?.counts[key] !== undefined);
+  return <section className="admin-dashboard__quick-actions" aria-labelledby="admin-overview-alerts-title" data-testid="admin-overview-alerts">
+    <div className="admin-dashboard__section-heading">
+      <h2 id="admin-overview-alerts-title">{locale === 'ar' ? 'الإشعارات والطلبات الجديدة' : 'Notifications and new requests'}</h2>
+      <button type="button" className="ui-button ui-button--secondary ui-button--xs" onClick={state.refresh}>{locale === 'ar' ? 'تحديث' : 'Refresh'}</button>
+    </div>
+    <p>{locale === 'ar' ? 'الأعداد تخص ما لم تقرأه بعد، وتتحدث تلقائيًا. فتح التفاصيل يزيل علامة الجديد، ويظل الطلب متاحًا للمتابعة.' : 'Counts show items you have not read yet and refresh automatically. Opening details clears the new badge; the request remains available for follow-up.'}</p>
+    {state.unavailable ? <p role="status">{locale === 'ar' ? 'تعذر تحديث الأعداد. اضغط تحديث لإعادة المحاولة.' : 'Counts could not refresh. Press Refresh to retry.'}</p> : null}
+    {state.ready ? <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: `repeat(${hasRequests ? 2 : 1}, minmax(0, 1fr))` }}>
+      <MetricCard value={state.unread} label={locale === 'ar' ? 'إشعارات غير مقروءة' : 'Unread notifications'} href={localePath(locale, '/admin/notifications')} icon="notifications" locale={locale} testId="admin-overview-unread-notifications" />
+      {hasRequests ? <MetricCard value={adminAttentionCount('requests', state.attention)} label={locale === 'ar' ? 'طلبات جديدة غير مقروءة' : 'New unread requests'} href={localePath(locale, '/admin/requests')} icon="requests" locale={locale} testId="admin-overview-new-requests" /> : null}
+    </div> : !state.unavailable ? <p role="status">{locale === 'ar' ? 'جارٍ تحميل الأعداد…' : 'Loading counts…'}</p> : null}
+    {state.ready ? <AdminAttentionQueues locale={locale} attention={state.attention} /> : null}
+  </section>;
+}
+
 function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
 
@@ -325,6 +343,7 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
           {headingActions.map(([label, path], index) => <a className={`ui-button ui-button--${index < 2 ? 'primary' : 'secondary'} ui-button--xs`} key={path} href={localePath(locale, path)}>{label}</a>)}
         </div>
       </div>
+      <OverviewAttention locale={locale} />
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />
       <MetricSection title={copy.overview.operationsTitle} metrics={operationMetrics} data={data.metrics} locale={locale} />
       <ExtendedOverview data={data} locale={locale} />
