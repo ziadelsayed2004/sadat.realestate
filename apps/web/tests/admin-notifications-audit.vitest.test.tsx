@@ -177,8 +177,9 @@ describe('Admin notifications and audit log', () => {
     fireEvent.change(screen.getByRole('combobox', { name: 'Change type' }), { target: { value: 'update' } });
     fireEvent.click(screen.getByRole('button', { name: 'Show results' }));
     await waitFor(() => expect(queries.at(-1)).toMatchObject({ targetType: 'property', actionGroup: 'update', page: 1 }));
-    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Next' }));
     await waitFor(() => expect(queries.at(-1)).toMatchObject({ targetType: 'property', actionGroup: 'update', page: 2 }));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Previous' })).toBeEnabled());
     fireEvent.click(screen.getByRole('button', { name: 'Reset filters' }));
     await waitFor(() => expect(queries.at(-1)).toEqual({ page: 1, limit: 25 }));
     expect(screen.getByRole('combobox', { name: 'Section' })).toHaveValue('');
