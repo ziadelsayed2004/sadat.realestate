@@ -89,6 +89,42 @@ async function routeProviderProperties(page: import('@playwright/test').Page, fo
   });
 }
 
+test('keeps property filters separate and usable when the provider list is empty', async ({ page }, info) => {
+  const locale = localeForProject();
+  await routeProviderSession(page);
+  await routeProviderProperties(page);
+  let initial = true;
+  await page.route('**/api/v1/provider/properties**', async route => {
+    if (!initial) return route.fallback();
+    initial = false;
+    await route.fulfill({ json: { data: { items: [] }, ...successMeta('empty-provider-properties', 0, 1, 5) } });
+  });
+  await page.goto(`/provider/properties?lang=${locale}`);
+  await expect(page.getByTestId('provider-properties-count')).toContainText(/0|٠/u);
+  const filters = page.locator('.provider-properties__filters');
+  const search = page.getByRole('searchbox');
+  const status = page.getByLabel(/Status|الحالة/iu);
+  const searchBox = (await search.boundingBox())!;
+  const statusBox = (await status.boundingBox())!;
+  const formBox = (await filters.boundingBox())!;
+  expect(searchBox.x >= statusBox.x + statusBox.width || statusBox.x >= searchBox.x + searchBox.width || searchBox.y >= statusBox.y + statusBox.height || statusBox.y >= searchBox.y + searchBox.height).toBe(true);
+  for (const box of [searchBox, statusBox]) {
+    expect(box.x).toBeGreaterThanOrEqual(formBox.x);
+    expect(box.x + box.width).toBeLessThanOrEqual(formBox.x + formBox.width + 1);
+  }
+  if (page.viewportSize()!.width <= 640) expect(statusBox.y - searchBox.y - searchBox.height).toBeGreaterThanOrEqual(12);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  await filters.screenshot({ path: info.outputPath('property-filters.png') });
+  await search.fill('villa');
+  await status.selectOption('published');
+  await filters.getByRole('button', { name: /Apply|تطبيق/iu }).click();
+  await expect(page.getByTestId('provider-properties-count')).toContainText(/1|١/u);
+  await filters.getByRole('button', { name: /Clear filters|مسح الفلاتر/iu }).click();
+  await expect(search).toHaveValue('');
+  await expect(status).toHaveValue('all');
+  await expect(page.getByTestId('provider-properties-count')).toContainText(/7|٧/u);
+});
+
 test.describe('PRV-02 My Properties', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-02' });
