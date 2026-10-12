@@ -292,12 +292,34 @@ test.describe('PRV-01 Provider Overview', () => {
       const menu = page.locator('.provider-dashboard__menu-button');
       await menu.click();
       await expect(menu).toHaveAttribute('aria-expanded', 'true');
-      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(11);
+      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(12);
       await expect(page.locator('.provider-dashboard__mobile-website a')).toBeVisible();
       await expect(page.locator('.provider-dashboard__mobile-website a')).toHaveAttribute('href', `/?lang=${locale}`);
       await page.locator('.provider-dashboard__navigation').screenshot({ path: testInfo.outputPath(`provider-navigation-${locale}.png`) });
       await page.locator('.provider-dashboard__navigation-backdrop').click({ position: { x: 2, y: 300 } });
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
+      const navigation = page.locator('.provider-dashboard__navigation');
+      for (const height of [844, 650, 844]) {
+        await page.setViewportSize({ width: viewportWidth, height });
+        for (const scroll of [0, 450, 900, 300, 50_000]) {
+          await page.evaluate(y => window.scrollTo(0, y), scroll);
+          await expect.poll(async () => {
+            const box = (await navigation.boundingBox())!;
+            return Math.abs(box.y + box.height - height);
+          }).toBeLessThanOrEqual(1);
+          for (const link of await navigation.locator('li:visible a').all()) {
+            const box = (await link.boundingBox())!;
+            const barBox = (await navigation.boundingBox())!;
+            expect(box.y).toBeGreaterThanOrEqual(barBox.y);
+            expect(box.y + box.height).toBeLessThanOrEqual(height);
+          }
+        }
+        const lastRow = page.locator('.provider-dashboard__recent tbody tr').last();
+        const rowBox = (await lastRow.boundingBox())!;
+        const barBox = (await navigation.boundingBox())!;
+        expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(barBox.y);
+      }
+      await page.screenshot({ path: testInfo.outputPath(`provider-navigation-scrolled-${locale}.png`) });
     } else {
       await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('width', '72px');
       await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '64px');
