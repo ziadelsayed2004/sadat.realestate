@@ -43,6 +43,29 @@ const categories: readonly PublicArticleCategoryOption[] = [
 const emptyRelatedProperties = { items: [], categories: [], propertyTypes: [], page: 1, limit: 3, total: 0 };
 
 describe('public article listing and details', () => {
+  it.each(['ar', 'en'] as const)('shows the selected category description and removes it when cleared in %s', locale => {
+    const description = { ar: 'دليل شراء العقارات', en: 'Practical property buying guidance' };
+    const supplied = categories.map(item => item.id === article.categoryId ? { ...item, description } : item);
+    const embedded = articlePublicSchema.parse({ ...article, category: { ...supplied[0], slug: 'buying-tips', description: { en: 'Stale description' } } });
+    const query = { ...parsePublicArticleListQuery('/articles', locale), categoryId: article.categoryId };
+    const { rerender } = renderWithLocale(<PublicArticles locale={locale} initialQuery={query} initialData={[embedded]} categories={supplied} />, { locale });
+    expect(screen.getByTestId('public-article-category-description')).toHaveTextContent(description[locale]);
+    expect(screen.queryByText('Stale description')).not.toBeInTheDocument();
+    rerender(<PublicArticles locale={locale} initialQuery={query} initialData={[embedded]} categories={categories} />);
+    expect(screen.queryByTestId('public-article-category-description')).toBeNull();
+  });
+  it('only shows a description for a selected category and safely renders fallback text', async () => {
+    window.history.replaceState({}, '', '/articles');
+    const supplied = [{ ...categories[0]!, description: { en: '<script>Example</script> Safe category note' } }, categories[1]!];
+    const load = vi.fn(async () => articleListData);
+    renderWithLocale(<PublicArticles locale="ar" initialData={articleListData} categories={supplied} load={load} />, { locale: 'ar' });
+    expect(screen.queryByTestId('public-article-category-description')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Buying tips' }));
+    expect(await screen.findByTestId('public-article-category-description')).toHaveTextContent('<script>Example</script> Safe category note');
+    expect(document.querySelector('.public-articles__results script')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: getPublicArticlesCopy('ar').allCategories }));
+    await waitFor(() => expect(screen.queryByTestId('public-article-category-description')).toBeNull());
+  });
   it.each(['ar', 'en'] as const)('puts available listings after article content and preserves the selected language in %s', locale => {
     const relatedProperties = publicPropertyListDataSchema.parse({ ...emptyRelatedProperties, total: 1, items: [{ id: 'e'.repeat(24), slug: 'available-home', kind: 'property', name: { ar: 'شقة متاحة', en: 'Available home' }, transactionType: 'sale', price: { amount: 150000, currency: 'EGP' } }] });
     const result = renderWithLocale(<PublicArticleDetails locale={locale} initialData={article} relatedArticles={[]} relatedProperties={relatedProperties} />, { locale });

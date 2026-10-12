@@ -127,9 +127,10 @@ function mergeCategories(
   articles: ArticlePublicListData | undefined
 ): readonly PublicArticleCategoryOption[] {
   const categories = new Map<string, PublicArticleCategoryOption>();
+  // Fresh category metadata takes priority over an older embedded article projection.
   for (const category of supplied ?? []) categories.set(category.id, category);
   for (const article of articles ?? []) {
-    if (article.category !== undefined) categories.set(article.category.id, article.category);
+    if (article.category !== undefined && !categories.has(article.category.id)) categories.set(article.category.id, article.category);
   }
   return [...categories.values()];
 }
@@ -274,6 +275,8 @@ export function PublicArticles({
     () => mergeCategories(loadedCategories, data),
     [data, loadedCategories]
   );
+  const selectedCategory = availableCategories.find(category => category.id === query.categoryId);
+  const categoryDescription = selectedCategory?.description === undefined ? undefined : localizedText(selectedCategory.description, locale);
 
   const updateCategory = (categoryId: string | undefined) => {
     const parsed = articleListQuerySchema.safeParse({ ...query, categoryId, page: 1 });
@@ -312,6 +315,7 @@ export function PublicArticles({
       </nav>
       <section className="public-articles__results" aria-labelledby="public-articles-results-title" aria-busy={view === 'loading'}>
         <div className="public-articles__toolbar"><p id="public-articles-results-title">{view === 'success' ? copy.resultCount(filteredArticles.length) : copy.title}</p></div>
+        {categoryDescription ? <p className="public-articles__category-description" data-testid="public-article-category-description">{categoryDescription}</p> : null}
         {resultsView}
       </section>
       <section className="public-articles__cta" aria-labelledby="public-articles-cta-title">

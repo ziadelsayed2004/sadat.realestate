@@ -276,7 +276,7 @@ function CategoryEditor({ category, locale, onCancel, onSave }: { readonly categ
       <LocalizedFields label={copy.name} value={name} onChange={updateField(setName)} />
       <details className="admin-content__category-description" open={category?.description ? true : undefined}>
         <summary>{locale === 'ar' ? 'إضافة وصف مختصر (اختياري)' : 'Add a short description (optional)'}</summary>
-        <p className="admin-content__muted">{locale === 'ar' ? 'سطر يوضّح نوع المقالات الموجودة في التصنيف. تقدر تسيبه فاضي وتحفظ عادي.' : 'One line explaining which articles belong in this category. You can leave it empty and save.'}</p>
+        <p className="admin-content__muted">{locale === 'ar' ? 'سطر يوضّح نوع المقالات الموجودة في التصنيف، ويظهر للزائر عند اختيار التصنيف في صفحة المقالات. تقدر تسيبه فاضي وتحفظ عادي.' : 'One line explaining which articles belong in this category, shown when visitors select it on the articles page. You can leave it empty and save.'}</p>
         <LocalizedFields label={locale === 'ar' ? 'وصف مختصر (اختياري)' : 'Short description (optional)'} value={description} onChange={updateField(setDescription)} />
       </details>
       <div className="admin-content__form-grid"><label htmlFor="admin-category-order">{copy.order}<input id="admin-category-order" type="number" min="0" value={displayOrder} onChange={event => setDisplayOrder(event.target.value)} /><small>{locale === 'ar' ? 'الرقم الأصغر يظهر أولًا.' : 'Lower numbers appear first.'}</small></label><label className="admin-content__checkbox" htmlFor="admin-category-active"><input id="admin-category-active" type="checkbox" checked={active} onChange={event => setActive(event.target.checked)} />{copy.active}</label></div>
