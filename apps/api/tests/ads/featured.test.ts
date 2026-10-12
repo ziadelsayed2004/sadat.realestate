@@ -104,6 +104,31 @@ test('explicit featured setup activates its disabled placement without publishin
   await assert.rejects(management.updateConfig(claims, { enabled: true, featuredActive: false, expectedVersion: 1, reason: 'Stale setup' }, context), { statusCode: 409 });
   assert.equal(db.rows.ad_placements[1]?.active, true);
 });
+
+test('hero placement activation preserves featured state and global display with versioned audit and permission checks', async () => {
+  const db = fixture(), claims = { sub: account.toHexString(), role: 'admin', status: 'verified' } as AccessTokenClaims;
+  db.rows.ad_settings = [{ _id: account, enabled: false, allowedSurfaces: ['homepage'], version: 0 }];
+  db.rows.ad_placements = [{ key: 'homepage.hero', surface: 'homepage', active: true, version: 3 }, { key: 'homepage.featured', surface: 'homepage', active: true, version: 2 }];
+  db.rows.ad_banners = [{ _id: owned, placementKey: 'homepage.hero', status: 'active' }];
+  const events: Array<Record<string, unknown>> = []; let allowed = true;
+  const management = createBannerManagement({ connection: db.connection, authorization: { authorize: async () => allowed }, audit: { record: async (event: Record<string, unknown>) => { events.push(event); } } as unknown as AuditWriter, storage: {} as never, scanner: {} as never, policy: {} as never });
+  const context = { requestId: 'hero-setup', traceId: '0'.repeat(32) };
+  const stopped = await management.updateConfig(claims, { enabled: false, heroActive: false, expectedVersion: 0, reason: 'Stop hero placement' }, context);
+  assert.equal(stopped.enabled, false);
+  assert.equal(stopped.placements.find(value => value.key === 'homepage.hero')?.active, false);
+  assert.equal(stopped.placements.find(value => value.key === 'homepage.featured')?.active, true);
+  assert.equal(db.rows.ad_banners[0]?.status, 'active');
+  assert.deepEqual(events.at(-1)?.before, { enabled: false, version: 0, heroActive: true });
+  assert.deepEqual(events.at(-1)?.after, { enabled: false, version: 1, heroActive: false });
+  await assert.rejects(management.updateConfig(claims, { enabled: false, heroActive: true, expectedVersion: 0, reason: 'Stale placement change' }, context), { statusCode: 409 });
+  allowed = false;
+  await assert.rejects(management.updateConfig(claims, { enabled: false, heroActive: true, expectedVersion: 1, reason: 'Unauthorized change' }, context), { statusCode: 403 });
+  assert.equal(events.length, 1);
+  allowed = true;
+  const restored = await management.updateConfig(claims, { enabled: false, heroActive: true, expectedVersion: 1, reason: 'Restore hero placement' }, context);
+  assert.equal(restored.placements.find(value => value.key === 'homepage.hero')?.active, true);
+  assert.equal(restored.enabled, false);
+});
 test('several featured cards can overlap, preserve content, stop and restart without replacing the hero placement', async () => {
   const now = new Date('2026-10-10T10:00:00Z'), admin = { sub: account.toHexString(), role: 'admin', status: 'verified' } as AccessTokenClaims;
   const service = createAdSettingsService({ now: () => now });

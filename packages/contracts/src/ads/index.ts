@@ -270,7 +270,7 @@ export type AdBannerPreview = z.infer<typeof adBannerPreviewSchema>;
 export type AdBannerPublic = z.infer<typeof adBannerPublicSchema>;
 
 export const adBannerConfigSchema = z.object({ enabled: z.boolean(), version: z.number().int().nonnegative(), placements: z.array(z.object({ key: placementKey, label: localizedTextSchema, active: z.boolean() }).strict()).max(100) }).strict();
-export const adBannerConfigPutSchema = z.object({ enabled: z.boolean(), featuredActive: z.boolean().optional(), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
+export const adBannerConfigPutSchema = z.object({ enabled: z.boolean(), heroActive: z.boolean().optional(), featuredActive: z.boolean().optional(), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();
 export const adBannerConfigSuccessEnvelopeSchema = successEnvelopeSchema(adBannerConfigSchema);
 export type AdBannerConfig = z.infer<typeof adBannerConfigSchema>;
 

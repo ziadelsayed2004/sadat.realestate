@@ -15,6 +15,7 @@ import {
 } from '../src/features/admin_home/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { getAdminHomeCopy } from '../src/features/admin_home/copy.ts';
+import { BannerDisplayControls } from '../src/features/admin_home/banner-controls.tsx';
 
 const adminId = 'cccccccccccccccccccccccc';
 const bannerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -106,6 +107,28 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it.each(['ar', 'en'] as const)('manages placement ads and toggles only the selected placement in %s', async locale => {
+    let config = { enabled: false, version: 2, placements: [{ key: 'homepage.hero', label: { ar: 'بانر الرئيسية', en: 'Homepage hero' }, active: true }, { key: 'homepage.featured', label: { ar: 'إعلانات مميزة', en: 'Featured ads' }, active: true }] };
+    const source = createAdminHomeSource({ apiClient: new ApiClient({ fetcher: async () => envelope(config) }) });
+    const update = vi.spyOn(source, 'updateBannerConfig').mockImplementation(async input => {
+      const patch = input as { enabled: boolean; heroActive?: boolean; featuredActive?: boolean };
+      config = { ...config, enabled: patch.enabled, version: config.version + 1, placements: config.placements.map(item => ({ ...item, active: item.key === 'homepage.hero' ? patch.heroActive ?? item.active : patch.featuredActive ?? item.active })) };
+      return config;
+    });
+    renderWithLocale(<BannerDisplayControls locale={locale} source={source} />, { locale });
+    const rows = await screen.findAllByRole('row');
+    const hero = rows.find(row => row.getAttribute('data-placement') === 'homepage.hero')!;
+    const featured = rows.find(row => row.getAttribute('data-placement') === 'homepage.featured')!;
+    expect(within(hero).getByRole('link')).toHaveAttribute('href', `/admin/banners?lang=${locale}#banner-list`);
+    expect(within(featured).getByRole('link')).toHaveAttribute('href', `/admin/ads/featured?lang=${locale}`);
+    fireEvent.click(within(hero).getByRole('button'));
+    await waitFor(() => expect(update).toHaveBeenCalledTimes(1));
+    expect(update).toHaveBeenLastCalledWith({ enabled: false, expectedVersion: 2, heroActive: false, reason: 'Stop placement homepage.hero' });
+    await waitFor(() => expect(within(hero).getByRole('button')).toHaveTextContent(locale === 'ar' ? 'تشغيل الموضع' : 'Enable placement'));
+    fireEvent.click(within(featured).getByRole('button'));
+    await waitFor(() => expect(update).toHaveBeenCalledTimes(2));
+    expect(update).toHaveBeenLastCalledWith({ enabled: false, expectedVersion: 3, featuredActive: false, reason: 'Stop placement homepage.featured' });
+  });
   it('renews an expired administrator token once and retries the same banner changes with the renewed token', async () => {
     let token = 'Bearer expired';
     const calls: Array<{ header: string | null; body: unknown }> = [];

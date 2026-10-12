@@ -22,5 +22,29 @@ export function BannerDisplayControls({ locale, source }: { locale: SupportedLoc
     try { setConfig(await source.updateBannerConfig({ enabled: !config.enabled, expectedVersion: config.version, reason: config.enabled ? 'Stop homepage banner display' : 'Enable homepage banner display' })); }
     catch { setError(true); } finally { setBusy(false); }
   }
-  return <section className="admin-home__panel admin-home__banner-settings"><h2>{copy.setup}</h2><p>{copy.configureHint}</p>{config ? <><p role="status">{config.enabled ? copy.on : copy.off}</p><Button variant="secondary" disabled={busy} onClick={() => void toggle()}>{config.enabled ? copy.disable : copy.enable}</Button><section id="banner-placements" aria-labelledby="banner-placements-title"><h3 id="banner-placements-title">{copy.placementsTitle}</h3><p>{copy.placementHelp}</p><a href={`/admin/settings/advertising?lang=${locale}`}>{copy.advertisingSettings}</a>{config.placements.length === 0 ? <p>{copy.noPlacements}</p> : <div className="admin-home__table-wrap"><table className="admin-home__table"><thead><tr><th>{copy.placementName}</th><th>{copy.placementCode}</th><th>{copy.placementState}</th></tr></thead><tbody>{config.placements.map(placement => <tr key={placement.key}><td>{placement.label[locale] ?? placement.label.ar ?? placement.label.en}</td><td><code dir="ltr">{placement.key}</code></td><td>{placement.active ? copy.placementActive : copy.placementInactive}</td></tr>)}</tbody></table></div>}</section></> : null}{error ? <p role="alert">{copy.setupError} <Button size="sm" variant="ghost" onClick={() => setAttempt(value => value + 1)}>{locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}</Button></p> : null}</section>;
+  async function togglePlacement(placement: AdBannerConfig['placements'][number]) {
+    if (!config || !['homepage.hero', 'homepage.featured'].includes(placement.key)) return;
+    setBusy(true); setError(false);
+    try { setConfig(await source.updateBannerConfig({ enabled: config.enabled, expectedVersion: config.version,
+      [placement.key === 'homepage.hero' ? 'heroActive' : 'featuredActive']: !placement.active,
+      reason: `${placement.active ? 'Stop' : 'Enable'} placement ${placement.key}` })); }
+    catch { setError(true); } finally { setBusy(false); }
+  }
+  return <section className="admin-home__panel admin-home__banner-settings"><h2>{copy.setup}</h2><p>{copy.configureHint}</p>{config ? <>
+    <p role="status">{config.enabled ? copy.on : copy.off}</p>
+    <Button variant="secondary" disabled={busy} onClick={() => void toggle()}>{config.enabled ? copy.disable : copy.enable}</Button>
+    <section id="banner-placements" aria-labelledby="banner-placements-title">
+      <h3 id="banner-placements-title">{copy.placementsTitle}</h3><p>{copy.placementHelp}</p>
+      <p>{locale === 'ar' ? 'دي أماكن عرض ثابتة، وليست صور البانرات. تعديل الصورة أو حذف الإعلان من العرض يتم من «إدارة إعلانات الموضع». إيقاف الموضع يخفي كل إعلاناته مؤقتًا ويحفظ بياناتها؛ تشغيله لا ينشر المسودات.' : 'These are fixed display locations, not banner images. Use “Manage placement ads” to edit images or remove an ad from display. Stopping a placement temporarily hides all its ads and keeps their data; enabling it does not publish drafts.'}</p>
+      <a href={`/admin/settings/advertising?lang=${locale}`}>{copy.advertisingSettings}</a>
+      {config.placements.length === 0 ? <p>{copy.noPlacements}</p> : <div className="admin-home__table-wrap admin-home__banner-list"><table className="admin-home__table" role="table"><thead className="a11y-visually-hidden"><tr><th scope="col">{copy.placementName}</th><th scope="col">{copy.placementCode}</th><th scope="col">{copy.placementState}</th><th scope="col">{locale === 'ar' ? 'الإجراءات' : 'Actions'}</th></tr></thead><tbody role="rowgroup">{config.placements.map(placement => <tr role="row" key={placement.key} data-placement={placement.key}>
+        <td role="cell"><strong>{placement.label[locale] ?? placement.label.ar ?? placement.label.en}</strong></td><td role="cell" data-label={copy.placementCode}><code dir="ltr">{placement.key}</code></td><td role="cell" data-label={copy.placementState}>{placement.active ? copy.placementActive : copy.placementInactive}</td>
+        <td><div className="admin-home__row-actions">{['homepage.hero', 'homepage.featured'].includes(placement.key) ? <>
+          <a href={placement.key === 'homepage.hero' ? `/admin/banners?lang=${locale}#banner-list` : `/admin/ads/featured?lang=${locale}`}>{locale === 'ar' ? 'إدارة إعلانات الموضع' : 'Manage placement ads'}</a>
+          <Button size="sm" variant="secondary" disabled={busy} onClick={() => void togglePlacement(placement)}>{placement.active ? locale === 'ar' ? 'إيقاف الموضع' : 'Stop placement' : locale === 'ar' ? 'تشغيل الموضع' : 'Enable placement'}</Button>
+        </> : <a href={`/admin/settings/advertising?lang=${locale}`}>{copy.advertisingSettings}</a>}</div></td>
+      </tr>)}</tbody></table></div>}
+      {!config.enabled ? <p>{locale === 'ar' ? 'العرض العام متوقف؛ تشغيل موضع وحده لا يشغّل العرض العام.' : 'Global display is stopped; enabling a placement alone does not enable global display.'}</p> : null}
+    </section>
+  </> : null}{error ? <p role="alert">{copy.setupError} <Button size="sm" variant="ghost" onClick={() => setAttempt(value => value + 1)}>{locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}</Button></p> : null}</section>;
 }

@@ -5,6 +5,42 @@ import { getAdminHomeCopy } from '../../src/features/admin_home/copy.ts';
 
 const requestId = '6ac78353462f103b89499896';
 
+test('placement controls fit the screen and preserve the other placement and global display', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-ar') ? 'ar' : 'en';
+  await routeAdminHomeApis(page);
+  let config = { enabled: false, version: 2, placements: [{ key: 'homepage.hero', label: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage hero' }, active: true }, { key: 'homepage.featured', label: { ar: 'إعلانات الرئيسية المميزة', en: 'Featured ads' }, active: true }] };
+  const writes: Record<string, unknown>[] = [];
+  await page.route('**/api/v1/admin/banners/config', route => {
+    if (route.request().method() === 'PUT') {
+      const patch = route.request().postDataJSON() as Record<string, unknown>;
+      expect(patch.expectedVersion).toBe(config.version);
+      writes.push(patch);
+      config = { ...config, enabled: patch.enabled as boolean, version: config.version + 1,
+        placements: config.placements.map(item => ({ ...item, active: (item.key === 'homepage.hero' ? patch.heroActive : patch.featuredActive) as boolean | undefined ?? item.active })) };
+    }
+    return route.fulfill({ json: { data: config, meta: { requestId: 'placement-controls' } } });
+  });
+  await page.goto(`/admin/banners?lang=${locale}`);
+  const hero = page.locator('[data-placement="homepage.hero"]');
+  const featured = page.locator('[data-placement="homepage.featured"]');
+  await expect(hero.getByRole('link')).toHaveAttribute('href', `/admin/banners?lang=${locale}#banner-list`);
+  await expect(featured.getByRole('link')).toHaveAttribute('href', `/admin/ads/featured?lang=${locale}`);
+  for (const row of [hero, featured]) for (const action of await row.locator('a,button').all()) {
+    const box = await action.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+  }
+  await hero.getByRole('button').click();
+  await expect(hero.getByRole('button')).toHaveText(locale === 'ar' ? 'تشغيل الموضع' : 'Enable placement');
+  expect(writes[0]).toEqual({ enabled: false, expectedVersion: 2, heroActive: false, reason: 'Stop placement homepage.hero' });
+  expect(config.placements[1]!.active).toBe(true);
+  await hero.getByRole('button').click();
+  await expect(hero.getByRole('button')).toHaveText(locale === 'ar' ? 'إيقاف الموضع' : 'Stop placement');
+  expect(config.enabled).toBe(false);
+  expect(config.placements[0]!.active).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('request-linked banner actions fit the screen, open the editor and confirm removal', async ({ page }, info) => {
   const locale = info.project.name.endsWith('-ar') ? 'ar' : 'en';
   const copy = getBannerControlCopy(locale), home = getAdminHomeCopy(locale);
