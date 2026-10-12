@@ -310,10 +310,12 @@ export type TipPatch = z.infer<typeof tipPatchSchema>;
 const displayKey = safeKey;
 const displayOrder = z.number().int().nonnegative().max(100000);
 export const homepageSectionStatusSchema = cmsSettingStatusSchema;
+const homepageEyebrowSchema = localizedTextSchema.refine(value => Object.values(value).every(text => text === undefined || text.length <= 120), { message: 'Introductory text must not exceed 120 characters per language' });
 export const homepageSectionCreateSchema = z
   .object({
     key: safeKey,
     title: localizedTextSchema,
+    eyebrow: homepageEyebrowSchema.optional(),
     body: localizedTextSchema.optional(),
     order: displayOrder,
     visible: z.boolean().default(true),
@@ -325,6 +327,7 @@ export const homepageSectionPatchSchema = z
   .object({
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
+    eyebrow: homepageEyebrowSchema.nullable().optional(),
     body: localizedTextSchema.optional(),
     order: displayOrder.optional(),
     visible: z.boolean().optional(),
@@ -374,6 +377,7 @@ export const homepageSectionPublicSchema = z
   .object({
     key: safeKey,
     title: localizedTextSchema,
+    eyebrow: homepageEyebrowSchema.optional(),
     body: localizedTextSchema.optional(),
     order: displayOrder,
   })
@@ -470,6 +474,7 @@ export const cmsAdminHomepageSectionSchema = z
     ...cmsAdminRecordFields,
     key: safeKey,
     title: localizedTextSchema,
+    eyebrow: homepageEyebrowSchema.optional(),
     body: localizedTextSchema.optional(),
     order: displayOrder,
     visible: z.boolean(),

@@ -107,6 +107,21 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it.each(['ar', 'en'] as const)('opens the hero editor directly and saves the introductory text in %s', async locale => {
+    const data = homepageContent(cmsAdminContentDataSchema.parse({ namespace: 'homepage', items: [{ ...homepage.items[0], key: 'hero', eyebrow: { ar: 'نص قديم', en: 'Old introduction' } }] }));
+    const source = createAdminHomeSource({ apiClient: apiClientFor([]) });
+    const update = vi.spyOn(source, 'updateContent').mockResolvedValue(data);
+    renderWithLocale(<AdminHome url={`/admin/content/homepage?section=hero&lang=${locale}`} locale={locale} session={session} initialContent={data} source={source} />, { locale });
+    const editor = await screen.findByTestId('admin-home-homepage-editor');
+    const input = editor.querySelector<HTMLInputElement>(`#admin-home-homepage-eyebrow-${locale}`)!;
+    expect(input).toHaveValue(locale === 'ar' ? 'نص قديم' : 'Old introduction');
+    expect(input).toHaveAttribute('maxlength', '120');
+    fireEvent.change(input, { target: { value: 'New homepage introduction' } });
+    fireEvent.change(editor.querySelector('#admin-home-homepage-reason')!, { target: { value: 'Change introductory text' } });
+    fireEvent.click(within(editor).getByRole('button', { name: getAdminHomeCopy(locale).save }));
+    await waitFor(() => expect(update).toHaveBeenCalledTimes(1));
+    expect(update).toHaveBeenCalledWith('homepage', expect.objectContaining({ id: data.items[0]!.id, version: data.items[0]!.version, eyebrow: expect.objectContaining({ [locale]: 'New homepage introduction' }) }));
+  });
   it.each(['ar', 'en'] as const)('manages placement ads and toggles only the selected placement in %s', async locale => {
     let config = { enabled: false, version: 2, placements: [{ key: 'homepage.hero', label: { ar: 'بانر الرئيسية', en: 'Homepage hero' }, active: true }, { key: 'homepage.featured', label: { ar: 'إعلانات مميزة', en: 'Featured ads' }, active: true }] };
     const source = createAdminHomeSource({ apiClient: new ApiClient({ fetcher: async () => envelope(config) }) });

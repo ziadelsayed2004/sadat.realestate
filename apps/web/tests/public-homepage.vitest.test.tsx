@@ -65,6 +65,12 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it.each(['ar', 'en'] as const)('uses the administrator introduction above the hero heading in %s', locale => {
+    const eyebrow = { ar: 'عنوان مقدمة من الإدارة', en: 'Administrator introduction' };
+    const data = publicHomepageDataSchema.parse({ ...homepageData, sections: homepageData.sections.map(section => ({ ...section, eyebrow })) });
+    const result = renderWithLocale(<PublicHomepage locale={locale} initialData={data} />, { locale });
+    expect(result.container.querySelector('.public-homepage__hero-content .public-homepage__eyebrow')).toHaveTextContent(eyebrow[locale]);
+  });
   it('requests bounded property previews while preserving external signed image URLs', () => {
     const src = `/api/v1/public/properties/${'a'.repeat(24)}/media/${'b'.repeat(24)}/content`;
     const result = renderWithLocale(<PublicMediaImage src={src} alt="Preview" fallback={null} />, { locale: 'en' });

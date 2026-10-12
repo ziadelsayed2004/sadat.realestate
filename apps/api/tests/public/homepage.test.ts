@@ -8,6 +8,14 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'الرئيسية', en: 'Home' };
 
+test('publishes the custom hero introduction only from a published visible section', () => {
+  const hero = { key: 'hero', title: localized, eyebrow: { ar: 'محتوى الإدارة', en: 'Managed introduction' }, order: 0, status: 'published', visible: true };
+  assert.deepEqual(publicHomepageProjection(sources({ sections: [hero] })).sections[0]?.eyebrow, hero.eyebrow);
+  for (const patch of [{ status: 'draft' }, { visible: false }]) {
+    assert.equal(publicHomepageProjection(sources({ sections: [{ ...hero, ...patch }] })).sections.length, 0);
+  }
+});
+
 function sources(overrides: Partial<HomepageSources> = {}): HomepageSources {
   return {
     sections: [

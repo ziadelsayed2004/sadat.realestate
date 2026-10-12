@@ -31,6 +31,7 @@ export function BannerDisplayControls({ locale, source }: { locale: SupportedLoc
     catch { setError(true); } finally { setBusy(false); }
   }
   return <section className="admin-home__panel admin-home__banner-settings"><h2>{copy.setup}</h2><p>{copy.configureHint}</p>{config ? <>
+    <p><a href={`/admin/content/homepage?section=hero&lang=${locale}`}>{locale === 'ar' ? 'تعديل نصوص بداية الرئيسية' : 'Edit homepage introduction text'}</a></p>
     <p role="status">{config.enabled ? copy.on : copy.off}</p>
     <Button variant="secondary" disabled={busy} onClick={() => void toggle()}>{config.enabled ? copy.disable : copy.enable}</Button>
     <section id="banner-placements" aria-labelledby="banner-placements-title">

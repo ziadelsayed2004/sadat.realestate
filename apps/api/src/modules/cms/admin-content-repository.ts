@@ -73,6 +73,7 @@ export interface StoredHomepageSection {
   id: string;
   key: string;
   title: LocalizedText;
+  eyebrow?: LocalizedText;
   body?: LocalizedText;
   order: number;
   visible: boolean;
@@ -136,6 +137,7 @@ export interface TipChanges {
 
 export interface HomepageSectionChanges {
   title?: LocalizedText;
+  eyebrow?: LocalizedText | null;
   body?: LocalizedText;
   order?: number;
   visible?: boolean;
@@ -256,6 +258,7 @@ function mapTip(record: RealEstateTipDocument): StoredTip {
 function mapHomepageSection(record: HomepageSectionDocument): StoredHomepageSection {
   return {
     id: record._id.toHexString(), key: record.key, title: record.title,
+    ...(record.eyebrow ? { eyebrow: record.eyebrow } : {}),
     ...(record.body ? { body: record.body } : {}), order: record.order, visible: record.visible,
     status: record.status, updatedBy: record.updatedBy.toHexString(), version: record.version, updatedAt: record.updatedAt
   };
@@ -457,6 +460,7 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
       try {
         const row = await models.sections.create({
           key: input.key, title: input.title, ...(input.body === undefined ? {} : { body: input.body }),
+          ...(input.eyebrow === undefined ? {} : { eyebrow: input.eyebrow }),
           order: input.order, visible: input.visible, status: input.status,
           updatedBy: new Types.ObjectId(actorId), updatedAt: at
         });

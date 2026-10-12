@@ -1,7 +1,39 @@
 import { expect, test } from '@playwright/test';
-import { adminHomeBannerId, routeAdminHomeApis } from './admin-home.fixtures.ts';
+import { adminHomeBannerId, adminHomeSectionFixture, routeAdminHomeApis } from './admin-home.fixtures.ts';
 import { publicHomepageFixture, routePublicHomepageApi } from './public-fixtures.ts';
 import { getBannerControlCopy } from '../../src/features/admin_home/banner-controls-copy.ts';
+
+test('homepage introductory text is editable from the banner page and persists in both languages', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  await routeAdminHomeApis(page);
+  const eyebrow = { ar: 'ابحث عن عقارك معنا', en: 'Find your property with us' };
+  let section = { ...adminHomeSectionFixture(), key: 'hero', eyebrow: { ar: 'المقدمة القديمة', en: 'Previous introduction' } };
+  await page.route('**/api/v1/admin/content/homepage', route => {
+    if (route.request().method() === 'PUT') {
+      const patch = route.request().postDataJSON();
+      expect(patch.id).toBe(section.id); expect(patch.version).toBe(section.version);
+      section = { ...section, eyebrow: patch.eyebrow, title: patch.title, body: patch.body, status: patch.status, version: section.version + 1 };
+    }
+    return route.fulfill({ json: { data: { namespace: 'homepage', items: [section] }, meta: { requestId: 'intro-editor' } } });
+  });
+  await page.goto(`/admin/banners?lang=${locale}`);
+  await page.getByRole('link', { name: locale === 'ar' ? 'تعديل نصوص بداية الرئيسية' : 'Edit homepage introduction text' }).click();
+  const editor = page.getByTestId('admin-home-homepage-editor');
+  await expect(editor).toBeVisible();
+  for (const language of ['ar', 'en'] as const) await editor.locator(`#admin-home-homepage-eyebrow-${language}`).fill(eyebrow[language]);
+  await editor.locator('#admin-home-homepage-reason').fill('Update the homepage introductory text');
+  const saved = page.waitForResponse(response => response.request().method() === 'PUT' && response.url().endsWith('/api/v1/admin/content/homepage'));
+  await editor.locator('button[type=submit]').click(); expect((await saved).status()).toBe(200);
+  await page.goto(`/admin/content/homepage?section=hero&lang=${locale}`);
+  await expect(editor.locator(`#admin-home-homepage-eyebrow-${locale}`)).toHaveValue(eyebrow[locale]);
+  await expect(editor.locator(`#admin-home-homepage-eyebrow-${locale}`)).toHaveAttribute('maxlength', '120');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await routePublicHomepageApi(page);
+  const home = publicHomepageFixture().data;
+  await page.route('**/api/v1/public/home**', route => route.fulfill({ json: { data: { ...home, sections: [{ key: 'hero', title: section.title, body: section.body, eyebrow, order: 0 }] }, meta: { requestId: 'published-intro' } } }));
+  await page.goto(`/?lang=${locale}`);
+  await expect(page.locator('.public-homepage__hero-content .public-homepage__eyebrow')).toHaveText(eyebrow[locale]);
+});
 
 test('saved banner content reopens and replaces the default sentence on the homepage', async ({ page }, testInfo) => {
   const locale = testInfo.project.name.endsWith('-en') ? 'en' : 'ar';
@@ -26,7 +58,7 @@ test('saved banner content reopens and replaces the default sentence on the home
 
   await routePublicHomepageApi(page);
   const home = publicHomepageFixture().data;
-  await page.route('**/api/v1/public/home', route => route.fulfill({ json: { data: { ...home, banners: [{ key: `banner_${adminHomeBannerId}`, title: { ar: 'عنوان البانر', en: 'Banner title' }, body, imageUrl: '/assets/canonical/public/home-hero-sadat-city.png', order: 0 }] }, meta: { requestId: 'owned-home-content' } } }));
+  await page.route('**/api/v1/public/home**', route => route.fulfill({ json: { data: { ...home, banners: [{ key: `banner_${adminHomeBannerId}`, title: { ar: 'عنوان البانر', en: 'Banner title' }, body, imageUrl: '/assets/canonical/public/home-hero-sadat-city.png', order: 0 }] }, meta: { requestId: 'owned-home-content' } } }));
   await page.goto(`/?lang=${locale}`);
   await page.clock.runFor(2000);
   await expect(page.locator('#site-intro')).toBeHidden();

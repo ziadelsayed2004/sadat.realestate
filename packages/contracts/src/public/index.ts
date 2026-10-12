@@ -17,6 +17,7 @@ const publicUrlSchema = z.union([
 export const publicHomepageSectionSchema = z.object({
   key: z.string().trim().min(2).max(64).regex(/^[a-z][a-z0-9_]*$/),
   title: localizedTextSchema,
+  eyebrow: localizedTextSchema.optional(),
   body: localizedTextSchema.optional(),
   order: publicOrderSchema
 }).strict();

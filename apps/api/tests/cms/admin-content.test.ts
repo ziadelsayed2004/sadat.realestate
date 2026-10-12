@@ -188,7 +188,9 @@ function repository(): CmsAdminContentRepository {
     async updateHomepageSection(id, version, input, actorId, at) {
       if (id !== homepage.id) return { kind: 'not_found' };
       if (version !== homepage.version) return { kind: 'version_conflict' };
-      homepage = { ...homepage, ...input, updatedBy: actorId, version: version + 1, updatedAt: at };
+      const { eyebrow, ...changes } = input;
+      homepage = { ...homepage, ...changes, ...(eyebrow ? { eyebrow } : {}), updatedBy: actorId, version: version + 1, updatedAt: at };
+      if (eyebrow === null) delete homepage.eyebrow;
       return { kind: 'written', item: homepage };
     },
     async listDisplaySettings() { return [display]; },
@@ -266,6 +268,24 @@ test('automatic population is read-only and does not overwrite manual About stat
   const about = await service.put({ userId: adminId }, 'about', { id: adminId, version: 2, order: 0, stats, reason: 'Update manual building count' }, context);
   assert.equal(about.namespace, 'about');
   if (about.namespace === 'about') assert.deepEqual(about.items[0]?.stats, stats);
+});
+
+test('saves and clears the bounded bilingual homepage introductory text using the existing permission and version boundary', async () => {
+  const { service, audits } = createService();
+  const initial = await service.get({ userId: adminId }, 'homepage');
+  assert.equal(initial.namespace, 'homepage'); if (initial.namespace !== 'homepage') return;
+  const hero = initial.items[0]!;
+  const context = { requestId: 'hero-intro', traceId: 'a'.repeat(32) };
+  const eyebrow = { ar: 'نص مقدمة جديد', en: 'New introductory text' };
+  const saved = await service.put({ userId: adminId }, 'homepage', { id: hero.id, version: hero.version, eyebrow, reason: 'Update homepage introduction' }, context);
+  if (saved.namespace !== 'homepage') throw new Error('Wrong namespace');
+  assert.deepEqual(saved.items[0]!.eyebrow, eyebrow);
+  await assert.rejects(service.put({ userId: adminId }, 'homepage', { id: hero.id, version: saved.items[0]!.version, eyebrow: { en: 'x'.repeat(121) }, reason: 'Reject long introductory text' }, context));
+  const cleared = await service.put({ userId: adminId }, 'homepage', { id: hero.id, version: saved.items[0]!.version, eyebrow: null, reason: 'Restore default introductory text' }, context);
+  if (cleared.namespace !== 'homepage') throw new Error('Wrong namespace');
+  assert.equal(cleared.items[0]!.eyebrow, undefined);
+  assert.equal(audits.filter(action => action === 'cms.homepage.write').length, 2);
+  await assert.rejects(createService({ manage: false }).service.put({ userId: adminId }, 'homepage', { id: hero.id, version: hero.version, eyebrow, reason: 'Unauthorized introduction change' }, context));
 });
 
 test('attaches a verified uploaded portrait and clears both the photo ID and displayed URL on removal', async () => {

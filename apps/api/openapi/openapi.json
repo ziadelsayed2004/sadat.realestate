@@ -22995,6 +22995,27 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "eyebrow": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "en": {
+                    "type": "string",
+                    "maxLength": 120
+                  }
+                }
+              }
+            ],
+            "description": "Optional short introduction above the homepage heading; 120 characters per language."
           }
         }
       },
@@ -24656,6 +24677,27 @@
             "items": {
               "$ref": "#/components/schemas/CmsAdminContentAction"
             }
+          },
+          "eyebrow": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "en": {
+                    "type": "string",
+                    "maxLength": 120
+                  }
+                }
+              }
+            ],
+            "description": "Optional short introduction above the homepage heading; 120 characters per language."
           }
         }
       },
@@ -24899,6 +24941,27 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "eyebrow": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "en": {
+                    "type": "string",
+                    "maxLength": 120
+                  }
+                }
+              }
+            ],
+            "description": "Optional short introduction above the homepage heading; 120 characters per language."
           }
         }
       },
@@ -24944,6 +25007,35 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "eyebrow": {
+            "oneOf": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LocalizedText"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ar": {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      "en": {
+                        "type": "string",
+                        "maxLength": 120
+                      }
+                    }
+                  }
+                ],
+                "description": "Optional short introduction above the homepage heading; 120 characters per language."
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null restores the default introductory text."
           }
         }
       },

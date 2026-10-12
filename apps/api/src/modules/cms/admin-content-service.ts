@@ -372,6 +372,7 @@ export function createCmsAdminContentService(dependencies: {
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           const changes: HomepageSectionChanges = {
             ...(update.title !== undefined ? { title: update.title } : {}),
+            ...(update.eyebrow !== undefined ? { eyebrow: update.eyebrow } : {}),
             ...(update.body !== undefined ? { body: update.body } : {}),
             ...(update.order !== undefined ? { order: update.order } : {}),
             ...(update.visible !== undefined ? { visible: update.visible } : {}),
@@ -383,6 +384,7 @@ export function createCmsAdminContentService(dependencies: {
           requirePublish(create.status, authorization.publish);
           row = homepageSectionResult(await dependencies.repository.createHomepageSection({
             key: create.key, title: create.title, ...(create.body === undefined ? {} : { body: create.body }),
+            ...(create.eyebrow === undefined ? {} : { eyebrow: create.eyebrow }),
             order: create.order, visible: create.visible, status: create.status
           }, principal.userId, at));
         }

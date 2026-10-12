@@ -21,7 +21,7 @@ import type { DisplayRuntimeSettings, DisplaySettingsReader } from '../settings/
 import { populationStatement, type AutomaticPopulationReader } from '../cms/automatic-population.js';
 import { CITY_STATISTICS, manualCityMetrics } from '../cms/city-statistics.js';
 
-export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
+export interface HomepageSectionSource { key: string; title: unknown; eyebrow?: unknown; body?: unknown; order: number; status: string; visible: boolean }
 export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
 export interface HomepageLocationSource { id: string; kind: string; name: unknown; slug: string; parentLocationId?: string; order: number; active: boolean }
 export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean; sourceUrl?: string; sourceYear?: number; checkedAt?: string }
@@ -84,7 +84,7 @@ function stableOrder<T extends { order: number; key: string }>(items: T[]): T[] 
 
 function publicSections(items: HomepageSectionSource[]) {
   return stableOrder(items.filter((item) => item.status === 'published' && item.visible).flatMap((item) => {
-    const parsed = publicHomepageSectionSchema.safeParse({ key: item.key, title: item.title, ...(item.body !== undefined ? { body: item.body } : {}), order: item.order });
+    const parsed = publicHomepageSectionSchema.safeParse({ key: item.key, title: item.title, ...(item.eyebrow !== undefined ? { eyebrow: item.eyebrow } : {}), ...(item.body !== undefined ? { body: item.body } : {}), order: item.order });
     return parsed.success ? [parsed.data] : [];
   }));
 }
@@ -234,7 +234,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
     async read() {
       const managedBanners = (await readPublishedBannerRows(connection)).map((row, order) => ({ key: `${row.placementKey === 'homepage.featured' ? 'featured' : 'banner'}_${row._id.toString()}_${row.mediaId.toString()}`, presentation: row.placementKey === 'homepage.featured' ? 'featured' as const : 'hero' as const, ...(row.placementKey === 'homepage.featured' ? { advertiserName: row.advertiserName, advertiserImageUrl: row.advertiserImageUrl, advertiserVerified: row.advertiserVerified, ...Object.fromEntries(['highlight', 'installment', 'eyebrow', 'ctaLabel'].flatMap(key => row.featured?.[key] === undefined ? [] : [[key, row.featured[key]]])) } : {}), title: row.title, ...(row.altText !== undefined ? { altText: row.altText } : {}), ...(row.body !== undefined ? { body: row.body } : {}), imageUrl: String(row.media.url), displaySeconds: Number(row.displaySeconds), ...(row.targetUrl ? { targetUrl: String(row.targetUrl) } : {}), order, status: 'published', active: true }));
       const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations, totalPropertyCount, population, cityStatistics] = await Promise.all([
-        findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
+        findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, eyebrow: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, providerId: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_about_blocks', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
@@ -268,7 +268,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
           ...(population[0].sourceUrl !== undefined ? { sourceUrl: population[0].sourceUrl } : {}),
           ...(population[0].asOf instanceof Date && Number.isFinite(population[0].asOf.getTime()) ? { asOf: population[0].asOf.toISOString() } : typeof population[0].asOf === 'string' ? { asOf: population[0].asOf } : {})
         } } : {}),
-        sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
+        sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.eyebrow !== undefined ? { eyebrow: row.eyebrow } : {}), ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
         categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
         locations: locations.flatMap((row) => { const rowId = mapId(row); const parentLocationId = id(row.parentLocationId); return rowId && typeof row.kind === 'string' && row.name !== undefined && typeof row.slug === 'string' && typeof row.order === 'number' && typeof row.active === 'boolean' ? [{ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order, active: row.active }] : []; }),
         metrics: metrics.flatMap((row)=>typeof row.key==='string'&&row.title!==undefined&&typeof row.value==='number'&&typeof row.order==='number'&&typeof row.status==='string'&&typeof row.visible==='boolean'?[{key:row.key,title:row.title,value:row.value,...(row.unit!==undefined?{unit:row.unit}:{}),order:row.order,status:row.status,visible:row.visible}]:[]),
