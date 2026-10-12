@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   propertyContactStepSchema,
+  propertyMapUrlSchema,
   type PropertyContact,
   type PropertyData,
   type PropertyMediaData,
@@ -692,7 +693,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
     event.preventDefault();
     if (property === undefined) return;
     const currentMissing = (property.locationId === undefined && property.mapUrl === undefined && property.coordinates === undefined) || property.price === undefined || (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined);
-    if (currentMissing || !property.availableActions.includes('submit') || !checks.data || !checks.authority || !checks.review) { setValidationError(true); return; }
+    if (currentMissing || (property.mapUrl !== undefined && !propertyMapUrlSchema.safeParse(property.mapUrl).success) || !property.availableActions.includes('submit') || !checks.data || !checks.authority || !checks.review) { setValidationError(true); return; }
     const parsed = propertySubmitInput(property.version, reason);
     if (parsed === undefined) { setValidationError(true); return; }
     setValidationError(false);

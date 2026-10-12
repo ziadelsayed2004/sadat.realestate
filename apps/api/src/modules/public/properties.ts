@@ -2,7 +2,7 @@ import { createProviderVisibilityReader } from '../provider/visibility.js';
 import { visiblePublicOrganizations } from '../public/identity.js';
 import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
-import { organizationSlugSchema, propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
+import { organizationSlugSchema, propertyMapUrlSchema, propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, unexpiredPropertyFilter, type PropertyRuntimeSettings, type PropertySettingsReader } from '../settings/property-policy.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 
@@ -110,7 +110,7 @@ export function publicPropertyDetailsProjection(
     ...(property.layout !== undefined ? { layout: property.layout } : {}),
     ...(property.price !== undefined ? { price: property.price } : {}),
     ...(property.locationName !== undefined ? { locationName: property.locationName } : {}),
-    ...(source.mapUrl ? { mapUrl: source.mapUrl } : {}),
+    ...(propertyMapUrlSchema.safeParse(source.mapUrl).success ? { mapUrl: source.mapUrl } : {}),
     ...(property.publicCode ? { publicCode: property.publicCode } : {}),
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {}),

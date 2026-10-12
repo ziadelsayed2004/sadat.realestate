@@ -3782,7 +3782,7 @@
         "parentPropertyId": "Required for a unit without a project",
         "reason": "Save basic property data",
         "locationId": "24 hexadecimal characters",
-        "mapUrl": "https://maps.example.com/…",
+        "mapUrl": "https://maps.app.goo.gl/…",
         "latitude": "30.62",
         "longitude": "30.74"
       },
@@ -3839,7 +3839,8 @@
       "clearLocationSearch": "Clear search and show all areas",
       "contractBoundaryTitle": "Fields not supported by the current contract",
       "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
-      "coordinateHelp": "A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.",
+      "coordinateHelp": "Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.",
+      "mapUrlError": "Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.",
       "sourceHelp": "The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.",
       "notFoundTitle": "Draft not found",
       "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
@@ -3882,6 +3883,7 @@
       "reasonUnavailable": "The server did not provide an additional review reason.",
       "issueLabels": {
         "location": "Location",
+        "mapUrl": "Correct the location link: use Google Maps or Apple Maps, or clear it and use an area or coordinates.",
         "price": "Price",
         "contact": "Contact data",
         "status": "Status"

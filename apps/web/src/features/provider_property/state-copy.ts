@@ -1,7 +1,7 @@
 import { localizeCopy } from '../localization/copy-catalog.ts';
-import type { PropertyData, PropertyStatus, SupportedLocale } from '@sadat-real-estate/contracts';
+import { propertyMapUrlSchema, type PropertyData, type PropertyStatus, type SupportedLocale } from '@sadat-real-estate/contracts';
 
-export type ProviderPropertyValidationIssue = 'location' | 'price' | 'contact' | 'status';
+export type ProviderPropertyValidationIssue = 'location' | 'mapUrl' | 'price' | 'contact' | 'status';
 export type ProviderPropertyStateStatus = Extract<PropertyStatus, 'pending_review' | 'rejected' | 'approved' | 'published' | 'hidden'>;
 
 export interface ProviderPropertyStateCopy {
@@ -56,7 +56,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
       notesTitle: 'ملاحظات فريق المراجعة:',
       reasonLabel: 'سبب المراجعة',
       reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا للمراجعة.',
-      issueLabels: { location: 'الموقع', price: 'السعر', contact: 'بيانات التواصل', status: 'الحالة' },
+      issueLabels: { location: 'الموقع', mapUrl: 'صحح رابط الموقع: استخدم Google Maps أو Apple Maps، أو امسح الرابط واستخدم المنطقة أو الإحداثيات.', price: 'السعر', contact: 'بيانات التواصل', status: 'الحالة' },
       back: 'العودة لاحقًا',
       edit: 'بدء التعديل',
       editUnavailable: 'الإجراء غير متاح من حالة الخادم الحالية.',
@@ -80,7 +80,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
       notesTitle: 'Review team notes:',
       reasonLabel: 'Review reason',
       reasonUnavailable: 'The server did not provide an additional review reason.',
-      issueLabels: { location: 'Location', price: 'Price', contact: 'Contact data', status: 'Status' },
+      issueLabels: { location: 'Location', mapUrl: 'Correct the location link: use Google Maps or Apple Maps, or clear it and use an area or coordinates.', price: 'Price', contact: 'Contact data', status: 'Status' },
       back: 'Come back later',
       edit: 'Start editing',
       editUnavailable: 'This action is unavailable in the current server state.',
@@ -104,6 +104,7 @@ export function getProviderPropertyStateCopy(locale: SupportedLocale): ProviderP
 
 export function getProviderPropertyValidationIssues(property: PropertyData): readonly ProviderPropertyValidationIssue[] {
   const issues: ProviderPropertyValidationIssue[] = [];
+  if (property.mapUrl !== undefined && !propertyMapUrlSchema.safeParse(property.mapUrl).success) issues.push('mapUrl');
   if (property.locationId === undefined && property.mapUrl === undefined && property.coordinates === undefined) issues.push('location');
   if (property.price === undefined) issues.push('price');
   if (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined) issues.push('contact');

@@ -52,7 +52,11 @@ test('projects published property details with SEO, source, map link, media, and
 });
 
 test('rejects an unsafe map URL before it reaches the public projection', () => {
-  assert.throws(() => publicPropertyDetailsProjection(source({ mapUrl: 'javascript:alert(1)' })));
+  for (const mapUrl of ['javascript:alert(1)', 'https://example.com', 'https://www.google.com/url?url=https://example.com']) {
+    const legacy = publicPropertyDetailsProjection(source({ mapUrl }));
+    assert.equal(legacy?.id, id);
+    assert.equal(legacy?.mapUrl, undefined);
+  }
 });
 
 test('excludes draft/inactive details and non-ready media or related rows', () => {

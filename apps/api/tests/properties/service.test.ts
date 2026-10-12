@@ -269,6 +269,20 @@ test('aggregates submission readiness and rejects incomplete or stale submission
   await assert.rejects(service.submit(claims(), id, { version: 0, reason: 'Submit incomplete property' }, { requestId: 'property-submit-1', traceId: '5'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VALIDATION_FAILED');
 });
 
+test('blocks submission of legacy arbitrary map URLs even when another location source is present', async () => {
+  const { service, rows } = fixture();
+  rows.set(id, record({ mapUrl: 'https://example.com', locationId: location, price: { amount: 150000, currency: 'EGP' }, contact: { phone: '+201000000000' } }));
+  assert.equal((await service.get(claims(), id)).mapUrl, 'https://example.com');
+  const readiness = await service.validate(claims(), id);
+  assert.equal(readiness.valid, false);
+  assert.ok(readiness.issues.some(issue => issue.messageKey === 'errors.properties.mapUrlInvalid'));
+  await assert.rejects(service.submit(claims(), id, { version: 0, reason: 'Submit invalid old map' }, { requestId: 'legacy-map', traceId: 'a'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VALIDATION_FAILED');
+  assert.equal(rows.get(id)!.status, 'draft');
+  const updated = await service.saveStep(claims(), id, 'location', { version: 0, mapUrl: 'https://maps.google.com/?q=Sadat', reason: 'Correct saved map link' }, { requestId: 'correct-map', traceId: 'a'.repeat(32) });
+  assert.equal(updated.version, 1);
+  assert.equal((await service.validate(claims(), id)).valid, true);
+});
+
 test('rejects unauthenticated or pending providers, IDOR, stale versions, invalid steps, and mass assignment', async () => {
   const { service } = fixture();
   await assert.rejects(service.get(claims(provider, 'pending_review'), id), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');

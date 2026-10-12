@@ -71,6 +71,18 @@ test('rejects invalid source relationships and property/unit state combinations'
 });
 
 test('validates resumable core and location steps with bounded coordinates and versions', () => {
+  for (const mapUrl of ['https://maps.apple/p/U8rE9v8n8iVZjr', 'https://maps.apple.com/place?place-id=I521E602783BA9605', 'https://maps.apple.com/frame?center=30.62,30.74', 'https://maps.apple.com/search?query=Sadat']) {
+    assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl, reason: 'Save Apple Maps location' }).success, true, mapUrl);
+  }
+  for (const mapUrl of ['https://maps.apple/p/', 'https://maps.apple.com.evil.example/?q=Sadat', 'https://maps.app.goo.gl/Abc123xyz?link=https://example.com']) {
+    assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl, reason: 'Reject unsafe map target' }).success, false, mapUrl);
+  }
+  for (const mapUrl of ['https://maps.app.goo.gl/Abc123xyz', 'https://goo.gl/maps/Abc123xyz', 'https://www.google.com/maps/place/Sadat+City/', 'https://www.google.com/maps/@30.62,30.74,15z', 'https://www.google.com/maps/search/?api=1&query=Sadat', 'https://maps.apple.com/?ll=30.62,30.74', 'https://maps.apple.com/?q=Sadat']) {
+    assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl, reason: 'Save valid map link' }).success, true, mapUrl);
+  }
+  for (const mapUrl of ['https://example.com', 'https://www.google.com', 'https://www.google.com/maps', 'https://maps.apple.com/', 'https://maps.app.goo.gl/', 'https://goo.gl/Abc123xyz', 'https://maps.google.com.evil.example/?q=Sadat', 'https://maps.google.com@evil.example/?q=Sadat', 'https://evil@maps.google.com/?q=Sadat', 'https://www.google.com/url?url=https://example.com', 'https://maps.google.com:8443/?q=Sadat', 'https://maps.google.com/?ll=91,181']) {
+    assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl, reason: 'Reject unrelated website' }).success, false, mapUrl);
+  }
   assert.equal(propertyCoreStepSchema.safeParse({ version: 0, name: { en: 'Updated apartment' }, reason: 'Save basic property data' }).success, true);
   assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl: 'https://maps.google.com/?q=Sadat+City', reason: 'Save map location' }).success, true);
   assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl: 'http://maps.example.com/sadat', reason: 'Reject insecure map link' }).success, false);

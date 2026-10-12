@@ -4,7 +4,7 @@ import type {
   PublicPropertyMedia,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { requestCreateSchema, viewingCreateSchema } from '@sadat-real-estate/contracts';
+import { propertyMapUrlSchema, requestCreateSchema, viewingCreateSchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
@@ -72,13 +72,8 @@ function loginUrl(url: string | undefined): string {
 }
 
 function safeMapUrl(value: string | undefined): string | undefined {
-  if (value === undefined || value.length > 2048) return undefined;
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' && url.hostname.length > 0 ? value : undefined;
-  } catch {
-    return undefined;
-  }
+  const parsed = propertyMapUrlSchema.safeParse(value);
+  return parsed.success ? parsed.data : undefined;
 }
 
 function Footer({ locale }: { readonly locale: SupportedLocale }) { return <PublicSiteFooter locale={locale} />; }

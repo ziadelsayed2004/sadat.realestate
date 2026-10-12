@@ -4,7 +4,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { ProviderNavigation, type ProviderAuthorizationSource } from '../provider/index.ts';
-import { propertyCoreStepSchema, propertyCreateSchema, propertyLocationStepSchema, type PropertyCoreStep, type PropertyData, type PropertyLocationStep, type SupportedLocale } from '@sadat-real-estate/contracts';
+import { propertyCoreStepSchema, propertyCreateSchema, propertyLocationStepSchema, propertyMapUrlSchema, type PropertyCoreStep, type PropertyData, type PropertyLocationStep, type SupportedLocale } from '@sadat-real-estate/contracts';
 import {
   createProviderProperty,
   loadProviderPropertyLocations,
@@ -295,7 +295,7 @@ function LocationFormView({
             </div> : null}
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
-          <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" aria-invalid={validationError || undefined} />
+          <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" state={validationError && form.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(form.mapUrl).success ? 'error' : 'default'} error={wizard.mapUrlError} />
           <Input id="provider-property-latitude" label={wizard.labels.latitude} value={form.latitude} placeholder={wizard.placeholders.latitude} inputMode="decimal" onChange={event => setForm({ ...form, latitude: event.target.value })} aria-invalid={validationError || undefined} />
           <Input id="provider-property-longitude" label={wizard.labels.longitude} value={form.longitude} placeholder={wizard.placeholders.longitude} inputMode="decimal" onChange={event => setForm({ ...form, longitude: event.target.value })} aria-invalid={validationError || undefined} />
         </div>
@@ -455,12 +455,13 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     const parsed = propertyLocationStepSchema.safeParse({
       version: property.version,
       ...(location.locationId.trim() === '' ? {} : { locationId: location.locationId.trim().toLowerCase() }),
-      ...(location.mapUrl.trim() === '' ? {} : { mapUrl: location.mapUrl.trim() }),
+      ...(location.mapUrl.trim() === '' ? property.mapUrl === undefined ? {} : { mapUrl: null } : { mapUrl: location.mapUrl.trim() }),
       ...(coordinates === undefined ? {} : { coordinates }),
       reason: location.reason.trim()
     });
     if (!parsed.success || hasLatitude !== hasLongitude) {
       setValidationError(true);
+      if (location.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(location.mapUrl).success) document.getElementById('provider-property-map-url')?.focus();
       return;
     }
     setMutationState('saving');

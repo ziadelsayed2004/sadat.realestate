@@ -301,7 +301,7 @@ describe('public property details', () => {
     expect(result.container.querySelectorAll('.public-property-details__related-card')).toHaveLength(1);
   });
 
-  it.each(['javascript:alert(1)', 'http://maps.example.com/sadat', 'data:text/plain,sadat'])('fails closed when an unsafe map URL reaches the view: %s', mapUrl => {
+  it.each(['javascript:alert(1)', 'http://maps.example.com/sadat', 'data:text/plain,sadat', 'https://example.com', 'https://www.google.com/url?url=https://example.com', 'https://maps.google.com.evil.example/?q=Sadat'])('fails closed when an unsafe map URL reaches the view: %s', mapUrl => {
     const unsafeData = { ...detailsData, mapUrl } as typeof detailsData;
     const copy = getPublicPropertyDetailsCopy('en');
     renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={unsafeData} />, { locale: 'en' });

@@ -43,6 +43,7 @@ export interface ProviderPropertyCopy {
     readonly contractBoundaryTitle: string;
     readonly contractBoundaryBody: string;
     readonly coordinateHelp: string;
+    readonly mapUrlError: string;
     readonly sourceHelp: string;
     readonly notFoundTitle: string;
     readonly notFoundBody: string;
@@ -72,7 +73,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       placeholders: {
         name: 'مثال: شقة في مدينة السادات', slug: 'apartment-sadat-city', organizationId: '24 حرفاً سداسياً عشرينياً',
         projectId: 'اختياري', parentPropertyId: 'مطلوب للوحدة إن لم يوجد مشروع', reason: 'حفظ البيانات الأساسية',
-         locationId: '24 حرفاً سداسياً عشرينياً', mapUrl: 'https://maps.example.com/…', latitude: '30.62', longitude: '30.74'
+         locationId: '24 حرفاً سداسياً عشرينياً', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' },
       kindLabels: { property: 'عقار', unit: 'وحدة' },
@@ -100,7 +101,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationSearchEmpty: 'لا توجد مناطق تطابق البحث. امسح البحث لعرض كل المناطق المتاحة.', clearLocationSearch: 'مسح البحث وعرض كل المناطق',
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
-      coordinateHelp: 'يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.',
+      coordinateHelp: 'انسخ رابط موقع العقار من مشاركة Google Maps أو Apple Maps. يمكنك أيضًا اختيار المنطقة أو إدخال خط العرض والطول معًا.',
+      mapUrlError: 'أدخل رابط موقع من Google Maps أو Apple Maps؛ روابط المواقع العادية غير مقبولة.',
       sourceHelp: 'حساب مالك العقار يتحدد من جلسة الدخول. اختر نوع المصدر عند الإضافة؛ لا يتغير المصدر بعد حفظ المسودة.',
       notFoundTitle: 'المسودة غير موجودة', notFoundBody: 'لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.', unavailable: 'غير متاح'
     },
@@ -133,7 +135,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       placeholders: {
         name: 'Example: Sadat City apartment', slug: 'apartment-sadat-city', organizationId: '24 hexadecimal characters',
         projectId: 'Optional', parentPropertyId: 'Required for a unit without a project', reason: 'Save basic property data',
-        locationId: '24 hexadecimal characters', mapUrl: 'https://maps.example.com/…', latitude: '30.62', longitude: '30.74'
+        locationId: '24 hexadecimal characters', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' },
       kindLabels: { property: 'Property', unit: 'Unit' },
@@ -161,7 +163,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationSearchEmpty: 'No areas match your search. Clear the search to see all available areas.', clearLocationSearch: 'Clear search and show all areas',
       contractBoundaryTitle: 'Fields not supported by the current contract',
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
-      coordinateHelp: 'A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.',
+      coordinateHelp: 'Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.',
+      mapUrlError: 'Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.',
       sourceHelp: 'The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.',
       notFoundTitle: 'Draft not found', notFoundBody: 'This draft could not be loaded or is not owned by the current session.', unavailable: 'Unavailable'
     },

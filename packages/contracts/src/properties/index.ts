@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { normalizedPhoneSchema } from '../auth/index.js';
 import { localizedTextSchema, supportedLocaleSchema } from '../localization/index.js';
 import { sourceIdentitySchema } from '../organizations/index.js';
+import { isPropertyMapUrl } from './map-url.js';
 
 export const PROPERTY_KINDS = ['property', 'unit'] as const;
 export const propertyKindSchema = z.enum(PROPERTY_KINDS);
@@ -30,10 +31,13 @@ export const propertyCoordinatesSchema = z.object({
   latitude: z.number().finite().min(-90).max(90),
   longitude: z.number().finite().min(-180).max(180)
 }).strict();
-export const propertyMapUrlSchema = z.string().trim().max(2_048).url().refine(
+const propertyLegacyMapUrlSchema = z.string().trim().max(2_048).url().refine(
   value => new URL(value).protocol === 'https:',
   { message: 'Map URL must use HTTPS' }
 );
+export const propertyMapUrlSchema = propertyLegacyMapUrlSchema.refine(isPropertyMapUrl, {
+  message: 'Use a Google Maps or Apple Maps location link'
+});
 export const PROPERTY_DRAFT_STEPS = ['basic', 'location', 'details', 'price-payment', 'features-services', 'contact'] as const;
 export const propertyDraftStepSchema = z.enum(PROPERTY_DRAFT_STEPS);
 export const propertyIdParamsSchema = z.object({ propertyId: propertyObjectIdSchema }).strict();
@@ -262,7 +266,7 @@ export const propertyDataSchema = z.object({
   parentPropertyId: propertyObjectIdSchema.optional(),
   locationId: propertyObjectIdSchema.optional(),
   coordinates: propertyCoordinatesSchema.optional(),
-  mapUrl: propertyMapUrlSchema.optional(),
+  mapUrl: propertyLegacyMapUrlSchema.optional(),
   description: propertyDescriptionSchema.optional(),
   propertyTypeId: propertyObjectIdSchema.optional(),
   deliveryStatus: propertyDeliveryStatusSchema.optional(),

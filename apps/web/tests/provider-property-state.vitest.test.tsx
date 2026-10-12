@@ -107,4 +107,12 @@ describe('provider property submission and state screens', () => {
     expect(document.querySelector('[data-screen-id="PRV-12"]')).not.toBeNull();
     expect(screen.queryByRole('link', { name: getProviderPropertyStateCopy('en').actions.viewProperty })).not.toBeInTheDocument();
   });
+
+  it.each(['ar', 'en'] as const)('explains an invalid legacy map link before presenting submission controls in %s', locale => {
+    const copy = getProviderPropertyStateCopy(locale);
+    renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property({ status: 'draft', mapUrl: 'https://example.com', locationId: 'c'.repeat(24), availableActions: ['update', 'submit'], price: { amount: 100000, currency: 'EGP' }, contact: { phone: '+201000000000' } })} />, { locale });
+    expect(screen.getByText(copy.validation.issueLabels.mapUrl)).toBeVisible();
+    expect(document.querySelector('[data-screen-id="PRV-11"]')).not.toBeNull();
+    expect(screen.getByRole('link', { name: copy.validation.edit })).toHaveAttribute('href', expect.stringContaining('/location'));
+  });
 });

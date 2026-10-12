@@ -20608,6 +20608,7 @@
                 "type": "string",
                 "format": "uri",
                 "maxLength": 2048,
+                "description": "Google Maps or Apple Maps HTTPS location link only. Requires a place, search target, coordinates, or a recognized Maps share token. Ordinary websites, map homepages, redirect endpoints, credentials, and custom ports are rejected.",
                 "pattern": "^https://[^\\s]+$"
               },
               {
@@ -22750,6 +22751,7 @@
                 "type": "string",
                 "format": "uri",
                 "maxLength": 2048,
+                "description": "Validated Google Maps or Apple Maps location link. Unrecognized legacy links are omitted from the public projection.",
                 "pattern": "^https://[^\\s]+$"
               }
             }
