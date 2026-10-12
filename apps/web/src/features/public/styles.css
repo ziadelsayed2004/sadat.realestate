@@ -2497,7 +2497,11 @@
 }
 
 @media (max-width: 767px) {
+  .public-homepage .public-homepage__property-card .ui-property-card__media:has(>img) {
+    min-block-size: 0;
+  }
   .public-homepage .public-homepage__property-card .ui-property-card__media>img {
+    block-size: auto;
     object-fit: contain;
   }
   .public-homepage__hero--advertisement .public-homepage__hero-visual { position: relative; }
