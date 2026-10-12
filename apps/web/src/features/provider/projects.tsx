@@ -319,6 +319,7 @@ function ProjectRow({ project, locale, copy, onEdit, onSubmit }: {
   readonly onSubmit: (project: ProjectData) => void;
 }) {
   const name = localizedValue(project.name, locale);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const showReason = project.reviewReason !== undefined && (project.status === 'needs_changes' || project.status === 'rejected');
   return (
     <tr data-testid={`provider-project-${project.id}`} data-project-status={project.status}>
@@ -328,16 +329,25 @@ function ProjectRow({ project, locale, copy, onEdit, onSubmit }: {
           {project.description?.[locale] ? <span>{project.description[locale]}</span> : null}
         </div>
       </td>
-      <td><code>{project.slug}</code></td>
+      <td><details className="provider-projects__link"><summary>{copy.linkIdentifier}</summary><code dir="ltr">{project.slug}</code><small>{copy.linkHelp}</small></details></td>
       <td><ProjectStatusBadge status={project.status} copy={copy} /></td>
-      <td>{showReason ? <span className="provider-projects__reason"><strong>{copy.reason}</strong> {project.reviewReason}</span> : <span className="provider-projects__unavailable">{copy.viewUnavailable}</span>}</td>
+      <td><p className="provider-projects__state-help">{copy.statusDescriptions[project.status]}</p>{showReason ? <span className="provider-projects__reason"><strong>{copy.reason}</strong> {project.reviewReason}</span> : null}</td>
       <td><time dateTime={project.updatedAt}>{dateLabel(project.updatedAt, locale)}</time></td>
       <td>
         <div className="provider-projects__actions">
+          <Button size="xs" variant="secondary" onClick={() => setDetailsOpen(true)} aria-label={`${copy.details}: ${name}`}>{copy.details}</Button>
           {project.availableActions.includes('update') ? <Button size="xs" variant="secondary" onClick={() => onEdit(project)} aria-label={`${copy.edit}: ${name}`}>{copy.edit}</Button> : null}
           {project.availableActions.includes('submit') ? <Button size="xs" onClick={() => onSubmit(project)} aria-label={`${copy.submit}: ${name}`}>{copy.submit}</Button> : null}
-          {project.availableActions.length === 0 ? <span className="provider-projects__unavailable">{copy.noActions}</span> : null}
         </div>
+        <Modal open={detailsOpen} className="provider-projects__dialog" title={name} closeLabel={copy.form.close} onClose={() => setDetailsOpen(false)}>
+          <dl className="provider-projects__details">
+            <div><dt>{copy.columns.status}</dt><dd><ProjectStatusBadge status={project.status} copy={copy} /><p>{copy.statusDescriptions[project.status]}</p></dd></div>
+            {project.description ? <div><dt>{copy.form.description}</dt><dd>{localizedValue(project.description, locale)}</dd></div> : null}
+            <div><dt>{copy.linkIdentifier}</dt><dd><code dir="ltr">{project.slug}</code><p>{copy.linkHelp}</p></dd></div>
+            {project.reviewReason ? <div><dt>{copy.reason}</dt><dd>{project.reviewReason}</dd></div> : null}
+            <div><dt>{copy.columns.updated}</dt><dd><time dateTime={project.updatedAt}>{dateLabel(project.updatedAt, locale)}</time></dd></div>
+          </dl>
+        </Modal>
       </td>
     </tr>
   );

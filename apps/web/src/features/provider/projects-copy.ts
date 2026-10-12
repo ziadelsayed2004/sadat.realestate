@@ -21,6 +21,10 @@ export interface ProviderProjectsCopy {
   readonly columns: Readonly<Record<'project' | 'slug' | 'status' | 'reason' | 'updated' | 'actions', string>>;
   readonly statuses: Readonly<Record<ProjectStatus, string>>;
   readonly viewUnavailable: string;
+  readonly details: string;
+  readonly linkIdentifier: string;
+  readonly linkHelp: string;
+  readonly statusDescriptions: Readonly<Record<ProjectStatus, string>>;
   readonly edit: string;
   readonly submit: string;
   readonly noActions: string;

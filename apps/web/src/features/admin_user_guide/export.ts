@@ -2,7 +2,7 @@ import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { GuideSection } from './content.ts';
 import { guideTopicAnchor } from './quick-actions.ts';
 
-export const GUIDE_EDITION = '2026-10-09';
+export const GUIDE_EDITION = '2026-10-12';
 
 /** Markdown uses the same filtered topics as the on-screen operating guide. */
 export function guideAsMarkdown(sections: readonly GuideSection[], locale: SupportedLocale = 'ar'): string {

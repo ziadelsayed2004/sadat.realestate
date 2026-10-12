@@ -233,6 +233,15 @@
 .provider-projects__dialog .ui-modal__header,
 .provider-projects__dialog .ui-modal__footer { flex-shrink: 0; }
 
+.provider-projects__link summary{cursor:pointer;color:var(--color-brand-primary);font-size:13px}
+.provider-projects__link code,.provider-projects__link small{display:block;margin-top:8px;overflow-wrap:anywhere;white-space:normal}
+.provider-projects__state-help{margin:0;font-size:13px;line-height:1.7;color:var(--color-text-secondary)}
+.provider-projects__details{display:grid;gap:16px;margin:0;text-align:start}
+.provider-projects__details div{min-width:0}
+.provider-projects__details dt{font-size:13px;color:var(--color-text-muted)}
+.provider-projects__details dd{margin:6px 0 0;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.7}
+.provider-projects__details p{margin:6px 0 0}
+
 .provider-projects__form fieldset {
   display: grid;
   gap: 12px;

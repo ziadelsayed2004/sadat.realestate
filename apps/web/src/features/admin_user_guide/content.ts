@@ -1,4 +1,5 @@
 import { updatedOwnerTopic } from './owner-updates.ts';
+import { recentGuideTopic } from './recent-updates.ts';
 import { adPaymentsGuide, adPublicationGuide } from './advertising-guide.ts';
 import { ACCOUNT_GUIDES } from './account-guides.ts';
 import { featuredIdentityGuide } from './featured-identity-guide.ts';
@@ -122,4 +123,4 @@ export function searchGuide(query: string, sectionId = 'all', sections: readonly
   })).filter(section => section.topics.length > 0);
 }
 
-export const GUIDE_SECTIONS: readonly GuideSection[] = BASE_GUIDE_SECTIONS.map(section => ({ ...section, topics: section.topics.map(updatedOwnerTopic) }));
+export const GUIDE_SECTIONS: readonly GuideSection[] = BASE_GUIDE_SECTIONS.map(section => ({ ...section, topics: section.topics.map(updatedOwnerTopic).map(recentGuideTopic) }));

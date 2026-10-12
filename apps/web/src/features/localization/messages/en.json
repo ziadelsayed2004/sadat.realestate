@@ -3122,7 +3122,20 @@
       "hidden": "Hidden",
       "archived": "Archived"
     },
-    "viewUnavailable": "Detailed view unavailable",
+    "viewUnavailable": "No review notes",
+    "details": "Project details",
+    "linkIdentifier": "Automatic link identifier",
+    "linkHelp": "Generated automatically and stays unchanged when the name is edited. It does not mean the project is published.",
+    "statusDescriptions": {
+      "draft": "Draft: complete the details and submit for review.",
+      "pending_review": "The project is with the administration for review. Await its decision.",
+      "needs_changes": "Read the notes, edit the details, and submit again.",
+      "approved": "Approved. Awaiting publication by the administration before visitors can see it.",
+      "published": "Published. Later changes require administrative review.",
+      "rejected": "Rejected. Read the reason and contact the administration.",
+      "hidden": "Hidden from visitors. Contact the administration to restore visibility.",
+      "archived": "Archived and unavailable to visitors."
+    },
     "edit": "Edit",
     "submit": "Submit for review",
     "noActions": "No actions available",

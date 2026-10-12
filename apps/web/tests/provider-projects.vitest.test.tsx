@@ -38,6 +38,25 @@ const published = project({ id: 'cccccccccccccccccccccccc', slug: 'published-pro
 const data: ProviderProjectsData = { items: [draft, published], page: 1, limit: 5, total: 2 };
 const session = { status: 'authenticated' as const, role: 'provider' as const };
 
+it.each(['ar', 'en'] as const)('explains approved versus published and opens read-only project details in %s', async locale => {
+  const approved = project({ status: 'approved', availableActions: [], description: { ar: 'وصف المشروع', en: 'Project description' }, slug: `project-${'a'.repeat(32)}` });
+  const mutations = { create: vi.fn(), update: vi.fn(), submit: vi.fn() };
+  renderWithLocale(<ProviderProjects locale={locale} session={session} load={async () => ({ items: [approved], page: 1, limit: 5, total: 1 })} mutations={mutations} />, { locale });
+  const copy = getProviderProjectsCopy(locale);
+  const row = await screen.findByTestId(`provider-project-${projectId}`);
+  expect(row).toHaveTextContent(copy.statusDescriptions.approved);
+  expect(row).not.toHaveTextContent(copy.viewUnavailable);
+  expect(row.querySelector('details')).not.toHaveAttribute('open');
+  expect(within(row).queryByRole('button', { name: `${copy.edit}: ${approved.name[locale]}` })).not.toBeInTheDocument();
+  fireEvent.click(within(row).getByRole('button', { name: `${copy.details}: ${approved.name[locale]}` }));
+  const dialog = screen.getByRole('dialog');
+  expect(dialog).toHaveTextContent(approved.description![locale]!);
+  expect(dialog).toHaveTextContent(copy.statusDescriptions.approved);
+  expect(dialog).toHaveTextContent(copy.linkHelp);
+  expect(mutations.update).not.toHaveBeenCalled();
+  expect(mutations.submit).not.toHaveBeenCalled();
+});
+
 function success(payload: unknown, requestId: string, meta: Record<string, unknown> = {}): Response {
   return new Response(JSON.stringify({ data: payload, meta: { requestId, ...meta } }), { status: 200 });
 }

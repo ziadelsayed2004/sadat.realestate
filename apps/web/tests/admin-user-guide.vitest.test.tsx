@@ -1,4 +1,7 @@
 import navigationSource from '../src/features/admin/overview.tsx?raw';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import routeMatrixSource from '../../../docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json?raw';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -16,6 +19,32 @@ import { guideAsHtml } from '../src/features/admin_user_guide/catalog-export.ts'
 const admin = { status: 'authenticated' as const, role: 'admin' as const };
 const topics = GUIDE_SECTIONS.flatMap(section => section.topics);
 const paths = new Set(topics.flatMap(topic => topic.links.map(link => new URL(link.path, 'https://example.test').pathname)));
+
+it('keeps every downloadable account guide in sync with its on-screen instructions', () => {
+  for (const [audience, filename] of [['owner-admin', 'owner-user-guide'], ['staff-admin', 'user-guide-staff'], ['developer', 'user-guide-company'], ['individual_broker', 'user-guide-individual'], ['brokerage_office', 'user-guide-office'], ['seeker', 'user-guide-seeker']] as const) {
+    const stored = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../../docs/operations', `${filename}.ar.md`), 'utf8');
+    expect(stored.trimEnd()).toBe(guideAsMarkdown(sectionsForAudience(GUIDE_SECTIONS, audience)).trimEnd());
+  }
+});
+
+it('documents project publication, saved media, currencies, and both transfer accounts for the right audience', () => {
+  const company = guideAsMarkdown(sectionsForAudience(GUIDE_SECTIONS, 'developer'));
+  expect(company).toContain('المشروع');
+  expect(company).toContain('معرّف الرابط التلقائي');
+  expect(company).toContain('سببًا واضحًا من 5 إلى 500 حرف');
+  expect(company).toContain('ينتظر نشر الإدارة');
+  for (const audience of ['individual_broker', 'brokerage_office', 'developer'] as const) {
+    const markdown = guideAsMarkdown(sectionsForAudience(GUIDE_SECTIONS, audience));
+    expect(markdown).toContain('جنيه مصري EGP أو دولار أمريكي USD فقط');
+    expect(markdown).toContain('الوسائط المحفوظة');
+    expect(markdown).toContain('اسم المستفيد');
+    expect(markdown).toContain('الذي حوّلت منه أنت');
+  }
+  const owner = guideAsMarkdown(sectionsForAudience(GUIDE_SECTIONS, 'owner-admin'));
+  expect(owner).toContain('بيانات المستفيد وقت الإرسال');
+  expect(owner).toContain('نص النصيحة نفسه تكتبه الإدارة');
+  expect(guideAsMarkdown(sectionsForAudience(GUIDE_SECTIONS, 'seeker'))).toContain('إعلانات مستقلة');
+});
 
 beforeEach(() => {
   localStorage.clear(); sessionStorage.clear();

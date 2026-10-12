@@ -40,6 +40,31 @@ async function routeSession(page: import('@playwright/test').Page, allowed = tru
   });
 }
 
+test('approved project explains publication and opens readable details on every device', async ({ page }, info) => {
+  const locale = localeForProject();
+  const approved = { ...projectFixture(PUBLISHED_PROJECT_ID, 'approved'), slug: `project-${'a'.repeat(32)}`, description: { ar: 'بيانات مشروع مقدم العقار', en: 'Provider project details' } };
+  await routeSession(page);
+  await page.route('**/api/v1/provider/projects**', route => {
+    expect(route.request().method()).toBe('GET');
+    return route.fulfill({ json: { data: { items: [approved] }, meta: { requestId: 'approved-project', page: 1, limit: 5, total: 1 } } });
+  });
+  await page.goto(`/provider/projects?lang=${locale}`);
+  const row = page.getByTestId(`provider-project-${PUBLISHED_PROJECT_ID}`);
+  await expect(row).toContainText(locale === 'ar' ? 'ينتظر نشر الإدارة' : 'Awaiting publication');
+  await expect(row.getByRole('button', { name: /تعديل:|Edit:/ })).toHaveCount(0);
+  await expect(row.getByRole('button', { name: /إرسال للمراجعة:|Submit for review:/ })).toHaveCount(0);
+  await expect(row.locator('code')).toBeHidden();
+  await row.getByRole('button', { name: /تفاصيل المشروع:|Project details:/ }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(approved.description[locale]);
+  expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: info.outputPath('approved-project-details.png') });
+  await dialog.getByRole('button', { name: locale === 'ar' ? 'إغلاق' : 'Close', exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+});
+
 async function routeProjects(page: import('@playwright/test').Page): Promise<void> {
   await page.route('**/api/v1/provider/projects**', async route => {
     expect(route.request().headers().authorization).toBe('Bearer provider.projects.token');
