@@ -5,6 +5,10 @@ export interface ProviderProjectsCopy {
   readonly eyebrow: string;
   readonly title: string;
   readonly description: string;
+  readonly helpTitle: string;
+  readonly helpBody: string;
+  readonly helpPublication: string;
+  readonly helpLink: string;
   readonly add: string;
   readonly countSuffix: string;
   readonly filtersLabel: string;

@@ -59,6 +59,13 @@
   box-shadow: 0 12px 32px rgb(35 48 73 / 5%);
 }
 
+.provider-projects__help { margin-block-start: 24px; padding: 18px; border: 1px solid #d7e6de; border-radius: 14px; background: #f4f9f6; color: #24334f; overflow-wrap: anywhere; }
+.provider-projects__help h2 { margin: 0; font-size: 1rem; }
+.provider-projects__help p { margin-block: 10px; line-height: 1.8; }
+.provider-projects__help-publication { border-inline-start: 3px solid #cfaa55; padding-inline-start: 12px; }
+.provider-projects__help a { display: inline-flex; align-items: center; min-height: 44px; color: #124f40; font-weight: 700; }
+.provider-projects__help a:focus-visible { outline: 2px solid #124f40; outline-offset: 3px; }
+
 .provider-projects__count {
   color: #63718b;
   font-weight: 700;

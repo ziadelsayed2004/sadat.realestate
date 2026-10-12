@@ -44,6 +44,10 @@ it.each(['ar', 'en'] as const)('explains approved versus published and opens rea
   renderWithLocale(<ProviderProjects locale={locale} session={session} load={async () => ({ items: [approved], page: 1, limit: 5, total: 1 })} mutations={mutations} />, { locale });
   const copy = getProviderProjectsCopy(locale);
   const row = await screen.findByTestId(`provider-project-${projectId}`);
+  const help = screen.getByRole('complementary', { name: copy.helpTitle });
+  expect(help).toHaveTextContent(copy.helpBody);
+  expect(help).toHaveTextContent(copy.helpPublication);
+  expect(within(help).getByRole('link', { name: copy.helpLink })).toHaveAttribute('href', `/provider/user-guide?lang=${locale}&audience=developer#guide-developer-journey`);
   expect(row).toHaveTextContent(copy.statusDescriptions.approved);
   expect(row).not.toHaveTextContent(copy.viewUnavailable);
   expect(row.querySelector('details')).not.toHaveAttribute('open');

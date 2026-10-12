@@ -382,6 +382,12 @@ function ProjectsContent({ data, locale, copy, status, searchInput, query, onSta
         </div>
         <Button onClick={onAdd} startIcon="+">{copy.add}</Button>
       </div>
+      <aside className="provider-projects__help" aria-labelledby="provider-projects-help-title">
+        <h2 id="provider-projects-help-title">{copy.helpTitle}</h2>
+        <p>{copy.helpBody}</p>
+        <p className="provider-projects__help-publication">{copy.helpPublication}</p>
+        <a href={`/provider/user-guide?lang=${locale}&audience=developer#guide-developer-journey`}>{copy.helpLink}</a>
+      </aside>
       <section className="provider-projects__panel" aria-labelledby="provider-projects-list-title">
         <div className="provider-dashboard__section-heading">
           <h2 id="provider-projects-list-title" className="a11y-visually-hidden">{copy.title}</h2>

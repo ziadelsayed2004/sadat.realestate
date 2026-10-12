@@ -93,6 +93,26 @@ async function routeProjects(page: import('@playwright/test').Page): Promise<voi
   });
 }
 
+test('explains projects and links directly to the developer guide on mobile', async ({ page }, info) => {
+  const locale = localeForProject();
+  await routeSession(page);
+  await routeProjects(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`/provider/projects?lang=${locale}`);
+  const help = page.locator('.provider-projects__help');
+  await expect(help).toBeVisible();
+  await expect(help).toContainText(locale === 'ar' ? 'لا تنشئ عقارات تلقائيًا' : 'does not create property listings automatically');
+  await expect(help).toContainText(locale === 'ar' ? 'يحتاج أن تنشره الإدارة' : 'must publish the project');
+  const link = help.getByRole('link');
+  await expect(link).toHaveAttribute('href', `/provider/user-guide?lang=${locale}&audience=developer#guide-developer-journey`);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  await help.screenshot({ path: info.outputPath('project-explanation.png') });
+  await link.click();
+  await expect(page).toHaveURL(new RegExp(`/provider/user-guide\\?lang=${locale}&audience=developer#guide-developer-journey$`, 'u'));
+  await expect(page.locator('#guide-toggle-developer-journey')).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#guide-developer-journey')).toContainText('إنشاء المشروع لا يضيف عقارات تلقائيًا');
+});
+
 test.describe('PRV-15 Provider Projects', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-15' });
@@ -117,7 +137,7 @@ test.describe('PRV-15 Provider Projects', () => {
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('.provider-projects__identity strong')).not.toHaveText('');
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).locator('code')).toHaveText('provider-project');
     await expect(page.locator('.provider-projects__heading > .ui-button')).toHaveCSS('background-color', 'rgb(23, 35, 61)');
-    await expect(page.getByRole('heading', { name: locale === 'ar' ? 'المشاريع' : 'Projects', level: 2 })).toHaveClass(/a11y-visually-hidden/u);
+    await expect(page.getByRole('heading', { name: locale === 'ar' ? 'المشاريع' : 'Projects', level: 2, exact: true })).toHaveClass(/a11y-visually-hidden/u);
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).getByRole('button', { name: /Edit|تعديل|编辑/u })).toBeEnabled();
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`).getByRole('button', { name: /Submit for review|إرسال للمراجعة|提交审核/u })).toBeEnabled();
     await expect(page.locator('body')).not.toContainText(/aaaaaaaaaaaaaaaaaaaaaaaa|reviewedBy|assignedTo|auditData|storageKey|accessToken|refreshToken/u);

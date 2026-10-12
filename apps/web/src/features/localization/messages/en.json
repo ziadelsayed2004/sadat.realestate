@@ -3088,6 +3088,10 @@
     "retry": "Retry"
   },
   "provider/projects-copy#getProviderProjectsCopy": {
+    "helpTitle": "What are projects for?",
+    "helpPublication": "Approved means the review is complete. The administration must publish the project before visitors see it.",
+    "helpBody": "A project groups your company's units under one name, such as a compound or building. Create it, then submit it for review. Creating a project does not create property listings automatically.",
+    "helpLink": "Read the steps in the user guide",
     "eyebrow": "Project management",
     "title": "Projects",
     "description": "Manage projects owned by your provider account and review their status and server-authorized actions.",
