@@ -399,6 +399,9 @@ async function proxyApiRequest(request, response) {
     const upstream = await fetch(target, {
       method,
       headers,
+      // Explicit validation avoids fetch's default conditional-header handling
+      // adding "no-cache" and defeating the browser's If-None-Match request.
+      cache: 'no-cache',
       ...(method === 'GET' || method === 'HEAD' ? {} : { body: request, duplex: 'half' })
     });
     response.statusCode = upstream.status;

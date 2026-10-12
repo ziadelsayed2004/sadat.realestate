@@ -10,7 +10,7 @@ export function createPropertyMediaContentReader(connection: Connection, models:
     if (!property) return null;
     const media = await models.PropertyMedia.findOne({ _id: mediaId, propertyId, active: true, processingState: 'ready' }).select('+storageKey').lean();
     if (!media) return null;
-    return { mime: media.detectedMime, size: media.byteSize, etag: `"${media.sha256}"`, open: (range?: { start: number; end: number }) => storage.openPrivate(media.storageKey, range) };
+    return { mime: media.detectedMime, size: media.byteSize, ...(/^[a-f0-9]{64}$/u.test(media.sha256 ?? '') ? { etag: `"${media.sha256}"` } : {}), open: (range?: { start: number; end: number }) => storage.openPrivate(media.storageKey, range) };
   };
 }
 

@@ -4,12 +4,18 @@ import { adminPropertyFixture, adminPropertyId, routeAdminPropertyApis } from '.
 test('published property exposes an authenticated thumbnail, edit link, public link and versioned archive', async ({ page }, info) => {
   const ar = info.project.name.endsWith('-ar'), locale = ar ? 'ar' : 'en';
   const mediaId = 'c'.repeat(24);
+  let previewRequests = 0;
   let property = { ...adminPropertyFixture(), status: 'published', availableActions: ['hide', 'archive', 'update'], imageUrl: `/api/v1/public/properties/${adminPropertyId}/media/${mediaId}/content` };
   await routeAdminPropertyApis(page);
   await page.route('**/api/v1/admin/properties**', async route => {
     const request = route.request(), path = new URL(request.url()).pathname;
     expect(request.headers().authorization).toBe('Bearer admin.properties.qa');
-    if (path.endsWith('/content')) { await route.fulfill({ contentType: 'image/png', path: './apps/web/public/assets/clone/pub08-g.png' }); return; }
+    if (path.endsWith('/content')) {
+      expect(new URL(request.url()).searchParams.get('width')).toBe('320');
+      previewRequests++;
+      if (previewRequests === 1) { await route.fulfill({ status: 503 }); return; }
+      await route.fulfill({ contentType: 'image/png', path: './apps/web/public/assets/clone/pub08-g.png' }); return;
+    }
     if (path.endsWith('/media')) { await route.fulfill({ json: { data: { items: [] }, meta: { requestId: 'media-list' } } }); return; }
     if (request.method() === 'POST') {
       expect(request.postDataJSON()).toEqual({ version: 3, action: 'archive', reason: 'Remove displayed property' });
@@ -21,6 +27,7 @@ test('published property exposes an authenticated thumbnail, edit link, public l
   const row = page.getByTestId(`admin-property-${adminPropertyId}`);
   await expect(row.locator('img')).toBeVisible();
   await expect(row.locator('img')).toHaveAttribute('src', /^blob:/);
+  expect(previewRequests).toBe(2);
   await expect(row.getByRole('link', { name: ar ? 'عرض في الموقع' : 'View on website' })).toHaveAttribute('href', `/properties/nile-villa?lang=${locale}`);
   await row.scrollIntoViewIfNeeded();
   await expect(row.locator('.admin-properties__badge')).toBeInViewport();

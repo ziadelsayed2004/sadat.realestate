@@ -65,6 +65,16 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it('requests bounded property previews while preserving external signed image URLs', () => {
+    const src = `/api/v1/public/properties/${'a'.repeat(24)}/media/${'b'.repeat(24)}/content`;
+    const result = renderWithLocale(<PublicMediaImage src={src} alt="Preview" fallback={null} />, { locale: 'en' });
+    expect(screen.getByRole('img', { name: 'Preview' })).toHaveAttribute('src', `${src}?width=960`);
+    result.rerender(<PublicMediaImage src={`${src}?width=320&version=2`} previewWidth={1600} loading="eager" alt="Preview" fallback={null} />);
+    expect(screen.getByRole('img', { name: 'Preview' })).toHaveAttribute('src', `${src}?width=1600&version=2`);
+    expect(screen.getByRole('img', { name: 'Preview' })).toHaveAttribute('loading', 'eager');
+    result.rerender(<PublicMediaImage src="https://example.com/image.jpg?signature=abc" alt="Preview" fallback={null} />);
+    expect(screen.getByRole('img', { name: 'Preview' })).toHaveAttribute('src', 'https://example.com/image.jpg?signature=abc');
+  });
   it('does not keep a replacement image hidden after an earlier URL failed', () => {
     const result = renderWithLocale(<PublicMediaImage src="/unavailable.jpg" alt="Property" fallback={<span>Image unavailable</span>} />, { locale: 'en' });
     fireEvent.error(screen.getByRole('img', { name: 'Property' }));

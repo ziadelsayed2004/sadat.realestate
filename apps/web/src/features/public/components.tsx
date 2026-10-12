@@ -358,16 +358,23 @@ export function PublicMediaImage({
   alt,
   fallback,
   className,
-  loading = 'lazy'
+  loading = 'lazy',
+  previewWidth = 960
 }: {
   readonly src?: string | undefined;
   readonly alt: string;
   readonly fallback: ReactNode;
   readonly className?: string | undefined;
   readonly loading?: 'eager' | 'lazy';
+  readonly previewWidth?: 320 | 960 | 1600;
 }) {
   const [failedUrl, setFailedUrl] = useState<string | undefined>();
-  const imageUrl = safePublicUrl(src);
+  let imageUrl = safePublicUrl(src);
+  if (imageUrl !== undefined && /^\/api\/v1\/public\/properties\/[a-f\d]{24}\/media\/[a-f\d]{24}\/content(?:\?|$)/u.test(imageUrl)) {
+    const preview = new URL(imageUrl, 'http://sadat-real-estate.local');
+    preview.searchParams.set('width', String(previewWidth));
+    imageUrl = `${preview.pathname}${preview.search}`;
+  }
   if (imageUrl === undefined || failedUrl === imageUrl) return <>{fallback}</>;
   return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailedUrl(imageUrl)} />;
 }

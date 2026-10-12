@@ -9,6 +9,7 @@ import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { PropertyMediaServiceError, type MediaMutationContext, type PropertyMediaService } from './service.js';
 import { pipeline } from 'node:stream/promises';
 import { mediaByteRange, type PropertyMediaContentReader } from './content.js';
+import { imagePreview, previewContentEtag, type ImagePreviewWidth } from './image-preview.js';
 
 export const PROPERTY_MEDIA_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/properties/:propertyId/media/:assetId/content', operationId: 'getAdminPropertyMediaContent' },
@@ -23,12 +24,30 @@ export const PROPERTY_MEDIA_ROUTE_DEFINITIONS = [
   { method: 'DELETE', path: '/api/v1/admin/properties/:propertyId/media/:assetId', operationId: 'deleteAdminPropertyMedia' }
 ] as const;
 export interface PropertyMediaRouterDependencies { service: PropertyMediaService; accessTokens: AccessTokenService; content?: PropertyMediaContentReader; adminContent?: PropertyMediaContentReader; }
+function previewWidth(request: Request, mime: string): ImagePreviewWidth | undefined {
+  const value = request.query.width;
+  if (value !== undefined && value !== '320' && value !== '960' && value !== '1600') throw new ApiContractError('VALIDATION_FAILED', 'errors.validation', 400);
+  return value !== undefined && /^image\/(?:jpeg|png|webp)$/u.test(mime) ? Number(value) as ImagePreviewWidth : undefined;
+}
+function revalidateContent(request: Request, response: Response, etag: string | undefined): boolean {
+  response.setHeader('Cache-Control', 'private, no-cache');
+  if (etag !== undefined) response.setHeader('ETag', etag);
+  if (etag !== undefined && request.get('range') === undefined && request.fresh) { response.status(304).end(); return true; }
+  return false;
+}
+async function sendPreview(request: Request, response: Response, media: NonNullable<Awaited<ReturnType<PropertyMediaContentReader>>>, width: ImagePreviewWidth): Promise<void> {
+  const bytes = await imagePreview(media.open, width, media.etag);
+  response.type('image/webp').setHeader('Content-Length', bytes.length);
+  response.setHeader('X-Content-Type-Options', 'nosniff');
+  if (request.method === 'HEAD') response.end();
+  else response.end(bytes);
+}
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
   MEDIA_FORBIDDEN: { statusCode: 403, messageKey: 'errors.media.forbidden' }, MEDIA_PROPERTY_NOT_FOUND: { statusCode: 404, messageKey: 'errors.media.propertyNotFound' }, MEDIA_PROPERTY_NOT_EDITABLE: { statusCode: 409, messageKey: 'errors.media.propertyNotEditable' }, MEDIA_NOT_FOUND: { statusCode: 404, messageKey: 'errors.media.notFound' }, MEDIA_VERSION_CONFLICT: { statusCode: 409, messageKey: 'errors.media.versionConflict' }, MEDIA_CAPACITY: { statusCode: 409, messageKey: 'errors.media.capacity' }, MEDIA_PROCESSING_FAILED: { statusCode: 422, messageKey: 'errors.media.processingFailed' }, MEDIA_INVALID_UPLOAD: { statusCode: 400, messageKey: 'errors.media.invalidUpload' }, MEDIA_STORAGE_UNAVAILABLE: { statusCode: 503, messageKey: 'errors.media.storageUnavailable' }
 };
 function context(request: Request): MediaMutationContext { const current = getRequestContext(); let reason: string | undefined; try { reason = request.get('x-edit-reason') === undefined ? undefined : decodeURIComponent(request.get('x-edit-reason')!); } catch { throw new ApiContractError('INVALID_REASON', 'errors.validation', 400); } return { ...(reason === undefined ? {} : { reason }), requestId: current?.requestId ?? request.get('x-request-id') ?? 'unknown-request', traceId: current?.traceId ?? 'f'.repeat(32) }; }
 function claims(response: Response): AccessTokenClaims { return (response.locals.adminRbacClaims ?? response.locals.providerClaims) as AccessTokenClaims; }
-function sendError(request: Request, response: Response, error: unknown): void { const mediaError = error instanceof PropertyMediaServiceError ? ERROR_MAP[error.code] : undefined; const mapped = toApiErrorResponse(mediaError ? new ApiContractError((error as PropertyMediaServiceError).code, mediaError.messageKey, mediaError.statusCode) : error, getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request'); response.status(mapped.statusCode).json(mapped.body); }
+function sendError(request: Request, response: Response, error: unknown): void { response.removeHeader('ETag'); response.setHeader('Cache-Control', 'no-store'); const mediaError = error instanceof PropertyMediaServiceError ? ERROR_MAP[error.code] : undefined; const mapped = toApiErrorResponse(mediaError ? new ApiContractError((error as PropertyMediaServiceError).code, mediaError.messageKey, mediaError.statusCode) : error, getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request'); response.status(mapped.statusCode).json(mapped.body); }
 function id(value: string | string[] | undefined): string { return typeof value === 'string' ? value : ''; }
 function contentLength(request: Request): number | undefined { const raw = request.get('content-length'); if (!raw) return undefined; return /^\d+$/.test(raw) ? Number(raw) : Number.NaN; }
 function filename(request: Request): string | undefined { const raw = request.get('x-file-name'); try { return raw === undefined ? undefined : decodeURIComponent(raw); } catch { throw new ApiContractError('MEDIA_INVALID_UPLOAD', 'errors.media.invalidUpload', 400); } }
@@ -43,6 +62,10 @@ export function createPropertyMediaRouter(dependencies: PropertyMediaRouterDepen
       if (!allowed.some(media => media.id === mediaId && media.active && media.processingState === 'ready')) throw new PropertyMediaServiceError('MEDIA_NOT_FOUND');
       const media = await dependencies.adminContent?.(propertyId, mediaId);
       if (!media) throw new PropertyMediaServiceError('MEDIA_NOT_FOUND');
+      const width = previewWidth(request, media.mime);
+      // Authorization and active-media checks must run before a cache hit or a 304.
+      if (revalidateContent(request, response, previewContentEtag(media.etag, width))) return;
+      if (width !== undefined) { await sendPreview(request, response, media, width); return; }
       response.setHeader('X-Content-Type-Options', 'nosniff');
       response.type(media.mime).setHeader('Content-Length', media.size);
       if (request.method === 'HEAD') { response.end(); return; }
@@ -55,12 +78,10 @@ export function createPropertyMediaRouter(dependencies: PropertyMediaRouterDepen
       const mediaId = propertyMediaObjectIdSchema.parse(id(request.params.assetId));
       const media = await dependencies.content?.(propertyId, mediaId);
       if (!media) throw new PropertyMediaServiceError('MEDIA_NOT_FOUND');
-      // Recheck publication before every cache validation; hidden media must never get a 304.
-      response.setHeader('Cache-Control', 'private, no-cache');
-      if (media.etag) {
-        response.setHeader('ETag', media.etag);
-        if (request.get('range') === undefined && request.fresh) { response.status(304).end(); return; }
-      }
+      const width = previewWidth(request, media.mime);
+      // Publication must be rechecked before reusing derived bytes or returning a 304.
+      if (revalidateContent(request, response, previewContentEtag(media.etag, width))) return;
+      if (width !== undefined) { await sendPreview(request, response, media, width); return; }
       const range = mediaByteRange(request.get('range'), media.size);
       response.setHeader('Accept-Ranges', 'bytes');
       response.setHeader('X-Content-Type-Options', 'nosniff');

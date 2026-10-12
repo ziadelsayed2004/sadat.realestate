@@ -1,14 +1,80 @@
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { propertyDataSchema } from '@sadat-real-estate/contracts';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminPropertyEditor } from '../src/features/admin_properties/editor.tsx';
-import { AdminPropertyCover } from '../src/features/admin_properties/photo.tsx';
+import { AdminPropertyCover, AdminPropertyPhoto } from '../src/features/admin_properties/photo.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const property = propertyDataSchema.parse({ id: 'a'.repeat(24), kind: 'property', name: { en: 'Published villa', ar: 'فيلا منشورة' }, slug: 'published-villa', transactionType: 'sale', source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, status: 'published', active: true, version: 3, createdAt: '2026-10-08T10:00:00Z', updatedAt: '2026-10-08T10:00:00Z', availableActions: ['update'] });
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.editor.test' };
 const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { requestId: 'editor-test' } }), { headers: { 'content-type': 'application/json' } });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+it('keeps the loaded preview when the authorization object changes without a token change', async () => {
+  const fetcher = vi.fn<typeof fetch>(async () => new Response('image', { headers: { 'content-type': 'image/webp' } }));
+  vi.stubGlobal('fetch', fetcher);
+  const result = renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={authorization} />, { locale: 'en' });
+  const image = await screen.findByRole('img', { name: 'Cover' });
+  const initialUrl = image.getAttribute('src');
+  result.rerender(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={{ getAuthorizationHeader: () => 'Bearer admin.editor.test' }} />);
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(image).toHaveAttribute('src', initialUrl);
+});
+
+it('renews an expired session once and uses the refreshed authorization for the image', async () => {
+  let token = 'Bearer expired';
+  const refresh = vi.fn(async () => { token = 'Bearer renewed'; });
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(new Response('', { status: 401 }))
+    .mockImplementation(async () => new Response('image', { headers: { 'content-type': 'image/webp' } }));
+  vi.stubGlobal('fetch', fetcher);
+  renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={{ getAuthorizationHeader: () => token, refresh }} />, { locale: 'en' });
+  await screen.findByRole('img', { name: 'Cover' });
+  expect(refresh).toHaveBeenCalledTimes(1);
+  // The token change revalidates the mounted preview under the renewed session.
+  expect(fetcher).toHaveBeenCalledTimes(3);
+  expect(new Headers(fetcher.mock.calls[1]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
+  expect(new Headers(fetcher.mock.calls[2]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
+});
+
+it('recovers one transient preview failure and offers a fresh request after an image decode failure', async () => {
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(new Response('', { status: 503 }))
+    .mockImplementation(async () => new Response('image', { headers: { 'content-type': 'image/webp' } }));
+  vi.stubGlobal('fetch', fetcher);
+  renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={authorization} />, { locale: 'en' });
+  fireEvent.error(await screen.findByRole('img', { name: 'Cover' }));
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  fireEvent.click(screen.getByRole('button', { name: 'Retry image: Cover' }));
+  await screen.findByRole('img', { name: 'Cover' });
+  expect(fetcher).toHaveBeenCalledTimes(3);
+  expect(fetcher.mock.calls[2]?.[1]?.cache).toBe('reload');
+});
+
+it('stops a hanging preview at the deadline and exposes retry instead of endless loading', async () => {
+  vi.useFakeTimers();
+  try {
+    const fetcher = vi.fn<typeof fetch>((_input, init) => new Promise((_resolve, reject) => {
+      init?.signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')));
+    }));
+    vi.stubGlobal('fetch', fetcher);
+    renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={authorization} />, { locale: 'en' });
+    await act(async () => { await vi.advanceTimersByTimeAsync(15_001); });
+    expect(screen.getByRole('button', { name: 'Retry image: Cover' })).toBeInTheDocument();
+    expect(screen.queryByText('Loading image…')).not.toBeInTheDocument();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  } finally { vi.useRealTimers(); }
+});
+
+it('also exposes retry when session renewal stalls instead of keeping the image loading', async () => {
+  vi.useFakeTimers();
+  try {
+    const refresh = vi.fn(() => new Promise<void>(() => undefined));
+    vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => new Response('', { status: 401 })));
+    renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={{ ...authorization, refresh }} />, { locale: 'en' });
+    await act(async () => { await vi.advanceTimersByTimeAsync(15_001); });
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'Retry image: Cover' })).toBeInTheDocument();
+  } finally { vi.useRealTimers(); }
+});
 
 it('previews a non-public cover through authenticated admin media without requesting public bytes', async () => {
   const fetcher = vi.fn<typeof fetch>(async () => new Response('', { status: 403 }));
@@ -17,7 +83,7 @@ it('previews a non-public cover through authenticated admin media without reques
   await screen.findByText('Image preview unavailable');
   expect(fetcher).toHaveBeenCalledTimes(1);
   const [url, init] = fetcher.mock.calls[0]!;
-  expect(String(url)).toBe(`/api/v1/admin/properties/${property.id}/media/${'c'.repeat(24)}/content`);
+  expect(String(url)).toBe(`/api/v1/admin/properties/${property.id}/media/${'c'.repeat(24)}/content?width=320`);
   expect(new Headers(init?.headers).get('authorization')).toBe('Bearer admin.editor.test');
   expect(init?.credentials).toBe('include');
 });
@@ -40,7 +106,7 @@ it('queues media and uses the returned field version for the cover, without uplo
   let fail = true;
   let current = property;
   const fetcher = vi.fn<typeof fetch>(async (input, init) => {
-    if (String(input).endsWith('/content')) return new Response('', { status: 404 });
+    if (new URL(String(input), 'http://local').pathname.endsWith('/content')) return new Response('', { status: 404 });
     if (init?.method === 'POST') {
       uploaded.push(init.body as File);
       if (init.body === files[1] && fail) { fail = false; return new Response('', { status: 503 }); }
@@ -67,7 +133,7 @@ it('queues media and uses the returned field version for the cover, without uplo
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Some changes were saved'));
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
-  await waitFor(() => expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/media/${'2'.repeat(24)}/content`))).toBe(true));
+  await waitFor(() => expect(fetcher.mock.calls.some(([url]) => String(url).includes(`/media/${'2'.repeat(24)}/content?width=1600`))).toBe(true));
   expect(uploaded).toEqual([files[0], files[1], files[1]]);
   expect(fetcher.mock.calls.filter(([url, init]) => init?.method === 'PATCH' && String(url).endsWith(property.id))).toHaveLength(1);
 });
@@ -99,7 +165,7 @@ it('keeps failed title edits and retries the unified administrative save at the 
 it('removes a photo through the administrative route with a reason and does not render deleted media', async () => {
   const media = { id: 'c'.repeat(24), propertyId: property.id, kind: 'image', originalFilename: 'photo.jpg', detectedMime: 'image/jpeg', byteSize: 6, sha256: 'd'.repeat(64), sortOrder: 0, isCover: true, processingState: 'ready', active: true, version: 1, createdAt: property.createdAt, updatedAt: property.updatedAt };
   const fetcher = vi.fn<typeof fetch>(async (input, init) => {
-    if (String(input).endsWith('/content')) return new Response('', { status: 404 });
+    if (new URL(String(input), 'http://local').pathname.endsWith('/content')) return new Response('', { status: 404 });
     if (String(input).endsWith(property.id)) return response(property);
     if (!init?.method || init.method === 'GET') return response({ items: [media, { ...media, id: 'e'.repeat(24), originalFilename: 'deleted.jpg', active: false, processingState: 'deleted' }] });
     expect(String(input)).toContain(`/admin/properties/${property.id}/media/${media.id}`);
@@ -184,7 +250,7 @@ it('uploads a cover without a typed reason and refreshes the persisted public im
       return response(media);
     }
     if (String(input).endsWith(property.id)) return response({ ...property, imageUrl });
-    if (String(input).endsWith('/content')) return new Response('', { status: 404 });
+    if (new URL(String(input), 'http://local').pathname.endsWith('/content')) return new Response('', { status: 404 });
     return response({ items: [] });
   }));
   renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={saved} />, { locale: 'en' });

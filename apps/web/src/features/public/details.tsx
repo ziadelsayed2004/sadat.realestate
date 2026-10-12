@@ -155,6 +155,7 @@ function Gallery({
           alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
           fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
           loading="eager"
+          previewWidth={1600}
         />}
         {selected?.kind === 'image' && safePublicUrl(selected.imageUrl) ? <button type="button" aria-label={copy.openImage} onClick={() => setViewerOpen(true)} style={{ position: 'absolute', inset: 0, width: '100%', border: 0, background: 'transparent', cursor: 'zoom-in' }} /> : null}
       </div>
@@ -178,7 +179,7 @@ function Gallery({
         <p className="public-property-details__media-note">{copy.mediaUnavailable}</p>
       )}
       <Modal open={viewerOpen} title={copy.galleryTitle} closeLabel={copy.close} onClose={() => setViewerOpen(false)}>
-        <PublicMediaImage key={selected?.id} src={selected?.imageUrl} alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))} loading="eager" className="public-property-details__viewer-image" fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        <PublicMediaImage key={selected?.id} src={selected?.imageUrl} alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))} loading="eager" previewWidth={1600} className="public-property-details__viewer-image" fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
         <div className="public-property-details__gallery-thumbnails">
           {media.filter(item => item.kind === 'image').map(item => <button key={item.id} type="button" aria-label={copy.mediaItem(media.indexOf(item) + 1)} aria-pressed={item.id === selected?.id} onClick={() => setSelectedId(item.id)}>{media.indexOf(item) + 1}</button>)}
         </div>

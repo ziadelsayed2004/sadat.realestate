@@ -39,6 +39,7 @@ const propertyReportSuccessEnvelopeSchema = successEnvelopeSchema(propertyReport
 
 export interface AdminPropertiesAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 interface CommonOptions {

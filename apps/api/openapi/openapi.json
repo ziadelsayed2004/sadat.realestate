@@ -11238,11 +11238,25 @@
               "type": "string"
             },
             "example": "bytes=0-1023"
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "required": false,
+            "description": "Optional image preview bound in pixels. Preserves the entire image and returns WebP; omit for the original media.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                320,
+                960,
+                1600
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Full media content",
+            "description": "Original media, or a bounded WebP image preview when width is supplied.",
             "content": {
               "image/jpeg": {
                 "schema": {
@@ -11303,6 +11317,9 @@
                 }
               }
             }
+          },
+          "304": {
+            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
           }
         }
       }
@@ -12254,11 +12271,25 @@
               "type": "string",
               "pattern": "^[a-f0-9]{24}$"
             }
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "required": false,
+            "description": "Optional image preview bound in pixels. Preserves the entire image and returns WebP; omit for the original media.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                320,
+                960,
+                1600
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Full media content",
+            "description": "Original media, or a bounded WebP image preview when width is supplied.",
             "content": {
               "image/jpeg": {
                 "schema": {
@@ -12297,6 +12328,9 @@
           },
           "404": {
             "$ref": "#/components/responses/ProviderError"
+          },
+          "304": {
+            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
           }
         }
       }

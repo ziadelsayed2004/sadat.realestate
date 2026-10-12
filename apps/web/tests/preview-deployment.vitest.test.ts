@@ -1,5 +1,5 @@
 import { spawn, type ChildProcess } from 'node:child_process';
-import { createServer } from 'node:http';
+import { createServer, get } from 'node:http';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -170,6 +170,13 @@ describe('secure preview build and deployment', () => {
     const apiPort = await unusedPort();
     const apiOrigin = `http://127.0.0.1:${apiPort}`;
     const api = createServer((request, response) => {
+      if (request.url === '/api/v1/public/properties/preview/content') {
+        response.setHeader('ETag', '"preview-v1"');
+        response.setHeader('Cache-Control', 'private, no-cache');
+        response.statusCode = request.headers['if-none-match'] === '"preview-v1"' && !request.headers['cache-control']?.includes('no-cache') ? 304 : 200;
+        response.end(response.statusCode === 304 ? undefined : 'image bytes');
+        return;
+      }
       if (request.url !== '/api/v1/public/settings/seo') {
         response.statusCode = 404;
         response.end();
@@ -206,6 +213,15 @@ describe('secure preview build and deployment', () => {
     server.close();
     try {
       await waitForPreviewServer(child, `${origin}/health`);
+      const revalidated = await new Promise<{ status: number | undefined; bytes: number }>((resolve, reject) => {
+        get(`${origin}/api/v1/public/properties/preview/content`, { headers: { 'if-none-match': '"preview-v1"' } }, response => {
+          let bytes = 0;
+          response.on('data', (chunk: Buffer) => { bytes += chunk.length; });
+          response.on('end', () => resolve({ status: response.statusCode, bytes }));
+          response.on('error', reject);
+        }).on('error', reject);
+      });
+      expect(revalidated).toEqual({ status: 304, bytes: 0 });
       const html = await (await fetch(`${origin}/?lang=en`)).text();
       expect(html).toContain('<title>Configured production title</title>');
       expect(html).toContain('name="google-site-verification" content="verification-value"');
