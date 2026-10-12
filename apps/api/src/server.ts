@@ -1,4 +1,5 @@
 import { createServer, type Server } from 'node:http';
+import { initializeDeveloperOrganizations } from './modules/organizations/provider-profile.js';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -129,6 +130,7 @@ async function runEntrypoint(): Promise<void> {
   const database = createDatabaseConnection(databaseEnvironment, runtimeEnvironment.appEnvironment);
   await database.connect();
   await initializeFeaturedHomepagePlacement(database.nativeConnection);
+  await initializeDeveloperOrganizations(database.nativeConnection);
   const auth = createAuthRuntime(database.nativeConnection, authEnvironment);
   if (!auth.accessTokens) throw new Error('Auth access-token verifier is required for product routes');
   const seeker = createSeekerRuntime(

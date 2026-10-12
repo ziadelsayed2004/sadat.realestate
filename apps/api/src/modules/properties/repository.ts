@@ -1,4 +1,5 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
+import { developerOrganizationId } from '../organizations/provider-profile.js';
 import type { PropertyAdminListQuery, PropertyContactStep, PropertyCoordinates, PropertyCoreStep, PropertyDetailsStep, PropertyDuplicateData, PropertyFeaturesServicesStep, PropertyListQuery, PropertyLocationStep, PropertyPricingStep, PropertySource } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { PropertyModels, PropertyRecord } from './models.js';
@@ -280,10 +281,11 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     async create(input) {
       try {
         return await transaction(async (session) => {
+          const organizationId = input.property.source.organizationId ? new Types.ObjectId(input.property.source.organizationId) : await developerOrganizationId(connection, input.property.providerId, session);
           const payload = {
             providerId: new Types.ObjectId(input.property.providerId),
-            sourceType: input.property.source.sourceType,
-            ...(input.property.source.organizationId ? { organizationId: new Types.ObjectId(input.property.source.organizationId) } : {}),
+            sourceType: organizationId && !input.property.source.organizationId ? 'developer_company' : input.property.source.sourceType,
+            ...(organizationId ? { organizationId } : {}),
             kind: input.property.kind,
             name: input.property.name,
             slug: input.property.slug,

@@ -1,4 +1,5 @@
 import { Types, type Connection, type QueryFilter } from 'mongoose';
+import { ensureDeveloperOrganization } from '../organizations/provider-profile.js';
 import type {
   AdminAccountUserData,
   AdminAccountUserListData,
@@ -628,6 +629,9 @@ export function createMongooseAccountRepository(
             throw new ConcurrentAccountTransitionError();
           }
 
+          const organization = input.toProviderStatus === 'approved' && input.target.providerType === 'developer_company'
+            ? await ensureDeveloperOrganization(connection, userId, input.changedAt, session) : undefined;
+
           // Review progress must not sign the provider out. The access guard
           // rejects the old account status until refresh issues current claims.
           // Only a decision that blocks authentication revokes the sessions.
@@ -685,6 +689,7 @@ export function createMongooseAccountRepository(
             after: {
               userId: input.target.userId,
               providerType: input.target.providerType,
+              ...(organization ? { organizationId: organization.organizationId } : {}),
               accountStatus: input.toAccountStatus,
               applicationStatus: input.toProviderStatus,
               profileStatus: input.toProviderStatus,

@@ -1,4 +1,5 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
+import { developerOrganizationId } from '../organizations/provider-profile.js';
 import type { ProjectListQuery, ProjectStatus } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { ProjectModels, ProjectRecord } from './models.js';
@@ -156,11 +157,12 @@ export function createMongooseProjectRepository(connection: Connection, models: 
     async create(input) {
       try {
         return await tx(async session => {
+          const organizationId = input.project.organizationId ? new Types.ObjectId(input.project.organizationId) : await developerOrganizationId(connection, input.project.providerId, session);
           const project = {
             ...input.project,
             providerId: new Types.ObjectId(input.project.providerId),
             ...(input.project.locationId ? { locationId: new Types.ObjectId(input.project.locationId) } : {}),
-            ...(input.project.organizationId ? { organizationId: new Types.ObjectId(input.project.organizationId) } : {}),
+            ...(organizationId ? { organizationId } : {}),
             createdAt: input.metadata.changedAt,
             updatedAt: input.metadata.changedAt
           };
