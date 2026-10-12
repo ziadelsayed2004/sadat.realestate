@@ -12,6 +12,7 @@ export interface PublicArticlesCopy {
   readonly resultCount: (count: number) => string;
   readonly openArticle: string;
   readonly readTime: (minutes: number) => string;
+  readonly readTimeLabel: string;
   readonly publishedAt: string;
   readonly authorLabel: string;
   readonly authorUnavailable: string;
@@ -57,6 +58,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     resultCount: count => `${count} مقالات منشورة`,
     openArticle: 'اقرأ المقال',
     readTime: minutes => `${minutes} دقائق`,
+    readTimeLabel: 'مدة القراءة',
     publishedAt: 'تاريخ النشر',
     authorLabel: '\u0627\u0644\u0643\u0627\u062a\u0628',
     authorUnavailable: 'بيانات الكاتب غير متاحة في المحتوى العام',
@@ -66,7 +68,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     articleBody: 'محتوى المقال',
     introduction: '\u0645\u0642\u062f\u0645\u0629',
     relatedArticles: 'مقالات ذات صلة',
-    relatedProperties: '\u0639\u0642\u0627\u0631\u0627\u062a \u0630\u0627\u062a \u0635\u0644\u0629',
+    relatedProperties: 'عقارات متاحة على المنصة',
     ctaTitle: 'هل تبحث عن عقار مناسب؟',
     ctaAction: 'ابحث الآن',
     noRelatedArticles: 'لا توجد مقالات ذات صلة منشورة حاليًا.',
@@ -100,6 +102,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     resultCount: count => `${count} published ${count === 1 ? 'article' : 'articles'}`,
     openArticle: 'Read article',
     readTime: minutes => `${minutes} min read`,
+    readTimeLabel: 'Reading time',
     publishedAt: 'Published',
     authorLabel: 'Author',
     authorUnavailable: 'Author details are not available in the public content projection.',
@@ -109,7 +112,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     articleBody: 'Article content',
     introduction: 'Introduction',
     relatedArticles: 'Related articles',
-    relatedProperties: 'Related properties',
+    relatedProperties: 'Available properties',
     ctaTitle: 'Looking for the right property?',
     ctaAction: 'Search now',
     noRelatedArticles: 'No related published articles are available yet.',

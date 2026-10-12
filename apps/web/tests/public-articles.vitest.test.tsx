@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { articlePublicListDataSchema, articlePublicSchema } from '@sadat-real-estate/contracts';
+import { articlePublicListDataSchema, articlePublicSchema, publicPropertyListDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
@@ -43,6 +43,17 @@ const categories: readonly PublicArticleCategoryOption[] = [
 const emptyRelatedProperties = { items: [], categories: [], propertyTypes: [], page: 1, limit: 3, total: 0 };
 
 describe('public article listing and details', () => {
+  it.each(['ar', 'en'] as const)('puts available listings after article content and preserves the selected language in %s', locale => {
+    const relatedProperties = publicPropertyListDataSchema.parse({ ...emptyRelatedProperties, total: 1, items: [{ id: 'e'.repeat(24), slug: 'available-home', kind: 'property', name: { ar: 'شقة متاحة', en: 'Available home' }, transactionType: 'sale', price: { amount: 150000, currency: 'EGP' } }] });
+    const result = renderWithLocale(<PublicArticleDetails locale={locale} initialData={article} relatedArticles={[]} relatedProperties={relatedProperties} />, { locale });
+    const layout = result.container.querySelector('.public-article-details__detail-layout')!;
+    expect(layout.firstElementChild?.tagName).toBe('ARTICLE');
+    expect(layout.lastElementChild?.tagName).toBe('ASIDE');
+    expect(layout.querySelector('.public-article-details__meta div:last-child dt')).toHaveTextContent(locale === 'ar' ? 'مدة القراءة' : 'Reading time');
+    expect(screen.getByRole('heading', { name: getPublicArticlesCopy(locale).relatedProperties })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /شقة متاحة|Available home/ })).toHaveAttribute('href', `/properties/available-home?lang=${locale}`);
+    expect(layout.querySelector('.public-article-details__property-placeholder')).toBeInTheDocument();
+  });
   it('reloads the saved translation when language changes without replacing the SSR bootstrap', async () => {
     const arabic = { ...article, title: { ar: 'العنوان العربي' }, body: { ar: 'المحتوى العربي' } };
     const english = { ...article, title: { en: 'English translation' }, body: { en: 'English body' } };

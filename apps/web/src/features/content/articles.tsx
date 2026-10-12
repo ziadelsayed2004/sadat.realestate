@@ -192,7 +192,7 @@ function ArticleCard({
             <dd>{publishedAt ?? '—'}</dd>
           </div>
           <div>
-            <dt>{copy.readTime(1)}</dt>
+            <dt>{copy.readTimeLabel}</dt>
             <dd>{copy.readTime(readingTimeMinutes)}</dd>
           </div>
         </dl>
@@ -366,8 +366,8 @@ function RelatedPropertyRail({
           const title = localizedText(item.name, locale) ?? item.slug;
           const price = relatedPropertyPrice(item, locale);
           return (
-            <a className="public-article-details__property" href={`/properties/${encodeURIComponent(item.slug)}`} key={item.id}>
-              <PublicMediaImage src={item.imageUrl} alt={title} loading="eager" fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+            <a className="public-article-details__property" href={`/properties/${encodeURIComponent(item.slug)}?lang=${locale}`} key={item.id}>
+              <PublicMediaImage src={item.imageUrl} alt="" fallback={<span className="public-article-details__property-placeholder" aria-hidden="true">⌂</span>} />
               <span className="public-article-details__property-copy">
                 <strong>{title}</strong>
                 <span>{price ?? '—'}</span>
@@ -405,7 +405,6 @@ function ArticleDetailsView({
   const hasRelatedProperties = (relatedProperties?.items.length ?? 0) > 0;
   return (
     <div className={`public-article-details__detail-layout${hasRelatedProperties ? '' : ' public-article-details__detail-layout--without-property-rail'}`}>
-      <RelatedPropertyRail data={relatedProperties} locale={locale} copy={copy} />
       <article className="public-article-details__article">
       <div className="public-article-details__hero">
         <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" /></div>
@@ -415,7 +414,7 @@ function ArticleDetailsView({
           <dl className="public-article-details__meta">
             <div><dt>{copy.authorLabel}</dt><dd>{authorName}</dd></div>
             <div><dt>{copy.publishedAt}</dt><dd>{publishedAt ?? '—'}</dd></div>
-            <div><dt>{copy.readTime(1)}</dt><dd>{copy.readTime(article.readingTimeMinutes ?? readTime(localizedText(article.body, locale)))}</dd></div>
+            <div><dt>{copy.readTimeLabel}</dt><dd>{copy.readTime(article.readingTimeMinutes ?? readTime(localizedText(article.body, locale)))}</dd></div>
           </dl>
         </div>
       </div>
@@ -425,6 +424,7 @@ function ArticleDetailsView({
         {related.length === 0 ? <p>{copy.noRelatedArticles}</p> : <div className="public-article-details__related-grid">{related.map(item => <ArticleCard key={item.id} article={item} locale={locale} copy={copy} categories={categories} />)}</div>}
       </section>
       </article>
+      <RelatedPropertyRail data={relatedProperties} locale={locale} copy={copy} />
     </div>
   );
 }
