@@ -369,25 +369,26 @@ function SourceAndProject({
   const sourceDescriptorParts = locale === 'ar'
     ? [projectName === undefined ? undefined : `مشروع: ${projectName}`, sourceName === sourceType ? undefined : sourceType].filter((value): value is string => value !== undefined)
     : [projectName, sourceName === sourceType ? undefined : sourceType].filter((value): value is string => value !== undefined);
+  const avatar = <span className="public-property-details__source-avatar" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">{data.source.sourceType === 'individual_broker' ? <><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></> : <><path d="M5 21V3h14v18M2 21h20M9 21v-5h6v5M8 7h2m4 0h2M8 11h2m4 0h2" /></>}</svg></span>;
   return (
     <section className="public-property-details__card public-property-details__source-card" aria-labelledby="public-property-details-source-title">
       <div className="public-property-details__source-identity">
-        {data.source.imageUrl ? <img src={data.source.imageUrl} alt="" width="48" height="48" loading="lazy" decoding="async" /> : null}
+        <PublicMediaImage className="public-property-details__source-avatar" src={data.source.imageUrl} alt="" fallback={avatar} />
         <div>
           <p className="public-property-details__eyebrow">{copy.sourceTitle}</p>
           <h2 id="public-property-details-source-title">{sourceName}</h2>
-          <p>
+          {sourceDescriptorParts.length > 0 || data.source.verified ? <p className="public-property-details__source-meta">
             {sourceDescriptorParts.map((part, index) => (
               <span key={`${part}-${index}`}>
                 {index === 0 ? null : <span aria-hidden="true"> · </span>}
                 <span>{part}</span>
               </span>
             ))}
-          </p>
+            {data.source.verified ? <span className="public-property-details__verified">{copy.verified}</span> : null}
+          </p> : null}
         </div>
-        {data.source.verified ? <span className="public-property-details__verified">{copy.verified}</span> : null}
       </div>
-      {data.source.verified && data.source.organizationSlug && data.source.sourceType !== 'individual_broker' ? <a className="public-property-details__profile-link" href={`/developers/${data.source.organizationSlug}?lang=${locale}`}>{data.source.sourceType === 'brokerage_office' ? copy.viewOfficeProfile : copy.viewDeveloperProfile}</a> : null}
+      {data.source.verified && data.source.organizationSlug && data.source.sourceType !== 'individual_broker' ? <a className="public-property-details__profile-link" href={`/developers/${data.source.organizationSlug}?lang=${locale}`}>{data.source.sourceType === 'brokerage_office' ? copy.viewOfficeProfile : copy.viewDeveloperProfile}<span aria-hidden="true">{locale === 'ar' ? '←' : '→'}</span></a> : null}
     </section>
   );
 }

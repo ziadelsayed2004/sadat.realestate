@@ -38,13 +38,14 @@ for (const kind of ['brokerage_office', 'developer_company'] as const) {
   test(`opens the ${kind} source profile by slug and preserves the language`, async ({ page }, info) => {
     const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
     const slug = `sadat-${kind.replace('_', '-')}`;
+    const displayName = kind === 'brokerage_office' ? { ar: 'مكتب السادات العقاري للتسويق وإدارة العقارات بمدينة السادات', en: 'Sadat real estate office for sales and property management' } : name;
     const details = publicPropertyDetailsSchema.parse({
       id: 'a'.repeat(24), slug: 'office-home', kind: 'property', name: { ar: 'عقار المكتب', en: 'Office property' }, transactionType: 'sale',
-      source: { sourceType: kind, organizationId, organizationSlug: slug, name, verified: true },
+      source: { sourceType: kind, organizationId, organizationSlug: slug, name: displayName, verified: true },
       seo: { title: { en: 'Office property' }, slug: 'office-home' }, project: null, media: [], features: [], services: [], relatedProperties: []
     });
     const profile = publicOrganizationProfileSchema.parse({
-      id: organizationId, kind, slug, name, verified: true, projectCount: 0, propertyCount: 0, projects: [], properties: [],
+      id: organizationId, kind, slug, name: displayName, verified: true, projectCount: 0, propertyCount: 0, projects: [], properties: [],
       stats: { publishedProjects: 0, availableProperties: 0, saleProperties: 0, rentalProperties: 0 }
     });
     await page.route('**/api/v1/auth/refresh', route => route.fulfill({ status: 401, json: { error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired' } } }));
@@ -56,11 +57,19 @@ for (const kind of ['brokerage_office', 'developer_company'] as const) {
     const link = source.getByRole('link', { name: label });
     await expect(link).toHaveAttribute('href', `/developers/${slug}?lang=${locale}`);
     await source.scrollIntoViewIfNeeded();
-    await expect(source.getByRole('heading', { name: name[locale] })).toBeVisible();
+    await expect(source.getByRole('heading', { name: displayName[locale] })).toBeVisible();
+    expect(await source.evaluate(element => {
+      const card = element.getBoundingClientRect();
+      return [...element.querySelectorAll('h2, .public-property-details__source-avatar, a')].every(child => {
+        const box = child.getBoundingClientRect();
+        return box.x >= card.x && box.right <= card.right && box.y >= card.y && box.bottom <= card.bottom && child.scrollWidth <= child.clientWidth + 1;
+      });
+    })).toBe(true);
+    expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
     await source.screenshot({ path: info.outputPath('source-card.png') });
     await link.click();
     await expect(page).toHaveURL(new RegExp(`/developers/${slug}\\?lang=${locale}$`));
-    await expect(page.getByRole('heading', { name: name[locale], level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: displayName[locale], level: 1 })).toBeVisible();
   });
 }
