@@ -31,8 +31,8 @@ export interface StoredProperty {
   deliveryStatus?: PropertyRecord['deliveryStatus'];
   area?: PropertyDetailsStep['area'] extends infer T ? Exclude<T, null | undefined> : never;
   layout?: PropertyDetailsStep['layout'];
-  price?: PropertyPricingStep['price'];
-  paymentPlans?: PropertyPricingStep['paymentPlans'];
+  price?: PropertyRecord['price'];
+  paymentPlans?: PropertyRecord['paymentPlans'];
   featureIds?: string[];
   serviceIds?: string[];
   contact?: PropertyContactStep['contact'] extends infer T ? Exclude<T, null | undefined> : never;

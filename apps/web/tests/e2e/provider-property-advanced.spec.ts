@@ -136,7 +136,13 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('[data-screen-id="PRV-06"]')).toBeVisible();
     await page.locator('#provider-property-price').fill('1000000');
-    await page.locator('#provider-property-currency').fill('EGP');
+    const currency = page.locator('#provider-property-currency');
+    await expect(currency).toHaveValue('EGP');
+    expect(await currency.locator('option').evaluateAll(options => options.map(option => (option as HTMLOptionElement).value))).toEqual(['EGP', 'USD']);
+    await currency.selectOption('USD');
+    await expect(currency).toHaveValue('USD');
+    await page.locator('[aria-labelledby="provider-property-pricing-title"]').screenshot({ path: test.info().outputPath('property-currency-options.png') });
+    await currency.selectOption('EGP');
     await page.locator('#provider-property-payment-plan').check();
     await page.locator('#provider-property-plan-name').fill('12 month plan');
     await page.locator('#provider-property-installments').fill('12');

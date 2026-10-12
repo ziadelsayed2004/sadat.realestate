@@ -184,10 +184,15 @@ export const propertyPaymentPlanSchema = z.object({
   downPayment: propertyMoneySchema.optional(),
   installmentAmount: propertyMoneySchema
 }).strict();
+const pricingMoneySchema = propertyMoneySchema.extend({ currency: z.enum(['EGP', 'USD']) });
+const pricingPaymentPlanSchema = propertyPaymentPlanSchema.extend({
+  downPayment: pricingMoneySchema.optional(),
+  installmentAmount: pricingMoneySchema
+});
 const pricingFields = {
   transactionType: propertyTransactionTypeSchema.optional(),
-  price: propertyMoneySchema.optional(),
-  paymentPlans: z.array(propertyPaymentPlanSchema).max(20).optional()
+  price: pricingMoneySchema.optional(),
+  paymentPlans: z.array(pricingPaymentPlanSchema).max(20).optional()
 };
 function validatePricing(value: { price?: PropertyMoney | undefined; paymentPlans?: PropertyPaymentPlan[] | undefined }, context: z.RefinementCtx) {
   if (value.paymentPlans && value.paymentPlans.length > 0 && !value.price) {

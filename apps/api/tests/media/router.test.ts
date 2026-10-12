@@ -20,6 +20,30 @@ test('property media routes enforce verified-provider access and canonical uploa
   assert.equal((await request(url, 'DELETE', `/api/v1/provider/properties/${property}/media/${media}`, 'provider')).status, 200);
 }));
 
+test('public media revalidates cached bytes and refuses cached access after unpublishing', async () => {
+  let published = true;
+  let opened = 0;
+  const etag = `"${'a'.repeat(64)}"`;
+  const server = createApiServer({ database: { isReady: async () => true }, propertyMedia: { service, accessTokens: tokens, async content() {
+    return published ? { mime: 'image/jpeg', size: 5, etag, async open() { opened++; return Readable.from(Buffer.from('photo')); } } : null;
+  } } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const url = `http://127.0.0.1:${address.port}/api/v1/public/properties/${property}/media/${media}/content`;
+  try {
+    const initial = await fetch(url);
+    assert.equal(initial.headers.get('cache-control'), 'private, no-cache');
+    assert.equal(initial.headers.get('etag'), etag);
+    assert.equal(await initial.text(), 'photo');
+    const cached = await fetch(url, { headers: { 'if-none-match': etag, 'cache-control': 'max-age=0' } });
+    assert.equal(cached.status, 304);
+    assert.equal(await cached.text(), '');
+    assert.equal(opened, 1);
+    published = false;
+    assert.equal((await fetch(url, { headers: { 'if-none-match': etag } })).status, 404);
+    assert.equal(opened, 1);
+  } finally { await stopApiServer(server); }
+});
+
 test('streams public media with HEAD and byte ranges, rejects invalid ranges and unavailable private media', async () => {
   const contentBytes = Buffer.from('0123456789');
   const server = createApiServer({ database: { isReady: async () => true }, propertyMedia: { service, accessTokens: tokens, async content(propertyId, mediaId) {

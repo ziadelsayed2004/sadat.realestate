@@ -780,8 +780,8 @@
       "cash": "نقدًا"
     },
     "reviewAction": "إجراء المراجعة",
-    "approvalReason": "تم اعتماده",
     "approve": "اعتماد",
+    "approvalReason": "تم اعتماده",
     "reject": "رفض",
     "reasonLabel": "سبب الإجراء",
     "reasonPlaceholder": "اكتب سبباً واضحاً لا يقل عن حرفين",
@@ -3129,8 +3129,8 @@
     "form": {
       "createTitle": "إضافة مشروع جديد",
       "editTitle": "تعديل المشروع",
-      "createDescription": "أدخل البيانات التي يدعمها عقد المشروع الحالي.",
-      "editDescription": "عدّل البيانات المملوكة للمشروع مع الاحتفاظ بإصدار الخادم.",
+      "createDescription": "أدخل اسم المشروع وبياناته، ثم احفظه كمسودة.",
+      "editDescription": "عدّل بيانات المشروع، ثم احفظ التغييرات.",
       "name": "اسم المشروع",
       "description": "الوصف",
       "slug": "الرابط المختصر",
@@ -3659,7 +3659,9 @@
       "permissionTitle": "لا توجد صلاحية للرفع",
       "permissionBody": "لا يمكن رفع وسائط لهذه المسودة أو للجلسة الحالية.",
       "versionConflictTitle": "تعارض في نسخة الوسائط",
-      "versionConflictBody": "تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة."
+      "versionConflictBody": "تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة.",
+      "loading": "جارٍ تحميل الوسائط…",
+      "retry": "إعادة المحاولة"
     },
     "contact": {
       "validationBody": "راجع الحقول الموضحة أدناه ثم أعد الحفظ. بياناتك لم تُفقد.",
@@ -3717,7 +3719,7 @@
       "contact": "بيانات التواصل",
       "status": "الحالة",
       "media": "الصور",
-      "noMedia": "لا توجد وسائط مرفوعة في هذه الجلسة",
+      "noMedia": "لا توجد وسائط محفوظة لهذا العقار",
       "mediaCount": "وسائط مرفوعة",
       "reviewReason": "سبب الإرسال",
       "submittedTitle": "تم إرسال المسودة للمراجعة",
@@ -3932,6 +3934,11 @@
     }
   },
   "provider_property/steps-copy#getProviderPropertyAdvancedCopy": {
+    "currencyLabels": {
+      "EGP": "جنيه مصري",
+      "USD": "دولار أمريكي"
+    },
+    "chooseCurrency": "اختر الجنيه المصري أو الدولار الأمريكي",
     "titles": {
       "details": "تفاصيل العقار",
       "price-payment": "السعر والسداد",
@@ -4178,6 +4185,7 @@
     "imageUnavailable": "الصورة غير متاحة",
     "mediaUnavailable": "لا تتوفر وسائط عامة لهذا العقار حالياً.",
     "videoUnavailable": "تعذر تشغيل الفيديو. جرّب متصفحاً آخر أو تواصل للاستفسار عن العقار.",
+    "openImage": "فتح الصورة بالحجم الكامل",
     "sourceTitle": "مصدر هذا العقار",
     "publishedSource": "مصدر منشور معتمد",
     "sourceTypes": {

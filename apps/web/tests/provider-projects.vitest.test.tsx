@@ -43,6 +43,20 @@ function success(payload: unknown, requestId: string, meta: Record<string, unkno
 }
 
 describe('Provider projects', () => {
+  it('identifies and focuses the missing project reason before creating a project', async () => {
+    const mutations: ProviderProjectMutationApi = { create: vi.fn(async () => draft), update: vi.fn(async () => draft), submit: vi.fn(async () => draft) };
+    renderWithLocale(<ProviderProjects locale="en" session={session} load={async () => data} mutations={mutations} />, { locale: 'en' });
+    fireEvent.click(await screen.findByRole('button', { name: 'Add new project' }));
+    fireEvent.change(screen.getByLabelText('Project name — English'), { target: { value: 'Ahmed project' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(screen.getAllByRole('alert').find(node => node.textContent?.includes('Change reason'))).toBeInTheDocument();
+    expect(screen.getByLabelText('Change reason')).toHaveAccessibleDescription('Enter a clear reason of at least 5 characters.');
+    expect(screen.getByLabelText('Change reason')).toHaveFocus();
+    expect(mutations.create).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create new project' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'Ahmed project' }, reason: 'Create new project' }));
+  });
   it('loads the owner-scoped project list with strict query and authorization', async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null }> = [];
     const client = new ApiClient({

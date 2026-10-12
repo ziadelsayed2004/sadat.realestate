@@ -55,6 +55,12 @@ export function createPropertyMediaRouter(dependencies: PropertyMediaRouterDepen
       const mediaId = propertyMediaObjectIdSchema.parse(id(request.params.assetId));
       const media = await dependencies.content?.(propertyId, mediaId);
       if (!media) throw new PropertyMediaServiceError('MEDIA_NOT_FOUND');
+      // Recheck publication before every cache validation; hidden media must never get a 304.
+      response.setHeader('Cache-Control', 'private, no-cache');
+      if (media.etag) {
+        response.setHeader('ETag', media.etag);
+        if (request.get('range') === undefined && request.fresh) { response.status(304).end(); return; }
+      }
       const range = mediaByteRange(request.get('range'), media.size);
       response.setHeader('Accept-Ranges', 'bytes');
       response.setHeader('X-Content-Type-Options', 'nosniff');

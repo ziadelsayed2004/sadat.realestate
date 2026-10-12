@@ -206,7 +206,7 @@ describe('public property details', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: detailsData.name[locale] ?? detailsData.slug, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(copy.sourceTypes.developer_company)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: copy.sourceTitle, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.sourceTypes.developer_company, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.relatedTitle, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: copy.openMap })).toHaveAttribute('href', detailsData.mapUrl);
     expect(screen.getByRole('link', { name: copy.openMap })).toHaveAttribute('target', '_blank');
@@ -269,6 +269,27 @@ describe('public property details', () => {
     expect(result.container.querySelector('[data-gallery] img')).toHaveAttribute('src', fallbackImage);
     expect(result.container.querySelector('[data-gallery] [data-state="missing_image"]')).not.toBeInTheDocument();
     expect(result.container.querySelector('.public-property-details__media-note')).not.toBeInTheDocument();
+  });
+
+  it('opens the complete gallery image and restores focus when closed', () => {
+    const copy = getPublicPropertyDetailsCopy('en');
+    renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={{ ...detailsData, media: [{ ...detailsData.media[0]!, imageUrl: '/front.jpg' }, { ...detailsData.media[0]!, id: relatedId, imageUrl: '/second.jpg' }] }} />, { locale: 'en' });
+    const open = screen.getByRole('button', { name: copy.openImage });
+    open.focus();
+    fireEvent.click(open);
+    const dialog = screen.getByRole('dialog', { name: copy.galleryTitle });
+    expect(dialog.querySelector('img')).toHaveAttribute('src', '/front.jpg');
+    fireEvent.click(dialog.querySelectorAll('button')[2]!);
+    expect(dialog.querySelector('img')).toHaveAttribute('src', '/second.jpg');
+    fireEvent.click(screen.getByRole('button', { name: copy.close }));
+    expect(screen.queryByRole('dialog', { name: copy.galleryTitle })).not.toBeInTheDocument();
+    expect(open).toHaveFocus();
+  });
+
+  it('preserves dollars on a million-dollar property instead of labelling them as Egyptian pounds', () => {
+    const result = renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={{ ...detailsData, price: { amount: 1_500_000, currency: 'USD' } }} />, { locale: 'en' });
+    expect(result.container.querySelector('.public-property-details__price')).toHaveTextContent('$1,500,000');
+    expect(result.container.querySelector('.public-property-details__price')).not.toHaveTextContent('EGP');
   });
 
   it('matches the canonical details composition by rendering one related property card', () => {

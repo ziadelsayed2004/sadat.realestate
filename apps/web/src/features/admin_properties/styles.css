@@ -414,11 +414,11 @@
 .admin-property-editor__image-state{display:grid;place-items:center;color:#596578;text-align:center}
 .admin-property-editor__save{position:sticky;bottom:1rem;z-index:2;background:#fff;border:1px solid #d6dce3;border-radius:.75rem;padding:1rem;display:grid;gap:.5rem;box-shadow:0 4px 16px #0001}.admin-property-editor__save p{margin:0}.admin-property-editor__save button{justify-self:stretch}
 .admin-properties__table.admin-properties__table--properties { min-width: 0; table-layout: fixed; }
-.admin-properties__table--properties th:nth-child(1) { width: 31%; }
-.admin-properties__table--properties th:nth-child(2) { width: 18%; }
+.admin-properties__table--properties th:nth-child(1) { width: 30%; }
+.admin-properties__table--properties th:nth-child(2) { width: 17%; }
 .admin-properties__table--properties th:nth-child(3) { width: 12%; }
-.admin-properties__table--properties th:nth-child(4) { width: 14%; }
-.admin-properties__table--properties th:nth-child(5) { width: 25%; }
+.admin-properties__table--properties th:nth-child(4) { width: 13%; }
+.admin-properties__table--properties th:nth-child(5) { width: 28%; }
 .admin-properties__table--properties td { padding: 16px; overflow-wrap: anywhere; }
 .admin-properties__listing { display: flex; align-items: center; gap: 12px; min-inline-size: 0; }
 .admin-properties__listing-copy { min-inline-size: 0; line-height: 1.6; }
@@ -427,7 +427,8 @@
 .admin-properties__source { display: grid; gap: 4px; line-height: 1.6; }
 .admin-properties__thumbnail { flex: 0 0 88px; inline-size: 88px; overflow: hidden; border-radius: 10px; }
 .admin-properties__thumbnail .admin-property-editor__image { inline-size: 88px; block-size: 72px; object-fit: contain; font-size: 11px; line-height: 1.5; }
-.admin-properties__table--properties .admin-properties__row-actions { gap: 8px; }
+.admin-properties__table--properties .admin-properties__row-actions { gap: 10px; }
+.admin-properties__table--properties .admin-properties__row-actions a { white-space: nowrap; overflow-wrap: normal; }
 .admin-properties__table--properties .admin-properties__row-actions a { display: inline-flex; align-items: center; min-block-size: 36px; padding: 6px 10px; border: 1px solid #dce5e1; border-radius: 8px; background: #f7faf8; font-size: .8rem; line-height: 1.5; }
 @container (max-width: 900px) {
   .admin-properties__table.admin-properties__table--properties td { border-block-end: 0; }

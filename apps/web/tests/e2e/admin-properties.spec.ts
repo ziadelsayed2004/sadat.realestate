@@ -43,3 +43,28 @@ test.describe('ADM-14 through ADM-17 property management', () => {
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
   });
 });
+
+
+test('keeps the property review actions contained and readable at every viewport', async ({ page }, info) => {
+  const locale = localeForAdminProperties(info.project.name);
+  await routeAdminPropertyApis(page);
+  await page.goto(`/admin/properties/review?lang=${locale}`);
+  const row = page.getByTestId(`admin-property-${adminPropertyId}`);
+  await expect(row).toBeVisible();
+  const geometry = await row.evaluate(node => {
+    const bounds = node.getBoundingClientRect();
+    return [...node.querySelectorAll('.admin-properties__row-actions a')].map(link => {
+      const box=link.getBoundingClientRect();
+      return {left:box.left-bounds.left,right:box.right-bounds.right,height:box.height,width:box.width};
+    });
+  });
+  expect(geometry.length).toBeGreaterThan(0);
+  for (const link of geometry) {
+    expect(link.left).toBeGreaterThanOrEqual(-1);
+    expect(link.right).toBeLessThanOrEqual(1);
+    expect(link.height).toBeLessThan(70);
+    expect(link.width).toBeGreaterThan(70);
+  }
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await row.screenshot({path:info.outputPath('property-review-row.png')});
+});

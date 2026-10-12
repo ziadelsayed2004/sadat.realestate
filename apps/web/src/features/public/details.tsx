@@ -135,6 +135,7 @@ function Gallery({
   const cover = media.find(item => item.kind === 'image' && item.isCover) ?? media.find(item => item.kind === 'image') ?? media[0];
   const [selectedId, setSelectedId] = useState<string | undefined>(cover?.id);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [viewerOpen, setViewerOpen] = useState(false);
   const selected = media.find(item => item.id === selectedId) ?? cover;
 
   useEffect(() => {
@@ -148,13 +149,14 @@ function Gallery({
         {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{copy.installments}</span> : null}
         <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{transactionType === 'sale' ? copy.sale : copy.rent}</span>
       </div>
-      <div className="public-property-details__gallery-main">
+      <div className="public-property-details__gallery-main" style={{ position: 'relative' }}>
         {selected?.kind === 'video' ? videoFailed ? <UxStateView state="error" title={copy.videoUnavailable} /> : <video key={selected.id} src={safePublicUrl(selected.imageUrl)} controls playsInline preload="metadata" aria-label={copy.galleryTitle} onError={() => setVideoFailed(true)} style={{ width: '100%', height: '100%', maxHeight: '70vh', objectFit: 'contain', background: '#111' }} /> : <PublicMediaImage
           src={selected?.imageUrl}
           alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
           fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
           loading="eager"
         />}
+        {selected?.kind === 'image' && safePublicUrl(selected.imageUrl) ? <button type="button" aria-label={copy.openImage} onClick={() => setViewerOpen(true)} style={{ position: 'absolute', inset: 0, width: '100%', border: 0, background: 'transparent', cursor: 'zoom-in' }} /> : null}
       </div>
       {media.length > 0 ? (
         <div className="public-property-details__gallery-thumbnails" role="list" aria-label={copy.galleryTitle}>
@@ -175,6 +177,12 @@ function Gallery({
       ) : (
         <p className="public-property-details__media-note">{copy.mediaUnavailable}</p>
       )}
+      <Modal open={viewerOpen} title={copy.galleryTitle} closeLabel={copy.close} onClose={() => setViewerOpen(false)}>
+        <PublicMediaImage key={selected?.id} src={selected?.imageUrl} alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))} loading="eager" className="public-property-details__viewer-image" fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        <div className="public-property-details__gallery-thumbnails">
+          {media.filter(item => item.kind === 'image').map(item => <button key={item.id} type="button" aria-label={copy.mediaItem(media.indexOf(item) + 1)} aria-pressed={item.id === selected?.id} onClick={() => setSelectedId(item.id)}>{media.indexOf(item) + 1}</button>)}
+        </div>
+      </Modal>
     </section>
   );
 }
@@ -291,7 +299,7 @@ function DetailLineIcon({ kind, index }: { readonly kind: DetailLineIconKind; re
 
 function detailsPrice(value: PublicPropertyDetailsData['price'], locale: SupportedLocale): string | undefined {
   if (value === undefined) return undefined;
-  if (value.amount >= 1_000_000) {
+  if (value.currency === 'EGP' && value.amount >= 1_000_000) {
     const millions = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000);
     if (locale === 'ar') return `${millions} مليون جنيه`;
     return `EGP ${millions}M`;
@@ -301,8 +309,7 @@ function detailsPrice(value: PublicPropertyDetailsData['price'], locale: Support
 
 function detailsRelatedPrice(value: PublicPropertyDetailsData['price'], transactionType: PublicPropertyDetailsData['transactionType'], locale: SupportedLocale): string | undefined {
   if (value === undefined) return undefined;
-  if (transactionType === 'rent' && locale === 'ar') return `${new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 0 }).format(value.amount)} جنيه / شهر`;
-  if (transactionType === 'rent' && locale === 'en') return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value.amount)} EGP / month`;
+  if (transactionType === 'rent') return `${formatMoney(value, locale)} ${locale === 'ar' ? '/ شهر' : '/ month'}`;
   return detailsPrice(value, locale);
 }
 
@@ -355,12 +362,12 @@ function SourceAndProject({
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyDetailsCopy;
 }) {
-  const sourceName = localizedText(data.source.name, locale) ?? copy.sourceTitle;
+  const sourceName = localizedText(data.source.name, locale) ?? copy.sourceTypes[data.source.sourceType];
   const projectName = localizedText(data.project?.name, locale);
   const sourceType = copy.sourceTypes[data.source.sourceType];
   const sourceDescriptorParts = locale === 'ar'
-    ? [projectName === undefined ? undefined : `مشروع: ${projectName}`, sourceType].filter((value): value is string => value !== undefined)
-    : [projectName, sourceType].filter((value): value is string => value !== undefined);
+    ? [projectName === undefined ? undefined : `مشروع: ${projectName}`, sourceName === sourceType ? undefined : sourceType].filter((value): value is string => value !== undefined)
+    : [projectName, sourceName === sourceType ? undefined : sourceType].filter((value): value is string => value !== undefined);
   return (
     <section className="public-property-details__card public-property-details__source-card" aria-labelledby="public-property-details-source-title">
       <div className="public-property-details__source-identity">

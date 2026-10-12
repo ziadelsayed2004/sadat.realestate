@@ -228,6 +228,11 @@
   gap: 18px;
 }
 
+.provider-projects__dialog { display: flex; flex-direction: column; overflow: hidden; }
+.provider-projects__dialog .ui-modal__body { min-height: 0; overflow: auto; }
+.provider-projects__dialog .ui-modal__header,
+.provider-projects__dialog .ui-modal__footer { flex-shrink: 0; }
+
 .provider-projects__form fieldset {
   display: grid;
   gap: 12px;

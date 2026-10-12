@@ -130,8 +130,8 @@ describe('Provider property advanced wizard steps', () => {
     expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ version: 2, propertyTypeId: apartmentType.id, deliveryStatus: 'ready_to_move', area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
   });
 
-  it('conditionally validates payment plans and keeps plan currencies aligned with price', async () => {
-    const save = vi.fn(async () => property({ version: 3, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: '12 month plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }] }));
+  it.each(['EGP', 'USD'] as const)('keeps the selected %s currency aligned across price and payment plans', async currency => {
+    const save = vi.fn(async () => property({ version: 3, price: { amount: 1_000_000, currency }, paymentPlans: [{ name: { en: '12 month plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency } }] }));
     const loadCommission = vi.fn(async () => ({ accountId: providerId, source: 'policy' as const, effectiveAt: '2026-08-01T00:00:00.000Z', policyVersion: 3, kind: 'percentage' as const, percentageBps: 250, readOnly: true as const }));
     const copy = getProviderPropertyAdvancedCopy('en');
     const advancedCopy = getProviderPropertyAdvancedCopy('en');
@@ -139,14 +139,32 @@ describe('Provider property advanced wizard steps', () => {
     await waitFor(() => expect(screen.getByText('2.5%')).toBeInTheDocument());
     expect(screen.getByText(advancedCopy.commissionSources.policy)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText(copy.labels.priceAmount), { target: { value: '1000000' } });
-    fireEvent.change(screen.getByLabelText(copy.labels.currency), { target: { value: 'EGP' } });
+    const currencyField = screen.getByRole('combobox', { name: copy.labels.currency });
+    expect(currencyField).toHaveValue('EGP');
+    expect(Array.from(currencyField.querySelectorAll('option')).map(option => option.value)).toEqual(['EGP', 'USD']);
+    fireEvent.change(currencyField, { target: { value: currency } });
     fireEvent.click(screen.getByLabelText(copy.labels.paymentPlan));
     fireEvent.change(screen.getByLabelText(copy.labels.planName), { target: { value: '12 month plan' } });
     fireEvent.change(screen.getByLabelText(copy.labels.installments), { target: { value: '12' } });
     fireEvent.change(screen.getByLabelText(copy.labels.installmentAmount), { target: { value: '80000' } });
     fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('en').wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
-    expect(save).toHaveBeenCalledWith(propertyId, 'price-payment', expect.objectContaining({ version: 2, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: '12 month plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }] }));
+    expect(save).toHaveBeenCalledWith(propertyId, 'price-payment', expect.objectContaining({ version: 2, price: { amount: 1_000_000, currency }, paymentPlans: [{ name: { en: '12 month plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency } }] }));
+  });
+
+  it('keeps legacy price amounts and requires an explicit supported currency choice', async () => {
+    const save = vi.fn(async () => property({ version: 3, price: { amount: 150000, currency: 'USD' } }));
+    const copy = getProviderPropertyAdvancedCopy('ar');
+    renderWithLocale(<ProviderPropertyAdvancedWizard locale="ar" session={session} authClient={authClient} step="price-payment" propertyId={propertyId} initialData={property({ price: { amount: 150000, currency: 'EUR' } })} save={save} loadCommission={async () => ({ accountId: providerId, source: 'none', effectiveAt: '2026-08-01T00:00:00.000Z', readOnly: true })} />, { locale: 'ar' });
+    const currency = screen.getByRole('combobox', { name: copy.labels.currency });
+    expect(currency).toHaveValue('EUR');
+    expect(screen.getByRole('option', { name: copy.chooseCurrency })).toBeDisabled();
+    expect(screen.getByLabelText(copy.labels.priceAmount)).toHaveValue(150000);
+    fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('ar').wizard.saveDraft }));
+    expect(save).not.toHaveBeenCalled();
+    fireEvent.change(currency, { target: { value: 'USD' } });
+    fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('ar').wizard.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'price-payment', expect.objectContaining({ price: { amount: 150000, currency: 'USD' } })));
   });
 
   it('explains the exact floor error, retains the draft, and saves once corrected', async () => {

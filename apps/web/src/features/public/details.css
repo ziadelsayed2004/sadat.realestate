@@ -516,20 +516,12 @@
   gap: var(--space-md);
 }
 
-.public-property-details__source-card > img {
-  flex: 0 0 auto;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
 .public-property-details__source-card h2,
 .public-property-details__source-card p,
 .public-property-details__amenities h2,
 .public-property-details__nearby h2 {
   margin: 0;
 }
-
-.public-property-details__source-card .ui-badge { margin-inline-start: auto; }
 
 .public-property-details__amenities,
 .public-property-details__nearby {
@@ -780,10 +772,6 @@
     flex-wrap: wrap;
   }
 
-  .public-property-details__source-card .ui-badge {
-    margin-inline-start: 0;
-  }
-
   .public-property-details__facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1010,31 +998,11 @@
 
   .public-property-details__source-card {
     display: flex;
-    height: 106px;
     min-height: 106px;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     padding: 16px 18px;
-  }
-
-  .public-property-details__source-identity {
-    display: flex;
-    min-width: 0;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .public-property-details__source-card > .public-property-details__source-identity > img {
-    width: 48px;
-    height: 48px;
-    flex: 0 0 auto;
-    object-fit: contain;
-    border-radius: 12px;
-  }
-
-  .public-property-details__source-identity > div {
-    min-width: 0;
   }
 
   .public-property-details__source-card .public-property-details__eyebrow {
@@ -1046,7 +1014,6 @@
 
   .public-property-details__source-card h2 {
     overflow: hidden;
-    margin: 0;
     color: var(--color-text-strong);
     font-size: 16px;
     font-weight: 700;
@@ -1056,7 +1023,6 @@
   }
 
   .public-property-details__source-card .public-property-details__source-identity p:last-child {
-    margin: 0;
     color: var(--color-text-secondary);
     font-size: 12px;
     line-height: 17px;
@@ -1642,3 +1608,12 @@
   color: #a76b2b;
   background: #fff1d8;
 }
+
+.public-property-details__viewer-image{display:block;width:100%;max-height:65dvh;object-fit:contain}
+.public-property-details__source-identity{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.public-property-details__source-identity>div{min-width:0}
+.public-property-details__source-card h2{font-size:18px;line-height:1.5;overflow-wrap:anywhere}
+.public-property-details__source-card p{font-size:14px}
+.public-property-details__source-card .public-property-details__profile-link{font-size:13px;white-space:normal}
+
+.public-property-details__source-identity>img{flex:none;object-fit:contain;border-radius:12px}

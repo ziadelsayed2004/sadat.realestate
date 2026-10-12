@@ -1,4 +1,4 @@
-import { localizeCopy } from '../localization/copy-catalog.ts';
+import { getEditableCopyCatalog, localizeCopy } from '../localization/copy-catalog.ts';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderPropertyCompletionStep = 'media' | 'contact' | 'review';
@@ -21,6 +21,8 @@ export interface ProviderPropertyCompletionCopy {
   readonly notFoundBody: string;
   readonly versionConflict: string;
   readonly media: {
+    readonly loading: string;
+    readonly retry: string;
     readonly chooseImage: string;
     readonly chooseVideo: string;
     readonly videoKind: string;
@@ -108,98 +110,6 @@ export interface ProviderPropertyCompletionCopy {
   };
 }
 
-const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCompletionCopy>> = {
-  ar: {
-    pageTitle: 'إضافة عقار جديد',
-    pageDescription: 'أكمل الخطوات التالية لإضافة عقارك للمنصة',
-    steps: { media: 'الصور والوسائط', contact: 'التواصل', review: 'المراجعة والإرسال' },
-    titles: { media: 'الصور والوسائط', contact: 'بيانات التواصل', review: 'المراجعة والإرسال' },
-    descriptions: {
-      media: 'أضف صور العقار والمخطط من خلال مسار رفع الوسائط المعتمد.',
-      contact: 'حدد بيانات التواصل التي يدعمها عقد العقار الحالي.',
-      review: 'راجع ملخص المسودة وأرسلها للمراجعة عندما تسمح حالة الخادم بذلك.'
-    },
-    back: 'السابق', saveDraft: 'حفظ كمسودة', continue: 'متابعة', saving: 'جارٍ الحفظ…', saved: 'تم حفظ المسودة.',
-    validationTitle: 'تحقق من البيانات', validationBody: 'أكمل الحقول المطلوبة باستخدام قيم يقبلها العقد الحالي.',
-    mutationError: 'تعذر حفظ البيانات. تحقق من الاتصال وحاول مرة أخرى.',
-    permissionBody: 'لا يمكن تعديل هذه المسودة أو بياناتها من خلال الجلسة الحالية.',
-    notFoundBody: 'المسودة غير موجودة أو لا تنتمي إلى حساب المزود الحالي.',
-    versionConflict: 'تغيرت المسودة في جلسة أخرى. أعد تحميلها ثم حاول مرة أخرى.',
-    media: {
-      chooseImage: 'اختيار صورة', chooseVideo: 'اختيار فيديو', videoKind: 'فيديو', chooseFloorPlan: 'اختيار مخطط', imageKind: 'صورة', floorPlanKind: 'مخطط طابق', remove: 'إزالة', makeCover: 'تعيين كغلاف', moveUp: 'تحريك لأعلى', moveDown: 'تحريك لأسفل', upload: 'رفع الملف', uploading: 'جارٍ الرفع…', count: 'عدد الوسائط',
-      emptyTitle: 'لم يتم رفع وسائط بعد', emptyBody: 'أضف صورة أو فيديو أو مخططاً من الملفات المعتمدة.', existingUnavailableTitle: 'قائمة الوسائط السابقة غير متاحة في العقد الحالي', existingUnavailableBody: 'يعرض هذا المحرر الوسائط التي تم رفعها خلال الجلسة الحالية فقط؛ لا يتم اختلاق روابط أو بيانات لوسائط سابقة.', acceptedTypes: 'الأنواع المدعومة: JPG وPNG للصور، وPDF للمخططات وMP4 للفيديو (يفضل H.264). الحد الأقصى 10 ميجابايت للملف.', privacyNote: 'تظهر الوسائط للزوار بعد مراجعة العقار ونشره. الفيديو لا يُستخدم كصورة غلاف.', invalidFileTitle: 'الملف غير صالح', invalidFileBody: 'اختر ملفاً غير فارغ بامتداد ونوع مدعومين.', tooLargeTitle: 'الملف كبير جداً', tooLargeBody: 'يجب ألا يتجاوز الملف 10 ميجابايت.', uploadErrorTitle: 'تعذر رفع الملف', uploadErrorBody: 'تعذر إكمال الرفع. يمكنك المحاولة مرة أخرى.', storageUnavailableTitle: 'خدمة الوسائط غير متاحة مؤقتاً', storageUnavailableBody: 'لا يمكن إكمال الرفع حتى تصبح خدمة التخزين والفحص متاحة.', permissionTitle: 'لا توجد صلاحية للرفع', permissionBody: 'لا يمكن رفع وسائط لهذه المسودة أو للجلسة الحالية.', versionConflictTitle: 'تعارض في نسخة الوسائط', versionConflictBody: 'تغير ترتيب الوسائط. أعد تحميل المسودة قبل المتابعة.'
-    },
-    contact: {
-      validationBody: 'راجع الحقول الموضحة أدناه ثم أعد الحفظ. بياناتك لم تُفقد.',
-      errors: {
-        contactName: 'أدخل اسمًا صالحًا لا يزيد عن 160 حرفًا.',
-        phone: 'أدخل رقم هاتف صحيحًا، مثل 01012345678 أو +201012345678.',
-        whatsappNumber: 'أدخل رقم واتساب صحيحًا، مثل 01012345678 أو +201012345678.',
-        email: 'أدخل بريدًا إلكترونيًا صحيحًا، مثل name@example.com.',
-        preferredContactTime: 'اكتب الوقت المناسب للتواصل في 200 حرف كحد أقصى.',
-        internalNotes: 'اكتب الملاحظات الداخلية في 2000 حرف كحد أقصى.'
-      },
-      contactName: 'اسم مسؤول التواصل', phone: 'رقم الهاتف', whatsapp: 'رقم واتساب', email: 'البريد الإلكتروني', preferredLocale: 'لغة التواصل', contactNamePlaceholder: 'الاسم الكامل', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'العربية', en: 'English',}, supportedFieldsTitle: 'الحقول المدعومة', supportedFieldsBody: 'أدخل بيانات المسؤول الذي سيتلقى استفسارات العقار.', internalNotesTitle: 'ملاحظات داخلية', internalNotesBody: 'ملاحظات داخلية لا تظهر للمستخدمين...',
-      preferredContactTime: 'الوقت المناسب للتواصل',
-      contactRole: 'مسؤول التواصل',
-      contactRoles: { account_owner: 'مسؤول الحساب', sales_agent: 'موظف مبيعات', custom: 'رقم مخصص' },
-      visibilityTitle: 'ظهور بيانات التواصل',
-      visibilityHelp: 'هذه البيانات لصاحب العقار وإدارة المنصة فقط. تصل طلبات العملاء من خلال المنصة لتتولى الإدارة متابعتها.',
-      visibilityHidden: 'لن يظهر رقم الهاتف أو واتساب أو البريد أو الملاحظات الداخلية في صفحة العقار، حتى بعد النشر.',
-      showPhone: 'إظهار رقم الهاتف للمستخدمين',
-      showWhatsapp: 'إظهار رقم واتساب للمستخدمين',
-      showEmail: 'إظهار البريد الإلكتروني للمستخدمين',
-    },
-    review: {
-      submit: 'إرسال العقار للمراجعة', submitting: 'جارٍ الإرسال…', save: 'حفظ كمسودة', requiredConfirmationsTitle: 'التأكيدات المطلوبة', accurateData: 'أقر بأن بيانات العقار المدخلة دقيقة.', authority: 'أقر بأن لدي الصلاحية لعرض هذا العقار وتسويقه.', reviewProcess: 'أوافق على مراجعة فريق سادات للعقار قبل النشر.', missingTitle: 'لا يمكن الإرسال بعد', missingBody: 'أكمل المتطلبات التي يحددها الخادم قبل الإرسال.', location: 'الموقع', price: 'السعر', contact: 'بيانات التواصل', status: 'الحالة', media: 'الصور', noMedia: 'لا توجد وسائط مرفوعة في هذه الجلسة', mediaCount: 'وسائط مرفوعة', reviewReason: 'سبب الإرسال', submittedTitle: 'تم إرسال المسودة للمراجعة', submittedBody: 'استلم الخادم طلب المراجعة. ستظهر الحالة التالية عند توفرها من الخادم.', submittedStatus: 'قيد المراجعة', notSubmittableTitle: 'الإرسال غير متاح', notSubmittableBody: 'تسمح حالة الخادم الحالية بالحفظ فقط.', safeProjectionTitle: 'ملخص آمن', safeProjectionBody: 'يعرض هذا الملخص بيانات العقار التي يسمح بها عقد المزود فقط، ولا يعرض ملاحظات الإدارة أو التعيينات أو بيانات التدقيق.'
-    }
-  },
-  en: {
-    pageTitle: 'Add new property',
-    pageDescription: 'Complete the following steps to add your property to the platform.',
-    steps: { media: 'Media', contact: 'Contact', review: 'Review and submit' },
-    titles: { media: 'Photos and media', contact: 'Contact details', review: 'Review and submit' },
-    descriptions: {
-      media: 'Add property photos and floor plans through the implemented media-upload boundary.',
-      contact: 'Set the contact data supported by the current property contract.',
-      review: 'Review the draft summary and submit it when the server state allows it.'
-    },
-    back: 'Back', saveDraft: 'Save draft', continue: 'Continue', saving: 'Saving…', saved: 'Draft saved.',
-    validationTitle: 'Check the form', validationBody: 'Complete the required fields with values accepted by the current contract.',
-    mutationError: 'The data could not be saved. Check the connection and try again.',
-    permissionBody: 'This draft or its data cannot be changed by the current session.',
-    notFoundBody: 'The draft was not found or is not owned by the current provider account.',
-    versionConflict: 'The draft changed in another session. Reload it and try again.',
-    media: {
-      chooseImage: 'Choose image', chooseVideo: 'Choose video', videoKind: 'Video', chooseFloorPlan: 'Choose floor plan', imageKind: 'Image', floorPlanKind: 'Floor plan', remove: 'Remove', makeCover: 'Make cover', moveUp: 'Move up', moveDown: 'Move down', upload: 'Upload file', uploading: 'Uploading…', count: 'Media count',
-      emptyTitle: 'No media uploaded yet', emptyBody: 'Add an image, video or floor plan from the supported file types.', existingUnavailableTitle: 'Existing media list is not exposed by the current contract', existingUnavailableBody: 'This editor shows media uploaded during the current session only; it does not fabricate old media records or URLs.', acceptedTypes: 'Supported types: JPG and PNG for images, PDF for floor plans and MP4 video (H.264 recommended). Maximum 10 MB per file.', privacyNote: 'Media appears to visitors after the property is reviewed and published. Videos cannot be cover images.', invalidFileTitle: 'File is not valid', invalidFileBody: 'Choose a non-empty file with a supported extension and MIME type.', tooLargeTitle: 'File is too large', tooLargeBody: 'The file must not exceed 10 MB.', uploadErrorTitle: 'File could not be uploaded', uploadErrorBody: 'The upload did not complete. You can retry it.', storageUnavailableTitle: 'Media service is temporarily unavailable', storageUnavailableBody: 'The upload cannot complete until storage and scanning are ready.', permissionTitle: 'Upload permission required', permissionBody: 'Media cannot be uploaded for this draft or session.', versionConflictTitle: 'Media version conflict', versionConflictBody: 'The media order changed. Reload the draft before continuing.'
-    },
-    contact: {
-      validationBody: 'Check the fields marked below and save again. Your entries have been kept.',
-      errors: {
-        contactName: 'Enter a valid name of up to 160 characters.',
-        phone: 'Enter a valid phone number, such as 01012345678 or +201012345678.',
-        whatsappNumber: 'Enter a valid WhatsApp number, such as 01012345678 or +201012345678.',
-        email: 'Enter a valid email address, such as name@example.com.',
-        preferredContactTime: 'Use up to 200 characters for the preferred contact time.',
-        internalNotes: 'Use up to 2000 characters for internal notes.'
-      },
-      contactName: 'Contact name', phone: 'Phone number', whatsapp: 'WhatsApp number', email: 'Email', preferredLocale: 'Contact language', contactNamePlaceholder: 'Full name', phonePlaceholder: '+201234567890', whatsappPlaceholder: '+201234567891', emailPlaceholder: 'example@domain.com', preferredLocaleLabels: { ar: 'Arabic', en: 'English',}, supportedFieldsTitle: 'Supported fields', supportedFieldsBody: 'Enter the details of the person receiving property enquiries.', internalNotesTitle: 'Internal notes', internalNotesBody: 'Internal notes are not shown publicly...',
-      preferredContactTime: 'Best time to contact',
-      contactRole: 'Contact person',
-      contactRoles: { account_owner: 'Account owner', sales_agent: 'Sales agent', custom: 'Custom number' },
-      visibilityHelp: 'These details are private to the property owner and platform administration. Customer requests go through the platform for the team to follow up.',
-      visibilityHidden: 'Phone, WhatsApp, email and internal notes will not appear on the property page, including after publication.',
-      visibilityTitle: 'Contact privacy',
-      showPhone: 'Show phone number',
-      showWhatsapp: 'Show WhatsApp number',
-      showEmail: 'Show email address',
-    },
-    review: {
-      submit: 'Submit property for review', submitting: 'Submitting…', save: 'Save draft', requiredConfirmationsTitle: 'Required confirmations', accurateData: 'I confirm that the property data entered is accurate.', authority: 'I confirm that I am authorized to list and market this property.', reviewProcess: 'I agree that Sadat Real Estate will review the property before publication.', missingTitle: 'Cannot submit yet', missingBody: 'Complete the server-defined requirements before submitting.', location: 'Location', price: 'Price', contact: 'Contact data', status: 'Status', media: 'Media', noMedia: 'No media uploaded in this session', mediaCount: 'Uploaded media', reviewReason: 'Submission reason', submittedTitle: 'Draft submitted for review', submittedBody: 'The server accepted the review request. The next status will appear when supplied by the server.', submittedStatus: 'Pending review', notSubmittableTitle: 'Submission unavailable', notSubmittableBody: 'The current server state allows saving only.', safeProjectionTitle: 'Safe summary', safeProjectionBody: 'This summary renders only provider-permitted property contract data; administrator notes, assignments, and audit data are excluded.'
-    }
-  },};
-
 export function getProviderPropertyCompletionCopy(locale: SupportedLocale): ProviderPropertyCompletionCopy {
-  return localizeCopy('provider_property/completion-copy#getProviderPropertyCompletionCopy', locale, copyByLocale[locale]);
+  return localizeCopy('provider_property/completion-copy#getProviderPropertyCompletionCopy', locale, getEditableCopyCatalog(locale)['provider_property/completion-copy#getProviderPropertyCompletionCopy'] as unknown as ProviderPropertyCompletionCopy);
 }

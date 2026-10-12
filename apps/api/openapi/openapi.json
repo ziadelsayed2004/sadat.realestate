@@ -20931,13 +20931,13 @@
             "$ref": "#/components/schemas/PropertyTransactionType"
           },
           "price": {
-            "$ref": "#/components/schemas/PropertyMoney"
+            "$ref": "#/components/schemas/PropertyPricingMoney"
           },
           "paymentPlans": {
             "type": "array",
             "maxItems": 20,
             "items": {
-              "$ref": "#/components/schemas/PropertyPaymentPlan"
+              "$ref": "#/components/schemas/PropertyPricingPaymentPlan"
             }
           },
           "reason": {
@@ -28808,13 +28808,13 @@
             "$ref": "#/components/schemas/PropertyTransactionType"
           },
           "price": {
-            "$ref": "#/components/schemas/PropertyMoney"
+            "$ref": "#/components/schemas/PropertyPricingMoney"
           },
           "paymentPlans": {
             "type": "array",
             "maxItems": 20,
             "items": {
-              "$ref": "#/components/schemas/PropertyPaymentPlan"
+              "$ref": "#/components/schemas/PropertyPricingPaymentPlan"
             }
           }
         },
@@ -30734,6 +30734,61 @@
             "minLength": 3,
             "maxLength": 160,
             "pattern": "^[^\\u0000-\\u001f\\u007f<>]+$"
+          }
+        }
+      },
+      "PropertyPricingMoney": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000000000000
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "EGP",
+              "USD"
+            ]
+          }
+        }
+      },
+      "PropertyPricingPaymentPlan": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "installments",
+          "frequency",
+          "installmentAmount"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "installments": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 120
+          },
+          "frequency": {
+            "enum": [
+              "monthly",
+              "quarterly",
+              "annually"
+            ]
+          },
+          "downPayment": {
+            "$ref": "#/components/schemas/PropertyPricingMoney"
+          },
+          "installmentAmount": {
+            "$ref": "#/components/schemas/PropertyPricingMoney"
           }
         }
       }

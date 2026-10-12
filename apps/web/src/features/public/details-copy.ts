@@ -19,6 +19,7 @@ export interface PublicPropertyDetailsCopy {
   readonly mediaUnavailable: string;
   readonly videoUnavailable: string;
   readonly mediaItem: (position: number) => string;
+  readonly openImage: string;
   readonly sourceTitle: string;
   readonly publishedSource: string;
   readonly sourceTypes: Readonly<Record<'individual_broker' | 'brokerage_office' | 'developer_company', string>>;
@@ -109,6 +110,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     mediaUnavailable: 'لا تتوفر وسائط عامة لهذا العقار حالياً.',
     videoUnavailable: 'تعذر تشغيل الفيديو. جرّب متصفحاً آخر أو تواصل للاستفسار عن العقار.' ,
     mediaItem: position => `الوسائط ${position}`,
+    openImage: 'فتح الصورة بالحجم الكامل',
     sourceTitle: 'مصدر هذا العقار',
     publishedSource: 'مصدر منشور معتمد',
     sourceTypes: {
@@ -201,6 +203,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     mediaUnavailable: 'No public media is available for this property yet.',
     videoUnavailable: 'Unable to play this video. Try another browser or contact us about the property.',
     mediaItem: position => `Media item ${position}`,
+    openImage: 'Open full image',
     sourceTitle: 'Property source',
     publishedSource: 'Approved published source',
     sourceTypes: {

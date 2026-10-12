@@ -64,6 +64,29 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('provider property media, contact, and review completion', () => {
+  it('loads persisted media when the review step opens in a new session', async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL) => success({ items: [media(), { ...media(), id: 'eeeeeeeeeeeeeeeeeeeeeeee', active: false, processingState: 'deleted' }] }, 'review-media'));
+    vi.stubGlobal('fetch', fetcher);
+    const copy = getProviderPropertyCompletionCopy('en');
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property({ propertyTypeId: 'ffffffffffffffffffffffff', area: { value: 120, unit: 'sqm' } })} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByText(`1 ${copy.review.mediaCount}`)).toBeInTheDocument());
+    expect(String(fetcher.mock.calls[0]?.[0])).toContain(`/provider/properties/${propertyId}/media`);
+    expect(screen.queryByText(copy.review.noMedia)).not.toBeInTheDocument();
+  });
+
+  it('shows a load failure rather than an empty review and retries only the media request', async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL) => success({ items: [] }, 'review-media-retry'));
+    fetcher.mockRejectedValueOnce(new Error('Temporary network failure'));
+    vi.stubGlobal('fetch', fetcher);
+    const copy = getProviderPropertyCompletionCopy('en');
+    renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property()} />, { locale: 'en' });
+    await screen.findByText('Could not load existing media. Retry before editing it.');
+    expect(screen.queryByText(copy.review.noMedia)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.media.retry }));
+    await screen.findByText(copy.review.noMedia);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(fetcher.mock.calls.every(([input]) => String(input).endsWith(`/provider/properties/${propertyId}/media`))).toBe(true);
+  });
   it('removes public-sharing controls and clears legacy opt-ins when contact details are saved', async () => {
     const copy = getProviderPropertyCompletionCopy('en');
     const save = vi.fn<ProviderPropertySaveAction>(async (_id, _step, input) => property({ version: 3, ...('contact' in input && input.contact != null ? { contact: input.contact } : {}) }));

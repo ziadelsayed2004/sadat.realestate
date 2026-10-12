@@ -140,15 +140,32 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
 }) {
   const [form, setForm] = useState<ProjectFormState>(() => project === undefined ? blankForm() : formForProject(project));
   const [validationError, setValidationError] = useState<string | undefined>();
+  const [invalidFields, setInvalidFields] = useState<readonly string[]>([]);
   const title = mode === 'create' ? copy.form.createTitle : copy.form.editTitle;
   const description = mode === 'create' ? copy.form.createDescription : copy.form.editDescription;
 
   const update = <K extends keyof ProjectFormState>(key: K, value: ProjectFormState[K]) => setForm(previous => ({ ...previous, [key]: value }));
   const updateLocalized = (key: 'name' | 'description', localeKey: SupportedLocale, value: string) => update(key, { ...form[key], [localeKey]: value });
+  const showValidation = (issues: readonly { readonly path: readonly PropertyKey[] }[]) => {
+    const fields = [...new Set(issues.map(issue => String(issue.path[0])))];
+    setInvalidFields(fields);
+    const labels: Record<string, string> = { name: copy.form.name, description: copy.form.description, reason: `${copy.form.reason} (${copy.submitDialog.reasonHelp})`, website: copy.form.website, locationId: copy.form.locationId };
+    setValidationError(`${copy.errors.validation} ${fields.map(field => labels[field] ?? field).join('، ')}`);
+  };
+
+  useEffect(() => {
+    const field = invalidFields[0];
+    if (field === undefined) return;
+    const id = field === 'name' || field === 'description' ? `provider-project-${field}-${locale}` : `provider-project-${field === 'locationId' ? 'location' : field}`;
+    const input = document.getElementById(id);
+    input?.focus({ preventScroll: true });
+    input?.scrollIntoView?.({ block: 'center' });
+  }, [invalidFields, locale]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setValidationError(undefined);
+    setInvalidFields([]);
     const name = localizedText(form.name);
     const descriptionValue = localizedText(form.description);
     const reason = form.reason.trim();
@@ -161,7 +178,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
         reason
       });
       if (!parsed.success) {
-        setValidationError(copy.errors.validation);
+        showValidation(parsed.error.issues);
         return;
       }
       await onSave(parsed.data);
@@ -177,7 +194,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     if (form.website.trim() !== (project.website ?? '')) candidate.website = form.website.trim() === '' ? null : form.website.trim();
     const parsed = projectPatchSchema.safeParse(candidate);
     if (!parsed.success) {
-      setValidationError(copy.errors.validation);
+      showValidation(parsed.error.issues);
       return;
     }
     await onSave(parsed.data);
@@ -186,6 +203,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
   return (
     <Modal
       open
+      className="provider-projects__dialog"
       title={title}
       description={description}
       closeLabel={copy.form.close}
@@ -201,8 +219,9 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
         {validationError || error ? <p className="provider-projects__form-error" role="alert">{validationError ?? error}</p> : null}
         <fieldset disabled={saving}>
           <legend>{copy.form.name}</legend>
-          {LOCALE_KEYS.map(localeKey => <Input key={localeKey} id={`provider-project-name-${localeKey}`} label={`${copy.form.name} — ${copy.form.localeLabels[localeKey]}`} value={form.name[localeKey]} onChange={event => updateLocalized('name', localeKey, event.target.value)} required={localeKey === locale} />)}
+          {LOCALE_KEYS.map(localeKey => <Input key={localeKey} id={`provider-project-name-${localeKey}`} label={`${copy.form.name} — ${copy.form.localeLabels[localeKey]}`} value={form.name[localeKey]} onChange={event => updateLocalized('name', localeKey, event.target.value)} state={invalidFields.includes('name') ? 'error' : 'default'} required={localeKey === locale} />)}
         </fieldset>
+        <Input id="provider-project-reason" label={copy.form.reason} value={form.reason} onChange={event => update('reason', event.target.value)} helpText={copy.submitDialog.reasonHelp} error={invalidFields.includes('reason') ? copy.submitDialog.reasonHelp : undefined} state={invalidFields.includes('reason') ? 'error' : 'default'} required minLength={5} maxLength={500} />
         <fieldset disabled={saving}>
           <legend>{copy.form.description}</legend>
           {LOCALE_KEYS.map(localeKey => (
@@ -217,7 +236,6 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
           <Input id="provider-project-location" label={copy.form.locationId} value={form.locationId} onChange={event => update('locationId', event.target.value)} placeholder={copy.form.placeholders.locationId} />
           <Input id="provider-project-website" label={copy.form.website} type="url" value={form.website} onChange={event => update('website', event.target.value)} placeholder={copy.form.placeholders.website} />
         </div>
-        <Input id="provider-project-reason" label={copy.form.reason} value={form.reason} onChange={event => update('reason', event.target.value)} helpText={copy.form.reasonHelp} required />
       </form>
     </Modal>
   );
@@ -247,7 +265,7 @@ function SubmitProjectModal({ copy, project, saving, error, onClose, onSubmit }:
   }
 
   return (
-    <Modal open title={copy.submitDialog.title} description={copy.submitDialog.description} closeLabel={copy.form.close} onClose={onClose} footer={(
+    <Modal open className="provider-projects__dialog" title={copy.submitDialog.title} description={copy.submitDialog.description} closeLabel={copy.form.close} onClose={onClose} footer={(
       <>
         <Button type="button" variant="secondary" onClick={onClose} disabled={saving}>{copy.submitDialog.cancel}</Button>
         <Button type="submit" form={formId} loading={saving}>{copy.submitDialog.confirm}</Button>

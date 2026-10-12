@@ -3,6 +3,7 @@ import { publicHomepageDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClientError } from '../src/features/contracts/index.ts';
 import { PublicHomepage } from '../src/features/public/index.ts';
+import { PublicMediaImage } from '../src/features/public/components.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { parsePublicPropertySearchQuery } from '../src/features/public/listing-data.ts';
 
@@ -64,6 +65,14 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it('does not keep a replacement image hidden after an earlier URL failed', () => {
+    const result = renderWithLocale(<PublicMediaImage src="/unavailable.jpg" alt="Property" fallback={<span>Image unavailable</span>} />, { locale: 'en' });
+    fireEvent.error(screen.getByRole('img', { name: 'Property' }));
+    expect(screen.getByText('Image unavailable')).toBeInTheDocument();
+    result.rerender(<PublicMediaImage src="/replacement.jpg" alt="Property" fallback={<span>Image unavailable</span>} />);
+    expect(screen.getByRole('img', { name: 'Property' })).toHaveAttribute('src', '/replacement.jpg');
+    expect(screen.queryByText('Image unavailable')).not.toBeInTheDocument();
+  });
   it('gives new property types a Sadat entrance photo and preserves supplied images', () => {
     const categories = [
       { id: 'c'.repeat(24), slug: 'new-type', name: { en: 'New type' }, propertyCount: 0, order: 100 },

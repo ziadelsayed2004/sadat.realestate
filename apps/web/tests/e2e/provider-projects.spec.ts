@@ -122,6 +122,9 @@ test.describe('PRV-15 Provider Projects', () => {
 
     await page.getByRole('button', { name: /Add new project|إضافة مشروع جديد|添加新项目/u }).click();
     await page.getByLabel(/Project name.*English|اسم المشروع.*English|项目名称.*英语/u).fill('New provider project');
+    await page.getByRole('button', { name: /Save|حفظ|保存/u }).click();
+    await expect(page.getByLabel(/Change reason|سبب التغيير|变更原因/u)).toBeFocused();
+    await expect(page.getByRole('alert').filter({ hasText: /Change reason|سبب التغيير/u })).toBeVisible();
     await page.getByLabel(/Change reason|سبب التغيير|变更原因/u).fill('Create project');
     await page.getByRole('button', { name: /Save|حفظ|保存/u }).click();
     await expect(page.getByRole('status').filter({ hasText: /created|تم إنشاء|已创建/u })).toBeVisible();
@@ -188,4 +191,36 @@ test.describe('PRV-15 responsive Figma contract', () => {
     await expect(page.getByTestId(`provider-project-${DRAFT_PROJECT_ID}`)).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   });
+});
+
+
+test('keeps project validation and dialog controls accessible at every viewport', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
+  await routeSession(page);
+  await routeProjects(page);
+  await page.goto(`/provider/projects?lang=${locale}`);
+  await page.locator('.provider-projects__heading > button').click();
+  await page.locator(`#provider-project-name-${locale}`).fill('Local project');
+  const dialog = page.getByRole('dialog');
+  await dialog.locator('button[type="submit"]').click();
+  await expect(page.locator('#provider-project-reason')).toBeFocused();
+  await expect(dialog.getByRole('alert').filter({ hasText: /Change reason|سبب التغيير/u })).toBeVisible();
+  const bounds = await dialog.evaluate(node => {
+    const parent = node.getBoundingClientRect();
+    const header = node.querySelector('.ui-modal__header')!.getBoundingClientRect();
+    const footer = node.querySelector('.ui-modal__footer')!.getBoundingClientRect();
+    return { top:parent.top, bottom:parent.bottom, headerTop:header.top, footerBottom:footer.bottom, scrollWidth:node.scrollWidth, width:node.clientWidth, viewport:innerHeight };
+  });
+  expect(bounds.top).toBeGreaterThanOrEqual(0);
+  expect(bounds.bottom).toBeLessThanOrEqual(bounds.viewport);
+  expect(bounds.headerTop).toBeGreaterThanOrEqual(bounds.top);
+  expect(bounds.footerBottom).toBeLessThanOrEqual(bounds.bottom);
+  expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.width);
+  const reasonBox = await page.locator('#provider-project-reason').boundingBox();
+  const footerBox = await dialog.locator('.ui-modal__footer').boundingBox();
+  expect(reasonBox!.y + reasonBox!.height).toBeLessThanOrEqual(footerBox!.y);
+  await page.screenshot({path:info.outputPath('project-validation.png')});
+  await page.locator('#provider-project-reason').fill('Create local project');
+  await dialog.locator('button[type="submit"]').click();
+  await expect(page.getByRole('status').filter({hasText:/created|تم إنشاء/u})).toBeVisible();
 });

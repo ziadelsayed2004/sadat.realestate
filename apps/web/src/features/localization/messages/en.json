@@ -780,8 +780,8 @@
       "cash": "Cash"
     },
     "reviewAction": "Review action",
-    "approvalReason": "Approved",
     "approve": "Approve",
+    "approvalReason": "Approved",
     "reject": "Reject",
     "reasonLabel": "Action reason",
     "reasonPlaceholder": "Write a clear reason of at least two characters",
@@ -3129,8 +3129,8 @@
     "form": {
       "createTitle": "Add new project",
       "editTitle": "Edit project",
-      "createDescription": "Enter fields supported by the current project contract.",
-      "editDescription": "Edit provider-owned fields while preserving the server version.",
+      "createDescription": "Enter the project name and details, then save a draft.",
+      "editDescription": "Update the project details, then save your changes.",
       "name": "Project name",
       "description": "Description",
       "slug": "Slug",
@@ -3659,7 +3659,9 @@
       "permissionTitle": "Upload permission required",
       "permissionBody": "Media cannot be uploaded for this draft or session.",
       "versionConflictTitle": "Media version conflict",
-      "versionConflictBody": "The media order changed. Reload the draft before continuing."
+      "versionConflictBody": "The media order changed. Reload the draft before continuing.",
+      "loading": "Loading media...",
+      "retry": "Retry"
     },
     "contact": {
       "validationBody": "Check the fields marked below and save again. Your entries have been kept.",
@@ -3717,7 +3719,7 @@
       "contact": "Contact data",
       "status": "Status",
       "media": "Media",
-      "noMedia": "No media uploaded in this session",
+      "noMedia": "No saved media for this property",
       "mediaCount": "Uploaded media",
       "reviewReason": "Submission reason",
       "submittedTitle": "Draft submitted for review",
@@ -3932,6 +3934,11 @@
     }
   },
   "provider_property/steps-copy#getProviderPropertyAdvancedCopy": {
+    "currencyLabels": {
+      "EGP": "Egyptian pound",
+      "USD": "US dollar"
+    },
+    "chooseCurrency": "Choose Egyptian pounds or US dollars",
     "titles": {
       "details": "Property details",
       "price-payment": "Price and payment",
@@ -4178,6 +4185,7 @@
     "imageUnavailable": "Image unavailable",
     "mediaUnavailable": "No public media is available for this property yet.",
     "videoUnavailable": "Unable to play this video. Try another browser or contact us about the property.",
+    "openImage": "Open full image",
     "sourceTitle": "Property source",
     "publishedSource": "Approved published source",
     "sourceTypes": {

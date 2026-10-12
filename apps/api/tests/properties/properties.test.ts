@@ -10,6 +10,8 @@ import {
   propertyContactStepSchema,
   propertyLocationStepSchema,
   propertyPricingStepSchema,
+  propertyMoneySchema,
+  propertyAdminEditSchema,
   propertySourceSchema,
   propertySourceIdentitySchema
 } from '@sadat-real-estate/contracts';
@@ -86,6 +88,19 @@ test('validates details, area, layout, price, and payment-plan conditionals', ()
   assert.equal(propertyPricingStepSchema.safeParse({ version: 1, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }], reason: 'Save pricing plan' }).success, true);
   assert.equal(propertyPricingStepSchema.safeParse({ version: 1, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'USD' } }], reason: 'Require price for plan' }).success, false);
   assert.equal(propertyPricingStepSchema.safeParse({ version: 1, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'USD' } }], reason: 'Reject mixed currencies' }).success, false);
+});
+
+test('pricing writes accept only pounds and dollars while legacy amounts remain readable', () => {
+  for (const currency of ['EGP', 'USD']) {
+    assert.equal(propertyPricingStepSchema.safeParse({ version: 1, price: { amount: 150000, currency }, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', downPayment: { amount: 30000, currency }, installmentAmount: { amount: 10000, currency } }], reason: 'Save supported currency' }).success, true);
+    assert.equal(propertyAdminEditSchema.safeParse({ version: 1, price: { amount: 150000, currency }, reason: 'Set supported property price' }).success, true);
+  }
+  for (const currency of ['EUR', 'GBP', 'دول', 'usd', 'جنيه']) {
+    assert.equal(propertyPricingStepSchema.safeParse({ version: 1, price: { amount: 150000, currency }, reason: 'Reject unsupported property currency' }).success, false);
+    assert.equal(propertyAdminEditSchema.safeParse({ version: 1, price: { amount: 150000, currency }, reason: 'Reject unsupported property currency' }).success, false);
+    assert.equal(propertyPricingStepSchema.safeParse({ version: 1, price: { amount: 150000, currency: 'EGP' }, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 10000, currency } }], reason: 'Reject unsupported plan currency' }).success, false);
+  }
+  assert.equal(propertyMoneySchema.safeParse({ amount: 150000, currency: 'EUR' }).success, true);
 });
 
 test('validates feature and service associations with deterministic references', () => {

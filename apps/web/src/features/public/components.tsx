@@ -366,10 +366,10 @@ export function PublicMediaImage({
   readonly className?: string | undefined;
   readonly loading?: 'eager' | 'lazy';
 }) {
-  const [failed, setFailed] = useState(false);
+  const [failedUrl, setFailedUrl] = useState<string | undefined>();
   const imageUrl = safePublicUrl(src);
-  if (imageUrl === undefined || failed) return <>{fallback}</>;
-  return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailed(true)} />;
+  if (imageUrl === undefined || failedUrl === imageUrl) return <>{fallback}</>;
+  return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailedUrl(imageUrl)} />;
 }
 
 const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `

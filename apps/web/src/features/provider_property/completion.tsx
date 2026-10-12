@@ -399,6 +399,9 @@ function ReviewView({
   copy,
   property,
   media,
+  mediaLoading,
+  mediaMessage,
+  onRetryMedia,
   checks,
   onCheck,
   reason,
@@ -414,6 +417,9 @@ function ReviewView({
   readonly copy: ReturnType<typeof getProviderPropertyCompletionCopy>;
   readonly property: PropertyData;
   readonly media: readonly PropertyMediaData[];
+  readonly mediaLoading: boolean;
+  readonly mediaMessage: string | undefined;
+  readonly onRetryMedia: () => void;
   readonly checks: Checks;
   readonly onCheck: (field: keyof Checks) => void;
   readonly reason: string;
@@ -467,7 +473,7 @@ function ReviewView({
           <h3 id="provider-property-review-contact">{review.contact}</h3>
           <dl className="provider-property-completion__summary">
             <div><dt>{review.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? unavailable}</dd></div>
-            <div><dt>{review.media}</dt><dd>{media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
+            <div><dt>{review.media}</dt><dd>{mediaLoading ? copy.media.loading : mediaMessage ? <><span role="alert">{mediaMessage}</span><Button type="button" variant="secondary" onClick={onRetryMedia}>{copy.media.retry}</Button></> : media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
           </dl>
         </section>
       </section>
@@ -493,7 +499,8 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const propertyCopy = getProviderPropertyCopy(locale);
   const [state, setState] = useState<ViewState>('loading');
   const [property, setProperty] = useState<PropertyData | undefined>(initialData);
-  const [mediaLoading, setMediaLoading] = useState(false);
+  const [mediaLoading, setMediaLoading] = useState(() => authClient !== undefined && (step === 'media' || step === 'review'));
+  const [mediaAttempt, setMediaAttempt] = useState(0);
   const [media, setMedia] = useState<readonly PropertyMediaData[]>([]);
   const [contact, setContact] = useState<ContactForm>(() => contactFromProperty(initialData, locale));
   const [checks, setChecks] = useState<Checks>({ data: false, authority: false, review: false });
@@ -548,16 +555,18 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   }, [attempt, initialData, loadAction, locale, propertyId, sessionRole, session.status]);
 
   useEffect(() => {
-    if (step !== 'media' || session.status !== 'authenticated' || session.role !== 'provider' || !authClient) return undefined;
+    if ((step !== 'media' && step !== 'review') || session.status !== 'authenticated' || session.role !== 'provider' || !authClient) return undefined;
     const controller = new AbortController();
     setMediaLoading(true);
+    setMediaMessage(undefined);
+    setMedia([]);
     void loadProviderPropertyMedia({ propertyId, authorization: authClient, apiOrigin, signal: controller.signal }).then(items => {
       if (!controller.signal.aborted) { setMedia(items.filter(item => item.active && item.processingState !== 'deleted'));  setMediaLoading(false); }
     }).catch(() => {
       if (!controller.signal.aborted) { setMediaLoading(false); setMediaMessage(locale === 'ar' ? 'تعذر تحميل الوسائط السابقة. أعد المحاولة قبل تعديلها.' : 'Could not load existing media. Retry before editing it.'); }
     });
     return () => controller.abort();
-  }, [step, propertyId, authClient, apiOrigin, attempt, locale, session.status, sessionRole]);
+  }, [step, propertyId, authClient, apiOrigin, attempt, mediaAttempt, locale, session.status, sessionRole]);
 
   const retry = () => setAttempt(value => value + 1);
   const goBack = () => navigate(locale, propertyId, step === 'media' ? 'features-services' : step === 'contact' ? 'media' : 'contact');
@@ -706,7 +715,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const content = state === 'success' && property !== undefined ? (
     step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving' || mediaLoading} message={mediaMessage} onBack={goBack} onContinue={goForward} />
       : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onSaveDraft={() => { void saveContact(false); }} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} errors={contactErrors} />
-        : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
+        : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} mediaLoading={mediaLoading} mediaMessage={mediaMessage} onRetryMedia={() => setMediaAttempt(value => value + 1)} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
   ) : null;
 
   return (

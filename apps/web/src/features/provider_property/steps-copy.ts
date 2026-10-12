@@ -7,6 +7,8 @@ export interface ProviderPropertyAdvancedCopy {
   readonly titles: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
   readonly descriptions: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
   readonly steps: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
+  readonly currencyLabels: Readonly<Record<'EGP' | 'USD', string>>;
+  readonly chooseCurrency: string;
   readonly labels: Readonly<Record<'description' | 'propertyTypeId' | 'deliveryStatus' | 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'totalFloors' | 'priceAmount' | 'currency' | 'paymentPlan' | 'planName' | 'installments' | 'frequency' | 'downPaymentAmount' | 'installmentAmount' | 'featureIds' | 'serviceIds', string>>;
   readonly placeholders: Readonly<Record<'description' | 'propertyTypeId' | 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'totalFloors' | 'priceAmount' | 'currency' | 'planName' | 'installments' | 'downPaymentAmount' | 'installmentAmount' | 'featureIds' | 'serviceIds', string>>;
   readonly frequencyLabels: Readonly<Record<'monthly' | 'quarterly' | 'annually', string>>;
@@ -42,6 +44,8 @@ export interface ProviderPropertyAdvancedCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCopy>> = {
   ar: {
+    currencyLabels: { EGP: 'جنيه مصري', USD: 'دولار أمريكي' },
+    chooseCurrency: 'اختر الجنيه المصري أو الدولار الأمريكي',
     titles: { details: 'تفاصيل العقار', 'price-payment': 'السعر والسداد', 'features-services': 'المميزات والخدمات' },
     descriptions: {
       details: 'أدخل المساحات والتقسيم الداخلي والوصف المدعوم في مسودة العقار.',
@@ -78,6 +82,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     versionConflict: 'تغيرت المسودة منذ تحميلها. أعد تحميلها قبل حفظ تعديلاتك.'
   },
   en: {
+    currencyLabels: { EGP: 'Egyptian pound', USD: 'US dollar' },
+    chooseCurrency: 'Choose Egyptian pounds or US dollars',
     titles: { details: 'Property details', 'price-payment': 'Price and payment', 'features-services': 'Features and services' },
     descriptions: {
       details: 'Enter the area, layout, and description fields supported by the current property contract.',
