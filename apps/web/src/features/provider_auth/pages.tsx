@@ -49,13 +49,16 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const selected = selectedProviderType !== undefined;
+  const validPassword = accountPasswordSchema.safeParse(password).success;
+  const invalidPassword = password !== '' && !validPassword;
+  const passwordMismatch = passwordConfirmation !== '' && password !== passwordConfirmation;
 
   useEffect(() => {
     setSelectedProviderType(initialProviderType);
   }, [initialProviderType]);
 
   function continueToAccount(): void {
-    if (selectedProviderType === undefined || !accountPasswordSchema.safeParse(password).success || password !== passwordConfirmation) return;
+    if (selectedProviderType === undefined || !validPassword || password !== passwordConfirmation) return;
     const targetPath = providerAccountPath(url, selectedProviderType);
     if (onContinue !== undefined) {
       onContinue(selectedProviderType, targetPath, password);
@@ -105,15 +108,15 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
             })}
           </div>
           <div className="auth-form">
-            <Input id="provider-registration-password" label={locale === 'ar' ? 'كلمة المرور' : 'Password'} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required />
-            <Input id="provider-registration-password-confirmation" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} type="password" autoComplete="new-password" value={passwordConfirmation} onChange={event => setPasswordConfirmation(event.currentTarget.value)} required />
-            <p className="auth-field-help">{locale === 'ar' ? '8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'At least 8 characters with uppercase, lowercase, a number, and a symbol.'}</p>
+            <Input id="provider-registration-password" label={locale === 'ar' ? 'كلمة المرور' : 'Password'} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} state={invalidPassword ? 'error' : 'default'} error={copy.passwordInvalid} aria-describedby="provider-registration-password-rules" required />
+            <Input id="provider-registration-password-confirmation" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} type="password" autoComplete="new-password" value={passwordConfirmation} onChange={event => setPasswordConfirmation(event.currentTarget.value)} state={passwordMismatch ? 'error' : 'default'} error={copy.passwordMismatch} required />
+            <p id="provider-registration-password-rules" className="auth-field-help">{locale === 'ar' ? '8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'At least 8 characters with uppercase, lowercase, a number, and a symbol.'}</p>
           </div>
           <aside className="provider-type-guidance" role="note">
             <strong>{copy.guidanceTitle}</strong>
             <span>{copy.guidanceBody}</span>
           </aside>
-          <Button type="button" fullWidth size="lg" disabled={!selected || !accountPasswordSchema.safeParse(password).success || password !== passwordConfirmation} onClick={continueToAccount}>
+          <Button type="button" fullWidth size="lg" disabled={!selected || !validPassword || password !== passwordConfirmation} onClick={continueToAccount}>
             {copy.continueAction}
           </Button>
           <p className="auth-card__prompt"><a href="/auth/register">{copy.backAction}</a></p>

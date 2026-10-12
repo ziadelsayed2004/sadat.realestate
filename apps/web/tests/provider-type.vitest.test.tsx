@@ -58,6 +58,39 @@ describe('provider type selection', () => {
     expect(document.body.textContent).not.toContain('accessToken');
   });
 
+  it.each(['ar', 'en'] as const)('explains invalid passwords and confirmation mismatches inline in %s', locale => {
+    const copy = getProviderTypeCopy(locale);
+    const onContinue = vi.fn();
+    renderWithLocale(<ProviderTypePage url={`/auth/register/provider/type?lang=${locale}`} locale={locale} onContinue={onContinue} />, { locale });
+    const password = screen.getByLabelText(locale === 'ar' ? 'كلمة المرور' : 'Password');
+    const confirmation = screen.getByLabelText(locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password');
+    const next = screen.getByRole('button', { name: copy.continueAction });
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.options.developer_company.title) }));
+    for (const invalid of ['Ab1!', 'Provider!', 'provider1!', 'PROVIDER1!', 'Provider12', `Aa1!${'x'.repeat(125)}`]) {
+      fireEvent.change(password, { target: { value: invalid } });
+      expect(screen.getByRole('alert')).toHaveTextContent(copy.passwordInvalid);
+      expect(password).toHaveAttribute('aria-invalid', 'true');
+      expect(password).toHaveAttribute('aria-describedby', expect.stringContaining('provider-registration-password-message'));
+      expect(next).toBeDisabled();
+    }
+    fireEvent.change(password, { target: { value: 'Provider1!' } });
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(password).not.toHaveAttribute('aria-invalid', 'true');
+    fireEvent.change(confirmation, { target: { value: 'Different1!' } });
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.passwordMismatch);
+    expect(confirmation).toHaveAttribute('aria-invalid', 'true');
+    expect(next).toBeDisabled();
+    fireEvent.click(next);
+    expect(onContinue).not.toHaveBeenCalled();
+    fireEvent.change(confirmation, { target: { value: 'Provider1!' } });
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(confirmation).not.toHaveAttribute('aria-invalid', 'true');
+    expect(next).toBeEnabled();
+    fireEvent.click(next);
+    expect(onContinue).toHaveBeenCalledWith('developer_company', `/auth/register/provider/account?providerType=developer_company&lang=${locale}`, 'Provider1!');
+  });
+
   it('accepts a valid non-sensitive query handoff and rejects unsupported provider types', async () => {
     const copy = getProviderTypeCopy('en');
     const { rerender } = renderWithLocale(

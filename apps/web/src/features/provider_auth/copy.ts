@@ -12,6 +12,8 @@ export interface ProviderTypeCopy {
   readonly optionsLabel: string;
   readonly continueAction: string;
   readonly backAction: string;
+  readonly passwordInvalid: string;
+  readonly passwordMismatch: string;
   readonly guidanceTitle: string;
   readonly guidanceBody: string;
   readonly options: Readonly<Record<ProviderType, ProviderTypeOptionCopy>>;
@@ -24,6 +26,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderTypeCopy>> = {
     optionsLabel: 'أنواع مقدمي العقارات المتاحة',
     continueAction: 'متابعة',
     backAction: 'العودة إلى اختيار الحساب',
+    passwordInvalid: 'كلمة المرور لازم تكون من 8 إلى 128 حرفًا، وتشمل حرفًا إنجليزيًا كبيرًا وصغيرًا ورقمًا ورمزًا.',
+    passwordMismatch: 'تأكيد كلمة المرور مش مطابق لكلمة المرور.',
     guidanceTitle: 'اختيارك يحدد الخطوة التالية',
     guidanceBody: 'سنطلب في الخطوة التالية البيانات والوثائق المناسبة لنوع مقدم العقار الذي اخترته. تخضع الطلبات للمراجعة الإدارية قبل الموافقة.',
     options: {
@@ -47,6 +51,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderTypeCopy>> = {
     optionsLabel: 'Available provider types',
     continueAction: 'Continue',
     backAction: 'Back to account selection',
+    passwordInvalid: 'Password must be 8–128 characters and include uppercase and lowercase English letters, a number, and a symbol.',
+    passwordMismatch: 'Password confirmation does not match the password.',
     guidanceTitle: 'Your choice sets the next step',
     guidanceBody: 'The next step will request the fields and documents for the provider type you choose. Applications are subject to administrative review before approval.',
     options: {

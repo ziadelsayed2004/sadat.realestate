@@ -3379,6 +3379,8 @@
     "optionsLabel": "Available provider types",
     "continueAction": "Continue",
     "backAction": "Back to account selection",
+    "passwordInvalid": "Password must be 8–128 characters and include uppercase and lowercase English letters, a number, and a symbol.",
+    "passwordMismatch": "Password confirmation does not match the password.",
     "guidanceTitle": "Your choice sets the next step",
     "guidanceBody": "The next step will request the fields and documents for the provider type you choose. Applications are subject to administrative review before approval.",
     "options": {
