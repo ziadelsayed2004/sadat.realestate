@@ -340,7 +340,7 @@ function PropertySummary({
         <div className="public-property-details__summary-identity">
           <p className="public-property-details__location"><span className="public-property-details__inline-icon public-property-details__inline-icon--location" aria-hidden="true"><DetailLineIcon kind="location" /></span>{localizedText(data.locationName, locale) ?? summaryLabels.location}</p>
           <h1 id="public-property-details-title">{title}</h1>
-          <p className="public-property-details__code">{copy.code}: {data.publicCode ?? data.slug}</p>
+          {data.publicCode ? <p className="public-property-details__code">{copy.code}: <bdi dir="ltr">{data.publicCode}</bdi></p> : null}
         </div>
         {data.price === undefined ? null : <p className="public-property-details__price">{detailsPrice(data.price, locale)}</p>}
       </div>

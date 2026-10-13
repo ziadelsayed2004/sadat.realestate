@@ -95,6 +95,22 @@ const viewingResponse = viewingDataSchema.parse({
 });
 
 describe('public property details', () => {
+  it.each(['ar', 'en'] as const)('uses only a saved public code in the details summary in %s', locale => {
+    const slug = 'property-57cf2f4327104b7787553eced1535f3c';
+    for (const publicCode of [undefined, 'SDT-1234']) {
+      const data = { ...detailsData, slug, publicCode };
+      const result = renderWithLocale(<PublicPropertyDetails locale={locale} initialData={data} url={`/properties/${slug}?lang=${locale}`} />, { locale });
+      const summary = result.container.querySelector('.public-property-details__summary')!;
+      expect(summary.textContent?.toLowerCase()).not.toContain(slug);
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(data.name[locale]!);
+      const code = summary.querySelector('.public-property-details__code');
+      if (publicCode) {
+        expect(code).toHaveTextContent(publicCode);
+        expect(code?.querySelector('bdi')).toHaveAttribute('dir', 'ltr');
+      } else expect(code).toBeNull();
+      result.unmount();
+    }
+  });
   it('waits for a hinted session before recording a visitor', async () => {
     const session = { token: undefined as string | undefined, hint: true };
     let notify: (() => void) | undefined;

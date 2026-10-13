@@ -32,6 +32,22 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it.each(['ar', 'en'] as const)('shows only the saved public code and keeps identifier URLs out of the card text in %s', locale => {
+    const slug = 'property-57cf2f4327104b7787553eced1535f3c';
+    for (const publicCode of [undefined, 'SDT-1234']) {
+      const data = { ...listingData, items: [{ ...listingData.items[0]!, slug, publicCode }] };
+      const result = renderWithLocale(<PublicPropertyListing locale={locale} initialData={data} />, { locale });
+      const card = result.container.querySelector('.public-property-listing__card')!;
+      expect(card.textContent?.toLowerCase()).not.toContain(slug);
+      expect(card.querySelector('h3 a')).toHaveAttribute('href', `/properties/${slug}?lang=${locale}`);
+      const badge = card.querySelector('[data-badge="code"]');
+      if (publicCode) {
+        expect(badge).toHaveTextContent(publicCode);
+        expect(badge?.querySelector('bdi')).toHaveAttribute('dir', 'ltr');
+      } else expect(badge).toBeNull();
+      result.unmount();
+    }
+  });
   it('shows the entrance image for an added type and filters by its real ID', async () => {
     const type = { id: 'f'.repeat(24), slug: 'new-custom-type', name: { en: 'New custom type' }, propertyCount: 0, order: 20 };
     const data = publicPropertyListDataSchema.parse({ ...listingData, propertyTypes: [...listingData.propertyTypes, type] });
