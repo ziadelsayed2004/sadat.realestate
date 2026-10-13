@@ -83,7 +83,8 @@ test('dashboard metric cards open their sections and apply the matching filters'
     await page.goto(`/provider?lang=${locale}`);
     const url = new URL(destination.path, 'http://127.0.0.1:4173');
     url.searchParams.set('lang', locale);
-    await page.getByTestId(`provider-summary-${destination.tone}`).click();
+    if (destination.tone === 'total') await page.locator('.provider-dashboard__metric-grid').screenshot({ path: test.info().outputPath(`dashboard-clickable-cards-${locale}.png`) });
+    await page.getByTestId(`provider-summary-${destination.tone}`).click({ position: { x: 8, y: 8 } });
     await expect(page).toHaveURL(url.href);
     if (destination.path.startsWith('/provider/properties')) await expect(page.locator('#provider-properties-status')).toHaveValue(destination.status!);
     else if (destination.tone === 'booked') await expect(page.locator('#provider-viewings-status')).toHaveValue('confirmed');
