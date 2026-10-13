@@ -21950,7 +21950,8 @@
           },
           "publishedProperties": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Current total of active published properties across all publication dates, independent of the activity range."
           },
           "openRequests": {
             "type": "integer",

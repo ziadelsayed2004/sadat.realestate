@@ -1,4 +1,4 @@
-﻿import { getAdditionalMetricGroups, type OverviewGroup } from './additional-metrics.tsx';
+import { getAdditionalMetricGroups, type OverviewGroup } from './additional-metrics.tsx';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -225,12 +225,13 @@ function MetricCard({ value, label, href, testId, icon = 'properties', money = f
 
 function MetricSection({ title, metrics, data, locale }: { readonly title: string; readonly metrics: readonly AdminMetricKey[]; readonly data: AdminOverviewMetrics; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
-  const paths: Record<AdminMetricKey, string> = { users: '/admin/users', seekers: '/admin/property-seekers', providers: '/admin/providers', verifiedProviders: '/admin/providers', publishedProperties: '/admin/properties?status=published', openRequests: '/admin/requests', pendingReviews: '/admin#admin-overview-queue-title' };
+  const paths: Record<AdminMetricKey, string> = { users: '/admin/users', seekers: '/admin/property-seekers', providers: '/admin/providers', verifiedProviders: '/admin/providers', publishedProperties: '/admin/properties?status=published&active=true', openRequests: '/admin/requests', pendingReviews: '/admin#admin-overview-queue-title' };
   return (
     <section className="admin-dashboard__metric-section" aria-labelledby={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>
       <div className="admin-dashboard__section-heading">
         <h2 id={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>{title}</h2>
       </div>
+      {metrics.includes('publishedProperties') ? <p>{copy.overview.publishedTotalNote}</p> : null}
       <div className="admin-dashboard__metric-grid">
         {metrics.map(metric => <MetricCard key={metric} icon={metric === 'users' || metric === 'seekers' ? 'users' : metric === 'providers' || metric === 'verifiedProviders' ? 'providers' : metric === 'publishedProperties' ? 'properties' : 'requests'} value={data[metric]} label={copy.overview.metrics[metric]} href={localePath(locale, paths[metric])} testId={`admin-metric-${metric}`} />)}
       </div>
@@ -251,7 +252,7 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
   const copy = getAdminCopy(locale);
   const sections: readonly OverviewGroup[] = [
     { title: copy.nav.properties, cards: [
-      { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties, path: '/admin/properties?status=published', icon: 'properties' },
+      { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties, path: '/admin/properties?status=published&active=true', icon: 'properties' },
       { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews, path: '/admin#admin-overview-queue-title', icon: 'requests' },
       { label: copy.nav.providers, value: data.metrics.providers, path: '/admin/providers', icon: 'providers' },
       { label: copy.nav.audit, path: '/admin/audit-logs', icon: 'audit' }

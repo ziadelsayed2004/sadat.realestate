@@ -34,7 +34,6 @@ export function createAdminOverviewSource(
     async aggregate(range): Promise<AdminOverviewMetrics> {
       const userCreated = dateRange('createdAt', range);
       const updated = dateRange('updatedAt', range);
-      const published = dateRange('publishedAt', range);
 
       const [
         users,
@@ -51,7 +50,8 @@ export function createAdminOverviewSource(
         store.count('users', { ...userCreated, roleType: 'seeker' }),
         store.count('users', { ...userCreated, roleType: 'provider' }),
         store.count('users', { ...userCreated, roleType: 'provider', status: 'verified' }),
-        store.count('properties', { ...published, status: 'published', active: true }),
+        // This card is current inventory, rather than publications during the activity range.
+        store.count('properties', { status: 'published', active: true }),
         store.count('requests', {
           ...dateRange('createdAt', range),
           status: { $nin: ['resolved', 'cancelled', 'closed'] }

@@ -26,6 +26,7 @@ export interface AdminCopy {
     readonly refreshedLabel: string;
     readonly platformTitle: string;
     readonly operationsTitle: string;
+    readonly publishedTotalNote: string;
     readonly queueTitle: string;
     readonly queueBody: string;
     readonly activityTitle: string;
@@ -136,6 +137,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       refreshedLabel: 'آخر تحديث',
       platformTitle: 'المنصة',
       operationsTitle: 'التشغيل والمراجعة',
+      publishedTotalNote: 'عدد العقارات المنشورة والنشطة هو الإجمالي الحالي لكل تواريخ النشر.',
       queueTitle: 'طلبات تحتاج إلى مراجعة',
       queueBody: 'افتح القائمة المناسبة لمراجعة الطلبات واتخاذ الإجراء المطلوب.',
       activityTitle: 'اختصارات الإدارة',
@@ -262,6 +264,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       refreshedLabel: 'Last refreshed',
       platformTitle: 'Platform',
       operationsTitle: 'Operations and review',
+      publishedTotalNote: 'Published properties shows the current active total across all publication dates.',
       queueTitle: 'Requests needing review',
       queueBody: 'Open the relevant queue to review requests and take action.',
       activityTitle: 'Administration shortcuts',

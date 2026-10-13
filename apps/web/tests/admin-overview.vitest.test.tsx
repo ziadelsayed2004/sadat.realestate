@@ -94,6 +94,8 @@ describe('Admin overview', () => {
     expect(screen.getByRole('heading', { name: copy.overview.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByTestId('admin-metric-users')).toHaveTextContent('2,847');
     expect(screen.getByTestId('admin-metric-publishedProperties')).toHaveTextContent('1,089');
+    expect(screen.getByTestId('admin-metric-publishedProperties')).toHaveAttribute('href', `/admin/properties?status=published&active=true&lang=${locale}`);
+    expect(screen.getByText(copy.overview.publishedTotalNote)).toBeInTheDocument();
     expect(screen.getByTestId('admin-metric-pendingReviews')).toHaveTextContent('23');
     expect(screen.getByTestId('admin-overview-extended')).toBeInTheDocument();
     expect(screen.queryByText(copy.unavailable)).not.toBeInTheDocument();

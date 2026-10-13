@@ -133,7 +133,8 @@
         }
       ],
       "emptyTitle": "No data in this range",
-      "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available."
+      "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available.",
+      "publishedTotalNote": "Published properties shows the current active total across all publication dates."
     },
     "states": {
       "loading": {

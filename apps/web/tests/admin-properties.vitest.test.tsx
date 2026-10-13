@@ -77,6 +77,18 @@ function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
 }
 
 describe('Admin property management contracts and views', () => {
+  it.each([
+    { query: 'status=published&active=true', expected: { status: 'published', active: true } },
+    { query: 'status=published&active=false', expected: { status: 'published', active: false } },
+    { query: 'status=invalid&active=invalid', expected: {} }
+  ])('applies validated dashboard URL filters to the loader and controls: $query', async ({ query, expected }) => {
+    const load = vi.fn().mockResolvedValue(properties);
+    renderWithLocale(<AdminProperties locale="en" session={session} view="list" url={`/admin/properties?${query}&lang=en`} loadProperties={load} />, { locale: 'en' });
+    await waitFor(() => expect(load).toHaveBeenCalled());
+    expect(load.mock.calls[0]?.[0]).toEqual({ page: 1, limit: 20, sort: 'updatedAt', direction: 'desc', ...expected });
+    expect(document.getElementById('admin-properties-status')).toHaveValue(expected.status ?? '');
+    expect(document.getElementById('admin-properties-active')).toHaveValue(expected.active === undefined ? '' : String(expected.active));
+  });
   it.each(['ar', 'en'] as const)('opens published details, photos, editing, public view and archive for %s', async locale => {
     const published = { ...property, status: 'published' as const, imageUrl: 'https://example.com/cover.jpg', availableActions: ['hide', 'archive', 'update'] as const };
     const result = renderWithLocale(<AdminProperties locale={locale} session={session} view="review" initialProperties={{ ...properties, items: [{ ...published, availableActions: [...published.availableActions] }] }} />, { locale });
