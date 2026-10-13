@@ -20,6 +20,10 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it.each(['ar', 'en'] as const)('explains eligibility for every approved provider type in %s', locale => {
+    renderWithLocale(<FeaturedEditor options={options} loadOptions={async () => options} source={sourceFor().source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
+    expect(document.getElementById('featured-account-hint')).toHaveTextContent(locale === 'ar' ? 'المزود الفردي، والمكاتب، والشركات' : 'individuals, offices and developers');
+  });
   it.each(['ar', 'en'] as const)('retries a failed image preview without clearing edited fields or saving content in %s', async locale => {
     const { source } = sourceFor();
     vi.mocked(source.loadMediaPreview).mockRejectedValueOnce(new Error('Unavailable')).mockResolvedValueOnce('/restored-image.png');

@@ -39,13 +39,13 @@ test('featured destination options only expose an eligible real advertiser and i
   await assert.rejects(resolveFeatured(db.connection, { ...creative, destination: { kind: 'property', id: foreign.toHexString() } }), { code: 'FEATURED_DESTINATION_UNAVAILABLE' });
   db.rows.properties![0]!.status = 'draft'; await assert.rejects(resolveFeatured(db.connection, creative), { code: 'FEATURED_DESTINATION_UNAVAILABLE' });
 });
-test('a hidden or unapproved advertiser cannot publish; external links cannot be a featured destination', async () => {
-  const db = fixture(); db.rows.commission_confirmations![0]!.status = 'revoked';
+test('an unapproved advertiser cannot publish; external links cannot be a featured destination', async () => {
+  const db = fixture(); db.rows.users![0]!.status = 'restricted';
   await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: application.toHexString(), destination: { kind: 'organization', id: organization.toHexString() } }), { code: 'FEATURED_ADVERTISER_UNAVAILABLE' });
   assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
   assert.equal(adBannerCreateSchema.safeParse({ placementKey: 'homepage.featured', title: { en: 'Ad' }, startAt: '2026-10-10T00:00:00Z', endAt: '2026-10-11T00:00:00Z', featured: { advertiserProviderId: application.toHexString(), destination: { kind: 'external', id: 'https://outside.invalid' } } }).success, false);
 });
-test('an eligible office can advertise its published property without a separate organization page', async () => {
+test('an approved office can advertise its property without a directory subscription or separate organization page', async () => {
   const db = fixture();
   db.rows.organizations = [];
   db.rows.provider_applications![0]!.providerType = 'brokerage_office';
@@ -58,8 +58,8 @@ test('an eligible office can advertise its published property without a separate
   assert.deepEqual(value.destinations.map(item => item.kind), ['property']);
   assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: account.toHexString(), destination: { kind: 'property', id: owned.toHexString() } })).targetPath, '/properties/owned-property');
   db.rows.provider_identity_subscriptions![0]!.paymentConfirmed = false;
-  assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
-  await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: account.toHexString(), destination: { kind: 'property', id: owned.toHexString() } }), { code: 'FEATURED_ADVERTISER_UNAVAILABLE' });
+  assert.equal((await featuredOptions(db.connection)).advertisers.length, 1);
+  assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: account.toHexString(), destination: { kind: 'property', id: owned.toHexString() } })).targetPath, '/properties/owned-property');
 });
 test('advertiser options deduplicate account aliases and never substitute the private owner for a business name', async () => {
   const db = fixture();
@@ -145,4 +145,43 @@ test('several featured cards can overlap, preserve content, stop and restart wit
   const card = values[1]!; assert.deepEqual((await service.previewBanner(admin, card.id)).banner.featured, card.featured);
   const stopped = await service.updateBanner(admin, card.id, { status: 'draft', expectedVersion: card.version, reason: 'Stop card' }); assert.equal(stopped.status, 'draft');
   assert.equal((await service.updateBanner(admin, card.id, { status: 'active', expectedVersion: stopped.version, reason: 'Restart card' })).status, 'active');
+});
+
+
+test('every approved provider type can advertise its published property without exposing a private owner name', async () => {
+  for (const type of ['individual_broker', 'brokerage_office', 'developer_company']) {
+    const db = fixture(); db.rows.organizations = []; db.rows.commission_confirmations = []; db.rows.provider_identity_subscriptions = [];
+    db.rows.provider_applications![0]!.providerType = type;
+    db.rows.provider_profiles![0]!.providerType = type;
+    db.rows.provider_applications![0]!.displayName = 'Public advertiser name';
+    db.rows.provider_applications![0]!.accountOwnerFullName = 'Private account owner';
+    const value = await featuredOptions(db.connection, account.toString());
+    assert.equal(value.advertisers[0]?.name.en, 'Public advertiser name');
+    assert.equal(JSON.stringify(value).includes('Private account owner'), false);
+    assert.equal((await resolveFeatured(db.connection, { advertiserProviderId: account.toString(), destination: { kind: 'property', id: owned.toString() } })).targetPath, '/properties/owned-property');
+    await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: account.toString(), destination: { kind: 'property', id: foreign.toString() } }), { code: 'FEATURED_DESTINATION_UNAVAILABLE' });
+    db.rows.provider_profiles![0]!.status = 'pending_review';
+    assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
+  }
+});
+
+test('older ineligible applications do not prevent later eligible accounts from appearing', async () => {
+  const db = fixture();
+  db.rows.provider_applications!.push(...Array.from({ length: 101 }, (_, index) => ({ _id: new Types.ObjectId(index.toString(16).padStart(24, '0')), userId: new Types.ObjectId(), providerType: 'individual_broker', status: 'approved' })));
+  const value = await featuredOptions(db.connection);
+  assert.equal(value.advertisers.length, 1);
+  assert.equal(value.advertisers[0]?.id, account.toString());
+});
+
+test('advertiser eligibility requires a verified provider and matching approved application/profile', async () => {
+  for (const invalidate of [
+    (db: ReturnType<typeof fixture>) => { db.rows.users![0]!.deletedAt = new Date(); },
+    (db: ReturnType<typeof fixture>) => { db.rows.users![0]!.roleType = 'seeker'; },
+    (db: ReturnType<typeof fixture>) => { db.rows.provider_applications![0]!.status = 'pending_review'; },
+    (db: ReturnType<typeof fixture>) => { db.rows.provider_profiles![0]!.providerType = 'individual_broker'; }
+  ]) {
+    const db = fixture(); invalidate(db);
+    assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
+    await assert.rejects(resolveFeatured(db.connection, { advertiserProviderId: account.toString(), destination: { kind: 'property', id: owned.toString() } }), { code: 'FEATURED_ADVERTISER_UNAVAILABLE' });
+  }
 });
