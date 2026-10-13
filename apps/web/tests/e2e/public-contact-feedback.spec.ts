@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { getPublicPropertyDetailsCopy } from '../../src/features/public/details-copy.ts';
 
-for (const outcome of ['success', 'error'] as const) {
+for (const outcome of ['success', 'error', 'forbidden'] as const) {
   test(`property contact ${outcome} keeps the page and entered fields in place`, async ({ page }) => {
     const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
     const copy = getPublicPropertyDetailsCopy(locale);
@@ -37,7 +37,9 @@ for (const outcome of ['success', 'error'] as const) {
       expect(route.request().headers().authorization).toBe('Bearer contact.seeker.token');
       expect(route.request().postDataJSON()).toMatchObject({ propertyId, fullName: 'Example Seeker', phone: '01001234567', preferredContactTime: 'morning', message: 'Please contact me.', locale });
       await sendGate;
-      if (outcome === 'error') {
+      if (outcome === 'forbidden') {
+        await route.fulfill({ status: 403, json: { error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', details: [], requestId: 'contact-forbidden' } } });
+      } else if (outcome === 'error') {
         await route.fulfill({ status: 500, json: { error: { code: 'INTERNAL_ERROR', messageKey: 'errors.internalError', details: [], requestId: 'contact-error' } } });
       } else {
         sent = true;
@@ -46,6 +48,7 @@ for (const outcome of ['success', 'error'] as const) {
     });
     await page.goto(`/properties/demo-open-view-apartment?lang=${locale}`);
     const form = page.getByRole('form', { name: copy.contactTitle });
+    await expect(form.locator('#public-property-contact-account-help')).toContainText(locale === 'ar' ? 'باحث عن عقار' : 'property seeker account');
     await expect.poll(() => authorizedRead).toBe(true);
     await form.getByLabel(copy.fullName).fill('Example Seeker');
     await form.getByLabel(copy.phoneNumber).fill('01001234567');
@@ -79,6 +82,7 @@ for (const outcome of ['success', 'error'] as const) {
     } else {
       releaseRefresh?.();
       await expect(form.getByRole('alert')).toContainText(copy.actionErrorTitle);
+      if (outcome === 'forbidden') await expect(form.getByRole('alert')).toContainText(locale === 'ar' ? 'استخدم حساب «باحث عن عقار»' : 'use a property seeker account');
       await expect(form.locator('.public-property-details__contact-success')).toHaveCount(0);
     }
     await expect(form).toHaveAttribute('data-retained-form', 'true');

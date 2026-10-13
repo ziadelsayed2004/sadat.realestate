@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   publicPropertyDetailsSchema,
   requestDataSchema,
@@ -599,15 +599,18 @@ it('refreshes an expired session once, retries with the fresh token, and does no
   expect(refreshSession).toHaveBeenCalledTimes(1);
 });
 
-it('explains a contact role denial without a sign-in prompt and retains the draft', async () => {
-  const copy = getPublicPropertyDetailsCopy('en');
+it.each(['ar', 'en'] as const)('explains the seeker account requirement before sending and after denial while retaining the draft in %s', async locale => {
+  const copy = getPublicPropertyDetailsCopy(locale);
   const submitContact = vi.fn().mockRejectedValue(new ApiClientError('Forbidden', { code: 'HTTP_ERROR', status: 403 }));
-  renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} actions={{ submitContact, submitViewing: vi.fn() }} />, { locale: 'en' });
+  renderWithLocale(<PublicPropertyDetails locale={locale} url="/properties/published-home" initialData={detailsData} actions={{ submitContact, submitViewing: vi.fn() }} />, { locale });
+  const button = screen.getByRole('button', { name: copy.submitContact });
+  expect(button).toHaveAccessibleDescription(locale === 'ar' ? 'لإرسال الطلب، سجّل الدخول بحساب «باحث عن عقار».' : 'To send a request, sign in with a property seeker account.');
   fireEvent.change(screen.getByLabelText(copy.fullName), { target: { value: 'Example Provider' } });
   fireEvent.change(screen.getByLabelText(copy.phoneNumber), { target: { value: '01012345678' } });
   fireEvent.change(screen.getByLabelText(copy.contactTime, { selector: 'select' }), { target: { value: 'morning' } });
   fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
   expect(await screen.findByText(copy.actionForbiddenBody)).toBeVisible();
-  expect(screen.queryByRole('link', { name: copy.actionPermissionLink })).not.toBeInTheDocument();
+  expect(screen.getByText(copy.actionForbiddenBody)).toHaveTextContent(locale === 'ar' ? 'باحث عن عقار' : 'property seeker account');
+  expect(within(screen.getByRole('form', { name: copy.contactTitle })).queryByRole('link', { name: copy.actionPermissionLink })).not.toBeInTheDocument();
   expect(screen.getByLabelText(copy.fullName)).toHaveValue('Example Provider');
 });

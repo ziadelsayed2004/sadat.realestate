@@ -680,7 +680,8 @@ function RequestPanel({
             onChange={event => setMessage(event.target.value)}
           />
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
-          <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
+          {role !== 'provider' ? <p id="public-property-contact-account-help">{copy.actionPermissionBody}</p> : null}
+          <Button type="submit" fullWidth className="public-property-details__contact-submit" aria-describedby={role !== 'provider' ? 'public-property-contact-account-help' : undefined} startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
           {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span><a href={`${role === 'provider' ? `/provider/customer-requests?search=${contactId}&` : `/seeker/requests/${contactId}?`}lang=${locale}`}>{locale === 'ar' ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
           {contactState === 'permission' || contactState === 'forbidden' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} message={contactError} /> : null}
         </form>
