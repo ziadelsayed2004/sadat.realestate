@@ -70,7 +70,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
       published: { title: 'تم نشر العقار', body: 'العقار متاح للعرض العام على منصة عقارات السادات.', reasonLabel: 'آخر سبب للمراجعة', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' },
       hidden: { title: 'العقار غير ظاهر حاليًا', body: 'العقار محفوظ في حسابك لكنه غير متاح للعرض العام وفق حالته الحالية.', reasonLabel: 'سبب الحالة', reasonUnavailable: 'لم يرسل الخادم سببًا إضافيًا.' }
     },
-    labels: { reference: 'المرجع', submittedAt: 'تاريخ الإرسال', reviewedAt: 'تاريخ المراجعة', status: 'الحالة', views: 'المشاهدات', unavailable: 'غير متاح', safeTitle: 'بيانات آمنة', safeBody: 'يظهر هذا العرض فقط بيانات عقد العقار المسموح بها لمقدم الخدمة.', publishedWarning: 'تعديل البيانات الأساسية للعقار المنشور (السعر، الوصف، الموقع) قد يعيد العقار لمرحلة المراجعة مجددًا.' },
+    labels: { reference: 'المرجع', submittedAt: 'تاريخ الإرسال', reviewedAt: 'تاريخ المراجعة', status: 'الحالة', views: 'المشاهدات', unavailable: 'غير متاح', safeTitle: 'بيانات آمنة', safeBody: 'يظهر هذا العرض فقط بيانات عقد العقار المسموح بها لمقدم الخدمة.', publishedWarning: 'بدء تعديل العقار يوقف عرضه مؤقتًا حتى حفظ التعديلات وإرسالها واعتماد الإدارة لها. طلب إلغاء التفعيل لا يخفي العقار إلا بعد موافقة الإدارة.' },
     actions: { search: 'ابحث عن عقار', searchPlaceholder: 'اسم العقار أو المنطقة أو الكود', back: 'العودة إلى عقاراتي', contactSupport: 'التواصل مع الدعم', myProperties: 'عقاراتي', viewProperty: 'عرض العقار', viewPublic: 'عرض الصفحة العامة', supportUnavailable: 'لا يتوفر مسار دعم في العقد الحالي.', retry: 'إعادة المحاولة' }
   },
   en: {
@@ -94,7 +94,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
       published: { title: 'Property published', body: 'The property is available for public viewing on the Sadat Real Estate platform.', reasonLabel: 'Latest review reason', reasonUnavailable: 'The server did not provide an additional reason.' },
       hidden: { title: 'Property is currently hidden', body: 'The property remains in your account but is not available for public viewing in its current state.', reasonLabel: 'State reason', reasonUnavailable: 'The server did not provide an additional reason.' }
     },
-    labels: { reference: 'Reference', submittedAt: 'Submitted at', reviewedAt: 'Reviewed at', status: 'Status', views: 'Views', unavailable: 'Unavailable', safeTitle: 'Safe data', safeBody: 'This view contains only provider-permitted property contract data.', publishedWarning: 'Editing a published property’s core data (price, description, or location) may return it to review.' },
+    labels: { reference: 'Reference', submittedAt: 'Submitted at', reviewedAt: 'Reviewed at', status: 'Status', views: 'Views', unavailable: 'Unavailable', safeTitle: 'Safe data', safeBody: 'This view contains only provider-permitted property contract data.', publishedWarning: 'Starting an edit temporarily removes the property until changes are saved, submitted and approved. A deactivation request only hides it after administration approves.' },
     actions: { search: 'Search for a property', searchPlaceholder: 'Property name, area or code', back: 'Back to my properties', contactSupport: 'Contact support', myProperties: 'My properties', viewProperty: 'View property', viewPublic: 'View public page', supportUnavailable: 'A support route is not available in the current contract.', retry: 'Retry' }
   },};
 

@@ -56,7 +56,7 @@ export interface AdminPropertiesProps {
 
 const propertyStatuses: readonly PropertyStatus[] = ['draft', 'pending_review', 'needs_changes', 'approved', 'published', 'rejected', 'hidden', 'archived'];
 const reviewActions: readonly PropertyReviewAction[] = ['needs_changes', 'approve', 'reject', 'publish'];
-const visibilityActions: readonly PropertyVisibilityAction[] = ['hide', 'restore', 'archive'];
+const visibilityActions: readonly PropertyVisibilityAction[] = ['hide', 'restore', 'archive', 'approve_deactivation', 'reject_deactivation'];
 const reportStatuses: readonly PropertyReportStatus[] = ['open', 'in_review', 'resolved', 'dismissed'];
 const reportActions: readonly PropertyReportAction[] = ['resolve', 'dismiss'];
 
@@ -207,6 +207,7 @@ function PropertyLinks({ locale, property }: { readonly locale: SupportedLocale;
   const copy = getAdminPropertiesCopy(locale);
   const route = `${ADMIN_PROPERTY_REVIEW_ROUTE}?propertyId=${encodeURIComponent(property.id)}`;
   return <div className="admin-properties__row-actions">
+    {property.deactivationRequest?.status === 'pending' ? <a className="admin-properties__action-link" href={`${localePath(locale, `${route}&action=approve_deactivation`)}#admin-property-actions`}>{locale === 'ar' ? 'طلب إلغاء تفعيل بانتظار القرار' : 'Deactivation request awaiting decision'}</a> : null}
     <a className="admin-properties__action-link" href={localePath(locale, route)}>{copy.details}</a>
     {property.availableActions.includes('update') ? <a className="admin-properties__action-link" href={`${localePath(locale, route)}#admin-property-editor`}>{locale === 'ar' ? 'تعديل العقار والصور' : 'Edit property and photos'}</a> : null}
     {publiclyVisible(property) ? <a className="admin-properties__action-link" href={localePath(locale, `/properties/${encodeURIComponent(property.slug)}`)}>{locale === 'ar' ? 'عرض في الموقع' : 'View on website'}</a> : null}
@@ -265,6 +266,12 @@ function PropertyTable({ locale, data, onPage, authorization, apiOrigin, reviewL
   );
 }
 
+function PropertyDeactivationNotice({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {
+  const request = property.deactivationRequest;
+  if (!request) return null;
+  return <section role="status"><h3>{locale === 'ar' ? 'طلب إلغاء تفعيل من مزود العقار' : 'Provider deactivation request'}</h3><p>{request.reason}</p><p>{request.status === 'pending' ? locale === 'ar' ? 'الطلب بانتظار قرارك؛ العقار ما زال ظاهرًا. قبول الطلب يخفي العقار، ورفضه يبقيه ظاهرًا.' : 'Awaiting your decision; the property remains public. Approval hides it, and rejection keeps it public.' : request.status === 'approved' ? locale === 'ar' ? 'تم قبول الطلب' : 'Request approved' : locale === 'ar' ? 'تم رفض الطلب' : 'Request rejected'}</p>{request.decisionReason ? <p>{request.decisionReason}</p> : null}</section>;
+}
+
 function PropertyActionPanel({ locale, property, review, visibility, initialAction }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly review: AdminPropertyReviewMutation; readonly visibility: AdminPropertyVisibilityMutation; readonly initialAction?: string | undefined }) {
   const copy = getAdminPropertiesCopy(locale);
   const allowedActions = property.availableActions.filter((action): action is PropertyMutationAction => isReviewAction(action) || isVisibilityAction(action));
@@ -294,7 +301,7 @@ function PropertyActionPanel({ locale, property, review, visibility, initialActi
     }
   }
 
-  return <form id="admin-property-actions" className="admin-properties__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}><h2>{copy.titles.review}</h2>{allowedActions.length === 0 ? <p className="admin-properties__muted">{copy.noActions}</p> : <fieldset disabled={mutationState === 'saving'}><legend>{copy.columns.actions}</legend><label className="admin-properties__field" htmlFor="admin-property-action">{copy.columns.actions}</label><select id="admin-property-action" value={action} onChange={event => setAction(event.target.value as PropertyMutationAction)}>{allowedActions.map(value => <option key={value} value={value}>{isReviewAction(value) ? copy.availableAction[value] : (value === 'restore' && property.status === 'archived' ? `${copy.availableAction.restore} (${copy.status.pending_review})` : copy.visibilityAction[value])}</option>)}</select><label className="admin-properties__field" htmlFor="admin-property-reason">{copy.reasonLabel}{action === 'publish' ? (locale === 'ar' ? ' (اختياري)' : ' (optional)') : null}</label><textarea id="admin-property-reason" value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} minLength={5} maxLength={500} aria-required={action !== 'publish'} /><Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.saving : action === 'publish' ? copy.availableAction.publish : copy.saveAction}</Button></fieldset>}{feedback !== undefined ? <p className="admin-properties__feedback" data-tone={mutationState === 'error' || mutationState === 'permission' ? 'error' : 'success'} role="status">{feedback}</p> : null}</form>;
+  return <form id="admin-property-actions" className="admin-properties__action-card" onSubmit={event => { event.preventDefault(); void submit(); }}><h2>{copy.titles.review}</h2><PropertyDeactivationNotice property={property} locale={locale} />{allowedActions.length === 0 ? <p className="admin-properties__muted">{copy.noActions}</p> : <fieldset disabled={mutationState === 'saving'}><legend>{copy.columns.actions}</legend><label className="admin-properties__field" htmlFor="admin-property-action">{copy.columns.actions}</label><select id="admin-property-action" value={action} onChange={event => setAction(event.target.value as PropertyMutationAction)}>{allowedActions.map(value => <option key={value} value={value}>{isReviewAction(value) ? copy.availableAction[value] : (value === 'restore' && property.status === 'archived' ? `${copy.availableAction.restore} (${copy.status.pending_review})` : copy.visibilityAction[value])}</option>)}</select><label className="admin-properties__field" htmlFor="admin-property-reason">{copy.reasonLabel}{action === 'publish' ? (locale === 'ar' ? ' (اختياري)' : ' (optional)') : null}</label><textarea id="admin-property-reason" value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} minLength={5} maxLength={500} aria-required={action !== 'publish'} /><Button type="submit" loading={mutationState === 'saving'} disabled={mutationState === 'permission'}>{mutationState === 'saving' ? copy.saving : action === 'publish' ? copy.availableAction.publish : copy.saveAction}</Button></fieldset>}{feedback !== undefined ? <p className="admin-properties__feedback" data-tone={mutationState === 'error' || mutationState === 'permission' ? 'error' : 'success'} role="status">{feedback}</p> : null}</form>;
 }
 
 function PropertyReviewPanel({ locale, property, review, visibility, initialAction, authorization, apiOrigin }: { readonly locale: SupportedLocale; readonly property: PropertyData; readonly review: AdminPropertyReviewMutation; readonly visibility: AdminPropertyVisibilityMutation; readonly initialAction?: string | undefined; readonly authorization?: AdminPropertiesAuthorizationSource | undefined; readonly apiOrigin?: string | undefined }) {

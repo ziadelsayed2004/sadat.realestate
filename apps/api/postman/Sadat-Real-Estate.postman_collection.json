@@ -4115,6 +4115,106 @@
           }
         },
         {
+          "name": "startProviderPropertyEdit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit property for review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/start-edit",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "start-edit"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Aggregate validation returns structured field errors; only a valid owned draft can enter pending_review.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "requestProviderPropertyDeactivation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit property for review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/deactivation-request",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "deactivation-request"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Aggregate validation returns structured field errors; only a valid owned draft can enter pending_review.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Review Property",
           "request": {
             "method": "POST",

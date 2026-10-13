@@ -185,6 +185,21 @@ function fixture(ready = false, settings?: { requiresAdminReview: boolean; publi
       const current = rows.get(input.id);
       if (!current) return { kind: 'not_found' };
       if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
+      if (['start_edit', 'request_deactivation', 'approve_deactivation', 'reject_deactivation'].includes(input.action)) {
+        if (current.status !== 'published' || !current.active) return { kind: 'invalid_state' };
+        if (input.action === 'start_edit' || input.action === 'request_deactivation') {
+          if (current.providerId !== input.metadata.actorId || current.deactivationRequest?.status === 'pending') return { kind: 'invalid_state' };
+        } else if (current.deactivationRequest?.status !== 'pending') return { kind: 'invalid_state' };
+        const next: StoredProperty = { ...current, version: current.version + 1, updatedAt: input.metadata.changedAt };
+        if (input.action === 'start_edit') { next.status = 'needs_changes'; next.publishedAt = current.publishedAt ?? input.metadata.changedAt; }
+        else if (input.action === 'request_deactivation') next.deactivationRequest = { status: 'pending', reason: input.metadata.reason, requestedAt: input.metadata.changedAt.toISOString() };
+        else {
+          next.deactivationRequest = { ...current.deactivationRequest!, status: input.action === 'approve_deactivation' ? 'approved' : 'rejected', resolvedAt: input.metadata.changedAt.toISOString(), decisionReason: input.metadata.reason };
+          if (input.action === 'approve_deactivation') { next.status = 'hidden'; next.active = false; }
+        }
+        rows.set(input.id, next);
+        return { kind: 'written', property: next };
+      }
       const valid = input.action === 'hide' ? ['published', 'approved'].includes(current.status) : input.action === 'restore' ? ['hidden', 'archived'].includes(current.status) : current.status !== 'archived';
       if (!valid) return { kind: 'invalid_state' };
       const status = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? (current.status === 'archived' ? 'pending_review' : 'published') : 'archived';
@@ -373,4 +388,61 @@ test('administrators edit published properties with management permission while 
   const saved = await service.saveStep(administrator, id, 'basic', { version: 0, name: { en: 'Revised title' }, reason: 'Correct published title' }, context);
   assert.equal(saved.status, 'published'); assert.equal(saved.name.en, 'Revised title'); assert.equal(saved.source.providerId, provider);
   await assert.rejects(service.saveStep(administrator, id, 'basic', { version: 0, name: { en: 'Stale edit' }, reason: 'Replay obsolete version' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VERSION_CONFLICT');
+});
+
+
+test('deactivation requests retain publication until an authorized administrator decides with the current version', async () => {
+  const { service, rows } = fixture(true);
+  rows.set(id, { ...rows.get(id)!, status: 'published' });
+  const context = { requestId: 'deactivate', traceId: 'a'.repeat(32) };
+  const input = { version: 0, reason: 'Property has been sold' };
+  await assert.rejects(service.requestDeactivation(claims(other), id, input, context), /PROPERTY_NOT_FOUND/);
+  await assert.rejects(service.requestDeactivation(claims(provider, 'pending_review'), id, input, context), /PROPERTY_FORBIDDEN/);
+  await assert.rejects(service.requestDeactivation(claims(), id, { ...input, reason: 'bad' }, context));
+  await assert.rejects(service.requestDeactivation(claims(), id, { ...input, version: 5 }, context), /PROPERTY_VERSION_CONFLICT/);
+  const pending = await service.requestDeactivation(claims(), id, input, context);
+  assert.equal(pending.status, 'published'); assert.equal(pending.active, true);
+  assert.equal(pending.deactivationRequest?.status, 'pending');
+  assert.deepEqual(pending.availableActions, []);
+  await assert.rejects(service.requestDeactivation(claims(), id, { ...input, version: 1 }, context), /PROPERTY_INVALID_STATE/);
+  await assert.rejects(service.startEdit(claims(), id, { ...input, version: 1 }, context), /PROPERTY_INVALID_STATE/);
+  await assert.rejects(service.visibility(other, id, { ...input, action: 'approve_deactivation' }, context), /PROPERTY_FORBIDDEN/);
+  await assert.rejects(service.visibility(admin, id, { ...input, action: 'approve_deactivation' }, context), /PROPERTY_VERSION_CONFLICT/);
+  const rejected = await service.visibility(admin, id, { version: 1, action: 'reject_deactivation', reason: 'Listing is still available' }, context);
+  assert.equal(rejected.status, 'published'); assert.equal(rejected.active, true);
+  assert.equal(rejected.deactivationRequest?.status, 'rejected');
+  assert.deepEqual((await service.get(claims(), id)).availableActions, ['start_edit', 'request_deactivation']);
+  await service.requestDeactivation(claims(), id, { ...input, version: 2 }, context);
+  const approved = await service.visibility(admin, id, { version: 3, action: 'approve_deactivation', reason: 'Confirm property is sold' }, context);
+  assert.equal(approved.status, 'hidden'); assert.equal(approved.active, false);
+  assert.equal(approved.deactivationRequest?.status, 'approved');
+  assert.equal(approved.deactivationRequest?.decisionReason, 'Confirm property is sold');
+  await assert.rejects(service.visibility(admin, id, { version: 4, action: 'approve_deactivation', reason: input.reason }, context), /PROPERTY_INVALID_STATE/);
+  const restored = await service.visibility(admin, id, { version: 4, action: 'restore', reason: 'Property available again' }, context);
+  assert.equal(restored.status, 'published'); assert.equal(restored.active, true);
+});
+
+test('published editing is owner scoped and always returns to administrative review even with automatic provider publication', async () => {
+  const { service, rows } = fixture(true, { requiresAdminReview: false, publicationAfterApproval: 'automatic' });
+  rows.set(id, { ...rows.get(id)!, status: 'published' });
+  const context = { requestId: 'reopen-edit', traceId: 'b'.repeat(32) };
+  const input = { version: 0, reason: 'Update the published price' };
+  await assert.rejects(service.startEdit(claims(other), id, input, context), /PROPERTY_NOT_FOUND/);
+  await assert.rejects(service.saveStep(claims(), id, 'basic', { ...input, name: { en: 'Bypass review' } }, context), /PROPERTY_INVALID_STATE/);
+  const editable = await service.startEdit(claims(), id, input, context);
+  assert.equal(editable.status, 'needs_changes');
+  assert.deepEqual(editable.availableActions, ['update', 'submit']);
+  const edited = await service.saveStep(claims(), id, 'price-payment', { version: editable.version, reason: input.reason, price: { amount: 900000, currency: 'EGP' } }, context);
+  const submitted = await service.submit(claims(), id, { version: edited.version, reason: 'Submit corrected property' }, context);
+  assert.equal(submitted.status, 'pending_review');
+  const approved = await service.review(admin, id, { version: submitted.version, action: 'approve', reason: 'Approve corrected property' }, context);
+  assert.equal(approved.status, 'published');
+  assert.equal(approved.price?.amount, 900000);
+});
+
+test('review-only administrators cannot resolve deactivation requests', async () => {
+  const { service, rows } = fixture(false, undefined, ['admin:properties.view', 'admin:properties.review']);
+  rows.set(id, record({ status: 'published', deactivationRequest: { status: 'pending', reason: 'Property has been sold', requestedAt: now.toISOString() } }));
+  assert.deepEqual((await service.adminGet(admin, id)).availableActions, []);
+  await assert.rejects(service.visibility(admin, id, { version: 0, action: 'approve_deactivation', reason: 'Confirm sold property' }, { requestId: 'restricted', traceId: 'a'.repeat(32) }), /PROPERTY_FORBIDDEN/);
 });

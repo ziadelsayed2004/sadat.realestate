@@ -27,6 +27,7 @@ const steps: Readonly<Record<string, readonly string[]>> = {
 };
 
 export function recentGuideTopic(topic: GuideTopic): GuideTopic {
-  const extra = steps[topic.id];
-  return extra === undefined ? topic : { ...topic, steps: [...topic.steps, ...extra] };
+  const lifecycle = topic.id === 'provider-property' ? ['من صفحة العقار المنشور اضغط «بدء تعديل العقار»؛ يتوقف عرضه مؤقتًا حتى تحفظ التعديلات وترسلها للمراجعة وتعتمدها الإدارة. لو اتباع، اكتب السبب وأرسل طلب إلغاء التفعيل؛ يظل ظاهرًا حتى موافقة الإدارة، وتظهر حالة الطلب وسبب القرار في الصفحة.'] : topic.id === 'property-review' ? ['طلبات إلغاء التفعيل من المقدم تظهر ضمن مراجعة العقارات وعدّاد الطلبات. افتح العقار واقرأ السبب، ثم اختر قبول أو رفض طلب إلغاء التفعيل واكتب سبب القرار. القبول يخفي العقار، والرفض يبقيه منشورًا؛ يلزم صلاحية إدارة العقارات.'] : [];
+  const extra = [...(steps[topic.id] ?? []), ...lifecycle];
+  return extra.length === 0 ? topic : { ...topic, steps: [...topic.steps, ...extra] };
 }

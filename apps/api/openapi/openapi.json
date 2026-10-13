@@ -12963,6 +12963,154 @@
           }
         }
       }
+    },
+    "/api/v1/provider/properties/{propertyId}/deactivation-request": {
+      "post": {
+        "operationId": "requestProviderPropertyDeactivation",
+        "summary": "Request deactivation of an owned published property; remains public until administrative approval",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertySubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted property",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      }
+    },
+    "/api/v1/provider/properties/{propertyId}/start-edit": {
+      "post": {
+        "operationId": "startProviderPropertyEdit",
+        "summary": "Reopen an owned published property for editing; removes it from public listings until administrative review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertySubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted property",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -20860,7 +21008,7 @@
           },
           "availableActions": {
             "type": "array",
-            "maxItems": 9,
+            "maxItems": 13,
             "items": {
               "type": "string",
               "enum": [
@@ -20872,7 +21020,11 @@
                 "publish",
                 "hide",
                 "restore",
-                "archive"
+                "archive",
+                "start_edit",
+                "request_deactivation",
+                "approve_deactivation",
+                "reject_deactivation"
               ]
             }
           },
@@ -20883,6 +21035,43 @@
             "type": "string",
             "maxLength": 2048,
             "description": "Saved image preview URL."
+          },
+          "deactivationRequest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "reason",
+              "requestedAt"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "approved",
+                  "rejected"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 500
+              },
+              "requestedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "resolvedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "decisionReason": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 500
+              }
+            }
           }
         }
       },
@@ -21423,7 +21612,9 @@
             "enum": [
               "hide",
               "restore",
-              "archive"
+              "archive",
+              "approve_deactivation",
+              "reject_deactivation"
             ]
           },
           "reason": {

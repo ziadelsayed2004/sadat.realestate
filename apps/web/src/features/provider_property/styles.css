@@ -1413,3 +1413,6 @@
 .provider-property-wizard__amenity-option span { min-width: 0; overflow-wrap: anywhere; }
 .provider-property-wizard__amenity-option small { display: block; color: #64748b; margin-top: .25rem; }
 .provider-property-wizard__amenity-option:focus-within { outline: 2px solid #cc9e45; outline-offset: 2px; }
+.provider-property-deactivation { max-inline-size: 520px; margin: 24px auto 0; overflow-wrap: anywhere; }
+.provider-property-deactivation form { display: grid; gap: 12px; }
+.provider-property-deactivation textarea { inline-size: 100%; min-inline-size: 0; padding: 12px; font: inherit; border: 1px solid #cfd8e7; border-radius: 12px; }

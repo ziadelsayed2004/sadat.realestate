@@ -16,6 +16,8 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId/steps/:step', operationId: 'saveAdminPropertyStep' },
   { method: 'PATCH', path: '/api/v1/admin/properties/:propertyId', operationId: 'editAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/provider/properties/:propertyId/submit', operationId: 'submitProviderProperty' }
+  ,{ method: 'POST', path: '/api/v1/provider/properties/:propertyId/start-edit', operationId: 'startProviderPropertyEdit' }
+  ,{ method: 'POST', path: '/api/v1/provider/properties/:propertyId/deactivation-request', operationId: 'requestProviderPropertyDeactivation' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/review', operationId: 'reviewAdminProperty' }
   ,{ method: 'POST', path: '/api/v1/admin/properties/:propertyId/visibility', operationId: 'changeAdminPropertyVisibility' }
   ,{ method: 'GET', path: '/api/v1/admin/properties', operationId: 'listAdminProperties' }
@@ -59,6 +61,20 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
     next();
   });
   router.use('/admin/properties', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.post('/provider/properties/:propertyId/deactivation-request', async (request, response) => {
+    try {
+      const { propertyId } = propertyIdParamsSchema.parse(request.params);
+      const result = await dependencies.service.requestDeactivation(claims(response), propertyId, propertySubmitSchema.parse(request.body), context(request));
+      response.status(200).json(toSuccessResponse(result, context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
+  router.post('/provider/properties/:propertyId/start-edit', async (request, response) => {
+    try {
+      const { propertyId } = propertyIdParamsSchema.parse(request.params);
+      const result = await dependencies.service.startEdit(claims(response), propertyId, propertySubmitSchema.parse(request.body), context(request));
+      response.status(200).json(toSuccessResponse(result, context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
   router.post('/provider/properties', async (request, response) => {
     try { const current = context(request); response.status(201).json(toSuccessResponse(await dependencies.service.create(claims(response), propertyCreateSchema.parse(request.body ?? {}), current), current.requestId)); }
     catch (error) { sendError(request, response, error); }

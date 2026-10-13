@@ -1738,7 +1738,9 @@
     "visibilityAction": {
       "hide": "Hide property",
       "restore": "Restore visibility",
-      "archive": "Archive property"
+      "archive": "Archive property",
+      "approve_deactivation": "Approve deactivation request",
+      "reject_deactivation": "Reject deactivation request"
     },
     "reportStatus": {
       "open": "New",
@@ -3941,7 +3943,7 @@
       "unavailable": "Unavailable",
       "safeTitle": "Safe data",
       "safeBody": "This view contains only provider-permitted property contract data.",
-      "publishedWarning": "Editing a published property’s core data (price, description, or location) may return it to review."
+      "publishedWarning": "Starting an edit temporarily removes the property until changes are saved, submitted and approved. A deactivation request only hides it after administration approves."
     },
     "actions": {
       "search": "Search for a property",

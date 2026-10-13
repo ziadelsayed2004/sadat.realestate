@@ -38,6 +38,21 @@ const property = propertyDataSchema.parse({
 const candidateId = 'dddddddddddddddddddddddd';
 const reportId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const properties: AdminPropertyListData = { items: [property], page: 1, limit: 20, total: 1 };
+
+it.each(['ar', 'en'] as const)('shows the provider request and saves approval using the current version in %s', async locale => {
+  const pending = propertyDataSchema.parse({ ...property, status: 'published', availableActions: ['approve_deactivation', 'reject_deactivation'], deactivationRequest: { status: 'pending', reason: 'Property has been sold', requestedAt: property.updatedAt } });
+  const visibility = vi.fn().mockResolvedValue({ ...pending, status: 'hidden', active: false, version: 4, availableActions: ['restore'], deactivationRequest: { ...pending.deactivationRequest, status: 'approved', decisionReason: 'Confirm property is sold' } });
+  const review = vi.fn();
+  const copy = getAdminPropertiesCopy(locale);
+  renderWithLocale(<AdminProperties locale={locale} session={session} view="review" propertyId={pending.id} initialProperties={{ ...properties, items: [pending] }} changeVisibility={visibility} reviewProperty={review} />, { locale });
+  expect(await screen.findByText('Property has been sold')).toBeInTheDocument();
+  expect(screen.getByLabelText(copy.columns.actions)).toHaveValue('approve_deactivation');
+  fireEvent.change(screen.getByLabelText(copy.reasonLabel), { target: { value: 'Confirm property is sold' } });
+  fireEvent.click(screen.getByRole('button', { name: copy.saveAction }));
+  await waitFor(() => expect(visibility).toHaveBeenCalledWith(pending.id, { version: 3, action: 'approve_deactivation', reason: 'Confirm property is sold' }));
+  expect(review).not.toHaveBeenCalled();
+  await waitFor(() => expect(screen.getByLabelText(copy.columns.actions)).toHaveValue('restore'));
+});
 const duplicates = propertyDuplicateDataSchema.parse({
   propertyId: property.id,
   items: [{ candidateId, signals: ['same_slug', 'same_location_transaction'], explanation: 'The slug and transaction location match.' }],

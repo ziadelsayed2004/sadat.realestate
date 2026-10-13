@@ -46,5 +46,5 @@ test('uses explicit time-bounded collection filters and documented KPI definitio
   });
   assert.deepEqual(calls[6]?.filter, { updatedAt: dateBounds, status: 'pending_review' });
   assert.deepEqual(calls[7]?.filter, { updatedAt: dateBounds, status: 'pending_review' });
-  assert.deepEqual(calls[8]?.filter, { updatedAt: dateBounds, status: 'pending_review' });
+  assert.deepEqual(calls[8]?.filter, { updatedAt: dateBounds, $or: [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }] });
 });

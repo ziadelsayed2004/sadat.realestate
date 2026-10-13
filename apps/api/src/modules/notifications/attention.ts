@@ -4,7 +4,7 @@ import { adminAttentionSchema, type AdminAttentionKey, type AdminAttentionReadRe
 // Read receipts are separate from workflow status and scoped to each administrator.
 const queues: ReadonlyArray<{ key: AdminAttentionKey; collection: string; permission: RbacPermission; filter: Record<string, unknown> }> = [
   { key: 'verification', collection: 'provider_applications', permission: 'admin:providers.review', filter: { status: 'pending_review' } },
-  { key: 'property-review', collection: 'properties', permission: 'admin:properties.review', filter: { status: 'pending_review' } },
+  { key: 'property-review', collection: 'properties', permission: 'admin:properties.review', filter: { $or: [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }] } },
   { key: 'project-review', collection: 'projects', permission: 'admin:projects.review', filter: { status: 'pending_review' } },
   { key: 'account-reports', collection: 'account_reports', permission: 'admin:account-reports.view', filter: { status: { $in: ['open', 'in_review'] } } },
   { key: 'property-reports', collection: 'property_reports', permission: 'admin:property-reports.view', filter: { status: { $in: ['open', 'in_review'] } } },
@@ -24,11 +24,21 @@ export function createAdminAttentionSource(
   authorize: (adminId: string, permission: RbacPermission) => Promise<boolean>,
   acknowledge?: (collection: string, filter: Record<string, unknown>, adminId: string, key: AdminAttentionKey, itemId?: string) => Promise<number>
 ) {
+  async function authorizedFilter(queue: typeof queues[number], adminId: string, permissions?: readonly string[]): Promise<Record<string, unknown> | undefined> {
+    const allowed = (permission: RbacPermission) => permissions ? permissions.includes(permission) : authorize(adminId, permission);
+    if (queue.key === 'property-review') {
+      const [review, manage] = await Promise.all([allowed('admin:properties.review'), allowed('admin:properties.manage')]);
+      const filters = [review ? { status: 'pending_review' } : undefined, manage ? { status: 'published', active: true, 'deactivationRequest.status': 'pending' } : undefined].filter(filter => filter !== undefined);
+      return filters.length === 2 ? { $or: filters } : filters[0];
+    }
+    return await allowed(queue.permission) ? queue.filter : undefined;
+  }
   return {
     async read(adminId: string, permissions?: readonly string[]) {
       const entries = await Promise.all(queues.map(async queue => {
-        if (!(permissions ? permissions.includes(queue.permission) : await authorize(adminId, queue.permission))) return undefined;
-        return [queue.key, await count(queue.collection, queue.filter, adminId, queue.key)] as const;
+        const filter = await authorizedFilter(queue, adminId, permissions);
+        if (!filter) return undefined;
+        return [queue.key, await count(queue.collection, filter, adminId, queue.key)] as const;
       }));
       const counts = Object.fromEntries(entries.filter(entry => entry !== undefined));
       return adminAttentionSchema.parse({ counts, total: Object.values(counts).reduce((sum, value) => sum + value, 0) });
@@ -36,8 +46,9 @@ export function createAdminAttentionSource(
     async markRead(adminId: string, input: AdminAttentionReadRequest, permissions?: readonly string[]): Promise<number> {
       const changes = await Promise.all(queues.map(async queue => {
         if (input.queueKey && queue.key !== input.queueKey) return 0;
-        if (!(permissions ? permissions.includes(queue.permission) : await authorize(adminId, queue.permission))) return 0;
-        return await acknowledge?.(queue.collection, queue.filter, adminId, queue.key, input.itemId) ?? 0;
+        const filter = await authorizedFilter(queue, adminId, permissions);
+        if (!filter) return 0;
+        return await acknowledge?.(queue.collection, filter, adminId, queue.key, input.itemId) ?? 0;
       }));
       return changes.reduce((sum, value) => sum + value, 0);
     }

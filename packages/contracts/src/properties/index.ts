@@ -46,10 +46,10 @@ export const propertySubmitSchema = z.object({ version: z.number().int().nonnega
 export const PROPERTY_REVIEW_ACTIONS = ['needs_changes', 'approve', 'reject', 'publish'] as const;
 export const propertyReviewActionSchema = z.enum(PROPERTY_REVIEW_ACTIONS);
 export const propertyReviewSchema = z.object({ version: z.number().int().nonnegative(), action: propertyReviewActionSchema, reason: propertyReasonSchema }).strict();
-export const PROPERTY_VISIBILITY_ACTIONS = ['hide', 'restore', 'archive'] as const;
+export const PROPERTY_VISIBILITY_ACTIONS = ['hide', 'restore', 'archive', 'approve_deactivation', 'reject_deactivation'] as const;
 export const propertyVisibilityActionSchema = z.enum(PROPERTY_VISIBILITY_ACTIONS);
 export const propertyVisibilitySchema = z.object({ version: z.number().int().nonnegative(), action: propertyVisibilityActionSchema, reason: propertyReasonSchema }).strict();
-export const PROPERTY_AVAILABLE_ACTIONS = ['update', 'submit', 'needs_changes', 'approve', 'reject', 'publish', 'hide', 'restore', 'archive'] as const;
+export const PROPERTY_AVAILABLE_ACTIONS = ['update', 'submit', 'needs_changes', 'approve', 'reject', 'publish', 'hide', 'restore', 'archive', 'start_edit', 'request_deactivation', 'approve_deactivation', 'reject_deactivation'] as const;
 export const propertyAvailableActionSchema = z.enum(PROPERTY_AVAILABLE_ACTIONS);
 const positiveQuery = (fallback: number, max: number) => z.preprocess(value => value === undefined ? fallback : Number(value), z.number().int().positive().max(max));
 export const propertyListQuerySchema = z.object({
@@ -282,13 +282,14 @@ export const propertyDataSchema = z.object({
   reviewedBy: propertyObjectIdSchema.optional(),
   reviewedAt: z.string().datetime({ offset: true }).optional(),
   reviewReason: propertyReasonSchema.optional(),
+  deactivationRequest: z.object({ status: z.enum(['pending', 'approved', 'rejected']), reason: propertyReasonSchema, requestedAt: z.string().datetime({ offset: true }), resolvedAt: z.string().datetime({ offset: true }).optional(), decisionReason: propertyReasonSchema.optional() }).strict().optional(),
   publishedAt: z.string().datetime({ offset: true }).optional(),
   expiresAt: z.string().datetime({ offset: true }).optional(),
   active: z.boolean(),
   version: z.number().int().nonnegative(),
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true }),
-  availableActions: z.array(propertyAvailableActionSchema).max(9)
+  availableActions: z.array(propertyAvailableActionSchema).max(13)
 }).strict();
 export const propertyListDataSchema = z.object({ items: z.array(propertyDataSchema) }).strict();
 

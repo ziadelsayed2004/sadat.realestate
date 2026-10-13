@@ -14,6 +14,7 @@ function propertySearch(search: string): Record<string, unknown>[] {
 }
 
 export interface StoredProperty {
+  deactivationRequest?: import('@sadat-real-estate/contracts').PropertyData['deactivationRequest'];
   imageUrl?: string;
   id: string;
   providerId: string;
@@ -85,11 +86,12 @@ export interface PropertyRepository {
   updateContact(input: { providerId: string; id: string; expectedVersion: number; changes: PropertyContactStep; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
   submit(input: { providerId: string; id: string; expectedVersion: number; targetStatus?: 'pending_review' | 'published'; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
   review(input: { id: string; expectedVersion: number; toStatus: Extract<PropertyRecord['status'], 'needs_changes' | 'approved' | 'rejected' | 'published'>; reviewerId: string; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
-  visibility(input: { id: string; expectedVersion: number; action: 'hide' | 'restore' | 'archive'; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
+  visibility(input: { id: string; expectedVersion: number; action: 'hide' | 'restore' | 'archive' | 'start_edit' | 'request_deactivation' | 'approve_deactivation' | 'reject_deactivation'; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
 }
 
 function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredProperty {
   return {
+    ...(record.deactivationRequest ? { deactivationRequest: structuredClone(record.deactivationRequest) } : {}),
     id: record._id.toHexString(),
     ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     providerId: record.providerId.toHexString(),
@@ -215,7 +217,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         return { kind: 'invalid_state' as const };
       }
       const output = stored(result as PropertyRecord & { _id: Types.ObjectId });
-      await audit.record({ actorType: 'admin', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: input.action, reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
+      await audit.record({ actorType: input.metadata.actorType ?? 'admin', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: input.action, reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
       return { kind: 'written' as const, property: output };
     });
   }
@@ -378,9 +380,18 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: { $in: allowed } }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
     },
     async visibility(input) {
+      if (input.action === 'start_edit') {
+        return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { providerId: new Types.ObjectId(input.metadata.actorId), status: 'published', active: true, 'deactivationRequest.status': { $ne: 'pending' } }, set: { status: 'needs_changes', active: true, publishedAt: input.before.publishedAt ?? input.metadata.changedAt, updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.start_edit' });
+      }
+      if (input.action === 'request_deactivation') {
+        return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { providerId: new Types.ObjectId(input.metadata.actorId), status: 'published', active: true, 'deactivationRequest.status': { $ne: 'pending' } }, set: { deactivationRequest: { status: 'pending', reason: input.metadata.reason, requestedAt: input.metadata.changedAt.toISOString() }, updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.request_deactivation' });
+      }
+      if (input.action === 'approve_deactivation' || input.action === 'reject_deactivation') {
+        return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: 'published', active: true, 'deactivationRequest.status': 'pending' }, set: { ...(input.action === 'approve_deactivation' ? { status: 'hidden', active: false } : {}), deactivationRequest: { ...input.before.deactivationRequest, status: input.action === 'approve_deactivation' ? 'approved' : 'rejected', resolvedAt: input.metadata.changedAt.toISOString(), decisionReason: input.metadata.reason }, updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: `property.${input.action}` });
+      }
       const target = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? (input.before.status === 'archived' ? 'pending_review' : 'published') : 'archived';
       const filter = input.action === 'hide' ? { status: { $in: ['published', 'approved'] } } : input.action === 'restore' ? { status: input.before.status === 'archived' ? 'archived' : 'hidden' } : { status: { $ne: 'archived' } };
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: target === 'published', ...(target === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null } : {}), updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: target === 'published', ...(input.before.deactivationRequest?.status === 'pending' && target !== 'published' ? { deactivationRequest: { ...input.before.deactivationRequest, status: 'approved', resolvedAt: input.metadata.changedAt.toISOString(), decisionReason: input.metadata.reason } } : {}), ...(target === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null } : {}), updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
     }
   };
 }

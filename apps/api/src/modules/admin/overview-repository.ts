@@ -58,7 +58,7 @@ export function createAdminOverviewSource(
         }),
         store.count('provider_applications', { ...updated, status: 'pending_review' }),
         store.count('projects', { ...updated, status: 'pending_review' }),
-        store.count('properties', { ...updated, status: 'pending_review' })
+        store.count('properties', { ...updated, $or: [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }] })
       ]);
 
       return {

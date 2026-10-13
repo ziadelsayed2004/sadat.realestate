@@ -5,7 +5,8 @@ import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { ProviderNavigation } from '../provider/index.ts';
 import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction } from './wizard.tsx';
-import { loadProviderProperty } from './data.ts';
+import { loadProviderProperty, requestProviderPropertyDeactivation, startProviderPropertyEdit } from './data.ts';
+import { PropertyDeactivationRequest } from './deactivation.tsx';
 import { getProviderPropertyCopy } from './copy.ts';
 import { getProviderPropertyStateCopy, type ProviderPropertyStateStatus } from './state-copy.ts';
 import './styles.css';
@@ -226,11 +227,11 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
 
   return (
     <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop/tablet/mobile">
-      <ProviderNavigation locale={locale} activePath="/provider/properties/new/basic" authClient={authClient} />
+      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} loadingVariant="cards" /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
-        {state === 'success' && property !== undefined ? <StatusContent locale={locale} property={property} route={route} /> : null}
+        {state === 'success' && property !== undefined ? <><StatusContent locale={locale} property={property} route={route} /><PropertyDeactivationRequest property={property} locale={locale} startEdit={async () => { await startProviderPropertyEdit({ version: property.version, reason: 'Provider reopened published property for editing' }, { propertyId, apiOrigin, authorization: authClient }); window.location.assign(localePath(locale, `/provider/properties/${encodeURIComponent(propertyId)}/basic`)); }} submit={async reason => { setProperty(await requestProviderPropertyDeactivation({ version: property.version, reason }, { propertyId, apiOrigin, authorization: authClient })); }} /></> : null}
       </div>
     </section>
   );

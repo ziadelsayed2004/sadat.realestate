@@ -12,6 +12,8 @@ const tokens: AccessTokenService = {
   verify(token) { return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: provider, sid: '4123456789abcdef01234567', role: token === 'admin' ? 'admin' : 'provider', status: token === 'pending' ? 'pending_review' : 'verified', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims; }
 };
 const service: PropertyRouterDependencies['service'] = {
+  async startEdit() { return { ...property, status: 'needs_changes' as const, version: 1, availableActions: ['update', 'submit'] as const }; },
+  async requestDeactivation() { return { ...property, status: 'published' as const, version: 1, availableActions: [], deactivationRequest: { status: 'pending' as const, reason: 'Property has been sold', requestedAt: '2026-10-13T08:00:00.000Z' } }; },
   async adminEdit(_adminId, _id, input) { return { ...property, ...(input as object), version: 1, availableActions: ['update'] }; },
   async list() { return { data: { items: [{ ...property, availableActions: ['update', 'submit'] as const }] }, page: 1, limit: 20, total: 1 }; },
   async adminList() { return { data: { items: [{ ...property, availableActions: ['archive'] as const }] }, page: 1, limit: 20, total: 1 }; },
@@ -85,4 +87,18 @@ test('administrative property step edits reject providers and preserve strict wr
   assert.equal((await request(url, 'PATCH', path, 'admin', input)).status, 200);
   assert.equal((await request(url, 'PATCH', path, 'admin', { ...input, providerId: provider })).status, 400);
   assert.equal((await request(url, 'PATCH', path, 'admin', { ...input, status: 'published' })).status, 400);
+}));
+
+
+test('published provider mutation routes enforce authentication, verification and strict version/reason inputs', async () => run(async url => {
+  for (const suffix of ['deactivation-request', 'start-edit']) {
+    const path = `/api/v1/provider/properties/${propertyId}/${suffix}`;
+    const input = { version: 0, reason: 'Property has been sold' };
+    assert.equal((await fetch(url + path, { method: 'POST' })).status, 401);
+    assert.equal((await request(url, 'POST', path, 'admin', input)).status, 403);
+    assert.equal((await request(url, 'POST', path, 'pending', input)).status, 403);
+    assert.equal((await request(url, 'POST', path, 'provider', input)).status, 200);
+    assert.equal((await request(url, 'POST', path, 'provider', { ...input, active: false })).status, 400);
+    assert.equal((await request(url, 'POST', path, 'provider', { reason: input.reason })).status, 400);
+  }
 }));

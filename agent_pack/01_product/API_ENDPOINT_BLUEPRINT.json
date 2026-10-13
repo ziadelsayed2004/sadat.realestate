@@ -2853,5 +2853,29 @@
     "purpose": "Import legacy featured cards as reviewable drafts",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/deactivation-request",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Request property deactivation while keeping publication until administrative approval",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/start-edit",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Reopen an owned published property for editing and mandatory administrative review",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]
