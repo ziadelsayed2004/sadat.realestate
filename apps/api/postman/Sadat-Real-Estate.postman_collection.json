@@ -3944,7 +3944,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": { \"ar\": \"Synthetic apartment\", \"en\": \"Synthetic apartment\" },\n  \"slug\": \"synthetic-apartment\",\n  \"transactionType\": \"sale\",\n  \"source\": { \"providerId\": \"000000000000000000000000\", \"sourceType\": \"individual_broker\" },\n  \"reason\": \"Create synthetic property draft\"\n}",
+              "raw": "{\n  \"name\": {\n    \"ar\": \"Synthetic apartment\",\n    \"en\": \"Synthetic apartment\"\n  },\n  \"transactionType\": \"sale\",\n  \"reason\": \"Create synthetic property draft\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3961,7 +3961,7 @@
                 "properties"
               ]
             },
-            "description": "Requires an isolated verified provider session. Provider ownership is checked against the bearer subject.",
+            "description": "Requires an isolated verified approved provider session. The server derives provider type and organization from the authenticated account. No manual source or organization ID is required; legacy source input must match the resolved owner.",
             "auth": {
               "type": "bearer",
               "bearer": [

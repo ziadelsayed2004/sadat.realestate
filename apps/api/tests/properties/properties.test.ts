@@ -17,6 +17,8 @@ import {
 } from '@sadat-real-estate/contracts';
 import { propertySchema } from '../../src/modules/properties/models.js';
 import { derivePropertySourceIdentity } from '../../src/modules/properties/source-identity.js';
+import { createProviderPropertySourceResolver } from '../../src/modules/properties/provider-source.js';
+import { Types, type Connection } from 'mongoose';
 
 const providerId = '0123456789abcdef01234567';
 const organizationId = '1123456789abcdef01234567';
@@ -29,8 +31,58 @@ const base = {
   reason: 'Create a property draft'
 };
 
+test('resolves approved provider organizations automatically without bypassing ownership or review decisions', async () => {
+  const account = new Types.ObjectId(providerId), profileId = new Types.ObjectId(organizationId), applicationId = new Types.ObjectId('c'.repeat(24));
+  const rows: Record<string, Record<string, unknown> | null> = {
+    users: { _id: account, roleType: 'provider', status: 'verified' },
+    provider_applications: { _id: applicationId, userId: account, providerType: 'brokerage_office', status: 'approved', legalBusinessName: 'Approved office' },
+    provider_profiles: { _id: profileId, userId: account, providerType: 'brokerage_office', status: 'approved' },
+    organizations: null
+  };
+  let creates = 0;
+  const connection = { transaction: async (run: (session: unknown) => Promise<unknown>) => run({}), collection: (name: string) => ({
+    findOne: async (filter: Record<string, unknown>) => {
+      const row = rows[name];
+      if (!row || filter.status && row.status !== filter.status || filter.roleType && row.roleType && row.roleType !== filter.roleType || row.deletedAt) return null;
+      if (name === 'organizations' && filter.providerId && ![providerId, organizationId, applicationId.toHexString()].includes(String(row.providerId))) return null;
+      return row;
+    },
+    updateOne: async (_filter: unknown, update: { $setOnInsert: Record<string, unknown> }) => { if (!rows[name]) { rows[name] = { _id: profileId, ...update.$setOnInsert }; creates += 1; } }
+  }) } as unknown as Connection;
+  const resolve = createProviderPropertySourceResolver(connection);
+  assert.deepEqual(await resolve(providerId), { providerId, sourceType: 'brokerage_office', organizationId });
+  assert.equal(creates, 1);
+  assert.deepEqual(await resolve(providerId), { providerId, sourceType: 'brokerage_office', organizationId });
+  assert.equal(creates, 1);
+  for (const alias of [account, profileId, applicationId.toHexString()]) {
+    rows.organizations!.providerId = alias;
+    assert.equal((await resolve(providerId))?.organizationId, organizationId);
+  }
+  rows.organizations!.status = 'suspended';
+  assert.equal(await resolve(providerId), undefined);
+  rows.organizations!.status = 'approved'; rows.organizations!.providerId = new Types.ObjectId('d'.repeat(24));
+  assert.equal(await resolve(providerId), undefined);
+  rows.organizations = null;
+  for (const collection of ['users', 'provider_applications', 'provider_profiles']) {
+    const saved = rows[collection]; rows[collection] = null;
+    assert.equal(await resolve(providerId), undefined); rows[collection] = saved!;
+  }
+  rows.users!.status = 'restricted';
+  assert.equal(await resolve(providerId), undefined);
+  rows.users!.status = 'verified'; rows.users!.deletedAt = new Date();
+  assert.equal(await resolve(providerId), undefined);
+  delete rows.users!.deletedAt;
+  rows.provider_profiles!.providerType = 'developer_company';
+  assert.equal(await resolve(providerId), undefined);
+  rows.provider_applications!.providerType = 'developer_company'; rows.provider_applications!.legalCompanyName = 'Approved developer';
+  assert.equal((await resolve(providerId))?.sourceType, 'developer_company');
+  rows.provider_profiles!.providerType = 'individual_broker'; rows.provider_applications!.providerType = 'individual_broker';
+  assert.deepEqual(await resolve(providerId), { providerId, sourceType: 'individual_broker' });
+});
+
 test('validates localized property identity and rejects unknown or unsupported fields', () => {
   assert.equal(propertyCreateSchema.safeParse(base).success, true);
+  assert.equal(propertyCreateSchema.safeParse({ ...base, source: undefined }).success, true);
   assert.equal(propertyCreateSchema.safeParse({ ...base, verified: true }).success, false);
   assert.equal(propertyCreateSchema.safeParse({ ...base, name: { fr: 'Appartement' } }).success, false);
   assert.equal(propertyCreateSchema.safeParse({ ...base, source: { providerId, sourceType: 'developer_company' } }).success, false);

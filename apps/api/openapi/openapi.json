@@ -20691,7 +20691,6 @@
         "required": [
           "name",
           "transactionType",
-          "source",
           "reason"
         ],
         "properties": {
@@ -20721,7 +20720,8 @@
             "pattern": "^[a-f0-9]{24}$"
           },
           "source": {
-            "$ref": "#/components/schemas/PropertySource"
+            "$ref": "#/components/schemas/PropertySource",
+            "description": "Optional legacy input, validated against the authenticated account. Provider type and approved organization are resolved by the server when omitted. No organization code is required in the form."
           },
           "reason": {
             "type": "string",

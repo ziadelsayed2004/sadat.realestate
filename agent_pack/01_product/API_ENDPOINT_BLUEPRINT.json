@@ -823,7 +823,7 @@
     "roles": [
       "approved-provider"
     ],
-    "purpose": "Create property draft",
+    "purpose": "Create a provider-owned property draft with account-derived provider type and approved organization; manual organization IDs are not required and forged legacy source input is rejected",
     "status": "implemented",
     "apiVersion": "v1"
   },

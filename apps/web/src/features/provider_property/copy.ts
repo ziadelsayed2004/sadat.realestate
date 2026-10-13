@@ -103,7 +103,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
       coordinateHelp: 'انسخ رابط موقع العقار من مشاركة Google Maps أو Apple Maps. يمكنك أيضًا اختيار المنطقة أو إدخال خط العرض والطول معًا.',
       mapUrlError: 'أدخل رابط موقع من Google Maps أو Apple Maps؛ روابط المواقع العادية غير مقبولة.',
-      sourceHelp: 'حساب مالك العقار يتحدد من جلسة الدخول. اختر نوع المصدر عند الإضافة؛ لا يتغير المصدر بعد حفظ المسودة.',
+      sourceHelp: 'نوع الحساب والمؤسسة يُحددان تلقائيًا من حسابك المعتمد؛ لا تحتاج إدخال كود.',
       notFoundTitle: 'المسودة غير موجودة', notFoundBody: 'لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.', unavailable: 'غير متاح'
     },
     states: {
@@ -165,7 +165,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
       coordinateHelp: 'Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.',
       mapUrlError: 'Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.',
-      sourceHelp: 'The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.',
+      sourceHelp: 'Provider type and organization are determined automatically from your approved account. No code is needed.',
       notFoundTitle: 'Draft not found', notFoundBody: 'This draft could not be loaded or is not owned by the current session.', unavailable: 'Unavailable'
     },
     states: {

@@ -117,7 +117,7 @@ export const propertyCreateSchema = z.object({
   transactionType: propertyTransactionTypeSchema,
   projectId: propertyObjectIdSchema.optional(),
   parentPropertyId: propertyObjectIdSchema.optional(),
-  source: propertySourceSchema,
+  source: propertySourceSchema.optional(),
   reason: propertyReasonSchema
 }).strict().superRefine((value, context) => {
   if (value.kind === 'property' && value.parentPropertyId) {

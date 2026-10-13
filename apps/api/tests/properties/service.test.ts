@@ -89,7 +89,7 @@ function record(overrides: Partial<StoredProperty> = {}): StoredProperty {
   return { id, providerId: provider, source: { providerId: provider, sourceType: 'individual_broker' }, kind: 'property', name: { en: 'Apartment' }, slug: 'apartment', transactionType: 'sale', status: 'draft', active: true, version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }, permissions = ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage']) {
+function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }, permissions = ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage'], resolveSource?: (accountId: string) => Promise<StoredProperty['source'] | undefined>) {
   const rows = new Map([[id, record(ready ? { locationId: location, price: { amount: 1000000, currency: 'EGP' }, contact: { phone: '+201234567890' } } : {})]]);
   const repository: PropertyRepository = {
     async updateAdministrative(input) {
@@ -208,8 +208,25 @@ function fixture(ready = false, settings?: { requiresAdminReview: boolean; publi
       return { kind: 'written', property: next };
     }
   };
-  return { service: createPropertyService({ repository, authorization: { async authorize(id, permission) { return id === admin && permissions.includes(permission); } }, ...(settings ? { settings: { async read() { return { requiresAdminReview: settings.requiresAdminReview, publicationAfterApproval: settings.publicationAfterApproval, automaticExpiry: settings.automaticExpiry ?? 'never', maxImages: 50, acceptedImageMimes: ['image/jpeg' as const, 'image/png' as const], maxImageBytes: 10 * 1024 * 1024, hideProviderContact: true, contactVisibility: 'authenticated' as const }; } } } : {}), now: () => now }), rows };
+  return { service: createPropertyService({ repository, ...(resolveSource ? { resolveSource } : {}), authorization: { async authorize(id, permission) { return id === admin && permissions.includes(permission); } }, ...(settings ? { settings: { async read() { return { requiresAdminReview: settings.requiresAdminReview, publicationAfterApproval: settings.publicationAfterApproval, automaticExpiry: settings.automaticExpiry ?? 'never', maxImages: 50, acceptedImageMimes: ['image/jpeg' as const, 'image/png' as const], maxImageBytes: 10 * 1024 * 1024, hideProviderContact: true, contactVisibility: 'authenticated' as const }; } } } : {}), now: () => now }), rows };
 }
+
+test('creates drafts with server-resolved identity and rejects forged source relationships', async () => {
+  const input = { name: { en: 'Automatic company apartment' }, transactionType: 'sale' as const, reason: 'Create without internal IDs' };
+  const context = { requestId: 'automatic-source', traceId: 'a'.repeat(32) };
+  for (const sourceType of ['individual_broker', 'brokerage_office', 'developer_company'] as const) {
+    const source = { providerId: provider, sourceType, ...(sourceType === 'individual_broker' ? {} : { organizationId: other }) };
+    const { service } = fixture(false, undefined, undefined, async accountId => { assert.equal(accountId, provider); return source; });
+    assert.deepEqual((await service.create(claims(), input, context)).source, source);
+    assert.deepEqual((await service.create(claims(), { ...input, source }, context)).source, source);
+    await assert.rejects(service.create(claims(), { ...input, source: { ...source, providerId: other } }, context), error => error.code === 'PROPERTY_FORBIDDEN');
+    if (sourceType !== 'individual_broker') {
+      await assert.rejects(service.create(claims(), { ...input, source: { ...source, organizationId: admin } }, context), error => error.code === 'PROPERTY_FORBIDDEN');
+      await assert.rejects(service.create(claims(), { ...input, source: { providerId: provider, sourceType: 'individual_broker' } }, context), error => error.code === 'PROPERTY_FORBIDDEN');
+    }
+  }
+  await assert.rejects(fixture(false, undefined, undefined, async () => undefined).service.create(claims(), input, context), error => error.code === 'PROPERTY_FORBIDDEN');
+});
 
 test('creates provider-owned drafts and saves core/location steps with optimistic versions', async () => {
   const { service } = fixture();

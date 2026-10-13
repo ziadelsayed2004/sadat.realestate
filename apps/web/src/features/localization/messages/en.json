@@ -3850,7 +3850,7 @@
       "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
       "coordinateHelp": "Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.",
       "mapUrlError": "Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.",
-      "sourceHelp": "The owner account comes from your signed-in session. Select the source when adding the property; it cannot change after saving the draft.",
+      "sourceHelp": "Provider type and organization are determined automatically from your approved account. No code is needed.",
       "notFoundTitle": "Draft not found",
       "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
       "unavailable": "Unavailable"

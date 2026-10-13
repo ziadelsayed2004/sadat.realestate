@@ -3,6 +3,7 @@ import {
   propertyCoreStepSchema,
   propertyAdminEditSchema,
   propertyCreateSchema,
+  propertySourceSchema,
   propertyDataSchema,
   propertyDetailsStepSchema,
   propertyDraftStepSchema,
@@ -165,7 +166,7 @@ function validation(record: StoredProperty): ReturnType<typeof propertyValidatio
   return propertyValidationDataSchema.parse({ valid: issues.length === 0, issues });
 }
 
-export function createPropertyService(dependencies: { repository: PropertyRepository; authorization?: PropertyAuthorization; settings?: PropertySettingsReader; now?: () => Date }): PropertyService {
+export function createPropertyService(dependencies: { repository: PropertyRepository; resolveSource?: (accountId: string) => Promise<StoredProperty['source'] | undefined>; authorization?: PropertyAuthorization; settings?: PropertySettingsReader; now?: () => Date }): PropertyService {
   const now = dependencies.now ?? (() => new Date());
   async function adminPermission(adminId: string, permission: 'admin:properties.review' | 'admin:properties.manage'): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, permission)) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
@@ -237,11 +238,13 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
     async create(claims, unparsedInput, context) {
       provider(claims);
       const input = propertyCreateSchema.parse(unparsedInput);
-      if (input.source.providerId !== claims.sub) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
+      if (input.source && input.source.providerId !== claims.sub) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
+      const source = dependencies.resolveSource ? await dependencies.resolveSource(claims.sub) : input.source;
+      if (!source || source.providerId !== claims.sub || (input.source && (input.source.sourceType !== source.sourceType || input.source.organizationId !== source.organizationId))) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
       const result = await dependencies.repository.create({
         property: {
           providerId: claims.sub,
-          source: input.source,
+          source: propertySourceSchema.parse(source),
           kind: input.kind,
           name: input.name,
           slug: input.slug ?? generateIdentifier(input.kind, input.name),

@@ -15,7 +15,7 @@ import {
   type ProviderPropertyStep,
   type ProviderPropertyStepInput
 } from './data.ts';
-import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertySourceType, type ProviderPropertyWizardState } from './copy.ts';
+import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertyWizardState } from './copy.ts';
 import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
 import { filterProviderLocations } from './location-search.ts';
@@ -49,8 +49,6 @@ interface BasicForm {
   readonly slug: string;
   readonly kind: PropertyData['kind'];
   readonly transactionType: PropertyData['transactionType'];
-  readonly sourceType: ProviderPropertySourceType | '';
-  readonly organizationId: string;
   readonly projectId: string;
   readonly parentPropertyId: string;
   readonly reason: string;
@@ -79,8 +77,6 @@ function emptyBasic(copy: ProviderPropertyCopy): BasicForm {
     slug: '',
     kind: 'property',
     transactionType: 'sale',
-    sourceType: '',
-    organizationId: '',
     projectId: '',
     parentPropertyId: '',
     reason: copy.wizard.placeholders.reason
@@ -99,8 +95,6 @@ function basicFromProperty(property: PropertyData, copy: ProviderPropertyCopy): 
     slug: property.slug,
     kind: property.kind,
     transactionType: property.transactionType,
-    sourceType: property.source.sourceType,
-    organizationId: property.source.organizationId ?? '',
     projectId: property.projectId ?? '',
     parentPropertyId: property.parentPropertyId ?? '',
     reason: copy.wizard.placeholders.reason
@@ -187,7 +181,7 @@ function BasicFormView({
   mutationMessage,
   validationError,
   invalidFields,
-  sourceEditable
+  sourceType
 }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
@@ -198,7 +192,7 @@ function BasicFormView({
   readonly mutationMessage: string | undefined;
   readonly validationError: boolean;
   readonly invalidFields: readonly BasicValidationField[];
-  readonly sourceEditable: boolean;
+  readonly sourceType?: PropertyData['source']['sourceType'] | undefined;
 }) {
   const wizard = copy.wizard;
   const updateName = (value: string) => setForm({ ...form, name: { ...form.name, [locale]: value } });
@@ -222,10 +216,10 @@ function BasicFormView({
         </div>
       </section>
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-source-title">
-        <div className="provider-property-wizard__card-heading"><h2 id="provider-property-source-title">{wizard.labels.sourceType}</h2><span>{wizard.sourceHelp}</span></div>
+        <div className="provider-property-wizard__card-heading"><h2 id="provider-property-source-title">{wizard.labels.sourceType}</h2></div>
+        <p>{sourceType ? wizard.sourceTypeLabels[sourceType] : (locale === 'ar' ? 'يُحدد تلقائيًا من حسابك المعتمد.' : 'Determined automatically from your approved account.')}</p>
+        <p>{locale === 'ar' ? 'المؤسسة هي المكتب أو الشركة المسجلة في حسابك. نربط العقار بها تلقائيًا عند الحفظ؛ لا تحتاج إدخال كود أو رقم سجل تجاري. الحساب الفردي لا يحتاج مؤسسة.' : 'Your organization is the office or company registered to your account. We link it automatically when you save. No code or registration number is needed. Individual accounts do not need an organization.'}</p>
         <div className="provider-property-wizard__grid">
-          <div className="provider-property-wizard__field"><label htmlFor="provider-property-source-type">{wizard.labels.sourceType}</label><select id="provider-property-source-type" value={form.sourceType} onChange={event => setForm({ ...form, sourceType: event.target.value as BasicForm['sourceType'], organizationId: '' })} disabled={!sourceEditable} aria-invalid={fieldError('sourceType') ? true : undefined} aria-describedby={fieldError('sourceType') ? 'provider-property-source-type-error' : undefined} required><option value="">{wizard.unavailable}</option>{(['individual_broker', 'brokerage_office', 'developer_company'] as const).map(value => <option key={value} value={value}>{wizard.sourceTypeLabels[value]}</option>)}</select>{fieldError('sourceType') ? <small id="provider-property-source-type-error">{fieldError('sourceType')}</small> : null}</div>
-          {form.sourceType === 'brokerage_office' || form.sourceType === 'developer_company' ? <Input id="provider-property-organization" label={wizard.labels.organizationId} helpText={locale === 'ar' ? 'كود داخلي لربط العقار بحساب الشركة أو المكتب. ليس رقم السجل التجاري أو الهاتف. مطلوب للشركات والمكاتب فقط.' : 'An internal code that links this property to the company or office account. It is not a registration number or phone number. Required only for companies and offices.'} value={form.organizationId} placeholder={wizard.placeholders.organizationId} onChange={event => setForm({ ...form, organizationId: event.target.value })} disabled={!sourceEditable} state={fieldError('organizationId') ? 'error' : 'default'} error={fieldError('organizationId')} required /> : null}
           <Input id="provider-property-project" label={wizard.labels.projectId} value={form.projectId} placeholder={wizard.placeholders.projectId} onChange={event => setForm({ ...form, projectId: event.target.value })} state={fieldError('projectId') ? 'error' : 'default'} error={fieldError('projectId')} />
           {form.kind === 'unit' ? <Input id="provider-property-parent" label={wizard.labels.parentPropertyId} value={form.parentPropertyId} placeholder={wizard.placeholders.parentPropertyId} onChange={event => setForm({ ...form, parentPropertyId: event.target.value })} state={fieldError('parentPropertyId') ? 'error' : 'default'} error={fieldError('parentPropertyId')} /> : null}
         </div>
@@ -400,13 +394,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     setValidationError(false);
     setInvalidFields([]);
     setMutationMessage(undefined);
-    const providerId = authClient?.getSnapshot().user?.id;
     const name = textMap(basic.name);
-    const source = {
-      providerId,
-      sourceType: basic.sourceType,
-      ...(basic.sourceType === 'individual_broker' || basic.organizationId.trim() === '' ? {} : { organizationId: basic.organizationId.trim().toLowerCase() })
-    };
     const common = {
       kind: basic.kind,
       name,
@@ -415,10 +403,10 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       ...(basic.kind !== 'unit' || basic.parentPropertyId.trim() === '' ? (isNew ? {} : { parentPropertyId: null }) : { parentPropertyId: basic.parentPropertyId.trim().toLowerCase() })
     };
     const parsed = isNew
-      ? propertyCreateSchema.safeParse({ ...common, source, reason: basic.reason.trim() })
+      ? propertyCreateSchema.safeParse({ ...common, reason: basic.reason.trim() })
       : propertyCoreStepSchema.safeParse({ version: property?.version ?? 0, ...common, reason: basic.reason.trim() });
-    if (!parsed.success || (isNew && providerId === undefined)) {
-      const fields = parsed.success ? ['providerId'] : parsed.error.issues.map(issue => String(issue.path[0] === 'source' ? issue.path[1] : issue.path[0]));
+    if (!parsed.success) {
+      const fields = parsed.error.issues.map(issue => String(issue.path[0]));
       const invalid = [...new Set(fields)].filter(field => field in copy.wizard.validationMessages) as BasicValidationField[];
       setInvalidFields(invalid);
       setValidationError(true);
@@ -484,7 +472,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       <div className="provider-dashboard__content provider-property-wizard__content">
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
-          step === 'basic' ? <BasicFormView invalidFields={invalidFields} sourceEditable={isNew} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
+          step === 'basic' ? <BasicFormView invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>
