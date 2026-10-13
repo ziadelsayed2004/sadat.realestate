@@ -42,7 +42,7 @@ function success(data: unknown, requestId: string, meta: { page?: number; limit?
 const pageData: ProviderPropertiesData = { items: rows, page: 1, limit: 5, total: 3 };
 
 describe('Provider properties', () => {
-  it.each([{ requested: 'draft', expected: 'draft' }, { requested: 'invalid-status', expected: undefined }])('honors a valid dashboard filter and rejects unknown status: $requested', async ({ requested, expected }) => {
+  it.each([{ requested: 'draft', expected: 'draft' }, { requested: 'published', expected: 'published' }, { requested: 'pending_review', expected: 'pending_review' }, { requested: 'needs_changes', expected: 'needs_changes' }, { requested: 'invalid-status', expected: undefined }])('honors a valid dashboard filter and rejects unknown status: $requested', async ({ requested, expected }) => {
     const previous = window.location.href;
     window.history.replaceState({}, '', `/provider/properties?status=${requested}&lang=en`);
     try {

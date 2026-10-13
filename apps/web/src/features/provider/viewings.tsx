@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   viewingTransitionSchema,
+  viewingStatusSchema,
   type SupportedLocale,
   type ViewingData,
   type ViewingStatus,
@@ -280,8 +281,11 @@ function ViewingsContent({ data, locale, copy, status, onStatusChange, onApply, 
 
 export function ProviderViewings({ locale, session, authClient, apiOrigin, load, mutations }: ProviderViewingsProps) {
   const copy = getProviderViewingsCopy(locale);
-  const [status, setStatus] = useState<ProviderViewingStatusFilter>('all');
-  const [appliedStatus, setAppliedStatus] = useState<ProviderViewingStatusFilter>('all');
+  const [status, setStatus] = useState<ProviderViewingStatusFilter>(() => {
+    const parsed = viewingStatusSchema.safeParse(typeof window === 'undefined' ? undefined : new URL(window.location.href).searchParams.get('status'));
+    return parsed.success ? parsed.data : 'all';
+  });
+  const [appliedStatus, setAppliedStatus] = useState<ProviderViewingStatusFilter>(status);
   const [page, setPage] = useState(1);
   const [state, setState] = useState<ProviderViewingsViewState>('loading');
   const [data, setData] = useState<ProviderViewingsData | undefined>();

@@ -75,7 +75,7 @@ describe('Provider overview', () => {
     const card = screen.getByTestId('provider-summary-views');
     expect(card).toHaveTextContent(new Intl.NumberFormat(locale).format(9));
     expect(card).not.toHaveTextContent(getProviderCopy(locale).unavailable);
-    expect(card).toHaveAttribute('href', `/provider/user-guide?lang=${locale}#guide-provider-access`);
+    expect(card).toHaveAttribute('href', `/provider?lang=${locale}#provider-recent-title`);
     expect(screen.getByRole('cell', { name: new Intl.NumberFormat(locale).format(4) })).toBeInTheDocument();
     rerender(<ProviderOverview key="zero" locale={locale} session={session} initialData={{ ...overview, activity: { ...overview.activity, monthlyViews: 0 } }} />);
     expect(screen.getByTestId('provider-summary-views')).toHaveTextContent(new Intl.NumberFormat(locale).format(0));
@@ -142,6 +142,13 @@ describe('Provider overview', () => {
     expect(screen.getByTestId('provider-summary-drafts')).toHaveTextContent('1');
     expect(screen.getByTestId('provider-summary-customer-requests')).toHaveTextContent('23');
     expect(screen.getByTestId('provider-summary-booked')).toHaveTextContent('1');
+    const destinations = { total: '/provider/properties', published: '/provider/properties?status=published', pending: '/provider/properties?status=pending_review', 'needs-changes': '/provider/properties?status=needs_changes', booked: '/provider/viewings?status=confirmed', drafts: '/provider/properties?status=draft', views: '/provider#provider-recent-title', 'customer-requests': '/provider/customer-requests' };
+    for (const [tone, destination] of Object.entries(destinations)) {
+      const url = new URL(destination, 'http://sadat-real-estate.local');
+      url.searchParams.set('lang', locale);
+      expect(screen.getByTestId(`provider-summary-${tone}`)).toHaveAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+      expect(screen.getByTestId(`provider-summary-${tone}`).tagName).toBe('A');
+    }
     expect(screen.getByRole('heading', { name: locale === 'ar' ? 'لوحة التحكم' : 'Dashboard', level: 1 })).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(providerId);

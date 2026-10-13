@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { type ViewingData, viewingDataSchema } from '@sadat-real-estate/contracts';
+import { type ViewingData, type ViewingListQuery, viewingDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { getProviderCopy } from '../src/features/provider/copy.ts';
@@ -44,6 +44,17 @@ function success(payload: unknown, requestId: string): Response {
 }
 
 describe('Provider viewing appointments', () => {
+  it.each([{ requested: 'confirmed', expected: 'confirmed' }, { requested: 'unknown', expected: undefined }])('applies a valid dashboard booking filter and ignores an unknown status: $requested', async ({ requested, expected }) => {
+    const previous = window.location.href;
+    window.history.replaceState({}, '', `/provider/viewings?status=${requested}&lang=en`);
+    const load = vi.fn(async (_query?: ViewingListQuery) => ({ items: [], page: 1, limit: 5, total: 0 }));
+    try {
+      renderWithLocale(<ProviderViewings locale="en" session={session} load={load} />, { locale: 'en' });
+      await waitFor(() => expect(load).toHaveBeenCalled());
+      expect(load.mock.calls[0]?.[0]).toMatchObject({ page: 1, limit: 5 });
+      expect(load.mock.calls[0]?.[0]?.status).toBe(expected);
+    } finally { window.history.replaceState({}, '', previous); }
+  });
   it('loads provider viewings with the strict status query and authorization', async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null }> = [];
     const client = new ApiClient({

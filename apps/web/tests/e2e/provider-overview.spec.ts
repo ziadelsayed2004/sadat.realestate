@@ -62,6 +62,36 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
   });
 }
 
+test('dashboard metric cards open their sections and apply the matching filters', async ({ page }) => {
+  const locale = localeForProject();
+  await routeProviderSession(page);
+  await routeProviderOverview(page);
+  for (const resource of ['properties', 'viewings', 'customer-requests']) {
+    await page.route(`**/api/v1/provider/${resource}?**`, route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: resource === 'properties' ? { items: [] } : { items: [], page: 1, limit: 5, total: 0 }, ...successMeta('dashboard-card-empty-section', 0) }) }));
+  }
+  const destinations = [
+    { tone: 'total', path: '/provider/properties', status: 'all' },
+    { tone: 'published', path: '/provider/properties?status=published', status: 'published' },
+    { tone: 'pending', path: '/provider/properties?status=pending_review', status: 'pending_review' },
+    { tone: 'needs-changes', path: '/provider/properties?status=needs_changes', status: 'needs_changes' },
+    { tone: 'drafts', path: '/provider/properties?status=draft', status: 'draft' },
+    { tone: 'booked', path: '/provider/viewings?status=confirmed', status: 'confirmed' },
+    { tone: 'customer-requests', path: '/provider/customer-requests' },
+    { tone: 'views', path: '/provider#provider-recent-title' }
+  ];
+  for (const destination of destinations) {
+    await page.goto(`/provider?lang=${locale}`);
+    const url = new URL(destination.path, 'http://127.0.0.1:4173');
+    url.searchParams.set('lang', locale);
+    await page.getByTestId(`provider-summary-${destination.tone}`).click();
+    await expect(page).toHaveURL(url.href);
+    if (destination.path.startsWith('/provider/properties')) await expect(page.locator('#provider-properties-status')).toHaveValue(destination.status!);
+    else if (destination.tone === 'booked') await expect(page.locator('#provider-viewings-status')).toHaveValue('confirmed');
+    else if (destination.tone === 'customer-requests') await expect(page.locator('.provider-customer-requests [data-state="empty"]')).toBeVisible();
+    else await expect(page.locator('#provider-recent-title')).toBeInViewport();
+  }
+});
+
 test('dashboard shows advertising approval and payment alerts with their request links and unread count', async ({ page }) => {
   const locale = localeForProject();
   await routeProviderSession(page);
