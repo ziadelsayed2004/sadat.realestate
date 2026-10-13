@@ -53,18 +53,46 @@ test('archives projects with review permission and the current version while kee
   await assert.rejects(fixture(true, false).service.create(claims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
 });
 
-test('public project links open an independent page only for published projects and approved developers', async () => {
+test('project links match the real public company projection, including approval, acknowledgement and membership', async () => {
   let unavailable: string | undefined;
   let lookups = 0;
-  const connection = { collection: (name: string) => ({ findOne: async (filter: { status: string }) => {
+  let profileLoads = 0;
+  const organizationId = 'c'.repeat(24);
+  const profileId = new Types.ObjectId(other);
+  const row = { ...record({ status: 'published', organizationId }), _id: new Types.ObjectId(id) };
+  const rows: Record<string, Record<string, unknown>> = {
+    organizations: { _id: new Types.ObjectId(organizationId), slug: 'approved-builder', providerId: profileId, kind: 'developer_company', name: { en: 'Approved builder' }, status: 'approved' },
+    provider_applications: { _id: new Types.ObjectId('d'.repeat(24)), userId: new Types.ObjectId(provider), providerType: 'developer_company', status: 'approved' },
+    provider_profiles: { _id: profileId, userId: new Types.ObjectId(provider), providerType: 'developer_company', status: 'approved' },
+    users: { _id: new Types.ObjectId(provider), status: 'verified' },
+    commission_confirmations: { _id: new Types.ObjectId('e'.repeat(24)) }
+  };
+  const connection = { collection: (name: string) => ({ findOne: async () => {
     lookups += 1;
-    assert.equal(filter.status, 'approved');
-    return unavailable === name ? null : name === 'organizations' ? { slug: 'approved-builder', providerId: new Types.ObjectId(provider) } : { _id: new Types.ObjectId(provider) };
+    return unavailable === name ? null : rows[name] ?? null;
+  }, find: () => {
+    if (name === 'projects') profileLoads += 1;
+    const query = { sort: () => query, limit: () => query, toArray: async () => unavailable === name ? [] : name === 'projects' ? [row] : name === 'commission_policies' ? [{ _id: new Types.ObjectId('f'.repeat(24)), status: 'active', kind: 'percentage', percentageBps: 250, version: 1, effectiveFrom: new Date('2000-01-01') }] : [] };
+    return query;
   } }) } as unknown as Connection;
   const repository = createMongooseProjectRepository(connection, {} as ProjectModels, {} as AuditWriter);
-  const project = record({ status: 'published', organizationId: 'c'.repeat(24) });
+  const project = record({ status: 'published', organizationId });
   assert.equal(await repository.publicPath(project), '/developers/approved-builder/projects/project');
-  for (unavailable of ['organizations', 'provider_profiles']) assert.equal(await repository.publicPath(project), undefined);
+  const previousLoads = profileLoads;
+  assert.deepEqual(await Promise.all([repository.publicPath(project), repository.publicPath(project)]), ['/developers/approved-builder/projects/project', '/developers/approved-builder/projects/project']);
+  assert.equal(profileLoads, previousLoads + 1);
+  for (unavailable of ['organizations', 'provider_applications', 'provider_profiles', 'users', 'commission_confirmations', 'commission_policies', 'projects']) assert.equal(await repository.publicPath(project), undefined, unavailable);
+  unavailable = undefined;
+  rows.users!.status = 'restricted';
+  assert.equal(await repository.publicPath(project), undefined);
+  rows.users!.status = 'verified';
+  row.slug = 'different-project';
+  assert.equal(await repository.publicPath(project), undefined);
+  row.slug = project.slug;
+  rows.organizations!.providerId = new Types.ObjectId(provider);
+  assert.equal(await repository.publicPath(project), '/developers/approved-builder/projects/project');
+  rows.organizations!.slug = '-';
+  assert.equal(await repository.publicPath(project), undefined);
   const previous = lookups;
   for (const status of ['draft', 'pending_review', 'approved', 'hidden', 'archived', 'rejected'] as const) {
     assert.equal(await repository.publicPath({ ...project, status }), undefined);

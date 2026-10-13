@@ -26,3 +26,6 @@
   .admin-shell-header .locale-pill-globe { display: none; }
   .admin-shell-header .custom-locale-pill-btn { padding-inline: 8px; gap: 6px; }
 }
+@media (max-width: 360px) {
+  .admin-shell-header .admin-shell-header__identity-copy { display: none; }
+}

@@ -48,6 +48,20 @@ function apiClientFor(requests: Array<{ method: string; path: string; authorizat
 }
 
 describe('Admin project management contracts and views', () => {
+  it.each(['ar', 'en'] as const)('explains public location and distinguishes publication from visibility for %s', locale => {
+    window.history.pushState({}, '', '/admin/projects');
+    const visible = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer/projects/nile-heights' };
+    const hidden = { ...project, id: 'c'.repeat(24), slug: 'long-technical-project-slug', status: 'published' as const };
+    const result = renderWithLocale(<AdminProjects locale={locale} session={session} initialData={{ ...listData, total: 2, items: [visible, hidden] }} />, { locale });
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'فتح دليل المطورين' : 'Open developers directory' })).toHaveAttribute('href', `/developers?lang=${locale}`);
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض صفحة الشركة' : 'View company page' })).toHaveAttribute('href', `/developers/qa-developer?lang=${locale}`);
+    const unavailable = screen.getByTestId(`admin-project-${hidden.id}`);
+    expect(unavailable.textContent).toContain(locale === 'ar' ? 'غير ظاهر' : 'Not visible');
+    expect(unavailable.querySelector('a[href*="/developers/"]')).toBeNull();
+    expect(result.container.textContent).not.toContain(hidden.slug);
+    expect(result.container.textContent).not.toContain(project.id);
+    result.unmount();
+  });
   it.each(['ar', 'en'] as const)('confirms versioned archive without offering project creation for %s', async locale => {
     window.history.pushState({}, '', `/admin/projects/review?projectId=${project.id}&action=archive`);
     const published = { ...project, status: 'published' as const, publicPath: '/developers/qa-developer/projects/nile-heights', availableActions: ['archive' as const] };
@@ -74,6 +88,7 @@ describe('Admin project management contracts and views', () => {
     expect(screen.getByRole('link', { name: 'View details' })).toHaveAttribute('href', `/admin/projects/review?projectId=${project.id}&lang=en`);
     expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute('href', `/admin/projects/review?projectId=${project.id}&lang=en#project-edit`);
     expect(screen.getByRole('link', { name: 'View on site' })).toHaveAttribute('href', '/developers/qa-developer/projects/nile-heights?lang=en');
+    expect(screen.queryByRole('button', { name: getAdminProjectsCopy('en').review })).toBeNull();
   });
   it('uses a table skeleton while the project list is loading', () => {
     const result = renderWithLocale(<AdminProjects locale="ar" session={session} load={() => new Promise(() => undefined)} />, { locale: 'ar' });

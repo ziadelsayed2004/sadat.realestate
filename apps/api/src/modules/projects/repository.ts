@@ -1,6 +1,7 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import { developerOrganizationId } from '../organizations/provider-profile.js';
-import type { ProjectListQuery, ProjectStatus } from '@sadat-real-estate/contracts';
+import { createMongoosePublicOrganizationRepository, createPublicOrganizationService } from '../organizations/public.js';
+import { organizationSlugSchema, type ProjectListQuery, type ProjectStatus, type PublicOrganizationProfile } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { ProjectModels, ProjectRecord } from './models.js';
 
@@ -86,6 +87,15 @@ function stored(r: ProjectRecord & { _id: Types.ObjectId }): StoredProject {
 const duplicate = (e: unknown) => typeof e === 'object' && e !== null && 'code' in e && (e as { code?: unknown }).code === 11000;
 
 export function createMongooseProjectRepository(connection: Connection, models: ProjectModels, audit: AuditWriter): ProjectRepository {
+  // Share simultaneous list-row reads, without retaining stale visibility.
+  const publicProfiles = new Map<string, Promise<PublicOrganizationProfile | null>>();
+  async function publicProfile(slug: string): Promise<PublicOrganizationProfile | null> {
+    const existing = publicProfiles.get(slug);
+    if (existing) return existing;
+    const pending = createPublicOrganizationService({ repository: createMongoosePublicOrganizationRepository(connection) }).get(slug);
+    publicProfiles.set(slug, pending);
+    try { return await pending; } finally { publicProfiles.delete(slug); }
+  }
   async function tx<T>(run: (session: ClientSession) => Promise<T>): Promise<T> {
     const session = await connection.startSession();
     try { return await session.withTransaction(() => run(session)); } finally { await session.endSession(); }
@@ -134,10 +144,14 @@ export function createMongooseProjectRepository(connection: Connection, models: 
   return {
     async publicPath(project) {
       if (project.status !== 'published' || !project.organizationId) return undefined;
-      const organization = await connection.collection('organizations').findOne({ _id: new Types.ObjectId(project.organizationId), status: 'approved' }, { projection: { slug: 1, providerId: 1 } });
-      if (!organization || typeof organization.slug !== 'string' || !/^[a-z0-9-]+$/.test(organization.slug) || !organization.providerId) return undefined;
-      const provider = await connection.collection('provider_profiles').findOne({ _id: organization.providerId, status: 'approved' }, { projection: { _id: 1 } });
-      return provider ? `/developers/${organization.slug}/projects/${project.slug}` : undefined;
+      const organization = await connection.collection('organizations').findOne({ _id: new Types.ObjectId(project.organizationId), kind: 'developer_company', status: 'approved' }, { projection: { slug: 1 } });
+      const slug = organizationSlugSchema.safeParse(organization?.slug);
+      if (!slug.success) return undefined;
+      // Use the same projection as the public project page, including account
+      // approval, current commission acknowledgement and project membership.
+      const profile = await publicProfile(slug.data);
+      return profile?.projects.some(value => value.id === project.id && value.slug === project.slug)
+        ? `/developers/${slug.data}/projects/${project.slug}` : undefined;
     },
 
     async list(providerId, query) {

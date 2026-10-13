@@ -126,11 +126,9 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
       <table className="admin-projects__table">
         <thead>
           <tr>
-            <th scope="col">{copy.columns.id}</th>
             <th scope="col">{copy.columns.name}</th>
-            <th scope="col">{copy.columns.slug}</th>
             <th scope="col">{copy.columns.status}</th>
-            <th scope="col">{copy.columns.version}</th>
+            <th scope="col">{locale === 'ar' ? 'الظهور للزوار' : 'Public visibility'}</th>
             <th scope="col">{copy.columns.updated}</th>
             <th scope="col">{copy.columns.actions}</th>
           </tr>
@@ -138,16 +136,14 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
         <tbody>
           {projects.map(project => (
             <tr key={project.id} data-testid={`admin-project-${project.id}`}>
-              <td><code>{project.id}</code></td>
-              <td><strong>{localizedValue(project.name, locale)}</strong></td>
-              <td>{project.slug}</td>
+              <td><a className="admin-projects__name" href={localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}`)}>{localizedValue(project.name, locale)}</a></td>
               <td><StatusBadge status={project.status} locale={locale} /></td>
-              <td>{project.version}</td>
+              <td><ProjectVisibility project={project} locale={locale} /></td>
               <td>{dateLabel(project.updatedAt, locale)}</td>
               <td>
                 <div className="admin-projects__row-actions">
                   <ProjectLinks project={project} locale={locale} />
-                  {project.availableActions.some(action => actions.includes(action as ProjectReviewAction)) ? <Button size="sm" variant="secondary" onClick={() => onReview(project.id)}>{copy.review}</Button> : null}
+                  {project.availableActions.some(action => action !== 'archive' && actions.includes(action as ProjectReviewAction)) ? <Button size="sm" variant="secondary" onClick={() => onReview(project.id)}>{copy.review}</Button> : null}
                 </div>
               </td>
             </tr>
@@ -156,6 +152,11 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
       </table>
     </div>
   );
+}
+
+function ProjectVisibility({ project, locale }: { project: ProjectData; locale: SupportedLocale }) {
+  const ar = locale === 'ar';
+  return <div className="admin-projects__visibility">{project.publicPath ? <><strong>{ar ? 'ظاهر ضمن مشروعات الشركة' : 'Visible in the company’s projects'}</strong><a href={localePath(locale, project.publicPath.split('/projects/')[0]!)} target="_blank" rel="noopener noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a></> : <span>{project.status === 'published' ? (ar ? 'غير ظاهر؛ راجع اعتماد الشركة وإقرار العمولة الحالية.' : 'Not visible. Check company approval and current commission acknowledgement.') : (ar ? 'غير ظاهر؛ لم يُنشر للزوار.' : 'Not visible; not published for visitors.')}</span>}</div>;
 }
 
 function ProjectLinks({ project, locale }: { project: ProjectData; locale: SupportedLocale }) {
@@ -205,6 +206,7 @@ function ReviewPanel({ project, locale, onBack, review, initialAction }: { reado
         <article className="admin-projects__detail-card">
           <p className="admin-projects__eyebrow">{project.slug}</p>
           <h2>{localizedValue(project.name, locale)}</h2>
+          <ProjectVisibility project={project} locale={locale} />
           <div className="admin-projects__row-actions"><ProjectLinks project={project} locale={locale} /></div>
           {project.description ? <p>{localizedValue(project.description, locale)}</p> : null}
           {project.website ? <p>{project.website}</p> : null}
@@ -302,8 +304,9 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
         {showProjectList ? <>
           <div className="admin-projects__heading">
             <div><p className="admin-projects__eyebrow">{copy.eyebrow}</p><h1>{copy.listTitle}</h1><p>{copy.listDescription}</p></div>
-            <a className="admin-projects__all-link" href={localePath(locale, ADMIN_PROJECTS_ROUTE)}>{copy.allProjects}</a>
+            <a className="admin-projects__all-link" href={localePath(locale, '/developers')} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'فتح دليل المطورين' : 'Open developers directory'}</a>
           </div>
+          <aside className="admin-projects__help"><strong>{locale === 'ar' ? 'أين تظهر المشاريع؟' : 'Where do projects appear?'}</strong><p>{locale === 'ar' ? 'المشاريع المنشورة تظهر ضمن صفحة الشركة في دليل المطورين. «عرض في الموقع» يفتح المشروع و«عرض صفحة الشركة» يفتح مشروعاتها. يلزم اعتماد الشركة وإقرار العمولة الحالية.' : 'Published projects appear on their company’s page in the developers directory. “View on site” opens the project. Public visibility requires company approval and current commission acknowledgement.'}</p></aside>
           {state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} /> : null}
           <ProjectStatusStrip locale={locale} selected={statusInput} onSelect={status => { setStatusInput(status); setQuery(current => ({ ...current, page: 1, ...(status === '' ? { status: undefined } : { status }) })); setAttempt(value => value + 1); }} />
           <form className="admin-projects__filters" role="search" aria-label={copy.searchLabel} onSubmit={event => { event.preventDefault(); applyFilters(); }}>
@@ -323,7 +326,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
         {showProjectList && state === 'empty' ? <section className="admin-projects__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p></section> : null}
         {showProjectList && state === 'success' && data !== undefined ? <>
           <section className="admin-projects__panel" aria-labelledby="admin-projects-table-title">
-            <div className="admin-projects__panel-heading"><div><h2 id="admin-projects-table-title">{copy.allProjects}</h2><p>{copy.count(data.total)}</p></div><span className="admin-projects__direction-note">{copy.directionNote}</span></div>
+            <div className="admin-projects__panel-heading"><div><h2 id="admin-projects-table-title">{copy.allProjects}</h2><p>{copy.count(data.total)}</p></div></div>
             <ProjectTable projects={data.items} locale={locale} onReview={id => { window.location.href = reviewPath(id); }} />
             <div className="admin-projects__pagination"><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => { setQuery(current => ({ ...current, page: page - 1 })); setAttempt(value => value + 1); }}>{copy.previous}</Button><span>{copy.page(page, totalPages)}</span><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => { setQuery(current => ({ ...current, page: page + 1 })); setAttempt(value => value + 1); }}>{copy.next}</Button></div>
           </section>
