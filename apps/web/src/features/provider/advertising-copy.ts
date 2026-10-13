@@ -36,6 +36,8 @@ export interface ProviderAdvertisingCopy {
   readonly submitRequest: string;
   readonly paymentProof: string;
   readonly paymentProofHelp: string;
+  readonly paymentApprovedTitle: string;
+  readonly paymentApprovedBody: string;
   readonly uploadPaymentProof: string;
   readonly sendPaymentProof: string;
   readonly paymentProofSendHelp: string;

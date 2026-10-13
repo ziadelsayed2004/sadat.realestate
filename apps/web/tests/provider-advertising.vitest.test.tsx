@@ -115,6 +115,7 @@ const commissionProjection = providerCommissionProjectionSchema.parse({
   percentageBps: 250,
   readOnly: true
 });
+const proofProjection = { id: proof.id, adRequestId: proof.adRequestId, status: proof.status, securityState: proof.securityState, version: proof.version, reviewHistory: proof.reviewHistory, uploadedAt: proof.uploadedAt, active: proof.active };
 const commissionConfirmation = {
   confirmationId: 'eeeeeeeeeeeeeeeeeeeeeeee',
   policyVersion: 3,
@@ -128,6 +129,40 @@ function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'
 }
 
 describe('Provider advertising requests and commission', () => {
+  it.each(['ar', 'en'] as const)('shows approved payment as awaiting scheduling and removes the duplicate payment form in %s', locale => {
+    const paid = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentProofs: [{ ...proofProjection, status: 'approved', securityState: 'clean' }] });
+    const copy = getProviderAdvertisingCopy(locale);
+    const list = renderWithLocale(<ProviderAdvertising locale={locale} session={session} initialData={{ ...data, items: [paid] }} />, { locale });
+    const row = screen.getByTestId('provider-advertising-row');
+    expect(row).toHaveTextContent(locale === 'ar' ? 'تم الدفع — في انتظار الجدولة' : 'Paid — awaiting scheduling');
+    expect(row).not.toHaveTextContent(copy.statuses.waiting_payment);
+    list.unmount();
+    const result = renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={paid} loadDetail={vi.fn(async () => paid)} />, { locale });
+    expect(screen.getByRole('status')).toHaveTextContent(copy.paymentApprovedBody);
+    expect(result.container.querySelector('.provider-advertising__proof-form')).toBeNull();
+    expect(screen.queryByLabelText(copy.uploadPaymentProof)).not.toBeInTheDocument();
+    expect(screen.queryByText(copy.paymentProofHelp)).not.toBeInTheDocument();
+    expect(screen.queryByText(copy.paymentProofUploaded)).not.toBeInTheDocument();
+    expect(screen.getByText(copy.noSchedule)).toBeVisible();
+  });
+  it.each([
+    { status: 'pending_review', active: true, securityState: 'clean' },
+    { status: 'rejected', active: true, securityState: 'clean' },
+    { status: 'approved', active: false, securityState: 'clean' },
+    { status: 'approved', active: true, securityState: 'quarantined' }
+  ] as const)('never claims payment success for $status, active=$active, security=$securityState', payment => {
+    const item = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentProofs: [{ ...proofProjection, ...payment }] });
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} initialData={{ ...data, items: [item] }} />, { locale: 'en' });
+    const row = screen.getByTestId('provider-advertising-row');
+    expect(row).toHaveTextContent(getProviderAdvertisingCopy('en').statuses.waiting_payment);
+    expect(row).not.toHaveTextContent('Paid — awaiting scheduling');
+  });
+  it('keeps the scheduled advertisement status after approved payment', () => {
+    const item = adRequest({ status: 'scheduled', paymentProofs: [{ ...proofProjection, status: 'approved', securityState: 'clean' }] });
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} initialData={{ ...data, items: [item] }} />, { locale: 'en' });
+    expect(screen.getByTestId('provider-advertising-row')).toHaveTextContent(getProviderAdvertisingCopy('en').statuses.scheduled);
+    expect(screen.getByTestId('provider-advertising-row')).not.toHaveTextContent('Paid — awaiting scheduling');
+  });
   it.each(['ar', 'en'] as const)('shows only the selected method recipient and never substitutes the customer contact in %s', async locale => {
     const waiting = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, contactPhone: '+201111111111', paymentInstructions: {
       vodafone_cash: ['Test beneficiary', '+201000000001'], instapay: ['Test beneficiary', 'test-beneficiary@instapay']

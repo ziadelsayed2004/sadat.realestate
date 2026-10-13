@@ -2649,6 +2649,8 @@
     "submitRequest": "Submit for review",
     "paymentProof": "Payment proof",
     "paymentProofHelp": "Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.",
+    "paymentApprovedTitle": "Paid — awaiting scheduling",
+    "paymentApprovedBody": "Payment was completed successfully and administration approved the proof. You do not need to pay or upload another proof. Administration still needs to schedule the advertisement; it is not live yet.",
     "uploadPaymentProof": "Upload payment proof",
     "sendPaymentProof": "Send request",
     "paymentProofSendHelp": "Selecting a file does not send it automatically. Press “Send request” to submit payment proof for review.",

@@ -78,6 +78,29 @@ async function routeAdvertisingApi(page: import('@playwright/test').Page): Promi
   });
 }
 
+test('approved payment shows success while the advertisement awaits scheduling', async ({ page }, testInfo) => {
+  const locale = localeForProject();
+  const copy = getProviderAdvertisingCopy(locale);
+  await routeSession(page);
+  await routeAdvertisingApi(page);
+  const request = { ...advertisingRequest('waiting_payment'), paymentProofs: [{ id: 'dddddddddddddddddddddddd', adRequestId: REQUEST_ID, status: 'approved', securityState: 'clean', version: 2, reviewHistory: [], uploadedAt: '2026-10-08T08:00:00.000Z', active: true }] };
+  await page.route('**/api/v1/provider/ads**', route => {
+    const url = new URL(route.request().url());
+    return route.fulfill({ json: { data: url.pathname.endsWith(REQUEST_ID) ? request : { items: [request], page: 1, limit: 5, total: 1 }, meta: { requestId: 'approved-ad-payment' } } });
+  });
+  await page.goto(`/provider/ads?lang=${locale}`);
+  const row = page.getByTestId('provider-advertising-row');
+  await expect(row).toContainText(copy.paymentApprovedTitle);
+  await expect(row).not.toContainText(copy.statuses.waiting_payment);
+  await row.screenshot({ path: testInfo.outputPath(`paid-ad-list-${locale}.png`) });
+  await row.getByRole('link', { name: copy.open }).click();
+  await expect(page).toHaveURL(new RegExp(`/provider/ads/${REQUEST_ID}\\?lang=${locale}$`));
+  await expect(page.getByRole('status')).toContainText(copy.paymentApprovedBody);
+  await expect(page.locator('.provider-advertising__proof-form')).toHaveCount(0);
+  await expect(page.getByText(copy.noSchedule, { exact: true })).toBeVisible();
+  await page.locator('[aria-labelledby="provider-advertising-payment-heading"]').screenshot({ path: testInfo.outputPath(`paid-ad-detail-${locale}.png`) });
+});
+
 test('payment proof is sent only by the send button and can be retried without choosing it again', async ({ page }, testInfo) => {
   const locale = localeForProject();
   const copy = getProviderAdvertisingCopy(locale);

@@ -168,6 +168,15 @@ function CreateRequestModal({ locale, copy, busy, error, onClose, onSave }: { re
   );
 }
 
+function paymentApproved(request: ProviderAdRequestProjection): boolean {
+  return request.paymentProofs.some(proof => proof.active && proof.status === 'approved' && proof.securityState === 'clean');
+}
+
+function AdvertisingStatus({ request, copy }: { readonly request: ProviderAdRequestProjection; readonly copy: ProviderAdvertisingCopy }) {
+  const awaitingSchedule = request.status === 'waiting_payment' && paymentApproved(request);
+  return <Badge tone={awaitingSchedule ? 'success' : statusTone(request.status)}>{awaitingSchedule ? copy.paymentApprovedTitle : copy.statuses[request.status]}</Badge>;
+}
+
 function RequestTable({ data, locale, copy }: { readonly data: import('@sadat-real-estate/contracts').ProviderAdRequestListData; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy }) {
   return (
     <div className="provider-advertising__table-wrap">
@@ -182,7 +191,7 @@ function RequestTable({ data, locale, copy }: { readonly data: import('@sadat-re
                 <td><a className="provider-advertising__request-link" href={localizedPath(locale, `/provider/ads/${item.id}`)}>{shortId(item.id)}</a><span>{dateLabel(item.createdAt, locale)}</span></td>
                 <td><strong>{item.purpose}</strong></td>
                 <td><span>{dateLabel(item.intervalStart, locale)}</span><span>{dateLabel(item.intervalEnd, locale)}</span></td>
-                <td><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></td>
+                <td><AdvertisingStatus request={item} copy={copy} /></td>
                 <td>{item.quote ? <><strong>{moneyLabel(item.quote.totalMinor, item.quote.currency, locale)}</strong><span>{copy.quoteStatuses[item.quote.status]}</span></> : <span className="provider-advertising__unavailable">{copy.noQuote}</span>}</td>
                 <td>{payment ? <Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge> : <span className="provider-advertising__unavailable">{copy.noPaymentProof}</span>}</td>
                 <td><a className="provider-advertising__action-link" href={localizedPath(locale, `/provider/ads/${item.id}`)}>{copy.open}</a></td>
@@ -220,7 +229,8 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
   const fileInput = useRef<HTMLInputElement>(null);
   const sendingProof = useRef(false);
   const canAccept = detail.quote?.status === 'issued';
-  const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
+  const paid = paymentApproved(detail);
+  const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted' && !paid;
   async function sendProof(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!selectedFile || busy || sendingProof.current || !canUpload || !validPaymentMethod || !validSender || !validRecipient) return;
@@ -241,15 +251,16 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
   return (
     <div className="provider-advertising__detail-grid">
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-detail-heading">
-        <div className="provider-advertising__detail-heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1 id="provider-advertising-detail-heading">{copy.requestDetails}</h1></div><Badge tone={statusTone(detail.status)}>{copy.statuses[detail.status]}</Badge></div>
+        <div className="provider-advertising__detail-heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1 id="provider-advertising-detail-heading">{copy.requestDetails}</h1></div><AdvertisingStatus request={detail} copy={copy} /></div>
         {detail.status === 'draft' ? <Button onClick={onSubmit} loading={busy}>{copy.submitRequest}</Button> : null}
         <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.request}</dt><dd>{shortId(detail.id)}</dd></div><div><dt>{copy.columns.placement}</dt><dd>{adPlacementName(detail.placementKey, locale)}</dd></div><div><dt>{copy.purpose}</dt><dd>{detail.purpose}</dd></div>{detail.paymentWaiver ? <div><dt>{locale === 'ar' ? 'إعلان مجاني' : 'Free advertisement'}</dt><dd>{detail.paymentWaiver.reason}</dd></div> : null}{detail.contactPhone ? <div><dt>{copy.createForm.contactPhone}</dt><dd><a dir="ltr" href={`tel:${detail.contactPhone}`}>{detail.contactPhone}</a></dd></div> : null}<div><dt>{copy.interval}</dt><dd>{dateLabel(detail.intervalStart, locale)} — {dateLabel(detail.intervalEnd, locale)}</dd></div></dl>
         <AdPlacementGuide placementKey={detail.placementKey} locale={locale} />
         {detail.quote ? <section className="provider-advertising__nested-card"><h2>{copy.quote}</h2><div className="provider-advertising__quote-total"><span>{copy.quoteTotal}</span><strong>{moneyLabel(detail.quote.totalMinor, detail.quote.currency, locale)}</strong></div><dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{copy.quoteStatuses[detail.quote.status]}</dd></div><div><dt>{copy.quoteValidUntil}</dt><dd>{dateLabel(detail.quote.validUntil, locale)}</dd></div><div><dt>{copy.quoteTerms}</dt><dd>{detail.quote.terms}</dd></div></dl>{canAccept ? <Button onClick={onAccept} loading={busy}>{copy.acceptQuote}</Button> : null}</section> : <p className="provider-advertising__muted">{copy.noQuote}</p>}
       </section>
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
-        <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2><p className="provider-advertising__muted">{copy.paymentProofHelp}</p>
-        {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span><span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span></div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
+        <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2>{!paid ? <p className="provider-advertising__muted">{copy.paymentProofHelp}</p> : null}
+        {paid && detail.status === 'waiting_payment' ? <p className="provider-advertising__help" role="status">{copy.paymentApprovedBody}</p> : null}
+        {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span>{!paid ? <span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span> : null}</div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
         {payment ? <PaymentAccounts {...payment} locale={locale} /> : null}
         {canUpload ? <form className="provider-advertising__proof-form" onSubmit={event => { void sendProof(event); }}>
           <label className="provider-advertising__field" htmlFor="provider-advertising-payment-method"><span>{copy.paymentMethod}</span><select id="provider-advertising-payment-method" value={paymentMethod} onChange={event => { setPaymentMethod(event.target.value); setSender({ name: '', account: '' }); setFileError(false); }} required disabled={busy}><option value="" disabled>{copy.choosePaymentMethod}</option>{paymentMethods.map(method => <option key={method} value={method}>{copy.paymentMethodLabels[method as keyof typeof copy.paymentMethodLabels] ?? method.replace(/[_.-]/gu, ' ')}</option>)}</select></label>
