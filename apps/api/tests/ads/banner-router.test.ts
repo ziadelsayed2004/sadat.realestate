@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { Readable } from 'node:stream';
+import { ApiContractError } from '../../src/modules/contracts/error-boundary.js';
+import type { BannerManagement } from '../../src/modules/ads/banner-management.js';
 import {
   adBannerMediaSchema,
   adBannerSchema,
@@ -152,4 +155,32 @@ test('bounds carousel inputs and rejects another banner image', async () => {
   const foreign = { ...media, id: 'dddddddddddddddddddddddd', bannerId: '111111111111111111111111' };
   const service = createAdSettingsService({ placements: [placement], banners: [banner], bannerMedia: [media, foreign], bannerAuthorization: { authorize: async () => true } });
   await assert.rejects(service.updateBanner(claims('admin'), banner.id, { ...patch, mediaIds: [mediaId, foreign.id] }), /NOT_FOUND/);
+});
+
+test('draft image previews return authentication errors for expired or malformed sessions without exposing private media', async () => {
+  const actors: string[] = [];
+  const management = { async openMedia(_id: string, actor?: AccessTokenClaims) {
+    if (!actor) throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
+    actors.push(actor.sub);
+    return { mime: 'image/png', stream: Readable.from(Buffer.from('private draft image')) };
+  } } as unknown as BannerManagement;
+  const service = createAdSettingsService({ placements: [placement], banners: [banner], bannerMedia: [media], bannerAuthorization: { authorize: async () => true } });
+  const server = createApiServer({ database: { isReady: async () => true }, adminBanners: { service, accessTokens, management } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const url = `http://127.0.0.1:${address.port}/api/v1/public/banner-media/${mediaId}`;
+  try {
+    assert.equal((await fetch(url)).status, 404);
+    for (const authorization of ['Bearer expired-token', 'Basic invalid']) {
+      const response = await fetch(url, { headers: { authorization } });
+      assert.equal(response.status, 401);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+    }
+    assert.equal((await fetch(url, { headers: { authorization: `Bearer ${seekerToken}` } })).status, 403);
+    assert.deepEqual(actors, []);
+    const response = await fetch(url, { headers: { authorization: `Bearer ${adminToken}` } });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('content-type'), 'image/png');
+    assert.equal(await response.text(), 'private draft image');
+    assert.deepEqual(actors, [adminId]);
+  } finally { await stopApiServer(server); }
 });

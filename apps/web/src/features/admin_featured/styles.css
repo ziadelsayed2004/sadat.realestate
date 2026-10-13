@@ -15,7 +15,7 @@
 .admin-featured__account { display: grid; gap: 14px; padding: 18px; border-radius: 12px; background: #f8fafb; min-inline-size: 0; }
 .admin-featured__account p { font-size: .875rem; font-weight: 400; line-height: 1.9; }
 .admin-featured { background: #f7f5ef; }
-.admin-featured .admin-home__content { max-width: 1240px; margin-inline: auto; box-sizing: border-box; }
+.admin-featured .admin-home__content { width: 100%; max-width: 1240px; margin-inline: auto; box-sizing: border-box; }
 .admin-featured .admin-home__heading { padding: 24px; margin-block-end: 16px; border: 1px solid #e5e2d9; border-radius: 20px; background: #fff; }
 .admin-featured .admin-home__heading > div { min-width: 0; }
 .admin-featured .admin-home__heading h1 { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.6; }

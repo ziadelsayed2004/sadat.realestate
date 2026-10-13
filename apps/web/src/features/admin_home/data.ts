@@ -35,7 +35,7 @@ import {
   type CmsAdminContentData,
   type CmsAdminContentNamespace
 } from '@sadat-real-estate/contracts';
-import type { ApiClient, ApiRequestOptions, ContractSchema } from '../contracts/index.ts';
+import { ApiClientError, type ApiClient, type ApiRequestOptions, type ContractSchema } from '../contracts/index.ts';
 import { createAdminSessionClient as clientFor, adminSessionOptions as requestOptions, loadAdminAdRequest, type AdminAdsAuthorizationSource } from '../admin_ads/data.ts';
 
 export const ADMIN_BANNERS_ROUTE = '/admin/banners' as const;
@@ -134,9 +134,16 @@ export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {
   const loadMediaBlob = async (url: string) => {
     if (!/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/u.test(url)) throw new Error('INVALID_BANNER_IMAGE');
     const origin = options.apiOrigin ? new URL(options.apiOrigin, window.location.origin).origin : window.location.origin;
-    const response = await fetch(`${origin}${url}`, { ...requestOptions(options), credentials: 'include' });
-    if (!response.ok) throw new Error('BANNER_PREVIEW_FAILED');
-    return response.blob();
+    const request = () => fetch(`${origin}${url}`, { ...requestOptions(options), credentials: 'include', cache: 'no-store' });
+    let response = await request();
+    if (response.status === 401 && options.authorization?.refresh && options.authorization.getAuthorizationHeader()) {
+      await options.authorization.refresh();
+      response = await request();
+    }
+    if (!response.ok) throw new ApiClientError('Banner preview unavailable', { code: 'HTTP_ERROR', status: response.status });
+    const blob = await response.blob();
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(blob.type) || !blob.size || blob.size > 10 * 1024 * 1024) throw new Error('INVALID_BANNER_IMAGE');
+    return blob;
   };
   return {
     loadMediaBlob,

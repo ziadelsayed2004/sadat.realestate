@@ -20,6 +20,29 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it.each(['ar', 'en'] as const)('retries a failed image preview without clearing edited fields or saving content in %s', async locale => {
+    const { source } = sourceFor();
+    vi.mocked(source.loadMediaPreview).mockRejectedValueOnce(new Error('Unavailable')).mockResolvedValueOnce('/restored-image.png');
+    renderWithLocale(<FeaturedEditor item={item} options={options} loadOptions={async () => options} source={source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
+    await screen.findByRole('alert');
+    fireEvent.change(screen.getByDisplayValue('Original title'), { target: { value: 'My unsaved changes' } });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'إعادة تحميل المعاينة' : 'Reload preview' }));
+    await waitFor(() => expect(document.querySelector('.admin-featured__preview img')).toHaveAttribute('src', '/restored-image.png'));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.getByDisplayValue('My unsaved changes')).toBeInTheDocument();
+    expect(source.updateBanner).not.toHaveBeenCalled();
+  });
+
+  it('releases a preview URL that finishes loading after the editor closes', async () => {
+    const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    let finish!: (url: string) => void;
+    const { source } = sourceFor();
+    vi.mocked(source.loadMediaPreview).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+    const view = renderWithLocale(<FeaturedEditor item={item} options={options} loadOptions={async () => options} source={source} locale="en" onSaved={() => {}} onClose={() => {}} />, { locale: 'en' });
+    await waitFor(() => expect(source.loadMediaPreview).toHaveBeenCalled());
+    view.unmount(); finish('blob:closed-editor');
+    await waitFor(() => expect(revoke).toHaveBeenCalledWith('blob:closed-editor'));
+  });
   it('selects the sole eligible account and loads its pages automatically', async () => {
     const loadOptions = vi.fn(async () => options);
     renderWithLocale(<FeaturedEditor options={options} loadOptions={loadOptions} source={sourceFor().source} locale="en" onSaved={() => {}} onClose={() => {}} />, { locale: 'en' });

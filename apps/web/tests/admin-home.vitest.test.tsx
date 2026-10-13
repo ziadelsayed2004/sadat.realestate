@@ -23,6 +23,37 @@ const tipId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const homepageId = 'dddddddddddddddddddddddd';
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 
+it('renews an expired session once before retrying a private draft image', async () => {
+  let token = 'Bearer expired';
+  const authorization = { getAuthorizationHeader: () => token, refresh: vi.fn(async () => { token = 'Bearer renewed'; }) };
+  const fetcher = vi.fn().mockResolvedValueOnce(new Response('', { status: 401 })).mockResolvedValueOnce(new Response('image', { headers: { 'content-type': 'image/png' } }));
+  vi.stubGlobal('fetch', fetcher);
+  try {
+    const blob = await createAdminHomeSource({ authorization }).loadMediaBlob(`/api/v1/public/banner-media/${bannerId}`);
+    expect(blob.type).toBe('image/png');
+    expect(authorization.refresh).toHaveBeenCalledOnce();
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(new Headers(fetcher.mock.calls[0]?.[1].headers).get('authorization')).toBe('Bearer expired');
+    expect(new Headers(fetcher.mock.calls[1]?.[1].headers).get('authorization')).toBe('Bearer renewed');
+  } finally { vi.unstubAllGlobals(); }
+});
+
+it.each([401, 403, 404, 503])('fails closed on an unavailable preview (HTTP %s) and never repeats indefinitely', async status => {
+  const authorization = { getAuthorizationHeader: () => 'Bearer admin', refresh: vi.fn(async () => {}) };
+  const fetcher = vi.fn(async () => new Response('', { status })); vi.stubGlobal('fetch', fetcher);
+  try {
+    await expect(createAdminHomeSource({ authorization }).loadMediaBlob(`/api/v1/public/banner-media/${bannerId}`)).rejects.toMatchObject({ status });
+    expect(authorization.refresh).toHaveBeenCalledTimes(status === 401 ? 1 : 0);
+    expect(fetcher).toHaveBeenCalledTimes(status === 401 ? 2 : 1);
+  } finally { vi.unstubAllGlobals(); }
+});
+
+it('rejects non-image responses without creating a misleading preview', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response('<html>Login</html>', { headers: { 'content-type': 'text/html' } })));
+  try { await expect(createAdminHomeSource().loadMediaBlob(`/api/v1/public/banner-media/${bannerId}`)).rejects.toThrow('INVALID_BANNER_IMAGE'); }
+  finally { vi.unstubAllGlobals(); }
+});
+
 function tipsContent(data: CmsAdminContentData): Extract<CmsAdminContentData, { namespace: 'tips' }> {
   if (data.namespace !== 'tips') throw new Error('Expected tips content');
   return data;

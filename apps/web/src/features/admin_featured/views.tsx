@@ -38,10 +38,22 @@ export function FeaturedEditor({ item, campaign, options, loadOptions, source, l
   const [start, setStart] = useState(egyptLocalDateTime(new Date(item?.startAt ?? campaign?.intervalStart ?? Date.now()))), [end, setEnd] = useState(egyptLocalDateTime(new Date(item?.endAt ?? campaign?.intervalEnd ?? Date.now() + 86400000 * 30)));
   const [imageIds, setImageIds] = useState<string[]>(item?.mediaIds ?? (item?.mediaId ? [item.mediaId] : []));
   const [image, setImage] = useState<string>(), [file, setFile] = useState<File>(), [filePreview, setFilePreview] = useState<string>();
+  const [previewError, setPreviewError] = useState(false), [previewAttempt, setPreviewAttempt] = useState(0);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string>(), [feedback, setFeedback] = useState<string>(), [previewSize, setPreviewSize] = useState<'desktop' | 'mobile'>('desktop');
   useEffect(() => { let current = true; setDestinations([]); setError(undefined); if (!provider) return; void loadOptions(provider).then(value => { if (current) setDestinations(value.destinations); }).catch(() => { if (current) setError(ar ? 'الحساب غير متاح للإعلان.' : 'Advertiser unavailable.'); }); return () => { current = false; }; }, [provider, loadOptions, ar]);
   useEffect(() => { if (!file) { setFilePreview(undefined); return; } const url = URL.createObjectURL(file); setFilePreview(url); return () => URL.revokeObjectURL(url); }, [file]);
-  useEffect(() => { let current = true; const urls: string[] = []; if (item) void source.previewBanner(item.id).then(async value => { if (value.media) { const url = await source.loadMediaPreview(value.media.url); if (url.startsWith('blob:')) urls.push(url); if (current) setImage(url); } }).catch(() => { if (current) setError(ar ? 'تعذر تحميل صورة المعاينة.' : 'Could not load the preview image.'); }); return () => { current = false; urls.forEach(url => URL.revokeObjectURL(url)); }; }, [item, source, ar]);
+  useEffect(() => {
+    let current = true, objectUrl: string | undefined;
+    setImage(undefined); setPreviewError(false);
+    if (saved) void source.previewBanner(saved.id).then(async value => {
+      if (!value.media) return;
+      const url = await source.loadMediaPreview(value.media.url);
+      if (!current) { if (url.startsWith('blob:')) URL.revokeObjectURL(url); return; }
+      if (url.startsWith('blob:')) objectUrl = url;
+      setImage(url);
+    }).catch(() => { if (current) setPreviewError(true); });
+    return () => { current = false; if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [saved, source, previewAttempt]);
   const advertiser = options.advertisers.find(value => value.id === provider);
   const selected = destinations.find(value => `${value.kind}:${value.id}` === destination);
   const preview: PublicHomepageBanner = { key: 'featured_preview', presentation: 'featured', title: cleanText(title), body: cleanText(body), highlight: cleanText(highlight), installment: cleanText(installment), ctaLabel: cleanText(ctaLabel), imageUrl: filePreview ?? image, targetUrl: selected?.href, advertiserName: advertiser?.name, advertiserImageUrl: advertiser?.imageUrl, advertiserVerified: advertiser?.verified ?? false, order: saved?.sortOrder ?? 0 };
@@ -55,7 +67,7 @@ export function FeaturedEditor({ item, campaign, options, loadOptions, source, l
       let record = saved ? await source.updateBanner(saved.id, { ...fields, body: fields.body ?? null, status: 'draft', expectedVersion: saved.version, reason: 'Save featured content' }) : await source.createBanner({ ...fields, ...(campaign ? { adRequestId: campaign.id } : {}) });
       setSaved(record);
       let selectedIds = imageIds;
-      if (file) { const media = await source.uploadBannerImage(record.id, file); selectedIds = [media.id]; setImageIds(selectedIds); setFile(undefined); try { const url = await source.loadMediaPreview(media.url); setImage(url); } catch { setImage(undefined); /* Saving does not depend on preview delivery. */ } }
+      if (file) { const media = await source.uploadBannerImage(record.id, file); selectedIds = [media.id]; setImageIds(selectedIds); setFile(undefined); }
       record = await source.updateBanner(record.id, { mediaIds: selectedIds, expectedVersion: record.version, reason: 'Save featured card image' }); setSaved(record);
       if (publish) { record = await source.updateBanner(record.id, { status: new Date(record.startAt).getTime() > Date.now() ? 'scheduled' : 'active', expectedVersion: record.version, reason: 'Publish featured card' }); setSaved(record); }
       setFeedback(ar ? publish ? 'تم حفظ الإعلان ونشره حسب موعده.' : 'تم حفظ المسودة.' : publish ? 'Ad saved and published for its schedule.' : 'Draft saved.'); onSaved();
@@ -70,7 +82,9 @@ export function FeaturedEditor({ item, campaign, options, loadOptions, source, l
       {campaign ? <p>{ar ? 'هذا الإعلان مرتبط بطلب العميل. النشر يتطلب اعتماد الدفع والجدولة.' : 'This ad belongs to a customer request. Approved payment and scheduling are required to publish.'}</p> : null}
       <div className="admin-home__inline-actions">{[false, true].map(publish => <Button key={String(publish)} type="submit" disabled={busy || !advertiser || !selected} onClick={event => { event.preventDefault(); if (event.currentTarget.form) void save(publish, { preventDefault() {} } as FormEvent<HTMLFormElement>); }}>{ar ? publish ? 'حفظ ونشر' : 'حفظ مسودة' : publish ? 'Save and publish' : 'Save draft'}</Button>)}</div>
     </fieldset></form>{error ? <p role="alert">{error}</p> : null}{feedback ? <p role="status">{feedback}</p> : null}
-    <div className="admin-home__inline-actions"><h3>{ar ? 'معاينة مباشرة' : 'Live preview'}</h3><Button variant="secondary" onClick={() => setPreviewSize('desktop')}>{ar ? 'كمبيوتر' : 'Desktop'}</Button><Button variant="secondary" onClick={() => setPreviewSize('mobile')}>{ar ? 'موبايل' : 'Mobile'}</Button></div><div className="admin-featured__preview public-homepage__section--banners" data-size={previewSize}><div className="public-homepage__banner-card"><FeaturedCard banner={preview} locale={locale} preview /></div></div>
+    <div className="admin-home__inline-actions"><h3>{ar ? 'معاينة مباشرة' : 'Live preview'}</h3><Button variant="secondary" onClick={() => setPreviewSize('desktop')}>{ar ? 'كمبيوتر' : 'Desktop'}</Button><Button variant="secondary" onClick={() => setPreviewSize('mobile')}>{ar ? 'موبايل' : 'Mobile'}</Button></div>
+    {previewError && !filePreview ? <div role="alert"><p>{ar ? 'تعذر تحميل صورة المعاينة. التعديلات محفوظة في النموذج؛ أعد المحاولة أو اختر صورة بديلة إذا كان الملف غير متاح.' : 'Could not load the preview image. Your edits are kept in the form; retry or select a replacement image if the file is unavailable.'}</p><Button variant="secondary" disabled={busy} onClick={() => setPreviewAttempt(value => value + 1)}>{ar ? 'إعادة تحميل المعاينة' : 'Reload preview'}</Button></div> : null}
+    <div className="admin-featured__preview public-homepage__section--banners" data-size={previewSize}><div className="public-homepage__banner-card"><FeaturedCard banner={preview} locale={locale} preview /></div></div>
   </section>;
 }
 
@@ -107,7 +121,7 @@ export function AdminFeatured({ locale, session, authClient, apiOrigin, url }: {
 }
 function FeaturedRow({ item, index, count, locale, source, disabled, onEdit, onStop, onMove }: { item: AdBanner; index: number; count: number; locale: SupportedLocale; source: AdminHomeSource; disabled: boolean; onEdit: () => void; onStop: () => void; onMove: (offset: number) => void }) {
   const [image, setImage] = useState<string>();
-  useEffect(() => { let current = true, objectUrl: string | undefined; void source.previewBanner(item.id).then(async preview => { if (!preview.media) return; const url = await source.loadMediaPreview(preview.media.url); if (url.startsWith('blob:')) objectUrl = url; if (current) setImage(url); }).catch(() => {}); return () => { current = false; if (objectUrl) URL.revokeObjectURL(objectUrl); }; }, [source, item.id, item.version]);
+  useEffect(() => { let current = true, objectUrl: string | undefined; void source.previewBanner(item.id).then(async preview => { if (!preview.media) return; const url = await source.loadMediaPreview(preview.media.url); if (!current) { if (url.startsWith('blob:')) URL.revokeObjectURL(url); return; } if (url.startsWith('blob:')) objectUrl = url; setImage(url); }).catch(() => {}); return () => { current = false; if (objectUrl) URL.revokeObjectURL(objectUrl); }; }, [source, item.id, item.version]);
   const ar = locale === 'ar', states = ar ? { draft: 'مسودة', scheduled: 'مجدول', active: 'منشور', paused: 'موقوف', ended: 'انتهى', archived: 'مؤرشف' } : { draft: 'Draft', scheduled: 'Scheduled', active: 'Published', paused: 'Stopped', ended: 'Ended', archived: 'Archived' };
   return <tr><td>{image ? <img className="admin-featured__thumbnail" src={image} alt="" /> : null}<strong>{featuredText(item.title, locale)}</strong>{!item.featured?.advertiserProviderId ? <small>{ar ? 'غير مرتبط — عارض مبهم حتى تختار الحساب' : 'Unlinked — anonymous until an account is selected'}</small> : null}</td><td>{new Date(item.endAt).getTime() <= Date.now() && ['active', 'scheduled'].includes(item.status) ? states.ended : states[item.status]}</td><td>{dateLabel(item.startAt, locale)}</td><td>{dateLabel(item.endAt, locale)}</td><td><div className="admin-home__row-actions"><Button disabled={disabled} onClick={onEdit}>{ar ? 'تعديل' : 'Edit'}</Button><Button variant="secondary" onClick={onEdit}>{ar ? 'معاينة' : 'Preview'}</Button>{['active', 'scheduled'].includes(item.status) ? <Button variant="secondary" disabled={disabled} onClick={onStop}>{ar ? 'إيقاف' : 'Stop'}</Button> : null}<Button variant="secondary" disabled={disabled || index === 0} onClick={() => onMove(-1)}>↑</Button><Button variant="secondary" disabled={disabled || index === count - 1} onClick={() => onMove(1)}>↓</Button></div></td></tr>;
 }

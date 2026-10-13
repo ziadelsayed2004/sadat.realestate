@@ -109,11 +109,14 @@ export function createAdminBannerRouter(dependencies: AdminBannerRouterDependenc
         response.status(201).json(toSuccessResponse(media, requestId(request)));
       } catch (error) { sendError(request, response, error); }
     });
-    router.get('/public/banner-media/:mediaId', async (request, response) => {
+    const previewAuthentication = createAdminRbacAuthMiddleware(dependencies.accessTokens);
+    router.get('/public/banner-media/:mediaId', (request, response, next) => {
+      if (request.get('authorization') !== undefined) void previewAuthentication(request, response, next);
+      else next();
+    }, async (request, response) => {
       try {
         const { mediaId } = adBannerMediaIdParamsSchema.parse(request.params);
-        const bearer = request.get('authorization');
-        const actor = bearer?.startsWith('Bearer ') ? dependencies.accessTokens.verify(bearer.slice(7)) : undefined;
+        const actor = response.locals.adminRbacClaims as AccessTokenClaims | undefined;
         const media = await management.openMedia(mediaId, actor);
         response.setHeader('Content-Type', media.mime);
         response.setHeader('X-Content-Type-Options', 'nosniff');

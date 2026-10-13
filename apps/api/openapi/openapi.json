@@ -11040,6 +11040,7 @@
       "get": {
         "operationId": "downloadPublicBannerImage",
         "summary": "Download an image only during its public display window; authorized admins may preview drafts",
+        "description": "An optional administrator bearer token is validated using the administrative session policy. Expired or malformed credentials return 401 so the client can refresh its session; credentials with the wrong role or insufficient banner viewing permission return 403. Draft images remain unavailable to anonymous visitors.",
         "responses": {
           "200": {
             "description": "Scanned image; no-store",
@@ -11066,6 +11067,12 @@
           },
           "404": {
             "description": "Image not publicly available"
+          },
+          "401": {
+            "description": "Administrator preview credentials are expired or invalid"
+          },
+          "403": {
+            "description": "Administrator preview lacks the required role, verified state or banner viewing permission"
           }
         }
       }
