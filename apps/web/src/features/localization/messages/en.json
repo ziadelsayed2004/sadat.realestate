@@ -3771,12 +3771,12 @@
       "labels": {
         "name": "Property name",
         "slug": "Short identifier",
-        "kind": "Record type",
+        "kind": "What are you listing?",
         "transaction": "Transaction type",
         "sourceType": "Property source type",
         "organizationId": "Organization ID",
         "projectId": "Project ID",
-        "parentPropertyId": "Parent property ID",
+        "parentPropertyId": "Building or main property",
         "reason": "Draft save reason",
         "locationId": "Area or district",
         "mapUrl": "Map location link",
@@ -3788,7 +3788,7 @@
         "slug": "apartment-sadat-city",
         "organizationId": "24 hexadecimal characters",
         "projectId": "Optional",
-        "parentPropertyId": "Required for a unit without a project",
+        "parentPropertyId": "Building or main property",
         "reason": "Save basic property data",
         "locationId": "24 hexadecimal characters",
         "mapUrl": "https://maps.app.goo.gl/…",
@@ -3801,8 +3801,8 @@
         "developer_company": "Developer company"
       },
       "kindLabels": {
-        "property": "Property",
-        "unit": "Unit"
+        "property": "Standalone property",
+        "unit": "Unit within a property or project"
       },
       "transactionLabels": {
         "sale": "Sale",
@@ -3831,7 +3831,7 @@
         "sourceType": "Select the property source type.",
         "organizationId": "Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.",
         "projectId": "The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.",
-        "parentPropertyId": "A unit needs a project or parent property with a valid 24-character ID containing digits or letters a–f.",
+        "parentPropertyId": "Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.",
         "reason": "Enter a save reason of 5–500 characters on one line.",
         "providerId": "The provider account could not be identified. Sign in as a provider and try again."
       },
@@ -3853,7 +3853,18 @@
       "sourceHelp": "Provider type and organization are determined automatically from your approved account. No code is needed.",
       "notFoundTitle": "Draft not found",
       "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
-      "unavailable": "Unavailable"
+      "unavailable": "Unavailable",
+      "parentPicker": {
+        "search": "Search by building or property name",
+        "help": "The registered building or property this unit belongs to, such as an apartment inside a building. Choose it by name from your properties. Optional if you selected a project.",
+        "kindHelp": "For an apartment, shop or plot listed on its own, choose “Standalone property”. Choose a unit to link it to a registered property or project.",
+        "loading": "Loading your properties…",
+        "empty": "No main properties on this page. Try searching or the next page. You can add the main property first, or choose “Standalone property”.",
+        "error": "Your properties could not be loaded. Retry; your current selection is preserved.",
+        "selected": "Currently linked property",
+        "previous": "Previous",
+        "next": "Next"
+      }
     },
     "states": {
       "loading": {

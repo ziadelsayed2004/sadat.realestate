@@ -44,6 +44,7 @@ export interface ProviderPropertyCopy {
     readonly contractBoundaryBody: string;
     readonly coordinateHelp: string;
     readonly mapUrlError: string;
+    readonly parentPicker: Readonly<Record<'search' | 'help' | 'kindHelp' | 'loading' | 'empty' | 'error' | 'selected' | 'previous' | 'next', string>>;
     readonly sourceHelp: string;
     readonly notFoundTitle: string;
     readonly notFoundBody: string;
@@ -66,17 +67,23 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationDescription: 'اربط المسودة بموقع رئيسي نشط أو أضف إحداثيات تقريبية.',
       steps: { basic: 'البيانات الأساسية', location: 'الموقع' },
       labels: {
-        name: 'اسم العقار', slug: 'المعرّف المختصر', kind: 'نوع السجل', transaction: 'نوع المعاملة', sourceType: 'نوع مصدر العقار',
-        organizationId: 'معرّف المؤسسة', projectId: 'معرّف المشروع', parentPropertyId: 'معرّف العقار الأب', reason: 'سبب حفظ المسودة',
+        name: 'اسم العقار', slug: 'المعرّف المختصر', kind: 'بتعلن عن إيه؟', transaction: 'نوع المعاملة', sourceType: 'نوع مصدر العقار',
+        organizationId: 'معرّف المؤسسة', projectId: 'معرّف المشروع', parentPropertyId: 'العمارة أو العقار الرئيسي', reason: 'سبب حفظ المسودة',
          locationId: 'المنطقة أو الحي', mapUrl: 'رابط موقع الخريطة', latitude: 'خط العرض', longitude: 'خط الطول'
       },
       placeholders: {
         name: 'مثال: شقة في مدينة السادات', slug: 'apartment-sadat-city', organizationId: '24 حرفاً سداسياً عشرينياً',
-        projectId: 'اختياري', parentPropertyId: 'مطلوب للوحدة إن لم يوجد مشروع', reason: 'حفظ البيانات الأساسية',
+        projectId: 'اختياري', parentPropertyId: 'اختر العقار من قائمتك', reason: 'حفظ البيانات الأساسية',
          locationId: '24 حرفاً سداسياً عشرينياً', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' },
-      kindLabels: { property: 'عقار', unit: 'وحدة' },
+      kindLabels: { property: 'عقار مستقل', unit: 'وحدة تابعة لعقار أو مشروع' },
+      parentPicker: {
+        search: 'ابحث باسم العمارة أو العقار', help: 'يعني العمارة أو العقار المسجّل اللي الوحدة جزء منه، زي شقة داخل عمارة. اختاره بالاسم من عقاراتك. الحقل اختياري لو اخترت مشروع.',
+        kindHelp: 'لإعلان شقة أو محل أو أرض لوحده اختر «عقار مستقل». «وحدة تابعة» لربط الإعلان بعقار أو مشروع مسجّل.',
+        loading: 'جارٍ تحميل عقاراتك…', empty: 'لا توجد عقارات رئيسية في هذه الصفحة. جرّب البحث أو الصفحة التالية. يمكنك إضافة العقار الرئيسي أولًا، أو اختيار «عقار مستقل».',
+        error: 'تعذر تحميل عقاراتك. أعد المحاولة؛ اختيارك الحالي محفوظ.', selected: 'العقار المرتبط حاليًا', previous: 'السابق', next: 'التالي'
+      },
       transactionLabels: { sale: 'بيع', rent: 'إيجار' },
       statusLabels: { draft: 'مسودة', pending_review: 'قيد المراجعة', needs_changes: 'تحتاج تعديلات', approved: 'معتمدة', published: 'منشورة', rejected: 'مرفوضة', hidden: 'مخفية', archived: 'مؤرشفة' },
       saveDraft: 'حفظ المسودة', continue: 'متابعة', back: 'رجوع', saved: 'تم حفظ المسودة.', saving: 'جارٍ الحفظ…',
@@ -87,7 +94,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         sourceType: 'اختر نوع مصدر العقار.',
         organizationId: 'أدخل معرّف المؤسسة لمكتب الوساطة أو الشركة: يتكون من 24 حرفاً من الأرقام والحروف a إلى f؛ الوسيط الفردي لا يحتاج مؤسسة.',
         projectId: 'معرّف المشروع اختياري؛ إن أدخلته يجب أن يتكون من 24 حرفاً من الأرقام والحروف a إلى f.',
-        parentPropertyId: 'الوحدة تحتاج إلى مشروع أو عقار أب بمعرّف صحيح من 24 حرفاً من الأرقام والحروف a إلى f.',
+        parentPropertyId: 'اختر العمارة أو العقار الرئيسي من القائمة، أو اربط الوحدة بمشروع. للإعلان غير المرتبط اختر «عقار مستقل».',
         reason: 'اكتب سبب الحفظ من 5 إلى 500 حرف في سطر واحد.',
         providerId: 'تعذر تحديد حساب مقدم العقار. سجّل الدخول بحساب مقدم خدمة ثم حاول مرة أخرى.'
       },
@@ -128,17 +135,23 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationDescription: 'Attach an active master location or provide approximate coordinates.',
       steps: { basic: 'Basic information', location: 'Location' },
       labels: {
-        name: 'Property name', slug: 'Short identifier', kind: 'Record type', transaction: 'Transaction type', sourceType: 'Property source type',
-        organizationId: 'Organization ID', projectId: 'Project ID', parentPropertyId: 'Parent property ID', reason: 'Draft save reason',
+        name: 'Property name', slug: 'Short identifier', kind: 'What are you listing?', transaction: 'Transaction type', sourceType: 'Property source type',
+        organizationId: 'Organization ID', projectId: 'Project ID', parentPropertyId: 'Building or main property', reason: 'Draft save reason',
         locationId: 'Area or district', mapUrl: 'Map location link', latitude: 'Latitude', longitude: 'Longitude'
       },
       placeholders: {
         name: 'Example: Sadat City apartment', slug: 'apartment-sadat-city', organizationId: '24 hexadecimal characters',
-        projectId: 'Optional', parentPropertyId: 'Required for a unit without a project', reason: 'Save basic property data',
+        projectId: 'Optional', parentPropertyId: 'Choose from your properties', reason: 'Save basic property data',
         locationId: '24 hexadecimal characters', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' },
-      kindLabels: { property: 'Property', unit: 'Unit' },
+      kindLabels: { property: 'Standalone property', unit: 'Unit within a property or project' },
+      parentPicker: {
+        search: 'Search by building or property name', help: 'The registered building or property this unit belongs to, such as an apartment inside a building. Choose it by name from your properties. Optional if you selected a project.',
+        kindHelp: 'For an apartment, shop or plot listed on its own, choose “Standalone property”. Choose a unit to link it to a registered property or project.',
+        loading: 'Loading your properties…', empty: 'No main properties on this page. Try searching or the next page. You can add the main property first, or choose “Standalone property”.',
+        error: 'Your properties could not be loaded. Retry; your current selection is preserved.', selected: 'Currently linked property', previous: 'Previous', next: 'Next'
+      },
       transactionLabels: { sale: 'Sale', rent: 'Rent' },
       statusLabels: { draft: 'Draft', pending_review: 'Pending review', needs_changes: 'Needs changes', approved: 'Approved', published: 'Published', rejected: 'Rejected', hidden: 'Hidden', archived: 'Archived' },
       saveDraft: 'Save draft', continue: 'Continue', back: 'Back', saved: 'Draft saved.', saving: 'Saving…',
@@ -149,7 +162,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         sourceType: 'Select the property source type.',
         organizationId: 'Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.',
         projectId: 'The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.',
-        parentPropertyId: 'A unit needs a project or parent property with a valid 24-character ID containing digits or letters a–f.',
+        parentPropertyId: 'Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.',
         reason: 'Enter a save reason of 5–500 characters on one line.',
         providerId: 'The provider account could not be identified. Sign in as a provider and try again.'
       },

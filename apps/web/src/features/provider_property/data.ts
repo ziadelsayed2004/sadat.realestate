@@ -7,6 +7,7 @@ import {
   propertyLocationStepSchema,
   propertyMapCoordinatesRequestSchema,
   propertyMapCoordinatesDataSchema,
+  propertyListDataSchema,
   propertyContactStepSchema,
   propertyPricingStepSchema,
   propertyMediaOrderSchema,
@@ -35,6 +36,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from '../provider/data.ts';
+import type { ProviderPropertiesData, ProviderPropertiesQuery } from '../provider/data.ts';
 
 export const PROVIDER_PROPERTY_ROUTE = '/provider/properties' as const;
 export const PUBLIC_PROPERTY_CATALOG_ROUTE = '/public/properties' as const;
@@ -99,6 +101,7 @@ export interface ProviderPropertySubmitOptions extends ProviderPropertyRequestOp
 
 export type ProviderPropertyCreate = PropertyCreate;
 export type ProviderPropertyLocationOption = PublicPropertyLocation;
+export type ProviderPropertyParentsLoader = (query: ProviderPropertiesQuery, signal?: AbortSignal) => Promise<ProviderPropertiesData>;
 export type ProviderPropertyTypeOption = PublicHomepageCategory;
 export type ProviderPropertyStepInput = PropertyCoreStep | PropertyLocationStep | PropertyDetailsStep | PropertyPricingStep | PropertyFeaturesServicesStep | PropertyContactStep;
 
@@ -115,6 +118,17 @@ function authorizationHeaders(source: ProviderAuthorizationSource | undefined): 
 
 function propertyPath(propertyId: string): string {
   return `${PROVIDER_PROPERTY_ROUTE}/${encodeURIComponent(propertyId)}`;
+}
+
+export async function loadProviderPropertyParentOptions(query: ProviderPropertiesQuery, options: ProviderPropertyRequestOptions = {}): Promise<ProviderPropertiesData> {
+  const page = query.page ?? 1;
+  const response = await withPropertySession(options, () => clientFor(options).request(PROVIDER_PROPERTY_ROUTE, {
+    responseSchema: successEnvelopeSchema(propertyListDataSchema),
+    query: { page, limit: 100, sort: 'updatedAt', direction: 'desc', ...(query.search?.trim() ? { search: query.search.trim() } : {}) },
+    ...(authorizationHeaders(options.authorization) ? { headers: authorizationHeaders(options.authorization)! } : {}),
+    ...(options.signal ? { signal: options.signal } : {})
+  }));
+  return { items: response.data.data.items, page: response.data.meta.page ?? page, limit: 100, total: response.data.meta.total ?? response.data.data.items.length };
 }
 
 export async function loadProviderPropertyLocations(options: ProviderPropertyRequestOptions = {}): Promise<readonly ProviderPropertyLocationOption[]> {

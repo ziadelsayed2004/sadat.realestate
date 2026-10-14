@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import { getProviderPropertyCopy } from '../src/features/provider_property/copy.ts';
-import { loadProviderProperty, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
+import { loadProviderProperty, loadProviderPropertyParentOptions, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
 import { ProviderPropertyWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
@@ -236,7 +236,7 @@ describe('Provider property wizard', () => {
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'My apartment' } });
     const kind = screen.getByRole('combobox', { name: copy.wizard.labels.kind });
     fireEvent.change(kind, { target: { value: 'unit' } });
-    fireEvent.change(screen.getByLabelText(copy.wizard.labels.parentPropertyId), { target: { value: 'invalid parent reference' } });
+    expect(screen.getByRole('combobox', { name: copy.wizard.labels.parentPropertyId })).toBeInTheDocument();
     fireEvent.change(kind, { target: { value: 'property' } });
     expect(screen.queryByLabelText(copy.wizard.labels.parentPropertyId)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
@@ -244,11 +244,65 @@ describe('Provider property wizard', () => {
     expect(create.mock.calls[0]![0]).not.toHaveProperty('parentPropertyId');
   });
 
+  it('loads the provider-owned parent list with bounded pages and an authenticated name search', async () => {
+    const requests: URL[] = [];
+    const apiClient = new ApiClient({ fetcher: async (input, init) => {
+      expect(new Headers(init?.headers).get('authorization')).toBe('Bearer provider.wizard.token');
+      requests.push(new URL(String(input), 'http://sadat-real-estate.local'));
+      return new Response(JSON.stringify({ data: { items: [property()] }, meta: { requestId: 'parent-list', page: 2, limit: 100, total: 101 } }), { status: 200 });
+    } });
+    const result = await loadProviderPropertyParentOptions({ page: 2, search: 'Building' }, { apiClient, authorization: authClient });
+    expect(result).toMatchObject({ page: 2, limit: 100, total: 101 });
+    expect(requests[0]!.pathname).toBe('/api/v1/provider/properties');
+    expect(requests[0]!.searchParams.get('search')).toBe('Building');
+    expect(requests[0]!.searchParams.get('limit')).toBe('100');
+  });
+
+  it.each(['ar', 'en'] as const)('chooses the main property by name and saves its reference without asking for a code in %s', async locale => {
+    const copy = getProviderPropertyCopy(locale);
+    const parent = property({ id: 'dddddddddddddddddddddddd', name: { ar: 'عمارة النخيل', en: 'Palm building' } });
+    const create = vi.fn(async () => property());
+    const loadParents = vi.fn(async () => ({ items: [parent, property({ kind: 'unit' }), property({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', status: 'archived' })], page: 1, limit: 100, total: 3 }));
+    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" create={create} loadParents={loadParents} load={async () => parent} />, { locale });
+    expect(screen.queryByLabelText(copy.wizard.labels.parentPropertyId)).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'Apartment listing' } });
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.kind), { target: { value: 'unit' } });
+    await screen.findByRole('option', { name: parent.name[locale]! });
+    const picker = screen.getByRole('combobox', { name: copy.wizard.labels.parentPropertyId });
+    expect(picker.querySelectorAll('option')).toHaveLength(2);
+    expect(screen.getByText(copy.wizard.parentPicker.help)).toBeVisible();
+    fireEvent.change(picker, { target: { value: parent.id } });
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unit', parentPropertyId: parent.id })));
+  });
+
+  it('keeps a saved parent visible across paging, search and a failed retry, and excludes the current property', async () => {
+    const copy = getProviderPropertyCopy('en');
+    const parent = property({ id: 'dddddddddddddddddddddddd', name: { en: 'Existing building' } });
+    const initial = property({ kind: 'unit', parentPropertyId: parent.id });
+    const loadParents = vi.fn(async () => ({ items: [property()], page: 1, limit: 100, total: 101 }));
+    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" propertyId={propertyId} initialData={initial} loadParents={loadParents} load={async () => parent} />, { locale: 'en' });
+    const picker = screen.getByRole('combobox', { name: copy.wizard.labels.parentPropertyId });
+    await screen.findByRole('option', { name: 'Existing building' });
+    await waitFor(() => expect(loadParents).toHaveBeenCalledTimes(1));
+    expect(picker).toHaveValue(parent.id);
+    expect(picker.querySelector(`option[value="${propertyId}"]`)).toBeNull();
+    fireEvent.click(await screen.findByRole('button', { name: copy.wizard.parentPicker.next }));
+    await waitFor(() => expect(loadParents).toHaveBeenCalledWith(expect.objectContaining({ page: 2 }), expect.any(AbortSignal)));
+    loadParents.mockRejectedValueOnce(new Error('Network failure'));
+    fireEvent.change(screen.getByRole('searchbox', { name: copy.wizard.parentPicker.search }), { target: { value: 'Absent' } });
+    await screen.findByText(copy.wizard.parentPicker.error);
+    expect(picker).toHaveValue(parent.id);
+    fireEvent.click(screen.getByRole('button', { name: copy.retry }));
+    await waitFor(() => expect(loadParents).toHaveBeenLastCalledWith({ page: 1, search: 'Absent' }, expect.any(AbortSignal)));
+    expect(picker).toHaveValue(parent.id);
+  });
+
   it('clears saved project and parent references explicitly when updating an existing draft', async () => {
     const copy = getProviderPropertyCopy('en');
     const initial = property({ kind: 'unit', projectId: 'cccccccccccccccccccccccc', parentPropertyId: 'dddddddddddddddddddddddd' });
     const save = vi.fn(async () => property({ version: 3 }));
-    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" propertyId={propertyId} initialData={initial} save={save} />, { locale: 'en' });
+    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="basic" propertyId={propertyId} initialData={initial} save={save} load={async () => property({ id: initial.parentPropertyId! })} loadParents={async () => ({ items: [], page: 1, limit: 100, total: 0 })} />, { locale: 'en' });
     fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.kind }), { target: { value: 'property' } });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.projectId), { target: { value: '' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));

@@ -172,6 +172,8 @@
   gap: 18px 20px;
 }
 
+.provider-property-wizard__grid--links { align-items: start; }
+
 .provider-property-wizard__field {
   display: grid;
   gap: 7px;
