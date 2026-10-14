@@ -2,16 +2,20 @@ import { account, application, profile, policyId, database } from '../helpers/pr
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { publicIdentitySubscriptionPutSchema } from '@sadat-real-estate/contracts';
-import { createProviderVisibilityReader, identitySubscriptionActive, providerVisibility } from '../../src/modules/provider/visibility.js';
+import { createProviderVisibilityReader, directoryIdentityVisible, identitySubscriptionActive, providerVisibility } from '../../src/modules/provider/visibility.js';
 import { createIdentitySubscriptionService } from '../../src/modules/provider/identity-subscription.js';
 import type { AuditWriter, AuditRecordInput } from '../../src/modules/audit/writer.js';
 
 test('identity policy fails closed for unknown and unapproved accounts; individuals never subscribe', () => {
   for (const providerType of ['individual_broker', 'brokerage_office', 'developer_company'] as const) {
     assert.equal(providerVisibility({ accountId: account.toHexString(), providerType, approved: false, subscribed: true, acknowledged: true }).publicIdentity, false);
+    assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType, approved: false, subscribed: true, acknowledged: true })), false);
   }
   const individual = providerVisibility({ accountId: account.toHexString(), providerType: 'individual_broker', approved: true, subscribed: true, acknowledged: true });
   assert.deepEqual([individual.publicIdentity, individual.customerIdentity, individual.contact], [false, false, false]);
+  assert.equal(directoryIdentityVisible(individual), false);
+  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'brokerage_office', approved: true, subscribed: false, acknowledged: true })), false);
+  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'developer_company', approved: true, subscribed: false, acknowledged: false })), true);
 });
 test('paid office visibility is half-open and never reveals customer identity or contact details', () => {
   const row = { status: 'active', paymentConfirmed: true, startAt: new Date('2026-10-10T09:00:00Z'), endAt: new Date('2026-10-10T10:00:00Z') };

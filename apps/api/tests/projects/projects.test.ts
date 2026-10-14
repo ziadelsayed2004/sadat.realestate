@@ -53,7 +53,7 @@ test('archives projects with review permission and the current version while kee
   await assert.rejects(fixture(true, false).service.create(claims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
 });
 
-test('project links match the real public company projection, including approval, acknowledgement and membership', async () => {
+test('project links match company approval and published membership independently of commission acknowledgement', async () => {
   let unavailable: string | undefined;
   let lookups = 0;
   let profileLoads = 0;
@@ -81,7 +81,8 @@ test('project links match the real public company projection, including approval
   const previousLoads = profileLoads;
   assert.deepEqual(await Promise.all([repository.publicPath(project), repository.publicPath(project)]), ['/developers/approved-builder/projects/project', '/developers/approved-builder/projects/project']);
   assert.equal(profileLoads, previousLoads + 1);
-  for (unavailable of ['organizations', 'provider_applications', 'provider_profiles', 'users', 'commission_confirmations', 'commission_policies', 'projects']) assert.equal(await repository.publicPath(project), undefined, unavailable);
+  for (unavailable of ['commission_confirmations', 'commission_policies']) assert.equal(await repository.publicPath(project), '/developers/approved-builder/projects/project', unavailable);
+  for (unavailable of ['organizations', 'provider_applications', 'provider_profiles', 'users', 'projects']) assert.equal(await repository.publicPath(project), undefined, unavailable);
   unavailable = undefined;
   rows.users!.status = 'restricted';
   assert.equal(await repository.publicPath(project), undefined);

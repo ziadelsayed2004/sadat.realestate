@@ -32,7 +32,7 @@ export function createMongoosePublicSitemapSource(connection: Connection): Publi
       return [
         ...STATIC_PATHS.map(path => ({ path })),
         ...properties.flatMap(row => item('/properties', row) ?? []),
-        ...(await visiblePublicOrganizations(connection, organizations)).flatMap(row => item('/developers', row) ?? []),
+        ...(await visiblePublicOrganizations(connection, organizations, 'directory')).flatMap(row => item('/developers', row) ?? []),
         ...articles.flatMap(row => item('/articles', row) ?? [])
       ];
     }

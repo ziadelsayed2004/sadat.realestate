@@ -6,6 +6,7 @@ function matches(row: Record<string, unknown>, query: Record<string, unknown>): 
     if (key === '$and') return (expected as Record<string, unknown>[]).every(value => matches(row, value));
     if (key === '$or') return (expected as Record<string, unknown>[]).some(value => matches(row, value));
     const value = key.split('.').reduce<unknown>((current, part) => current && typeof current === 'object' ? (current as Record<string, unknown>)[part] : undefined, row);
+    if (expected === null) return value == null;
     if (expected instanceof RegExp) return typeof value === 'string' && expected.test(value);
     if (expected && typeof expected === 'object' && !(expected instanceof Types.ObjectId)) {
       const operator = expected as Record<string, unknown>;

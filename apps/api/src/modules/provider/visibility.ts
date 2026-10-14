@@ -7,6 +7,10 @@ export interface ProviderVisibility {
   publicIdentity: boolean; customerIdentity: boolean; contact: boolean;
 }
 export interface ProviderVisibilityReader { read(providerId: string): Promise<ProviderVisibility>; }
+/** A reviewed developer's company and published projects may be browsed before commission acknowledgement. */
+export function directoryIdentityVisible(value: ProviderVisibility): boolean {
+  return value.providerType === 'developer_company' ? value.approved : value.publicIdentity;
+}
 const hidden: ProviderVisibility = { approved: false, publicIdentity: false, customerIdentity: false, contact: false };
 export function identitySubscriptionActive(row: Record<string, unknown> | null, at: Date): boolean {
   return row?.status === 'active' && row.paymentConfirmed === true && row.startAt instanceof Date && row.endAt instanceof Date && row.startAt <= at && at < row.endAt;
@@ -30,7 +34,7 @@ export function createProviderVisibilityReader(connection: Connection, now: () =
     if (!(accountId instanceof Types.ObjectId)) return hidden;
     const [profile, account, app] = await Promise.all([
       profileById ?? connection.collection('provider_profiles').findOne({ userId: accountId }, { projection: { status: 1, providerType: 1 } }),
-      connection.collection('users').findOne({ _id: accountId, roleType: 'provider', deletedAt: { $exists: false } }, { projection: { status: 1 } }),
+      connection.collection('users').findOne({ _id: accountId, roleType: 'provider', deletedAt: null }, { projection: { status: 1 } }),
       application ?? connection.collection('provider_applications').findOne({ userId: accountId }, { projection: { status: 1, providerType: 1 } })
     ]);
     const providerType = app?.providerType;
