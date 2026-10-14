@@ -33,6 +33,36 @@ test('returns a single item comparison without inventing unavailable data', asyn
   assert.equal(result.items[0]?.price, undefined);
 });
 
+test('comparison resolves only selected active finishing features and keeps each property association', async () => {
+  const finishId = '2123456789abcdef01234567', hiddenId = '3123456789abcdef01234567';
+  const finishing = { ar: 'تشطيب فاخر', en: 'Premium finishing' };
+  const stored = [
+    { _id: new Types.ObjectId(id), ...row(id), featureIds: [new Types.ObjectId(finishId), new Types.ObjectId(hiddenId)], deliveryStatus: 'ready_to_move' },
+    { _id: new Types.ObjectId(other), ...row(other), deliveryStatus: 'ready_to_move' }
+  ];
+  let featureReads = 0;
+  const connection = { collection(name: string) { return { find(filter: Record<string, unknown>, options?: { projection: Record<string, number> }) {
+    if (name === 'properties') {
+      assert.equal(options?.projection.featureIds, 1);
+      return { async toArray() { return stored; } };
+    }
+    if (name === 'property_media') return { async toArray() { return []; } };
+    assert.equal(name, 'features_services');
+    featureReads++;
+    assert.equal(filter.kind, 'feature');
+    assert.equal(filter.active, true);
+    assert.deepEqual(filter._id, { $in: [new Types.ObjectId(finishId), new Types.ObjectId(hiddenId)] });
+    assert.deepEqual(filter.$or, [{ groupKey: 'finishing' }, { slug: /(?:^|-)finish(?:ing)?(?:-|$)/u }]);
+    assert.deepEqual(options?.projection, { _id: 1, name: 1 });
+    return { sort() { return this; }, async toArray() { return [{ _id: new Types.ObjectId(finishId), name: finishing }]; } };
+  } }; } } as unknown as Connection;
+  const result = await createPublicPropertyComparisonService({ repository: createMongoosePublicPropertyComparisonRepository(connection) }).compare({ propertyIds: [other, id] });
+  assert.equal(featureReads, 1);
+  assert.equal(result.items[0]?.finishing, undefined, 'ready to move does not imply a finishing condition');
+  assert.deepEqual(result.items[1]?.finishing, [finishing]);
+  assert.equal('featureIds' in result.items[1]!, false);
+});
+
 test('comparison resolves uploaded covers in one bounded query when the stored URL is missing or stale', async () => {
   const mediaId = '2123456789abcdef01234567', otherMediaId = '3123456789abcdef01234567';
   const toStored = (value: PublicPropertyComparisonSource) => {

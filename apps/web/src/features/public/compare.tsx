@@ -147,7 +147,7 @@ function fieldValue(
     case 'bedrooms': return property.layout?.bedrooms === undefined ? copy.valueUnavailable : String(property.layout.bedrooms);
     case 'bathrooms': return property.layout?.bathrooms === undefined ? copy.valueUnavailable : String(property.layout.bathrooms);
     case 'floor': return property.layout?.floor === undefined ? copy.valueUnavailable : String(property.layout.floor);
-    case 'deliveryStatus': return copy.valueUnavailable;
+    case 'deliveryStatus': return property.finishing?.map(value => localizedText(value, locale)).filter(Boolean).join(locale === 'ar' ? '، ' : ', ') || copy.valueUnavailable;
     case 'locationName': return localizedOptional(property.locationName, locale, copy.valueUnavailable);
   }
 }

@@ -4,7 +4,7 @@ import { Types, type Connection } from 'mongoose';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonItemSchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
 
-export interface PublicPropertyComparisonSource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; propertyTypeName?: unknown; publicCode?: string; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; organizationId?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
+export interface PublicPropertyComparisonSource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; propertyTypeName?: unknown; finishing?: unknown[]; publicCode?: string; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; organizationId?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
 export interface PublicPropertyComparisonRepository { findPublished(ids: string[]): Promise<PublicPropertyComparisonSource[]> }
 export class PublicPropertyComparisonError extends Error { constructor(readonly code: 'PROPERTY_UNAVAILABLE') { super(code); this.name = 'PublicPropertyComparisonError'; } }
 
@@ -18,6 +18,7 @@ function card(source: PublicPropertyComparisonSource) {
     ...(source.imageUrl ? { imageUrl: source.imageUrl } : {}),
     ...(source.locationName !== undefined ? { locationName: source.locationName } : {}),
     ...(source.propertyTypeName !== undefined ? { propertyTypeName: source.propertyTypeName } : {}),
+    ...(source.finishing?.length ? { finishing: source.finishing } : {}),
     ...(source.publicCode ? { publicCode: source.publicCode } : {}),
     ...(source.deliveryStatus ? { deliveryStatus: source.deliveryStatus } : {}),
     ...(source.installmentAvailable !== undefined ? { installmentAvailable: source.installmentAvailable } : {}),
@@ -47,6 +48,9 @@ export function createPublicPropertyComparisonService(dependencies: { repository
 
 type Row = Record<string, unknown>;
 function id(value: unknown): string | undefined { if (typeof value === 'string') return value; if (value && typeof value === 'object' && typeof (value as { toHexString?: () => string }).toHexString === 'function') return (value as { toHexString: () => string }).toHexString(); return undefined; }
+function featureIds(row: Row): string[] {
+  return Array.isArray(row.featureIds) ? row.featureIds.slice(0, 100).flatMap(value => { const key = id(value); return key && /^[a-f0-9]{24}$/u.test(key) ? [key] : []; }) : [];
+}
 function mapRow(row: Row): PublicPropertyComparisonSource | null {
   const rowId = id(row._id); const projectId = id(row.projectId); const organizationId = id(row.organizationId);
   if (!rowId || typeof row.slug !== 'string' || typeof row.kind !== 'string' || row.name === undefined || typeof row.transactionType !== 'string' || typeof row.status !== 'string' || typeof row.active !== 'boolean') return null;
@@ -75,16 +79,18 @@ function mapRow(row: Row): PublicPropertyComparisonSource | null {
 
 export function createMongoosePublicPropertyComparisonRepository(connection: Connection): PublicPropertyComparisonRepository {
   return { async findPublished(ids) {
-    const storedRows = await connection.collection('properties').find({ _id: { $in: ids.map((value) => new Types.ObjectId(value)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).toArray();
+    const storedRows = await connection.collection('properties').find({ _id: { $in: ids.map((value) => new Types.ObjectId(value)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, propertyTypeId: 1, featureIds: 1, publicCode: 1, deliveryStatus: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).toArray();
     const rows = await attachPublicPropertyCovers(connection, storedRows);
     const mapped = rows.flatMap((row) => { const value = mapRow(row as Row); return value ? [value] : []; });
     const organizationIds = [...new Set(mapped.flatMap((value) => value.organizationId ? [value.organizationId] : []))];
     const locationIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).locationId); return value ? [value] : []; }))];
     const propertyTypeIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).propertyTypeId); return value ? [value] : []; }))];
-    const [organizations, locations, propertyTypes] = await Promise.all([
+    const selectedFeatureIds = [...new Set(rows.flatMap(row => featureIds(row as Row)))];
+    const [organizations, locations, propertyTypes, finishingOptions] = await Promise.all([
       organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray() : [],
       locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
-      propertyTypeIds.length ? connection.collection('property_taxonomy').find({ _id: { $in: propertyTypeIds.map((value) => new Types.ObjectId(value)) }, kind: 'type', active: true }, { projection: { _id: 1, name: 1 } }).toArray() : []
+      propertyTypeIds.length ? connection.collection('property_taxonomy').find({ _id: { $in: propertyTypeIds.map((value) => new Types.ObjectId(value)) }, kind: 'type', active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
+      selectedFeatureIds.length ? connection.collection('features_services').find({ _id: { $in: selectedFeatureIds.map(value => new Types.ObjectId(value)) }, kind: 'feature', active: true, $or: [{ groupKey: 'finishing' }, { slug: /(?:^|-)finish(?:ing)?(?:-|$)/u }] }, { projection: { _id: 1, name: 1 } }).sort({ order: 1, _id: 1 }).toArray() : []
     ]);
     const organizationById = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => {
       const value = id((row as Row)._id);
@@ -98,12 +104,16 @@ export function createMongoosePublicPropertyComparisonRepository(connection: Con
       const value = id((row as Row)._id);
       return value && (row as Row).name !== undefined ? [[value, (row as Row).name] as const] : [];
     }));
-    return mapped.map((value, index) => {
-      const row = rows[index] as Row;
+    const rowById = new Map(rows.map(row => [id((row as Row)._id), row as Row]));
+    return mapped.map(value => {
+      const row = rowById.get(value.id)!;
+      const selected = new Set(featureIds(row));
+      const finishing = finishingOptions.filter(option => selected.has(id(option._id)!)).map(option => option.name);
       const organization = value.organizationId ? organizationById.get(value.organizationId) : undefined;
       const locationId = id(row.locationId);
       return {
         ...value,
+        ...(finishing.length ? { finishing } : {}),
         ...(locationId && locationById.has(locationId) ? { locationName: locationById.get(locationId) } : {}),
         ...(id(row.propertyTypeId) && propertyTypeById.has(id(row.propertyTypeId)!) ? { propertyTypeName: propertyTypeById.get(id(row.propertyTypeId)!) } : {}),
         ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceVerified: true } : {})

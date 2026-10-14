@@ -26,7 +26,8 @@ export const PUBLIC_PROPERTY_COMPARISON_FIELDS = [
 ] as const;
 export const publicPropertyComparisonFieldSchema = z.enum(PUBLIC_PROPERTY_COMPARISON_FIELDS);
 export const publicPropertyComparisonItemSchema = publicPropertyRelatedPropertySchema.extend({
-  propertyTypeName: localizedTextSchema.optional()
+  propertyTypeName: localizedTextSchema.optional(),
+  finishing: z.array(localizedTextSchema).max(100).optional()
 }).strict();
 export const publicPropertyComparisonDataSchema = z.object({
   items: z.array(publicPropertyComparisonItemSchema).min(1).max(2),

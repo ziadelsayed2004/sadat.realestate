@@ -334,6 +334,7 @@ function FeaturesFormView({ locale, copy, advancedCopy, form, setForm, onSubmit,
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-features-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-features-title">{advancedCopy.titles['features-services']}</h2><span>{advancedCopy.steps['features-services']}</span></div>
         <p className="provider-property-wizard__help">{advancedCopy.referenceHelp}</p>
+        <p className="provider-property-wizard__help">{locale === 'ar' ? 'لإضافة حالة التشطيب التي تظهر في تفاصيل العقار والمقارنة، اختر التشطيب المناسب من المميزات ثم احفظ.' : 'To show the finishing condition in property details and comparisons, select the matching finishing option under Features and save.'}</p>
         {catalogState === 'loading' ? <p role="status">{locale === 'ar' ? 'جارٍ تحميل الاختيارات…' : 'Loading choices…'}</p> : null}
         {catalogState === 'error' ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.featureCatalogUnavailableTitle}</strong><p>{advancedCopy.featureCatalogUnavailableBody}</p><Button type="button" variant="secondary" onClick={onRetryCatalog}>{copy.retry}</Button></div> : null}
         <div className="provider-property-wizard__amenity-groups">

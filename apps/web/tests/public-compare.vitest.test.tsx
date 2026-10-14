@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import {
   publicHomepagePropertySchema,
   publicPropertyComparisonDataSchema
@@ -86,6 +86,17 @@ afterEach(() => {
 });
 
 describe('public property comparison', () => {
+  it.each(['ar', 'en'] as const)('shows saved finishing choices and does not infer them from delivery status in %s', locale => {
+    const finishing = { ar: 'تشطيب فاخر', en: 'Premium finishing' };
+    const data = publicPropertyComparisonDataSchema.parse({ ...comparisonData, items: [{ ...firstProperty, finishing: [finishing] }, { ...secondProperty, deliveryStatus: 'ready_to_move' }] });
+    const copy = getPublicPropertyComparisonCopy(locale);
+    renderWithLocale(<PublicPropertyComparison locale={locale} url={`/compare?lang=${locale}&propertyIds=${firstId}&propertyIds=${secondId}`} initialData={data} />, { locale });
+    const cells = within(screen.getByRole('row', { name: new RegExp(copy.deliveryStatus) })).getAllByRole('cell');
+    expect(cells[0]).toHaveTextContent(finishing[locale]);
+    expect(cells[1]).toHaveTextContent(copy.valueUnavailable);
+    fireEvent.click(screen.getByRole('button', { name: copy.showDifferences }));
+    expect(screen.getByText(finishing[locale])).toBeVisible();
+  });
   it('parses at most two unique IDs and preserves the selected locale in URLs', () => {
     expect(parsePublicPropertyComparisonIds(`/compare?lang=ar&propertyIds=${firstId}&propertyIds=${secondId}`)).toEqual([firstId, secondId]);
     expect(parsePublicPropertyComparisonIds(`/compare?propertyIds=${firstId}&propertyIds=${firstId}`)).toEqual([]);
