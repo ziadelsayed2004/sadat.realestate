@@ -32,6 +32,24 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it.each(['ar', 'en'] as const)('combines units and installment filters, restores the URL, and clears them in %s', async locale => {
+    window.history.replaceState({}, '', `/properties?lang=${locale}`);
+    const load = vi.fn().mockResolvedValue(listingData);
+    const result = renderWithLocale(<PublicPropertyListing locale={locale} initialData={listingData} load={load} />, { locale });
+    const filters = result.container.querySelector('#public-property-listing-filter-form')!;
+    fireEvent.click(filters.querySelector('input[name="kind"][value="unit"]')!);
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'unit', page: 1 }), expect.anything()));
+    fireEvent.click(filters.querySelector('input[name="installmentAvailable"][value="true"]')!);
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'unit', installmentAvailable: true, page: 1 }), expect.anything()));
+    expect(parsePublicPropertySearchQuery(window.location.href)).toMatchObject({ kind: 'unit', installmentAvailable: true });
+    expect(publicPropertySearchUrl(parsePublicPropertySearchQuery('/properties?kind=unit&installmentAvailable=false'))).toBe('/properties?kind=unit&installmentAvailable=false');
+    fireEvent.click(filters.querySelector('input[name="installmentAvailable"][value="false"]')!);
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'unit', installmentAvailable: false }), expect.anything()));
+    fireEvent.click(screen.getByRole('button', { name: getPublicPropertyListingCopy(locale).resetFilters }));
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(defaultPublicPropertySearchQuery(), expect.anything()));
+    expect(filters.querySelector('input[name="kind"][value=""]')).toBeChecked();
+    expect(filters.querySelector('input[name="installmentAvailable"][value=""]')).toBeChecked();
+  });
   it.each(['ar', 'en'] as const)('shows only the saved public code and keeps identifier URLs out of the card text in %s', locale => {
     const slug = 'property-57cf2f4327104b7787553eced1535f3c';
     for (const publicCode of [undefined, 'SDT-1234']) {

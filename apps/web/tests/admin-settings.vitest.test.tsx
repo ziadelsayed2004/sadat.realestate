@@ -20,6 +20,13 @@ import { mergeSettingsDraft } from '../src/features/admin_settings/data.ts';
 const adminId = 'cccccccccccccccccccccccc';
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 
+it.each(['ar', 'en'] as const)('makes manual city statistics discoverable from display settings in %s', locale => {
+  const data = adminSettingsDataSchema.parse({ ...settings('display'), values: {} });
+  renderWithLocale(<AdminSettings locale={locale} session={session} path="/admin/settings/display" initialData={data} />, { locale });
+  expect(screen.getByRole('link', { name: locale === 'ar' ? 'تعديل أرقام إحصاءات المدينة' : 'Edit city statistics counts' })).toHaveAttribute('href', `/admin/content/population-counter?lang=${locale}#admin-city-statistics`);
+  expect(screen.getByText(locale === 'ar' ? /عدد السكان يتحدث تلقائيًا من المصدر/ : /Population updates automatically from the source/)).toBeVisible();
+});
+
 function settings(namespace: AdminSettingsNamespace = 'platform', version = 4): AdminSettingsData {
   return adminSettingsDataSchema.parse({
     namespace,

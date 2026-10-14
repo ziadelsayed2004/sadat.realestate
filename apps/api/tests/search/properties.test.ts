@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { publicPropertySearchQuerySchema } from '@sadat-real-estate/contracts';
-import { createPublicPropertySearchService, type PublicPropertySearchRepository, type PublicPropertySearchSource } from '../../src/modules/search/properties.js';
+import type { Connection } from 'mongoose';
+import { createMongoosePublicPropertySearchRepository, createPublicPropertySearchService, type PublicPropertySearchRepository, type PublicPropertySearchSource } from '../../src/modules/search/properties.js';
 
 const id = '0123456789abcdef01234567';
 const other = '1123456789abcdef01234567';
@@ -53,4 +54,30 @@ test('supports allowlisted filters and deterministic query validation', async ()
 test('returns a safe empty page when no public rows exist', async () => {
   const service = createPublicPropertySearchService({ repository: repository([]) });
   assert.deepEqual(await service.list({}), { items: [], categories: [{ id: other, slug: 'residential', name: localized, propertyCount: 0, order: 0 }], propertyTypes: [{ id: other, slug: 'apartments', name: localized, propertyCount: 0, order: 0 }], page: 1, limit: 20, total: 0 });
+});
+
+test('unit and installment filters constrain both rows and counts without accepting boolean-like operators', async () => {
+  for (const input of ['true', 'false', true, false]) {
+    const expected = input === 'true' || input === true;
+    const query = publicPropertySearchQuerySchema.parse({ kind: 'unit', installmentAvailable: input, page: 2, limit: 10 });
+    assert.equal(query.installmentAvailable, expected);
+    const filters: Record<string, unknown>[] = [];
+    const connection = { collection(name: string) { return {
+      find(filter: Record<string, unknown>) {
+        if (name === 'properties') filters.push(filter);
+        return { sort() { return this; }, skip() { return this; }, limit() { return this; }, async toArray() { return []; } };
+      },
+      async countDocuments(filter: Record<string, unknown>) { filters.push(filter); return 0; }
+    }; } } as unknown as Connection;
+    await createMongoosePublicPropertySearchRepository(connection).list(query);
+    assert.equal(filters.length, 2);
+    for (const filter of filters) {
+      assert.equal(filter.kind, 'unit');
+      assert.equal(filter.status, 'published');
+      assert.equal(filter.active, true);
+      assert.deepEqual(filter['paymentPlans.0'], { $exists: expected });
+    }
+  }
+  for (const installmentAvailable of ['yes', '0', '', 1, { $ne: false }, ['true']]) assert.equal(publicPropertySearchQuerySchema.safeParse({ installmentAvailable }).success, false);
+  assert.equal(publicPropertySearchQuerySchema.parse({}).installmentAvailable, undefined);
 });

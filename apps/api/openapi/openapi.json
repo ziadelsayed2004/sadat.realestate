@@ -1641,6 +1641,12 @@
         "summary": "List published active properties with bounded search and filters",
         "parameters": [
           {
+            "name": "installmentAvailable",
+            "in": "query",
+            "description": "Filter by a saved installment plan. Omit for all, true for available installments, false for no plan.",
+            "schema": { "type": "boolean" }
+          },
+          {
             "name": "kind",
             "in": "query",
             "schema": {

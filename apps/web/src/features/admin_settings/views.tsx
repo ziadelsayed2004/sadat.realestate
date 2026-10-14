@@ -286,6 +286,11 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
 
   return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}>
     <div className="admin-settings__editor-heading"><div><h2>{copy.labels[namespace]}</h2><p>{copy.descriptions[namespace]}</p></div></div>
+    {namespace === 'display' ? <aside className="admin-settings__name-notice" aria-labelledby="display-city-statistics-title">
+      <h3 id="display-city-statistics-title">{locale === 'ar' ? 'أرقام إحصاءات المدينة في الرئيسية' : 'Homepage city statistics'}</h3>
+      <p>{locale === 'ar' ? 'الوحدات السكنية والمناطق والمباني والنمو السنوي: افتح الرابط، اضغط «تعديل إحصاءات المدينة»، اختر الرقم وعدّله ثم احفظ. عدد السكان يتحدث تلقائيًا من المصدر.' : 'Housing units, districts, buildings and annual growth: follow the link, choose Edit city statistics, select a count, edit and save it. Population updates automatically from the source.'}</p>
+      <a className="admin-settings__history-link" href={localePath(locale, '/admin/content/population-counter#admin-city-statistics')}>{locale === 'ar' ? 'تعديل أرقام إحصاءات المدينة' : 'Edit city statistics counts'}</a>
+    </aside> : null}
     <form onSubmit={event => { void submit(event); }}>
       {namespace === 'platform' ? <>
         <div className="admin-settings__name-summary">

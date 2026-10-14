@@ -11,6 +11,7 @@ export const PUBLIC_PROPERTIES_PATH = '/properties' as const;
 
 const QUERY_KEYS = [
   'kind',
+  'installmentAvailable',
   'transactionType',
   'projectId',
   'propertyCategoryId',
@@ -62,13 +63,14 @@ export function parsePublicPropertySearchQuery(source: URLSearchParams | URL | s
   return parsed.success ? parsed.data : defaultPublicPropertySearchQuery();
 }
 
-function setIfPresent(params: URLSearchParams, key: string, value: string | number | undefined): void {
+function setIfPresent(params: URLSearchParams, key: string, value: string | number | boolean | undefined): void {
   if (value !== undefined && String(value).length > 0) params.set(key, String(value));
 }
 
 export function publicPropertySearchParams(query: PublicPropertySearchQuery): URLSearchParams {
   const params = new URLSearchParams();
   setIfPresent(params, 'kind', query.kind);
+  setIfPresent(params, 'installmentAvailable', query.installmentAvailable);
   setIfPresent(params, 'transactionType', query.transactionType);
   setIfPresent(params, 'projectId', query.projectId);
   setIfPresent(params, 'propertyCategoryId', query.propertyCategoryId);

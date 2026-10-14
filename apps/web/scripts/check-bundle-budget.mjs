@@ -28,7 +28,9 @@ const maxJavaScriptBytes = 2_540 * 1024;
 // The accessible homepage range popover adds about 5.5 KB to the existing
 // 261,783-byte public route. Allow a bounded 8 KB increment (3.1%) for it;
 // keep the JavaScript limits unchanged and continue counting the whole route.
-const maxRouteStylesheetBytes = 264 * 1024;
+// Homepage unit/installment choices add 543 bytes to the 270,122-byte public
+// route. Allow one additional KiB; retain the JavaScript and per-chunk limits.
+const maxRouteStylesheetBytes = 265 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

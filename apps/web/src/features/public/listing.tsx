@@ -39,6 +39,7 @@ interface ListingFilterDraft {
   readonly search: string;
   readonly transactionType: '' | 'sale' | 'rent';
   readonly kind: '' | 'property' | 'unit';
+  readonly installmentAvailable: '' | 'true' | 'false';
   readonly minPrice: string;
   readonly maxPrice: string;
   readonly bedrooms: string;
@@ -136,6 +137,7 @@ function draftFromQuery(query: PublicPropertySearchQuery): ListingFilterDraft {
     search: query.search ?? '',
     transactionType: query.transactionType ?? '',
     kind: query.kind ?? '',
+    installmentAvailable: query.installmentAvailable === undefined ? '' : String(query.installmentAvailable) as 'true' | 'false',
     minPrice: query.minPrice === undefined ? '' : String(query.minPrice),
     maxPrice: query.maxPrice === undefined ? '' : String(query.maxPrice),
     bedrooms: query.bedrooms === undefined ? '' : String(query.bedrooms),
@@ -249,6 +251,18 @@ function ListingFilters({
           <label><input type="radio" name="transactionType" value="" checked={draft.transactionType === ''} onChange={() => onCommit('transactionType', '')} /> {copy.allTransactions}</label>
           <label><input type="radio" name="transactionType" value="sale" checked={draft.transactionType === 'sale'} onChange={() => onCommit('transactionType', 'sale')} /> {copy.sale}</label>
           <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onCommit('transactionType', 'rent')} /> {copy.rent}</label>
+        </fieldset>
+        <fieldset className="public-property-listing__filter-chips">
+          <legend>{locale === 'ar' ? 'أبحث عن' : 'Looking for'}</legend>
+          <label><input type="radio" name="kind" value="" checked={draft.kind === ''} onChange={() => onCommit('kind', '')} /> {copy.allKinds}</label>
+          <label><input type="radio" name="kind" value="property" checked={draft.kind === 'property'} onChange={() => onCommit('kind', 'property')} /> {copy.property}</label>
+          <label><input type="radio" name="kind" value="unit" checked={draft.kind === 'unit'} onChange={() => onCommit('kind', 'unit')} /> {copy.unit}</label>
+        </fieldset>
+        <fieldset className="public-property-listing__filter-chips">
+          <legend>{locale === 'ar' ? 'التقسيط' : 'Installments'}</legend>
+          <label><input type="radio" name="installmentAvailable" value="" checked={draft.installmentAvailable === ''} onChange={() => onCommit('installmentAvailable', '')} /> {copy.allKinds}</label>
+          <label><input type="radio" name="installmentAvailable" value="true" checked={draft.installmentAvailable === 'true'} onChange={() => onCommit('installmentAvailable', 'true')} /> {locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
+          <label><input type="radio" name="installmentAvailable" value="false" checked={draft.installmentAvailable === 'false'} onChange={() => onCommit('installmentAvailable', 'false')} /> {locale === 'ar' ? 'بدون تقسيط' : 'No installments'}</label>
         </fieldset>
         <div className="public-property-listing__price-range">
           <FilterField id="public-property-min-price" label={`${copy.minPrice} (${locale === 'ar' ? 'اختياري' : 'optional'})`}>

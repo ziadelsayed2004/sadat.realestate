@@ -605,6 +605,15 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
       </div>
       <input type="hidden" name="transactionType" value={transactionType} readOnly />
       <input type="hidden" name="lang" value={locale} readOnly />
+      <div className="public-homepage__search-options">
+        <fieldset>
+          <legend>{locale === 'ar' ? 'أبحث عن' : 'Looking for'}</legend>
+          <label><input type="radio" name="kind" value="" defaultChecked />{locale === 'ar' ? 'الكل' : 'All'}</label>
+          <label><input type="radio" name="kind" value="property" />{locale === 'ar' ? 'عقار' : 'Property'}</label>
+          <label><input type="radio" name="kind" value="unit" />{locale === 'ar' ? 'وحدة' : 'Unit'}</label>
+        </fieldset>
+        <label><input type="checkbox" name="installmentAvailable" value="true" />{locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
+      </div>
       <div className="public-homepage__search-row">
         <CustomSelect
           name="propertyTypeId"

@@ -57,7 +57,7 @@ export function CityStatisticsEditor({ locale, load, save, errorMessage }: {
     } catch (error) { setFeedback(errorMessage(error)); }
     finally { setSaving(false); }
   }
-  return <section className="admin-content__editor" data-testid="admin-city-statistics">
+  return <section className="admin-content__editor" id="admin-city-statistics" data-testid="admin-city-statistics" style={{ scrollMarginTop: '110px' }}>
     <h2>{ar ? 'باقي إحصاءات المدينة' : 'Other city statistics'}</h2>
     <p>{ar ? 'أدخل الأرقام المعتمدة يدويًا. تعديلها لا يغير عدد السكان التلقائي.' : 'Enter approved counts manually. Editing them does not change the automatic population estimate.'}</p>
     <Button type="button" variant="secondary" disabled={loading || saving} onClick={() => { void openEditor(); }}>{ar ? (open ? 'تحديث البيانات' : 'تعديل إحصاءات المدينة') : (open ? 'Reload statistics' : 'Edit city statistics')}</Button>

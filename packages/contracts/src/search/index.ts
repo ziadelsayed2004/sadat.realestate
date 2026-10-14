@@ -10,6 +10,7 @@ const positiveQuery = (fallback: number, maximum: number) => z.preprocess((value
 const nonNegativeQuery = (maximum: number) => z.preprocess((value) => value === undefined ? undefined : Number(value), z.number().finite().nonnegative().max(maximum)).optional();
 export const publicPropertySearchQuerySchema = z.object({
   kind: propertyKindSchema.optional(),
+  installmentAvailable: z.preprocess(value => value === 'true' ? true : value === 'false' ? false : value, z.boolean()).optional(),
   transactionType: propertyTransactionTypeSchema.optional(),
   projectId: propertyObjectIdSchema.optional(),
   propertyCategoryId: propertyObjectIdSchema.optional(),

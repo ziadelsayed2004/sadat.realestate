@@ -127,6 +127,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
     async list(query) {
       const filter: Record<string, unknown> = { status: 'published', active: true, ...unexpiredPropertyFilter() };
       if (query.kind) filter.kind = query.kind;
+      if (query.installmentAvailable !== undefined) filter['paymentPlans.0'] = { $exists: query.installmentAvailable };
       if (query.transactionType) filter.transactionType = query.transactionType;
       if (query.projectId) filter.projectId = new Types.ObjectId(query.projectId);
       if (query.propertyCategoryId) {

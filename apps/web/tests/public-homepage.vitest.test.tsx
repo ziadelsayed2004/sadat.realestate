@@ -314,6 +314,18 @@ describe('public homepage', () => {
     expect(load).toHaveBeenCalledTimes(1);
   });
 
+  it.each(['ar', 'en'] as const)('submits a unit and real installment preference from the homepage in %s', locale => {
+    const result = renderWithLocale(<PublicHomepage locale={locale} initialData={homepageData} />, { locale });
+    const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
+    fireEvent.click(form.querySelector('input[name="kind"][value="unit"]')!);
+    fireEvent.click(form.querySelector('input[name="installmentAvailable"]')!);
+    const params = new URLSearchParams([...new FormData(form).entries()].map(([key, value]) => [key, String(value)]));
+    expect(params.get('lang')).toBe(locale);
+    expect(parsePublicPropertySearchQuery(`/properties?${params}`)).toMatchObject({ kind: 'unit', installmentAvailable: true, transactionType: 'sale' });
+    fireEvent.click(form.querySelector('input[name="installmentAvailable"]')!);
+    expect(new FormData(form).has('installmentAvailable')).toBe(false);
+  });
+
   it('keeps price optional and switches from purchase prices to a cleared rental budget', () => {
     const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
     const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
