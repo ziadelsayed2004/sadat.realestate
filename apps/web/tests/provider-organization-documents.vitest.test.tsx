@@ -295,7 +295,7 @@ describe('provider organization details', () => {
     );
 
     await waitFor(() => expect(screen.getByTestId('provider-organization-details')).toHaveAttribute('data-screen-id', 'AUTH-10'));
-    expect(screen.getByRole('heading', { name: copy.businessTitle, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: copy.businessTitle, level: 1 })).toBeInTheDocument();
     expect(screen.getByLabelText(copy.legalBusinessNameLabel)).toBeInTheDocument();
     expect(screen.queryByLabelText(/service area|property type/iu)).not.toBeInTheDocument();
   });

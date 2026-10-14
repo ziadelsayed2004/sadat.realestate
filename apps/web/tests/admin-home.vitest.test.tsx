@@ -152,13 +152,13 @@ describe('Admin banners, tips, and homepage administration', () => {
     expect(row).toHaveTextContent(locale === 'ar' ? 'مسودة / موقوف' : 'Draft / stopped');
     fireEvent.click(within(row).getByRole('button', { name: copy.preview }));
     const panel = await screen.findByRole('complementary', { name: copy.preview });
-    expect(panel.parentElement).toHaveFocus();
+    await waitFor(() => expect(panel.parentElement).toHaveFocus());
     expect(update).not.toHaveBeenCalled();
     expect(preview).toHaveBeenCalledWith(bannerId);
     fireEvent.click(within(row).getByRole('button', { name: locale === 'ar' ? 'تعديل' : 'Edit' }));
     const editor = await screen.findByTestId('admin-home-banner-editor');
     expect(screen.queryByRole('complementary', { name: copy.preview })).not.toBeInTheDocument();
-    expect(editor.parentElement).toHaveFocus();
+    await waitFor(() => expect(editor.parentElement).toHaveFocus());
     fireEvent.change(editor.querySelector(`#admin-home-banner-title-${locale}`)!, { target: { value: 'Changed while stopped' } });
     fireEvent.change(within(editor).getByLabelText(copy.reason), { target: { value: 'Edit stopped banner' } });
     fireEvent.submit(editor.querySelector('form')!);
