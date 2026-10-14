@@ -89,16 +89,16 @@ describe('public homepage', () => {
     expect(screen.getByRole('img', { name: 'Property' })).toHaveAttribute('src', '/replacement.jpg');
     expect(screen.queryByText('Image unavailable')).not.toBeInTheDocument();
   });
-  it('gives new property types a Sadat entrance photo and preserves supplied images', () => {
+  it('gives new property types a default template and preserves supplied images', () => {
     const categories = [
       { id: 'c'.repeat(24), slug: 'new-type', name: { en: 'New type' }, propertyCount: 0, order: 100 },
       { id: 'd'.repeat(24), slug: 'custom-type', name: { en: 'Custom type' }, imageUrl: 'https://example.com/custom.jpg', propertyCount: 0, order: 101 }
     ];
     const result = renderWithLocale(<PublicHomepage locale="en" initialData={publicHomepageDataSchema.parse({ ...homepageData, categories })} />, { locale: 'en' });
     const cards = result.container.querySelectorAll('.public-homepage__category-card:not(.public-homepage__category-card--all)');
-    expect(cards[0]?.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/sadat-city-entrance.jpg');
+    expect(cards[0]?.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/category-placeholder.svg');
     expect(cards[1]?.querySelector('img')).toHaveAttribute('src', 'https://example.com/custom.jpg');
-    expect(screen.getByRole('link', { name: /Sadat gate photo/ })).toHaveAttribute('href', '/assets/canonical/public/sadat-city-entrance.html');
+    expect(screen.queryByRole('link', { name: /Sadat gate photo/ })).not.toBeInTheDocument();
   });
   it.each(['ar', 'en'] as const)('makes only the promotion CTA a link and preserves its selected owned project destination in %s', locale => {
     const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [...homepageData.banners, { key: 'featured_project', presentation: 'featured', title: { en: 'Published project' }, targetUrl: '/developers/approved-builder#project-owned-project', order: 1 }] });

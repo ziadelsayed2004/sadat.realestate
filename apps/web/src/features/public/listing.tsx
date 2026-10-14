@@ -1,3 +1,4 @@
+import { categoryImageUrl } from '../design_system/category-image.ts';
 import { useEffect, useState, useContext, type FormEvent, type ReactNode } from 'react';
 import type {
   PublicHomepageCategory,
@@ -10,7 +11,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect, Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicAuthRoleContext, PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, canonicalHomepageCategories, publicCategoryAsset } from './components.tsx';
+import { PublicAuthRoleContext, PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, canonicalHomepageCategories } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -69,7 +70,7 @@ function listingRailItems(data: PublicPropertyListData): ReadonlyArray<ListingRa
       : [{
           ...item,
           ...actual,
-          ...(actual.imageUrl ? { imageUrl: actual.imageUrl } : {}),
+          imageUrl: categoryImageUrl(actual.imageUrl),
           actualId: actual.id,
           actualKind: categories.has(item.slug) ? 'category' as const : 'type' as const
         }];
@@ -523,11 +524,10 @@ export function PublicPropertyListing({
         </div>
       </section>
       {data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
-        {railItems.slice(0, 1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {railItems.slice(0, 1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={categoryImageUrl(item.imageUrl)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
         <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.propertyCountLabel}</span></button>
-        {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={categoryImageUrl(item.imageUrl)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
-      {railItems.some(item => (item.imageUrl ?? publicCategoryAsset(item.slug)).endsWith('/sadat-city-entrance.jpg')) ? <small><a href="/assets/canonical/public/sadat-city-entrance.html">{locale === 'ar' ? 'صورة بوابة السادات: فارس الجويلي — CC BY-SA 4.0' : 'Sadat gate photo: Faris El-Gwely — CC BY-SA 4.0'}</a></small> : null}
       <div className="public-property-listing__body">
         <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onDraftChange={(key, value) => { setDraft(previous => ({ ...previous, [key]: value })); setFilterError(false); }} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>

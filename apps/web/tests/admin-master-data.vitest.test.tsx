@@ -228,6 +228,6 @@ describe('Admin master-data contracts and views', () => {
     fail = false;
     fireEvent.click(screen.getByRole('button', { name: copy.save }));
     await waitFor(() => expect(screen.getByText(copy.mutation.created)).toBeInTheDocument());
-    expect(inputs).toEqual(Array(2).fill({ kind: 'type', imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg', categoryId: category.id, name: { en: 'New property type' }, order: 2, active: true, reason: 'Add new type' }));
+    expect(inputs).toEqual(Array(2).fill({ kind: 'type', imageUrl: '/assets/canonical/public/category-placeholder.svg', categoryId: category.id, name: { en: 'New property type' }, order: 2, active: true, reason: 'Add new type' }));
   });
 });

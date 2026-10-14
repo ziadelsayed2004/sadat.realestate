@@ -66,13 +66,13 @@ describe('public property listing', () => {
       result.unmount();
     }
   });
-  it('shows the entrance image for an added type and filters by its real ID', async () => {
+  it('shows the default template for an added type and filters by its real ID', async () => {
     const type = { id: 'f'.repeat(24), slug: 'new-custom-type', name: { en: 'New custom type' }, propertyCount: 0, order: 20 };
     const data = publicPropertyListDataSchema.parse({ ...listingData, propertyTypes: [...listingData.propertyTypes, type] });
     const load = vi.fn().mockResolvedValue(data);
     const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} load={load} />, { locale: 'en' });
     const card = result.container.querySelector('.public-property-listing__category-rail button:last-child')!;
-    expect(card.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/sadat-city-entrance.jpg');
+    expect(card.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/category-placeholder.svg');
     fireEvent.click(card);
     await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyTypeId: type.id }), expect.anything()));
   });

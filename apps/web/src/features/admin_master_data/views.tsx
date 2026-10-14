@@ -1,3 +1,4 @@
+import { categoryImageUrl, DEFAULT_CATEGORY_IMAGE } from '../design_system/category-image.ts';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   FeatureData,
@@ -89,7 +90,7 @@ function isFeature(item: MasterDataItem): item is FeatureData {
 function formFromItem(item: MasterDataItem | undefined, tab: AdminMasterDataTab): FormState {
   const name = item?.name;
   return {
-    imageUrl: item && isTaxonomy(item) ? item.imageUrl ?? '/assets/canonical/public/sadat-city-entrance.jpg' : '/assets/canonical/public/sadat-city-entrance.jpg',
+    imageUrl: categoryImageUrl(item && isTaxonomy(item) ? item.imageUrl : undefined),
     kind: item?.kind ?? (tab === 'categories' ? 'category' : tab === 'locations' ? 'location' : 'feature'),
     nameAr: name?.ar ?? '',
     nameEn: name?.en ?? '',
@@ -225,7 +226,7 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
           <img src={previewUrl ?? (form.imageUrl.startsWith('/api/') ? undefined : form.imageUrl)} alt={locale === 'ar' ? 'معاينة صورة النوع' : 'Property type image preview'} style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
           <label className="admin-master-data__field">{locale === 'ar' ? 'تغيير الصورة من جهازك' : 'Change image from your device'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) onImage(file); }} /></label>
           <p>{locale === 'ar' ? 'JPG أو PNG أو WebP حتى 10 ميجابايت. بعد رفع الصورة اضغط حفظ لتظهر في الموقع.' : 'JPG, PNG or WebP, up to 10 MB. After uploading, save to display it on the website.'}</p>
-          <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: '/assets/canonical/public/sadat-city-entrance.jpg' })}>{locale === 'ar' ? 'استخدام صورة بوابة السادات' : 'Use the Sadat gate image'}</Button>
+          <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: DEFAULT_CATEGORY_IMAGE })}>{locale === 'ar' ? 'استخدام القالب الافتراضي' : 'Use default template'}</Button>
         </div> : null}
         {tab === 'categories' ? <p className="admin-master-data__field--wide">{locale === 'ar' ? 'التصنيف مجموعة مثل «سكني»، ونوع العقار مثل «شقة» يتبع هذه المجموعة.' : 'A category is a group such as Residential. A property type such as Apartment belongs to that group.'}</p> : null}
         {tab !== 'locations' ?

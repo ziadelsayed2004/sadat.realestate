@@ -764,18 +764,17 @@
   display: flex;
   flex-direction: column;
   min-block-size: 10rem;
+  min-inline-size: 0;
 }
 
 .public-homepage__community-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
   gap: 1rem;
-  inline-size: 100%;
 }
 
 .public-homepage__community-header>.public-homepage__content-type {
-  flex: 0 0 auto;
   margin: 0;
   padding: 0.25rem 0.625rem;
   color: #1447e6;
@@ -787,23 +786,17 @@
 
 .public-homepage__community-author {
   display: flex;
-  flex: 1 1 auto;
   min-inline-size: 0;
   align-items: center;
   gap: 0.75rem;
-  direction: rtl;
 }
 
 .public-homepage__community-author>div {
-  display: flex;
   min-inline-size: 0;
-  flex-direction: column;
-  align-items: flex-end;
 }
 
 .public-homepage__community-author h3 {
   margin: 0;
-  color: var(--color-text-strong);
   font-size: 0.875rem;
   line-height: 1.25rem;
   overflow-wrap: anywhere;
@@ -817,12 +810,11 @@
 
 .public-homepage__community-author>img,
 .public-homepage__community-author>.public-homepage__content-media-fallback {
-  display: block;
   inline-size: 2.5rem;
   block-size: 2.5rem;
-  margin: 0;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .public-homepage__community-title {
@@ -830,6 +822,7 @@
   color: var(--color-text-strong);
   font-size: 1rem;
   line-height: 1.5rem;
+  overflow-wrap: anywhere;
 }
 
 .public-homepage__community-body,
@@ -843,12 +836,19 @@
   white-space: nowrap;
 }
 
+.public-homepage__community-body {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .public-homepage__community-stats {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-block-start: 1rem;
+  margin-block-start: auto;
+  padding-block-start: 1rem;
   color: #6b7280;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -1816,7 +1816,6 @@
   }
 
   .public-homepage__section--community {
-    block-size: 28.375rem;
     padding-block: 6rem 4.5rem;
   }
 

@@ -1,3 +1,4 @@
+import { categoryImageUrl } from '../design_system/category-image.ts';
 import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
@@ -78,20 +79,6 @@ export function PublicCategoryGlyph({ slug }: { readonly slug: string }) {
     </span>
   );
 }
-
-const publicCategoryAssets: Readonly<Record<string, string>> = Object.freeze({
-  apartment: '/assets/canonical/public/category-all.png',
-  apartments: '/assets/canonical/public/category-all.png',
-  flat: '/assets/canonical/public/category-all.png',
-  flats: '/assets/canonical/public/category-all.png',
-  duplex: '/assets/canonical/public/category-duplex.png',
-  'full-commercial-building': '/assets/canonical/public/category-full-commercial-building.png',
-  'restaurants-cafes': '/assets/canonical/public/category-restaurants-cafes.png',
-  roof: '/assets/canonical/public/category-roof.png',
-  room: '/assets/canonical/public/category-room.png',
-  showrooms: '/assets/canonical/public/category-showrooms.png',
-  villa: '/assets/canonical/public/category-villa.png'
-});
 
 type PublicHomepageLocaleText = Readonly<Record<SupportedLocale, string>>;
 
@@ -187,14 +174,6 @@ export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> 
   { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa' }, imageUrl: '/assets/canonical/public/category-villa.png', propertyCount: 0, order: 70 }
 ]);
 
-function withCanonicalHomepageCategories(categories: readonly PublicHomepageCategory[]): readonly PublicHomepageCategory[] {
-  const bySlug = new Map(canonicalHomepageCategories.map(category => [category.slug, category] as const));
-  return categories.map(current => {
-    const fallback = bySlug.get(current.slug);
-    return { ...current, ...(current.imageUrl ?? fallback?.imageUrl ? { imageUrl: current.imageUrl ?? fallback?.imageUrl } : {}) };
-  });
-}
-
 function withCanonicalHomepageContent(content: readonly PublicHomepageContent[]): readonly PublicHomepageContent[] {
   const result = [...content];
   for (const type of ['article', 'community'] as const) {
@@ -206,10 +185,6 @@ function withCanonicalHomepageContent(content: readonly PublicHomepageContent[])
     }
   }
   return result;
-}
-
-export function publicCategoryAsset(slug: string): string {
-  return publicCategoryAssets[slug.trim().toLowerCase()] ?? '/assets/canonical/public/sadat-city-entrance.jpg';
 }
 
 export function fallbackPropertyImage(slug?: string, kind?: string): string {
@@ -861,7 +836,7 @@ function HomepageCategoryRail({
   const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
     <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
-      <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
+      <PublicMediaImage className="public-homepage__category-image" src={categoryImageUrl(category.imageUrl)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
       <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
       <small>{new Intl.NumberFormat(locale).format(category.propertyCount)} {allPropertiesLabel}</small>
     </a>
@@ -881,7 +856,6 @@ function HomepageCategoryRail({
         </a>
         {categories.slice(1).map(renderCategory)}
       </div>
-      {categories.some(category => (category.imageUrl ?? publicCategoryAsset(category.slug)).endsWith('/sadat-city-entrance.jpg')) ? <small><a href="/assets/canonical/public/sadat-city-entrance.html">{locale === 'ar' ? 'صورة بوابة السادات: فارس الجويلي — CC BY-SA 4.0' : 'Sadat gate photo: Faris El-Gwely — CC BY-SA 4.0'}</a></small> : null}
     </section>
   );
 }
@@ -965,14 +939,14 @@ function ContentGrid({
             <article className="public-homepage__content-card" key={item.key}>
               {type === 'community' ? <>
                 <div className="public-homepage__community-header">
-                  <p className="public-homepage__content-type">{contentType}</p>
                   <div className="public-homepage__community-author">
+                    {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
                     <div>
                       <h3>{localizedText(item.title, locale) ?? item.key}</h3>
                       {communityDetails === undefined ? null : <span>{communityDetails.time[locale]}</span>}
                     </div>
-                    {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
                   </div>
+                  <p className="public-homepage__content-type">{contentType}</p>
                 </div>
                 <h4 className="public-homepage__community-title">{communityTitle}</h4>
                 {communityBody === '' ? null : <p className="public-homepage__community-body">{communityBody}</p>}
@@ -1155,7 +1129,7 @@ function HomepageContent({
   const sectionText = (key: string, field: 'title' | 'body') => localizedText(sections.find(item => item.key === key)?.[field], locale);
   const sectionCopy = { ...copy, propertiesTitle: sectionText('featured_properties', 'title') ?? copy.propertiesTitle, articlesTitle: sectionText('articles', 'title') ?? copy.articlesTitle, communityTitle: sectionText('community', 'title') ?? copy.communityTitle, tips: sectionText('tips', 'title') ?? copy.tips };
   const content = withCanonicalHomepageContent(data.content);
-  const categories = withCanonicalHomepageCategories(data.categories);
+  const categories = data.categories;
   const locations = data.locations ?? [];
   return (
     <div className="public-homepage__content">
