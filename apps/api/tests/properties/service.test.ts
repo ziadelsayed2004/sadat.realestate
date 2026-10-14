@@ -407,6 +407,23 @@ test('administrators edit published properties with management permission while 
   await assert.rejects(service.saveStep(administrator, id, 'basic', { version: 0, name: { en: 'Stale edit' }, reason: 'Replay obsolete version' }, context), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VERSION_CONFLICT');
 });
 
+test('administrators can edit and remove installment plans while retaining sale and publication', async () => {
+  const { service, rows } = fixture(true);
+  const price = { amount: 1000000, currency: 'EGP' };
+  const plan = { name: { en: 'Annual plan' }, installments: 12, frequency: 'monthly' as const, installmentAmount: { amount: 80000, currency: 'EGP' } };
+  rows.set(id, record({ status: 'published', price, paymentPlans: [plan] }));
+  const context = { requestId: 'admin-payment-plan', traceId: 'a'.repeat(32) };
+  const input = { version: 0, price, paymentPlans: [{ ...plan, installments: 24 }], reason: 'Update installment plan' };
+  await assert.rejects(service.adminEdit(other, id, input, context), /PROPERTY_FORBIDDEN/);
+  await assert.rejects(service.adminEdit(admin, id, { ...input, paymentPlans: [{ ...plan, installments: 121 }] }, context));
+  assert.equal(rows.get(id)?.version, 0);
+  const updated = await service.adminEdit(admin, id, input, context);
+  assert.equal(updated.paymentPlans?.[0]?.installments, 24);
+  const cash = await service.adminEdit(admin, id, { version: 1, paymentPlans: [], reason: 'Switch listing to cash only' }, context);
+  assert.deepEqual(cash.paymentPlans ?? [], []); assert.equal(cash.transactionType, 'sale'); assert.equal(cash.status, 'published'); assert.equal(cash.active, true);
+  await assert.rejects(service.adminEdit(admin, id, input, context), /PROPERTY_VERSION_CONFLICT/);
+});
+
 
 test('deactivation requests retain publication until an authorized administrator decides with the current version', async () => {
   const { service, rows } = fixture(true);

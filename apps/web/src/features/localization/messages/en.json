@@ -4032,7 +4032,7 @@
     "serviceCatalogUnavailableTitle": "Unable to load services",
     "serviceCatalogUnavailableBody": "You can continue without selecting a service.",
     "referenceHelp": "Select what is actually available in or near the property. All choices are optional; you can save and continue without selecting a feature or service.",
-    "paymentPlanHelp": "Plan currencies must match the property price currency. This form does not display a universal commission or an unsupported financing claim.",
+    "paymentPlanHelp": "Edit the plan to change installments. To remove them, uncheck Payment plan and save. The installment badge disappears while sale or rent stays unchanged. Plan and price currencies must match.",
     "commissionBoundaryTitle": "Commission is platform-controlled",
     "commissionBoundaryBody": "This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.",
     "commissionTitle": "Sadat Real Estate commission",

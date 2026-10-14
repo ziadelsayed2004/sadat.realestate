@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { propertyDataSchema } from '@sadat-real-estate/contracts';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminPropertyEditor } from '../src/features/admin_properties/editor.tsx';
@@ -8,7 +8,98 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const property = propertyDataSchema.parse({ id: 'a'.repeat(24), kind: 'property', name: { en: 'Published villa', ar: 'فيلا منشورة' }, slug: 'published-villa', transactionType: 'sale', source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, status: 'published', active: true, version: 3, createdAt: '2026-10-08T10:00:00Z', updatedAt: '2026-10-08T10:00:00Z', availableActions: ['update'] });
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.editor.test' };
 const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { requestId: 'editor-test' } }), { headers: { 'content-type': 'application/json' } });
+const plan = { name: { ar: 'خطة سنوية', en: 'Annual plan' }, installments: 12, frequency: 'monthly' as const, downPayment: { amount: 100000, currency: 'EGP' }, installmentAmount: { amount: 75000, currency: 'EGP' } };
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+it('explicitly removes old installment data even when its incompatible fields are absent from the loaded projection', async () => {
+  const writes: unknown[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (_input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    writes.push(JSON.parse(String(init.body)));
+    return response({ ...property, version: 4 });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
+  fireEvent.click(screen.getByRole('button', { name: 'Remove installments' }));
+  expect(writes).toHaveLength(0);
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await screen.findByRole('status');
+  expect(writes).toEqual([{ version: 3, reason: 'Administrative property edit', paymentPlans: [] }]);
+});
+
+it.each(['ar', 'en'] as const)('removes installments without changing sale or publication in %s', async locale => {
+  const initial = { ...property, price: { amount: 1000000, currency: 'EGP' }, paymentPlans: [plan] };
+  const bodies: Record<string, unknown>[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (_input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    const body = JSON.parse(String(init.body)); bodies.push(body);
+    return response({ ...initial, ...body, reason: undefined, version: 4 });
+  }));
+  const saved = vi.fn();
+  renderWithLocale(<AdminPropertyEditor initialProperty={initial} locale={locale} authorization={authorization} onSaved={saved} />, { locale });
+  fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'طريقة السداد' : 'Payment method'), { target: { value: 'cash' } });
+  expect(bodies).toHaveLength(0);
+  fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'حفظ التعديلات' : 'Save changes' }));
+  await waitFor(() => expect(saved).toHaveBeenCalledWith(expect.objectContaining({ paymentPlans: [], transactionType: 'sale', status: 'published', version: 4 })));
+  expect(bodies).toEqual([{ version: 3, reason: 'Administrative property edit', paymentPlans: [] }]);
+  fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'حفظ التعديلات' : 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'لا توجد تعديلات' : 'No new changes'));
+  expect(bodies).toHaveLength(1);
+});
+
+it('edits one plan while preserving the other plans and rejects invalid inputs before any write', async () => {
+  const second = { ...plan, name: { en: 'Second plan' }, installments: 24 };
+  const initial = { ...property, price: { amount: 1000000, currency: 'EGP' }, paymentPlans: [plan, second] };
+  const bodies: Record<string, unknown>[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (_input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    const body = JSON.parse(String(init.body)); bodies.push(body);
+    return response({ ...initial, ...body, reason: undefined, version: 4 });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={initial} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
+  const fields = within(screen.getByRole('group', { name: 'Plan 1' }));
+  fireEvent.change(fields.getByLabelText('Installments'), { target: { value: '121' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Check installment plan'));
+  expect(bodies).toHaveLength(0);
+  fireEvent.change(fields.getByLabelText('Installments'), { target: { value: '36' } });
+  fireEvent.change(fields.getByLabelText('Payment frequency'), { target: { value: 'quarterly' } });
+  fireEvent.change(fields.getByLabelText('Down payment (optional)'), { target: { value: '' } });
+  fireEvent.change(fields.getByLabelText('Installment amount (EGP)'), { target: { value: '25000' } });
+  fireEvent.change(fields.getByLabelText('Plan name EN'), { target: { value: 'Revised plan' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await screen.findByRole('status');
+  expect(bodies[0]).toMatchObject({ version: 3, price: initial.price, paymentPlans: [{ name: { ar: plan.name.ar, en: 'Revised plan' }, installments: 36, frequency: 'quarterly', installmentAmount: { amount: 25000, currency: 'EGP' } }, second] });
+  expect((bodies[0]?.paymentPlans as unknown[])[0]).not.toHaveProperty('downPayment');
+});
+
+it('adds installments to cash, retains edits on save failure, retries and removes the final plan', async () => {
+  let attempts = 0;
+  const bodies: Record<string, unknown>[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (_input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    const body = JSON.parse(String(init.body)); bodies.push(body);
+    if (++attempts === 1) return new Response('', { status: 503 });
+    return response({ ...property, price: { amount: 1000000, currency: 'EGP' }, ...body, reason: undefined, version: attempts + 2 });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={{ ...property, price: { amount: 1000000, currency: 'EGP' } }} locale="en" authorization={authorization} onSaved={() => undefined} />, { locale: 'en' });
+  fireEvent.change(screen.getByLabelText('Payment method'), { target: { value: 'installments' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Check installment plan'));
+  expect(bodies).toHaveLength(0);
+  fireEvent.change(screen.getByLabelText('Installment amount (EGP)'), { target: { value: '80000' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('entries are preserved'));
+  expect(screen.getByLabelText('Installment amount (EGP)')).toHaveValue(80000);
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await screen.findByRole('status');
+  expect(bodies[0]).toEqual(bodies[1]);
+  expect(bodies[1]).toMatchObject({ version: 3, paymentPlans: [{ installments: 12, installmentAmount: { amount: 80000, currency: 'EGP' } }] });
+  fireEvent.click(screen.getByRole('button', { name: 'Remove plan' }));
+  expect(screen.getByLabelText('Payment method')).toHaveValue('cash');
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(bodies).toHaveLength(3));
+  expect(bodies[2]).toMatchObject({ version: 4, paymentPlans: [] });
+});
 
 it('keeps the loaded preview when the authorization object changes without a token change', async () => {
   const fetcher = vi.fn<typeof fetch>(async () => new Response('image', { headers: { 'content-type': 'image/webp' } }));
@@ -219,7 +310,7 @@ it('validates the whole editor and saves title, description, price and layout in
   expect(screen.getByLabelText('Property description EN')).toHaveValue('New description');
   fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
   await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
-  expect(screen.getByRole('status')).toHaveFocus();
+  await waitFor(() => expect(screen.getByRole('status')).toHaveFocus());
   expect(writes.map(write => write.version)).toEqual([3, 3]);
   expect(current).toMatchObject({ version: 4, status: 'published', price: { amount: 2000 }, name: { en: 'Updated villa' }, area: { value: 145, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 9 } });
 });

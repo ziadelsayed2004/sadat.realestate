@@ -6,6 +6,7 @@ import { Button } from '../design_system/index.ts';
 import type { AdminPropertiesAuthorizationSource } from './data.ts';
 import { AdminPropertyPhoto } from './photo.tsx';
 import AdminPropertyVideo from './video.tsx';
+import { AdminPaymentPlans } from './payment-plans.tsx';
 
 const mediaList = successEnvelopeSchema(z.object({ items: z.array(propertyMediaDataSchema) }));
 export function AdminPropertyEditor({ initialProperty, locale, authorization, apiOrigin, onSaved }: { readonly initialProperty: PropertyData; readonly locale: SupportedLocale; readonly authorization?: AdminPropertiesAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onSaved: (property: PropertyData) => void }) {
@@ -14,6 +15,9 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
   const [name, setName] = useState({ ar: property.name.ar ?? '', en: property.name.en ?? '' });
   const [description, setDescription] = useState({ ar: property.description?.ar ?? '', en: property.description?.en ?? '' });
   const [amount, setAmount] = useState(String(property.price?.amount ?? ''));
+  const [plans, setPlans] = useState(property.paymentPlans ?? []);
+  const [installments, setInstallments] = useState(Boolean(property.paymentPlans?.length));
+  const [clearPlans, setClearPlans] = useState(false);
   const [transactionType, setTransactionType] = useState(property.transactionType);
   const [area, setArea] = useState(String(property.area?.value ?? ''));
   const [layout, setLayout] = useState({ bedrooms: String(property.layout?.bedrooms ?? ''), bathrooms: String(property.layout?.bathrooms ?? ''), floor: String(property.layout?.floor ?? ''), totalFloors: String(property.layout?.totalFloors ?? '') });
@@ -56,7 +60,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
   function errorMessage(error: unknown): string {
     if (error instanceof z.ZodError) {
       const field = String(error.issues[0]?.path[0] ?? '');
-      const labels: Record<string, string> = { name: ar ? 'عنوان العقار' : 'property title', description: ar ? 'وصف العقار' : 'property description', price: ar ? 'السعر' : 'price', area: ar ? 'المساحة' : 'area', layout: ar ? 'الغرف والأدوار' : 'rooms and floors' };
+      const labels: Record<string, string> = { name: ar ? 'عنوان العقار' : 'property title', description: ar ? 'وصف العقار' : 'property description', price: ar ? 'السعر' : 'price', paymentPlans: ar ? 'خطة التقسيط' : 'installment plan', area: ar ? 'المساحة' : 'area', layout: ar ? 'الغرف والأدوار' : 'rooms and floors' };
       return ar ? `راجع ${labels[field] ?? 'الحقول'}؛ قيمة غير صالحة. لم يتم الحفظ.` : `Check ${labels[field] ?? 'the fields'}: invalid value. Nothing saved.`;
     }
     if (error instanceof ApiClientError && error.status === 409) return ar ? 'تغير العقار في جلسة أخرى. أعد تحميله قبل الحفظ.' : 'This property changed in another session. Reload before saving.';
@@ -82,7 +86,13 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     const nextLayout = Object.fromEntries(Object.entries(layout).filter(([, value]) => value.trim()).map(([key, value]) => [key, Number(value)]));
     const oldLayout = Object.fromEntries(Object.keys(layout).filter(key => property.layout?.[key as keyof typeof property.layout] !== undefined).map(key => [key, property.layout?.[key as keyof typeof property.layout]]));
     if (!equal(nextLayout, oldLayout)) details.layout = nextLayout;
-    if (amount.trim() !== String(property.price?.amount ?? '')) { pricing.price = { amount: Number(amount), currency: property.price?.currency ?? 'EGP' }; if (property.paymentPlans) pricing.paymentPlans = property.paymentPlans; }
+    const nextPlans = installments ? plans.map(plan => ({ ...plan, name: localize({ ar: plan.name.ar ?? '', en: plan.name.en ?? '' }) })) : [];
+    const plansChanged = clearPlans || !equal(nextPlans, property.paymentPlans ?? []);
+    const priceChanged = amount.trim() !== String(property.price?.amount ?? '');
+    if (priceChanged || plansChanged) {
+      if (priceChanged || nextPlans.length) pricing.price = { amount: Number(amount), currency: property.price?.currency ?? 'EGP' };
+      if (plansChanged || property.paymentPlans?.length) pricing.paymentPlans = nextPlans;
+    }
     if (removeLegacy) basic.imageUrl = null;
     const changes = { ...basic, ...details, ...pricing };
     const json = Object.keys(changes).length ? propertyAdminEditSchema.parse({ version: property.version, reason: changeReason(), ...changes }) : undefined;
@@ -93,7 +103,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     try {
       // The field update is atomic; completed media operations leave the queue
       // immediately so retrying a later failure cannot upload a file twice.
-      if (json) { current = await save(json); setRemoveLegacy(false); saved++; }
+      if (json) { current = await save(json); setRemoveLegacy(false); setClearPlans(false); saved++; }
       for (const file of uploads) {
         const result = await client.request(`${path}/media`, { method: 'POST', headers: { ...headers(), 'content-type': file.type, 'x-media-kind': 'image', 'x-file-name': encodeURIComponent(file.name) }, body: file, responseSchema: successEnvelopeSchema(propertyMediaDataSchema) });
         setMedia(items => [...items.map(item => result.data.data.isCover ? { ...item, isCover: false } : item), result.data.data]);
@@ -122,6 +132,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     <div className="admin-property-editor__grid">{(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'وصف العقار' : 'Property description'} {language.toUpperCase()}<textarea value={description[language]} onChange={event => setDescription(current => ({ ...current, [language]: event.target.value }))} /></label>)}</div>
     <label>{ar ? 'السعر' : 'Price'}<input type="number" min="1" value={amount} onChange={event => setAmount(event.target.value)} /></label>
     <label>{ar ? 'نوع العرض' : 'Listing type'}<select value={transactionType} onChange={event => setTransactionType(event.target.value as typeof transactionType)}><option value="sale">{ar ? 'للبيع' : 'For sale'}</option><option value="rent">{ar ? 'للإيجار' : 'For rent'}</option></select></label>
+    <AdminPaymentPlans locale={locale} enabled={installments} onEnabled={value => { setInstallments(value); setClearPlans(!value); }} plans={plans} onChange={setPlans} currency={property.price?.currency ?? 'EGP'} />
     <h3>{ar ? 'مساحة وتفاصيل العقار' : 'Property area and layout'}</h3><div className="admin-property-editor__grid"><label>{ar ? 'المساحة بالمتر المربع' : 'Area in square meters'}<input type="number" min="0.01" max="1000000" step="any" value={area} onChange={event => setArea(event.target.value)} /></label>{(['bedrooms', 'bathrooms', 'floor', 'totalFloors'] as const).map(key => <label key={key}>{({ bedrooms: ar ? 'عدد الغرف' : 'Bedrooms', bathrooms: ar ? 'عدد الحمامات' : 'Bathrooms', floor: ar ? 'الدور' : 'Floor', totalFloors: ar ? 'عدد أدوار المبنى' : 'Building floors' })[key]}<input type="number" min={key === 'totalFloors' ? 1 : 0} value={layout[key]} onChange={event => setLayout(current => ({ ...current, [key]: event.target.value }))} /></label>)}</div>
     {property.imageUrl && mediaReady && media.length === 0 && !removeLegacy ? <div><img src={property.imageUrl} alt="" className="admin-property-editor__image" /><Button type="button" variant="secondary" onClick={() => setRemoveLegacy(true)}>{ar ? 'إزالة الصورة القديمة' : 'Remove old image'}</Button></div> : null}
     <h3>{ar ? 'صور وفيديوهات العقار' : 'Property images and videos'}</h3>{!mediaReady ? <Button type="button" size="sm" variant="secondary" onClick={() => setMediaAttempt(value => value + 1)}>{ar ? 'إعادة تحميل الصور' : 'Reload images'}</Button> : null}<div className="admin-property-editor__grid">{media.filter(item => !removed.includes(item.id)).map(item => <article key={item.id}>{item.kind === 'image' ? <AdminPropertyPhoto propertyId={property.id} mediaId={item.id} filename={item.originalFilename} locale={locale} authorization={authorization} apiOrigin={apiOrigin} /> : <AdminPropertyVideo propertyId={property.id} mediaId={item.id} filename={item.originalFilename} locale={locale} authorization={authorization} apiOrigin={apiOrigin} />}<p>{(cover ? cover === item.id : item.isCover || property.imageUrl?.includes(`/media/${item.id}/content`)) ? (ar ? 'صورة الغلاف' : 'Cover image') : item.originalFilename}</p>{item.kind === 'image' ? <Button type="button" size="sm" onClick={() => setCover(item.id)}>{ar ? 'تعيين كغلاف' : 'Use as cover'}</Button> : null}<Button type="button" variant="secondary" size="sm" onClick={() => { setRemoved(ids => [...ids, item.id]); if (cover === item.id) setCover(undefined); }}>{ar ? 'إزالة' : 'Remove'}</Button></article>)}</div>
