@@ -1,0 +1,40 @@
+.payment-accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 14px;
+  min-width: 0;
+  margin: 16px 0;
+}
+
+.payment-accounts__card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #edf1f6;
+  border-radius: 12px;
+  background: #fbfcfe;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.payment-accounts dt {
+  color: #68768b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.payment-accounts dd {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 8px 0 0;
+  color: #24334f;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.payment-accounts bdi {
+  min-width: 0;
+  justify-self: start;
+  max-width: 100%;
+}
