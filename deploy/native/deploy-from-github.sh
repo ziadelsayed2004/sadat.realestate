@@ -19,6 +19,9 @@ if [[ ! "$RELEASE_REF" =~ ^[A-Za-z0-9._/-]+$ || "$RELEASE_REF" == -* || "$RELEAS
 fi
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=deployment-lock.sh
+source "$SCRIPT_DIR/deployment-lock.sh"
+bash "$SCRIPT_DIR/prune-deployments.sh" "$(realpath -e "$SCRIPT_DIR/../..")"
 bash "$SCRIPT_DIR/check-disk-space.sh"
 SOURCE_DIR=$(mktemp -d /opt/elsadatrealestate/staging/github.XXXXXX)
 cleanup() { rm -rf -- "$SOURCE_DIR"; }

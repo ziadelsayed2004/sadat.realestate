@@ -55,6 +55,21 @@ test('sparse deployment checkout retains required parity evidence but excludes u
       assert.equal(result.status, 0, result.stderr);
       for (const file of retained) assert.equal(fs.existsSync(path.join(copy, file)), true, `rsync: ${file}`);
       for (const file of excluded) assert.equal(fs.existsSync(path.join(copy, file)), false, `rsync: ${file}`);
+      // --from0 changes how both the tracked-path list and filter file are read.
+      fs.writeFileSync(path.join(source, 'operator.log'), 'untracked');
+      fs.writeFileSync(path.join(source, '.env.production'), 'fixture-only-secret');
+      const tracked = spawnSync('git', ['-C', source, 'ls-files', '-z'], { encoding: 'utf8', windowsHide: true });
+      assert.equal(tracked.status, 0, tracked.stderr);
+      const list = path.join(sandbox, 'tracked.list');
+      const rules = path.join(sandbox, 'rules.list');
+      fs.writeFileSync(list, tracked.stdout);
+      fs.writeFileSync(rules, fs.readFileSync(path.join(native, 'release-source.exclude'), 'utf8').replaceAll('\n', '\0'));
+      const managed = path.join(sandbox, 'managed');
+      fs.mkdirSync(managed);
+      const handoff = spawnSync('rsync', ['-a', '--from0', `--files-from=${list}`, `--exclude-from=${rules}`, '--include=.env*.example', '--exclude=.env*', `${source}/`, `${managed}/`], { encoding: 'utf8', windowsHide: true });
+      assert.equal(handoff.status, 0, handoff.stderr);
+      for (const file of retained) assert.equal(fs.existsSync(path.join(managed, file)), true, `managed rsync: ${file}`);
+      for (const file of [...excluded, '.env.production', 'operator.log']) assert.equal(fs.existsSync(path.join(managed, file)), false, `managed rsync: ${file}`);
     }
     const result = spawnSync('git', ['-C', clone, 'status', '--porcelain'], { encoding: 'utf8', windowsHide: true });
     assert.equal(result.stdout.trim(), '', 'Sparse exclusions must not make the checkout dirty');
@@ -85,6 +100,17 @@ test('both deployment copies exclude generated evidence before copying, while ke
   assert.ok(clone.indexOf('check-disk-space.sh') < clone.indexOf('git clone'));
   assert.match(clone, /git clone .*--no-checkout/u);
   assert.ok(clone.indexOf('sparse-checkout set') < clone.indexOf('checkout --force'));
+  assert.doesNotMatch(manage, /bash "\$STAGED_SOURCE\/deploy\/native\/deploy-from-github\.sh"/u);
+  assert.match(manage, /bash "\$STAGED_SOURCE\/deploy\/native\/deploy-release\.sh" "\$STAGED_SOURCE"/u);
+  assert.match(manage, /trap cleanup_manage EXIT/u);
+  assert.match(manage, /--from0 --files-from=.*ls-files -z/u);
+  assert.match(manage, /setpriv --reuid=elsadat --regid=elsadat --init-groups env/u);
+  assert.match(manage, /HOME=\/var\/lib\/elsadat USER=elsadat LOGNAME=elsadat/u);
+  assert.match(manage, /tr '\\n' '\\0' < .*release-source\.exclude/u);
+  assert.ok(manage.indexOf("--include='.env*.example'") < manage.indexOf("--exclude='.env*'"));
+  assert.ok(release.indexOf('prune-deployments.sh') < release.indexOf('check-disk-space.sh'));
+  assert.ok(clone.indexOf('prune-deployments.sh') < clone.indexOf('check-disk-space.sh'));
+  assert.match(clone, /prune-deployments\.sh" "\$\(realpath -e "\$SCRIPT_DIR\/\.\.\/\.\."\)"/u);
   for (const command of ['npm run typecheck', 'npm run lint', 'npm test', 'npm run build']) assert.ok(release.includes(command));
   assert.ok(release.indexOf('trap cleanup_failed_release EXIT') < release.indexOf('rsync -a'));
   assert.match(release, /readlink -e "\$CURRENT_LINK".*!= "\$RELEASE_DIR"/u);

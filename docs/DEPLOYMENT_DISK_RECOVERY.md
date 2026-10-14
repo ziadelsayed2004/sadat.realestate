@@ -1,58 +1,85 @@
-# Recover a deployment that ran out of disk space
+# Recover deployment disk space without deleting application data
 
-The failed `20261004T152254Z` release stopped during rsync, before changing the
-`current` link. The previously active release remains selected. Do not remove
-MongoDB files, private uploads, backup archives, or the active release.
+`DEPLOYMENT_DISK_SPACE_REQUIRED` means the build was refused before switching
+`current`. For example, `available_kb=2924036` is about 2.79 GiB, below the 3 GiB
+build reserve. A successful earlier deployment remains live.
 
-After publishing the deployment-script fix to `main`, run these commands in the
-existing root SSH session. Run only one deployment/recovery at a time.
+After this change is published, run in the existing root SSH session:
 
 ```bash
-cd /root/sadat-release
-
-# Free the incomplete attempt first so git pull can write its small update.
-FAILED=/opt/elsadatrealestate/releases/20261004T152254Z
-if [ "$(realpath -m "$FAILED")" != "$FAILED" ] || [ -L "$FAILED" ] || [ "$(readlink -e /opt/elsadatrealestate/current)" = "$FAILED" ]; then
-  echo 'Unsafe or active release; stop and inspect.'
-else
-  rm -rf -- "$FAILED"
-fi
-
+cd /root/sadat-release &&
 git pull --ff-only origin main &&
 bash deploy/native/recover-disk-space.sh &&
 bash deploy/native/manage-production.sh update
 ```
 
-`recover-disk-space.sh` removes only generated `docs/quality` material from
-release folders and the reviewed-source staging folder. Its optional first
-argument is the exact timestamp ID of a known failed release; it refuses the
-active release or a symlink target. Old working releases remain available for
-rollback.
+Recovery and deployment remove only recognized deployment artifacts. They retain
+`current` and `previous`, the explicit rollback release. On the first run of a
+legacy installation without `previous`, the newest timestamp release older than
+`current` is retained as the fallback. Other inactive timestamp releases are
+removed. Unknown directory names and directory symlinks are left alone. Broken
+or escaped release pointers abort cleanup before any release/source deletion.
 
-`update` deploys code without adding demo records. `demo` also adds missing
-synthetic data; use it only when that is intended.
+Abandoned `staging/github.XXXXXX`, `staging/reviewed.XXXXXX` and the old
+`staging/reviewed-source` handoff are removed under the same deployment lock.
+The source of the running build is always protected. Recovery also removes
+previously generated `docs/quality` artifacts from the existing release folders.
+An optional exact failed-release timestamp argument is still supported; neither
+the current nor explicit rollback release can be selected for removal.
 
-Deployment now excludes generated quality reports and captures during staging
-and release copying. Git's sparse checkout also excludes them before checkout,
-so the blob-filtered clone does not fetch unused images. The single SEK-04
-runtime capture referenced by the parity ledger is explicitly retained in both
-filters until tests finish; it is pruned with `docs/quality` after the gates.
-The deployment regression test reads the actual ledgers to check these dependencies.
-Design reference files,
-browser specs, manifests and public runtime assets are retained for the existing
-typecheck/lint/test/build gates. Design reference images are pruned after the
-gates, as before. Unsuccessful, inactive release attempts are removed on exit.
+The lock covers managed deployment, direct GitHub deployment, and recovery, so
+cleanup cannot delete a different in-progress build. Managed deployment passes
+its lock descriptor through `setpriv` when switching to the service user.
+A competing operation exits with `DEPLOYMENT_ALREADY_RUNNING`.
 
-If disk recovery has already succeeded but deployment stops with `SEK-04 runtime
-evidence is missing`, publish/pull the evidence-filter fix and rerun
-`bash deploy/native/manage-production.sh update`. No additional recovery or
-test skipping is needed. The inactive failed attempt is cleaned up automatically.
+## Avoid accumulating duplicate source and dependency trees
 
-At least 3 GiB must be free before cloning and before creating a release. If the
-preflight still fails, inspect usage instead of deleting application data:
+`manage-production.sh update` pulls the operator repository once. It copies only
+tracked source files into a fresh, temporary service-readable handoff, retaining
+checked-in environment examples and the required test evidence while excluding
+secret environment files, `.git`, `node_modules`, generated builds and unused
+screenshots. It deploys that reviewed source directly, without a second GitHub
+clone. Tracked uncommitted changes are refused. The handoff is removed on both
+success and normal failure; a handoff left by a killed process is reclaimed by
+the next locked cleanup.
+
+The build still runs typecheck, lint, tests, production build and configuration
+checks. It never lowers the 3 GiB reserve to force a build. A failed inactive
+release is removed automatically. Health-check failure restores the old current
+link, including failure of the external smoke check. After success, `previous`
+points to the old current release and cleanup retains exactly those two managed
+runtime trees, including their dependencies for rollback.
+
+Tracked filenames and exclusion rules both use NUL separators during the
+handoff: [`--from0` affects both inputs](https://download.samba.org/pub/rsync/rsync.1#opt--from0).
+
+`update` does not seed, copy, deduplicate or purge database records. It leaves
+MongoDB files, private uploaded images/documents and backup archives untouched.
+`demo`, `empty` and `launch` remain separate explicitly selected data operations;
+do not use them to free deployment disk space.
+
+If cleanup still leaves less than 3 GiB free, inspect usage and increase disk
+capacity or review the unrelated large files. Do not remove live storage to
+force deployment:
 
 ```bash
 df -h /opt
 df -i /opt
-du -sh /opt/elsadatrealestate/releases/* /opt/elsadatrealestate/staging/* /var/backups/elsadatrealestate /root/.npm 2>/dev/null
+du -sh /opt/elsadatrealestate/releases/* /opt/elsadatrealestate/staging/* /var/backups/elsadatrealestate /root/.npm /var/lib/elsadat/.npm 2>/dev/null
 ```
+
+## Verification
+
+`packages/config/tests/native-deployment-shell.test.mjs` executes the real Bash
+cleanup and release scripts in redirected temporary roots. Scenarios cover
+bounded retention, legacy fallback, abandoned handoffs/clones, symlink escapes,
+broken pointers, busy-lock refusal, disk reclamation before the space check,
+failed-copy cleanup, successful rotation and external-smoke rollback. Sentinel
+MongoDB, upload and backup files survive every scenario. Linux uses real
+`flock`; Git Bash lacks util-linux and uses a command adapter for lock branches.
+The sparse-checkout/packaging tests retain required parity evidence and ensure
+managed deployment uses tracked source directly with environment examples.
+The managed-update shell fixture also verifies no second clone, no seed/data
+commands, and handoff removal after success or a failed copy. The workspace
+suite passes 34 tests. Actual production cleanup must be run on the server;
+these checks use temporary local fixtures, never the production filesystem.

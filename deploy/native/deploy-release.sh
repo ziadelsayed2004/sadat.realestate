@@ -11,6 +11,11 @@ if [[ $(id -un) != 'elsadat' ]]; then
   echo 'Run this release script as the elsadat service user.' >&2
   exit 1
 fi
+SOURCE_DIR=$(realpath -e "$SOURCE_DIR")
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=deployment-lock.sh
+source "$SCRIPT_DIR/deployment-lock.sh"
+bash "$SCRIPT_DIR/prune-deployments.sh" "$SOURCE_DIR"
 
 RELEASE_ID=$(date -u +%Y%m%dT%H%M%SZ)
 RELEASE_DIR="/opt/elsadatrealestate/releases/$RELEASE_ID"
@@ -88,9 +93,25 @@ if [[ $READY != true ]]; then
 fi
 
 if [[ -n ${EXTERNAL_SMOKE_BASE_URL:-} ]]; then
-  curl --fail --silent --show-error --max-time 15 "${EXTERNAL_SMOKE_BASE_URL%/}/health" >/dev/null
+  if ! curl --fail --silent --show-error --max-time 15 "${EXTERNAL_SMOKE_BASE_URL%/}/health" >/dev/null; then
+    if [[ -n "$PREVIOUS" && -d "$PREVIOUS" ]]; then
+      ln -sfn "$PREVIOUS" /opt/elsadatrealestate/current.rollback
+      mv -Tf /opt/elsadatrealestate/current.rollback "$CURRENT_LINK"
+      sudo systemctl restart elsadat-api.service elsadat-web.service
+    fi
+    echo 'DEPLOYMENT_EXTERNAL_SMOKE_FAILED' >&2
+    exit 1
+  fi
   EXTERNAL_SMOKE=passed
 else
   EXTERNAL_SMOKE=deferred
+fi
+if [[ -n "$PREVIOUS" && "$PREVIOUS" != "$RELEASE_DIR" ]]; then
+  ln -sfn "$PREVIOUS" /opt/elsadatrealestate/previous.next
+  mv -Tf /opt/elsadatrealestate/previous.next /opt/elsadatrealestate/previous
+fi
+# Keep one live release plus its rollback. Never retain every node_modules tree.
+if ! bash "$SCRIPT_DIR/prune-deployments.sh" "$SOURCE_DIR"; then
+  echo 'DEPLOYMENT_PRUNE_DEFERRED release_is_ready=true' >&2
 fi
 echo "NATIVE_RELEASE_READY release=$RELEASE_ID external_smoke=$EXTERNAL_SMOKE"

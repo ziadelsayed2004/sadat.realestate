@@ -6,6 +6,9 @@ if [[ $(id -u) -ne 0 ]]; then
   echo 'Run this recovery as root.' >&2
   exit 1
 fi
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=deployment-lock.sh
+source "$SCRIPT_DIR/deployment-lock.sh"
 FAILED_ID=${1:-}
 ROOT=/opt/elsadatrealestate
 ACTIVE=$(readlink -e "$ROOT/current" 2>/dev/null || true)
@@ -15,7 +18,8 @@ if [[ -n "$FAILED_ID" ]]; then
     exit 1
   fi
   FAILED="$ROOT/releases/$FAILED_ID"
-  if [[ -L "$FAILED" || $(realpath -m "$FAILED") != "$FAILED" || "$ACTIVE" == "$FAILED" ]]; then
+  if [[ -L "$FAILED" || $(realpath -m "$FAILED") != "$FAILED" || "$ACTIVE" == "$FAILED" \
+    || $(readlink -e "$ROOT/previous" 2>/dev/null || true) == "$FAILED" ]]; then
     echo 'REFUSING_TO_REMOVE_ACTIVE_OR_UNSAFE_RELEASE' >&2
     exit 1
   fi
@@ -40,5 +44,6 @@ for DIRECTORY in "$ROOT/staging/reviewed-source" "$ROOT"/releases/*; do
     echo "DEPLOYMENT_QA_ARTIFACTS_REMOVED path=$TARGET"
   fi
 done
+bash "$SCRIPT_DIR/prune-deployments.sh"
 df -h "$ROOT"
 df -i "$ROOT"

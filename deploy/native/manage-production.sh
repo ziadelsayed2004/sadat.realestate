@@ -4,7 +4,7 @@ umask 027
 
 MODE=${1:-}
 OPERATOR_REPOSITORY=${OPERATOR_REPOSITORY:-/root/sadat-release}
-STAGED_SOURCE=/opt/elsadatrealestate/staging/reviewed-source
+STAGED_SOURCE=''
 PRODUCTION_ENV_FILE=${PRODUCTION_ENV_FILE:-/etc/elsadatrealestate/production.env}
 RELEASE_REF=${RELEASE_REF:-main}
 PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://elsadatrealestate.com}
@@ -46,8 +46,16 @@ if [[ ! -f "$PRODUCTION_ENV_FILE" ]]; then
   exit 1
 fi
 
+# One inherited lock covers cleanup, staging, build, activation and data modes.
+# shellcheck source=deployment-lock.sh
+source "$OPERATOR_REPOSITORY/deploy/native/deployment-lock.sh"
+
 echo "PRODUCTION_MANAGE_START mode=$MODE ref=$RELEASE_REF"
 git -C "$OPERATOR_REPOSITORY" pull --ff-only origin "$RELEASE_REF"
+if ! git -C "$OPERATOR_REPOSITORY" diff --quiet || ! git -C "$OPERATOR_REPOSITORY" diff --cached --quiet; then
+  echo 'OPERATOR_REPOSITORY_HAS_UNCOMMITTED_CHANGES' >&2
+  exit 1
+fi
 
 PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
 PRODUCTION_MONGODB_URI_REPAIR_CONFIRM=REBUILD_MONGODB_URI_FROM_APP_CREDENTIALS \
@@ -58,28 +66,41 @@ chmod 0640 "$PRODUCTION_ENV_FILE"
 PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
   node "$OPERATOR_REPOSITORY/scripts/production-preflight.mjs"
 
-install -d -o elsadat -g elsadat -m 0750 "$STAGED_SOURCE"
+if [[ -L /opt/elsadatrealestate/staging || $(realpath -e /opt/elsadatrealestate/staging) != /opt/elsadatrealestate/staging ]]; then
+  echo 'STAGED_SOURCE_UNSAFE' >&2
+  exit 1
+fi
+services_stopped=false
+cleanup_manage() {
+  local status=$?
+  if [[ "$services_stopped" == true ]]; then
+    systemctl restart elsadat-api.service elsadat-web.service || true
+  fi
+  if [[ "$STAGED_SOURCE" =~ ^/opt/elsadatrealestate/staging/reviewed\.[A-Za-z0-9]{6}$ \
+    && -d "$STAGED_SOURCE" && ! -L "$STAGED_SOURCE" && $(realpath -e "$STAGED_SOURCE") == "$STAGED_SOURCE" ]]; then
+    rm -rf -- "$STAGED_SOURCE"
+  fi
+  return "$status"
+}
+trap cleanup_manage EXIT
+bash "$OPERATOR_REPOSITORY/deploy/native/prune-deployments.sh"
+STAGED_SOURCE=$(mktemp -d /opt/elsadatrealestate/staging/reviewed.XXXXXX)
 rsync -a --delete \
   --delete-excluded \
-  --exclude-from="$OPERATOR_REPOSITORY/deploy/native/release-source.exclude" \
+  --from0 --files-from=<(git -C "$OPERATOR_REPOSITORY" ls-files -z) \
+  --exclude-from=<(tr '\n' '\0' < "$OPERATOR_REPOSITORY/deploy/native/release-source.exclude") \
+  --include='.env*.example' \
   --exclude='.env*' \
   --exclude='.git' \
   --exclude='node_modules' \
   "$OPERATOR_REPOSITORY/" "$STAGED_SOURCE/"
 chown -R elsadat:elsadat "$STAGED_SOURCE"
 
-sudo -u elsadat env \
-  RELEASE_REF="$RELEASE_REF" \
+# setpriv preserves the inherited lock descriptor; sudo normally closes it.
+setpriv --reuid=elsadat --regid=elsadat --init-groups env \
+  HOME=/var/lib/elsadat USER=elsadat LOGNAME=elsadat \
   EXTERNAL_SMOKE_BASE_URL="$PUBLIC_ORIGIN" \
-  bash "$STAGED_SOURCE/deploy/native/deploy-from-github.sh"
-
-services_stopped=false
-restart_on_failure() {
-  if [[ "$services_stopped" == true ]]; then
-    systemctl restart elsadat-api.service elsadat-web.service || true
-  fi
-}
-trap restart_on_failure EXIT
+  bash "$STAGED_SOURCE/deploy/native/deploy-release.sh" "$STAGED_SOURCE"
 
 case "$MODE" in
   demo)

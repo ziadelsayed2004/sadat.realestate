@@ -1,1 +1,2 @@
 /.githooks/* text eol=lf
+/deploy/native/*.sh text eol=lf
