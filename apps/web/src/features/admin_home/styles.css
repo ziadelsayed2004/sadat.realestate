@@ -17,6 +17,10 @@
 .admin-home__request-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; max-width: 1320px; margin: 0 auto 24px; padding: 16px 20px; border: 1px solid #d9cfba; border-radius: 12px; background: #fffdf8; overflow-wrap: anywhere; }
 .admin-home__request-filter a { color: #155b4f; line-height: 1.8; }
 .admin-home__banner-list { container-type: inline-size; }
+.admin-home__selection, #banner-display-settings { scroll-margin-block-start: 100px; }
+.admin-home__request-filter select { max-width: 100%; min-height: 44px; padding: 8px; border: 1px solid #d9cfba; border-radius: 10px; background: #fff; color: inherit; font: inherit; }
+.admin-home__selection:focus { outline: 2px solid #155b4f; outline-offset: -2px; }
+.admin-home__selection .admin-home__preview { overflow-wrap: anywhere; }
 .admin-home__banner-list .admin-home__table { min-width: 0; }
 .admin-home__banner-list tbody { display: grid; gap: 16px; padding: 20px; }
 .admin-home__banner-list tbody tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 20px; border: 1px solid #e3e5e7; border-radius: 14px; background: #fffdf8; }

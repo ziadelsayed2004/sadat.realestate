@@ -138,6 +138,59 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it.each(['ar', 'en'] as const)('finds stopped banners, previews privately, and edits without publishing in %s', async locale => {
+    const copy = getAdminHomeCopy(locale);
+    const source = createAdminHomeSource({ apiClient: apiClientFor([]) });
+    let stopped = { ...banners.items[0]!, status: 'draft' as const, endAt: '2099-09-20T08:00:00.000Z' };
+    const load = vi.spyOn(source, 'loadBanners').mockImplementation(async query => ({ ...banners, page: query.page ?? 1, items: [stopped] }));
+    const update = vi.spyOn(source, 'updateBanner').mockImplementation(async (_id, input) => { stopped = { ...stopped, ...input, status: 'draft', version: stopped.version + 1 } as typeof stopped; return stopped; });
+    const preview = vi.spyOn(source, 'previewBanner').mockImplementation(async () => ({ banner: stopped, preview: true }));
+    renderWithLocale(<AdminHome url="/admin/banners" locale={locale} session={session} initialBanners={banners} source={source} />, { locale });
+    fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'حالة البانر' : 'Banner status'), { target: { value: 'draft' } });
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ page: 1, status: 'draft', placementKey: 'homepage.hero' }), expect.any(AbortSignal)));
+    const row = await screen.findByTestId(`admin-home-banner-${bannerId}`);
+    expect(row).toHaveTextContent(locale === 'ar' ? 'مسودة / موقوف' : 'Draft / stopped');
+    fireEvent.click(within(row).getByRole('button', { name: copy.preview }));
+    const panel = await screen.findByRole('complementary', { name: copy.preview });
+    expect(panel.parentElement).toHaveFocus();
+    expect(update).not.toHaveBeenCalled();
+    expect(preview).toHaveBeenCalledWith(bannerId);
+    fireEvent.click(within(row).getByRole('button', { name: locale === 'ar' ? 'تعديل' : 'Edit' }));
+    const editor = await screen.findByTestId('admin-home-banner-editor');
+    expect(screen.queryByRole('complementary', { name: copy.preview })).not.toBeInTheDocument();
+    expect(editor.parentElement).toHaveFocus();
+    fireEvent.change(editor.querySelector(`#admin-home-banner-title-${locale}`)!, { target: { value: 'Changed while stopped' } });
+    fireEvent.change(within(editor).getByLabelText(copy.reason), { target: { value: 'Edit stopped banner' } });
+    fireEvent.submit(editor.querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledTimes(2));
+    expect(update.mock.calls.every(([, input]) => input.status === undefined)).toBe(true);
+    expect(stopped.status).toBe('draft');
+    expect(stopped.title[locale]).toBe('Changed while stopped');
+  });
+
+  it('loads a linked stopped filter instead of showing unfiltered initial banners', async () => {
+    const source = createAdminHomeSource({ apiClient: apiClientFor([]) });
+    const load = vi.spyOn(source, 'loadBanners').mockResolvedValue({ ...banners, items: [] });
+    renderWithLocale(<AdminHome url="/admin/banners?status=draft" locale="en" session={session} initialBanners={banners} source={source} />, { locale: 'en' });
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ status: 'draft', page: 1 }), expect.any(AbortSignal)));
+    expect(screen.getByLabelText('Banner status')).toHaveValue('draft');
+    await waitFor(() => expect(screen.queryByTestId(`admin-home-banner-${bannerId}`)).not.toBeInTheDocument());
+    expect(screen.getByRole('link', { name: 'Banner display settings' })).toHaveAttribute('href', '#banner-display-settings');
+  });
+
+  it('resets server pagination when switching to stopped banners', async () => {
+    const source = createAdminHomeSource({ apiClient: apiClientFor([]) });
+    const load = vi.spyOn(source, 'loadBanners').mockImplementation(async query => ({ ...banners, page: query.page ?? 1, total: query.status ? 0 : 21, items: query.status ? [] : banners.items }));
+    renderWithLocale(<AdminHome url="/admin/banners" locale="en" session={session} initialBanners={{ ...banners, total: 21 }} source={source} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ page: 2 }), expect.any(AbortSignal)));
+    fireEvent.click(await screen.findByRole('button', { name: 'Previous' }));
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1 }), expect.any(AbortSignal)));
+    fireEvent.change(screen.getByLabelText('Banner status'), { target: { value: 'draft' } });
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, status: 'draft' }), expect.any(AbortSignal)));
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument());
+  });
+
   it.each(['ar', 'en'] as const)('opens the hero editor directly and saves the introductory text in %s', async locale => {
     const data = homepageContent(cmsAdminContentDataSchema.parse({ namespace: 'homepage', items: [{ ...homepage.items[0], key: 'hero', eyebrow: { ar: 'نص قديم', en: 'Old introduction' } }] }));
     const source = createAdminHomeSource({ apiClient: apiClientFor([]) });
