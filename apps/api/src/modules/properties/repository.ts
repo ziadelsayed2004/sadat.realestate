@@ -244,6 +244,11 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     },
     async listAdmin(query) {
       const filter: Record<string, unknown> = {};
+      if (query.deactivationStatus) {
+        filter['deactivationRequest.status'] = query.deactivationStatus;
+        filter.status = 'published';
+        filter.active = true;
+      }
       if (query.status) filter.status = query.status;
       if (query.providerId) filter.providerId = new Types.ObjectId(query.providerId);
       if (query.locationId) filter.locationId = new Types.ObjectId(query.locationId);

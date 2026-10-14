@@ -1165,6 +1165,7 @@
                     "enum": [
                       "verification",
                       "property-review",
+                      "property-deactivation",
                       "project-review",
                       "account-reports",
                       "property-reports",
@@ -5152,6 +5153,12 @@
           }
         ],
         "parameters": [
+          {
+            "name": "deactivationStatus",
+            "in": "query",
+            "description": "Pending provider deactivation requests on published active properties.",
+            "schema": { "type": "string", "enum": ["pending"] }
+          },
           {
             "name": "status",
             "in": "query",

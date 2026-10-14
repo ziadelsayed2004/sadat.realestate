@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AdminAttentionProvider, AdminAttentionBell, adminAttentionCount, useAdminAttentionRead } from '../src/features/routing/admin-attention.tsx';
+import { AdminAttentionProvider, AdminAttentionBell, AdminAttentionQueues, adminAttentionCount, useAdminAttentionRead } from '../src/features/routing/admin-attention.tsx';
 import { AdminNavigation } from '../src/features/admin/overview.tsx';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { adminNotificationReadAllSuccessEnvelopeSchema } from '@sadat-real-estate/contracts';
@@ -14,6 +14,15 @@ let fail = false;
 let extraPending = 3;
 let unread = 1;
 const authorization = { getAuthorizationHeader: () => 'Bearer admin-test' };
+
+it.each(['ar', 'en'] as const)('exposes pending deactivation separately from publication review without counting it twice in %s', locale => {
+  const attention = { counts: { 'property-review': 2, 'property-deactivation': 3 }, total: 5 };
+  renderWithLocale(<AdminAttentionQueues locale={locale} attention={attention} />, { locale });
+  expect(screen.getByRole('link', { name: new RegExp(locale === 'ar' ? 'طلبات إلغاء تفعيل العقارات' : 'Property deactivation requests') })).toHaveAttribute('href', `/admin/properties/review?deactivationStatus=pending&lang=${locale}`);
+  expect(adminAttentionCount('property-review', attention)).toBe(5);
+  expect(adminAttentionCount('properties', attention)).toBe(5);
+  expect(adminAttentionCount('notifications', attention)).toBe(5);
+});
 beforeEach(() => {
   pending = 3; extraPending = 3; unread = 1; calls = 0; fail = false; sessionStorage.clear();
   Object.defineProperty(window, 'matchMedia', { configurable: true, value: vi.fn().mockImplementation(media => ({ matches: false, media, addEventListener: vi.fn(), removeEventListener: vi.fn() })) });

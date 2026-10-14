@@ -22,3 +22,14 @@ test('searches ID, public code and names without requiring a Mongo text index or
   await repository.listOwned('b'.repeat(24), propertyListQuerySchema.parse({ search: 'SDT-1234', status: 'draft' }));
   assert.equal(String(found.providerId), 'b'.repeat(24)); assert.equal(found.status, 'draft'); assert.deepEqual(found, counted);
 });
+
+test('lists pending deactivation requests before paging and counts the same scoped queue', async () => {
+  let found: Record<string, unknown> = {}, counted: Record<string, unknown> = {}, skipped = -1, limited = -1;
+  const cursor = { sort() { return this; }, skip(value: number) { skipped = value; return this; }, limit(value: number) { limited = value; return this; }, async lean() { return []; } };
+  const models = { Property: { find(filter: Record<string, unknown>) { found = filter; return cursor; }, async countDocuments(filter: Record<string, unknown>) { counted = filter; return 0; } } } as unknown as PropertyModels;
+  const repository = createMongoosePropertyRepository({} as Connection, models, {} as AuditWriter);
+  await repository.listAdmin(propertyAdminListQuerySchema.parse({ deactivationStatus: 'pending', providerId: 'b'.repeat(24), search: 'sold', page: 2, limit: 10 }));
+  assert.equal(found.status, 'published'); assert.equal(found.active, true); assert.equal(found['deactivationRequest.status'], 'pending');
+  assert.equal(String(found.providerId), 'b'.repeat(24)); assert.ok(found.$or); assert.equal(skipped, 10); assert.equal(limited, 10); assert.deepEqual(found, counted);
+  for (const deactivationStatus of ['approved', 'rejected', { $ne: '' }]) assert.equal(propertyAdminListQuerySchema.safeParse({ deactivationStatus }).success, false);
+});

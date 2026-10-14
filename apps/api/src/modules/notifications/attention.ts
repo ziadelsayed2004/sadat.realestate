@@ -4,7 +4,8 @@ import { adminAttentionSchema, type AdminAttentionKey, type AdminAttentionReadRe
 // Read receipts are separate from workflow status and scoped to each administrator.
 const queues: ReadonlyArray<{ key: AdminAttentionKey; collection: string; permission: RbacPermission; filter: Record<string, unknown> }> = [
   { key: 'verification', collection: 'provider_applications', permission: 'admin:providers.review', filter: { status: 'pending_review' } },
-  { key: 'property-review', collection: 'properties', permission: 'admin:properties.review', filter: { $or: [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }] } },
+  { key: 'property-review', collection: 'properties', permission: 'admin:properties.review', filter: { status: 'pending_review' } },
+  { key: 'property-deactivation', collection: 'properties', permission: 'admin:properties.manage', filter: { status: 'published', active: true, 'deactivationRequest.status': 'pending' } },
   { key: 'project-review', collection: 'projects', permission: 'admin:projects.review', filter: { status: 'pending_review' } },
   { key: 'account-reports', collection: 'account_reports', permission: 'admin:account-reports.view', filter: { status: { $in: ['open', 'in_review'] } } },
   { key: 'property-reports', collection: 'property_reports', permission: 'admin:property-reports.view', filter: { status: { $in: ['open', 'in_review'] } } },
@@ -26,11 +27,6 @@ export function createAdminAttentionSource(
 ) {
   async function authorizedFilter(queue: typeof queues[number], adminId: string, permissions?: readonly string[]): Promise<Record<string, unknown> | undefined> {
     const allowed = (permission: RbacPermission) => permissions ? permissions.includes(permission) : authorize(adminId, permission);
-    if (queue.key === 'property-review') {
-      const [review, manage] = await Promise.all([allowed('admin:properties.review'), allowed('admin:properties.manage')]);
-      const filters = [review ? { status: 'pending_review' } : undefined, manage ? { status: 'published', active: true, 'deactivationRequest.status': 'pending' } : undefined].filter(filter => filter !== undefined);
-      return filters.length === 2 ? { $or: filters } : filters[0];
-    }
     return await allowed(queue.permission) ? queue.filter : undefined;
   }
   return {

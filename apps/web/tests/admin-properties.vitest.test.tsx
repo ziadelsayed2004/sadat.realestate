@@ -78,6 +78,7 @@ function envelope(data: unknown, meta: Record<string, unknown> = {}): Response {
 
 describe('Admin property management contracts and views', () => {
   it.each([
+    { query: 'deactivationStatus=pending', expected: { deactivationStatus: 'pending' } },
     { query: 'status=published&active=true', expected: { status: 'published', active: true } },
     { query: 'status=published&active=false', expected: { status: 'published', active: false } },
     { query: 'status=invalid&active=invalid', expected: {} }
@@ -88,6 +89,15 @@ describe('Admin property management contracts and views', () => {
     expect(load.mock.calls[0]?.[0]).toEqual({ page: 1, limit: 20, sort: 'updatedAt', direction: 'desc', ...expected });
     expect(document.getElementById('admin-properties-status')).toHaveValue(expected.status ?? '');
     expect(document.getElementById('admin-properties-active')).toHaveValue(expected.active === undefined ? '' : String(expected.active));
+  });
+  it.each(['ar', 'en'] as const)('opens a dedicated pending deactivation list and retains its filter when searching in %s', async locale => {
+    const load = vi.fn().mockResolvedValue(properties);
+    renderWithLocale(<AdminProperties locale={locale} session={session} view="review" url={`/admin/properties/review?deactivationStatus=pending&lang=${locale}`} loadProperties={load} />, { locale });
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ deactivationStatus: 'pending', page: 1 }), expect.anything()));
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'طلبات إلغاء التفعيل المعلقة' : 'Pending deactivation requests' })).toHaveAttribute('href', `/admin/properties/review?deactivationStatus=pending&lang=${locale}`);
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'sold' } });
+    fireEvent.submit(screen.getByRole('search'));
+    await waitFor(() => expect(load).toHaveBeenLastCalledWith(expect.objectContaining({ deactivationStatus: 'pending', search: 'sold', page: 1 }), expect.anything()));
   });
   it.each(['ar', 'en'] as const)('opens published details, photos, editing, public view and archive for %s', async locale => {
     const published = { ...property, status: 'published' as const, imageUrl: 'https://example.com/cover.jpg', availableActions: ['hide', 'archive', 'update'] as const };

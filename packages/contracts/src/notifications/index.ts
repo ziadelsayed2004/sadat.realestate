@@ -53,7 +53,7 @@ export const notificationReadSuccessEnvelopeSchema = successEnvelopeSchema(notif
 export const notificationReadAllSuccessEnvelopeSchema = successEnvelopeSchema(notificationReadAllDataSchema);
 
 export const ADMIN_ATTENTION_KEYS = [
-  'verification', 'property-review', 'project-review', 'account-reports',
+  'verification', 'property-review', 'property-deactivation', 'project-review', 'account-reports',
   'property-reports', 'request-issues', 'community', 'community-reports',
   'contact-requests', 'viewing-requests', 'search-requests', 'customer-requests',
   'advertising', 'payment-review'

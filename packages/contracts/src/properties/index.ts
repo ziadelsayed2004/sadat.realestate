@@ -64,6 +64,7 @@ export const propertyListQuerySchema = z.object({
   limit: positiveQuery(20, 100)
 }).strict();
 export const propertyAdminListQuerySchema = z.object({
+  deactivationStatus: z.literal('pending').optional(),
   status: propertyStatusSchema.optional(),
   providerId: propertyObjectIdSchema.optional(),
   locationId: propertyObjectIdSchema.optional(),

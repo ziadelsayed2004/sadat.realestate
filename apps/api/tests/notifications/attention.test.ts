@@ -13,8 +13,9 @@ test('counts authorized submissions and reports across all dates without returni
   assert.equal(result.counts['account-reports'], 2);
   assert.equal(result.counts['property-reports'], 2);
   assert.equal(result.counts['community-reports'], 2);
-  assert.equal(result.total, 9);
-  assert.deepEqual(filters.find(row => row.collection === 'properties')?.filter, { $or: [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }] });
+  assert.equal(result.counts['property-deactivation'], 3);
+  assert.equal(result.total, 12);
+  assert.deepEqual(filters.filter(row => row.collection === 'properties').map(row => row.filter), [{ status: 'pending_review' }, { status: 'published', active: true, 'deactivationRequest.status': 'pending' }]);
   assert.deepEqual(filters.find(row => row.collection === 'ad_requests')?.filter, { status: { $in: ['review', 'waiting_pricing'] } });
   assert.deepEqual(filters.find(row => row.collection === 'viewings')?.filter, { status: 'requested' });
   assert.equal(filters.some(row => 'createdAt' in row.filter || 'updatedAt' in row.filter), false);
@@ -31,7 +32,7 @@ test('does not query or disclose queues outside the administrator permissions', 
 test('fresh queue reads remove processed submissions and retain independent request types', async () => {
   let pending = 2;
   const source = createAdminAttentionSource(async (collection, filter) => collection === 'properties' ? pending : filter.type === 'contact' ? 3 : collection === 'viewings' ? 1 : 0, async () => true);
-  assert.equal((await source.read('admin')).total, 6);
+  assert.equal((await source.read('admin')).total, 8);
   pending = 0;
   const result = await source.read('admin');
   assert.equal(result.counts['property-review'], 0);
@@ -64,6 +65,14 @@ test('acknowledges only the selected authorized queue and item, scoped to the ad
 test('management-only administrators receive deactivation requests without unrelated review records', async () => {
   const filters: unknown[] = [];
   const source = createAdminAttentionSource(async (_collection, filter) => { filters.push(filter); return 1; }, async (_id, permission) => permission === 'admin:properties.manage');
-  assert.deepEqual(await source.read('manager'), { counts: { 'property-review': 1 }, total: 1 });
+  assert.deepEqual(await source.read('manager'), { counts: { 'property-deactivation': 1 }, total: 1 });
   assert.deepEqual(filters, [{ status: 'published', active: true, 'deactivationRequest.status': 'pending' }]);
+});
+
+test('acknowledges only a pending deactivation item under management permission', async () => {
+  const writes: unknown[] = [];
+  const source = createAdminAttentionSource(async () => 1, async (_id, permission) => permission === 'admin:properties.manage', async (collection, filter, adminId, key, itemId) => { writes.push({ collection, filter, adminId, key, itemId }); return 1; });
+  assert.equal(await source.markRead('manager', { queueKey: 'property-deactivation', itemId: 'record1' }), 1);
+  assert.deepEqual(writes, [{ collection: 'properties', filter: { status: 'published', active: true, 'deactivationRequest.status': 'pending' }, adminId: 'manager', key: 'property-deactivation', itemId: 'record1' }]);
+  assert.equal(await source.markRead('manager', { queueKey: 'property-review', itemId: 'record1' }), 0);
 });

@@ -5,6 +5,7 @@ import { ApiClient, ApiClientError } from '../contracts/index.ts';
 const destinations: ReadonlyArray<{ key: AdminAttentionKey; path: string; ar: string; en: string }> = [
   { key: 'verification', path: '/admin/verification', ar: 'طلبات توثيق المزودين', en: 'Provider verification' },
   { key: 'property-review', path: '/admin/properties/review', ar: 'عقارات للمراجعة', en: 'Property submissions' },
+  { key: 'property-deactivation', path: '/admin/properties/review?deactivationStatus=pending', ar: 'طلبات إلغاء تفعيل العقارات', en: 'Property deactivation requests' },
   { key: 'project-review', path: '/admin/projects/review', ar: 'مشروعات للمراجعة', en: 'Project submissions' },
   { key: 'account-reports', path: '/admin/account-reports', ar: 'بلاغات الحسابات', en: 'Account reports' },
   { key: 'property-reports', path: '/admin/property-reports', ar: 'بلاغات العقارات', en: 'Property reports' },
@@ -83,7 +84,7 @@ export function useAdminAttentionRead(queueKey: AdminAttentionKey, itemId?: stri
 export function adminAttentionCount(id: string, attention: AdminAttention | undefined, unread = 0): number {
   const counts = attention?.counts ?? {};
   if (id === 'notifications') return (attention?.total ?? 0) + unread;
-  if (id === 'properties') return counts['property-review'] ?? 0;
+  if (id === 'properties' || id === 'property-review') return (counts['property-review'] ?? 0) + (counts['property-deactivation'] ?? 0);
   if (id === 'projects') return counts['project-review'] ?? 0;
   if (id === 'providers') return counts.verification ?? 0;
   if (id === 'payment-proofs') return counts['payment-review'] ?? 0;
