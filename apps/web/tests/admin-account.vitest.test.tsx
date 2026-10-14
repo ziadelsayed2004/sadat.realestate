@@ -8,6 +8,20 @@ const authorization = { getAuthorizationHeader: () => 'Bearer admin-test.session
 const response = () => new Response(JSON.stringify({ data: { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', displayName: 'Tarek Admin' }, meta: { requestId: 'presence-ui' } }), { headers: { 'content-type': 'application/json' } });
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
+it('refreshes an expired access token once and records presence with the renewed session', async () => {
+  vi.useFakeTimers();
+  let header = 'Bearer expired';
+  const refresh = vi.fn(async () => { header = 'Bearer renewed'; });
+  const fetch = vi.fn().mockResolvedValueOnce(new Response('{}', { status: 401 })).mockResolvedValueOnce(response());
+  vi.stubGlobal('fetch', fetch);
+  render(<AdminAccountProvider enabled authorization={{ getAuthorizationHeader: () => header, refresh }}><Name /></AdminAccountProvider>);
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(screen.getByText('Tarek Admin')).toBeVisible();
+  expect(refresh).toHaveBeenCalledTimes(1);
+  expect(fetch).toHaveBeenCalledTimes(2);
+  expect(new Headers(fetch.mock.calls[1]![1]?.headers).get('authorization')).toBe('Bearer renewed');
+});
+
 it('loads own name, polls visible dashboards and stops heartbeat on unmount', async () => {
   vi.useFakeTimers();
   const fetch = vi.fn(async () => response());

@@ -7,7 +7,8 @@ import type { AuditRouterDependencies } from './router.js';
 import { createAuditService } from './service.js';
 import { createMongooseAuditWriter, type AuditWriter } from './writer.js';
 import { createAdminModels } from '../admin/models.js';
-import { createAuditActorNameResolver } from './actor-names.js';
+import { createAuditActorNameResolver, createAuditActorEmailResolver } from './actor-names.js';
+import { createIdentityModels } from '../identity/models.js';
 
 export interface AuditInfrastructure {
   models: AuditModels;
@@ -39,7 +40,8 @@ export function createAuditRuntime(
     service: createAuditService({
       repository: infrastructure.repository,
       authorization,
-      resolveActorNames: createAuditActorNameResolver(createAdminModels(infrastructure.models.AuditLog.db))
+      resolveActorNames: createAuditActorNameResolver(createAdminModels(infrastructure.models.AuditLog.db)),
+      resolveActorEmails: createAuditActorEmailResolver(createIdentityModels(infrastructure.models.AuditLog.db))
     })
   };
 }

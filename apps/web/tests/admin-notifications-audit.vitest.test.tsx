@@ -39,6 +39,7 @@ function audit(): AuditLogData {
     actorType: 'admin',
     actorId,
     actorDisplayName: 'Tarek',
+    actorEmail: 'staff@example.invalid',
     targetType: 'settings',
     targetId: 'platform',
     action: 'settings.update',
@@ -68,6 +69,21 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 describe('Admin notifications and audit log', () => {
+  it('uses the administrative email when a historical account has no name projection', () => {
+    const { actorDisplayName: omitted, ...log } = audit();
+    expect(omitted).toBe('Tarek');
+    renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale="en" session={adminSession} initialAuditLog={log} />, { locale: 'en' });
+    expect(screen.getByText('staff@example.invalid')).toBeVisible();
+  });
+  it.each(['ar', 'en'] as const)('opens the selected staff action log and keeps identity in the list in %s', async locale => {
+    const queries: unknown[] = [];
+    renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs?actorId=${actorId}&lang=${locale}`} locale={locale} session={adminSession} loadAuditLogs={async query => { queries.push(query); return { items: [audit()], total: 1, page: 1, limit: 25 }; }} />, { locale });
+    expect(await screen.findByText('Tarek')).toBeVisible();
+    expect(screen.getByText('staff@example.invalid')).toBeVisible();
+    expect(queries[0]).toEqual({ page: 1, limit: 25, actorId });
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'إلغاء الفلاتر' : 'Reset filters' }));
+    await waitFor(() => expect(queries.at(-1)).toEqual({ page: 1, limit: 25 }));
+  });
   it('compares nested fields and actual permission membership without claiming reordered permissions changed', () => {
     expect(auditChanges({ permissions: ['admin:ads.view', 'admin:ads.price'], name: 'Ads', active: true }, { active: true, name: 'Ads', permissions: ['admin:ads.price', 'admin:ads.view'] })).toEqual([]);
     expect(auditChanges({ title: { ar: 'قديم', en: 'Same' }, flag: false, removed: 'Old' }, { title: { en: 'Same', ar: 'جديد' }, flag: true, added: 0 }).map(change => change.path)).toEqual(['added', 'flag', 'removed', 'title.ar']);
@@ -78,6 +94,7 @@ describe('Admin notifications and audit log', () => {
     const log = { ...audit(), actorDisplayName: 'طارق', targetType: 'rbac_role', action: 'rbac.role_updated', before: { name: 'Advertising', active: true, permissions: ['admin:ads.view', 'admin:content.manage'] }, after: { name: 'Advertising', active: false, permissions: ['admin:ads.view', 'admin:ads.price'] } };
     const result = renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale={locale} session={adminSession} initialAuditLog={log} />, { locale });
     expect(screen.getByText('طارق')).toBeVisible();
+    expect(screen.getByText('staff@example.invalid')).toBeVisible();
     expect(screen.getByText('Advertising', { exact: true })).toBeVisible();
     const changes = screen.getByRole('region', { name: locale === 'ar' ? 'إيه اللي اتعدل؟' : 'What changed?' });
     expect(changes).toHaveTextContent(locale === 'ar' ? 'صلاحيات اتشالت' : 'Permissions removed');

@@ -20,14 +20,17 @@ function query<T>(value: T) {
 test('loads only Admin credentials and creates hashed-token sessions', async () => {
   const userId = new Types.ObjectId('0123456789abcdef01234567');
   let created: Record<string, unknown> | undefined;
+  let activity: unknown;
+  const signedInAt = new Date('2026-09-01T12:00:00Z');
   const identityModels = {
     User: {
-      findOne: () => query({ _id: userId, roleType: 'admin', status: 'verified' })
+      findOne: () => query({ _id: userId, roleType: 'admin', status: 'verified' }),
+      updateOne(filter: unknown, update: unknown, options: unknown) { activity = { filter, update, options }; return query({ matchedCount: 1 }); }
     },
     Session: {
       async create(value: Record<string, unknown>) {
         created = value;
-        return { _id: new Types.ObjectId('abcdefabcdefabcdefabcdef') };
+        return { _id: new Types.ObjectId('abcdefabcdefabcdefabcdef'), userId, createdAt: signedInAt };
       }
     }
   } as unknown as IdentityModels;
@@ -52,6 +55,7 @@ test('loads only Admin credentials and creates hashed-token sessions', async () 
   assert.equal(session.sessionId, 'abcdefabcdefabcdefabcdef');
   assert.equal(created?.tokenHash, 'h'.repeat(43));
   assert.equal('refreshToken' in (created ?? {}), false);
+  assert.deepEqual(activity, { filter: { _id: userId, roleType: 'admin', status: 'verified', deletedAt: null }, update: { $max: { lastAdminActivityAt: signedInAt } }, options: { timestamps: false } });
 });
 
 test('creates account credentials without conflicting with schema-managed timestamps', async () => {
@@ -93,6 +97,7 @@ test('allows one concurrent refresh winner and treats the loser as reuse', async
   const currentId = new Types.ObjectId('111111111111111111111111');
   let updateAttempt = 0;
   let familyRevocations = 0;
+  let activityWrites = 0;
   const current = {
     _id: currentId,
     userId,
@@ -116,7 +121,8 @@ test('allows one concurrent refresh winner and treats the loser as reuse', async
   };
   const identityModels = {
     User: {
-      findById: () => query({ _id: userId, roleType: 'admin', status: 'verified' })
+      findById: () => query({ _id: userId, roleType: 'admin', status: 'verified' }),
+      updateOne() { activityWrites++; return query({ matchedCount: 1 }); }
     },
     Session
   } as unknown as IdentityModels;
@@ -138,6 +144,7 @@ test('allows one concurrent refresh winner and treats the loser as reuse', async
   ]);
   assert.deepEqual([first.kind, second.kind].sort(), ['reuse_detected', 'rotated']);
   assert.equal(familyRevocations, 1);
+  assert.equal(activityWrites, 1);
 });
 
 test('detects replayed rotated tokens, expired tokens, inactive accounts, and logout replay', async () => {

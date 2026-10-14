@@ -70,20 +70,25 @@ test('returns details only after permission and uses a non-enumerating not-found
 test('resolves the current stored employee name for historical records only after audit authorization', async () => {
   let name = 'Tarek';
   const resolved: string[][] = [];
+  const emailResolved: string[][] = [];
   const service = createAuditService({
     repository: { async list() { return { items: [stored, { ...stored, id: '5123456789abcdef01234567' }], total: 2 }; }, async findById() { return stored; } },
     authorization: { async authorize(id) { return id === viewerId; } },
-    resolveActorNames: async ids => { resolved.push([...ids]); return new Map([[viewerId, name]]); }
+    resolveActorNames: async ids => { resolved.push([...ids]); return new Map([[viewerId, name]]); },
+    resolveActorEmails: async ids => { emailResolved.push([...ids]); return new Map([[viewerId, 'staff@example.invalid']]); }
   });
   const result = await service.list({ userId: viewerId }, { page: 1, limit: 25 });
   assert.deepEqual(resolved, [[viewerId]]);
   assert.ok(result.data.items.every(item => item.actorDisplayName === 'Tarek'));
+  assert.ok(result.data.items.every(item => item.actorEmail === 'staff@example.invalid'));
   name = 'Tarek updated';
   assert.equal((await service.findById({ userId: viewerId }, auditId)).actorDisplayName, name);
   assert.equal(stored.before.status, 'verified');
   resolved.length = 0;
+  emailResolved.length = 0;
   await assert.rejects(service.findById({ userId: forbiddenId }, auditId), AuditServiceError);
   assert.deepEqual(resolved, []);
+  assert.deepEqual(emailResolved, []);
 });
 
 test('keeps absent names honest and never resolves names for provider or seeker actors', async () => {
@@ -91,7 +96,8 @@ test('keeps absent names honest and never resolves names for provider or seeker 
   const service = createAuditService({
     repository: { async list() { return { items: [{ ...stored, actorType: 'provider' as const }], total: 1 }; }, async findById() { return stored; } },
     authorization: { async authorize() { return true; } },
-    resolveActorNames: async () => { lookedUp = true; return new Map(); }
+    resolveActorNames: async () => { lookedUp = true; return new Map(); },
+    resolveActorEmails: async () => { lookedUp = true; return new Map(); }
   });
   assert.equal((await service.list({ userId: viewerId }, { page: 1, limit: 25 })).data.items[0]?.actorDisplayName, undefined);
   assert.equal(lookedUp, false);
@@ -102,9 +108,11 @@ test('does not attach an administrator name to another actor type sharing an ide
   const service = createAuditService({
     repository: { async list() { return { items: [stored, { ...stored, actorType: 'seeker' as const }], total: 2 }; }, async findById() { return undefined; } },
     authorization: { async authorize() { return true; } },
-    resolveActorNames: async () => new Map([[viewerId, 'Tarek']])
+    resolveActorNames: async () => new Map([[viewerId, 'Tarek']]),
+    resolveActorEmails: async () => new Map([[viewerId, 'staff@example.invalid']])
   });
   const result = await service.list({ userId: viewerId }, { page: 1, limit: 25 });
   assert.equal(result.data.items[0]?.actorDisplayName, 'Tarek');
   assert.equal(result.data.items[1]?.actorDisplayName, undefined);
+  assert.equal(result.data.items[1]?.actorEmail, undefined);
 });

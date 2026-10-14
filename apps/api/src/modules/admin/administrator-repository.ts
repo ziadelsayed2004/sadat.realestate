@@ -263,23 +263,35 @@ export function createMongooseAdministratorRepository(
       const result = await identityModels.Session.updateOne({ _id: session, userId: user, revokedAt: { $exists: false }, expiresAt: { $gt: now } }, {
         $set: { adminPresenceAt: now, adminPresenceExpiresAt: expiresAt }
       }).exec();
+      if (result.matchedCount === 1) await identityModels.User.updateOne({ _id: user, roleType: 'admin', status: 'verified', deletedAt: null },
+        { $max: { lastAdminActivityAt: now } }, { timestamps: false }).exec();
       return result.matchedCount === 1;
     },
 
     async presence(userIds, now) {
       if (userIds.length === 0) return {};
-      const rows = await identityModels.Session.aggregate<{ _id: Types.ObjectId; lastActiveAt: Date; online: number }>([
-        { $match: { userId: { $in: userIds.flatMap(id => objectId(id) ?? []) }, adminPresenceAt: { $lte: now }, adminPresenceExpiresAt: { $exists: true } } },
+      const ids = userIds.flatMap(id => objectId(id) ?? []);
+      const [accounts, rows] = await Promise.all([
+        identityModels.User.find({ _id: { $in: ids }, roleType: 'admin', lastAdminActivityAt: { $lte: now } })
+          .select({ _id: 1, lastAdminActivityAt: 1 }).lean<Array<{ _id: Types.ObjectId; lastAdminActivityAt: Date }>>(),
+        identityModels.Session.aggregate<{ _id: Types.ObjectId; lastActiveAt: Date; online: number }>([
+        { $match: { userId: { $in: ids }, createdAt: { $lte: now } } },
         { $group: {
-          _id: '$userId', lastActiveAt: { $max: '$adminPresenceAt' },
+          _id: '$userId', lastActiveAt: { $max: { $ifNull: ['$adminPresenceAt', '$createdAt'] } },
           online: { $max: { $cond: [{ $and: [
             { $eq: [{ $ifNull: ['$revokedAt', null] }, null] },
             { $gt: ['$expiresAt', now] }, { $gt: ['$adminPresenceExpiresAt', now] },
             { $gt: ['$adminPresenceAt', new Date(now.getTime() - 120_000)] }
           ] }, 1, 0] } }
         } }
-      ]).exec();
-      return Object.fromEntries(rows.map(row => [row._id.toHexString(), { online: row.online === 1, lastActiveAt: row.lastActiveAt.toISOString() } satisfies AdminPresence]));
+      ]).exec()]);
+      const presence: Record<string, AdminPresence> = Object.fromEntries(accounts.map(row => [row._id.toHexString(), { online: false, lastActiveAt: row.lastAdminActivityAt.toISOString() }]));
+      for (const row of rows) {
+        const id = row._id.toHexString();
+        const saved = presence[id]?.lastActiveAt;
+        presence[id] = { online: row.online === 1, lastActiveAt: saved && new Date(saved) > row.lastActiveAt ? saved : row.lastActiveAt.toISOString() };
+      }
+      return presence;
     },
 
     async findById(id) {

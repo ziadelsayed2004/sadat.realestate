@@ -79,12 +79,23 @@ it('shows staff connectivity and last activity separately from account activatio
   ])) });
   renderWithLocale(<AdminRbac locale="ar" session={adminSession} source={api} url="/admin/admin-users?lang=ar" />);
   expect(await screen.findByText('🟢 متصل الآن')).toBeVisible();
-  expect(screen.getByText(/آخر نشاط:/)).toBeVisible();
+  expect(screen.getAllByText(/آخر اتصال:/)).toHaveLength(2);
+  expect(screen.getByRole('link', { name: 'سجل إجراءات Tarek Admin' })).toHaveAttribute('href', `/admin/audit-logs?actorId=${userId}&lang=ar`);
   expect(screen.getByText('غير متصل — لا يوجد نشاط مسجل')).toBeVisible();
   expect(screen.getByText(/تتحدث الحالة تلقائيًا/)).toBeVisible();
 });
 
 describe('frontend_075 Administrator Users and Roles', () => {
+  it.each(['ar', 'en'] as const)('shows elapsed last connection and its timestamp even while online in %s', async locale => {
+    vi.spyOn(Date, 'now').mockReturnValue(new Date('2026-10-10T12:30:00Z').getTime());
+    const api = source({ loadUsers: vi.fn(async () => userList([user({ presence: { online: true, lastActiveAt: '2026-10-10T12:00:00Z' } })])) });
+    const { container } = renderWithLocale(<AdminRbac locale={locale} session={adminSession} source={api} url={`/admin/admin-users?lang=${locale}`} />, { locale });
+    expect(await screen.findByText(locale === 'ar' ? '🟢 متصل الآن' : '🟢 Online now')).toBeVisible();
+    const time = container.querySelector('time');
+    expect(time).toHaveAttribute('datetime', '2026-10-10T12:00:00Z');
+    expect(time?.textContent).toBe(new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(-30, 'minute'));
+    vi.restoreAllMocks();
+  });
   it.each(['ar', 'en'] as const)('confirms deletion by name, supports cancellation and removes the row in %s', async locale => {
     let removed = false;
     const current = user({ availableActions: ['update', 'disable', 'delete'] });

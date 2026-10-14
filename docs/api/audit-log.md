@@ -11,6 +11,8 @@ Both routes require a verified Admin bearer session and the explicit `admin:audi
 
 Administrator events may include `actorDisplayName`, resolved from the stored administrative account only after audit authorization. List reads resolve distinct actor IDs in one bounded query selecting only account ID and display name. Missing profiles omit the name, and provider/seeker actor names are not resolved. The name is the currently stored name, including retained historical account profiles; it is not a claim about the name at the event time. Audit records and snapshots are never rewritten to enrich them.
 
+Administrator events may also include `actorEmail`, resolved after the same authorization from administrative user identities with an explicit ID/email-only projection. This identifies accounts without a display-name profile, including retained deleted accounts. It is current account identity, not a historical email snapshot. Provider/seeker emails are not resolved. The list, detail and CSV show this authorized administrative identity; before/after snapshots still redact emails and other sensitive values.
+
 The administrative detail view compares only recorded snapshot fields. Permission changes show localized added and removed capabilities; permission order alone is not a change. Unchanged fields are omitted, absent values are explicit, and unchanged or hidden snapshots do not fabricate a change. Original redacted JSON remains available in collapsed technical details. Employee names also appear in the audit list and its CSV export.
 
 ## Transaction and redaction policy

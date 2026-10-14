@@ -307,6 +307,8 @@ export function createMongooseAuthRepository(
         expiresAt: input.expiresAt,
         authenticationMethod: input.authenticationMethod
       });
+      await User.updateOne({ _id: session.userId, roleType: 'admin', status: 'verified', deletedAt: null },
+        { $max: { lastAdminActivityAt: session.createdAt } }, { timestamps: false }).exec();
       return { sessionId: session._id.toString() };
     },
 
@@ -368,6 +370,8 @@ export function createMongooseAuthRepository(
         await revokeAll(current.userId, input.now);
         return { kind: 'reuse_detected' };
       }
+      if (account.roleType === 'admin') await User.updateOne({ _id: current.userId, roleType: 'admin', status: 'verified', deletedAt: null },
+        { $max: { lastAdminActivityAt: input.now } }, { timestamps: false }).exec();
       return {
         kind: 'rotated',
         account,

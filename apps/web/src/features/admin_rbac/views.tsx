@@ -8,6 +8,7 @@ import { ADMIN_RBAC_ROLES_ROUTE, ADMIN_RBAC_USERS_ROUTE, createAdminRbacSource, 
 import { getAdminRbacCopy } from "./copy.ts";
 import { PermissionChooser, RoleStaff, StaffRoles, RoleAccountGuide, StaffLoginHandoff } from './role-tools.tsx';
 import { userCreateFeedback } from './user-create-feedback.ts';
+import { StaffPresence } from './staff-presence.tsx';
 import "./styles.css";
 
 export type AdminRbacState = "loading" | "empty" | "error" | "retry" | "permission" | "not_found" | "conflict" | "success";
@@ -308,7 +309,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                     <small>
                       <code>{user.id}</code>
                     </small>
-                    <small>{user.presence ? user.presence.online ? (ar ? '🟢 متصل الآن' : '🟢 Online now') : user.presence.lastActiveAt ? `${ar ? 'آخر نشاط: ' : 'Last active: '}${new Date(user.presence.lastActiveAt).toLocaleString(ar ? 'ar-EG' : 'en-GB', { timeZone: 'Africa/Cairo' })}` : (ar ? 'غير متصل — لا يوجد نشاط مسجل' : 'Offline — no activity recorded') : (ar ? 'حالة الاتصال غير متاحة' : 'Presence unavailable')}</small>
+                    <StaffPresence presence={user.presence} locale={locale} />
                   </td>
                   <td>{user.email}</td>
                   <td>{user.accessLevel === "super_admin" ? copy.superAdmin : copy.standardAdmin}</td>
@@ -316,6 +317,7 @@ function UsersList({ locale, source, authClient, initialSearch }: { readonly loc
                   <td>{user.version}</td>
                   <td>
                     <div className="admin-rbac__row-actions">
+                      {permissionFor(authClient, 'admin:audit.view', authClient === undefined) ? <a className="admin-rbac__row-link" aria-label={`${ar ? 'سجل إجراءات' : 'Action log for'} ${user.displayName}`} href={localePath(locale, `/admin/audit-logs?actorId=${user.id}`)}>{ar ? 'سجل الإجراءات' : 'Action log'}</a> : null}
                       {user.availableActions.includes("update") ? (
                         <a className="admin-rbac__row-link" href={localePath(locale, `${ADMIN_RBAC_USERS_ROUTE}/${user.id}`)}>
                           {copy.edit}

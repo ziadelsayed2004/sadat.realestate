@@ -66,6 +66,10 @@ test('exposes strict redacted audit projections and paginated envelopes', () => 
 
 test('accepts only a bounded safe optional actor name without changing legacy projections', () => {
   assert.equal(auditLogDataSchema.parse({ ...item, actorDisplayName: 'طارق' }).actorDisplayName, 'طارق');
+  assert.equal(auditLogDataSchema.parse({ ...item, actorEmail: 'staff@example.invalid' }).actorEmail, 'staff@example.invalid');
+  for (const actorEmail of ['bad', 'staff\n@example.invalid', { email: 'staff@example.invalid' }]) {
+    assert.equal(auditLogDataSchema.safeParse({ ...item, actorEmail }).success, false);
+  }
   for (const actorDisplayName of ['', 'x', 'x'.repeat(161), 'Name\ncontrol', { password: 'private' }]) {
     assert.equal(auditLogDataSchema.safeParse({ ...item, actorDisplayName }).success, false);
   }

@@ -28,6 +28,7 @@ export interface AuditServiceDependencies {
   repository: AuditRepository;
   authorization: AuditAuthorization;
   resolveActorNames?: (actorIds: readonly string[]) => Promise<ReadonlyMap<string, string>>;
+  resolveActorEmails?: (actorIds: readonly string[]) => Promise<ReadonlyMap<string, string>>;
 }
 
 export interface AuditListResult {
@@ -42,12 +43,13 @@ export interface AuditService {
   findById(principal: AuditPrincipal, auditId: string): Promise<AuditLogData>;
 }
 
-function data(record: StoredAuditLog, actorDisplayName?: string): AuditLogData {
+function data(record: StoredAuditLog, actorDisplayName?: string, actorEmail?: string): AuditLogData {
   return {
     id: record.id,
     actorType: record.actorType,
     actorId: record.actorId,
     ...(record.actorType === 'admin' && actorDisplayName ? { actorDisplayName } : {}),
+    ...(record.actorType === 'admin' && actorEmail ? { actorEmail } : {}),
     targetType: record.targetType,
     targetId: record.targetId,
     action: record.action,
@@ -61,9 +63,12 @@ function data(record: StoredAuditLog, actorDisplayName?: string): AuditLogData {
 }
 
 export function createAuditService(dependencies: AuditServiceDependencies): AuditService {
-  async function actorNames(records: readonly StoredAuditLog[]): Promise<ReadonlyMap<string, string>> {
+  async function actors(records: readonly StoredAuditLog[]) {
     const ids = [...new Set(records.filter(record => record.actorType === 'admin').map(record => record.actorId))];
-    return ids.length && dependencies.resolveActorNames ? dependencies.resolveActorNames(ids) : new Map();
+    return Promise.all([
+      ids.length && dependencies.resolveActorNames ? dependencies.resolveActorNames(ids) : new Map<string, string>(),
+      ids.length && dependencies.resolveActorEmails ? dependencies.resolveActorEmails(ids) : new Map<string, string>()
+    ]);
   }
   async function requireView(adminId: string): Promise<void> {
     if (!await dependencies.authorization.authorize(adminId, 'admin:audit.view')) {
@@ -76,9 +81,9 @@ export function createAuditService(dependencies: AuditServiceDependencies): Audi
       await requireView(principal.userId);
       const query = auditLogListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.list(query);
-      const names = await actorNames(result.items);
+      const [names, emails] = await actors(result.items);
       return {
-        data: { items: result.items.map(record => data(record, names.get(record.actorId))) },
+        data: { items: result.items.map(record => data(record, names.get(record.actorId), emails.get(record.actorId))) },
         page: query.page,
         limit: query.limit,
         total: result.total
@@ -90,8 +95,8 @@ export function createAuditService(dependencies: AuditServiceDependencies): Audi
       const auditId = auditObjectIdSchema.parse(unparsedAuditId);
       const result = await dependencies.repository.findById(auditId);
       if (!result) throw new AuditServiceError('AUDIT_LOG_NOT_FOUND');
-      const names = await actorNames([result]);
-      return data(result, names.get(result.actorId));
+      const [names, emails] = await actors([result]);
+      return data(result, names.get(result.actorId), emails.get(result.actorId));
     }
   };
 }

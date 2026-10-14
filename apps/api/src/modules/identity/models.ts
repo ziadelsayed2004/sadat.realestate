@@ -24,6 +24,7 @@ const NORMALIZED_PHONE_PATTERN = /^\+[1-9]\d{7,14}$/;
 const TOKEN_HASH_PATTERN = /^[A-Za-z0-9_-]{43,128}$/;
 
 export interface UserRecord {
+  lastAdminActivityAt?: Date;
   deletedAt?: Date;
   deletedBy?: Types.ObjectId;
   normalizedEmail?: string;
@@ -114,6 +115,7 @@ const userSchema = new Schema<UserRecord>(
       maxlength: 254,
       match: NORMALIZED_EMAIL_PATTERN
     },
+    lastAdminActivityAt: Date,
     normalizedPhone: {
       type: String,
       trim: true,
