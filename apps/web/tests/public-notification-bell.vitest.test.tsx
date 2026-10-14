@@ -13,6 +13,56 @@ function bell(authorization: RouteShellAuthClient, role: AuthRoleType = 'seeker'
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe('public header notifications', () => {
+  it('includes administrative queues even when the message inbox is empty', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ data: { items: [], unreadCount: 0, page: 1, limit: 1, total: 0, attention: { counts: { advertising: 2 }, total: 2 } }, meta: { requestId: 'admin-queues' } })));
+    render(bell({ getAuthorizationHeader: () => 'Bearer admin' }, 'admin'));
+    expect(await screen.findByRole('link', { name: 'Notifications: 2 unread notifications' })).toHaveAttribute('href', '/admin/notifications?lang=en');
+  });
+
+  it('retries with the refreshed token and immediately displays the real unread count', async () => {
+    let header = 'Bearer expired';
+    const refresh = vi.fn(async () => { header = 'Bearer renewed'; });
+    const fetcher = vi.fn().mockResolvedValueOnce(Response.json({}, { status: 401 })).mockResolvedValueOnce(response(4));
+    vi.stubGlobal('fetch', fetcher);
+    render(bell({ getAuthorizationHeader: () => header, refresh }, 'provider'));
+    expect(await screen.findByRole('link', { name: 'Notifications: 4 unread notifications' })).toBeVisible();
+    expect(refresh).toHaveBeenCalledOnce();
+    expect(new Headers(fetcher.mock.calls[1]![1].headers).get('authorization')).toBe('Bearer renewed');
+  });
+
+  it('starts fetching when the initial session is restored without a parent rerender', async () => {
+    let header: string | undefined;
+    let notify: () => void = () => undefined;
+    const unsubscribe = vi.fn();
+    const fetcher = vi.fn().mockResolvedValue(response(2));vi.stubGlobal('fetch', fetcher);
+    const view = render(bell({ getAuthorizationHeader: () => header, subscribe: listener => { notify = () => listener({ status: 'authenticated', availableActions: [] }); return unsubscribe; } }));
+    expect(fetcher).not.toHaveBeenCalled();
+    await act(async () => { header = 'Bearer restored'; notify(); });
+    expect(await screen.findByRole('link', { name: 'Notifications: 2 unread notifications' })).toBeVisible();
+    view.unmount();expect(unsubscribe).toHaveBeenCalledOnce();
+  });
+
+  it('keeps a previously verified unread count during a transient network failure', async () => {
+    const fetcher=vi.fn().mockResolvedValueOnce(response(2)).mockRejectedValue(new Error('offline'));vi.stubGlobal('fetch',fetcher);
+    render(bell({getAuthorizationHeader:()=> 'Bearer token'}));
+    await screen.findByRole('link',{name:'Notifications: 2 unread notifications'});
+    fireEvent(window,new Event('focus'));
+    await waitFor(()=>expect(fetcher).toHaveBeenCalledTimes(2));
+    expect(screen.getByRole('link',{name:'Notifications: 2 unread notifications'})).toBeVisible();
+  });
+
+  it('clears the old account badge on subscription changes and ignores its late inbox response', async () => {
+    let header = 'Bearer old-account';
+    let notify: () => void = () => undefined;
+    let release: ((value: Response) => void) | undefined;
+    const fetcher = vi.fn().mockImplementationOnce(() => new Promise<Response>(resolve => { release = resolve; })).mockResolvedValue(response(1));
+    vi.stubGlobal('fetch', fetcher);
+    render(bell({ getAuthorizationHeader: () => header, subscribe: listener => { notify = () => listener({ status: 'authenticated', availableActions: [] }); return () => undefined; } }));
+    await act(async () => { header = 'Bearer new-account'; notify(); release?.(response(9)); });
+    expect(await screen.findByRole('link', { name: 'Notifications: 1 unread notifications' })).toBeVisible();
+    expect(screen.queryByRole('link', { name: 'Notifications: 9 unread notifications' })).toBeNull();
+    expect(new Headers(fetcher.mock.calls[1]![1].headers).get('authorization')).toBe('Bearer new-account');
+  });
   it('does not expose a bell or request an inbox for guests', () => {
     const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
     render(<PublicSiteHeader locale="en" copy={getPublicHomepageCopy('en')} />);

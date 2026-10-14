@@ -10,7 +10,6 @@ export function PublicNotificationBell({ role, locale }: { role: AuthRoleType; l
   const unread = state?.header === header && state?.role === role ? state.unread : 0;
 
   useEffect(() => {
-    if (!header) return;
     const client = new ApiClient();
     let stopped = false;
     let controller: AbortController | undefined;
@@ -18,40 +17,50 @@ export function PublicNotificationBell({ role, locale }: { role: AuthRoleType; l
     let queued = false;
     const update = () => {
       if (stopped || document.visibilityState === 'hidden') return;
-      if (header !== authorization?.getAuthorizationHeader?.()) { setState(undefined); return; }
+      let currentHeader = authorization?.getAuthorizationHeader?.();
+      if (!currentHeader) { setState(undefined); return; }
       if (pending) { queued = true; return; }
       pending = true;
       controller = new AbortController();
-      void client.request(`/${role}/notifications`, {
-        query: { page: 1, limit: 1 }, headers: { authorization: header }, signal: controller.signal,
+      const signal = controller.signal;
+      const request = () => client.request(`/${role}/notifications`, {
+        query: { page: 1, limit: 1 }, headers: { authorization: currentHeader! }, signal,
         responseSchema: adminNotificationListSuccessEnvelopeSchema
+      });
+      void request().catch(async error => {
+        if (!(error instanceof ApiClientError) || error.status !== 401 || !authorization?.refresh || stopped || signal.aborted) throw error;
+        await authorization.refresh();
+        if (stopped || signal.aborted) throw error;
+        currentHeader = authorization.getAuthorizationHeader?.();
+        if (!currentHeader) throw error;
+        return request();
       }).then(result => {
-        if (!stopped && header === authorization?.getAuthorizationHeader?.()) {
-          setState({ header, role, unread: result.data.data.unreadCount });
+        if (!stopped && currentHeader === authorization?.getAuthorizationHeader?.()) {
+          const data = result.data.data;
+          setState({ header: currentHeader!, role, unread: data.unreadCount + (role === 'admin' ? data.attention?.total ?? 0 : 0) });
         }
-      }).catch(async error => {
+      }).catch(error => {
         if (stopped) return;
-        setState(undefined);
-        if (error instanceof ApiClientError && error.status === 401 && authorization?.refresh) {
-          await authorization.refresh().catch(() => undefined);
-        }
+        if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) setState(undefined);
       }).finally(() => {
         pending = false;
         if (queued && !stopped) { queued = false; update(); }
       });
     };
     update();
+    const unsubscribe = authorization?.subscribe?.(() => { setState(undefined); update(); });
     const timer = window.setInterval(update, 30_000);
     window.addEventListener('focus', update);
     document.addEventListener('visibilitychange', update);
     return () => {
       stopped = true;
+      unsubscribe?.();
       controller?.abort();
       window.clearInterval(timer);
       window.removeEventListener('focus', update);
       document.removeEventListener('visibilitychange', update);
     };
-  }, [authorization, header, role]);
+  }, [authorization, role]);
 
   const label = locale === 'ar' ? 'الإشعارات' : 'Notifications';
   const countLabel = locale === 'ar' ? `${unread} إشعارات غير مقروءة` : `${unread} unread notifications`;
