@@ -2921,7 +2921,15 @@
     "retry": "إعادة المحاولة",
     "reviewReason": "السبب:",
     "continueApplication": "متابعة طلب المزود",
-    "unavailable": "غير متاح"
+    "unavailable": "غير متاح",
+    "accountType": {
+      "label": "نوع حسابك",
+      "types": {
+        "individual_broker": "مزوّد عقارات فردي",
+        "brokerage_office": "مكتب وساطة عقارية",
+        "developer_company": "شركة تطوير عقاري"
+      }
+    }
   },
   "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
     "eyebrow": "إدارة طلبات العملاء",

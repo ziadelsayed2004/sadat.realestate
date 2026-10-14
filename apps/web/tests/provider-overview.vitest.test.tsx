@@ -53,6 +53,16 @@ function success(data: unknown, requestId: string, total?: number): Response {
 }
 
 describe('Provider overview', () => {
+  it.each(['ar', 'en'] as const)('shows the actual account type above the dashboard for all provider types in %s', locale => {
+    const copy = getProviderCopy(locale);
+    for (const providerType of ['individual_broker', 'brokerage_office', 'developer_company'] as const) {
+      const result = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={{ ...overview, application: { ...application, providerType }, properties: { ...overview.properties, total: 0, recent: [] } }} />, { locale });
+      const heading = result.container.querySelector('.provider-dashboard__heading-row')!;
+      expect(heading).toHaveTextContent(`${copy.accountType.label}: ${copy.accountType.types[providerType]}`);
+      for (const other of ['individual_broker', 'brokerage_office', 'developer_company'] as const) if (other !== providerType) expect(heading).not.toHaveTextContent(copy.accountType.types[other]);
+      result.unmount();
+    }
+  });
   it.each(['ar', 'en'] as const)('opens recent properties by name and status without exposing their codes in %s', locale => {
     const routes = { draft: 'basic', pending_review: 'submitted', needs_changes: 'review', rejected: 'rejected', approved: 'published', published: 'published', hidden: 'published', archived: 'review' } as const;
     const recent = Object.entries(routes).map(([status], index) => ({ ...property, id: index.toString(16).padStart(24, '0'), slug: `property-${index.toString(16).padStart(32, '0')}`, name: { ar: `عقار ${index + 1}`, en: `Property ${index + 1}` }, status: status as typeof property.status }));

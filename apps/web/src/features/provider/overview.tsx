@@ -330,6 +330,7 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <p className="provider-dashboard__eyebrow">{copy.overview.eyebrow}</p>
           <h1>{dashboardTitle}</h1>
           <p>{dashboardWelcome}</p>
+          <div className="provider-dashboard__account-type"><Badge tone="neutral">{copy.accountType.label}: {copy.accountType.types[data.application.providerType]}</Badge></div>
         </div>
         <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider/properties/new/basic')}><span aria-hidden="true">＋</span>{copy.overview.addProperty}</a>
       </div>

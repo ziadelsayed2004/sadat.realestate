@@ -1,10 +1,11 @@
 import { localizeCopy } from '../localization/copy-catalog.ts';
-import type { PropertyKind, PropertyStatus, PropertyTransactionType, ProviderApplicationState, SupportedLocale } from '@sadat-real-estate/contracts';
+import type { PropertyKind, PropertyStatus, PropertyTransactionType, ProviderApplicationState, ProviderType, SupportedLocale } from '@sadat-real-estate/contracts';
 
 export type ProviderOverviewBaseState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 export type ProviderNavKey = 'overview' | 'properties' | 'projects' | 'requests' | 'viewings' | 'advertising' | 'commission' | 'notifications' | 'settings';
 
 export interface ProviderCopy {
+  readonly accountType: { readonly label: string; readonly types: Readonly<Record<ProviderType, string>> };
   readonly nav: Readonly<Record<ProviderNavKey, string>>;
   readonly overview: {
     readonly eyebrow: string;
@@ -66,6 +67,7 @@ export interface ProviderCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
   ar: {
+    accountType: { label: 'نوع حسابك', types: { individual_broker: 'مزوّد عقارات فردي', brokerage_office: 'مكتب وساطة عقارية', developer_company: 'شركة تطوير عقاري' } },
     nav: {
       overview: 'لوحة التحكم',
       properties: 'عقاراتي',
@@ -158,6 +160,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
     unavailable: 'غير متاح'
   },
   en: {
+    accountType: { label: 'Account type', types: { individual_broker: 'Individual property provider', brokerage_office: 'Real estate brokerage office', developer_company: 'Real estate development company' } },
     nav: {
       overview: 'Dashboard',
       properties: 'My properties',

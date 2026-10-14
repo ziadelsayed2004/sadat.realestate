@@ -2921,7 +2921,15 @@
     "retry": "Retry",
     "reviewReason": "Reason:",
     "continueApplication": "Continue provider application",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "accountType": {
+      "label": "Account type",
+      "types": {
+        "individual_broker": "Individual property provider",
+        "brokerage_office": "Real estate brokerage office",
+        "developer_company": "Real estate development company"
+      }
+    }
   },
   "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
     "eyebrow": "Customer request management",

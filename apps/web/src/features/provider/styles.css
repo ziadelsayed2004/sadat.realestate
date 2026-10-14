@@ -289,6 +289,8 @@
   margin-bottom: 24px;
 }
 
+.provider-dashboard__account-type { margin-top: 8px; }
+
 .provider-dashboard h1,
 .provider-dashboard h2,
 .provider-dashboard h3,
