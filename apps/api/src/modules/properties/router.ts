@@ -7,8 +7,11 @@ import { getRequestContext } from '../observability/context.js';
 import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { PropertyServiceError, type PropertyMutationContext, type PropertyService } from './service.js';
+import { propertyMapCoordinatesRequestSchema } from '@sadat-real-estate/contracts';
+import { resolvePropertyMapCoordinates } from './map-coordinates.js';
 
 export const PROPERTY_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/provider/properties/:propertyId/map-coordinates', operationId: 'resolveProviderPropertyMapCoordinates' },
   { method: 'GET', path: '/api/v1/provider/properties/:propertyId', operationId: 'getProviderProperty' },
   { method: 'GET', path: '/api/v1/provider/properties', operationId: 'listProviderProperties' },
   { method: 'POST', path: '/api/v1/provider/properties', operationId: 'createProviderProperty' },
@@ -25,7 +28,7 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   ,{ method: 'GET', path: '/api/v1/admin/properties/possible-duplicates', operationId: 'listPossiblePropertyDuplicates' }
 ] as const;
 
-export interface PropertyRouterDependencies { service: PropertyService; accessTokens: AccessTokenService; }
+export interface PropertyRouterDependencies { service: PropertyService; accessTokens: AccessTokenService; mapFetcher?: typeof fetch; }
 
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
   PROPERTY_FORBIDDEN: { statusCode: 403, messageKey: 'errors.properties.forbidden' },
@@ -61,6 +64,15 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
     next();
   });
   router.use('/admin/properties', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.post('/provider/properties/:propertyId/map-coordinates', async (request, response) => {
+    try {
+      const { propertyId } = propertyIdParamsSchema.parse(request.params);
+      const { mapUrl } = propertyMapCoordinatesRequestSchema.parse(request.body);
+      await dependencies.service.get(claims(response), propertyId);
+      const coordinates = await resolvePropertyMapCoordinates(mapUrl, dependencies.mapFetcher);
+      response.status(200).json(toSuccessResponse({ coordinates }, context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
   router.post('/provider/properties/:propertyId/deactivation-request', async (request, response) => {
     try {
       const { propertyId } = propertyIdParamsSchema.parse(request.params);

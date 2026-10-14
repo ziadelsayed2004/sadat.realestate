@@ -5,6 +5,8 @@ import {
   propertyDetailsStepSchema,
   propertyFeaturesServicesStepSchema,
   propertyLocationStepSchema,
+  propertyMapCoordinatesRequestSchema,
+  propertyMapCoordinatesDataSchema,
   propertyContactStepSchema,
   propertyPricingStepSchema,
   propertyMediaOrderSchema,
@@ -186,6 +188,16 @@ export async function loadProviderProperty(options: ProviderPropertyLoadOptions)
     });
   });
   return response.data.data;
+}
+
+export async function resolveProviderPropertyMapCoordinates(mapUrl: string, options: ProviderPropertyLoadOptions) {
+  const json = propertyMapCoordinatesRequestSchema.parse({ mapUrl });
+  const response = await withPropertySession(options, () => clientFor(options).request(`${propertyPath(options.propertyId)}/map-coordinates`, {
+    method: 'POST', json, responseSchema: successEnvelopeSchema(propertyMapCoordinatesDataSchema),
+    ...(authorizationHeaders(options.authorization) ? { headers: authorizationHeaders(options.authorization)! } : {}),
+    ...(options.signal ? { signal: options.signal } : {})
+  }));
+  return response.data.data.coordinates;
 }
 
 export async function saveProviderPropertyStep(

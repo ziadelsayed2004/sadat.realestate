@@ -3848,7 +3848,7 @@
       "clearLocationSearch": "Clear search and show all areas",
       "contractBoundaryTitle": "Fields not supported by the current contract",
       "contractBoundaryBody": "Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.",
-      "coordinateHelp": "Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.",
+      "coordinateHelp": "Paste the property pin link from Google Maps or Apple Maps. Latitude and longitude fill automatically when an exact point is available. You can also select an area or edit the coordinates manually.",
       "mapUrlError": "Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.",
       "sourceHelp": "Provider type and organization are determined automatically from your approved account. No code is needed.",
       "notFoundTitle": "Draft not found",

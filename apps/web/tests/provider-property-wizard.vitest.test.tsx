@@ -85,7 +85,7 @@ describe('Provider property wizard', () => {
   it.each(['ar', 'en'] as const)('explains an ordinary website URL and keeps the location draft in %s', async locale => {
     const copy = getProviderPropertyCopy(locale);
     const save = vi.fn(async () => property({ version: 3 }));
-    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={property()} save={save} loadLocations={vi.fn(async () => [])} />, { locale });
+    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={property()} save={save} loadLocations={vi.fn(async () => [])} resolveMapCoordinates={async () => null} />, { locale });
     const map = screen.getByLabelText(copy.wizard.labels.mapUrl);
     fireEvent.change(map, { target: { value: 'https://example.com' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
@@ -95,9 +95,49 @@ describe('Provider property wizard', () => {
     expect(screen.getByText(copy.wizard.mapUrlError)).toBeVisible();
     expect(map).toHaveValue('https://example.com');
     fireEvent.change(map, { target: { value: 'https://maps.app.goo.gl/Abc123xyz' } });
+    await waitFor(() => expect(screen.getByRole('button', { name: copy.wizard.saveDraft })).toBeEnabled());
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
     expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ mapUrl: 'https://maps.app.goo.gl/Abc123xyz' }));
+  });
+
+  it.each(['ar', 'en'] as const)('automatically fills and saves map coordinates in %s, without mixing an old pin with a new map', async locale => {
+    const copy = getProviderPropertyCopy(locale);
+    const save = vi.fn(async () => property({ version: 3 }));
+    const resolveMapCoordinates = vi.fn(async () => null);
+    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={property()} save={save} loadLocations={async () => []} resolveMapCoordinates={resolveMapCoordinates} />, { locale });
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.mapUrl), { target: { value: 'https://www.google.com/maps/place/Home/@31,32,15z/data=!3d30.63!4d30.75' } });
+    await waitFor(() => expect(screen.getByLabelText(copy.wizard.labels.latitude)).toHaveValue('30.63'));
+    expect(screen.getByLabelText(copy.wizard.labels.longitude)).toHaveValue('30.75');
+    expect(resolveMapCoordinates).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ coordinates: { latitude: 30.63, longitude: 30.75 } })));
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.mapUrl), { target: { value: 'https://maps.google.com/?q=New+address' } });
+    await waitFor(() => expect(screen.getByRole('button', { name: copy.wizard.saveDraft })).toBeEnabled());
+    expect(screen.getByLabelText(copy.wizard.labels.latitude)).toHaveValue('');
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenLastCalledWith(propertyId, 'location', expect.objectContaining({ coordinates: null })));
+  });
+
+  it('ignores stale short-link responses and manual edits cancel automatic replacement', async () => {
+    const copy = getProviderPropertyCopy('en');
+    let finish: ((point: { latitude: number; longitude: number }) => void) | undefined;
+    const resolver = vi.fn(() => new Promise<{ latitude: number; longitude: number }>(resolve => { finish = resolve; }));
+    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={property()} loadLocations={async () => []} resolveMapCoordinates={resolver} />, { locale: 'en' });
+    const map = screen.getByLabelText(copy.wizard.labels.mapUrl);
+    fireEvent.change(map, { target: { value: 'https://maps.app.goo.gl/Abc123xyz' } });
+    await waitFor(() => expect(resolver).toHaveBeenCalledTimes(1));
+    fireEvent.change(map, { target: { value: 'https://maps.apple.com/?ll=30.64,30.76' } });
+    await waitFor(() => expect(screen.getByLabelText(copy.wizard.labels.latitude)).toHaveValue('30.64'));
+    finish!({ latitude: 1, longitude: 2 });
+    await waitFor(() => expect(screen.getByLabelText(copy.wizard.labels.longitude)).toHaveValue('30.76'));
+    fireEvent.change(map, { target: { value: 'https://maps.app.goo.gl/Another123' } });
+    await waitFor(() => expect(resolver).toHaveBeenCalledTimes(2));
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.latitude), { target: { value: '30.65' } });
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.longitude), { target: { value: '30.77' } });
+    finish!({ latitude: 1, longitude: 2 });
+    await waitFor(() => expect(screen.getByLabelText(copy.wizard.labels.latitude)).toHaveValue('30.65'));
+    expect(screen.getByLabelText(copy.wizard.labels.longitude)).toHaveValue('30.77');
   });
 
   it('explicitly clears an old unrelated map link while preserving the selected location', async () => {

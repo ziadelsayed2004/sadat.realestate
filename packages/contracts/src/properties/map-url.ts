@@ -35,3 +35,40 @@ export function isPropertyMapUrl(value: string): boolean {
     return false;
   }
 }
+
+/** Extract an explicit map pin, never geocode an address or use a place's camera position. */
+export function coordinatesFromPropertyMapUrl(value: string): { latitude: number; longitude: number } | null {
+  if (!isPropertyMapUrl(value)) return null;
+  const url = new URL(value);
+  const pair = (text: string | null) => {
+    const match = text?.trim().match(/^([+-]?\d+(?:\.\d+)?),\s*([+-]?\d+(?:\.\d+)?)$/);
+    if (!match) return null;
+    const latitude = Number(match[1]), longitude = Number(match[2]);
+    return Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180 ? { latitude, longitude } : null;
+  };
+  if (url.hostname === 'maps.apple.com') {
+    for (const key of ['coordinate', 'll', 'destination', 'daddr']) {
+      const point = pair(url.searchParams.get(key));
+      if (point) return point;
+    }
+    return null;
+  }
+  if (['maps.app.goo.gl', 'goo.gl', 'maps.apple'].includes(url.hostname)) return null;
+  // A place URL may contain a camera @lat,lng distinct from its actual !3d,!4d pin.
+  const pin = !/^\/maps\/dir(?:\/|$)/.test(url.pathname) && url.pathname.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)(?:!|\/|$)/);
+  if (pin) return pair(`${pin[1]},${pin[2]}`);
+  const pathPoint = url.pathname.match(/^\/maps\/(?:search|place)\/([^/]+)/);
+  if (pathPoint) {
+    try {
+      const point = pair(decodeURIComponent(pathPoint[1]!).replaceAll('+', ' '));
+      if (point) return point;
+    } catch { return null; }
+  }
+  for (const key of ['destination', 'daddr', 'query', 'q']) {
+    const point = pair(url.searchParams.get(key));
+    if (point) return point;
+  }
+  if (/^\/maps\/(?:place|dir)(?:\/|$)/.test(url.pathname)) return null;
+  const camera = url.pathname.match(/^\/maps\/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)(?:,|\/|$)/);
+  return camera ? pair(`${camera[1]},${camera[2]}`) : pair(url.searchParams.get('ll'));
+}

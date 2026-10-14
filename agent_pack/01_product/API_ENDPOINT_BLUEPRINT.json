@@ -2877,5 +2877,17 @@
     "purpose": "Reopen an owned published property for editing and mandatory administrative review",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/map-coordinates",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Resolve explicit coordinates from an owned property map link without saving",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

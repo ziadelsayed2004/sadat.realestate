@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction, type FormEvent } from 'react';
 import type { AuthSnapshot } from '../auth/index.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, StateMessage } from '../design_system/index.ts';
@@ -10,6 +10,7 @@ import {
   loadProviderPropertyLocations,
   loadProviderProperty,
   saveProviderPropertyStep,
+  resolveProviderPropertyMapCoordinates,
   type ProviderPropertyCreate,
   type ProviderPropertyLocationOption,
   type ProviderPropertyStep,
@@ -19,6 +20,10 @@ import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderProper
 import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
 import { filterProviderLocations } from './location-search.ts';
+import { coordinatesFromPropertyMapUrl } from '@sadat-real-estate/contracts';
+
+type MapCoordinates = { latitude: number; longitude: number } | null;
+type MapCoordinatesAction = (mapUrl: string, signal: AbortSignal) => Promise<MapCoordinates>;
 
 export interface ProviderPropertyAuthClient extends ProviderAuthorizationSource {
   readonly getSnapshot: () => AuthSnapshot;
@@ -42,6 +47,7 @@ export interface ProviderPropertyWizardProps {
   readonly create?: ProviderPropertyCreateAction | undefined;
   readonly save?: ProviderPropertySaveAction | undefined;
   readonly loadLocations?: ProviderPropertyLocationsLoadAction | undefined;
+  readonly resolveMapCoordinates?: MapCoordinatesAction | undefined;
 }
 
 interface BasicForm {
@@ -247,12 +253,13 @@ function LocationFormView({
   validationError,
   locations,
   locationsState,
-  onRetryLocations
+  onRetryLocations,
+  resolveMapCoordinates
 }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
   readonly form: LocationForm;
-  readonly setForm: (next: LocationForm) => void;
+  readonly setForm: Dispatch<SetStateAction<LocationForm>>;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>, continueAfter: boolean) => void;
   readonly onBack: () => void;
   readonly mutationState: MutationState;
@@ -261,15 +268,46 @@ function LocationFormView({
   readonly locations: readonly ProviderPropertyLocationOption[];
   readonly locationsState: 'loading' | 'success' | 'error';
   readonly onRetryLocations: () => void;
+  readonly resolveMapCoordinates: MapCoordinatesAction;
 }) {
   const wizard = copy.wizard;
   const saving = mutationState === 'saving';
   const [locationSearch, setLocationSearch] = useState('');
+  const [mapState, setMapState] = useState<'idle' | 'loading' | 'resolved' | 'unresolved'>('idle');
+  const originalMap = useRef(form.latitude && form.longitude ? form.mapUrl : '');
+  const manualRevision = useRef(0);
+  const mapRequest = useRef<AbortController | null>(null);
+  useEffect(() => {
+    const mapUrl = form.mapUrl.trim();
+    if (!mapUrl || mapUrl === originalMap.current || !propertyMapUrlSchema.safeParse(mapUrl).success) { setMapState('idle'); return; }
+    const controller = new AbortController();
+    mapRequest.current = controller;
+    const revision = manualRevision.current;
+    setMapState('loading');
+    const apply = (coordinates: MapCoordinates) => {
+      if (controller.signal.aborted || manualRevision.current !== revision) return;
+      setMapState(coordinates ? 'resolved' : 'unresolved');
+      if (coordinates) setForm(previous => previous.mapUrl.trim() === mapUrl ? { ...previous, latitude: String(coordinates.latitude), longitude: String(coordinates.longitude) } : previous);
+    };
+    const point = coordinatesFromPropertyMapUrl(mapUrl);
+    const timeout = window.setTimeout(() => {
+      if (point) apply(point);
+      else void resolveMapCoordinates(mapUrl, controller.signal).then(apply, () => apply(null));
+    }, point ? 0 : 400);
+    return () => { window.clearTimeout(timeout); controller.abort(); };
+  }, [form.mapUrl, resolveMapCoordinates, setForm]);
+  const editCoordinate = (field: 'latitude' | 'longitude', value: string) => {
+    manualRevision.current++;
+    mapRequest.current?.abort();
+    setMapState('idle');
+    setForm(previous => ({ ...previous, [field]: value }));
+  };
+  const busy = saving || mapState === 'loading';
   const matches = filterProviderLocations(locations, locationSearch);
   const selected = locations.find(item => item.id === form.locationId);
   const visibleLocations = selected && !matches.includes(selected) ? [selected, ...matches] : matches;
   return (
-    <form className="provider-property-wizard__form" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+    <form className="provider-property-wizard__form" onSubmit={event => { if (busy) { event.preventDefault(); return; } onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue'); }} noValidate>
       <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{wizard.createTitle}</h1><p>{wizard.createDescription}</p></div>
       <WizardSteps step="location" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-location-title">
@@ -290,11 +328,12 @@ function LocationFormView({
             </select>}
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
-          <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" state={validationError && form.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(form.mapUrl).success ? 'error' : 'default'} error={wizard.mapUrlError} />
-          <Input id="provider-property-latitude" label={wizard.labels.latitude} value={form.latitude} placeholder={wizard.placeholders.latitude} inputMode="decimal" onChange={event => setForm({ ...form, latitude: event.target.value })} aria-invalid={validationError || undefined} />
-          <Input id="provider-property-longitude" label={wizard.labels.longitude} value={form.longitude} placeholder={wizard.placeholders.longitude} inputMode="decimal" onChange={event => setForm({ ...form, longitude: event.target.value })} aria-invalid={validationError || undefined} />
+          <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => { originalMap.current = ''; setForm({ ...form, mapUrl: event.target.value, latitude: '', longitude: '' }); }} type="url" inputMode="url" state={validationError && form.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(form.mapUrl).success ? 'error' : 'default'} error={wizard.mapUrlError} />
+          <Input id="provider-property-latitude" label={wizard.labels.latitude} value={form.latitude} placeholder={wizard.placeholders.latitude} inputMode="decimal" onChange={event => editCoordinate('latitude', event.target.value)} aria-invalid={validationError || undefined} />
+          <Input id="provider-property-longitude" label={wizard.labels.longitude} value={form.longitude} placeholder={wizard.placeholders.longitude} inputMode="decimal" onChange={event => editCoordinate('longitude', event.target.value)} aria-invalid={validationError || undefined} />
         </div>
         <p className="provider-property-wizard__help">{wizard.coordinateHelp}</p>
+        {mapState !== 'idle' ? <p className="provider-property-wizard__help" aria-live="polite">{mapState === 'loading' ? (locale === 'ar' ? 'جارٍ تحديد الإحداثيات من رابط الخريطة…' : 'Reading coordinates from the map link…') : mapState === 'resolved' ? (locale === 'ar' ? 'تم ملء خط العرض والطول تلقائيًا. راجع الموقع ثم احفظ.' : 'Latitude and longitude filled automatically. Check the location, then save.') : (locale === 'ar' ? 'لم نتمكن من استخراج نقطة دقيقة. يمكنك حفظ رابط الخريطة وحده، أو نسخ رابط دبوس الموقع أو إدخال الإحداثيات يدويًا.' : 'No exact point could be extracted. You can save the map link alone, copy a dropped-pin link, or enter coordinates manually.')}</p> : null}
         {locationsState === 'success' && locations.length === 0 ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{wizard.locationCatalogEmptyTitle}</strong><p>{wizard.locationCatalogEmptyBody}</p></div> : null}
         {locationsState === 'error' ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{wizard.locationCatalogUnavailableTitle}</strong><p>{wizard.locationCatalogUnavailableBody}</p></div> : null}
       </section>
@@ -302,12 +341,12 @@ function LocationFormView({
       <div className="provider-property-wizard__field provider-property-wizard__reason"><label htmlFor="provider-property-reason">{wizard.labels.reason}</label><textarea id="provider-property-reason" rows={2} value={form.reason} placeholder={wizard.placeholders.reason} onChange={event => setForm({ ...form, reason: event.target.value })} required /></div>
       {validationError ? <p className="provider-property-wizard__form-error" role="alert"><strong>{wizard.validationTitle}</strong> {wizard.validationBody}</p> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
-      <div className="provider-property-wizard__actions"><Button type="button" variant="secondary" disabled={saving} onClick={onBack}>{wizard.back}</Button><Button type="submit" name="intent" value="save" disabled={saving}>{saving ? wizard.saving : wizard.saveDraft}</Button><Button type="submit" name="intent" value="continue" variant="secondary" disabled={saving}>{wizard.continue}</Button></div>
+      <div className="provider-property-wizard__actions"><Button type="button" variant="secondary" disabled={saving} onClick={onBack}>{wizard.back}</Button><Button type="submit" name="intent" value="save" disabled={busy}>{saving ? wizard.saving : wizard.saveDraft}</Button><Button type="submit" name="intent" value="continue" variant="secondary" disabled={busy}>{wizard.continue}</Button></div>
     </form>
   );
 }
 
-export function ProviderPropertyWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, initialState = 'loading', load, create, save, loadLocations }: ProviderPropertyWizardProps) {
+export function ProviderPropertyWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, initialState = 'loading', load, create, save, loadLocations, resolveMapCoordinates }: ProviderPropertyWizardProps) {
   const copy = getProviderPropertyCopy(locale);
   const currentCopy = useRef(copy);
   currentCopy.current = copy;
@@ -330,6 +369,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
   const createAction = useMemo(() => create ?? ((input: ProviderPropertyCreate) => createProviderProperty(input, { apiOrigin, authorization: authClient })), [apiOrigin, authClient, create]);
   const saveAction = useMemo(() => save ?? ((id: string, currentStep: ProviderPropertyStep, input: ProviderPropertyStepInput) => saveProviderPropertyStep(input, { propertyId: id, step: currentStep, apiOrigin, authorization: authClient })), [apiOrigin, authClient, save]);
   const locationsAction = useMemo(() => loadLocations ?? ((signal?: AbortSignal) => loadProviderPropertyLocations({ apiOrigin, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, loadLocations]);
+  const mapCoordinatesAction = useMemo(() => resolveMapCoordinates ?? ((mapUrl: string, signal: AbortSignal) => resolveProviderPropertyMapCoordinates(mapUrl, { propertyId: draftId!, apiOrigin, authorization: authClient, signal })), [resolveMapCoordinates, draftId, apiOrigin, authClient]);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {
@@ -445,7 +485,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       version: property.version,
       ...(location.locationId.trim() === '' ? {} : { locationId: location.locationId.trim().toLowerCase() }),
       ...(location.mapUrl.trim() === '' ? property.mapUrl === undefined ? {} : { mapUrl: null } : { mapUrl: location.mapUrl.trim() }),
-      ...(coordinates === undefined ? {} : { coordinates }),
+      ...(coordinates === undefined ? property.coordinates === undefined ? {} : { coordinates: null } : { coordinates }),
       reason: location.reason.trim()
     });
     if (!parsed.success || hasLatitude !== hasLongitude) {
@@ -473,7 +513,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       <div className="provider-dashboard__content provider-property-wizard__content">
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
-          step === 'basic' ? <BasicFormView invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
+          step === 'basic' ? <BasicFormView invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView resolveMapCoordinates={mapCoordinatesAction} locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>

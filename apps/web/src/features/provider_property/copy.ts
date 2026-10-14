@@ -101,7 +101,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationSearchEmpty: 'لا توجد مناطق تطابق البحث. امسح البحث لعرض كل المناطق المتاحة.', clearLocationSearch: 'مسح البحث وعرض كل المناطق',
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
-      coordinateHelp: 'انسخ رابط موقع العقار من مشاركة Google Maps أو Apple Maps. يمكنك أيضًا اختيار المنطقة أو إدخال خط العرض والطول معًا.',
+      coordinateHelp: "الصق رابط دبوس موقع العقار من Google Maps أو Apple Maps؛ نملأ خط العرض والطول تلقائيًا عند توفر نقطة دقيقة. يمكنك أيضًا اختيار المنطقة أو تعديل الإحداثيات يدويًا.",
       mapUrlError: 'أدخل رابط موقع من Google Maps أو Apple Maps؛ روابط المواقع العادية غير مقبولة.',
       sourceHelp: 'نوع الحساب والمؤسسة يُحددان تلقائيًا من حسابك المعتمد؛ لا تحتاج إدخال كود.',
       notFoundTitle: 'المسودة غير موجودة', notFoundBody: 'لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.', unavailable: 'غير متاح'
@@ -163,7 +163,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationSearchEmpty: 'No areas match your search. Clear the search to see all available areas.', clearLocationSearch: 'Clear search and show all areas',
       contractBoundaryTitle: 'Fields not supported by the current contract',
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
-      coordinateHelp: 'Copy the property location from Share in Google Maps or Apple Maps. You can also select an area or enter latitude and longitude together.',
+      coordinateHelp: "Paste the property pin link from Google Maps or Apple Maps. Latitude and longitude fill automatically when an exact point is available. You can also select an area or edit the coordinates manually.",
       mapUrlError: 'Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.',
       sourceHelp: 'Provider type and organization are determined automatically from your approved account. No code is needed.',
       notFoundTitle: 'Draft not found', notFoundBody: 'This draft could not be loaded or is not owned by the current session.', unavailable: 'Unavailable'

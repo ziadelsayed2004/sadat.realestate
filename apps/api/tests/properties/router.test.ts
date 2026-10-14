@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { coordinatesFromPropertyMapUrl } from '@sadat-real-estate/contracts';
+import { resolvePropertyMapCoordinates } from '../../src/modules/properties/map-coordinates.js';
+import { PropertyServiceError } from '../../src/modules/properties/service.js';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import type { PropertyRouterDependencies } from '../../src/modules/properties/router.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
@@ -28,12 +31,62 @@ const service: PropertyRouterDependencies['service'] = {
   async visibility(_adminId: string, _id: string, input: { action: string }) { return { ...property, status: (input.action === 'hide' ? 'hidden' : input.action === 'archive' ? 'archived' : 'published') as 'hidden' | 'archived' | 'published', active: input.action === 'restore', version: 1 }; }
 };
 
-async function run(fn: (url: string) => Promise<void>): Promise<void> {
-  const server = createApiServer({ database: { isReady: async () => true }, properties: { service, accessTokens: tokens } });
+async function run(fn: (url: string) => Promise<void>, overrides: Partial<PropertyRouterDependencies> = {}): Promise<void> {
+  const server = createApiServer({ database: { isReady: async () => true }, properties: { service, accessTokens: tokens, ...overrides } });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try { await fn(`http://127.0.0.1:${address.port}`); } finally { await stopApiServer(server); }
 }
 const request = (url: string, method: string, path: string, token: string, body?: unknown) => fetch(url + path, { method, headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+
+test('map coordinates prefer the actual pin and never invent coordinates from place names or camera positions', () => {
+  const expected = { latitude: 30.62, longitude: 30.74 };
+  for (const url of ['https://www.google.com/maps/search/30.62,+30.74?entry=tts', 'https://www.google.com/maps/search/?api=1&query=30.62%2C30.74', 'https://maps.google.com/?q=30.62,30.74', 'https://www.google.com/maps/@30.62,30.74,15z', 'https://www.google.com/maps/place/Home/@31,32,15z/data=!4m2!3d30.62!4d30.74', 'https://maps.apple.com/?ll=30.62,30.74', 'https://maps.apple.com/place?coordinate=30.62,30.74', 'https://www.google.com/maps/dir/?api=1&destination=30.62,30.74']) {
+    assert.deepEqual(coordinatesFromPropertyMapUrl(url), expected, url);
+  }
+  for (const url of ['https://www.google.com/maps/place/Home/@31,32,15z', 'https://www.google.com/maps/dir/A/B/@31,32,15z', 'https://maps.google.com/?q=Sadat', 'https://maps.google.com/?q=91,32', 'https://maps.google.com/?q=30,181', 'https://maps.apple.com/?q=Home', 'https://example.com/?q=30.62,30.74']) assert.equal(coordinatesFromPropertyMapUrl(url), null, url);
+  assert.deepEqual(coordinatesFromPropertyMapUrl('https://maps.google.com/?q=-30.62,-30.74'), { latitude: -30.62, longitude: -30.74 });
+});
+
+test('short map links follow bounded allowlisted redirects without fetching final maps or external destinations', async () => {
+  const calls: string[] = [];
+  const fetcher: typeof fetch = async (url, init) => {
+    calls.push(String(url));
+    assert.equal(init?.redirect, 'manual'); assert(init?.signal);
+    return new Response(null, { status: 302, headers: { location: 'https://www.google.com/maps/place/Home/data=!3d30.62!4d30.74' } });
+  };
+  assert.deepEqual(await resolvePropertyMapCoordinates('https://maps.app.goo.gl/Abc123xyz', fetcher), { latitude: 30.62, longitude: 30.74 });
+  assert.equal(calls.length, 1);
+  for (const target of ['http://127.0.0.1/', 'https://example.com/', 'https://www.google.com/url?url=https://example.com/', 'https://maps.google.com.evil.test/?q=30,31']) {
+    let count = 0;
+    assert.equal(await resolvePropertyMapCoordinates('https://goo.gl/maps/Abc123xyz', async () => { count++; return new Response(null, { status: 302, headers: { location: target } }); }), null);
+    assert.equal(count, 1);
+  }
+  let count = 0;
+  assert.equal(await resolvePropertyMapCoordinates('https://maps.app.goo.gl/Abc123xyz', async () => { count++; return new Response(null, { status: 302, headers: { location: 'https://maps.app.goo.gl/Abc123xyz' } }); }), null);
+  assert.equal(count, 1);
+  count = 0;
+  assert.equal(await resolvePropertyMapCoordinates('https://maps.app.goo.gl/Start123', async () => { count++; return new Response(null, { status: 302, headers: { location: `https://maps.app.goo.gl/Next123${count}` } }); }), null);
+  assert.equal(count, 5);
+  assert.equal(await resolvePropertyMapCoordinates('https://maps.apple/Abc123xyz', fetcher).catch(() => null), null);
+  assert.equal(await resolvePropertyMapCoordinates('https://maps.apple/p/Abc123xyz', async () => { throw new Error('timeout'); }), null);
+});
+
+test('map coordinate preview requires a verified owner and does not mutate the property', async () => {
+  const path = `/api/v1/provider/properties/${propertyId}/map-coordinates`;
+  await run(async url => {
+    assert.equal((await fetch(url + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mapUrl: 'https://maps.google.com/?q=30.62,30.74' }) })).status, 401);
+    for (const token of ['pending', 'admin']) assert.equal((await request(url, 'POST', path, token, { mapUrl: 'https://maps.google.com/?q=30.62,30.74' })).status, 403);
+    const response = await request(url, 'POST', path, 'provider', { mapUrl: 'https://maps.google.com/?q=30.62,30.74' });
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json()).data, { coordinates: { latitude: 30.62, longitude: 30.74 } });
+    assert.equal((await request(url, 'POST', path, 'provider', { mapUrl: 'https://example.com/' })).status, 400);
+  });
+  let fetched = false;
+  await run(async url => {
+    assert.equal((await request(url, 'POST', path, 'provider', { mapUrl: 'https://maps.app.goo.gl/Abc123xyz' })).status, 403);
+  }, { service: { ...service, async get() { throw new PropertyServiceError('PROPERTY_FORBIDDEN'); } }, mapFetcher: async () => { fetched = true; return new Response(); } });
+  assert.equal(fetched, false);
+});
 
 test('the unified edit route authenticates administrators and rejects publication and ownership fields', async () => run(async url => {
   const path = `/api/v1/admin/properties/${propertyId}`;

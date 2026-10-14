@@ -15,10 +15,10 @@ import {
   propertySourceSchema,
   propertySourceIdentitySchema
 } from '@sadat-real-estate/contracts';
-import { propertySchema } from '../../src/modules/properties/models.js';
+import { propertySchema, createPropertyModels } from '../../src/modules/properties/models.js';
 import { derivePropertySourceIdentity } from '../../src/modules/properties/source-identity.js';
 import { createProviderPropertySourceResolver } from '../../src/modules/properties/provider-source.js';
-import { Types, type Connection } from 'mongoose';
+import { createConnection, Types, type Connection } from 'mongoose';
 
 const providerId = '0123456789abcdef01234567';
 const organizationId = '1123456789abcdef01234567';
@@ -113,6 +113,18 @@ test('model is strict, links provider/project/source, and has deterministic look
   assert.equal(propertySchema.path('verified'), undefined);
   assert.ok(propertySchema.indexes().some(([keys, options]) => keys.providerId === 1 && keys.slug === 1 && options?.unique === true));
   assert.ok(propertySchema.indexes().some(([keys]) => keys.status === 1 && keys.active === 1));
+});
+
+test('adding a first map pin preserves the complete GeoJSON point through Mongoose update casting', async () => {
+  const connection = createConnection();
+  const { Property } = createPropertyModels(connection);
+  const original = Property.collection.findOneAndUpdate;
+  let sent: Record<string, unknown> = {};
+  Property.collection.findOneAndUpdate = (async (_filter: unknown, update: unknown) => { sent = update as Record<string, unknown>; return null; }) as typeof original;
+  try {
+    await Property.findOneAndUpdate({ _id: new Types.ObjectId() }, { $set: { coordinates: { type: 'Point', coordinates: [30.74, 30.62] } } }, { runValidators: true, lean: true });
+    assert.deepEqual((sent.$set as Record<string, unknown>).coordinates, { type: 'Point', coordinates: [30.74, 30.62] });
+  } finally { Property.collection.findOneAndUpdate = original; await connection.destroy(); }
 });
 
 test('rejects invalid source relationships and property/unit state combinations', () => {

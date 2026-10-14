@@ -13118,6 +13118,117 @@
           }
         }
       }
+    },
+    "/api/v1/provider/properties/{propertyId}/map-coordinates": {
+      "post": {
+        "operationId": "resolveProviderPropertyMapCoordinates",
+        "summary": "Resolve explicit map pin coordinates for an owned property; no mutation",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "mapUrl"
+                ],
+                "properties": {
+                  "mapUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "maxLength": 2048,
+                    "description": "HTTPS Google Maps or Apple Maps location link. Short redirects are allowlisted, bounded and timed out."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Coordinates extracted from the explicit map pin, or null when unavailable. Does not geocode text addresses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "coordinates"
+                      ],
+                      "properties": {
+                        "coordinates": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "required": [
+                                "latitude",
+                                "longitude"
+                              ],
+                              "properties": {
+                                "latitude": {
+                                  "type": "number",
+                                  "minimum": -90,
+                                  "maximum": 90
+                                },
+                                "longitude": {
+                                  "type": "number",
+                                  "minimum": -180,
+                                  "maximum": 180
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Verified provider and property ownership required"
+          },
+          "404": {
+            "description": "Property not found"
+          },
+          "400": {
+            "description": "Invalid map URL or property ID"
+          }
+        }
+      }
     }
   },
   "components": {

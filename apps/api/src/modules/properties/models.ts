@@ -78,7 +78,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   locationId: { type: Schema.Types.ObjectId, ref: 'Location' },
   mapUrl: { type: String, trim: true, maxlength: 2_048, match: /^https:\/\/[^\s]+$/ },
   coordinates: {
-    type: { type: String, enum: ['Point'], immutable: true },
+    type: { type: String, enum: ['Point'] },
     coordinates: { type: [Number], validate: { validator: (value: number[]) => value.length === 2 && Number.isFinite(value[0]) && Number.isFinite(value[1]), message: 'Coordinates must contain longitude and latitude' } }
   },
   description: localized,

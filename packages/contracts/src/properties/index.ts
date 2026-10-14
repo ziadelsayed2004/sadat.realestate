@@ -3,6 +3,7 @@ import { normalizedPhoneSchema } from '../auth/index.js';
 import { localizedTextSchema, supportedLocaleSchema } from '../localization/index.js';
 import { sourceIdentitySchema } from '../organizations/index.js';
 import { isPropertyMapUrl } from './map-url.js';
+export { coordinatesFromPropertyMapUrl } from './map-url.js';
 
 export const PROPERTY_KINDS = ['property', 'unit'] as const;
 export const propertyKindSchema = z.enum(PROPERTY_KINDS);
@@ -38,6 +39,8 @@ const propertyLegacyMapUrlSchema = z.string().trim().max(2_048).url().refine(
 export const propertyMapUrlSchema = propertyLegacyMapUrlSchema.refine(isPropertyMapUrl, {
   message: 'Use a Google Maps or Apple Maps location link'
 });
+export const propertyMapCoordinatesRequestSchema = z.object({ mapUrl: propertyMapUrlSchema }).strict();
+export const propertyMapCoordinatesDataSchema = z.object({ coordinates: propertyCoordinatesSchema.nullable() }).strict();
 export const PROPERTY_DRAFT_STEPS = ['basic', 'location', 'details', 'price-payment', 'features-services', 'contact'] as const;
 export const propertyDraftStepSchema = z.enum(PROPERTY_DRAFT_STEPS);
 export const propertyIdParamsSchema = z.object({ propertyId: propertyObjectIdSchema }).strict();
