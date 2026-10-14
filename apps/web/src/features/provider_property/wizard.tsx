@@ -278,15 +278,16 @@ function LocationFormView({
           <div className="provider-property-wizard__field provider-property-wizard__location-picker">
             <label htmlFor="provider-property-location-search">{wizard.locationSearchLabel}</label>
             <input id="provider-property-location-search" type="search" value={locationSearch} placeholder={wizard.locationSearchPlaceholder} onChange={event => setLocationSearch(event.target.value)} />
+            {locationsState === 'success' && locationSearch.trim() !== '' && locations.length > 0 ? <div className="provider-property-wizard__help">
+              <p aria-live="polite">{locale === 'ar' ? `نتائج البحث: ${matches.length} من ${locations.length} مناطق. امسح البحث لعرض الكل.` : `Search results: ${matches.length} of ${locations.length} areas. Clear the search to show all.`}</p>
+              {matches.length === 0 ? <p role="status">{wizard.locationSearchEmpty}</p> : null}
+              <Button type="button" variant="secondary" size="sm" onClick={() => setLocationSearch('')}>{wizard.clearLocationSearch}</Button>
+            </div> : null}
             <label htmlFor="provider-property-location-id">{wizard.labels.locationId}</label>
             {locationsState === 'error' ? <input id="provider-property-location-id" value={form.locationId} placeholder={wizard.placeholders.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} /> : <select id="provider-property-location-id" value={form.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} disabled={locationsState !== 'success'}>
               <option value="">{locationsState === 'loading' ? wizard.locationCatalogLoading : wizard.locationSelectPlaceholder}</option>
               {visibleLocations.map(location => <option key={location.id} value={location.id}>{location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug}</option>)}
             </select>}
-            {locationsState === 'success' && locationSearch.trim() !== '' && locations.length > 0 ? <div className="provider-property-wizard__help">
-              {matches.length === 0 ? <p role="status">{wizard.locationSearchEmpty}</p> : null}
-              <Button type="button" variant="secondary" size="sm" onClick={() => setLocationSearch('')}>{wizard.clearLocationSearch}</Button>
-            </div> : null}
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
           <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" state={validationError && form.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(form.mapUrl).success ? 'error' : 'default'} error={wizard.mapUrlError} />

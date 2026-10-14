@@ -248,6 +248,9 @@ describe('Provider property wizard', () => {
     const picker = screen.getByRole('combobox', { name: copy.labels.locationId });
     await waitFor(() => expect(picker).toBeEnabled());
     fireEvent.change(screen.getByRole('searchbox', { name: copy.locationSearchLabel }), { target: { value: 'السباعه' } });
+    const clearSearch = screen.getByRole('button', { name: copy.clearLocationSearch });
+    expect(clearSearch.compareDocumentPosition(picker) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByText(locale === 'ar' ? 'نتائج البحث: 1 من 2 مناطق. امسح البحث لعرض الكل.' : 'Search results: 1 of 2 areas. Clear the search to show all.')).toBeInTheDocument();
     expect(screen.getByRole('option', { name: locale === 'ar' ? 'الحي السابع' : 'Seventh District' })).toBeInTheDocument();
     expect(screen.queryByText(copy.locationSearchEmpty)).not.toBeInTheDocument();
     fireEvent.change(screen.getByRole('searchbox', { name: copy.locationSearchLabel }), { target: { value: 'منطقة غير مسجلة' } });

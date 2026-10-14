@@ -17,6 +17,13 @@ describe('Provider location search', () => {
     expect(filterProviderLocations(locations, 'الرابع')).toEqual([locations[1]]);
     expect(filterProviderLocations(locations, 'السابع')).toEqual([locations[2]]);
   });
+  it.each(['المنطقة الأولى', 'منطقة الاول', 'حي الاول', 'First area', 'First neighborhood'])('matches district names across area terminology for %s', query => {
+    expect(filterProviderLocations(locations, query)).toEqual([locations[0]]);
+  });
+  it('still filters partial searches and never invents a missing district', () => {
+    expect(filterProviderLocations(locations, 'الح')).toEqual(locations);
+    expect(filterProviderLocations(locations, 'المنطقة الثانية')).toEqual([]);
+  });
   it('returns only existing catalog entries, with empty results for unrelated or excessively long queries', () => {
     expect(filterProviderLocations(locations, 'منطقة غير مسجلة')).toEqual([]);
     expect(filterProviderLocations(locations, 'x'.repeat(1000))).toEqual([]);

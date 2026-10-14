@@ -23,7 +23,11 @@ function nearWord(query: string, candidate: string): boolean {
 }
 
 export function filterProviderLocations(locations: readonly ProviderPropertyLocationOption[], search: string): readonly ProviderPropertyLocationOption[] {
-  const query = words(search.trim());
+  const input = words(search.trim());
+  // Area/district are interchangeable search terms, not part of a district's
+  // distinguishing name. Keep them for a search containing only that term.
+  const specific = input.filter(word => !['حي', 'منطقه', 'district', 'neighborhood', 'area'].includes(word));
+  const query = specific.length ? specific : input;
   if (query.length === 0) return locations;
   const indexed = locations.map(location => ({ location, tokens: words(`${location.name.ar ?? ''} ${location.name.en ?? ''} ${location.slug}`) }));
   const exact = indexed.filter(({ tokens }) => query.every(word => tokens.some(token => token.includes(word))));
