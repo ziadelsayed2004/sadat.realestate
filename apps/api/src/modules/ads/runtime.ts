@@ -9,7 +9,7 @@ import { createAdAdminRequestService, createAdCalendarService } from './service.
 import type { AdminAdsRouterDependencies } from './admin-router.js';
 import type { AdminBannerRouterDependencies } from './banner-router.js';
 import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
-import { createBannerManagement } from './banner-management.js';
+import { createBannerManagement, readPublishedBannerRows } from './banner-management.js';
 import type { UploadEnvironment } from '../uploads/environment.js';
 import { createInMemoryStorageAdapter, createLocalFilesystemStorageAdapter, createUnavailableStorageAdapter, createClamAvMalwareScanner, createDeterministicMalwareScanner, createUnavailableMalwareScanner } from '../uploads/adapters.js';
 
@@ -52,6 +52,7 @@ export function createAdminBannersRuntime(
       policy: createMongooseAdvertisingSettingsReader(connection) }),
     service: createAdSettingsService({
       bannerRepository: createMongooseAdBannerRepository(connection, audit),
+      publishedBannerIds: async () => new Set((await readPublishedBannerRows(connection)).map(row => String(row._id))),
       bannerAuthorization: authorization,
       runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
     })

@@ -142,6 +142,17 @@ describe('public homepage', () => {
     const empty = renderWithLocale(<PublicHomepage locale="en" initialData={{ ...homepageData, banners: [] }} />, { locale: 'en' });
     expect(empty.container.querySelector('#homepage-featured')).toBeNull();
   });
+  it('opens the exact published featured card selected by an administrative view link', async () => {
+    const id = 'a'.repeat(24);
+    window.history.replaceState({}, '', `/?lang=en&featuredAd=${id}#homepage-featured`);
+    const data = { ...homepageData, banners: [{ key: 'featured_other', presentation: 'featured' as const, title: { en: 'Other card' }, order: 0 }, { key: `featured_${id}_${'b'.repeat(24)}`, presentation: 'featured' as const, title: { en: 'Selected saved card' }, order: 1 }] };
+    renderWithLocale(<PublicHomepage locale="en" initialData={data} load={async () => data} />, { locale: 'en' });
+    expect(await screen.findByRole('heading', { name: 'Selected saved card' })).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Other card' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Previous banner' }));
+    expect(screen.getByRole('heading', { name: 'Other card' })).toBeVisible();
+    window.history.replaceState({}, '', '/');
+  });
   it('keeps the featured timer running across background data refreshes and hides controls for one card', async () => {
     vi.useFakeTimers();
     const banners = [{ key: 'featured_first', presentation: 'featured' as const, title: { en: 'First card' }, order: 0 }, { key: 'featured_second', presentation: 'featured' as const, title: { en: 'Second card' }, order: 1 }];

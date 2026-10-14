@@ -17,7 +17,7 @@ export async function featuredAdvertiser(connection: Connection, providerId: str
   const account = application?.userId ?? profile?.userId;
   if (!(account instanceof Types.ObjectId)) return undefined;
   const [user, profiles, applications] = await Promise.all([
-    connection.collection('users').findOne({ _id: account, roleType: 'provider', status: 'verified', deletedAt: { $exists: false } }, { projection: { _id: 1 } }),
+    connection.collection('users').findOne({ _id: account, roleType: 'provider', status: 'verified', deletedAt: null }, { projection: { _id: 1 } }),
     connection.collection('provider_profiles').find({ userId: account }, { projection: { _id: 1, status: 1, providerType: 1 } }).toArray(),
     connection.collection('provider_applications').find({ userId: account }, { projection: { _id: 1, providerType: 1, status: 1, displayName: 1, tradeName: 1, brandName: 1, legalBusinessName: 1, legalCompanyName: 1 } }).toArray()
   ]);

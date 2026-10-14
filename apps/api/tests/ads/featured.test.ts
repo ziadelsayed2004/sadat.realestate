@@ -45,6 +45,14 @@ test('an unapproved advertiser cannot publish; external links cannot be a featur
   assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
   assert.equal(adBannerCreateSchema.safeParse({ placementKey: 'homepage.featured', title: { en: 'Ad' }, startAt: '2026-10-10T00:00:00Z', endAt: '2026-10-11T00:00:00Z', featured: { advertiserProviderId: application.toHexString(), destination: { kind: 'external', id: 'https://outside.invalid' } } }).success, false);
 });
+
+test('null deletion fields do not exclude valid featured advertisers but real deletion does', async () => {
+  const db = fixture();
+  db.rows.users![0]!.deletedAt = null;
+  assert.equal((await featuredOptions(db.connection)).advertisers.length, 1);
+  db.rows.users![0]!.deletedAt = new Date();
+  assert.deepEqual((await featuredOptions(db.connection)).advertisers, []);
+});
 test('an approved office can advertise its property without a directory subscription or separate organization page', async () => {
   const db = fixture();
   db.rows.organizations = [];

@@ -17,7 +17,10 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Persistent staff presence presentation, authorized actor email, per-staff audit
 // links, session refresh and their guide add about 2 KB to the 2,587,906-byte
 // baseline. Allow a bounded 4 KiB increment; route/chunk limits stay unchanged.
-const maxJavaScriptBytes = 2_532 * 1024;
+// Saved featured-card previews, verified public-view links and action navigation
+// add about 5 KB to the 2,591,133-byte baseline. Allow a bounded 8 KiB increment;
+// per-chunk and route stylesheet limits stay unchanged.
+const maxJavaScriptBytes = 2_540 * 1024;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

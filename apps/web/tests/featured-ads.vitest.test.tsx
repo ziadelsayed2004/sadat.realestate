@@ -1,7 +1,10 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { AdBanner, FeaturedOptions } from '@sadat-real-estate/contracts';
-import { FeaturedEditor } from '../src/features/admin_featured/views.tsx';
+import { FeaturedEditor, AdminFeatured } from '../src/features/admin_featured/views.tsx';
+import { FeaturedPreview } from '../src/features/admin_featured/preview.tsx';
+import { featuredOrder } from '../src/features/admin_featured/order.ts';
+import { adBannerOrderSchema } from '@sadat-real-estate/contracts';
 import { FeaturedCard } from '../src/features/public/featured-card.tsx';
 import type { AdminHomeSource } from '../src/features/admin_home/data.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
@@ -20,6 +23,46 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it('reorders imported cards with tied positions using unique orders and original optimistic versions', () => {
+    const tied = [item, { ...item, id: 'a'.repeat(24), version: 3 }, { ...item, id: 'b'.repeat(24), version: 7 }];
+    const order = adBannerOrderSchema.parse(featuredOrder(tied, 2, -1, 1));
+    expect(order.items).toEqual([{ bannerId: item.id, sortOrder: 0, expectedVersion: 0 }, { bannerId: tied[2]!.id, sortOrder: 1, expectedVersion: 7 }, { bannerId: tied[1]!.id, sortOrder: 2, expectedVersion: 3 }]);
+    expect(featuredOrder(tied, 0, -1, 1)).toBeUndefined();
+    expect(featuredOrder(tied, 2, 1, 1)).toBeUndefined();
+  });
+
+  it.each(['ar', 'en'] as const)('provides a read-only preview of unlinked drafts without saving or fabricating identity in %s', async locale => {
+    const { source } = sourceFor();
+    const unlinked = { ...item, featured: { highlight: { en: 'Legacy offer' } } };
+    vi.mocked(source.previewBanner).mockResolvedValue({ banner: unlinked, preview: true, media: { id: mediaId, bannerId, url: '/legacy.png', mime: 'image/png', width: 800, height: 400, active: true, version: 0, createdBy: '5'.repeat(24), createdAt: item.createdAt, updatedAt: item.updatedAt } });
+    renderWithLocale(<FeaturedPreview item={unlinked} options={options} loadOptions={async () => options} source={source} locale={locale} onClose={() => {}} />, { locale });
+    expect(await screen.findByRole('heading', { name: locale === 'ar' ? 'الإعلان' : 'Original title' })).toBeVisible();
+    await waitFor(() => expect(document.querySelector('.admin-featured__preview img')).toHaveAttribute('src', '/legacy.png'));
+    expect(screen.getByText(locale === 'ar' ? 'عارض عقار' : 'Property advertiser')).toBeVisible();
+    expect(screen.queryByLabelText(locale === 'ar' ? 'موثق' : 'Verified')).toBeNull();
+    expect(screen.queryByLabelText('Advertiser account')).toBeNull();
+    expect(source.updateBanner).not.toHaveBeenCalled();
+  });
+
+  it.each(['ar', 'en'] as const)('opens edit and preview separately, preserves draft visibility and links only the published card in %s', async locale => {
+    const { source } = sourceFor();
+    const published = { ...item, id: 'a'.repeat(24), status: 'active' as const, publiclyVisible: true, title: { ar: 'منشور', en: 'Live ad' } };
+    Object.assign(source, { loadBanners: vi.fn(async () => ({ items: [item, published], total: 2, page: 1, limit: 100 })) });
+    const view = renderWithLocale(<AdminFeatured locale={locale} session={{ status: 'authenticated', role: 'admin' }} source={source} loadOptions={async () => options} />, { locale });
+    const draftRow = await screen.findByTestId(`featured-row-${item.id}`);
+    const liveRow = screen.getByTestId(`featured-row-${published.id}`);
+    const siteLabel = locale === 'ar' ? 'عرض في الموقع' : 'View on site';
+    expect(within(draftRow).getByRole('button', { name: siteLabel })).toBeDisabled();
+    expect(await within(liveRow).findByRole('link', { name: siteLabel })).toHaveAttribute('href', `/?lang=${locale}&featuredAd=${published.id}#homepage-featured`);
+    fireEvent.click(within(draftRow).getByRole('button', { name: locale === 'ar' ? 'معاينة' : 'Preview' }));
+    expect(await screen.findByRole('region', { name: locale === 'ar' ? 'معاينة الإعلان المميز' : 'Featured ad preview' })).toBeVisible();
+    expect(view.container.querySelector('.admin-featured__work-panel')).toHaveFocus();
+    expect(screen.queryByRole('region', { name: locale === 'ar' ? 'تعديل الإعلان المميز' : 'Featured ad editor' })).toBeNull();
+    fireEvent.click(within(draftRow).getByRole('button', { name: locale === 'ar' ? 'تعديل' : 'Edit' }));
+    expect(await screen.findByRole('region', { name: locale === 'ar' ? 'تعديل الإعلان المميز' : 'Featured ad editor' })).toBeVisible();
+    expect(screen.queryByRole('region', { name: locale === 'ar' ? 'معاينة الإعلان المميز' : 'Featured ad preview' })).toBeNull();
+    expect(source.updateBanner).not.toHaveBeenCalled();
+  });
   it.each(['ar', 'en'] as const)('explains eligibility for every approved provider type in %s', locale => {
     renderWithLocale(<FeaturedEditor options={options} loadOptions={async () => options} source={sourceFor().source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
     expect(document.getElementById('featured-account-hint')).toHaveTextContent(locale === 'ar' ? 'المزود الفردي، والمكاتب، والشركات' : 'individuals, offices and developers');

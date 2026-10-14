@@ -253,6 +253,7 @@ export function createAdSettingsService(seed: {
   authorization?: { authorize(adminId: string, permission: 'admin:ads.price'): Promise<boolean> };
   bannerAuthorization?: { authorize(adminId: string, permission: 'admin:banners.view' | 'admin:banners.manage'): Promise<boolean> };
   bannerRepository?: AdBannerRepository;
+  publishedBannerIds?: () => Promise<ReadonlySet<string>>;
   hasActivePlacement?: (placementKey: string) => Promise<boolean> | boolean;
   runtimeSettings?: AdvertisingSettingsReader;
 } = {}) {
@@ -527,7 +528,12 @@ export function createAdSettingsService(seed: {
     async listBanners(claims: AccessTokenClaims, input: unknown) {
       const query = adBannerListQuerySchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.view');
-      if (seed.bannerRepository) return seed.bannerRepository.listBanners(query);
+      if (seed.bannerRepository) {
+        const result = await seed.bannerRepository.listBanners(query);
+        if (!seed.publishedBannerIds || !result.items.some(item => item.placementKey === 'homepage.featured')) return result;
+        const visible = await seed.publishedBannerIds();
+        return { ...result, items: result.items.map(item => item.placementKey === 'homepage.featured' ? { ...item, publiclyVisible: visible.has(item.id) } : item) };
+      }
       const values = [...banners.values()].filter(item => (!query.adRequestId || item.adRequestId === query.adRequestId) && (!query.placementKey || item.placementKey === query.placementKey) && (!query.status || item.status === query.status)).sort((a, b) => a.placementKey.localeCompare(b.placementKey) || a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },

@@ -1,6 +1,6 @@
 import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
   PublicHomepageCategory,
@@ -1062,6 +1062,17 @@ function BannerGrid({
 }) {
   const carouselBanners = useMemo(() => ordered(banners).filter(item => item.presentation === 'featured'), [banners]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const selectedFromLink = useRef(false);
+  useEffect(() => {
+    if (selectedFromLink.current) return;
+    const id = new URL(window.location.href).searchParams.get('featuredAd');
+    if (!id || !/^[a-f0-9]{24}$/u.test(id)) return;
+    const index = carouselBanners.findIndex(item => item.key.startsWith(`featured_${id}_`));
+    if (index < 0) return;
+    selectedFromLink.current = true;
+    setActiveIndex(index);
+    document.getElementById('homepage-featured')?.scrollIntoView?.({ block: 'start' });
+  }, [carouselBanners]);
   useEffect(() => { setActiveIndex(index => Math.min(index, Math.max(0, carouselBanners.length - 1))); }, [carouselBanners.length]);
 
   useEffect(() => {

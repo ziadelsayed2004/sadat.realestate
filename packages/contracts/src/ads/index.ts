@@ -112,7 +112,15 @@ export const AD_BANNER_MEDIA_MIME_TYPES = ['image/jpeg', 'image/png', 'image/web
 export const adBannerStatusSchema = z.enum(AD_BANNER_STATUSES);
 export const adBannerMediaMimeSchema = z.enum(AD_BANNER_MEDIA_MIME_TYPES);
 const publicHttpsUrl = z.string().url().max(2_048).refine(value => value.startsWith('https://'), { message: 'Only HTTPS media and target URLs are accepted' });
-const bannerMediaUrl = z.union([publicHttpsUrl, z.string().regex(/^\/api\/v1\/public\/banner-media\/[a-f0-9]{24}$/)]);
+// Legacy CMS cards already use same-origin public image paths. Preserve them
+// through import and preview without accepting protocol-relative or escaped URLs.
+const localBannerMediaUrl = z.string().max(2_048).regex(/^\/(?!\/)[^\s\\]+$/u).refine(value => {
+  try {
+    const decoded = decodeURIComponent(value);
+    return !decoded.startsWith('//') && !/[\\\u0000-\u0020]/u.test(decoded) && !decoded.split(/[/?#]/u).includes('..');
+  } catch { return false; }
+});
+const bannerMediaUrl = z.union([publicHttpsUrl, localBannerMediaUrl]);
 const bannerDateRange = (value: { startAt?: string | undefined; endAt?: string | undefined }, ctx: z.RefinementCtx) => {
   if (value.startAt && value.endAt && new Date(value.endAt) <= new Date(value.startAt)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endAt'], message: 'endAt must be after startAt' });
 };
@@ -145,6 +153,7 @@ const bannerMediaIds = z.array(id).max(20).refine(value => new Set(value).size =
 const bannerDisplaySeconds = z.number().int().min(3).max(60);
 
 export const adBannerSchema = z.object({
+  publiclyVisible: z.boolean().optional(),
   featured: featuredCreativeSchema.optional(),
   id,
   adRequestId: id.optional(),
