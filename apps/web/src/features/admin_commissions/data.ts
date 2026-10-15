@@ -1,6 +1,9 @@
 import {
   commissionAccountCommissionSuccessEnvelopeSchema,
   commissionAccountOverrideCreateSchema,
+  commissionAccountOverrideListSuccessEnvelopeSchema,
+  commissionAccountOverridePatchSchema,
+  type CommissionAccountOverridePatch,
   commissionAccountOverrideSuccessEnvelopeSchema,
   commissionAccountReadQuerySchema,
   commissionChangeLogListQuerySchema,
@@ -221,6 +224,8 @@ export function createAdminCommissionsSource(options: Omit<CommonOptions, 'signa
     createPolicy: (input: CommissionPolicyCreate, signal?: AbortSignal) => createAdminCommissionPolicy(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     loadAccount: (accountId: string, query?: { readonly at?: string }, signal?: AbortSignal) => loadAdminAccountCommission(accountId, { ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createAccountOverride: (accountId: string, input: CommissionAccountOverrideCreate, signal?: AbortSignal) => createAdminAccountCommissionOverride(accountId, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    loadAssignments: async (accountId: string, page: number, signal?: AbortSignal) => (await clientFor(options).request(`${ADMIN_COMMISSION_ACCOUNT_API_ROUTE}/${accountIdForPath(accountId)}/assignments`, { responseSchema: commissionAccountOverrideListSuccessEnvelopeSchema, query: { page, limit: 20 }, ...requestOptions(options), ...(signal ? { signal } : {}) })).data.data,
+    updateAssignment: async (accountId: string, overrideId: string, input: CommissionAccountOverridePatch) => (await clientFor(options).request(`${ADMIN_COMMISSION_ACCOUNT_API_ROUTE}/${accountIdForPath(accountId)}/assignments/${accountIdForPath(overrideId)}`, { method: 'PATCH', responseSchema: commissionAccountOverrideSuccessEnvelopeSchema, json: commissionAccountOverridePatchSchema.parse(input), ...requestOptions(options) })).data.data,
     loadExceptions: (query: CommissionExceptionListQuery, signal?: AbortSignal) => loadAdminCommissionExceptions({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createException: (input: CommissionExceptionCreate, signal?: AbortSignal) => createAdminCommissionException(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     updateException: (id: string, input: CommissionExceptionPatch) => updateAdminCommissionException(id, input, options),

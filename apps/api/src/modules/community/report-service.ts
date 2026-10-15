@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { notifyCommunityReporter } from './report-notifications.js';
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import {
   communityAdminReportListDataSchema,
@@ -303,6 +304,7 @@ export function createMongooseCommunityReportService(
           throw new Error('INVALID_STATE');
         }
         await recordAudit(audit, claims, context, reportId, `community_report.${parsed.action}`, parsed.reason, { status: before.status, version: parsed.version }, { status: result.status, version: result.version }, session);
+        await notifyCommunityReporter(connection, result, session);
         return result;
       });
       return (await withReporters([resolved]))[0]!;

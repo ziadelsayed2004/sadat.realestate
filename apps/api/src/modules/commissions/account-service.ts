@@ -55,7 +55,7 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
       admin(claims);
       if (!/^[a-f0-9]{24}$/.test(accountId)) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_NOT_FOUND');
       const parsed = commissionAccountOverrideCreateSchema.parse(input);
-      const existing = (await allOverrides()).find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
+      const existing = (await allOverrides()).find(item => item.status !== 'archived' && item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
       if (existing) {
         const retried = retryDraft(existing, parsed, activate);
         if (!activate || retried.status === 'active') return retried;
@@ -73,12 +73,12 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
           requestId: context?.requestId ?? 'commission-account-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(stamp) };
         const result = repository.insertWithAudit ? await repository.insertWithAudit(override, event) : await repository.insert(override);
         if (result.kind === 'duplicate') {
-          const winner = (await allOverrides()).find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
+          const winner = (await allOverrides()).find(item => item.status !== 'archived' && item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
           if (winner) return retryDraft(winner, parsed, activate);
           throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_DUPLICATE');
         }
       } else {
-        const winner = [...overrides.values()].find(item => item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
+        const winner = [...overrides.values()].find(item => item.status !== 'archived' && item.accountId === accountId && item.effectiveFrom === parsed.effectiveFrom);
         if (winner) return retryDraft(winner, parsed, activate);
         overrides.set(override.id, override);
       }
@@ -95,6 +95,7 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
     async updateOverride(claims: AccessTokenClaims, overrideId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const current = await get(overrideId);
+      if (current.status === 'archived') throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_INVALID_STATE');
       const parsed = commissionAccountOverridePatchSchema.parse(input);
       if (parsed.expectedVersion !== current.version) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: _reason, ...patch } = parsed;

@@ -67,7 +67,7 @@ function repository(): CommissionAccountOverrideRepository {
     async list() { return [...values.values()]; },
     async findById(id) { return values.get(id); },
     async insert(value) {
-      if ([...values.values()].some(item => item.accountId === value.accountId && item.effectiveFrom === value.effectiveFrom)) return duplicate();
+      if ([...values.values()].some(item => item.status !== 'archived' && item.accountId === value.accountId && item.effectiveFrom === value.effectiveFrom)) return duplicate();
       values.set(value.id, value);
       return { kind: 'written' };
     },
@@ -191,5 +191,33 @@ test('keeps view and manage permissions separate and rejects invalid account inp
       headers: { authorization: `Bearer ${adminToken}` }
     });
     assert.equal(response.status, 404);
+  });
+});
+
+test('cancels a versioned assignment, retains history, and permits a replacement on its start date', async () => {
+  await withServer(['admin:commissions.view', 'admin:commissions.manage'], async baseUrl => {
+    const path = `${baseUrl}/api/v1/admin/account-commissions/${accountId}`;
+    const headers = { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' };
+    const input = { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-08-01T00:00:00.000Z' };
+    const saved = await (await fetch(path, { method: 'PUT', headers, body: JSON.stringify(input) })).json() as { data: CommissionAccountOverride };
+    const assignment = `${path}/assignments/${saved.data.id}`;
+    const cancel = { expectedVersion: saved.data.version, status: 'archived', reason: 'Replace incorrect saved assignment' };
+    assert.equal((await fetch(assignment)).status, 401);
+    assert.equal((await fetch(assignment.replace(accountId, 'cccccccccccccccccccccccc'), { method: 'PATCH', headers, body: JSON.stringify(cancel) })).status, 404);
+    assert.equal((await fetch(assignment, { method: 'PATCH', headers, body: JSON.stringify({ ...cancel, status: 'active' }) })).status, 400);
+    assert.equal((await fetch(assignment, { method: 'PATCH', headers, body: JSON.stringify({ ...cancel, percentageBps: 500 }) })).status, 400);
+    assert.equal((await fetch(assignment, { method: 'PATCH', headers, body: JSON.stringify({ ...cancel, expectedVersion: 99 }) })).status, 409);
+    assert.equal((await fetch(assignment, { method: 'PATCH', headers, body: JSON.stringify(cancel) })).status, 200);
+    assert.equal((await fetch(assignment, { method: 'PATCH', headers, body: JSON.stringify({ ...cancel, expectedVersion: saved.data.version + 1 }) })).status, 409);
+    const read = await (await fetch(path, { headers })).json() as { data: { source: string } };
+    assert.equal(read.data.source, 'policy');
+    const replacement = await fetch(path, { method: 'PUT', headers, body: JSON.stringify({ ...input, percentageBps: 400 }) });
+    assert.equal(replacement.status, 201);
+    const next = await replacement.json() as { data: CommissionAccountOverride };
+    assert.notEqual(next.data.id, saved.data.id);
+    const list = await (await fetch(`${path}/assignments`, { headers })).json() as { data: { items: CommissionAccountOverride[]; total: number } };
+    assert.equal(list.data.total, 2);
+    assert.equal(list.data.items.find(row => row.id === saved.data.id)?.status, 'archived');
+    assert.equal(list.data.items.find(row => row.id === next.data.id)?.status, 'active');
   });
 });

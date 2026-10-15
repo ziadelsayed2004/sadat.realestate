@@ -95,8 +95,10 @@ test('repeated and concurrent draft saves retain one record without changing ano
     await assert.rejects(() => service.createOverride(seeker, accountId, input),
       (error) => error instanceof CommissionAccountServiceError && error.code === 'COMMISSION_FORBIDDEN');
     await service.updateOverride(admin, first.id, { expectedVersion: 0, reason: 'Archive draft', status: 'archived' });
-    await assert.rejects(() => service.createOverride(admin, accountId, input),
-      (error) => error instanceof CommissionAccountServiceError && error.code === 'COMMISSION_ACCOUNT_DUPLICATE');
+    const replacement = await service.createOverride(admin, accountId, input);
+    assert.notEqual(replacement.id, first.id);
+    assert.equal((await service.listOverrides(admin, { accountId })).total, 2);
+    assert.equal((await service.getOverride(admin, first.id)).status, 'archived');
   }
 });
 

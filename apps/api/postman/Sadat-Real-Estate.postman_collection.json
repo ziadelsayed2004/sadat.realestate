@@ -7503,6 +7503,90 @@
             },
             "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft override with strict value and effective-window validation; no settlement or universal-rate claim is made."
           }
+        },
+        {
+          "name": "List saved account commission assignments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-commissions/:accountId/assignments",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-commissions",
+                ":accountId",
+                "assignments"
+              ],
+              "variable": [
+                {
+                  "key": "accountId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft override with strict value and effective-window validation; no settlement or universal-rate claim is made."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel saved account commission assignment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0,\n  \"status\": \"archived\",\n  \"reason\": \"Replace saved account assignment\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-commissions/:accountId/assignments/:overrideId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-commissions",
+                ":accountId",
+                "assignments",
+                ":overrideId"
+              ],
+              "variable": [
+                {
+                  "key": "accountId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft override with strict value and effective-window validation; no settlement or universal-rate claim is made."
+          },
+          "response": []
         }
       ]
     },

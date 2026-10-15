@@ -93,6 +93,7 @@
       "refreshedLabel": "Last refreshed",
       "platformTitle": "Platform",
       "operationsTitle": "Operations and review",
+      "publishedTotalNote": "Published properties shows the current active total across all publication dates.",
       "queueTitle": "Requests needing review",
       "queueBody": "Open the relevant queue to review requests and take action.",
       "activityTitle": "Administration shortcuts",
@@ -133,8 +134,7 @@
         }
       ],
       "emptyTitle": "No data in this range",
-      "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available.",
-      "publishedTotalNote": "Published properties shows the current active total across all publication dates."
+      "emptyBody": "There are no operational records for the selected range. Real metrics will appear when records are available."
     },
     "states": {
       "loading": {
@@ -2558,9 +2558,9 @@
     "allCategories": "All",
     "categoryLabel": "Article categories",
     "openArticle": "Read article",
+    "readTimeLabel": "Reading time",
     "publishedAt": "Published",
     "authorLabel": "Author",
-    "readTimeLabel": "Reading time",
     "authorUnavailable": "Author details are not available in the public content projection.",
     "imageUnavailable": "Article image unavailable",
     "noSummary": "No published summary is available for this article.",
@@ -2749,6 +2749,14 @@
     "mutationFailed": "The action could not be completed. Try again."
   },
   "provider/copy#getProviderCopy": {
+    "accountType": {
+      "label": "Account type",
+      "types": {
+        "individual_broker": "Individual property provider",
+        "brokerage_office": "Real estate brokerage office",
+        "developer_company": "Real estate development company"
+      }
+    },
     "nav": {
       "overview": "Dashboard",
       "properties": "My properties",
@@ -2921,15 +2929,7 @@
     "retry": "Retry",
     "reviewReason": "Reason:",
     "continueApplication": "Continue provider application",
-    "unavailable": "Unavailable",
-    "accountType": {
-      "label": "Account type",
-      "types": {
-        "individual_broker": "Individual property provider",
-        "brokerage_office": "Real estate brokerage office",
-        "developer_company": "Real estate development company"
-      }
-    }
+    "unavailable": "Unavailable"
   },
   "provider/customer-requests-copy#getProviderCustomerRequestsCopy": {
     "eyebrow": "Customer request management",
@@ -3088,6 +3088,12 @@
       "request.updated": "Request update",
       "property.updated": "Property update",
       "profile.updated": "Profile update",
+      "commission.account_changed": "Commission update",
+      "commission.account_stopped": "Commission assignment cancelled",
+      "commission.exception_activated": "Commission exception",
+      "commission.exception_stopped": "Commission exception stopped",
+      "community.report_resolved": "Report resolved",
+      "community.report_reviewed": "Report reviewed",
       "account.admin_message": "Message from administration",
       "advertising.approved": "Advertising approval",
       "advertising.rejected": "Advertising rejection",
@@ -3812,6 +3818,17 @@
         "property": "Standalone property",
         "unit": "Unit within a property or project"
       },
+      "parentPicker": {
+        "search": "Search by building or property name",
+        "help": "The registered building or property this unit belongs to, such as an apartment inside a building. Choose it by name from your properties. Optional if you selected a project.",
+        "kindHelp": "For an apartment, shop or plot listed on its own, choose “Standalone property”. Choose a unit to link it to a registered property or project.",
+        "loading": "Loading your properties…",
+        "empty": "No main properties on this page. Try searching or the next page. You can add the main property first, or choose “Standalone property”.",
+        "error": "Your properties could not be loaded. Retry; your current selection is preserved.",
+        "selected": "Currently linked property",
+        "previous": "Previous",
+        "next": "Next"
+      },
       "transactionLabels": {
         "sale": "Sale",
         "rent": "Rent"
@@ -3861,18 +3878,7 @@
       "sourceHelp": "Provider type and organization are determined automatically from your approved account. No code is needed.",
       "notFoundTitle": "Draft not found",
       "notFoundBody": "This draft could not be loaded or is not owned by the current session.",
-      "unavailable": "Unavailable",
-      "parentPicker": {
-        "search": "Search by building or property name",
-        "help": "The registered building or property this unit belongs to, such as an apartment inside a building. Choose it by name from your properties. Optional if you selected a project.",
-        "kindHelp": "For an apartment, shop or plot listed on its own, choose “Standalone property”. Choose a unit to link it to a registered property or project.",
-        "loading": "Loading your properties…",
-        "empty": "No main properties on this page. Try searching or the next page. You can add the main property first, or choose “Standalone property”.",
-        "error": "Your properties could not be loaded. Retry; your current selection is preserved.",
-        "selected": "Currently linked property",
-        "previous": "Previous",
-        "next": "Next"
-      }
+      "unavailable": "Unavailable"
     },
     "states": {
       "loading": {

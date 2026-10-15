@@ -9,6 +9,8 @@ test('Mongo insert cannot add _id to the account commission response or its audi
   const connection = {
     collection() { return {
       async createIndex() {},
+      async dropIndex() {},
+      async updateOne() {},
       async insertOne(row: CommissionAccountOverride & { _id?: Types.ObjectId }) { row._id = new Types.ObjectId(); }
     }; },
     async startSession() { return { async withTransaction<T>(run: () => Promise<T>) { return run(); }, async endSession() {} }; }

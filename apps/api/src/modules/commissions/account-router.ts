@@ -1,6 +1,8 @@
 import { Router, type Request, type Response } from 'express';
+import { z } from 'zod';
 import {
   commissionAccountReadQuerySchema,
+  commissionAccountOverridePatchSchema,
   type RbacPermission
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
@@ -13,7 +15,9 @@ import { CommissionAccountServiceError, type CommissionAccountService } from './
 
 export const ADMIN_COMMISSION_ACCOUNT_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/account-commissions/:accountId', operationId: 'getAdminAccountCommission' },
-  { method: 'PUT', path: '/api/v1/admin/account-commissions/:accountId', operationId: 'setAdminAccountCommission' }
+  { method: 'PUT', path: '/api/v1/admin/account-commissions/:accountId', operationId: 'setAdminAccountCommission' },
+  { method: 'GET', path: '/api/v1/admin/account-commissions/:accountId/assignments', operationId: 'listAdminAccountCommissionAssignments' },
+  { method: 'PATCH', path: '/api/v1/admin/account-commissions/:accountId/assignments/:overrideId', operationId: 'updateAdminAccountCommissionAssignment' }
 ] as const;
 
 export interface CommissionAccountRouterDependencies {
@@ -21,6 +25,12 @@ export interface CommissionAccountRouterDependencies {
   accessTokens: AccessTokenService;
   authorization: Pick<RbacService, 'authorize'>;
 }
+
+const cancelAssignmentSchema = z.object({
+  expectedVersion: commissionAccountOverridePatchSchema.shape.expectedVersion,
+  reason: commissionAccountOverridePatchSchema.shape.reason,
+  status: z.literal('archived')
+}).strict();
 
 const ERROR_MAP = Object.freeze({
   COMMISSION_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
@@ -113,6 +123,24 @@ export function createCommissionAccountRouter(
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.get('/admin/account-commissions/:accountId/assignments', async (request, response) => {
+    try {
+      await requirePermission(dependencies, response, 'admin:commissions.view');
+      const data = await dependencies.service.listOverrides(claims(response), { ...request.query, accountId: accountId(request.params.accountId) });
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+  router.patch('/admin/account-commissions/:accountId/assignments/:overrideId', async (request, response) => {
+    try {
+      await requirePermission(dependencies, response, 'admin:commissions.manage');
+      const input = cancelAssignmentSchema.parse(request.body ?? {});
+      const current = await dependencies.service.getOverride(claims(response), accountId(request.params.overrideId));
+      if (current.accountId !== accountId(request.params.accountId)) throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_NOT_FOUND');
+      const data = await dependencies.service.updateOverride(claims(response), current.id, input, mutationContext(request));
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
   });
 
   return router;

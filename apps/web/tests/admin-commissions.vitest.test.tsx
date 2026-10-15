@@ -98,6 +98,7 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
 }
 
 const loaders = {
+  assignmentSource: { loadAssignments: vi.fn(async () => ({ items: [], page: 1, limit: 20, total: 0 })), updateAssignment: vi.fn(async () => override) },
   loadUsers: vi.fn(async () => adminAccountUserListDataSchema.parse({ items: [{ id: accountId, displayName: 'Brokerage Office', email: 'office@example.test', roleType: 'provider', status: 'verified', locale: 'en', version: 1, statusChangedAt: date, createdAt: date, updatedAt: date, availableActions: [] }], page: 1, limit: 20, total: 1 })),
   loadPolicies: vi.fn(async () => policyList),
   createPolicy: vi.fn(async () => policy),

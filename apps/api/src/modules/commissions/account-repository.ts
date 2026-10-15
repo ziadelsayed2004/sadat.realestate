@@ -4,6 +4,7 @@ import {
   type CommissionAccountOverride
 } from '@sadat-real-estate/contracts';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
+import { writeCommissionAccountNotification } from './account-notifications.js';
 
 export type CommissionAccountOverrideWriteResult =
   | { kind: 'written' }
@@ -66,20 +67,26 @@ export function createMongooseCommissionAccountOverrideRepository(
   let indexes: Promise<unknown> | undefined;
 
   const ensureIndexes = (): Promise<unknown> => {
-    indexes ??= Promise.all([
-      collection.createIndex(
-        { id: 1 },
-        { unique: true, name: 'commission_account_overrides_id_unique' }
-      ),
-      collection.createIndex(
+    indexes ??= (async () => {
+      // Build the replacement before removing the old stricter index. Archived
+      // assignments remain in history but do not reserve a new assignment's date.
+      await collection.createIndex(
         { accountId: 1, effectiveFrom: 1 },
-        { unique: true, name: 'commission_account_overrides_account_effective_unique' }
-      ),
-      collection.createIndex(
-        { accountId: 1, status: 1, effectiveFrom: -1, version: -1, id: 1 },
-        { name: 'commission_account_overrides_account_status_effective' }
-      )
-    ]);
+        { unique: true, partialFilterExpression: { status: { $in: ['draft', 'active', 'inactive'] } }, name: 'commission_account_overrides_nonarchived_effective_unique' }
+      );
+      try { await collection.dropIndex('commission_account_overrides_account_effective_unique'); }
+      catch (error) { if (!(error && typeof error === 'object' && 'code' in error && [26, 27].includes(Number(error.code)))) throw error; }
+      return Promise.all([
+        collection.createIndex(
+          { id: 1 },
+          { unique: true, name: 'commission_account_overrides_id_unique' }
+        ),
+        collection.createIndex(
+          { accountId: 1, status: 1, effectiveFrom: -1, version: -1, id: 1 },
+          { name: 'commission_account_overrides_account_status_effective' }
+        )
+      ]);
+    })();
     return indexes;
   };
 
@@ -115,7 +122,10 @@ export function createMongooseCommissionAccountOverrideRepository(
       try {
         return await session.withTransaction(async () => {
           const result = await insert(override, session);
-          if (result.kind === 'written') await audit.record(event, session);
+          if (result.kind === 'written') {
+            await audit.record(event, session);
+            await writeCommissionAccountNotification(connection, override, undefined, session);
+          }
           return result;
         });
       } catch (error) {
@@ -135,6 +145,8 @@ export function createMongooseCommissionAccountOverrideRepository(
           const result = await collection.replaceOne({ id: override.id, version: expectedVersion }, { ...override }, { session });
           if (result.matchedCount === 1) {
             await audit.record(event, session);
+            const before = event.before as { status?: unknown } | undefined;
+            await writeCommissionAccountNotification(connection, override, before?.status, session);
             return { kind: 'written' } as const;
           }
           const current = await collection.findOne({ id: override.id }, { session, projection: { id: 1 } });

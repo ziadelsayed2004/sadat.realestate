@@ -2889,5 +2889,29 @@
     "purpose": "Resolve explicit coordinates from an owned property map link without saving",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/account-commissions/:accountId/assignments",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Read saved account commission assignments and cancellation history",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/account-commissions/:accountId/assignments/:overrideId",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Cancel a saved account commission assignment with version and reason",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

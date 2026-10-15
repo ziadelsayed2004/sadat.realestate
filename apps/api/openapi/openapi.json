@@ -1645,7 +1645,9 @@
             "name": "installmentAvailable",
             "in": "query",
             "description": "Filter by a saved installment plan. Omit for all, true for available installments, false for no plan.",
-            "schema": { "type": "boolean" }
+            "schema": {
+              "type": "boolean"
+            }
           },
           {
             "name": "kind",
@@ -5157,7 +5159,12 @@
             "name": "deactivationStatus",
             "in": "query",
             "description": "Pending provider deactivation requests on published active properties.",
-            "schema": { "type": "string", "enum": ["pending"] }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending"
+              ]
+            }
           },
           {
             "name": "status",
@@ -9690,8 +9697,8 @@
       },
       "put": {
         "operationId": "setAdminAccountCommission",
-        "summary": "Create a draft account commission override",
-        "description": "Creates a persisted draft account override with strict value and effective-window validation. The operation never implies settlement or a universal commission.",
+        "summary": "Save and activate an account commission assignment",
+        "description": "Persists an active account assignment with a provider notification and audit in one transaction. Approved exceptions take precedence. Identical retries are idempotent; cancelled assignments retain history and permit a replacement on the same start date.",
         "security": [
           {
             "bearerAuth": []
@@ -13239,6 +13246,155 @@
           },
           "400": {
             "description": "Invalid map URL or property ID"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/account-commissions/{accountId}/assignments": {
+      "get": {
+        "operationId": "listAdminAccountCommissionAssignments",
+        "summary": "Read saved account assignments and cancellation history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "active",
+                "inactive",
+                "archived"
+              ]
+            }
+          },
+          {
+            "name": "at",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "403": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "200": {
+            "description": "Saved assignments, including cancelled history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionAccountOverrideListSuccessEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/account-commissions/{accountId}/assignments/{overrideId}": {
+      "patch": {
+        "operationId": "updateAdminAccountCommissionAssignment",
+        "summary": "Cancel a saved account assignment while retaining history",
+        "description": "Requires manage permission, an expected version and a reason. Only archived status is accepted; cancelled records cannot be modified. The assignment must belong to the account in the path.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "overrideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommissionAccountAssignmentCancel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "403": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "409": {
+            "$ref": "#/components/responses/CommissionAccountError"
+          },
+          "200": {
+            "$ref": "#/components/responses/CommissionAccountOverrideSuccess"
           }
         }
       }
@@ -31333,6 +31489,73 @@
           },
           "installmentAmount": {
             "$ref": "#/components/schemas/PropertyPricingMoney"
+          }
+        }
+      },
+      "CommissionAccountOverrideListSuccessEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "items",
+                  "page",
+                  "limit",
+                  "total"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "maxItems": 100,
+                    "items": {
+                      "$ref": "#/components/schemas/CommissionAccountOverride"
+                    }
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  "total": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CommissionAccountAssignmentCancel": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedVersion",
+          "reason",
+          "status"
+        ],
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 500
+          },
+          "status": {
+            "const": "archived"
           }
         }
       }
