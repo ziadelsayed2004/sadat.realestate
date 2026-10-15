@@ -16,6 +16,7 @@ Validation:
 - `node --import tsx scripts/verify-property-view-counts-local.mjs`: isolated local replica-set checks passed for concurrent deduplication, owner/admin exclusion, transaction rollback/retry, legacy counts and retention. The disposable database was removed.
 - Real local API/browser journey, without mocked responses: saved a standalone property after field validation; verified one accepted visit and one duplicate; checked old kind URLs, visible views and installment UI at 390/1440 pixels; saved a developer's selected location/service areas and verified no repeated location step in documents; checked the public card in WebKit. Screenshots reviewed in `.tmp/search-provider-real/`; fixtures removed.
 - Build passed. Total client JavaScript: 2,618,654 bytes; bounded four-KiB allowance for searchable registration locations/actionable validation. Per-chunk and route CSS limits unchanged.
+- The first complete push check passed 877 API tests but hit three admin UI failures under unrestricted jsdom concurrency (two five-second timeouts, then a stale-state assertion). Both affected files passed in isolation (37 tests). Cap frontend workers at four, keeping all assertions and deadlines, before repeating the complete guarded push.
 
 Legacy counts use retained visit events when the property has no saved counter. Expired historical visitor events cannot be reconstructed. New accepted visits maintain a durable total without retaining visitor hashes beyond their existing TTL.
 

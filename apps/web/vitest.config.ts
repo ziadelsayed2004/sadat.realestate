@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { availableParallelism } from 'node:os';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
@@ -15,6 +16,9 @@ export default defineConfig({
     noExternal: ['@sadat-real-estate/contracts']
   },
   test: {
+    // Bound jsdom workers on high-core developer machines to avoid CPU/memory
+    // contention exhausting individual test deadlines during the full suite.
+    maxWorkers: Math.min(4, availableParallelism()),
     environment: 'jsdom',
     setupFiles: ['./src/features/testing/setup.ts'],
     include: ['./tests/**/*.vitest.test.{ts,tsx}'],
