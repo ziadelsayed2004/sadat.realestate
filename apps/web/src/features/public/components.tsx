@@ -580,9 +580,6 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
       </div>
       <input type="hidden" name="transactionType" value={transactionType} readOnly />
       <input type="hidden" name="lang" value={locale} readOnly />
-      <div className="public-homepage__search-options">
-        <label><input type="checkbox" name="installmentAvailable" value="true" />{locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
-      </div>
       <div className="public-homepage__search-row">
         <CustomSelect
           name="propertyTypeId"
@@ -611,6 +608,7 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
             control above is always backed by admin-managed location ids. */}
         <input id="public-homepage-search" name="search" type="search" className="a11y-visually-hidden" tabIndex={-1} aria-hidden="true" />
         <HomepagePriceRange key={transactionType} locale={locale} transactionType={transactionType} minPrice={minPrice} maxPrice={maxPrice} onChange={(min, max) => { setMinPrice(min); setMaxPrice(max); }} />
+        <label className="public-homepage__installment-filter"><input type="checkbox" name="installmentAvailable" value="true" />{locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
         <button type="submit" disabled={!priceRangeValid}>
           <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg>
           {searchActionLabel}
@@ -689,10 +687,12 @@ function Hero({
       </div> : null}
       </div>
       <div className="public-homepage__hero-content">
+        <div className="public-homepage__hero-heading">
         <p className="public-homepage__eyebrow">{localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
+        </div>
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>

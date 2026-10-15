@@ -103,8 +103,10 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await expect(saveButton).toHaveText(/\S/u);
     await expect(saveButton).toHaveCSS('background-color', (page.viewportSize()?.width ?? 1280) <= 767 ? 'rgb(255, 255, 255)' : 'rgb(23, 35, 61)');
     await expect(page.locator('body')).not.toContainText(/aaaaaaaaaaaaaaaaaaaaaaaa|accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.evaluate(() => window.scrollTo(0, 0));
     if (process.env.AUTH_LANE_SEMANTIC_ONLY !== '1') await expect(page).toHaveScreenshot(`provider-property-details-${locale}.png`, { fullPage: true, maxDiffPixelRatio: 0.02 });
   });
@@ -186,7 +188,7 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     expect(unexpectedAdminRequests).toEqual([]);
     await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
     await page.evaluate(() => { if (document.activeElement instanceof HTMLElement) document.activeElement.blur(); window.scrollTo(0, 0); });
-    await expect(page.locator('.a11y-skip-link')).not.toBeInViewport();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await page.screenshot({ path: test.info().outputPath('named-property-features.png'), fullPage: true });
     if (process.env.AUTH_LANE_SEMANTIC_ONLY !== '1') await expect(page).toHaveScreenshot(`provider-property-features-${locale}.png`, { fullPage: true });
   });

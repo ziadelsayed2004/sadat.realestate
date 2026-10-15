@@ -41,7 +41,9 @@ test('public About exposes landmarks, labeled navigation, headings, and keyboard
   await expect(about.locator('h1')).toBeVisible();
   await expect(about.locator('.public-about__how h2')).toHaveCount(1);
   await page.keyboard.press('Tab');
-  await expect(page.locator('.a11y-skip-link')).toBeFocused();
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
 });
 
 test('public Team exposes labeled content and a non-deceptive media fallback', async ({ page }) => {

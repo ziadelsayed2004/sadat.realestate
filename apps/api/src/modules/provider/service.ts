@@ -16,6 +16,7 @@ import {
   availableProviderActions,
   missingProviderFields,
   PROVIDER_REQUIREMENT_VERSION,
+  OFFICE_REQUIREMENT_VERSION,
   providerRequirementSnapshot,
   requiredDocumentCategories
 } from './requirements.js';
@@ -209,15 +210,22 @@ function incompleteDetails(
 
 export function createProviderService(dependencies: ProviderServiceDependencies): ProviderService {
   const now = dependencies.now ?? (() => new Date());
+  function currentPolicy(application: ProviderApplicationEntity): ProviderApplicationEntity {
+    if (application.providerType !== 'brokerage_office' || !['draft', 'needs_information'].includes(application.status)) return application;
+    const draft = { ...application };
+    delete draft.requirementsSnapshot;
+    return { ...draft, requirementVersion: OFFICE_REQUIREMENT_VERSION };
+  }
 
   async function owned(claims: AccessTokenClaims): Promise<ProviderApplicationEntity> {
     providerClaims(claims);
     const application = await dependencies.repository.findByUserId(claims.sub);
     if (!application) throw new ProviderServiceError('PROVIDER_APPLICATION_NOT_FOUND');
-    return application;
+    return currentPolicy(application);
   }
 
   async function withCompleteness(application: ProviderApplicationEntity): Promise<ProviderApplicationData> {
+    application = currentPolicy(application);
     const state = await completeness(application, dependencies.documentInventory);
     return applicationData(application, state.missingFields, state.missingDocuments);
   }
@@ -249,7 +257,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
         application = await dependencies.repository.createDraft({
           email: grant.email,
           providerType: input.providerType,
-          requirementVersion: PROVIDER_REQUIREMENT_VERSION
+          requirementVersion: input.providerType === 'brokerage_office' ? OFFICE_REQUIREMENT_VERSION : PROVIDER_REQUIREMENT_VERSION
         });
       } catch (error) {
         if (error instanceof Error && error.message === 'PROVIDER_ALREADY_EXISTS') {

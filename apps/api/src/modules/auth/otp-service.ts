@@ -25,6 +25,7 @@ export type OtpServiceErrorCode =
   | 'OTP_SEND_RATE_LIMITED'
   | 'OTP_PROVIDER_UNAVAILABLE'
   | 'ACCOUNT_NOT_FOUND'
+  | 'ACCOUNT_ALREADY_EXISTS'
   | 'ACCOUNT_NOT_ACTIVE';
 
 export class OtpServiceError extends Error {
@@ -95,6 +96,9 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
   return Object.freeze({
     isReady: () => dependencies.provider.isReady(),
     async send(input: OtpSendRequest | PasswordResetOtpSendRequest) {
+      if (input.purpose === 'registration' && await dependencies.repository.findRegistrationAccount?.(input.email)) {
+        throw new OtpServiceError('ACCOUNT_ALREADY_EXISTS');
+      }
       if (input.purpose === 'password_reset') {
         const account = await dependencies.repository.findOtpAccount(input.email, input.roleType);
         if (!account) throw new OtpServiceError('ACCOUNT_NOT_FOUND');

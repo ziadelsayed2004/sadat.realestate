@@ -17,6 +17,7 @@ export const AUTH_ERROR_CODES = Object.freeze({
   INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
   ACCOUNT_NOT_ACTIVE: 'ACCOUNT_NOT_ACTIVE',
   ACCOUNT_NOT_FOUND: 'ACCOUNT_NOT_FOUND',
+  ACCOUNT_ALREADY_EXISTS: 'ACCOUNT_ALREADY_EXISTS',
   INVALID_REFRESH_TOKEN: 'INVALID_REFRESH_TOKEN',
   REFRESH_TOKEN_REUSED: 'REFRESH_TOKEN_REUSED',
   INVALID_OTP: 'INVALID_OTP',
@@ -45,11 +46,14 @@ export const normalizedPhoneSchema = phoneInputSchema.pipe(
 
 export const normalizedEmailSchema = z
   .string()
+  // Remove invisible keyboard/paste direction controls, not visible characters.
+  .transform(value => value.replace(/[\u200B-\u200F\u202A-\u202E\u2060\u2066-\u2069\uFEFF]/g, ''))
+  .pipe(z.string()
   .trim()
   .toLowerCase()
   .min(3)
   .max(254)
-  .email();
+  .email());
 
 export const otpPurposeSchema = z.enum(OTP_PURPOSES);
 export const otpRoleTypeSchema = z.enum(OTP_ROLE_TYPES);

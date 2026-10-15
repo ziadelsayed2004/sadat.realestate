@@ -261,7 +261,7 @@
 .public-homepage__hero {
   position: relative;
   display: grid;
-  min-block-size: clamp(30rem, 52vw, 41rem);
+  min-block-size: clamp(28rem, 42vw, 35rem);
   isolation: isolate;
   color: var(--color-on-brand);
   background: var(--color-brand-secondary);
@@ -314,7 +314,7 @@
   gap: var(--space-lg);
   width: min(100% - clamp(2rem, 8vw, 8rem), 78rem);
   margin-inline: auto;
-  padding-block: clamp(var(--space-3xl), 8vw, var(--space-4xl));
+  padding-block: clamp(2rem, 4vw, 4rem);
 }
 
 .public-homepage__eyebrow,
@@ -432,39 +432,9 @@
   box-shadow: 0 2px 8px rgba(27, 41, 66, 0.3);
 }
 
-.public-homepage__search-options {
-  display: flex;
-  color: var(--color-text-strong);
-  font-size: 0.875rem;
-}
-
-.public-homepage__search-options label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 0 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  background: var(--color-surface, #fff);
-  cursor: pointer;
-}
-
-.public-homepage__search-options label:has(input:checked) {
-  color: #145448;
-  border-color: #145448;
-  background: #edf7f2;
-}
-
-.public-homepage__search-options input {
-  width: 18px;
-  height: 18px;
-  accent-color: #145448;
-}
-
 .public-homepage__search-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 0.85rem;
   align-items: end;
 }
@@ -1566,8 +1536,8 @@
   }
 
   .public-homepage__hero {
-    block-size: 53.125rem;
-    min-block-size: 53.125rem;
+    block-size: auto;
+    min-block-size: 35rem;
   }
 
   .public-homepage__hero-content,
@@ -1631,7 +1601,7 @@
   }
 
   .public-homepage__search-row {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
     gap: 0.5rem;
     padding: 0.75rem 0.25rem 0.25rem;
   }
@@ -1701,7 +1671,7 @@
   }
 
   .public-homepage__summary {
-    block-size: 28.0625rem;
+    block-size: auto;
     padding: 3rem max(calc((100vw - 76.875rem) / 2), 2.5rem);
   }
 
@@ -2571,3 +2541,28 @@
     padding: 1.5rem 1rem;
   }
 }
+
+.public-homepage__hero-heading { display: contents; }
+@media (max-width: 767px) {
+  .public-homepage__hero { display: block; min-block-size: 0; block-size: auto; padding: 0; }
+  .public-homepage__hero .public-homepage__hero-visual,
+  .public-homepage__hero .public-homepage__hero-media { position: relative; inset: auto; inline-size: 100%; }
+  .public-homepage__hero .public-homepage__hero-media > img { inline-size: 100%; block-size: auto; object-fit: contain; opacity: 1; }
+  .public-homepage__hero .public-homepage__hero-shade { display: none; }
+  .public-homepage__hero .public-homepage__hero-content { inline-size: 100%; padding: 0; gap: 0; }
+  .public-homepage__hero-heading { display: grid; gap: 12px; padding: 24px 16px; }
+  .public-homepage__hero .public-homepage__search { inline-size: calc(100% - 32px); margin: 0 16px 20px; box-sizing: border-box; }
+}
+
+.public-homepage__search-row .public-homepage__installment-filter {
+  display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;
+  min-block-size: 46px; block-size: auto; padding: 8px 12px; box-sizing: border-box;
+  border: 1px solid #e2dfd5; border-radius: 16px; background: #f8f9fc;
+  color: #17233d; font-size: .875rem; cursor: pointer;
+}
+.public-homepage__search-row .public-homepage__installment-filter:has(:checked) { border-color: #145448; background: #edf7f2; }
+.public-homepage__search-row .public-homepage__installment-filter input { width: 18px; height: 18px; min-height: 18px; padding: 0; accent-color: #145448; }
+.public-homepage__summary-primary { max-inline-size: 100%; overflow-wrap: anywhere; line-height: 1.2; }
+.public-homepage__summary-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 125px), 1fr)); gap: 16px; width: 100%; }
+.public-homepage__summary-item { min-inline-size: 0; padding-inline: 8px; container-type: inline-size; }
+.public-homepage__summary-item strong { font-size: clamp(1.25rem, 23cqi, 3rem); line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }

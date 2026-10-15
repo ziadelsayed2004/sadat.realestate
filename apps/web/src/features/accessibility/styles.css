@@ -117,3 +117,5 @@ code {
     outline-width: 4px;
   }
 }
+[data-shell] input:is([type="date"], [type="time"], [type="datetime-local"]) { direction: ltr; cursor: pointer; }
+[data-shell] input:is([type="date"], [type="time"], [type="datetime-local"])::-webkit-calendar-picker-indicator { opacity: 1; cursor: pointer; min-width: 20px; min-height: 20px; }

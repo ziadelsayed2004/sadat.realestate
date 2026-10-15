@@ -34,7 +34,7 @@ export function DocumentLocationRepair({ application, locale, save, onSaved }: {
   }}>
     <h2>{ar ? 'استكمل موقعك للمتابعة' : 'Complete your location to continue'}</h2>
     <p>{ar ? 'الملفات محفوظة. اختر الموقع الرئيسي ومناطق الخدمة ثم احفظ؛ لا تحتاج لإعادة رفع الملفات.' : 'Your files are saved. Select your primary location and service areas, then save; no re-upload is needed.'}</p>
-    <ProviderLocationFields locale={locale} locations={locations} primary={primary} areas={areas} onPrimary={setPrimary} onAreas={setAreas}
+    <ProviderLocationFields locale={locale} office={application.providerType === 'brokerage_office'} locations={locations} primary={primary} areas={areas} onPrimary={setPrimary} onAreas={setAreas}
       showPrimary={application.missingFields.includes('primaryLocationId')} showAreas={application.missingFields.includes('serviceAreaIds')} disabled={busy} error={error} />
     {error ? <p role="alert">{ar ? 'تعذر تحميل أو حفظ الموقع. أعد المحاولة، وارجع لبيانات الحساب إذا استمر الخطأ.' : 'Could not load or save locations. Retry, or return to account details if the error persists.'}<Button type="button" onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة المحاولة' : 'Retry'}</Button></p> : null}
     <Button type="submit" disabled={busy || !primary || areas.length === 0}>{busy ? (ar ? 'جارٍ الحفظ…' : 'Saving…') : (ar ? 'حفظ الموقع ومناطق الخدمة' : 'Save location and service areas')}</Button>

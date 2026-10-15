@@ -162,8 +162,10 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
       const panelEdge = locale === 'ar' ? panelBox.x + panelBox.width : panelBox.x;
       expect(Math.abs(tabsEdge - panelEdge)).toBeLessThanOrEqual(2);
     }
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.getByRole('link', { name: copy.tabs.profile }).focus();
     await expect(page.getByRole('link', { name: copy.tabs.profile })).toBeFocused();
     await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());

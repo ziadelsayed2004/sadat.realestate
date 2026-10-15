@@ -40,6 +40,22 @@ const verificationTokens: OpaqueTokenService = {
   isValid: (token) => token.length === 43
 };
 
+test('rejects existing registration emails across all roles before sending or creating a challenge', async () => {
+  for (const roleType of ['provider', 'seeker', 'admin'] as const) {
+    let challenges = 0;
+    const provider = createDeterministicFakeOtpProvider();
+    const otp = service(repository({
+      async findRegistrationAccount(email) {
+        assert.equal(email, 'existing@example.com');
+        return { id: '0123456789abcdef01234567', roleType, status: 'verified' };
+      },
+      async createChallenge() { challenges++; return { kind: 'created' }; }
+    }), provider);
+    await rejectsWithCode(() => otp.send({ email: 'existing@example.com', roleType: 'provider', purpose: 'registration' }), 'ACCOUNT_ALREADY_EXISTS');
+    assert.equal(challenges, 0);
+  }
+});
+
 function repository(overrides: Partial<OtpRepository> = {}): OtpRepository {
   return {
     async createChallenge() { return { kind: 'created' }; },

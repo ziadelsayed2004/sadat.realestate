@@ -1,4 +1,5 @@
-import { AdPlacementGuide, adPlacementName } from './placement-guide.tsx';
+import { CalendarTable } from './calendar.tsx';
+import { AdvertisingSteps, AdPlacementGuide, adPlacementName } from './placement-guide.tsx';
 import { FinancialSummary } from './financial-summary.tsx';
 import { AdLedgerTable } from './ledger.tsx';
 import { getAdLedgerCopy } from './ledger-copy.ts';
@@ -25,7 +26,7 @@ import type {
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { adCampaignSchema } from '@sadat-real-estate/contracts';
-import { egyptInstant, egyptDurationLabel } from '../public/egypt-time.ts';
+import { egyptLocalDateTime, egyptInstant, egyptDurationLabel } from '../public/egypt-time.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { AdminNavigation } from '../admin/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
@@ -226,13 +227,13 @@ function RequestReviewPanel({ locale, onReview }: { readonly locale: SupportedLo
 function QuoteIssuePanel({ locale, onIssue, data }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onIssue: (input: Parameters<AdminAdsQuoteIssueMutation>[1]) => Promise<void> }) {
   const assisted = data.request.requestMode === 'assisted';
   const [placementKey, setPlacementKey] = useState('');
-  const [adType, setAdType] = useState('');
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  const [adType, setAdType] = useState(data.request.adType ?? (data.pricingOptions?.adTypes.length === 1 ? data.pricingOptions.adTypes[0]! : ''));
+  const [start, setStart] = useState(egyptLocalDateTime(new Date()));
+  const [end, setEnd] = useState(egyptLocalDateTime(new Date(Date.now() + 7 * 86400000)));
   const [description, setDescription] = useState(assisted ? data.request.purpose.slice(0, 300) : '');
   const [amount, setAmount] = useState('');
-  const [validUntil, setValidUntil] = useState('');
-  const [terms, setTerms] = useState('');
+  const [validUntil, setValidUntil] = useState(egyptLocalDateTime(new Date(Date.now() + 3 * 86400000)));
+  const [terms, setTerms] = useState(locale === 'ar' ? '\u0627\u0644\u0639\u0631\u0636 \u062d\u0633\u0628 \u0627\u0644\u0645\u062f\u0629 \u0648\u0627\u0644\u0645\u0648\u0636\u0639 \u0627\u0644\u0645\u062a\u0641\u0642 \u0639\u0644\u064a\u0647\u0645\u0627. \u0627\u0644\u0646\u0634\u0631 \u0628\u0639\u062f \u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u062f\u0641\u0639 \u0648\u0627\u0643\u062a\u0645\u0627\u0644 \u0645\u062d\u062a\u0648\u0649 \u0627\u0644\u0625\u0639\u0644\u0627\u0646.' : 'For the agreed placement and period. Publication follows payment approval and completion of ad content.');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
   const startInstant = egyptInstant(start);
@@ -251,7 +252,7 @@ function QuoteIssuePanel({ locale, onIssue, data }: { readonly data: AdAdminRequ
   const quoteCopy = getAdminAdsCopy(locale).quoteIssue;
   const campaignFields = assisted ? <div className="admin-ads__campaign-fields">
     <p>{locale === 'ar' ? 'حدد مكان العرض والفترة المتفق عليها بتوقيت مصر. المبلغ هنا بالجنيه المصري.' : 'Set the agreed placement and period in Egypt time. Enter the amount in EGP.'}</p>
-    <label className="admin-ads__field" htmlFor="admin-ad-placement">{locale === 'ar' ? 'مكان عرض الإعلان' : 'Advertising placement'}<select id="admin-ad-placement" value={placementKey} onChange={event => setPlacementKey(event.target.value)} required><option value="">{locale === 'ar' ? 'اختر مكان العرض' : 'Choose a placement'}</option>{data.pricingOptions?.placements.map(item => <option key={item.key} value={item.key}>{item.label[locale] ?? item.label.ar ?? item.label.en}</option>)}</select></label>
+    <label className="admin-ads__field" htmlFor="admin-ad-placement">{locale === 'ar' ? 'مكان عرض الإعلان' : 'Advertising placement'}<select id="admin-ad-placement" value={placementKey} onChange={event => { const key = event.target.value; setPlacementKey(key); const type = key === 'homepage.featured' ? 'featured_card' : 'banner'; if (data.pricingOptions?.adTypes.includes(type)) setAdType(type); }} required><option value="">{locale === 'ar' ? 'اختر مكان العرض' : 'Choose a placement'}</option>{data.pricingOptions?.placements.map(item => <option key={item.key} value={item.key}>{adPlacementName(item.key, locale)}</option>)}</select></label>
     <AdPlacementGuide placementKey={placementKey} locale={locale} />
     {!data.pricingOptions?.placements.length ? <p role="alert">{locale === 'ar' ? 'لا توجد أماكن عرض نشطة ومسموحة. فعّل مكان العرض من إعدادات البانرات والإعلانات ثم حدّث الطلب.' : 'No active, allowed placements are available. Enable a placement in banner and advertising settings, then refresh the request.'}</p> : null}
     {data.pricingOptions?.adTypes.length ? <label className="admin-ads__field" htmlFor="admin-ad-type">{locale === 'ar' ? 'نوع الإعلان' : 'Advertising type'}<select id="admin-ad-type" aria-label={locale === 'ar' ? 'نوع الإعلان' : 'Advertising type'} value={adType} onChange={event => setAdType(event.target.value)} required aria-describedby="admin-ad-type-help"><option value="">{locale === 'ar' ? 'اختر نوع الإعلان' : 'Choose an advertising type'}</option>{data.pricingOptions.adTypes.map(type => <option key={type} value={type}>{adTypeLabel(type, locale)}</option>)}</select><small id="admin-ad-type-help">{adTypeHelp(adType, locale)}</small></label> : null}
@@ -259,7 +260,7 @@ function QuoteIssuePanel({ locale, onIssue, data }: { readonly data: AdAdminRequ
     <label className="admin-ads__field" htmlFor="admin-ad-end">{locale === 'ar' ? 'نهاية العرض — توقيت مصر' : 'Campaign end — Egypt time'}<input id="admin-ad-end" type="datetime-local" dir="ltr" value={end} onChange={event => setEnd(event.target.value)} required /></label>
     {invalidRange ? <p role="alert">{locale === 'ar' ? 'نهاية العرض لازم تكون بعد بدايته. راجع التاريخ والوقت.' : 'Campaign end must be after its start. Check the date and time.'}</p> : duration ? <p role="status">{locale === 'ar' ? 'مدة العرض' : 'Display duration'}: {duration}. {locale === 'ar' ? 'تبدأ بعد اعتماد الدفع والجدولة في الموعد المتفق عليه.' : 'Starts at the agreed time after payment approval and scheduling.'}</p> : null}
   </div> : null;
-  return <form className="admin-ads__review-card" onSubmit={submit}><h3>{quoteCopy.title}</h3><p>{assisted ? locale === 'ar' ? 'أرسل السعر والفترة والشروط المتفق عليها للعميل.' : 'Send the agreed price, period and terms to the provider.' : quoteCopy.help}</p><fieldset disabled={saving}>{campaignFields}<label className="admin-ads__field" htmlFor="admin-ad-quote-description">{quoteCopy.description}<input id="admin-ad-quote-description" value={description} onChange={event => setDescription(event.target.value)} minLength={2} maxLength={300} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-amount">{assisted ? locale === 'ar' ? 'السعر بالجنيه المصري' : 'Price in EGP' : quoteCopy.amount}<input id="admin-ad-quote-amount" type="number" min="0" step={assisted ? '0.01' : '1'} value={amount} onChange={event => setAmount(event.target.value)} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-valid">{quoteCopy.validUntil}<input id="admin-ad-quote-valid" type="datetime-local" dir="ltr" value={validUntil} onChange={event => setValidUntil(event.target.value)} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-terms">{quoteCopy.terms}<textarea id="admin-ad-quote-terms" value={terms} onChange={event => setTerms(event.target.value)} minLength={2} maxLength={2000} required /></label><Button type="submit" loading={saving}>{quoteCopy.submit}</Button></fieldset>{error ? <p role="alert">{quoteCopy.error}</p> : null}</form>;
+  return <form className="admin-ads__review-card" onSubmit={submit}><h3>{quoteCopy.title}</h3><AdvertisingSteps locale={locale} /><p>{assisted ? locale === 'ar' ? 'أرسل السعر والفترة والشروط المتفق عليها للعميل.' : 'Send the agreed price, period and terms to the provider.' : quoteCopy.help}</p><fieldset disabled={saving}>{campaignFields}<label className="admin-ads__field" htmlFor="admin-ad-quote-amount">{assisted ? locale === 'ar' ? 'السعر بالجنيه المصري' : 'Price in EGP' : quoteCopy.amount}<input id="admin-ad-quote-amount" type="number" min="0" step={assisted ? '0.01' : '1'} value={amount} onChange={event => setAmount(event.target.value)} required /></label><details className="admin-ads__optional-details" open={!assisted}><summary>{locale === 'ar' ? '\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u0639\u0631\u0636 \u0648\u0627\u0644\u0634\u0631\u0648\u0637 (\u064a\u0645\u0643\u0646 \u062a\u0639\u062f\u064a\u0644\u0647\u0627)' : 'Quote details and terms (editable)'}</summary><label className="admin-ads__field" htmlFor="admin-ad-quote-description">{quoteCopy.description}<input id="admin-ad-quote-description" value={description} onChange={event => setDescription(event.target.value)} minLength={2} maxLength={300} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-valid">{quoteCopy.validUntil}<input id="admin-ad-quote-valid" type="datetime-local" dir="ltr" value={validUntil} onChange={event => setValidUntil(event.target.value)} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-terms">{quoteCopy.terms}<textarea id="admin-ad-quote-terms" value={terms} onChange={event => setTerms(event.target.value)} minLength={2} maxLength={2000} required /></label></details><Button type="submit" loading={saving}>{quoteCopy.submit}</Button></fieldset>{error ? <p role="alert">{quoteCopy.error}</p> : null}</form>;
 }
 
 function RequestDetail({ data, locale, onBack, onReview, onIssueQuote, onSchedule }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onBack: () => void; readonly onReview: (action: 'approve' | 'reject', reason: string) => Promise<void>; readonly onIssueQuote: (input: Parameters<AdminAdsQuoteIssueMutation>[1]) => Promise<void>; readonly onSchedule: (options: SchedulingOptions) => Promise<void> }) {
@@ -363,12 +364,6 @@ function ReviewPanel({ proof, locale, review, onSaved, loadFile }: { readonly pr
     <PaymentAccounts {...proof} locale={locale} /><PaymentProofPreview key={proof.id} proof={proof} locale={locale} load={loadFile} /><fieldset disabled={state === 'saving' || state === 'permission' || proof.status !== 'pending_review'}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ads-review-action" value="approve" checked={action === 'approve'} onChange={() => { setAction('approve'); setFeedback(undefined); }} />{copy.approve}</label><label><input type="radio" name="admin-ads-review-action" value="reject" checked={action === 'reject'} onChange={() => { setAction('reject'); setFeedback(undefined); }} />{copy.reject}</label></div><label className="admin-ads__field" htmlFor="admin-ads-review-reason">{copy.reasonLabel}<textarea id="admin-ads-review-reason" value={reason} onChange={event => action === 'approve' ? setApprovalReason(event.target.value) : setRejectionReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={state === 'saving'} disabled={state === 'permission'}>{state === 'saving' ? copy.reviewing : copy.reviewAction}</Button></fieldset>{feedback !== undefined ? <p className="admin-ads__feedback" data-tone={state === 'error' || state === 'permission' ? 'error' : 'success'} role={state === 'error' || state === 'permission' ? 'alert' : 'status'}>{feedback}</p> : null}</form>;
 }
 
-function CalendarTable({ data, locale }: { readonly data: AdCalendarListData; readonly locale: SupportedLocale }) {
-  const copy = getAdminAdsCopy(locale);
-  const ar = locale === 'ar';
-  return <><div className="admin-ads__detail-actions"><a href={`/admin/ads/featured?lang=${locale}`}>{ar ? 'إضافة إعلان رئيسية مميز' : 'Add featured homepage ad'}</a><a href={`/admin/banners/new?lang=${locale}`}>{ar ? 'إضافة بانر أعلى الصفحة' : 'Add homepage hero banner'}</a></div><div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.start}</th><th scope="col">{copy.columns.end}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={`${item.requestId}-${item.version}`} data-testid={`admin-ad-calendar-${item.requestId}`}><td><a href={`/admin/ads/requests?requestId=${item.requestId}&lang=${locale}`}>{item.requestId}</a></td><td><code>{item.providerId}</code></td><td>{adPlacementName(item.placementKey, locale)}</td><td><StatusBadge status={item.status} label={copy.calendarStatus[item.status] ?? item.status} /></td><td>{dateLabel(item.startsAt, locale)}</td><td>{dateLabel(item.endsAt, locale)}</td><td><a href={`${item.placementKey === 'homepage.featured' ? '/admin/ads/featured?requestId=' : '/admin/banners?adRequestId='}${item.requestId}&lang=${locale}`}>{ar ? 'معاينة وتصميم الإعلان' : 'Preview and edit ad'}</a><br />{['homepage.hero', 'homepage.featured'].includes(item.placementKey) ? <a href={`/?lang=${locale}#${item.placementKey === 'homepage.featured' ? 'homepage-featured' : 'homepage-hero'}`} target="_blank" rel="noopener noreferrer">{ar ? 'مكانه في الرئيسية' : 'Location on homepage'}</a> : null}</td></tr>)}</tbody></table></div></>;
-}
-
 function FinancialTable({ data, locale, onDetail }: { readonly data: AdFinancialReviewListData; readonly locale: SupportedLocale; readonly onDetail: (id: string) => void }) {
   const copy = getAdminAdsCopy(locale);
   const count = (predicate: (item: AdFinancialReviewListData['items'][number]) => boolean) => data.items.filter(predicate).length;
@@ -413,6 +408,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
   const [state, setState] = useState<AdminAdsState>('loading');
   const [payload, setPayload] = useState<LoadedPayload | undefined>(undefined);
   const [attempt, setAttempt] = useState(0);
+  const [calendarPage, setCalendarPage] = useState(1);
   const [requestQuery, setRequestQuery] = useState<AdAdminRequestListQuery>({ page: 1, limit: 20 });
   const [requestStatus, setRequestStatus] = useState<AdAdminRequestListQuery['status'] | ''>('');
   const [providerId, setProviderId] = useState('');
@@ -444,7 +440,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
       const selectedProof = selectedProofId === undefined ? undefined : data.items.find(item => item.id === selectedProofId) ?? await loaders.loadPaymentProof(selectedProofId, controller.signal);
       return { kind: 'proofs', data, ...(selectedProof ? { selectedProof } : {}) };
     });
-    else if (projection.view === 'calendar') request = loaders.loadCalendar({ page: 1, limit: 50 }, controller.signal).then(data => ({ kind: 'calendar', data }));
+    else if (projection.view === 'calendar') request = loaders.loadCalendar({ page: calendarPage, limit: 50 }, controller.signal).then(data => ({ kind: 'calendar', data }));
     else request = Promise.all([loaders.loadFinancialReview(financialQuery, controller.signal), loaders.loadLedger({ page: 1, limit: 20 }, controller.signal)]).then(([data, ledger]) => ({ kind: 'financial', data, ledger }));
     void request.then(nextPayload => {
       if (controller.signal.aborted) return;
@@ -458,7 +454,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
       }
     });
     return () => controller.abort();
-  }, [attempt, financialQuery, loaders, projection.view, requestQuery, selectedProofId, selectedRequestId, sessionAllowed]);
+  }, [attempt, calendarPage, financialQuery, loaders, projection.view, requestQuery, selectedProofId, selectedRequestId, sessionAllowed]);
 
   function applyRequestFilters(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -519,7 +515,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
         {projection.view === 'review' && selectedProof !== undefined ? <ReviewPanel key={selectedProof.id} loadFile={loaders.loadPaymentProofFile} proof={selectedProof} locale={locale} review={loaders.reviewPaymentProof} onSaved={() => { setReviewFeedback(copy.reviewSaved); setAttempt(value => value + 1); }} /> : null}
         <TableFrame title={copy.titles[projection.view]} count={copy.count(payload.data.total)} note={copy.directionNote}><PaymentProofTable data={payload.data} locale={locale} loadFile={loaders.loadPaymentProofFile} review={projection.view === 'review'} onReview={id => go(`${ADMIN_ADS_PENDING_REVIEW_ROUTE}?proofId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame>
       </> : null}
-      {state === 'success' && payload?.kind === 'calendar' ? <TableFrame title={copy.titles.calendar} count={copy.count(payload.data.total)} note={copy.directionNote}><CalendarTable data={payload.data} locale={locale} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame> : null}
+      {state === 'success' && payload?.kind === 'calendar' ? <TableFrame title={copy.titles.calendar} count={copy.count(payload.data.total)} note={copy.directionNote}><CalendarTable data={payload.data} locale={locale} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setCalendarPage(value => Math.max(1, value - 1))} onNext={() => setCalendarPage(value => value + 1)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame> : null}
       {state === 'success' && payload?.kind === 'financial' ? <><FinancialSummary summary={payload.data.summary} locale={locale} /><TableFrame title={copy.titles.financial} count={copy.count(payload.data.total)} note={copy.notRealized}><FinancialTable data={payload.data} locale={locale} onDetail={id => go(`${ADMIN_ADS_FINANCIAL_REVIEW_ROUTE}?requestId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setFinancialQuery(value => ({ ...value, page: Math.max(1, value.page - 1) }))} onNext={() => setFinancialQuery(value => ({ ...value, page: value.page + 1 }))} /></TableFrame><TableFrame title={getAdLedgerCopy(locale).title} count={copy.count(payload.ledger.total)} note={copy.notRealized}><AdLedgerTable data={payload.ledger} locale={locale} /></TableFrame></> : null}
     </div>
   </section>;

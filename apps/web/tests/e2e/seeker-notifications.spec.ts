@@ -161,8 +161,10 @@ test.describe('SEK-07 Seeker Notifications', () => {
     await expect(page.locator('body')).not.toContainText(/recipientId|internalNote|accessToken|refreshToken|providerDocument/u);
     await expect(page.locator('.seeker-notifications__count')).toContainText(`4 ${copy.unreadCount}`);
     await expect(page.getByRole('link', { name: `${copy.openLink}: ${locale === 'ar' ? 'تذكير بموعد معاينة' : 'Viewing appointment reminder'}` })).toHaveAttribute('href', `/seeker/viewings?viewing=${firstId}&ref=VIEW-201&lang=${locale}`);
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.locator('.seeker-notifications__tab').first().focus();
     await expect(page.locator('.seeker-notifications__tab').first()).toBeFocused();
     await expect(page.getByRole('button', { name: new RegExp(`^${copy.markAll}`) })).toBeVisible();

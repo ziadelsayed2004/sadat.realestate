@@ -3,7 +3,7 @@ import type { PublicPropertyLocation, SupportedLocale } from '@sadat-real-estate
 
 const normalize = (text: string) => text.normalize('NFKD').replace(/\p{M}|ـ/gu, '').replace(/[أإآٱ]/gu, 'ا').replace(/ى/gu, 'ي').toLowerCase();
 
-export function ProviderLocationFields({ locale, locations, primary, areas, onPrimary, onAreas, showPrimary = true, showAreas = true, error = false, disabled = false }: {
+export function ProviderLocationFields({ locale, locations, primary, areas, onPrimary, onAreas, showPrimary = true, showAreas = true, error = false, disabled = false, office = false }: {
   readonly locale: SupportedLocale;
   readonly locations: readonly PublicPropertyLocation[];
   readonly primary: string;
@@ -14,6 +14,7 @@ export function ProviderLocationFields({ locale, locations, primary, areas, onPr
   readonly showAreas?: boolean;
   readonly error?: boolean;
   readonly disabled?: boolean;
+  readonly office?: boolean;
 }) {
   const ar = locale === 'ar';
   const id = useId();
@@ -33,7 +34,7 @@ export function ProviderLocationFields({ locale, locations, primary, areas, onPr
   }
   return <div className="provider-location-fields">
     {showPrimary ? <div className="provider-location-fields__primary">
-      <label htmlFor={`${id}-primary`}>{ar ? 'الموقع الرئيسي (مطلوب للمتابعة)' : 'Primary location (required to continue)'}</label>
+      <label htmlFor={`${id}-primary`}>{ar ? (office ? 'موقع المكتب (مطلوب للمتابعة)' : 'الموقع الرئيسي (مطلوب للمتابعة)') : 'Primary location (required to continue)'}</label>
       <div className="provider-location-fields__picker">
       <input id={`${id}-primary`} role="combobox" autoComplete="off" value={query} disabled={disabled} maxLength={120}
         placeholder={ar ? 'اكتب اسم المنطقة واختر من القائمة' : 'Type an area and choose a suggestion'}
@@ -55,10 +56,10 @@ export function ProviderLocationFields({ locale, locations, primary, areas, onPr
         {suggestions.length === 0 ? <li role="presentation">{ar ? 'لا توجد منطقة مطابقة. جرّب اسمًا آخر.' : 'No matching area. Try another name.'}</li> : null}
       </ul> : null}
       </div>
-      <small id={`${id}-help`}>{ar ? 'اكتب للبحث، ثم اختر مقر الشركة من الاقتراحات. مناطق الخدمة تختارها أسفل.' : 'Search and select your office location. Choose service areas below.'}</small>
+      <small id={`${id}-help`}>{ar ? (office ? 'اختر المنطقة الموجود فيها مكتبك مرة واحدة. أسفلها اختر المناطق التي تقدم فيها خدماتك؛ ممكن تكون أكثر من منطقة.' : 'اكتب للبحث، ثم اختر مقر الشركة من الاقتراحات. مناطق الخدمة تختارها أسفل.') : 'Search and select your office location. Choose service areas below.'}</small>
     </div> : null}
     {showAreas ? <fieldset className="provider-account-consents" disabled={disabled} aria-invalid={error && areas.length === 0 ? true : undefined}>
-      <legend>{ar ? 'مناطق الخدمة (اختر منطقة واحدة على الأقل)' : 'Service areas (choose at least one)'}</legend>
+      <legend>{ar ? (office ? 'المناطق التي يخدمها المكتب (اختر منطقة واحدة على الأقل)' : 'مناطق الخدمة (اختر منطقة واحدة على الأقل)') : 'Service areas (choose at least one)'}</legend>
       <label htmlFor={`${id}-areas`}>{ar ? 'ابحث في مناطق الخدمة' : 'Search service areas'}</label>
       <input id={`${id}-areas`} type="search" maxLength={120} value={areaQuery} onChange={event => setAreaQuery(event.target.value)} />
       <small role="status">{ar ? `المناطق المختارة: ${areas.length}` : `Selected areas: ${areas.length}`}</small>

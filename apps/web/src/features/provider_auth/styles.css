@@ -763,3 +763,6 @@
 .provider-location-fields [role="option"]:is(:hover, [data-active="true"], [aria-selected="true"]) { background: #edf7f2; }
 .provider-location-fields small { color: #526176; }
 .provider-location-fields__areas { display: grid; gap: 8px; max-height: 240px; overflow-y: auto; }
+.provider-field-optional,
+.provider-document-card__classification--optional { display: inline-block; padding: 3px 10px; border-radius: 20px; background: #e8f2ff; color: #174678; font-size: .8rem; font-weight: 700; }
+.provider-location-fields fieldset { min-width: 0; padding: 14px; border: 1px solid var(--color-border); border-radius: 16px; }

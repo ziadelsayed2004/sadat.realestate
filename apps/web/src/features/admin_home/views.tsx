@@ -45,6 +45,8 @@ type HomeContentItem = CmsAdminTip | CmsAdminHomepageSection;
 
 function mutationMessage(error: unknown, copy: AdminHomeCopy, locale: SupportedLocale, creating = false): string {
   if (error instanceof ApiClientError) {
+    if (error.apiError?.code === 'PLACEMENT_CONFLICT') return locale === 'ar' ? 'يوجد إعلان منشور في نفس الموضع خلال هذه الفترة. عدّل موعد البداية أو النهاية، أو افتح الإعلان الموجود من قائمة البانرات لتعديله.' : 'A published banner already uses this placement during that period. Change the start/end time, or edit the existing banner in the banner list.';
+    if (error.apiError?.code === 'DUPLICATE') return locale === 'ar' ? 'ترتيب العرض مستخدم في هذا الموضع. حدّث قائمة البانرات واختر الإعلان الموجود لتعديله.' : 'This display order is already used. Refresh the banner list and edit the existing banner.';
     if (error.status === 404) return creating ? copy.mutation.placementNotFound : copy.mutation.notFound;
     if (error.status === 409) return copy.mutation.conflict;
     if (error.status === 401) return locale === 'ar' ? 'انتهت جلسة الإدارة؛ سجّل دخولك.' : 'Admin session expired; sign in again.';
@@ -103,29 +105,16 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 
 function localDateParts(value: string): [string, string] { const local = egyptLocalDateTime(new Date(value)); return [local.slice(0, 10), local.slice(11, 16)]; }
 
-type BannerTime = { clock: string; period: 'am' | 'pm' };
-
-function bannerTimeDraft(time: string): BannerTime {
-  const hour = Number(time.slice(0, 2));
-  return { clock: time ? `${String(hour % 12 || 12).padStart(2, '0')}:${time.slice(3, 5)}` : '', period: hour >= 12 ? 'pm' : 'am' };
-}
+type BannerTime = string;
+const bannerTimeDraft = (time: string): BannerTime => time;
 
 function scheduleInstant(date: string, time: BannerTime): Date | undefined {
-  if (!/^\d{4}-\d{2}-\d{2}$/u.test(date)) return undefined;
-  if (time.clock === '') return egyptInstant(`${date}T00:00`);
-  const parts = /^(0?[1-9]|1[0-2])(?::([0-5]\d))?$/u.exec(time.clock);
-  if (!parts) return undefined;
-  const hour = Number(parts[1]) % 12 + (time.period === 'pm' ? 12 : 0);
-  return egyptInstant(`${date}T${String(hour).padStart(2, '0')}:${parts[2] ?? '00'}`);
+  if (!/^\d{4}-\d{2}-\d{2}$/u.test(date) || (time && !/^([01]\d|2[0-3]):[0-5]\d$/u.test(time))) return undefined;
+  return egyptInstant(`${date}T${time || '00:00'}`);
 }
 
-function BannerTimeField({ id, label, locale, value, disabled, onChange }: { id: string; label: string; locale: SupportedLocale; value: BannerTime; disabled: boolean; onChange: (value: BannerTime) => void }) {
-  return <div style={{ display: 'grid', gap: 6 }}><label htmlFor={id}>{label}</label><div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 8 }}>
-    <input id={id} type="text" dir="ltr" style={{ minWidth: 0 }} placeholder="02:30" pattern="(0?[1-9]|1[0-2])(:[0-5][0-9])?" maxLength={5} aria-describedby="admin-home-banner-schedule-hint" value={value.clock} disabled={disabled} onChange={event => onChange({ ...value, clock: event.target.value.replace(/[٠-٩۰-۹]/gu, digit => String(digit.charCodeAt(0) - (digit <= '٩' ? 0x660 : 0x6f0))) })} />
-    <select id={`${id}-period`} aria-label={`${label} — ${locale === 'ar' ? 'صباحًا أو مساءً' : 'AM or PM'}`} value={value.period} disabled={disabled} onChange={event => onChange({ ...value, period: event.target.value as BannerTime['period'] })}>
-      <option value="am">{locale === 'ar' ? 'صباحًا' : 'AM'}</option><option value="pm">{locale === 'ar' ? 'مساءً' : 'PM'}</option>
-    </select>
-  </div></div>;
+function BannerTimeField({ id, label, value, disabled, onChange }: { id: string; label: string; locale: SupportedLocale; value: BannerTime; disabled: boolean; onChange: (value: BannerTime) => void }) {
+  return <label htmlFor={id}>{label}<input id={id} type="time" step="60" dir="ltr" aria-describedby="admin-home-banner-schedule-hint" value={value} disabled={disabled} onChange={event => onChange(event.target.value)} /></label>;
 }
 
 function BannerSchedulePreview({ locale, startDate, startTime, endDate, endTime }: { locale: SupportedLocale; startDate: string; startTime: BannerTime; endDate: string; endTime: BannerTime }) {
@@ -377,7 +366,7 @@ function BannerCreateForm({ locale, source, onSaved, initialBanner, campaign }: 
         setFeedback({ tone: 'error', text: controls.uploadHint }); event.target.value = ''; return;
       }
       setFiles(current => [...current, ...selected]); event.target.value = '';
-    }} /></label><p className="admin-home__hint">{controls.uploadHint}</p><Button type="button" variant="secondary" disabled={saving} aria-expanded={libraryOpen} onClick={() => setLibraryOpen(value => !value)}>{locale === 'ar' ? 'اختيار من مكتبة الوسائط' : 'Choose from media library'}</Button>{libraryOpen ? <BannerMediaLibrary source={source} locale={locale} disabled={saving || images.length + files.length >= 20} onPick={file => { setFiles(current => current.length + images.length >= 20 ? current : [...current, file]); setDirty(true); }} /> : null}<BannerGallery locale={locale} images={images} files={files} disabled={saving} onChange={value => { setImages(value); setDirty(true); }} onFilesChange={value => { setFiles(value); setDirty(true); }} /><p className="admin-home__hint">{locale === 'ar' ? 'يمكنك إضافة حتى 20 صورة. تتبدّل بالترتيب بعد النشر. المقاس المقترح 1200 × 400 بكسل، ويجب مطابقة المقاسات المسموحة في إعدادات الإعلانات.' : 'Add up to 20 images. They rotate in order after publication. Suggested size: 1200 × 400 px; match the sizes allowed in advertising settings.'}</p><label htmlFor="admin-home-banner-duration">{locale === 'ar' ? 'مدة عرض كل صورة (بالثواني)' : 'Seconds per image'}<input id="admin-home-banner-duration" type="number" min="3" max="60" step="1" required value={displaySeconds} aria-invalid={durationError || undefined} aria-describedby={durationError ? "admin-home-banner-duration-error" : undefined} onInvalid={() => setDurationError(true)} onChange={event => { setDisplaySeconds(event.target.value); setDurationError(false); }} /></label>{durationError ? <p id="admin-home-banner-duration-error" role="alert" className="admin-home__feedback" data-tone="error">{durationMessage}</p> : null}</fieldset>{savedBanner || files.length ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}</p> : null}</form></section>;
+    }} /></label><p className="admin-home__hint">{controls.uploadHint}</p><Button type="button" variant="secondary" disabled={saving} aria-expanded={libraryOpen} onClick={() => setLibraryOpen(value => !value)}>{locale === 'ar' ? 'اختيار من مكتبة الوسائط' : 'Choose from media library'}</Button>{libraryOpen ? <BannerMediaLibrary source={source} locale={locale} disabled={saving || images.length + files.length >= 20} onPick={file => { setFiles(current => current.length + images.length >= 20 ? current : [...current, file]); setDirty(true); }} /> : null}<BannerGallery locale={locale} images={images} files={files} disabled={saving} onChange={value => { setImages(value); setDirty(true); }} onFilesChange={value => { setFiles(value); setDirty(true); }} /><p className="admin-home__hint">{locale === 'ar' ? 'يمكنك إضافة حتى 20 صورة. تتبدّل بالترتيب بعد النشر. المقاس المقترح 1200 × 400 بكسل، ويجب مطابقة المقاسات المسموحة في إعدادات الإعلانات.' : 'Add up to 20 images. They rotate in order after publication. Suggested size: 1200 × 400 px; match the sizes allowed in advertising settings.'}</p><label htmlFor="admin-home-banner-duration">{locale === 'ar' ? 'مدة عرض كل صورة (بالثواني)' : 'Seconds per image'}<input id="admin-home-banner-duration" type="number" min="3" max="60" step="1" required value={displaySeconds} aria-invalid={durationError || undefined} aria-describedby={durationError ? "admin-home-banner-duration-error" : undefined} onInvalid={() => setDurationError(true)} onChange={event => { setDisplaySeconds(event.target.value); setDurationError(false); }} /></label>{durationError ? <p id="admin-home-banner-duration-error" role="alert" className="admin-home__feedback" data-tone="error">{durationMessage}</p> : null}</fieldset>{savedBanner || files.length ? <label htmlFor="admin-home-banner-reason">{copy.reason}<textarea id="admin-home-banner-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={3} required placeholder={copy.reasonPlaceholder} /></label> : null}<div className="admin-home__inline-actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button>{savedBanner?.status === "draft" ? <Button type="button" variant="secondary" disabled={saving || dirty} onClick={() => void publish()}>{controls.publish}</Button> : null}<a className="admin-home__text-link" href={`${ADMIN_BANNERS_ROUTE}?lang=${encodeURIComponent(locale)}`}>{copy.cancel}</a></div>{feedback ? <p className="admin-home__feedback" data-tone={feedback.tone} role={feedback.tone === 'error' ? 'alert' : 'status'}>{feedback.text}{feedback.tone === 'error' ? <><br /><a href={`${ADMIN_BANNERS_ROUTE}?placementKey=${encodeURIComponent(placementKey)}&lang=${locale}`}>{locale === 'ar' ? 'عرض إعلانات هذا الموضع' : 'View banners in this placement'}</a></> : null}</p> : null}</form></section>;
 }
 
 function ContentForm({ namespace, item, items, locale, source, onSaved, onCancel, initialKey = '' }: { readonly namespace: 'tips' | 'homepage'; readonly item?: HomeContentItem; readonly items: readonly HomeContentItem[]; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: (data: AdminHomeCmsContent) => void; readonly onCancel: () => void; readonly initialKey?: string }) {
@@ -444,9 +433,10 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
   const query = new URL(url ?? (typeof window === 'undefined' ? path : window.location.href), 'http://sadat-real-estate.local').searchParams;
   const requestId = query.get('requestId') ?? undefined;
   const adRequestId = query.get('adRequestId') ?? undefined;
+  const placementFilter = query.get('placementKey') ?? 'homepage.hero';
   const newBannerHref = `${ADMIN_BANNERS_ROUTE}/new?lang=${locale}${adRequestId ? `&requestId=${adRequestId}` : ''}`;
   const requestedStatus = adBannerStatusSchema.safeParse(query.get('status'));
-  const initialBannersMatch = route === 'banners' && initialBanners !== undefined && !adRequestId && !requestedStatus.success;
+  const initialBannersMatch = route === 'banners' && initialBanners !== undefined && !adRequestId && !query.has('placementKey') && !requestedStatus.success;
   const initialContentMatch = (route === 'tips' && initialContent?.namespace === 'tips') || (route === 'homepage' && initialContent?.namespace === 'homepage');
   const [state, setState] = useState<AdminHomeState>(() => session.status !== 'authenticated' || session.role !== 'admin' ? 'permission' : route === 'banner_create' ? 'success' : route === 'not_found' ? 'not_found' : initialBannersMatch ? stateForItems(initialBanners.items) : initialContentMatch ? stateForItems(initialContent!.items) : 'loading');
   const [banners, setBanners] = useState<AdBannerListData | undefined>(initialBannersMatch ? initialBanners : undefined);
@@ -463,14 +453,14 @@ export function AdminHome({ url, locale, session, authClient, apiOrigin, initial
     if ((route === 'banners' && initialBannersMatch && attempt === 0 && page === 1 && !bannerStatus) || (route === 'tips' && initialContentMatch && attempt === 0) || (route === 'homepage' && initialContentMatch && attempt === 0)) return undefined;
     const controller = new AbortController();
     setState('loading');
-    const request = route === 'banners' ? source.loadBanners({ page, limit: 20, placementKey: 'homepage.hero', ...(bannerStatus ? { status: bannerStatus } : {}), ...(adRequestId ? { adRequestId } : {}) }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
+    const request = route === 'banners' ? source.loadBanners({ page, limit: 20, placementKey: placementFilter, ...(bannerStatus ? { status: bannerStatus } : {}), ...(adRequestId ? { adRequestId } : {}) }, controller.signal) : source.loadContent(route === 'tips' ? 'tips' : 'homepage', controller.signal);
     void request.then(next => {
       if (controller.signal.aborted) return;
       if (route === 'banners') { const nextBanners = next as AdBannerListData; setBanners(nextBanners); setState(stateForItems(nextBanners.items)); }
       else { const nextContent = next as AdminHomeCmsContent; setContent(nextContent); setState(stateForItems(nextContent.items)); }
     }).catch(error => { if (!controller.signal.aborted) setState(stateForError(error)); });
     return () => controller.abort();
-  }, [attempt, page, bannerStatus, adRequestId, initialBannersMatch, initialContentMatch, route, sessionRole, session.status, source]);
+  }, [attempt, page, bannerStatus, adRequestId, placementFilter, initialBannersMatch, initialContentMatch, route, sessionRole, session.status, source]);
 
   const refresh = () => setAttempt(value => value + 1);
   const cmsNamespace = route === 'tips' || route === 'homepage' ? route : undefined;

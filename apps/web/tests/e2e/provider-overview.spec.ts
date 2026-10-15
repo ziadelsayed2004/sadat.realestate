@@ -244,12 +244,14 @@ test.describe('PRV-01 Provider Overview', () => {
     expect(navigationBox?.x).toBe(locale === 'ar' ? viewportWidth - 240 : 0);
     expect(navigationBox?.height).toBeGreaterThanOrEqual((dashboardBox?.height ?? 0) - 1);
 
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.locator('.provider-dashboard__navigation a').nth(1).focus();
     await expect(page.locator('.provider-dashboard__navigation a').nth(1)).toBeFocused();
 
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-overview-${locale}.png`, { fullPage: true });
   });
 

@@ -31,12 +31,14 @@ test.describe('ADM-09 through ADM-11 admin master data', () => {
       await expect(page.getByRole('table')).toBeVisible();
       await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);
 
-      await page.locator('.a11y-skip-link').focus();
-      await expect(page.locator('.a11y-skip-link')).toBeFocused();
+      await page.locator('#main-content').focus();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
       await page.locator('.admin-dashboard__navigation a').nth(1).focus();
       await expect(page.locator('.admin-dashboard__navigation a').nth(1)).toBeFocused();
 
-      await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
       await page.evaluate(() => document.fonts.ready);
       await expect(page).toHaveScreenshot(`${routeCase.snapshot}-${locale}.png`, { fullPage: true });
     }

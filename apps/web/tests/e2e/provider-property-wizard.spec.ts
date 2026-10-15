@@ -112,11 +112,13 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.getByRole('button', { name: /Save draft|حفظ المسودة|保存草稿/u }).click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toContainText(/Draft saved|تم حفظ المسودة|草稿已保存/u);
     await expect(page.locator('body')).not.toContainText(/aaaaaaaaaaaaaaaaaaaaaaaa|accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.locator('#provider-property-name').focus();
     await expect(page.locator('#provider-property-name')).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await page.evaluate(async () => {
       await document.fonts.ready;
     });
@@ -139,7 +141,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.locator('#provider-property-longitude').fill('30.74');
     await page.getByRole('button', { name: /Save draft|حفظ المسودة|保存草稿/u }).click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toContainText(/Draft saved|تم حفظ المسودة|草稿已保存/u);
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await page.evaluate(async () => {
       await document.fonts.ready;
     });

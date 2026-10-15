@@ -31,9 +31,7 @@ function envelope(data: unknown, requestId: string): string {
 }
 
 async function hideSkipLink(page: import('@playwright/test').Page): Promise<void> {
-  await page.locator('.a11y-skip-link').evaluate((element) => {
-    (element as HTMLElement).style.visibility = 'hidden';
-  });
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
 }
 
 function propertyFixture(overrides: Record<string, unknown> = {}) {

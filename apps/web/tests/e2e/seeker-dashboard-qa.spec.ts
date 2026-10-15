@@ -182,8 +182,10 @@ test.describe('F3 Seeker Dashboard QA', () => {
       // serialized sensitive field names instead of matching ordinary copy.
       await expect(page.locator('body')).not.toContainText(/\b(?:assignedTo|internalNotes|auditData|providerId|seekerId|recipientId|providerDocument|accessToken|refreshToken|password|secret)\s*[:=]/u);
 
-      await page.locator('.a11y-skip-link').focus();
-      await expect(page.locator('.a11y-skip-link')).toBeFocused();
+      await page.locator('#main-content').focus();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
       await page.locator('.seeker-dashboard__nav a').first().focus();
       await expect(page.locator('.seeker-dashboard__nav a').first()).toBeFocused();
     });

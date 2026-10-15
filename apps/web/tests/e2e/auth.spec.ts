@@ -270,7 +270,9 @@ test('auth controls expose keyboard focus and accessible labels', async ({ page 
   await page.goto(`/auth/verify-email?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
 
   await page.keyboard.press('Tab');
-  await expect(page.locator('.a11y-skip-link')).toBeFocused();
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('#auth-otp-email')).toHaveAttribute('autocomplete', 'email');
   await expect(page.locator('#auth-role-type')).toHaveAttribute('name', 'roleType');
@@ -288,9 +290,7 @@ test('auth login and OTP approved states have responsive visual baselines', asyn
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
   await page.locator('.auth-otp__digit').first().blur();
-  await page.locator('.a11y-skip-link').evaluate((element) => {
-    (element as HTMLElement).style.visibility = 'hidden';
-  });
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
   await expect(page).toHaveScreenshot(`auth-otp-${locale}.png`, {
     fullPage: true,
     mask: [page.locator('.auth-otp__actions')]

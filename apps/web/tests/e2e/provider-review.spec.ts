@@ -46,9 +46,7 @@ function envelope(data: unknown): string {
 }
 
 async function hideSkipLink(page: import('@playwright/test').Page): Promise<void> {
-  await page.locator('.a11y-skip-link').evaluate((element) => {
-    (element as HTMLElement).style.visibility = 'hidden';
-  });
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
 }
 
 test('review, submit, under-review, and tracking states remain API-backed across locales and devices', async ({ page }) => {

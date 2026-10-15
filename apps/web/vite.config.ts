@@ -38,6 +38,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             if (normalizedId.includes('/src/features/admin_featured') || normalizedId.includes('/src/features/admin_accounts/identity-subscription')) return 'feature-featured-identity';
             if (normalizedId.includes('/src/features/admin_commissions')) return 'feature-admin-commissions';
             if (normalizedId.includes('/src/features/provider/advertising-copy') || normalizedId.includes('/src/features/provider/payment-accounts')) return 'feature-payment-copy';
+            if (normalizedId.includes('/src/features/admin_content/city-statistics') || normalizedId.includes('/src/features/admin_content/population-form') || normalizedId.includes('/src/features/admin_ads/calendar') || normalizedId.includes('/src/features/admin_accounts/subscription-guide')) return 'feature-admin-content-tools';
             if (normalizedId.includes('/src/features/admin')) return 'feature-admin';
             if (normalizedId.includes('/src/features/admin_')) return 'feature-admin-operations';
             if (normalizedId.includes('/src/features/provider_property')) return 'feature-provider-property';

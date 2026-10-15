@@ -145,11 +145,13 @@ test.describe('SEK-05 Seeker Viewing Requests', () => {
     await expect(page).toHaveScreenshot(`seeker-viewings-${locale}.png`, { fullPage: true });
     await page.getByRole('tab', { name: locale === 'ar' ? 'السابقة' :'Past' }).click();
     await expect(page.getByTestId(`seeker-viewing-${completedId}`)).toBeVisible();
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.locator('.seeker-viewings__tab').first().focus();
     await expect(page.locator('.seeker-viewings__tab').first()).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
   });
 
   test('keeps the viewing cards within the viewport across responsive widths', async ({ page }) => {

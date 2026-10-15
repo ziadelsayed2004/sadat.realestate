@@ -365,3 +365,10 @@
 .admin-accounts__delete-form .admin-accounts__delete-confirm { display: flex; align-items: flex-start; gap: 0.5rem; }
 .admin-accounts__delete-confirm input { flex: 0 0 auto; margin-block-start: 0.3rem; }
 .admin-accounts__table .admin-accounts__user-actions { position: sticky; inset-inline-end: 0; z-index: 1; background: var(--color-surface); }
+.admin-provider-subscription-guide { padding: 22px; margin-block: 20px; border: 1px solid #e5e2d9; border-radius: 16px; background: #fff; scroll-margin-top: 100px; }
+.admin-provider-subscription-guide summary { cursor: pointer; font-weight: 700; color: #145448; line-height: 1.8; }
+.admin-provider-subscription-guide > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; margin-block: 20px; }
+.admin-provider-subscription-guide article { padding: 16px; border: 1px solid #e5e2d9; border-radius: 12px; background: #faf9f5; }
+.admin-provider-subscription-guide article[data-current="true"] { border-color: #145448; background: #edf7f2; }
+.admin-provider-subscription-guide p { line-height: 1.9; }
+.admin-provider-subscription-guide a { color: #145448; font-weight: 700; }

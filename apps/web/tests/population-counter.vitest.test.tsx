@@ -27,8 +27,7 @@ describe('automatic population reference', () => {
       return display;
     });
     renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(true)} load={async () => display} update={update} />, { locale });
-    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تعديل إحصاءات المدينة' : 'Edit city statistics' }));
-    const count = await screen.findByLabelText(locale === 'ar' ? 'العدد' : 'Count');
+    const count = await screen.findByLabelText(locale === 'ar' ? 'المباني' : 'Buildings');
     expect(count).toHaveValue(50);
     fireEvent.change(count, { target: { value: '123' } });
     fireEvent.change(screen.getByLabelText(locale === 'ar' ? 'سبب التعديل' : 'Change reason'), { target: { value: 'Update approved building count' } });
@@ -44,8 +43,7 @@ describe('automatic population reference', () => {
     const display = cmsAdminContentDataSchema.parse({ namespace: 'display', items: [] });
     const update = vi.fn(async () => { throw new Error('failed'); });
     renderWithLocale(<AdminCmsContent path={path} locale="en" session={session} initialData={data(true)} load={async () => display} update={update} />, { locale: 'en' });
-    fireEvent.click(screen.getByRole('button', { name: 'Edit city statistics' }));
-    const count = await screen.findByLabelText('Count');
+    const count = await screen.findByLabelText('Buildings');
     fireEvent.change(count, { target: { value: '-1' } });
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Update approved building count' } });
     fireEvent.submit(count.closest('form')!); expect(update).not.toHaveBeenCalled();
@@ -56,20 +54,20 @@ describe('automatic population reference', () => {
   });
   it.each(['ar', 'en'] as const)('shows the verified number, estimate year and source without editable fields in %s', locale => {
     const update = vi.fn();
-    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(true)} update={update} />, { locale });
+    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(true)} load={async () => cmsAdminContentDataSchema.parse({ namespace: 'display', items: [] })} update={update} />, { locale });
     expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent(new Intl.NumberFormat(locale).format(79120));
     expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent('2026');
     expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض مصدر عدد السكان' : 'View population source' })).toHaveAttribute('href', sourceUrl);
     expect(screen.getByTestId('admin-cms-population-editor').querySelector('time')).toHaveAttribute('datetime', '2026-10-11T10:00:00.000Z');
-    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.getByTestId('admin-cms-population-editor').querySelector('input')).toBeNull();
+    expect(screen.getByTestId('admin-cms-population-editor').querySelector('textarea')).toBeNull();
     expect(screen.getByTestId('admin-cms-population-editor').querySelector('form')).toBeNull();
     expect(update).not.toHaveBeenCalled();
   });
 
   it.each(['ar', 'en'] as const)('explains an unavailable first retrieval without presenting a fabricated number in %s', locale => {
-    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(false)} />, { locale });
-    expect(screen.getByRole('status')).toHaveTextContent(locale === 'ar' ? 'لم يتم جلب تقدير السكان' : 'has not been retrieved');
+    renderWithLocale(<AdminCmsContent path={path} locale={locale} session={session} initialData={data(false)} load={async () => cmsAdminContentDataSchema.parse({ namespace: 'display', items: [] })} />, { locale });
+    expect(screen.getByTestId('admin-cms-population-editor')).toHaveTextContent(locale === 'ar' ? 'لم يتم جلب تقدير السكان' : 'has not been retrieved');
     expect(screen.getByTestId('admin-cms-population-editor')).not.toHaveTextContent('79,120');
     expect(screen.getByRole('link', { name: locale === 'ar' ? 'عرض مصدر عدد السكان' : 'View population source' })).toHaveAttribute('href', sourceUrl);
   });

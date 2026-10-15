@@ -10,6 +10,26 @@ import { Types } from 'mongoose';
 const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'شركة موثوقة', en: 'Trusted Company' };
+
+test('finds developer properties stored under account/profile aliases and uses their ready cover image', async () => {
+  const db = database('developer_company'), organizationId = new Types.ObjectId('a'.repeat(24));
+  const propertyId = new Types.ObjectId('b'.repeat(24)), mediaId = new Types.ObjectId('c'.repeat(24));
+  db.rows.organizations = [{ _id: organizationId, providerId: profileId, kind: 'developer_company', slug: 'cover-company', name: localized, status: 'approved' }];
+  const property = { _id: propertyId, providerId: account, slug: 'company-property', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true };
+  db.rows.property_media = [{ _id: mediaId, propertyId, kind: 'image', active: true, processingState: 'ready', isCover: true }];
+  db.rows.properties = [];
+  const service = createPublicOrganizationService({ repository: createMongoosePublicOrganizationRepository(db.connection) });
+  for (const owner of [account, account.toHexString(), profileId, profileId.toHexString()]) {
+    db.rows.properties.splice(0, db.rows.properties.length, { ...property, providerId: owner });
+    const result = await service.get('cover-company');
+    assert.equal(result?.properties[0]?.slug, 'company-property');
+    assert.equal(result?.properties[0]?.imageUrl, `/api/v1/public/properties/${propertyId}/media/${mediaId}/content`);
+    assert.equal(result?.imageUrl, result?.properties[0]?.imageUrl);
+    assert.equal(result?.stats.availableProperties, 1);
+  }
+  db.rows.properties.splice(0, db.rows.properties.length, { ...property, organizationId: new Types.ObjectId('d'.repeat(24)) }, { ...property, _id: new Types.ObjectId('e'.repeat(24)), expiresAt: new Date('2020-01-01') });
+  assert.equal((await service.get('cover-company'))?.stats.availableProperties, 0);
+});
 function source(overrides: Partial<PublicOrganizationSource> = {}): PublicOrganizationSource { return { id, providerId: secondId, kind: 'developer_company', slug: 'trusted-company', name: localized, status: 'approved', providerStatus: 'approved', projects: [{ id, slug: 'published-project', name: localized, status: 'published' }, { id: secondId, slug: 'draft-project', name: localized, status: 'draft' }], properties: [{ id, slug: 'published-home', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true }, { id: secondId, slug: 'inactive-home', kind: 'property', name: localized, transactionType: 'rent', status: 'published', active: false }], ...overrides }; }
 
 test('projects approved organizations with only published projects and active properties', async () => {

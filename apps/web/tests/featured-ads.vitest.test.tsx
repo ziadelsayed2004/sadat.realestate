@@ -72,7 +72,7 @@ describe('Featured homepage advertising', () => {
     vi.mocked(source.loadMediaPreview).mockRejectedValueOnce(new Error('Unavailable')).mockResolvedValueOnce('/restored-image.png');
     renderWithLocale(<FeaturedEditor item={item} options={options} loadOptions={async () => options} source={source} locale={locale} onSaved={() => {}} onClose={() => {}} />, { locale });
     await screen.findByRole('alert');
-    fireEvent.change(screen.getByDisplayValue('Original title'), { target: { value: 'My unsaved changes' } });
+    fireEvent.change(screen.getByDisplayValue(locale === 'ar' ? item.title.ar! : 'Original title'), { target: { value: 'My unsaved changes' } });
     fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'إعادة تحميل المعاينة' : 'Reload preview' }));
     await waitFor(() => expect(document.querySelector('.admin-featured__preview img')).toHaveAttribute('src', '/restored-image.png'));
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();

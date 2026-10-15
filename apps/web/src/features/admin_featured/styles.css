@@ -51,3 +51,11 @@
 .admin-featured .admin-home__editor > [role] { margin: 16px 26px; }
 .admin-featured__preview { padding: 0 26px 26px; box-sizing: border-box; }
 @media(max-width:760px) { .admin-featured .admin-home__heading { align-items: stretch; flex-direction: column; gap: 18px; padding: 20px; } .admin-featured__actions { grid-template-columns: 1fr; } .admin-featured .admin-home__tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .admin-featured .admin-home__tabs a { justify-content: center; padding: 10px; text-align: center; } }
+.admin-featured__texts { grid-template-columns: minmax(0, 1fr); }
+.admin-featured__languages { display: flex; gap: 10px; padding-block: 8px; }
+.admin-featured__languages button { padding: 10px 24px; min-height: 44px; border: 1px solid #dbe0e6; border-radius: 12px; background: #fff; color: #17233d; cursor: pointer; }
+.admin-featured__languages button[aria-selected="true"] { background: #155b4f; color: #fff; }
+.admin-featured__fields .admin-featured__installment, .admin-featured__installment { display: flex; align-items: center; gap: 10px; padding: 12px; background: #edf7f2; border-radius: 12px; color: #155b4f; }
+.admin-featured__fields .admin-featured__installment input, .admin-featured__installment input { width: 20px; height: 20px; min-height: 20px; accent-color: #155b4f; }
+.admin-featured__display-settings { padding: 24px; margin-block: 20px; background: #fff; border: 1px solid #dbe0e6; border-radius: 16px; }
+.admin-featured__display-settings form { display: grid; gap: 16px; }

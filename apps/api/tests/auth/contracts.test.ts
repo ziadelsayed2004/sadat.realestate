@@ -24,6 +24,8 @@ test('accepts strong passwords from eight characters and rejects incomplete poli
 });
 
 test('normalizes strict Admin login requests without exposing a password policy to other roles', () => {
+  assert.equal(adminLoginRequestSchema.parse({ email: '\u200F Admin@Example.COM\u200B ', password: 'samePassword!' }).email, 'admin@example.com');
+  assert.throws(() => adminLoginRequestSchema.parse({ email: 'ad min@example.com', password: 'samePassword!' }));
   const parsed = adminLoginRequestSchema.parse({
     email: ' Admin@Example.COM ',
     password: 'synthetic-password'

@@ -89,13 +89,13 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
   return (
     <article className="public-developer-directory__card">
       <div className="public-developer-directory__card-media">
-        <PublicMediaImage src={organization.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        <PublicMediaImage src={organization.imageUrl ?? organization.logoUrl} alt={title} fallback={<div className="public-developer-directory__placeholder"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 56V20l22-12 22 12v36M24 56V40h16v16M22 24h4m12 0h4m-20 8h4m12 0h4" fill="none" stroke="currentColor" strokeWidth="3" /></svg><span>{title}</span></div>} />
         {organization.logoUrl ? <PublicMediaImage className="public-developer-directory__card-logo" src={organization.logoUrl} alt="" loading="lazy" fallback={<span className="public-developer-directory__card-logo-fallback" aria-hidden="true" />} /> : null}
       </div>
       <div className="public-developer-directory__card-body">
         <h2><a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}>{title}</a></h2>
         {description === undefined ? null : <p className="public-developer-directory__card-description">{description}</p>}
-        <div className="public-developer-directory__card-counts"><span>{copy.projectCount(organization.projectCount)}</span><span>{copy.propertyCount(organization.propertyCount)}</span></div>
+        <div className="public-developer-directory__card-counts"><span>{organization.projectCount ? <a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}#developer-projects`}>{copy.projectCount(organization.projectCount)}</a> : copy.projectCount(0)}</span><span>{organization.propertyCount ? <a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}#developer-properties`}>{copy.propertyCount(organization.propertyCount)}</a> : copy.propertyCount(0)}</span></div>
         {locations.length > 0 ? <div className="public-developer-directory__card-locations" aria-label={copy.locationsLabel}>{locations.map(location => <span key={location.key}>{location.label}</span>)}</div> : null}
         <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}><span>{copy.openProfile}</span><span aria-hidden="true">←</span></a>
       </div>

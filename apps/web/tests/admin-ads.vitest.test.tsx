@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { CalendarTable } from '../src/features/admin_ads/calendar.tsx';
 import {
   adAdminRequestListSuccessEnvelopeSchema,
   adAdminRequestSchema,
@@ -139,6 +140,17 @@ const loaders = {
 };
 
 describe('Admin advertising, payment, calendar, and financial projections', () => {
+  it('filters calendar cards by date, clears filters and links to the correct advertisement', () => {
+    renderWithLocale(<CalendarTable data={calendarList} locale="en" />, { locale: 'en' });
+    expect(screen.getByTestId(`admin-ad-calendar-${request.id}`)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Open ad request' })).toHaveAttribute('href', `/admin/ads/requests?requestId=${request.id}&lang=en`);
+    expect(screen.queryByText(request.providerId)).toBeNull();
+    fireEvent.change(screen.getByLabelText('Advertisements on date'), { target: { value: '2030-01-01' } });
+    expect(screen.queryByTestId(`admin-ad-calendar-${request.id}`)).toBeNull();
+    expect(screen.getByRole('status')).toHaveTextContent('No schedules match');
+    fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+    expect(screen.getByTestId(`admin-ad-calendar-${request.id}`)).toBeVisible();
+  });
   it('refreshes an expired advertising session once and reloads requests with the current token', async () => {
     let token = 'Bearer expired';
     const headers: Array<string | null> = [];
@@ -388,8 +400,8 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(screen.getByRole('option', { name: 'Featured ad card' })).toHaveValue('featured_card');
     fireEvent.change(screen.getByLabelText('Advertising type'), { target: { value: 'featured_card' } });
     expect(screen.getByText(/An advertising card with an image and text/)).toBeVisible();
-    expect(screen.getByRole('option', { name: 'Homepage banner' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Featured homepage card' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Homepage hero banner' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Featured homepage ads' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '+201234567890' })).toHaveAttribute('href', 'tel:+201234567890');
     fireEvent.change(placement, { target: { value: placementKey } });
     fireEvent.change(screen.getByLabelText('Campaign start — Egypt time'), { target: { value: '2026-10-10T12:00' } });
@@ -404,6 +416,6 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(screen.getByText(/Campaign end must be after its start/u)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Campaign end — Egypt time'), { target: { value: '2026-10-20T12:00' } });
     fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
-    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, expect.objectContaining({ campaign: { placementKey, adType: 'featured_card', intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' }, lineItems: [{ description: request.purpose, quantity: 1, unitAmountMinor: 125050 }] })));
+    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, expect.objectContaining({ campaign: { placementKey, adType: placementKey === 'homepage.hero' ? 'banner' : 'featured_card', intervalStart: '2026-10-10T09:00:00.000Z', intervalEnd: '2026-10-20T09:00:00.000Z' }, lineItems: [{ description: request.purpose, quantity: 1, unitAmountMinor: 125050 }] })));
   });
 });

@@ -30,7 +30,7 @@ export function OfficeIdentitySubscription({ providerId, locale, authorization, 
     } catch (failure) { setError(failure instanceof ApiClientError && failure.status === 409 ? ar ? 'عدّل موظف آخر الاشتراك. أعد تحميله وراجع المدة قبل الحفظ.' : 'Another employee changed this subscription. Reload and review the dates.' : ar ? 'تعذر الحفظ. راجع الصلاحيات والمدة.' : 'Could not save. Check permission and dates.'); }
     finally { setBusy(false); }
   }
-  return <section className="admin-accounts__detail-card admin-office-identity" aria-label={ar ? 'ظهور المكتب للزوار' : 'Office public identity'} aria-busy={busy || (!data && !error)}>
+  return <section id="provider-subscription-form" className="admin-accounts__detail-card admin-office-identity" aria-label={ar ? 'ظهور المكتب للزوار' : 'Office public identity'} aria-busy={busy || (!data && !error)}>
     <header className="admin-office-identity__heading">
       <h2>{ar ? 'ظهور المكتب للزوار' : 'Office public identity'}</h2>
       {data ? <p className="admin-accounts__badge" data-tone={data.visible ? 'success' : 'neutral'} role="status">{data.visible ? ar ? 'ظاهر الآن' : 'Visible now' : ar ? 'مخفي الآن' : 'Hidden now'}</p> : null}

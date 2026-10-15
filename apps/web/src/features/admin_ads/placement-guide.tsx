@@ -1,6 +1,10 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import './placement-guide.css';
 
+export function AdvertisingSteps({ locale }: { locale: SupportedLocale }) {
+  return <ol className="ad-workflow" aria-label={locale === 'ar' ? 'خطوات الإعلان' : 'Advertising steps'}>{(locale === 'ar' ? ['اطلب الإعلان', 'وافق على السعر', 'ارفع إثبات الدفع', 'نجهز الإعلان وننشره'] : ['Request an ad', 'Accept the quote', 'Upload payment proof', 'We prepare and publish']).map((label, index) => <li key={label}><b>{index + 1}</b>{label}</li>)}</ol>;
+}
+
 export function adPlacementName(key: string | undefined, locale: SupportedLocale): string {
   const ar = locale === 'ar';
   if (key === 'homepage.hero') return ar ? 'بانر أعلى الرئيسية' : 'Homepage hero banner';

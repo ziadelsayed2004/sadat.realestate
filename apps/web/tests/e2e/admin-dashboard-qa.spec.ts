@@ -178,9 +178,10 @@ test.describe('F5 Admin Dashboard QA', () => {
       await expect(page.locator('.admin-dashboard__navigation'), screenId).toHaveAttribute('aria-label', /.+/u);
       await expect(page.locator('body'), screenId).not.toContainText(/\b(?:internalNotes|assignedTo|auditData|storageKey|temporaryUrl|privateUrl|paymentProof|accessToken|refreshToken|secret|password)\b/u);
 
-      const skipLink = page.locator('.a11y-skip-link');
-      await skipLink.focus();
-      await expect(skipLink, `${screenId} skip link`).toBeFocused();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  const mainTarget = page.locator('#main-content');
+      await mainTarget.focus();
+      await expect(mainTarget, `${screenId} main content landmark`).toBeFocused();
       const responsiveMenu = page.locator('.admin-shell-header__menu');
       if (await responsiveMenu.isVisible()) {
         await responsiveMenu.click();

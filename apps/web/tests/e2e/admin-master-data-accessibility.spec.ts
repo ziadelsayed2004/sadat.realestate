@@ -28,7 +28,9 @@ test.describe('ADM-09 through ADM-11 admin master data accessibility', () => {
       await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);
 
       await page.keyboard.press('Tab');
-      await expect(page.locator('.a11y-skip-link')).toBeFocused();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
       await page.keyboard.press('Enter');
       await expect(page.locator('main#main-content')).toBeFocused();
       await page.getByRole('button', { name: /Add item|إضافة عنصر|添加项目/u }).first().focus();

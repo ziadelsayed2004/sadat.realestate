@@ -294,10 +294,11 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
 
   const title = variant === 'business' ? copy.businessTitle : copy.companyTitle;
   const description = variant === 'business' ? copy.businessDescription : copy.companyDescription;
-  const organizationFields = new Set(application?.missingFields ?? []);
+  const organizationFields = new Set((application?.missingFields ?? []).filter(field => variant !== 'business' || !['commercialRegistrationNumber', 'taxRegistrationNumber'].includes(field)));
+  const optionalBusinessLabel = (label: string) => variant === 'business' ? <>{label} <strong className="provider-field-optional">{locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631\u064a' : 'Optional'}</strong></> : label;
   const missingOrganizationLabels = [...new Set((application?.missingFields ?? [])
     .filter(field => {
-      if (copy.missingFieldLabels[field] === undefined) return false;
+      if (!organizationFields.has(field) || copy.missingFieldLabels[field] === undefined) return false;
       if (field === 'accountOwnerHasRegisteredAuthority') return form.accountOwnerHasRegisteredAuthority === undefined;
       const value = form[field as OrganizationField];
       return value.trim() === '';
@@ -343,8 +344,8 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
               </>
             )}
             <div className="provider-organization-grid">
-              <Input id="provider-organization-commercial-registration" label={copy.commercialRegistrationNumberLabel} name="commercialRegistrationNumber" placeholder={copy.commercialRegistrationNumberPlaceholder} value={form.commercialRegistrationNumber} onChange={event => updateField('commercialRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('commercialRegistrationNumber')} state={inputState('commercialRegistrationNumber')} />
-              <Input id="provider-organization-tax-registration" label={copy.taxRegistrationNumberLabel} name="taxRegistrationNumber" placeholder={copy.taxRegistrationNumberPlaceholder} value={form.taxRegistrationNumber} onChange={event => updateField('taxRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('taxRegistrationNumber')} state={inputState('taxRegistrationNumber')} />
+              <Input id="provider-organization-commercial-registration" label={optionalBusinessLabel(copy.commercialRegistrationNumberLabel)} name="commercialRegistrationNumber" placeholder={copy.commercialRegistrationNumberPlaceholder} value={form.commercialRegistrationNumber} onChange={event => updateField('commercialRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('commercialRegistrationNumber')} state={inputState('commercialRegistrationNumber')} />
+              <Input id="provider-organization-tax-registration" label={optionalBusinessLabel(copy.taxRegistrationNumberLabel)} name="taxRegistrationNumber" placeholder={copy.taxRegistrationNumberPlaceholder} value={form.taxRegistrationNumber} onChange={event => updateField('taxRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('taxRegistrationNumber')} state={inputState('taxRegistrationNumber')} />
               <Input id="provider-organization-representative" label={copy.authorizedRepresentativeFullNameLabel} name="authorizedRepresentativeFullName" placeholder={copy.authorizedRepresentativeFullNamePlaceholder} value={form.authorizedRepresentativeFullName} onChange={event => updateField('authorizedRepresentativeFullName', event.currentTarget.value)} required={organizationFields.has('authorizedRepresentativeFullName')} state={inputState('authorizedRepresentativeFullName')} />
               <Input id="provider-organization-representative-title" label={copy.authorizedRepresentativeTitleLabel} name="authorizedRepresentativeTitle" placeholder={copy.authorizedRepresentativeTitlePlaceholder} value={form.authorizedRepresentativeTitle} onChange={event => updateField('authorizedRepresentativeTitle', event.currentTarget.value)} required={organizationFields.has('authorizedRepresentativeTitle')} state={inputState('authorizedRepresentativeTitle')} />
             </div>

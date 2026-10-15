@@ -134,7 +134,7 @@ function authError(error: unknown, copy: AuthCopy): AuthUiError {
   if (code === 'INVALID_REGISTRATION_TOKEN' || code === 'SEEKER_NOT_FOUND') {
     return { state: 'error', title: copy.invalidRegistrationTokenTitle, message: copy.invalidRegistrationTokenBody };
   }
-  if (code === 'SEEKER_ALREADY_EXISTS') {
+  if (code === 'SEEKER_ALREADY_EXISTS' || code === 'PROVIDER_ALREADY_EXISTS' || code === 'ACCOUNT_ALREADY_EXISTS') {
     return { state: 'error', title: copy.duplicateRegistrationTitle, message: copy.duplicateRegistrationBody };
   }
   if (code === AUTH_ERROR_CODES.INVALID_CREDENTIALS) {
@@ -282,9 +282,12 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
                 name="email"
                 autoComplete="email"
                 inputMode="email"
+                dir="ltr"
+                autoCapitalize="none"
+                spellCheck={false}
                 placeholder={copy.identifierPlaceholder}
                 value={email}
-                onChange={event => setEmail(event.currentTarget.value)}
+                onChange={event => setEmail(event.currentTarget.value.replace(/[\u200B-\u200F\u202A-\u202E\u2060\u2066-\u2069\uFEFF]/g, ''))}
                 required
                 state={state === 'error' && !normalizedEmailSchema.safeParse(email).success ? 'error' : 'default'}
               />

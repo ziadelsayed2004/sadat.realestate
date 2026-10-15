@@ -123,8 +123,10 @@ test.describe('SEK-06 Seeker Saved Properties', () => {
     await expect(page.getByTestId(`seeker-saved-property-${fourthId}`)).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/seekerId|providerId|accessToken|refreshToken/u);
     await expect(page.getByRole('link', { name: copy.view }).first()).toBeVisible();
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await expect(page.getByRole('button', { name: copy.remove }).first()).toBeVisible();
     const compare = page.getByTestId(`seeker-saved-property-${firstId}`).locator('.seeker-saved-property-card__compare');
     await expect(compare).toHaveAccessibleName(locale === 'ar' ? 'أضف للمقارنة' : 'Add to compare');

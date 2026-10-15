@@ -336,8 +336,8 @@ describe('provider organization details', () => {
     fireEvent.change(screen.getByLabelText(copy.legalBusinessNameLabel), { target: { value: 'Nile Brokerage' } });
     fireEvent.change(screen.getByLabelText(copy.tradeNameLabel), { target: { value: 'Nile Homes' } });
     fireEvent.change(screen.getByLabelText(copy.addressLabel), { target: { value: 'Cairo' } });
-    fireEvent.change(screen.getByLabelText(copy.commercialRegistrationNumberLabel), { target: { value: 'CR-11' } });
-    fireEvent.change(screen.getByLabelText(copy.taxRegistrationNumberLabel), { target: { value: 'TAX-22' } });
+    fireEvent.change(screen.getByLabelText(copy.commercialRegistrationNumberLabel, { exact: false }), { target: { value: 'CR-11' } });
+    fireEvent.change(screen.getByLabelText(copy.taxRegistrationNumberLabel, { exact: false }), { target: { value: 'TAX-22' } });
     fireEvent.change(screen.getByLabelText(copy.authorizedRepresentativeFullNameLabel), { target: { value: 'Mona Hassan' } });
     fireEvent.change(screen.getByLabelText(copy.authorizedRepresentativeTitleLabel), { target: { value: 'Managing Director' } });
     fireEvent.change(screen.getByLabelText(copy.authorityLabel), { target: { value: 'true' } });

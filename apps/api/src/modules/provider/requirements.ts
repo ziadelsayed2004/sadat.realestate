@@ -7,6 +7,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 
 export const PROVIDER_REQUIREMENT_VERSION = '2026-08-13.1';
+export const OFFICE_REQUIREMENT_VERSION = '2026-10-15.office.1';
 
 const conditionalAuthorizationLetter = Object.freeze({
   key: 'authorization_letter' as const,
@@ -58,10 +59,16 @@ export const PROVIDER_DOCUMENT_REQUIREMENTS: Readonly<
   ])
 });
 
+const officeRequirements = defineRequirements(PROVIDER_DOCUMENT_REQUIREMENTS.brokerage_office.map(requirement =>
+  requirement.key === 'authorized_representative_id_front' || requirement.key === 'authorized_representative_id_back'
+    ? requirement : { key: requirement.key, labelKey: requirement.labelKey, classification: 'optional' }
+));
+
 const PROVIDER_DOCUMENT_REQUIREMENT_VERSIONS: Readonly<
   Record<string, Readonly<Record<ProviderType, readonly ProviderDocumentRequirement[]>>>
 > = Object.freeze({
-  [PROVIDER_REQUIREMENT_VERSION]: PROVIDER_DOCUMENT_REQUIREMENTS
+  [PROVIDER_REQUIREMENT_VERSION]: PROVIDER_DOCUMENT_REQUIREMENTS,
+  [OFFICE_REQUIREMENT_VERSION]: { ...PROVIDER_DOCUMENT_REQUIREMENTS, brokerage_office: officeRequirements }
 });
 
 export interface ProviderSubmissionCandidate {
@@ -102,8 +109,6 @@ const officeFields = [
   'legalBusinessName',
   'tradeName',
   'businessAddress',
-  'commercialRegistrationNumber',
-  'taxRegistrationNumber',
   'authorizedRepresentativeFullName',
   'authorizedRepresentativeTitle',
   'accountOwnerHasRegisteredAuthority'
@@ -138,7 +143,7 @@ export function missingProviderFields(candidate: ProviderSubmissionCandidate): s
 export function providerRequirementSnapshot(
   providerType: ProviderType,
   accountOwnerHasRegisteredAuthority: boolean | undefined,
-  version = PROVIDER_REQUIREMENT_VERSION
+  version = providerType === 'brokerage_office' ? OFFICE_REQUIREMENT_VERSION : PROVIDER_REQUIREMENT_VERSION
 ): ProviderRequirementSnapshot {
   const requirements = PROVIDER_DOCUMENT_REQUIREMENT_VERSIONS[version];
   if (!requirements) {

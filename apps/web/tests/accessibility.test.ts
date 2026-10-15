@@ -65,11 +65,11 @@ test('skip link, main landmark, navigation landmark, and locale direction are re
     children: createElement('p', null, 'content')
   }));
 
-  assert.match(markup, /class="a11y-skip-link" href="#main-content"/);
+  assert.doesNotMatch(markup, /class="a11y-skip-link"/);
   assert.match(markup, /<main[^>]+id="main-content"[^>]+tabindex="-1"/);
   assert.match(markup, /<nav[^>]+aria-label=/);
   assert.match(markup, /dir="rtl"/);
-  assert.match(markup, new RegExp(getAccessibilityCopy('ar').skipToContent));
+  assert.doesNotMatch(markup, new RegExp(getAccessibilityCopy('ar').skipToContent));
 
   const ltrMarkup = renderToStaticMarkup(createElement(SkipLink, { label: getAccessibilityCopy('en').skipToContent }));
   assert.match(ltrMarkup, new RegExp(getAccessibilityCopy('en').skipToContent));

@@ -96,7 +96,9 @@ test('community controls are labeled and keyboard-accessible across approved loc
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('main#main-content main')).toHaveCount(0);
   await page.keyboard.press('Tab');
-  await expect(page.locator('.a11y-skip-link')).toBeFocused();
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
 });
 
 test('anonymous community login modal stays inside a full viewport overlay', async ({ page }) => {

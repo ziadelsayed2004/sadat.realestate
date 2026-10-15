@@ -98,6 +98,7 @@ export interface RedeemedPasswordResetGrant {
 }
 
 export interface OtpRepository {
+  findRegistrationAccount?(email: string): Promise<AuthAccount | undefined>;
   createChallenge(input: CreateOtpChallengeInput): Promise<CreateOtpChallengeResult>;
   cancelChallenge(publicId: string, now: Date): Promise<void>;
   findChallenge(publicId: string, context: OtpChallengeContext, now: Date): Promise<OtpChallenge | undefined>;
@@ -551,6 +552,12 @@ export function createMongooseOtpRepository(
         }
       ).exec();
       return result.modifiedCount === 1;
+    },
+
+    async findRegistrationAccount(email) {
+      const user = await User.findOne({ normalizedEmail: email })
+        .select('_id roleType status').lean<LeanUser>().exec();
+      return user ? toAccount(user) : undefined;
     },
 
     async findOtpAccount(email, roleType) {

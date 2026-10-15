@@ -23,5 +23,5 @@ export function PopulationValueForm({ population, locale, loadStatistics, saveSt
     </> : <p role="status">{locale === 'ar' ? 'لم يتم جلب تقدير السكان بعد. سيظهر العدد بعد نجاح الاتصال بالمصدر.' : 'The population estimate has not been retrieved yet. It will appear after a successful source check.'}</p>}
     <p><a href="https://worldpopulationreview.com/cities/egypt/sadat-city" target="_blank" rel="noreferrer">{locale === 'ar' ? 'عرض مصدر عدد السكان' : 'View population source'}</a></p>
     <p className="admin-content__muted">{locale === 'ar' ? 'المباني وباقي الإحصائيات تظل قابلة للتعديل يدويًا من إعدادات محتوى المنصة.' : 'Buildings and other statistics remain editable manually in the platform content settings.'}</p>
-  </section>{loadStatistics && saveStatistic ? <CityStatisticsEditor locale={locale} load={loadStatistics} save={saveStatistic} errorMessage={errorMessage} /> : null}</>;
+  </section>{loadStatistics && saveStatistic ? <CityStatisticsEditor locale={locale} population={available ? population.value : undefined} load={loadStatistics} save={saveStatistic} errorMessage={errorMessage} /> : null}</>;
 }

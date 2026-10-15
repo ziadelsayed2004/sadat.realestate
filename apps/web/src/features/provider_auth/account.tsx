@@ -445,7 +445,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               />
             ) : null}
             {hasLocations ? (
-              <ProviderLocationFields locale={locale} locations={locations} primary={form.primaryLocationId} areas={form.serviceAreaIds}
+              <ProviderLocationFields locale={locale} office={providerType === 'brokerage_office'} locations={locations} primary={form.primaryLocationId} areas={form.serviceAreaIds}
                 onPrimary={value => update('primaryLocationId', value)} onAreas={value => update('serviceAreaIds', value)}
                 disabled={saveState === 'loading'} error={saveState === 'error'} />
             ) : null}

@@ -130,16 +130,18 @@ function articleDetailsFixture() {
   return { data: articleListFixture().data[0], meta: { requestId: 'a11y-article-details' } };
 }
 
-test('public route shell exposes skip navigation and main landmark', async ({ page }) => {
+test('public route shell keeps a focusable main landmark without the removed skip control', async ({ page }) => {
   const locale = localeForProject();
   await page.goto(`/properties?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
 
-  const skipLink = page.locator('.a11y-skip-link');
-  await expect(skipLink).toHaveAttribute('href', '#main-content');
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  const mainTarget = page.locator('#main-content');
+  await expect(mainTarget).toHaveAttribute('tabindex', '-1');
   await expect(page.locator('main#main-content')).toBeVisible();
 
   await page.keyboard.press('Tab');
-  await expect(skipLink).toBeFocused();
+  await mainTarget.focus();
+  await expect(mainTarget).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('main#main-content')).toBeFocused();
 });

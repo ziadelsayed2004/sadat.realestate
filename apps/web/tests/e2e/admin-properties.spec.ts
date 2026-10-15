@@ -81,7 +81,7 @@ test('keeps the property review actions contained and readable at every viewport
     }
   }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
-  await page.locator('.a11y-skip-link').evaluate(node => { (node as HTMLElement).style.visibility = 'hidden'; });
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
   await row.screenshot({path:info.outputPath('property-review-row.png'), style: '.route-shell--admin > .route-shell__header{position:static!important}'});
   // Reset the viewport so sticky navigation stays at the top of the full-page capture.
   await page.evaluate(() => window.scrollTo(0, 0));

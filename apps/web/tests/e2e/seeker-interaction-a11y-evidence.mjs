@@ -56,8 +56,8 @@ for (const locale of locales) {
     target.searchParams.set('lang', locale);
     await page.goto(target.toString(), { waitUntil: 'domcontentloaded', timeout: 30_000 });
     await page.locator(item.selector).waitFor({ state: 'visible', timeout: 30_000 });
-    await page.locator('.a11y-skip-link').focus();
-    const skipFocused = await page.locator('.a11y-skip-link').evaluate(node => document.activeElement === node);
+    await page.locator('#main-content').focus();
+    const mainFocused = await page.locator('#main-content').evaluate(node => document.activeElement === node);
     await page.locator('.seeker-dashboard__nav a').first().focus();
     const navFocused = await page.locator('.seeker-dashboard__nav a').first().evaluate(node => document.activeElement === node);
     const base = await page.evaluate(() => {
@@ -109,7 +109,7 @@ for (const locale of locales) {
       interactions.profilePatchObserved = apiBodies.some(body => body.method === 'PATCH' && body.pathname === '/me' && body.body?.firstName === 'Mariam' && body.body?.lastName === 'QA');
     }
     if (item.id === 'SEK-10') interactions.phoneControlCount = await page.locator('input[id*="phone"], [name*="phone" i]').count();
-    results.push({ screenId: item.id, locale, direction: locale === 'ar' ? 'rtl' : 'ltr', route: target.pathname + target.search, accessibility: { ...base, skipFocused, navFocused }, interactions, apiRequests: apiRequests.splice(0) });
+    results.push({ screenId: item.id, locale, direction: locale === 'ar' ? 'rtl' : 'ltr', route: target.pathname + target.search, accessibility: { ...base, mainFocused, navFocused }, interactions, apiRequests: apiRequests.splice(0) });
   }
   await context.close();
 }

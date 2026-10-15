@@ -47,6 +47,10 @@ const AUTH_ERROR_MAP = Object.freeze({
     statusCode: 403,
     messageKey: 'errors.auth.accountNotActive'
   },
+  ACCOUNT_ALREADY_EXISTS: {
+    statusCode: 409,
+    messageKey: 'errors.conflict'
+  },
   ACCOUNT_NOT_FOUND: {
     statusCode: 404,
     messageKey: 'errors.auth.accountNotFound'

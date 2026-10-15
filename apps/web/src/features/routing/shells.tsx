@@ -1,7 +1,6 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import { createContext, useContext, type ReactNode, useEffect, useState } from 'react';
 import { BrandMark, type DesignAssetCatalog } from '../design_system/index.ts';
-import { getAccessibilityCopy, SkipLink } from '../accessibility/index.ts';
 import type { FoundationCopy } from '../frontend_foundation/locale.js';
 import { directionForLocale } from '../frontend_foundation/locale.js';
 import type { RouteMatch } from '../../routes/route-table.js';
@@ -65,7 +64,6 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
   };
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
-  const accessibilityCopy = getAccessibilityCopy(locale);
   const adminHeader = kind === 'admin' ? copy.adminHeader : undefined;
   useEffect(() => {
     if (kind !== 'admin') return;
@@ -100,12 +98,17 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
         data-device-scope={route.deviceScope}
         data-locale={locale}
         data-route-id={route.id}
+        onClickCapture={event => {
+          const input = event.target;
+          if (input instanceof HTMLInputElement && ['date', 'time', 'datetime-local'].includes(input.type) && !input.disabled && !input.readOnly) {
+            try { input.showPicker?.(); } catch { /* Native keyboard editing remains available where picker opening is unsupported. */ }
+          }
+        }}
         data-shell={kind}
         data-admin-sidebar-open={kind === 'admin' ? adminSidebarOpen : undefined}
         data-surface={route.surface}
         dir={directionForLocale(locale)}
       >
-        <SkipLink label={accessibilityCopy.skipToContent} />
         <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
         {adminHeader === undefined ? (

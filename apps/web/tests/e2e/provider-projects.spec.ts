@@ -152,9 +152,11 @@ test.describe('PRV-15 Provider Projects', () => {
     await page.getByRole('button', { name: /Apply|تطبيق|应用/u }).click();
     await page.getByRole('button', { name: /Edit:|تعديل:|编辑:/u }).first().focus();
     await expect(page.getByRole('button', { name: /Edit:|تعديل:|编辑:/u }).first()).toBeFocused();
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-projects-${locale}.png`, { fullPage: true });
   });
 

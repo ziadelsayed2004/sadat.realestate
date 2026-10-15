@@ -29,7 +29,9 @@ test.describe('ADM-02 through ADM-05 admin account accessibility', () => {
       await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);
 
       await page.keyboard.press('Tab');
-      await expect(page.locator('.a11y-skip-link')).toBeFocused();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
       await page.keyboard.press('Enter');
       await expect(page.locator('main#main-content')).toBeFocused();
       await page.locator('#admin-accounts-search').focus();

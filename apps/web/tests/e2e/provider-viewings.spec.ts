@@ -163,9 +163,11 @@ test.describe('PRV-18 Provider Viewing Appointments', () => {
 
     await page.getByRole('button', { name: /Reschedule|إعادة الجدولة|改期/u }).first().focus();
     await expect(page.getByRole('button', { name: /Reschedule|إعادة الجدولة|改期/u }).first()).toBeFocused();
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-viewings-${locale}.png`, { fullPage: true });
   });
 

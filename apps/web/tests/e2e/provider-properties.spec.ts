@@ -205,11 +205,13 @@ test.describe('PRV-02 My Properties', () => {
     await page.getByRole('button', { name: /Next page|الصفحة التالية|下一页/iu }).click();
     await expect(page.getByTestId('provider-property-eeeeeeeeeeeeeeeeeeeeeeee')).toBeVisible();
 
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
     await page.locator('#provider-properties-search').focus();
     await expect(page.locator('#provider-properties-search')).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-properties-${locale}.png`, { fullPage: true });
   });
 

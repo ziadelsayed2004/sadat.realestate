@@ -1,4 +1,4 @@
-import { AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
+import { AdvertisingSteps, AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
 import { paymentProofError } from './payment-proof-error.ts';
 import { PaymentAccounts } from './payment-accounts.tsx';
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
@@ -162,7 +162,7 @@ function CreateRequestModal({ locale, copy, busy, error, onClose, onSave }: { re
         <Input id="provider-advertising-contact-phone" type="tel" autoComplete="tel" inputMode="tel" dir="ltr" label={copy.createForm.contactPhone} value={form.contactPhone} onChange={event => update('contactPhone', event.target.value)} required />
         <p className="provider-advertising__help">{copy.createForm.contactPhoneHelp}</p>
         <label className="provider-advertising__field" htmlFor="provider-advertising-purpose"><span>{copy.createForm.purpose}</span><textarea id="provider-advertising-purpose" value={form.purpose} onChange={event => update('purpose', event.target.value)} rows={4} minLength={2} maxLength={500} required /></label>
-        <p className="provider-advertising__help">{copy.createForm.placementKeyHelp}</p><AdPlacementGuide locale={locale} />
+        <p className="provider-advertising__help">{copy.createForm.placementKeyHelp}</p><AdvertisingSteps locale={locale} />
       </form>
     </Modal>
   );

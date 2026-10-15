@@ -105,6 +105,7 @@ function repository(initial = baseApplication()): ProviderRepository {
         status: 'pending_review',
         version: current.version + 1,
         requirementsSnapshot: snapshot,
+        requirementVersion: snapshot.version,
         submittedAt: now,
         updatedAt: now
       };
@@ -150,6 +151,20 @@ const completeCommon = {
   termsAcceptedAt: new Date('2026-08-13T00:00:00.000Z'),
   privacyAcceptedAt: new Date('2026-08-13T00:00:00.000Z')
 };
+
+test('upgrades an editable office draft to the identity-only document policy on submission', async () => {
+  const application = baseApplication({
+    ...completeCommon, providerType: 'brokerage_office',
+    legalBusinessName: 'Office legal name', tradeName: 'Office', businessAddress: 'Sadat City office',
+    authorizedRepresentativeFullName: 'Mona Hassan', authorizedRepresentativeTitle: 'Owner',
+    accountOwnerHasRegisteredAuthority: false
+  });
+  const result = await service(repository(application), inventory(['authorized_representative_id_front', 'authorized_representative_id_back']))
+    .submit(claims, { version: 0 });
+  assert.equal(result.status, 'pending_review');
+  assert.equal(result.requirementVersion, '2026-10-15.office.1');
+  assert.deepEqual(result.missingDocuments, []);
+});
 
 test('registers a provider draft from a one-time provider OTP authority and issues a shared session', async () => {
   let redeemed = '';

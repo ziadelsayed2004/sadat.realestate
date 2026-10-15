@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   availableProviderActions,
+  OFFICE_REQUIREMENT_VERSION,
+  PROVIDER_REQUIREMENT_VERSION,
   canTransitionProviderApplication,
   missingProviderFields,
   providerRequirementSnapshot,
@@ -29,11 +31,11 @@ test('applies exact required and optional categories by provider type', () => {
   const officeOwner = providerRequirementSnapshot('brokerage_office', true);
   assert.equal(requiredDocumentCategories(officeOwner).includes('authorization_letter'), false);
   const officeDelegate = providerRequirementSnapshot('brokerage_office', false);
-  assert.equal(requiredDocumentCategories(officeDelegate).includes('authorization_letter'), true);
-  assert.equal(
-    officeDelegate.requirements.find((item) => item.key === 'authorization_letter')?.condition?.key,
-    'account_owner_lacks_registered_authority'
-  );
+  assert.equal(officeDelegate.version, OFFICE_REQUIREMENT_VERSION);
+  assert.deepEqual(requiredDocumentCategories(officeDelegate), ['authorized_representative_id_front', 'authorized_representative_id_back']);
+  for (const key of ['commercial_registration', 'tax_card', 'authorization_letter']) assert.equal(officeDelegate.requirements.find(item => item.key === key)?.classification, 'optional');
+  assert.equal(requiredDocumentCategories(providerRequirementSnapshot('brokerage_office', false, PROVIDER_REQUIREMENT_VERSION)).includes('authorization_letter'), true);
+  assert.equal(requiredDocumentCategories(providerRequirementSnapshot('developer_company', false)).includes('tax_card'), true);
 });
 
 test('validates common and type-specific submission fields without retroactive defaults', () => {

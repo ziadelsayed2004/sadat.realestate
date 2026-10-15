@@ -10,9 +10,7 @@ function localeForProject(): 'ar' | 'en' {
 }
 
 async function hideSkipLink(page: import('@playwright/test').Page): Promise<void> {
-  await page.locator('.a11y-skip-link').evaluate((element) => {
-    (element as HTMLElement).style.visibility = 'hidden';
-  });
+  await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
 }
 
 test('provider type selection renders the approved contract options and safe direction', async ({ page }) => {

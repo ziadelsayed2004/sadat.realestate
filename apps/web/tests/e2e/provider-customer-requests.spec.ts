@@ -176,9 +176,11 @@ test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
     await expect(page.locator('body')).not.toContainText(new RegExp(PROVIDER_ID));
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|storageKey|accessToken|refreshToken/u);
 
-    await page.locator('.a11y-skip-link').focus();
-    await expect(page.locator('.a11y-skip-link')).toBeFocused();
-    await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await page.locator('#main-content').focus();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  await page.locator('#main-content').focus();
+  await expect(page.locator('#main-content')).toBeFocused();
+    await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
     await expect(page).toHaveScreenshot(`provider-customer-requests-${locale}.png`, { fullPage: true, maxDiffPixels: 600 });
 
     await page.getByRole('combobox', { name: /Status|الحالة|状态/u }).selectOption('contacted');

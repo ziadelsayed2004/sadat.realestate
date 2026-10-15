@@ -145,3 +145,18 @@
 .admin-ads__proof-preview img { display: block; max-width: 100%; max-height: 70dvh; margin-inline: auto; object-fit: contain; border-radius: 8px; }
 .admin-ads__proof-file-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .admin-ads__proof-file-actions a { min-height: 44px; padding: 10px 16px; text-decoration: none; text-align: center; }
+.admin-ads__optional-details { padding: 14px; border: 1px solid #dbe0e6; border-radius: 12px; }
+.admin-ads__optional-details summary { cursor: pointer; font-weight: 700; padding: 8px 0; }
+.admin-ads-calendar__filters { display: flex; align-items: end; flex-wrap: wrap; gap: 16px; margin-block: 20px; }
+.admin-ads-calendar__filters label { display: grid; gap: 8px; flex: 1; min-width: min(200px, 100%); }
+.admin-ads-calendar__filters :is(input, select, button) { min-height: 44px; padding: 10px 14px; border: 1px solid #dbe0e6; border-radius: 12px; background: #fff; color: #17233d; font: inherit; }
+.admin-ads-calendar__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; }
+.admin-ads-calendar__cards article { padding: 22px; background: #fff; border: 1px solid #e5e2d9; border-inline-start: 5px solid #145448; border-radius: 16px; min-width: 0; }
+.admin-ads-calendar__cards header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.admin-ads-calendar__cards h3 { margin: 0; color: #17233d; }
+.admin-ads-calendar__status { padding: 4px 12px; border-radius: 20px; background: #f3e9cf; color: #805319; }
+.admin-ads-calendar__cards dl { display: grid; gap: 12px; padding-block: 18px; }
+.admin-ads-calendar__cards dl > div { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.admin-ads-calendar__cards dd { margin: 0; font-weight: 700; }
+.admin-ads-calendar__cards nav { display: flex; gap: 12px; flex-wrap: wrap; border-block-start: 1px solid #e5e2d9; padding-block-start: 16px; }
+.admin-ads-calendar__cards nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 4px 10px; border: 1px solid #dbe0e6; border-radius: 10px; color: #145448; text-decoration: none; }

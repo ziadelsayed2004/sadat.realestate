@@ -266,7 +266,8 @@ export function createMongooseProviderRepository(
               status: 'pending_review',
               statusChangedAt: now,
               submittedAt: now,
-              requirementsSnapshot: snapshot
+              requirementsSnapshot: snapshot,
+              requirementVersion: snapshot.version
             },
             $unset: { reviewReason: 1 },
             $inc: { version: 1 }

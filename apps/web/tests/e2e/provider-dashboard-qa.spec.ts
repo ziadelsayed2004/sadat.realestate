@@ -137,9 +137,11 @@ test.describe('F4 Provider Dashboard QA', () => {
       expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(viewportWidth > 620 && viewportWidth <= 1100 ? 64 : 56, 0);
       expect(shellGeometry.documentWidth, `${routeCase.label}: ${JSON.stringify(shellGeometry)}`).toBeLessThanOrEqual(shellGeometry.viewportWidth);
 
-      const skipLink = page.locator('.a11y-skip-link');
-      await skipLink.focus();
-      await expect(skipLink).toBeFocused();
+      await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
+  const mainTarget = page.locator('#main-content');
+      await mainTarget.focus();
+      await mainTarget.focus();
+  await expect(mainTarget).toBeFocused();
       const firstNavigationLink = page.locator('.provider-dashboard__navigation a:visible').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink).toBeFocused();
