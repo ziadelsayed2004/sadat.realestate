@@ -122,7 +122,7 @@ it('renews an expired session once and uses the refreshed authorization for the 
   await screen.findByRole('img', { name: 'Cover' });
   expect(refresh).toHaveBeenCalledTimes(1);
   // The token change revalidates the mounted preview under the renewed session.
-  expect(fetcher).toHaveBeenCalledTimes(3);
+  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
   expect(new Headers(fetcher.mock.calls[1]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
   expect(new Headers(fetcher.mock.calls[2]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
 });
