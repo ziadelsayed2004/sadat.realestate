@@ -42,6 +42,26 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('Provider property wizard', () => {
+  it.each(['ar', 'en'] as const)('recovers from an unlinked unit using the standalone action in %s', async locale => {
+    const copy = getProviderPropertyCopy(locale);
+    const create = vi.fn(async () => property());
+    const loadParents = vi.fn(async () => ({ items: [], page: 1, limit: 100, total: 0 }));
+    renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" create={create} loadParents={loadParents} />, { locale });
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.name), { target: { value: 'Apartment listing' } });
+    fireEvent.change(screen.getByLabelText(copy.wizard.labels.kind), { target: { value: 'unit' } });
+    await screen.findByText(copy.wizard.parentPicker.empty);
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
+    const parent = screen.getByRole('combobox', { name: copy.wizard.labels.parentPropertyId });
+    expect(parent).toHaveFocus();
+    expect(create).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.validationMessages.parentPropertyId }));
+    expect(parent).toHaveFocus();
+    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'إعلان عقار مستقل' : 'List a standalone property' }));
+    expect(screen.getByLabelText(copy.wizard.labels.name)).toHaveValue('Apartment listing');
+    expect(screen.queryByRole('combobox', { name: copy.wizard.labels.parentPropertyId })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ kind: 'property' })));
+  });
   it('uses the implemented detail and step routes with the provider authorization header', async () => {
     const requests: Array<{ path: string; method: string; authorization: string | null; json?: unknown }> = [];
     const client = new ApiClient({

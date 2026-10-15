@@ -11,6 +11,7 @@ export function propertyViewDay(at: Date): string {
 
 export function createMongoosePropertyViews(connection: Connection, now = () => new Date()) {
   const events = connection.collection('property_view_events');
+  const properties = connection.collection('properties');
   let indexes: Promise<unknown> | undefined;
   const ready = () => indexes ??= Promise.all([
     events.createIndex({ propertyId: 1, visitorHash: 1, day: 1 }, { unique: true }),
@@ -20,22 +21,31 @@ export function createMongoosePropertyViews(connection: Connection, now = () => 
   return {
     async record(slug: string, visitor: string, viewer?: AccessTokenClaims): Promise<boolean> {
       const at = now();
-      const property = await connection.collection('properties').findOne(
-        { slug, status: 'published', active: true, ...unexpiredPropertyFilter(at) },
-        { projection: { _id: 1, providerId: 1 } }
-      );
+      const filter = { slug, status: 'published', active: true, ...unexpiredPropertyFilter(at) };
+      const projection = { _id: 1, providerId: 1, viewCount: 1 };
+      const property = await properties.findOne(filter, { projection });
       if (!property?.providerId || String(property.providerId) === viewer?.sub || viewer?.role === 'admin') return false;
       await ready();
       const day = propertyViewDay(at);
+      const session = await connection.startSession();
       try {
-        // A unique index handles concurrent tabs and retries without increasing the count.
-        await events.insertOne({ propertyId: property._id, providerId: new Types.ObjectId(String(property.providerId)),
-          visitorHash: createHash('sha256').update(visitor).digest('hex'), day, month: day.slice(0, 7),
-          expiresAt: new Date(at.getTime() + 40 * 86_400_000) });
-        return true;
+        return await session.withTransaction(async () => {
+          const current = await properties.findOne(filter, { projection, session });
+          if (!current?.providerId || String(current.providerId) === viewer?.sub || viewer?.role === 'admin') return false;
+          // Initialize legacy rows from retained events before counting the new visit.
+          // The durable total then survives expiry of the short-lived visitor hashes.
+          const previous = typeof current.viewCount === 'number' ? current.viewCount : await events.countDocuments({ propertyId: current._id }, { session });
+          await events.insertOne({ propertyId: current._id, providerId: new Types.ObjectId(String(current.providerId)),
+            visitorHash: createHash('sha256').update(visitor).digest('hex'), day, month: day.slice(0, 7),
+            expiresAt: new Date(at.getTime() + 40 * 86_400_000) }, { session });
+          await properties.updateOne({ _id: current._id }, { $set: { viewCount: previous + 1 } }, { session });
+          return true;
+        }) ?? false;
       } catch (error) {
         if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) return false;
         throw error;
+      } finally {
+        await session.endSession();
       }
     },
     async read(providerId: string, propertyIds: readonly string[] = []) {

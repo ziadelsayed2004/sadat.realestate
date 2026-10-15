@@ -33,12 +33,14 @@ test('listing reads one batch of public covers without a stored imageUrl or leak
         assert.equal(options?.projection.storageKey, undefined);
         return { async toArray() { return [{ _id: new Types.ObjectId(mediaId), propertyId: row._id, kind: 'image', active: true, processingState: 'ready', isCover: true, sortOrder: 0, storageKey: 'private-should-not-leak' }]; } };
       },
-      async countDocuments() { return 1; }
+      async countDocuments() { return 1; },
+      aggregate() { assert.equal(name, 'property_view_events'); return { async toArray() { return [{ _id: row._id, count: 4 }]; } }; }
     };
   } } as unknown as Connection;
   const service = createPublicPropertySearchService({ repository: createMongoosePublicPropertySearchRepository(connection) });
   const result = await service.list({});
   assert.equal(result.items[0]?.imageUrl, url());
+  assert.equal(result.items[0]?.viewCount, 4);
   assert.equal(coverReads, 1);
   assert.equal(JSON.stringify(result).includes('private-should-not-leak'), false);
   assert.equal('imageUrl' in row, false);

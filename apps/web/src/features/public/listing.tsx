@@ -39,7 +39,6 @@ export interface PublicPropertyListingProps {
 interface ListingFilterDraft {
   readonly search: string;
   readonly transactionType: '' | 'sale' | 'rent';
-  readonly kind: '' | 'property' | 'unit';
   readonly installmentAvailable: '' | 'true' | 'false';
   readonly minPrice: string;
   readonly maxPrice: string;
@@ -137,7 +136,6 @@ function draftFromQuery(query: PublicPropertySearchQuery): ListingFilterDraft {
   return {
     search: query.search ?? '',
     transactionType: query.transactionType ?? '',
-    kind: query.kind ?? '',
     installmentAvailable: query.installmentAvailable === undefined ? '' : String(query.installmentAvailable) as 'true' | 'false',
     minPrice: query.minPrice === undefined ? '' : String(query.minPrice),
     maxPrice: query.maxPrice === undefined ? '' : String(query.maxPrice),
@@ -254,12 +252,6 @@ function ListingFilters({
           <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onCommit('transactionType', 'rent')} /> {copy.rent}</label>
         </fieldset>
         <fieldset className="public-property-listing__filter-chips">
-          <legend>{locale === 'ar' ? 'أبحث عن' : 'Looking for'}</legend>
-          <label><input type="radio" name="kind" value="" checked={draft.kind === ''} onChange={() => onCommit('kind', '')} /> {copy.allKinds}</label>
-          <label><input type="radio" name="kind" value="property" checked={draft.kind === 'property'} onChange={() => onCommit('kind', 'property')} /> {copy.property}</label>
-          <label><input type="radio" name="kind" value="unit" checked={draft.kind === 'unit'} onChange={() => onCommit('kind', 'unit')} /> {copy.unit}</label>
-        </fieldset>
-        <fieldset className="public-property-listing__filter-chips">
           <legend>{locale === 'ar' ? 'التقسيط' : 'Installments'}</legend>
           <label><input type="radio" name="installmentAvailable" value="" checked={draft.installmentAvailable === ''} onChange={() => onCommit('installmentAvailable', '')} /> {copy.allKinds}</label>
           <label><input type="radio" name="installmentAvailable" value="true" checked={draft.installmentAvailable === 'true'} onChange={() => onCommit('installmentAvailable', 'true')} /> {locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
@@ -353,9 +345,9 @@ function PropertyResults({
             href={'/properties/' + property.slug + '?lang=' + locale}
             price={listingPrice(property.price, property.transactionType, locale)}
             location={localizedText(property.locationName, locale)}
-            source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
+            source={<><span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span><span className="public-property-listing__views">{copy.views}: {(property.viewCount ?? 0).toLocaleString(locale)}</span></>}
             mediaOverlay={<div className="ui-property-card__badges"><span data-badge="transaction">{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.installmentAvailable ? <span data-badge="installment">{copy.installment}</span> : null}{property.featured ? <span data-badge="featured">{copy.featured}</span> : null}{property.publicCode ? <span data-badge="code"><bdi dir="ltr">{property.publicCode}</bdi></span> : null}</div>}
-            features={[...propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3), ...(property.viewCount === undefined ? [] : [{ label: copy.views, value: property.viewCount.toLocaleString(locale) }])]}
+            features={propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3)}
             image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<span className="public-homepage__content-media-fallback" />} />}
             imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
@@ -441,6 +433,11 @@ export function PublicPropertyListing({
   }, [attempt, initialData, load, query]);
 
   useEffect(() => {
+    const currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.has('kind')) {
+      currentUrl.searchParams.delete('kind');
+      window.history.replaceState(window.history.state, '', `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`);
+    }
     const onPopState = () => {
       if (window.location.pathname !== '/properties') return;
       const nextQuery = parsePublicPropertySearchQuery(window.location.href);

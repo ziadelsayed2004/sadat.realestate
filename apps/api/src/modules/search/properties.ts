@@ -155,11 +155,16 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const typeRows = taxonomyRows.filter((row) => row.kind === 'type');
       const taxonomyIds = typeRows.flatMap((row) => { const value = id(row._id); return value ? [value] : []; });
       const now = new Date();
-      const [organizationRows, categoryCounts, featuredRows] = await Promise.all([
+      const uncountedIds = rows.filter(row => typeof row.viewCount !== 'number').flatMap(row => { const value = id(row._id); return value ? [new Types.ObjectId(value)] : []; });
+      const [organizationRows, categoryCounts, featuredRows, retainedViewCounts] = await Promise.all([
         organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1, kind: 1, status: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
         taxonomyIds.length ? collection.aggregate<{ _id: unknown; count: number }>([{ $match: { status: 'published', active: true, ...unexpiredPropertyFilter(now), propertyTypeId: { $in: taxonomyIds.map((value) => new Types.ObjectId(value)) } } }, { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }]).toArray() : [],
-        rows.length ? connection.collection('ad_banners').find({ status: 'active', startAt: { $lte: now }, endAt: { $gt: now }, $or: rows.map((row) => ({ targetUrl: { $regex: `/properties/${row.slug}$` } })) }, { projection: { targetUrl: 1 } }).limit(100).toArray() as Promise<Array<{ targetUrl?: string }>> : []
+        rows.length ? connection.collection('ad_banners').find({ status: 'active', startAt: { $lte: now }, endAt: { $gt: now }, $or: rows.map((row) => ({ targetUrl: { $regex: `/properties/${row.slug}$` } })) }, { projection: { targetUrl: 1 } }).limit(100).toArray() as Promise<Array<{ targetUrl?: string }>> : [],
+        uncountedIds.length ? connection.collection('property_view_events').aggregate<{ _id: Types.ObjectId; count: number }>([
+          { $match: { propertyId: { $in: uncountedIds } } }, { $group: { _id: '$propertyId', count: { $sum: 1 } } }
+        ]).toArray() : []
       ]);
+      const legacyViews = new Map(retainedViewCounts.map(row => [String(row._id), row.count]));
       const names = new Map(allLocationRows.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, row.name] as const] : []; }));
       const locations = allLocationRows.flatMap((row) => {
         const rowId = id(row._id);
@@ -197,7 +202,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicPropertyAmenitySchema.safeParse({ id: id(row._id), kind: row.kind, groupKey: row.groupKey, name: row.name, ...(row.detail === undefined ? {} : { detail: row.detail }), ...(row.distanceLabel === undefined ? {} : { distanceLabel: row.distanceLabel }), slug: row.slug, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: coveredRows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
+      return { items: coveredRows.flatMap((row) => { const value = source({ ...row, viewCount: row.viewCount ?? legacyViews.get(String(row._id)) ?? 0 }, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
     }
   };
 }

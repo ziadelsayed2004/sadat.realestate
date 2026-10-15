@@ -66,11 +66,10 @@ test('individual broker repairs locations inline before reviewing documents', as
   await expect(review).toBeDisabled();
   const primary = page.getByRole('combobox', { name: ar ? 'الموقع الرئيسي' : 'Primary location' });
   await expect(primary).toBeEnabled();
-  const options = await primary.locator('option').evaluateAll(nodes => nodes.map(node => ({ value: (node as HTMLOptionElement).value, label: node.textContent ?? '' })).filter(option => option.value));
-  expect(options.length).toBeGreaterThan(0);
-  const selected = options[0]!;
-  await primary.selectOption(selected.value);
-  await page.getByRole('checkbox', { name: selected.label, exact: true }).check();
+  const label = ar ? 'الحي الأول' : 'First District';
+  await primary.fill(ar ? 'الأول' : 'First');
+  await page.getByRole('option', { name: label, exact: true }).click();
+  await page.getByRole('checkbox', { name: label, exact: true }).check();
   await page.screenshot({ path: testInfo.outputPath('location-selected.png'), fullPage: true });
   await page.getByRole('button', { name: ar ? 'حفظ الموقع ومناطق الخدمة' : 'Save location and service areas', exact: true }).click();
   await expect(review).toBeEnabled();

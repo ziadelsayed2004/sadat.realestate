@@ -75,6 +75,11 @@ interface LocationForm {
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 type BasicValidationField = keyof ProviderPropertyCopy['wizard']['validationMessages'];
 
+const basicFieldIds: Partial<Record<BasicValidationField, string>> = { name: 'name', slug: 'slug', sourceType: 'source-type', organizationId: 'organization', projectId: 'project', parentPropertyId: 'parent', reason: 'reason' };
+function focusBasicField(field: BasicValidationField) {
+  document.getElementById(`provider-property-${basicFieldIds[field]}`)?.focus();
+}
+
 const LOCALES: readonly SupportedLocale[] = ['ar', 'en',];
 
 function emptyName(): Record<SupportedLocale, string> {
@@ -240,12 +245,16 @@ function BasicFormView({
           <Input id="provider-property-project" label={wizard.labels.projectId} value={form.projectId} placeholder={wizard.placeholders.projectId} onChange={event => setForm({ ...form, projectId: event.target.value })} state={fieldError('projectId') ? 'error' : 'default'} error={fieldError('projectId')} />
           {form.kind === 'unit' ? <ParentPropertyPicker locale={locale} copy={copy} value={form.parentPropertyId} currentId={currentId} onChange={id => setForm({ ...form, parentPropertyId: id })} load={loadParents} loadSelected={loadParent} error={fieldError('parentPropertyId')} /> : null}
         </div>
+        {form.kind === 'unit' && !form.parentPropertyId && !form.projectId ? <aside className="provider-property-wizard__standalone" role="note">
+          <p>{locale === 'ar' ? 'بتعلن عن شقة أو محل أو أرض لوحدها؟ اختار «عقار مستقل» وكمل. ربط العمارة أو المشروع مطلوب فقط لو الإعلان وحدة تابعة.' : 'Listing an apartment, shop or plot on its own? Choose a standalone property to continue. A parent building or project is only required for a linked unit.'}</p>
+          <Button type="button" variant="secondary" onClick={() => { setForm({ ...form, kind: 'property', parentPropertyId: '' }); document.getElementById('provider-property-kind')?.focus(); }}>{locale === 'ar' ? 'إعلان عقار مستقل' : 'List a standalone property'}</Button>
+        </aside> : null}
       </section>
       <section className="provider-property-wizard__contract-note" aria-label={wizard.contractBoundaryTitle}>
         <strong>{wizard.contractBoundaryTitle}</strong><p>{wizard.contractBoundaryBody}</p>
       </section>
       <div className="provider-property-wizard__field provider-property-wizard__reason"><label htmlFor="provider-property-reason">{wizard.labels.reason}</label><textarea id="provider-property-reason" rows={2} value={form.reason} placeholder={wizard.placeholders.reason} onChange={event => setForm({ ...form, reason: event.target.value })} aria-invalid={fieldError('reason') ? true : undefined} aria-describedby={fieldError('reason') ? 'provider-property-reason-error' : undefined} required />{fieldError('reason') ? <small id="provider-property-reason-error">{fieldError('reason')}</small> : null}</div>
-      {validationError ? <div className="provider-property-wizard__form-error" role="alert"><strong>{wizard.validationTitle}</strong> {wizard.validationBody}<ul>{invalidFields.map(field => <li key={field}>{wizard.validationMessages[field]}</li>)}</ul></div> : null}
+      {validationError ? <div className="provider-property-wizard__form-error" role="alert"><strong>{wizard.validationTitle}</strong> {wizard.validationBody}<ul>{invalidFields.map(field => <li key={field}><button type="button" onClick={() => focusBasicField(field)}>{wizard.validationMessages[field]}</button></li>)}</ul></div> : null}
       {mutationMessage !== undefined ? <p className={`provider-property-wizard__form-message provider-property-wizard__form-message--${mutationState}`} role={mutationState === 'error' || mutationState === 'permission' ? 'alert' : 'status'}>{mutationMessage}</p> : null}
       <div className="provider-property-wizard__actions"><Button type="submit" name="intent" value="save" disabled={saving}>{saving ? wizard.saving : wizard.saveDraft}</Button><Button type="submit" name="intent" value="continue" variant="secondary" disabled={saving}>{wizard.continue}</Button></div>
     </form>
@@ -463,8 +472,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       const invalid = [...new Set(fields)].filter(field => field in copy.wizard.validationMessages) as BasicValidationField[];
       setInvalidFields(invalid);
       setValidationError(true);
-      const fieldIds: Partial<Record<BasicValidationField, string>> = { name: 'name', slug: 'slug', sourceType: 'source-type', organizationId: 'organization', projectId: 'project', parentPropertyId: 'parent', reason: 'reason' };
-      if (invalid[0] && fieldIds[invalid[0]]) document.getElementById(`provider-property-${fieldIds[invalid[0]]}`)?.focus();
+      if (invalid[0]) focusBasicField(invalid[0]);
       return;
     }
     setMutationState('saving');

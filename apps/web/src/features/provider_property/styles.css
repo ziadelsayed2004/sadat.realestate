@@ -1418,3 +1418,5 @@
 .provider-property-deactivation { max-inline-size: 520px; margin: 24px auto 0; overflow-wrap: anywhere; }
 .provider-property-deactivation form { display: grid; gap: 12px; }
 .provider-property-deactivation textarea { inline-size: 100%; min-inline-size: 0; padding: 12px; font: inherit; border: 1px solid #cfd8e7; border-radius: 12px; }
+.provider-property-wizard__standalone { margin-block: 16px; padding: 16px; border-radius: 12px; background: #edf7f2; }
+.provider-property-wizard__form-error li button { border: 0; padding: 6px 0; background: transparent; color: inherit; font: inherit; text-align: start; text-decoration: underline; cursor: pointer; }

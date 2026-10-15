@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { ProviderAccountPatch, ProviderApplicationData, PublicPropertyLocation, SupportedLocale } from '@sadat-real-estate/contracts';
-import { Button, Select } from '../design_system/index.ts';
+import { Button } from '../design_system/index.ts';
 import { loadProviderAccountLocations } from './locations.ts';
+import { ProviderLocationFields } from './location-fields.tsx';
 
 export function DocumentLocationRepair({ application, locale, save, onSaved }: {
   readonly application: ProviderApplicationData;
@@ -33,17 +34,8 @@ export function DocumentLocationRepair({ application, locale, save, onSaved }: {
   }}>
     <h2>{ar ? 'استكمل موقعك للمتابعة' : 'Complete your location to continue'}</h2>
     <p>{ar ? 'الملفات محفوظة. اختر الموقع الرئيسي ومناطق الخدمة ثم احفظ؛ لا تحتاج لإعادة رفع الملفات.' : 'Your files are saved. Select your primary location and service areas, then save; no re-upload is needed.'}</p>
-    <Select required label={ar ? 'الموقع الرئيسي (مطلوب)' : 'Primary location (required)'} value={primary} onChange={event => setPrimary(event.currentTarget.value)} disabled={busy || locations.length === 0} options={[
-      { value: '', label: ar ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
-      ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
-    ]} />
-    {!primary ? <p role="status">{ar ? 'اختيار مناطق الخدمة لا يحدد الموقع الرئيسي. اختر مقر المكتب من القائمة أعلاه حتى تتمكن من الحفظ والمتابعة.' : 'Service areas do not set your primary location. Choose your office location above to save and continue.'}</p> : null}
-    <fieldset disabled={busy}><legend>{ar ? 'مناطق الخدمة (اختر منطقة واحدة على الأقل)' : 'Service areas (choose at least one)'}</legend>
-      {locations.map(location => <label className="provider-account-checkbox" key={location.id}>
-        <input type="checkbox" checked={areas.includes(location.id)} onChange={event => { const checked = event.currentTarget.checked; setAreas(previous => checked ? [...previous, location.id] : previous.filter(id => id !== location.id)); }} />
-        <span>{location.name[locale] ?? location.name.ar}</span>
-      </label>)}
-    </fieldset>
+    <ProviderLocationFields locale={locale} locations={locations} primary={primary} areas={areas} onPrimary={setPrimary} onAreas={setAreas}
+      showPrimary={application.missingFields.includes('primaryLocationId')} showAreas={application.missingFields.includes('serviceAreaIds')} disabled={busy} error={error} />
     {error ? <p role="alert">{ar ? 'تعذر تحميل أو حفظ الموقع. أعد المحاولة، وارجع لبيانات الحساب إذا استمر الخطأ.' : 'Could not load or save locations. Retry, or return to account details if the error persists.'}<Button type="button" onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة المحاولة' : 'Retry'}</Button></p> : null}
     <Button type="submit" disabled={busy || !primary || areas.length === 0}>{busy ? (ar ? 'جارٍ الحفظ…' : 'Saving…') : (ar ? 'حفظ الموقع ومناطق الخدمة' : 'Save location and service areas')}</Button>
   </form>;

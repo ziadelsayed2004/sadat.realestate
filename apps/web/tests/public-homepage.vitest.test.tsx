@@ -321,14 +321,14 @@ describe('public homepage', () => {
     expect(load).toHaveBeenCalledTimes(1);
   });
 
-  it.each(['ar', 'en'] as const)('submits a unit and real installment preference from the homepage in %s', locale => {
+  it.each(['ar', 'en'] as const)('submits installment preferences without a kind selector from the homepage in %s', locale => {
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={homepageData} />, { locale });
     const form = result.container.querySelector<HTMLFormElement>('.public-homepage__search')!;
-    fireEvent.click(form.querySelector('input[name="kind"][value="unit"]')!);
+    expect(form.querySelector('input[name="kind"]')).toBeNull();
     fireEvent.click(form.querySelector('input[name="installmentAvailable"]')!);
     const params = new URLSearchParams([...new FormData(form).entries()].map(([key, value]) => [key, String(value)]));
     expect(params.get('lang')).toBe(locale);
-    expect(parsePublicPropertySearchQuery(`/properties?${params}`)).toMatchObject({ kind: 'unit', installmentAvailable: true, transactionType: 'sale' });
+    expect(parsePublicPropertySearchQuery(`/properties?${params}`)).toMatchObject({ installmentAvailable: true, transactionType: 'sale' });
     fireEvent.click(form.querySelector('input[name="installmentAvailable"]')!);
     expect(new FormData(form).has('installmentAvailable')).toBe(false);
   });

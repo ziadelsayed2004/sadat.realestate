@@ -78,7 +78,13 @@ describe('provider account details', () => {
     const onContinue = vi.fn();
     renderWithLocale(<ProviderAccountPage client={{ getProviderApplication: vi.fn().mockResolvedValue(draft), updateProviderAccount }} locale="en" providerType="individual_broker" onBack={vi.fn()} onContinue={onContinue} />, { locale: 'en' });
     await screen.findByRole('checkbox', { name: 'Sadat City' });
-    fireEvent.change(screen.getByLabelText('Primary location'), { target: { value: 'd'.repeat(24) } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveContinueAction }));
+    expect(updateProviderAccount).not.toHaveBeenCalled();
+    expect(onContinue).not.toHaveBeenCalled();
+    const location = screen.getByRole('combobox', { name: 'Primary location (required to continue)' });
+    expect(location).toHaveFocus();
+    fireEvent.change(location, { target: { value: 'Sadat' } });
+    fireEvent.keyDown(location, { key: 'Enter' });
     fireEvent.click(screen.getByRole('checkbox', { name: 'Sadat City' }));
     fireEvent.click(screen.getByRole('button', { name: copy.saveContinueAction }));
     await waitFor(() => expect(onContinue).toHaveBeenCalledWith(updated));

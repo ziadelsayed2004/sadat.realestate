@@ -14,6 +14,7 @@ import { getProviderTypeCopy } from './copy.ts';
 import { getProviderAccountCopy, type ProviderAccountCopy } from './account-copy.ts';
 import './styles.css';
 import { loadProviderAccountLocations } from './locations.ts';
+import { ProviderLocationFields } from './location-fields.tsx';
 
 export interface ProviderAccountFlowClient {
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
@@ -272,6 +273,12 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
       return;
     }
 
+    if (continueAfterSave.current && (!form.primaryLocationId || form.serviceAreaIds.length === 0)) {
+      setSaveState('error');
+      setError({ state: 'error', title: copy.invalidFormTitle, message: locale === 'ar' ? '\u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0631\u0626\u064a\u0633\u064a \u0645\u0646 \u0627\u0644\u0627\u0642\u062a\u0631\u0627\u062d\u0627\u062a \u0648\u0645\u0646\u0637\u0642\u0629 \u062e\u062f\u0645\u0629 \u0648\u0627\u062d\u062f\u0629 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644 \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629.' : 'Select your primary location from the suggestions and at least one service area to continue.' });
+      document.querySelector<HTMLInputElement>(form.primaryLocationId ? '.provider-location-fields input[type="search"]' : '.provider-location-fields input[role="combobox"]')?.focus();
+      return;
+    }
     setSaveState('loading');
     setError(undefined);
     try {
@@ -286,7 +293,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
       setSaveState(nextError.state === 'permission' ? 'error' : nextError.state);
       setError(nextError);
     }
-  }, [application, client, copy, form.privacyAccepted, form.termsAccepted, onContinue, patchPreview]);
+  }, [application, client, copy, form.privacyAccepted, form.termsAccepted, form.primaryLocationId, form.serviceAreaIds.length, locale, onContinue, patchPreview]);
 
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -438,26 +445,9 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               />
             ) : null}
             {hasLocations ? (
-              <>
-                <Select
-                  label={copy.missingFieldLabels['primaryLocationId'] ?? 'Primary location'}
-                  value={form.primaryLocationId}
-                  onChange={event => update('primaryLocationId', event.currentTarget.value)}
-                  options={[
-                    { value: '', label: locale === 'ar' ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
-                    ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
-                  ]}
-                />
-                <fieldset className="provider-account-consents">
-                  <legend>{copy.missingFieldLabels['serviceAreaIds']}</legend>
-                  {locations.map(location => (
-                    <label className="provider-account-checkbox" key={location.id}>
-                      <input type="checkbox" checked={form.serviceAreaIds.includes(location.id)} onChange={event => update('serviceAreaIds', event.currentTarget.checked ? [...form.serviceAreaIds, location.id] : form.serviceAreaIds.filter(id => id !== location.id))} />
-                      <span>{location.name[locale] ?? location.name.ar}</span>
-                    </label>
-                  ))}
-                </fieldset>
-              </>
+              <ProviderLocationFields locale={locale} locations={locations} primary={form.primaryLocationId} areas={form.serviceAreaIds}
+                onPrimary={value => update('primaryLocationId', value)} onAreas={value => update('serviceAreaIds', value)}
+                disabled={saveState === 'loading'} error={saveState === 'error'} />
             ) : null}
             {locationsState === 'error' || (locationsState === 'ready' && locations.length === 0) ? (
               <StateMessage state="retry" title={copy.requirementsTitle} message={copy.unavailableLocationBody} retryLabel={copy.retryAction} onRetry={() => void loadLocations()} />

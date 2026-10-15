@@ -16,11 +16,12 @@ test('views deduplicate per browser/property/day, skip private and owner views a
   let at = new Date('2026-09-30T20:59:59Z');
   const events: Array<Record<string, unknown>> = [];
   const indexes: unknown[] = [];
-  const connection = { collection(name: string) {
+  let viewCount = 0;
+  const connection = { async startSession() { return { async withTransaction(action: () => Promise<boolean>) { return action(); }, async endSession() {} }; }, collection(name: string) {
     if (name === 'properties') return { async findOne(filter: Record<string, unknown>) {
       assert.equal(filter.status, 'published'); assert.equal(filter.active, true); assert.ok(filter.expiresAt);
-      return filter.slug === 'public-home' ? { _id: propertyId, providerId } : null;
-    } };
+      return filter.slug === 'public-home' ? { _id: propertyId, providerId, viewCount } : null;
+    }, async updateOne(_filter: unknown, update: { $set: { viewCount: number } }) { viewCount = update.$set.viewCount; } };
     return {
       async createIndex(keys: unknown, options?: unknown) { indexes.push({ keys, options }); },
       async insertOne(row: Record<string, unknown>) {
@@ -47,6 +48,7 @@ test('views deduplicate per browser/property/day, skip private and owner views a
   assert.equal(await service.record('public-home', 'visitor'), true);
   assert.equal(await service.record('public-home', 'another-visitor'), true);
   assert.deepEqual(await service.read(String(providerId), [String(propertyId)]), { monthlyViews: 2, propertyMonthlyViews: { [String(propertyId)]: 2 } });
+  assert.equal(viewCount, 3);
   assert.ok(indexes.some(value => (value as { options?: { unique?: boolean } }).options?.unique));
   assert.ok(indexes.some(value => (value as { options?: { expireAfterSeconds?: number } }).options?.expireAfterSeconds === 0));
 });

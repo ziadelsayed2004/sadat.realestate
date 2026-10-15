@@ -10,7 +10,6 @@ export const PUBLIC_PROPERTY_LIST_ROUTE = '/public/properties' as const;
 export const PUBLIC_PROPERTIES_PATH = '/properties' as const;
 
 const QUERY_KEYS = [
-  'kind',
   'installmentAvailable',
   'transactionType',
   'projectId',
@@ -69,7 +68,6 @@ function setIfPresent(params: URLSearchParams, key: string, value: string | numb
 
 export function publicPropertySearchParams(query: PublicPropertySearchQuery): URLSearchParams {
   const params = new URLSearchParams();
-  setIfPresent(params, 'kind', query.kind);
   setIfPresent(params, 'installmentAvailable', query.installmentAvailable);
   setIfPresent(params, 'transactionType', query.transactionType);
   setIfPresent(params, 'projectId', query.projectId);

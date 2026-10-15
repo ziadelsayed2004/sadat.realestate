@@ -142,15 +142,16 @@ it.each([false, true])('repairs missing broker locations without optional upload
   renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="individual_broker" initialApplication={draft} client={{ updateProviderAccount: save }} onBack={vi.fn()} onContinue={next} />, { locale: 'ar' });
   const review = await screen.findByRole('button', { name: 'مراجعة الطلب' });
   expect(review).toBeDisabled();
-  await screen.findByRole('option', { name: 'السادات' });
-  fireEvent.change(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب)' }), { target: { value: locationId } });
+  await screen.findByRole('checkbox', { name: 'السادات' });
+  fireEvent.change(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب للمتابعة)' }), { target: { value: 'السادات' } });
+  fireEvent.click(screen.getByRole('option', { name: 'السادات' }));
   fireEvent.click(screen.getByRole('checkbox', { name: 'السادات' }));
   fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
   if (failFirstSave) {
     await screen.findByRole('alert');
     expect(review).toBeDisabled();
     expect(next).not.toHaveBeenCalled();
-    expect(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب)' })).toHaveValue(locationId);
+    expect(screen.getByRole('combobox', { name: 'الموقع الرئيسي (مطلوب للمتابعة)' })).toHaveValue('السادات');
     expect(screen.getByRole('checkbox', { name: 'السادات' })).toBeChecked();
     fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
   }
@@ -227,13 +228,14 @@ function documentData(category: ProviderDocumentData['category']): ProviderDocum
 
 describe('provider organization details', () => {
   it('advances the authenticated provider flow from account to organization to documents', async () => {
+    vi.mocked(loadProviderAccountLocations).mockResolvedValueOnce([{ id: 'd'.repeat(24), kind: 'location', slug: 'sadat', order: 0, name: { en: 'Sadat City' } }]);
     const accountCopy = getProviderAccountCopy('en');
     const initial = application('brokerage_office');
     const accountUpdated = application('brokerage_office', {
       accountOwnerFullName: 'Mona Hassan',
       displayName: 'Nile Homes',
       email: 'mona@example.com',
-      preferredLocale: 'en',
+      preferredLocale: 'en', primaryLocationId: 'd'.repeat(24), serviceAreaIds: ['d'.repeat(24)],
       termsAcceptedAt: '2026-08-13T00:00:00.000Z',
       privacyAcceptedAt: '2026-08-13T00:00:00.000Z',
       missingFields: ['legalBusinessName', 'tradeName', 'businessAddress']
@@ -271,6 +273,9 @@ describe('provider organization details', () => {
     fireEvent.change(screen.getByLabelText(accountCopy.emailLabel), { target: { value: 'mona@example.com' } });
     fireEvent.click(screen.getByLabelText(accountCopy.termsLabel));
     fireEvent.click(screen.getByLabelText(accountCopy.privacyLabel));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Primary location (required to continue)' }), { target: { value: 'Sadat' } });
+    fireEvent.click(await screen.findByRole('option', { name: 'Sadat City' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Sadat City' }));
     fireEvent.click(screen.getByRole('button', { name: accountCopy.saveContinueAction }));
     const organizationCopy = getProviderOrganizationCopy('en');
     await waitFor(() => expect(screen.getByRole('heading', { name: organizationCopy.businessTitle, level: 1 })).toBeInTheDocument());
