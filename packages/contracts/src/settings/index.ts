@@ -8,6 +8,18 @@ export const publicSeoSettingsSchema=z.object({title:localizedTextSchema,descrip
 export const publicSeoSettingsSuccessEnvelopeSchema=successEnvelopeSchema(publicSeoSettingsSchema);
 export type SeoSettings=z.infer<typeof seoSettingsSchema>;export type SeoSettingsPatch=z.infer<typeof seoSettingsPatchSchema>;export type PublicSeoSettings=z.infer<typeof publicSeoSettingsSchema>;export type PrivacyPolicy=z.infer<typeof privacyPolicySchema>;export type PrivacyPolicyPatch=z.infer<typeof privacyPolicyPatchSchema>;
 
+export const DEFAULT_PUBLIC_SEO_SETTINGS: PublicSeoSettings = {
+  title: { ar: 'عقارات السادات | بيع وإيجار في مدينة السادات', en: 'Sadat Real Estate | Property for Sale and Rent in Sadat City' },
+  description: { ar: 'اكتشف عقارات للبيع والإيجار في مدينة السادات، شقق وفيلات وأراضي ومحلات، ومشروعات الشركات المطورة. ابحث حسب المنطقة والسعر وخيارات التقسيط.', en: 'Find properties for sale and rent in Sadat City: apartments, villas, land, shops and developer projects. Search by area, price and installment options.' },
+  canonicalUrl: 'https://elsadatrealestate.com', robots: 'index,follow', titleSeparator: '|', sitemapStatus: 'active'
+};
+export const DEFAULT_ADMIN_SEO_VALUES = {
+  default_seo_title: DEFAULT_PUBLIC_SEO_SETTINGS.title,
+  default_meta_description: DEFAULT_PUBLIC_SEO_SETTINGS.description,
+  canonical_domain: DEFAULT_PUBLIC_SEO_SETTINGS.canonicalUrl,
+  title_separator: '|', allow_indexing: true, sitemap_status: 'active', google_search_console_verification: ''
+};
+
 export const ADMIN_SETTINGS_NAMESPACES = [
   'platform', 'contact', 'social', 'properties', 'requests', 'advertising', 'seo', 'privacy-security', 'display'
 ] as const;

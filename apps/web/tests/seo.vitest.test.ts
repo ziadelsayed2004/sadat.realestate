@@ -32,7 +32,8 @@ describe('public SEO metadata', () => {
       type: 'website',
       title: 'Articles',
       description: 'Published articles',
-      url: '/articles'
+      url: '/articles',
+      image: '/assets/canonical/public/home-hero-sadat-city.png'
     });
     expect(metadata.jsonLd).not.toHaveProperty('authorId');
   });

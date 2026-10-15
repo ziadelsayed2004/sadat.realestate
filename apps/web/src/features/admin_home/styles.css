@@ -1,4 +1,13 @@
 .admin-home { min-height: calc(100vh - var(--header-height-min)); overflow: hidden; background: #f5e9cb; color: #1b2942; }
+.route-shell--admin .admin-home { background: #f5f7f5; }
+.admin-home__content > .admin-home__heading { padding: 24px; background: #fff; border: 1px solid #e0e7e1; border-radius: 18px; }
+.admin-home__panel, .admin-home__editor { border-color: #e0e7e1; box-shadow: 0 4px 18px #183c2510; }
+.admin-home__banner-list tbody tr { background: #fff; border-color: #e0e7e1; }
+.admin-home__banner-settings > .ui-button { margin-block: 12px; }
+.admin-home__panel-heading h2, .admin-home__editor-heading h2 { margin: 0; font-size: 1.15rem; line-height: 1.6; }
+.admin-home__editor form { min-inline-size: 0; inline-size: 100%; }
+.admin-home__editor form > *, .admin-home__editor fieldset { min-inline-size: 0; }
+.admin-home__editor :is(input, select, textarea) { min-inline-size: 0; }
 .admin-home__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
 .admin-home__heading, .admin-home__panel, .admin-home__editor, .admin-home__state { max-width: 1320px; margin-inline: auto; }
 .admin-home__panel, .admin-home__editor, .admin-home__state { border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }

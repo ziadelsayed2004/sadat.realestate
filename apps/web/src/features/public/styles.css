@@ -2543,6 +2543,10 @@
 }
 
 .public-homepage__hero-heading { display: contents; }
+.public-homepage .public-homepage__hero {
+  min-block-size: calc(100svh - var(--public-header-height, 110px));
+  box-sizing: border-box;
+}
 @media (max-width: 767px) {
   .public-homepage__hero { display: block; min-block-size: 0; block-size: auto; padding: 0; }
   .public-homepage__hero .public-homepage__hero-visual,

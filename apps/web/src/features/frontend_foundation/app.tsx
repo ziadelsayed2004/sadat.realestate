@@ -38,6 +38,7 @@ import { type DesignAssetCatalog } from '../design_system/index.ts';
 import { getFoundationCopy } from './locale.js';
 import { SessionLoading } from './session-loading.tsx';
 import './styles.css';
+import './interactions.css';
 
 const AdminUserGuide = lazy(() => import('../admin_user_guide/views.tsx'));
 

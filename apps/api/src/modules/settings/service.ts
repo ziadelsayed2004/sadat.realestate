@@ -3,6 +3,8 @@ import { ApiContractError } from '../contracts/error-boundary.js';
 import { contactSettingsProjection } from './contact-policy.js';
 import {
   adminSettingsDataSchema,
+  DEFAULT_ADMIN_SEO_VALUES,
+  DEFAULT_PUBLIC_SEO_SETTINGS,
   adminSettingsNamespaceSchema,
   adminSettingsUpdateSchema,
   providerAdRequestProjectionSchema,
@@ -132,6 +134,7 @@ function canonicalOrigin(value: unknown): string | undefined {
 
 function publicSeoProjection(setting: AdminSettingsData | undefined): PublicSeoSettings | undefined {
   if (setting?.namespace !== 'seo') return undefined;
+  setting = { ...setting, values: { ...DEFAULT_ADMIN_SEO_VALUES, ...setting.values } };
   const canonicalUrl = canonicalOrigin(setting.values.canonical_domain);
   const sitemapStatus = setting.values.sitemap_status;
   if (canonicalUrl === undefined || typeof setting.values.allow_indexing !== 'boolean' || (sitemapStatus !== 'active' && sitemapStatus !== 'inactive')) return undefined;
@@ -156,11 +159,14 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     await requirePermission(dependencies, claims.sub, 'admin:settings.view');
     const target = namespace(unparsedNamespace);
     const value = await dependencies.repository.find(target);
+    if (!value && target === 'seo') return output({ namespace: 'seo', schemaVersion: 1, values: DEFAULT_ADMIN_SEO_VALUES, version: 0, updatedBy: claims.sub, updatedAt: clock().toISOString() });
     if (!value) throw new SettingsServiceError('SETTINGS_NOT_FOUND');
-    return output(value);
+    return output(target === 'seo' ? { ...value, values: { ...DEFAULT_ADMIN_SEO_VALUES, ...value.values } } : value);
   };
   const getPublicSeo = async (): Promise<PublicSeoSettings> => {
-    const value = publicSeoProjection(await dependencies.repository.find('seo'));
+    const stored = await dependencies.repository.find('seo');
+    if (!stored) return publicSeoSettingsSchema.parse(DEFAULT_PUBLIC_SEO_SETTINGS);
+    const value = publicSeoProjection(stored);
     if (value === undefined) throw new SettingsServiceError('SETTINGS_NOT_FOUND');
     return value;
   };

@@ -14,6 +14,14 @@ const publicSeoSettings = {
 };
 
 describe('public SEO settings cycle', () => {
+  it('provides searchable defaults without an API and keeps private routes excluded', async () => {
+    const home = await render('/?lang=ar');
+    expect(home.seo?.title).toContain('بيع وإيجار');
+    expect(home.seo?.description).toContain('مدينة السادات');
+    expect(home.seo?.robots).toBe('index,follow');
+    expect(home.seo?.jsonLd['@type']).toBe('WebSite');
+    expect((await render('/auth/login?lang=ar')).seo?.robots).toBe('noindex,nofollow');
+  });
   it('loads only the public projection through its anonymous API route', async () => {
     const requests: string[] = [];
     const client = new ApiClient({ fetcher: async input => {

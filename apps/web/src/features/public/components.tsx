@@ -236,6 +236,17 @@ export function PublicSiteHeader({
   const contextRole = useContext(PublicAuthRoleContext);
   const role = authenticatedRole ?? contextRole;
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const measure = () => header.closest<HTMLElement>('.public-homepage')?.style.setProperty('--public-header-height', `${header.offsetHeight}px`);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
+    observer?.observe(header);
+    window.addEventListener('resize', measure);
+    return () => { observer?.disconnect(); window.removeEventListener('resize', measure); };
+  }, []);
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
@@ -281,7 +292,7 @@ export function PublicSiteHeader({
   }, [menuOpen]);
 
   return (
-    <header className="public-homepage__header">
+    <header ref={headerRef} className="public-homepage__header">
       <a className="public-homepage__brand" href={localeHref('/')} aria-label={copy.brand}>
         <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>

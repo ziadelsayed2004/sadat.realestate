@@ -13,6 +13,7 @@ export interface SeoOpenGraph {
   readonly title: string;
   readonly description?: string;
   readonly url: string;
+  readonly image?: string;
 }
 
 export interface PublicSeoMetadata {
@@ -90,7 +91,8 @@ export function createPublicSeo(input: PublicSeoInput): PublicSeoMetadata {
       type: openGraphType,
       title: input.title,
       ...(description === undefined ? {} : { description }),
-      url: canonicalPath
+      url: canonicalPath,
+      image: '/assets/canonical/public/home-hero-sadat-city.png'
     },
     jsonLd
   };

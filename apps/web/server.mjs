@@ -260,11 +260,16 @@ function renderSeoMetadata(seo, publicOrigin, cspNonce) {
   const openGraph = '<meta property="og:type" content="' + escapeHtml(seo.openGraph.type) + '" />'
     + '<meta property="og:title" content="' + escapeHtml(seo.openGraph.title) + '" />'
     + (seo.openGraph.description === undefined ? '' : '<meta property="og:description" content="' + escapeHtml(seo.openGraph.description) + '" />')
-    + '<meta property="og:url" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.url)) + '" />';
+    + '<meta property="og:url" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.url)) + '" />'
+    + (seo.openGraph.image ? '<meta property="og:image" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.image)) + '" />' : '');
+  const twitter = '<meta name="twitter:card" content="summary_large_image" />'
+    + '<meta name="twitter:title" content="' + escapeHtml(seo.openGraph.title) + '" />'
+    + (seo.description ? '<meta name="twitter:description" content="' + escapeHtml(seo.description) + '" />' : '')
+    + (seo.openGraph.image ? '<meta name="twitter:image" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.image)) + '" />' : '');
   const jsonLd = `<script${inlineNonceAttribute(cspNonce)} type="application/ld+json">`
-    + escapeJsonForHtml(JSON.stringify(seo.jsonLd))
+    + escapeJsonForHtml(JSON.stringify(seo.jsonLd, (key, value) => ['url', '@id', 'logo', 'image'].includes(key) && typeof value === 'string' && value.startsWith('/') ? absoluteSeoUrl(publicOrigin, value) : value))
     + '</script>';
-  return description + robots + verification + canonical + alternates + openGraph + jsonLd;
+  return description + robots + verification + canonical + alternates + openGraph + twitter + jsonLd;
 }
 
 function renderDocument(template, result, cspNonce) {

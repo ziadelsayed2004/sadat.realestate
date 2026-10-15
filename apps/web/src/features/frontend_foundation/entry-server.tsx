@@ -7,6 +7,7 @@ import { getPublicAboutTeamCopy, getPublicArticlesCopy, loadPublicAbout, loadPub
 import { getCommunityCopy, loadPublicCommunity, parseCommunityListQuery } from '../community/index.ts';
 import { canonicalPathForUrl, createPublicSeo, loadPublicSeoSettings, normalizePublicOrigin, type PublicSeoMetadata } from '../seo/index.ts';
 import { App } from './app.js';
+import { DEFAULT_PUBLIC_SEO_SETTINGS } from '@sadat-real-estate/contracts';
 import { directionForLocale, getFoundationCopy, resolveLocale } from './locale.js';
 
 export type ServerRenderSeo = PublicSeoMetadata;
@@ -153,7 +154,7 @@ function publicRouteSeo(routeId: string, locale: SupportedLocale, url: string): 
   const robots = routeId === 'public-compare' || hasQueryVariants(url) ? 'noindex,follow' : 'index,follow';
   switch (routeId) {
     case 'public-home':
-      return createPublicSeo({ title: homepage.brand, locale, canonicalPath: '/', description: homepage.heroFallbackBody, robots });
+      return createPublicSeo({ title: homepage.brand, locale, canonicalPath: '/', description: homepage.heroFallbackBody, robots, jsonLd: { '@context': 'https://schema.org', '@type': 'WebSite', name: homepage.brand, url: '/', inLanguage: locale, publisher: { '@type': 'Organization', name: homepage.brand, url: '/', logo: '/assets/sadat-real-estate-logo.png' } } });
     case 'public-properties': {
       const copy = getPublicPropertyListingCopy(locale);
       return createPublicSeo({ title: copy.title, locale, canonicalPath, description: copy.footerDescription, robots });
@@ -479,8 +480,8 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   }
 
   if (publicSeoSettings === undefined && publicSeoSettingsPromise !== undefined) publicSeoSettings = await publicSeoSettingsPromise;
-  if (seo !== undefined && publicSeoSettings !== undefined && route.kind === 'matched' && route.surface === 'public') {
-    seo = applyPublicSeoSettings(seo, publicSeoSettings, locale, route.id === 'public-home');
+  if (seo !== undefined && route.kind === 'matched' && route.surface === 'public' && (publicSeoSettings !== undefined || route.id === 'public-home')) {
+    seo = applyPublicSeoSettings(seo, publicSeoSettings ?? DEFAULT_PUBLIC_SEO_SETTINGS, locale, route.id === 'public-home');
   }
 
   const configuredPublicOrigin = normalizePublicOrigin(publicSeoSettings?.canonicalUrl) ?? options.publicOrigin;

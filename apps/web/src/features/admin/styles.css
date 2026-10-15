@@ -1,5 +1,22 @@
 @import '../dashboard_account/styles.css';
 
+/* Shared administration surfaces and controls. */
+.route-shell--admin { --admin-canvas: #f5f7f5; --admin-border: #e0e7e1; }
+.route-shell--admin .route-shell__body { background: var(--admin-canvas) !important; }
+.route-shell--admin .app-main > :has(> .admin-dashboard__navigation) { background: var(--admin-canvas) !important; }
+.route-shell--admin .app-main > :has(> .admin-dashboard__navigation) > :not(.admin-dashboard__navigation) { min-inline-size: 0; box-sizing: border-box; }
+.route-shell--admin :is(h1, h2, h3) { overflow-wrap: anywhere; }
+.route-shell--admin .ui-button { min-block-size: 42px; border-radius: 11px; line-height: 1.4; padding: 10px 16px; text-align: center; }
+.route-shell--admin .ui-button:disabled { cursor: not-allowed; opacity: .5; }
+.route-shell--admin :is(input, select, textarea) { font: inherit; box-sizing: border-box; max-inline-size: 100%; }
+.route-shell--admin .admin-dashboard__metric { min-inline-size: 0; border-color: var(--admin-border); box-shadow: 0 4px 16px #183c2510; }
+.route-shell--admin .admin-dashboard__metric strong { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.route-shell--admin .admin-dashboard__metric-icon { background: #eaf4ee; color: #155b4f; border-radius: 12px; }
+.route-shell--admin .admin-shell-header__search { background: #f5f7f5; border-color: var(--admin-border); }
+.route-shell--admin .admin-section-search:focus-within { outline: none; box-shadow: 0 0 0 3px #155b4f24; }
+.route-shell--admin .admin-dashboard__navigation a { line-height: 1.6; }
+.route-shell--admin .admin-dashboard__navigation a[aria-current="page"] { background: #eaf3ec; color: #155b4f; }
+
 .route-shell--admin .route-shell__navigation {
   display: none;
 }

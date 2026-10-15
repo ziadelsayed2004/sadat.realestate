@@ -14,6 +14,20 @@ const initial: AdminSettingsData = {
   updatedBy: adminClaims.sub, updatedAt: '2026-08-01T00:00:00.000Z'
 };
 
+test('returns editable SEO defaults when no settings exist, without persisting or replacing customization', async () => {
+  const repo = repository();
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: repo, audit: { async record() { return 'audit-id'; } } });
+  const defaults = await service.get(adminClaims, 'seo');
+  assert.equal(defaults.values.allow_indexing, true);
+  assert.equal(defaults.values.sitemap_status, 'active');
+  assert.equal((await service.getPublicSeo()).canonicalUrl, 'https://elsadatrealestate.com');
+  assert.equal(await repo.find('seo'), undefined);
+  const updated = await service.update(adminClaims, 'seo', { schemaVersion: 1, values: { ...defaults.values, allow_indexing: false, canonical_domain: 'https://example.test' }, expectedVersion: 0, reason: 'Customize SEO defaults' }, { requestId: 'seo-defaults', traceId: 'seo-defaults' });
+  assert.equal(updated.version, 0);
+  assert.equal((await service.getPublicSeo()).robots, 'noindex,nofollow');
+  assert.equal((await service.getPublicSeo()).canonicalUrl, 'https://example.test');
+});
+
 const providerClaims: AccessTokenClaims = {
   ...adminClaims,
   role: 'provider',
@@ -111,7 +125,8 @@ test('projects only complete public SEO values and strips administrative metadat
   const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find(namespace) { return namespace === 'seo' ? seo : undefined; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
   assert.deepEqual(await service.getPublicSeo(), { title: seo.values.default_seo_title, description: seo.values.default_meta_description, canonicalUrl: 'https://example.test', robots: 'noindex,nofollow', sitemapStatus: 'active', titleSeparator: '|', googleSiteVerification: 'site-verification-value' });
   const incomplete = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find() { return { ...seo, values: { default_seo_title: { en: 'Missing description' }, canonical_domain: 'https://example.test', allow_indexing: true } }; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
-  await assert.rejects(() => incomplete.getPublicSeo(), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
+  assert.equal((await incomplete.getPublicSeo()).sitemapStatus, 'active');
+  assert.ok((await incomplete.getPublicSeo()).description.en?.includes('Sadat City'));
 });
 
 function providerRepository(result: { kind: 'updated'; settings: ProviderSettingsData } | { kind: 'not_found' } | { kind: 'version_conflict' } = { kind: 'updated', settings: providerSettings }): ProviderSettingsRepository {

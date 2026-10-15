@@ -98,6 +98,9 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
         data-device-scope={route.deviceScope}
         data-locale={locale}
         data-route-id={route.id}
+        onDragStartCapture={event => {
+          if (!(event.target instanceof Element) || !event.target.closest('input, textarea, [contenteditable="true"]')) event.preventDefault();
+        }}
         onClickCapture={event => {
           const input = event.target;
           if (input instanceof HTMLInputElement && ['date', 'time', 'datetime-local'].includes(input.type) && !input.disabled && !input.readOnly) {

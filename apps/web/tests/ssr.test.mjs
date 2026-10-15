@@ -201,7 +201,7 @@ test('SSR renders the homepage shell and hydrates CMS data only when supplied', 
   assert.match(result.html, /Published homes/);
   assert.deepEqual(result.homepageData?.sections[0]?.title, { en: 'Published homes' });
   assert.equal(result.seo?.canonicalPath, '/');
-  assert.equal(result.seo?.description, 'A complete real-estate platform for Sadat City services and properties');
+  assert.match(result.seo?.description, /properties for sale and rent in Sadat City/i);
 });
 
 test('SSR renders the property listing with the implemented query and safe list data', async () => {
