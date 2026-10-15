@@ -17,7 +17,7 @@ import {
   type MasterDataItem,
   type MasterDataList
 } from './data.ts';
-import { getAdminMasterDataCopy, type AdminMasterDataState, type AdminMasterDataTab } from './copy.ts';
+import { getAdminMasterDataCopy, type AdminMasterDataKind, type AdminMasterDataState, type AdminMasterDataTab } from './copy.ts';
 import './styles.css';
 
 export interface AdminMasterDataProps {
@@ -172,14 +172,14 @@ function parentLabel(item: MasterDataItem, data: MasterDataList, tab: AdminMaste
   return copy.noGroup;
 }
 
-function MasterDataTable({ tab, data, locale, copy, onEdit, onDelete }: { readonly tab: AdminMasterDataTab; readonly data: MasterDataList; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getAdminMasterDataCopy>; readonly onEdit: (item: MasterDataItem) => void; readonly onDelete: (item: MasterDataItem) => void }) {
+function MasterDataTable({ tab, data, locale, copy, onEdit, onDelete, onMove, onAddType, busy }: { readonly busy: boolean; readonly onMove: (index: number, direction: number) => void; readonly onAddType: (item: MasterDataItem) => void; readonly tab: AdminMasterDataTab; readonly data: MasterDataList; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getAdminMasterDataCopy>; readonly onEdit: (item: MasterDataItem) => void; readonly onDelete: (item: MasterDataItem) => void }) {
   return (
     <div className="admin-master-data__table-wrap">
       <table className="admin-master-data__table">
         <caption className="sr-only">{copy.titles[tab]}</caption>
         <thead><tr><th scope="col">{copy.columns.name}</th><th scope="col">{copy.columns.kind}</th>{tab !== 'features' ? <th scope="col">{copy.columns.parent}</th> : null}<th scope="col">{copy.columns.order}</th><th scope="col">{copy.columns.active}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead>
         <tbody>
-          {data.items.map(item => {
+          {data.items.map((item, index) => {
             const canEdit = item.availableActions.includes('update');
             const canDelete = item.availableActions.includes('delete');
             return (
@@ -187,11 +187,12 @@ function MasterDataTable({ tab, data, locale, copy, onEdit, onDelete }: { readon
                 <td><div className="admin-master-data__identity"><strong>{localizedValue(item.name, locale)}</strong><small>{item.slug}</small></div></td>
                 <td><span className="admin-master-data__kind">{copy.kinds[item.kind] ?? item.kind}</span></td>
                 {tab !== 'features' ? <td>{parentLabel(item, data, tab, locale, copy)}</td> : null}
-                <td className="admin-master-data__number">{new Intl.NumberFormat(locale).format(item.order)}</td>
+                <td className="admin-master-data__number">{new Intl.NumberFormat(locale).format(tab === 'locations' ? index + 1 : item.order)}{tab === 'locations' && canEdit ? <span className="admin-master-data__actions"><Button size="sm" variant="ghost" disabled={busy || index === 0 || data.items.length !== data.total || data.total > 1000} onClick={() => onMove(index, -1)} aria-label={`${locale === 'ar' ? 'تحريك لأعلى' : 'Move up'}: ${localizedValue(item.name, locale)}`}>↑</Button><Button size="sm" variant="ghost" disabled={busy || index === data.items.length - 1 || data.items.length !== data.total || data.total > 1000} onClick={() => onMove(index, 1)} aria-label={`${locale === 'ar' ? 'تحريك لأسفل' : 'Move down'}: ${localizedValue(item.name, locale)}`}>↓</Button></span> : null}</td>
                 <td><span className={`admin-master-data__status admin-master-data__status--${item.active ? 'active' : 'inactive'}`}>{item.active ? copy.active : copy.inactive}</span></td>
                 <td>{dateLabel(item.updatedAt, locale)}</td>
                 <td><div className="admin-master-data__actions">
-                  {canEdit ? <Button variant="ghost" size="sm" onClick={() => onEdit(item)} aria-label={`${copy.edit}: ${localizedValue(item.name, locale)}`}>{copy.edit}</Button> : null}
+                  {canEdit && tab === 'categories' && item.kind === 'category' ? <Button variant="ghost" size="sm" onClick={() => onAddType(item)}>{locale === 'ar' ? 'إضافة نوع داخله' : 'Add property type'}</Button> : null}
+                  {canEdit ? <Button variant="ghost" size="sm" disabled={busy} onClick={() => onEdit(item)} aria-label={`${copy.edit}: ${localizedValue(item.name, locale)}`}>{copy.edit}</Button> : null}
                   {canDelete ? <Button variant="ghost" size="sm" onClick={() => onDelete(item)} aria-label={`${copy.delete}: ${localizedValue(item.name, locale)}`}>{copy.delete}</Button> : null}
                   {!canEdit && !canDelete ? <span className="admin-master-data__muted">{copy.noActions}</span> : null}
                 </div></td>
@@ -218,7 +219,7 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
   return (
     <form className="admin-master-data__form" onSubmit={onSubmit}>
       <div className="admin-master-data__form-grid">
-        <SelectField id="admin-master-data-kind" label={copy.labels.kind} value={form.kind} options={kindOptions} disabled={editing} onChange={kind => onChange({ kind, categoryId: kind === 'type' && parentOptions.length === 1 ? parentOptions[0]!.value : form.categoryId })} />
+        {editing ? <div className="admin-master-data__field"><span>{copy.labels.kind}</span><strong>{copy.kinds[form.kind as AdminMasterDataKind]}</strong><small>{tab === 'categories' ? locale === 'ar' ? 'نوع العنصر ثابت بعد الإنشاء. لإضافة نوع عقار، استخدم إضافة نوع داخل التصنيف.' : 'The element kind stays fixed after creation. Use Add property type on a category to create a type inside it.' : locale === 'ar' ? 'نوع العنصر ثابت بعد الإنشاء.' : 'The element kind stays fixed after creation.'}</small></div> : <SelectField id="admin-master-data-kind" label={copy.labels.kind} value={form.kind} options={kindOptions} onChange={kind => onChange({ kind, categoryId: kind === 'type' && parentOptions.length === 1 ? parentOptions[0]!.value : form.categoryId })} />}
         <p>{locale === 'ar' ? 'المعرّف يتولد تلقائيًا عند الإنشاء ويظل ثابتًا عند التعديل.' : 'The identifier is generated automatically on creation and stays unchanged on edits.'}</p>
         <FormField id="admin-master-data-name-ar" label={copy.labels.nameAr} value={form.nameAr} placeholder={copy.placeholders.nameAr} onChange={nameAr => onChange({ nameAr })} />
         <FormField id="admin-master-data-name-en" label={copy.labels.nameEn} value={form.nameEn} placeholder={copy.placeholders.nameEn} onChange={nameEn => onChange({ nameEn })} />
@@ -229,9 +230,7 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
           <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: DEFAULT_CATEGORY_IMAGE })}>{locale === 'ar' ? 'استخدام القالب الافتراضي' : 'Use default template'}</Button>
         </div> : null}
         {tab === 'categories' ? <p className="admin-master-data__field--wide">{locale === 'ar' ? 'التصنيف مجموعة مثل «سكني»، ونوع العقار مثل «شقة» يتبع هذه المجموعة.' : 'A category is a group such as Residential. A property type such as Apartment belongs to that group.'}</p> : null}
-        {tab !== 'locations' ?
-          <details className="admin-master-data__field--wide"><summary>{locale === 'ar' ? 'ترتيب الظهور (اختياري)' : 'Display order (optional)'}</summary><p>{locale === 'ar' ? 'الجديد يُضاف آخر القائمة تلقائيًا. الرقم الأصغر يظهر أولًا؛ لا تحتاج تغييره.' : 'New entries go at the end automatically. Smaller numbers appear first; no change is needed.'}</p><FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} /></details>
-        : <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} />}
+        <details className="admin-master-data__field--wide"><summary>{locale === 'ar' ? 'ترتيب الظهور (اختياري)' : 'Display order (optional)'}</summary><p>{locale === 'ar' ? 'الجديد يُضاف آخر القائمة تلقائيًا. يمكنك استخدام أسهم القائمة لترتيب المناطق.' : 'New entries go at the end automatically. Use the list arrows to arrange locations.'}</p><FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" max="1000000" step="1" required onChange={order => onChange({ order })} /></details>
         {tab === 'categories' && form.kind === 'type' ? <><SelectField id="admin-master-data-category" label={locale === 'ar' ? 'التصنيف الذي يتبعه النوع' : 'Category for this property type'} value={form.categoryId} required options={[{ value: '', label: copy.placeholders.category }, ...parentOptions]} onChange={categoryId => onChange({ categoryId })} />{parentOptions.length === 0 ? <div><p>{locale === 'ar' ? 'أضف تصنيفًا أولًا، ثم أضف نوع العقار داخله.' : 'Add a category first, then add a property type to it.'}</p><Button type="button" variant="secondary" onClick={() => onChange({ kind: 'category' })}>{locale === 'ar' ? 'إضافة تصنيف أولًا' : 'Add a category first'}</Button></div> : null}</> : null}
         {tab === 'locations' && form.kind === 'neighborhood' ? <SelectField id="admin-master-data-parent" label={copy.labels.parent} value={form.parentId} options={[{ value: '', label: copy.placeholders.parent }, ...parentOptions]} onChange={parentId => onChange({ parentId })} /> : null}
         {tab === 'features' ? <p className="admin-master-data__field--wide">{locale === 'ar' ? 'الميزة شيء داخل العقار مثل مصعد أو موقف سيارات. الخدمة مكان قريب مثل مدرسة أو مستشفى. المجموعة تُحدد تلقائيًا حسب النوع؛ لا تحتاج لكتابة كود.' : 'A feature is part of the property, such as an elevator or parking. A service is a nearby place, such as a school or hospital. The group is assigned automatically by type; no code is needed.'}</p> : null}
@@ -310,8 +309,25 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
     setMutationError(undefined);
   }
 
+  async function moveLocation(index: number, direction: number): Promise<void> {
+    if (busy || tab !== 'locations' || !data || data.items.length !== data.total || data.total > 1000) return;
+    const items = [...data.items], next = index + direction;
+    if (next < 0 || next >= items.length) return;
+    [items[index], items[next]] = [items[next]!, items[index]!];
+    setBusy(true); setMutationError(undefined);
+    try {
+      await source.reorderLocations({ items: items.map(item => ({ id: item.id, version: item.version })), reason: 'Reorder locations using list arrows' });
+      setData(await source.load('locations'));
+    } catch {
+      setMutationError(locale === 'ar' ? 'تعذر حفظ الترتيب أو تغيرت القائمة. حدّثها ثم حاول مجددًا.' : 'The order could not save or the list changed. Refresh it and try again.');
+    } finally { setBusy(false); }
+  }
+  function addPropertyType(item: MasterDataItem): void {
+    setForm({ ...formFromItem(undefined, 'categories'), kind: 'type', categoryId: item.id, order: String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(row => row.order) ?? [])) + 1)) });
+    setMutationError(undefined); setModal({ mode: 'create' });
+  }
   function openCreate(): void {
-    setForm({ ...formFromItem(undefined, tab), order: tab !== 'locations' ? String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(item => item.order) ?? [])) + 1)) : '0' });
+    setForm({ ...formFromItem(undefined, tab), order: String(Math.min(1_000_000, Math.max(-1, ...(data?.items.map(item => item.order) ?? [])) + 1)) });
     setMutationError(undefined);
     setModal({ mode: 'create' });
   }
@@ -422,7 +438,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
           {feedback !== undefined ? <p className="admin-master-data__feedback" role="status">{feedback}</p> : null}
           {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
           {state === 'empty' && data !== undefined ? <section className="admin-master-data__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p><Button onClick={openCreate}>{copy.add}</Button></section> : null}
-          {state === 'success' && data !== undefined ? <section className="admin-master-data__panel" aria-labelledby="admin-master-data-list-title"><div className="admin-master-data__panel-heading"><div><h2 id="admin-master-data-list-title">{title}</h2><p data-testid="admin-master-data-total">{copy.count(data.total)}</p></div><Button variant="secondary" size="sm" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button></div><MasterDataTable tab={tab} data={data} locale={locale} copy={copy} onEdit={openEdit} onDelete={openDelete} /></section> : null}
+          {!modal && mutationError ? <p role="alert">{mutationError}</p> : null}{state === 'success' && data !== undefined ? <section className="admin-master-data__panel" aria-labelledby="admin-master-data-list-title"><div className="admin-master-data__panel-heading"><div><h2 id="admin-master-data-list-title">{title}</h2><p data-testid="admin-master-data-total">{copy.count(data.total)}</p></div><Button variant="secondary" size="sm" onClick={() => setAttempt(value => value + 1)}>{copy.retry}</Button></div><MasterDataTable tab={tab} data={data} locale={locale} copy={copy} onEdit={openEdit} onDelete={openDelete} onAddType={addPropertyType} onMove={(index, direction) => { void moveLocation(index, direction); }} busy={busy} /></section> : null}
         </div>
       </div>
       {modal?.mode === 'create' || modal?.mode === 'edit' ? <Modal open title={modal.mode === 'create' ? copy.add : copy.edit} description={title} closeLabel={copy.close} onClose={() => { if (!busy) setModal(undefined); }}><EditorForm tab={tab} form={form} copy={copy} editing={modal.mode === 'edit'} data={data} locale={locale} onChange={patchForm} onSubmit={event => { void submitEditor(event); }} onClose={() => { if (!busy) setModal(undefined); }} busy={busy} error={mutationError} previewUrl={previewUrl} onImage={file => { void uploadImage(file); }} /></Modal> : null}

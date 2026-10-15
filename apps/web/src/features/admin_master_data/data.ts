@@ -8,6 +8,8 @@ import {
   featurePatchSchema,
   featureSuccessEnvelopeSchema,
   locationCreateRequestSchema,
+  locationReorderRequestSchema,
+  locationReorderSuccessEnvelopeSchema,
   locationDeleteRequestSchema,
   locationDeleteSuccessEnvelopeSchema,
   locationListQuerySchema,
@@ -193,8 +195,7 @@ export function createAdminMasterDataSource(options: Omit<CommonOptions, 'signal
     },
     load: async (tab: AdminMasterDataTab, signal?: AbortSignal): Promise<MasterDataList> => {
       const request = { ...options, ...(signal === undefined ? {} : { signal }) };
-      if (tab === 'locations') return loadAdminMasterData(tab, request);
-      const load = tab === 'categories' ? loadAdminTaxonomy : loadAdminFeatures;
+      const load = tab === 'locations' ? loadAdminLocations : tab === 'categories' ? loadAdminTaxonomy : loadAdminFeatures;
       let result: MasterDataList = await load({ ...request, query: { limit: 100 } });
       for (let page = 2; (page - 1) * result.limit < result.total; page++) {
         const next = await load({ ...request, query: { limit: 100, page } });
@@ -204,6 +205,10 @@ export function createAdminMasterDataSource(options: Omit<CommonOptions, 'signal
       return result;
     },
     createLocation: (input: unknown, signal?: AbortSignal) => createAdminLocation(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    reorderLocations: async (input: unknown) => {
+      const headers = headersFor(options.authorization);
+      return (await clientFor(options).request(`${ADMIN_LOCATIONS_ROUTE}/order`, { method: 'PUT', json: locationReorderRequestSchema.parse(input), responseSchema: locationReorderSuccessEnvelopeSchema, ...(headers ? { headers } : {}) })).data.data;
+    },
     updateLocation: (id: string, input: unknown, signal?: AbortSignal) => updateAdminLocation(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     deleteLocation: (id: string, input: unknown, signal?: AbortSignal) => deleteAdminLocation(id, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     createTaxonomy: (input: unknown, signal?: AbortSignal) => createAdminTaxonomy(input, { ...options, ...(signal === undefined ? {} : { signal }) }),

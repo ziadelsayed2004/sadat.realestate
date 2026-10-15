@@ -5,6 +5,8 @@ import {
   locationListQuerySchema,
   locationObjectIdSchema,
   locationPatchRequestSchema,
+  locationReorderRequestSchema,
+  type LocationReorderRequest,
   type LocationCreateRequest,
   type LocationData,
   type LocationDeleteData,
@@ -41,6 +43,7 @@ export interface LocationAuthorization {
 }
 
 export interface LocationService {
+  reorder(principal: LocationPrincipal, input: LocationReorderRequest, context: LocationMutationContext): Promise<{ reordered: true }>;
   list(principal: LocationPrincipal, query: LocationListQuery): Promise<{
     data: LocationListData; page: number; limit: number; total: number;
   }>;
@@ -104,6 +107,17 @@ export function createLocationService(dependencies: {
   }
 
   return {
+    async reorder(principal, input, context) {
+      await requirePermission(principal.userId, 'admin:locations.manage');
+      const parsed = locationReorderRequestSchema.parse(input);
+      try {
+        if (!await dependencies.repository.reorder(parsed, metadata(principal, parsed.reason, context, now()))) throw new LocationServiceError('LOCATION_VERSION_CONFLICT');
+      } catch (error) {
+        if (error instanceof Error && error.message === 'LOCATION_REORDER_CONFLICT') throw new LocationServiceError('LOCATION_VERSION_CONFLICT');
+        throw error;
+      }
+      return { reordered: true };
+    },
     async list(principal, unparsedQuery) {
       const query = locationListQuerySchema.parse(unparsedQuery);
       await requirePermission(principal.userId, 'admin:locations.view');

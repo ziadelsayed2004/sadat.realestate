@@ -18,6 +18,19 @@ test('generates a location slug on the server and preserves it on rename', async
   assert.equal(updated.slug, created.slug);
 });
 
+test('reorders the complete versioned list and denies stale, incomplete and view-only writes', async () => {
+  const { service, records } = setup();
+  records.set(neighborhoodId, record({ id: neighborhoodId, kind: 'neighborhood', parentLocationId: locationId, slug: 'district-one', order: 25 }));
+  const context = { requestId: 'location-order-test', traceId: 'a'.repeat(32) };
+  const input = { items: [{ id: neighborhoodId, version: 0 }, { id: locationId, version: 0 }], reason: 'Move neighborhood to the beginning' };
+  await assert.rejects(service.reorder({ userId: viewerId }, input, context), /LOCATION_FORBIDDEN/);
+  await assert.rejects(service.reorder({ userId: adminId }, { ...input, items: input.items.slice(0, 1) }, context), /LOCATION_VERSION_CONFLICT/);
+  assert.deepEqual(await service.reorder({ userId: adminId }, input, context), { reordered: true });
+  assert.equal(records.get(neighborhoodId)?.order, 0);
+  assert.equal(records.get(locationId)?.order, 1);
+  await assert.rejects(service.reorder({ userId: adminId }, input, context), /LOCATION_VERSION_CONFLICT/);
+});
+
 function record(overrides: Partial<StoredLocation> = {}): StoredLocation {
   return {
     id: locationId, kind: 'location', name: { ar: 'مدينة السادات' }, slug: 'sadat-city',
@@ -29,6 +42,11 @@ function setup(options: { inUse?: boolean } = {}) {
   const records = new Map<string, StoredLocation>([[locationId, record()]]);
   let capturedQuery: unknown;
   const repository: LocationRepository = {
+    async reorder(input) {
+      if (input.items.length !== records.size || input.items.some(item => records.get(item.id)?.version !== item.version)) return false;
+      input.items.forEach((item, order) => { const current = records.get(item.id)!; records.set(item.id, { ...current, order, version: current.version + 1 }); });
+      return true;
+    },
     async list(query) { capturedQuery = query; return { items: [...records.values()], total: records.size }; },
     async findById(id) { return records.get(id) ?? null; },
     async parentLocationExists(id) { return records.get(id)?.kind === 'location'; },

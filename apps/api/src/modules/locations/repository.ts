@@ -3,7 +3,8 @@ import type {
   LocalizedText,
   LocationCoordinates,
   LocationKind,
-  LocationListQuery
+  LocationListQuery,
+  LocationReorderRequest
 } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
 import type { LocationModels, LocationRecord } from './models.js';
@@ -43,6 +44,7 @@ export type LocationDeleteResult =
   | { kind: 'in_use' };
 
 export interface LocationRepository {
+  reorder(input: LocationReorderRequest, metadata: LocationMutationMetadata): Promise<boolean>;
   list(query: LocationListQuery): Promise<{ items: StoredLocation[]; total: number }>;
   findById(id: string): Promise<StoredLocation | null>;
   parentLocationExists(id: string): Promise<boolean>;
@@ -119,6 +121,23 @@ export function createMongooseLocationRepository(
   }
 
   return {
+    async reorder(input, metadata) {
+      return transaction(async session => {
+        const rows = await models.Location.find({}).session(session).lean();
+        if (rows.length !== input.items.length) return false;
+        const current = new Map(rows.map(row => [row._id.toString(), row]));
+        if (input.items.some(item => current.get(item.id)?.version !== item.version)) return false;
+        for (const [order, item] of input.items.entries()) {
+          const before = current.get(item.id)!;
+          if (before.order === order) continue;
+          const result = await models.Location.updateOne({ _id: item.id, version: item.version }, { $set: { order, updatedBy: new Types.ObjectId(metadata.actorId), updatedAt: metadata.changedAt }, $inc: { version: 1 } }, { session, runValidators: true });
+          // Throw to roll back every preceding write if any record changed.
+          if (result.modifiedCount !== 1) throw new Error('LOCATION_REORDER_CONFLICT');
+          await audit('location.reorder', item.id, { order: before.order, version: before.version }, { order, version: item.version + 1 }, metadata, session);
+        }
+        return true;
+      });
+    },
     async list(query) {
       const filter: Record<string, unknown> = {};
       if (query.kind) filter.kind = query.kind;

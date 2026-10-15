@@ -30,6 +30,42 @@ function createClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClient {
 }
 
 describe('login and OTP screens', () => {
+  it.each(['ar', 'en'] as const)('offers registration for an unknown recovery account in %s instead of showing a sent-code screen', async locale => {
+    const copy = getAuthCopy(locale);
+    const client = createClient({ sendOtp: vi.fn().mockRejectedValue(new ApiClientError('missing', { code: 'HTTP_ERROR', status: 404, apiError: { code: 'ACCOUNT_NOT_FOUND', messageKey: 'errors.auth.accountNotFound', details: [], requestId: 'missing-account-test' } })) });
+    renderWithLocale(<AuthPage url="/auth/forgot-password" locale={locale} client={client} onAuthenticated={vi.fn()} />, { locale });
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'absent@example.test' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(copy.accountNotFoundTitle);
+    expect(screen.getByRole('link', { name: copy.createNewAccount })).toHaveAttribute('href', `/auth/register?lang=${locale}`);
+    expect(screen.queryByLabelText(copy.codeDigitLabel(1))).not.toBeInTheDocument();
+  });
+
+  it.each(['ar', 'en'] as const)('distinguishes mismatched passwords, strength and recovery expiry in %s', async locale => {
+    const copy = getAuthCopy(locale);
+    const resetPassword = vi.fn().mockRejectedValueOnce(new ApiClientError('expired', { code: 'HTTP_ERROR', status: 401, apiError: { code: 'INVALID_OTP', messageKey: 'errors.auth.invalidOtp', details: [], requestId: 'expired-grant-test' } }));
+    const client = createClient({ resetPassword });
+    renderWithLocale(<AuthPage url="/auth/forgot-password" locale={locale} client={client} onAuthenticated={vi.fn()} />, { locale });
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.test' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
+    fireEvent.change(await screen.findByLabelText(copy.codeDigitLabel(1)), { target: { value: '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.verifyAction }));
+    const password = await screen.findByLabelText(copy.newPasswordLabel), confirmation = screen.getByLabelText(copy.confirmPasswordLabel);
+    fireEvent.change(password, { target: { value: 'weak' } }); fireEvent.change(confirmation, { target: { value: 'weak' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.savePasswordAction }));
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.resetPasswordDescription);
+    expect(screen.getByRole('alert')).not.toHaveTextContent(copy.passwordMismatch);
+    fireEvent.change(password, { target: { value: 'Strong-New!2026' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.savePasswordAction }));
+    expect(screen.getByRole('alert')).toHaveTextContent(copy.passwordMismatch);
+    expect(resetPassword).not.toHaveBeenCalled();
+    fireEvent.change(confirmation, { target: { value: 'Strong-New!2026' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.savePasswordAction }));
+    expect(await screen.findByText(copy.resetExpiredTitle)).toBeInTheDocument();
+    expect(resetPassword).toHaveBeenCalledWith({ verificationToken: 'A'.repeat(43), newPassword: 'Strong-New!2026' });
+    fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
+    expect(screen.getByLabelText(copy.identifierLabel)).toBeInTheDocument();
+  });
   it.each(['ar', 'en'] as const)('renders the login surface with the supported direction for %s', (locale) => {
     const result = renderWithLocale(
       <AuthPage url="/auth/login" locale={locale} client={createClient()} onAuthenticated={vi.fn()} />,

@@ -29,6 +29,14 @@
   cursor: pointer;
 }
 
+.public-property-listing__intro .public-property-listing__count-note {
+  block-size: auto;
+  max-inline-size: 65ch;
+  margin-block-start: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
 .public-property-listing__price-range {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

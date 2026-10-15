@@ -96,11 +96,35 @@ function otpService(): OtpService {
   };
 }
 
-async function withAuthServer(run: (baseUrl: string) => Promise<void>): Promise<void> {
+test('a temporary refresh failure preserves its cookie so the same session can recover', async () => {
+  let attempts = 0;
+  await withAuthServer(async baseUrl => {
+    const refresh = () => fetch(`${baseUrl}/api/v1/auth/refresh`, { method: 'POST', headers: { Cookie: `sadat_refresh=${currentToken}` } });
+    const failed = await refresh();
+    assert.equal(failed.status, 500);
+    assert.equal(failed.headers.get('set-cookie'), null);
+    const retry = await refresh();
+    assert.equal(retry.status, 200);
+    assert.match(retry.headers.get('set-cookie') ?? '', new RegExp(`^sadat_refresh=${replacementToken}`));
+    const invalidPassword = await fetch(`${baseUrl}/api/v1/auth/account-access/change`, { method: 'POST', headers: { authorization: 'Bearer header.payload.signature', 'content-type': 'application/json', Cookie: `sadat_refresh=${replacementToken}` }, body: JSON.stringify({ currentPassword: 'wrong-password', newPassword: 'New-Strong!2026' }) });
+    assert.equal(invalidPassword.status, 401);
+    assert.equal(invalidPassword.headers.get('set-cookie'), null);
+  }, { async refresh() { if (++attempts === 1) throw new Error('Temporary database interruption'); return issued(replacementToken); } });
+});
+
+test('explicit logout still clears the browser cookie during a revocation outage', async () => {
+  await withAuthServer(async baseUrl => {
+    const response = await fetch(`${baseUrl}/api/v1/auth/logout`, { method: 'POST', headers: { Cookie: `sadat_refresh=${replacementToken}` } });
+    assert.equal(response.status, 500);
+    assert.match(response.headers.get('set-cookie') ?? '', /Max-Age=0/);
+  }, { async logout() { throw new Error('Temporary revocation outage'); } });
+});
+
+async function withAuthServer(run: (baseUrl: string) => Promise<void>, overrides: Partial<AuthService> = {}): Promise<void> {
   const server = createApiServer({
     database: { isReady: async () => true },
     auth: {
-      service: service(),
+      service: { ...service(), ...overrides },
       otpService: otpService(),
       cookie: {
         name: 'sadat_refresh',

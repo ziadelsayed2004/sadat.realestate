@@ -4,7 +4,8 @@ import {
   locationDeleteRequestSchema,
   locationIdParamsSchema,
   locationListQuerySchema,
-  locationPatchRequestSchema
+  locationPatchRequestSchema,
+  locationReorderRequestSchema
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
@@ -16,6 +17,7 @@ import { LocationServiceError, type LocationService } from './service.js';
 export const LOCATION_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/locations', operationId: 'listAdminLocations' },
   { method: 'POST', path: '/api/v1/admin/locations', operationId: 'createAdminLocation' },
+  { method: 'PUT', path: '/api/v1/admin/locations/order', operationId: 'reorderAdminLocations' },
   { method: 'PATCH', path: '/api/v1/admin/locations/:locationId', operationId: 'updateAdminLocation' },
   { method: 'DELETE', path: '/api/v1/admin/locations/:locationId', operationId: 'deleteAdminLocation' }
 ] as const;
@@ -67,6 +69,12 @@ export function createLocationRouter(dependencies: LocationRouterDependencies): 
     next();
   });
   router.use('/admin/locations', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+  router.put('/admin/locations/order', async (request, response) => {
+    try {
+      const data = await dependencies.service.reorder(principal(response), locationReorderRequestSchema.parse(request.body ?? {}), context(request));
+      response.status(200).json(toSuccessResponse(data, context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
 
   router.get('/admin/locations', async (request, response) => {
     try {

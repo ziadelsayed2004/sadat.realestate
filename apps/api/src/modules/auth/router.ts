@@ -47,6 +47,10 @@ const AUTH_ERROR_MAP = Object.freeze({
     statusCode: 403,
     messageKey: 'errors.auth.accountNotActive'
   },
+  ACCOUNT_NOT_FOUND: {
+    statusCode: 404,
+    messageKey: 'errors.auth.accountNotFound'
+  },
   INVALID_REFRESH_TOKEN: {
     statusCode: 401,
     messageKey: 'errors.auth.invalidRefreshToken'
@@ -154,7 +158,13 @@ function sendError(
   clearCookie: boolean,
   policy: AuthCookiePolicy
 ): void {
-  if (clearCookie) clearRefreshCookie(response, policy);
+  // Temporary infrastructure failures and invalid form submissions do not
+  // revoke an otherwise valid refresh cookie. Successful password changes and
+  // logout clear it explicitly; invalid/replayed sessions still fail closed.
+  if (clearCookie && error instanceof AuthServiceError
+    && ['INVALID_REFRESH_TOKEN', 'REFRESH_TOKEN_REUSED', 'ACCOUNT_NOT_ACTIVE'].includes(error.code)) {
+    clearRefreshCookie(response, policy);
+  }
   const mapped = toApiErrorResponse(
     error instanceof AuthServiceError || error instanceof OtpServiceError
       ? mappedAuthError(error)
@@ -278,7 +288,10 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
       clearRefreshCookie(response, dependencies.cookie);
       response.status(200).json(toSuccessResponse({ loggedOut: true as const }, requestId(request)));
     } catch (error) {
-      sendError(request, response, error, true, dependencies.cookie);
+      // An explicit logout always removes browser authority, including when
+      // revocation storage is temporarily unavailable.
+      clearRefreshCookie(response, dependencies.cookie);
+      sendError(request, response, error, false, dependencies.cookie);
     }
   });
 

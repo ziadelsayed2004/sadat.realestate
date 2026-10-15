@@ -176,11 +176,13 @@ export function publicHomepageFixture() {
       ],
       banners: [{
         key: 'featured_banner',
+        presentation: 'hero',
         title: { ar: 'اكتشف المزيد', en: 'Discover more',},
         imageUrl: PUBLIC_CLONE_ASSETS.homepageHero,
          order: 0
        }, {
          key: 'city_banner',
+         presentation: 'featured',
         eyebrow: { ar: 'إعلان مميز', en: 'Featured opportunity',},
          title: { ar: 'كمبوند النخبة — الحي الأول', en: 'Elite Compound — First District',},
          body: { ar: 'وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات. تصميم عصري وإطلالات خضراء مفتوحة.', en: 'Luxury homes with super-lux finishes in one of Sadat City’s finest locations. Modern design with open green views.',},
@@ -189,7 +191,7 @@ export function publicHomepageFixture() {
          targetUrl: publicAsset('/properties'),
          order: 1
        }, {
-           key: 'market_banner', title: { ar: 'Market banner', en: 'Market banner',}, imageUrl: PUBLIC_CLONE_ASSETS.chart, targetUrl: publicAsset('/articles'), order: 2
+           key: 'market_banner', presentation: 'featured', title: { ar: 'Market banner', en: 'Market banner',}, imageUrl: PUBLIC_CLONE_ASSETS.chart, targetUrl: publicAsset('/articles'), order: 2
        }]
     },
     meta: { requestId: 'e2e-public-homepage-success' }

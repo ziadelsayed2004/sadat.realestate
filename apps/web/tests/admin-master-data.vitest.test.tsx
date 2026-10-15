@@ -66,6 +66,34 @@ function apiClientFor(requests: Array<{ method: string; path: string; authorizat
 }
 
 describe('Admin master-data contracts and views', () => {
+  it('moves locations with list arrows using all loaded versions and reloads the committed order', async () => {
+    window.history.pushState({}, '', '/admin/locations');
+    let items = [{ ...location, order: 10 }, { ...location, id: 'd'.repeat(24), slug: 'second', name: { en: 'Second location' }, order: 25 }];
+    const inputs: unknown[] = [];
+    const client = new ApiClient({ fetcher: async (input, init) => {
+      const path = new URL(String(input), 'http://local').pathname;
+      if (init?.method === 'PUT' && path.endsWith('/locations/order')) {
+        inputs.push(JSON.parse(String(init.body))); items = [...items].reverse().map((item, order) => ({ ...item, order, version: item.version + 1 })); return envelope({ reordered: true });
+      }
+      return envelope({ items }, 2);
+    } });
+    renderWithLocale(<AdminMasterData locale="en" session={session} apiClient={client} authClient={authorization} initialData={{ items, page: 1, limit: 100, total: 2 }} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Move up: Second location' }));
+    await waitFor(() => expect(inputs).toHaveLength(1));
+    expect(inputs[0]).toMatchObject({ items: [{ id: 'd'.repeat(24), version: location.version }, { id: location.id, version: location.version }] });
+    await waitFor(() => expect(screen.getAllByTestId(/admin-master-data-item-/)[0]).toHaveAttribute('data-testid', `admin-master-data-item-${'d'.repeat(24)}`));
+  });
+  it('creates a type inside its selected category and explains the fixed kind when editing', async () => {
+    window.history.pushState({}, '', '/admin/property-categories');
+    renderWithLocale(<AdminMasterData locale="en" session={session} initialData={{ items: [category], page: 1, limit: 100, total: 1 }} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Add property type' }));
+    expect(screen.getByLabelText(getAdminMasterDataCopy('en').labels.kind)).toHaveValue('type');
+    expect(screen.getByLabelText(/Category for this property type/)).toHaveValue(category.id);
+    fireEvent.click(screen.getByRole('button', { name: getAdminMasterDataCopy('en').cancel }));
+    fireEvent.click(screen.getByRole('button', { name: `Edit: ${category.name.en}` }));
+    expect(screen.getByText(/The element kind stays fixed after creation/)).toBeInTheDocument();
+    expect(screen.queryByLabelText(getAdminMasterDataCopy('en').labels.kind)).not.toBeInTheDocument();
+  });
   it('uses the implemented list and CRUD routes with authorization and strict request schemas', async () => {
     const requests: Array<{ method: string; path: string; authorization: string | null; body: unknown }> = [];
     const client = apiClientFor(requests);

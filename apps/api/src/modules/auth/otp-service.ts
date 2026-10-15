@@ -24,6 +24,7 @@ export type OtpServiceErrorCode =
   | 'OTP_ATTEMPTS_EXCEEDED'
   | 'OTP_SEND_RATE_LIMITED'
   | 'OTP_PROVIDER_UNAVAILABLE'
+  | 'ACCOUNT_NOT_FOUND'
   | 'ACCOUNT_NOT_ACTIVE';
 
 export class OtpServiceError extends Error {
@@ -94,6 +95,11 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
   return Object.freeze({
     isReady: () => dependencies.provider.isReady(),
     async send(input: OtpSendRequest | PasswordResetOtpSendRequest) {
+      if (input.purpose === 'password_reset') {
+        const account = await dependencies.repository.findOtpAccount(input.email, input.roleType);
+        if (!account) throw new OtpServiceError('ACCOUNT_NOT_FOUND');
+        if (['rejected', 'suspended'].includes(account.status)) throw new OtpServiceError('ACCOUNT_NOT_ACTIVE');
+      }
       if (!await dependencies.provider.isReady()) {
         throw new OtpServiceError('OTP_PROVIDER_UNAVAILABLE');
       }

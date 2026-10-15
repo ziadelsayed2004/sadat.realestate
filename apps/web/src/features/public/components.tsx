@@ -650,7 +650,7 @@ function Hero({
   const [reducedMotion, setReducedMotion] = useState(false);
   const selectedIndex = slides.findIndex(item => item.key === slideKey);
   const activeIndex = selectedIndex < 0 ? 0 : selectedIndex;
-  const banner = slides[activeIndex] ?? banners.find(item => !item.key.startsWith('banner-'));
+  const banner = slides[activeIndex] ?? banners.find(item => item.presentation !== 'featured' && !item.key.startsWith('featured_') && !item.key.startsWith('banner-'));
   const imageKey = (item: PublicHomepageBanner | undefined) => item?.imageUrl ?? '';
   // Keep URL-keyed image nodes mounted so no-store media is not requested again on every slide.
   const media = [...new Map((slides.length ? slides : [banner]).map(item => [imageKey(item), item])).entries()];

@@ -96,6 +96,12 @@ export interface AuthCopy {
   readonly resetPasswordTitle: string;
   readonly resetPasswordDescription: string;
   readonly resetPasswordValidation: string;
+  readonly passwordMismatch: string;
+  readonly accountNotFoundTitle: string;
+  readonly accountNotFoundBody: string;
+  readonly createNewAccount: string;
+  readonly resetExpiredTitle: string;
+  readonly resetExpiredBody: string;
   readonly resetPasswordSuccessTitle: string;
   readonly resetPasswordSuccessBody: string;
   readonly newPasswordLabel: string;
@@ -199,6 +205,12 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     resetPasswordTitle: 'تعيين كلمة مرور جديدة',
     resetPasswordDescription: 'استخدم 8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.',
     resetPasswordValidation: 'تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.',
+    passwordMismatch: 'كلمتا المرور غير متطابقتين. أعد كتابة التأكيد كما هو.',
+    accountNotFoundTitle: 'لا يوجد حساب مسجل',
+    accountNotFoundBody: 'لا يوجد حساب بهذا البريد ونوع الحساب المختار. راجع البيانات أو أنشئ حسابًا جديدًا.',
+    createNewAccount: 'إنشاء حساب جديد',
+    resetExpiredTitle: 'انتهت جلسة استعادة كلمة المرور',
+    resetExpiredBody: 'اطلب كودًا جديدًا لتعيين كلمة المرور. لم يتم حفظ التغيير.',
     resetPasswordSuccessTitle: 'تم تغيير كلمة المرور',
     resetPasswordSuccessBody: 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.',
     newPasswordLabel: 'كلمة المرور الجديدة',
@@ -300,6 +312,12 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     resetPasswordTitle: 'Set a new password',
     resetPasswordDescription: 'Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.',
     resetPasswordValidation: 'Passwords must match and include uppercase and lowercase letters, a number, and a symbol.',
+    passwordMismatch: 'Passwords do not match. Enter the same confirmation.',
+    accountNotFoundTitle: 'No registered account',
+    accountNotFoundBody: 'No account uses this email and selected account type. Check the details or create a new account.',
+    createNewAccount: 'Create a new account',
+    resetExpiredTitle: 'Password recovery session expired',
+    resetExpiredBody: 'Request a new code to set your password. The change was not saved.',
     resetPasswordSuccessTitle: 'Password changed',
     resetPasswordSuccessBody: 'You can now log in with the new password.',
     newPasswordLabel: 'New password',

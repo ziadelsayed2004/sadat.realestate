@@ -95,6 +95,15 @@ const viewingResponse = viewingDataSchema.parse({
 });
 
 describe('public property details', () => {
+  it.each(['ar', 'en'] as const)('localizes every delivery status in %s', locale => {
+    for (const [status, label] of Object.entries(locale === 'ar' ? { ready_to_move: 'جاهز للاستلام', under_construction: 'تحت الإنشاء', future_delivery: 'استلام مستقبلي' } : { ready_to_move: 'Ready to move', under_construction: 'Under construction', future_delivery: 'Future delivery' })) {
+      const data = publicPropertyDetailsSchema.parse({ ...detailsData, deliveryStatus: status });
+      const result = renderWithLocale(<PublicPropertyDetails locale={locale} initialData={data} url={`/properties/${data.slug}?lang=${locale}`} />, { locale });
+      expect(result.container.querySelector('.public-property-details__summary')).toHaveTextContent(label);
+      expect(result.container.querySelector('.public-property-details__summary')).not.toHaveTextContent(status);
+      result.unmount();
+    }
+  });
   it.each(['ar', 'en'] as const)('uses only a saved public code in the details summary in %s', locale => {
     const slug = 'property-57cf2f4327104b7787553eced1535f3c';
     for (const publicCode of [undefined, 'SDT-1234']) {

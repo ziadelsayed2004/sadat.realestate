@@ -65,6 +65,13 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it('keeps a featured promotion out of the hero when there is no managed hero banner', () => {
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'featured_aaaaaaaaaaaaaaaaaaaaaaaa_bbbbbbbbbbbbbbbbbbbbbbbb', presentation: 'featured', title: { en: 'Featured promotion only' }, imageUrl: '/featured-only.jpg', targetUrl: '/properties', order: 0 }] });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+    expect(result.container.querySelector('.public-homepage__banner-card img')).toHaveAttribute('src', '/featured-only.jpg');
+    expect(result.container.querySelector('.public-homepage__hero-media img[src="/featured-only.jpg"]')).toBeNull();
+    expect(result.container.querySelector('.public-homepage__hero h1')).toHaveTextContent('Published homes');
+  });
   it.each(['ar', 'en'] as const)('uses the administrator introduction above the hero heading in %s', locale => {
     const eyebrow = { ar: 'عنوان مقدمة من الإدارة', en: 'Administrator introduction' };
     const data = publicHomepageDataSchema.parse({ ...homepageData, sections: homepageData.sections.map(section => ({ ...section, eyebrow })) });

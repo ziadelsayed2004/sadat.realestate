@@ -128,6 +128,9 @@ function getApiErrorCode(error: unknown): string | undefined {
 
 function authError(error: unknown, copy: AuthCopy): AuthUiError {
   const code = getApiErrorCode(error);
+  if (code === AUTH_ERROR_CODES.ACCOUNT_NOT_FOUND) {
+    return { state: 'error', title: copy.accountNotFoundTitle, message: copy.accountNotFoundBody };
+  }
   if (code === 'INVALID_REGISTRATION_TOKEN' || code === 'SEEKER_NOT_FOUND') {
     return { state: 'error', title: copy.invalidRegistrationTokenTitle, message: copy.invalidRegistrationTokenBody };
   }
@@ -344,6 +347,8 @@ function ForgotPasswordPage({ client, locale, url }: { readonly client: AuthFlow
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [state, setState] = useState<RequestState>('idle');
+  const [error, setError] = useState<AuthUiError>();
+  const [expired, setExpired] = useState(false);
   const copy = getAuthCopy(locale);
   let initialRoleType: OtpRoleType | 'admin' = 'seeker';
   try {
@@ -360,15 +365,21 @@ function ForgotPasswordPage({ client, locale, url }: { readonly client: AuthFlow
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const parsed = passwordResetRequestSchema.safeParse({ verificationToken: grant, newPassword: password });
-    if (!parsed.success || password !== confirmation || client.resetPassword === undefined) {
+    if (password !== confirmation || !parsed.success) {
+      setError({ state: 'error', title: copy.invalidFormTitle, message: password !== confirmation ? copy.passwordMismatch : copy.resetPasswordDescription });
       setState('error');
       return;
     }
+    if (client.resetPassword === undefined) { setError({ state: 'error', title: copy.genericErrorTitle, message: copy.genericErrorBody }); setState('error'); return; }
     setState('loading');
+    setError(undefined);
     try {
       await client.resetPassword(parsed.data);
       setState('success');
-    } catch {
+    } catch (cause) {
+      const grantExpired = getApiErrorCode(cause) === AUTH_ERROR_CODES.INVALID_OTP;
+      setExpired(grantExpired);
+      setError(grantExpired ? { state: 'error', title: copy.resetExpiredTitle, message: copy.resetExpiredBody } : authError(cause, copy));
       setState('error');
     }
   };
@@ -377,9 +388,10 @@ function ForgotPasswordPage({ client, locale, url }: { readonly client: AuthFlow
     <div className="auth-card auth-card--form">
       <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{copy.resetPasswordTitle}</h1><p>{copy.resetPasswordDescription}</p></header>
       <div className="auth-card__body">
-        {state === 'error' ? <StateMessage state="error" title={copy.invalidFormTitle} message={copy.resetPasswordValidation} /> : null}
+        {state === 'error' && error ? <StateNotice error={error} copy={copy} /> : null}
+        {expired ? <Button type="button" onClick={() => { setGrant(undefined); setPassword(''); setConfirmation(''); setExpired(false); setError(undefined); setState('idle'); }}>{copy.sendCodeAction}</Button> : null}
         {state === 'success' ? <StateMessage state="success" title={copy.resetPasswordSuccessTitle} message={copy.resetPasswordSuccessBody} /> : null}
-        {state !== 'success' ? <form className="auth-form" onSubmit={event => void submit(event)}><Input id="auth-new-password" label={copy.newPasswordLabel} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required /><Input id="auth-confirm-password" label={copy.confirmPasswordLabel} type="password" autoComplete="new-password" value={confirmation} onChange={event => setConfirmation(event.currentTarget.value)} required /><Button type="submit" fullWidth size="lg" loading={state === 'loading'}>{copy.savePasswordAction}</Button></form> : null}
+        {state !== 'success' && !expired ? <form className="auth-form" onSubmit={event => void submit(event)}><Input id="auth-new-password" label={copy.newPasswordLabel} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required /><Input id="auth-confirm-password" label={copy.confirmPasswordLabel} type="password" autoComplete="new-password" value={confirmation} onChange={event => setConfirmation(event.currentTarget.value)} required /><Button type="submit" fullWidth size="lg" loading={state === 'loading'}>{copy.savePasswordAction}</Button></form> : null}
         <p className="auth-card__prompt"><a href={`/auth/login?lang=${locale}`}>{copy.loginAction}</a></p>
       </div>
     </div>
@@ -416,6 +428,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   const [state, setState] = useState<RequestState>('idle');
   const [error, setError] = useState<AuthUiError | undefined>();
   const [verified, setVerified] = useState(false);
+  const [accountMissing, setAccountMissing] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
   const normalizedEmail = normalizedEmailSchema.safeParse(email).success
@@ -446,6 +459,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
     setState('loading');
     setError(undefined);
+    setAccountMissing(false);
     try {
       const response = await client.sendOtp({
         email: parsedEmail.data,
@@ -460,6 +474,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
       setStage('verify');
       setState('success');
     } catch (requestError: unknown) {
+      setAccountMissing(getApiErrorCode(requestError) === AUTH_ERROR_CODES.ACCOUNT_NOT_FOUND);
       const nextError = authError(requestError, copy);
       setState(nextError.state);
       setError(nextError);
@@ -565,6 +580,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
           </header>
           <div className="auth-card__body">
             {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void sendCode()} />}
+            {accountMissing && purpose === 'password_reset' ? <p className="auth-card__prompt"><a href={`/auth/register?lang=${locale}`}>{copy.createNewAccount}</a></p> : null}
             <form className="auth-form" onSubmit={handleRequestSubmit} noValidate>
               <Input
                 id="auth-otp-email"

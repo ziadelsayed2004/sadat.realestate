@@ -39,6 +39,10 @@ function accessTokens(): AccessTokenService {
 
 function service(): LocationService {
   return {
+    async reorder(principal) {
+      if (principal.userId === viewerId) throw new LocationServiceError('LOCATION_FORBIDDEN');
+      return { reordered: true };
+    },
     async list(principal, query) {
       if (principal.userId === viewerId) throw new LocationServiceError('LOCATION_FORBIDDEN');
       return { data: { items: [item()] }, page: query.page, limit: query.limit, total: 1 };
@@ -69,10 +73,10 @@ async function withServer(run: (baseUrl: string) => Promise<void>): Promise<void
   finally { await stopApiServer(server); }
 }
 
-function request(baseUrl: string, method: string, path: string, token: string, body?: unknown) {
+function request(baseUrl: string, method: string, path: string, token: string | undefined, body?: unknown) {
   return fetch(`${baseUrl}${path}`, {
     method,
-    headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
     ...(body ? { body: JSON.stringify(body) } : {})
   });
 }
@@ -106,6 +110,21 @@ test('lists and mutates strict no-store localized projections', async () => {
     assert.equal((await request(baseUrl, 'DELETE', `/api/v1/admin/locations/${locationId}`, 'admin-token', {
       version: 0, reason: 'Delete unused location'
     })).status, 200);
+  });
+});
+
+test('location reorder is authenticated, management-only, strict and versioned', async () => {
+  await withServer(async baseUrl => {
+    const path = '/api/v1/admin/locations/order';
+    const input = { items: [{ id: locationId, version: 0 }], reason: 'Arrange list using arrows' };
+    assert.equal((await request(baseUrl, 'PUT', path, undefined, input)).status, 401);
+    assert.equal((await request(baseUrl, 'PUT', path, 'viewer-token', input)).status, 403);
+    assert.equal((await request(baseUrl, 'PUT', path, 'admin-token', { ...input, items: [...input.items, ...input.items] })).status, 400);
+    assert.equal((await request(baseUrl, 'PUT', path, 'admin-token', { ...input, unknown: true })).status, 400);
+    const response = await request(baseUrl, 'PUT', path, 'admin-token', input);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.deepEqual((await response.json() as { data: unknown }).data, { reordered: true });
   });
 });
 

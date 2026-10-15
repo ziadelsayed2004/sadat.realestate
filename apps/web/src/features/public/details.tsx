@@ -22,6 +22,7 @@ import {
   type PublicPropertyDetailsLoader
 } from './details-data.ts';
 import { getPublicPropertyDetailsCopy, type PublicPropertyDetailsCopy } from './details-copy.ts';
+import { getPublicPropertyListingCopy } from './listing-copy.ts';
 import { formatArea, formatMoney, localizedText } from './model.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import { EGYPT_TIME_ZONE, egyptInstant, egyptLocalDateTime, egyptTimeLabel } from './egypt-time.ts';
@@ -320,6 +321,7 @@ function PropertySummary({
   readonly copy: PublicPropertyDetailsCopy;
 }) {
   const title = localizedText(data.name, locale) ?? data.slug;
+  const deliveryCopy = getPublicPropertyListingCopy(locale);
   const summaryLabels = locale === 'ar'
     ? { location: 'الحي الأول', delivery: 'الاستلام', finishing: 'التشطيب', ready: 'جاهز للتسليم' }
     :{ location: 'First District', delivery: 'Delivery', finishing: 'Finishing', ready: 'Ready to move' };
@@ -330,7 +332,7 @@ function PropertySummary({
     ...(data.layout?.bedrooms === undefined ? [] : [{ kind: 'bedrooms' as const, label: copy.bedrooms, value: String(data.layout.bedrooms) }]),
     ...(data.layout?.bathrooms === undefined ? [] : [{ kind: 'bathrooms' as const, label: copy.bathrooms, value: String(data.layout.bathrooms) }]),
     ...(data.layout?.floor === undefined ? [] : [{ kind: 'floor' as const, label: copy.floor, value: String(data.layout.floor) }]),
-    ...(data.deliveryStatus === undefined ? [] : [{ kind: 'delivery' as const, label: summaryLabels.delivery, value: data.deliveryStatus === 'ready_to_move' ? summaryLabels.ready : data.deliveryStatus }]),
+    ...(data.deliveryStatus === undefined ? [] : [{ kind: 'delivery' as const, label: summaryLabels.delivery, value: { ready_to_move: deliveryCopy.readyToMove, under_construction: deliveryCopy.underConstruction, future_delivery: deliveryCopy.futureDelivery }[data.deliveryStatus] }]),
     ...(finishing === undefined ? [] : [{ kind: 'finishing' as const, label: summaryLabels.finishing, value: localizedText(finishing.detail, locale) ?? localizedText(finishing.name, locale) ?? finishing.slug }])
   ];
 

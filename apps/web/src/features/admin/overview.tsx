@@ -316,7 +316,7 @@ function OverviewAttention({ locale }: { readonly locale: SupportedLocale }) {
     {state.unavailable ? <p role="status">{locale === 'ar' ? 'تعذر تحديث الأعداد. اضغط تحديث لإعادة المحاولة.' : 'Counts could not refresh. Press Refresh to retry.'}</p> : null}
     {state.ready ? <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: `repeat(${hasRequests ? 2 : 1}, minmax(0, 1fr))` }}>
       <MetricCard value={state.unread} label={locale === 'ar' ? 'إشعارات غير مقروءة' : 'Unread notifications'} href={localePath(locale, '/admin/notifications')} icon="notifications" locale={locale} testId="admin-overview-unread-notifications" />
-      {hasRequests ? <MetricCard value={adminAttentionCount('requests', state.attention)} label={locale === 'ar' ? 'طلبات جديدة غير مقروءة' : 'New unread requests'} href={localePath(locale, '/admin/requests')} icon="requests" locale={locale} testId="admin-overview-new-requests" /> : null}
+      {hasRequests ? <MetricCard value={adminAttentionCount('requests', state.attention)} label={locale === 'ar' ? 'طلبات جديدة غير مقروءة' : 'New unread requests'} href={localePath(locale, '/admin/notifications')} icon="requests" locale={locale} testId="admin-overview-new-requests" /> : null}
     </div> : !state.unavailable ? <p role="status">{locale === 'ar' ? 'جارٍ تحميل الأعداد…' : 'Loading counts…'}</p> : null}
     {state.ready ? <AdminAttentionQueues locale={locale} attention={state.attention} /> : null}
   </section>;

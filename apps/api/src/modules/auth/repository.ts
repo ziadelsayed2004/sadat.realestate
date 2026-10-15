@@ -556,6 +556,7 @@ export function createMongooseOtpRepository(
     async findOtpAccount(email, roleType) {
       const user = await User.findOne({
         normalizedEmail: email,
+        deletedAt: null,
         roleType
       })
         .select('_id roleType status')

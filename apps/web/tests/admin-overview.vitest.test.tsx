@@ -34,7 +34,7 @@ describe('Admin overview', () => {
     const { rerender } = renderWithLocale(<AdminAttentionContext.Provider value={state}><AdminOverview locale={locale} session={session} initialData={overview} /></AdminAttentionContext.Provider>, { locale });
     expect(screen.getByTestId('admin-overview-unread-notifications').querySelector('strong')).toHaveTextContent('6');
     expect(screen.getByTestId('admin-overview-new-requests').querySelector('strong')).toHaveTextContent('14');
-    expect(screen.getByTestId('admin-overview-new-requests')).toHaveAttribute('href', `/admin/requests?lang=${locale}`);
+    expect(screen.getByTestId('admin-overview-new-requests')).toHaveAttribute('href', `/admin/notifications?lang=${locale}`);
     expect(screen.getByTestId('admin-overview-unread-notifications')).toHaveAttribute('href', `/admin/notifications?lang=${locale}`);
     expect(screen.getByTestId('admin-overview-alerts').querySelector(`a[href="/admin/contact-requests?lang=${locale}"]`)).not.toBeNull();
     fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'تحديث' : 'Refresh' }));

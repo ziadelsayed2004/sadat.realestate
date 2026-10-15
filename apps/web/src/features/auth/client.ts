@@ -2,6 +2,7 @@ import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
   authLoginSuccessEnvelopeSchema,
+  authSessionDataSchema,
   authSessionSuccessEnvelopeSchema,
   emptyAuthRequestSchema,
   logoutSuccessEnvelopeSchema,
@@ -58,6 +59,7 @@ import {
   type ApiRequestOptions
 } from '../contracts/index.ts';
 import { AuthStore, type AuthRouteSession, type AuthSnapshot } from './store.ts';
+import { SessionRenewal } from './session-renewal.ts';
 
 export interface AuthApiClient {
   request<TResponse>(path: string, options: ApiRequestOptions<TResponse>): Promise<ApiClientResponse<TResponse>>;
@@ -109,11 +111,17 @@ export class AuthClient {
   private readonly sessionHintStorage: AuthSessionHintStorage | undefined;
   private refreshPromise: Promise<AuthSnapshot> | undefined;
   private pendingSecondFactorToken: string | undefined;
+  private readonly renewal: SessionRenewal;
+  private readonly unsubscribeRenewal: () => void;
 
   constructor(options: AuthClientOptions = {}) {
     this.apiClient = options.apiClient ?? new ApiClient();
     this.store = options.store ?? new AuthStore();
     this.sessionHintStorage = options.sessionHintStorage ?? browserSessionHintStorage();
+    this.renewal = new SessionRenewal(() => this.refresh(), () => this.store.getSnapshot().status === 'authenticated');
+    this.unsubscribeRenewal = this.store.subscribe(snapshot => {
+      if (snapshot.status === 'anonymous' || snapshot.status === 'error') this.renewal.clear();
+    });
   }
 
   getSnapshot(): AuthSnapshot {
@@ -404,6 +412,7 @@ export class AuthClient {
   }
 
   async logout(): Promise<LogoutData> {
+    this.renewal.clear();
     try {
       emptyAuthRequestSchema.parse({});
       const response = await this.apiClient.request('/auth/logout', {
@@ -420,6 +429,8 @@ export class AuthClient {
   }
 
   dispose(): void {
+    this.unsubscribeRenewal();
+    this.renewal.dispose();
     this.pendingSecondFactorToken = undefined;
     this.store.dispose();
   }
@@ -472,7 +483,9 @@ export class AuthClient {
 
   private setSession(session: unknown, availableActions?: unknown): AuthSnapshot {
     this.pendingSecondFactorToken = undefined;
-    const snapshot = this.store.setSession(session, availableActions);
+    const parsed = authSessionDataSchema.parse(session);
+    const snapshot = this.store.setSession(parsed, availableActions);
+    this.renewal.schedule(parsed.expiresInSeconds);
     this.markSessionHint(true);
     return snapshot;
   }

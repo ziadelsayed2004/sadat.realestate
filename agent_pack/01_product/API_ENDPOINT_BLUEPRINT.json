@@ -2913,5 +2913,17 @@
     "purpose": "Cancel a saved account commission assignment with version and reason",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/locations/order",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:locations.manage"
+    ],
+    "purpose": "Atomically reorder locations with version validation and an audit reason",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

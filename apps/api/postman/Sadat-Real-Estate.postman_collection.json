@@ -9449,6 +9449,51 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Reorder locations",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"id\": \"aaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"version\": 0\n    }\n  ],\n  \"reason\": \"Arrange locations using list arrows\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/locations/order",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "locations",
+            "order"
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:locations.manage. Uses synthetic values only; localized content, stable slug, and reason are required.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

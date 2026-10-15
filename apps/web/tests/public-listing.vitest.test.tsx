@@ -32,6 +32,13 @@ const listingData = publicPropertyListDataSchema.parse({
 });
 
 describe('public property listing', () => {
+  it('distinguishes category totals before filters from zero matching results', () => {
+    const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={{ ...listingData, items: [], total: 0 }} initialQuery={{ ...defaultPublicPropertySearchQuery(), propertyTypeId: 'cccccccccccccccccccccccc', minPrice: 1000, maxPrice: 20000 }} />, { locale: 'en' });
+    expect(result.container.querySelector('.public-property-listing__intro')).toHaveTextContent(getPublicPropertyListingCopy('en').resultCount(0));
+    expect(screen.getByText(/Category totals include properties before filters/)).toBeInTheDocument();
+    expect(result.container.querySelector('.public-property-listing__category-rail')).toHaveTextContent('Total 1');
+    expect(screen.getByRole('status', { name: getPublicPropertyListingCopy('en').emptyTitle })).toBeInTheDocument();
+  });
   it.each(['ar', 'en'] as const)('combines units and installment filters, restores the URL, and clears them in %s', async locale => {
     window.history.replaceState({}, '', `/properties?lang=${locale}`);
     const load = vi.fn().mockResolvedValue(listingData);
@@ -141,7 +148,7 @@ describe('public property listing', () => {
       propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'villa', name: { en: 'Managed villas' }, propertyCount: 2, order: 0 }]
     });
     const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} initialQuery={defaultPublicPropertySearchQuery()} />, { locale: 'en' });
-    expect(screen.getByRole('button', { name: /^Managed villas\s*2 properties$/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /^Managed villas\s*Total 2 properties$/ })).toBeEnabled();
     expect(screen.queryByRole('button', { name: /Restaurants and cafés/ })).not.toBeInTheDocument();
     expect(result.container.textContent).not.toContain('1,200+');
     expect(result.container.textContent).not.toContain('87 properties');

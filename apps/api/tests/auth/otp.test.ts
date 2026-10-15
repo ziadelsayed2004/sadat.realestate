@@ -90,6 +90,17 @@ async function rejectsWithCode(run: () => Promise<unknown>, code: string): Promi
   });
 }
 
+test('recovery rejects an absent or inactive account before creating a challenge or sending email', async () => {
+  let persisted = 0, delivered = 0;
+  const provider = createDeterministicFakeOtpProvider(() => { delivered++; });
+  const repo = repository({ async findOtpAccount() { return undefined; }, async createChallenge() { persisted++; return { kind: 'created' }; } });
+  await rejectsWithCode(() => service(repo, provider).send({ email: 'absent@example.com', roleType: 'seeker', purpose: 'password_reset' }), 'ACCOUNT_NOT_FOUND');
+  await rejectsWithCode(() => service(repository({ ...repo, async findOtpAccount() { return { id: 'a'.repeat(24), roleType: 'provider', status: 'suspended' }; } }), provider).send({ email: 'blocked@example.com', roleType: 'provider', purpose: 'password_reset' }), 'ACCOUNT_NOT_ACTIVE');
+  assert.equal(persisted, 0); assert.equal(delivered, 0);
+  await service(repo, provider).send({ email: 'new@example.com', roleType: 'seeker', purpose: 'registration' });
+  assert.equal(persisted, 1); assert.equal(delivered, 1);
+});
+
 test('uses deterministic Local/Test adapters without logging or returning the raw OTP', async () => {
   let delivered: OtpDelivery | undefined;
   let persistedHash = '';

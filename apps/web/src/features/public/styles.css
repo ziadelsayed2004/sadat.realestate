@@ -2305,7 +2305,13 @@
 .public-homepage__hero {
   z-index: 2;
   overflow: visible;
+  grid-template-columns: minmax(0, 1fr);
 }
+
+.public-homepage__hero-content { min-inline-size: 0; box-sizing: border-box; }
+.public-homepage__hero-content > * { min-inline-size: 0; max-inline-size: 100%; }
+.public-homepage__hero h1 { overflow-wrap: anywhere; }
+.public-homepage__search { inline-size: 100%; box-sizing: border-box; }
 
 .public-homepage__search,
 .public-homepage__search-row,

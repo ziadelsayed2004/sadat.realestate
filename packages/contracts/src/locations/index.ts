@@ -61,6 +61,12 @@ export const locationDeleteRequestSchema = z.object({
 }).strict();
 
 export const locationIdParamsSchema = z.object({ locationId: locationObjectIdSchema }).strict();
+export const locationReorderRequestSchema = z.object({
+  items: z.array(z.object({ id: locationObjectIdSchema, version: z.number().int().nonnegative() }).strict()).min(1).max(1000),
+  reason: locationReasonSchema
+}).strict().refine(value => new Set(value.items.map(item => item.id)).size === value.items.length, { message: 'Location IDs must be unique' });
+export const locationReorderSuccessEnvelopeSchema = successEnvelopeSchema(z.object({ reordered: z.literal(true) }).strict());
+export type LocationReorderRequest = z.infer<typeof locationReorderRequestSchema>;
 
 const optionalBooleanQuery = z.preprocess(
   (value) => value === 'true' ? true : value === 'false' ? false : value,
