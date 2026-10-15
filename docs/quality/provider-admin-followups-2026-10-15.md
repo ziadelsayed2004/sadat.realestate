@@ -70,16 +70,16 @@ Validation:
 
 ## Final implementation checkpoint
 
-All 15 reported items now have an implementation or a verified explanation.
-The remaining release condition is the normal full pre-push check and successful
-push of this checkpoint to main. Production deployment is outside this goal.
+All 15 reported items have an implementation or a verified explanation.
+Code checkpoint `7cd7f8e6` passed the normal full pre-push checks and was
+confirmed on remote main. Production deployment is outside this goal.
 
 | Item | Result and evidence |
 | --- | --- |
 | 1: Category template | `9b05309a`: same template on home, listing and editor; supplied/scanned upload takes precedence; real upload/reset checks passed. |
 | 2: Location order | Up/down buttons show sequential positions; create defaults to the end. `PUT /admin/locations/order` checks a complete list of IDs/versions and saves all changed ranks plus audits in one transaction. Sparse/tied values are handled. |
 | 3: Category form | Editing shows a clear fixed-kind label rather than a disabled select. Each category has Add property type, which preselects the category in a working create form. Parent category remains editable for an existing type. |
-| 4: Placement code | Removed the unnecessary technical code column from banner administration. Existing placement guide and new copy explain the two independent positions and their controls. |
+| 4: Placement code | Removed the unnecessary technical code column and obsolete instruction to share a code with advertisers. Placement guidance now explains selecting a location, adding media, scheduling and the two independent display switches. |
 | 5: Hero versus featured | Fixed HeroSection fallback accidentally selecting a `featured_` item when no hero was published. Explicit featured data stays out of the hero; managed hero and featured placement switches remain independent. Scheduled rows display only inside their time window. |
 | 6: Commission notice | Account assignment activation/change/stopping creates a localized provider notice transactionally. Existing approved-exception notices remain supported. Idempotent retries do not create duplicate notices. |
 | 7: Session stability | Transient refresh failures and invalid password form submissions no longer erase a valid HttpOnly refresh cookie. Access tokens also renew before expiry for all roles and on resuming an idle tab. Network failures retry while keeping the current screen. Invalid/replayed/revoked sessions still clear the cookie; explicit logout clears it even during a revocation outage. Three real provider tabs survived three parallel full reloads: nine successful rotations and one live session. |
@@ -109,7 +109,8 @@ push of this checkpoint to main. Production deployment is outside this goal.
   time to the renewal deadline triggers a real API cookie rotation for admin
   and provider. An unsaved administrator form stays open with its draft intact.
   Unit tests cover all three roles, transient failure/retry, idle-tab resume,
-  logout and disposal.
+  logout and disposal. The same real-API renewal journey also passed on WebKit
+  (Safari engine), with no mocked responses.
 - `.tmp/goal-remaining-real/result.json`: PASS_LOCAL with real APIs, browser,
   uploads and MongoDB. Covers location reorder/reload, category-to-type creation,
   filtered results, Arabic delivery, admin counts and independent promotions.
@@ -131,11 +132,23 @@ push of this checkpoint to main. Production deployment is outside this goal.
   Workspace tests pass. Full lint/typecheck/test run is enforced by the normal
   push hook; the hook is not bypassed.
 
-The final measured client build is 2,615,990 JavaScript bytes and 260,316
+The verified code checkpoint `7cd7f8e6` built 2,616,011 JavaScript bytes and 260,316
 bytes for the public route stylesheet.
 The JS ceiling is a bounded 2,616,320 bytes; chunk and stylesheet ceilings are
 unchanged. Replacing the conflicting featured CSS removed 11,042 route bytes
 net after the hero containment fix. Final build metrics are also printed by
 `check-bundle-budget.mjs` in every release/push build.
+
+### Completed release checks
+
+`7cd7f8e6` passed lint, typecheck, 27 workspace checks, 877 API tests,
+1,074 frontend Vitest tests in 101 files, and 90 frontend Node/SSR tests.
+The normal push hook reported `PUSH_CHECK_OK`; remote main matched the checked
+commit. No checks were bypassed.
+
+The last visual check also verified the category-count explanation fits inside
+the listing introduction at 360px Arabic and 1440px English, without clipping.
+All 15 items above are complete. This checkpoint records these results and
+removes the last obsolete instruction about sharing placement codes.
 
 No production deployment or production-data modification has been made.

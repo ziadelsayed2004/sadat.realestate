@@ -1340,7 +1340,7 @@
     "placementActive": "Active",
     "placementInactive": "Inactive",
     "noPlacements": "No placements are configured. Enabling display prepares the homepage placement.",
-    "placementHelp": "A code identifies the display location; it is not a licence for sale. Share an active code and check the allowed placements and types in advertising settings.",
+    "placementHelp": "Choose where the ad appears on the homepage, then use Manage placement ads to add its image and set its schedule.",
     "advertisingSettings": "Allowed placements and advertising types",
     "on": "Banner display enabled",
     "off": "Banner display stopped",
