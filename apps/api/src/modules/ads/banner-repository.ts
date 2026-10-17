@@ -12,6 +12,7 @@ import { AdBannerServiceError, type AdBannerRepository } from './service.js';
 import type { AuditWriter } from '../audit/writer.js';
 import { bannerImageChanges, selectedBannerMediaIds } from './banner-images.js';
 import { validateBannerCampaign } from './banner-campaign.js';
+import { currentBannerStatus } from './banner-status.js';
 
 type BannerStatus = AdBanner['status'];
 
@@ -329,6 +330,7 @@ export function createMongooseAdBannerRepository(connection: Connection, audit?:
         const current = await findBanner(bannerId, session);
         if (current.version !== input.expectedVersion) throw new AdBannerServiceError('VERSION_CONFLICT');
         const currentValue = toBanner(current);
+        if (input.status === undefined && currentValue.status === 'scheduled' && currentBannerStatus(currentValue, now) === 'active') input = { ...input, status: 'active' };
         const creative = input.featured ?? currentValue.featured;
         if (creative && (input.placementKey ?? currentValue.placementKey) !== 'homepage.featured') throw new AdBannerServiceError('BANNER_INVALID_STATE');
         if ((input.placementKey ?? currentValue.placementKey) === 'homepage.featured' && !creative) throw new AdBannerServiceError('BANNER_INVALID_STATE');

@@ -1,0 +1,10 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "actual_scanned_payment_upload_redirects_public_home_with_success_notice",
+    "payment_review_displays_real_advertiser_name_linked_to_account"
+  ],
+  "http": [],
+  "cleanup": true
+}

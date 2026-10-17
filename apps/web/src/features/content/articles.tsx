@@ -185,6 +185,7 @@ function ArticleCard({
         <p className="public-articles__card-summary">{summary(body, copy)}</p>
         <div className="public-articles__card-byline">
           <span className="public-articles__card-author">{authorName}</span>
+          {publishedAt ? <time dateTime={article.publishedAt} aria-label={`${copy.publishedAt}: ${publishedAt}`}>{publishedAt}</time> : null}
           <span className="public-articles__card-reading"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.7" /><path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /></svg>{copy.readTime(readingTimeMinutes)}</span>
         </div>
         <dl className="public-articles__card-meta">

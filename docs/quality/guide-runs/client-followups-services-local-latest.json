@@ -1,0 +1,26 @@
+{
+  "status": "PASS_LOCAL",
+  "journeys": [
+    "client-followups-2026-10-17"
+  ],
+  "environment": "isolated-local-MongoDB-rs0-real-services",
+  "mockedRoutes": false,
+  "commit": "f76d7987fd0a986775d673390cc098c0a19886ef",
+  "startedAt": "2026-10-17T20:32:54.122Z",
+  "checks": [
+    "registration_atomically_creates_user_profile_credential_and_session",
+    "verification_grant_replay_rejected_without_duplicate_account",
+    "duplicate_email_rolls_back_grant_consumption_and_account_write",
+    "credential_failure_rolls_back_grant_user_and_profile",
+    "deletion_releases_email_new_identity_password_login_old_sessions_revoked_history_preserved",
+    "historical_deleted_email_released_active_email_still_reserved",
+    "role_delete_permissions_version_and_assigned_guard_real_transaction",
+    "company_owner_edit_photo_ownership_admin_hide_restore_provider_profile_alias",
+    "real_property_review_atomically_publishes_and_notifies_owner_no_duplicate_on_retry",
+    "featured_flag_and_order_persisted_permission_version_and_audit_rollback",
+    "logout_revokes_current_refresh_session"
+  ],
+  "cleanup": true,
+  "deliveryScope": "Local verification only; no production deployment.",
+  "finishedAt": "2026-10-17T20:32:55.110Z"
+}

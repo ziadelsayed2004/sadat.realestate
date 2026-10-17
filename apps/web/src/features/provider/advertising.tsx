@@ -341,6 +341,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     setMutationError(undefined);
     try {
       await mutationApi.createRequest(input);
+      window.location.assign(`/?lang=${locale}&notice=ad-request-sent`);
       setCreateOpen(false);
       setFeedback(locale === 'ar' ? 'تم إرسال طلب الإعلان بنجاح. ستراجعه الإدارة وتتواصل معك على الرقم المسجل لتحديد السعر والفترة.' : 'Advertising request sent successfully. Administration will review it and contact you to agree the price and period.');
       setAttempt(value => value + 1);
@@ -376,6 +377,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     setMutationError(undefined);
     try {
       await mutationApi.submitRequest(detail.id, detail.version);
+      window.location.assign(`/?lang=${locale}&notice=ad-request-sent`);
       setFeedback(copy.success);
       setAttempt(value => value + 1);
     } catch {
@@ -397,6 +399,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
       setFeedback(undefined);
       await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod, transfer);
       setFeedback(copy.paymentProofUploaded);
+      window.location.assign(`/?lang=${locale}&notice=ad-request-sent`);
       setAttempt(value => value + 1);
       return true;
     } catch (error) {

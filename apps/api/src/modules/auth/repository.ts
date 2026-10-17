@@ -194,7 +194,7 @@ export function createMongooseAuthRepository(
   }
 
   async function findAccountLogin(email: string): Promise<PasswordLoginRecord | undefined> {
-    const user = await User.findOne({ normalizedEmail: email })
+    const user = await User.findOne({ normalizedEmail: email, deletedAt: null })
       .select('_id roleType status')
       .lean<LeanUser>()
       .exec();
@@ -555,7 +555,10 @@ export function createMongooseOtpRepository(
     },
 
     async findRegistrationAccount(email) {
-      const user = await User.findOne({ normalizedEmail: email })
+      // Release addresses retained by historical soft deletions. Account IDs,
+      // financial records and revoked sessions remain tied to the old owner.
+      await User.collection.updateMany({ normalizedEmail: email, deletedAt: { $type: 'date' } }, { $unset: { normalizedEmail: 1, normalizedPhone: 1 } });
+      const user = await User.findOne({ normalizedEmail: email, deletedAt: null })
         .select('_id roleType status').lean<LeanUser>().exec();
       return user ? toAccount(user) : undefined;
     },

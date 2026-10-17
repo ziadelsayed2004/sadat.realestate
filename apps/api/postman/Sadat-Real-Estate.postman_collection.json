@@ -9494,6 +9494,360 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Client follow-ups - company profiles and featured properties",
+      "item": [
+        {
+          "name": "deleteAdminRole",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/roles/:roleId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "roles",
+                ":roleId"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Remove obsolete administrative role\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires admin:roles.manage. Assigned roles return RBAC_ROLE_ASSIGNED (409); reassign staff first. Version conflict prevents deleting a changed role. Delete and audit commit together."
+          }
+        },
+        {
+          "name": "getAdminProviderOrganization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/organization",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "providers",
+                ":providerId",
+                "organization"
+              ]
+            },
+            "description": "Resolve the provider account and legacy organization ownership aliases. Viewing requires admin:providers.view; updates require admin:providers.visibility.manage. Inactive profiles are removed from the public directory; account and financial history are preserved."
+          }
+        },
+        {
+          "name": "updateAdminProviderOrganization",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/organization",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "providers",
+                ":providerId",
+                "organization"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"name\": {\n    \"en\": \"Synthetic Company\"\n  },\n  \"reason\": \"Update company directory profile\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Resolve the provider account and legacy organization ownership aliases. Viewing requires admin:providers.view; updates require admin:providers.visibility.manage. Inactive profiles are removed from the public directory; account and financial history are preserved."
+          }
+        },
+        {
+          "name": "getProviderOrganization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/organization",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "organization"
+              ]
+            },
+            "description": "Edit only your approved developer company. Status changes are forbidden and image assets must belong to your account."
+          }
+        },
+        {
+          "name": "updateProviderOrganization",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/organization",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "organization"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"name\": {\n    \"en\": \"Synthetic Company\"\n  },\n  \"reason\": \"Update company directory profile\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Edit only your approved developer company. Status changes are forbidden and image assets must belong to your account."
+          }
+        },
+        {
+          "name": "setAdminFeaturedProperty",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/featured",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "featured"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"featured\": true,\n  \"order\": 0,\n  \"reason\": \"Select homepage featured property\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires admin:properties.manage. Atomically updates the featured flag and order with an audit record. Only published, active and unexpired properties appear publicly."
+          }
+        },
+        {
+          "name": "uploadAdminOrganizationPhoto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/organization-photos",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "providers",
+                "organization-photos"
+              ]
+            },
+            "description": "Requires admin:providers.visibility.manage to upload, admin:providers.view to preview."
+          }
+        },
+        {
+          "name": "previewAdminOrganizationPhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/providers/organization-photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "providers",
+                "organization-photos",
+                ":assetId"
+              ]
+            },
+            "description": "Requires admin:providers.visibility.manage to upload, admin:providers.view to preview."
+          }
+        },
+        {
+          "name": "uploadProviderOrganizationPhoto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/organization-photos",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "organization-photos"
+              ]
+            },
+            "description": "Requires an approved developer account; private preview is limited to its own uploaded assets."
+          }
+        },
+        {
+          "name": "previewProviderOrganizationPhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/organization-photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "organization-photos",
+                ":assetId"
+              ]
+            },
+            "description": "Requires an approved developer account; private preview is limited to its own uploaded assets."
+          }
+        },
+        {
+          "name": "downloadPublicOrganizationPhoto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/organization-photos/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "organization-photos",
+                ":assetId"
+              ]
+            },
+            "description": "Available only while attached to an approved directory profile."
+          }
+        }
+      ]
     }
   ]
 }

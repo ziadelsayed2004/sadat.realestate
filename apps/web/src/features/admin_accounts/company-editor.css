@@ -1,0 +1,9 @@
+.admin-company-editor { margin-block: 24px; padding: 24px; }
+.admin-company-editor form { display: grid; gap: 16px; }
+.admin-company-editor label { display: grid; gap: 8px; }
+.admin-company-editor :is(input, textarea) { width: 100%; min-width: 0; min-height: 44px; padding: 10px; border: 1px solid #dce3dd; border-radius: 10px; font: inherit; }
+.admin-company-editor form > div { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.admin-company-editor { border: 1px solid #dce3dd; border-radius: 16px; background: white; }
+.admin-company-editor :is(input, textarea) { box-sizing: border-box; }
+.admin-company-editor__photo { inline-size: min(100%, 320px); block-size: 190px; object-fit: contain; border-radius: 12px; background: #f4f7f5; }

@@ -38,7 +38,10 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Native scheduling, live statistics and advertising controls add about 12 KB.
 // Keep per-chunk limits fixed and split the new administration tools.
 // Header sizing and shared SEO defaults add under one KiB; retain chunk limits.
-const maxJavaScriptBytes = 2_572 * 1024;
+// Company editing/photo upload, role deletion, featured ordering and the client
+// follow-up fixes add 16,587 bytes to the 2,633,388-byte baseline. Split the new
+// account tools and allow a bounded 16 KiB; retain the existing per-chunk cap.
+const maxJavaScriptBytes = 2_588 * 1024;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

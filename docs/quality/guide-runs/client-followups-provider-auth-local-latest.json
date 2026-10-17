@@ -1,0 +1,9 @@
+{
+  "status": "PASS_LOCAL",
+  "checks": [
+    "fresh_developer_email_otp_registration_password_retained_webkit",
+    "new_developer_password_login_in_independent_chromium_and_webkit_sessions"
+  ],
+  "mockedResponses": false,
+  "cleanup": true
+}

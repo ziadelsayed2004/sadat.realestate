@@ -6,6 +6,19 @@ import { adCalendarEventSchema, adQuoteSchema, adRequestSchema } from '@sadat-re
 
 const admin = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '3123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const seeker = { ...admin, role: 'seeker' } as AccessTokenClaims;
+test('an already-started scheduled banner remains editable and becomes active without manual state repair', async () => {
+  let clock = new Date('2026-10-17T09:00:00Z');
+  const service = createAdSettingsService({ now: () => clock });
+  await service.updateSettings(admin, { expectedVersion: 0, reason: 'Enable banner display', patch: { enabled: true } });
+  await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: false });
+  let banner = await service.createBanner(admin, { placementKey: 'homepage.hero', title: { en: 'Scheduled campaign' }, startAt: '2026-10-17T10:00:00Z', endAt: '2026-10-18T10:00:00Z' });
+  const media = await service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/ad.png', mime: 'image/png', width: 1200, height: 400 });
+  banner = await service.updateBanner(admin, banner.id, { expectedVersion: banner.version, mediaId: media.id, status: 'scheduled', reason: 'Schedule verified campaign' });
+  clock = new Date('2026-10-17T11:00:00Z');
+  const edited = await service.updateBanner(admin, banner.id, { expectedVersion: banner.version, title: { en: 'Corrected campaign' }, reason: 'Correct campaign title' });
+  assert.equal(edited.status, 'active');
+  assert.equal(edited.title.en, 'Corrected campaign');
+});
 test('ad placements use stable keys, bounded settings, admin authorization, and no public price', async () => {
   const service = createAdSettingsService();
   const placement = await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { ar: 'رئيسي', en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: true });

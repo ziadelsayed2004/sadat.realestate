@@ -1,3 +1,4 @@
+import { DeleteRole } from './delete-role.tsx';
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { adminUserCreateSchema, adminUserPatchSchema, rbacRoleCreateRequestSchema, rbacRolePatchRequestSchema, type AdminUserCreate, type AdminUserData, type AdminUserListData, type AdminUserListQuery, type AdminUserPatch, type RbacPermission, type RbacRoleData, type RbacRoleListData, type SupportedLocale } from "@sadat-real-estate/contracts";
 import { ApiClientError } from "../contracts/index.ts";
@@ -884,6 +885,7 @@ function RoleDetail({ id, locale, source }: { readonly id: string; readonly loca
   }
   return (
     <Shell locale={locale} path={`${ADMIN_RBAC_ROLES_ROUTE}/${id}`} screenId="ADM-64" state={state} title={role.name} description={copy.rolesDescription} actions={<RbacLink href={localePath(locale, ADMIN_RBAC_ROLES_ROUTE)}>{copy.back}</RbacLink>}>
+      {canUpdate ? <DeleteRole id={role.id} version={role.version} locale={locale} onDeleted={() => window.location.assign(`/admin/roles?lang=${locale}`)} /> : null}
       <RoleAccountGuide locale={locale} roleId={role.active ? role.id : undefined} canCreate={role.active && data.effectivePermissions.includes('admin:roles.manage') && data.effectivePermissions.includes('admin:staff.manage')} />
       <section className="admin-rbac__form-panel">
         {canUpdate ? (

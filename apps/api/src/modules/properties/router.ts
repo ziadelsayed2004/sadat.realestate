@@ -13,6 +13,7 @@ import { resolvePropertyMapCoordinates } from './map-coordinates.js';
 export const PROPERTY_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/provider/properties/:propertyId/map-coordinates', operationId: 'resolveProviderPropertyMapCoordinates' },
   { method: 'GET', path: '/api/v1/provider/properties/:propertyId', operationId: 'getProviderProperty' },
+  { method: 'PUT', path: '/api/v1/admin/properties/:propertyId/featured', operationId: 'setAdminFeaturedProperty' },
   { method: 'GET', path: '/api/v1/provider/properties', operationId: 'listProviderProperties' },
   { method: 'POST', path: '/api/v1/provider/properties', operationId: 'createProviderProperty' },
   { method: 'PATCH', path: '/api/v1/provider/properties/:propertyId/steps/:step', operationId: 'saveProviderPropertyStep' },
@@ -28,7 +29,7 @@ export const PROPERTY_ROUTE_DEFINITIONS = [
   ,{ method: 'GET', path: '/api/v1/admin/properties/possible-duplicates', operationId: 'listPossiblePropertyDuplicates' }
 ] as const;
 
-export interface PropertyRouterDependencies { service: PropertyService; accessTokens: AccessTokenService; mapFetcher?: typeof fetch; }
+export interface PropertyRouterDependencies { featured?: ReturnType<typeof import('./featured.js').createFeaturedPropertyManager>; service: PropertyService; accessTokens: AccessTokenService; mapFetcher?: typeof fetch; }
 
 const ERROR_MAP: Record<string, { statusCode: number; messageKey: string }> = {
   PROPERTY_FORBIDDEN: { statusCode: 403, messageKey: 'errors.properties.forbidden' },
@@ -130,6 +131,15 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
   router.post('/admin/properties/:propertyId/visibility', async (request, response) => {
     try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.visibility(adminId(response), propertyId, propertyVisibilitySchema.parse(request.body ?? {}), current), current.requestId)); }
     catch (error) { sendError(request, response, error); }
+  });
+  router.put('/admin/properties/:propertyId/featured', async (request, response) => {
+    try {
+      if (!dependencies.featured) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
+      const claims = response.locals.adminRbacClaims as AccessTokenClaims;
+      const id = String(request.params.propertyId);
+      await dependencies.featured(claims.sub, id, request.body, context(request));
+      response.json(toSuccessResponse(await dependencies.service.adminGet(claims.sub, id), context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
   });
   return router;
 }

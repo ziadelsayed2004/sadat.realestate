@@ -138,6 +138,7 @@ function NotFoundNotice({ copy, locale, projectPage, slug }: { readonly copy: Pu
 }
 
 function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+  const role = useContext(PublicAuthRoleContext);
   const title = localizedText(data.name, locale) ?? data.slug;
   const description = localizedText(data.description, locale);
   const locations = localizedValues(data.locations, locale);
@@ -148,7 +149,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
       </div>
       <div className="public-developer-profile__identity">
         <div className="public-developer-profile__identity-actions">
-          <a className="public-developer-profile__identity-action public-developer-profile__identity-action--primary" href="#developer-contact"><ProfileIcon name="phone" />{copy.contactDeveloper}</a>
+          {role === undefined || role === 'seeker' ? <a className="public-developer-profile__identity-action public-developer-profile__identity-action--primary" href="#developer-contact"><ProfileIcon name="phone" />{copy.contactDeveloper}</a> : null}
           <a className="public-developer-profile__identity-action public-developer-profile__identity-action--secondary" href="#developer-properties"><ProfileIcon name="unit" />{copy.availableUnitsAction}</a>
         </div>
         <div className="public-developer-profile__identity-copy">
@@ -163,7 +164,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
           {locations.length > 0 ? <div className="public-developer-profile__identity-locations">{locations.map(location => <span key={location}><ProfileIcon name="location" />{location}</span>)}</div> : null}
         </div>
         <div className="public-developer-profile__identity-logo">
-          {data.logoUrl ? <PublicMediaImage src={data.logoUrl} alt="" loading="eager" fallback={<span className="public-developer-profile__identity-logo-fallback" />} /> : <span className="public-developer-profile__identity-logo-fallback" aria-hidden="true" />}
+          {data.logoUrl || data.imageUrl ? <PublicMediaImage src={data.logoUrl ?? data.imageUrl} alt="" loading="eager" fallback={<span className="public-developer-profile__identity-logo-fallback" />} /> : <span className="public-developer-profile__identity-logo-fallback" aria-hidden="true" />}
           <span className="public-developer-profile__identity-logo-check"><ProfileIcon name="check" /></span>
           <a className="public-developer-profile__back" href="/developers"><ProfileIcon name="arrow" />{copy.backToDirectory}</a>
         </div>
@@ -176,6 +177,7 @@ const PROFILE_SECTION_IDS = ['developer-overview', 'developer-projects', 'develo
 type ProfileSectionId = typeof PROFILE_SECTION_IDS[number];
 
 function ProfileTabs({ copy }: { readonly copy: PublicDevelopersCopy }) {
+  const role = useContext(PublicAuthRoleContext);
   const [activeSection, setActiveSection] = useState<ProfileSectionId>('developer-overview');
 
   useEffect(() => {
@@ -208,7 +210,7 @@ function ProfileTabs({ copy }: { readonly copy: PublicDevelopersCopy }) {
       {link('developer-overview', copy.profileOverview)}
       {link('developer-projects', copy.profileProjects)}
       {link('developer-properties', copy.profileProperties)}
-      {link('developer-contact', copy.profileContact)}
+      {role === undefined || role === 'seeker' ? link('developer-contact', copy.profileContact) : null}
     </nav>
   );
 }
@@ -268,11 +270,12 @@ function ProjectsSection({ data, locale, copy }: { readonly data: PublicOrganiza
 }
 
 function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+  const role = useContext(PublicAuthRoleContext);
   return (
     <section className="public-developer-profile__section public-developer-profile__properties-section" id="developer-properties" aria-labelledby="public-developer-properties-title">
       <div className="public-developer-profile__section-heading">
         <h2 id="public-developer-properties-title">{copy.availableUnitsTitle}</h2>
-        <a href="#developer-contact">{copy.availableUnitsAction}<ProfileIcon name="arrow" /></a>
+        {role === undefined || role === 'seeker' ? <a href="#developer-contact">{copy.availableUnitsAction}<ProfileIcon name="arrow" /></a> : null}
       </div>
       {data.properties.length === 0 ? <p className="public-developer-profile__empty public-developer-profile__empty--units"><ProfileIcon name="unit" />{copy.availableUnitsEmpty}</p> : (
         <div className="public-developer-profile__property-grid">
@@ -317,6 +320,7 @@ function ProfileOverview({ data, locale, copy }: { readonly data: PublicOrganiza
 }
 
 function ProfileAside({ data, copy, compact = false }: { readonly data: PublicOrganizationProfile; readonly copy: PublicDevelopersCopy; readonly compact?: boolean }) {
+  const role = useContext(PublicAuthRoleContext);
   const stats = data.stats;
   const areas = stats.activeAreas ?? data.activeAreas?.length ?? 0;
   const metricRows: ReadonlyArray<readonly [number, string, IconName]> = [
@@ -345,7 +349,7 @@ function ProfileAside({ data, copy, compact = false }: { readonly data: PublicOr
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
         {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
         {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer"><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
-        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{hasContactDetails ? copy.sendInquiry : copy.profileContact}</a>
+        {role === undefined || role === 'seeker' ? <>        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{hasContactDetails ? copy.sendInquiry : copy.profileContact}</a></> : null}
       </section>
       <div className="public-developer-profile__advisory"><ProfileIcon name="shield" /><div><strong>{copy.advisoryTitle}</strong><p>{copy.advisoryBody}</p></div></div>
     </aside>
@@ -387,6 +391,7 @@ function ContactSection({ data, locale, copy, actions, projectId = '' }: { reado
       setState(error instanceof ApiClientError && error.status === 401 ? 'permission' : error instanceof ApiClientError && error.status === 403 ? 'forbidden' : 'error');
     }
   }
+  if (role === 'provider' || role === 'admin') return null;
   return (
     <section className="public-developer-profile__contact" id="developer-contact" aria-labelledby="developer-contact-title">
       <h2 id="developer-contact-title">{copy.profileInquiryTitle(companyName)}</h2>
@@ -402,7 +407,7 @@ function ContactSection({ data, locale, copy, actions, projectId = '' }: { reado
           <button type="submit" disabled={state === 'submitting' || state === 'success'}>{state === 'submitting' ? (ar ? 'جارٍ الإرسال…' : 'Sending…') : copy.sendInquiry}<ProfileIcon name="arrow" /></button>
           {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="public-developer-profile__whatsapp-button"><ProfileIcon name="whatsapp" />{channel === 'provider' ? copy.contactWhatsapp : (ar ? 'واتساب المنصة' : 'Platform WhatsApp')}</a> : null}
         </div>
-        {state === 'success' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="status" aria-live="polite">{ar ? 'تم إرسال طلبك بنجاح.' : 'Your inquiry was sent successfully.'} <a href={`${role === 'provider' ? `/provider/customer-requests?search=${requestId}&` : `/seeker/requests/${requestId}?`}lang=${locale}`}>{ar ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
+        {state === 'success' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="status" aria-live="polite">{ar ? 'تم إرسال طلبك بنجاح.' : 'Your inquiry was sent successfully.'} <a href={`/seeker/requests/${requestId}?lang=${locale}`}>{ar ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
         {state === 'permission' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'سجّل الدخول لإرسال الاستفسار، أو تواصل عبر واتساب.' : 'Sign in to send an inquiry, or use WhatsApp.'} <a href={`/auth/login?lang=${locale}`}>{ar ? 'تسجيل الدخول' : 'Sign in'}</a></p> : null}
         {state === 'forbidden' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'حسابك لا يملك صلاحية إرسال الطلب. لم يتم تسجيل خروجك.' : 'Your account cannot send this inquiry. You are still signed in.'}</p> : null}
         {state === 'error' ? <p ref={feedback} className="public-developer-profile__inquiry-wide" role="alert">{ar ? 'تعذر الإرسال. راجع الهاتف وحاول مجددًا؛ بياناتك محفوظة.' : 'Could not send. Check the phone and retry; your entries are kept.'}</p> : null}
@@ -430,12 +435,13 @@ function ProfileSuccess({ data, locale, copy, actions }: { readonly data: Public
 }
 
 function ProjectSuccess({ data, project, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly project: PublicOrganizationProject; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+  const role = useContext(PublicAuthRoleContext);
   const projectData = { ...data, projects: [project], properties: data.properties.filter(property => property.projectId === project.id) };
   return <div className="public-developer-profile__content">
     <nav className="public-developer-profile__tabs" aria-label={copy.profileProjects}>
       <a href={`/developers/${data.slug}?lang=${locale}#developer-projects`}>{localizedText(data.name, locale) ?? data.slug}</a>
       <a href="#developer-properties">{copy.availableUnitsTitle}</a>
-      <a href="#developer-contact">{copy.profileContact}</a>
+      {role === undefined || role === 'seeker' ? <a href="#developer-contact">{copy.profileContact}</a> : null}
     </nav>
     <div className="public-developer-profile__layout">
       <ProfileAside data={data} copy={copy} compact />

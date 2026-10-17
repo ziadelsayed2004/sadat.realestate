@@ -9,6 +9,11 @@ const locations: readonly ProviderPropertyLocationOption[] = [
 ];
 
 describe('Provider location search', () => {
+  it.each(['المنطقة ال22', 'المنطقة ال٢٢', 'منطقة۲۲', '22'])('finds a numeric area across phone keyboard variants: %s', query => {
+    const numeric = { id: 'd'.repeat(24), kind: 'neighborhood' as const, name: { ar: 'المنطقة 22' }, slug: 'area-22', order: 4 };
+    const other = { ...numeric, id: 'e'.repeat(24), name: { ar: 'المنطقة 23' }, slug: 'area-23' };
+    expect(filterProviderLocations([...locations, numeric, other], query)).toEqual([numeric]);
+  });
   it.each(['السباعه', 'السابعه', 'السّابع', 'sevneth', 'SEVENTH district'])('finds the registered seventh district for %s', query => {
     expect(filterProviderLocations(locations, query).map(item => item.id)).toContain('c'.repeat(24));
   });

@@ -1,3 +1,4 @@
+import { AdvertiserLink } from './advertiser-link.tsx';
 import { CalendarTable } from './calendar.tsx';
 import { AdvertisingSteps, AdPlacementGuide, adPlacementName } from './placement-guide.tsx';
 import { FinancialSummary } from './financial-summary.tsx';
@@ -310,7 +311,7 @@ function PaymentProofTable({ data, locale, review, onReview, loadFile }: { reado
         <td className="admin-ads__proof-action"><Button type="button" size="sm" onClick={() => onReview(item.id)}>{item.status === 'pending_review' ? copy.viewPaymentReview : copy.view}</Button></td>
         <td><code>{item.id}</code></td>
         <td><a href={localePath(locale, `${ADMIN_ADS_REQUESTS_ROUTE}?requestId=${encodeURIComponent(item.adRequestId)}`)}><code>{item.adRequestId}</code></a></td>
-        <td><a href={localePath(locale, `/admin/providers/${encodeURIComponent(item.providerId)}`)}><code>{item.providerId}</code></a></td>
+        <td><AdvertiserLink id={item.providerId} locale={locale} /></td>
         <td><Button className="admin-ads__proof-filename" type="button" size="sm" variant="secondary" title={item.originalFilename} onClick={() => setOpenedId(item.id === openedId ? undefined : item.id)} aria-expanded={item.id === openedId}>{item.originalFilename}</Button></td>
         <td>{Math.round(item.byteSize / 1024)} KB</td><td><StatusBadge status={item.securityState} label={item.securityState} /></td><td><StatusBadge status={item.status} label={copy.proofStatus[item.status] ?? item.status} /></td><td>{item.version}</td><td>{dateLabel(item.uploadedAt, locale)}</td>
       </tr>)}</tbody>
@@ -352,7 +353,7 @@ function ReviewPanel({ proof, locale, review, onSaved, loadFile }: { readonly pr
     <dl className="admin-ads__detail-list admin-ads__proof-details">
       <div><dt>{copy.columns.id}</dt><dd><code>{proof.id}</code></dd></div>
       <div><dt>{copy.columns.request}</dt><dd><a href={localePath(locale, `${ADMIN_ADS_REQUESTS_ROUTE}?requestId=${encodeURIComponent(proof.adRequestId)}`)}><code>{proof.adRequestId}</code></a></dd></div>
-      <div><dt>{copy.columns.provider}</dt><dd><a href={localePath(locale, `/admin/providers/${encodeURIComponent(proof.providerId)}`)}><code>{proof.providerId}</code></a></dd></div>
+      <div><dt>{copy.columns.provider}</dt><dd><AdvertiserLink id={proof.providerId} locale={locale} /></dd></div>
       <div><dt>{copy.paymentMethod}</dt><dd>{proof.paymentMethod ? copy.paymentMethodLabels[proof.paymentMethod] ?? proof.paymentMethod.replace(/[_.-]/gu, ' ') : copy.unavailable}</dd></div>
       <div><dt>{copy.columns.filename}</dt><dd>{proof.originalFilename}</dd></div>
       <div><dt>{copy.columns.size}</dt><dd>{Math.round(proof.byteSize / 1024)} KB</dd></div>

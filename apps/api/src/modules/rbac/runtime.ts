@@ -1,3 +1,4 @@
+import { createRoleDeleter } from './deletion.js';
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
@@ -16,9 +17,7 @@ export function createRbacRuntime(
   const identityModels = createIdentityModels(connection);
   const adminModels = createAdminModels(connection);
   const rbacModels = createRbacModels(connection);
-  return {
-    accessTokens,
-    service: createRbacService({
+  const service = createRbacService({
       repository: createMongooseRbacRepository(
         connection,
         identityModels,
@@ -26,6 +25,6 @@ export function createRbacRuntime(
         rbacModels,
         auditWriter
       )
-    })
-  };
+    });
+  return { accessTokens, service, deleteRole: createRoleDeleter(connection, service, auditWriter) };
 }

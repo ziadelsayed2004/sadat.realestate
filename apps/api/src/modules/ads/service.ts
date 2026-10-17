@@ -1,4 +1,5 @@
 import { bannerImageChanges, selectedBannerMediaIds } from './banner-images.js';
+import { currentBannerStatus } from './banner-status.js';
 import { randomBytes } from 'node:crypto';
 import { validateBannerCampaign } from './banner-campaign.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
@@ -538,10 +539,11 @@ export function createAdSettingsService(seed: {
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
     async updateBanner(claims: AccessTokenClaims, bannerId: string, input: unknown, context?: { requestId: string; traceId: string }) {
-      const parsed = adBannerPatchSchema.parse(input);
+      let parsed = adBannerPatchSchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.manage');
       if (seed.bannerRepository) return seed.bannerRepository.updateBanner(claims.sub, bannerId, parsed, clock(), context);
       const current = bannerById(bannerId);
+      if (parsed.status === undefined && current.status === 'scheduled' && currentBannerStatus(current, clock()) === 'active') parsed = { ...parsed, status: 'active' };
       if (parsed.expectedVersion !== current.version) throw new AdBannerServiceError('VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: _reason, ...changes } = parsed;
       void _expectedVersion;

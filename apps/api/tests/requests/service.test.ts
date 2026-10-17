@@ -8,6 +8,17 @@ const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0
 const provider = { ...seeker, sub: '2123456789abcdef01234567', role: 'provider' } as AccessTokenClaims;
 const admin = { ...seeker, sub: '3123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
 
+test('property, project and company inquiries are seeker-only while general provider contact remains available', async () => {
+  const service = createRequestService({ repository: createInMemoryRequestRepository() });
+  for (const key of ['propertyId', 'projectId', 'organizationId']) {
+    const payload = { message: 'Ask about this advertised listing', [key]: 'f'.repeat(24) };
+    await assert.rejects(service.createContact(provider, payload), /REQUEST_FORBIDDEN/u);
+    await assert.rejects(service.create(provider, { type: 'contact', payload }), /REQUEST_FORBIDDEN/u);
+    assert.equal((await service.createContact(seeker, payload)).type, 'contact');
+  }
+  assert.equal((await service.createContact(provider, { message: 'General platform support question' })).type, 'contact');
+});
+
 test('providers send inquiries as themselves and retain only requester permissions on sent inquiries', async () => {
   const repository = createInMemoryRequestRepository();
   const recipient = { ...provider, sub: '4'.repeat(24) };

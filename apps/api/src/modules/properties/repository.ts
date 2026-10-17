@@ -1,3 +1,4 @@
+import { notifyPropertyReview } from './notifications.js';
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import type { PropertyAdminListQuery, PropertyContactStep, PropertyCoordinates, PropertyCoreStep, PropertyDetailsStep, PropertyDuplicateData, PropertyFeaturesServicesStep, PropertyListQuery, PropertyLocationStep, PropertyPricingStep, PropertySource } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
@@ -13,6 +14,8 @@ function propertySearch(search: string): Record<string, unknown>[] {
 }
 
 export interface StoredProperty {
+  featured?: boolean;
+  featuredOrder?: number;
   deactivationRequest?: import('@sadat-real-estate/contracts').PropertyData['deactivationRequest'];
   imageUrl?: string;
   id: string;
@@ -90,6 +93,8 @@ export interface PropertyRepository {
 
 function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredProperty {
   return {
+    ...(record.featured === undefined ? {} : { featured: record.featured }),
+    ...(record.featuredOrder == null ? {} : { featuredOrder: record.featuredOrder }),
     ...(record.deactivationRequest ? { deactivationRequest: structuredClone(record.deactivationRequest) } : {}),
     id: record._id.toHexString(),
     ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
@@ -217,6 +222,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       }
       const output = stored(result as PropertyRecord & { _id: Types.ObjectId });
       await audit.record({ actorType: input.metadata.actorType ?? 'admin', actorId: input.metadata.actorId, targetType: 'property', targetId: output.id, action: input.action, reason: input.metadata.reason, before: input.before, after: output, requestId: input.metadata.requestId, traceId: input.metadata.traceId, occurredAt: input.metadata.changedAt }, session);
+      if (input.action === 'property.review') await notifyPropertyReview(connection, { id: output.id, providerId: String(result.providerId), version: output.version, status: output.status, occurredAt: input.metadata.changedAt }, session);
       return { kind: 'written' as const, property: output };
     });
   }

@@ -244,16 +244,16 @@
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
-          "429": {
-            "$ref": "#/components/responses/AuthError"
-          },
-          "503": {
+          "403": {
             "$ref": "#/components/responses/AuthError"
           },
           "404": {
             "$ref": "#/components/responses/AuthError"
           },
-          "403": {
+          "429": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "503": {
             "$ref": "#/components/responses/AuthError"
           }
         },
@@ -2658,6 +2658,102 @@
             "$ref": "#/components/responses/RbacError"
           }
         }
+      },
+      "delete": {
+        "operationId": "deleteAdminRole",
+        "summary": "deleteAdminRole",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "deleted": {
+                              "const": true
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "deleted"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "version",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "description": "Requires admin:roles.manage. Assigned roles return RBAC_ROLE_ASSIGNED (409); reassign staff first. Version conflict prevents deleting a changed role. Delete and audit commit together."
       }
     },
     "/api/v1/admin/audit-logs": {
@@ -3586,7 +3682,7 @@
       "delete": {
         "operationId": "deleteAdminUser",
         "summary": "Delete a non-Admin account from operating use",
-        "description": "Requires admin:users.manage, current version, reason, and explicit confirmation. Self and administrator targets are forbidden. Atomically retains a tombstone, revokes sessions, hides provider public content, and records audit evidence. Financial and request history remains linked; email is reserved. No automated notification or email is sent.",
+        "description": "Requires admin:users.manage, current version, reason, and explicit confirmation. Self and administrator targets are forbidden. Atomically retains a tombstone, revokes sessions, hides provider public content, and records audit evidence. Financial and request history remains linked; email and phone are released for a new account; the deleted identity cannot sign in. No automated notification or email is sent.",
         "security": [
           {
             "bearerAuth": []
@@ -5770,7 +5866,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Property, project and company inquiry targets require a seeker account. Provider accounts may send general platform contact messages without a listing target."
       }
     },
     "/api/v1/seeker/search-requests": {
@@ -11092,14 +11189,14 @@
               }
             }
           },
-          "404": {
-            "description": "Image not publicly available"
-          },
           "401": {
             "description": "Administrator preview credentials are expired or invalid"
           },
           "403": {
             "description": "Administrator preview lacks the required role, verified state or banner viewing permission"
+          },
+          "404": {
+            "description": "Image not publicly available"
           }
         }
       }
@@ -11344,6 +11441,9 @@
               }
             }
           },
+          "304": {
+            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
+          },
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
@@ -11359,9 +11459,6 @@
                 }
               }
             }
-          },
-          "304": {
-            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
           }
         }
       }
@@ -12359,6 +12456,9 @@
               }
             }
           },
+          "304": {
+            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
+          },
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
@@ -12370,9 +12470,6 @@
           },
           "404": {
             "$ref": "#/components/responses/ProviderError"
-          },
-          "304": {
-            "description": "The authorized image or media representation is unchanged. Access is rechecked before returning this response."
           }
         }
       }
@@ -12989,10 +13086,10 @@
           "429": {
             "$ref": "#/components/responses/SeekerError"
           },
-          "503": {
+          "500": {
             "$ref": "#/components/responses/SeekerError"
           },
-          "500": {
+          "503": {
             "$ref": "#/components/responses/SeekerError"
           }
         }
@@ -13242,6 +13339,9 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid map URL or property ID"
+          },
           "401": {
             "description": "Authentication required"
           },
@@ -13250,9 +13350,6 @@
           },
           "404": {
             "description": "Property not found"
-          },
-          "400": {
-            "description": "Invalid map URL or property ID"
           }
         }
       }
@@ -13319,6 +13416,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Saved assignments, including cancelled history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionAccountOverrideListSuccessEnvelope"
+                }
+              }
+            }
+          },
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
@@ -13330,16 +13437,6 @@
           },
           "404": {
             "$ref": "#/components/responses/CommissionAccountError"
-          },
-          "200": {
-            "description": "Saved assignments, including cancelled history",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommissionAccountOverrideListSuccessEnvelope"
-                }
-              }
-            }
           }
         }
       }
@@ -13385,6 +13482,9 @@
           }
         },
         "responses": {
+          "200": {
+            "$ref": "#/components/responses/CommissionAccountOverrideSuccess"
+          },
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
@@ -13399,9 +13499,6 @@
           },
           "409": {
             "$ref": "#/components/responses/CommissionAccountError"
-          },
-          "200": {
-            "$ref": "#/components/responses/CommissionAccountOverrideSuccess"
           }
         }
       }
@@ -13462,21 +13559,6 @@
           }
         },
         "responses": {
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/LocationError"
-          },
-          "403": {
-            "$ref": "#/components/responses/LocationError"
-          },
-          "409": {
-            "$ref": "#/components/responses/LocationError"
-          },
-          "500": {
-            "$ref": "#/components/responses/LocationError"
-          },
           "200": {
             "description": "Saved display order",
             "content": {
@@ -13507,8 +13589,657 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/LocationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/LocationError"
+          },
+          "409": {
+            "$ref": "#/components/responses/LocationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/LocationError"
           }
         }
+      }
+    },
+    "/api/v1/admin/providers/{providerId}/organization": {
+      "get": {
+        "operationId": "getAdminProviderOrganization",
+        "summary": "getAdminProviderOrganization",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/OrganizationDirectoryProfile"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "description": "Resolve the provider account and legacy organization ownership aliases. Viewing requires admin:providers.view; updates require admin:providers.visibility.manage. Inactive profiles are removed from the public directory; account and financial history are preserved."
+      },
+      "patch": {
+        "operationId": "updateAdminProviderOrganization",
+        "summary": "updateAdminProviderOrganization",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/OrganizationDirectoryProfile"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "parameters": [
+          {
+            "name": "providerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "description": "Resolve the provider account and legacy organization ownership aliases. Viewing requires admin:providers.view; updates require admin:providers.visibility.manage. Inactive profiles are removed from the public directory; account and financial history are preserved.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationDirectoryPatch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/provider/organization": {
+      "get": {
+        "operationId": "getProviderOrganization",
+        "summary": "getProviderOrganization",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/OrganizationDirectoryProfile"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "description": "Edit only your approved developer company. Status changes are forbidden and image assets must belong to your account."
+      },
+      "patch": {
+        "operationId": "updateProviderOrganization",
+        "summary": "updateProviderOrganization",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/OrganizationDirectoryProfile"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "description": "Edit only your approved developer company. Status changes are forbidden and image assets must belong to your account.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "name": {
+                    "type": "object",
+                    "properties": {
+                      "ar": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "en": {
+                        "type": "string",
+                        "maxLength": 200
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "description": {
+                    "type": "object",
+                    "properties": {
+                      "ar": {
+                        "type": "string",
+                        "maxLength": 5000
+                      },
+                      "en": {
+                        "type": "string",
+                        "maxLength": 5000
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "imageUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "version",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/properties/{propertyId}/featured": {
+      "put": {
+        "operationId": "setAdminFeaturedProperty",
+        "summary": "setAdminFeaturedProperty",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versioned result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PropertyData"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Target not found or outside access scope"
+          },
+          "409": {
+            "description": "Stale version or assigned role"
+          }
+        },
+        "parameters": [
+          {
+            "name": "propertyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "featured": {
+                    "type": "boolean"
+                  },
+                  "order": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "version",
+                  "featured",
+                  "order",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "description": "Requires admin:properties.manage. Atomically updates the featured flag and order with an audit record. Only published, active and unexpired properties appear publicly."
+      }
+    },
+    "/api/v1/admin/providers/organization-photos": {
+      "post": {
+        "operationId": "uploadAdminOrganizationPhoto",
+        "summary": "Upload a scanned company image (10 MiB maximum)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Scanned portrait stored; save the team member to attach it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsTeamPhotoSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          },
+          "503": {
+            "description": "Storage or scanner unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "description": "Requires admin:providers.visibility.manage to upload, admin:providers.view to preview."
+      }
+    },
+    "/api/v1/admin/providers/organization-photos/{assetId}": {
+      "get": {
+        "operationId": "previewAdminOrganizationPhoto",
+        "summary": "Read a scanned company image",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        },
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "description": "Requires admin:providers.visibility.manage to upload, admin:providers.view to preview."
+      }
+    },
+    "/api/v1/provider/organization-photos": {
+      "post": {
+        "operationId": "uploadProviderOrganizationPhoto",
+        "summary": "Upload a scanned company image (10 MiB maximum)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Scanned portrait stored; save the team member to attach it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CmsTeamPhotoSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          },
+          "503": {
+            "description": "Storage or scanner unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "description": "Requires an approved developer account; private preview is limited to its own uploaded assets."
+      }
+    },
+    "/api/v1/provider/organization-photos/{assetId}": {
+      "get": {
+        "operationId": "previewProviderOrganizationPhoto",
+        "summary": "Read a scanned company image",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        },
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "description": "Requires an approved developer account; private preview is limited to its own uploaded assets."
+      }
+    },
+    "/api/v1/public/organization-photos/{assetId}": {
+      "get": {
+        "operationId": "downloadPublicOrganizationPhoto",
+        "summary": "Read a scanned company image",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Scanned image; no-store",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "description": "Image not publicly available"
+          }
+        },
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          }
+        ],
+        "description": "Available only while attached to an approved directory profile."
       }
     }
   },
@@ -21471,6 +22202,14 @@
                 "maxLength": 500
               }
             }
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "featuredOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
           }
         }
       },
@@ -31670,6 +32409,134 @@
             "const": "archived"
           }
         }
+      },
+      "OrganizationDirectoryProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 5000
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 5000
+              }
+            },
+            "additionalProperties": false
+          },
+          "imageUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "inactive"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "imageUrl",
+          "status",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "OrganizationDirectoryPatch": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "maxLength": 5000
+              },
+              "en": {
+                "type": "string",
+                "maxLength": 5000
+              }
+            },
+            "additionalProperties": false
+          },
+          "imageUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "inactive"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "version",
+          "reason"
+        ],
+        "additionalProperties": false
       }
     }
   }

@@ -14,10 +14,12 @@ import { RbacServiceError, type RbacService } from './service.js';
 export const RBAC_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/roles', operationId: 'listAdminRoles' },
   { method: 'POST', path: '/api/v1/admin/roles', operationId: 'createAdminRole' },
-  { method: 'PATCH', path: '/api/v1/admin/roles/:roleId', operationId: 'updateAdminRole' }
+  { method: 'PATCH', path: '/api/v1/admin/roles/:roleId', operationId: 'updateAdminRole' },
+  { method: 'DELETE', path: '/api/v1/admin/roles/:roleId', operationId: 'deleteAdminRole' }
 ] as const;
 
 export interface RbacRouterDependencies {
+  deleteRole?: ReturnType<typeof import('./deletion.js').createRoleDeleter>;
   service: RbacService;
   accessTokens: AccessTokenService;
 }
@@ -123,5 +125,11 @@ export function createRbacRouter(dependencies: RbacRouterDependencies): Router {
     }
   });
 
+  router.delete('/admin/roles/:roleId', async (request, response) => {
+    try {
+      if (!dependencies.deleteRole) throw new ApiContractError('RBAC_FORBIDDEN', 'errors.forbidden', 403);
+      response.json(toSuccessResponse(await dependencies.deleteRole(principal(response).userId, String(request.params.roleId), request.body, mutationContext(request)), requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
   return router;
 }

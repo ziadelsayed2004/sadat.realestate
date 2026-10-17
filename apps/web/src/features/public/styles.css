@@ -2291,7 +2291,7 @@
 }
 
 .public-homepage__category-rail {
-  display: flex !important;
+  display: flex;
   gap: 0.75rem;
   inline-size: 100%;
   padding: 0.5rem 0.25rem 0.875rem;
@@ -2570,3 +2570,17 @@
 .public-homepage__summary-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 125px), 1fr)); gap: 16px; width: 100%; }
 .public-homepage__summary-item { min-inline-size: 0; padding-inline: 8px; container-type: inline-size; }
 .public-homepage__summary-item strong { font-size: clamp(1.25rem, 23cqi, 3rem); line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+.public-homepage__request-success { position: fixed; z-index: 90; inset-block-start: 96px; inset-inline: max(16px, calc((100% - 680px) / 2)); padding: 18px; border: 1px solid #bdd7c6; border-radius: 16px; background: #effbf2; color: #154d36; box-shadow: 0 8px 24px #10261c20; }
+.public-homepage__request-success a { display: inline-block; margin-inline-start: 12px; font-weight: 700; }
+@media (max-width: 767px) {
+  .public-homepage__hero-heading { padding: 18px 16px; gap: 8px; }
+  .public-homepage__hero h1 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); line-height: 1.35; }
+  .public-homepage__hero-body { font-size: .95rem; line-height: 1.7; }
+  .public-homepage__hero .public-homepage__hero-media > img { aspect-ratio: 16 / 8; object-fit: cover; }
+  .public-homepage__hero--advertisement .public-homepage__hero-media > img { aspect-ratio: auto; object-fit: contain; }
+  .public-homepage__category-rail { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 10px; }
+  .public-homepage__category-rail .public-homepage__category-card { min-inline-size: 0; inline-size: 100%; padding: 12px 6px; }
+  .public-homepage__category-rail .public-homepage__category-image { max-inline-size: 56px; block-size: 52px; object-fit: contain; }
+}
+.public-homepage__category-rail { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; overflow: visible; }
+.public-homepage__category-rail .public-homepage__category-card { min-inline-size: 0; inline-size: 100%; }

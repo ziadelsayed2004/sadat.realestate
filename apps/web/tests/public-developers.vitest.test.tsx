@@ -183,17 +183,12 @@ describe('public developer directory and profiles', () => {
   });
 });
 
-it('keeps providers browsing the company profile and links their inquiry to their existing account', async () => {
-  const id = 'f'.repeat(24);
-  const submitContact = vi.fn(async payload => requestDataSchema.parse({ id, type: 'contact', source: 'provider', creatorId: 'a'.repeat(24), status: 'new', payload, version: 0, availableActions: ['cancel'], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }));
-  const result = renderWithLocale(<PublicAuthRoleContext.Provider value="provider"><PublicDeveloperProfile locale="en" initialData={profileData} actions={{ submitContact, submitViewing: vi.fn() }} /></PublicAuthRoleContext.Provider>, { locale: 'en' });
-  const form = result.container.querySelector('form.public-developer-profile__inquiry')!;
-  fireEvent.change(form.querySelector('[name=name]')!, { target: { value: 'Example Provider' } });
-  fireEvent.change(form.querySelector('[name=phone]')!, { target: { value: '01012345678' } });
-  fireEvent.change(form.querySelector('[name=message]')!, { target: { value: 'Project inquiry' } });
-  fireEvent.submit(form);
-  expect(await screen.findByRole('link', { name: 'Track inquiry' })).toHaveAttribute('href', `/provider/customer-requests?search=${id}&lang=en`);
-  expect(form.querySelector('[name=name]')).toHaveValue('Example Provider');
+it.each(['provider', 'admin'] as const)('keeps %s browsing the company profile without seeker inquiry controls', role => {
+  const submitContact = vi.fn();
+  const result = renderWithLocale(<PublicAuthRoleContext.Provider value={role}><PublicDeveloperProfile locale="en" initialData={profileData} actions={{ submitContact, submitViewing: vi.fn() }} /></PublicAuthRoleContext.Provider>, { locale: 'en' });
+  expect(result.container.querySelector('form.public-developer-profile__inquiry')).toBeNull();
+  expect(result.container.querySelector('a[href="#developer-contact"]')).toBeNull();
+  expect(submitContact).not.toHaveBeenCalled();
   expect(result.container.querySelector('[data-developer-profile-state]')).toHaveAttribute('data-developer-profile-state', 'success');
 });
 

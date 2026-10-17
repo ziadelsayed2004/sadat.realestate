@@ -1,8 +1,8 @@
 import type { ProviderPropertyLocationOption } from './data.ts';
 
 function words(value: string): string[] {
-  return value.normalize('NFKD').replace(/\p{M}|ـ/gu, '').replace(/[أإآٱ]/gu, 'ا').replace(/ى/gu, 'ي').replace(/ة/gu, 'ه')
-    .toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean).map(word => word.startsWith('ال') ? word.slice(2) : word);
+  return value.normalize('NFKD').replace(/[٠-٩۰-۹]/g, digit => String(digit.charCodeAt(0) - (digit >= '۰' ? 1776 : 1632))).replace(/\p{M}|ـ/gu, '').replace(/[أإآٱ]/gu, 'ا').replace(/ى/gu, 'ي').replace(/ة/gu, 'ه')
+    .toLowerCase().replace(/(\p{L})(\p{N})|(\p{N})(\p{L})/gu, '$1$3 $2$4').split(/[^\p{L}\p{N}]+/u).filter(Boolean).map(word => word.startsWith('ال') ? word.slice(2) : word).filter(Boolean);
 }
 
 // Bound spelling suggestions, including swapped adjacent letters. Exact results

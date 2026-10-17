@@ -57,7 +57,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     categoryLabel: 'تصنيفات المقالات',
     resultCount: count => `${count} مقالات منشورة`,
     openArticle: 'اقرأ المقال',
-    readTime: minutes => `${minutes} دقائق`,
+    readTime: minutes => `قراءة ${minutes} ${minutes === 1 ? 'دقيقة' : minutes <= 10 ? 'دقائق' : 'دقيقة'}`,
     readTimeLabel: 'مدة القراءة',
     publishedAt: 'تاريخ النشر',
     authorLabel: '\u0627\u0644\u0643\u0627\u062a\u0628',

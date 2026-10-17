@@ -155,7 +155,7 @@ describe('Admin request administration contracts and views', () => {
     await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'needs_information', reason: 'More information needed', customerMessage: 'Which area do you prefer?', expectedVersion: 2 }, undefined));
   });
 
-  it.each(['ar', 'en'] as const)('accepts a reviewed contact request with a reason and updates its displayed state in %s', async locale => {
+  it.each(['ar', 'en'] as const)('accepts a reviewed contact request directly with an audit reason and current version in %s', async locale => {
     window.history.replaceState({}, '', `/admin/contact-requests?lang=${locale}`);
     const reviewed = requestDataSchema.parse({ ...request, status: 'under_review', version: 3, availableActions: ['contact', 'start_progress'] });
     const accepted = requestDataSchema.parse({ ...reviewed, status: 'in_progress', version: 4, availableActions: ['resolve', 'needs_information', 'cancel'] });
@@ -164,12 +164,7 @@ describe('Admin request administration contracts and views', () => {
     renderWithLocale(<AdminRequests locale={locale} session={session} initialRequests={{ ...requestList, items: [reviewed] }} transition={transition} />, { locale });
     fireEvent.click(screen.getByRole('button', { name: copy.view }));
     fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'قبول طلب التواصل وبدء المتابعة' : 'Accept contact request and start follow-up' }));
-    expect(transition).not.toHaveBeenCalled();
-    expect(screen.getByLabelText(copy.transitionReason)).toHaveFocus();
-    expect(screen.getByLabelText(copy.transition)).toHaveValue('start_progress');
-    fireEvent.change(screen.getByLabelText(copy.transitionReason), { target: { value: 'Accept customer follow-up' } });
-    fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'قبول الطلب وبدء المتابعة' : 'Accept and start follow-up' }));
-    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_progress', expectedVersion: 3, reason: 'Accept customer follow-up' }, undefined));
+    await waitFor(() => expect(transition).toHaveBeenCalledWith(request.id, { transition: 'start_progress', expectedVersion: 3, reason: 'Accepted contact request for follow-up' }, undefined));
     await waitFor(() => expect(screen.queryByRole('button', { name: locale === 'ar' ? 'قبول طلب التواصل وبدء المتابعة' : 'Accept contact request and start follow-up' })).not.toBeInTheDocument());
     expect(screen.getByTestId('admin-request-detail')).toHaveTextContent(copy.statusLabel.in_progress);
   });

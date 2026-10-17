@@ -8,6 +8,7 @@ import type { AuditWriter } from '../audit/writer.js';
 import type { RbacService } from '../rbac/service.js';
 import type { StorageAdapter, MalwareScannerAdapter } from '../uploads/adapters.js';
 import { ApiContractError } from '../contracts/error-boundary.js';
+import { visiblePublicOrganizations } from '../public/identity.js';
 
 const maxBytes = 10 * 1024 * 1024;
 const invalid = () => new ApiContractError('TEAM_PHOTO_INVALID', 'errors.validation', 400);
@@ -20,14 +21,20 @@ export function createTeamPhotos(dependencies: {
   audit: Pick<AuditWriter, 'record'>;
   storage: StorageAdapter;
   scanner: MalwareScannerAdapter;
-  kind?: 'article' | 'taxonomy';
+  kind?: 'article' | 'taxonomy' | 'organization';
 }) {
   const { connection, authorization, audit, storage, scanner } = dependencies;
+  const organization = dependencies.kind === 'organization';
   const article = dependencies.kind === 'article';
   const taxonomy = dependencies.kind === 'taxonomy';
-  const photos = connection.collection(taxonomy ? 'taxonomy_photos' : article ? 'cms_article_photos' : 'cms_team_photos');
+  const photos = connection.collection(organization ? 'organization_photos' : taxonomy ? 'taxonomy_photos' : article ? 'cms_article_photos' : 'cms_team_photos');
   async function authorize(claims: AccessTokenClaims, permission: RbacPermission) {
-    if (claims.role !== 'admin' || claims.status !== 'verified' || !await authorization.authorize(claims.sub, permission)) {
+    if (organization && claims?.role === 'provider' && claims.status === 'verified') {
+      const key = new Types.ObjectId(claims.sub);
+      const user = await connection.collection('users').findOne({ _id: key, roleType: 'provider', status: 'verified', deletedAt: null });
+      if (user && await connection.collection('provider_applications').findOne({ userId: key, providerType: 'developer_company', status: 'approved' })) return;
+    }
+    if (claims?.role !== 'admin' || claims.status !== 'verified' || !await authorization.authorize(claims.sub, permission)) {
       throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
     }
   }
@@ -40,7 +47,7 @@ export function createTeamPhotos(dependencies: {
   return {
     async validateAttach(id: string) { await find(id); },
     async upload(claims: AccessTokenClaims, source: AsyncIterable<Uint8Array>, mime: string, context: { requestId: string; traceId: string }) {
-      await authorize(claims, taxonomy ? 'admin:taxonomy.manage' : 'admin:content.manage');
+      await authorize(claims, organization ? 'admin:providers.visibility.manage' : taxonomy ? 'admin:taxonomy.manage' : 'admin:content.manage');
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(mime)) throw invalid();
       if (!await storage.isReady() || !await scanner.isReady()) throw unavailable();
       const chunks: Buffer[] = []; let bytes = 0;
@@ -61,23 +68,28 @@ export function createTeamPhotos(dependencies: {
       } catch { throw invalid(); }
       if (image.length > maxBytes) throw invalid();
       const id = new Types.ObjectId(); const at = new Date();
-      const photo = cmsTeamPhotoSchema.parse({ id: id.toHexString(), imageUrl: `/api/v1/public/${taxonomy ? 'taxonomy' : article ? 'article' : 'team'}-photos/${id.toHexString()}` });
+      const photo = cmsTeamPhotoSchema.parse({ id: id.toHexString(), imageUrl: `/api/v1/public/${organization ? 'organization' : taxonomy ? 'taxonomy' : article ? 'article' : 'team'}-photos/${id.toHexString()}` });
       const storageKey = `quarantine/${randomUUID().replaceAll('-', '')}`;
       const session = await connection.startSession();
       try {
         await storage.putPrivateQuarantine(storageKey, Readable.from(image));
         await session.withTransaction(async () => {
           await photos.insertOne({ _id: id, storageKey, mime: 'image/webp', createdBy: new Types.ObjectId(claims.sub), createdAt: at }, { session });
-          await audit.record({ actorType: 'admin', actorId: claims.sub, action: taxonomy ? 'taxonomy.photo.upload' : article ? 'article.photo.upload' : 'cms.team.photo.upload', targetType: taxonomy ? 'taxonomy_photo' : article ? 'article_photo' : 'cms_team_photo', targetId: photo.id, reason: taxonomy ? 'Upload scanned taxonomy image' : article ? 'Upload scanned article image' : 'Upload scanned team portrait', before: {}, after: { mime: 'image/webp', bytes: image.length }, ...context, occurredAt: at }, session);
+          await audit.record({ actorType: claims.role === 'provider' ? 'provider' : 'admin', actorId: claims.sub, action: organization ? 'organization.photo.upload' : taxonomy ? 'taxonomy.photo.upload' : article ? 'article.photo.upload' : 'cms.team.photo.upload', targetType: organization ? 'organization_photo' : taxonomy ? 'taxonomy_photo' : article ? 'article_photo' : 'cms_team_photo', targetId: photo.id, reason: organization ? 'Upload scanned company image' : taxonomy ? 'Upload scanned taxonomy image' : article ? 'Upload scanned article image' : 'Upload scanned team portrait', before: {}, after: { mime: 'image/webp', bytes: image.length }, ...context, occurredAt: at }, session);
         });
       } catch (error) { await storage.deletePrivate(storageKey); throw error; }
       finally { await session.endSession(); }
       return photo;
     },
     async open(id: string, claims?: AccessTokenClaims) {
-      if (claims) await authorize(claims, taxonomy ? 'admin:taxonomy.view' : 'admin:content.view');
+      if (claims) await authorize(claims, organization ? 'admin:providers.view' : taxonomy ? 'admin:taxonomy.view' : 'admin:content.view');
       const photo = await find(id);
-      if (!claims && !await connection.collection(taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(taxonomy
+      if (claims?.role === 'provider' && String(photo.createdBy) !== claims.sub) throw missing();
+      if (organization && !claims) {
+        const company = await connection.collection('organizations').findOne({ imageUrl: `/api/v1/public/organization-photos/${id}`, status: 'approved' });
+        if (!company || (await visiblePublicOrganizations(connection, [company], 'directory')).length === 0) throw missing();
+      }
+      if (!claims && !await connection.collection(organization ? 'organizations' : taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(organization ? { imageUrl: `/api/v1/public/organization-photos/${id}`, status: 'approved' } : taxonomy
         ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }
         : article ? { status: 'published', $or: [{ coverAssetId: photo._id }, { galleryAssetIds: photo._id }] }
         : { photoAssetId: photo._id, active: true, status: 'published' })) throw missing();

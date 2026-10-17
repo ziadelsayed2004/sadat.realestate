@@ -104,6 +104,8 @@ function expiryAt(publishedAt: Date, settings: PropertyRuntimeSettings): Date | 
 function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'): PropertyData {
   const paymentPlans = compatiblePaymentPlans(record);
   return propertyDataSchema.parse({
+    ...(record.featured === undefined ? {} : { featured: record.featured }),
+    ...(record.featuredOrder === undefined ? {} : { featuredOrder: record.featuredOrder }),
     id: record.id,
     ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     kind: record.kind,

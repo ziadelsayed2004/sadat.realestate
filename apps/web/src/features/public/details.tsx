@@ -653,15 +653,15 @@ function RequestPanel({
 
   return (
     <aside className="public-property-details__actions" aria-labelledby="public-property-details-contact-title">
-      {actions.saveProperty ? <>
+      {actions.saveProperty && (role === undefined || role === 'seeker') ? <>
         <Button type="button" variant="secondary" fullWidth loading={saveState === 'submitting'} disabled={saveState === 'success'} onClick={() => { void saveProperty(); }}>{saveState === 'success' ? copy.propertySaved : copy.saveProperty}</Button>
         {saveState === 'success' ? <a href={`/seeker/saved?lang=${locale}`}>{copy.viewSavedProperties}</a> : null}
         {saveState === 'permission' ? <p role="alert">{copy.savePermission} <a href={loginUrl(url)}>{copy.actionPermissionLink}</a></p> : null}
         {saveState === 'forbidden' ? <p role="alert">{copy.actionForbiddenBody}</p> : null}
         {saveState === 'error' ? <p role="alert">{copy.saveError}</p> : null}
       </> : null}
-      <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { if (viewingState !== 'success') setViewingState('idle'); setViewingValidation(false); setViewingOpen(true); }}>{copy.requestViewing}</Button>
-      <section className="public-property-details__card public-property-details__contact">
+      {role === undefined || role === 'seeker' ? <>      <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { if (viewingState !== 'success') setViewingState('idle'); setViewingValidation(false); setViewingOpen(true); }}>{copy.requestViewing}</Button></> : null}
+      {role === undefined || role === 'seeker' ? <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
           {data.source.organizationId ? <CustomSelect name="contactChannel" value={contactChannel} onChange={value => setContactChannel(value as 'platform' | 'provider')} ariaLabel={locale === 'ar' ? 'جهة التواصل' : 'Send inquiry to'} options={[{ value: 'platform', label: locale === 'ar' ? 'إدارة عقارات السادات' : 'Sadat Real Estate team' }, { value: 'provider', label: localizedText(data.source.name, locale) ?? (locale === 'ar' ? 'الشركة مباشرة' : 'Company directly') }]} /> : null}
@@ -682,14 +682,14 @@ function RequestPanel({
             onChange={event => setMessage(event.target.value)}
           />
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
-          {role !== 'provider' ? <p id="public-property-contact-account-help">{copy.actionPermissionBody}</p> : null}
-          <Button type="submit" fullWidth className="public-property-details__contact-submit" aria-describedby={role !== 'provider' ? 'public-property-contact-account-help' : undefined} startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
-          {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span><a href={`${role === 'provider' ? `/provider/customer-requests?search=${contactId}&` : `/seeker/requests/${contactId}?`}lang=${locale}`}>{locale === 'ar' ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
+          <p id="public-property-contact-account-help">{copy.actionPermissionBody}</p>
+          <Button type="submit" fullWidth className="public-property-details__contact-submit" aria-describedby="public-property-contact-account-help" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
+          {contactState === 'success' ? <p className="public-property-details__contact-success" role="status" aria-live="polite"><strong>{copy.actionSuccessTitle}</strong><span>{copy.actionSuccessBody}</span><a href={`/seeker/requests/${contactId}?lang=${locale}`}>{locale === 'ar' ? 'متابعة الطلب' : 'Track inquiry'}</a></p> : null}
           {contactState === 'permission' || contactState === 'forbidden' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} message={contactError} /> : null}
         </form>
 
         {platformContact.whatsappNumber ? <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText, platformContact.whatsappNumber)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><WhatsAppIcon /></span><span>{locale === 'ar' ? 'تواصل مع المنصة عبر واتساب' : 'Contact the platform on WhatsApp'}</span></a> : null}
-      </section>
+      </section> : <section className="public-property-details__card"><h2 id="public-property-details-contact-title">{locale === 'ar' ? 'إجراءات الباحث' : 'Seeker actions'}</h2><p>{locale === 'ar' ? 'حفظ العقار وطلب المعاينة والاستفسار متاحة لحساب باحث عن عقار.' : 'Saving and inquiries are available to property seekers.'}</p></section>}
       <Modal
         className="public-property-details__viewing-dialog"
         open={viewingOpen}

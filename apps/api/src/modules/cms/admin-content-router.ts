@@ -8,11 +8,17 @@ import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundar
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
+import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { CmsAdminContentServiceError, type CmsAdminContentService } from './admin-content-service.js';
 import type { TeamPhotos } from './team-photos.js';
 import type { TeamCategories } from './team-categories.js';
 
 export const CMS_ADMIN_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/admin/providers/organization-photos', operationId: 'uploadAdminOrganizationPhoto' },
+  { method: 'GET', path: '/api/v1/admin/providers/organization-photos/:assetId', operationId: 'previewAdminOrganizationPhoto' },
+  { method: 'POST', path: '/api/v1/provider/organization-photos', operationId: 'uploadProviderOrganizationPhoto' },
+  { method: 'GET', path: '/api/v1/provider/organization-photos/:assetId', operationId: 'previewProviderOrganizationPhoto' },
+  { method: 'GET', path: '/api/v1/public/organization-photos/:assetId', operationId: 'downloadPublicOrganizationPhoto' },
   { method: 'GET', path: '/api/v1/admin/content/:namespace', operationId: 'getAdminCmsContent' },
   { method: 'PUT', path: '/api/v1/admin/content/:namespace', operationId: 'putAdminCmsContent' },
   { method: 'DELETE', path: '/api/v1/admin/content/team', operationId: 'deleteAdminCmsTeamMember' },
@@ -27,6 +33,7 @@ export interface CmsAdminContentRouterDependencies {
   service: CmsAdminContentService;
   accessTokens: AccessTokenService;
   photos?: TeamPhotos;
+  organizationPhotos?: TeamPhotos;
   categories?: TeamCategories;
 }
 
@@ -96,6 +103,40 @@ export function createCmsAdminContentRouter(dependencies: CmsAdminContentRouterD
       } catch (error) { sendError(request, response, error); }
     });
     for (const path of ['/admin/content/team/photos/:assetId', '/public/team-photos/:assetId']) {
+      router.get(path, async (request, response) => {
+        try {
+          const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined);
+          response.setHeader('Cache-Control', 'no-store');
+          response.setHeader('Content-Type', photo.mime);
+          response.setHeader('X-Content-Type-Options', 'nosniff');
+          photo.stream.on('error', () => response.destroy());
+          photo.stream.pipe(response);
+        } catch (error) { sendError(request, response, error); }
+      });
+    }
+  }
+  if (dependencies.organizationPhotos) {
+    const photos = dependencies.organizationPhotos;
+    router.use('/admin/providers/organization-photos', createAdminRbacAuthMiddleware(dependencies.accessTokens));
+    router.use('/provider/organization-photos', createProviderAuthMiddleware(dependencies.accessTokens));
+    router.post('/provider/organization-photos', async (request, response) => {
+      try { response.status(201).json(toSuccessResponse(await photos.upload(response.locals.providerClaims as AccessTokenClaims, request, request.get('content-type') ?? '', context(request)), requestId(request))); }
+      catch (error) { sendError(request, response, error); }
+    });
+    router.get('/provider/organization-photos/:assetId', async (request, response) => {
+      try {
+        const photo = await photos.open(String(request.params.assetId), response.locals.providerClaims as AccessTokenClaims);
+        response.setHeader('Cache-Control', 'no-store'); response.setHeader('Content-Type', photo.mime); response.setHeader('X-Content-Type-Options', 'nosniff');
+        photo.stream.on('error', () => response.destroy()); photo.stream.pipe(response);
+      } catch (error) { sendError(request, response, error); }
+    });
+    router.post('/admin/providers/organization-photos', async (request, response) => {
+      try {
+        const photo = await photos.upload(response.locals.adminRbacClaims as AccessTokenClaims, request, request.get('content-type') ?? '', context(request));
+        response.status(201).json(toSuccessResponse(photo, requestId(request)));
+      } catch (error) { sendError(request, response, error); }
+    });
+    for (const path of ['/admin/providers/organization-photos/:assetId', '/public/organization-photos/:assetId']) {
       router.get(path, async (request, response) => {
         try {
           const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined);

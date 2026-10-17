@@ -422,16 +422,17 @@ export function createMongooseAccountRepository(
 
     async findProvider(providerId) {
       if (!validObjectId(providerId)) return undefined;
-      const application = await ProviderApplication.findById(objectId(providerId))
+        let application = await ProviderApplication.findById(objectId(providerId))
         .lean<LeanProviderApplication | null>()
         .exec();
+        if (!application) application = await ProviderApplication.findOne({ userId: objectId(providerId) }).lean<LeanProviderApplication | null>().exec();
       if (!application) return undefined;
       const user = await User.findOne({ _id: application.userId, roleType: 'provider', deletedAt: null })
         .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
         .lean<LeanUser | null>()
         .exec();
       if (!user) return undefined;
-      return providerData(application, user, await providerDocuments(providerId));
+        return providerData(application, user, await providerDocuments(application._id.toHexString()));
     },
 
     async findAccount(userId) {

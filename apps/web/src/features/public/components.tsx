@@ -1131,6 +1131,14 @@ function HomepageContent({
   readonly data: PublicHomepageData;
 }) {
   const sections = ordered(data.sections);
+  const [requestSent, setRequestSent] = useState(false);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('notice') !== 'ad-request-sent') return;
+    setRequestSent(true);
+    url.searchParams.delete('notice');
+    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  }, []);
   const sectionText = (key: string, field: 'title' | 'body') => localizedText(sections.find(item => item.key === key)?.[field], locale);
   const sectionCopy = { ...copy, propertiesTitle: sectionText('featured_properties', 'title') ?? copy.propertiesTitle, articlesTitle: sectionText('articles', 'title') ?? copy.articlesTitle, communityTitle: sectionText('community', 'title') ?? copy.communityTitle, tips: sectionText('tips', 'title') ?? copy.tips };
   const content = withCanonicalHomepageContent(data.content);
@@ -1141,6 +1149,7 @@ function HomepageContent({
       <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} locations={locations} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       <HomepageSummary locale={locale} metrics={data.metrics} />
+      {requestSent ? <div className="public-homepage__request-success" role="status">{locale === 'ar' ? 'تم إرسال طلبك بنجاح. ستراجعه الإدارة وتتواصل معك.' : 'Your request was sent successfully. Administration will review it and contact you.'}<a href={`/provider/ads?lang=${locale}`}>{locale === 'ar' ? 'متابعة طلباتي' : 'Track my requests'}</a><button type="button" onClick={() => setRequestSent(false)} aria-label={locale === 'ar' ? 'إغلاق رسالة النجاح' : 'Dismiss success message'}>×</button></div> : null}
       <HomepageCategoryRail locale={locale} copy={copy} categories={categories} totalPropertyCount={data.totalPropertyCount} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
@@ -1208,17 +1217,17 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
     if (view !== 'success') return;
     const controller = new AbortController();
     let pending = false;
-    const refreshBanners = async () => {
+    const refreshHomepage = async () => {
       if (pending || document.visibilityState === 'hidden') return;
       pending = true;
       try {
         const next = await load(controller.signal);
-        if (!controller.signal.aborted) setData(current => current ? { ...current, banners: next.banners } : current);
+        if (!controller.signal.aborted) setData(next);
       } catch { /* Keep the current page and search entries on a temporary failure. */ }
       finally { pending = false; }
     };
-    const timer = window.setInterval(() => { void refreshBanners(); }, 30_000);
-    const onVisible = () => { void refreshBanners(); };
+    const timer = window.setInterval(() => { void refreshHomepage(); }, 30_000);
+    const onVisible = () => { void refreshHomepage(); };
     window.addEventListener('focus', onVisible);
     document.addEventListener('visibilitychange', onVisible);
     return () => {

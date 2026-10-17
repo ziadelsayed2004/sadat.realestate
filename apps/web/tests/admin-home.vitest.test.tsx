@@ -16,6 +16,16 @@ import {
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { getAdminHomeCopy } from '../src/features/admin_home/copy.ts';
 import { BannerDisplayControls } from '../src/features/admin_home/banner-controls.tsx';
+import { bannerDisplayStatus } from '../src/features/admin_home/banner-list-controls.tsx';
+
+it('shows the actual banner window at start and end even when its stored state remains scheduled', () => {
+  const window = { status: 'scheduled' as const, startAt: '2026-10-17T19:00:00Z', endAt: '2026-10-18T18:00:00Z' };
+  expect(bannerDisplayStatus(window, Date.parse('2026-10-17T18:59:59Z'))).toBe('scheduled');
+  expect(bannerDisplayStatus(window, Date.parse(window.startAt))).toBe('active');
+  expect(bannerDisplayStatus(window, Date.parse(window.endAt))).toBe('ended');
+  expect(bannerDisplayStatus({ ...window, status: 'draft' }, Date.parse(window.startAt))).toBe('draft');
+  expect(bannerDisplayStatus({ ...window, status: 'archived' }, Date.parse(window.startAt))).toBe('archived');
+});
 
 const adminId = 'cccccccccccccccccccccccc';
 const bannerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';

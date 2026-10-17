@@ -1,6 +1,12 @@
 import { AD_BANNER_STATUSES, type AdBanner, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { getAdminHomeCopy } from './copy.ts';
 
+export function bannerDisplayStatus(banner: Pick<AdBanner, 'status' | 'startAt' | 'endAt'>, now = Date.now()): AdBanner['status'] {
+  if (banner.status !== 'active' && banner.status !== 'scheduled') return banner.status;
+  if (Date.parse(banner.endAt) <= now) return 'ended';
+  return Date.parse(banner.startAt) > now ? 'scheduled' : 'active';
+}
+
 export function bannerListStatus(status: string, locale: SupportedLocale): string {
   return status === 'draft' ? locale === 'ar' ? 'مسودة / موقوف' : 'Draft / stopped' : getAdminHomeCopy(locale).statuses[status] ?? status;
 }

@@ -13,11 +13,16 @@ import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundar
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
+import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { AccountServiceError, type AccountService } from './service.js';
 import type { createAccountCommunicator } from './communication.js';
 import type { createAccountDeleter } from './deletion.js';
 
 export const ACCOUNT_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/admin/providers/:providerId/organization', operationId: 'getAdminProviderOrganization' },
+  { method: 'PATCH', path: '/api/v1/admin/providers/:providerId/organization', operationId: 'updateAdminProviderOrganization' },
+  { method: 'GET', path: '/api/v1/provider/organization', operationId: 'getProviderOrganization' },
+  { method: 'PATCH', path: '/api/v1/provider/organization', operationId: 'updateProviderOrganization' },
   { method: 'GET', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'getProviderIdentitySubscription' },
   { method: 'PUT', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'putProviderIdentitySubscription' },
   { method: 'DELETE', path: '/api/v1/admin/users/:userId', operationId: 'deleteAdminUser' },
@@ -55,6 +60,7 @@ export const ACCOUNT_ROUTE_DEFINITIONS = [
 ] as const;
 
 export interface AccountRouterDependencies {
+  organization?: ReturnType<typeof import('./organization-management.js').createOrganizationManager>;
   identitySubscription?: ReturnType<typeof createIdentitySubscriptionService>;
   deleteUser?: ReturnType<typeof createAccountDeleter>;
   communicate?: ReturnType<typeof createAccountCommunicator>;
@@ -131,6 +137,14 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
   const authenticate = createAdminRbacAuthMiddleware(dependencies.accessTokens);
   router.use('/admin/users', authenticate);
   router.use('/admin/providers', authenticate);
+  router.use('/provider/organization', createProviderAuthMiddleware(dependencies.accessTokens));
+  for (const method of ['get', 'patch'] as const) router[method]('/provider/organization', async (request, response) => {
+    try {
+      if (!dependencies.organization) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
+      const claims = response.locals.providerClaims as AccessTokenClaims;
+      response.json(toSuccessResponse(await dependencies.organization(claims.sub, claims.sub, method === 'patch' ? request.body : undefined, requestContext(request), true), requestContext(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
 
   if (dependencies.identitySubscription) {
     const subscription = dependencies.identitySubscription;
@@ -250,5 +264,11 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
     } catch (error) { sendError(request, response, error); }
   });
 
+  for (const method of ['get', 'patch'] as const) router[method]('/admin/providers/:providerId/organization', async (request, response) => {
+    try {
+      if (!dependencies.organization) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
+      response.json(toSuccessResponse(await dependencies.organization(principal(response).userId, String(request.params.providerId), method === 'patch' ? request.body : undefined, requestContext(request)), requestContext(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
   return router;
 }

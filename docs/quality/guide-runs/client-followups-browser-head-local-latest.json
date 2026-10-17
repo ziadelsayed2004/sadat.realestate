@@ -1,0 +1,27 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "real_basic_missing_field_focus_standalone_save",
+    "numeric_arabic_search_existing_area_selectable",
+    "provider_public_property_and_own_company_hide_seeker_actions_and_api_rejects_targeted_inquiry",
+    "developer_own_profile_upload_preview_save_and_public_image",
+    "admin_company_edit_remove_restore_restricts_public_photo",
+    "admin_feature_property_persists_and_sorts_home_first",
+    "real_admin_role_delete",
+    "new_active_property_category_visible_on_home_without_view_all"
+  ],
+  "http": [
+    {
+      "url": "/seeker/contact-requests",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "url": "/public/home",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "cleanup": true
+}

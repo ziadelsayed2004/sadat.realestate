@@ -20,7 +20,8 @@ export function createAccountDeleter(connection: Connection, authorization: Acco
       const stamp = new Date();
       const versionFilter = request.version === 0 ? { $or: [{ version: 0 }, { version: { $exists: false } }] } : { version: request.version };
       const updated = await connection.collection('users').updateOne({ _id: id, deletedAt: null, ...versionFilter }, {
-        $set: { status: 'suspended', deletedAt: stamp, deletedBy: new Types.ObjectId(principal.userId), statusChangedAt: stamp, updatedAt: stamp }, $inc: { version: 1 }
+        $set: { status: 'suspended', deletedAt: stamp, deletedBy: new Types.ObjectId(principal.userId), statusChangedAt: stamp, updatedAt: stamp },
+        $unset: { normalizedEmail: 1, normalizedPhone: 1 }, $inc: { version: 1 }
       }, { session });
       if (updated.modifiedCount !== 1) throw new AccountServiceError('ACCOUNT_TRANSITION_CONFLICT');
       await connection.collection('sessions').updateMany({ userId: id, revokedAt: { $exists: false } }, { $set: { revokedAt: stamp, lastUsedAt: stamp } }, { session });

@@ -280,7 +280,7 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     const copy = getAdminAdsCopy(locale);
     expect(within(row).getByRole('button', { name: copy.viewPaymentReview })).toBeEnabled();
     expect(within(row).getByRole('link', { name: proof.adRequestId })).toHaveAttribute('href', `/admin/ads/requests?requestId=${proof.adRequestId}&lang=${locale}`);
-    expect(within(row).getByRole('link', { name: proof.providerId })).toHaveAttribute('href', `/admin/providers/${proof.providerId}?lang=${locale}`);
+    expect(within(row).getByRole('link', { name: locale === 'ar' ? 'فتح حساب المعلن' : 'Open advertiser account' })).toHaveAttribute('href', `/admin/providers/${proof.providerId}?lang=${locale}`);
     fireEvent.click(within(row).getByRole('button', { name: proof.originalFilename }));
     await waitFor(() => expect(file).toHaveBeenCalledWith(proof.id, expect.any(AbortSignal)));
     expect(screen.getByTestId('admin-payment-proof-preview')).toBeInTheDocument();

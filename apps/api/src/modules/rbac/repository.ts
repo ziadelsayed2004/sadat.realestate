@@ -1,4 +1,5 @@
 import { Types, type Connection } from 'mongoose';
+import { ApiContractError } from '../contracts/error-boundary.js';
 import type {
   RbacPermission,
   RbacRoleAccessMode
@@ -285,6 +286,12 @@ export function createMongooseRbacRepository(
     async setAdminRoleAssignment(input) {
       try {
         return await connection.transaction(async (session) => {
+          // Share a write lock with deletion so a role cannot disappear between
+          // validation and assignment. MongoDB retries a conflicting transaction.
+          if (input.roleIds.length) {
+            const locked = await rbacModels.Role.updateMany({ _id: { $in: input.roleIds.map(id => new Types.ObjectId(id)) }, active: true }, { $currentDate: { updatedAt: true } }, { session });
+            if (locked.matchedCount !== input.roleIds.length) throw new ApiContractError('RBAC_ASSIGNMENT_ROLE_INVALID', 'errors.rbac.assignmentRoleInvalid', 409);
+          }
           const adminUserId = new Types.ObjectId(input.adminId);
           const current = await rbacModels.AdminRoleAssignment.findOne({ adminUserId })
             .select({ roleIds: 1, version: 1 })

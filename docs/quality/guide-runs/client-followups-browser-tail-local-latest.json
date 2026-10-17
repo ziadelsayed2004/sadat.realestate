@@ -1,0 +1,39 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "contact_accept_one_click_no_required_assignee_human_staff_picker",
+    "notifications_show_attention_queue_alongside_direct_messages",
+    "stored_scheduled_banner_started_in_past_shows_active",
+    "real_viewing_requested_mobile_image_and_details_do_not_overlap",
+    "mobile_tablet_desktop_homepage_all_categories_visible_no_overflow",
+    "article_reading_time_label_and_visible_publication_date",
+    "provider_customer_request_usage_guide",
+    "provider_ad_request_redirects_home_success_notice"
+  ],
+  "http": [
+    {
+      "url": "/seeker/contact-requests",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/v1/admin/requests/64a1cf211635a43528b187d7/transitions",
+      "status": 200,
+      "body": "{\"data\":{\"id\":\"64a1cf211635a43528b187d7\",\"type\":\"contact\",\"source\":\"seeker\",\"creatorId\":\"6ad3ddbb0be51b1b448a6a1f\",\"seekerId\":\"6ad3ddbb0be51b1b448a6a1f\",\"propertyId\":\"6ad3ddbb0be51b1b448a6a1d\",\"property\":{\"id\":\"6ad3ddbb0be51b1b448a6a1d\",\"slug\":\"oct17qa1792269755799\",\"kind\":\"property\",\"name\":{\"ar\":\"شقة العميل بالمنطقة 22\",\"en\":\"Client property in Area 22\"},\"transactionType\":\"sale\",\"imageUrl\":\"/assets/canonical/public/property-home.png\",\"area\":{\"value\":120,\"unit\":\"sqm\"},\"price\":{\"amount\":1234567,\"currency\":\"EGP\"},\"locationName\":{\"ar\":\"المنطقة 22\",\"en\":\"Area 22\"},\"sourceType\":\"developer_company\"},\"status\":\"in_progress\",\"customerUpdates\":[{\"status\":\"in_progress\",\"createdAt\":\"2026-10-17T20:42:37.479Z\"}],\"payload\":{\"message\":\"Client property inquiry\",\"fullName\":\"Client Seeker\",\"phone\":\"+201001234567\",\"propertyId\":\"6ad3ddbb0be51b1b448a6a1d\"},\"dueAt\":\"2026-10-19T20:42:36.145Z\",\"version\":1,\"availableActions\":[\"resolve\",\"cancel\"],\"capabilities\":{\"assign\":true,\"note\":true},\"createdAt\":\"2026-10-17T20:42:36.145Z\",\"updatedAt\":\"2026-10-17T20:42:37.479Z\"},\"meta\":{\"requestId\":\"a9f1786e-8c82-43d9-afac-d4e7956343eb\"}}"
+    },
+    {
+      "url": "/seeker/search-requests",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "url": "/seeker/viewings",
+      "method": "POST",
+      "status": 201
+    }
+  ],
+  "cleanup": true,
+  "contactId": "64a1cf211635a43528b187d7",
+  "viewingId": "b475a8ec6f97a6fb0dec6a00"
+}

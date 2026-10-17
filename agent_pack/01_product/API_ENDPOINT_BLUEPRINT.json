@@ -2925,5 +2925,137 @@
     "purpose": "Atomically reorder locations with version validation and an audit reason",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/roles/:roleId",
+    "module": "rbac",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "deleteAdminRole",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/providers/:providerId/organization",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "getAdminProviderOrganization",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/providers/:providerId/organization",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "updateAdminProviderOrganization",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/organization",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "getProviderOrganization",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/organization",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "updateProviderOrganization",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/properties/:propertyId/featured",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "setAdminFeaturedProperty",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/providers/organization-photos",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Upload a scanned company image (10 MiB maximum)",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/providers/organization-photos/:assetId",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Read a scanned company image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/organization-photos",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Upload a scanned company image (10 MiB maximum)",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/organization-photos/:assetId",
+    "module": "accounts",
+    "auth": "bearer",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Read a scanned company image",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/organization-photos/:assetId",
+    "module": "accounts",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Read a scanned company image",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

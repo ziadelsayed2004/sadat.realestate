@@ -259,6 +259,8 @@ export const propertyContactStepSchema = draftPatch({
 export const propertyStepSchema = z.union([propertyCoreStepSchema, propertyLocationStepSchema, propertyDetailsStepSchema, propertyPricingStepSchema, propertyFeaturesServicesStepSchema, propertyContactStepSchema]);
 
 export const propertyDataSchema = z.object({
+  featured: z.boolean().optional(),
+  featuredOrder: z.number().int().min(0).max(100000).optional(),
   imageUrl: z.union([z.url().max(2048), z.string().max(2048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   id: propertyObjectIdSchema,
   kind: propertyKindSchema,

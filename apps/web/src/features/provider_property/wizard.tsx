@@ -342,10 +342,10 @@ function LocationFormView({
               <Button type="button" variant="secondary" size="sm" onClick={() => setLocationSearch('')}>{wizard.clearLocationSearch}</Button>
             </div> : null}
             <label htmlFor="provider-property-location-id">{wizard.labels.locationId}</label>
-            {locationsState === 'error' ? <input id="provider-property-location-id" value={form.locationId} placeholder={wizard.placeholders.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} /> : <select id="provider-property-location-id" value={form.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} disabled={locationsState !== 'success'}>
+            <select id="provider-property-location-id" value={form.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} disabled={locationsState !== 'success'}>
               <option value="">{locationsState === 'loading' ? wizard.locationCatalogLoading : wizard.locationSelectPlaceholder}</option>
               {visibleLocations.map(location => <option key={location.id} value={location.id}>{location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug}</option>)}
-            </select>}
+            </select>
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
           <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => { originalMap.current = ''; setForm({ ...form, mapUrl: event.target.value, latitude: '', longitude: '' }); }} type="url" inputMode="url" state={validationError && form.mapUrl.trim() !== '' && !propertyMapUrlSchema.safeParse(form.mapUrl).success ? 'error' : 'default'} error={wizard.mapUrlError} />
@@ -447,7 +447,12 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       return;
     }
     setMutationState('error');
-    setMutationMessage(copy.wizard.mutationError);
+    const details = error instanceof ApiClientError ? error.apiError?.details : undefined;
+    const fields = details?.flatMap(detail => detail.path?.map(String) ?? []) ?? [];
+    const invalid = [...new Set(fields)].filter(field => field in copy.wizard.validationMessages) as BasicValidationField[];
+    setInvalidFields(invalid); setValidationError(invalid.length > 0);
+    setMutationMessage(invalid.length ? invalid.map(field => copy.wizard.validationMessages[field]).join(' ? ') : copy.wizard.mutationError);
+    if (invalid[0]) focusBasicField(invalid[0]);
   };
 
   const onBasicSubmit = async (event: FormEvent<HTMLFormElement>, continueAfter: boolean) => {

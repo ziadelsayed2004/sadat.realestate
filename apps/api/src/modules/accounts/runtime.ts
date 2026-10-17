@@ -1,3 +1,4 @@
+import { createOrganizationManager } from './organization-management.js';
 import { createIdentitySubscriptionService } from '../provider/identity-subscription.js';
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
@@ -29,6 +30,7 @@ export function createAccountRuntime(
     auditWriter
   );
   return {
+    organization: createOrganizationManager(connection, authorization, auditWriter),
     identitySubscription: createIdentitySubscriptionService(connection, authorization, auditWriter),
     deleteUser: createAccountDeleter(connection, authorization, auditWriter),
     communicate: createAccountCommunicator(connection, authorization, auditWriter),

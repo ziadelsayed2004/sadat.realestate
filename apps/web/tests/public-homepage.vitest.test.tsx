@@ -190,7 +190,8 @@ describe('public homepage', () => {
   it('refreshes timed banners without replacing the search form, and retains the page if background refresh fails', async () => {
     vi.useFakeTimers();
     const title = 'A scheduled banner';
-    const load = vi.fn().mockResolvedValueOnce({ ...homepageData, banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title: { en: title }, imageUrl: 'https://example.com/timed.jpg', order: 0 }] })
+    const category = { id: 'f'.repeat(24), slug: 'new-category', name: { en: 'Newly added category' }, propertyCount: 0, order: 100 };
+    const load = vi.fn().mockResolvedValueOnce({ ...homepageData, categories: [category], banners: [{ key: 'banner_aaaaaaaaaaaaaaaaaaaaaaaa', title: { en: title }, imageUrl: 'https://example.com/timed.jpg', order: 0 }] })
       .mockRejectedValueOnce(new Error('Temporary outage'))
       .mockResolvedValueOnce({ ...homepageData, banners: [] });
     const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} load={load} />, { locale: 'en' });
@@ -199,6 +200,7 @@ describe('public homepage', () => {
       const searchForm = result.container.querySelector('.public-homepage__hero form');
       await act(() => vi.advanceTimersByTimeAsync(30_000));
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title);
+      expect(screen.getByRole('link', { name: /Newly added category/ })).toHaveAttribute('href', `/properties?propertyTypeId=${category.id}`);
       expect(result.container.querySelector('.public-homepage__hero form')).toBe(searchForm);
       expect(result.container.querySelector('input[name="transactionType"]')).toHaveValue('rent');
       await act(() => vi.advanceTimersByTimeAsync(30_000));

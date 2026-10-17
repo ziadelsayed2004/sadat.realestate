@@ -29,9 +29,13 @@ export function createCmsAdminContentRuntime(
   const photos = createTeamPhotos({ connection, authorization, audit,
     storage: environment.mode === 'memory' ? createInMemoryStorageAdapter() : environment.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter(),
     scanner: environment.scannerMode === 'clamav' && environment.clamav ? createClamAvMalwareScanner(environment.clamav) : environment.scannerMode === 'deterministic-fake' ? createDeterministicMalwareScanner('clean') : createUnavailableMalwareScanner() });
+  const organizationPhotos = createTeamPhotos({ connection, authorization, audit, kind: 'organization',
+    storage: environment.mode === 'memory' ? createInMemoryStorageAdapter() : environment.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter(),
+    scanner: environment.scannerMode === 'clamav' && environment.clamav ? createClamAvMalwareScanner(environment.clamav) : environment.scannerMode === 'deterministic-fake' ? createDeterministicMalwareScanner('clean') : createUnavailableMalwareScanner() });
   return {
     accessTokens,
     photos,
+    organizationPhotos,
     categories,
     service: createCmsAdminContentService({
       repository: createMongooseCmsAdminContentRepository({

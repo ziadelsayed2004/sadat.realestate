@@ -1,3 +1,4 @@
+import { createFeaturedPropertyManager } from './featured.js';
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
@@ -11,5 +12,5 @@ import { createProviderPropertySourceResolver } from './provider-source.js';
 
 export function createPropertyRuntime(connection: Connection, accessTokens: AccessTokenService, audit: AuditWriter, rbac?: Pick<RbacService, 'authorize'>): PropertyRouterDependencies {
   const models = createPropertyModels(connection);
-  return { accessTokens, service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), resolveSource: createProviderPropertySourceResolver(connection), settings: createMongoosePropertySettingsReader(connection), ...(rbac ? { authorization: rbac } : {}) }) };
+  return { accessTokens, featured: createFeaturedPropertyManager(connection, rbac, audit), service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), resolveSource: createProviderPropertySourceResolver(connection), settings: createMongoosePropertySettingsReader(connection), ...(rbac ? { authorization: rbac } : {}) }) };
 }

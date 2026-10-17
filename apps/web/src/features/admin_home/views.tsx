@@ -3,7 +3,7 @@ import { HomepageSectionPicker, homepagePlaceName } from './homepage-section-pic
 import { AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
 import { BannerPlacementOptions } from './banner-placement-options.tsx';
 import { BannerRotationHint } from './banner-rotation-hint.tsx';
-import { BannerListControls, bannerListStatus } from './banner-list-controls.tsx';
+import { BannerListControls, bannerListStatus, bannerDisplayStatus } from './banner-list-controls.tsx';
 import { ContentPreview } from './content-preview.tsx';
 import { HomepageSectionVisibility, homepageSectionActionLabel, isHomepageSectionVisible } from './homepage-section-visibility.tsx';
 import { useEffect, useMemo, useState, type FormEvent, useRef } from 'react';
@@ -172,14 +172,15 @@ function BannerStatusBadge({ banner, locale }: { banner: AdBanner; locale: Suppo
   const [now, setNow] = useState(Date.now);
   const end = Date.parse(banner.endAt);
   const published = banner.status === 'active' || banner.status === 'scheduled';
-  const expired = published && end <= Date.now();
+  const start = Date.parse(banner.startAt);
+  const status = bannerDisplayStatus(banner, now);
   useEffect(() => {
-    if (!published || !Number.isFinite(end) || end <= Date.now()) return;
-    // Refresh at the deadline, including schedules beyond the browser's timer limit.
-    const timer = setTimeout(() => setNow(Date.now()), Math.min(end - Date.now(), 2_147_483_647));
+    const deadline = start > now ? start : end;
+    if (!published || !Number.isFinite(deadline) || deadline <= now) return;
+    const timer = setTimeout(() => setNow(Date.now()), Math.min(deadline - Date.now(), 2_147_483_647));
     return () => clearTimeout(timer);
-  }, [end, published, now]);
-  return banner.status === 'draft' ? <span className="admin-home__badge" data-tone="neutral">{bannerListStatus('draft', locale)}</span> : <StatusBadge status={expired ? 'ended' : banner.status} locale={locale} />;
+  }, [start, end, published, now]);
+  return status === 'draft' ? <span className="admin-home__badge" data-tone="neutral">{bannerListStatus('draft', locale)}</span> : <StatusBadge status={status} locale={locale} />;
 }
 
 function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBannerListData; readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onChanged: (data: AdBannerListData) => void }) {

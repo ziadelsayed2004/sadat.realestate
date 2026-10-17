@@ -3149,6 +3149,14 @@
   block-size: 100%;
   object-fit: cover;
 }
+.seeker-viewings .seeker-viewing-card { display: flex; flex-direction: column; min-inline-size: 0; }
+.seeker-viewings .seeker-viewing-card__image { position: relative; overflow: hidden; flex: 0 0 auto; min-block-size: 0; aspect-ratio: 16 / 10; }
+.seeker-viewings .seeker-viewing-card__image img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.seeker-viewings .seeker-viewing-card__body { position: relative; background: #fff; inline-size: 100%; }
+.seeker-viewings .seeker-viewing-card__topline { align-items: start; }
+.seeker-viewings .seeker-viewing-card__topline > .ui-badge { position: static; flex-shrink: 0; }
+.seeker-viewings .seeker-viewing-card__summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.seeker-viewings .seeker-viewing-card__summary dd { overflow-wrap: anywhere; }
 
 .seeker-viewing-card__code {
   display: block;

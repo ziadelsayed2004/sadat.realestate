@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useContext, useEffect, useState, type FormEvent } from 'react';
 import type {
   PublicOrganizationCard,
   PublicOrganizationDirectoryQuery,
@@ -10,7 +10,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Pagination } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
+import { PublicAuthRoleContext, PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   PUBLIC_DEVELOPERS_PATH,
   defaultPublicDeveloperDirectoryLoader,
@@ -171,6 +171,7 @@ export function PublicDevelopers({
     syncBrowserUrl(nextQuery, locale);
     setAttempt(value => value + 1);
   };
+  const role = useContext(PublicAuthRoleContext);
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const parsed = publicOrganizationDirectoryQuerySchema.safeParse({ ...query, search: search.trim() || undefined, page: 1 });
@@ -187,6 +188,7 @@ export function PublicDevelopers({
         <div>
           <p className="public-homepage__eyebrow">{copy.introEyebrow}</p>
           <h1>{copy.title}</h1>
+          {role === 'admin' ? <p><a href={`/admin/providers?lang=${locale}`}>{locale === 'ar' ? 'إدارة الشركات: تعديل الملف والصورة أو الحذف من الدليل' : 'Manage companies: edit profiles, images or remove from the directory'}</a></p> : role === 'provider' ? <p><a href={`/provider/settings?lang=${locale}`}>{locale === 'ar' ? 'إعدادات حسابك' : 'Your account settings'}</a></p> : null}
           <p>{copy.subtitle}</p>
         </div>
       </header>
