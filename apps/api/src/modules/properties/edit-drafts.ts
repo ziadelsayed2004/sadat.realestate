@@ -11,6 +11,7 @@ const editable = ['imageUrl', 'name', 'slug', 'transactionType', 'projectId', 'p
 export function createPropertyEditDrafts(connection: Connection, models: PropertyModels, audit: AuditWriter, stored: (row: PropertyRecord & { _id: Types.ObjectId }) => StoredProperty, repository: (models: PropertyModels) => PropertyRepository) {
   const Draft = (connection.models.PropertyEditDraft as Model<PropertyRecord> | undefined) ?? connection.model<PropertyRecord>('PropertyEditDraft', propertySchema, 'property_edit_drafts');
   const drafts = repository({ Property: Draft });
+  const draftFields = new Set(Object.keys(propertySchema.paths).map(key => key.split('.')[0]));
   async function transaction(run: (session: import('mongoose').ClientSession) => Promise<PropertyWriteResult>) {
     const session = await connection.startSession();
     try { return await session.withTransaction(() => run(session)); }
@@ -32,7 +33,9 @@ export function createPropertyEditDrafts(connection: Connection, models: Propert
       return transaction(async session => {
         const row = await models.Property.findOneAndUpdate({ _id: input.id, providerId: input.metadata.actorId, version: input.expectedVersion, status: 'published', active: true, hasEditDraft: { $ne: true }, 'deactivationRequest.status': { $ne: 'pending' } }, { $set: { hasEditDraft: true }, $inc: { version: 1 } }, { new: true, lean: true, session });
         if (!row) return { kind: 'version_conflict' };
-        const draft = { ...row, status: 'needs_changes' as const, editingPublishedVersion: row.version, updatedAt: input.metadata.changedAt };
+        // Raw analytics/legacy fields (e.g. viewCount/publicCode) can be present
+        // on lean public records. Keep them on the original, outside the strict draft schema.
+        const draft = { ...Object.fromEntries(Object.entries(row).filter(([key]) => draftFields.has(key))), status: 'needs_changes', editingPublishedVersion: row.version, version: row.version, updatedAt: input.metadata.changedAt } as PropertyRecord & { _id: Types.ObjectId };
         await Draft.replaceOne({ _id: row._id }, draft, { upsert: true, session, runValidators: true });
         const media = await connection.collection('property_media').find({ propertyId: row._id }, { session }).toArray();
         await connection.collection('property_media_drafts').deleteMany({ propertyId: row._id }, { session });

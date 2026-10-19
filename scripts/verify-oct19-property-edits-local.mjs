@@ -23,6 +23,7 @@ try {
   const providerId = new mongoose.Types.ObjectId(), propertyId = new mongoose.Types.ObjectId(), mediaId = new mongoose.Types.ObjectId();
   const now = new Date(), metadata = { actorId: String(providerId), actorType: 'provider', reason: 'Provider saves draft changes', requestId: 'oct19-qa', traceId: 'f'.repeat(32), changedAt: now };
   await models.Property.create({ _id: propertyId, providerId, sourceType: 'individual_broker', kind: 'property', name: { ar: 'Original', en: 'Original' }, slug: 'oct19-original', transactionType: 'sale', status: 'published', active: true, version: 0, publishedAt: now, price: { amount: 1000000, currency: 'EGP' }, imageUrl: `/api/v1/public/properties/${propertyId}/media/${mediaId}/content` });
+  await db.collection('properties').updateOne({ _id: propertyId }, { $set: { viewCount: 9, publicCode: 'SDT-LEGACY-22' } });
   await mediaModels.PropertyMedia.create({ _id: mediaId, providerId, propertyId, kind: 'image', originalFilename: 'cover.png', declaredMime: 'image/png', detectedMime: 'image/png', byteSize: 100, sha256: 'a'.repeat(64), storageKey: 'qa/private/cover', processingState: 'ready', sortOrder: 0, isCover: true, active: true, version: 0 });
   let before = await properties.findOwned(String(providerId), String(propertyId));
   const start = await properties.visibility({ id: String(propertyId), expectedVersion: before.version, action: 'start_edit', before, metadata });
@@ -63,6 +64,7 @@ try {
   const submitted = await properties.submit({ providerId: String(providerId), id: String(propertyId), expectedVersion: before.version, before, metadata, targetStatus: 'published' });
   assert.equal(submitted.kind, 'written'); assert.equal(submitted.property.status, 'pending_review');
   live = await models.Property.findById(propertyId).lean(); assert.equal(live.name.en, 'Changed'); assert.equal(live.hasEditDraft, undefined); assert(live.imageUrl.includes(uploaded.media.id));
+  const retained = await db.collection('properties').findOne({ _id: propertyId }); assert.equal(retained.viewCount, 9); assert.equal(retained.publicCode, 'SDT-LEGACY-22');
   assert.equal((await media.listPublic(String(propertyId))).length, 0);
   assert.equal(await db.collection('property_edit_drafts').countDocuments({}), 0); assert.equal(await db.collection('property_media_drafts').countDocuments({}), 0);
   report.checks.push('only_explicit_submit_replaces_record_and_withdraws_for_admin_review_in_one_transaction');
