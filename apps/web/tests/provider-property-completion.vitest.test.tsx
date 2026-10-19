@@ -64,6 +64,16 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('provider property media, contact, and review completion', () => {
+  it.each(['ar', 'en'] as const)('shows illustrated photography guidance alongside the media uploader in %s', async locale => {
+    vi.stubGlobal('fetch', vi.fn(async () => success({ items: [] }, 'photo-guide')));
+    const result = renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} authClient={authClient} step="media" propertyId={propertyId} initialData={property()} />, { locale });
+    const guide = result.container.querySelector('.provider-photo-guide');
+    expect(guide).toHaveAttribute('open');
+    expect(guide?.querySelectorAll('img')).toHaveLength(3);
+    expect(guide?.querySelector('img')).toHaveAttribute('src', '/assets/guides/property-landscape.svg');
+    expect(result.container.querySelector('input[type=file]')).toBeInTheDocument();
+    await waitFor(() => expect(result.container.querySelector('.provider-photo-guide')).toBeInTheDocument());
+  });
   it('loads persisted media when the review step opens in a new session', async () => {
     const fetcher = vi.fn(async (_input: RequestInfo | URL) => success({ items: [media(), { ...media(), id: 'eeeeeeeeeeeeeeeeeeeeeeee', active: false, processingState: 'deleted' }] }, 'review-media'));
     vi.stubGlobal('fetch', fetcher);

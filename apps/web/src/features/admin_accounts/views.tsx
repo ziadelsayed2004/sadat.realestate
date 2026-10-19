@@ -16,7 +16,7 @@ import type {
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Button, StateMessage } from '../design_system/index.ts';
+import { Button, StateMessage, Toast } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { AdminNavigation } from '../admin/index.ts';
 import {
@@ -526,7 +526,7 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
           <div className="admin-accounts__actions">
             {provider.availableActions.map(action => <Button key={action} type="button" variant={action === 'verify' ? 'success' : action === 'needs_information' ? 'secondary' : 'danger'} disabled={!validReason || reviewingAction !== undefined} loading={reviewingAction === action} onClick={() => onReview(action)}>{reviewLabels[action]}</Button>)}
           </div>
-          {reviewFeedback !== undefined ? <p className={reviewFeedback.tone === 'error' ? 'admin-accounts__document-error' : 'admin-accounts__muted'} role={reviewFeedback.tone === 'error' ? 'alert' : 'status'}>{reviewFeedback.message}</p> : null}
+          {reviewFeedback !== undefined ? <Toast open tone={reviewFeedback.tone} title={reviewFeedback.tone === 'success' ? (locale === 'ar' ? 'تم حفظ المراجعة' : 'Review saved') : (locale === 'ar' ? 'تعذر حفظ المراجعة' : 'Review could not be saved')} message={reviewFeedback.message} /> : null}
         </section>
       ) : null}
     </main>

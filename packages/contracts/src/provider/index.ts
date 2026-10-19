@@ -146,8 +146,10 @@ export const providerRequirementSnapshotItemSchema = providerDocumentRequirement
   applies: z.boolean()
 }).strict();
 
+const providerRequirementVersionSchema = z.string().max(64).regex(/^\d{4}-\d{2}-\d{2}\.(?:[a-z][a-z0-9_-]{0,31}\.)?\d+$/);
+
 export const providerRequirementSnapshotSchema = z.object({
-  version: z.string().regex(/^\d{4}-\d{2}-\d{2}\.\d+$/),
+  version: providerRequirementVersionSchema,
   providerType: providerTypeSchema,
   requirements: z.array(providerRequirementSnapshotItemSchema).min(1).max(20)
 }).strict();
@@ -157,7 +159,7 @@ export const providerApplicationDataSchema = z.object({
   providerType: providerTypeSchema,
   status: providerApplicationStateSchema,
   version: providerApplicationVersionSchema,
-  requirementVersion: z.string().regex(/^\d{4}-\d{2}-\d{2}\.\d+$/),
+  requirementVersion: providerRequirementVersionSchema,
   accountOwnerFullName: safeTextSchema.max(160).optional(),
   displayName: safeTextSchema.max(160).optional(),
   email: normalizedEmailSchema,

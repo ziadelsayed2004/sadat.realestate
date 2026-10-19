@@ -1,7 +1,7 @@
 import { categoryImageUrl } from '../design_system/category-image.ts';
 import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
   PublicHomepageCategory,
@@ -15,7 +15,7 @@ import type {
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { CustomSelect, PropertyCard } from '../design_system/index.ts';
+import { CustomSelect, PropertyCard, Toast } from '../design_system/index.ts';
 import { LocaleSwitcher, replaceLocaleInUrl } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
@@ -594,7 +594,7 @@ function SearchPanel({ copy, locale, categories, locations }: { readonly copy: P
       <input type="hidden" name="lang" value={locale} readOnly />
       <div className="public-homepage__search-row">
         <CustomSelect
-          name="propertyTypeId"
+          name={categories.find(category => category.id === propertyType)?.kind === 'category' ? 'propertyCategoryId' : 'propertyTypeId'}
           label={labels.type}
           placeholder={labels.type}
           value={propertyType}
@@ -835,13 +835,31 @@ function HomepageCategoryRail({
   readonly categories: readonly PublicHomepageCategory[];
   readonly totalPropertyCount: number | undefined;
 }) {
+  const rail = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ previous: false, next: false });
+  const updateEdges = useCallback(() => {
+    const element = rail.current;
+    if (!element) return;
+    const bounds = element.getBoundingClientRect();
+    const first = element.firstElementChild?.getBoundingClientRect(), last = element.lastElementChild?.getBoundingClientRect();
+    const visible = (item: DOMRect | undefined) => !!item && item.left >= bounds.left - 1 && item.right <= bounds.right + 1;
+    setEdges({ previous: !visible(first), next: !visible(last) });
+  }, []);
+  useEffect(() => {
+    const element = rail.current;
+    if (!element) return;
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(updateEdges);
+    observer?.observe(element); updateEdges();
+    return () => observer?.disconnect();
+  }, [categories, updateEdges]);
   if (categories.length === 0) return null;
+  const slide = (direction: number) => rail.current?.scrollBy({ left: direction * (locale === 'ar' ? -1 : 1) * rail.current.clientWidth * .8, behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
 
   const firstCategory = categories[0];
   const allPropertiesLabel = locale === 'ar' ? '\u0639\u0642\u0627\u0631' :'properties';
   const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
-    <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
+    <a className="public-homepage__category-card" href={`/properties?${category.kind === 'category' ? 'propertyCategoryId' : 'propertyTypeId'}=${encodeURIComponent(category.id)}&lang=${locale}`} key={category.id}>
       <PublicMediaImage className="public-homepage__category-image" src={categoryImageUrl(category.imageUrl)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
       <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
       <small>{new Intl.NumberFormat(locale).format(category.propertyCount)} {allPropertiesLabel}</small>
@@ -851,9 +869,9 @@ function HomepageCategoryRail({
   const title = copy.categoryTitle;
   return (
     <section className="public-homepage__category-section" aria-labelledby="public-homepage-categories">
-      <SectionHeading eyebrow={copy.categoryEyebrow} id="public-homepage-categories" title={title} />
+      <SectionHeading eyebrow={copy.categoryEyebrow} id="public-homepage-categories" title={title} action={<div className="public-homepage__category-controls">{([-1, 1] as const).map(direction => <button key={direction} type="button" aria-controls="homepage-category-rail" aria-label={locale === 'ar' ? direction === 1 ? 'التصنيفات التالية' : 'التصنيفات السابقة' : direction === 1 ? 'Next categories' : 'Previous categories'} disabled={direction === 1 ? !edges.next : !edges.previous} onClick={() => slide(direction)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d={(direction === 1) === (locale === 'ar') ? 'm15 5-7 7 7 7' : 'm9 5 7 7-7 7'} /></svg></button>)}</div>} />
       <p className="public-homepage__section-description">{copy.categoryDescription}</p>
-      <div className="public-homepage__category-rail" tabIndex={0} aria-label={title}>
+      <div id="homepage-category-rail" className="public-homepage__category-rail" ref={rail} onScroll={updateEdges} tabIndex={0} aria-label={title}>
         {firstCategory === undefined ? null : renderCategory(firstCategory)}
         <a className="public-homepage__category-card public-homepage__category-card--all" href="/properties" key="all-properties">
           <img className="public-homepage__category-image" src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" decoding="async" loading="lazy" />
@@ -1150,7 +1168,7 @@ function HomepageContent({
       <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} locations={locations} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       <HomepageSummary locale={locale} metrics={data.metrics} />
-      {requestSent ? <div className="public-homepage__request-success" role="status">{locale === 'ar' ? 'تم إرسال طلبك بنجاح. ستراجعه الإدارة وتتواصل معك.' : 'Your request was sent successfully. Administration will review it and contact you.'}<a href={`/provider/ads?lang=${locale}`}>{locale === 'ar' ? 'متابعة طلباتي' : 'Track my requests'}</a><button type="button" onClick={() => setRequestSent(false)} aria-label={locale === 'ar' ? 'إغلاق رسالة النجاح' : 'Dismiss success message'}>×</button></div> : null}
+      {requestSent ? <div className="public-homepage__request-success"><Toast open tone="success" title={locale === 'ar' ? 'تم إرسال طلبك بنجاح' : 'Request sent successfully'} message={locale === 'ar' ? 'ستراجع الإدارة طلبك وتتواصل معك.' : 'Administration will review your request and contact you.'} action={<a href={`/provider/ads?lang=${locale}`}>{locale === 'ar' ? 'متابعة طلباتي' : 'Track my requests'}</a>} onDismiss={() => setRequestSent(false)} dismissLabel={locale === 'ar' ? 'إغلاق رسالة النجاح' : 'Dismiss success message'} /></div> : null}
       <HomepageCategoryRail locale={locale} copy={copy} categories={categories} totalPropertyCount={data.totalPropertyCount} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">

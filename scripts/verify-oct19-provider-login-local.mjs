@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import mongoose from 'mongoose';
+import {chromium,webkit,expect as baseExpect} from '@playwright/test';
+const expect = baseExpect.configure({ timeout: 20000 });
+const env=Object.fromEntries((await readFile('.env.local','utf8')).split(/\r?\n/).filter(l=>l.includes('=')&&!l.startsWith('#')).map(l=>{const at=l.indexOf('=');return[l.slice(0,at),l.slice(at+1).replace(/^['"]|['"]$/g,'')];}));
+const uri=new URL(env.MONGODB_URI);assert(['127.0.0.1','localhost'].includes(uri.hostname)&&uri.port==='27018');
+const db=await mongoose.createConnection(uri.href).asPromise(),chrome=await chromium.launch(),safari=await webkit.launch();
+assert(['brokerage_office', 'developer_company', 'individual_broker'].includes(process.argv[2] ?? 'brokerage_office'));
+const base='http://127.0.0.1:4173',type=process.argv[2]??'brokerage_office',email=`next-${type}-${Date.now()}@example.invalid`,password='Fresh-All-Types!2026',report={type,status:'FAIL_LOCAL',checks:[],cleanup:false,mockedResponses:false,environment:'local-real-api-mailpit-mongodb-chromium-webkit'};let id;
+let lastPage;
+try{
+ const context=await safari.newContext({viewport:{width:390,height:844}}),p=await context.newPage();
+ await p.goto(base+'/auth/register/provider/type?lang=en');await expect(p.locator('#site-intro')).toBeHidden();await p.locator(`[data-provider-type="${type}"]`).click();await p.locator('#provider-registration-password').fill(password);await p.locator('#provider-registration-password-confirmation').fill(password);await p.getByRole('button',{name:'Continue',exact:true}).click();await p.locator('#auth-otp-email').fill(email);await p.getByRole('button',{name:'Send code',exact:true}).click();
+ let code;await expect.poll(async()=>{const box=await(await fetch('http://127.0.0.1:8025/api/messages')).json();code=box.messages.find(m=>m.to.includes(email))?.raw.replace(/=\r?\n/g,'').match(/\b(\d{6})\b/u)?.[1];return !!code;}).toBe(true);
+ await p.locator('.auth-otp__digit').first().fill(code);const registration=p.waitForResponse(r=>r.url().endsWith('/provider/application')&&r.request().method()==='POST');await p.getByRole('button',{name:'Verify code',exact:true}).click();const registered=await registration;assert.equal(registered.status(),201);id=new mongoose.Types.ObjectId((await registered.json()).data.session.user.id);
+ await expect(p.locator('[data-testid=provider-account-details]')).toHaveAttribute('data-state','idle');
+ report.checks.push('fresh_email_otp_registration_and_account_form');await context.close();
+ for(const engine of [chrome,safari]){
+  const ctx=await engine.newContext({viewport:{width:390,height:844}}),page=await ctx.newPage();lastPage=page;page.on('pageerror',e=>{report.browserErrors??=[];report.browserErrors.push(String(e));});await page.goto(base+'/auth/login?lang=en');await expect(page.locator('#site-intro')).toBeHidden();await page.locator('#auth-login-email').fill(email.toUpperCase());await page.locator('#auth-login-password').fill(password);const signed=page.waitForResponse(r=>r.url().endsWith('/auth/login')&&r.request().method()==='POST');await page.getByRole('button',{name:'Log in',exact:true}).click();assert.equal((await signed).status(),200);await expect(page).not.toHaveURL(/auth\/login/);await page.waitForLoadState('networkidle');await expect(page.locator('[data-auth-resolution=pending]')).toHaveCount(0);await expect(page.locator('#site-intro')).toBeHidden();
+  await page.goto(base+'/provider?lang=en');await expect(page.locator('[data-provider-status=draft]')).toBeVisible();await page.locator('[data-provider-status=draft] a').filter({hasText:'Continue'}).first().click();await expect(page).toHaveURL(/provider-application|register\/provider\/account/);await expect(page.locator('#site-intro')).toBeHidden();await expect(page.locator('input:visible').first()).toBeVisible();await page.reload();await expect(page.locator('#site-intro')).toBeHidden();await expect(page.locator('input:visible').first()).toBeVisible();await ctx.close();
+ }
+ report.checks.push('independent_chromium_and_webkit_password_login_draft_dashboard_resume_and_reload');assert.equal((report.browserErrors??[]).length,0);report.status='PASS_LOCAL';
+}catch(error){if(lastPage){report.page={url:lastPage.url(),text:await lastPage.locator('body').innerText()};await lastPage.screenshot({path:'.tmp/provider-types-failure.png'});}report.error=String(error.stack??error);process.exitCode=1;}
+finally{const user=await db.collection('users').findOne({normalizedEmail:email});id??=user?._id;if(id){for(const c of ['sessions','admin_credentials','provider_profiles','provider_applications'])await db.collection(c).deleteMany({userId:id});await db.collection('users').deleteOne({_id:id});}await db.collection('otp_challenges').deleteMany({normalizedEmail:email});report.cleanup=true;await writeFile('docs/quality/guide-runs/oct19-provider-login-'+type+'.json',JSON.stringify(report,null,2));await chrome.close();await safari.close();await db.close();console.log(JSON.stringify(report));}

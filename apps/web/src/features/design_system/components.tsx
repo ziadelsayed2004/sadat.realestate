@@ -441,12 +441,13 @@ export interface ToastProps {
   readonly open: boolean;
   readonly title: ReactNode;
   readonly message?: ReactNode | undefined;
+  readonly action?: ReactNode | undefined;
   readonly tone?: ToastTone | undefined;
   readonly dismissLabel?: string | undefined;
   readonly onDismiss?: (() => void) | undefined;
 }
 
-export function Toast({ open, title, message, tone = 'info', dismissLabel, onDismiss }: ToastProps) {
+export function Toast({ open, title, message, action, tone = 'info', dismissLabel, onDismiss }: ToastProps) {
   if (!open) return null;
   const role = tone === 'error' ? 'alert' : 'status';
   return (
@@ -454,6 +455,7 @@ export function Toast({ open, title, message, tone = 'info', dismissLabel, onDis
       <div className="ui-toast__content">
         <strong>{title}</strong>
         {message !== undefined ? <p>{message}</p> : null}
+        {action !== undefined ? <div className="ui-toast__action">{action}</div> : null}
       </div>
       {onDismiss !== undefined && dismissLabel !== undefined ? <button className="ui-toast__dismiss" type="button" aria-label={dismissLabel} onClick={onDismiss}>×</button> : null}
     </div>

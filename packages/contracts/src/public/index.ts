@@ -25,6 +25,7 @@ export const publicHomepageSectionSchema = z.object({
 
 export const publicHomepageCategorySchema = z.object({
   id: propertyObjectIdSchema,
+  kind: z.enum(['category', 'type']).optional(),
   slug: propertySlugSchema,
   name: localizedTextSchema,
   imageUrl: publicUrlSchema.optional(),

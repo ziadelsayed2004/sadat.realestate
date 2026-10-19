@@ -43,7 +43,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // account tools and allow a bounded 16 KiB; retain the existing per-chunk cap.
 // Visible-item read receipts, property draft guidance and area result selection:
 // allow four KiB above the 2,649,946-byte baseline, retaining chunk/CSS limits.
-const maxJavaScriptBytes = 2_592 * 1024;
+// Illustrated property photography guidance, category slider controls and shared
+// actionable notices add about 4.4 KiB. Allow eight KiB; keep chunk/CSS caps fixed.
+const maxJavaScriptBytes = 2_600 * 1024;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

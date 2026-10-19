@@ -8,6 +8,29 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'الرئيسية', en: 'Home' };
 
+test('includes new parent categories on the homepage and totals their published child types', async () => {
+  const connection = {
+    collection(name: string) {
+      return {
+        async findOne() { return null; },
+        async countDocuments() { return 4; },
+        aggregate() { return { async toArray() { return [{ _id: secondId, count: 4 }]; } }; },
+        find(filter: unknown) {
+          if (name === 'property_taxonomy') assert.deepEqual(filter, { kind: { $in: ['category', 'type'] }, active: true });
+          return { sort() { return { limit() { return { async toArray() {
+            return name === 'property_taxonomy' ? [
+              { _id: id, kind: 'category', slug: 'soso', name: { en: 'soso' }, active: true, order: 71 },
+              { _id: secondId, kind: 'type', categoryId: id, slug: 'new-type', name: { en: 'New type' }, active: true, order: 72 }
+            ] : [];
+          } }; } }; } };
+        }
+      };
+    }
+  } as unknown as Connection;
+  const result = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
+  assert.deepEqual(result.categories.map(row => [row.slug, row.kind, row.propertyCount]), [['soso', 'category', 4], ['new-type', undefined, 4]]);
+});
+
 test('publishes the custom hero introduction only from a published visible section', () => {
   const hero = { key: 'hero', title: localized, eyebrow: { ar: 'محتوى الإدارة', en: 'Managed introduction' }, order: 0, status: 'published', visible: true };
   assert.deepEqual(publicHomepageProjection(sources({ sections: [hero] })).sections[0]?.eyebrow, hero.eyebrow);

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { PropertyPhotoGuide } from './photo-guide.tsx';
 import {
   propertyContactStepSchema,
   propertyMapUrlSchema,
@@ -323,6 +324,7 @@ function MediaView({
     <div className="provider-property-completion__form" data-form-step="media">
       <CompletionPageIntro copy={copy} />
       <StepRail step="media" locale={locale} />
+      <PropertyPhotoGuide locale={locale} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-media-upload">
         <h2 id="provider-property-media-upload">{copy.titles.media}</h2>
         <p>{labels.acceptedTypes}</p>

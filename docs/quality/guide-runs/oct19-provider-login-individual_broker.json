@@ -1,0 +1,11 @@
+{
+  "type": "individual_broker",
+  "status": "PASS_LOCAL",
+  "checks": [
+    "fresh_email_otp_registration_and_account_form",
+    "independent_chromium_and_webkit_password_login_draft_dashboard_resume_and_reload"
+  ],
+  "cleanup": true,
+  "mockedResponses": false,
+  "environment": "local-real-api-mailpit-mongodb-chromium-webkit"
+}

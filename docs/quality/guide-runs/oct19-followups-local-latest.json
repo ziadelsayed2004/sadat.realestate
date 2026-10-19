@@ -1,0 +1,11 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "real_homepage_api_includes_new_parent_category_without_visiting_listing",
+    "chromium_webkit_320_390_1440_rtl_ltr_single_row_slider_controls_and_parent_filter",
+    "toast_title_message_link_and_close_do_not_overlap_and_dismiss_works",
+    "real_provider_media_page_three_loaded_illustrations_mobile_desktop_bilingual_collapsible_guide_and_uploader"
+  ],
+  "cleanup": true
+}

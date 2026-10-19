@@ -65,6 +65,27 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
+  it('links root categories to their category filter and leaves types linked to their type filter', () => {
+    const data = { ...homepageData, categories: [
+      { id: 'c'.repeat(24), kind: 'category' as const, slug: 'soso', name: { en: 'soso' }, propertyCount: 0, order: 71 },
+      { id: 'd'.repeat(24), slug: 'type', name: { en: 'Specific type' }, propertyCount: 1, order: 72 }
+    ] };
+    renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+    expect(screen.getByRole('link', { name: /soso/ })).toHaveAttribute('href', `/properties?propertyCategoryId=${'c'.repeat(24)}&lang=en`);
+    expect(screen.getByRole('link', { name: /Specific type/ })).toHaveAttribute('href', `/properties?propertyTypeId=${'d'.repeat(24)}&lang=en`);
+    expect(screen.getByRole('button', { name: 'Next categories' })).toHaveAttribute('aria-controls', 'homepage-category-rail');
+  });
+
+  it('separates success text, tracking action and dismiss control', async () => {
+    window.history.replaceState({}, '', '/?notice=ad-request-sent&lang=ar');
+    const result = renderWithLocale(<PublicHomepage locale="ar" initialData={homepageData} />, { locale: 'ar' });
+    const action = await screen.findByRole('link', { name: 'متابعة طلباتي' });
+    expect(action.closest('.ui-toast__action')).toBeInTheDocument();
+    expect(result.container.querySelector('.ui-toast__content > p')).not.toContainElement(action);
+    fireEvent.click(screen.getByRole('button', { name: 'إغلاق رسالة النجاح' }));
+    expect(screen.queryByRole('link', { name: 'متابعة طلباتي' })).not.toBeInTheDocument();
+  });
+
   it('keeps a featured promotion out of the hero when there is no managed hero banner', () => {
     const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [{ key: 'featured_aaaaaaaaaaaaaaaaaaaaaaaa_bbbbbbbbbbbbbbbbbbbbbbbb', presentation: 'featured', title: { en: 'Featured promotion only' }, imageUrl: '/featured-only.jpg', targetUrl: '/properties', order: 0 }] });
     const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
@@ -200,7 +221,7 @@ describe('public homepage', () => {
       const searchForm = result.container.querySelector('.public-homepage__hero form');
       await act(() => vi.advanceTimersByTimeAsync(30_000));
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(title);
-      expect(screen.getByRole('link', { name: /Newly added category/ })).toHaveAttribute('href', `/properties?propertyTypeId=${category.id}`);
+      expect(screen.getByRole('link', { name: /Newly added category/ })).toHaveAttribute('href', `/properties?propertyTypeId=${category.id}&lang=en`);
       expect(result.container.querySelector('.public-homepage__hero form')).toBe(searchForm);
       expect(result.container.querySelector('input[name="transactionType"]')).toHaveValue('rent');
       await act(() => vi.advanceTimersByTimeAsync(30_000));
@@ -269,7 +290,7 @@ describe('public homepage', () => {
     const categories = result.container.querySelectorAll('.public-homepage__category-card:not(.public-homepage__category-card--all)');
     expect(categories).toHaveLength(1);
     expect(categories[0]).toHaveTextContent('7 properties');
-    expect(categories[0]).toHaveAttribute('href', '/properties?propertyTypeId=cccccccccccccccccccccccc');
+    expect(categories[0]).toHaveAttribute('href', '/properties?propertyTypeId=cccccccccccccccccccccccc&lang=en');
   });
 
   it('keeps homepage property metadata clean and aligns the developer identity', () => {

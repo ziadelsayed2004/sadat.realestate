@@ -22,7 +22,7 @@ import { populationStatement, type AutomaticPopulationReader } from '../cms/auto
 import { CITY_STATISTICS, manualCityMetrics } from '../cms/city-statistics.js';
 
 export interface HomepageSectionSource { key: string; title: unknown; eyebrow?: unknown; body?: unknown; order: number; status: string; visible: boolean }
-export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
+export interface HomepageCategorySource { id: string; kind?: 'category' | 'type'; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
 export interface HomepageLocationSource { id: string; kind: string; name: unknown; slug: string; parentLocationId?: string; order: number; active: boolean }
 export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean; sourceUrl?: string; sourceYear?: number; checkedAt?: string }
 export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; locationName?: unknown; sourceName?: unknown; sourceImageUrl?: string; sourceType?: string; sourceVerified?: boolean; publicCode?: string; viewCount?: number; installmentAvailable?: boolean; featured?: boolean; deliveryStatus?: string; featuredOrder?: number; status: string; active: boolean }
@@ -46,7 +46,7 @@ export interface HomepageSources {
 
 function publicCategories(items: HomepageCategorySource[] = []) {
   return [...items].filter((item) => item.active).sort((left, right) => left.order - right.order || left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en')).flatMap((item) => {
-    const parsed = publicHomepageCategorySchema.safeParse({ id: item.id, slug: item.slug, name: item.name, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), propertyCount: item.propertyCount, order: item.order });
+    const parsed = publicHomepageCategorySchema.safeParse({ id: item.id, ...(item.kind ? { kind: item.kind } : {}), slug: item.slug, name: item.name, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), propertyCount: item.propertyCount, order: item.order });
     return parsed.success ? [parsed.data] : [];
   });
 }
@@ -212,6 +212,7 @@ type MongoRow = {
   imageUrl?: string;
   targetUrl?: string;
   propertyTypeId?: unknown;
+  categoryId?: unknown;
   parentLocationId?: unknown;
   value?: number | { kind?: string; value?: number };
   unit?: unknown;
@@ -240,7 +241,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'cms_about_blocks', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_real_estate_tips', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_banners', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, eyebrow: 1, body: 1, highlight: 1, imageUrl: 1, targetUrl: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
-        findRows(connection, 'property_taxonomy', { kind: 'type', active: true }, { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, active: 1 }, { order: 1, slug: 1, _id: 1 }, 100),
+        findRows(connection, 'property_taxonomy', { kind: { $in: ['category', 'type'] }, active: true }, { _id: 1, kind: 1, categoryId: 1, slug: 1, name: 1, imageUrl: 1, order: 1, active: 1 }, { order: 1, slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500),
         findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, providerId: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
@@ -255,6 +256,10 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }
       ]).toArray() : [];
       const countById = new Map(categoryCounts.flatMap((row) => { const value=id(row._id); return value ? [[value,row.count] as const] : []; }));
+      for (const row of categories) {
+        const child = id(row._id), parent = id(row.categoryId);
+        if (row.kind === 'type' && child && parent) countById.set(parent, (countById.get(parent) ?? 0) + (countById.get(child) ?? 0));
+      }
       const mapId = (row: MongoRow) => id(row._id);
       const locationNames = new Map(locations.flatMap((row) => { const value = mapId(row); return value && row.name !== undefined ? [[value, row.name] as const] : []; }));
       const organizationById = new Map((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), kind: row.kind }] as const] : []; }));
@@ -269,7 +274,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
           ...(population[0].asOf instanceof Date && Number.isFinite(population[0].asOf.getTime()) ? { asOf: population[0].asOf.toISOString() } : typeof population[0].asOf === 'string' ? { asOf: population[0].asOf } : {})
         } } : {}),
         sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.eyebrow !== undefined ? { eyebrow: row.eyebrow } : {}), ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
-        categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
+        categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,...(row.kind === 'category' ? {kind:'category' as const} : {}),slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
         locations: locations.flatMap((row) => { const rowId = mapId(row); const parentLocationId = id(row.parentLocationId); return rowId && typeof row.kind === 'string' && row.name !== undefined && typeof row.slug === 'string' && typeof row.order === 'number' && typeof row.active === 'boolean' ? [{ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order, active: row.active }] : []; }),
         metrics: metrics.flatMap((row)=>typeof row.key==='string'&&row.title!==undefined&&typeof row.value==='number'&&typeof row.order==='number'&&typeof row.status==='string'&&typeof row.visible==='boolean'?[{key:row.key,title:row.title,value:row.value,...(row.unit!==undefined?{unit:row.unit}:{}),order:row.order,status:row.status,visible:row.visible}]:[]),
         properties: coveredProperties.flatMap((row) => { const rowId = mapId(row); const projectId = id(row.projectId); const locationId = id(row.locationId); const organizationId = id(row.organizationId); const organization = organizationId ? organizationById.get(organizationId) : undefined; return rowId && typeof row.slug === 'string' && typeof row.kind === 'string' && row.name !== undefined && typeof row.transactionType === 'string' && typeof row.status === 'string' && typeof row.active === 'boolean' ? [{ id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(locationId && locationNames.has(locationId) ? { locationName: locationNames.get(locationId) } : {}), ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceType: organization.kind, sourceVerified: true } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(typeof row.featured === 'boolean' ? { featured: row.featured } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(typeof row.featuredOrder === 'number' ? { featuredOrder: row.featuredOrder } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active }] : []; }),

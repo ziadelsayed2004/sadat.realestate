@@ -3,12 +3,25 @@ import test from 'node:test';
 import {
   providerAccountPatchSchema,
   providerApplicationCreateRequestSchema,
+  providerApplicationDataSchema,
+  providerRequirementSnapshotSchema,
   providerBusinessPatchSchema,
   providerCompanyPatchSchema,
   providerDocumentRequirementSchema,
   providerSubmitRequestSchema,
   providerTypeSchema
 } from '@sadat-real-estate/contracts';
+
+test('reads office-specific requirement versions as well as legacy versions without accepting arbitrary strings', () => {
+  for (const version of ['2026-08-13.1', '2026-10-15.office.1']) {
+    assert.equal(providerApplicationDataSchema.shape.requirementVersion.parse(version), version);
+    assert.equal(providerRequirementSnapshotSchema.shape.version.parse(version), version);
+  }
+  for (const version of ['', 'office', '2026-10-15.office', '2026-10-15..1', '2026-10-15.office.1.extra']) {
+    assert.equal(providerApplicationDataSchema.shape.requirementVersion.safeParse(version).success, false);
+    assert.equal(providerRequirementSnapshotSchema.shape.version.safeParse(version).success, false);
+  }
+});
 
 test('accepts only the three approved provider types and strict draft creation input', () => {
   for (const value of ['individual_broker', 'brokerage_office', 'developer_company']) {
