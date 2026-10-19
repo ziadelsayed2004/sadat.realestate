@@ -1,0 +1,106 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import mongoose from 'mongoose';
+import { createPropertyModels } from '../apps/api/src/modules/properties/models.ts';
+import { createMongoosePropertyRepository } from '../apps/api/src/modules/properties/repository.ts';
+import { createPropertyService } from '../apps/api/src/modules/properties/service.ts';
+import { createPropertyMediaModels } from '../apps/api/src/modules/media/models.ts';
+import { createMongoosePropertyMediaRepository } from '../apps/api/src/modules/media/repository.ts';
+import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
+import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
+import { createMongooseAdminAttentionSource } from '../apps/api/src/modules/notifications/attention.ts';
+
+const env = Object.fromEntries((await readFile('.env.local', 'utf8')).split(/\r?\n/).filter(line => line.includes('=') && !line.startsWith('#')).map(line => { const i = line.indexOf('='); return [line.slice(0, i), line.slice(i + 1).replace(/^['"]|['"]$/g, '')]; }));
+const uri = new URL(env.MONGODB_URI);
+assert(['localhost', '127.0.0.1'].includes(uri.hostname) && uri.port === '27018');
+uri.pathname = `/oct19_edit_qa_${Date.now()}`;
+const db = await mongoose.createConnection(uri.href).asPromise();
+const report = { status: 'FAIL_LOCAL', mockedResponses: false, checks: [], cleanup: false };
+try {
+  const models = createPropertyModels(db), mediaModels = createPropertyMediaModels(db), auditModels = createAuditModels(db);
+  const audit = createMongooseAuditWriter(auditModels), properties = createMongoosePropertyRepository(db, models, audit), media = createMongoosePropertyMediaRepository(db, mediaModels, audit);
+  await Promise.all([models.Property.init(), mediaModels.PropertyMedia.init(), ...Object.values(auditModels).map(model => model.init())]);
+  const providerId = new mongoose.Types.ObjectId(), propertyId = new mongoose.Types.ObjectId(), mediaId = new mongoose.Types.ObjectId();
+  const now = new Date(), metadata = { actorId: String(providerId), actorType: 'provider', reason: 'Provider saves draft changes', requestId: 'oct19-qa', traceId: 'f'.repeat(32), changedAt: now };
+  await models.Property.create({ _id: propertyId, providerId, sourceType: 'individual_broker', kind: 'property', name: { ar: 'Original', en: 'Original' }, slug: 'oct19-original', transactionType: 'sale', status: 'published', active: true, version: 0, publishedAt: now, price: { amount: 1000000, currency: 'EGP' }, imageUrl: `/api/v1/public/properties/${propertyId}/media/${mediaId}/content` });
+  await mediaModels.PropertyMedia.create({ _id: mediaId, providerId, propertyId, kind: 'image', originalFilename: 'cover.png', declaredMime: 'image/png', detectedMime: 'image/png', byteSize: 100, sha256: 'a'.repeat(64), storageKey: 'qa/private/cover', processingState: 'ready', sortOrder: 0, isCover: true, active: true, version: 0 });
+  let before = await properties.findOwned(String(providerId), String(propertyId));
+  const start = await properties.visibility({ id: String(propertyId), expectedVersion: before.version, action: 'start_edit', before, metadata });
+  assert.equal(start.kind, 'written');
+  let live = await models.Property.findById(propertyId).lean();
+  assert.equal(live.status, 'published'); assert.equal(live.active, true); assert.equal(live.name.en, 'Original');
+  assert.equal((await properties.findByIdAny(String(propertyId))).status, 'published');
+  assert.equal((await properties.listOwned(String(providerId), { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc', status: 'published' })).total, 1);
+  assert.equal((await properties.findOwned(String(new mongoose.Types.ObjectId()), String(propertyId))), null);
+  report.checks.push('opening_edit_keeps_original_published_and_owner_scoped');
+  before = await properties.findOwned(String(providerId), String(propertyId));
+  const saved = await properties.updateCore({ providerId: String(providerId), id: String(propertyId), expectedVersion: before.version, changes: { version: before.version, reason: metadata.reason, name: { ar: 'Changed', en: 'Changed' }, slug: 'oct19-changed', transactionType: 'sale' }, before, metadata });
+  assert.equal(saved.kind, 'written');
+  const removed = await media.markDeleted({ providerId: String(providerId), propertyId: String(propertyId), mediaId: String(mediaId), metadata });
+  assert.equal(removed.kind, 'written');
+  assert.equal((await media.listPublic(String(propertyId))).length, 1);
+  assert.equal((await media.listOwned(String(providerId), String(propertyId)))[0].active, false);
+  live = await models.Property.findById(propertyId).lean(); assert.equal(live.name.en, 'Original'); assert(live.imageUrl);
+  before = await properties.findOwned(String(providerId), String(propertyId)); assert.equal(before.name.en, 'Changed'); assert.equal(before.status, 'needs_changes');
+  assert.equal(before.hasEditDraft, true); assert.equal(before.imageUrl, undefined);
+  const service = createPropertyService({ repository: properties });
+  const owner = { role: 'provider', status: 'verified', sub: String(providerId) };
+  assert.equal((await service.get(owner, String(propertyId), 'published')).name.en, 'Original');
+  assert.equal((await service.get(owner, String(propertyId))).name.en, 'Changed');
+  await assert.rejects(service.get({ ...owner, sub: String(new mongoose.Types.ObjectId()) }, String(propertyId), 'published'), /PROPERTY_NOT_FOUND/);
+  const uploaded = await media.create({ propertyId: String(propertyId), providerId: String(providerId), kind: 'image', originalFilename: 'replacement.png', declaredMime: 'image/png', detectedMime: 'image/png', byteSize: 120, sha256: 'c'.repeat(64), storageKey: 'qa/private/replacement', capacity: 10, metadata });
+  assert.equal(uploaded.kind, 'written');
+  assert.equal((await media.updateProcessing({ providerId: String(providerId), mediaId: uploaded.media.id, state: 'ready', metadata })).kind, 'written');
+  assert.equal((await media.reorder({ providerId: String(providerId), propertyId: String(propertyId), expectedVersion: before.version, changes: { version: before.version, reason: metadata.reason, items: [{ mediaId: uploaded.media.id, sortOrder: 0, isCover: true }] }, metadata }))[0].kind, 'written');
+  assert.equal((await media.listPublic(String(propertyId)))[0].id, String(mediaId));
+  before = await properties.findOwned(String(providerId), String(propertyId));
+  const failingSubmit = createMongoosePropertyRepository(db, models, { record: async () => { throw new Error('Submit audit unavailable'); } });
+  await assert.rejects(failingSubmit.submit({ providerId: String(providerId), id: String(propertyId), expectedVersion: before.version, before, metadata }), /Submit audit unavailable/);
+  assert.equal((await properties.findByIdAny(String(propertyId))).name.en, 'Original');
+  assert.equal((await media.listPublic(String(propertyId)))[0].id, String(mediaId));
+  assert.equal((await properties.updateCore({ providerId: String(providerId), id: String(propertyId), expectedVersion: start.property.version, changes: { version: start.property.version, reason: metadata.reason, name: { en: 'Stale' }, slug: 'stale', transactionType: 'sale' }, before, metadata })).kind, 'version_conflict');
+  report.checks.push('saved_fields_and_deleted_media_are_private_until_submission_stale_writes_rejected');
+  const submitted = await properties.submit({ providerId: String(providerId), id: String(propertyId), expectedVersion: before.version, before, metadata, targetStatus: 'published' });
+  assert.equal(submitted.kind, 'written'); assert.equal(submitted.property.status, 'pending_review');
+  live = await models.Property.findById(propertyId).lean(); assert.equal(live.name.en, 'Changed'); assert.equal(live.hasEditDraft, undefined); assert(live.imageUrl.includes(uploaded.media.id));
+  assert.equal((await media.listPublic(String(propertyId))).length, 0);
+  assert.equal(await db.collection('property_edit_drafts').countDocuments({}), 0); assert.equal(await db.collection('property_media_drafts').countDocuments({}), 0);
+  report.checks.push('only_explicit_submit_replaces_record_and_withdraws_for_admin_review_in_one_transaction');
+  await properties.review({ id: String(propertyId), expectedVersion: live.version, toStatus: 'published', reviewerId: String(new mongoose.Types.ObjectId()), before: submitted.property, metadata: { ...metadata, actorType: 'admin' } });
+  assert.equal((await properties.findByIdAny(String(propertyId))).status, 'published');
+  assert.equal((await media.listPublic(String(propertyId)))[0].id, uploaded.media.id);
+  before = await properties.findOwned(String(providerId), String(propertyId));
+  const rollback = createMongoosePropertyRepository(db, models, { record: async () => { throw new Error('Audit unavailable'); } });
+  await assert.rejects(rollback.visibility({ id: String(propertyId), expectedVersion: before.version, action: 'start_edit', before, metadata }), /Audit unavailable/);
+  assert.equal((await models.Property.findById(propertyId).lean()).hasEditDraft, undefined); assert.equal(await db.collection('property_edit_drafts').countDocuments({}), 0);
+  report.checks.push('admin_republication_and_failed_audit_roll_back_without_losing_public_listing');
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const concurrentId = new mongoose.Types.ObjectId();
+    await models.Property.create({ _id: concurrentId, providerId, sourceType: 'individual_broker', kind: 'property', name: { en: 'Concurrent upload' }, slug: 'concurrent-' + attempt, transactionType: 'sale', status: 'published', active: true, version: 0, publishedAt: now });
+    const original = await properties.findOwned(String(providerId), String(concurrentId));
+    await properties.visibility({ id: String(concurrentId), expectedVersion: 0, action: 'start_edit', before: original, metadata });
+    const draft = await properties.findOwned(String(providerId), String(concurrentId));
+    const [submission, upload] = await Promise.all([
+      properties.submit({ providerId: String(providerId), id: String(concurrentId), expectedVersion: draft.version, before: draft, metadata }),
+      media.create({ providerId: String(providerId), propertyId: String(concurrentId), kind: 'image', originalFilename: 'concurrent.png', declaredMime: 'image/png', detectedMime: 'image/png', byteSize: 100, sha256: String(attempt).repeat(64), storageKey: 'qa/concurrent/' + attempt, capacity: 10, metadata })
+    ]);
+    assert.equal(submission.kind, 'written');
+    assert(['written', 'version_conflict'].includes(upload.kind));
+    if (upload.kind === 'written') assert(await mediaModels.PropertyMedia.exists({ _id: upload.media.id, propertyId: concurrentId }));
+    assert.equal(await db.collection('property_media_drafts').countDocuments({ propertyId: concurrentId }), 0);
+  }
+  report.checks.push('concurrent_upload_and_submit_preserve_accepted_upload_or_return_explicit_conflict');
+  const custom = String(new mongoose.Types.ObjectId()), other = String(new mongoose.Types.ObjectId());
+  const post1 = new mongoose.Types.ObjectId(), post2 = new mongoose.Types.ObjectId();
+  await db.collection('community_posts').insertMany([{ _id: post1, status: 'draft', updatedAt: now }, { _id: post2, status: 'draft', updatedAt: now }]);
+  const attention = createMongooseAdminAttentionSource(db, async (_admin, permission) => permission === 'admin:community.moderate');
+  assert.equal((await attention.read(custom)).counts.community, 2);
+  await attention.markRead(custom, { queueKey: 'community', itemIds: [String(post1)] });
+  assert.equal((await attention.read(custom)).counts.community, 1); assert.equal((await attention.read(other)).counts.community, 2);
+  await db.collection('community_posts').updateOne({ _id: post1 }, { $set: { updatedAt: new Date(+now + 1000) } });
+  assert.equal((await attention.read(custom)).counts.community, 2);
+  assert.equal(await attention.markRead(custom, { queueKey: 'advertising', itemIds: [String(post1)] }), 0);
+  report.checks.push('custom_admin_visible_item_read_receipts_preserve_unseen_other_admin_and_new_revisions');
+  report.status = 'PASS_LOCAL';
+} catch (error) { report.error = String(error.stack ?? error); process.exitCode = 1; }
+finally { assert(db.name.startsWith('oct19_edit_qa_')); await db.dropDatabase(); report.cleanup = true; await db.close(); await writeFile('docs/quality/guide-runs/oct19-property-edits-local-latest.json', JSON.stringify(report, null, 2) + '\n'); console.log(JSON.stringify(report)); }

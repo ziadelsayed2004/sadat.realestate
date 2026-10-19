@@ -325,17 +325,22 @@ function LocationFormView({
   const busy = saving || mapState === 'loading';
   const matches = filterProviderLocations(locations, locationSearch);
   const selected = locations.find(item => item.id === form.locationId);
-  const visibleLocations = selected && !matches.includes(selected) ? [selected, ...matches] : matches;
+  // A misspelled search must never leave the selection control with no choices.
+  const choices = matches.length ? matches : locations;
+  const visibleLocations = selected && !choices.includes(selected) ? [selected, ...choices] : choices;
   return (
     <form className="provider-property-wizard__form" onSubmit={event => { if (busy) { event.preventDefault(); return; } onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue'); }} noValidate>
       <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{wizard.createTitle}</h1><p>{wizard.createDescription}</p></div>
       <WizardSteps step="location" locale={locale} copy={copy} />
+      <p className="provider-property-wizard__help">{locale === 'ar' ? 'لو بتعدّل عقارًا منشورًا، يظل ظاهرًا بنسخته الحالية أثناء حفظ المسودة. إرساله للمراجعة يوقف عرضه مؤقتًا لحين اعتماد الإدارة.' : 'A published listing stays visible while you save a draft. Submitting for review temporarily hides it until administration approves.'}</p>
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-location-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-location-title">{wizard.locationTitle}</h2><span>{wizard.steps.location}</span></div>
         <div className="provider-property-wizard__grid">
           <div className="provider-property-wizard__field provider-property-wizard__location-picker">
             <label htmlFor="provider-property-location-search">{wizard.locationSearchLabel}</label>
             <input id="provider-property-location-search" type="search" value={locationSearch} placeholder={wizard.locationSearchPlaceholder} onChange={event => setLocationSearch(event.target.value)} />
+            <p className="provider-property-wizard__help">{locale === 'ar' ? 'اكتب اسم المنطقة أو رقمها للبحث، ثم اضغط على النتيجة لاختيارها. لو لم تجدها، اختر من القائمة الكاملة بالأسفل.' : 'Search by area name or number, then select a result. If there is no match, choose from the full list below.'}</p>
+            {locationsState === 'success' && locationSearch.trim() && matches.length ? <div className="provider-property-wizard__location-results" role="group" aria-label={locale === 'ar' ? 'اختيار المنطقة من النتائج' : 'Choose an area from results'}>{matches.slice(0, 10).map(location => <Button key={location.id} type="button" variant={form.locationId === location.id ? 'primary' : 'secondary'} size="sm" aria-pressed={form.locationId === location.id} onClick={() => { setForm({ ...form, locationId: location.id }); setLocationSearch(''); }}>{location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug}</Button>)}</div> : null}
             {locationsState === 'success' && locationSearch.trim() !== '' && locations.length > 0 ? <div className="provider-property-wizard__help">
               <p aria-live="polite">{locale === 'ar' ? `نتائج البحث: ${matches.length} من ${locations.length} مناطق. امسح البحث لعرض الكل.` : `Search results: ${matches.length} of ${locations.length} areas. Clear the search to show all.`}</p>
               {matches.length === 0 ? <p role="status">{wizard.locationSearchEmpty}</p> : null}

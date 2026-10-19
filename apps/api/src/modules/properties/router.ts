@@ -8,6 +8,7 @@ import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { PropertyServiceError, type PropertyMutationContext, type PropertyService } from './service.js';
 import { propertyMapCoordinatesRequestSchema } from '@sadat-real-estate/contracts';
+import { propertyReadQuerySchema } from '@sadat-real-estate/contracts';
 import { resolvePropertyMapCoordinates } from './map-coordinates.js';
 
 export const PROPERTY_ROUTE_DEFINITIONS = [
@@ -97,7 +98,7 @@ export function createPropertyRouter(dependencies: PropertyRouterDependencies): 
     catch (error) { sendError(request, response, error); }
   });
   router.get('/provider/properties/:propertyId', async (request, response) => {
-    try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.get(claims(response), propertyId), current.requestId)); }
+    try { const { propertyId } = propertyIdParamsSchema.parse(request.params); const { view } = propertyReadQuerySchema.parse(request.query); const current = context(request); response.status(200).json(toSuccessResponse(await dependencies.service.get(claims(response), propertyId, view), current.requestId)); }
     catch (error) { sendError(request, response, error); }
   });
   router.patch('/admin/properties/:propertyId', async (request, response) => {

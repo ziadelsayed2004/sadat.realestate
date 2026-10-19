@@ -1,0 +1,34 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "legacy_custom_role_without_explicit_ads_view_can_open_accept_and_price_request_in_browser",
+    "custom_role_can_review_payment_and_schedule_but_cannot_manage_roles",
+    "community_list_clears_custom_admin_read_badge_and_report_red_mark_disappears_only_on_resolution",
+    "webkit_location_arabic_number_click_selection_and_no_match_keeps_full_choices",
+    "real_webkit_320_390_768_1440_centered_cover_search_overlap_and_working_rtl_ltr_arrows"
+  ],
+  "http": [
+    {
+      "url": "/admin/roles",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "url": "/admin/payment-proofs/6ad655f54705a6e8f629fd36/review",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "url": "/admin/ad-requests/6ad655f54705a6e8f629fd35/schedule",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "url": "/admin/notifications?limit=1",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "cleanup": true
+}

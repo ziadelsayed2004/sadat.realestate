@@ -187,7 +187,7 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
   const [state, setState] = useState<ViewState>(initialData === undefined ? 'loading' : initialStatus === undefined ? 'error' : 'success');
   const [property, setProperty] = useState<PropertyData | undefined>(initialStatus === undefined ? undefined : initialData);
   const [attempt, setAttempt] = useState(0);
-  const loadAction = useMemo(() => load ?? ((id: string) => loadProviderProperty({ propertyId: id, apiOrigin, authorization: authClient })), [apiOrigin, authClient, load]);
+  const loadAction = useMemo(() => load ?? ((id: string) => loadProviderProperty({ propertyId: id, view: 'published', apiOrigin, authorization: authClient })), [apiOrigin, authClient, load]);
   const screenId = ROUTE_SCREEN_IDS[route];
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 

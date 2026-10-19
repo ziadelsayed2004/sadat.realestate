@@ -554,8 +554,9 @@ function BannerMedia({
       fetchPriority={hidden ? 'low' : 'high'}
       hidden={hidden}
       style={hidden ? { display: 'none' } : undefined}
-      onLoad={event => { const image = event.currentTarget; if (image.decode) void image.decode().then(onLoad, onLoad); else onLoad(); }}
-      onError={() => setFailed(true)}
+      ref={node => { if (node?.complete && node.naturalWidth > 0) onLoad(); }}
+      onLoad={onLoad}
+      onError={() => { if (failed) onLoad(); else setFailed(true); }}
     />
   );
 }
@@ -693,17 +694,17 @@ function Hero({
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       {slides.length > 1 ? <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
-        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}>{locale === 'ar' ? '›' : '‹'}</button>
-        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}>{locale === 'ar' ? '‹' : '›'}</button>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm9 5 7 7-7 7' : 'm15 5-7 7 7 7'} /></svg></button>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm15 5-7 7 7 7' : 'm9 5 7 7-7 7'} /></svg></button>
       </div> : null}
-      </div>
-      <div className="public-homepage__hero-content">
         <div className="public-homepage__hero-heading">
         <p className="public-homepage__eyebrow">{localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
         </div>
+      </div>
+      <div className="public-homepage__hero-content">
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>

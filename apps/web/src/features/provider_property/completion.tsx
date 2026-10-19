@@ -449,6 +449,7 @@ function ReviewView({
     <form className="provider-property-completion__form" data-form-step="review" onSubmit={onSubmit} noValidate>
       <CompletionPageIntro copy={copy} />
       <StepRail step="review" locale={locale} />
+      {property.hasEditDraft ? <p className="provider-property-wizard__contract-note" role="status">{locale === 'ar' ? 'عقارك ما زال منشورًا بنسخته السابقة. الضغط على «إرسال للمراجعة» يرسل هذه التعديلات ويوقف عرضه مؤقتًا حتى تعتمدها الإدارة. يمكنك الخروج الآن واستكمال المسودة لاحقًا دون إخفائه.' : 'Your previous listing is still published. Submitting these changes temporarily hides it until administration approves. You can leave now and resume the draft later without hiding the listing.'}</p> : null}
       {submittedView ? <section className="provider-property-completion__submitted" role="status"><h2>{review.submittedTitle}</h2><p>{review.submittedBody}</p><strong>{review.submittedStatus}</strong></section> : null}
       <section className="provider-property-completion__card" aria-labelledby="provider-property-review-summary">
         <h2 id="provider-property-review-summary">{review.safeProjectionTitle}</h2>

@@ -2,13 +2,16 @@ import { Types, type Connection } from 'mongoose';
 import type { Readable } from 'node:stream';
 import type { StorageAdapter } from '../uploads/adapters.js';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
-import type { PropertyMediaModels } from './models.js';
+import { propertyMediaSchema, type PropertyMediaModels, type PropertyMediaRecord } from './models.js';
+import type { Model } from 'mongoose';
 
 export function createPropertyMediaContentReader(connection: Connection, models: PropertyMediaModels, storage: StorageAdapter, audience: 'public' | 'admin' = 'public') {
+  const Draft = audience === 'public' ? undefined : (connection.models.PropertyMediaDraft as Model<PropertyMediaRecord> | undefined) ?? connection.model<PropertyMediaRecord>('PropertyMediaDraft', propertyMediaSchema, 'property_media_drafts');
   return async (propertyId: string, mediaId: string): Promise<{ mime: string; size: number; etag?: string; open: (range?: { start: number; end: number }) => Promise<Readable> } | null> => {
-    const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), ...(audience === 'public' ? { active: true, status: 'published', ...unexpiredPropertyFilter() } : {}) }, { projection: { _id: 1 } });
+    const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), ...(audience === 'public' ? { active: true, status: 'published', ...unexpiredPropertyFilter() } : {}) }, { projection: { _id: 1, hasEditDraft: 1, status: 1 } });
     if (!property) return null;
-    const media = await models.PropertyMedia.findOne({ _id: mediaId, propertyId, active: true, processingState: 'ready' }).select('+storageKey').lean();
+    const source = Draft && property.hasEditDraft && property.status === 'published' ? Draft : models.PropertyMedia;
+    const media = await source.findOne({ _id: mediaId, propertyId, active: true, processingState: 'ready' }).select('+storageKey').lean();
     if (!media) return null;
     return { mime: media.detectedMime, size: media.byteSize, ...(/^[a-f0-9]{64}$/u.test(media.sha256 ?? '') ? { etag: `"${media.sha256}"` } : {}), open: (range?: { start: number; end: number }) => storage.openPrivate(media.storageKey, range) };
   };

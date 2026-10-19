@@ -66,7 +66,7 @@ export interface PropertyService {
   adminGet(adminId: string, id: string): Promise<PropertyData>;
   duplicates(adminId: string, query: unknown): Promise<PropertyDuplicateData>;
   create(claims: AccessTokenClaims, input: PropertyDraftCreate, context: PropertyMutationContext): Promise<PropertyData>;
-  get(claims: AccessTokenClaims, id: string): Promise<PropertyData>;
+  get(claims: AccessTokenClaims, id: string, view?: 'working' | 'published'): Promise<PropertyData>;
   saveStep(claims: AccessTokenClaims, id: string, step: string, input: unknown, context: PropertyMutationContext): Promise<PropertyData>;
   validate(claims: AccessTokenClaims, id: string): Promise<ReturnType<typeof propertyValidationDataSchema.parse>>;
   submit(claims: AccessTokenClaims, id: string, input: unknown, context: PropertyMutationContext): Promise<PropertyData>;
@@ -79,6 +79,7 @@ function provider(claims: AccessTokenClaims): void {
 }
 
 function actions(record: StoredProperty, actor: 'provider' | 'admin'): PropertyData['availableActions'] {
+  if (actor === 'provider' && record.status === 'published' && record.active && record.hasEditDraft) return ['update', 'submit'];
   if (actor === 'provider') return record.status === 'draft' || record.status === 'needs_changes' ? ['update', 'submit'] : record.status === 'published' && record.active && record.deactivationRequest?.status !== 'pending' ? ['start_edit', 'request_deactivation'] : [];
   if (record.status === 'published' && record.active && record.deactivationRequest?.status === 'pending') return ['approve_deactivation', 'reject_deactivation', 'hide', 'archive'];
   if (record.status === 'pending_review') return ['needs_changes', 'approve', 'reject'];
@@ -104,6 +105,7 @@ function expiryAt(publishedAt: Date, settings: PropertyRuntimeSettings): Date | 
 function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'): PropertyData {
   const paymentPlans = compatiblePaymentPlans(record);
   return propertyDataSchema.parse({
+    ...(record.hasEditDraft ? { hasEditDraft: true } : {}),
     ...(record.featured === undefined ? {} : { featured: record.featured }),
     ...(record.featuredOrder === undefined ? {} : { featuredOrder: record.featuredOrder }),
     id: record.id,
@@ -198,6 +200,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const input = propertySubmitSchema.parse(unparsedInput);
       const before = await dependencies.repository.findOwned(claims.sub, id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
+      if (before.editingPublishedVersion !== undefined) return data(before);
       if (!actions(before, 'provider').includes('start_edit')) throw new PropertyServiceError('PROPERTY_INVALID_STATE');
       return data(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: 'start_edit', before, metadata: { ...metadata(claims, input.reason, context, now()), actorType: 'provider' } })));
     },
@@ -260,11 +263,11 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       });
       return data(write(result));
     },
-    async get(claims, id) {
+    async get(claims, id, view) {
       provider(claims);
       propertyObjectIdSchema.parse(id);
-      const result = await dependencies.repository.findOwned(claims.sub, id);
-      if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
+      const result = view === 'published' ? await dependencies.repository.findByIdAny(id) : await dependencies.repository.findOwned(claims.sub, id);
+      if (!result || result.providerId !== claims.sub) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
       return data(result);
     },
     async saveStep(claims, id, unparsedStep, unparsedInput, context) {
@@ -313,7 +316,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       provider(claims); propertyObjectIdSchema.parse(id); const result = await dependencies.repository.findOwned(claims.sub, id); if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); return validation(result);
     },
     async submit(claims, id, unparsedInput, context) {
-      provider(claims); propertyObjectIdSchema.parse(id); const input = propertySubmitSchema.parse(unparsedInput) as PropertySubmit; const before = await dependencies.repository.findOwned(claims.sub, id); if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); const result = validation(before); if (!result.valid) throw new PropertyServiceError('PROPERTY_VALIDATION_FAILED', result); const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS; const changedAt = now(); const publish = !settings.requiresAdminReview && before.publishedAt === undefined; const expiresAt = publish ? expiryAt(changedAt, settings) : undefined; const submitted = await dependencies.repository.submit({ providerId: claims.sub, id, expectedVersion: input.version, targetStatus: publish ? 'published' : 'pending_review', ...(expiresAt ? { expiresAt } : {}), before, metadata: metadata(claims, input.reason, context, changedAt) }); if (submitted.kind === 'invalid_state') throw new PropertyServiceError('PROPERTY_INVALID_STATE'); if (submitted.kind === 'version_conflict') throw new PropertyServiceError('PROPERTY_VERSION_CONFLICT'); if (submitted.kind === 'not_found') throw new PropertyServiceError('PROPERTY_NOT_FOUND'); if (submitted.kind === 'written' || submitted.kind === 'already_submitted') return data(submitted.property); throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      provider(claims); propertyObjectIdSchema.parse(id); const input = propertySubmitSchema.parse(unparsedInput) as PropertySubmit; const before = await dependencies.repository.findOwned(claims.sub, id); if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); const result = validation(before); if (!result.valid) throw new PropertyServiceError('PROPERTY_VALIDATION_FAILED', result); const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS; const changedAt = now(); const publish = !settings.requiresAdminReview && before.publishedAt === undefined; const expiresAt = publish ? expiryAt(changedAt, settings) : undefined; const submitted = await dependencies.repository.submit({ providerId: claims.sub, id, expectedVersion: input.version, targetStatus: publish ? 'published' : 'pending_review', ...(expiresAt ? { expiresAt } : {}), before, metadata: metadata(claims, input.reason, context, changedAt) }); if (submitted.kind === 'slug_conflict') throw new PropertyServiceError('PROPERTY_SLUG_EXISTS'); if (submitted.kind === 'invalid_state') throw new PropertyServiceError('PROPERTY_INVALID_STATE'); if (submitted.kind === 'version_conflict') throw new PropertyServiceError('PROPERTY_VERSION_CONFLICT'); if (submitted.kind === 'not_found') throw new PropertyServiceError('PROPERTY_NOT_FOUND'); if (submitted.kind === 'written' || submitted.kind === 'already_submitted') return data(submitted.property); throw new PropertyServiceError('PROPERTY_INVALID_STATE');
     },
     async review(adminId, id, unparsedInput, context) {
       await adminPermission(adminId, 'admin:properties.review');

@@ -1,0 +1,13 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "opening_edit_keeps_original_published_and_owner_scoped",
+    "saved_fields_and_deleted_media_are_private_until_submission_stale_writes_rejected",
+    "only_explicit_submit_replaces_record_and_withdraws_for_admin_review_in_one_transaction",
+    "admin_republication_and_failed_audit_roll_back_without_losing_public_listing",
+    "concurrent_upload_and_submit_preserve_accepted_upload_or_return_explicit_conflict",
+    "custom_admin_visible_item_read_receipts_preserve_unseen_other_admin_and_new_revisions"
+  ],
+  "cleanup": true
+}

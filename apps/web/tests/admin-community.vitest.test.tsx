@@ -188,6 +188,7 @@ describe('admin community contracts and views', () => {
     const loadReports = vi.fn(async () => ({ ...reports, items: [{ ...report, status: 'resolved' as const, version: 3 }], summary: { total: 1, open: 0, in_review: 0, resolved: 1, dismissed: 0 } }));
     renderWithLocale(<AdminCommunity locale="en" session={session} initialReports={reports} loadReports={loadReports} resolveReport={resolveReport} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId(`admin-community-report-${report.id}`)).toBeInTheDocument());
+      expect(screen.getByRole('img', { name: 'Report needs review' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: getAdminCommunityCopy('en').action.review }));
     fireEvent.submit(screen.getByTestId('admin-community-resolution').querySelector('form')!);
     expect(resolveReport).not.toHaveBeenCalled();
@@ -197,6 +198,7 @@ describe('admin community contracts and views', () => {
     await waitFor(() => expect(resolveReport).toHaveBeenCalledWith(report.id, { version: 2, action: 'resolve', reason: 'Moderation decision recorded.' }));
     await waitFor(() => expect(screen.getByTestId('admin-community-summary-open')).toHaveTextContent('0'));
     expect(screen.getByTestId('admin-community-summary-resolved')).toHaveTextContent('1');
+      expect(screen.queryByRole('img', { name: 'Report needs review' })).not.toBeInTheDocument();
   });
 
   it('fails closed for a non-admin session without loading', async () => {

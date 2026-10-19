@@ -832,3 +832,4 @@ export type { AdBannerConfig } from '../ads/index.js';
 export * from '../provider/visibility.js';
 
 export * from '../ads/featured.js';
+export { propertyReadQuerySchema } from '../properties/index.js';

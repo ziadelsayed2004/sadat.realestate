@@ -61,8 +61,9 @@ export const ADMIN_ATTENTION_KEYS = [
 export const adminAttentionKeySchema = z.enum(ADMIN_ATTENTION_KEYS);
 export const adminAttentionReadRequestSchema = z.object({
   queueKey: adminAttentionKeySchema.optional(),
-  itemId: z.string().trim().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional()
-}).strict().refine(value => value.itemId === undefined || value.queueKey !== undefined, { message: 'An item requires its queue' });
+  itemId: z.string().trim().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/).optional(),
+  itemIds: z.array(z.string().trim().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/)).min(1).max(100).optional()
+}).strict().refine(value => (value.itemId === undefined && value.itemIds === undefined) || value.queueKey !== undefined, { message: 'An item requires its queue' }).refine(value => !value.itemId || !value.itemIds, { message: 'Use one item selector' });
 export const adminAttentionSchema = z.object({
   counts: z.partialRecord(adminAttentionKeySchema, z.number().int().nonnegative()),
   total: z.number().int().nonnegative()

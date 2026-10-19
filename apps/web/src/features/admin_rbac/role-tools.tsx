@@ -8,12 +8,12 @@ import { permissionLabel } from './permission-label.ts';
 export function PermissionChooser({ locale, catalog, value, mode, disabled, change, applyPreset }: { readonly locale: SupportedLocale; readonly catalog: readonly RbacPermission[]; readonly value: readonly RbacPermission[]; readonly mode: 'custom' | 'view_only'; readonly disabled: boolean; readonly change: (permissions: RbacPermission[]) => void; readonly applyPreset: (name: string, permissions: RbacPermission[], mode: 'custom' | 'view_only') => void }) {
   const ar = locale === 'ar';
   const allowed = catalog.filter(permission => mode !== 'view_only' || permission.endsWith('.view'));
-  const needsAdsView = value.includes('admin:ads.price') || value.includes('admin:ads.schedule');
+  const needsAdsView = value.includes('admin:ads.price') || value.includes('admin:ads.schedule') || value.includes('admin:payments.review');
   useEffect(() => {
     if (!disabled && mode === 'custom' && needsAdsView && !value.includes('admin:ads.view') && catalog.includes('admin:ads.view')) change([...value, 'admin:ads.view']);
   }, [catalog, change, disabled, mode, needsAdsView, value]);
   const selectPermissions = (permissions: RbacPermission[]) => change(
-    (permissions.includes('admin:ads.price') || permissions.includes('admin:ads.schedule')) && catalog.includes('admin:ads.view')
+    (permissions.includes('admin:ads.price') || permissions.includes('admin:ads.schedule') || permissions.includes('admin:payments.review')) && catalog.includes('admin:ads.view')
       ? [...new Set([...permissions, 'admin:ads.view' as const])] : permissions
   );
   const presets = [

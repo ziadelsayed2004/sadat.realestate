@@ -30,6 +30,19 @@ const viewerRoleId = '5123456789abcdef01234567';
 const timestamp = new Date('2026-08-13T18:30:00.000Z');
 const mutationContext = { requestId: 'rbac-test-1', traceId: 'a'.repeat(32) };
 
+for (const permission of ['admin:ads.price', 'admin:ads.schedule', 'admin:payments.review'] as const) {
+  test(`legacy custom ${permission} includes request reading without other write permissions`, async () => {
+    const repository = new MemoryRepository();
+    repository.authorizations.set(targetAdminId, { accountStatus: 'verified', bootstrapSuperAdmin: false, roles: [storedRole({ permissions: [permission] })] });
+    const service = createRbacService({ repository });
+    assert.equal(await service.authorize(targetAdminId, permission), true);
+    assert.equal(await service.authorize(targetAdminId, 'admin:ads.view'), true);
+    assert.equal(await service.authorize(targetAdminId, 'admin:roles.manage'), false);
+    assert.equal(await service.authorize(targetAdminId, 'admin:banners.manage'), false);
+    assert.equal(await service.authorize(viewerId, 'admin:ads.price'), false);
+  });
+}
+
 function storedRole(overrides: Partial<StoredRbacRole> = {}): StoredRbacRole {
   return {
     id: roleId,

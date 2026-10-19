@@ -103,6 +103,7 @@ function PropertyRow({ property, locale }: { readonly property: PropertyData; re
         <div className="provider-properties__identity">
           <strong><a href={localeForProviderPath(locale, providerPropertyStatusPath(property))}>{name}</a></strong>
           <span>{property.slug}</span>
+          {property.hasEditDraft && property.status === 'published' ? <small>{locale === 'ar' ? 'مسودة تعديل محفوظة — النسخة المنشورة لم تتغير' : 'Edit draft saved — the published listing is unchanged'}</small> : null}
           {hasReviewReason ? <small className="provider-properties__reason"><strong>{copy.properties.reason}</strong> {property.reviewReason}</small> : null}
         </div>
       </td>

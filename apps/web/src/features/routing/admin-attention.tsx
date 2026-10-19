@@ -81,6 +81,15 @@ export function useAdminAttentionRead(queueKey: AdminAttentionKey, itemId?: stri
   }, [queueKey, itemId, revision, markRead]);
 }
 
+export function useAdminAttentionListRead(queueKey: AdminAttentionKey, items: readonly { id: string; updatedAt: string }[]) {
+  const { markRead } = useContext(AdminAttentionContext);
+  const ids = items.map(item => item.id).join(',');
+  const revisions = items.map(item => item.updatedAt).join(',');
+  useEffect(() => {
+    if (ids) void markRead({ queueKey, itemIds: ids.split(',') }).catch(() => undefined);
+  }, [queueKey, ids, revisions, markRead]);
+}
+
 export function adminAttentionCount(id: string, attention: AdminAttention | undefined, unread = 0): number {
   const counts = attention?.counts ?? {};
   if (id === 'notifications') return (attention?.total ?? 0) + unread;

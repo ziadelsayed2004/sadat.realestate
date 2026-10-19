@@ -2,6 +2,9 @@ import { Schema, type Connection, type Model, type Types } from 'mongoose';
 import type { LocalizedText, PropertyArea, PropertyContact, PropertyDeliveryStatus, PropertyKind, PropertyLayout, PropertyMoney, PropertyPaymentPlan, PropertySource, PropertyStatus, PropertyTransactionType } from '@sadat-real-estate/contracts';
 
 export interface PropertyRecord {
+  hasEditDraft?: boolean;
+  editingPublishedVersion?: number;
+  mediaRevision?: string;
   featured?: boolean;
   featuredOrder?: number;
   deactivationRequest?: import('@sadat-real-estate/contracts').PropertyData['deactivationRequest'];
@@ -66,6 +69,9 @@ const contact = new Schema<PropertyContact>({
 }, { _id: false, strict: 'throw' });
 
 export const propertySchema = new Schema<PropertyRecord>({
+  hasEditDraft: { type: Boolean },
+  editingPublishedVersion: { type: Number, min: 0 },
+  mediaRevision: { type: String, maxlength: 36 },
   featured: { type: Boolean, default: false },
   featuredOrder: { type: Number, min: 0, max: 100000 },
   deactivationRequest: { type: new Schema({ status: { type: String, enum: ['pending', 'approved', 'rejected'], required: true }, reason: { type: String, required: true, minlength: 5, maxlength: 500 }, requestedAt: { type: String, required: true }, resolvedAt: String, decisionReason: { type: String, minlength: 5, maxlength: 500 } }, { _id: false, strict: 'throw' }), required: false },

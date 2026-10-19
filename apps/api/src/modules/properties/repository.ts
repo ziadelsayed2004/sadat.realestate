@@ -1,4 +1,5 @@
 import { notifyPropertyReview } from './notifications.js';
+import { createPropertyEditDrafts } from './edit-drafts.js';
 import { Types, type ClientSession, type Connection } from 'mongoose';
 import type { PropertyAdminListQuery, PropertyContactStep, PropertyCoordinates, PropertyCoreStep, PropertyDetailsStep, PropertyDuplicateData, PropertyFeaturesServicesStep, PropertyListQuery, PropertyLocationStep, PropertyPricingStep, PropertySource } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
@@ -14,6 +15,8 @@ function propertySearch(search: string): Record<string, unknown>[] {
 }
 
 export interface StoredProperty {
+  hasEditDraft?: boolean;
+  editingPublishedVersion?: number;
   featured?: boolean;
   featuredOrder?: number;
   deactivationRequest?: import('@sadat-real-estate/contracts').PropertyData['deactivationRequest'];
@@ -93,6 +96,8 @@ export interface PropertyRepository {
 
 function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredProperty {
   return {
+    ...(record.hasEditDraft ? { hasEditDraft: true } : {}),
+    ...(record.editingPublishedVersion === undefined ? {} : { editingPublishedVersion: record.editingPublishedVersion }),
     ...(record.featured === undefined ? {} : { featured: record.featured }),
     ...(record.featuredOrder == null ? {} : { featuredOrder: record.featuredOrder }),
     ...(record.deactivationRequest ? { deactivationRequest: structuredClone(record.deactivationRequest) } : {}),
@@ -146,7 +151,9 @@ function coordinates(value: PropertyCoordinates | null | undefined): { type: 'Po
 }
 function normalizedName(value: string | undefined): string | undefined { const normalized = value?.trim().toLocaleLowerCase('en').replace(/\s+/g, ' '); return normalized || undefined; }
 
-export function createMongoosePropertyRepository(connection: Connection, models: PropertyModels, audit: AuditWriter): PropertyRepository {
+export function createMongoosePropertyRepository(connection: Connection, models: PropertyModels, audit: AuditWriter, draftOnly = false): PropertyRepository {
+  let draftOperations: ReturnType<typeof createPropertyEditDrafts> | undefined;
+  const edits = () => draftOnly ? undefined : draftOperations ??= createPropertyEditDrafts(connection, models, audit, stored, draftModels => createMongoosePropertyRepository(connection, draftModels, audit, true));
   async function transaction<T>(run: (session: ClientSession) => Promise<T>): Promise<T> {
     const session = await connection.startSession();
     try { return await session.withTransaction(() => run(session)); }
@@ -161,6 +168,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     before: StoredProperty;
     metadata: PropertyMutationMetadata;
   }): Promise<PropertyWriteResult> {
+    if (!draftOnly && input.before.editingPublishedVersion !== undefined) return edits()!.update(input);
     if (input.before.status === 'archived') return { kind: 'invalid_state' };
     if (!(input.metadata.adminEdit && input.metadata.actorType === 'admin') && !['draft', 'needs_changes'].includes(input.before.status)) return { kind: 'invalid_state' };
     try {
@@ -230,6 +238,10 @@ export function createMongoosePropertyRepository(connection: Connection, models:
   return {
     async findOwned(providerId, id) {
       const result = await models.Property.findOne({ _id: id, providerId: new Types.ObjectId(providerId) }).lean();
+      if (!draftOnly && result?.hasEditDraft) {
+        const draft = await edits()!.findOwned(providerId, id);
+        if (draft) return draft;
+      }
       return result ? stored(result as PropertyRecord & { _id: Types.ObjectId }) : null;
     },
     async findByIdAny(id) {
@@ -361,6 +373,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       return update({ ...input, changes });
     },
     async submit(input) {
+      if (!draftOnly && input.before.editingPublishedVersion !== undefined) return edits()!.submit(input);
       return transaction(async session => {
         const targetStatus = input.targetStatus ?? 'pending_review';
         const result = await models.Property.findOneAndUpdate({ _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion, status: { $in: ['draft', 'needs_changes'] } }, { $set: { status: targetStatus, submittedAt: input.metadata.changedAt, ...(targetStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : {}), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
@@ -391,7 +404,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     },
     async visibility(input) {
       if (input.action === 'start_edit') {
-        return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { providerId: new Types.ObjectId(input.metadata.actorId), status: 'published', active: true, 'deactivationRequest.status': { $ne: 'pending' } }, set: { status: 'needs_changes', active: true, publishedAt: input.before.publishedAt ?? input.metadata.changedAt, updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.start_edit' });
+        return edits()?.start(input) ?? { kind: 'invalid_state' };
       }
       if (input.action === 'request_deactivation') {
         return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { providerId: new Types.ObjectId(input.metadata.actorId), status: 'published', active: true, 'deactivationRequest.status': { $ne: 'pending' } }, set: { deactivationRequest: { status: 'pending', reason: input.metadata.reason, requestedAt: input.metadata.changedAt.toISOString() }, updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.request_deactivation' });

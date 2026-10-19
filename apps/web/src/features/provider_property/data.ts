@@ -59,6 +59,7 @@ export interface ProviderPropertyRequestOptions {
 
 export interface ProviderPropertyLoadOptions extends ProviderPropertyRequestOptions {
   readonly propertyId: string;
+  readonly view?: 'published' | 'working';
 }
 
 export async function loadProviderPropertyMedia(options: ProviderPropertyLoadOptions): Promise<readonly PropertyMediaData[]> {
@@ -196,6 +197,7 @@ export async function loadProviderProperty(options: ProviderPropertyLoadOptions)
     const headers = authorizationHeaders(options.authorization);
     return client.request(propertyPath(options.propertyId), {
       method: 'GET',
+      ...(options.view ? { query: { view: options.view } } : {}),
       responseSchema: successEnvelopeSchema(propertyDataSchema),
       ...(headers === undefined ? {} : { headers }),
       ...(options.signal === undefined ? {} : { signal: options.signal })

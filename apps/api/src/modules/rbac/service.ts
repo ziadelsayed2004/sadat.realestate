@@ -86,7 +86,11 @@ function normalizedNameKey(name: string): string {
 }
 
 function sortedPermissions(permissions: readonly RbacPermission[]): RbacPermission[] {
-  return [...permissions].sort((left, right) => left.localeCompare(right, 'en'));
+  const selected = new Set(permissions);
+  // These capabilities require reading the request they operate on. Resolve the
+  // prerequisite on the server too, including roles saved before the UI added it.
+  if (selected.has('admin:ads.price') || selected.has('admin:ads.schedule') || selected.has('admin:payments.review')) selected.add('admin:ads.view');
+  return [...selected].sort((left, right) => left.localeCompare(right, 'en'));
 }
 
 function effectivePermissions(roles: readonly StoredRbacRole[]): RbacPermission[] {

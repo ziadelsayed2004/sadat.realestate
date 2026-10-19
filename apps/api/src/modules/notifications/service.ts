@@ -209,7 +209,9 @@ export function createNotificationService(dependencies: NotificationServiceDepen
       const input = adminAttentionReadRequestSchema.parse(unparsedInput ?? {});
       const permittedPermissions = await dependencies.authorization?.permissions?.(claims.sub);
       const queueChanges = await dependencies.attention?.markRead?.(claims.sub, input, permittedPermissions) ?? 0;
-      const notificationChanges = input.itemId
+      const notificationChanges = input.itemIds
+        ? (await Promise.all(input.itemIds.map(id => dependencies.repository.markRelatedRead?.(claims.sub, id, now(), permittedPermissions ?? []) ?? 0))).reduce((sum, count) => sum + count, 0)
+        : input.itemId
         ? await dependencies.repository.markRelatedRead?.(claims.sub, input.itemId, now(), permittedPermissions ?? []) ?? 0
         : input.queueKey ? 0 : await dependencies.repository.markAllRead(claims.sub, now(), 'admin', permittedPermissions ?? []);
       return adminNotificationReadAllDataSchema.parse({ updatedCount: queueChanges + notificationChanges });

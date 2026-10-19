@@ -54,6 +54,7 @@ export const propertyVisibilityActionSchema = z.enum(PROPERTY_VISIBILITY_ACTIONS
 export const propertyVisibilitySchema = z.object({ version: z.number().int().nonnegative(), action: propertyVisibilityActionSchema, reason: propertyReasonSchema }).strict();
 export const PROPERTY_AVAILABLE_ACTIONS = ['update', 'submit', 'needs_changes', 'approve', 'reject', 'publish', 'hide', 'restore', 'archive', 'start_edit', 'request_deactivation', 'approve_deactivation', 'reject_deactivation'] as const;
 export const propertyAvailableActionSchema = z.enum(PROPERTY_AVAILABLE_ACTIONS);
+export const propertyReadQuerySchema = z.object({ view: z.enum(['working', 'published']).optional() }).strict();
 const positiveQuery = (fallback: number, max: number) => z.preprocess(value => value === undefined ? fallback : Number(value), z.number().int().positive().max(max));
 export const propertyListQuerySchema = z.object({
   status: propertyStatusSchema.optional(),
@@ -259,6 +260,7 @@ export const propertyContactStepSchema = draftPatch({
 export const propertyStepSchema = z.union([propertyCoreStepSchema, propertyLocationStepSchema, propertyDetailsStepSchema, propertyPricingStepSchema, propertyFeaturesServicesStepSchema, propertyContactStepSchema]);
 
 export const propertyDataSchema = z.object({
+  hasEditDraft: z.boolean().optional(),
   featured: z.boolean().optional(),
   featuredOrder: z.number().int().min(0).max(100000).optional(),
   imageUrl: z.union([z.url().max(2048), z.string().max(2048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),

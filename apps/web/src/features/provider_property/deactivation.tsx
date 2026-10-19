@@ -11,7 +11,7 @@ export function PropertyDeactivationRequest({ property, locale, submit, startEdi
   const [error, setError] = useState<string>();
   const request = property.deactivationRequest;
   const canRequest = property.availableActions.includes('request_deactivation');
-  const canEdit = property.availableActions.includes('start_edit');
+  const canEdit = property.availableActions.includes('start_edit') || (property.hasEditDraft === true && property.status === 'published' && property.active);
   if (!canRequest && !canEdit && !request) return null;
   async function perform(action: () => Promise<void>) {
     if (pending.current) return;
@@ -31,7 +31,7 @@ export function PropertyDeactivationRequest({ property, locale, submit, startEdi
     <p>{ar ? 'لو العقار اتباع أو لم يعد متاحًا، أرسل طلبًا لإيقاف عرضه. يظل العقار ظاهرًا حتى موافقة الإدارة.' : 'If the property is sold or unavailable, request removal from public listings. It stays visible until administration approves.'}</p>
     {request ? <div role="status"><strong>{request.status === 'pending' ? ar ? 'تم إرسال الطلب — بانتظار موافقة الإدارة' : 'Request sent — awaiting administration approval' : request.status === 'approved' ? ar ? 'وافقت الإدارة على إلغاء التفعيل' : 'Administration approved deactivation' : ar ? 'رفضت الإدارة طلب إلغاء التفعيل' : 'Administration rejected deactivation'}</strong><p>{request.reason}</p>{request.decisionReason ? <p>{ar ? 'سبب القرار: ' : 'Decision reason: '}{request.decisionReason}</p> : null}</div> : null}
     {canRequest ? <form onSubmit={event => { void send(event); }}><label htmlFor="property-deactivation-reason">{ar ? 'سبب إلغاء التفعيل' : 'Deactivation reason'}</label><textarea id="property-deactivation-reason" rows={3} minLength={5} maxLength={500} required disabled={saving} value={reason} onChange={event => setReason(event.target.value)} placeholder={ar ? 'مثال: تم بيع العقار' : 'For example: the property has been sold'} /><Button type="submit" loading={saving} disabled={saving}>{ar ? 'إرسال طلب إلغاء التفعيل' : 'Send deactivation request'}</Button></form> : null}
-    {canEdit ? <><h2>{ar ? 'تعديل العقار المنشور' : 'Edit published property'}</h2><p>{ar ? 'بدء التعديل يوقف عرض العقار مؤقتًا. بعد حفظ التعديلات، أرسله للمراجعة؛ يعود للظهور بعد اعتماد الإدارة.' : 'Starting an edit temporarily removes the property from public listings. Save and submit your changes for review; it returns after administration approves.'}</p><Button type="button" variant="secondary" disabled={saving} onClick={() => { void perform(startEdit); }}>{ar ? 'بدء تعديل العقار' : 'Start editing property'}</Button></> : null}
+    {canEdit ? <><h2>{ar ? 'تعديل العقار المنشور' : 'Edit published property'}</h2><p>{ar ? 'فتح التعديل أو حفظ مسودة لا يخفي عقارك. تظل النسخة الحالية منشورة حتى تضغط «إرسال للمراجعة»؛ عندها يتوقف عرض العقار مؤقتًا ويعود بعد اعتماد الإدارة.' : 'Opening the editor or saving a draft keeps your current listing published. Only submitting for review temporarily hides it until administration approves.'}</p><Button type="button" variant="secondary" disabled={saving} onClick={() => { void perform(startEdit); }}>{ar ? 'بدء تعديل العقار' : 'Start editing property'}</Button></> : null}
     {error ? <p role="alert">{error}</p> : null}
   </section>;
 }

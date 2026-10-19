@@ -45,7 +45,7 @@ it('keeps the reason on conflict and does not claim the request succeeded', asyn
 it('explains that editing temporarily removes publication before starting the edit', async () => {
   const startEdit = vi.fn().mockResolvedValue(undefined);
   renderWithLocale(<PropertyDeactivationRequest property={published} locale="en" submit={vi.fn()} startEdit={startEdit} />, { locale: 'en' });
-  expect(screen.getByText(/Starting an edit temporarily removes/u)).toBeInTheDocument();
+  expect(screen.getByText(/Opening the editor or saving a draft keeps/u)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Start editing property' }));
   await waitFor(() => expect(startEdit).toHaveBeenCalledOnce());
 });

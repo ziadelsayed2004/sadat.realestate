@@ -23,7 +23,7 @@ const queues: ReadonlyArray<{ key: AdminAttentionKey; collection: string; permis
 export function createAdminAttentionSource(
   count: (collection: string, filter: Record<string, unknown>, adminId: string, key: AdminAttentionKey) => Promise<number>,
   authorize: (adminId: string, permission: RbacPermission) => Promise<boolean>,
-  acknowledge?: (collection: string, filter: Record<string, unknown>, adminId: string, key: AdminAttentionKey, itemId?: string) => Promise<number>
+  acknowledge?: (collection: string, filter: Record<string, unknown>, adminId: string, key: AdminAttentionKey, itemId?: string, itemIds?: string[]) => Promise<number>
 ) {
   async function authorizedFilter(queue: typeof queues[number], adminId: string, permissions?: readonly string[]): Promise<Record<string, unknown> | undefined> {
     const allowed = (permission: RbacPermission) => permissions ? permissions.includes(permission) : authorize(adminId, permission);
@@ -44,7 +44,7 @@ export function createAdminAttentionSource(
         if (input.queueKey && queue.key !== input.queueKey) return 0;
         const filter = await authorizedFilter(queue, adminId, permissions);
         if (!filter) return 0;
-        return await acknowledge?.(queue.collection, filter, adminId, queue.key, input.itemId) ?? 0;
+        return await acknowledge?.(queue.collection, filter, adminId, queue.key, input.itemId, input.itemIds) ?? 0;
       }));
       return changes.reduce((sum, value) => sum + value, 0);
     }
@@ -70,10 +70,10 @@ export function createMongooseAdminAttentionSource(connection: Connection, autho
       { $match: { 'readReceipts.0': { $exists: false } } }, { $count: 'total' }
     ]).toArray();
     return (result[0]?.total as number | undefined) ?? 0;
-  }, authorize, async (collection, filter, adminId, key, itemId) => {
+  }, authorize, async (collection, filter, adminId, key, itemId, itemIds) => {
     // Snapshot the actual records, so new arrivals during/after this action stay unread.
     const rows = await connection.collection(collection).aggregate<{ itemId: string; revision: unknown }>([
-      { $match: filter }, { $project: projection }, ...(itemId ? [{ $match: { itemId } }] : [])
+      { $match: filter }, { $project: projection }, ...(itemId ? [{ $match: { itemId } }] : itemIds ? [{ $match: { itemId: { $in: itemIds } } }] : [])
     ]).toArray();
     if (!rows.length) return 0;
     const result = await receipts.bulkWrite(rows.map(row => ({ updateOne: {

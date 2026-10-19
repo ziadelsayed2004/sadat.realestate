@@ -57,3 +57,4 @@
   .admin-community__summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-community__resolution { grid-template-columns: 1fr; }
 }
+.admin-community__pending-dot { display: inline-block; width: 10px; height: 10px; margin-inline-end: 8px; border-radius: 50%; background: #b82335; box-shadow: 0 0 0 4px #b8233514; vertical-align: middle; }
