@@ -43,6 +43,20 @@ const categories: readonly PublicArticleCategoryOption[] = [
 const emptyRelatedProperties = { items: [], categories: [], propertyTypes: [], page: 1, limit: 3, total: 0 };
 
 describe('public article listing and details', () => {
+  it.each(['ar', 'en'] as const)('keeps the cover separate from the additional-image carousel in %s', locale => {
+    const cover = `/api/v1/public/article-photos/${'1'.repeat(24)}`, other = `/api/v1/public/article-photos/${'2'.repeat(24)}`;
+    const selected = articlePublicSchema.parse({ ...article, imageUrl: cover, images: [{ id: '1'.repeat(24), imageUrl: cover }, { id: '2'.repeat(24), imageUrl: other }] });
+    const { container } = renderWithLocale(<PublicArticleDetails locale={locale} initialData={selected} relatedArticles={[]} relatedProperties={emptyRelatedProperties} />, { locale });
+    const hero = container.querySelector('.public-article-details__hero-media')!;
+    expect(hero.querySelector('img')).toHaveAttribute('src', cover);
+    expect(hero.querySelector('[aria-roledescription]')).toBeNull();
+    const gallery = screen.getByRole('region', { name: locale === 'ar' ? 'صور المقال' : 'Article images' });
+    expect(container.querySelector('.public-article-details__body')).toContainElement(gallery);
+    expect(gallery.querySelectorAll('img')).toHaveLength(1);
+    expect(gallery.querySelector('img')).toHaveAttribute('src', other);
+    fireEvent.error(gallery.querySelector('img')!);
+    expect(hero.querySelector('img')).toHaveAttribute('src', cover);
+  });
   it.each(['ar', 'en'] as const)('shows the selected category description and removes it when cleared in %s', locale => {
     const description = { ar: 'دليل شراء العقارات', en: 'Practical property buying guidance' };
     const supplied = categories.map(item => item.id === article.categoryId ? { ...item, description } : item);

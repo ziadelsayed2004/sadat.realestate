@@ -35,7 +35,7 @@ import {
 } from './articles-data.ts';
 import { getPublicArticlesCopy, type PublicArticlesCopy } from './articles-copy.ts';
 import './articles.css';
-import { ArticleImageSlider } from './article-image-slider.tsx';
+import { ArticleImageCarousel } from './article-image-carousel.tsx';
 
 export type PublicArticlesViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
 export type PublicArticleDetailsViewState = PublicArticlesViewState | 'not_found';
@@ -332,13 +332,14 @@ function NotFoundNotice({ copy }: { readonly copy: PublicArticlesCopy }) {
 function ArticleBody({ article, locale, copy }: { readonly article: ArticlePublic; readonly locale: SupportedLocale; readonly copy: PublicArticlesCopy }) {
   const body = localizedText(article.body, locale);
   const paragraphs = (body ?? '').split(/\n{2,}/u).map(value => value.trim()).filter(Boolean);
+  const gallery = article.images?.filter(image => image.imageUrl !== article.imageUrl) ?? [];
   return (
     <section className="public-article-details__body" aria-labelledby="public-article-body-title">
       <h2 id="public-article-body-title">{copy.introduction ?? copy.articleBody}</h2>
       {paragraphs.length === 0 ? <p>{copy.noSummary}</p> : paragraphs.map((paragraph, index) => /^['"“«]/u.test(paragraph)
         ? <blockquote key={`${article.id}-paragraph-${index}`}>{paragraph.replace(/^['"“«]|['"”»]$/gu, '').trim()}</blockquote>
         : <p key={`${article.id}-paragraph-${index}`}>{paragraph}</p>)}
-
+      {gallery.length ? <ArticleImageCarousel key={article.id} locale={locale} title={localizedText(article.title, locale) ?? article.slug} images={gallery.map(image => ({ key: image.id, src: image.imageUrl }))} /> : null}
     </section>
   );
 }
@@ -403,7 +404,7 @@ function ArticleDetailsView({
     <div className={`public-article-details__detail-layout${hasRelatedProperties ? '' : ' public-article-details__detail-layout--without-property-rail'}`}>
       <article className="public-article-details__article">
       <div className="public-article-details__hero">
-        <div className="public-article-details__hero-media"><ArticleImageSlider key={article.id} locale={locale} title={title} images={[...(article.imageUrl ? [{ key: 'cover', src: article.imageUrl }] : []), ...(article.images ?? []).map(image => ({ key: image.id, src: image.imageUrl }))]} /></div>
+        <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" /></div>
         <div className="public-article-details__hero-copy">
           {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
           <h1 id="public-article-details-title">{title}</h1>

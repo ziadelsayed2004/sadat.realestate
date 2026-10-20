@@ -3,11 +3,13 @@
   "mockedResponses": false,
   "checks": [
     "real_scanned_image_upload_rejects_corrupt_and_unsupported_files_without_creating_records",
-    "administrative_preview_uses_same_slider_and_rejected_upload_preserves_article_text",
+    "administrative_preview_keeps_separate_cover_and_additional_image_carousel_and_rejected_upload_preserves_text",
     "chromium_webkit_320_390_1440_long_unbroken_text_and_portrait_panorama_stay_inside_viewport",
-    "legacy_missing_cover_recovers_after_hydration_corrupt_image_skipped_and_duplicate_images_removed",
-    "gallery_buttons_rtl_ltr_keyboard_single_frame_and_all_images_failed_keep_body_readable",
-    "both_healthy_article_examples_keep_single_image_layout_without_redundant_controls"
+    "cover_stays_separate_and_unchanged_during_gallery_navigation",
+    "additional_images_form_one_horizontal_row_with_4_to_3_cards_and_contain_fitting",
+    "corrupt_gallery_images_skipped_duplicates_removed_and_all_images_failed_keep_body_readable",
+    "gallery_buttons_rtl_ltr_keyboard_home_end_navigate_with_correct_edge_controls",
+    "both_healthy_article_examples_keep_cover_without_an_empty_carousel"
   ],
   "geometry": [
     {
@@ -16,7 +18,25 @@
       "width": 320,
       "scrollWidth": 320,
       "bodyWidth": 288,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 411.1875,
+          "width": 218.4375,
+          "height": 163.828125
+        },
+        {
+          "top": 411.1875,
+          "width": 218.4375,
+          "height": 163.828125
+        },
+        {
+          "top": 411.1875,
+          "width": 218.4375,
+          "height": 163.828125
+        }
+      ]
     },
     {
       "engine": "chromium",
@@ -24,7 +44,25 @@
       "width": 390,
       "scrollWidth": 390,
       "bodyWidth": 358,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 388.90625,
+          "width": 278.625,
+          "height": 208.96875
+        },
+        {
+          "top": 388.90625,
+          "width": 278.625,
+          "height": 208.96875
+        },
+        {
+          "top": 388.90625,
+          "width": 278.625,
+          "height": 208.96875
+        }
+      ]
     },
     {
       "engine": "chromium",
@@ -32,7 +70,25 @@
       "width": 1440,
       "scrollWidth": 1440,
       "bodyWidth": 811,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 374.4375,
+          "width": 372.5,
+          "height": 279.375
+        },
+        {
+          "top": 374.4375,
+          "width": 372.5,
+          "height": 279.375
+        },
+        {
+          "top": 374.4375,
+          "width": 372.5,
+          "height": 279.375
+        }
+      ]
     },
     {
       "engine": "webkit",
@@ -40,7 +96,25 @@
       "width": 320,
       "scrollWidth": 320,
       "bodyWidth": 288,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 445.375,
+          "width": 218.4375,
+          "height": 163.828125
+        },
+        {
+          "top": 445.375,
+          "width": 218.4375,
+          "height": 163.828125
+        },
+        {
+          "top": 445.375,
+          "width": 218.4375,
+          "height": 163.828125
+        }
+      ]
     },
     {
       "engine": "webkit",
@@ -48,7 +122,25 @@
       "width": 390,
       "scrollWidth": 390,
       "bodyWidth": 358,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 422.90625,
+          "width": 278.625,
+          "height": 208.96875
+        },
+        {
+          "top": 422.90625,
+          "width": 278.625,
+          "height": 208.96875
+        },
+        {
+          "top": 422.90625,
+          "width": 278.625,
+          "height": 208.96875
+        }
+      ]
     },
     {
       "engine": "webkit",
@@ -56,7 +148,25 @@
       "width": 1440,
       "scrollWidth": 1440,
       "bodyWidth": 811,
-      "fit": "contain"
+      "fit": "contain",
+      "coverFit": "contain",
+      "cards": [
+        {
+          "top": 339.4375,
+          "width": 372.5,
+          "height": 279.375
+        },
+        {
+          "top": 339.4375,
+          "width": 372.5,
+          "height": 279.375
+        },
+        {
+          "top": 339.4375,
+          "width": 372.5,
+          "height": 279.375
+        }
+      ]
     }
   ],
   "cleanup": true,
