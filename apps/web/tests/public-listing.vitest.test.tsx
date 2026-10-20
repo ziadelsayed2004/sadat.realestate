@@ -83,7 +83,7 @@ describe('public property listing', () => {
     const load = vi.fn().mockResolvedValue(data);
     const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} load={load} />, { locale: 'en' });
     const card = result.container.querySelector('.public-property-listing__category-rail button:last-child')!;
-    expect(card.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/category-placeholder.svg');
+    expect(card.querySelector('img')).toHaveAttribute('src', '/assets/sadat-real-estate-logo.png');
     fireEvent.click(card);
     await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyTypeId: type.id }), expect.anything()));
   });

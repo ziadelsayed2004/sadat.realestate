@@ -124,7 +124,7 @@ describe('public homepage', () => {
     ];
     const result = renderWithLocale(<PublicHomepage locale="en" initialData={publicHomepageDataSchema.parse({ ...homepageData, categories })} />, { locale: 'en' });
     const cards = result.container.querySelectorAll('.public-homepage__category-card:not(.public-homepage__category-card--all)');
-    expect(cards[0]?.querySelector('img')).toHaveAttribute('src', '/assets/canonical/public/category-placeholder.svg');
+    expect(cards[0]?.querySelector('img')).toHaveAttribute('src', '/assets/sadat-real-estate-logo.png');
     expect(cards[1]?.querySelector('img')).toHaveAttribute('src', 'https://example.com/custom.jpg');
     expect(screen.queryByRole('link', { name: /Sadat gate photo/ })).not.toBeInTheDocument();
   });

@@ -947,3 +947,10 @@
   block-size: auto;
   object-fit: contain;
 }
+
+.public-articles__card-meta { margin-block-start: 18px; padding-block-start: 12px; gap: 10px 16px; align-items: center; line-height: 1.7; }
+.public-articles__card-author { font-weight: 600; }
+.public-articles__card-meta time { white-space: normal; }
+
+.public-articles__card-byline { margin-block-start: 20px; padding-block-start: 12px; line-height: 1.8; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.public-articles__card-byline time { white-space: normal; }

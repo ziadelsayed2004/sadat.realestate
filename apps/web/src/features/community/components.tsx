@@ -1,3 +1,4 @@
+import { useCommunityCategories } from './categories.ts';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   communityPostCreateSchema,
@@ -34,7 +35,7 @@ type DetailViewState = PublicCommunityViewState | 'not_found';
 type ComposerState = 'closed' | 'checking' | 'open' | 'permission';
 type MutationState = 'idle' | 'creating' | 'reporting';
 type ReportReason = 'spam' | 'abuse' | 'misinformation' | 'other';
-type PostCategory = 'question' | 'experience' | 'advice' | 'service' | 'area' | 'property';
+type PostCategory = string;
 
 export interface CommunityAuthClient {
   readonly getSnapshot: () => AuthSnapshot;
@@ -108,7 +109,7 @@ function postPresentation(post: CommunityPublicPost, locale: SupportedLocale): C
   return {
     author: post.authorName?.[locale] || copy.member,
     time: formatDate(post.createdAt, locale),
-    category: post.category === undefined ? copy.post : copy.categories[post.category],
+    category: post.category === undefined ? copy.post : post.categoryName?.[locale] ?? post.categoryName?.ar ?? post.categoryName?.en ?? (copy.categories as Record<string, string>)[post.category] ?? post.category,
     categoryKey: post.category ?? 'post',
     likes: post.likeCount ?? 0,
     dislikes: post.dislikeCount ?? 0,
@@ -480,7 +481,8 @@ export function PublicCommunity({
   };
 
   const pageCount = data === undefined || data.limit <= 0 ? 0 : Math.ceil(data.total / data.limit);
-  const filters = communityFilters(locale);
+  const customCategories = useCommunityCategories(locale);
+  const filters = [...communityFilters(locale), ...customCategories.filter(item => item.key.startsWith("custom_"))];
   const categoryOptions = filters
     .filter((filter): filter is { readonly key: PostCategory; readonly label: string } => filter.key !== 'all')
     .map(filter => ({ value: filter.key, label: filter.label }));

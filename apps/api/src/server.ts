@@ -164,7 +164,7 @@ async function runEntrypoint(): Promise<void> {
   const commissionAccounts = createCommissionAccountRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
   const commissionExceptions = createCommissionExceptionRuntime(database.nativeConnection, auth.accessTokens, rbac.service, auditInfrastructure.writer);
   const commissionConfirmations = createCommissionConfirmationRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
-  const commissionChangeLog = createCommissionChangeLogRuntime(auditInfrastructure.repository, auth.accessTokens, rbac.service);
+  const commissionChangeLog = createCommissionChangeLogRuntime(auditInfrastructure.repository, auth.accessTokens, rbac.service, database.nativeConnection);
   const audit = createAuditRuntime(auth.accessTokens, rbac.service, auditInfrastructure);
   const uploadEnvironment = parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment);
   const uploads = createUploadRuntime(

@@ -724,7 +724,7 @@ function RoleList({ locale, source }: { readonly locale: SupportedLocale; readon
                     <td>{role.accessMode === "view_only" ? copy.viewOnly : copy.custom}</td>
                     <td>{role.permissions.length}</td>
                     <td>{role.active ? copy.activeStatus : copy.disabledStatus}</td>
-                    <td>
+                    <td>{canManage && role.availableActions.includes("update") ? <DeleteRole id={role.id} version={role.version} locale={locale} onDeleted={() => setAttempt(value => value + 1)} /> : null}
                       {role.availableActions.includes("update") ? (
                         <a className="admin-rbac__row-link" href={localePath(locale, `${ADMIN_RBAC_ROLES_ROUTE}/${role.id}`)}>
                           {copy.edit}

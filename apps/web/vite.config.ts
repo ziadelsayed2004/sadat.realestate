@@ -31,6 +31,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             if (normalizedId.includes('/src/features/contracts/')) return 'api-client';
             if (normalizedId.includes('/node_modules/zod/')) return 'vendor-validation';
             if (normalizedId.includes('/src/features/localization/copy-catalog') || normalizedId.includes('/src/features/localization/messages/')) return 'locale-copy';
+            if (normalizedId.includes('/src/features/admin_home')) return 'feature-admin-home';
             if (normalizedId.includes('/src/features/admin_user_guide')) return 'feature-user-guide';
             if (normalizedId.includes('/src/features/admin_accounts/company-editor') || normalizedId.includes('/src/features/admin_properties/featured') || normalizedId.includes('/src/features/admin_rbac/delete-role') || normalizedId.includes('/src/features/admin_requests/staff-picker') || normalizedId.includes('/src/features/admin_ads/advertiser-link')) return 'feature-account-tools';
             if (normalizedId.includes('/src/features/admin/audit-presentation') || normalizedId.includes('/src/features/admin/notifications-audit-copy') || normalizedId.includes('/src/features/admin/audit-changes') || normalizedId.includes('/src/features/admin_rbac/permission-label')) return 'feature-admin-audit-copy';

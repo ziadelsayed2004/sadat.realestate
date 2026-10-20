@@ -91,7 +91,8 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'primary_email', kind: 'text', labelKey: 'primary_email' },
     { key: 'primary_phone', kind: 'text', labelKey: 'primary_phone' },
     { key: 'office_address', kind: 'localized', labelKey: 'office_address' },
-    { key: 'working_hours', kind: 'localized', labelKey: 'working_hours' }
+    { key: 'working_hours', kind: 'localized', labelKey: 'working_hours' },
+    { key: 'map_url', kind: 'url', labelKey: 'map_url' }
   ],
   contact: [
     { key: 'primary_phone', kind: 'text', labelKey: 'primary_phone' },
@@ -252,7 +253,7 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
   const dirty = JSON.stringify(values) !== JSON.stringify(data?.values ?? {});
   const renderField = (field: Field) => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField locale={locale} key={field.key} field={field} values={values} copy={copy} hint={namespace === 'platform' ? (copy.guide.fieldHelp as Readonly<Record<string, string>>)[field.key] : undefined} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />;
   const nameKeys = ['platform_name', 'short_name', 'description'];
-  const officeKeys = ['city', 'primary_email', 'primary_phone', 'office_address', 'working_hours'];
+  const officeKeys = ['city', 'primary_email', 'primary_phone', 'office_address', 'working_hours', 'map_url'];
   const savedName = localizedDraft(data?.values.platform_name);
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {

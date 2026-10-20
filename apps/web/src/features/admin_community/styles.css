@@ -58,3 +58,7 @@
   .admin-community__resolution { grid-template-columns: 1fr; }
 }
 .admin-community__pending-dot { display: inline-block; width: 10px; height: 10px; margin-inline-end: 8px; border-radius: 50%; background: #b82335; box-shadow: 0 0 0 4px #b8233514; vertical-align: middle; }
+.admin-community__category-manager summary { cursor: pointer; font-weight: 700; line-height: 1.8; }
+.admin-community__category-manager fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); align-items: end; gap: 16px; padding: 0; border: 0; }
+.admin-community__category-manager label { display: grid; gap: 8px; line-height: 1.7; }
+.admin-community__category-manager input { inline-size: 100%; min-inline-size: 0; box-sizing: border-box; padding: 10px; border: 1px solid #d7ded9; border-radius: 10px; font: inherit; }

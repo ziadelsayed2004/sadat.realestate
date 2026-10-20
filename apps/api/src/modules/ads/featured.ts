@@ -43,6 +43,7 @@ export async function featuredOptions(connection: Connection, providerId?: strin
   if (!providerId) return featuredOptionsSchema.parse({ advertisers, destinations: [] });
   const advertiser = await featuredAdvertiser(connection, providerId);
   if (!advertiser) throw missing();
+  if (!advertisers.some(item => item.id === advertiser.identity.id)) { if (advertisers.length >= 100) advertisers.pop(); advertisers.push(advertiser.identity); }
   return featuredOptionsSchema.parse({ advertisers, destinations: await featuredDestinations(connection, advertiser) });
 }
 async function featuredDestinations(connection: Connection, advertiser: NonNullable<Awaited<ReturnType<typeof featuredAdvertiser>>>) {

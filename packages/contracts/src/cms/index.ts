@@ -147,6 +147,7 @@ export const aboutBlockCreateSchema = z
   .object({
     key: safeKey.optional(),
     title: localizedTextSchema,
+    imageUrl: publicAssetUrl.optional(),
     body: localizedTextSchema,
     stats: aboutStats.optional(),
     order,
@@ -159,6 +160,7 @@ export const aboutBlockPatchSchema = z
   .object({
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
+    imageUrl: publicAssetUrl.nullable().optional(),
     body: localizedTextSchema.optional(),
     stats: aboutStats.optional(),
     order,
@@ -282,6 +284,7 @@ export const tipCreateSchema = z
   .object({
     key: safeKey.optional(),
     title: localizedTextSchema,
+    imageUrl: publicAssetUrl.optional(),
     body: localizedTextSchema,
     order: order.optional(),
     active: z.boolean().default(true),
@@ -293,6 +296,7 @@ export const tipPatchSchema = z
   .object({
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
+    imageUrl: publicAssetUrl.nullable().optional(),
     body: localizedTextSchema.optional(),
     order: order.optional(),
     active: z.boolean().optional(),
@@ -325,6 +329,7 @@ export const homepageSectionCreateSchema = z
   .strict();
 export const homepageSectionPatchSchema = z
   .object({
+    key: z.enum(["hero", "featured_properties", "articles", "community", "tips", "about"]).optional(),
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
     eyebrow: homepageEyebrowSchema.nullable().optional(),
@@ -417,6 +422,7 @@ export const cmsAdminAboutBlockSchema = z
     ...cmsAdminRecordFields,
     key: safeKey,
     title: localizedTextSchema,
+    imageUrl: publicAssetUrl.optional(),
     body: localizedTextSchema,
     stats: aboutStats.optional(),
     order,
@@ -463,6 +469,7 @@ export const cmsAdminTipSchema = z
     ...cmsAdminRecordFields,
     key: safeKey,
     title: localizedTextSchema,
+    imageUrl: publicAssetUrl.optional(),
     body: localizedTextSchema,
     order,
     active: z.boolean(),

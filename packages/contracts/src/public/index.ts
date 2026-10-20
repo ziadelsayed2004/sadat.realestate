@@ -145,6 +145,7 @@ export const publicBootstrapDataSchema = z.object({
     facebookUrl: z.url().max(2048).optional(),
     instagramUrl: z.url().max(2048).optional(),
     mapUrl: z.url().max(2048).optional(),
+    workingHours: localizedTextSchema.optional(),
     isDemo: z.boolean().optional(),
     address: localizedTextSchema.optional()
   }).strict().optional(),

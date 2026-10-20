@@ -20,6 +20,7 @@ export const publicHomeHandler = http.get(
 );
 
 export const handlers = [publicHomeHandler,
+  http.get('*/api/v1/public/community/categories', () => HttpResponse.json({ data: { items: [] }, meta: { requestId: 'test-community-categories' } })),
   http.post('*/api/v1/public/properties/:slug/views', () => HttpResponse.json({
     data: { recorded: true }, meta: { requestId: 'test-property-view' }
   })),

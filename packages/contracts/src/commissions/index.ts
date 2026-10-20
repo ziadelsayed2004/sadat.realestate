@@ -365,6 +365,8 @@ export type CommissionConfirmationListData = z.infer<typeof commissionConfirmati
 export const COMMISSION_CHANGE_LOG_TARGET_TYPES = ['commission_policy', 'commission_exception', 'commission_account_override', 'commission_confirmation'] as const;
 export const commissionChangeLogTargetTypeSchema = z.enum(COMMISSION_CHANGE_LOG_TARGET_TYPES);
 export const commissionChangeLogRowSchema = z.object({
+  accountId: objectIdSchema.optional(),
+  accountName: z.string().trim().min(1).max(320).optional(),
   id: objectIdSchema,
   targetType: commissionChangeLogTargetTypeSchema,
   targetId: objectIdSchema,

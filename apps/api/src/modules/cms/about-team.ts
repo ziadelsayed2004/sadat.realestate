@@ -26,6 +26,7 @@ export function publicAboutBlock(
         key: string;
         title: AboutBlockCreate["title"];
         body: AboutBlockCreate["body"];
+        imageUrl?: string;
         stats?: AboutBlockCreate["stats"];
         order: number;
         status: "draft" | "published" | "inactive";
@@ -37,6 +38,7 @@ export function publicAboutBlock(
     key: value.key,
     title: value.title,
     body: value.body,
+    ...(value.imageUrl ? { imageUrl: value.imageUrl } : {}),
     ...(value.stats !== undefined ? { stats: value.stats } : {}),
     order: value.order,
   });

@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { AdBanner, FeaturedOptions } from '@sadat-real-estate/contracts';
+import type { AdBanner, AdAdminRequest, FeaturedOptions } from '@sadat-real-estate/contracts';
 import { FeaturedEditor, AdminFeatured } from '../src/features/admin_featured/views.tsx';
 import { FeaturedPreview } from '../src/features/admin_featured/preview.tsx';
 import { featuredOrder } from '../src/features/admin_featured/order.ts';
@@ -23,6 +23,15 @@ function sourceFor(failUpload = false) {
   return { source, calls };
 }
 describe('Featured homepage advertising', () => {
+  it('preserves the linked campaign seconds and milliseconds when saving a featured draft', async () => {
+    const campaign: AdAdminRequest['request'] = { id: 'f'.repeat(24), providerId, purpose: 'Campaign timing regression', placementKey: 'homepage.featured', adType: 'featured_card', status: 'waiting_payment', version: 0, intervalStart: '2026-10-20T07:42:31.123Z', intervalEnd: '2026-10-25T17:22:18.738Z', createdAt: '2026-10-20T00:00:00.000Z', updatedAt: '2026-10-20T00:00:00.000Z' };
+    const { source } = sourceFor();
+    renderWithLocale(<FeaturedEditor item={{ ...item, adRequestId: campaign.id }} campaign={campaign} options={options} source={source} loadOptions={async () => options} locale="en" onSaved={vi.fn()} onClose={vi.fn()} />, { locale: 'en' });
+    const save = screen.getByRole('button', { name: 'Save draft' });
+    await waitFor(() => expect(save).toBeEnabled());
+    fireEvent.click(save);
+    await waitFor(() => expect(source.updateBanner).toHaveBeenCalledWith(bannerId, expect.objectContaining({ startAt: campaign.intervalStart, endAt: campaign.intervalEnd })));
+  });
   it('reorders imported cards with tied positions using unique orders and original optimistic versions', () => {
     const tied = [item, { ...item, id: 'a'.repeat(24), version: 3 }, { ...item, id: 'b'.repeat(24), version: 7 }];
     const order = adBannerOrderSchema.parse(featuredOrder(tied, 2, -1, 1));

@@ -1,0 +1,66 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "duplicates_entry_explains_selection_list_and_never_labels_every_property_duplicate",
+    "linked_banner_autoselects_only_owner_page_and_explains_authoritative_campaign_dates",
+    "featured_request_with_one_published_destination_can_save_draft",
+    "legacy_section_reassigned_in_ui_with_live_preview_and_public_heading_description",
+    "audit_has_real_text_before_after_and_record_editor_link",
+    "tips_and_about_images_persist_through_guarded_admin_api_to_public_projection",
+    "role_deletion_available_on_list_unassigned_role_removed_assigned_role_protected",
+    "custom_community_category_created_in_ui_used_on_moderated_post_visible_as_public_filter_unknown_category_rejected",
+    "commission_history_resolves_account_display_name_without_exposing_credentials",
+    "real_webkit_mobile_desktop_footer_map_and_hours_and_non_overflowing_homepage_layout",
+    "homepage_heading_description_gap_and_article_metadata_geometry"
+  ],
+  "http": [
+    {
+      "method": "GET",
+      "path": "/admin/content/homepage",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/content/homepage",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/content/tips",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/content/about",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/roles/6ad6f5c6af266f958fb4241b",
+      "status": 409
+    },
+    {
+      "method": "POST",
+      "path": "/public/community/posts",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/admin/community/posts/26f96bc638f3a470abaeddd8/moderate",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/public/community/posts",
+      "status": 400
+    },
+    {
+      "method": "GET",
+      "path": "/admin/commission-change-log",
+      "status": 200
+    }
+  ],
+  "cleanup": true,
+  "rateLimitWaitSeconds": 56
+}

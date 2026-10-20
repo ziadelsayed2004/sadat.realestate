@@ -22,6 +22,7 @@ import {
   type CommunityReactionData,
   type CommunityReactionType
 } from '@sadat-real-estate/contracts';
+import type { CommunityCategories } from './categories.js';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { CommunityAccountCheck } from './account-state.js';
@@ -132,7 +133,8 @@ export function createCommunityService(
   repository: CommunityRepository = createMemoryCommunityRepository(seed),
   authorization?: CommunityAuthorization,
   settingsReader?: CommunitySettingsReader,
-  accountCheck?: CommunityAccountCheck
+  accountCheck?: CommunityAccountCheck,
+  categories?: CommunityCategories
 ): CommunityService {
   async function requireActive(claims: AccessTokenClaims): Promise<void> {
     if (!active(claims) || (accountCheck !== undefined && !(await accountCheck(claims)))) throw new Error('FORBIDDEN');
@@ -160,6 +162,7 @@ export function createCommunityService(
     async create(claims, input) {
       await requireActive(claims);
       const parsed: CommunityPostCreate = communityPostCreateSchema.parse(input);
+      await categories?.validate(parsed.category);
       const stamp = now();
       const policy = await settings();
       if (policy.dailyPostLimit !== undefined) {
@@ -181,6 +184,7 @@ export function createCommunityService(
       const post = await repository.getPost(postId);
       if (!post || post.authorId !== claims.sub) throw new Error('NOT_FOUND');
       const patch = communityPostPatchSchema.parse(input);
+      await categories?.validate(patch.category);
       const policy = await settings();
       if (containsBlockedWord(`${patch.title ?? post.title} ${patch.body ?? post.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
       const updated = communityPostSchema.parse({ ...post, ...patch, version: post.version + 1, updatedAt: now() });
@@ -252,13 +256,15 @@ export function createCommunityService(
     async publicPage(query) {
       const posts = await this.publicList();
       const start = (query.page - 1) * query.limit;
-      const items = posts.slice(start, start + query.limit).map(post => publicPost(post, 0));
+      const labels = new Map((await categories?.list() ?? []).map(item => [item.key, item.label]));
+      const items = posts.slice(start, start + query.limit).map(post => ({ ...publicPost(post, 0), ...(post.category && labels.has(post.category) ? { categoryName: labels.get(post.category) } : {}) }));
       return { items, page: query.page, limit: query.limit, total: posts.length };
     },
     async publicDetail(postId) {
       const post = await repository.getPost(postId);
       if (!post || post.status !== 'published') return undefined;
-      return { post: publicPost(post, 0), comments: [] };
+      const label = (await categories?.list())?.find(item => item.key === post.category)?.label;
+      return { post: { ...publicPost(post, 0), ...(label ? { categoryName: label } : {}) }, comments: [] };
     },
     async adminPage(claims, query) {
       await requireAdminView(claims);

@@ -9,6 +9,7 @@ const fields: Record<string, readonly [string, string]> = {
   version: ['الإصدار', 'Version'], schemaVersion: ['إصدار البيانات', 'Schema version'],
   platformName: ['اسم المنصة', 'Platform name'], title: ['العنوان', 'Title'], price: ['السعر', 'Price'],
   displayOrder: ['الترتيب', 'Display order'], deleted: ['الحذف', 'Deleted'], publishedAt: ['وقت النشر', 'Published at'],
+  body: ['الوصف أو المحتوى', 'Description or content'], eyebrow: ['الجملة فوق العنوان', 'Text above the heading'], key: ['مكان الظهور', 'Display location'], order: ['ترتيب الظهور', 'Display order'], visible: ['ظاهر للزوار', 'Visible to visitors'],
   ar: ['العربية', 'Arabic'], en: ['الإنجليزية', 'English'], 'zh-CN': ['الصينية', 'Chinese'],
   roleIds: ['المناصب المرتبطة', 'Assigned roles'], visibility: ['الظهور', 'Visibility'], categoryId: ['معرّف التصنيف', 'Category ID']
 };
@@ -51,11 +52,12 @@ function valueText(value: AuditJsonValue | undefined, locale: SupportedLocale): 
 
 export function AuditChanges({ log, locale }: { readonly log: AuditLogData; readonly locale: SupportedLocale }) {
   const ar = locale === 'ar'; const index = ar ? 0 : 1;
-  const changes = auditChanges(log.before, log.after);
+  const changes = auditChanges(log.before, log.after).filter(change => !["id", "version", "schemaVersion", "updatedAt", "updatedBy"].includes(change.path));
   return <section className="admin-audit-changes" aria-labelledby="audit-changes-title"><h3 id="audit-changes-title">{ar ? 'إيه اللي اتعدل؟' : 'What changed?'}</h3>
     <p>{ar ? 'الحقول التالية تغيّرت في البيانات المحفوظة. التفاصيل المحجوبة أو غير المسجلة لا يمكن مقارنتها.' : 'These fields changed in the saved data. Hidden or unrecorded details cannot be compared.'}</p>
+    {["cms_homepage_section", "cms_about_block", "cms_real_estate_tip"].includes(log.targetType) && !["title", "body"].some(key => key in log.before || key in log.after) ? <p>{ar ? "السجل القديم لا يحتوي على النص قبل وبعد التعديل. يمكنك فتح السجل المرتبط لرؤية المحتوى الحالي؛ التعديلات الجديدة تسجل النصوص والصور التي تغيّرت." : "This older record does not contain text before and after the change. Open the linked record for current content; new changes record the changed text and images."}</p> : null}
     {changes.length === 200 ? <p>{ar ? 'المقارنة تعرض حتى 200 حقل. راجع التفاصيل التقنية لبقية البيانات المسجلة.' : 'The comparison displays up to 200 fields. Check technical details for the remaining recorded data.'}</p> : null}
-    {changes.length === 0 ? <p>{ar ? 'لا توجد فروق ظاهرة في البيانات المسجلة لهذا الإجراء.' : 'No visible differences in the recorded data for this action.'}</p> : changes.map(change => {
+    {changes.length === 0 ? <p>{JSON.stringify(log.before) === JSON.stringify(log.after) ? (ar ? 'لا توجد فروق ظاهرة في البيانات المسجلة لهذا الإجراء.' : 'No visible differences in the recorded data for this action.') : ar ? 'هذا السجل القديم لا يحتوي على تفاصيل المحتوى قبل وبعد التعديل. افتح السجل المرتبط لرؤية المحتوى الحالي؛ التعديلات الجديدة تسجل النصوص التي تغيرت.' : 'This older record does not contain content before/after details. Open the linked record to see current content. New changes record the changed text.'}</p> : changes.map(change => {
       const label = change.path.split('.').map(key => fields[key]?.[index] ?? key).join(' / ');
       const isPermissions = change.path.split('.').at(-1) === 'permissions' && (change.before === undefined || permissions(change.before)) && (change.after === undefined || permissions(change.after));
       const before = isPermissions && permissions(change.before) ? change.before.filter(item => !permissions(change.after) || !change.after.includes(item)) : [];

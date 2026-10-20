@@ -278,12 +278,14 @@ export function createCmsAdminContentService(dependencies: {
       if (namespace === 'about') {
         const input = cmsAdminAboutBlockPutSchema.parse(unparsedInput) as CmsAdminAboutBlockPut;
         let row: StoredAboutBlock;
+        const previous = "id" in input ? await dependencies.repository.findAbout(input.id!) : undefined;
         if ('id' in input && input.id !== undefined) {
           const update = input as Extract<CmsAdminAboutBlockPut, { id: string }>;
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           row = aboutResult(await dependencies.repository.updateAbout(update.id, update.version, {
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.body !== undefined ? { body: update.body } : {}),
+            ...(update.imageUrl !== undefined ? { imageUrl: update.imageUrl } : {}),
             ...(update.stats !== undefined ? { stats: update.stats } : {}),
             ...(update.order !== undefined ? { order: update.order } : {}),
             ...(update.active !== undefined ? { active: update.active } : {}),
@@ -293,11 +295,12 @@ export function createCmsAdminContentService(dependencies: {
           const create = input as AboutBlockCreate;
           requirePublish(create.status, authorization.publish);
           row = aboutResult(await dependencies.repository.createAbout({
-            key: create.key ?? generateIdentifier('about', undefined, '_'), title: create.title, body: create.body, ...(create.stats !== undefined ? { stats: create.stats } : {}), order: create.order,
+            key: create.key ?? generateIdentifier('about', undefined, '_'), title: create.title, body: create.body, ...(create.imageUrl ? { imageUrl: create.imageUrl } : {}), ...(create.stats !== undefined ? { stats: create.stats } : {}), order: create.order,
             active: create.active, status: create.status
           }, principal.userId, at));
         }
-        await audit('cms.about.write', 'cms_about_block', row.id, principal, input.reason, null, { id: row.id, key: row.key, status: row.status, version: row.version }, context, at);
+        const snapshot = (value: StoredAboutBlock) => ({ key: value.key, title: value.title, body: value.body, imageUrl: value.imageUrl ?? null, stats: value.stats ?? [], order: value.order, active: value.active, status: value.status });
+        await audit('cms.about.write', 'cms_about_block', row.id, principal, input.reason, previous ? snapshot(previous) : null, snapshot(row), context, at);
         return read(principal, namespace);
       }
       if (namespace === 'team') {
@@ -342,12 +345,14 @@ export function createCmsAdminContentService(dependencies: {
       if (namespace === 'tips') {
         const input = cmsAdminTipPutSchema.parse(unparsedInput) as CmsAdminTipPut;
         let row: StoredTip;
+        const previous = "id" in input ? (await dependencies.repository.listTips()).find(item => item.id === input.id) : undefined;
         if ('id' in input && input.id !== undefined) {
           const update = input as Extract<CmsAdminTipPut, { id: string }>;
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           const changes: TipChanges = {
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.body !== undefined ? { body: update.body } : {}),
+            ...(update.imageUrl !== undefined ? { imageUrl: update.imageUrl } : {}),
             ...(update.order !== undefined ? { order: update.order } : {}),
             ...(update.active !== undefined ? { active: update.active } : {}),
             ...(update.status !== undefined ? { status: update.status } : {})
@@ -357,20 +362,23 @@ export function createCmsAdminContentService(dependencies: {
           const create = input as import('@sadat-real-estate/contracts').TipCreate;
           requirePublish(create.status, authorization.publish);
           row = tipResult(await dependencies.repository.createTip({
-            key: create.key ?? generateIdentifier('tip', undefined, '_'), title: create.title, body: create.body, order: create.order,
+            key: create.key ?? generateIdentifier('tip', undefined, '_'), title: create.title, body: create.body, ...(create.imageUrl ? { imageUrl: create.imageUrl } : {}), order: create.order,
             active: create.active, status: create.status
           }, principal.userId, at));
         }
-        await audit('cms.tips.write', 'cms_real_estate_tip', row.id, principal, input.reason, null, { id: row.id, key: row.key, status: row.status, version: row.version }, context, at);
+        const snapshot = (value: StoredTip) => ({ key: value.key, title: value.title, body: value.body, imageUrl: value.imageUrl ?? null, order: value.order, active: value.active, status: value.status });
+        await audit('cms.tips.write', 'cms_real_estate_tip', row.id, principal, input.reason, previous ? snapshot(previous) : null, snapshot(row), context, at);
         return read(principal, namespace);
       }
       if (namespace === 'homepage') {
         const input = cmsAdminHomepageSectionPutSchema.parse(unparsedInput) as CmsAdminHomepageSectionPut;
         let row: StoredHomepageSection;
+        const previous = "id" in input ? (await dependencies.repository.listHomepageSections()).find(item => item.id === input.id) : undefined;
         if ('id' in input && input.id !== undefined) {
           const update = input as Extract<CmsAdminHomepageSectionPut, { id: string }>;
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           const changes: HomepageSectionChanges = {
+            ...(update.key !== undefined ? { key: update.key } : {}),
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.eyebrow !== undefined ? { eyebrow: update.eyebrow } : {}),
             ...(update.body !== undefined ? { body: update.body } : {}),
@@ -388,7 +396,8 @@ export function createCmsAdminContentService(dependencies: {
             order: create.order, visible: create.visible, status: create.status
           }, principal.userId, at));
         }
-        await audit('cms.homepage.write', 'cms_homepage_section', row.id, principal, input.reason, null, { id: row.id, key: row.key, status: row.status, version: row.version }, context, at);
+        const snapshot = (value: StoredHomepageSection) => ({ key: value.key, title: value.title, body: value.body ?? null, eyebrow: value.eyebrow ?? null, order: value.order, visible: value.visible, status: value.status });
+        await audit('cms.homepage.write', 'cms_homepage_section', row.id, principal, input.reason, previous ? snapshot(previous) : null, snapshot(row), context, at);
         return read(principal, namespace);
       }
       if (namespace === 'display') {

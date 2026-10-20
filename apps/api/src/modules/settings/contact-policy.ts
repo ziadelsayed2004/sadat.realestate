@@ -36,16 +36,25 @@ export function contactSettingsProjection(contact: Record<string, unknown> = {},
     const entries = Object.entries(address).filter(([key, value]) => ['ar', 'en'].includes(key) && typeof value === 'string' && value.trim());
     if (entries.length) result.address = Object.fromEntries(entries);
   }
+  const hours = contact.working_hours;
+  if (hours && typeof hours === "object" && !Array.isArray(hours)) {
+    const entries = Object.entries(hours).filter(([key, value]) => ["ar", "en"].includes(key) && typeof value === "string" && value.trim());
+    if (entries.length) result.workingHours = Object.fromEntries(entries);
+  }
   return result;
 }
 
 export function createMongoosePublicContactSettingsReader(connection: Connection): PublicContactSettingsReader {
   return { async read() {
-    const rows = await connection.collection('admin_settings').find({ namespace: { $in: ['contact', 'social', 'platform'] } }, { projection: { namespace: 1, values: 1 } }).toArray();
+    const rows = await connection.collection('admin_settings').find({ namespace: { $in: ['contact', 'social', 'platform'] } }, { projection: { namespace: 1, values: 1, updatedAt: 1 } }).toArray();
     const values = (namespace: string): Record<string, unknown> => rows.find(row => row.namespace === namespace)?.values ?? {};
-    const contact = { ...values('platform'), ...values('contact') };
+    const platform = values('platform');
+    const stamp = (value: unknown) => value instanceof Date ? value.getTime() : typeof value === 'string' ? Date.parse(value) || 0 : 0;
+    const latestMap = rows.filter(row => ['platform', 'contact'].includes(row.namespace) && row.values?.map_url !== undefined).sort((a, b) => stamp(a.updatedAt) - stamp(b.updatedAt)).at(-1);
+    const contact: Record<string, unknown> = { ...platform, ...values('contact'), ...(latestMap ? { map_url: latestMap.values.map_url } : {}) };
     const social = values('social');
     const configured = contact.contact_configured === true || ['primary_phone', 'whatsapp_number', 'map_url', 'facebook_url', 'instagram_url'].some(key => typeof (contact[key] ?? social[key]) === 'string' && String(contact[key] ?? social[key]).trim());
-    return configured ? contactSettingsProjection(contact, social) : { ...contactSettingsProjection(DEMO_CONTACT_SETTINGS), isDemo: true };
+    const projected = contactSettingsProjection(contact, social);
+    return configured || projected.workingHours || projected.address ? projected : { ...contactSettingsProjection(DEMO_CONTACT_SETTINGS), isDemo: true };
   } };
 }

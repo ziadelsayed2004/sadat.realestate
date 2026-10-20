@@ -823,6 +823,7 @@ export type {
   ReleaseReadinessOutcome
 } from '../release/index.js';
 
+export { communityCategorySchema, communityCategoryCreateSchema, communityCategoryListSuccessEnvelopeSchema, type CommunityCategory } from '../community/index.js';
 export { communityPostModerationSchema } from '../community/index.js';
 export type { CommunityPostModeration } from '../community/index.js';
 

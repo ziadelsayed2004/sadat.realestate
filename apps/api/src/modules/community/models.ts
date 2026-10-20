@@ -16,7 +16,7 @@ const postSchema = new Schema<CommunityPostRecord>({
   authorId: { type: String, required: true, immutable: true, match: /^[a-f0-9]{24}$/ },
   title: { type: String, required: true, trim: true, maxlength: 160 },
   body: { type: String, required: true, trim: true, maxlength: 5_000 },
-  category: { type: String, enum: ['question', 'experience', 'advice', 'service', 'area', 'property'] },
+  category: { type: String, match: /^(question|experience|advice|service|area|property|custom_[a-f0-9]{24})$/ },
   authorName: { type: Schema.Types.Mixed },
   avatarUrl: { type: String, trim: true, maxlength: 2_048 },
   imageUrl: { type: String, trim: true, maxlength: 2_048 },

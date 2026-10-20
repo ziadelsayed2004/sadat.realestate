@@ -1,3 +1,4 @@
+import { createCommunityCategories } from './categories.js';
 import type { Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
@@ -11,9 +12,11 @@ import { createCommunityAccountCheck } from './account-state.js';
 
 export function createCommunityRuntime(connection: Connection, accessTokens: AccessTokenService, authorization?: CommunityAuthorization, audit?: AuditWriter): CommunityRouterDependencies {
   const models = createCommunityModels(connection);
+  const categories = createCommunityCategories(connection, authorization, audit);
   return {
     accessTokens,
-    service: createCommunityService([], createMongooseCommunityRepository(models, audit), authorization, createMongooseCommunitySettingsReader(connection), createCommunityAccountCheck(connection)),
+    categories,
+    service: createCommunityService([], createMongooseCommunityRepository(models, audit), authorization, createMongooseCommunitySettingsReader(connection), createCommunityAccountCheck(connection), categories),
     reports: createMongooseCommunityReportService(connection, authorization, audit)
   };
 }

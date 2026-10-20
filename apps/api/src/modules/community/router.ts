@@ -1,5 +1,7 @@
 import { Router, type Request, type RequestHandler, type Response } from 'express';
 import {
+  communityCategoryCreateSchema,
+  communityCategoryListSuccessEnvelopeSchema,
   communityCommentCreateRequestSchema,
   communityCommentMutationDataSchema,
   communityCommentMutationSuccessEnvelopeSchema,
@@ -32,9 +34,12 @@ import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import type { CommunityReportService } from './report-service.js';
+import { DEFAULT_COMMUNITY_CATEGORIES, type CommunityCategories } from './categories.js';
 import type { CommunityService } from './service.js';
 
 export const COMMUNITY_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/public/community/categories', operationId: 'listCommunityCategories' },
+  { method: 'POST', path: '/api/v1/admin/community/categories', operationId: 'createCommunityCategory' },
   { method: 'GET', path: '/api/v1/public/community/posts', operationId: 'listPublicCommunityPosts' },
   { method: 'GET', path: '/api/v1/public/community/posts/:postId', operationId: 'getPublicCommunityPost' },
   { method: 'POST', path: '/api/v1/public/community/posts', operationId: 'createCommunityPost' },
@@ -50,6 +55,7 @@ export const COMMUNITY_ROUTE_DEFINITIONS = [
 
 export interface CommunityRouterDependencies {
   service: CommunityService;
+  categories?: CommunityCategories;
   reports: CommunityReportService;
   accessTokens: AccessTokenService;
 }
@@ -96,6 +102,8 @@ function authenticated(accessTokens: AccessTokenService): RequestHandler {
 function sendError(request: Request, response: Response, error: unknown): void {
   const code = error instanceof Error ? error.message : '';
   const known: Record<string, { statusCode: number; messageKey: string }> = {
+    INVALID_CATEGORY: { statusCode: 400, messageKey: 'errors.validation' },
+    CATEGORY_LIMIT: { statusCode: 409, messageKey: 'errors.validation' },
     FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
     COMMENTS_DISABLED: { statusCode: 403, messageKey: 'errors.forbidden' },
     NOT_FOUND: { statusCode: 404, messageKey: 'errors.communityNotFound' },
@@ -137,6 +145,12 @@ function commentMutationData(comment: Awaited<ReturnType<CommunityService['creat
 export function createCommunityRouter(dependencies: CommunityRouterDependencies): Router {
   const router = Router();
   const auth = authenticated(dependencies.accessTokens);
+  router.get('/public/community/categories', async (request, response) => {
+    try { const items = await dependencies.categories?.list() ?? DEFAULT_COMMUNITY_CATEGORIES; response.setHeader('Cache-Control', 'no-store'); response.json(communityCategoryListSuccessEnvelopeSchema.parse(toSuccessResponse({ items }, requestId(request)))); } catch (error) { sendError(request, response, error); }
+  });
+  router.post('/admin/community/categories', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (request, response) => {
+    try { if (!dependencies.categories) throw new Error('FORBIDDEN'); const input = communityCategoryCreateSchema.parse(request.body); await dependencies.categories.create(adminClaims(response), input, { requestId: requestId(request), traceId: getRequestContext()?.traceId ?? requestId(request) }); const items = await dependencies.categories.list(); response.setHeader('Cache-Control', 'no-store'); response.status(201).json(communityCategoryListSuccessEnvelopeSchema.parse(toSuccessResponse({ items }, requestId(request)))); } catch (error) { sendError(request, response, error); }
+  });
   router.use('/admin/community/posts', createAdminRbacAuthMiddleware(dependencies.accessTokens));
   router.use('/admin/community/comments', createAdminRbacAuthMiddleware(dependencies.accessTokens));
 

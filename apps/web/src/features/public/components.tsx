@@ -497,6 +497,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
             {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
             {contact.mapUrl ? <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer">{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{localizedText(contact.address, locale) ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
+            {localizedText(contact.workingHours, locale) ? <span className="public-site-footer__hours">{locale === "ar" ? "ساعات العمل: " : "Working hours: "}{localizedText(contact.workingHours, locale)}</span> : null}
           </div>
         </div>
         <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">
@@ -946,7 +947,7 @@ function ContentGrid({
       <div className="public-homepage__content-grid">
         {items.map(item => {
           const body = localizedText(item.body, locale);
-          if (type === 'tip') return <TipCard key={item.key} title={localizedText(item.title, locale) ?? item.key} body={body ?? ''} />;
+          if (type === 'tip') return <TipCard imageUrl={item.imageUrl} key={item.key} title={localizedText(item.title, locale) ?? item.key} body={body ?? ''} />;
           const bodyLines = body?.split('\n').filter(Boolean) ?? [];
           const contentType = type === 'community'
             ? item.key === 'community_events' ? copy.communityQuestion : copy.communityExperience

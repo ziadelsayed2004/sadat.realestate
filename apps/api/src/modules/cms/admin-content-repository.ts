@@ -13,6 +13,7 @@ import type { PopulationValueDocument, RealEstateTipDocument, registerPopulation
 import type { DisplaySettingDocument, HomepageSectionDocument, registerHomepageDisplayModels } from './homepage-display-models.js';
 
 export interface StoredAboutBlock {
+  imageUrl?: string;
   id: string;
   key: string;
   title: LocalizedText;
@@ -57,6 +58,7 @@ export interface StoredPopulationValue {
 }
 
 export interface StoredTip {
+  imageUrl?: string;
   id: string;
   key: string;
   title: LocalizedText;
@@ -94,6 +96,7 @@ export interface StoredDisplaySetting {
 }
 
 export interface AboutBlockChanges {
+  imageUrl?: string | null;
   title?: LocalizedText;
   body?: LocalizedText;
   stats?: NonNullable<AboutBlockCreate['stats']>;
@@ -128,6 +131,7 @@ export interface PopulationValueUpdateChanges extends Omit<PopulationValueChange
 }
 
 export interface TipChanges {
+  imageUrl?: string | null;
   title?: LocalizedText;
   body?: LocalizedText;
   order?: number;
@@ -136,6 +140,7 @@ export interface TipChanges {
 }
 
 export interface HomepageSectionChanges {
+  key?: string;
   title?: LocalizedText;
   eyebrow?: LocalizedText | null;
   body?: LocalizedText;
@@ -196,6 +201,7 @@ function mapAbout(record: AboutBlockDocument): StoredAboutBlock {
     key: record.key,
     title: record.title,
     body: record.body,
+    ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     ...(record.stats !== undefined ? { stats: record.stats } : {}),
     order: record.order,
     active: record.active,
@@ -246,6 +252,7 @@ function mapTip(record: RealEstateTipDocument): StoredTip {
     key: record.key,
     title: record.title,
     body: record.body,
+    ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     order: record.order,
     active: record.active,
     status: record.status,
@@ -304,8 +311,8 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
     },
     async createAbout(input, actorId, at) {
       try {
-        const { stats, ...fields } = input;
-        const row = await models.about.create({ ...fields, ...(stats !== undefined ? { stats } : {}), updatedBy: new Types.ObjectId(actorId), updatedAt: at });
+        const { stats, imageUrl, ...fields } = input;
+        const row = await models.about.create({ ...fields, ...(imageUrl ? { imageUrl } : {}), ...(stats !== undefined ? { stats } : {}), updatedBy: new Types.ObjectId(actorId), updatedAt: at });
         return { kind: 'written', item: mapAbout(row.toObject()) };
       } catch (error) {
         return duplicateKey(error) ? { kind: 'key_conflict' } : Promise.reject(error);
@@ -426,6 +433,7 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
           key: input.key,
           title: input.title,
           body: input.body,
+          ...(input.imageUrl ? { imageUrl: input.imageUrl } : {}),
           order: input.order ?? Math.min(100000, (last?.order ?? -1) + 1),
           active: input.active,
           status: input.status,

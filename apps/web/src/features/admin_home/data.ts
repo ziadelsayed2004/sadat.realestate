@@ -1,4 +1,5 @@
 import {
+  featuredOptionsSuccessEnvelopeSchema,
   adBannerCreateSchema,
   adBannerConfigSuccessEnvelopeSchema,
   adBannerConfigPutSchema,
@@ -147,6 +148,7 @@ export function createAdminHomeSource(options: Omit<CommonOptions, 'signal'> = {
   };
   return {
     loadMediaBlob,
+    loadDestinations: (providerId: string) => homeRequest(`/admin/banners/featured-options?providerId=${encodeURIComponent(providerId)}`, featuredOptionsSuccessEnvelopeSchema, options),
     loadAdRequest: (id: string, signal?: AbortSignal) => loadAdminAdRequest(id, withSignal(signal)),
     loadBannerConfig: () => homeRequest(`${ADMIN_BANNERS_ROUTE}/config`, adBannerConfigSuccessEnvelopeSchema, options),
     updateBannerConfig: (input: unknown) => homeRequest(`${ADMIN_BANNERS_ROUTE}/config`, adBannerConfigSuccessEnvelopeSchema, options, { method: 'PUT', json: adBannerConfigPutSchema.parse(input) }),

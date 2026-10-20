@@ -769,3 +769,4 @@
     align-items: stretch;
   }
 }
+.public-about__block-image { display: block; inline-size: 100%; max-block-size: 360px; object-fit: cover; border-radius: 16px; margin-block-end: 20px; }

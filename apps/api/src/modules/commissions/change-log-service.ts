@@ -51,11 +51,12 @@ const dateField = (before: AuditLogData['before'], after: AuditLogData['after'],
   return candidate;
 };
 
-export function createCommissionChangeLogService(dependencies: { source: CommissionAuditSource }) {
-  const project = (record: AuditLogData): CommissionChangeLogRow => {
+export function createCommissionChangeLogService(dependencies: { source: CommissionAuditSource; resolveAccount?: (record: AuditLogData) => Promise<{ accountId?: string; accountName?: string }> }) {
+  const project = async (record: AuditLogData): Promise<CommissionChangeLogRow> => {
     const parsed = auditLogDataSchema.safeParse(record);
     if (!parsed.success || !isCommissionTarget(parsed.data.targetType)) throw new CommissionChangeLogServiceError('COMMISSION_CHANGE_LOG_INVALID_SOURCE');
     return commissionChangeLogRowSchema.parse({
+      ...(await dependencies.resolveAccount?.(parsed.data)),
       id: parsed.data.id,
       targetType: parsed.data.targetType,
       targetId: parsed.data.targetId,
@@ -88,7 +89,7 @@ export function createCommissionChangeLogService(dependencies: { source: Commiss
         limit: query.limit
       });
       if (!Array.isArray(result.items) || !Number.isInteger(result.total) || result.total < 0) throw new CommissionChangeLogServiceError('COMMISSION_CHANGE_LOG_INVALID_SOURCE');
-      const items = result.items.map(project).sort((left, right) => right.createdAt.localeCompare(left.createdAt) || right.id.localeCompare(left.id));
+      const items = (await Promise.all(result.items.map(project))).sort((left, right) => right.createdAt.localeCompare(left.createdAt) || right.id.localeCompare(left.id));
       return commissionChangeLogListDataSchema.parse({ items, page: query.page, limit: query.limit, total: result.total });
     },
     async findById(claims: AccessTokenClaims, auditId: string): Promise<CommissionChangeLogRow> {
@@ -96,7 +97,7 @@ export function createCommissionChangeLogService(dependencies: { source: Commiss
       const record = await dependencies.source.findById(auditId);
       if (!record) throw new CommissionChangeLogServiceError('COMMISSION_CHANGE_LOG_NOT_FOUND');
       try {
-        return project(record);
+        return await project(record);
       } catch (error) {
         if (error instanceof CommissionChangeLogServiceError && error.code === 'COMMISSION_CHANGE_LOG_INVALID_SOURCE') throw new CommissionChangeLogServiceError('COMMISSION_CHANGE_LOG_NOT_FOUND');
         throw error;

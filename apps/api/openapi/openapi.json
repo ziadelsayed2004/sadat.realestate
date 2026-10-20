@@ -14241,6 +14241,71 @@
         ],
         "description": "Available only while attached to an approved directory profile."
       }
+    },
+    "/api/v1/public/community/categories": {
+      "get": {
+        "operationId": "listCommunityCategories",
+        "responses": {
+          "200": {
+            "description": "Built-in and administrator-created community categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityCategoryListSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/community/categories": {
+      "post": {
+        "operationId": "createCommunityCategory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunityCategoryCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created; full public category catalog",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityCategoryListSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "409": {
+            "description": "Duplicate category or catalog limit reached"
+          }
+        },
+        "description": "Requires admin:community.moderate. Category and audit record commit together. Duplicate names return 409."
+      }
     }
   },
   "components": {
@@ -24813,6 +24878,25 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 5000
+          },
+          "category": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "question",
+                  "experience",
+                  "advice",
+                  "service",
+                  "area",
+                  "property"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^custom_[a-f0-9]{24}$"
+              }
+            ]
           }
         }
       },
@@ -25772,6 +25856,12 @@
               "$ref": "#/components/schemas/CmsAboutStatistic"
             },
             "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": false,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -26015,6 +26105,12 @@
             "items": {
               "$ref": "#/components/schemas/CmsAdminContentAction"
             }
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": false,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -26254,6 +26350,12 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": false,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -26300,6 +26402,12 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -26440,6 +26548,18 @@
               }
             ],
             "description": "Null restores the default introductory text."
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "hero",
+              "featured_properties",
+              "articles",
+              "community",
+              "tips",
+              "about"
+            ],
+            "description": "Connect a legacy record to an unoccupied supported homepage placement."
           }
         }
       },
@@ -26792,6 +26912,12 @@
               "$ref": "#/components/schemas/CmsAboutStatistic"
             },
             "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": false,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -26846,6 +26972,12 @@
               "$ref": "#/components/schemas/CmsAboutStatistic"
             },
             "description": "Editable About page statistic cards. Omit to preserve legacy defaults; an empty array hides the section."
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 2048,
+            "description": "Optional content image URL; null removes it in a patch."
           }
         }
       },
@@ -28195,6 +28327,15 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "accountId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "accountName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
           }
         }
       },
@@ -28960,6 +29101,23 @@
               },
               "isDemo": {
                 "type": "boolean"
+              },
+              "workingHours": {
+                "type": "object",
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                },
+                "additionalProperties": false,
+                "minProperties": 1
               }
             }
           }
@@ -32537,6 +32695,112 @@
           "reason"
         ],
         "additionalProperties": false
+      },
+      "CommunityCategory": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "question",
+                  "experience",
+                  "advice",
+                  "service",
+                  "area",
+                  "property"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^custom_[a-f0-9]{24}$"
+              }
+            ]
+          },
+          "label": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "additionalProperties": false,
+            "minProperties": 1
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "CommunityCategoryCreate": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "additionalProperties": false,
+            "minProperties": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "label",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "CommunityCategoryListSuccessEnvelope": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "maxItems": 200,
+                    "items": {
+                      "$ref": "#/components/schemas/CommunityCategory"
+                    }
+                  }
+                },
+                "required": [
+                  "items"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ]
       }
     }
   }

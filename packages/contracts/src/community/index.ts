@@ -12,7 +12,12 @@ const publicMediaUrl = z.union([
 ]);
 
 export const communityPostStatusSchema = z.enum(['draft', 'published', 'hidden', 'rejected', 'removed']);
-export const communityPostCategorySchema = z.enum(['question', 'experience', 'advice', 'service', 'area', 'property']);
+export const communityPostCategorySchema = z.union([z.enum(['question', 'experience', 'advice', 'service', 'area', 'property']), z.string().regex(/^custom_[a-f0-9]{24}$/)]);
+const communityCategoryLabelSchema = localizedTextSchema.refine(value => Object.values(value).every(text => (text?.length ?? 0) <= 160), 'Category labels must not exceed 160 characters');
+export const communityCategorySchema = z.object({ key: communityPostCategorySchema, label: communityCategoryLabelSchema }).strict();
+export const communityCategoryCreateSchema = z.object({ label: communityCategoryLabelSchema, reason: z.string().trim().min(3).max(500) }).strict();
+export const communityCategoryListSuccessEnvelopeSchema = successEnvelopeSchema(z.object({ items: z.array(communityCategorySchema).max(200) }).strict());
+export type CommunityCategory = z.infer<typeof communityCategorySchema>;
 export const communityPostSchema = z.object({
   id,
   authorId: id,
@@ -80,6 +85,7 @@ export const communityPublicPostSchema = z.object({
   body: communityPostSchema.shape.body,
   createdAt: communityPostSchema.shape.createdAt,
   category: communityPostCategorySchema,
+  categoryName: localizedTextSchema.optional(),
   authorName: localizedTextSchema.optional(),
   avatarUrl: publicMediaUrl.optional(),
   imageUrl: publicMediaUrl.optional(),

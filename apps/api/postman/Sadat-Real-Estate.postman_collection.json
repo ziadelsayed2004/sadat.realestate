@@ -7072,6 +7072,55 @@
             },
             "description": "Requires admin:community.moderate, a current report version, and a reason of at least five characters. Transitions are optimistic-concurrency guarded. Admin responses include the current reporterName when available and reporterAccountAvailable. Deleted accounts have no name or account link. Public report creation does not disclose reporter identity."
           }
+        },
+        {
+          "name": "List community categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/categories",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create community category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": {\n    \"ar\": \"أخبار المدينة\",\n    \"en\": \"City news\"\n  },\n  \"reason\": \"Organize community posts\"\n}"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/categories",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "categories"
+              ]
+            }
+          }
         }
       ]
     },
