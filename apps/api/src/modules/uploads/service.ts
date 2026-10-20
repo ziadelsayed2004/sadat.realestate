@@ -241,29 +241,34 @@ export function createProviderDocumentService(
       }
       if (registered.kind !== 'created') {
         await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);
-        if (registered.kind === 'replay') return toData(registered.document, true);
-        throw new UploadServiceError(registered.kind === 'category_limit'
+        if (registered.kind === 'replay') {
+          // A failed scan can be retried using the existing quarantined bytes.
+          // Clean, infected and currently scanning documents remain idempotent.
+          if (registered.document.securityState !== 'scan_failed') return toData(registered.document, true);
+        } else throw new UploadServiceError(registered.kind === 'category_limit'
           ? 'DOCUMENT_CATEGORY_LIMIT'
           : registered.kind === 'replacement_limit'
             ? 'DOCUMENT_REPLACEMENT_LIMIT'
             : 'DOCUMENT_CONCURRENT_UPLOAD');
       }
 
-      await dependencies.repository.updateSecurity(registered.document.id, 'scan_pending');
+      const pending = await dependencies.repository.updateSecurity(registered.document.id, 'scan_pending');
+      if (!pending || pending.securityState !== 'scan_pending') throw new UploadServiceError('DOCUMENT_CONCURRENT_UPLOAD');
       try {
         const scan = await dependencies.scanner.scan(
           await dependencies.storage.openPrivate(registered.document.storageKey)
         );
+        if (scan !== 'clean' && scan !== 'infected') throw new Error(`MALWARE_SCAN_${scan.toUpperCase()}`);
         const completedAt = now();
         const updated = await dependencies.repository.updateSecurity(
           registered.document.id,
-            scan === 'clean' ? 'clean' : 'infected',
-            scan === 'infected'
-              ? { scanCompletedAt: completedAt, deleteAfter: retentionDeadlineFor('infected', completedAt) }
+          scan === 'clean' ? 'clean' : 'infected',
+          scan === 'infected'
+            ? { scanCompletedAt: completedAt, deleteAfter: retentionDeadlineFor('infected', completedAt) }
             : { scanCompletedAt: completedAt }
         );
         if (!updated) throw new Error('PROVIDER_DOCUMENT_NOT_FOUND_AFTER_SCAN');
-        return toData(updated, false);
+        return toData(updated, registered.kind === 'replay');
       } catch (error) {
         await dependencies.repository.updateSecurity(registered.document.id, 'scan_failed', {
           scanCompletedAt: now(),

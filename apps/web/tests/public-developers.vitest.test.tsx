@@ -57,6 +57,28 @@ const profileData = publicOrganizationProfileSchema.parse({
 });
 
 describe('public developer directory and profiles', () => {
+  it.each([
+    { imageUrl: undefined, logoUrl: undefined, expected: '/assets/sadat-real-estate-logo.png' },
+    { imageUrl: '/cover.png', logoUrl: undefined, expected: '/cover.png' },
+    { imageUrl: '/cover.png', logoUrl: '/logo.png', expected: '/logo.png' }
+  ])('always renders the circular identity using logo, cover, or site fallback: $expected', ({ imageUrl, logoUrl, expected }) => {
+    const data = { ...directoryData, items: [{ ...directoryData.items[0]!, imageUrl, logoUrl }] };
+    const result = renderWithLocale(<PublicDevelopers locale="en" initialData={data} />, { locale: 'en' });
+    const logo = result.container.querySelector('.public-developer-directory__card-logo');
+    expect(logo).toHaveAttribute('aria-hidden', 'true');
+    expect(logo?.querySelector('img')).toHaveAttribute('src', expected);
+  });
+
+  it('recovers a broken company logo through the cover and site logo without losing the circle', () => {
+    const data = { ...directoryData, items: [{ ...directoryData.items[0]!, imageUrl: '/broken-cover.png', logoUrl: '/broken-logo.png' }] };
+    const result = renderWithLocale(<PublicDevelopers locale="ar" initialData={data} />, { locale: 'ar' });
+    const circle = result.container.querySelector('.public-developer-directory__card-logo')!;
+    fireEvent.error(circle.querySelector('img')!);
+    expect(circle.querySelector('img')).toHaveAttribute('src', '/broken-cover.png');
+    fireEvent.error(circle.querySelector('img')!);
+    expect(circle.querySelector('img')).toHaveAttribute('src', '/assets/sadat-real-estate-logo.png');
+  });
+
   it('sends a real company inquiry and retains its controlled draft when the surrounding page rerenders', async () => {
     const submitContact = vi.fn(async (payload) => requestDataSchema.parse({ id: 'f'.repeat(24), type: 'contact', source: 'seeker', status: 'new', payload, version: 0, availableActions: ['cancel'], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }));
     const actions = { submitContact, submitViewing: vi.fn() };

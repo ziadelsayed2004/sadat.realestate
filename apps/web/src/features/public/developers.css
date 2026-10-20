@@ -231,8 +231,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   overflow: hidden;
 }
 
-.public-developer-directory__card-media > .public-developer-directory__card-logo,
-.public-developer-directory__card-media > .public-developer-directory__card-logo-fallback {
+.public-developer-directory__card-media > .public-developer-directory__card-logo {
   position: absolute;
   inset-block-end: 1rem;
   inset-inline-end: 1rem;
@@ -240,12 +239,23 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   inline-size: 4rem;
   block-size: 4rem;
   min-block-size: 4rem;
-  object-fit: contain;
+  overflow: hidden;
   border: 2px solid var(--color-surface);
   border-radius: 50%;
   background: var(--color-surface);
   box-shadow: 0 0.25rem 0.75rem rgb(12 29 56 / 18%);
   pointer-events: none;
+}
+
+.public-developer-directory__card-logo > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.public-developer-directory__card-logo > .public-developer-directory__card-avatar {
+  object-fit: cover;
 }
 
 .public-developer-directory__card-body {

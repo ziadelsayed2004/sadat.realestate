@@ -1,0 +1,37 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "Corrupt replacement is rejected without losing the saved document; unauthenticated metadata stays private",
+    "Office with both clean required identity images successfully submits for review",
+    "Office JPEG/PNG uploads, Arabic/timestamp filenames, refresh persistence, idempotency and mobile layout pass"
+  ],
+  "browsers": [
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "width": 390,
+      "persistedFiles": 2
+    },
+    {
+      "engine": "chromium",
+      "locale": "en",
+      "width": 1440,
+      "persistedFiles": 2
+    },
+    {
+      "engine": "webkit",
+      "locale": "ar",
+      "width": 390,
+      "persistedFiles": 2
+    },
+    {
+      "engine": "webkit",
+      "locale": "en",
+      "width": 1440,
+      "persistedFiles": 2
+    }
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

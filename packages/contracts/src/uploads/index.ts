@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
-import { providerDocumentCategorySchema, providerDocumentReviewStateSchema } from '../provider/index.js';
+import { providerDocumentCategorySchema, providerDocumentReviewStateSchema, providerRequirementVersionSchema } from '../provider/index.js';
 
 export const PROVIDER_DOCUMENT_SECURITY_STATES = [
   'quarantined',
@@ -33,7 +33,7 @@ export const providerDocumentDataSchema = z.object({
   id: objectIdSchema,
   applicationId: objectIdSchema,
   category: providerDocumentCategorySchema,
-  requirementVersion: z.string().regex(/^\d{4}-\d{2}-\d{2}\.\d+$/),
+  requirementVersion: providerRequirementVersionSchema,
   originalFilename: z.string().min(1).max(120),
   normalizedExtension: z.enum(['.pdf', '.jpg', '.jpeg', '.png']),
   detectedMime: providerDocumentMimeSchema,

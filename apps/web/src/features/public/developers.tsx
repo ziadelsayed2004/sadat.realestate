@@ -90,7 +90,11 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
     <article className="public-developer-directory__card">
       <div className="public-developer-directory__card-media">
         <PublicMediaImage src={organization.imageUrl ?? organization.logoUrl} alt={title} fallback={<div className="public-developer-directory__placeholder"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 56V20l22-12 22 12v36M24 56V40h16v16M22 24h4m12 0h4m-20 8h4m12 0h4" fill="none" stroke="currentColor" strokeWidth="3" /></svg><span>{title}</span></div>} />
-        {organization.logoUrl ? <PublicMediaImage className="public-developer-directory__card-logo" src={organization.logoUrl} alt="" loading="lazy" fallback={<span className="public-developer-directory__card-logo-fallback" aria-hidden="true" />} /> : null}
+        <span className="public-developer-directory__card-logo" aria-hidden="true">
+          <PublicMediaImage src={organization.logoUrl} alt="" previewWidth={320} fallback={
+            <PublicMediaImage className="public-developer-directory__card-avatar" src={organization.imageUrl} alt="" previewWidth={320} fallback={<img src="/assets/sadat-real-estate-logo.png" alt="" loading="lazy" decoding="async" />} />
+          } />
+        </span>
       </div>
       <div className="public-developer-directory__card-body">
         <h2><a href={`/developers/${encodeURIComponent(organization.slug)}?lang=${locale}`}>{title}</a></h2>

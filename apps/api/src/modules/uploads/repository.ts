@@ -268,10 +268,11 @@ export function createMongooseProviderDocumentRepository(
         set.deleteAfter = details.deleteAfter;
         set.retentionReason = 'infected';
       }
-      await ProviderDocument.updateOne(
+      const updated = await ProviderDocument.updateOne(
         { _id: new Types.ObjectId(id), securityState: current.securityState },
         { $set: set }
       ).exec();
+      if (updated.matchedCount !== 1) return undefined;
       return loadDocument({ _id: new Types.ObjectId(id) });
     },
 

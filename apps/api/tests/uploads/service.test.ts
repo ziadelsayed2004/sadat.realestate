@@ -209,6 +209,58 @@ test('fails closed for unavailable or failed scanning and never grants non-clean
   }
 });
 
+test('returned scanner failures remain quarantined and retry the same file without another document version', async () => {
+  for (const outcome of ['failed', 'timeout'] as const) {
+    let recovered = false, scanCount = 0;
+    const state = fixture({
+      ...createDeterministicMalwareScanner(),
+      async scan(source) {
+        for await (const chunk of source) assert(Buffer.byteLength(chunk) > 0);
+        scanCount++;
+        return recovered ? 'clean' : outcome;
+      }
+    });
+    await assert.rejects(state.service.upload(claims, headers, Readable.from(pdf)), /MALWARE_SCAN_FAILED/);
+    const saved = (await state.service.list(claims)).items[0]!;
+    assert.equal(saved.securityState, 'scan_failed');
+    await assert.rejects(state.service.createAccessGrant(claims, saved.id, 'provider_review', { requestId: 'failed-scan' }), /DOCUMENT_NOT_CLEAN/);
+    recovered = true;
+    const retry = await state.service.upload(claims, headers, Readable.from(pdf));
+    assert.equal(retry.id, saved.id);
+    assert.equal(retry.version, 1);
+    assert.equal(retry.idempotentReplay, true);
+    assert.equal(retry.securityState, 'clean');
+    assert.equal(state.documents.size, 1);
+    assert.equal(state.storage.has(`quarantine/${'2'.padStart(32, '0')}`), false);
+    await state.service.upload(claims, headers, Readable.from(pdf));
+    assert.equal(scanCount, 2, 'clean replays are not scanned again');
+  }
+});
+
+test('an infected replay cannot be rescanned as clean by retrying the same file', async () => {
+  let scanCount = 0;
+  const state = fixture(createDeterministicMalwareScanner(() => ++scanCount === 1 ? 'infected' : 'clean'));
+  const first = await state.service.upload(claims, headers, Readable.from(pdf));
+  const replay = await state.service.upload(claims, headers, Readable.from(pdf));
+  assert.equal(replay.id, first.id);
+  assert.equal(replay.securityState, 'infected');
+  assert.equal(scanCount, 1);
+});
+
+test('a lost scan claim does not run another scanner', async () => {
+  const state = fixture();
+  let scans = 0;
+  const service = createProviderDocumentService({
+    repository: { ...state.repo, async updateSecurity() { return undefined; } },
+    storage: state.storage,
+    scanner: { ...createDeterministicMalwareScanner(), async scan() { scans++; return 'clean'; } },
+    signer: createPrivateDownloadSigner(Buffer.alloc(32, 1)),
+    authorization: { authorize: async () => true }, audit: { record() {} }
+  });
+  await assert.rejects(service.upload(claims, headers, Readable.from(pdf)), /DOCUMENT_CONCURRENT_UPLOAD/);
+  assert.equal(scans, 0);
+});
+
 test('grants only owner-scoped clean downloads for 300 seconds and audits without the bearer URL', async () => {
   const value = fixture();
   const document = await value.service.upload(claims, headers, Readable.from(pdf));

@@ -148,7 +148,7 @@ export const providerRequirementSnapshotItemSchema = providerDocumentRequirement
   applies: z.boolean()
 }).strict();
 
-const providerRequirementVersionSchema = z.string().max(64).regex(/^\d{4}-\d{2}-\d{2}\.(?:[a-z][a-z0-9_-]{0,31}\.)?\d+$/);
+export const providerRequirementVersionSchema = z.string().max(64).regex(/^\d{4}-\d{2}-\d{2}\.(?:[a-z][a-z0-9_-]{0,31}\.)?\d+$/);
 
 export const providerRequirementSnapshotSchema = z.object({
   version: providerRequirementVersionSchema,

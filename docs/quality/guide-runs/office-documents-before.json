@@ -1,0 +1,23 @@
+{
+  "status": "REPRODUCED_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    {
+      "before": "Clean successful upload rejected by document contract",
+      "issues": [
+        "requirementVersion"
+      ]
+    },
+    "Refresh reproduces unavailable page despite HTTP 200 saved metadata"
+  ],
+  "browsers": [
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "width": 390,
+      "persistedFiles": 1
+    }
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

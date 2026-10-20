@@ -197,12 +197,16 @@ test('developer directory logos stay inside the cover instead of behind the desc
     }, meta: { requestId: 'developer-directory-layout' }
   } }));
   await page.goto(`/developers?lang=${locale}`);
+  // SSR may contain real local organizations; submit a search to load this test's API fixture.
+  await page.locator('#public-developer-search').fill('AS');
+  await page.locator('form[role="search"] button[type="submit"]').click();
+  await expect(page.locator('.public-developer-directory__card h2 a')).toHaveAttribute('href', `/developers/approved-builder?lang=${locale}`);
   const card = page.locator('.public-developer-directory__card').first();
   const logo = card.locator('.public-developer-directory__card-logo');
   await expect(logo).toBeVisible();
   await card.scrollIntoViewIfNeeded();
   await page.evaluate(() => document.fonts.ready);
-  await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).complete)).toBe(true);
+  await expect.poll(() => logo.locator('img').evaluate(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0)).toBe(true);
   const geometry = await card.evaluate(element => {
     const media = element.querySelector('.public-developer-directory__card-media')!.getBoundingClientRect();
     const photo = element.querySelector('.public-developer-directory__card-logo')!.getBoundingClientRect();
