@@ -43,6 +43,7 @@ export interface ProviderApplicationEntity {
   businessAddress?: string;
   legalCompanyName?: string;
   companyImageUrl?: string | null;
+  companyLogoUrl?: string | null;
   brandName?: string;
   headOfficeAddress?: string;
   commercialRegistrationNumber?: string;

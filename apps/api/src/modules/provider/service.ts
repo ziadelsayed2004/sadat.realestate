@@ -165,6 +165,7 @@ function applicationData(
     ...(application.businessAddress ? { businessAddress: application.businessAddress } : {}),
     ...(application.legalCompanyName ? { legalCompanyName: application.legalCompanyName } : {}),
     ...(application.companyImageUrl ? { companyImageUrl: application.companyImageUrl } : {}),
+    ...(application.companyLogoUrl ? { companyLogoUrl: application.companyLogoUrl } : {}),
     ...(application.brandName ? { brandName: application.brandName } : {}),
     ...(application.headOfficeAddress ? { headOfficeAddress: application.headOfficeAddress } : {}),
     ...(application.commercialRegistrationNumber ? { commercialRegistrationNumber: application.commercialRegistrationNumber } : {}),
@@ -308,6 +309,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
         throw new ProviderServiceError('PROVIDER_STEP_NOT_APPLICABLE');
       }
       if (patch.companyImageUrl && !await dependencies.validateCompanyPhoto?.(claims.sub, patch.companyImageUrl)) throw new ProviderServiceError('PROVIDER_COMPANY_IMAGE_INVALID');
+      if (patch.companyLogoUrl && !await dependencies.validateCompanyPhoto?.(claims.sub, patch.companyLogoUrl)) throw new ProviderServiceError('PROVIDER_COMPANY_IMAGE_INVALID');
       const { version, ...fields } = patch;
       return save(claims, version, fields);
     },

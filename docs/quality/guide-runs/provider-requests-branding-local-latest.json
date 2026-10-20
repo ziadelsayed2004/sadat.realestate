@@ -1,0 +1,69 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "registration_saves_separate_cover_and_logo_private_until_approval_and_rejects_foreign_logo",
+    "administrator_sees_both_application_images_and_approval_publishes_distinct_cover_and_logo",
+    "owner_settings_upload_replace_remove_logo_preserve_cover_reject_corrupt_foreign_and_stale_changes",
+    "developer_without_commission_ack_creates_reads_calls_searches_and_transitions_own_manual_lead_while_incoming_and_other_accounts_stay_protected",
+    "chromium_webkit_ar_en_mobile_desktop_requests_spacing_and_two_independent_branding_fields_public_logo_fits_without_cropping"
+  ],
+  "geometry": [
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "viewport": 320,
+      "document": 320,
+      "topPadding": 24,
+      "sidePadding": 16,
+      "topGap": 24
+    },
+    {
+      "engine": "chromium",
+      "locale": "en",
+      "viewport": 390,
+      "document": 390,
+      "topPadding": 24,
+      "sidePadding": 16,
+      "topGap": 24
+    },
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "viewport": 1440,
+      "document": 1440,
+      "topPadding": 32,
+      "sidePadding": 32,
+      "topGap": 32
+    },
+    {
+      "engine": "webkit",
+      "locale": "ar",
+      "viewport": 320,
+      "document": 320,
+      "topPadding": 24,
+      "sidePadding": 16,
+      "topGap": 24
+    },
+    {
+      "engine": "webkit",
+      "locale": "en",
+      "viewport": 390,
+      "document": 390,
+      "topPadding": 24,
+      "sidePadding": 16,
+      "topGap": 24
+    },
+    {
+      "engine": "webkit",
+      "locale": "ar",
+      "viewport": 1440,
+      "document": 1440,
+      "topPadding": 32,
+      "sidePadding": 32,
+      "topGap": 32
+    }
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

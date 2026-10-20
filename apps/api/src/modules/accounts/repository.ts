@@ -267,6 +267,7 @@ function providerData(
     ...(application.tradeName ? { tradeName: application.tradeName } : {}),
     ...(application.legalCompanyName ? { legalCompanyName: application.legalCompanyName } : {}),
     ...(application.companyImageUrl ? { companyImageUrl: application.companyImageUrl } : {}),
+    ...(application.companyLogoUrl ? { companyLogoUrl: application.companyLogoUrl } : {}),
     ...(application.brandName ? { brandName: application.brandName } : {}),
     ...(application.reviewReason ? { reviewReason: application.reviewReason } : {}),
     ...(application.submittedAt ? { submittedAt: application.submittedAt.toISOString() } : {}),

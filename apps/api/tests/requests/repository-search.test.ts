@@ -40,6 +40,16 @@ test('provider search cannot infer customer names through concatenated expressio
   assert.equal(clauses.some(clause => clause.providerId), false);
 });
 
+test('customer-name search is available only within the providers own manual lead branch', async () => {
+  const providerId = '2123456789abcdef01234567';
+  const clauses = await searchFilter('Mona+literal');
+  const branch = clauses.find(clause => clause.$and)?.$and as Array<Record<string, unknown>>;
+  assert.deepEqual(branch[0], { type: 'provider_customer', source: 'provider', providerId: new Types.ObjectId(providerId), creatorId: new Types.ObjectId(providerId) });
+  const fields = branch[1]!.$or as Array<Record<string, RegExp>>;
+  assert.equal(fields.find(clause => clause['payload.firstName'])!['payload.firstName']!.test('Mona+literal'), true);
+  assert.equal(fields.find(clause => clause['payload.firstName'])!['payload.firstName']!.test('Monaaliteral'), false);
+});
+
 test('retains exact request-ID search alongside escaped customer search', async () => {
   const id = '3123456789abcdef01234567';
   const clauses = await searchFilter(id);

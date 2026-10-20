@@ -45,6 +45,20 @@ test('projects approved organizations with only published projects and active pr
   assert.equal('status' in (profile ?? {}), false);
 });
 
+test('an empty optional description cannot hide an approved company or its independent logo', async () => {
+  const logoUrl = '/api/v1/public/organization-photos/' + 'f'.repeat(24);
+  for (const description of [{}, { en: '' }, null]) {
+    const row = source({ description, logoUrl });
+    const service = createPublicOrganizationService({ repository: { async list() { return { items: [row], total: 1 }; }, async findBySlug() { return row; } } });
+    const result = await service.get(row.slug);
+    assert.equal(result?.logoUrl, logoUrl); assert.equal(result?.description, undefined);
+    assert.equal((await service.list({})).items[0]?.logoUrl, logoUrl);
+  }
+  const row = source({ description: { ar: '', en: 'A valid company description' } });
+  const service = createPublicOrganizationService({ repository: { async list() { return { items: [row], total: 1 }; }, async findBySlug() { return row; } } });
+  assert.deepEqual((await service.get(row.slug))?.description, { en: 'A valid company description' });
+});
+
 test('approved developer companies and published projects stay browsable without commission acknowledgement, while contact and other identity scopes stay protected', async () => {
   const db = database('developer_company');
   const organizationId = new Types.ObjectId('a'.repeat(24));

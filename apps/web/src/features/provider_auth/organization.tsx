@@ -55,6 +55,7 @@ type OrganizationField =
 
 interface OrganizationFormState {
   readonly companyImageUrl: string;
+  readonly companyLogoUrl: string;
   readonly legalBusinessName: string;
   readonly tradeName: string;
   readonly businessAddress: string;
@@ -77,6 +78,7 @@ interface OrganizationUiError {
 function emptyForm(): OrganizationFormState {
   return {
     companyImageUrl: '',
+    companyLogoUrl: '',
     legalBusinessName: '',
     tradeName: '',
     businessAddress: '',
@@ -94,6 +96,7 @@ function emptyForm(): OrganizationFormState {
 function formFromApplication(application: ProviderApplicationData): OrganizationFormState {
   return {
     companyImageUrl: application.companyImageUrl ?? '',
+    companyLogoUrl: application.companyLogoUrl ?? '',
     legalBusinessName: application.legalBusinessName ?? '',
     tradeName: application.tradeName ?? '',
     businessAddress: application.businessAddress ?? '',
@@ -117,6 +120,7 @@ function hasValues(form: OrganizationFormState): boolean {
 function buildPatch(application: ProviderApplicationData, form: OrganizationFormState, variant: OrganizationVariant): Record<string, unknown> {
   const patch: Record<string, unknown> = { version: application.version };
   if (variant === 'company' && (form.companyImageUrl || application.companyImageUrl)) patch.companyImageUrl = form.companyImageUrl || null;
+  if (variant === 'company' && (form.companyLogoUrl || application.companyLogoUrl)) patch.companyLogoUrl = form.companyLogoUrl || null;
   const fields: readonly OrganizationField[] = variant === 'business'
     ? ['legalBusinessName', 'tradeName', 'businessAddress', 'commercialRegistrationNumber', 'taxRegistrationNumber', 'authorizedRepresentativeFullName', 'authorizedRepresentativeTitle']
     : ['legalCompanyName', 'brandName', 'headOfficeAddress', 'commercialRegistrationNumber', 'taxRegistrationNumber', 'authorizedRepresentativeFullName', 'authorizedRepresentativeTitle'];
@@ -352,7 +356,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
                 <Input id="provider-company-address" label={copy.addressLabel} name="headOfficeAddress" placeholder={copy.addressPlaceholder} value={form.headOfficeAddress} onChange={event => updateField('headOfficeAddress', event.currentTarget.value)} required={organizationFields.has('headOfficeAddress')} state={inputState('headOfficeAddress')} />
               </>
             )}
-            {variant === 'company' ? <CompanyImageField locale={locale} value={form.companyImageUrl} client={client} onChange={value => setForm(current => ({ ...current, companyImageUrl: value }))} onBusy={setPhotoBusy} /> : null}
+            {variant === 'company' ? <><CompanyImageField locale={locale} value={form.companyImageUrl} client={client} disabled={photoBusy} onChange={value => setForm(current => ({ ...current, companyImageUrl: value }))} onBusy={setPhotoBusy} /><CompanyImageField kind="logo" locale={locale} value={form.companyLogoUrl} client={client} disabled={photoBusy} onChange={value => setForm(current => ({ ...current, companyLogoUrl: value }))} onBusy={setPhotoBusy} /></> : null}
             <div className="provider-organization-grid">
               <Input id="provider-organization-commercial-registration" label={optionalBusinessLabel(copy.commercialRegistrationNumberLabel)} name="commercialRegistrationNumber" placeholder={copy.commercialRegistrationNumberPlaceholder} value={form.commercialRegistrationNumber} onChange={event => updateField('commercialRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('commercialRegistrationNumber')} state={inputState('commercialRegistrationNumber')} />
               <Input id="provider-organization-tax-registration" label={optionalBusinessLabel(copy.taxRegistrationNumberLabel)} name="taxRegistrationNumber" placeholder={copy.taxRegistrationNumberPlaceholder} value={form.taxRegistrationNumber} onChange={event => updateField('taxRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('taxRegistrationNumber')} state={inputState('taxRegistrationNumber')} />

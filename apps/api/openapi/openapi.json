@@ -18929,6 +18929,17 @@
                 "type": "null"
               }
             ]
+          },
+          "companyLogoUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -19138,6 +19149,10 @@
             "format": "date-time"
           },
           "companyImageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "companyLogoUrl": {
             "type": "string",
             "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
@@ -20716,6 +20731,10 @@
           "companyImageUrl": {
             "type": "string",
             "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "companyLogoUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -21157,6 +21176,10 @@
             }
           },
           "companyImageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "companyLogoUrl": {
             "type": "string",
             "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }

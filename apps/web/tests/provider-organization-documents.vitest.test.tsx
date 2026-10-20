@@ -1,4 +1,6 @@
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
 import type { ProviderApplicationData, ProviderDocumentData, ProviderRequirementSnapshot } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { AuthPage, type AuthFlowClient } from '../src/features/auth/pages.tsx';
@@ -227,6 +229,19 @@ function documentData(category: ProviderDocumentData['category']): ProviderDocum
 }
 
 describe('provider organization details', () => {
+  it('keeps cover and logo separate when saving or removing an application logo', async () => {
+    server.use(http.get('*/api/v1/provider/organization-photos/:id', () => new HttpResponse(null, { status: 404 })));
+    const cover = `/api/v1/public/organization-photos/${'1'.repeat(24)}`, logo = `/api/v1/public/organization-photos/${'2'.repeat(24)}`;
+    const draft = application('developer_company', { companyImageUrl: cover, companyLogoUrl: logo });
+    const updateProviderCompany = vi.fn().mockResolvedValue({ ...draft, companyLogoUrl: undefined, version: 1 });
+    renderWithLocale(<ProviderOrganizationPage locale="en" providerType="developer_company" initialApplication={draft} client={{ updateProviderCompany }} onBack={vi.fn()} />, { locale: 'en' });
+    await screen.findByRole('heading', { name: 'Company logo (optional)' });
+    expect(screen.getByLabelText('Choose company image')).toHaveAttribute('type', 'file');
+    expect(screen.getByLabelText('Choose company logo')).toHaveAttribute('type', 'file');
+    fireEvent.click(screen.getByRole('button', { name: 'Remove application logo' }));
+    fireEvent.click(screen.getByRole('button', { name: getProviderOrganizationCopy('en').saveDraftAction }));
+    await waitFor(() => expect(updateProviderCompany).toHaveBeenCalledWith(expect.objectContaining({ companyImageUrl: cover, companyLogoUrl: null })));
+  });
   it('advances the authenticated provider flow from account to organization to documents', async () => {
     vi.mocked(loadProviderAccountLocations).mockResolvedValueOnce([{ id: 'd'.repeat(24), kind: 'location', slug: 'sadat', order: 0, name: { en: 'Sadat City' } }]);
     const accountCopy = getProviderAccountCopy('en');

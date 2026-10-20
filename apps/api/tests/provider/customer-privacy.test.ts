@@ -10,6 +10,19 @@ const admin = { sub: '3'.repeat(24), role: 'admin', status: 'verified' } as Acce
 const stamp = new Date('2026-10-10T00:00:00Z'), viewingId = '4'.repeat(24), propertyId = '5'.repeat(24), requestId = '6'.repeat(24);
 const viewing: ViewingRecord = { id: viewingId, propertyId, seekerId: seeker.sub, providerId: provider.sub, customerName: 'Private customer', customerPhone: '+201012345678', note: 'Call Private customer +201012345678', status: 'requested', requestedAt: new Date('2026-10-11T00:00:00Z'), timezone: 'Africa/Cairo', version: 0, createdAt: stamp, updatedAt: stamp };
 const request: RequestRecord = { id: requestId, type: 'contact', source: 'seeker', seekerId: seeker.sub, creatorId: seeker.sub, providerId: provider.sub, propertyId, payload: { fullName: 'Private customer', phone: '+201012345678', email: 'private@example.invalid', message: 'Private text', propertyId }, customerUpdates: [{ status: 'new', message: 'Private update', createdAt: stamp }], status: 'new', version: 0, createdAt: stamp, updatedAt: stamp };
+test('an unacknowledged developer can read and manage only the manual leads it supplied itself', async () => {
+  const visibility = { read: async () => providerVisibility({ accountId: provider.sub, providerType: 'developer_company', approved: true, acknowledged: false, subscribed: false }) };
+  const requests = createRequestService({ visibility, repository: createInMemoryRequestRepository([request]), now: () => stamp });
+  const payload = { firstName: 'Own', lastName: 'Customer', phone: '+201012345678', email: 'own@example.invalid', message: 'Offline inquiry', sourceNote: 'Company showroom' };
+  const created = await requests.create(provider, { type: 'provider_customer', payload });
+  assert.equal(created.customerVisibility, 'visible'); assert.deepEqual(created.payload, payload); assert.equal(created.creatorId, provider.sub); assert(created.availableActions.includes('contact'));
+  assert.deepEqual((await requests.get(provider, created.id)).payload, payload);
+  assert.equal((await requests.transition(provider, created.id, { transition: 'contact', expectedVersion: 0 })).status, 'contacted');
+  assert.equal((await requests.get(provider, requestId)).customerVisibility, 'hidden');
+  await assert.rejects(requests.transition(provider, requestId, { transition: 'contact', expectedVersion: 0 }), /REQUEST_FORBIDDEN/);
+  await assert.rejects(requests.get({ ...provider, sub: '7'.repeat(24) }, created.id), /REQUEST_NOT_FOUND/);
+  await assert.rejects(requests.transition({ ...provider, sub: '7'.repeat(24) }, created.id, { transition: 'resolve', expectedVersion: 1 }), /REQUEST_NOT_FOUND/);
+});
 for (const providerType of ['brokerage_office', 'individual_broker', 'developer_company'] as const) test(`${providerType}: hidden incoming requests omit identifiers, text, name and contact; API decisions fail closed`, async () => {
   const visibility = { read: async () => providerVisibility({ accountId: provider.sub, providerType, approved: true, acknowledged: false, subscribed: true }) };
   const viewings = createViewingService({ visibility, repository: createInMemoryViewingRepository([viewing]), now: () => stamp, authorization: { authorize: async () => true } });

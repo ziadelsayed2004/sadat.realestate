@@ -551,7 +551,8 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   display: block;
   inline-size: 7rem;
   block-size: 7rem;
-  object-fit: cover;
+  object-fit: contain;
+  background: white;
   border: 2px solid var(--color-surface);
   border-radius: 0.75rem;
   box-shadow: var(--shadow-card);

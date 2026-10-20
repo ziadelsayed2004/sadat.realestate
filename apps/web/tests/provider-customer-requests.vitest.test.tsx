@@ -42,6 +42,14 @@ function success(payload: unknown, requestIdValue: string, meta: Record<string, 
 }
 
 describe('Provider customer requests', () => {
+  it('shows the full contact and details supplied by the owner of a manual lead', async () => {
+    const item = request({ customerVisibility: 'visible', creatorId: providerId });
+    renderWithLocale(<ProviderCustomerRequests locale="en" session={session} load={async () => ({ ...data, items: [item] })} />, { locale: 'en' });
+    expect(await screen.findByRole('link', { name: '01012345678' })).toHaveAttribute('href', 'tel:01012345678');
+    expect(screen.getByRole('link', { name: 'mona@example.com' })).toHaveAttribute('href', 'mailto:mona@example.com');
+    fireEvent.click(screen.getByText('Request details', { exact: true }));
+    expect(screen.getByText('Interested in a property')).toBeVisible();
+  });
   it.each(['ar', 'en'] as const)('renders the safe related property name in %s', async locale => {
     const property = { id: 'cccccccccccccccccccccccc', slug: 'local-apartment', kind: 'property' as const, name: { ar: 'شقة السادات', en: 'Sadat apartment' }, transactionType: 'sale' as const };
     const load = vi.fn().mockResolvedValue({ ...data, items: [request({ property })] });

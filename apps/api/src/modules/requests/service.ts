@@ -35,6 +35,9 @@ function available(status: RequestStatus, role: AccessTokenClaims['role'], type?
 interface RequestProjectionAccess { readonly manage: boolean; readonly assign: boolean; readonly note: boolean; }
 function project(request: RequestRecord, role: AccessTokenClaims['role'], access: RequestProjectionAccess, actorId?: string): RequestData { return requestDataSchema.parse({ id: request.id, type: request.type, source: request.source, ...(role === 'admin' ? { creatorId: request.creatorId, seekerId: request.seekerId, providerId: request.providerId, assignedTo: request.assignedTo, dueAt: request.dueAt?.toISOString(), capabilities: { assign: access.assign, note: access.note } } : { ...(role === 'provider' && request.type === 'contact' && request.creatorId === actorId ? { creatorId: actorId } : {}), ...(request.seekerId ? { seekerId: request.seekerId } : {}), ...(request.providerId ? { providerId: request.providerId } : {}) }), ...(request.propertyId ? { propertyId: request.propertyId } : {}), ...(request.projectId ? { projectId: request.projectId } : {}), ...(request.property ? { property: request.property } : {}), status: request.status, ...(request.customerUpdates ? { customerUpdates: request.customerUpdates.map(update => ({ ...update, createdAt: update.createdAt.toISOString() })) } : {}), payload: request.payload, ...(request.appointmentAt ? { appointmentAt: request.appointmentAt.toISOString(), appointmentTimezone: request.appointmentTimezone } : {}), version: request.version, availableActions: access.manage ? available(request.status, role === 'provider' && request.type === 'contact' && request.creatorId === actorId ? 'seeker' : role, request.type) : [], createdAt: request.createdAt.toISOString(), updatedAt: request.updatedAt.toISOString() }); }
 function scopeFor(claims: AccessTokenClaims): { seekerId?: string; providerId?: string } | undefined { return claims.role === 'seeker' ? { seekerId: claims.sub } : claims.role === 'provider' ? { providerId: claims.sub } : undefined; }
+function ownManualRequest(claims: AccessTokenClaims, row: RequestRecord): boolean {
+  return claims.role === 'provider' && row.type === 'provider_customer' && row.source === 'provider' && row.creatorId === claims.sub && row.providerId === claims.sub;
+}
 
 export function createRequestService(dependencies: { repository: RequestRepository; visibility?: ProviderVisibilityReader; authorization?: Pick<RbacService, 'authorize'>; now?: () => Date }) {
   const now = dependencies.now ?? (() => new Date());
@@ -55,6 +58,7 @@ export function createRequestService(dependencies: { repository: RequestReposito
   }
   async function projectFor(claims: AccessTokenClaims, row: RequestRecord, access: RequestProjectionAccess): Promise<RequestData> {
     if (claims.role !== 'provider' || row.type === 'contact' && row.creatorId === claims.sub) return project(row, claims.role, access, claims.sub);
+    if (ownManualRequest(claims, row)) return requestDataSchema.parse({ ...project(row, claims.role, access, claims.sub), creatorId: claims.sub, customerVisibility: 'visible' });
     if ((await dependencies.visibility?.read(claims.sub))?.customerIdentity) {
       const value = project(row, claims.role, access, claims.sub);
       const { seekerId: _seekerId, creatorId: _creatorId, ...safe } = value;
@@ -94,7 +98,7 @@ export function createRequestService(dependencies: { repository: RequestReposito
     const target: Record<RequestTransition, RequestStatus> = { start_review: 'under_review', contact: 'contacted', schedule: 'scheduled', needs_information: 'needs_information', start_progress: 'in_progress', resolve: 'resolved', cancel: 'cancelled', close: 'closed', reopen: 'under_review' };
     const row = await dependencies.repository.get(requestId, scopeFor(claims));
     if (!row) throw new RequestServiceError('REQUEST_NOT_FOUND');
-    if (claims.role === 'provider' && !(row.type === 'contact' && row.creatorId === claims.sub) && !(await dependencies.visibility?.read(claims.sub))?.customerIdentity) throw new RequestServiceError('REQUEST_FORBIDDEN');
+    if (claims.role === 'provider' && !ownManualRequest(claims, row) && !(row.type === 'contact' && row.creatorId === claims.sub) && !(await dependencies.visibility?.read(claims.sub))?.customerIdentity) throw new RequestServiceError('REQUEST_FORBIDDEN');
     const requesterRole = claims.role === 'provider' && row.type === 'contact' && row.creatorId === claims.sub ? 'seeker' : claims.role;
     const seekerReply = requesterRole === 'seeker' && row.status === 'needs_information' && input.transition === 'start_review';
     if (seekerReply && !input.customerMessage) throw new RequestServiceError('REQUEST_INVALID_STATE');

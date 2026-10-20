@@ -7,19 +7,64 @@ import type { AdminAccountsAuthorizationSource } from './data.ts';
 import './company-editor.css';
 import { CompanyPhoto } from './company-photo.tsx';
 
-const schema = z.object({ id: z.string(), slug: z.string(), version: z.number(), name: z.object({ ar: z.string().optional(), en: z.string().optional() }), description: z.object({ ar: z.string().optional(), en: z.string().optional() }), imageUrl: z.string().nullable(), status: z.string() });
+const schema = z.object({ id: z.string(), slug: z.string(), version: z.number(), name: z.object({ ar: z.string().optional(), en: z.string().optional() }), description: z.object({ ar: z.string().optional(), en: z.string().optional() }), imageUrl: z.string().nullable(), logoUrl: z.string().nullable().optional(), status: z.string() });
+type ImageField = 'imageUrl' | 'logoUrl';
 export function CompanyEditor({ providerId, locale, authorization, apiOrigin, owner = false }: { owner?: boolean; providerId: string; locale: SupportedLocale; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined }) {
   const ar = locale === 'ar', client = useMemo(() => new ApiClient(apiOrigin ? { baseUrl: apiOrigin } : {}), [apiOrigin]);
   const [company, setCompany] = useState<z.infer<typeof schema>>(), [busy, setBusy] = useState(false), [feedback, setFeedback] = useState(''), [reason, setReason] = useState(owner ? 'Company profile updated by its owner' : ''), [attempt, setAttempt] = useState(0);
+  const [changedImages, setChangedImages] = useState<ReadonlySet<ImageField>>(() => new Set());
   const endpoint = owner ? '/provider/organization' : `/admin/providers/${providerId}/organization`;
   const headers = () => ({ authorization: authorization?.getAuthorizationHeader() ?? '' });
-  useEffect(() => { let active = true; void client.request(endpoint, { headers: { authorization: authorization?.getAuthorizationHeader() ?? '' }, responseSchema: z.object({ data: schema }) }).then(result => { if (active) setCompany(result.data.data); }, () => { if (active) setFeedback(ar ? 'ملف الشركة غير متاح حاليًا. تحقق من اعتماد الحساب وصلاحية عرض العارضين.' : 'Company profile unavailable. Check approval and provider-view access.'); }); return () => { active = false; }; }, [client, endpoint, authorization, ar, attempt]);
+  useEffect(() => {
+    let active = true;
+    void client.request(endpoint, { headers: { authorization: authorization?.getAuthorizationHeader() ?? '' }, responseSchema: z.object({ data: schema }) }).then(result => {
+      if (active) { setCompany(result.data.data); setChangedImages(new Set()); }
+    }, () => { if (active) setFeedback(ar ? 'ملف الشركة غير متاح حاليًا. تحقق من اعتماد الحساب وصلاحية عرض العارضين.' : 'Company profile unavailable. Check approval and provider-view access.'); });
+    return () => { active = false; };
+  }, [client, endpoint, authorization, ar, attempt]);
+  function setImage(field: ImageField, value: string | null) {
+    setCompany(current => current ? { ...current, [field]: value } : current);
+    setChangedImages(current => new Set([...current, field]));
+  }
+  async function upload(field: ImageField, file: File) {
+    if (busy) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size === 0 || file.size > 10 * 1024 * 1024) { setFeedback(ar ? 'اختر JPG أو PNG أو WebP حتى 10 ميجابايت.' : 'Choose JPG, PNG or WebP up to 10 MB.'); return; }
+    setBusy(true); setFeedback('');
+    try {
+      const result = await client.request(owner ? '/provider/organization-photos' : '/admin/providers/organization-photos', { method: 'POST', body: file, headers: { ...headers(), 'content-type': file.type }, responseSchema: z.object({ data: z.object({ imageUrl: z.string() }) }) });
+      setImage(field, result.data.data.imageUrl);
+      setFeedback(ar ? 'تم رفع الصورة. احفظ الملف لإظهارها في الدليل.' : 'Image uploaded. Save the profile to display it publicly.');
+    } catch { setFeedback(ar ? 'تعذر رفع الصورة. بياناتك محفوظة؛ اختر JPG أو PNG أو WebP حتى 10 ميجابايت.' : 'Upload failed. Your details are preserved; choose JPG, PNG or WebP up to 10 MB.'); }
+    finally { setBusy(false); }
+  }
   async function save(status = company?.status) {
     if (!company || reason.trim().length < 3 || busy) return;
     setBusy(true); setFeedback('');
-    try { const result = await client.request(endpoint, { method: 'PATCH', headers: headers(), json: { version: company.version, name: company.name, description: company.description, ...(company.imageUrl?.startsWith('/api/v1/public/organization-photos/') ? { imageUrl: company.imageUrl } : {}), ...(owner ? {} : { status }), reason: reason.trim() }, responseSchema: z.object({ data: schema }) }); setCompany(result.data.data); setFeedback(ar ? 'تم حفظ ملف الشركة.' : 'Company profile saved.'); }
-    catch { setFeedback(ar ? 'تعذر الحفظ. تحقق من الصلاحيات وحدّث البيانات قبل إعادة المحاولة.' : 'Could not save. Check permissions and reload before retrying.'); }
+    const images = Object.fromEntries([...changedImages].map(field => [field, company[field] || null]));
+    try {
+      const result = await client.request(endpoint, { method: 'PATCH', headers: headers(), json: { version: company.version, name: company.name, description: company.description, ...images, ...(owner ? {} : { status }), reason: reason.trim() }, responseSchema: z.object({ data: schema }) });
+      setCompany(result.data.data); setChangedImages(new Set()); setFeedback(ar ? 'تم حفظ ملف الشركة.' : 'Company profile saved.');
+    } catch { setFeedback(ar ? 'تعذر الحفظ. بياناتك موجودة؛ تحقق من الصلاحيات وحدّث البيانات قبل إعادة المحاولة.' : 'Could not save. Your details are preserved; check permissions and reload before retrying.'); }
     finally { setBusy(false); }
   }
-  return <section className="admin-accounts__detail-card admin-company-editor" id="company-profile-editor"><h2>{owner ? (ar ? 'بيانات شركتك وصورة الغلاف' : 'Your company details and cover image') : (ar ? 'إدارة ملف الشركة وصورتها في دليل المطورين' : 'Manage the company directory profile and image')}</h2>{owner ? <p>{ar ? 'عدّل الاسم أو النبذة أو الصورة ثم اضغط حفظ. التعديل يظهر في صفحة شركتك بالموقع.' : 'Update the name, description or image, then save. Your changes appear on your company page.'}</p> : null}{company ? <form onSubmit={event => { event.preventDefault(); void save(); }}><a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a>{(['ar', 'en'] as const).map(lang => <label key={lang}>{ar ? `اسم الشركة — ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}` : `Company name — ${lang}`}<input value={company.name[lang] ?? ''} onChange={event => setCompany({ ...company, name: { ...company.name, [lang]: event.target.value } })} /></label>)}<label>{ar ? 'نبذة الشركة' : 'Company description'}<textarea value={company.description[locale] ?? ''} onChange={event => setCompany({ ...company, description: { ...company.description, [locale]: event.target.value } })} /></label>{company.imageUrl ? <CompanyPhoto imageUrl={company.imageUrl} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={company.name[locale] ?? company.name.ar ?? company.name.en ?? ''} /> : null}<label>{ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={event => { const file = event.target.files?.[0]; if (!file) return; setBusy(true); void client.request(owner ? '/provider/organization-photos' : '/admin/providers/organization-photos', { method: 'POST', body: file, headers: { ...headers(), 'content-type': file.type }, responseSchema: z.object({ data: z.object({ imageUrl: z.string() }) }) }).then(result => { setCompany(current => current ? { ...current, imageUrl: result.data.data.imageUrl } : current); setFeedback(ar ? 'تم رفع الصورة. احفظ الملف لإظهارها في الدليل.' : 'Image uploaded. Save the profile to display it publicly.'); }, () => setFeedback(ar ? 'تعذر رفع الصورة. اختر JPG أو PNG أو WebP حتى 10 ميجابايت.' : 'Upload failed. Choose JPG, PNG or WebP up to 10 MB.')).finally(() => setBusy(false)); }} /></label>{!owner ? <label>{ar ? 'سبب التعديل أو الحذف' : 'Change or removal reason'}<input value={reason} minLength={3} onChange={event => setReason(event.target.value)} required /></label> : null}<div><Button disabled={busy || reason.trim().length < 3} type="submit">{ar ? 'حفظ ملف الشركة' : 'Save company'}</Button>{!owner ? <Button type="button" variant="danger" disabled={busy || reason.trim().length < 3} onClick={() => void save(company.status === 'inactive' ? 'approved' : 'inactive')}>{company.status === 'inactive' ? ar ? 'إعادة عرض الشركة' : 'Restore company' : ar ? 'حذف الشركة من الدليل' : 'Remove company from directory'}</Button> : null}</div>{!owner ? <p>{ar ? 'الحذف من الدليل يخفي ملف الشركة ويمكن الرجوع عنه؛ لا يحذف حسابها أو سجلاتها المالية.' : 'Removing the directory profile is reversible and preserves the account and financial history.'}</p> : null}</form> : <Button onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة تحميل الملف' : 'Reload profile'}</Button>}{feedback ? <p role="status">{feedback}</p> : null}</section>;
+  return <section className="admin-accounts__detail-card admin-company-editor" id="company-profile-editor">
+    <h2>{owner ? (ar ? 'بيانات شركتك والغلاف واللوجو' : 'Your company details, cover and logo') : (ar ? 'إدارة ملف الشركة والغلاف واللوجو' : 'Manage company profile, cover and logo')}</h2>
+    {owner ? <p>{ar ? 'الغلاف صورة عريضة أعلى صفحة الشركة، واللوجو شعار مربع يظهر في هوية الشركة وكروتها. ارفع كل صورة في مكانها ثم اضغط حفظ.' : 'The cover is the wide image above your company page. The square logo identifies your company on its profile and cards. Upload each separately, then save.'}</p> : null}
+    {company ? <form onSubmit={event => { event.preventDefault(); void save(); }}>
+      <a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a>
+      {(['ar', 'en'] as const).map(lang => <label key={lang}>{ar ? `اسم الشركة — ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}` : `Company name — ${lang}`}<input value={company.name[lang] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, name: { ...company.name, [lang]: event.target.value } })} /></label>)}
+      <label>{ar ? 'نبذة الشركة' : 'Company description'}<textarea value={company.description[locale] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, description: { ...company.description, [locale]: event.target.value } })} /></label>
+      <div className="admin-company-editor__images">{(['imageUrl', 'logoUrl'] as const).map(field => <fieldset key={field} className={`admin-company-editor__image admin-company-editor__image--${field === 'logoUrl' ? 'logo' : 'cover'}`} disabled={busy}>
+        <legend>{field === 'logoUrl' ? ar ? 'لوجو الشركة' : 'Company logo' : ar ? 'صورة غلاف الشركة' : 'Company cover'}</legend>
+        <p>{field === 'logoUrl' ? ar ? 'صورة مربعة؛ المقاس المقترح 512 × 512 بكسل. يظهر الشعار كاملًا.' : 'Square image; suggested size 512 × 512 px. The full logo stays visible.' : ar ? 'صورة عريضة؛ المقاس المقترح 1600 × 900 بكسل.' : 'Wide image; suggested size 1600 × 900 px.'}</p>
+        {company[field] ? <CompanyPhoto imageUrl={company[field]!} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={field === 'logoUrl' ? ar ? 'معاينة لوجو الشركة' : 'Company logo preview' : ar ? 'معاينة غلاف الشركة' : 'Company cover preview'} /> : null}
+        <label>{field === 'logoUrl' ? ar ? 'رفع لوجو الشركة' : 'Upload company logo' : ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void upload(field, file); }} /></label>
+        {company[field] ? <Button type="button" variant="secondary" onClick={() => setImage(field, null)}>{field === 'logoUrl' ? ar ? 'إزالة اللوجو' : 'Remove logo' : ar ? 'إزالة الغلاف' : 'Remove cover'}</Button> : null}
+      </fieldset>)}</div>
+      {!owner ? <label>{ar ? 'سبب التعديل أو الحذف' : 'Change or removal reason'}<input value={reason} minLength={3} onChange={event => setReason(event.target.value)} required /></label> : null}
+      <div><Button disabled={busy || reason.trim().length < 3} type="submit">{ar ? 'حفظ ملف الشركة' : 'Save company'}</Button>{!owner ? <Button type="button" variant="danger" disabled={busy || reason.trim().length < 3} onClick={() => void save(company.status === 'inactive' ? 'approved' : 'inactive')}>{company.status === 'inactive' ? ar ? 'إعادة عرض الشركة' : 'Restore company' : ar ? 'حذف الشركة من الدليل' : 'Remove company from directory'}</Button> : null}</div>
+      {!owner ? <p>{ar ? 'الحذف من الدليل يخفي ملف الشركة ويمكن الرجوع عنه؛ لا يحذف حسابها أو سجلاتها المالية.' : 'Removing the directory profile is reversible and preserves the account and financial history.'}</p> : null}
+    </form> : <Button onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة تحميل الملف' : 'Reload profile'}</Button>}
+    {feedback ? <p role="status">{feedback}</p> : null}
+  </section>;
 }

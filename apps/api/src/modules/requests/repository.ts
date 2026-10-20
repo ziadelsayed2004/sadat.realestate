@@ -197,6 +197,10 @@ export function createMongooseRequestRepository(connection: Connection, audit?: 
           { 'payload.note': escapedSearch(search) }
           ] : [])
         ];
+        if (scope?.providerId) clauses.push({ $and: [
+          { type: 'provider_customer', source: 'provider', providerId: toObjectId(scope.providerId), creatorId: toObjectId(scope.providerId) },
+          { $or: ['firstName', 'lastName', 'phone', 'email'].map(field => ({ [`payload.${field}`]: escapedSearch(search) })) }
+        ] });
         if (matches.length) clauses.push({ propertyId: { $in: matches.map(match => match._id) } });
         if (/^[a-f0-9]{24}$/iu.test(search)) clauses.unshift({ _id: toObjectId(search) }, { propertyId: toObjectId(search) });
         filter.$or = clauses;

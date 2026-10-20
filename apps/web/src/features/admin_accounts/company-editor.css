@@ -7,3 +7,9 @@
 .admin-company-editor { border: 1px solid #dce3dd; border-radius: 16px; background: white; }
 .admin-company-editor :is(input, textarea) { box-sizing: border-box; }
 .admin-company-editor__photo { inline-size: min(100%, 320px); block-size: 190px; object-fit: contain; border-radius: 12px; background: #f4f7f5; }
+.admin-company-editor form > .admin-company-editor__images { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.admin-company-editor__image { display: grid; align-content: start; gap: 12px; min-width: 0; margin: 0; padding: 16px; border: 1px solid #e1e6e2; border-radius: 12px; }
+.admin-company-editor__image p { margin: 0; line-height: 1.8; }
+.admin-company-editor__image legend { padding-inline: 6px; font-weight: 700; }
+.admin-company-editor__image--logo .admin-company-editor__photo { inline-size: 160px; block-size: 160px; }
+@media (max-width: 700px) { .admin-company-editor form > .admin-company-editor__images { grid-template-columns: minmax(0, 1fr); } .admin-company-editor { padding: 16px; } }

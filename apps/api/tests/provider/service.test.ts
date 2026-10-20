@@ -389,4 +389,5 @@ test('enforces verified provider access, owner binding, and strict source valida
 test('rejects attaching a company image when ownership cannot be established', async () => {
   const app = baseApplication({ providerType: 'developer_company' });
   await assert.rejects(service(repository(app)).updateCompany(claims, { version: 0, companyImageUrl: '/api/v1/public/organization-photos/' + 'c'.repeat(24) }), (error: unknown) => error instanceof ProviderServiceError && error.code === 'PROVIDER_COMPANY_IMAGE_INVALID');
+  await assert.rejects(service(repository(app)).updateCompany(claims, { version: 0, companyLogoUrl: '/api/v1/public/organization-photos/' + 'd'.repeat(24) }), (error: unknown) => error instanceof ProviderServiceError && error.code === 'PROVIDER_COMPANY_IMAGE_INVALID');
 });

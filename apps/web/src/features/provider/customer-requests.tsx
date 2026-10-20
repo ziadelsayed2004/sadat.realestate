@@ -157,6 +157,7 @@ function RequestFormModal({ copy, saving, error, onClose, onSave }: {
       </>
     )}>
       <form id={formId} className="provider-customer-requests__form" onSubmit={event => { void submit(event); }} noValidate>
+        <p className="provider-customer-requests__help">{copy.form.description}</p>
         {validationError || error ? <p className="provider-customer-requests__form-error" role="alert">{validationError ?? error}</p> : null}
         <fieldset disabled={saving}>
           <legend>{copy.form.customerDetails}</legend>
@@ -202,7 +203,7 @@ function TransitionModal({ request, action, copy, locale, saving, error, onClose
     event.preventDefault();
     setValidationError(undefined);
     const parsed = requestTransitionRequestSchema.safeParse({ transition: action, expectedVersion: request.version, ...(reason.trim() === '' ? {} : { reason: reason.trim() }), ...(customerMessage.trim() ? { customerMessage: customerMessage.trim() } : {}) });
-    if (!parsed.success || (request.creatorId && action === 'start_review' && request.status === 'needs_information' && !customerMessage.trim())) {
+    if (!parsed.success || (request.type === 'contact' && request.creatorId && action === 'start_review' && request.status === 'needs_information' && !customerMessage.trim())) {
       setValidationError(copy.transition.validation);
       return;
     }
@@ -222,13 +223,14 @@ function TransitionModal({ request, action, copy, locale, saving, error, onClose
         <label className="provider-customer-requests__textarea-label" htmlFor={`${formId}-reason`}>{copy.transition.reason}</label>
         <textarea id={`${formId}-reason`} value={reason} onChange={event => setReason(event.target.value)} rows={4} aria-describedby={`${formId}-reason-help`} />
         <p id={`${formId}-reason-help`} className="provider-customer-requests__help">{copy.transition.reasonHelp}</p>
-        {((request.seekerId || request.source === 'provider') && request.payload.contactChannel === 'provider' || request.creatorId && action === 'start_review' && request.status === 'needs_information') ? <label>{locale === 'ar' ? 'رسالة للمتابعة' : 'Follow-up message'}<textarea value={customerMessage} onChange={event => setCustomerMessage(event.target.value)} maxLength={2000} rows={3} /></label> : null}
+        {((request.seekerId || request.source === 'provider') && request.payload.contactChannel === 'provider' || request.type === 'contact' && request.creatorId && action === 'start_review' && request.status === 'needs_information') ? <label>{locale === 'ar' ? 'رسالة للمتابعة' : 'Follow-up message'}<textarea value={customerMessage} onChange={event => setCustomerMessage(event.target.value)} maxLength={2000} rows={3} /></label> : null}
       </form>
     </Modal>
   );
 }
 
 function RequestRow({ request, locale, copy, onTransition }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly copy: ProviderCustomerRequestsCopy; readonly onTransition: (request: RequestData, action: RequestTransition) => void }) {
+  const manual = request.type === 'provider_customer' && request.source === 'provider' && request.customerVisibility === 'visible' && Boolean(request.creatorId);
   const name = customerName(request, copy.unavailable, locale);
   const phone = payloadText(request, 'phone');
   const email = payloadText(request, 'email');
@@ -237,9 +239,9 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
       <td>
         <div className="provider-customer-requests__identity">
           <strong>{name}</strong>
-          {phone ? request.payload.contactChannel === 'provider' ? <a href={`tel:${phone}`} dir="ltr">{phone}</a> : <span>{maskPhone(phone)}</span> : null}
-          {email ? <span>{maskEmail(email)}</span> : null}
-          {request.type === 'contact' ? <details><summary>{locale === 'ar' ? 'تفاصيل الاستفسار' : 'Inquiry details'}</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{payloadText(request, 'message')}</p>{request.customerUpdates?.filter(update => request.creatorId || update.authorRole === 'seeker' || update.authorRole === 'provider').map((update, index) => <div key={`${update.createdAt}-${index}`}><strong>{locale === 'ar' ? 'تحديث الطلب' : 'Request update'}</strong><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{update.message}</p></div>)}</details> : null}
+          {phone ? request.payload.contactChannel === 'provider' || manual ? <a href={`tel:${phone}`} dir="ltr">{phone}</a> : <span>{maskPhone(phone)}</span> : null}
+          {email ? manual ? <a href={`mailto:${email}`} dir="ltr">{email}</a> : <span>{maskEmail(email)}</span> : null}
+          {request.type === 'contact' || manual ? <details><summary>{manual ? locale === 'ar' ? 'تفاصيل الطلب' : 'Request details' : locale === 'ar' ? 'تفاصيل الاستفسار' : 'Inquiry details'}</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{payloadText(request, 'message')}</p>{request.customerUpdates?.filter(update => request.creatorId || update.authorRole === 'seeker' || update.authorRole === 'provider').map((update, index) => <div key={`${update.createdAt}-${index}`}><strong>{locale === 'ar' ? 'تحديث الطلب' : 'Request update'}</strong><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{update.message}</p></div>)}</details> : null}
         </div>
       </td>
       <td><span>{request.type === 'contact' ? (request.creatorId ? (locale === 'ar' ? 'استفسار أرسلته' : 'Sent inquiry') : (locale === 'ar' ? 'استفسار وارد' : 'Incoming inquiry')) : copy.requestType}</span><small>{copy.source}: {request.type === 'contact' ? (locale === 'ar' ? 'الموقع' : 'Website') : payloadText(request, 'sourceNote') ?? copy.providerSource}</small></td>

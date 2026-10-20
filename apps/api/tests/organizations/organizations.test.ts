@@ -17,6 +17,7 @@ function organizationFixture() {
   const matches = (row: Row, filter: Row) => Object.entries(filter).every(([key, value]) => {
     if (value === null) return row[key] == null;
     if (value && typeof value === 'object' && '$in' in value) return (value.$in as unknown[]).some(item => equals(row[key], item));
+    if (value && typeof value === 'object' && '$type' in value) return typeof row[key] === value.$type;
     return equals(row[key], value);
   });
   const session = {} as ClientSession;
@@ -33,6 +34,19 @@ function organizationFixture() {
   } } as unknown as Connection;
   return { connection, session, rows, accountId, profileId };
 }
+
+test('approval attaches independently owned cover and logo without publishing other accounts photos', async () => {
+  const f = organizationFixture(), coverId = new Types.ObjectId(), logoId = new Types.ObjectId();
+  const cover = `/api/v1/public/organization-photos/${coverId}`, logo = `/api/v1/public/organization-photos/${logoId}`;
+  Object.assign(f.rows.provider_applications![0]!, { companyImageUrl: cover, companyLogoUrl: logo });
+  f.rows.organization_photos = [{ _id: coverId, createdBy: f.accountId, storageKey: 'cover' }, { _id: logoId, createdBy: f.accountId, storageKey: 'logo' }];
+  await ensureDeveloperOrganization(f.connection, f.accountId, new Date(), f.session);
+  assert.equal(f.rows.organizations![0]!.imageUrl, cover); assert.equal(f.rows.organizations![0]!.logoUrl, logo);
+  const other = organizationFixture(); Object.assign(other.rows.provider_applications![0]!, { companyLogoUrl: logo });
+  other.rows.organization_photos = [{ _id: logoId, createdBy: new Types.ObjectId(), storageKey: 'foreign' }];
+  await ensureDeveloperOrganization(other.connection, other.accountId, new Date(), other.session);
+  assert.equal(other.rows.organizations![0]!.logoUrl, undefined);
+});
 
 test('restores approved developer identities and unlinked owned records idempotently without exposing application data', async () => {
   const f = organizationFixture();

@@ -53,7 +53,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Article gallery carousel, separate cover and SSR image recovery add about
 // 4.5 KiB. Existing headroom plus four KiB bounds this increment; retain chunk
 // and route-stylesheet limits.
-const maxJavaScriptBytes = 2_630 * 1024;
+// Separate company logo controls and readable manual leads add about 4.2 KiB;
+// existing headroom plus four KiB bounds this change without changing route caps.
+const maxJavaScriptBytes = 2_634 * 1024;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

@@ -506,6 +506,7 @@ function ProviderDetail({ provider, locale, authClient, apiOrigin, onBack, onOpe
           [copy.users.columns.updated, dateLabel(provider.updatedAt, locale)]
         ]} />
         {provider.companyImageUrl ? <div><h2>{locale === 'ar' ? 'صورة الشركة المرسلة مع الطلب' : 'Company image submitted with application'}</h2><CompanyPhoto imageUrl={provider.companyImageUrl} owner={false} authorization={authClient} apiOrigin={apiOrigin} alt={provider.brandName ?? provider.displayName ?? ''} /></div> : null}
+        {provider.companyLogoUrl ? <div><h2>{locale === 'ar' ? 'لوجو الشركة المرسل مع الطلب' : 'Company logo submitted with application'}</h2><CompanyPhoto imageUrl={provider.companyLogoUrl} owner={false} authorization={authClient} apiOrigin={apiOrigin} alt={locale === 'ar' ? 'لوجو الشركة' : 'Company logo'} /></div> : null}
         {provider.reviewReason !== undefined ? <p className="admin-accounts__muted">{provider.reviewReason}</p> : null}
       </section>
       <section className="admin-accounts__detail-card" aria-labelledby="admin-provider-documents-title">
