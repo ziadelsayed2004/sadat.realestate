@@ -85,7 +85,10 @@ for (const [action, accountStatus, applicationStatus, shouldRevoke] of [
     assert.deepEqual(notifications[0]?.recipientId, new mongoose.Types.ObjectId(userId));
     assert.equal(notifications[0]?.audience, 'provider');
     assert.equal(notifications[0]?.type, `provider.review.${action}`);
-    assert.deepEqual(notifications[0]?.message, { ar: input.reason, en: input.reason });
+    if (action === 'verify') {
+      assert.match(String((notifications[0]?.message as { en: string }).en), /account is approved/);
+      assert.equal(JSON.stringify(notifications[0]?.message).includes(input.reason), false);
+    } else assert.deepEqual(notifications[0]?.message, { ar: input.reason, en: input.reason });
     assert.equal(notifications[0]?.link, '/provider');
     if (action === 'verify') assert.deepEqual(notifications[0]?.title, { ar: 'تم تفعيل حسابك', en: 'Your account is activated' });
   });

@@ -1,3 +1,4 @@
+import { CompanyPhoto } from './company-photo.tsx';
 import { CompanyEditor } from './company-editor.tsx';
 import { OfficeIdentitySubscription } from './identity-subscription.tsx';
 import { ProviderSubscriptionGuide } from './subscription-guide.tsx';
@@ -484,7 +485,7 @@ function DocumentRow({ document, locale, onOpen, opening }: { readonly document:
   );
 }
 
-function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocumentId, documentError, reviewReason, onReviewReasonChange, onReview, reviewingAction, reviewFeedback }: { readonly provider: AdminProviderData; readonly locale: SupportedLocale; readonly onBack: string; readonly onOpenDocument: (documentId: string) => void; readonly openingDocumentId: string | undefined; readonly documentError: string | undefined; readonly reviewReason: string; readonly onReviewReasonChange: (value: string) => void; readonly onReview: (action: ProviderReviewAction) => void; readonly reviewingAction: ProviderReviewAction | undefined; readonly reviewFeedback: { readonly tone: 'success' | 'error'; readonly message: string } | undefined }) {
+function ProviderDetail({ provider, locale, authClient, apiOrigin, onBack, onOpenDocument, openingDocumentId, documentError, reviewReason, onReviewReasonChange, onReview, reviewingAction, reviewFeedback }: { readonly provider: AdminProviderData; readonly locale: SupportedLocale; readonly authClient?: AdminAccountsAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onBack: string; readonly onOpenDocument: (documentId: string) => void; readonly openingDocumentId: string | undefined; readonly documentError: string | undefined; readonly reviewReason: string; readonly onReviewReasonChange: (value: string) => void; readonly onReview: (action: ProviderReviewAction) => void; readonly reviewingAction: ProviderReviewAction | undefined; readonly reviewFeedback: { readonly tone: 'success' | 'error'; readonly message: string } | undefined }) {
   useAdminAttentionRead('verification', provider.id);
   const copy = getAdminAccountsCopy(locale);
   const reviewLabels: Readonly<Record<ProviderReviewAction, string>> = { verify: copy.actions.verify, reject: copy.actions.reject, needs_information: copy.actions.needsInformation, suspend: copy.actions.suspend };
@@ -504,6 +505,7 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
           [copy.users.columns.phone, provider.phone ?? '—'],
           [copy.users.columns.updated, dateLabel(provider.updatedAt, locale)]
         ]} />
+        {provider.companyImageUrl ? <div><h2>{locale === 'ar' ? 'صورة الشركة المرسلة مع الطلب' : 'Company image submitted with application'}</h2><CompanyPhoto imageUrl={provider.companyImageUrl} owner={false} authorization={authClient} apiOrigin={apiOrigin} alt={provider.brandName ?? provider.displayName ?? ''} /></div> : null}
         {provider.reviewReason !== undefined ? <p className="admin-accounts__muted">{provider.reviewReason}</p> : null}
       </section>
       <section className="admin-accounts__detail-card" aria-labelledby="admin-provider-documents-title">
@@ -660,7 +662,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} detail={detailId !== undefined} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={backPath}>{copy.actions.back}</a></section> : null}
         {state === 'success' && isDetail && isUserView && userData !== undefined ? <><UserDetail user={userData} locale={locale} onBack={backPath} /><AccountActions user={userData} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onChanged={() => { void userLoader(userData.id).then(setUserData); }} /></> : null}
-        {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}
+        {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} authClient={authClient} apiOrigin={apiOrigin} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}
         {state === 'success' && isDetail && providerData?.providerType === 'developer_company' ? <CompanyEditor providerId={providerData.userId} locale={locale} authorization={authClient} apiOrigin={apiOrigin} /> : null}
         {(state === 'success' || state === 'empty') && isProviderView ? <ProviderSubscriptionGuide locale={locale} providerType={isDetail ? providerData?.providerType : undefined} providerId={isDetail ? providerData?.id : undefined} /> : null}
         {state === 'success' && isDetail && isProviderView && providerData?.providerType === 'brokerage_office' ? <OfficeIdentitySubscription providerId={providerData.id} locale={locale} authorization={authClient} apiOrigin={apiOrigin} /> : null}

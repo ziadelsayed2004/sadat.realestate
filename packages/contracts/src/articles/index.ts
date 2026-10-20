@@ -113,6 +113,7 @@ export const articleDataSchema = z.object({
   coverAssetId: articleIdSchema.optional(),
   galleryAssetIds: articleGallerySchema.optional(),
   imageUrl: z.union([z.url().max(2048).refine(value => /^https?:\/\//iu.test(value)), z.string().max(2048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
+  authorName: localizedTextSchema.optional(),
   authorId: articleIdSchema,
   status: articleStatusSchema,
   publishedAt: z.string().datetime({ offset: true }).optional(),
@@ -126,6 +127,7 @@ export const articleDataSchema = z.object({
 export const articleSchema = articleDataSchema;
 
 export const articleCreateSchema = z.object({
+  authorName: localizedTextSchema.optional(),
   categoryId: articleIdSchema,
   slug: articleSlugSchema.optional(),
   title: localizedTextSchema,
@@ -138,6 +140,7 @@ export const articleCreateSchema = z.object({
 }).strict();
 
 export const articlePatchSchema = z.object({
+  authorName: localizedTextSchema.nullable().optional(),
   version: z.number().int().nonnegative(),
   categoryId: articleIdSchema.optional(),
   slug: articleSlugSchema.optional(),

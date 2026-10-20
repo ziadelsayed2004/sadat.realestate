@@ -107,6 +107,7 @@ export const providerBusinessPatchSchema = draftPatch({
 });
 
 export const providerCompanyPatchSchema = draftPatch({
+  companyImageUrl: z.string().regex(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/).nullable().optional(),
   legalCompanyName: safeTextSchema.max(200).optional(),
   brandName: safeTextSchema.max(200).optional(),
   headOfficeAddress: safeTextSchema.max(500).optional(),
@@ -178,6 +179,7 @@ export const providerApplicationDataSchema = z.object({
   tradeName: safeTextSchema.max(200).optional(),
   businessAddress: safeTextSchema.max(500).optional(),
   legalCompanyName: safeTextSchema.max(200).optional(),
+  companyImageUrl: z.string().regex(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/).optional(),
   brandName: safeTextSchema.max(200).optional(),
   headOfficeAddress: safeTextSchema.max(500).optional(),
   commercialRegistrationNumber: safeTextSchema.max(100).optional(),

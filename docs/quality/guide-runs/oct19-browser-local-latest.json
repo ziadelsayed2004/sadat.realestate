@@ -15,12 +15,12 @@
       "status": 403
     },
     {
-      "url": "/admin/payment-proofs/6ad655f54705a6e8f629fd36/review",
+      "url": "/admin/payment-proofs/6ad706e7632b9226995449eb/review",
       "method": "POST",
       "status": 200
     },
     {
-      "url": "/admin/ad-requests/6ad655f54705a6e8f629fd35/schedule",
+      "url": "/admin/ad-requests/6ad706e7632b9226995449ea/schedule",
       "method": "POST",
       "status": 200
     },

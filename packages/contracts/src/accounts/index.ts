@@ -214,6 +214,7 @@ export const adminProviderDataSchema = z.object({
   legalBusinessName: z.string().trim().min(1).max(200).optional(),
   tradeName: z.string().trim().min(1).max(200).optional(),
   legalCompanyName: z.string().trim().min(1).max(200).optional(),
+  companyImageUrl: z.string().regex(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/).optional(),
   brandName: z.string().trim().min(1).max(200).optional(),
   reviewReason: z.string().trim().min(1).max(1_000).optional(),
   submittedAt: adminAccountDateSchema.optional(),

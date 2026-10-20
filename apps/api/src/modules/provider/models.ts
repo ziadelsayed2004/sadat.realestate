@@ -39,6 +39,7 @@ export interface ProviderApplicationRecord {
   tradeName?: string;
   businessAddress?: string;
   legalCompanyName?: string;
+  companyImageUrl?: string | null;
   brandName?: string;
   headOfficeAddress?: string;
   commercialRegistrationNumber?: string;
@@ -110,6 +111,7 @@ const applicationSchema = new Schema<ProviderApplicationRecord>({
   tradeName: { type: String, trim: true, maxlength: 200 },
   businessAddress: { type: String, trim: true, maxlength: 500 },
   legalCompanyName: { type: String, trim: true, maxlength: 200 },
+  companyImageUrl: { type: String, match: /^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/ },
   brandName: { type: String, trim: true, maxlength: 200 },
   headOfficeAddress: { type: String, trim: true, maxlength: 500 },
   commercialRegistrationNumber: { type: String, trim: true, maxlength: 100 },

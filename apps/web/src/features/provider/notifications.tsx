@@ -76,9 +76,9 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Provid
   );
 }
 
-function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly item: NotificationData; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getProviderNotificationsCopy>; readonly marking: boolean; readonly onMarkRead: () => void }) {
+function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly item: NotificationData; readonly locale: SupportedLocale; readonly copy: ReturnType<typeof getProviderNotificationsCopy>; readonly marking: boolean; readonly onMarkRead: () => Promise<boolean> }) {
   const title = localizedText(item.title, locale) ?? item.type;
-  const message = localizedText(item.message, locale);
+  const message = item.type === 'provider.review.verify' ? (locale === 'ar' ? 'تمت الموافقة على حسابك. تقدر دلوقتي تضيف عقاراتك وتتابع طلباتك من لوحة التحكم.' : 'Your account is approved. You can now add properties and manage requests from your dashboard.') : localizedText(item.message, locale);
   const href = item.link === undefined ? undefined : localeForProviderPath(locale, item.link);
   const read = item.readAt !== null;
   return (
@@ -86,15 +86,15 @@ function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly
       <span className="provider-notifications__icon" aria-hidden="true">{iconForType(item.type)}</span>
       <div className="provider-notifications__body">
         <div className="provider-notifications__meta">
-          <span className="provider-notifications__type">{copy.typeLabels[item.type] ?? item.type}</span>
+          <span className="provider-notifications__type">{copy.typeLabels[item.type] ?? copy.listLabel}</span>
           {!read ? <span className="provider-notifications__unread-label">{copy.unreadLabel}</span> : null}
           <time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time>
         </div>
         <h2>{title}</h2>
         {message !== undefined ? <p>{message}</p> : null}
         <div className="provider-notifications__actions">
-          {href !== undefined ? <a href={href}>{copy.openLink}</a> : null}
-          {!read ? <Button variant="ghost" size="xs" loading={marking} onClick={onMarkRead}>{copy.markRead}</Button> : null}
+          {href !== undefined ? <a href={href} aria-busy={marking} onClick={event => { if (!read) { event.preventDefault(); if (!marking) void onMarkRead().then(ok => { if (ok) window.location.assign(href); }); } }}>{copy.openLink}</a> : null}
+          {!read ? <Button variant="ghost" size="xs" loading={marking} onClick={() => { void onMarkRead(); }}>{copy.markRead}</Button> : null}
         </div>
       </div>
     </article>
@@ -138,10 +138,10 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
     return () => controller.abort();
   }, [attempt, filter, loadSource, page, sessionRole, session.status]);
 
-  const markRead = async (notificationId: string) => {
+  const markRead = async (notificationId: string): Promise<boolean> => {
     if (sessionRole !== 'provider') {
       setMutationFeedback('permission');
-      return;
+      return false;
     }
     setMutationFeedback(undefined);
     setMarkingId(notificationId);
@@ -154,7 +154,8 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
         unreadCount: Math.max(0, current.unreadCount - 1)
       });
       setMutationFeedback('markedRead');
-    } catch (error) { setMutationFeedback(mutationErrorFor(error)); } finally { setMarkingId(undefined); }
+      return true;
+    } catch (error) { setMutationFeedback(mutationErrorFor(error)); return false; } finally { setMarkingId(undefined); }
   };
 
   const markAllRead = async () => {
@@ -188,7 +189,7 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
             </div>
             <section className="provider-notifications__panel" aria-labelledby="provider-notifications-list-title">
               <div className="provider-notifications__toolbar"><h2 id="provider-notifications-list-title">{copy.listLabel}</h2><div className="provider-notifications__tabs" aria-label={copy.listLabel}>{(['all', 'unread'] as const).map(tab => <button key={tab} type="button" className="provider-notifications__tab" data-active={filter === tab} aria-pressed={filter === tab} onClick={() => { setFilter(tab); setPage(1); setMutationFeedback(undefined); }}>{copy.tabs[tab]}{tab === 'unread' && data.unreadCount > 0 ? <span className="provider-notifications__tab-count">{data.unreadCount}</span> : null}</button>)}</div></div>
-              {data.items.length === 0 ? <div className="provider-notifications__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="provider-notifications__list" role="list" aria-label={copy.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => { void markRead(item.id); }} />)}</div>}
+              {data.items.length === 0 ? <div className="provider-notifications__empty" data-state="empty"><h3>{emptyCopy.title}</h3><p>{emptyCopy.body}</p></div> : <div className="provider-notifications__list" role="list" aria-label={copy.listLabel}>{data.items.map(item => <NotificationRow key={item.id} item={item} locale={locale} copy={copy} marking={markingId === item.id} onMarkRead={() => markRead(item.id)} />)}</div>}
               <Pagination page={data.page} pageCount={pageCount} onPageChange={nextPage => { setPage(nextPage); setMutationFeedback(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} />
             </section>
           </>

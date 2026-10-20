@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Sadat Real Estate API",
-    "description": "Contains implemented requests only. Product requests use {{apiV1BaseUrl}} exactly once; /health and /ready remain operational root probes. Authentication requests use only synthetic placeholders and the runtime-managed HttpOnly refresh cookie.",
+    "description": "Contains implemented requests only. Product requests use {{apiV1BaseUrl}} exactly once; /health and /ready remain operational root probes. Authentication requests use only synthetic placeholders and the runtime-managed HttpOnly refresh cookie.\nDeveloper registration accepts an optional owned, scanned companyImageUrl through PATCH /provider/application/company. Upload using the existing POST /provider/organization-photos. Draft images remain private until the company is approved. Article authorName supplies an optional public byline; seoDescription is the short card description. Private creator identity remains unchanged.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -6676,6 +6676,46 @@
               ]
             },
             "description": "Draft submission requires admin:content.manage; review/publication transitions require admin:content.publish. A reason and current optimistic version are always required.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "getAdminArticle",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                ":articleId"
+              ],
+              "variable": [
+                {
+                  "key": "articleId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Edit draft or published content and images. Published edits require management and publishing permission.",
             "auth": {
               "type": "bearer",
               "bearer": [

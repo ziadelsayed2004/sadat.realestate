@@ -87,7 +87,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderOrganizationCopy>> 
     authorityPlaceholder: 'اختر الحالة',
     authorityYes: 'نعم، الصلاحية مسجلة',
     authorityNo: 'لا، أرفق خطاب التفويض',
-    unsupportedFieldNote: 'يتم حفظ الحقول المدعومة بالعقد الحالي فقط. ستظهر بيانات المناطق وأنواع العقارات عندما يوفرها العقد الخلفي الفعلي.',
+    unsupportedFieldNote: 'احفظ بيانات الشركة، وبعدها ارفع المستندات المطلوبة وراجع الطلب قبل إرساله للإدارة. تقدر ترجع وتكمل المسودة في أي وقت.',
     requirementsTitle: 'متطلبات الخطوة',
     requirementsBody: 'يمكنك حفظ مسودة الآن. ستظل الحقول غير المكتملة ظاهرة قبل الإرسال للمراجعة.',
     missingFieldLabels: {
@@ -152,7 +152,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderOrganizationCopy>> 
     authorityPlaceholder: 'Choose a status',
     authorityYes: 'Yes, authority is registered',
     authorityNo: 'No, an authorization letter is required',
-    unsupportedFieldNote: 'Only fields supported by the current contract are saved. Service areas and property types will appear when the real backend contract provides them.',
+    unsupportedFieldNote: 'Save the company details, then upload the required documents and review your application before sending it. You can return to finish your draft at any time.',
     requirementsTitle: 'Step requirements',
     requirementsBody: 'You can save a draft now. Incomplete fields remain visible before submission for review.',
     missingFieldLabels: {

@@ -8653,6 +8653,42 @@
             "$ref": "#/components/responses/ArticleError"
           }
         }
+      },
+      "get": {
+        "operationId": "getAdminArticle",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Draft or published article updated with optimistic version control; published edits require content management and publishing permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ArticleError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ArticleError"
+          }
+        },
+        "summary": "Read one article for its administrative editor"
       }
     },
     "/api/v1/admin/articles/{articleId}/transitions": {
@@ -18061,6 +18097,9 @@
             "minLength": 5,
             "maxLength": 1000,
             "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "authorName": {
+            "$ref": "#/components/schemas/LocalizedText"
           }
         },
         "required": [
@@ -18197,6 +18236,16 @@
             "minLength": 5,
             "maxLength": 1000,
             "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "authorName": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -18869,6 +18918,17 @@
           },
           "accountOwnerHasRegisteredAuthority": {
             "type": "boolean"
+          },
+          "companyImageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -19076,6 +19136,10 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "companyImageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -20648,6 +20712,10 @@
               "$ref": "#/components/schemas/ProviderReviewAction"
             },
             "uniqueItems": true
+          },
+          "companyImageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -21087,6 +21155,10 @@
             "items": {
               "$ref": "#/components/schemas/ProviderReviewAction"
             }
+          },
+          "companyImageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -31654,6 +31726,9 @@
                 "delete"
               ]
             }
+          },
+          "authorName": {
+            "$ref": "#/components/schemas/LocalizedText"
           }
         },
         "required": [

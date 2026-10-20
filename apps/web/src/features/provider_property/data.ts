@@ -180,14 +180,13 @@ export async function createProviderProperty(
 ): Promise<PropertyData> {
   const client = clientFor(options);
   const request = propertyCreateSchema.parse(input);
-  const headers = authorizationHeaders(options.authorization);
-  const response = await client.request(PROVIDER_PROPERTY_ROUTE, {
+  const response = await withPropertySession(options, () => client.request(PROVIDER_PROPERTY_ROUTE, {
     method: 'POST',
     json: request,
     responseSchema: successEnvelopeSchema(propertyDataSchema),
-    ...(headers === undefined ? {} : { headers }),
+    ...(authorizationHeaders(options.authorization) ? { headers: authorizationHeaders(options.authorization)! } : {}),
     ...(options.signal === undefined ? {} : { signal: options.signal })
-  });
+  }), true);
   return response.data.data;
 }
 
@@ -245,9 +244,9 @@ export async function saveProviderPropertyStep(
   return response.data.data;
 }
 
-async function withPropertySession<T>(options: ProviderPropertyRequestOptions, request: () => Promise<T>): Promise<T> {
+async function withPropertySession<T>(options: ProviderPropertyRequestOptions, request: () => Promise<T>, renewApproval = false): Promise<T> {
   try { return await request(); } catch (error: unknown) {
-    if (!(error instanceof ApiClientError) || error.status !== 401 || options.authorization?.refresh === undefined || options.signal?.aborted) throw error;
+    if (!(error instanceof ApiClientError) || !(error.status === 401 || (renewApproval && error.status === 403)) || options.authorization?.refresh === undefined || options.signal?.aborted) throw error;
     await options.authorization.refresh();
     return request();
   }

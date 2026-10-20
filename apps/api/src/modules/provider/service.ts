@@ -34,6 +34,7 @@ export type ProviderServiceErrorCode =
   | 'PROVIDER_APPLICATION_NOT_FOUND'
   | 'PROVIDER_APPLICATION_NOT_EDITABLE'
   | 'PROVIDER_APPLICATION_VERSION_CONFLICT'
+  | 'PROVIDER_COMPANY_IMAGE_INVALID'
   | 'PROVIDER_STEP_NOT_APPLICABLE'
   | 'PROVIDER_APPLICATION_INCOMPLETE';
 
@@ -52,6 +53,7 @@ export class ProviderServiceError extends Error {
 export interface ProviderServiceDependencies {
   repository: ProviderRepository;
   documentInventory: ProviderDocumentInventory;
+  validateCompanyPhoto?: (userId: string, imageUrl: string) => Promise<boolean>;
   registrationTokens: OpaqueTokenService;
   redeemRegistrationGrant: (
     verificationTokenHash: string,
@@ -162,6 +164,7 @@ function applicationData(
     ...(application.tradeName ? { tradeName: application.tradeName } : {}),
     ...(application.businessAddress ? { businessAddress: application.businessAddress } : {}),
     ...(application.legalCompanyName ? { legalCompanyName: application.legalCompanyName } : {}),
+    ...(application.companyImageUrl ? { companyImageUrl: application.companyImageUrl } : {}),
     ...(application.brandName ? { brandName: application.brandName } : {}),
     ...(application.headOfficeAddress ? { headOfficeAddress: application.headOfficeAddress } : {}),
     ...(application.commercialRegistrationNumber ? { commercialRegistrationNumber: application.commercialRegistrationNumber } : {}),
@@ -304,6 +307,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
       if (application.providerType !== 'developer_company') {
         throw new ProviderServiceError('PROVIDER_STEP_NOT_APPLICABLE');
       }
+      if (patch.companyImageUrl && !await dependencies.validateCompanyPhoto?.(claims.sub, patch.companyImageUrl)) throw new ProviderServiceError('PROVIDER_COMPANY_IMAGE_INVALID');
       const { version, ...fields } = patch;
       return save(claims, version, fields);
     },

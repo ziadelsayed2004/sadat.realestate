@@ -1,5 +1,6 @@
 import {
   AUTH_ERROR_CODES,
+  cmsTeamPhotoSuccessEnvelopeSchema,
   adminLoginRequestSchema,
   authLoginSuccessEnvelopeSchema,
   authSessionDataSchema,
@@ -292,6 +293,13 @@ export class AuthClient {
         responseSchema: providerApplicationSuccessEnvelopeSchema
       });
       return response.data.data;
+    });
+  }
+
+  async uploadCompanyPhoto(file: File): Promise<string> {
+    return this.withProviderSession(async () => {
+      const response = await this.apiClient.request('/provider/organization-photos', { method: 'POST', body: file, headers: { ...this.authorizationHeaders(), 'content-type': file.type }, responseSchema: cmsTeamPhotoSuccessEnvelopeSchema });
+      return response.data.data.imageUrl;
     });
   }
 

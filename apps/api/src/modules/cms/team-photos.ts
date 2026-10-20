@@ -29,10 +29,10 @@ export function createTeamPhotos(dependencies: {
   const taxonomy = dependencies.kind === 'taxonomy';
   const photos = connection.collection(organization ? 'organization_photos' : taxonomy ? 'taxonomy_photos' : article ? 'cms_article_photos' : 'cms_team_photos');
   async function authorize(claims: AccessTokenClaims, permission: RbacPermission) {
-    if (organization && claims?.role === 'provider' && claims.status === 'verified') {
+    if (organization && claims?.role === 'provider') {
       const key = new Types.ObjectId(claims.sub);
-      const user = await connection.collection('users').findOne({ _id: key, roleType: 'provider', status: 'verified', deletedAt: null });
-      if (user && await connection.collection('provider_applications').findOne({ userId: key, providerType: 'developer_company', status: 'approved' })) return;
+      const user = await connection.collection('users').findOne({ _id: key, roleType: 'provider', status: { $in: ['draft', 'pending_review', 'needs_information', 'verified'] }, deletedAt: null });
+      if (user && await connection.collection('provider_applications').findOne({ userId: key, providerType: 'developer_company', status: { $in: permission === 'admin:providers.view' ? ['draft', 'pending_review', 'needs_information', 'approved'] : ['draft', 'needs_information', 'approved'] } })) return;
     }
     if (claims?.role !== 'admin' || claims.status !== 'verified' || !await authorization.authorize(claims.sub, permission)) {
       throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);

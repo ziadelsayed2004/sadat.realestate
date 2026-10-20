@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import { getProviderPropertyCopy } from '../src/features/provider_property/copy.ts';
-import { loadProviderProperty, loadProviderPropertyParentOptions, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
+import { createProviderProperty, loadProviderProperty, loadProviderPropertyParentOptions, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
 import { ProviderPropertyWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
@@ -387,4 +387,15 @@ describe('Provider property wizard', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.states.permission.title })).toBeInTheDocument());
     expect(screen.queryByDisplayValue('30.62')).not.toBeInTheDocument();
   });
+});
+
+it.each([401, 403])('renews stale provider claims before retrying initial property creation (%s)', async status => {
+  let token = 'old'; const calls: string[] = [];
+  const authorization = { getAuthorizationHeader: () => `Bearer ${token}`, refresh: vi.fn(async () => { token = 'approved'; }) };
+  const client = new ApiClient({ baseUrl: 'http://api.test/api/v1', fetcher: async (_url, init) => {
+    const header = new Headers(init?.headers).get('authorization') ?? ''; calls.push(header);
+    return header.endsWith('old') ? new Response(JSON.stringify({ error: { code: 'FORBIDDEN', messageKey: 'errors.forbidden', requestId: 'test' } }), { status }) : success(property(), 'created');
+  } });
+  await expect(createProviderProperty({ kind: 'property', name: { en: 'New home' }, transactionType: 'sale', reason: 'Create a property' }, { apiClient: client, authorization })).resolves.toMatchObject({ id: propertyId });
+  expect(authorization.refresh).toHaveBeenCalledOnce(); expect(calls).toEqual(['Bearer old', 'Bearer approved']);
 });

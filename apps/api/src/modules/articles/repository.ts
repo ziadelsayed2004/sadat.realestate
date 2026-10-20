@@ -25,6 +25,7 @@ export interface StoredArticle {
   id: string;
   categoryId: string;
   slug: string;
+  authorName?: LocalizedText;
   title: LocalizedText;
   body: LocalizedText;
   seoTitle?: LocalizedText;
@@ -70,6 +71,7 @@ export interface ArticleCategoryChanges {
 export interface ArticleCreateRecord {
   categoryId: string;
   slug: string;
+  authorName?: LocalizedText;
   title: LocalizedText;
   body: LocalizedText;
   seoTitle?: LocalizedText;
@@ -83,6 +85,7 @@ export interface ArticleCreateRecord {
 export interface ArticleChanges {
   categoryId?: string;
   slug?: string;
+  authorName?: LocalizedText | null;
   title?: LocalizedText;
   body?: LocalizedText;
   seoTitle?: LocalizedText | null;
@@ -138,6 +141,7 @@ function mapArticle(record: ArticleRecord): StoredArticle {
     categoryId: record.categoryId.toHexString(),
     slug: record.slug,
     ...(record.galleryAssetIds ? { galleryAssetIds: record.galleryAssetIds.map(id => id.toHexString()) } : {}),
+    ...(record.authorName ? { authorName: record.authorName } : {}),
     title: record.title,
     body: record.body,
     ...(record.seoTitle ? { seoTitle: record.seoTitle } : {}),
@@ -484,18 +488,19 @@ export function createMemoryArticleRepository(
       if (!before) return { kind: 'not_found' };
       if (before.version !== version) return { kind: 'version_conflict' };
       if (changes.slug && [...articles.values()].some((item) => item.id !== id && item.slug === changes.slug)) return { kind: 'slug_conflict' };
-      const { seoTitle, seoDescription, coverAssetId, imageUrl, ...articleChanges } = changes;
+      const { authorName, seoTitle, seoDescription, coverAssetId, imageUrl, ...articleChanges } = changes;
       const next: StoredArticle = {
         ...before,
         ...articleChanges,
         ...(imageUrl !== undefined && imageUrl !== null ? { imageUrl } : {}),
+        ...(authorName !== undefined && authorName !== null ? { authorName } : {}),
         ...(seoTitle !== undefined && seoTitle !== null ? { seoTitle } : {}),
         ...(seoDescription !== undefined && seoDescription !== null ? { seoDescription } : {}),
         ...(coverAssetId !== undefined && coverAssetId !== null ? { coverAssetId } : {}),
         version: before.version + 1,
         updatedAt: at
       };
-      for (const key of ['seoTitle', 'seoDescription', 'coverAssetId', 'imageUrl'] as const) {
+      for (const key of ['authorName', 'seoTitle', 'seoDescription', 'coverAssetId', 'imageUrl'] as const) {
         if (changes[key] === null) delete next[key];
       }
       articles.set(id, next);

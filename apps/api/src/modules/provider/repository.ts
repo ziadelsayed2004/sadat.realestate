@@ -42,6 +42,7 @@ export interface ProviderApplicationEntity {
   tradeName?: string;
   businessAddress?: string;
   legalCompanyName?: string;
+  companyImageUrl?: string | null;
   brandName?: string;
   headOfficeAddress?: string;
   commercialRegistrationNumber?: string;

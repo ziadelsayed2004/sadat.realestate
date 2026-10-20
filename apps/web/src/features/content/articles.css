@@ -954,3 +954,8 @@
 
 .public-articles__card-byline { margin-block-start: 20px; padding-block-start: 12px; line-height: 1.8; gap: 12px; align-items: baseline; flex-wrap: wrap; }
 .public-articles__card-byline time { white-space: normal; }
+
+/* Keep the entire editorial cover visible, including portrait and text images. */
+.public-article-details .public-article-details__hero-media { block-size: auto; min-block-size: 0; background: #f2f1eb; }
+.public-article-details .public-article-details__hero-media > img { display: block; inline-size: 100%; block-size: auto; min-block-size: 0; max-block-size: 75vh; object-fit: contain; }
+.public-articles__card-summary { overflow-wrap: anywhere; }

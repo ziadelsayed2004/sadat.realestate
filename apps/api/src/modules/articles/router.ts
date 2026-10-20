@@ -45,6 +45,7 @@ export const ARTICLE_ROUTE_DEFINITIONS = [
   { method: 'PATCH', path: '/api/v1/admin/article-categories/:categoryId', operationId: 'updateAdminArticleCategory' },
   { method: 'DELETE', path: '/api/v1/admin/article-categories/:categoryId', operationId: 'deleteAdminArticleCategory' },
   { method: 'GET', path: '/api/v1/admin/articles', operationId: 'listAdminArticles' },
+  { method: 'GET', path: '/api/v1/admin/articles/:articleId', operationId: 'getAdminArticle' },
   { method: 'POST', path: '/api/v1/admin/articles', operationId: 'createAdminArticle' },
   { method: 'POST', path: '/api/v1/admin/articles/photos', operationId: 'uploadAdminArticlePhoto' },
   { method: 'GET', path: '/api/v1/admin/articles/photos/:assetId', operationId: 'previewAdminArticlePhoto' },
@@ -196,6 +197,12 @@ export function createArticleRouter(dependencies: ArticleRouterDependencies): Ro
     } catch (error) { sendError(request, response, error); }
   });
 
+  router.get('/admin/articles/:articleId', async (request, response) => {
+    try {
+      const { articleId } = articleParamsSchema.parse(request.params);
+      response.status(200).json(toSuccessResponse(await dependencies.service.getArticle(principal(response), articleId), context(request).requestId));
+    } catch (error) { sendError(request, response, error); }
+  });
   router.patch('/admin/articles/:articleId', async (request, response) => {
     try {
       const { articleId } = articleParamsSchema.parse(request.params);

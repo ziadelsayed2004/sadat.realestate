@@ -62,8 +62,10 @@ try {
         await expect.poll(() => rail.evaluate(element => element.scrollLeft)).not.toBe(before);
         const parent = rail.locator(`a[href*="propertyCategoryId=${parentId}"]`);
         await expect(parent).toHaveCount(1);
+        await expect(parent.locator('img')).toHaveAttribute('src', '/assets/sadat-real-estate-logo.png');
         await parent.scrollIntoViewIfNeeded();
         await expect(parent).toBeInViewport();
+        await expect.poll(() => parent.locator('img').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
         await page.screenshot({ path: `${root}/slider-${engine.browserType().name()}-${locale}-${width}.png` });
         const form = page.locator('.public-homepage__search');
         await form.locator('.custom-select-trigger').first().click();

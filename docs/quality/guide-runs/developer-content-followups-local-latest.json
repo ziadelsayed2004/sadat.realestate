@@ -1,0 +1,14 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "fresh_email_otp_registration_upload_and_save_company_cover_private_before_approval_foreign_photo_rejected",
+    "four_document_submission_admin_sees_cover_and_approval_carries_cover_to_public_company",
+    "real_initial_property_creation_recovers_stale_preapproval_token_once_and_uses_approved_company",
+    "notification_open_marks_read_persists_after_return_arabic_property_chooses_project_by_name_owner_settings_saves_without_internal_reason",
+    "real_webkit_ar_en_card_description_author_full_image_and_no_overflow_at_320_390_1440"
+  ],
+  "cleanup": true,
+  "browserErrors": [],
+  "rateLimitWaitSeconds": 54
+}

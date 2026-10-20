@@ -3057,5 +3057,39 @@
     "purpose": "Read a scanned company image",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/articles/:articleId",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "Read one article for the linked administrative editor",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/community/categories",
+    "module": "community",
+    "auth": "none",
+    "roles": [],
+    "purpose": "List built-in and registered community categories",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/community/categories",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.moderate"
+    ],
+    "purpose": "Create an audited community category",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]

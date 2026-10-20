@@ -68,7 +68,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       steps: { basic: 'البيانات الأساسية', location: 'الموقع' },
       labels: {
         name: 'اسم العقار', slug: 'المعرّف المختصر', kind: 'بتعلن عن إيه؟', transaction: 'نوع المعاملة', sourceType: 'نوع مصدر العقار',
-        organizationId: 'معرّف المؤسسة', projectId: 'معرّف المشروع', parentPropertyId: 'العمارة أو العقار الرئيسي', reason: 'سبب حفظ المسودة',
+        organizationId: 'معرّف المؤسسة', projectId: 'المشروع (اختياري)', parentPropertyId: 'العمارة أو العقار الرئيسي', reason: 'سبب حفظ المسودة',
          locationId: 'المنطقة أو الحي', mapUrl: 'رابط موقع الخريطة', latitude: 'خط العرض', longitude: 'خط الطول'
       },
       placeholders: {
@@ -93,7 +93,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         slug: 'المعرّف المختصر يجب أن يكون من 2 إلى 120 حرفاً إنجليزياً صغيراً أو رقماً، مع شرطة بين الكلمات، مثل sadat-apartment.',
         sourceType: 'اختر نوع مصدر العقار.',
         organizationId: 'أدخل معرّف المؤسسة لمكتب الوساطة أو الشركة: يتكون من 24 حرفاً من الأرقام والحروف a إلى f؛ الوسيط الفردي لا يحتاج مؤسسة.',
-        projectId: 'معرّف المشروع اختياري؛ إن أدخلته يجب أن يتكون من 24 حرفاً من الأرقام والحروف a إلى f.',
+        projectId: 'اختار المشروع من قائمة مشاريعك أو اتركه بدون مشروع للإعلان المستقل.',
         parentPropertyId: 'اختر العمارة أو العقار الرئيسي من القائمة، أو اربط الوحدة بمشروع. للإعلان غير المرتبط اختر «عقار مستقل».',
         reason: 'اكتب سبب الحفظ من 5 إلى 500 حرف في سطر واحد.',
         providerId: 'تعذر تحديد حساب مقدم العقار. سجّل الدخول بحساب مقدم خدمة ثم حاول مرة أخرى.'
@@ -106,8 +106,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogEmptyBody: 'أضف منطقة نشطة من لوحة الإدارة أو استخدم الإحداثيات لحين توفرها.',
       locationSearchLabel: 'البحث عن المنطقة', locationSearchPlaceholder: 'اكتب اسم المدينة أو المنطقة', locationSelectPlaceholder: 'اختر المنطقة',
       locationSearchEmpty: 'لم نجد تطابقًا مع البحث. القائمة بالأسفل تعرض كل المناطق المتاحة للاختيار.', clearLocationSearch: 'مسح البحث وعرض كل المناطق',
-      contractBoundaryTitle: 'حقول غير مدعومة حالياً',
-      contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
+      contractBoundaryTitle: 'إيه الخطوة الجاية؟',
+      contractBoundaryBody: 'احفظ البيانات الأساسية، وبعدها اختار المنطقة وأضف تفاصيل العقار وصوره. العقار يظهر للعميل بعد إرساله وموافقة الإدارة.',
       coordinateHelp: "الصق رابط دبوس موقع العقار من Google Maps أو Apple Maps؛ نملأ خط العرض والطول تلقائيًا عند توفر نقطة دقيقة. يمكنك أيضًا اختيار المنطقة أو تعديل الإحداثيات يدويًا.",
       mapUrlError: 'أدخل رابط موقع من Google Maps أو Apple Maps؛ روابط المواقع العادية غير مقبولة.',
       sourceHelp: 'نوع الحساب والمؤسسة يُحددان تلقائيًا من حسابك المعتمد؛ لا تحتاج إدخال كود.',
@@ -117,7 +117,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       loading: { title: 'جارٍ التحميل', body: 'يتم تحميل بيانات مسودة العقار.' },
       error: { title: 'تعذر تحميل المسودة', body: 'تحقق من الاتصال وحاول مرة أخرى.' },
       retry: { title: 'المسودة غير متاحة مؤقتاً', body: 'يمكنك إعادة المحاولة عند توفر اتصال صالح.' },
-      permission: { title: 'يلزم التحقق من الصلاحية', body: 'لا يتم عرض بيانات العقار المحمية قبل تحقق جلسة المزوّد.' },
+      permission: { title: 'يلزم التحقق من الصلاحية', body: 'تعذر تأكيد صلاحية حسابك لإضافة عقار. حدّث الصفحة وحاول تاني؛ لو الحساب لسه قيد المراجعة، تابع حالته من لوحة التحكم.' },
       not_found: { title: 'المسودة غير موجودة', body: 'لا توجد مسودة متاحة بهذه الهوية ضمن حساب المزوّد.' },
       success: { title: 'بيانات المسودة جاهزة', body: 'يمكنك متابعة حفظ بيانات العقار.' }
     },
@@ -136,7 +136,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       steps: { basic: 'Basic information', location: 'Location' },
       labels: {
         name: 'Property name', slug: 'Short identifier', kind: 'What are you listing?', transaction: 'Transaction type', sourceType: 'Property source type',
-        organizationId: 'Organization ID', projectId: 'Project ID', parentPropertyId: 'Building or main property', reason: 'Draft save reason',
+        organizationId: 'Organization ID', projectId: 'Project (optional)', parentPropertyId: 'Building or main property', reason: 'Draft save reason',
         locationId: 'Area or district', mapUrl: 'Map location link', latitude: 'Latitude', longitude: 'Longitude'
       },
       placeholders: {
@@ -161,7 +161,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         slug: 'Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.',
         sourceType: 'Select the property source type.',
         organizationId: 'Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.',
-        projectId: 'The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.',
+        projectId: 'Choose from your projects, or leave empty for a standalone listing.',
         parentPropertyId: 'Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.',
         reason: 'Enter a save reason of 5–500 characters on one line.',
         providerId: 'The provider account could not be identified. Sign in as a provider and try again.'
@@ -174,8 +174,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogEmptyBody: 'Add an active location from the admin dashboard, or use coordinates until one is available.',
       locationSearchLabel: 'Search locations', locationSearchPlaceholder: 'Type a city or area name', locationSelectPlaceholder: 'Select a location',
       locationSearchEmpty: 'No exact match. The list below shows all available areas to choose from.', clearLocationSearch: 'Clear search and show all areas',
-      contractBoundaryTitle: 'Fields not supported by the current contract',
-      contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
+      contractBoundaryTitle: 'What happens next?',
+      contractBoundaryBody: 'Save the basic information, then choose the area and add property details and photos. The listing becomes public after submission and administrative approval.',
       coordinateHelp: "Paste the property pin link from Google Maps or Apple Maps. Latitude and longitude fill automatically when an exact point is available. You can also select an area or edit the coordinates manually.",
       mapUrlError: 'Enter a Google Maps or Apple Maps location link; ordinary website links are not accepted.',
       sourceHelp: 'Provider type and organization are determined automatically from your approved account. No code is needed.',
@@ -185,7 +185,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       loading: { title: 'Loading', body: 'Loading the property draft.' },
       error: { title: 'The draft could not load', body: 'Check the connection and try again.' },
       retry: { title: 'The draft is temporarily unavailable', body: 'Retry when a valid connection is available.' },
-      permission: { title: 'Permission verification required', body: 'Protected property data is not rendered before the provider session is verified.' },
+      permission: { title: 'Permission verification required', body: 'Your account could not be verified for adding a property. Refresh and retry. If your account is still under review, check its status on the dashboard.' },
       not_found: { title: 'Draft not found', body: 'No draft with this identifier is available to the provider account.' },
       success: { title: 'Draft ready', body: 'You can continue saving the property data.' }
     },

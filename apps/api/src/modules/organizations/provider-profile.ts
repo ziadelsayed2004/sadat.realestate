@@ -16,7 +16,10 @@ export async function ensureDeveloperOrganization(connection: Connection, accoun
   if (!organization) {
     const name = [application.brandName, application.legalCompanyName, application.displayName].find(value => typeof value === 'string' && value.trim().length > 0);
     if (typeof name !== 'string' || name.trim().length > 200) return undefined;
+    const imageId = typeof application.companyImageUrl === 'string' ? application.companyImageUrl.match(/^\/api\/v1\/public\/organization-photos\/([a-f0-9]{24})$/)?.[1] : undefined;
+    const photo = imageId ? await connection.collection('organization_photos').findOne({ _id: new Types.ObjectId(imageId), createdBy: accountId, storageKey: { $type: 'string' } }, { session, projection: { _id: 1 } }) : undefined;
     const result = await organizations.updateOne({ _id: profile._id }, { $setOnInsert: {
+      ...(photo ? { imageUrl: application.companyImageUrl } : {}),
       providerId: profile._id, kind: 'developer_company', name: { ar: name.trim(), en: name.trim() },
       slug: `developer-${accountId.toHexString()}`, status: 'approved', version: 0, createdAt: now, updatedAt: now
     } }, { session, upsert: true });

@@ -68,6 +68,7 @@ const PROVIDER_ERROR_MAP = Object.freeze({
   PROVIDER_APPLICATION_NOT_FOUND: { statusCode: 404, messageKey: 'errors.provider.applicationNotFound' },
   PROVIDER_APPLICATION_NOT_EDITABLE: { statusCode: 409, messageKey: 'errors.provider.applicationNotEditable' },
   PROVIDER_APPLICATION_VERSION_CONFLICT: { statusCode: 409, messageKey: 'errors.provider.applicationVersionConflict' },
+  PROVIDER_COMPANY_IMAGE_INVALID: { statusCode: 400, messageKey: 'errors.validation' },
   PROVIDER_STEP_NOT_APPLICABLE: { statusCode: 409, messageKey: 'errors.provider.stepNotApplicable' },
   PROVIDER_APPLICATION_INCOMPLETE: { statusCode: 409, messageKey: 'errors.provider.applicationIncomplete' },
   PROVIDER_AD_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },

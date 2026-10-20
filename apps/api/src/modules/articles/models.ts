@@ -19,6 +19,7 @@ export interface ArticleRecord {
   _id: Types.ObjectId;
   categoryId: Types.ObjectId;
   slug: string;
+  authorName?: LocalizedText;
   title: LocalizedText;
   body: LocalizedText;
   seoTitle?: LocalizedText;
@@ -105,6 +106,7 @@ const articleSchema = new Schema<ArticleRecord>({
     trim: true,
     match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/
   },
+  authorName: { type: localizedSchema },
   title: { type: localizedSchema, required: true },
   body: { type: new Schema({ ar: { type: String, maxlength: 300000 }, en: { type: String, maxlength: 300000 } }, { _id: false, strict: 'throw' }), required: true },
   seoTitle: { type: localizedSchema },

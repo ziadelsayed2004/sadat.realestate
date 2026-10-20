@@ -88,6 +88,7 @@ export interface ArticleService {
     limit: number;
     total: number;
   }>;
+  getArticle(principal: ArticlePrincipal, id: string): Promise<Article>;
   createArticle(principal: ArticlePrincipal, input: ArticleCreate, context: ArticleMutationContext): Promise<Article>;
   updateArticle(principal: ArticlePrincipal, id: string, input: ArticlePatch, context: ArticleMutationContext): Promise<Article>;
   transitionArticle(principal: ArticlePrincipal, id: string, input: ArticleTransitionRequest, context: ArticleMutationContext): Promise<Article>;
@@ -220,7 +221,7 @@ function publicArticle(item: PublicStoredArticle, locale: SupportedLocale, autho
     ...(item.article.coverAssetId ? { coverAssetId: item.article.coverAssetId } : {}),
     ...(item.article.imageUrl ? { imageUrl: item.article.imageUrl } : {}),
     ...(item.article.galleryAssetIds ? { images: item.article.galleryAssetIds.map(id => ({ id, imageUrl: `/api/v1/public/article-photos/${id}` })) } : {}),
-    ...(authorName ? { authorName: { ar: authorName, en: authorName } } : {}),
+    ...(item.article.authorName ? { authorName: localized(item.article.authorName, locale) } : authorName ? { authorName: { ar: authorName, en: authorName } } : {}),
     readingTimeMinutes,
     ...(item.article.publishedAt ? { publishedAt: item.article.publishedAt.toISOString() } : {}),
     category: publicCategory(item.category, locale)
@@ -342,6 +343,13 @@ export function createArticleService(dependencies: {
       return { id, deleted: true };
     },
 
+    async getArticle(principal, id) {
+      articleIdSchema.parse(id);
+      await requirePermission(principal.userId, 'admin:content.view');
+      const stored = await dependencies.repository.findArticle(id);
+      if (!stored) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
+      return articleData(stored, await allowed(principal.userId, 'admin:content.manage'), await allowed(principal.userId, 'admin:content.publish'), await isSuperAdmin(principal.userId));
+    },
     async listArticles(principal, unparsedQuery) {
       const query = articleAdminListQuerySchema.parse(unparsedQuery);
       await requirePermission(principal.userId, 'admin:content.view');
@@ -371,6 +379,7 @@ export function createArticleService(dependencies: {
         title: input.title,
         body: input.body,
         ...(input.galleryAssetIds ? { galleryAssetIds: input.galleryAssetIds } : {}),
+        ...(input.authorName ? { authorName: input.authorName } : {}),
         ...(input.seoTitle ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription ? { seoDescription: input.seoDescription } : {}),
         ...(input.coverAssetId ? { coverAssetId: input.coverAssetId, imageUrl: `/api/v1/public/article-photos/${input.coverAssetId}` } : {}),
@@ -402,6 +411,7 @@ export function createArticleService(dependencies: {
         ...(input.title !== undefined ? { title: input.title } : {}),
         ...(input.body !== undefined ? { body: input.body } : {}),
         ...(input.galleryAssetIds !== undefined ? { galleryAssetIds: input.galleryAssetIds } : {}),
+        ...(input.authorName !== undefined ? { authorName: input.authorName } : {}),
         ...(input.seoTitle !== undefined ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription !== undefined ? { seoDescription: input.seoDescription } : {}),
         ...(input.coverAssetId !== undefined ? { coverAssetId: input.coverAssetId, imageUrl: input.coverAssetId ? `/api/v1/public/article-photos/${input.coverAssetId}` : null } : {})

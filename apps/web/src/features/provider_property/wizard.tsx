@@ -23,6 +23,8 @@ import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './s
 import './styles.css';
 import { filterProviderLocations } from './location-search.ts';
 import { coordinatesFromPropertyMapUrl } from '@sadat-real-estate/contracts';
+import { PropertyProjectPicker } from './project-picker.tsx';
+import { loadProviderProjects, type ProviderProjectsLoader } from '../provider/projects-data.ts';
 import { ParentPropertyPicker } from './parent-picker.tsx';
 
 type MapCoordinates = { latitude: number; longitude: number } | null;
@@ -199,7 +201,8 @@ function BasicFormView({
   sourceType,
   currentId,
   loadParents,
-  loadParent
+  loadParent,
+  loadProjects
 }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
@@ -214,6 +217,7 @@ function BasicFormView({
   readonly currentId?: string | undefined;
   readonly loadParents: ProviderPropertyParentsLoader;
   readonly loadParent: ProviderPropertyLoadAction;
+  readonly loadProjects: ProviderProjectsLoader;
 }) {
   const wizard = copy.wizard;
   const updateName = (value: string) => setForm({ ...form, name: { ...form.name, [locale]: value } });
@@ -242,7 +246,7 @@ function BasicFormView({
         <p>{sourceType ? wizard.sourceTypeLabels[sourceType] : (locale === 'ar' ? 'يُحدد تلقائيًا من حسابك المعتمد.' : 'Determined automatically from your approved account.')}</p>
         <p>{locale === 'ar' ? 'المؤسسة هي المكتب أو الشركة المسجلة في حسابك. نربط العقار بها تلقائيًا عند الحفظ؛ لا تحتاج إدخال كود أو رقم سجل تجاري. الحساب الفردي لا يحتاج مؤسسة.' : 'Your organization is the office or company registered to your account. We link it automatically when you save. No code or registration number is needed. Individual accounts do not need an organization.'}</p>
         <div className="provider-property-wizard__grid provider-property-wizard__grid--links">
-          <Input id="provider-property-project" label={wizard.labels.projectId} value={form.projectId} placeholder={wizard.placeholders.projectId} onChange={event => setForm({ ...form, projectId: event.target.value })} state={fieldError('projectId') ? 'error' : 'default'} error={fieldError('projectId')} />
+          <PropertyProjectPicker locale={locale} label={wizard.labels.projectId} value={form.projectId} onChange={projectId => setForm({ ...form, projectId })} load={loadProjects} error={fieldError('projectId')} />
           {form.kind === 'unit' ? <ParentPropertyPicker locale={locale} copy={copy} value={form.parentPropertyId} currentId={currentId} onChange={id => setForm({ ...form, parentPropertyId: id })} load={loadParents} loadSelected={loadParent} error={fieldError('parentPropertyId')} /> : null}
         </div>
         {form.kind === 'unit' && !form.parentPropertyId && !form.projectId ? <aside className="provider-property-wizard__standalone" role="note">
@@ -396,6 +400,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
   const locationsAction = useMemo(() => loadLocations ?? ((signal?: AbortSignal) => loadProviderPropertyLocations({ apiOrigin, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, loadLocations]);
   const parentsAction = useMemo(() => loadParents ?? ((query, signal) => loadProviderPropertyParentOptions(query, { apiOrigin, authorization: authClient, ...(signal ? { signal } : {}) })), [loadParents, apiOrigin, authClient]);
   const mapCoordinatesAction = useMemo(() => resolveMapCoordinates ?? ((mapUrl: string, signal: AbortSignal) => resolveProviderPropertyMapCoordinates(mapUrl, { propertyId: draftId!, apiOrigin, authorization: authClient, signal })), [resolveMapCoordinates, draftId, apiOrigin, authClient]);
+  const projectsAction = useMemo<ProviderProjectsLoader>(() => (query, signal) => loadProviderProjects({ query, apiOrigin, authorization: authClient, ...(signal ? { signal } : {}) }), [apiOrigin, authClient]);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {
@@ -456,7 +461,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     const fields = details?.flatMap(detail => detail.path?.map(String) ?? []) ?? [];
     const invalid = [...new Set(fields)].filter(field => field in copy.wizard.validationMessages) as BasicValidationField[];
     setInvalidFields(invalid); setValidationError(invalid.length > 0);
-    setMutationMessage(invalid.length ? invalid.map(field => copy.wizard.validationMessages[field]).join(' ? ') : copy.wizard.mutationError);
+    setMutationMessage(invalid.length ? invalid.map(field => copy.wizard.validationMessages[field]).join(' · ') : copy.wizard.mutationError);
     if (invalid[0]) focusBasicField(invalid[0]);
   };
 
@@ -543,7 +548,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       <div className="provider-dashboard__content provider-property-wizard__content">
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
-          step === 'basic' ? <BasicFormView currentId={draftId} loadParents={parentsAction} loadParent={loadAction} invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView resolveMapCoordinates={mapCoordinatesAction} locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
+          step === 'basic' ? <BasicFormView loadProjects={projectsAction} currentId={draftId} loadParents={parentsAction} loadParent={loadAction} invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView resolveMapCoordinates={mapCoordinatesAction} locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>

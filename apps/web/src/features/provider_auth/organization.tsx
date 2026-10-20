@@ -18,8 +18,11 @@ import {
   type ProviderOrganizationCopy
 } from './organization-copy.ts';
 import './styles.css';
+import { CompanyImageField } from './company-image-field.tsx';
 
 export interface ProviderOrganizationFlowClient {
+  readonly uploadCompanyPhoto?: ((file: File) => Promise<string>) | undefined;
+  readonly getAuthorizationHeader?: (() => string | undefined) | undefined;
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
   readonly updateProviderBusiness?: ((patch: ProviderBusinessPatch) => Promise<ProviderApplicationData>) | undefined;
   readonly updateProviderCompany?: ((patch: ProviderCompanyPatch) => Promise<ProviderApplicationData>) | undefined;
@@ -51,6 +54,7 @@ type OrganizationField =
   | 'authorizedRepresentativeTitle';
 
 interface OrganizationFormState {
+  readonly companyImageUrl: string;
   readonly legalBusinessName: string;
   readonly tradeName: string;
   readonly businessAddress: string;
@@ -72,6 +76,7 @@ interface OrganizationUiError {
 
 function emptyForm(): OrganizationFormState {
   return {
+    companyImageUrl: '',
     legalBusinessName: '',
     tradeName: '',
     businessAddress: '',
@@ -88,6 +93,7 @@ function emptyForm(): OrganizationFormState {
 
 function formFromApplication(application: ProviderApplicationData): OrganizationFormState {
   return {
+    companyImageUrl: application.companyImageUrl ?? '',
     legalBusinessName: application.legalBusinessName ?? '',
     tradeName: application.tradeName ?? '',
     businessAddress: application.businessAddress ?? '',
@@ -110,6 +116,7 @@ function hasValues(form: OrganizationFormState): boolean {
 
 function buildPatch(application: ProviderApplicationData, form: OrganizationFormState, variant: OrganizationVariant): Record<string, unknown> {
   const patch: Record<string, unknown> = { version: application.version };
+  if (variant === 'company' && (form.companyImageUrl || application.companyImageUrl)) patch.companyImageUrl = form.companyImageUrl || null;
   const fields: readonly OrganizationField[] = variant === 'business'
     ? ['legalBusinessName', 'tradeName', 'businessAddress', 'commercialRegistrationNumber', 'taxRegistrationNumber', 'authorizedRepresentativeFullName', 'authorizedRepresentativeTitle']
     : ['legalCompanyName', 'brandName', 'headOfficeAddress', 'commercialRegistrationNumber', 'taxRegistrationNumber', 'authorizedRepresentativeFullName', 'authorizedRepresentativeTitle'];
@@ -162,6 +169,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   const [form, setForm] = useState<OrganizationFormState>(() => initialApplication === undefined ? emptyForm() : formFromApplication(initialApplication));
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [saveState, setSaveState] = useState<SaveState>('idle');
+  const [photoBusy, setPhotoBusy] = useState(false);
   const [error, setError] = useState<OrganizationUiError | undefined>();
   const continueAfterSave = useRef(false);
 
@@ -226,6 +234,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   }, [application, form, variant]);
 
   const save = useCallback(async () => {
+    if (photoBusy) return;
     if (application === undefined || variant === undefined) {
       setSaveState('error');
       setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
@@ -259,7 +268,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
       setSaveState(nextError.state === 'permission' ? 'error' : nextError.state);
       setError(nextError);
     }
-  }, [application, client.updateProviderBusiness, client.updateProviderCompany, copy, form, onContinue, patchPreview, variant]);
+  }, [photoBusy, application, client.updateProviderBusiness, client.updateProviderCompany, copy, form, onContinue, patchPreview, variant]);
 
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -343,6 +352,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
                 <Input id="provider-company-address" label={copy.addressLabel} name="headOfficeAddress" placeholder={copy.addressPlaceholder} value={form.headOfficeAddress} onChange={event => updateField('headOfficeAddress', event.currentTarget.value)} required={organizationFields.has('headOfficeAddress')} state={inputState('headOfficeAddress')} />
               </>
             )}
+            {variant === 'company' ? <CompanyImageField locale={locale} value={form.companyImageUrl} client={client} onChange={value => setForm(current => ({ ...current, companyImageUrl: value }))} onBusy={setPhotoBusy} /> : null}
             <div className="provider-organization-grid">
               <Input id="provider-organization-commercial-registration" label={optionalBusinessLabel(copy.commercialRegistrationNumberLabel)} name="commercialRegistrationNumber" placeholder={copy.commercialRegistrationNumberPlaceholder} value={form.commercialRegistrationNumber} onChange={event => updateField('commercialRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('commercialRegistrationNumber')} state={inputState('commercialRegistrationNumber')} />
               <Input id="provider-organization-tax-registration" label={optionalBusinessLabel(copy.taxRegistrationNumberLabel)} name="taxRegistrationNumber" placeholder={copy.taxRegistrationNumberPlaceholder} value={form.taxRegistrationNumber} onChange={event => updateField('taxRegistrationNumber', event.currentTarget.value)} required={organizationFields.has('taxRegistrationNumber')} state={inputState('taxRegistrationNumber')} />
@@ -369,8 +379,8 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
               </aside>
             ) : null}
             <div className="provider-account-actions">
-              <Button type="submit" variant="secondary" size="lg" loading={saveState === 'loading'} disabled={saveState === 'loading'} onClick={() => { continueAfterSave.current = false; }}>{saveState === 'loading' ? copy.savingAction : copy.saveDraftAction}</Button>
-              <Button type="submit" size="lg" loading={saveState === 'loading'} disabled={saveState === 'loading'} onClick={() => { continueAfterSave.current = true; }}>{saveState === 'loading' ? copy.savingAction : copy.saveContinueAction}</Button>
+              <Button type="submit" variant="secondary" size="lg" loading={saveState === 'loading'} disabled={photoBusy || saveState === 'loading'} onClick={() => { continueAfterSave.current = false; }}>{saveState === 'loading' ? copy.savingAction : copy.saveDraftAction}</Button>
+              <Button type="submit" size="lg" loading={saveState === 'loading'} disabled={photoBusy || saveState === 'loading'} onClick={() => { continueAfterSave.current = true; }}>{saveState === 'loading' ? copy.savingAction : copy.saveContinueAction}</Button>
             </div>
           </form>
           <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>

@@ -235,6 +235,11 @@ export function createAdminCategoriesLoader(options: Omit<AdminCategoryLoadOptio
 
 export function createAdminContentSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    loadArticle: async (id: string, signal?: AbortSignal) => {
+      const { articleId } = articleParamsSchema.parse({ articleId: id });
+      const response = await withCurrentSession(options, () => clientFor(options).request(`/admin/articles/${articleId}`, { ...requestOptions(options), ...(signal ? { signal } : {}), responseSchema: articleSuccessEnvelopeSchema }));
+      return response.data.data;
+    },
     uploadArticlePhoto: async (file: File) => (await withCurrentSession(options, () => clientFor(options).request('/admin/articles/photos', {
       method: 'POST', body: file, responseSchema: cmsTeamPhotoSuccessEnvelopeSchema,
       ...requestOptions(options), headers: { ...requestOptions(options).headers, 'content-type': file.type }

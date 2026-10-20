@@ -37,7 +37,7 @@
     },
     {
       "method": "DELETE",
-      "path": "/admin/roles/6ad6f5c6af266f958fb4241b",
+      "path": "/admin/roles/6ad70764f78e908822b1a87d",
       "status": 409
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "method": "POST",
-      "path": "/admin/community/posts/26f96bc638f3a470abaeddd8/moderate",
+      "path": "/admin/community/posts/7199961f310551133738a4eb/moderate",
       "status": 200
     },
     {
@@ -62,5 +62,5 @@
     }
   ],
   "cleanup": true,
-  "rateLimitWaitSeconds": 56
+  "rateLimitWaitSeconds": 55
 }

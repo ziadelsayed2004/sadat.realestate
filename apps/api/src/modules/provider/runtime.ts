@@ -1,4 +1,4 @@
-import type { Connection } from 'mongoose';
+import { Types, type Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import { createOpaqueTokenService } from '../auth/crypto.js';
 import type { AuthCookiePolicy } from '../auth/environment.js';
@@ -61,6 +61,7 @@ export function createProviderRuntime(
       createProviderModels(connection)
     ),
     documentInventory: createMongooseProviderDocumentInventory(connection),
+    validateCompanyPhoto: async (userId, imageUrl) => Boolean(await connection.collection('organization_photos').findOne({ _id: new Types.ObjectId(imageUrl.split('/').at(-1)!), createdBy: new Types.ObjectId(userId), storageKey: { $type: 'string' } }, { projection: { _id: 1 } })),
     registrationTokens: createOpaqueTokenService(),
     async redeemRegistrationGrant(verificationTokenHash, roleType, now) {
       const grant = await otpRepository.redeemRegistrationGrant(

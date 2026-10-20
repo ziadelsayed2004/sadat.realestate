@@ -380,3 +380,13 @@ test('assigned article authors retain submission and receive no publisher action
   const employeeView = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
   assert.deepEqual(employeeView.data.items[0]?.availableActions, ['update', 'submit', 'delete']);
 });
+
+test('persists removable public author and summary metadata through publication', async () => {
+  const { service } = fixture(); const category = await createCategory(service);
+  const item = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Metadata example' }, body: { en: 'Full article content' }, authorName: { en: 'Public author' }, seoDescription: { en: 'Card description' }, reason: 'Add editorial details' }, CONTEXT);
+  const published = await service.transitionArticle(PRINCIPAL, item.id, { version: item.version, status: 'published', reason: 'Publish editorial details' }, CONTEXT);
+  assert.deepEqual((await service.getPublicBySlug(item.slug, 'en')).authorName, { en: 'Public author' });
+  assert.deepEqual((await service.getPublicBySlug(item.slug, 'en')).seoDescription, { en: 'Card description' });
+  await service.updateArticle(PRINCIPAL, item.id, { version: published.version, authorName: null, seoDescription: null, reason: 'Remove editorial overrides' }, CONTEXT);
+  assert.equal((await service.getPublicBySlug(item.slug, 'en')).seoDescription, undefined);
+});

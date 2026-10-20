@@ -197,3 +197,11 @@ describe('public article listing and details', () => {
     expect(result.container.textContent).not.toContain('authorId');
   });
 });
+
+it('shows the saved card description and public author instead of the full article opening', () => {
+  const selected = articlePublicSchema.parse({ ...article, seoDescription: { en: 'An explicit short description' }, authorName: { en: 'Editorial author' }, body: { en: 'FULL ARTICLE CONTENT THAT BELONGS INSIDE' } });
+  renderWithLocale(<PublicArticles locale="en" initialData={[selected]} categories={categories} />, { locale: 'en' });
+  expect(screen.getByText('An explicit short description')).toBeInTheDocument();
+  expect(screen.getByText('By: Editorial author')).toBeInTheDocument();
+  expect(screen.queryByText('FULL ARTICLE CONTENT THAT BELONGS INSIDE')).not.toBeInTheDocument();
+});

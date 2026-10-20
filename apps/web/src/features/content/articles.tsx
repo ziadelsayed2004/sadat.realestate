@@ -182,22 +182,12 @@ function ArticleCard({
       </div>
       <div className="public-articles__card-body">
         <h2><a className="public-articles__card-primary-link" href={`${publicArticleUrl(article.slug)}?lang=${locale}`}>{title}</a></h2>
-        <p className="public-articles__card-summary">{summary(body, copy)}</p>
+        <p className="public-articles__card-summary">{summary(localizedText(article.seoDescription, locale) ?? body?.replace(/!\[[^\]]*\]\([^)]*\)/gu, '').replace(/[#*_`>]+/gu, ''), copy)}</p>
         <div className="public-articles__card-byline">
           <span className="public-articles__card-author" title={copy.authorLabel}>{locale === "ar" ? "بقلم: " : "By: "}{authorName}</span>
           {publishedAt ? <time dateTime={article.publishedAt} aria-label={`${copy.publishedAt}: ${publishedAt}`}>{publishedAt}</time> : null}
           <span className="public-articles__card-reading"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.7" /><path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /></svg>{copy.readTime(readingTimeMinutes)}</span>
         </div>
-        <dl className="public-articles__card-meta">
-          <div>
-            <dt>{copy.publishedAt}</dt>
-            <dd>{publishedAt ?? '—'}</dd>
-          </div>
-          <div>
-            <dt>{copy.readTimeLabel}</dt>
-            <dd>{copy.readTime(readingTimeMinutes)}</dd>
-          </div>
-        </dl>
         <a className="public-articles__card-link" href={`${publicArticleUrl(article.slug)}?lang=${locale}`}>{copy.openArticle}</a>
       </div>
     </article>

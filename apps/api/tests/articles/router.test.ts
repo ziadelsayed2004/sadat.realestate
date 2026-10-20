@@ -82,6 +82,18 @@ function request(origin: string, method: string, path: string, token?: string, b
   });
 }
 
+test('single administrative article reads require authentication and content access, including drafts', async () => withServer(async origin => {
+  const path = `/api/v1/admin/articles/${DRAFT_ID}`;
+  assert.equal((await request(origin, 'GET', path)).status, 401);
+  assert.equal((await request(origin, 'GET', path, 'seeker')).status, 403);
+  const response = await request(origin, 'GET', path, 'viewer');
+  assert.equal(response.status, 200);
+  const body = await response.json() as { data: { id: string; availableActions: string[] } };
+  assert.equal(body.data.id, DRAFT_ID);
+  assert.deepEqual(body.data.availableActions, []);
+  assert.equal((await request(origin, 'GET', '/api/v1/admin/articles/' + 'f'.repeat(24), 'admin')).status, 404);
+}));
+
 test('article deletion HTTP route rejects unauthorized and stale requests then removes the public article', async () => withServer(async origin => {
   const path = `/api/v1/admin/articles/${ARTICLE_ID}`;
   const body = { version: 2, reason: 'Remove obsolete article' };

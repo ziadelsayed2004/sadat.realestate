@@ -266,6 +266,7 @@ function providerData(
     ...(application.legalBusinessName ? { legalBusinessName: application.legalBusinessName } : {}),
     ...(application.tradeName ? { tradeName: application.tradeName } : {}),
     ...(application.legalCompanyName ? { legalCompanyName: application.legalCompanyName } : {}),
+    ...(application.companyImageUrl ? { companyImageUrl: application.companyImageUrl } : {}),
     ...(application.brandName ? { brandName: application.brandName } : {}),
     ...(application.reviewReason ? { reviewReason: application.reviewReason } : {}),
     ...(application.submittedAt ? { submittedAt: application.submittedAt.toISOString() } : {}),
@@ -666,7 +667,7 @@ export function createMongooseAccountRepository(
             audience: 'provider',
             type: `provider.review.${input.action}`,
             title: providerReviewNotificationTitles[input.action],
-            message: { ar: input.reason, en: input.reason },
+            message: input.action === 'verify' ? { ar: 'تمت الموافقة على حسابك. يمكنك الآن إضافة عقاراتك ومتابعة طلباتك من لوحة التحكم.', en: 'Your account is approved. You can now add properties and manage requests from your dashboard.' } : { ar: input.reason, en: input.reason },
             link: '/provider',
             readAt: null,
             createdAt: input.changedAt
