@@ -1,0 +1,20 @@
+.article-image-slider { width: 100%; min-width: 0; max-width: 100%; border-radius: 16px; overflow: hidden; background: #f2f1eb; color: #18243e; }
+.article-image-slider:focus-visible { outline: 3px solid #bc9348; outline-offset: 3px; }
+.article-image-slider__frame { position: relative; min-width: 0; width: 100%; height: clamp(220px, 42vw, 520px); max-height: 70vh; display: grid; place-items: center; touch-action: pan-y pinch-zoom; overflow: hidden; }
+.article-image-slider .article-image-slider__frame > img { display: block; width: 100%; height: 100%; min-width: 0; max-width: 100%; max-height: 100%; object-fit: contain; }
+.article-image-slider__frame > button { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #ffffff99; border-radius: 50%; background: #18243ee8; color: #fff; cursor: pointer; }
+.article-image-slider__frame > button:disabled { opacity: .35; cursor: default; }
+.article-image-slider__frame > button:focus-visible, .article-image-slider__dots > button:focus-visible { outline: 3px solid #bc9348; outline-offset: 2px; }
+.article-image-slider__previous { inset-inline-start: 12px; }
+.article-image-slider__next { inset-inline-end: 12px; }
+.article-image-slider__frame svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.article-image-slider[dir=rtl] .article-image-slider__frame svg { transform: rotate(180deg); }
+.article-image-slider__controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 10px 16px; font-size: .875rem; line-height: 1.7; }
+.article-image-slider__dots { display: flex; flex-wrap: wrap; gap: 2px; }
+.article-image-slider__dots > button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.article-image-slider__dots > button::after { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: #a8b3ae; }
+.article-image-slider__dots > button[aria-current=true]::after { background: #075847; transform: scale(1.35); }
+.article-image-slider__empty { display: grid; gap: 8px; padding: 24px; text-align: center; line-height: 1.8; overflow-wrap: anywhere; }
+.article-image-slider__empty span { font-size: 2rem; }
+.article-image-slider__empty p { margin: 0; }
+.article-image-slider__notice { margin: 0; padding: 8px 16px 12px; font-size: .875rem; line-height: 1.7; overflow-wrap: anywhere; }

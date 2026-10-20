@@ -959,3 +959,21 @@
 .public-article-details .public-article-details__hero-media { block-size: auto; min-block-size: 0; background: #f2f1eb; }
 .public-article-details .public-article-details__hero-media > img { display: block; inline-size: 100%; block-size: auto; min-block-size: 0; max-block-size: 75vh; object-fit: contain; }
 .public-articles__card-summary { overflow-wrap: anywhere; }
+
+/* Unbroken pasted text must never determine the grid or image width. */
+.public-article-details__content,
+.public-article-details__detail-layout,
+.public-article-details__article,
+.public-article-details__hero,
+.public-article-details__hero-copy,
+.public-article-details__body,
+.public-article-details__related,
+.public-article-details__related-grid {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.public-article-details__body { inline-size: 100%; box-sizing: border-box; }
+.public-article-details :is(h1, h2, p, blockquote, dd, a) { min-inline-size: 0; overflow-wrap: anywhere; word-break: normal; }
+.public-article-details__body :is(p, blockquote) { white-space: pre-wrap; }
+.public-article-details__body figure { min-inline-size: 0; max-inline-size: 100%; margin-inline: 0; }
+.public-articles__card :is(h2, p, span, time) { min-inline-size: 0; overflow-wrap: anywhere; }

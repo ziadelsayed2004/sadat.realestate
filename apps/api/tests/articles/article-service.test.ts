@@ -14,6 +14,26 @@ const NOW = new Date('2026-08-17T08:00:00.000Z');
 const PRINCIPAL = { userId: ADMIN_ID };
 const CONTEXT = { requestId: 'article-test-request', traceId: 'a'.repeat(32) };
 
+test('normalizes a cover repeated in the article gallery on creation and cover changes', async () => {
+  const { service } = fixture(); const category = await createCategory(service);
+  const cover = 'a'.repeat(24), second = 'b'.repeat(24);
+  const item = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Image rules' }, body: { en: 'Article with images' }, coverAssetId: cover, galleryAssetIds: [cover, second], reason: 'Create gallery with repeated cover' }, CONTEXT);
+  assert.deepEqual(item.galleryAssetIds, [second]);
+  const changed = await service.updateArticle(PRINCIPAL, item.id, { version: item.version, coverAssetId: second, reason: 'Choose a gallery image as cover' }, CONTEXT);
+  assert.deepEqual(changed.galleryAssetIds, []);
+});
+
+test('legacy duplicate gallery references do not break administrative reads or public articles', async () => {
+  const { service, repository } = fixture(); const category = await createCategory(service);
+  const cover = 'a'.repeat(24), extra = 'b'.repeat(24);
+  const item = await service.createArticle(PRINCIPAL, { categoryId: category.id, title: { en: 'Legacy gallery' }, body: { en: 'Readable content' }, coverAssetId: cover, reason: 'Create legacy fixture' }, CONTEXT);
+  await repository.updateArticle(item.id, item.version, { galleryAssetIds: [cover, extra, extra] }, ADMIN_ID, NOW);
+  const read = await service.getArticle(PRINCIPAL, item.id);
+  assert.deepEqual(read.galleryAssetIds, [extra]);
+  await service.transitionArticle(PRINCIPAL, item.id, { version: read.version, status: 'published', reason: 'Publish legacy fixture' }, CONTEXT);
+  assert.deepEqual((await service.getPublicBySlug(item.slug, 'en')).images?.map(image => image.id), [extra]);
+});
+
 test('creates and publishes more than twenty thousand words without losing either translation', async () => {
   const { service } = fixture();
   const category = await service.createCategory(PRINCIPAL, { name: { en: 'Long guides' }, reason: 'Create guide category' }, CONTEXT);

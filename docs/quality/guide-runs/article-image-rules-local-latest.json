@@ -1,0 +1,64 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedResponses": false,
+  "checks": [
+    "real_scanned_image_upload_rejects_corrupt_and_unsupported_files_without_creating_records",
+    "administrative_preview_uses_same_slider_and_rejected_upload_preserves_article_text",
+    "chromium_webkit_320_390_1440_long_unbroken_text_and_portrait_panorama_stay_inside_viewport",
+    "legacy_missing_cover_recovers_after_hydration_corrupt_image_skipped_and_duplicate_images_removed",
+    "gallery_buttons_rtl_ltr_keyboard_single_frame_and_all_images_failed_keep_body_readable",
+    "both_healthy_article_examples_keep_single_image_layout_without_redundant_controls"
+  ],
+  "geometry": [
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "width": 320,
+      "scrollWidth": 320,
+      "bodyWidth": 288,
+      "fit": "contain"
+    },
+    {
+      "engine": "chromium",
+      "locale": "en",
+      "width": 390,
+      "scrollWidth": 390,
+      "bodyWidth": 358,
+      "fit": "contain"
+    },
+    {
+      "engine": "chromium",
+      "locale": "ar",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "bodyWidth": 811,
+      "fit": "contain"
+    },
+    {
+      "engine": "webkit",
+      "locale": "ar",
+      "width": 320,
+      "scrollWidth": 320,
+      "bodyWidth": 288,
+      "fit": "contain"
+    },
+    {
+      "engine": "webkit",
+      "locale": "en",
+      "width": 390,
+      "scrollWidth": 390,
+      "bodyWidth": 358,
+      "fit": "contain"
+    },
+    {
+      "engine": "webkit",
+      "locale": "ar",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "bodyWidth": 811,
+      "fit": "contain"
+    }
+  ],
+  "cleanup": true,
+  "browserErrors": []
+}

@@ -50,7 +50,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // administration into its own chunk and retain chunk and route-CSS limits.
 // Registration covers, editorial metadata, project-name selection and readable
 // receipts add about 10 KiB. Existing headroom plus six KiB bounds this increment.
-const maxJavaScriptBytes = 2_626 * 1024;
+// Shared resilient article slider and SSR image recovery add about 3.5 KiB;
+// allow four KiB while keeping chunk and route-stylesheet limits unchanged.
+const maxJavaScriptBytes = 2_630 * 1024;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

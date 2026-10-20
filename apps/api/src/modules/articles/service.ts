@@ -152,6 +152,7 @@ function categoryData(item: StoredArticleCategory, manage: boolean): ArticleCate
 
 function articleData(item: StoredArticle, manage: boolean, publish: boolean, superAdmin = false): Article {
   const adminFields = { ...item };
+  if (item.galleryAssetIds) adminFields.galleryAssetIds = [...new Set(item.galleryAssetIds)].filter(id => id !== item.coverAssetId).slice(0, 12);
   // Include the saved cover URL so administrators can see legacy article images.
   delete adminFields.readingTimeMinutes;
   return articleDataSchema.parse({
@@ -220,7 +221,7 @@ function publicArticle(item: PublicStoredArticle, locale: SupportedLocale, autho
     ...(item.article.seoDescription ? { seoDescription: localized(item.article.seoDescription, locale) } : {}),
     ...(item.article.coverAssetId ? { coverAssetId: item.article.coverAssetId } : {}),
     ...(item.article.imageUrl ? { imageUrl: item.article.imageUrl } : {}),
-    ...(item.article.galleryAssetIds ? { images: item.article.galleryAssetIds.map(id => ({ id, imageUrl: `/api/v1/public/article-photos/${id}` })) } : {}),
+    ...(item.article.galleryAssetIds ? { images: [...new Set(item.article.galleryAssetIds)].filter(id => id !== item.article.coverAssetId).slice(0, 12).map(id => ({ id, imageUrl: `/api/v1/public/article-photos/${id}` })) } : {}),
     ...(item.article.authorName ? { authorName: localized(item.article.authorName, locale) } : authorName ? { authorName: { ar: authorName, en: authorName } } : {}),
     readingTimeMinutes,
     ...(item.article.publishedAt ? { publishedAt: item.article.publishedAt.toISOString() } : {}),
@@ -378,7 +379,7 @@ export function createArticleService(dependencies: {
         slug: input.slug ?? generateIdentifier('article', input.title),
         title: input.title,
         body: input.body,
-        ...(input.galleryAssetIds ? { galleryAssetIds: input.galleryAssetIds } : {}),
+        ...(input.galleryAssetIds ? { galleryAssetIds: input.galleryAssetIds.filter(id => id !== input.coverAssetId) } : {}),
         ...(input.authorName ? { authorName: input.authorName } : {}),
         ...(input.seoTitle ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription ? { seoDescription: input.seoDescription } : {}),
@@ -404,13 +405,15 @@ export function createArticleService(dependencies: {
       }
       if (input.categoryId) await requireActiveCategory(input.categoryId);
       for (const id of [input.coverAssetId !== before.coverAssetId ? input.coverAssetId : undefined, ...(input.galleryAssetIds ?? [])]) { if (id) await dependencies.validateImage?.(id); }
+      const coverId = input.coverAssetId === undefined ? before.coverAssetId : input.coverAssetId;
+      const gallery = input.galleryAssetIds ?? before.galleryAssetIds;
       const at = now();
       const stored = articleResult(await dependencies.repository.updateArticle(id, input.version, {
         ...(input.categoryId !== undefined ? { categoryId: input.categoryId } : {}),
         ...(input.slug !== undefined ? { slug: input.slug } : {}),
         ...(input.title !== undefined ? { title: input.title } : {}),
         ...(input.body !== undefined ? { body: input.body } : {}),
-        ...(input.galleryAssetIds !== undefined ? { galleryAssetIds: input.galleryAssetIds } : {}),
+        ...(gallery !== undefined ? { galleryAssetIds: gallery.filter(id => id !== coverId) } : {}),
         ...(input.authorName !== undefined ? { authorName: input.authorName } : {}),
         ...(input.seoTitle !== undefined ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription !== undefined ? { seoDescription: input.seoDescription } : {}),

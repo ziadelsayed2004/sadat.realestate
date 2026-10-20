@@ -10,7 +10,7 @@ export function ArticleImages({ value, locale, upload, load, onChange, onBusy, o
 }) {
   const ar = locale === 'ar'; const [busy, setBusy] = useState(false); const [error, setError] = useState('');
   const [urls, setUrls] = useState<Record<string, string>>({}); const allocated = useRef<string[]>([]); const mounted = useRef(true);
-  const ids = useMemo(() => [value.coverId, ...value.galleryIds].filter((id): id is string => Boolean(id)), [value.coverId, value.galleryIds]);
+  const ids = useMemo(() => [...new Set([value.coverId, ...value.galleryIds].filter((id): id is string => Boolean(id)))], [value.coverId, value.galleryIds]);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; allocated.current.forEach(URL.revokeObjectURL); }; }, []);
   useEffect(() => { onPreview(urls); }, [onPreview, urls]);
   useEffect(() => {
@@ -34,7 +34,7 @@ export function ArticleImages({ value, locale, upload, load, onChange, onBusy, o
     finally { if (mounted.current) { setBusy(false); onBusy(false); } }
   };
   return <fieldset className="admin-article-images" disabled={busy}><legend>{ar ? 'صور المقال' : 'Article images'}</legend>
-    <p>{ar ? 'أول صورة هي الغلاف. مقاس مقترح للغلاف: 1600 × 900 بكسل. يمكنك إضافة حتى 12 صورة أخرى؛ تظهر كاملة داخل المقال.' : 'The first image is the cover. Suggested cover: 1600 × 900 px. Add up to 12 more images, shown in full in the article.'}</p>
+    <p>{ar ? 'أول صورة هي الغلاف. مقاس مقترح للغلاف: 1600 × 900 بكسل. يمكنك إضافة حتى 12 صورة أخرى؛ تظهر في سلايدر واحد داخل المقال مع الغلاف. الصور التالفة أو غير المدعومة تُرفض، وكل صورة تظهر كاملة من غير قص أو تمدد.' : 'The first image is the cover. Suggested cover: 1600 × 900 px. Add up to 12 more images in one slider with the cover. Corrupt or unsupported files are rejected; images are shown without cropping or stretching.'}</p>
     <div className="admin-article-images__grid">{ids.map(id => <div key={id}>{urls[id] ? <img src={urls[id]} alt={ar ? 'معاينة صورة المقال' : 'Article image preview'} /> : <p>{ar ? 'الصورة محفوظة؛ المعاينة غير متاحة.' : 'Image saved; preview unavailable.'}</p>}
       <span>{id === value.coverId ? ar ? 'صورة الغلاف' : 'Cover image' : ar ? 'صورة داخل المقال' : 'Article image'}</span>
       {id !== value.coverId ? <Button type="button" size="sm" variant="secondary" onClick={() => onChange({ coverId: id, galleryIds: [...(value.coverId ? [value.coverId] : []), ...value.galleryIds.filter(item => item !== id)] })}>{ar ? 'تعيين كغلاف' : 'Use as cover'}</Button> : null}

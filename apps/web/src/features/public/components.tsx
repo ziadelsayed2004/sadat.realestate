@@ -355,14 +355,16 @@ export function PublicMediaImage({
   readonly previewWidth?: 320 | 960 | 1600;
 }) {
   const [failedUrl, setFailedUrl] = useState<string | undefined>();
+  const picture = useRef<HTMLImageElement>(null);
   let imageUrl = safePublicUrl(src);
   if (imageUrl !== undefined && /^\/api\/v1\/public\/properties\/[a-f\d]{24}\/media\/[a-f\d]{24}\/content(?:\?|$)/u.test(imageUrl)) {
     const preview = new URL(imageUrl, 'http://sadat-real-estate.local');
     preview.searchParams.set('width', String(previewWidth));
     imageUrl = `${preview.pathname}${preview.search}`;
   }
+  useEffect(() => { const element = picture.current; if (imageUrl && element?.complete && element.currentSrc && element.naturalWidth === 0) setFailedUrl(imageUrl); }, [imageUrl]);
   if (imageUrl === undefined || failedUrl === imageUrl) return <>{fallback}</>;
-  return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailedUrl(imageUrl)} />;
+  return <img ref={picture} className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailedUrl(imageUrl)} />;
 }
 
 const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `

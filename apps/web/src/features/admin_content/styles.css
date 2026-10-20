@@ -97,6 +97,8 @@
 .admin-article-preview { padding: 24px; margin-block-start: 24px; max-width: 860px; border: 1px solid #e4e6ea; border-radius: 16px; background: white; }
 .admin-article-preview img { width: 100%; max-height: 520px; object-fit: contain; }
 .admin-article-preview p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
+.admin-article-preview { min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+.admin-article-preview h1 { overflow-wrap: anywhere; }
 .admin-content__category-description { padding: 16px; border: 1px solid #e4e6ea; border-radius: 12px; }
 .admin-content__category-description summary { cursor: pointer; color: #155b4f; font-weight: 700; }
 .admin-content__category-description .admin-content__localized-fields { margin-block-end: 0; }
