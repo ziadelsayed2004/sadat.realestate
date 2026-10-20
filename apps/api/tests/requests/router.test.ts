@@ -9,6 +9,24 @@ import { createInMemoryRequestRepository, createRequestService } from '../../src
 
 const tokens: AccessTokenService = { issue: () => 'x', verify(token) { const role = token === 'provider' ? 'provider' : token === 'admin' ? 'admin' : 'seeker'; return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: '1123456789abcdef01234567', role, status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims; } };
 
+test('provider deletion requests require ownership role and create an administrative review request', async () => {
+  const service = createRequestService({ repository: createInMemoryRequestRepository() });
+  const server = createApiServer({ database: { isReady: async () => true }, requests: { accessTokens: tokens, service } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  const url = `http://127.0.0.1:${address.port}/api/v1/provider/account-deletion-requests`;
+  try {
+    for (const token of ['seeker', 'admin']) assert.equal((await fetch(url, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ reason: 'Close my business account' }) })).status, 403);
+    const headers = { authorization: 'Bearer provider', 'content-type': 'application/json' };
+    assert.equal((await fetch(url, { method: 'POST', headers, body: JSON.stringify({ reason: 'x' }) })).status, 400);
+    assert.equal((await fetch(url, { method: 'POST', headers, body: JSON.stringify({ reason: 'Close my business', providerId: 'a'.repeat(24) }) })).status, 400);
+    const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify({ reason: 'Close my business account', locale: 'en' }) });
+    assert.equal(response.status, 201);
+    const { data } = await response.json() as { data: { id: string; type: string; source: string; status: string; payload: Record<string, unknown> } };
+    assert.equal(data.type, 'contact'); assert.equal(data.source, 'provider'); assert.equal(data.status, 'new');
+    assert.equal(data.payload.contactChannel, 'platform'); assert.match(String(data.payload.message), /Close my business account/);
+  } finally { await stopApiServer(server); }
+});
+
 test('expired tokens return 401 for refresh while verified providers can submit public inquiries', async () => {
   const accessTokens: AccessTokenService = { ...tokens, verify(token) {
     if (token === 'expired') throw new Error('Expired access token');

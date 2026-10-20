@@ -9,7 +9,7 @@ test('maps advertising placements, formats, dimensions, quote validity, and paym
 });
 
 test('ignores malformed advertising settings', () => {
-  assert.deepEqual(advertisingRuntimeSettings({ supported_placements: ['bad value'], desktop_dimensions: 'huge', quote_validity_days: 0 }), { supportedPlacements: ['homepage.featured'], supportedAdTypes: ['featured_card'], acceptedFileFormats: [], dimensions: [], paymentProofMethods: [] });
+  assert.deepEqual(advertisingRuntimeSettings({ supported_placements: ['bad value'], desktop_dimensions: 'huge', quote_validity_days: 0 }), { supportedPlacements: ['homepage.hero', 'homepage.featured'], supportedAdTypes: ['banner', 'featured_card'], acceptedFileFormats: [], dimensions: [], paymentProofMethods: [] });
 });
 
 test('payment recipients come only from the explicit method settings, with bounded safe lines', () => {

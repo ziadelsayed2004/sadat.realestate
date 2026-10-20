@@ -13,6 +13,16 @@ import {
 } from '../src/features/provider/index.ts';
 import { getProviderCopy } from '../src/features/provider/copy.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { ProjectImage } from '../src/features/provider/project-image.tsx';
+
+it('previews a legacy external project image without sending account credentials to that host', () => {
+  const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
+  try {
+    renderWithLocale(<ProjectImage value="https://images.example.invalid/project.jpg" onChange={() => {}} locale="en" authorization={{ getAuthorizationHeader: () => 'Bearer private-provider' }} />, { locale: 'en' });
+    expect(screen.getByAltText('Project image preview')).toHaveAttribute('src', 'https://images.example.invalid/project.jpg');
+    expect(fetcher).not.toHaveBeenCalled();
+  } finally { vi.unstubAllGlobals(); }
+});
 
 const providerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const projectId = 'bbbbbbbbbbbbbbbbbbbbbbbb';

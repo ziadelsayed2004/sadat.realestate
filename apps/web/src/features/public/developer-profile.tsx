@@ -146,6 +146,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
     <section className="public-developer-profile__hero" aria-label={title}>
       <div className="public-developer-profile__hero-media">
         <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" />
+        {safePublicUrl(data.imageUrl) ? <a href={safePublicUrl(data.imageUrl)} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', insetInlineEnd: 16, bottom: 12, padding: '6px 12px', background: 'white', borderRadius: 8 }}>{locale === 'ar' ? 'عرض الصورة كاملة' : 'View full image'}</a> : null}
       </div>
       <div className="public-developer-profile__identity">
         <div className="public-developer-profile__identity-actions">
@@ -240,7 +241,7 @@ function ProjectCard({ project, developerSlug, detail = false, locale, copy }: {
   return (
     <article className="public-developer-profile__project-card" id={anchorId} data-project-detail={detail || undefined}>
       <div className="public-developer-profile__project-media">
-        <PublicMediaImage src={project.imageUrl} alt={name} fallback={<span className="public-developer-profile__project-media-fallback" />} />
+        <PublicMediaImage src={project.imageUrl} alt={name} fallback={<img src="/assets/sadat-real-estate-logo.png" alt={copy.imageUnavailable} loading="lazy" />} />
         {localizedText(project.statusLabel, locale) ? <span className="public-developer-profile__project-status">{localizedText(project.statusLabel, locale)}</span> : null}
       </div>
       <div className="public-developer-profile__project-content">
@@ -254,7 +255,7 @@ function ProjectCard({ project, developerSlug, detail = false, locale, copy }: {
         {detail ? <div className="public-developer-profile__overview-content">
           {description ? <p>{description}</p> : <p>{copy.noDescription}</p>}
           {website ? <a href={website} rel="noopener noreferrer" target="_blank">{copy.openWebsite}</a> : null}
-        </div> : <a className="public-developer-profile__project-link" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}>{copy.viewProject}<ProfileIcon name="arrow" /></a>}
+        </div> : <>{description ? <p>{description}</p> : null}<a className="public-developer-profile__project-link" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}>{copy.viewProject}<ProfileIcon name="arrow" /></a></>}
       </div>
     </article>
   );
@@ -345,12 +346,12 @@ function ProfileAside({ data, copy, compact = false }: { readonly data: PublicOr
           <div><dt>{copy.verified}</dt><dd className="public-developer-profile__verified-mini"><ProfileIcon name="check" />{copy.verified}</dd></div>
         </dl>
       </section>}
-      <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
+      {hasContactDetails || role === undefined || role === 'seeker' ? <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
         {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
         {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer"><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
         {role === undefined || role === 'seeker' ? <>        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{hasContactDetails ? copy.sendInquiry : copy.profileContact}</a></> : null}
-      </section>
+      </section> : null}
       <div className="public-developer-profile__advisory"><ProfileIcon name="shield" /><div><strong>{copy.advisoryTitle}</strong><p>{copy.advisoryBody}</p></div></div>
     </aside>
   );
@@ -391,7 +392,7 @@ function ContactSection({ data, locale, copy, actions, projectId = '' }: { reado
       setState(error instanceof ApiClientError && error.status === 401 ? 'permission' : error instanceof ApiClientError && error.status === 403 ? 'forbidden' : 'error');
     }
   }
-  if (role === 'provider' || role === 'admin') return null;
+  if (role === 'provider' || role === 'admin') return <section className="public-developer-profile__contact" id="developer-contact"><h2>{copy.profileContact}</h2><p>{ar ? 'أنت تعرض الصفحة بحساب إدارة أو مقدم عقار. نموذج استفسار العميل يظهر للزائر والباحث عن عقار.' : 'You are viewing this page as an administrator or provider. The customer inquiry form is shown to visitors and property seekers.'}</p><a href={role === 'provider' ? `/provider/projects?lang=${locale}` : `/admin/projects?lang=${locale}`}>{ar ? 'إدارة المشاريع والصور والتفاصيل' : 'Manage projects, images and details'}</a></section>;
   return (
     <section className="public-developer-profile__contact" id="developer-contact" aria-labelledby="developer-contact-title">
       <h2 id="developer-contact-title">{copy.profileInquiryTitle(companyName)}</h2>

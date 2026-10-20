@@ -1,3 +1,4 @@
+import { ProviderSecurity } from './security.tsx';
 import { CompanyEditor } from '../admin_accounts/company-editor.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -172,21 +173,7 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
               </form>
             ) : null}
             {tab === 'security' ? (
-              <div className="provider-settings__security-grid">
-                <section className="provider-settings__panel" data-state="unavailable" aria-labelledby="provider-settings-security-heading">
-                  <h2 id="provider-settings-security-heading">{copy.security.password}</h2>
-                  <Input id="provider-settings-current-password" type="password" label={copy.security.current} disabled autoComplete="current-password" />
-                  <Input id="provider-settings-new-password" type="password" label={copy.security.next} disabled autoComplete="new-password" />
-                  <Input id="provider-settings-confirm-password" type="password" label={copy.security.confirm} disabled autoComplete="new-password" />
-                  <Button type="button" disabled>{copy.security.update}</Button>
-                  <p className="provider-settings__notice">{copy.security.unavailable}</p>
-                </section>
-                <section className="provider-settings__panel provider-settings__panel--danger" data-state="unavailable" aria-labelledby="provider-settings-delete-heading">
-                  <h2 id="provider-settings-delete-heading">{copy.security.deleteHeading}</h2>
-                  <p>{copy.security.deleteBody}</p>
-                  <Button type="button" variant="danger" disabled>{copy.security.deleteAction}</Button>
-                </section>
-              </div>
+              <ProviderSecurity locale={locale} authorization={authClient} apiOrigin={apiOrigin} />
             ) : null}
           </>
         ) : null}

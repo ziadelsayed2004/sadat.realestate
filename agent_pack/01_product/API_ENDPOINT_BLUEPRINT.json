@@ -649,6 +649,18 @@
   },
   {
     "method": "POST",
+    "path": "/api/v1/provider/account-deletion-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Submit an account deletion request for administration review without deleting account data",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
     "path": "/api/v1/seeker/contact-requests",
     "module": "requests",
     "auth": "access-token",

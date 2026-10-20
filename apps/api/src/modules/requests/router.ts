@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { requestIdParamsSchema, requestListQuerySchema, requestNoteSchema, requestTransitionRequestSchema } from '@sadat-real-estate/contracts';
+import { providerAccountDeletionRequestSchema, requestIdParamsSchema, requestListQuerySchema, requestNoteSchema, requestTransitionRequestSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -9,6 +9,7 @@ import { RequestServiceError } from './service.js';
 import type { createRequestService } from './service.js';
 
 export const REQUEST_ROUTE_DEFINITIONS = [
+  { method: 'POST', path: '/api/v1/provider/account-deletion-requests', operationId: 'createProviderAccountDeletionRequest' },
   { method: 'POST', path: '/api/v1/seeker/contact-requests', operationId: 'createSeekerContactRequest' }, { method: 'POST', path: '/api/v1/seeker/search-requests', operationId: 'createSeekerSearchRequest' }, { method: 'GET', path: '/api/v1/seeker/requests', operationId: 'listSeekerRequests' }, { method: 'GET', path: '/api/v1/seeker/requests/:requestId', operationId: 'getSeekerRequest' }, { method: 'POST', path: '/api/v1/seeker/requests/:requestId/transitions', operationId: 'transitionSeekerRequest' },
   { method: 'POST', path: '/api/v1/provider/customer-requests', operationId: 'createProviderCustomerRequest' }, { method: 'GET', path: '/api/v1/provider/customer-requests', operationId: 'listProviderCustomerRequests' }, { method: 'GET', path: '/api/v1/provider/customer-requests/:requestId', operationId: 'getProviderCustomerRequest' }, { method: 'POST', path: '/api/v1/provider/customer-requests/:requestId/transitions', operationId: 'transitionProviderCustomerRequest' },
   { method: 'GET', path: '/api/v1/admin/requests', operationId: 'listAdminRequests' }, { method: 'GET', path: '/api/v1/admin/requests/overdue', operationId: 'listOverdueAdminRequests' }, { method: 'GET', path: '/api/v1/admin/requests/:requestId', operationId: 'getAdminRequest' }, { method: 'POST', path: '/api/v1/admin/requests/:requestId/assign', operationId: 'assignAdminRequest' }, { method: 'POST', path: '/api/v1/admin/requests/:requestId/notes', operationId: 'addAdminRequestNote' }, { method: 'POST', path: '/api/v1/admin/requests/:requestId/transitions', operationId: 'transitionAdminRequest' }
@@ -36,6 +37,13 @@ function bearer(accessTokens: AccessTokenService, role: AccessTokenClaims['role'
 
 function send(request: Request, response: Response, error: unknown): void { const mapped: Record<string, { status: number; key: string }> = { REQUEST_FORBIDDEN: { status: 403, key: 'errors.forbidden' }, REQUEST_NOT_FOUND: { status: 404, key: 'errors.requests.notFound' }, REQUEST_VERSION_CONFLICT: { status: 409, key: 'errors.requests.versionConflict' }, REQUEST_INVALID_STATE: { status: 409, key: 'errors.requests.invalidState' }, REQUEST_DUPLICATE: { status: 409, key: 'errors.requests.duplicate' }, REQUEST_RATE_LIMITED: { status: 429, key: 'errors.rateLimited' } }; const serviceError = error instanceof RequestServiceError ? error : undefined; const current = serviceError ? mapped[serviceError.code] : undefined; const body = toApiErrorResponse(current && serviceError ? new ApiContractError(serviceError.code, current.key, current.status) : error, context(request)); response.status(body.statusCode).json(body.body); }
 export function createRequestRouter(dependencies: RequestRouterDependencies): Router { const router = Router(); router.use((_request, response, next) => { response.setHeader('Cache-Control', 'no-store'); next(); });
+  router.post('/provider/account-deletion-requests', bearer(dependencies.accessTokens, 'provider'), async (req, res) => {
+    try {
+      const input = providerAccountDeletionRequestSchema.parse(req.body ?? {});
+      const data = await dependencies.service.createContact(claims(res, 'provider'), { message: `طلب حذف حساب مقدم عقار / Provider account deletion request\n${input.reason}`, contactChannel: 'platform', ...(input.locale ? { locale: input.locale } : {}) });
+      res.status(201).json(toSuccessResponse(data, context(req)));
+    } catch (error) { send(req, res, error); }
+  });
   // Keep the existing public inquiry endpoint compatible; the verified claims retain the actual account role.
   router.post('/seeker/contact-requests', bearer(dependencies.accessTokens, 'seeker', true), async (req, res) => { try { const data = await dependencies.service.createContact(claims(res, 'seeker'), req.body ?? {}); res.status(201).json(toSuccessResponse(data, context(req))); } catch (e) { send(req, res, e); } });
   router.post('/seeker/search-requests', bearer(dependencies.accessTokens, 'seeker'), async (req, res) => { try { const data = await dependencies.service.create(claims(res, 'seeker'), { type: 'property_search', payload: req.body ?? {} }); res.status(201).json(toSuccessResponse(data, context(req))); } catch (e) { send(req, res, e); } });

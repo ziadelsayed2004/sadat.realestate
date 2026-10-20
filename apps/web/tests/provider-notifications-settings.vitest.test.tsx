@@ -179,7 +179,7 @@ describe('Provider settings', () => {
     rendered.unmount();
   });
 
-  it('renders contact fields and keeps unsupported security actions disabled', async () => {
+  it('renders contact fields and provides password and deletion request actions', async () => {
     const update = vi.fn(async () => settings);
     const contactView = renderWithLocale(<ProviderSettings locale="en" session={session} tab="contact" load={async () => settings} actions={{ update }} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId('provider-settings-page')).toBeInTheDocument());
@@ -190,8 +190,8 @@ describe('Provider settings', () => {
 
     renderWithLocale(<ProviderSettings locale="en" session={session} tab="security" load={async () => settings} actions={{ update }} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByTestId('provider-settings-page')).toHaveAttribute('data-screen-id', 'PRV-22-3'));
-    expect(screen.getByRole('button', { name: 'Update password' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Request account deletion' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Update password' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Request account deletion' })).toBeEnabled();
   });
 
   it('honors server-projected settings actions and never exposes phone identity fields', async () => {

@@ -1165,8 +1165,7 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
   }, [locale]);
 
   const handleSubmitted = useCallback(() => {
-    // Keep the confirmation mounted and retain the registration session.
-    replaceAuthUrl(`/provider-application/status?lang=${encodeURIComponent(locale)}`);
+    window.location.assign(`/?lang=${encodeURIComponent(locale)}&providerApplication=submitted`);
   }, [locale]);
 
   const resumeApplication = useCallback(async () => {

@@ -5,6 +5,7 @@ import { supportedLocaleSchema } from '../localization/index.js';
 const objectId = z.string().regex(/^[a-f0-9]{24}$/);
 const safeText = (max: number) => z.string().trim().min(1).max(max).regex(/^[^\u0000-\u001f\u007f]+$/u);
 const customerText = z.string().trim().min(1).max(2000).regex(/^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]*$/u);
+export const providerAccountDeletionRequestSchema = z.object({ reason: customerText.min(5).max(1500), locale: supportedLocaleSchema.optional() }).strict();
 const requestType = z.enum(['contact', 'viewing', 'property_search', 'provider_customer']);
 const requestSource = z.enum(['public', 'seeker', 'provider', 'admin']);
 const requestStatus = z.enum(['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress', 'resolved', 'cancelled', 'closed']);

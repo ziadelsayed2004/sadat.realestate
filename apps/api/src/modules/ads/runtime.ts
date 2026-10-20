@@ -26,8 +26,12 @@ export function createAdminAdsRuntime(
       authorization,
       async pricingOptions() {
         const policy = await createMongooseAdvertisingSettingsReader(connection).read();
-        const rows = await connection.collection('ad_placements').find({ active: true, ...(policy.supportedPlacements.length ? { key: { $in: policy.supportedPlacements } } : {}) }, { projection: { key: 1, label: 1 } }).sort({ sortOrder: 1, key: 1 }).limit(100).toArray();
-        return { placements: rows.map(row => ({ key: String(row.key), label: row.label ?? { ar: String(row.key), en: String(row.key) } })), adTypes: policy.supportedAdTypes };
+        const rows = await connection.collection('ad_placements').find(policy.supportedPlacements.length ? { key: { $in: policy.supportedPlacements } } : {}, { projection: { key: 1, label: 1, active: 1 } }).sort({ sortOrder: 1, key: 1 }).limit(98).toArray();
+        const keys = [...new Set(['homepage.hero', 'homepage.featured', ...rows.map(row => String(row.key))])];
+        return { placements: keys.map(key => {
+          const row = rows.find(item => item.key === key);
+          return { key, active: row?.active === true, label: row?.label ?? { ar: key, en: key } };
+        }), adTypes: policy.supportedAdTypes.length ? policy.supportedAdTypes : ['banner', 'featured_card'] };
       }
     }),
     calendar: createAdCalendarService({

@@ -86,7 +86,7 @@ export type AdQuoteIssue = z.infer<typeof adQuoteIssueSchema>;
 export type AdQuoteDecision = z.infer<typeof adQuoteDecisionSchema>;
 export type AdQuote = z.infer<typeof adQuoteSchema>;
 export type AdQuoteDecisionHistory = z.infer<typeof adQuoteDecisionHistorySchema>;
-export const adAdminRequestSchema = z.object({ request: adRequestSchema, quote: adQuoteSchema.optional(), pricingOptions: z.object({ placements: z.array(z.object({ key: placementKey, label: localizedTextSchema }).strict()).max(100), adTypes: z.array(adType).max(100) }).strict().optional() }).strict();
+export const adAdminRequestSchema = z.object({ request: adRequestSchema, advertiserName: z.string().max(200).optional(), quote: adQuoteSchema.optional(), pricingOptions: z.object({ placements: z.array(z.object({ key: placementKey, label: localizedTextSchema, active: z.boolean().optional() }).strict()).max(100), adTypes: z.array(adType).max(100) }).strict().optional() }).strict();
 const adAdminRequestPage = z.preprocess(value => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000));
 const adAdminRequestLimit = z.preprocess(value => value === undefined ? 20 : Number(value), z.number().int().positive().max(100));
 export const adAdminRequestListQuerySchema = z.object({

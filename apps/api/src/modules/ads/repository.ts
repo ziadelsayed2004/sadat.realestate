@@ -154,6 +154,7 @@ function toAdminRequest(row: AdRequestRow, quote?: AdQuoteRow): AdAdminRequest {
 }
 
 async function hydrateAdminRequests(
+  connection: Connection,
   models: ProviderAdvertisingModels,
   rows: readonly AdRequestRow[]
 ): Promise<AdAdminRequest[]> {
@@ -166,7 +167,15 @@ async function hydrateAdminRequests(
     const key = quote.requestId.toHexString();
     if (!latestQuoteByRequest.has(key)) latestQuoteByRequest.set(key, quote);
   }
-  return rows.map(row => toAdminRequest(row, latestQuoteByRequest.get(row._id.toHexString())));
+  const providers = await connection.collection('provider_applications').find(
+    { userId: { $in: rows.map(row => row.providerId) } },
+    { projection: { userId: 1, brandName: 1, legalCompanyName: 1, tradeName: 1, legalBusinessName: 1, displayName: 1, accountOwnerFullName: 1 } }
+  ).toArray();
+  const names = new Map(providers.map(provider => [String(provider.userId),
+    [provider.brandName, provider.legalCompanyName, provider.tradeName, provider.legalBusinessName, provider.displayName, provider.accountOwnerFullName]
+      .find((value): value is string => typeof value === 'string' && value.trim().length > 0)?.slice(0, 200)]));
+  return rows.map(row => ({ ...toAdminRequest(row, latestQuoteByRequest.get(row._id.toHexString())),
+    ...(names.get(String(row.providerId)) ? { advertiserName: names.get(String(row.providerId))! } : {}) }));
 }
 
 function requestObjectId(value: string): Types.ObjectId {
@@ -258,12 +267,12 @@ export function createMongooseAdAdminRequestRepository(
           .lean(),
         models.AdRequest.countDocuments(filter)
       ]);
-      return { items: await hydrateAdminRequests(models, rows as AdRequestRow[]), total };
+      return { items: await hydrateAdminRequests(connection, models, rows as AdRequestRow[]), total };
     },
     async getAdminRequest(requestId: string): Promise<AdAdminRequest | undefined> {
       const row = await models.AdRequest.findOne({ _id: requestObjectId(requestId) }).lean();
       if (!row) return undefined;
-      const values = await hydrateAdminRequests(models, [row as AdRequestRow]);
+      const values = await hydrateAdminRequests(connection, models, [row as AdRequestRow]);
       return values[0];
     },
     async reviewAdminRequest(requestId, expectedVersion, status, reason, now, metadata) {
@@ -285,7 +294,7 @@ export function createMongooseAdAdminRequestRepository(
         return updated;
       });
       if (!row) return undefined;
-      const values = await hydrateAdminRequests(models, [row]);
+      const values = await hydrateAdminRequests(connection, models, [row]);
       return values[0];
     }
   };

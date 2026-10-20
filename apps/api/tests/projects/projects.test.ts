@@ -158,7 +158,7 @@ function record(overrides: Partial<StoredProject> = {}): StoredProject {
   return { id, providerId: provider, name: { en: 'Project' }, slug: 'project', status: 'draft', version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(allowProjectView = true, canManageProjects = true, allowProjectReview = true) {
+function fixture(allowProjectView = true, canManageProjects = true, allowProjectReview = true, validateImage?: (url: string, actorId: string, admin: boolean) => Promise<boolean>) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
     async publicPath(project) { return project.status === 'published' && project.organizationId ? `/developers/qa-developer/projects/${project.slug}` : undefined; },
@@ -205,8 +205,24 @@ function fixture(allowProjectView = true, canManageProjects = true, allowProject
       return { kind: 'written', project: next };
     }
   };
-  return { service: createProjectService({ repository, providerPolicy: { canManageProjects: async () => canManageProjects }, authorization: { authorize: async (actor, permission) => actor === admin && ((allowProjectReview && permission === 'admin:projects.review') || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
+  return { service: createProjectService({ repository, ...(validateImage ? { validateImage } : {}), providerPolicy: { canManageProjects: async () => canManageProjects }, authorization: { authorize: async (actor, permission) => actor === admin && ((allowProjectReview && permission === 'admin:projects.review') || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
 }
+
+test('validates ownership of project photos and keeps draft photos out of public projections', async () => {
+  const imageUrl = `/api/v1/public/organization-photos/${other}`;
+  const context = { requestId: 'project-photo', traceId: 'a'.repeat(32) };
+  const input = { name: { en: 'Project with photo' }, imageUrl, reason: 'Add scanned project photo' };
+  await assert.rejects(fixture().service.create(claims(), input, context), error => error.code === 'PROJECT_FORBIDDEN');
+  const { service, rows } = fixture(true, true, true, async (url, actor) => url === imageUrl && actor === provider);
+  const created = await service.create(claims(), input, context);
+  assert.equal(created.imageUrl, imageUrl);
+  assert.equal(publicProjectProjection(rows.get(created.id)!), null);
+  await assert.rejects(service.update(claims(), created.id, { version: created.version, imageUrl: `/api/v1/public/organization-photos/${id}`, reason: 'Reject foreign image' }, context), error => error.code === 'PROJECT_FORBIDDEN');
+  assert.equal(rows.get(created.id)?.imageUrl, imageUrl);
+  assert.equal(publicProjectProjection({ ...rows.get(created.id)!, status: 'published' })?.imageUrl, imageUrl);
+  const removed = await service.update(claims(), created.id, { version: created.version, imageUrl: null, reason: 'Remove project image' }, context);
+  assert.equal(removed.imageUrl, undefined);
+});
 
 test('creates and lists only provider-owned localized drafts with safe projections', async () => {
   const fixtureData = fixture();

@@ -1,0 +1,19 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium ar 390px published project image, description, inquiry and no horizontal overflow",
+    "chromium en 1440px published project image, description, inquiry and no horizontal overflow",
+    "Native original-cover restore turns off only hero placement; Arabic mobile role deletion modal and confirmed deletion work",
+    "Real assisted ad request → admin review/quote → customer UI acceptance/upload → clean receipt admin approval → approved queue",
+    "chromium real API advertiser name, both placements/types, request-specific receipt filtering and next page",
+    "chromium deletion request created and visible to administration; provider remains active",
+    "webkit ar 390px published project image, description, inquiry and no horizontal overflow",
+    "webkit en 1440px published project image, description, inquiry and no horizontal overflow",
+    "webkit real API advertiser name, both placements/types, request-specific receipt filtering and next page",
+    "webkit deletion request created and visible to administration; provider remains active",
+    "Password changed through settings; old sessions and old password rejected; new password login succeeds"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

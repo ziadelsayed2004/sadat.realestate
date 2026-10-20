@@ -1,0 +1,13 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "Provider settings exposes separate logo/cover uploads with 512×512 and 1600×900 size guidance",
+    "chromium ar 390px: full cover, compact overview, project image/description, no horizontal overflow",
+    "chromium en 1440px: full cover, compact overview, project image/description, no horizontal overflow",
+    "webkit ar 390px: full cover, compact overview, project image/description, no horizontal overflow",
+    "webkit en 1440px: full cover, compact overview, project image/description, no horizontal overflow"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

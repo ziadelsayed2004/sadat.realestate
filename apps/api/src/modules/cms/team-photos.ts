@@ -86,10 +86,15 @@ export function createTeamPhotos(dependencies: {
       const photo = await find(id);
       if (claims?.role === 'provider' && String(photo.createdBy) !== claims.sub) throw missing();
       if (organization && !claims) {
-        const company = await connection.collection('organizations').findOne({ $or: [{ imageUrl: `/api/v1/public/organization-photos/${id}` }, { logoUrl: `/api/v1/public/organization-photos/${id}` }], status: 'approved' });
+        const imageUrl = `/api/v1/public/organization-photos/${id}`;
+        let company = await connection.collection('organizations').findOne({ $or: [{ imageUrl }, { logoUrl: imageUrl }], status: 'approved' });
+        if (!company) {
+          const project = await connection.collection('projects').findOne({ imageUrl, status: 'published' }, { projection: { organizationId: 1 } });
+          if (project?.organizationId) company = await connection.collection('organizations').findOne({ _id: project.organizationId, status: 'approved' });
+        }
         if (!company || (await visiblePublicOrganizations(connection, [company], 'directory')).length === 0) throw missing();
       }
-      if (!claims && !await connection.collection(organization ? 'organizations' : taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(organization ? { $or: [{ imageUrl: `/api/v1/public/organization-photos/${id}` }, { logoUrl: `/api/v1/public/organization-photos/${id}` }], status: 'approved' } : taxonomy
+      if (!claims && !organization && !await connection.collection(taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(taxonomy
         ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }
         : article ? { status: 'published', $or: [{ coverAssetId: photo._id }, { galleryAssetIds: photo._id }] }
         : { photoAssetId: photo._id, active: true, status: 'published' })) throw missing();

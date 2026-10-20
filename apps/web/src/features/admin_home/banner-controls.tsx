@@ -30,7 +30,19 @@ export function BannerDisplayControls({ locale, source }: { locale: SupportedLoc
       reason: `${placement.active ? 'Stop' : 'Enable'} placement ${placement.key}` })); }
     catch { setError(true); } finally { setBusy(false); }
   }
+  async function restoreHomepage() {
+    if (!config) return;
+    setBusy(true); setError(false);
+    try { setConfig(await source.updateBannerConfig({ enabled: config.enabled, heroActive: false, expectedVersion: config.version, reason: 'Restore original homepage cover and introduction; preserve advertisements' })); }
+    catch { setError(true); } finally { setBusy(false); }
+  }
   return <section id="banner-display-settings" className="admin-home__panel admin-home__banner-settings"><h2>{copy.setup}</h2><p>{copy.configureHint}</p>{config ? <>
+    <details><summary>{locale === 'ar' ? 'غلاف الرئيسية الأصلي واستعادته' : 'Original homepage cover and restore'}</summary>
+      <img src="/assets/canonical/public/home-hero-sadat-city.png" alt={locale === 'ar' ? 'غلاف مدينة السادات الأصلي' : 'Original Sadat City cover'} loading="lazy" style={{ width: '100%', maxHeight: 240, objectFit: 'contain' }} />
+      <p>{locale === 'ar' ? 'الاستعادة توقف الإعلانات في البانر العلوي وتُظهر غلاف الموقع ونصوص الرئيسية. صور الإعلانات ونصوصها تظل محفوظة؛ يمكنك تعديلها وإضافة صور ثم تشغيل الموضع مجددًا.' : 'Restore stops hero advertisements and shows the site cover and homepage introduction. Ad images and text remain saved; edit them, add images and enable the placement again when ready.'}</p>
+      <Button variant="secondary" disabled={busy || !config.placements.some(item => item.key === 'homepage.hero' && item.active)} onClick={() => void restoreHomepage()}>{locale === 'ar' ? 'استعادة غلاف الرئيسية الأصلي' : 'Restore original homepage cover'}</Button>
+      <a href={`/?lang=${locale}#homepage-hero`} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'معاينة الرئيسية' : 'Preview homepage'}</a>
+    </details>
     <p><a href={`/admin/content/homepage?section=hero&lang=${locale}`}>{locale === 'ar' ? 'تعديل نصوص بداية الرئيسية' : 'Edit homepage introduction text'}</a></p>
     <p role="status">{config.enabled ? copy.on : copy.off}</p>
     <Button variant="secondary" disabled={busy} onClick={() => void toggle()}>{config.enabled ? copy.disable : copy.enable}</Button>

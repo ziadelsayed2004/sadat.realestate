@@ -464,7 +464,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         ? await dependencies.repository.list(query)
         : (() => {
           const values = [...records.values()]
-            .filter((record) => record.active && (!query.status || record.status === query.status))
+            .filter((record) => record.active && (!query.status || record.status === query.status) && (!query.requestId || record.adRequestId === query.requestId))
             .sort((left, right) => right.uploadedAt.localeCompare(left.uploadedAt) || right.id.localeCompare(left.id));
           return {
             items: values.slice((query.page - 1) * query.limit, query.page * query.limit),

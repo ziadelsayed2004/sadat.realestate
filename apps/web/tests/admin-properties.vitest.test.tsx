@@ -209,6 +209,7 @@ describe('Admin property management contracts and views', () => {
     const result = renderWithLocale(<AdminProperties locale="en" session={session} view="duplicates" propertyId={property.id} initialProperties={properties} initialDuplicates={duplicates} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByText(candidateId)).toBeInTheDocument());
     expect(result.container.querySelector('[data-screen-id="ADM-16"]')).not.toBeNull();
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.getByText('The slug and transaction location match.')).toBeInTheDocument();
     expect(result.container.textContent).not.toMatch(/reviewedBy|reporterId|internalNotes|assignedTo|auditData|storageKey|privateUrl/u);
   });

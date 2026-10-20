@@ -548,6 +548,7 @@ export type { AccountReportAction, AccountReportData, AccountReportListData, Acc
 export {
   REQUEST_TYPES, REQUEST_STATUSES, REQUEST_TRANSITIONS, overdueRequestListDataSchema, overdueRequestSchema, requestAssignmentSchema, requestCreateSchema, requestDataSchema, requestIdParamsSchema, requestIssueCreateSchema, requestIssueListDataSchema, requestIssueResolveSchema, requestIssueSchema, requestListDataSchema, requestListQuerySchema, requestNoteDataSchema, requestNoteSchema, requestSourceSchema, requestStatusSchema, requestTransitionRequestSchema, requestTransitionSchema, requestTypeSchema
 } from '../requests/index.js';
+export { providerAccountDeletionRequestSchema } from '../requests/index.js';
 export type { OverdueRequestListData, RequestAssignment, RequestCreate, RequestData, RequestEvent, RequestIssue, RequestIssueCreate, RequestIssueListData, RequestIssueResolve, RequestListData, RequestListQuery, RequestNote, RequestNoteData, RequestSource, RequestStatus, RequestTransition, RequestTransitionRequest, RequestType } from '../requests/index.js';
 export { viewingCreateSchema, viewingDataSchema, viewingIdParamsSchema, viewingListDataSchema, viewingListQuerySchema, viewingPatchSchema, viewingStatusSchema, viewingTransitionSchema } from '../viewings/index.js';
 export type { ViewingCreate, ViewingData, ViewingListData, ViewingListQuery, ViewingPatch, ViewingStatus, ViewingTransition } from '../viewings/index.js';

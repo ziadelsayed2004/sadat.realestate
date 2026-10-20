@@ -44,7 +44,7 @@ export interface ProjectProviderPolicy {
 export function publicProjectProjection(project: StoredProject, developer: ProjectPublicDeveloper | null = null, linkedProperties: ProjectPublicProperty[] = []): ProjectPublicData | null {
   if (project.status !== 'published') return null;
   const properties = linkedProperties.filter(property => property.status === 'published' && property.active !== false).sort((left, right) => left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en'));
-  return projectPublicDataSchema.parse({ id: project.id, slug: project.slug, name: project.name, ...(project.description ? { description: project.description } : {}), ...(project.website ? { website: project.website } : {}), developer, linkedPublishedProperties: properties });
+  return projectPublicDataSchema.parse({ id: project.id, slug: project.slug, name: project.name, ...(project.description ? { description: project.description } : {}), ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}), ...(project.website ? { website: project.website } : {}), developer, linkedPublishedProperties: properties });
 }
 
 function actions(project: StoredProject, actor: 'provider' | 'admin'): ProjectData['availableActions'] {
@@ -59,6 +59,7 @@ function data(project: StoredProject, actor: 'provider' | 'admin' = 'provider'):
     providerId: project.providerId,
     name: project.name,
     slug: project.slug,
+    ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}),
     ...(project.description ? { description: project.description } : {}),
     ...(project.locationId ? { locationId: project.locationId } : {}),
     ...(project.organizationId ? { organizationId: project.organizationId } : {}),
@@ -84,7 +85,7 @@ function write(result: ProjectWriteResult): StoredProject {
   return result.project;
 }
 
-export function createProjectService(dependencies: { repository: ProjectRepository; providerPolicy: ProjectProviderPolicy; authorization?: ProjectAuthorization; now?: () => Date }) {
+export function createProjectService(dependencies: { repository: ProjectRepository; providerPolicy: ProjectProviderPolicy; authorization?: ProjectAuthorization; validateImage?: (url: string, actorId: string, admin: boolean) => Promise<boolean>; now?: () => Date }) {
   const now = dependencies.now ?? (() => new Date());
   async function provider(claims: AccessTokenClaims): Promise<void> {
     if (claims.role !== 'provider' || claims.status !== 'verified') throw new ProjectServiceError('PROJECT_FORBIDDEN');
@@ -95,6 +96,9 @@ export function createProjectService(dependencies: { repository: ProjectReposito
   }
   function metadata(actorId: string, reason: string, context: ProjectMutationContext): ProjectMutationMetadata {
     return { actorId, reason, requestId: context.requestId, traceId: context.traceId, changedAt: now() };
+  }
+  async function validateImage(url: string | null | undefined, actorId: string, admin = false) {
+    if (url && !await dependencies.validateImage?.(url, actorId, admin)) throw new ProjectServiceError('PROJECT_FORBIDDEN');
   }
   async function adminData(project: StoredProject, canEdit: boolean): Promise<ProjectData> {
     const publicPath = await dependencies.repository.publicPath(project);
@@ -131,6 +135,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
       if (before.status === 'archived') throw new ProjectServiceError('PROJECT_TRANSITION_INVALID');
+      if (parsed.imageUrl !== before.imageUrl) await validateImage(parsed.imageUrl, adminId, true);
       const { version, reason, ...fields } = parsed;
       const changes = Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined)) as ProjectChanges;
       return adminData(write(await dependencies.repository.update({ providerId: before.providerId, id, expectedVersion: version, changes, before, metadata: { ...metadata(adminId, reason, context), adminEdit: true } })), true);
@@ -138,7 +143,8 @@ export function createProjectService(dependencies: { repository: ProjectReposito
     async create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData> {
       await provider(claims);
       const parsed = projectCreateSchema.parse(input);
-      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug ?? generateIdentifier('project', parsed.name), ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
+      await validateImage(parsed.imageUrl, claims.sub);
+      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug ?? generateIdentifier('project', parsed.name), ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.imageUrl ? { imageUrl: parsed.imageUrl } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
       return data(write(result));
     },
     async update(claims: AccessTokenClaims, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData> {
@@ -155,6 +161,10 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       if (parsed.locationId !== undefined) changes.locationId = parsed.locationId;
       if (parsed.organizationId !== undefined) changes.organizationId = parsed.organizationId;
       if (parsed.website !== undefined) changes.website = parsed.website;
+      if (parsed.imageUrl !== undefined) {
+        if (parsed.imageUrl !== before.imageUrl) await validateImage(parsed.imageUrl, claims.sub);
+        changes.imageUrl = parsed.imageUrl;
+      }
       return data(write(await dependencies.repository.update({ providerId: claims.sub, id, expectedVersion: parsed.version, changes, metadata: metadata(claims.sub, parsed.reason, context), before })));
     },
     async submit(claims: AccessTokenClaims, id: string, input: ProjectSubmitRequest, context: ProjectMutationContext): Promise<ProjectData> {

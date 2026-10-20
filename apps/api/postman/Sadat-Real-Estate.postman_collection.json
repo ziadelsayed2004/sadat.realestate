@@ -9937,6 +9937,47 @@
           }
         }
       ]
+    },
+    {
+      "name": "Request provider account deletion review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/account-deletion-requests",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "account-deletion-requests"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"reason\": \"Please review this synthetic account deletion request\", \"locale\": \"en\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
     }
   ]
 }

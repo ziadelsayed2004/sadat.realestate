@@ -1,3 +1,4 @@
+import { ProjectImage } from './project-image.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import {
   PROJECT_STATUSES,
@@ -49,12 +50,13 @@ interface ProjectFormState {
   readonly description: Record<SupportedLocale, string>;
   readonly slug: string;
   readonly locationId: string;
+  readonly imageUrl: string;
   readonly website: string;
   readonly reason: string;
 }
 
 function blankForm(): ProjectFormState {
-  return { name: { ar: '', en: '',}, description: { ar: '', en: '',}, slug: '', locationId: '', website: '', reason: '' };
+  return { name: { ar: '', en: '',}, description: { ar: '', en: '',}, slug: '', locationId: '', website: '', imageUrl: '', reason: '' };
 }
 
 function formForProject(project: ProjectData): ProjectFormState {
@@ -64,6 +66,7 @@ function formForProject(project: ProjectData): ProjectFormState {
     slug: project.slug,
     locationId: project.locationId ?? '',
     website: project.website ?? '',
+    imageUrl: project.imageUrl ?? '',
     reason: ''
   };
 }
@@ -128,7 +131,9 @@ function ProjectStatusBadge({ status, copy }: { readonly status: ProjectStatus; 
   return <Badge tone={statusTone(status)} data-project-status={status}>{copy.statuses[status]}</Badge>;
 }
 
-function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose, onSave }: {
+function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose, onSave, authClient, apiOrigin }: {
+  readonly authClient?: ProviderProjectsProps['authClient'];
+  readonly apiOrigin?: string | undefined;
   readonly locale: SupportedLocale;
   readonly copy: ProviderProjectsCopy;
   readonly mode: 'create' | 'edit';
@@ -139,6 +144,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
   readonly onSave: (input: ProjectCreate | ProjectPatch) => Promise<void>;
 }) {
   const [form, setForm] = useState<ProjectFormState>(() => project === undefined ? blankForm() : formForProject(project));
+  const [uploading, setUploading] = useState(false);
   const [validationError, setValidationError] = useState<string | undefined>();
   const [invalidFields, setInvalidFields] = useState<readonly string[]>([]);
   const title = mode === 'create' ? copy.form.createTitle : copy.form.editTitle;
@@ -164,6 +170,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
 
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (uploading || saving) return;
     setValidationError(undefined);
     setInvalidFields([]);
     const name = localizedText(form.name);
@@ -172,6 +179,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     if (mode === 'create') {
       const parsed = projectCreateSchema.safeParse({
         name,
+        ...(form.imageUrl ? { imageUrl: form.imageUrl } : {}),
         ...(descriptionValue === undefined ? {} : { description: descriptionValue }),
         ...(form.locationId.trim() === '' ? {} : { locationId: form.locationId.trim() }),
         ...(form.website.trim() === '' ? {} : { website: form.website.trim() }),
@@ -190,6 +198,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     }
     const candidate: Record<string, unknown> = { version: project.version, description: descriptionValue ?? null, reason };
     if (name !== undefined) candidate.name = name;
+    if (form.imageUrl !== (project.imageUrl ?? '')) candidate.imageUrl = form.imageUrl || null;
     if (form.locationId.trim() !== (project.locationId ?? '')) candidate.locationId = form.locationId.trim() === '' ? null : form.locationId.trim();
     if (form.website.trim() !== (project.website ?? '')) candidate.website = form.website.trim() === '' ? null : form.website.trim();
     const parsed = projectPatchSchema.safeParse(candidate);
@@ -207,11 +216,11 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
       title={title}
       description={description}
       closeLabel={copy.form.close}
-      onClose={onClose}
+      onClose={() => { if (!uploading && !saving) onClose(); }}
       footer={(
         <>
-          <Button type="button" variant="secondary" onClick={onClose} disabled={saving}>{copy.form.cancel}</Button>
-          <Button type="submit" form={PROJECT_FORM_ID} loading={saving}>{copy.form.save}</Button>
+          <Button type="button" variant="secondary" onClick={onClose} disabled={saving || uploading}>{copy.form.cancel}</Button>
+          <Button type="submit" form={PROJECT_FORM_ID} loading={saving} disabled={uploading}>{copy.form.save}</Button>
         </>
       )}
     >
@@ -221,6 +230,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
           <legend>{copy.form.name}</legend>
           {LOCALE_KEYS.map(localeKey => <Input key={localeKey} id={`provider-project-name-${localeKey}`} label={`${copy.form.name} — ${copy.form.localeLabels[localeKey]}`} value={form.name[localeKey]} onChange={event => updateLocalized('name', localeKey, event.target.value)} state={invalidFields.includes('name') ? 'error' : 'default'} required={localeKey === locale} />)}
         </fieldset>
+        <ProjectImage locale={locale} value={form.imageUrl} onChange={value => update('imageUrl', value)} onBusy={setUploading} authorization={authClient} apiOrigin={apiOrigin} disabled={saving} />
         <Input id="provider-project-reason" label={copy.form.reason} value={form.reason} onChange={event => update('reason', event.target.value)} helpText={copy.submitDialog.reasonHelp} error={invalidFields.includes('reason') ? copy.submitDialog.reasonHelp : undefined} state={invalidFields.includes('reason') ? 'error' : 'default'} required minLength={5} maxLength={500} />
         <fieldset disabled={saving}>
           <legend>{copy.form.description}</legend>
@@ -536,7 +546,7 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
         {(state === 'success' || state === 'empty') && data !== undefined ? <ProjectsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onSubmit={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onEdit={openEdit} onSubmitProject={project => { setMutationError(undefined); setFeedback(undefined); setSubmitProject(project); }} /> : null}
         {feedback ? <p className="provider-projects__feedback" role="status">{feedback}</p> : null}
       </div>
-      {formMode !== undefined ? <ProjectFormModal key={`${formMode}-${editingProject?.id ?? 'new'}`} locale={locale} copy={copy} mode={formMode} project={editingProject} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveProject} /> : null}
+      {formMode !== undefined ? <ProjectFormModal key={`${formMode}-${editingProject?.id ?? 'new'}`} locale={locale} copy={copy} mode={formMode} project={editingProject} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveProject} authClient={authClient} apiOrigin={apiOrigin} /> : null}
       {submitProject !== undefined ? <SubmitProjectModal key={submitProject.id} copy={copy} project={submitProject} saving={saving} error={mutationError} onClose={closeDialogs} onSubmit={submitProjectForReview} /> : null}
       {state === 'permission' ? <span className="a11y-visually-hidden">{providerCopy.states.permission.title}</span> : null}
     </section>

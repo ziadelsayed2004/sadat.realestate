@@ -86,8 +86,9 @@ export function createMongoosePaymentProofRepository(
     },
 
     async list(query) {
-      const filter: { active: true; status?: PaymentProofData['status'] } = { active: true };
+      const filter: { active: true; status?: PaymentProofData['status']; adRequestId?: Types.ObjectId } = { active: true };
       if (query.status) filter.status = query.status;
+      if (query.requestId) filter.adRequestId = new Types.ObjectId(query.requestId);
       const [rows, total] = await Promise.all([
         models.PaymentProof.find(filter)
           .select('+storageKey')

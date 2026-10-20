@@ -36,6 +36,7 @@ async function rateWindow() {
   }
 }
 try {
+  await rateWindow();
   const catalog = await (await fetch(base + '/api/v1/public/properties?limit=1')).json();
   const location = new mongoose.Types.ObjectId(catalog.data.locations[0].id);
   await db.collection('users').insertOne({ _id: userId, roleType: 'provider', status: 'draft', normalizedEmail: email, locale: 'ar', version: 0, createdAt: at, updatedAt: at });
@@ -114,9 +115,16 @@ try {
     const application = (await response.json()).data;
     assert.deepEqual(application.missingDocuments, []);
     assert.deepEqual(application.missingFields, []);
-    const submit = await context.request.post(base + '/api/v1/provider/application/submit', { headers: { authorization }, data: { version: application.version } });
-    assert.equal(submit.status(), 200, await submit.text());
-    report.checks.push('Office with both clean required identity images successfully submits for review');
+    const page = await context.newPage();
+    await page.goto(base + '/auth/register/provider/review?providerType=brokerage_office&lang=ar');
+    await ready(page);
+    await expect(page.getByTestId('provider-review-submit')).toBeEnabled();
+    const submitted = page.waitForResponse(response => response.url().endsWith('/provider/application/submit') && response.request().method() === 'POST');
+    await page.getByTestId('provider-review-submit').click();
+    const submit = await submitted; assert.equal(submit.status(), 200, await submit.text());
+    await expect(page).toHaveURL(/\/\?lang=ar&providerApplication=submitted$/);
+    await expect(page.getByRole('link', { name: 'متابعة حالة الطلب' })).toBeVisible();
+    report.checks.push('Complete office application submits from review UI and returns to homepage with confirmation and status tracking');
   }
   report.checks.push(reproduce ? 'Refresh reproduces unavailable page despite HTTP 200 saved metadata' : 'Office JPEG/PNG uploads, Arabic/timestamp filenames, refresh persistence, idempotency and mobile layout pass');
   assert.deepEqual(report.browserErrors, []);

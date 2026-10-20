@@ -6857,6 +6857,15 @@
               "maximum": 100,
               "default": 20
             }
+          },
+          {
+            "name": "requestId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
           }
         ],
         "responses": {
@@ -14342,6 +14351,45 @@
         },
         "description": "Requires admin:community.moderate. Category and audit record commit together. Duplicate names return 409."
       }
+    },
+    "/api/v1/provider/account-deletion-requests": {
+      "post": {
+        "operationId": "createProviderAccountDeletionRequest",
+        "responses": {
+          "201": {
+            "description": "Persisted inquiry with selected destination and customer-visible history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderAccountDeletionRequest"
+              }
+            }
+          }
+        },
+        "description": "Verified providers request administrative account deletion review. Creates a platform contact request owned by the current account; does not immediately delete the account, its documents or obligations."
+      }
     }
   },
   "components": {
@@ -16653,6 +16701,9 @@
                     },
                     "label": {
                       "$ref": "#/components/schemas/LocalizedText"
+                    },
+                    "active": {
+                      "type": "boolean"
                     }
                   }
                 }
@@ -16668,6 +16719,10 @@
                 }
               }
             }
+          },
+          "advertiserName": {
+            "type": "string",
+            "maxLength": 200
           }
         }
       },
@@ -21585,6 +21640,10 @@
             "type": "string",
             "minLength": 5,
             "maxLength": 500
+          },
+          "imageUrl": {
+            "type": "string",
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -21658,6 +21717,13 @@
             "type": "string",
             "minLength": 5,
             "maxLength": 500
+          },
+          "imageUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
           }
         }
       },
@@ -21759,6 +21825,20 @@
             "type": "string",
             "pattern": "^\\/developers\\/[a-z0-9-]+(?:\\/projects\\/|#project-)[a-z0-9-]+$",
             "description": "Published projects belonging to an approved developer open their independent project detail page. Legacy developer-card anchors remain readable."
+          },
+          "imageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+              },
+              {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048,
+                "pattern": "^https?://"
+              }
+            ]
           }
         }
       },
@@ -21913,6 +21993,20 @@
                 }
               }
             }
+          },
+          "imageUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+              },
+              {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048,
+                "pattern": "^https?://"
+              }
+            ]
           }
         }
       },
@@ -32900,6 +32994,27 @@
             }
           }
         ]
+      },
+      "ProviderAccountDeletionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reason"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1500
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "ar",
+              "en"
+            ]
+          }
+        }
       }
     }
   }

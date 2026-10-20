@@ -1217,6 +1217,8 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
   const [data, setData] = useState<PublicHomepageData | undefined>(initialData);
   const [view, setView] = useState<PublicHomepageViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
+  useEffect(() => { setApplicationSubmitted(new URLSearchParams(window.location.search).get('providerApplication') === 'submitted'); }, []);
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -1264,6 +1266,7 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
   return (
     <div className="public-homepage" data-page="public-home" data-homepage-state={view}>
       <PublicSiteHeader locale={locale} copy={copy} authenticatedRole={authenticatedRole} />
+      {applicationSubmitted ? <div className="public-homepage__container" role="status"><p>{locale === 'ar' ? 'تم إرسال طلب حسابك بنجاح. سنراجع البيانات والمستندات ونبلغك بالنتيجة.' : 'Your account application has been sent. We will review your details and documents and notify you of the result.'}</p><a href={`/provider-application/status?lang=${locale}`}>{locale === 'ar' ? 'متابعة حالة الطلب' : 'Track application status'}</a></div> : null}
       {view === 'success' && data !== undefined ? (
         <HomepageContent locale={locale} copy={copy} data={data} />
       ) : view === 'success' ? (

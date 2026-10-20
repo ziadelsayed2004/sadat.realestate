@@ -69,6 +69,7 @@ export const paymentProofDataSchema = z.object({
 const paymentProofAdminListPage = z.preprocess(value => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000));
 const paymentProofAdminListLimit = z.preprocess(value => value === undefined ? 20 : Number(value), z.number().int().positive().max(100));
 export const paymentProofAdminListQuerySchema = z.object({
+  requestId: z.string().regex(/^[a-f0-9]{24}$/).optional(),
   status: paymentProofStatusSchema.optional(),
   page: paymentProofAdminListPage,
   limit: paymentProofAdminListLimit
