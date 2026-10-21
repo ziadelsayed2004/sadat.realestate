@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import type { AccountTransitionAction, AdminAccountUserData, SupportedLocale } from '@sadat-real-estate/contracts';
+import { useEffect, useState } from 'react';
+import type { AccountTransitionAction, AdminAccountUserData, AdminProviderData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button } from '../design_system/index.ts';
-import { communicateAdminAccount, transitionAdminAccount, type AdminAccountsAuthorizationSource } from './data.ts';
+import { communicateAdminAccount, loadAdminProvider, reviewAdminProvider, transitionAdminAccount, type AdminAccountsAuthorizationSource } from './data.ts';
 import { DeleteAccount } from './delete-account.tsx';
 
 export function AccountActions({ user, locale, authorization, apiOrigin, onChanged }: {
@@ -19,10 +19,30 @@ export function AccountActions({ user, locale, authorization, apiOrigin, onChang
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [messageFeedback, setMessageFeedback] = useState('');
+  const [provider, setProvider] = useState<AdminProviderData>();
+  const [providerLoading, setProviderLoading] = useState(false);
+  const [providerError, setProviderError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const blocked = user.status === 'suspended' || user.status === 'restricted';
+  const providerReviewNeeded = user.roleType === 'provider' && (user.status === 'verified' || user.status === 'suspended');
+  useEffect(() => {
+    setProvider(undefined); setProviderError(false);
+    if (!providerReviewNeeded || user.canManage === false) { setProviderLoading(false); return; }
+    const controller = new AbortController(); setProviderLoading(true);
+    void loadAdminProvider(user.id, { authorization, apiOrigin, signal: controller.signal }).then(value => {
+      if (!controller.signal.aborted) setProvider(value);
+    }).catch(() => { if (!controller.signal.aborted) setProviderError(true); })
+      .finally(() => { if (!controller.signal.aborted) setProviderLoading(false); });
+    return () => controller.abort();
+  }, [user.id, user.status, user.version, user.canManage, providerReviewNeeded, authorization, apiOrigin, attempt]);
   if (user.canManage === false) return <p>{ar ? 'حسابك يملك صلاحية العرض فقط. اطلب صلاحية إدارة الحسابات لتنفيذ الإجراءات.' : 'Your account has view access only. Account management permission is required for actions.'}</p>;
+  const providerActions = provider?.accountStatus === user.status ? provider.availableActions.filter(action =>
+    (action === 'verify' && user.status === 'suspended' && provider.applicationStatus === 'suspended')
+    || (action === 'suspend' && user.status === 'verified' && provider.applicationStatus === 'approved')) : [];
+  const actions = [...new Set([...user.availableActions, ...providerActions])];
   const labels: Record<AccountTransitionAction, string> = ar
-    ? { verify: 'تفعيل الحساب', reject: 'رفض الحساب', needs_information: 'طلب معلومات', suspend: 'تعطيل الحساب', restrict: 'تقييد الحساب' }
-    : { verify: 'Activate account', reject: 'Reject account', needs_information: 'Request information', suspend: 'Disable account', restrict: 'Restrict account' };
+    ? { verify: blocked ? 'إعادة تفعيل الحساب' : 'تفعيل الحساب', reject: 'رفض الحساب', needs_information: 'طلب معلومات', suspend: 'تعطيل الحساب', restrict: 'تقييد الحساب' }
+    : { verify: blocked ? 'Reactivate account' : 'Activate account', reject: 'Reject account', needs_information: 'Request information', suspend: 'Disable account', restrict: 'Restrict account' };
   async function run(action: AccountTransitionAction | 'notify' | 'logout') {
     const text = action === 'notify' ? message.trim() : reason.trim();
     const setResult = action === 'notify' ? setMessageFeedback : setFeedback;
@@ -34,8 +54,9 @@ export function AccountActions({ user, locale, authorization, apiOrigin, onChang
         action, reason: text, ...(action === 'notify' && title.trim() ? { title: title.trim() } : {}),
         ...(action === 'notify' && propertyCode.trim() ? { propertyCode: propertyCode.trim() } : {})
       }, options);
+      else if (provider && (action === 'verify' || action === 'suspend') && providerActions.includes(action)) { await reviewAdminProvider(provider.id, { action, reason: text }, options); setProvider(undefined); }
       else await transitionAdminAccount(user.id, { action, reason: text }, options);
-      setResult(ar ? (action === 'notify' ? 'تم إرسال الرسالة داخل حسابه.' : 'تم تنفيذ الإجراء.') : (action === 'notify' ? 'Message sent to their account.' : 'Action completed.'));
+      setResult(action === 'verify' && blocked ? (ar ? 'تمت إعادة تفعيل الحساب. يمكن لصاحبه تسجيل الدخول من جديد.' : 'Account reactivated. Its owner can sign in again.') : ar ? (action === 'notify' ? 'تم إرسال الرسالة داخل حسابه.' : 'تم تنفيذ الإجراء.') : (action === 'notify' ? 'Message sent to their account.' : 'Action completed.'));
       if (action === 'notify') { setMessage(''); setTitle(''); setPropertyCode(''); }
       else { setReason(''); setConfirmation(false); }
       onChanged();
@@ -61,12 +82,16 @@ export function AccountActions({ user, locale, authorization, apiOrigin, onChang
   </section><section className="admin-accounts__detail-card admin-account-reports">
     <h2>{ar ? 'إجراءات الحساب' : 'Account actions'}</h2>
     <p>{ar ? 'تغيير حالة الحساب أو تسجيل خروجه. هذه الإجراءات مستقلة عن إرسال الرسائل.' : 'Change account status or sign out its current sessions. These actions are separate from messaging.'}</p>
-    <details><summary>{ar ? 'تغيير الحالة أو إنهاء الجلسات' : 'Change status or end sessions'}</summary>
+    <details open={blocked || undefined}><summary>{ar ? 'تغيير الحالة أو إنهاء الجلسات' : 'Change status or end sessions'}</summary>
     <label className="admin-account-reports__reason-label">{ar ? 'سبب الإجراء الإداري (مطلوب)' : 'Administrative action reason (required)'}<textarea value={reason} minLength={3} maxLength={1000} rows={3} onChange={event => setReason(event.currentTarget.value)} disabled={busy} /></label>
     <p>{ar ? 'التعطيل يمنع استخدام الحساب ويخرج صاحبه، مع الاحتفاظ بطلباته وسجل المعاملات.' : 'Disabling blocks access and ends sessions while preserving requests and transaction history.'}</p>
+    {blocked ? <p>{ar ? 'إعادة التفعيل تسمح لصاحب الحساب بتسجيل الدخول من جديد وتحتفظ بطلباته وسجل معاملاته.' : 'Reactivation lets the account holder sign in again and keeps their requests and transaction history.'}</p> : null}
+    {providerLoading ? <p role="status">{ar ? 'جارٍ تحميل إجراءات حساب مقدم العقار…' : 'Loading provider account actions…'}</p> : null}
+    {providerError ? <p role="alert">{ar ? 'تعذر تحميل إجراءات مقدم العقار. تحقق من صلاحية عرض ومراجعة مقدمي العقارات أو أعد المحاولة.' : 'Could not load provider actions. Check provider viewing and review permissions or retry.'} <Button variant="secondary" size="sm" disabled={busy} onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة المحاولة' : 'Retry'}</Button></p> : null}
+    {user.roleType === 'provider' && user.status === 'suspended' && !providerLoading && !actions.includes('verify') ? <p><a href={`/admin/providers/${user.id}?lang=${locale}`}>{ar ? 'مراجعة حساب مقدم العقار وصلاحية إعادة تفعيله' : 'Review provider account and reactivation permission'}</a></p> : null}
     <label><input type="checkbox" checked={confirmation} onChange={event => setConfirmation(event.currentTarget.checked)} disabled={busy} /> {ar ? 'أؤكد تنفيذ إجراء على الحساب' : 'Confirm account action'}</label>
     <div className="admin-account-reports__actions">
-      {user.availableActions.map(action => <Button key={action} variant={action === 'verify' ? 'success' : 'danger'} disabled={busy || !confirmation || reason.trim().length < 3} onClick={() => { void run(action); }}>{labels[action]}</Button>)}
+      {actions.map(action => <Button key={action} variant={action === 'verify' ? 'success' : 'danger'} disabled={busy || !confirmation || reason.trim().length < 3} onClick={() => { void run(action); }}>{labels[action]}</Button>)}
       <Button variant="secondary" disabled={busy || !confirmation || reason.trim().length < 3} onClick={() => { void run('logout'); }}>{ar ? 'إنهاء الجلسات الحالية' : 'End current sessions'}</Button>
     </div>
     </details>

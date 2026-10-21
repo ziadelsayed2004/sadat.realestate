@@ -1,0 +1,12 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "seeker ar 390px: user-page suspension/reactivation, login blocked/restored, old sessions stay revoked, history retained, audited coherent state",
+    "seeker en 1440px: user-page suspension/reactivation, login blocked/restored, old sessions stay revoked, history retained, audited coherent state",
+    "provider ar 390px: user-page suspension/reactivation, login blocked/restored, old sessions stay revoked, history retained, audited coherent state",
+    "provider en 1440px: user-page suspension/reactivation, login blocked/restored, old sessions stay revoked, history retained, audited coherent state"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}
