@@ -351,6 +351,7 @@
   display: block;
 }
 
+.public-homepage__hero h1 span,
 .public-homepage__hero h1 strong,
 .public-site-footer__follow strong,
 .public-homepage__footer .public-homepage__eyebrow,
@@ -578,6 +579,7 @@
 }
 
 .public-homepage__summary-item strong {
+  color: var(--color-brand-accent);
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1;
 }
