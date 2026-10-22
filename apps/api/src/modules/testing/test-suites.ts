@@ -112,6 +112,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/cms/settings.test.ts',
     'tests/cms/about-team.test.ts',
     'tests/cms/team-photos.test.ts',
+    'tests/cms/organization-cover.test.ts',
     'tests/cms/public-about-team-router.test.ts',
     'tests/cms/population-tips.test.ts',
     'tests/cms/automatic-population.test.ts',
