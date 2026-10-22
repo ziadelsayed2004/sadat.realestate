@@ -1,4 +1,5 @@
 import { Router, type Request, type Response } from 'express';
+import { z } from 'zod';
 import {
   cmsAdminContentNamespaceSchema,
   type CmsAdminContentNamespace
@@ -139,7 +140,8 @@ export function createCmsAdminContentRouter(dependencies: CmsAdminContentRouterD
     for (const path of ['/admin/providers/organization-photos/:assetId', '/public/organization-photos/:assetId']) {
       router.get(path, async (request, response) => {
         try {
-          const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined);
+          const variant = z.enum(['cover']).optional().parse(request.query.variant);
+          const photo = await photos.open(String(request.params.assetId), path.startsWith('/admin/') ? response.locals.adminRbacClaims as AccessTokenClaims : undefined, variant);
           response.setHeader('Cache-Control', 'no-store');
           response.setHeader('Content-Type', photo.mime);
           response.setHeader('X-Content-Type-Options', 'nosniff');

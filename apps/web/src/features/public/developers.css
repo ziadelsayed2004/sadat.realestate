@@ -1333,6 +1333,12 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   border-radius: var(--radius-md);
 }
 
+.public-developer-profile__property-card {
+  background: var(--color-surface-soft);
+  border: 2px solid var(--color-border-strong);
+  box-shadow: var(--shadow-card);
+}
+
 .public-developer-profile__project-card h3,
 .public-developer-profile__project-card p,
 .public-developer-profile__property-card h3,
@@ -1756,8 +1762,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
     border-color: #e3e6df;
   }
 
-  .public-developer-profile__project-card,
-  .public-developer-profile__property-card {
+  .public-developer-profile__project-card {
     border-color: #d8d8dc;
   }
 
@@ -2048,6 +2053,6 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 .public-developer-directory__placeholder svg { width: 72px; height: 72px; }
 .public-developer-directory__card-counts a { color: inherit; text-decoration: none; }
 
-.public-developer-profile__hero-media { position: relative; }
+.public-developer-profile__hero-media { position: relative; background: var(--color-surface); }
 .public-developer-profile__hero-media > img { object-fit: contain; }
 .public-developer-profile__project-content > p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

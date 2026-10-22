@@ -14134,6 +14134,18 @@
               "type": "string",
               "pattern": "^[a-f0-9]{24}$"
             }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cover"
+              ]
+            },
+            "description": "Optional display preview that removes substantial uniform padding. Stored original and visibility checks are preserved."
           }
         ],
         "description": "Requires admin:providers.visibility.manage to upload, admin:providers.view to preview."
@@ -14282,6 +14294,18 @@
               "type": "string",
               "pattern": "^[a-f0-9]{24}$"
             }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cover"
+              ]
+            },
+            "description": "Optional display preview that removes substantial uniform padding. Stored original and visibility checks are preserved."
           }
         ],
         "description": "Available only while attached to an approved directory profile."

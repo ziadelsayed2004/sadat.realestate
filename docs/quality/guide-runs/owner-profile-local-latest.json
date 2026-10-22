@@ -2,11 +2,13 @@
   "status": "PASS_LOCAL",
   "mockedRoutes": false,
   "checks": [
+    "Padded 1600px square cover displays its full 1000×400 content; original unchanged; private/unpublished cover stays unavailable even after caching",
     "Provider settings exposes separate logo/cover uploads with 512×512 and 1600×900 size guidance",
-    "chromium ar 390px: full cover, compact overview, project image/description, no horizontal overflow",
-    "chromium en 1440px: full cover, compact overview, project image/description, no horizontal overflow",
-    "webkit ar 390px: full cover, compact overview, project image/description, no horizontal overflow",
-    "webkit en 1440px: full cover, compact overview, project image/description, no horizontal overflow"
+    "chromium ar 390px: readable complete cover, compact overview, project details, property card has 2px border and light background, no overflow",
+    "chromium en 1440px: readable complete cover, compact overview, project details, property card has 2px border and light background, no overflow",
+    "webkit ar 390px: readable complete cover, compact overview, project details, property card has 2px border and light background, no overflow",
+    "webkit en 1440px: readable complete cover, compact overview, project details, property card has 2px border and light background, no overflow",
+    "Arabic admin review → Feature on homepage → save order 0 → property appears among the homepage first three cards"
   ],
   "browserErrors": [],
   "cleanup": true

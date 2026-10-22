@@ -9,6 +9,7 @@ import type { RbacService } from '../rbac/service.js';
 import type { StorageAdapter, MalwareScannerAdapter } from '../uploads/adapters.js';
 import { ApiContractError } from '../contracts/error-boundary.js';
 import { visiblePublicOrganizations } from '../public/identity.js';
+import { createOrganizationCoverPreview } from './organization-cover.js';
 
 const maxBytes = 10 * 1024 * 1024;
 const invalid = () => new ApiContractError('TEAM_PHOTO_INVALID', 'errors.validation', 400);
@@ -25,6 +26,7 @@ export function createTeamPhotos(dependencies: {
 }) {
   const { connection, authorization, audit, storage, scanner } = dependencies;
   const organization = dependencies.kind === 'organization';
+  const coverPreview = createOrganizationCoverPreview();
   const article = dependencies.kind === 'article';
   const taxonomy = dependencies.kind === 'taxonomy';
   const photos = connection.collection(organization ? 'organization_photos' : taxonomy ? 'taxonomy_photos' : article ? 'cms_article_photos' : 'cms_team_photos');
@@ -81,7 +83,7 @@ export function createTeamPhotos(dependencies: {
       finally { await session.endSession(); }
       return photo;
     },
-    async open(id: string, claims?: AccessTokenClaims) {
+    async open(id: string, claims?: AccessTokenClaims, variant?: 'cover') {
       if (claims) await authorize(claims, organization ? 'admin:providers.view' : taxonomy ? 'admin:taxonomy.view' : 'admin:content.view');
       const photo = await find(id);
       if (claims?.role === 'provider' && String(photo.createdBy) !== claims.sub) throw missing();
@@ -98,7 +100,9 @@ export function createTeamPhotos(dependencies: {
         ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }
         : article ? { status: 'published', $or: [{ coverAssetId: photo._id }, { galleryAssetIds: photo._id }] }
         : { photoAssetId: photo._id, active: true, status: 'published' })) throw missing();
-      return { mime: 'image/webp', stream: await storage.openPrivate(String(photo.storageKey)) };
+      const storageKey = String(photo.storageKey);
+      return { mime: 'image/webp', stream: organization && variant === 'cover'
+        ? await coverPreview(storageKey, () => storage.openPrivate(storageKey)) : await storage.openPrivate(storageKey) };
     }
   };
 }

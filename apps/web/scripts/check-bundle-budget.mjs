@@ -60,7 +60,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Allow twelve KiB for these functions; retain route-CSS and per-chunk caps.
 // Coherent provider suspension/reactivation on the user page adds 2.3 KB;
 // existing headroom plus one KiB covers it without changing route/chunk caps.
-const maxJavaScriptBytes = 2_647 * 1024;
+// Opting developer covers into their display preview adds 87 bytes; reserve
+// 128 bytes while preserving the existing stylesheet and individual chunk caps.
+const maxJavaScriptBytes = 2_647 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

@@ -145,7 +145,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   return (
     <section className="public-developer-profile__hero" aria-label={title}>
       <div className="public-developer-profile__hero-media">
-        <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" />
+        <PublicMediaImage src={data.imageUrl?.replace(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/u, '$&?variant=cover')} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" />
         {safePublicUrl(data.imageUrl) ? <a href={safePublicUrl(data.imageUrl)} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', insetInlineEnd: 16, bottom: 12, padding: '6px 12px', background: 'white', borderRadius: 8 }}>{locale === 'ar' ? 'عرض الصورة كاملة' : 'View full image'}</a> : null}
       </div>
       <div className="public-developer-profile__identity">
