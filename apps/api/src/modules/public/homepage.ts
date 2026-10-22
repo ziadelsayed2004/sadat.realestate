@@ -12,6 +12,7 @@ import {
   populationValueSchema,
   publicHomepagePropertySchema,
   publicHomepageSectionSchema,
+  communityPostSchema,
   type PublicHomepageData,
   type PublicHomepageLocation
 } from '@sadat-real-estate/contracts';
@@ -27,7 +28,7 @@ export interface HomepageLocationSource { id: string; kind: string; name: unknow
 export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean; sourceUrl?: string; sourceYear?: number; checkedAt?: string }
 export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; locationName?: unknown; sourceName?: unknown; sourceImageUrl?: string; sourceType?: string; sourceVerified?: boolean; publicCode?: string; viewCount?: number; installmentAvailable?: boolean; featured?: boolean; deliveryStatus?: string; featuredOrder?: number; status: string; active: boolean }
 export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; imageUrl?: string; description?: unknown; kind: string; status: string }
-export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; imageUrl?: string; body?: unknown; order: number; status: string; active?: boolean }
+export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; imageUrl?: string; body?: unknown; targetUrl?: string; category?: string; order: number; status: string; active?: boolean }
 export interface HomepageBannerSource { key: string; title?: unknown; altText?: unknown; eyebrow?: unknown; body?: unknown; highlight?: unknown; imageUrl?: string; targetUrl?: string; displaySeconds?: number; presentation?: 'hero' | 'featured'; advertiserName?: unknown; advertiserImageUrl?: string; advertiserVerified?: boolean; installment?: unknown; ctaLabel?: unknown; order: number; status: string; active?: boolean }
 
 export interface HomepageSources {
@@ -111,7 +112,7 @@ function publicDevelopers(items: HomepageDeveloperSource[]) {
 
 function publicContent(items: HomepageContentSource[]) {
   return stableOrder(items.filter((item) => item.status === 'published' && item.active !== false).flatMap((item) => {
-    const parsed = publicHomepageContentSchema.safeParse({ key: item.key, type: item.type, title: item.title, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.body !== undefined ? { body: item.body } : {}), order: item.order });
+    const parsed = publicHomepageContentSchema.safeParse({ key: item.key, type: item.type, title: item.title, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.body !== undefined ? { body: item.body } : {}), ...(item.targetUrl ? { targetUrl: item.targetUrl } : {}), ...(item.category ? { category: item.category } : {}), order: item.order });
     return parsed.success ? [parsed.data] : [];
   }));
 }
@@ -250,6 +251,14 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'cms_display_settings', { key: { $in: CITY_STATISTICS.map(item => `city_metric_${item.key}`) }, status: 'published' }, { _id: 0, key: 1, value: 1, status: 1 }, { key: 1 }, 4)
       ]);
       const coveredProperties = await attachPublicPropertyCovers(connection, properties);
+      const community = (await connection.collection('community_posts').find({ status: 'published' }, { projection: { _id: 0, id: 1, authorId: 1, title: 1, body: 1, category: 1, authorName: 1, avatarUrl: 1, imageUrl: 1, likeCount: 1, dislikeCount: 1, status: 1, version: 1, createdAt: 1, updatedAt: 1 } }).sort({ createdAt: -1, id: 1 }).limit(3).toArray()).flatMap((row, order): HomepageContentSource[] => {
+        const parsed = communityPostSchema.safeParse(row);
+        if (!parsed.success) return [];
+        const post = parsed.data;
+        const author = post.authorName ?? { ar: 'عضو مجتمع السادات', en: 'Sadat community member' };
+        const excerpt = `${post.title}\n${post.body.slice(0, 280)}`;
+        return [{ key: `community_${post.id}`, type: 'community', title: author, body: { ar: excerpt, en: excerpt }, ...(post.avatarUrl ? { imageUrl: post.avatarUrl } : {}), targetUrl: `/community?postId=${post.id}`, ...(post.category ? { category: post.category } : {}), order, status: 'published' }];
+      });
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
       const categoryCounts = categoryIds.length ? await connection.collection('properties').aggregate<{_id: unknown; count: number}>([
         { $match: { status: 'published', active: true, ...unexpiredPropertyFilter(), propertyTypeId: { $in: categoryIds.map((value) => new Types.ObjectId(value)) } } },
@@ -279,7 +288,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         metrics: metrics.flatMap((row)=>typeof row.key==='string'&&row.title!==undefined&&typeof row.value==='number'&&typeof row.order==='number'&&typeof row.status==='string'&&typeof row.visible==='boolean'?[{key:row.key,title:row.title,value:row.value,...(row.unit!==undefined?{unit:row.unit}:{}),order:row.order,status:row.status,visible:row.visible}]:[]),
         properties: coveredProperties.flatMap((row) => { const rowId = mapId(row); const projectId = id(row.projectId); const locationId = id(row.locationId); const organizationId = id(row.organizationId); const organization = organizationId ? organizationById.get(organizationId) : undefined; return rowId && typeof row.slug === 'string' && typeof row.kind === 'string' && row.name !== undefined && typeof row.transactionType === 'string' && typeof row.status === 'string' && typeof row.active === 'boolean' ? [{ id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(locationId && locationNames.has(locationId) ? { locationName: locationNames.get(locationId) } : {}), ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceType: organization.kind, sourceVerified: true } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(typeof row.featured === 'boolean' ? { featured: row.featured } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(typeof row.featuredOrder === 'number' ? { featuredOrder: row.featuredOrder } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active }] : []; }),
         developers: (await visiblePublicOrganizations(connection, developers, 'directory')).flatMap((row) => { const rowId = mapId(row); return rowId && typeof row.slug === 'string' && row.name !== undefined && typeof row.kind === 'string' && typeof row.status === 'string' ? [{ id: rowId, slug: row.slug, name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.description !== undefined ? { description: row.description } : {}), kind: row.kind, status: row.status }] : [] }),
-        content: [...about, ...tips].flatMap((row) => typeof row.key === 'string' && row.title !== undefined && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, type: about.includes(row) ? 'about' as const : 'tip' as const, title: row.title, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : []),
+        content: [...community, ...[...about, ...tips].flatMap((row) => typeof row.key === 'string' && row.title !== undefined && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, type: about.includes(row) ? 'about' as const : 'tip' as const, title: row.title, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : [])],
         banners: [...managedBanners, ...banners.flatMap((row) => typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, ...(row.title !== undefined ? { title: row.title } : {}), ...(row.eyebrow !== undefined ? { eyebrow: row.eyebrow } : {}), ...(row.body !== undefined ? { body: row.body } : {}), ...(row.highlight !== undefined ? { highlight: row.highlight } : {}), ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.targetUrl ? { targetUrl: row.targetUrl } : {}), order: row.order + managedBanners.length, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : [])]
       };
     }

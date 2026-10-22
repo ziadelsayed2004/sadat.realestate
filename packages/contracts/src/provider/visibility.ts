@@ -6,7 +6,7 @@ export const publicIdentitySubscriptionSchema = z.object({
   status: z.enum(['inactive', 'active']),
   startAt: z.string().datetime().optional(), endAt: z.string().datetime().optional(),
   paymentConfirmed: z.boolean(), version: z.number().int().nonnegative(),
-  visible: z.boolean(), canManage: z.boolean()
+  visible: z.boolean(), canManage: z.boolean(), eligible: z.boolean().optional()
 }).strict();
 export const publicIdentitySubscriptionPutSchema = z.object({
   status: z.enum(['inactive', 'active']),

@@ -134,7 +134,8 @@ export function createCommunityService(
   authorization?: CommunityAuthorization,
   settingsReader?: CommunitySettingsReader,
   accountCheck?: CommunityAccountCheck,
-  categories?: CommunityCategories
+  categories?: CommunityCategories,
+  publicAuthor?: (authorId: string) => Promise<CommunityPost['authorName']>
 ): CommunityService {
   async function requireActive(claims: AccessTokenClaims): Promise<void> {
     if (!active(claims) || (accountCheck !== undefined && !(await accountCheck(claims)))) throw new Error('FORBIDDEN');
@@ -171,7 +172,8 @@ export function createCommunityService(
         if (createdToday >= policy.dailyPostLimit) throw new Error('POST_LIMIT');
       }
       if (containsBlockedWord(`${parsed.title} ${parsed.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
-      const post = communityPostSchema.parse({ id: id(), authorId: claims.sub, ...parsed, status: 'draft', version: 0, createdAt: stamp, updatedAt: stamp });
+      const authorName = await publicAuthor?.(claims.sub);
+      const post = communityPostSchema.parse({ id: id(), authorId: claims.sub, ...(authorName ? { authorName } : {}), ...parsed, status: 'draft', version: 0, createdAt: stamp, updatedAt: stamp });
       await repository.savePost(post);
       return post;
     },

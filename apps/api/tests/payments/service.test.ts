@@ -14,6 +14,19 @@ const adRequestId = '4123456789abcdef01234567';
 const validPdf = Buffer.from('%PDF-1.7\nprivate proof\n%%EOF', 'ascii');
 const headers = { filename: 'receipt.pdf', contentType: 'application/pdf' as const, contentLength: validPdf.byteLength, paymentMethod: 'cash' as const };
 
+test('one pending or approved receipt blocks different uploads; a rejected receipt can be corrected even with the same file', async () => {
+  const service = createPaymentProofService({ storage: createInMemoryStorageAdapter(), scanner: createDeterministicMalwareScanner('clean'), authorization: { authorize: async () => true }, audit: { record: async () => {} }, findPayableAdRequest: owner => requestFor(owner) });
+  const proof = await service.upload(provider, adRequestId, headers, Readable.from(validPdf));
+  const other = Buffer.from('%PDF-1.7\na different receipt\n%%EOF');
+  const otherHeaders = { ...headers, contentLength: other.length };
+  await assert.rejects(service.upload(provider, adRequestId, otherHeaders, Readable.from(other)), { code: 'AD_REQUEST_NOT_PAYABLE' });
+  await service.review(admin, proof.id, { action: 'reject', reason: 'Please correct transfer details', expectedVersion: proof.version }, { requestId: 'reject-receipt', traceId: 'a'.repeat(32) });
+  const replacement = await service.upload(provider, adRequestId, headers, Readable.from(validPdf));
+  assert.notEqual(replacement.id, proof.id); assert.equal(replacement.status, 'pending_review');
+  await service.review(admin, replacement.id, { action: 'approve', reason: 'Payment manually confirmed', expectedVersion: replacement.version }, { requestId: 'approve-receipt', traceId: 'a'.repeat(32) });
+  await assert.rejects(service.upload(provider, adRequestId, otherHeaders, Readable.from(other)), { code: 'AD_REQUEST_NOT_PAYABLE' });
+});
+
 test('transfer proofs require both accounts, preserve the recipient snapshot and reject changed details or conflicting replay', async () => {
   let recipient = { name: 'Test beneficiary', account: '+201000000001' };
   const sender = { name: 'Test sender', account: '+201111111111' };

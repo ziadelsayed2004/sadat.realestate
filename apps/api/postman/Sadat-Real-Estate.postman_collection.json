@@ -9471,6 +9471,22 @@
               }
             }
           }
+        },
+        {
+          "name": "Read my provider identity subscription",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/public-identity-subscription"
+            },
+            "description": "Authenticated approved broker, brokerage office or developer only. Read own subscription and Egypt display period; seekers are forbidden."
+          }
         }
       ]
     },

@@ -23,6 +23,7 @@ export interface ProviderAdvertisingRequestRecord {
   quote?: AdQuote;
   paymentProofs?: readonly PaymentProofData[];
   schedule?: AdCalendarEvent;
+  publicBannerId?: string;
 }
 
 export interface ProviderAdvertisingRequestSource {
@@ -105,6 +106,7 @@ function projection(record: ProviderAdvertisingRequestRecord): ProviderAdRequest
   if (schedule && (schedule.requestId !== request.id || schedule.providerId !== request.providerId)) throw new ProviderAdvertisingProjectionError('PROVIDER_AD_SOURCE_INVALID');
   const result = {
     id: request.id,
+    ...(record.publicBannerId ? { publicBannerId: record.publicBannerId } : {}),
     ...(request.requestMode ? { requestMode: request.requestMode, contactPhone: request.contactPhone } : {}),
     ...(request.paymentWaiver ? { paymentWaiver: { reason: request.paymentWaiver.reason, grantedAt: request.paymentWaiver.grantedAt } } : {}),
     placementKey: request.placementKey,

@@ -312,7 +312,10 @@ export function PublicCommunity({
   const [data, setData] = useState<CommunityPublicPostListData | undefined>(initialData);
   const [view, setView] = useState<PublicCommunityViewState>(initialData === undefined ? initialState : initialData.items.length === 0 ? 'empty' : 'success');
   const [attempt, setAttempt] = useState(0);
-  const [selectedPostId, setSelectedPostId] = useState<string | undefined>();
+  const [selectedPostId, setSelectedPostId] = useState<string | undefined>(() => {
+    const id = new URL(sourceUrl, 'http://sadat-real-estate.local').searchParams.get('postId');
+    return id && /^[a-f0-9]{24}$/u.test(id) ? id : undefined;
+  });
   const [detail, setDetail] = useState<CommunityPublicPostDetailData | undefined>();
   const [detailState, setDetailState] = useState<DetailViewState>('loading');
   const [detailAttempt, setDetailAttempt] = useState(0);

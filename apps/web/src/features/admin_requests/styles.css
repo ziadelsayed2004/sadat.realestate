@@ -161,6 +161,18 @@
 }
 .admin-requests__property-links { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 8px; }
 .admin-requests__property-links a { color: #155b4f; text-decoration: underline; overflow-wrap: anywhere; font-weight: 700; }
+.admin-requests__customer-open { padding: 0; border: 0; background: none; color: #155b4f; font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; text-align: start; }
+.admin-requests__phone { white-space: nowrap; direction: ltr; }
+@media (max-width: 620px) {
+  .admin-requests__table--requests, .admin-requests__table--requests tbody { display: block; min-width: 0; }
+  .admin-requests__table--requests thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  .admin-requests__table--requests tr { display: grid; gap: 0; margin: 12px; padding: 12px; border: 1px solid #dbe0e6; border-radius: 12px; }
+  .admin-requests__table--requests td { display: grid; grid-template-columns: 5rem minmax(0, 1fr); align-items: start; gap: 8px; height: auto !important; padding: 10px 0 !important; text-align: start; }
+  .admin-requests__table--requests td::before { content: attr(data-label); color: #68768b; font-weight: 700; }
+  .admin-requests__table--requests td > code, .admin-requests__table--requests td > .admin-requests__property-links { grid-column: 2; }
+  .admin-requests__details > div, .admin-requests__payload dl > div { flex-direction: column; gap: 6px; }
+  .admin-requests__details dd { text-align: start; }
+}
 
 .admin-viewing__help { max-width: 1420px; margin: 0 auto 24px; padding: 20px 24px; border: 1px solid #e2dbc9; border-radius: 18px; background: #fffdf8; box-sizing: border-box; }
 .admin-viewing__help h2 { margin: 0 0 8px; font-size: 1.15rem; }

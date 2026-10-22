@@ -104,23 +104,6 @@ const articlePresentation: Readonly<Record<string, {
   }
 });
 
-const communityPresentation: Readonly<Record<string, {
-  readonly time: PublicHomepageLocaleText;
-  readonly comments: string;
-  readonly views: string;
-}>> = Object.freeze({
-  community_events: {
-    time: { ar: '\u0645\u0646\u0630 \u064a\u0648\u0645\u064a\u0646', en: '2 days ago',},
-    comments: '12',
-    views: '24'
-  },
-  community_update: {
-    time: { ar: '\u0645\u0646\u0630 3 \u0623\u064a\u0627\u0645', en: '3 days ago',},
-    comments: '34',
-    views: '87'
-  }
-});
-
 const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.freeze([
   {
     key: 'buying_guide',
@@ -145,22 +128,6 @@ const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.fr
     body: { ar: 'استعراض شامل للخدمات المتاحة في المدينة.', en: 'A complete overview of the services available across the city.' },
     imageUrl: '/assets/canonical/public/article-services.png',
     order: 30
-  },
-  {
-    key: 'community_events',
-    type: 'community',
-    title: { ar: 'محمد السيد', en: 'Mohamed El Sayed' },
-    body: { ar: 'ما أفضل حي للسكن بميزانية 2 مليون؟\nأنا وعيلتي بنفكر ننتقل للسادات، ميزانيتنا حوالي 2 مليون.', en: 'What is the best district for a 2M budget?\nMy family and I are considering moving to Sadat City.' },
-    imageUrl: '/assets/canonical/public/community-mohamed.png',
-    order: 40
-  },
-  {
-    key: 'community_update',
-    type: 'community',
-    title: { ar: 'أحمد محمد', en: 'Ahmed Mohamed' },
-    body: { ar: 'تجربتي بعد سنة كاملة في السادات\nانتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.', en: 'My experience after a full year in Sadat City\nI moved from Cairo last year and wanted to share a few observations.' },
-    imageUrl: '/assets/canonical/public/community-hanaa.png',
-    order: 50
   }
 ]);
 
@@ -176,8 +143,8 @@ export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> 
 
 function withCanonicalHomepageContent(content: readonly PublicHomepageContent[]): readonly PublicHomepageContent[] {
   const result = [...content];
-  for (const type of ['article', 'community'] as const) {
-    const minimum = type === 'article' ? 3 : 2;
+  for (const type of ['article'] as const) {
+    const minimum = 3;
     const existingKeys = new Set(result.filter(item => item.type === type).map(item => item.key));
     for (const fallback of canonicalHomepageContent.filter(item => item.type === type)) {
       if (result.filter(item => item.type === type).length >= minimum) break;
@@ -655,6 +622,12 @@ function Hero({
   const [ready, setReady] = useState<readonly string[]>([]);
   const [hidden, setHidden] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const id = new URL(window.location.href).searchParams.get('heroAd');
+    if (!id || !/^[a-f0-9]{24}$/u.test(id)) return;
+    const chosen = slides.find(item => item.key.startsWith(`banner_${id}_`));
+    if (chosen) setSlideKey(chosen.key);
+  }, [slides]);
   const selectedIndex = slides.findIndex(item => item.key === slideKey);
   const activeIndex = selectedIndex < 0 ? 0 : selectedIndex;
   const banner = slides[activeIndex] ?? banners.find(item => item.presentation !== 'featured' && !item.key.startsWith('featured_') && !item.key.startsWith('banner-'));
@@ -952,14 +925,13 @@ function ContentGrid({
           if (type === 'tip') return <TipCard imageUrl={item.imageUrl} key={item.key} title={localizedText(item.title, locale) ?? item.key} body={body ?? ''} />;
           const bodyLines = body?.split('\n').filter(Boolean) ?? [];
           const contentType = type === 'community'
-            ? item.key === 'community_events' ? copy.communityQuestion : copy.communityExperience
+            ? item.category === 'question' ? copy.communityQuestion : copy.communityExperience
             : type === 'about'
               ? copy.aboutEyebrow
               : type === 'article'
                 ? articlePresentation[item.key]?.label[locale] ?? title
                 : title;
           const articleDetails = type === 'article' ? articlePresentation[item.key] : undefined;
-          const communityDetails = type === 'community' ? communityPresentation[item.key] : undefined;
           const communityTitle = bodyLines[0] ?? localizedText(item.title, locale) ?? item.key;
           const communityBody = bodyLines.slice(1).join('\n');
           return (
@@ -970,16 +942,13 @@ function ContentGrid({
                     {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
                     <div>
                       <h3>{localizedText(item.title, locale) ?? item.key}</h3>
-                      {communityDetails === undefined ? null : <span>{communityDetails.time[locale]}</span>}
                     </div>
                   </div>
                   <p className="public-homepage__content-type">{contentType}</p>
                 </div>
-                <h4 className="public-homepage__community-title">{communityTitle}</h4>
+                <h4 className="public-homepage__community-title">{item.targetUrl ? <a href={replaceLocaleInUrl(item.targetUrl, locale)}>{communityTitle}</a> : communityTitle}</h4>
                 {communityBody === '' ? null : <p className="public-homepage__community-body">{communityBody}</p>}
-                {communityDetails === undefined ? null : <div className="public-homepage__community-stats" aria-hidden="true">
-                  <span>{communityDetails.views}<svg viewBox="0 0 20 20" focusable="false"><path d="M2.5 10s2.5-4 7.5-4 7.5 4 7.5 4-2.5 4-7.5 4-7.5-4-7.5-4Z" /><circle cx="10" cy="10" r="1.75" /></svg></span>
-                </div>}
+
               </> : type === 'article' ? <>
                 <div className="public-homepage__article-media">
                   {item.imageUrl === undefined ? <span className="public-homepage__content-media-fallback" /> : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
@@ -1219,6 +1188,13 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
   const [attempt, setAttempt] = useState(0);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   useEffect(() => { setApplicationSubmitted(new URLSearchParams(window.location.search).get('providerApplication') === 'submitted'); }, []);
+  useEffect(() => {
+    if (view !== 'success' || !data || !window.location.hash) return;
+    let id: string;
+    try { id = decodeURIComponent(window.location.hash.slice(1)); } catch { return; }
+    const frame = requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView?.({ block: 'start', behavior: 'instant' }));
+    return () => cancelAnimationFrame(frame);
+  }, [view, Boolean(data)]);
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -1253,10 +1229,12 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
     const timer = window.setInterval(() => { void refreshHomepage(); }, 30_000);
     const onVisible = () => { void refreshHomepage(); };
     window.addEventListener('focus', onVisible);
+    window.addEventListener('sadat:homepage-refresh', onVisible);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       controller.abort(); window.clearInterval(timer);
       window.removeEventListener('focus', onVisible);
+      window.removeEventListener('sadat:homepage-refresh', onVisible);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [load, view]);

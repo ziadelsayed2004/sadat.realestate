@@ -1,4 +1,5 @@
 import { ProviderSecurity } from './security.tsx';
+import { ProviderIdentitySubscription } from './identity-subscription.tsx';
 import { CompanyEditor } from '../admin_accounts/company-editor.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -154,6 +155,7 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
           <>
             <div className="provider-dashboard__heading-row provider-settings__heading"><div><h1>{copy.title}</h1><p>{copy.description}</p></div></div>
             <SettingsTabs locale={locale} active={tab} />
+            {tab === 'account' && sessionRole === 'provider' ? <ProviderIdentitySubscription locale={locale} authorization={authClient} apiOrigin={apiOrigin} /> : null}
             {feedbackMessage ? <p className="provider-settings__feedback" data-state={feedback === 'saved' ? 'success' : feedback} role={feedback === 'saved' ? 'status' : 'alert'}>{feedbackMessage}</p> : null}
             {tab === 'account' ? (
               <form className="provider-settings__panel" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-account-heading">

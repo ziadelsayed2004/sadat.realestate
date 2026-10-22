@@ -81,7 +81,7 @@ try {
   const adminPage = await admin.newPage(); adminPage.on('pageerror', error => report.browserErrors.push(String(error)));
   await adminPage.goto(`${base}/admin/properties/review?propertyId=${propertyId}&lang=ar`);
   await expect(adminPage.locator('[data-auth-resolution=pending]')).toHaveCount(0); await expect(adminPage.locator('#site-intro')).toBeHidden();
-  await adminPage.getByText('إدارة ظهور العقار في أبرز العقارات بالرئيسية', { exact: true }).click();
+  await expect(adminPage.locator('#property-homepage-featured')).toHaveAttribute('open', '');
   await adminPage.getByRole('checkbox', { name: 'تمييز العقار في الرئيسية', exact: true }).check();
   await adminPage.getByRole('spinbutton', { name: 'ترتيب العرض', exact: true }).fill('0');
   const saved = adminPage.waitForResponse(r => r.url().endsWith(`/admin/properties/${propertyId}/featured`) && r.request().method() === 'PUT');

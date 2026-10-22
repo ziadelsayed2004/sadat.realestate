@@ -174,7 +174,8 @@ function paymentApproved(request: ProviderAdRequestProjection): boolean {
 
 function AdvertisingStatus({ request, copy }: { readonly request: ProviderAdRequestProjection; readonly copy: ProviderAdvertisingCopy }) {
   const awaitingSchedule = request.status === 'waiting_payment' && paymentApproved(request);
-  return <Badge tone={awaitingSchedule ? 'success' : statusTone(request.status)}>{awaitingSchedule ? copy.paymentApprovedTitle : copy.statuses[request.status]}</Badge>;
+  const pending = request.status === 'waiting_payment' && request.paymentProofs.some(proof => proof.active && proof.status !== 'rejected' && proof.status !== 'approved');
+  return <Badge tone={awaitingSchedule ? 'success' : statusTone(request.status)}>{awaitingSchedule ? copy.paymentApprovedTitle : pending ? copy.paymentStatuses.pending_review : copy.statuses[request.status]}</Badge>;
 }
 
 function RequestTable({ data, locale, copy }: { readonly data: import('@sadat-real-estate/contracts').ProviderAdRequestListData; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy }) {
@@ -230,7 +231,8 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
   const sendingProof = useRef(false);
   const canAccept = detail.quote?.status === 'issued';
   const paid = paymentApproved(detail);
-  const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted' && !paid;
+  const pendingPayment = detail.paymentProofs.some(proof => proof.active && proof.status !== 'rejected' && proof.status !== 'approved');
+  const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted' && !paid && !pendingPayment;
   async function sendProof(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!selectedFile || busy || sendingProof.current || !canUpload || !validPaymentMethod || !validSender || !validRecipient) return;
@@ -254,11 +256,12 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
         <div className="provider-advertising__detail-heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1 id="provider-advertising-detail-heading">{copy.requestDetails}</h1></div><AdvertisingStatus request={detail} copy={copy} /></div>
         {detail.status === 'draft' ? <Button onClick={onSubmit} loading={busy}>{copy.submitRequest}</Button> : null}
         <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.request}</dt><dd>{shortId(detail.id)}</dd></div><div><dt>{copy.columns.placement}</dt><dd>{adPlacementName(detail.placementKey, locale)}</dd></div><div><dt>{copy.purpose}</dt><dd>{detail.purpose}</dd></div>{detail.paymentWaiver ? <div><dt>{locale === 'ar' ? 'إعلان مجاني' : 'Free advertisement'}</dt><dd>{detail.paymentWaiver.reason}</dd></div> : null}{detail.contactPhone ? <div><dt>{copy.createForm.contactPhone}</dt><dd><a dir="ltr" href={`tel:${detail.contactPhone}`}>{detail.contactPhone}</a></dd></div> : null}<div><dt>{copy.interval}</dt><dd>{dateLabel(detail.intervalStart, locale)} — {dateLabel(detail.intervalEnd, locale)}</dd></div></dl>
-        <AdPlacementGuide placementKey={detail.placementKey} locale={locale} />
+        <AdPlacementGuide placementKey={detail.placementKey} locale={locale} bannerId={detail.publicBannerId} />
         {detail.quote ? <section className="provider-advertising__nested-card"><h2>{copy.quote}</h2><div className="provider-advertising__quote-total"><span>{copy.quoteTotal}</span><strong>{moneyLabel(detail.quote.totalMinor, detail.quote.currency, locale)}</strong></div><dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{copy.quoteStatuses[detail.quote.status]}</dd></div><div><dt>{copy.quoteValidUntil}</dt><dd>{dateLabel(detail.quote.validUntil, locale)}</dd></div><div><dt>{copy.quoteTerms}</dt><dd>{detail.quote.terms}</dd></div></dl>{canAccept ? <Button onClick={onAccept} loading={busy}>{copy.acceptQuote}</Button> : null}</section> : <p className="provider-advertising__muted">{copy.noQuote}</p>}
       </section>
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
-        <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2>{!paid ? <p className="provider-advertising__muted">{copy.paymentProofHelp}</p> : null}
+        <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2>{!paid && !pendingPayment ? <p className="provider-advertising__muted">{copy.paymentProofHelp}</p> : null}
+        {pendingPayment ? <p className="provider-advertising__help" role="status">{locale === 'ar' ? 'تم تقديم طلبك وإثبات التحويل، وبانتظار مراجعة الإدارة. لا تحتاج للدفع أو رفع الإيصال مرة أخرى. يمكنك متابعة النتيجة هنا.' : 'Your request and transfer proof have been submitted and are awaiting administrative review. No further payment or receipt is needed. Follow the result here.'}</p> : null}
         {paid && detail.status === 'waiting_payment' ? <p className="provider-advertising__help" role="status">{copy.paymentApprovedBody}</p> : null}
         {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span>{!paid ? <span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span> : null}</div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
         {payment ? <PaymentAccounts {...payment} locale={locale} /> : null}
@@ -397,9 +400,9 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     setMutationError(undefined);
     try {
       setFeedback(undefined);
-      await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod, transfer);
+      const receipt = await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod, transfer);
+      setDetail(current => current ? { ...current, paymentProofs: [receipt, ...current.paymentProofs.filter(proof => proof.id !== receipt.id)] } : current);
       setFeedback(copy.paymentProofUploaded);
-      window.location.assign(`/?lang=${locale}&notice=ad-request-sent`);
       setAttempt(value => value + 1);
       return true;
     } catch (error) {

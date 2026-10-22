@@ -9,6 +9,20 @@ function publicUrl(url: URL): boolean {
 /** Keep public navigation in the hydrated app. Auth and private routes retain
  * their server navigation and access checks. No fetched scripts are executed. */
 export function installPublicNavigation(onNavigate: (source: Document, url: URL) => void): () => void {
+  // Only public homepage JSON and SEO metadata survive navigation. Never retain
+  // rendered account controls, cookies, credentials or other page documents.
+  const homepages = new Map<string, { source: Document; at: number }>();
+  const homeKey = (url: URL) => url.pathname === '/' && [...url.searchParams.keys()].every(key => key === 'lang') ? url.origin + url.pathname + url.search : undefined;
+  const rememberHome = (source: Document, url: URL) => {
+    const key = homeKey(url), data = source.getElementById('sadat-public-homepage-data');
+    if (!key || !data) return;
+    const snapshot = document.implementation.createHTMLDocument(source.title);
+    const app = snapshot.createElement('div'); app.id = 'app'; snapshot.body.append(app, data.cloneNode(true));
+    source.head.querySelectorAll('meta[name="description"], link[rel="canonical"], meta[property^="og:"], meta[name^="twitter:"]').forEach(element => snapshot.head.append(element.cloneNode(true)));
+    homepages.set(key, { source: snapshot, at: Date.now() });
+    if (homepages.size > 2) homepages.delete(homepages.keys().next().value!);
+  };
+  rememberHome(document, new URL(window.location.href));
   let pathname = window.location.pathname;
   let pending: AbortController | undefined;
   const hadPageState = publicPageState() !== undefined;
@@ -100,10 +114,12 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
     pending = controller;
     document.documentElement.dataset.navigationPending = 'true';
     try {
-      const response = await fetch(target.href, { signal: controller.signal, headers: { Accept: 'text/html' } });
-      if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) throw new Error('Public navigation unavailable');
-      const source = new DOMParser().parseFromString(await response.text(), 'text/html');
-      const resolved = new URL(response.url || target.href);
+      const cached = homepages.get(homeKey(target) ?? '');
+      const usable = cached && Date.now() - cached.at < 120_000;
+      const response = usable ? undefined : await fetch(target.href, { signal: controller.signal, headers: { Accept: 'text/html' } });
+      if (response && (!response.ok || !response.headers.get('content-type')?.includes('text/html'))) throw new Error('Public navigation unavailable');
+      const source = usable ? cached.source : new DOMParser().parseFromString(await response!.text(), 'text/html');
+      const resolved = new URL(response?.url || target.href);
       if (resolved.origin !== window.location.origin || !publicUrl(resolved) || !source.getElementById('app')) throw new Error('Unsupported navigation response');
       if (controller.signal.aborted) return;
       if (!popstate) pushPublicPage(target.pathname + target.search + target.hash);
@@ -116,6 +132,8 @@ export function installPublicNavigation(onNavigate: (source: Document, url: URL)
         source.head.querySelectorAll(selector).forEach(element => document.head.append(document.importNode(element, true)));
       }
       onNavigate(source, target);
+      if (usable) window.dispatchEvent(new Event('sadat:homepage-refresh'));
+      else rememberHome(source, target);
       positionPage(target, popstate, true, pointerNavigation);
     } catch {
       if (!controller.signal.aborted) window.location.assign(target.href);

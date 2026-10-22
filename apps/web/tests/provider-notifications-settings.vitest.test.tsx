@@ -6,7 +6,9 @@ import {
   type NotificationListData,
   type ProviderSettingsData
 } from '@sadat-real-estate/contracts';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   createProviderNotificationActions,
@@ -22,6 +24,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const notificationId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const auth = { getAuthorizationHeader: () => 'Bearer provider.notifications.token' };
 const session = { status: 'authenticated' as const, role: 'provider' as const };
+beforeEach(() => server.use(http.get('*/api/v1/provider/public-identity-subscription', () => HttpResponse.json({ data: { providerId: 'a'.repeat(24), status: 'inactive', paymentConfirmed: false, version: 0, visible: false, canManage: false, eligible: true } }))));
 
 const notification = notificationDataSchema.parse({
   id: notificationId,

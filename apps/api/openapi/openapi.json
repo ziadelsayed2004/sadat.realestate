@@ -14414,6 +14414,44 @@
         },
         "description": "Verified providers request administrative account deletion review. Creates a platform contact request owned by the current account; does not immediately delete the account, its documents or obligations."
       }
+    },
+    "/api/v1/provider/public-identity-subscription": {
+      "get": {
+        "operationId": "getOwnProviderIdentitySubscription",
+        "summary": "Read the authenticated approved provider display subscription; never exposes another account",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authorized response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicIdentitySubscriptionSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Account or destination unavailable"
+          },
+          "409": {
+            "description": "Expected version is stale"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -24843,6 +24881,18 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "targetUrl": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "imageUrl": {
+            "type": "string",
+            "maxLength": 2048
           }
         }
       },
@@ -30000,6 +30050,38 @@
             "type": "string",
             "format": "date-time",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "internalNotes": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "body",
+                "authorId",
+                "createdAt"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "body": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "authorId": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{24}$"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
           }
         },
         "required": [
@@ -31217,6 +31299,9 @@
             "type": "boolean"
           },
           "canManage": {
+            "type": "boolean"
+          },
+          "eligible": {
             "type": "boolean"
           }
         },

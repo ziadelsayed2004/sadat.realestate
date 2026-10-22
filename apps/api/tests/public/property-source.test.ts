@@ -65,8 +65,8 @@ test('a stale or foreign organization link cannot reveal a different business or
     db.rows.organizations!.push({ _id: foreign, providerId: new Types.ObjectId('d'.repeat(24)), kind: 'developer_company', name: { en: 'Foreign business' }, slug: 'foreign-business', status: 'approved' });
     const details = await db.details.get('office-home');
     assert.equal(JSON.stringify(details).includes('Foreign business'), false);
-    if (type === 'brokerage_office') assert.equal(details?.source.organizationSlug, 'sadat-business');
-    else assert.deepEqual(details?.source, { sourceType: 'individual_broker' });
+    assert.equal(details?.source.organizationSlug, 'sadat-business');
+    assert.equal(details?.source.sourceType, type);
   }
 });
 

@@ -324,11 +324,17 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         && record.providerId === claims.sub
         && record.sha256 === validated.sha256
         && record.active
+        && record.status !== 'rejected'
       ));
       if (replay) {
         await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);
         if (replay.paymentMethod !== headers.paymentMethod || JSON.stringify(replay.sender) !== JSON.stringify(headers.sender) || JSON.stringify(replay.recipient) !== JSON.stringify(headers.recipient)) throw new PaymentProofServiceError('DUPLICATE');
         return project(replay, true);
+      }
+
+      if ([...records.values()].some(record => record.adRequestId === request.id && record.providerId === claims.sub && record.active && record.status !== 'rejected')) {
+        await dependencies.storage.deletePrivate(objectKey).catch(() => undefined);
+        throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
       }
 
       const record = paymentProofDataSchema.parse({

@@ -295,6 +295,7 @@ export const providerAdScheduleProjectionSchema = z.object({
 }).strict();
 export const providerAdRequestProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
+  publicBannerId: providerAdvertisingObjectIdSchema.optional(),
   requestMode: z.literal('assisted').optional(),
   contactPhone: normalizedPhoneSchema.optional(),
   paymentWaiver: z.object({ reason: z.string().min(3).max(500), grantedAt: providerAdvertisingDateSchema }).strict().optional(),

@@ -118,13 +118,24 @@ export function createMongoosePaymentProofRepository(
             adRequestId,
             providerId,
             sha256: input.sha256,
-            active: true
+            active: true,
+            status: { $ne: 'rejected' }
           })
             .select('+storageKey')
             .session(session)
             .lean<PaymentProofRow>()
             .exec();
           if (replay) return { kind: 'replay' as const, proof: toStoredPaymentProof(replay) };
+
+          if (await models.PaymentProof.exists({ adRequestId, providerId, active: true, status: { $ne: 'rejected' } }).session(session)) {
+            throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
+          }
+          // Serialize uploads for one request, including different receipt hashes.
+          // A retried transaction must observe the first pending receipt.
+          await models.AdRequest.updateOne({ _id: adRequestId, providerId }, {
+            $set: { updatedAt: input.uploadedAt }, $inc: { version: 1 },
+            $push: { history: { status: 'waiting_payment', version: request.version + 1, changedAt: input.uploadedAt, reason: 'Payment proof submitted for review' } }
+          }, { session });
 
           const [created] = await models.PaymentProof.create([{
             adRequestId,
@@ -156,7 +167,8 @@ export function createMongoosePaymentProofRepository(
             adRequestId,
             providerId,
             sha256: input.sha256,
-            active: true
+            active: true,
+            status: { $ne: 'rejected' }
           }).select('+storageKey').lean<PaymentProofRow>().exec();
           if (replay) return { kind: 'replay' as const, proof: toStoredPaymentProof(replay) };
         }

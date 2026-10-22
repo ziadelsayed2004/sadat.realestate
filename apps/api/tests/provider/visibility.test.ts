@@ -6,14 +6,14 @@ import { createProviderVisibilityReader, directoryIdentityVisible, identitySubsc
 import { createIdentitySubscriptionService } from '../../src/modules/provider/identity-subscription.js';
 import type { AuditWriter, AuditRecordInput } from '../../src/modules/audit/writer.js';
 
-test('identity policy fails closed for unknown and unapproved accounts; individuals never subscribe', () => {
+test('identity policy fails closed for unknown and unapproved accounts; subscriptions never expose customer data', () => {
   for (const providerType of ['individual_broker', 'brokerage_office', 'developer_company'] as const) {
     assert.equal(providerVisibility({ accountId: account.toHexString(), providerType, approved: false, subscribed: true, acknowledged: true }).publicIdentity, false);
     assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType, approved: false, subscribed: true, acknowledged: true })), false);
   }
   const individual = providerVisibility({ accountId: account.toHexString(), providerType: 'individual_broker', approved: true, subscribed: true, acknowledged: true });
-  assert.deepEqual([individual.publicIdentity, individual.customerIdentity, individual.contact], [false, false, false]);
-  assert.equal(directoryIdentityVisible(individual), false);
+  assert.deepEqual([individual.publicIdentity, individual.customerIdentity, individual.contact], [true, false, false]);
+  assert.equal(directoryIdentityVisible(individual), true);
   assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'brokerage_office', approved: true, subscribed: false, acknowledged: true })), false);
   assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'developer_company', approved: true, subscribed: false, acknowledged: false })), true);
 });
@@ -59,8 +59,10 @@ test('only the independent visibility permission can confirm payment, renew or s
   const stopped = await service.put(actor, provider, { status: 'inactive', paymentConfirmed: true, expectedVersion: 2 }, context); assert.equal(stopped.visible, false);
   assert.equal(events.length, 3); assert.equal(events[0]?.actorId, actor); assert.equal((events[2]?.before as Record<string, unknown>).status, 'active'); assert.equal((events[2]?.after as Record<string, unknown>).status, 'inactive');
 });
-test('individuals cannot receive subscriptions, and activation requires paid valid dates', async () => {
+test('individuals can subscribe, and activation requires paid valid dates', async () => {
   const db = database('individual_broker'); const service = createIdentitySubscriptionService(db.connection, { authorize: async () => true }, { record: async () => {} } as unknown as AuditWriter);
-  await assert.rejects(service.put('5'.repeat(24), application.toHexString(), { status: 'active', paymentConfirmed: true, startAt: '2020-01-01T00:00:00Z', endAt: '2099-01-01T00:00:00Z', expectedVersion: 0 }, { requestId: 'test', traceId: '0'.repeat(32) }), { code: 'NOT_FOUND' });
+  assert.equal((await service.put('5'.repeat(24), application.toHexString(), { status: 'active', paymentConfirmed: true, startAt: '2020-01-01T00:00:00Z', endAt: '2099-01-01T00:00:00Z', expectedVersion: 0 }, { requestId: 'test', traceId: '0'.repeat(32) })).visible, true);
+  assert.equal((await service.read(account.toHexString(), account.toHexString(), true)).canManage, false);
+  await assert.rejects(service.read(account.toHexString(), application.toHexString(), true), { code: 'FORBIDDEN' });
   for (const input of [{ status: 'active', paymentConfirmed: false, expectedVersion: 0 }, { status: 'active', paymentConfirmed: true, startAt: '2026-10-11T00:00:00Z', endAt: '2026-10-10T00:00:00Z', expectedVersion: 0 }]) assert.equal(publicIdentitySubscriptionPutSchema.safeParse(input).success, false);
 });

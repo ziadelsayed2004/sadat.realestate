@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium: all 3 provider types activate through real admin UI, read own period, seeker denied; unapproved activation rejected",
+    "chromium: provider keeps seeker notice and can contact platform about the current property without seeker mutation controls",
+    "chromium: real request, quote acceptance, receipt upload, reload persisted, different receipt rejected by server; rejected receipt corrected with same file; approval survives reload without upload form",
+    "chromium: provider link selects its live banner and scrolls to placement; broken ad image gets a real fallback with bounded mobile dimensions",
+    "Real concurrent uploads with different file hashes persist exactly one active receipt; losing request is rejected",
+    "chromium: mobile customer name opens full details; saved internal note appears in activity and stays absent from provider response",
+    "chromium: expanded featured-property control saves and property appears in first 3 homepage results",
+    "chromium: draft excluded, admin publication adds real author/post to homepage, link opens the exact post",
+    "chromium: public homepage returns from memory without waiting for a second HTML request; public data refreshes separately",
+    "webkit: all 3 provider types activate through real admin UI, read own period, seeker denied; unapproved activation rejected",
+    "webkit: provider keeps seeker notice and can contact platform about the current property without seeker mutation controls",
+    "webkit: real request, quote acceptance, receipt upload, reload persisted, different receipt rejected by server; rejected receipt corrected with same file; approval survives reload without upload form",
+    "webkit: provider link selects its live banner and scrolls to placement; broken ad image gets a real fallback with bounded mobile dimensions",
+    "webkit: mobile customer name opens full details; saved internal note appears in activity and stays absent from provider response",
+    "webkit: expanded featured-property control saves and property appears in first 3 homepage results",
+    "webkit: draft excluded, admin publication adds real author/post to homepage, link opens the exact post",
+    "webkit: public homepage returns from memory without waiting for a second HTML request; public data refreshes separately"
+  ],
+  "timings": [
+    {
+      "engine": "chromium",
+      "cachedReturnMs": 28
+    },
+    {
+      "engine": "webkit",
+      "cachedReturnMs": 943
+    }
+  ],
+  "browserErrors": [],
+  "httpErrors": [],
+  "cleanup": true
+}

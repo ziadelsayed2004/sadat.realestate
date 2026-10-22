@@ -10,16 +10,17 @@ export function createIdentitySubscriptionService(connection: Connection, author
   const denied = () => new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
   async function account(providerId: string) {
     const value = await visibility.read(providerId);
-    if (!value.accountId || value.providerType !== 'brokerage_office') throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
+    if (!value.accountId || !value.providerType) throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
     return new Types.ObjectId(value.accountId);
   }
-  async function read(actorId: string, providerId: string) {
-    if (!await authorization.authorize(actorId, 'admin:providers.view')) throw denied();
+  async function read(actorId: string, providerId: string, owner = false) {
+    if (owner ? actorId !== providerId || !(await visibility.read(actorId)).approved : !await authorization.authorize(actorId, 'admin:providers.view')) throw denied();
     const key = await account(providerId); const row = await collection.findOne({ _id: key });
     return publicIdentitySubscriptionSchema.parse({ providerId, status: row?.status ?? 'inactive', paymentConfirmed: row?.paymentConfirmed ?? false,
       ...(row?.startAt instanceof Date ? { startAt: row.startAt.toISOString() } : {}), ...(row?.endAt instanceof Date ? { endAt: row.endAt.toISOString() } : {}),
       version: row?.version ?? 0, visible: identitySubscriptionActive(row, new Date()) && (await visibility.read(providerId)).approved,
-      canManage: await authorization.authorize(actorId, 'admin:providers.visibility.manage') });
+      eligible: (await visibility.read(providerId)).approved,
+      canManage: !owner && await authorization.authorize(actorId, 'admin:providers.visibility.manage') });
   }
   return { read, async put(actorId: string, providerId: string, input: unknown, context: { requestId: string; traceId: string }) {
     if (!await authorization.authorize(actorId, 'admin:providers.visibility.manage') || !await authorization.authorize(actorId, 'admin:providers.view')) throw denied();
@@ -38,7 +39,7 @@ export function createIdentitySubscriptionService(connection: Connection, author
       } else await collection.insertOne({ _id: key, ...next, createdAt: stamp }, { session });
       const snapshot = (value: typeof before) => ({ status: value?.status ?? 'inactive', startAt: value?.startAt instanceof Date ? value.startAt.toISOString() : null, endAt: value?.endAt instanceof Date ? value.endAt.toISOString() : null, paymentConfirmed: value?.paymentConfirmed ?? false, version: value?.version ?? 0 });
       await audit.record({ actorType: 'admin', actorId, targetType: 'provider', targetId: providerId, action: 'provider.identity_subscription_updated',
-        reason: parsed.status === 'active' ? 'Confirm external payment and set office identity display period' : 'Stop office identity display', before: snapshot(before), after: snapshot({ _id: key, ...next }), ...context, occurredAt: stamp }, session);
+        reason: parsed.status === 'active' ? 'Confirm external payment and set provider identity display period' : 'Stop provider identity display', before: snapshot(before), after: snapshot({ _id: key, ...next }), ...context, occurredAt: stamp }, session);
     }).catch(error => {
       if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) throw new ApiContractError('VERSION_CONFLICT', 'errors.conflict', 409);
       throw error;

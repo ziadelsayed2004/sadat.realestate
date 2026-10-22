@@ -62,7 +62,10 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // existing headroom plus one KiB covers it without changing route/chunk caps.
 // Opting developer covers into their display preview adds 87 bytes; reserve
 // 128 bytes while preserving the existing stylesheet and individual chunk caps.
-const maxJavaScriptBytes = 2_647 * 1024 + 128;
+// Provider subscription status, receipt guards, request activity and fast public
+// return navigation add about 9 KiB (0.34%) over the 2,710,541-byte baseline.
+// Reserve a bounded 12 KiB; preserve the existing 650 KiB chunk cap.
+const maxJavaScriptBytes = 2_659 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route
@@ -72,7 +75,8 @@ const maxJavaScriptBytes = 2_647 * 1024 + 128;
 // keep the JavaScript limits unchanged and continue counting the whole route.
 // Homepage unit/installment choices add 543 bytes to the 270,122-byte public
 // route. Allow one additional KiB; retain the JavaScript and per-chunk limits.
-const maxRouteStylesheetBytes = 265 * 1024;
+// Explicit mobile banner media sizing adds 280 bytes to public route CSS.
+const maxRouteStylesheetBytes = 265 * 1024 + 512;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

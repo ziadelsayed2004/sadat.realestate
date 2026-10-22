@@ -8,6 +8,20 @@ const seeker = { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0
 const provider = { ...seeker, sub: '2123456789abcdef01234567', role: 'provider' } as AccessTokenClaims;
 const admin = { ...seeker, sub: '3123456789abcdef01234567', role: 'admin' } as AccessTokenClaims;
 
+test('saved internal follow-up notes are returned only in authorized administrative projections', async () => {
+  const stamp = new Date('2026-10-22T10:00:00Z'), requestId = 'a'.repeat(24);
+  const repository = createInMemoryRequestRepository([{ id: requestId, type: 'contact', source: 'seeker', seekerId: seeker.sub, providerId: provider.sub, status: 'new', payload: { message: 'Customer question' }, version: 0, createdAt: stamp, updatedAt: stamp }]);
+  const service = createRequestService({ repository, authorization: { authorize: async () => true }, visibility: acknowledgedDeveloperVisibility });
+  const saved = await service.addNote(admin, requestId, { expectedVersion: 0, body: 'Administration only follow-up' });
+  assert.equal(saved.internalNotes?.[0]?.body, 'Administration only follow-up');
+  assert.equal((await service.get(admin, requestId)).internalNotes?.[0]?.authorId, admin.sub);
+  for (const actor of [seeker, provider]) {
+    const response = await service.get(actor, requestId);
+    assert.equal(response.internalNotes, undefined);
+    assert.equal(JSON.stringify(response).includes('Administration only follow-up'), false);
+  }
+});
+
 test('property, project and company inquiries are seeker-only while general provider contact remains available', async () => {
   const service = createRequestService({ repository: createInMemoryRequestRepository() });
   for (const key of ['propertyId', 'projectId', 'organizationId']) {

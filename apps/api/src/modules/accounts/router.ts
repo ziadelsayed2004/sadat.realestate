@@ -22,6 +22,7 @@ export const ACCOUNT_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/providers/:providerId/organization', operationId: 'getAdminProviderOrganization' },
   { method: 'PATCH', path: '/api/v1/admin/providers/:providerId/organization', operationId: 'updateAdminProviderOrganization' },
   { method: 'GET', path: '/api/v1/provider/organization', operationId: 'getProviderOrganization' },
+  { method: 'GET', path: '/api/v1/provider/public-identity-subscription', operationId: 'getOwnProviderIdentitySubscription' },
   { method: 'PATCH', path: '/api/v1/provider/organization', operationId: 'updateProviderOrganization' },
   { method: 'GET', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'getProviderIdentitySubscription' },
   { method: 'PUT', path: '/api/v1/admin/providers/:providerId/public-identity-subscription', operationId: 'putProviderIdentitySubscription' },
@@ -148,6 +149,10 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
 
   if (dependencies.identitySubscription) {
     const subscription = dependencies.identitySubscription;
+    router.get('/provider/public-identity-subscription', createProviderAuthMiddleware(dependencies.accessTokens), async (request, response) => {
+      try { const actor = response.locals.providerClaims as AccessTokenClaims; response.json(toSuccessResponse(await subscription.read(actor.sub, actor.sub, true), requestContext(request).requestId)); }
+      catch (error) { sendError(request, response, error); }
+    });
     router.get('/admin/providers/:providerId/public-identity-subscription', async (request, response) => {
       try { const { providerId } = providerReviewIdParamsSchema.parse(request.params); response.json(toSuccessResponse(await subscription.read(principal(response).userId, providerId), requestContext(request).requestId)); }
       catch (error) { sendError(request, response, error); }

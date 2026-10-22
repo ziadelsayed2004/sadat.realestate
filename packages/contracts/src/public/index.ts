@@ -99,6 +99,8 @@ export const publicHomepageContentSchema = z.object({
   title: localizedTextSchema,
   imageUrl: publicUrlSchema.optional(),
   body: localizedTextSchema.optional(),
+  targetUrl: publicUrlSchema.optional(),
+  category: z.string().max(64).optional(),
   order: publicOrderSchema
 }).strict();
 

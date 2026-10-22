@@ -1,0 +1,5 @@
+import type { SupportedLocale } from '@sadat-real-estate/contracts';
+
+export function CommunityHomepageHelp({ locale }: { locale: SupportedLocale }) {
+  return <aside className="admin-community__panel" style={{ padding: 16, marginBlock: 16 }}><h2>{locale === 'ar' ? 'إضافة آراء وتجارب السكان للرئيسية' : 'Add residents’ posts to the homepage'}</h2><p>{locale === 'ar' ? 'ينشر صاحب التجربة من حسابه في المجتمع، ثم تفتح الإدارة مراجعة المنشور وتختار النشر. تظهر أحدث ٣ منشورات معتمدة تلقائيًا في الرئيسية باسم صاحبها المسجل في ملفه. إخفاء المنشور يزيله من الرئيسية أيضًا. أسماء الأمثلة والعدادات التجريبية أُزيلت.' : 'Residents submit a post from their own community account. Review it here and publish it. The latest three published posts appear automatically on the homepage with the author’s profile name. Hiding a post removes it from the homepage too. Sample people and sample counters have been removed.'}</p><a href={`/community?create=1&lang=${locale}`} target="_blank" rel="noreferrer">{locale === 'ar' ? 'فتح كتابة منشور في المجتمع' : 'Open the community composer'}</a></aside>;
+}

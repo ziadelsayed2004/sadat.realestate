@@ -18,7 +18,7 @@ export function identitySubscriptionActive(row: Record<string, unknown> | null, 
 export function providerVisibility(input: { accountId: string; providerType: ProviderType; approved: boolean; acknowledged: boolean; subscribed: boolean }): ProviderVisibility {
   const developer = input.approved && input.providerType === 'developer_company' && input.acknowledged;
   return { accountId: input.accountId, providerType: input.providerType, approved: input.approved,
-    publicIdentity: developer || input.approved && input.providerType === 'brokerage_office' && input.subscribed,
+    publicIdentity: developer || input.approved && input.subscribed,
     customerIdentity: developer, contact: developer };
 }
 export function createProviderVisibilityReader(connection: Connection, now: () => Date = () => new Date()): ProviderVisibilityReader {
@@ -49,7 +49,8 @@ export function createProviderVisibilityReader(connection: Connection, now: () =
           policyVersion: current.sourceVersion, status: 'acknowledged'
         }, { projection: { _id: 1 } }));
       }
-    } else if (approved && providerType === 'brokerage_office') {
+    }
+    if (approved) {
       subscribed = identitySubscriptionActive(await connection.collection('provider_identity_subscriptions').findOne({ _id: accountId }), now());
     }
     return providerVisibility({ accountId: accountId.toHexString(), providerType: providerType as ProviderType, approved, acknowledged, subscribed });

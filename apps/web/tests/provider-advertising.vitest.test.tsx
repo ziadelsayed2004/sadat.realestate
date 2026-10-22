@@ -154,7 +154,7 @@ describe('Provider advertising requests and commission', () => {
     const item = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentProofs: [{ ...proofProjection, ...payment }] });
     renderWithLocale(<ProviderAdvertising locale="en" session={session} initialData={{ ...data, items: [item] }} />, { locale: 'en' });
     const row = screen.getByTestId('provider-advertising-row');
-    expect(row).toHaveTextContent(getProviderAdvertisingCopy('en').statuses.waiting_payment);
+    expect(row).toHaveTextContent(payment.status === 'pending_review' ? getProviderAdvertisingCopy('en').paymentStatuses.pending_review : getProviderAdvertisingCopy('en').statuses.waiting_payment);
     expect(row).not.toHaveTextContent('Paid — awaiting scheduling');
   });
   it('keeps the scheduled advertisement status after approved payment', () => {
