@@ -19,11 +19,11 @@ const unavailable = () => new ApiContractError('BANNER_UPLOAD_UNAVAILABLE', 'err
 const notFound = () => new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
 
 /** Both homepage publication and public downloads enforce the same live window. */
-export async function readPublishedBannerRows(connection: Connection, at = new Date()) {
+export async function readPublishedBannerRows(connection: Connection, at = new Date(), onlyBanner?: Types.ObjectId) {
   const settings = await connection.collection('ad_settings').findOne({ enabled: true, allowedSurfaces: 'homepage' });
   if (!settings) return [];
   const rows = await connection.collection('ad_banners').aggregate([
-    { $match: { status: { $in: ['scheduled', 'active'] }, startAt: { $lte: at }, endAt: { $gt: at } } },
+    { $match: { ...(onlyBanner ? { _id: onlyBanner } : {}), status: { $in: ['scheduled', 'active'] }, startAt: { $lte: at }, endAt: { $gt: at } } },
     { $lookup: { from: 'ad_placements', localField: 'placementKey', foreignField: 'key', as: 'placement' } },
     { $unwind: '$placement' },
     { $match: { 'placement.active': true, 'placement.surface': 'homepage' } },

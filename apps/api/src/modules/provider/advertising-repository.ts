@@ -1,4 +1,5 @@
 ﻿import { Types, type Connection } from 'mongoose';
+import { readPublishedBannerRows } from '../ads/banner-management.js';
 import {
   AD_EGYPT_TIME_ZONE,
   adCalendarEventSchema,
@@ -208,7 +209,8 @@ export function createMongooseProviderAdvertisingSource(
       if (!row) return undefined;
       const values = await hydrate([row as RequestRow]);
       const banner = await connection.collection('ad_banners').findOne({ adRequestId: objectId(requestId), status: { $in: ['scheduled', 'active'] }, startAt: { $lte: new Date() }, endAt: { $gt: new Date() } }, { projection: { _id: 1 }, sort: { sortOrder: 1, _id: 1 } });
-      return values[0] ? { ...values[0], ...(banner ? { publicBannerId: String(banner._id) } : {}) } : undefined;
+      const published = banner && (await readPublishedBannerRows(connection, new Date(), banner._id)).length > 0;
+      return values[0] ? { ...values[0], ...(published ? { publicBannerId: String(banner!._id) } : {}) } : undefined;
     }
   };
 }

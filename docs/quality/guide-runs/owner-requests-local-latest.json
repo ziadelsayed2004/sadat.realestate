@@ -23,11 +23,11 @@
   "timings": [
     {
       "engine": "chromium",
-      "cachedReturnMs": 28
+      "cachedReturnMs": 24
     },
     {
       "engine": "webkit",
-      "cachedReturnMs": 943
+      "cachedReturnMs": 54
     }
   ],
   "browserErrors": [],

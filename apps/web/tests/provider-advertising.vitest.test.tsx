@@ -129,6 +129,11 @@ function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'
 }
 
 describe('Provider advertising requests and commission', () => {
+  it('offers no misleading public link for an unpublished ad request', () => {
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={detail} loadDetail={vi.fn(async () => detail)} />, { locale: 'en' });
+    expect(screen.queryByRole('link', { name: 'Open its location on the site' })).not.toBeInTheDocument();
+    expect(screen.getByText(/Your ad is not currently visible to visitors/)).toBeVisible();
+  });
   it.each(['ar', 'en'] as const)('shows approved payment as awaiting scheduling and removes the duplicate payment form in %s', locale => {
     const paid = adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentProofs: [{ ...proofProjection, status: 'approved', securityState: 'clean' }] });
     const copy = getProviderAdvertisingCopy(locale);
@@ -138,7 +143,7 @@ describe('Provider advertising requests and commission', () => {
     expect(row).not.toHaveTextContent(copy.statuses.waiting_payment);
     list.unmount();
     const result = renderWithLocale(<ProviderAdvertising locale={locale} session={session} requestId={requestId} initialDetail={paid} loadDetail={vi.fn(async () => paid)} />, { locale });
-    expect(screen.getByRole('status')).toHaveTextContent(copy.paymentApprovedBody);
+    expect(screen.getByText(copy.paymentApprovedBody)).toBeVisible();
     expect(result.container.querySelector('.provider-advertising__proof-form')).toBeNull();
     expect(screen.queryByLabelText(copy.uploadPaymentProof)).not.toBeInTheDocument();
     expect(screen.queryByText(copy.paymentProofHelp)).not.toBeInTheDocument();

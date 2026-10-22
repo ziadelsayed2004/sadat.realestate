@@ -150,6 +150,8 @@ try {
     proof = await db.collection('payment_proofs').findOne({ adRequestId: new mongoose.Types.ObjectId(requested.id), status: 'pending_review' }); storageKeys.push(proof.storageKey);
     await api(admin, 'POST', `/admin/payment-proofs/${proof._id}/review`, { action: 'approve', expectedVersion: proof.version, reason: 'Confirm synthetic local payment' });
     await adPage.goto(`${base}/provider/ads/${requested.id}?lang=en`); await ready(adPage); await expect(adPage.locator('input[type=file]')).toHaveCount(0); await expect(adPage.getByText('Paid — awaiting scheduling', { exact: true }).first()).toBeVisible();
+    await expect(adPage.getByRole('link', { name: 'Open its location on the site' })).toHaveCount(0);
+    await expect(adPage.getByText(/Your ad is not currently visible to visitors/)).toBeVisible();
     await noOverflow(adPage); await adPage.screenshot({ path: `${output}/${engine.name()}-receipt-approved.png`, fullPage: true });
     recordCheck(`${engine.name()}: real request, quote acceptance, receipt upload, reload persisted, different receipt rejected by server; rejected receipt corrected with same file; approval survives reload without upload form`);
 
@@ -168,7 +170,11 @@ try {
     const media = card.locator('.public-homepage__banner-media-wrapper img'); await expect(media).toHaveAttribute('src', '/assets/canonical/public/home-hero-sadat-city.png'); await expect.poll(() => media.evaluate(el => el.naturalWidth)).toBeGreaterThan(0);
     assert(await card.locator('.public-homepage__banner-layout').evaluate(el => el.getBoundingClientRect().height < 750));
     assert(await card.evaluate(el => Math.abs(el.getBoundingClientRect().top) < 220)); await noOverflow(adPopup);
-    await adPopup.screenshot({ path: `${output}/${engine.name()}-featured-mobile.png`, fullPage: true }); await adPopup.close();
+    await adPopup.screenshot({ path: `${output}/${engine.name()}-featured-mobile.png`, fullPage: true });
+    await card.screenshot({ path: `${output}/${engine.name()}-featured-card.png` }); await adPopup.close();
+    await db.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $set: { active: false } });
+    assert.equal((await api(advertiser, 'GET', `/provider/ads/${requested.id}`)).publicBannerId, undefined);
+    await db.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $set: { active: true } });
     recordCheck(`${engine.name()}: provider link selects its live banner and scrolls to placement; broken ad image gets a real fallback with bounded mobile dimensions`);
     if (engine === chromium) {
       stage = 'concurrent different receipt uploads';
