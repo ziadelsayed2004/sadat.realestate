@@ -333,8 +333,9 @@
   margin: 0;
   padding: 0.25rem 0.625rem;
   color: var(--color-brand-accent);
-  background: rgb(255 255 255 / 0.12);
-  border-radius: var(--radius-pill);
+  background: rgb(209 160 68 / 0.1);
+  border: 1px solid rgb(209 160 68 / 0.35);
+  border-radius: 999px;
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
@@ -349,10 +350,9 @@
 .public-homepage__hero h1 span,
 .public-homepage__hero h1 strong {
   display: block;
+  color: var(--color-on-brand);
 }
 
-.public-homepage__hero h1 span,
-.public-homepage__hero h1 strong,
 .public-site-footer__follow strong,
 .public-homepage__footer .public-homepage__eyebrow,
 .public-homepage__footer-title {
@@ -362,7 +362,7 @@
 .public-homepage__hero-body {
   max-inline-size: 42rem;
   margin: 0;
-  color: rgb(255 255 255 / 0.88);
+  color: rgb(255 255 255 / 0.65);
   font-size: var(--font-size-body-large);
   line-height: var(--line-height-body);
 }
@@ -2581,12 +2581,13 @@
   .public-homepage__category-rail .public-homepage__category-image { max-inline-size: 56px; block-size: 52px; object-fit: contain; }
 }
 
-/* The photograph covers the heading; search overlaps the lower edge on every screen. */
+/* The landing uses navy; managed advertisements retain their photographs. */
 .public-homepage .public-homepage__hero { display: block; min-block-size: calc(100svh - var(--public-header-height, 110px)); padding: 0 0 32px; box-sizing: border-box; }
 .public-homepage__hero .public-homepage__hero-visual { position: relative; inset: auto; display: grid; min-block-size: max(420px, calc(100svh - var(--public-header-height, 110px) - 120px)); align-items: center; isolation: isolate; }
 .public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; }
 .public-homepage__hero .public-homepage__hero-media > img { inline-size: 100%; block-size: 100%; aspect-ratio: auto; object-fit: cover; opacity: 1; }
-.public-homepage__hero .public-homepage__hero-shade { display: block; background: linear-gradient(180deg, #18243e38, #18243ebf 50%, #18243ee8); }
+.public-homepage__hero .public-homepage__hero-shade { display: block; background: var(--color-brand-secondary); }
+.public-homepage__hero--advertisement .public-homepage__hero-shade { background: linear-gradient(180deg, #18243e38, #18243ebf 50%, #18243ee8); }
 .public-homepage__hero-heading { display: grid; justify-items: center; gap: 16px; inline-size: min(900px, calc(100% - 128px)); margin: auto; padding: 64px 0 88px; text-align: center; overflow-wrap: anywhere; }
 .public-homepage__hero .public-homepage__hero-content { position: relative; z-index: 3; padding: 0; margin-block-start: -48px; }
 .public-homepage__hero .public-homepage__search { inline-size: 100%; margin: 0; }
