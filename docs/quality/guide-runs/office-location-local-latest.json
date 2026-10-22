@@ -1,0 +1,12 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium ar 390: platform UI saves address and map; public bootstrap and footer reflect the latest save",
+    "chromium ar 390: contact UI saves address and map; public bootstrap and footer reflect the latest save",
+    "webkit en 1440: platform UI saves address and map; public bootstrap and footer reflect the latest save",
+    "webkit en 1440: contact UI saves address and map; public bootstrap and footer reflect the latest save"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

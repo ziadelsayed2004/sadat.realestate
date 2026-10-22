@@ -97,6 +97,8 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
   contact: [
     { key: 'primary_phone', kind: 'text', labelKey: 'primary_phone' },
     { key: 'whatsapp_number', kind: 'text', labelKey: 'whatsapp_number' },
+    { key: 'office_address', kind: 'localized', labelKey: 'office_address' },
+    { key: 'working_hours', kind: 'localized', labelKey: 'working_hours' },
     { key: 'map_url', kind: 'url', labelKey: 'map_url' },
     { key: 'facebook_url', kind: 'url', labelKey: 'facebook_url' },
     { key: 'instagram_url', kind: 'url', labelKey: 'instagram_url' }
@@ -305,6 +307,7 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
         <section className="admin-settings__field-section" aria-labelledby="settings-office-section"><h3 id="settings-office-section">{copy.guide.officeSection}</h3><div className="admin-settings__fields">{fields.filter(field => officeKeys.includes(field.key)).map(renderField)}</div></section>
         <details className="admin-settings__additional"><summary>{copy.guide.advanced}</summary><p className="admin-settings__hint">{copy.guide.advancedHelp}</p><div className="admin-settings__fields">{fields.filter(field => !nameKeys.includes(field.key) && !officeKeys.includes(field.key)).map(renderField)}</div></details>
       </> : <div className="admin-settings__fields">{showEmptyValues ? <div className="admin-settings__empty-values" data-state="empty-values" role="status"><div className="admin-settings__empty-icon" aria-hidden="true">?</div><div><h3>{emptyValues.title}</h3><p>{emptyValues.body}</p></div></div> : fields.map(renderField)}</div>}
+      {namespace === 'contact' ? <p className="admin-settings__hint">{locale === 'ar' ? 'اكتب عنوان المقر وألصق رابط موقعه من «مشاركة» في خرائط Google. الضغط على العنوان بالفوتر يفتح هذا الموقع. لو أضفت العنوان فقط، يفتح البحث عنه على الخريطة. أحدث حفظ هنا أو في بيانات المنصة هو الذي يظهر للزوار.' : 'Enter the office address and paste its location link from Share in Google Maps. The footer address opens that location; an address without a link opens a map search. The latest save here or in platform details is shown publicly.'}</p> : null}
       {namespace === 'contact' || namespace === 'social' ? <p className="admin-settings__hint">{locale === 'ar' ? 'يظهر الرقم والروابط المحفوظة في أزرار الموقع والفوتر. اترك الحقل فارغًا لإخفاء الزر. رقم مصري: 01012345678 أو +201012345678. روابط التواصل: فيسبوك وإنستجرام فقط.' : 'Saved contacts appear on the site and footer. Leave a field empty to hide its button. Use an international phone number. Social links support Facebook and Instagram only.'}</p> : null}
       <p className="admin-settings__hint" role="status">{dirty ? copy.guide.unsaved : saved ? copy.saved : data ? copy.guide.savedStatus : copy.states.empty.title}</p>
       <label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label>

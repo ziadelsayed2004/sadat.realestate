@@ -6,6 +6,20 @@ import { getWhatsAppLink, getWhatsAppUrl } from '../src/features/frontend_founda
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 describe('configured public contacts', () => {
+  it.each(['ar', 'en'] as const)('opens the saved office map and falls back to searching the saved address in %s', async locale => {
+    let contact: { address: { ar: string; en: string }; mapUrl?: string } = { address: { ar: 'المقر في مدينة السادات', en: 'Sadat City office' }, mapUrl: 'https://maps.app.goo.gl/Abc123' };
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'office-contact' } }), { headers: { 'content-type': 'application/json' } })));
+    await refreshPublicContact(); render(<PublicSiteFooter locale={locale} />);
+    const link = screen.getByRole('link', { name: contact.address[locale] });
+    expect(link).toHaveAttribute('href', contact.mapUrl);
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    contact = { address: contact.address };
+    await act(async () => { await refreshPublicContact(); });
+    const url = new URL(link.getAttribute('href')!);
+    expect(url.origin).toBe('https://www.google.com');
+    expect(url.searchParams.get('query')).toBe(contact.address[locale]);
+  });
   it.each(['ar', 'en'] as const)('opens complaints on configured WhatsApp with a localized draft in %s', async locale => {
     let contact: Record<string, string> = { phone: '+201098765432', whatsappNumber: '+201012345678' };
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'support-contact' } }), { headers: { 'content-type': 'application/json' } })));

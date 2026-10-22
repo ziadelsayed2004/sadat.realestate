@@ -193,7 +193,7 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
       }
     }
     if (target === 'contact' || target === 'social' || target === 'platform') {
-      const projected = contactSettingsProjection(target === 'contact' ? data.values : {}, target === 'social' ? data.values : {});
+      const projected = contactSettingsProjection(target === 'contact' || target === 'platform' ? data.values : {}, target === 'social' ? data.values : {});
       const fields = target === 'platform' ? [['map_url', 'mapUrl']] as const : target === 'contact' ? [['primary_phone', 'phone'], ['whatsapp_number', 'whatsappNumber'], ['facebook_url', 'facebookUrl'], ['instagram_url', 'instagramUrl'], ['map_url', 'mapUrl']] as const : [['facebook_url', 'facebookUrl'], ['instagram_url', 'instagramUrl']] as const;
       for (const [key, field] of fields) {
         const raw = data.values[key];

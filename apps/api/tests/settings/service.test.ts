@@ -34,6 +34,14 @@ const providerClaims: AccessTokenClaims = {
   sub: '0123456789abcdef01234567'
 };
 
+test('saves a valid Google Maps link from platform details and rejects unsafe destinations', async () => {
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: repository(), audit: { async record() { return 'audit-id'; } } });
+  const input = { schemaVersion: 1, values: { office_address: { en: 'Office 5, Sadat City' }, map_url: 'https://maps.app.goo.gl/Abc123' }, expectedVersion: 0, reason: 'Set the real office location' };
+  const saved = await service.update(adminClaims, 'platform', input, { requestId: 'office-location', traceId: 'office-location' });
+  assert.equal(saved.values.map_url, input.values.map_url);
+  await assert.rejects(service.update(adminClaims, 'platform', { ...input, values: { map_url: 'javascript:alert(1)' } }, { requestId: 'unsafe-location', traceId: 'unsafe-location' }), error => error instanceof Error && 'code' in error && error.code === 'SETTINGS_INVALID_CONTACT');
+});
+
 const providerSettings: ProviderSettingsData = {
   version: 0,
   email: 'provider@example.test',

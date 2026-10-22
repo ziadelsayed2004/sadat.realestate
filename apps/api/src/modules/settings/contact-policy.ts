@@ -50,8 +50,11 @@ export function createMongoosePublicContactSettingsReader(connection: Connection
     const values = (namespace: string): Record<string, unknown> => rows.find(row => row.namespace === namespace)?.values ?? {};
     const platform = values('platform');
     const stamp = (value: unknown) => value instanceof Date ? value.getTime() : typeof value === 'string' ? Date.parse(value) || 0 : 0;
-    const latestMap = rows.filter(row => ['platform', 'contact'].includes(row.namespace) && row.values?.map_url !== undefined).sort((a, b) => stamp(a.updatedAt) - stamp(b.updatedAt)).at(-1);
-    const contact: Record<string, unknown> = { ...platform, ...values('contact'), ...(latestMap ? { map_url: latestMap.values.map_url } : {}) };
+    const contact: Record<string, unknown> = { ...platform, ...values('contact') };
+    for (const key of ['map_url', 'office_address', 'working_hours', 'primary_phone']) {
+      const latest = rows.filter(row => ['platform', 'contact'].includes(row.namespace) && row.values?.[key] !== undefined).sort((a, b) => stamp(a.updatedAt) - stamp(b.updatedAt)).at(-1);
+      if (latest) contact[key] = latest.values[key];
+    }
     const social = values('social');
     const configured = contact.contact_configured === true || ['primary_phone', 'whatsapp_number', 'map_url', 'facebook_url', 'instagram_url'].some(key => typeof (contact[key] ?? social[key]) === 'string' && String(contact[key] ?? social[key]).trim());
     const projected = contactSettingsProjection(contact, social);
