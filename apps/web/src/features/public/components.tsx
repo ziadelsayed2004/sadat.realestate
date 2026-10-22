@@ -663,6 +663,7 @@ function Hero({
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
   const body = (managed ? localizedText(banner?.body, locale) : undefined) ?? localizedText(section?.body, locale) ?? localizedText(banner?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
+  const eyebrow = localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel;
 
   return (
     <section id="homepage-hero" style={{ scrollMarginTop: '8rem' }} className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
@@ -676,7 +677,7 @@ function Hero({
         <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm15 5-7 7 7 7' : 'm9 5 7 7-7 7'} /></svg></button>
       </div> : null}
         <div className="public-homepage__hero-heading">
-        <p className="public-homepage__eyebrow">{localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel}</p>
+        <p className="public-homepage__eyebrow">{locale === 'ar' && !eyebrow.includes('🏙') ? <span aria-hidden="true">🏙️{' '}</span> : null}{eyebrow}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
