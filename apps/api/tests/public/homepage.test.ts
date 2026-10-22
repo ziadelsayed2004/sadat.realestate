@@ -8,6 +8,26 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'الرئيسية', en: 'Home' };
 
+test('automatically puts the latest selection ahead of three older featured properties regardless of legacy order', () => {
+  const template = sources().properties[0]!;
+  const older = Array.from({ length: 3 }, (_, index) => ({ ...template, id: `${index + 2}123456789abcdef01234567`, slug: `old-${index}`, featured: true, featuredOrder: 0, featuredAt: index + 1 }));
+  const selected = { ...template, id: secondId, slug: 'new-selection', featured: true, featuredOrder: 99999, featuredAt: 4 };
+  const result = publicHomepageProjection(sources({ properties: [...older, selected, { ...selected, id, slug: 'hidden', status: 'hidden', featuredAt: 5 }] }));
+  assert.deepEqual(result.properties.slice(0, 3).map(item => item.slug), ['new-selection', 'old-2', 'old-1']);
+  assert.equal('featuredAt' in result.properties[0]!, false);
+});
+
+test('automatically fills the homepage with the most recent published properties when none are selected', () => {
+  const template = sources().properties[0]!;
+  const result = publicHomepageProjection(sources({ properties: [
+    { ...template, slug: 'alpha-old', updatedAt: 1 },
+    { ...template, id: secondId, slug: 'zeta-new', updatedAt: 2 },
+    { ...template, slug: 'inactive', active: false, updatedAt: 3 }
+  ] }));
+  assert.deepEqual(result.properties.map(item => item.slug), ['zeta-new', 'alpha-old']);
+  assert.equal('updatedAt' in result.properties[0]!, false);
+});
+
 test('includes new parent categories on the homepage and totals their published child types', async () => {
   const connection = {
     collection(name: string) {

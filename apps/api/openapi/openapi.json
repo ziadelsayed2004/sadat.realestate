@@ -14007,7 +14007,9 @@
                   "order": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 100000
+                    "maximum": 100000,
+                    "deprecated": true,
+                    "description": "Legacy metadata only. Homepage order is automatic, newest selection first."
                   },
                   "reason": {
                     "type": "string",
@@ -14018,7 +14020,6 @@
                 "required": [
                   "version",
                   "featured",
-                  "order",
                   "reason"
                 ],
                 "additionalProperties": false
@@ -14026,7 +14027,7 @@
             }
           }
         },
-        "description": "Requires admin:properties.manage. Atomically updates the featured flag and order with an audit record. Only published, active and unexpired properties appear publicly."
+        "description": "Requires admin:properties.manage. Atomically updates the featured flag and selection timestamp with an audit record. Homepage order is automatic, newest selection first. Only published, active and unexpired properties appear publicly."
       }
     },
     "/api/v1/admin/providers/organization-photos": {

@@ -1,0 +1,11 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "Reproduced selection outside the first three behind four older featured properties",
+    "chromium ar 390: save without order, latest selection first in real homepage, no overflow, stale write rejected, expired selection explained and excluded",
+    "webkit en 1440: save without order, latest selection first in real homepage, no overflow, stale write rejected, expired selection explained and excluded"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

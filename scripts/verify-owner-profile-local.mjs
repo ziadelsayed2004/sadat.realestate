@@ -83,16 +83,15 @@ try {
   await expect(adminPage.locator('[data-auth-resolution=pending]')).toHaveCount(0); await expect(adminPage.locator('#site-intro')).toBeHidden();
   await expect(adminPage.locator('#property-homepage-featured')).toHaveAttribute('open', '');
   await adminPage.getByRole('checkbox', { name: 'تمييز العقار في الرئيسية', exact: true }).check();
-  await adminPage.getByRole('spinbutton', { name: 'ترتيب العرض', exact: true }).fill('0');
   const saved = adminPage.waitForResponse(r => r.url().endsWith(`/admin/properties/${propertyId}/featured`) && r.request().method() === 'PUT');
   await adminPage.getByRole('button', { name: 'حفظ التمييز', exact: true }).click(); assert.equal((await saved).status(), 200);
-  await expect(adminPage.getByText('تم حفظ ترتيب أبرز العقارات.', { exact: true })).toBeVisible();
+  await expect(adminPage.getByText('تمت إضافة العقار في أول عقارات مختارة بالرئيسية تلقائيًا.', { exact: true })).toBeVisible();
   const stored = await db.collection('properties').findOne({ _id: propertyId }); assert.equal(stored.featured, true); assert.equal(stored.featuredOrder, 0);
   const homeResponse = await admin.request.get(base + '/api/v1/public/home'); assert.equal(homeResponse.status(), 200);
   assert((await homeResponse.json()).data.properties.slice(0, 3).some(item => item.id === String(propertyId)));
   await adminPage.goto(base + '/?lang=ar');
   await expect(adminPage.locator('.public-homepage__property-card').filter({ hasText: 'عقار محلي مختار للمراجعة' })).toBeVisible();
-  report.checks.push('Arabic admin review → Feature on homepage → save order 0 → property appears among the homepage first three cards');
+  report.checks.push('Arabic admin review → Feature on homepage → save automatic placement → property appears among the homepage first three cards');
   await admin.request.post(base + '/api/v1/auth/logout'); await admin.close();
   assert.deepEqual(report.browserErrors, []); report.status = 'PASS_LOCAL';
 } catch (error) { report.status = 'FAIL_LOCAL'; report.error = String(error.stack ?? error); process.exitCode = 1; }

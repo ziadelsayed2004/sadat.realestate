@@ -208,7 +208,6 @@ try {
     await adminPage.goto(`${base}/admin/properties/review?propertyId=${propertyId}&lang=ar`); await ready(adminPage);
     await expect(adminPage.locator('#property-homepage-featured')).toHaveAttribute('open', '');
     await adminPage.getByRole('checkbox', { name: 'تمييز العقار في الرئيسية' }).check();
-    await adminPage.getByRole('spinbutton', { name: 'ترتيب العرض' }).fill('0');
     const feature = adminPage.waitForResponse(r => r.url().endsWith('/featured') && r.request().method() === 'PUT' && r.status() !== 401);
     await adminPage.getByRole('button', { name: 'حفظ التمييز' }).click(); assert.equal((await feature).status(), 200);
     const home = await api(admin, 'GET', '/public/home'); assert(home.properties.slice(0, 3).some(item => item.id === String(propertyId)));

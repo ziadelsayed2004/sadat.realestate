@@ -7,6 +7,7 @@ export interface PropertyRecord {
   mediaRevision?: string;
   featured?: boolean;
   featuredOrder?: number;
+  featuredAt?: Date;
   deactivationRequest?: import('@sadat-real-estate/contracts').PropertyData['deactivationRequest'];
   imageUrl?: string;
   providerId: Types.ObjectId;
@@ -74,6 +75,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   mediaRevision: { type: String, maxlength: 36 },
   featured: { type: Boolean, default: false },
   featuredOrder: { type: Number, min: 0, max: 100000 },
+  featuredAt: { type: Date },
   deactivationRequest: { type: new Schema({ status: { type: String, enum: ['pending', 'approved', 'rejected'], required: true }, reason: { type: String, required: true, minlength: 5, maxlength: 500 }, requestedAt: { type: String, required: true }, resolvedAt: String, decisionReason: { type: String, minlength: 5, maxlength: 500 } }, { _id: false, strict: 'throw' }), required: false },
   imageUrl: { type: String, maxlength: 2048 },
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },

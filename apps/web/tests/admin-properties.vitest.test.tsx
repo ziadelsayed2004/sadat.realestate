@@ -19,6 +19,7 @@ import { ApiClient } from '../src/features/contracts/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import type { AdminPropertyListData } from '../src/features/admin_properties/index.ts';
 import { getAdminPropertiesCopy } from '../src/features/admin_properties/copy.ts';
+import { FeaturedPropertyControl } from '../src/features/admin_properties/featured.tsx';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 const property = propertyDataSchema.parse({
@@ -38,6 +39,20 @@ const property = propertyDataSchema.parse({
 const candidateId = 'dddddddddddddddddddddddd';
 const reportId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const properties: AdminPropertyListData = { items: [property], page: 1, limit: 20, total: 1 };
+
+it.each(['published', 'pending_review', 'expired'] as const)('saves automatic homepage selection and explains the actual %s visibility', async state => {
+  const current = propertyDataSchema.parse({ ...property, status: state === 'pending_review' ? state : 'published', ...(state === 'expired' ? { expiresAt: '2020-01-01T00:00:00.000Z' } : {}) });
+  const saved = { ...current, featured: true, version: current.version + 1 };
+  const request = vi.spyOn(ApiClient.prototype, 'request').mockResolvedValue({ data: { data: saved } } as never);
+  const onSaved = vi.fn();
+  renderWithLocale(<FeaturedPropertyControl property={current} locale="en" onSaved={onSaved} />, { locale: 'en' });
+  expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Feature on homepage' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Save featured selection' }));
+  await waitFor(() => expect(onSaved).toHaveBeenCalledWith(saved));
+  expect(request).toHaveBeenCalledWith(`/admin/properties/${current.id}/featured`, expect.objectContaining({ json: { version: current.version, featured: true, reason: 'Manage homepage featured property' } }));
+  expect(screen.getByRole('status')).toHaveTextContent(state === 'published' ? 'Property added first' : 'must be published, active and unexpired');
+});
 
 it.each(['ar', 'en'] as const)('shows the provider request and saves approval using the current version in %s', async locale => {
   const pending = propertyDataSchema.parse({ ...property, status: 'published', availableActions: ['approve_deactivation', 'reject_deactivation'], deactivationRequest: { status: 'pending', reason: 'Property has been sold', requestedAt: property.updatedAt } });
