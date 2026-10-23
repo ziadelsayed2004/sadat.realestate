@@ -23,7 +23,7 @@ try {
       await expect.poll(() => header.evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThanOrEqual(1);
       const result = await header.evaluate(el => {
         const rect = el.getBoundingClientRect(), top = document.elementFromPoint(innerWidth / 2, rect.height / 2);
-        return { position: getComputedStyle(el).position, scrolled: scrollY, measured: parseFloat(getComputedStyle(el.parentElement).getPropertyValue('--public-header-height')), height: rect.height, onTop: el.contains(top), overflow: document.documentElement.scrollWidth > innerWidth + 1 };
+        return { position: getComputedStyle(el).position, scrolled: window.scrollY, measured: parseFloat(getComputedStyle(el.parentElement).getPropertyValue('--public-header-height')), height: rect.height, onTop: el.contains(top), overflow: document.documentElement.scrollWidth > innerWidth + 1 };
       });
       assert(result.scrolled > 100); assert.equal(result.position, 'sticky'); assert.equal(result.onTop, true); assert.equal(result.overflow, false); assert(Math.abs(result.measured - result.height) <= 1);
       if (width < 701) {
