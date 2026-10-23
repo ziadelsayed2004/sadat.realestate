@@ -79,7 +79,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
     login: 'تسجيل الدخول',
     createAccount: 'إنشاء حساب',
     localeLabel: 'اللغة',
-    heroLabel: '\ud83c\udfd9\ufe0f بوابتك لعقارات مدينة السادات',
+    heroLabel: 'بوابتك لعقارات مدينة السادات',
     heroFallbackTitle: 'ابحث عن عقارك\nالان في السادات',
     heroFallbackBody: 'منصة متكاملة لعقارات وخدمات مدينة السادات',
     searchLabel: 'ابحث عن عقار',
