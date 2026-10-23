@@ -207,7 +207,7 @@ export function PublicSiteHeader({
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
-    const measure = () => header.closest<HTMLElement>('.public-homepage')?.style.setProperty('--public-header-height', `${header.offsetHeight}px`);
+    const measure = () => header.parentElement?.style.setProperty('--public-header-height', `${header.offsetHeight}px`);
     measure();
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
     observer?.observe(header);

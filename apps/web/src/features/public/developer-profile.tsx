@@ -308,12 +308,12 @@ function ProfileOverview({ data, locale, copy }: { readonly data: PublicOrganiza
       <h2 id="developer-overview-title">{copy.descriptionTitle}</h2>
       <div className="public-developer-profile__overview-content">
         <p>{description}</p>
-        <div className="public-developer-profile__details">
+        {groups.some(([, values]) => localizedValues(values, locale).length > 0) ? <div className="public-developer-profile__details">
           {groups.map(([title, values, icon]) => {
             const labels = localizedValues(values, locale);
             return labels.length > 0 ? <div className="public-developer-profile__detail-group" key={title}><h3><ProfileIcon name={icon} />{title}</h3><div className="public-developer-profile__tags">{labels.map(label => <span key={label}>{label}</span>)}</div></div> : null;
           })}
-        </div>
+        </div> : null}
       </div>
     </section>
   );
@@ -418,19 +418,21 @@ function ContactSection({ data, locale, copy, actions, projectId = '' }: { reado
 
 function ProfileSuccess({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
   return (
-    <div className="public-developer-profile__content">
+    <>
       <ProfileHero data={data} locale={locale} copy={copy} />
       <ProfileTabs copy={copy} />
-      <div className="public-developer-profile__layout">
-        <ProfileAside data={data} copy={copy} />
-        <div className="public-developer-profile__main">
-          <ProfileOverview data={data} locale={locale} copy={copy} />
-          <ProjectsSection data={data} locale={locale} copy={copy} />
-          <PropertiesSection data={data} locale={locale} copy={copy} />
-          <ContactSection data={data} locale={locale} copy={copy} actions={actions} />
+      <div className="public-developer-profile__content">
+        <div className="public-developer-profile__layout">
+          <ProfileAside data={data} copy={copy} />
+          <div className="public-developer-profile__main">
+            <ProfileOverview data={data} locale={locale} copy={copy} />
+            <ProjectsSection data={data} locale={locale} copy={copy} />
+            <PropertiesSection data={data} locale={locale} copy={copy} />
+            <ContactSection data={data} locale={locale} copy={copy} actions={actions} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

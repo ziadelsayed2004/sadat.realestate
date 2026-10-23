@@ -62,6 +62,9 @@
 }
 
 .public-homepage__header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -1950,7 +1953,7 @@
 
   .public-homepage__header {
     grid-template-columns: auto minmax(0, 1fr) auto;
-    position: relative;
+    position: sticky;
     z-index: 20;
     min-block-size: 4rem;
     padding: 0.5rem 0.75rem;
@@ -1988,7 +1991,7 @@
 
   .public-homepage__nav {
     position: fixed;
-    inset-block: 4rem 0;
+    inset-block: var(--public-header-height, 4rem) 0;
     inset-inline-start: auto;
     inset-inline-end: 0;
     z-index: 30;
@@ -2026,11 +2029,11 @@
 
   .public-homepage__menu-backdrop {
     position: fixed;
-    inset: 4rem 0 0;
+    inset: var(--public-header-height, 4rem) 0 0;
     z-index: 25;
     display: block;
     inline-size: 100%;
-    block-size: calc(100dvh - 4rem);
+    block-size: calc(100dvh - var(--public-header-height, 4rem));
     padding: 0;
     background: rgb(15 23 42 / 0.56);
     border: 0;

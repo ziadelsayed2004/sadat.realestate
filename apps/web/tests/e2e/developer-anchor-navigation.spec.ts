@@ -13,11 +13,11 @@ const locale = () => test.info().project.name.endsWith('-en') ? 'en' : 'ar';
 async function atSection(page: Page, id: string) {
   await expect.poll(() => page.locator(`#${id}`).evaluate(element => {
     const bounds = element.getBoundingClientRect();
-    const tabsBottom = document.querySelector('.public-developer-profile__tabs')?.getBoundingClientRect().bottom ?? 0;
+    const headerBottom = document.querySelector('.public-homepage__header')?.getBoundingClientRect().bottom ?? 0;
     const margin = parseFloat(getComputedStyle(element).scrollMarginTop) || 0;
     const room = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
     const destination = Math.max(0, Math.min(room, window.scrollY + bounds.top - margin));
-    return bounds.top >= tabsBottom - 2 && bounds.top < window.innerHeight - 40 && Math.abs(window.scrollY - destination) < 2;
+    return bounds.top >= headerBottom - 2 && bounds.top < window.innerHeight - 40 && Math.abs(window.scrollY - destination) < 2;
   })).toBe(true);
 }
 test.beforeEach(async ({ page }) => {

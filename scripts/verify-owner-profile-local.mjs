@@ -74,9 +74,13 @@ try {
         const rect = selector => { const r = document.querySelector(selector).getBoundingClientRect(); return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, height: r.height }; };
         const media = rect('.public-developer-profile__hero-media'), logo = rect('.public-developer-profile__identity-logo'), back = rect('.public-developer-profile__back');
         const tabs = document.querySelector('.public-developer-profile__tabs');
-        return { gap: logo.top - media.bottom, backGap: media.top - back.bottom, tabsOverflow: tabs.scrollWidth > tabs.clientWidth + 1, actions: [...document.querySelectorAll('.public-developer-profile__identity-action')].map(el => el.getBoundingClientRect().height) };
+        const header = document.querySelector('.public-homepage__header');
+        return { gap: logo.top - media.bottom, backGap: media.top - back.bottom, tabsOverflow: tabs.scrollWidth > tabs.clientWidth + 1, coverWidth: media.right - media.left, identityWidth: document.querySelector('.public-developer-profile__identity').getBoundingClientRect().width, tabsWidth: tabs.getBoundingClientRect().width, tabsPosition: getComputedStyle(tabs).position, headerPosition: getComputedStyle(header).position, headerMeasured: parseFloat(getComputedStyle(header.parentElement).getPropertyValue('--public-header-height')), headerHeight: header.getBoundingClientRect().height, viewport: innerWidth, actions: [...document.querySelectorAll('.public-developer-profile__identity-action')].map(el => el.getBoundingClientRect().height) };
       });
       assert(geometry.gap >= 16); assert(geometry.backGap >= 16); assert.equal(geometry.tabsOverflow, false); assert(geometry.actions.every(height => height >= 44));
+      for (const size of [geometry.coverWidth, geometry.identityWidth, geometry.tabsWidth]) assert(Math.abs(size - geometry.viewport) <= 1);
+      assert.equal(geometry.tabsPosition, 'static'); assert.equal(geometry.headerPosition, 'sticky'); assert(Math.abs(geometry.headerHeight - geometry.headerMeasured) <= 1);
+      if (width <= 1024) assert(await page.evaluate(() => document.querySelector('.public-developer-profile__main').getBoundingClientRect().top - document.querySelector('.public-developer-profile__aside').getBoundingClientRect().bottom >= 23));
       await expect(page.locator('.public-developer-profile__project-card')).toContainText(locale === 'ar' ? 'تفاصيل المشروع تظهر تحت اسمه' : 'Project details appear below its title');
       assert(await page.locator('.public-developer-profile__overview-content').evaluate(el => el.getBoundingClientRect().height < 200));
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -86,8 +90,19 @@ try {
       await page.screenshot({ path: `${output}/${engine.name()}-${locale}-${width}.png`, fullPage: true });
       await page.locator('.public-developer-profile__hero').screenshot({ path: `${output}/${engine.name()}-${locale}-${width}-hero.png` });
       await page.locator('.public-developer-profile__tabs a[href="#developer-properties"]').click();
-      await expect.poll(() => page.evaluate(() => document.getElementById('developer-properties').getBoundingClientRect().top >= document.querySelector('.public-developer-profile__tabs').getBoundingClientRect().bottom - 1)).toBe(true);
-      report.checks.push(`${engine.name()} ${locale} ${width}px: complete cover without overlay button, separate locale-aware back link, cover/logo gap >=16px, 44px actions, wrapping tabs, compact overview, project details, bordered property cards, no overflow`);
+      await expect.poll(() => page.evaluate(() => document.getElementById('developer-properties').getBoundingClientRect().top >= document.querySelector('.public-homepage__header').getBoundingClientRect().bottom - 1)).toBe(true);
+      assert(Math.abs(await page.locator('.public-homepage__header').evaluate(el => el.getBoundingClientRect().top)) <= 1);
+      await expect.poll(() => page.locator('.public-developer-profile__tabs').evaluate(el => el.getBoundingClientRect().top < 0)).toBe(true);
+      if (width <= 700) {
+        await page.locator('.public-homepage__menu-toggle').click();
+        await expect(page.locator('.public-homepage__nav.is-open')).toBeVisible();
+        assert(await page.evaluate(() => document.querySelector('.public-homepage__nav').getBoundingClientRect().top >= document.querySelector('.public-homepage__header').getBoundingClientRect().bottom - 1));
+        await page.keyboard.press('Escape');
+        await expect(page.locator('.public-homepage__nav.is-open')).toHaveCount(0);
+        await expect(page.locator('.public-homepage__nav')).toBeHidden();
+      }
+      await page.screenshot({ path: `${output}/${engine.name()}-${locale}-${width}-scrolled.png` });
+      report.checks.push(`${engine.name()} ${locale} ${width}px: full-width cover/identity/static tabs, site header pinned on scroll with measured height, visible anchors, mobile menu below header, complete cover, 16px media separation, 44px actions and no overflow`);
     }
     await db.collection('organizations').updateOne({ _id: orgId }, { $set: { kind: 'brokerage_office' }, $unset: { imageUrl: '', logoUrl: '' } });
     await db.collection('provider_profiles').updateOne({ userId }, { $set: { providerType: 'brokerage_office' } });
@@ -104,6 +119,22 @@ try {
     await expect(page.locator('.public-developer-profile__cover-fallback')).toBeVisible();
     await expect(page.locator('.public-developer-profile__identity-logo-fallback svg')).toBeVisible();
     report.checks.push(`${engine.name()}: broken office cover and logo recover to the same stable fallback`);
+    const beforeEmpty = await db.collection('organizations').findOne({ _id: orgId });
+    await db.collection('organizations').updateOne({ _id: orgId }, { $unset: { description: '' }, $set: { name: { ar: 'شركة اختبار التطوير والاستثمار والتسويق العقاري في مدينة السادات', en: 'Local Real Estate Development Investment and Marketing Group in Sadat City' } } });
+    await db.collection('projects').updateOne({ _id: projectId }, { $set: { status: 'draft' } });
+    await page.reload();
+    await expect(page.locator('.public-developer-profile__projects-section .public-developer-profile__empty')).toBeVisible();
+    await expect(page.locator('.public-developer-profile__details')).toHaveCount(0);
+    const emptyLayout = await page.evaluate(() => {
+      const box = selector => document.querySelector(selector).getBoundingClientRect();
+      const heading = box('.public-developer-profile__section-heading h2'), link = box('.public-developer-profile__section-heading a');
+      return { overlap: Math.min(heading.right, link.right) - Math.max(heading.left, link.left) > 1 && Math.min(heading.bottom, link.bottom) - Math.max(heading.top, link.top) > 1, sectionGap: box('#developer-properties').top - box('#developer-projects').bottom, overviewHeight: box('.public-developer-profile__overview-content').height, overflow: document.documentElement.scrollWidth > innerWidth + 1 };
+    });
+    assert.equal(emptyLayout.overlap, false); assert(emptyLayout.sectionGap <= 40); assert(emptyLayout.overviewHeight < 160); assert.equal(emptyLayout.overflow, false);
+    await page.screenshot({ path: `${output}/${engine.name()}-office-empty-content.png`, fullPage: true });
+    report.checks.push(`${engine.name()}: 320px long name, missing overview and projects stay compact; property heading/link do not overlap; sections are at most 40px apart`);
+    await db.collection('organizations').updateOne({ _id: orgId }, { $set: { name: beforeEmpty.name, description: beforeEmpty.description } });
+    await db.collection('projects').updateOne({ _id: projectId }, { $set: { status: 'published' } });
     await db.collection('organizations').updateOne({ _id: orgId }, { $set: { kind: 'developer_company', imageUrl, logoUrl: imageUrl } });
     await db.collection('provider_profiles').updateOne({ userId }, { $set: { providerType: 'developer_company' } });
     await db.collection('provider_applications').updateOne({ _id: appId }, { $set: { providerType: 'developer_company' } });

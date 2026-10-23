@@ -1,0 +1,24 @@
+{
+  "status": "PASS_LOCAL",
+  "checks": [
+    "chromium ar 390 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium ar 390 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium ar 390 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium en 820 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium en 820 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium en 820 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium ar 1440 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium ar 1440 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "chromium ar 1440 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 390 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 390 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 390 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit en 820 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit en 820 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit en 820 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 1440 /: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 1440 /developers: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow",
+    "webkit ar 1440 /articles: header pinned above content after scrolling, measured height, mobile drawer placement, no overflow"
+  ],
+  "browserErrors": []
+}
