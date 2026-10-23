@@ -17,9 +17,12 @@ const output = '.tmp/owner-profile', report = { status: 'RUNNING', mockedRoutes:
 const storageRoot = path.resolve(env.PRIVATE_STORAGE_LOCAL_ROOT || path.join(os.tmpdir(), 'sadat-real-estate-private-storage'));
 await mkdir(output, { recursive: true });
 let browser;
+async function rateWindow() {
+  const response = await fetch(base + '/api/v1/public/bootstrap');
+  if (response.status === 429 || Number(response.headers.get('ratelimit-remaining')) < 55) await new Promise(resolve => setTimeout(resolve, 60000));
+}
 try {
-  const window = await fetch(base + '/api/v1/public/bootstrap');
-  if (window.status === 429 || Number(window.headers.get('ratelimit-remaining')) < 40) await new Promise(resolve => setTimeout(resolve, 60_000));
+  await rateWindow();
   await db.collection('users').insertOne({ _id: userId, roleType: 'provider', status: 'verified', normalizedEmail: email, version: 0, createdAt: stamp, updatedAt: stamp });
   await db.collection('admin_credentials').insertOne({ userId, passwordHash: await createArgon2PasswordHasher().hash(password), passwordChangedAt: stamp, version: 0, createdAt: stamp, updatedAt: stamp });
   await db.collection('provider_profiles').insertOne({ _id: orgId, userId, providerType: 'developer_company', status: 'approved', version: 0, createdAt: stamp, updatedAt: stamp });
@@ -57,13 +60,23 @@ try {
   report.checks.push('Provider settings exposes separate logo/cover uploads with 512×512 and 1600×900 size guidance');
   await browser.close();
   for (const engine of [chromium, webkit]) {
+    await rateWindow();
     browser = await engine.launch();
     const page = await browser.newPage(); page.on('pageerror', error => report.browserErrors.push(String(error)));
-    for (const [locale, width] of [['ar', 390], ['en', 1440]]) {
+    for (const [locale, width] of [['ar', 390], ['ar', 820], ['ar', 1440], ['en', 390], ['en', 820], ['en', 1440]]) {
       await page.setViewportSize({ width, height: 1000 }); await page.goto(`${base}/developers/${slug}?lang=${locale}`);
       await expect(page.locator('[data-auth-resolution=pending]')).toHaveCount(0); await expect(page.locator('#site-intro')).toBeHidden();
       const cover = page.locator('.public-developer-profile__hero-media > img');
       await expect(cover).toHaveAttribute('src', imageUrl + '?variant=cover'); await expect(cover).toHaveJSProperty('naturalWidth', croppedMetadata.width); assert.equal(await cover.evaluate(el => getComputedStyle(el).objectFit), 'contain');
+      await expect(page.getByRole('link', { name: locale === 'ar' ? 'عرض الصورة كاملة' : 'View full image', exact: true })).toHaveCount(0);
+      await expect(page.locator('.public-developer-profile__back')).toHaveAttribute('href', `/developers?lang=${locale}`);
+      const geometry = await page.evaluate(() => {
+        const rect = selector => { const r = document.querySelector(selector).getBoundingClientRect(); return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, height: r.height }; };
+        const media = rect('.public-developer-profile__hero-media'), logo = rect('.public-developer-profile__identity-logo'), back = rect('.public-developer-profile__back');
+        const tabs = document.querySelector('.public-developer-profile__tabs');
+        return { gap: logo.top - media.bottom, backGap: media.top - back.bottom, tabsOverflow: tabs.scrollWidth > tabs.clientWidth + 1, actions: [...document.querySelectorAll('.public-developer-profile__identity-action')].map(el => el.getBoundingClientRect().height) };
+      });
+      assert(geometry.gap >= 16); assert(geometry.backGap >= 16); assert.equal(geometry.tabsOverflow, false); assert(geometry.actions.every(height => height >= 44));
       await expect(page.locator('.public-developer-profile__project-card')).toContainText(locale === 'ar' ? 'تفاصيل المشروع تظهر تحت اسمه' : 'Project details appear below its title');
       assert(await page.locator('.public-developer-profile__overview-content').evaluate(el => el.getBoundingClientRect().height < 200));
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -71,10 +84,32 @@ try {
       const style = await card.evaluate(el => { const s = getComputedStyle(el); return { border: s.borderTopWidth, color: s.backgroundColor, page: getComputedStyle(document.body).backgroundColor }; });
       assert.equal(style.border, '2px'); assert.notEqual(style.color, style.page);
       await page.screenshot({ path: `${output}/${engine.name()}-${locale}-${width}.png`, fullPage: true });
-      report.checks.push(`${engine.name()} ${locale} ${width}px: readable complete cover, compact overview, project details, property card has 2px border and light background, no overflow`);
+      await page.locator('.public-developer-profile__hero').screenshot({ path: `${output}/${engine.name()}-${locale}-${width}-hero.png` });
+      await page.locator('.public-developer-profile__tabs a[href="#developer-properties"]').click();
+      await expect.poll(() => page.evaluate(() => document.getElementById('developer-properties').getBoundingClientRect().top >= document.querySelector('.public-developer-profile__tabs').getBoundingClientRect().bottom - 1)).toBe(true);
+      report.checks.push(`${engine.name()} ${locale} ${width}px: complete cover without overlay button, separate locale-aware back link, cover/logo gap >=16px, 44px actions, wrapping tabs, compact overview, project details, bordered property cards, no overflow`);
     }
+    await db.collection('organizations').updateOne({ _id: orgId }, { $set: { kind: 'brokerage_office' }, $unset: { imageUrl: '', logoUrl: '' } });
+    await db.collection('provider_profiles').updateOne({ userId }, { $set: { providerType: 'brokerage_office' } });
+    await db.collection('provider_applications').updateOne({ _id: appId }, { $set: { providerType: 'brokerage_office' } });
+    await db.collection('provider_identity_subscriptions').updateOne({ _id: userId }, { $set: { status: 'active', paymentConfirmed: true, startAt: new Date(Date.now() - 60000), endAt: new Date(Date.now() + 86400000), version: 1 } }, { upsert: true });
+    await page.setViewportSize({ width: 320, height: 1000 }); await page.goto(`${base}/developers/${slug}?lang=ar`);
+    await expect(page.locator('.public-developer-profile__cover-fallback')).toBeVisible();
+    await expect(page.locator('.public-developer-profile__identity-logo-fallback svg')).toBeVisible();
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+    await page.locator('.public-developer-profile__hero').screenshot({ path: `${output}/${engine.name()}-office-missing-images.png` });
+    report.checks.push(`${engine.name()}: office with no cover/logo has compact labelled cover fallback and visible building identity without overflow`);
+    await db.collection('organizations').updateOne({ _id: orgId }, { $set: { imageUrl: '/assets/missing-local-office-cover.png', logoUrl: '/assets/missing-local-office-logo.png' } });
+    await page.reload();
+    await expect(page.locator('.public-developer-profile__cover-fallback')).toBeVisible();
+    await expect(page.locator('.public-developer-profile__identity-logo-fallback svg')).toBeVisible();
+    report.checks.push(`${engine.name()}: broken office cover and logo recover to the same stable fallback`);
+    await db.collection('organizations').updateOne({ _id: orgId }, { $set: { kind: 'developer_company', imageUrl, logoUrl: imageUrl } });
+    await db.collection('provider_profiles').updateOne({ userId }, { $set: { providerType: 'developer_company' } });
+    await db.collection('provider_applications').updateOne({ _id: appId }, { $set: { providerType: 'developer_company' } });
     await browser.close();
   }
+  await rateWindow();
   browser = await chromium.launch();
   const admin = await browser.newContext();
   const adminLogin = await admin.request.post(base + '/api/v1/auth/login', { data: { email: 'admin.demo@example.invalid', password: 'LocalPreview-Admin-Only-2026!' } }); assert.equal(adminLogin.status(), 200);
@@ -102,6 +137,7 @@ finally {
   }
   for (const name of ['users', 'provider_profiles', 'provider_applications', 'admin_credentials', 'sessions', 'organization_photos', 'audit_logs']) await db.collection(name).deleteMany({ $or: [{ _id: { $in: [userId, appId, orgId] } }, { userId }, { createdBy: userId }, { actorId: userId }] });
   await db.collection('organizations').deleteOne({ _id: orgId }); await db.collection('projects').deleteOne({ _id: projectId }); await db.collection('properties').deleteOne({ _id: propertyId });
+  await db.collection('provider_identity_subscriptions').deleteOne({ _id: userId });
   await db.collection('audit_logs').deleteMany({ targetId: String(propertyId) });
   await db.close(); report.cleanup = true; await writeFile('docs/quality/guide-runs/owner-profile-local-latest.json', JSON.stringify(report, null, 2) + '\n');
 }
