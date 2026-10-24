@@ -17,3 +17,5 @@ Verification:
 - Local screenshots: `.tmp/public-carousels/`.
 
 Owner update command and its availability/data behavior: [regular updates guide](../deployment/REGULAR_UPDATES_AR.md).
+
+Search-overlay follow-up: the search panel is now inside the hero's visual container, so the photograph extends behind the entire panel and its bottom spacing. On phones the heading and search share the first screen instead of stacking a full-screen photograph before the form. Arrows are anchored to the introduction above search. The browser verifier additionally checks that the search rectangle is fully inside the photograph, below the pagination and clear of both arrows, using the full Arabic homepage headline.

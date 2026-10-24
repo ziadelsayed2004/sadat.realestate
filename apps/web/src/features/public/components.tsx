@@ -621,6 +621,9 @@ function Hero({
         {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} exiting={url === outgoingImage} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
+
+      </div>
+      <div className="public-homepage__hero-introduction">
       {slides.length > 1 ? <>
       <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? '\u0635\u0648\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646' : 'Advertisement images'}>
         <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? '\u0627\u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u0633\u0627\u0628\u0642\u0629' : 'Previous image'}><CarouselArrow locale={locale} /></button>
@@ -628,7 +631,6 @@ function Hero({
       </div>
 
       </> : null}
-      </div>
         <div className="public-homepage__hero-heading">
         <div className="public-homepage__hero-copy" key={banner?.key ?? 'original'}>
         <p className="public-homepage__eyebrow">{eyebrow}</p>
@@ -643,6 +645,7 @@ function Hero({
       </div>
       <div className="public-homepage__hero-content">
         <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
+      </div>
       </div>
     </section>
   );

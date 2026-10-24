@@ -30,7 +30,7 @@ try {
     banner = await repository.updateBanner(String(user), banner.id, { expectedVersion: banner.version, mediaIds: [picture.id], status: 'active', reason: 'Verify real carousel layout and motion' }, now);
     return banner;
   }
-  const heroA = await create('homepage.hero', copy('البانر الأول', 'First hero'), '/assets/canonical/public/home-hero-sadat-city.png');
+  const heroA = await create('homepage.hero', copy('ابحث عن عقارك الآن في مدينة السادات', 'First hero'), '/assets/canonical/public/home-hero-sadat-city.png');
   await create('homepage.hero', copy('البانر الثاني', 'Second hero'), '/assets/canonical/public/listing-property-home.png');
   const featured = { advertiserProviderId: String(user), destination: { kind: 'organization', id: String(organization) }, highlight: copy('اختيار مناسب لعقارك', 'Find your next property'), ctaLabel: copy('شاهد التفاصيل', 'View details') };
   const cardA = await create('homepage.featured', copy('إعلان أول', 'First promotion'), '/assets/canonical/public/home-hero-sadat-city.png', { featured });
@@ -47,7 +47,7 @@ try {
       await expect(page.locator('#site-intro')).toBeHidden();
       const hero = page.locator('#homepage-hero'), section = page.locator('#homepage-featured');
       const card = section.locator('.public-homepage__banner-card');
-      await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'البانر الأول' : 'First hero');
+      await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'ابحث عن عقارك الآن في مدينة السادات' : 'First hero');
       await expect(section.locator('h2')).toHaveText(locale === 'ar' ? 'إعلان أول' : 'First promotion');
       const previous = section.getByRole('button', { name: locale === 'ar' ? 'الإعلان السابق' : 'Previous banner' });
       const next = section.getByRole('button', { name: locale === 'ar' ? 'الإعلان التالي' : 'Next banner' });
@@ -66,6 +66,12 @@ try {
       await page.waitForFunction(() => document.querySelector('.public-homepage__hero-image[data-active]')?.naturalWidth > 0);
       await heroPhoto.evaluate(image => Promise.all(image.getAnimations().map(animation => animation.finished)));
       const visual = await hero.locator('.public-homepage__hero-visual').boundingBox(), image = await heroPhoto.boundingBox();
+      const search = await hero.locator('.public-homepage__search').boundingBox();
+      const dots = await hero.locator('.public-homepage__hero-dots').boundingBox();
+      const arrow = await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).boundingBox();
+      assert(search.y >= image.y && search.y + search.height <= image.y + image.height - 8, 'Search panel must float fully inside the photograph');
+      assert(dots.y + dots.height <= search.y + 1, 'Pagination must stay above search');
+      assert(arrow.y + arrow.height <= search.y, 'Navigation must stay clear of search');
       if (width === 390) { assert(visual.height >= 844 - 90); assert(Math.abs(image.width - width) < 1); assert(Math.abs(image.height - visual.height) < 1); }
       await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).click();
       await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'البانر الثاني' : 'Second hero');
@@ -73,13 +79,13 @@ try {
       const target = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(visual.height - target.height) < 1);
       const heroDot = hero.getByRole('button', { name: locale === 'ar' ? 'صورة 1' : 'Image 1', exact: true });
       await heroDot.focus(); await page.keyboard.press('Enter');
-      await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'البانر الأول' : 'First hero');
+      await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'ابحث عن عقارك الآن في مدينة السادات' : 'First hero');
       await expect(heroDot).toBeFocused();
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({ animations: 'disabled', path: `${output}/${name}-${locale}-${width}-hero.png` });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await page.waitForLoadState('networkidle');
-      report.checks.push(`${name} ${locale} ${width}: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow`);
+      report.checks.push(`${name} ${locale} ${width}: stable featured/hero heights, search fully over photograph below text/pagination, unobstructed arrows, selected pagination, smooth animation and no page overflow`);
     }
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect(page.locator('.public-homepage__banner-slide')).toHaveCSS('animation-name', 'none');

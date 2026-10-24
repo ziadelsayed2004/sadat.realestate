@@ -128,7 +128,7 @@ try {
       await page.waitForFunction(() => [...document.querySelectorAll('.public-homepage__hero-image')].some(image => !image.hidden && image.complete && image.naturalWidth > 0));
       const geometry = await photo.evaluate(image => ({ width: image.clientWidth, height: image.clientHeight, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit }));
       if (width === 390) { assert.equal(geometry.fit, 'cover'); const picture = await hero.locator('.public-homepage__hero-picture').boundingBox(), visual = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(picture.height - visual.height) < 1); assert(visual.height >= 700); }
-      else { const picture = await hero.locator('.public-homepage__hero-picture').boundingBox(), container = await hero.boundingBox(); assert(Math.abs(picture.height - container.height) < 1); }
+      else { const picture = await hero.locator('.public-homepage__hero-picture').boundingBox(), container = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(picture.height - container.height) < 1); }
       await noOverflow(page);
       await page.screenshot({ path: `${output}/${engineName}-home-${width}.png` });
       await hero.getByRole('button', { name: 'Next image', exact: true }).click();

@@ -2589,8 +2589,9 @@
 
 /* Keep the hero photograph visible beneath the navy text overlay. */
 .public-homepage .public-homepage__hero { display: block; min-block-size: calc(100svh - var(--public-header-height, 110px)); padding: 0 0 32px; box-sizing: border-box; }
-.public-homepage__hero .public-homepage__hero-visual { position: static; display: grid; min-block-size: max(420px, calc(100svh - var(--public-header-height, 110px) - 120px)); align-items: center; }
+.public-homepage__hero .public-homepage__hero-visual { position: relative; display: grid; grid-template-rows: 1fr auto; min-block-size: max(420px, calc(100svh - var(--public-header-height, 110px))); align-items: center; padding-block-end: 24px; box-sizing: border-box; }
 .public-homepage__hero-picture { position: absolute; inset: 0; z-index: 0; }
+.public-homepage__hero-introduction { position: relative; z-index: 2; min-inline-size: 0; display: grid; align-items: center; }
 .public-homepage__hero-heading { position: relative; z-index: 2; }
 .public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; z-index: 0; }
 .public-homepage__hero .public-homepage__hero-media > img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; aspect-ratio: auto; object-fit: cover; opacity: 1; }
@@ -2612,15 +2613,16 @@
 .public-homepage__hero-slider button { display: grid; place-items: center; flex: 0 0 44px; font-size: inherit; }
 .public-homepage__hero-slider svg { display: block; width: 22px; height: 22px; }
 @media (max-width: 767px) {
-  .public-homepage .public-homepage__hero { padding-block-end: 24px; }
-  .public-homepage__hero .public-homepage__hero-visual { position: relative; min-block-size: max(34rem, calc(100svh - var(--public-header-height, 65px))); display: grid; }
+  .public-homepage .public-homepage__hero { padding-block-end: 0; }
+  .public-homepage__hero .public-homepage__hero-visual { min-block-size: max(34rem, calc(100svh - var(--public-header-height, 65px))); display: flex; flex-direction: column; }
   .public-homepage__hero-picture { position: absolute; inset: 0; }
+  .public-homepage__hero-introduction { flex: 1; inline-size: 100%; }
   .public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; }
   .public-homepage__hero .public-homepage__hero-media > img { block-size: 100%; object-fit: cover; }
   .public-homepage__hero .public-homepage__hero-shade { display: block; background: linear-gradient(180deg, #18243e30, #18243ea6 44%, #18243edb); }
-  .public-homepage__hero-heading { inline-size: calc(100% - 104px); gap: 12px; padding-block: 48px 80px; }
+  .public-homepage__hero-heading { inline-size: calc(100% - 104px); flex: 1; align-content: center; gap: 12px; padding-block: 32px 24px; }
   .public-homepage__hero .public-homepage__eyebrow { font-size: .7rem; padding: 6px 8px; }
-  .public-homepage__hero .public-homepage__hero-content { inline-size: calc(100% - 24px); margin-block-start: -32px; }
+  .public-homepage__hero .public-homepage__hero-content { inline-size: calc(100% - 24px); flex: none; margin-block-start: 0; }
   .public-homepage__hero-slider { padding-inline: 8px; }
   .public-homepage__hero-slider button { inline-size: 44px; block-size: 44px; flex-basis: 44px; }
 }
