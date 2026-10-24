@@ -9,7 +9,7 @@ import { CompanyPhoto } from './company-photo.tsx';
 
 const schema = z.object({ id: z.string(), slug: z.string(), version: z.number(), name: z.object({ ar: z.string().optional(), en: z.string().optional() }), description: z.object({ ar: z.string().optional(), en: z.string().optional() }), imageUrl: z.string().nullable(), logoUrl: z.string().nullable().optional(), status: z.string() });
 type ImageField = 'imageUrl' | 'logoUrl';
-export function CompanyEditor({ providerId, locale, authorization, apiOrigin, owner = false }: { owner?: boolean; providerId: string; locale: SupportedLocale; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined }) {
+export function CompanyEditor({ providerId, locale, authorization, apiOrigin, owner = false, identity = false }: { identity?: boolean; owner?: boolean; providerId: string; locale: SupportedLocale; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined }) {
   const ar = locale === 'ar', client = useMemo(() => new ApiClient(apiOrigin ? { baseUrl: apiOrigin } : {}), [apiOrigin]);
   const [company, setCompany] = useState<z.infer<typeof schema>>(), [busy, setBusy] = useState(false), [feedback, setFeedback] = useState(''), [reason, setReason] = useState(owner ? 'Company profile updated by its owner' : ''), [attempt, setAttempt] = useState(0);
   const [changedImages, setChangedImages] = useState<ReadonlySet<ImageField>>(() => new Set());
@@ -47,15 +47,16 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
     } catch { setFeedback(ar ? 'تعذر الحفظ. بياناتك موجودة؛ تحقق من الصلاحيات وحدّث البيانات قبل إعادة المحاولة.' : 'Could not save. Your details are preserved; check permissions and reload before retrying.'); }
     finally { setBusy(false); }
   }
+  const individual = company?.slug.startsWith('broker-') === true;
   return <section className="admin-accounts__detail-card admin-company-editor" id="company-profile-editor">
-    <h2>{owner ? (ar ? 'بيانات شركتك والغلاف واللوجو' : 'Your company details, cover and logo') : (ar ? 'إدارة ملف الشركة والغلاف واللوجو' : 'Manage company profile, cover and logo')}</h2>
-    {owner ? <p>{ar ? 'الغلاف صورة عريضة أعلى صفحة الشركة، واللوجو شعار مربع يظهر في هوية الشركة وكروتها. ارفع كل صورة في مكانها ثم اضغط حفظ.' : 'The cover is the wide image above your company page. The square logo identifies your company on its profile and cards. Upload each separately, then save.'}</p> : null}
+    <h2>{identity ? (ar ? 'اسمك وصورتك للعرض العام' : 'Your public name and photo') : owner ? (ar ? 'بيانات شركتك والغلاف واللوجو' : 'Your company details, cover and logo') : (ar ? 'إدارة ملف الشركة والغلاف واللوجو' : 'Manage company profile, cover and logo')}</h2>
+    {owner && !individual ? <p>{ar ? 'الغلاف صورة عريضة أعلى صفحة الشركة، واللوجو شعار مربع يظهر في هوية الشركة وكروتها. ارفع كل صورة في مكانها ثم اضغط حفظ.' : 'The cover is the wide image above your company page. The square logo identifies your company on its profile and cards. Upload each separately, then save.'}</p> : null}
     {company ? <form onSubmit={event => { event.preventDefault(); void save(); }}>
-      <a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a>
-      {(['ar', 'en'] as const).map(lang => <label key={lang}>{ar ? `اسم الشركة — ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}` : `Company name — ${lang}`}<input value={company.name[lang] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, name: { ...company.name, [lang]: event.target.value } })} /></label>)}
+      {!individual ? <a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a> : null}
+      {(['ar', 'en'] as const).map(lang => <label key={lang}>{ar ? `${individual ? 'اسم العرض' : 'اسم الشركة'} — ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}` : `${individual ? 'Display name' : 'Company name'} — ${lang}`}<input value={company.name[lang] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, name: { ...company.name, [lang]: event.target.value } })} /></label>)}
       <label>{ar ? 'نبذة الشركة' : 'Company description'}<textarea value={company.description[locale] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, description: { ...company.description, [locale]: event.target.value } })} /></label>
-      <div className="admin-company-editor__images">{(['imageUrl', 'logoUrl'] as const).map(field => <fieldset key={field} className={`admin-company-editor__image admin-company-editor__image--${field === 'logoUrl' ? 'logo' : 'cover'}`} disabled={busy}>
-        <legend>{field === 'logoUrl' ? ar ? 'لوجو الشركة' : 'Company logo' : ar ? 'صورة غلاف الشركة' : 'Company cover'}</legend>
+      <div className="admin-company-editor__images">{(individual ? ['logoUrl'] as const : ['imageUrl', 'logoUrl'] as const).map(field => <fieldset key={field} className={`admin-company-editor__image admin-company-editor__image--${field === 'logoUrl' ? 'logo' : 'cover'}`} disabled={busy}>
+        <legend>{individual ? ar ? 'صورة العرض' : 'Public photo' : field === 'logoUrl' ? ar ? 'لوجو الشركة' : 'Company logo' : ar ? 'صورة غلاف الشركة' : 'Company cover'}</legend>
         <p>{field === 'logoUrl' ? ar ? 'صورة مربعة؛ المقاس المقترح 512 × 512 بكسل. يظهر الشعار كاملًا.' : 'Square image; suggested size 512 × 512 px. The full logo stays visible.' : ar ? 'صورة عريضة؛ المقاس المقترح 1600 × 900 بكسل.' : 'Wide image; suggested size 1600 × 900 px.'}</p>
         {company[field] ? <CompanyPhoto imageUrl={company[field]!} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={field === 'logoUrl' ? ar ? 'معاينة لوجو الشركة' : 'Company logo preview' : ar ? 'معاينة غلاف الشركة' : 'Company cover preview'} /> : null}
         <label>{field === 'logoUrl' ? ar ? 'رفع لوجو الشركة' : 'Upload company logo' : ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void upload(field, file); }} /></label>

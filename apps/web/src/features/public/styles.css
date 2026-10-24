@@ -2606,6 +2606,8 @@
 }
 
 .public-homepage__section-heading h2 { line-height: 1.5; margin-block-end: 0; }
+.public-homepage__section-heading > a { display: inline-flex; align-items: center; justify-content: center; min-block-size: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--color-brand-accent); border-radius: .75rem; background: #f3e8d0; color: #17233d; box-shadow: 0 2px 5px #17233d0d; }
+.public-homepage__section-heading > a:hover { background: var(--color-brand-accent); color: #17233d; }
 .public-homepage__section-description { margin-block: 16px 28px; line-height: 1.8; clear: both; }
 .public-site-footer__hours { white-space: pre-line; line-height: 1.8; }
 .public-homepage__category-section .public-homepage__section-description { margin-block: 20px 28px; }

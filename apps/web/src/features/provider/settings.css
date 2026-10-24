@@ -189,3 +189,4 @@
     width: 100%;
   }
 }
+.provider-settings__whatsapp-link { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: .65rem 1rem; border-radius: 999px; color: #fff; background: #124e40; text-decoration: none; margin-block: 1rem; }

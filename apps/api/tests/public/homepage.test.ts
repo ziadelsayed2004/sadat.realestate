@@ -8,6 +8,13 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'الرئيسية', en: 'Home' };
 
+test('keeps an explicitly removed property out of homepage fallback without changing its published status', () => {
+  const property = sources().properties[0]!;
+  const result = publicHomepageProjection(sources({ properties: [{ ...property, featured: false, homepageExcluded: true, updatedAt: Date.now() }, { ...property, id: secondId, slug: 'eligible-fallback' }] }));
+  assert.deepEqual(result.properties.map(item => item.slug), ['eligible-fallback']);
+  assert.equal(property.status, 'published');
+});
+
 test('automatically puts the latest selection ahead of three older featured properties regardless of legacy order', () => {
   const template = sources().properties[0]!;
   const older = Array.from({ length: 3 }, (_, index) => ({ ...template, id: `${index + 2}123456789abcdef01234567`, slug: `old-${index}`, featured: true, featuredOrder: 0, featuredAt: index + 1 }));
@@ -172,6 +179,7 @@ test('reads the latest population statement from the collection used by CMS admi
             } };
           } };
         },
+        aggregate() { return { async toArray() { return []; } }; },
         async countDocuments() { return 0; }
       };
     }
@@ -191,6 +199,7 @@ test('reads the published listing total independently of the homepage preview li
           return null;
         },
         find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_homepage_metrics' ? [{ key: 'housing_units', title: localized, value: 1200, order: 1, status: 'published', visible: true }] : []; } }; } }; } }; },
+        aggregate() { return { async toArray() { return []; } }; },
         async countDocuments(filter: Record<string, unknown>) { assert.equal(name, 'properties'); countFilter = filter; return 243; }
       };
     }
@@ -210,6 +219,7 @@ test('includes enabled managed banners ahead of legacy CMS banners using only pu
       return {
         async findOne() { assert.equal(name, 'ad_settings'); return { maxActiveBanners: 5 }; },
         aggregate(pipeline: Array<Record<string, unknown>>) {
+          if (name === 'articles') return { async toArray() { return []; } };
           assert.equal(name, 'ad_banners');
           assert.ok(pipeline.some(stage => stage.$limit === 5));
           return { async toArray() { return [{ _id: id, mediaId: secondId, displaySeconds: 8, title: localized, altText: { en: 'Description of the banner image' }, targetUrl: '/properties', media: { url: `/api/v1/public/banner-media/${secondId}` }, internalNotes: 'private' }]; } };

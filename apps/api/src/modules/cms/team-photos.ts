@@ -10,6 +10,7 @@ import type { StorageAdapter, MalwareScannerAdapter } from '../uploads/adapters.
 import { ApiContractError } from '../contracts/error-boundary.js';
 import { visiblePublicOrganizations } from '../public/identity.js';
 import { createOrganizationCoverPreview } from './organization-cover.js';
+import { createProviderVisibilityReader } from '../provider/visibility.js';
 
 const maxBytes = 10 * 1024 * 1024;
 const invalid = () => new ApiContractError('TEAM_PHOTO_INVALID', 'errors.validation', 400);
@@ -35,6 +36,7 @@ export function createTeamPhotos(dependencies: {
       const key = new Types.ObjectId(claims.sub);
       const user = await connection.collection('users').findOne({ _id: key, roleType: 'provider', status: { $in: ['draft', 'pending_review', 'needs_information', 'verified'] }, deletedAt: null });
       if (user && await connection.collection('provider_applications').findOne({ userId: key, providerType: 'developer_company', status: { $in: permission === 'admin:providers.view' ? ['draft', 'pending_review', 'needs_information', 'approved'] : ['draft', 'needs_information', 'approved'] } })) return;
+      if (user) { const visibility = await createProviderVisibilityReader(connection).read(claims.sub); if (visibility.approved && visibility.publicIdentity) return; }
     }
     if (claims?.role !== 'admin' || claims.status !== 'verified' || !await authorization.authorize(claims.sub, permission)) {
       throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
@@ -94,7 +96,9 @@ export function createTeamPhotos(dependencies: {
           const project = await connection.collection('projects').findOne({ imageUrl, status: 'published' }, { projection: { organizationId: 1 } });
           if (project?.organizationId) company = await connection.collection('organizations').findOne({ _id: project.organizationId, status: 'approved' });
         }
-        if (!company || (await visiblePublicOrganizations(connection, [company], 'directory')).length === 0) throw missing();
+        const individual = !company ? await connection.collection('provider_profiles').findOne({ publicImageUrl: imageUrl, providerType: 'individual_broker', status: 'approved' }, { projection: { userId: 1 } }) : null;
+        const individualVisible = individual?.userId ? (await createProviderVisibilityReader(connection).read(String(individual.userId))).publicIdentity : false;
+        if (!individualVisible && (!company || (await visiblePublicOrganizations(connection, [company], 'directory')).length === 0)) throw missing();
       }
       if (!claims && !organization && !await connection.collection(taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(taxonomy
         ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }

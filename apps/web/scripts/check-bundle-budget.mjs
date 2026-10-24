@@ -65,7 +65,10 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Provider subscription status, receipt guards, request activity and fast public
 // return navigation add about 9 KiB (0.34%) over the 2,710,541-byte baseline.
 // Reserve a bounded 12 KiB; preserve the existing 650 KiB chunk cap.
-const maxJavaScriptBytes = 2_659 * 1024 + 128;
+// Owner controls add a draft banner preview, subscription profile editing and
+// bilingual settings help in lazy feature chunks. Allow a bounded 8 KiB (0.30%)
+// increment over the previous total budget; retain chunk and route CSS limits.
+const maxJavaScriptBytes = 2_667 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

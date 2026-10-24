@@ -36,7 +36,7 @@ describe('frontend_074 settings namespaces', () => {
     result.unmount();
   });
 
-  it('preserves server-provided dynamic values while sending the current version', async () => {
+  it('preserves inactive legacy values without offering them as working display controls', async () => {
     const requests: Array<{ namespace: AdminSettingsNamespace; input: unknown }> = [];
     renderWithLocale(
       <AdminSettings
@@ -46,21 +46,22 @@ describe('frontend_074 settings namespaces', () => {
         initialData={settings('display', { show_map: true })}
         update={async (namespace, input) => {
           requests.push({ namespace, input });
-          return settings(namespace, { show_map: false });
+          return settings(namespace, { show_map: true, show_population_counter: true });
         }}
       />,
       { locale: 'en' }
     );
 
     await waitFor(() => expect(screen.getByTestId('admin-settings-display-form')).toBeInTheDocument());
-    fireEvent.click(screen.getByLabelText('show_map'));
+    expect(screen.queryByLabelText('show_map')).not.toBeInTheDocument();
+    fireEvent.click(document.getElementById('admin-settings-show_population_counter')!);
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Update approved display setting' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
     expect(requests[0]).toMatchObject({
       namespace: 'display',
-      input: { expectedVersion: 2, schemaVersion: 1, reason: 'Update approved display setting', values: { show_map: false } }
+      input: { expectedVersion: 2, schemaVersion: 1, reason: 'Update approved display setting', values: { show_map: true, show_population_counter: true } }
     });
   });
 

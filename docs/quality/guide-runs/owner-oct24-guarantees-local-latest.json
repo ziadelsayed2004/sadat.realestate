@@ -1,0 +1,14 @@
+{
+  "status": "PASS_LOCAL",
+  "environment": "isolated-local-MongoDB",
+  "mockedDatabase": false,
+  "checks": [
+    "individual_broker: canonical account notification, active/renewed/scheduled/expired, deduplicated sweeps, no lead access, owned profile image edit, foreign image denied, audit rollback",
+    "brokerage_office: canonical account notification, active/renewed/scheduled/expired, deduplicated sweeps, no lead access, owned profile image edit, foreign image denied, audit rollback",
+    "developer_company: canonical account notification, active/renewed/scheduled/expired, deduplicated sweeps, no lead access, owned profile image edit, foreign image denied, audit rollback",
+    "Published article appears with correct link and excerpt; inactive category and archive remove it",
+    "Two simultaneous published homepage banners coexist; original-intro choice survives DB and public contract",
+    "Cleanup preview writes no data; manual record listed; stale plan refused; deleted record restored from EJSON backup; unselected real content retained; unselected dependent blocks deletion; full reviewed cleanup preserves admin credentials/session/settings"
+  ],
+  "cleanup": true
+}

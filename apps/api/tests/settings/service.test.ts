@@ -122,7 +122,7 @@ test('rejects unauthorized, stale, schema-mismatched, unknown, and secret-bearin
 
 test('returns unavailable for a missing namespace without fabricating settings', async () => {
   const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find() { return undefined; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
-  await assert.rejects(() => service.get(adminClaims, 'display'), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
+  await assert.rejects(() => service.get(adminClaims, 'contact'), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
 });
 
 test('projects only complete public SEO values and strips administrative metadata', async () => {
@@ -160,4 +160,18 @@ test('restricts provider settings to verified providers and returns safe version
     () => createProviderSettingsService({ repository: providerRepository({ kind: 'version_conflict' }) }).update(providerClaims, { expectedVersion: 0, website: 'https://example.test' }),
     (error: unknown) => error instanceof ProviderSettingsServiceError && error.code === 'PROVIDER_SETTINGS_VERSION_CONFLICT'
   );
+});
+
+test('shows effective property and community defaults without persisting them', async () => {
+  let writes = 0;
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find() { return undefined; }, async upsert() { writes++; return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
+  const properties = await service.get(adminClaims, 'properties');
+  assert.equal(properties.version, 0); assert.equal(properties.values.requires_admin_review, true);
+  assert.equal(properties.values.publication_after_approval, 'manual'); assert.equal(properties.values.automatic_expiry, 'never');
+  assert.equal(properties.values.max_images, 50); assert.equal(properties.values.max_image_size_mb, 10);
+  assert.deepEqual(properties.values.accepted_image_formats, ['image/jpeg', 'image/png']);
+  assert.equal(properties.values.hide_provider_contact, true); assert.equal(properties.values.contact_visibility, 'authenticated');
+  const display = await service.get(adminClaims, 'display');
+  assert.equal(display.values.blocked_word_review, false); assert.deepEqual(display.values.blocked_words, []);
+  assert.equal(display.values.blocked_word_action, 'manual_review'); assert.equal(writes, 0);
 });

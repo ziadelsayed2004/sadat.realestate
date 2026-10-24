@@ -153,6 +153,7 @@ const bannerMediaIds = z.array(id).max(20).refine(value => new Set(value).size =
 const bannerDisplaySeconds = z.number().int().min(3).max(60);
 
 export const adBannerSchema = z.object({
+  keepOriginalHero: z.boolean().optional(),
   publiclyVisible: z.boolean().optional(),
   featured: featuredCreativeSchema.optional(),
   id,
@@ -176,6 +177,7 @@ export const adBannerSchema = z.object({
   updatedAt: z.string().datetime({ offset: true })
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerCreateSchema = z.object({
+  keepOriginalHero: z.boolean().optional(),
   featured: featuredCreativeSchema.optional(),
   adRequestId: id.optional(),
   placementKey,
@@ -191,6 +193,7 @@ export const adBannerCreateSchema = z.object({
   sortOrder: z.number().int().nonnegative().max(100_000).optional()
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerPatchSchema = z.object({
+  keepOriginalHero: z.boolean().optional(),
   featured: featuredCreativeSchema.optional(),
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(2).max(500),

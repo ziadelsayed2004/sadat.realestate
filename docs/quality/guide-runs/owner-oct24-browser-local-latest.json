@@ -1,0 +1,12 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium: pre-save local image/text preview at 390/768/1440, no mutations, phone/original toggle, real save/upload/publish, original/ad rotation with search, real article link, gold view-all, ten-second and manual dismissal",
+    "chromium: actual provider account activation notice, WhatsApp, editable name/photo upload, public source/image shown while active, hidden after expiry, expiry notice once, editor removed",
+    "webkit: pre-save local image/text preview at 390/768/1440, no mutations, phone/original toggle, real save/upload/publish, original/ad rotation with search, real article link, gold view-all, ten-second and manual dismissal",
+    "webkit: actual provider account activation notice, WhatsApp, editable name/photo upload, public source/image shown while active, hidden after expiry, expiry notice once, editor removed"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

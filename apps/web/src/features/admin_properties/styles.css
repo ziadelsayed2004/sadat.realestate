@@ -8,6 +8,13 @@
   min-width: 0;
   padding: 1.75rem clamp(1.125rem, 2.2vw, 2.125rem) 3rem;
 }
+.admin-properties__featured { margin-block-end: 1.5rem; padding: 1.25rem; }
+.admin-properties__featured summary { font-size: 1.125rem; font-weight: 700; color: #14213d; cursor: pointer; }
+.admin-properties__featured p { line-height: 1.8; color: #616b7b; }
+.admin-properties__featured form { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border: 1px solid #e6dcc7; background: #faf8f2; border-radius: 1rem; }
+.admin-properties__featured form label { display: flex; align-items: center; gap: .75rem; margin: 0; font-weight: 600; }
+.admin-properties__featured input[type='checkbox'] { inline-size: 1.25rem; block-size: 1.25rem; min-block-size: 0; padding: 0; margin: 0; accent-color: #145448; }
+.admin-properties__featured [role='status'] { margin-block: 1rem 0; }
 
 .admin-properties__heading,
 .admin-properties__review-heading {

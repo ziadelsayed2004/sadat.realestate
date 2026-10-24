@@ -1,6 +1,8 @@
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import { ApiContractError } from '../contracts/error-boundary.js';
 import { contactSettingsProjection } from './contact-policy.js';
+import { propertyRuntimeSettings } from './property-policy.js';
+import { communityRuntimeSettings } from './community-policy.js';
 import {
   adminSettingsDataSchema,
   DEFAULT_ADMIN_SEO_VALUES,
@@ -121,6 +123,21 @@ function output(value: AdminSettingsData): AdminSettingsData {
   return adminSettingsDataSchema.parse(value);
 }
 
+function effectiveValues(target: AdminSettingsNamespace, stored: AdminSettingsData['values'] = {}): AdminSettingsData['values'] {
+  if (target === 'seo') return { ...DEFAULT_ADMIN_SEO_VALUES, ...stored };
+  if (target === 'properties') {
+    const policy = propertyRuntimeSettings(stored);
+    return { ...stored, requires_admin_review: policy.requiresAdminReview, publication_after_approval: policy.publicationAfterApproval,
+      automatic_expiry: policy.automaticExpiry, max_images: policy.maxImages, accepted_image_formats: [...policy.acceptedImageMimes],
+      max_image_size_mb: policy.maxImageBytes / (1024 * 1024), hide_provider_contact: policy.hideProviderContact, contact_visibility: policy.contactVisibility };
+  }
+  if (target === 'display') {
+    const policy = communityRuntimeSettings(stored);
+    return { show_population_counter: true, ...stored, blocked_word_review: policy.blockedWordReview, blocked_words: policy.blockedWords, blocked_word_action: policy.blockedWordAction };
+  }
+  return stored;
+}
+
 function canonicalOrigin(value: unknown): string | undefined {
   if (typeof value !== 'string') return undefined;
   try {
@@ -159,9 +176,9 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     await requirePermission(dependencies, claims.sub, 'admin:settings.view');
     const target = namespace(unparsedNamespace);
     const value = await dependencies.repository.find(target);
-    if (!value && target === 'seo') return output({ namespace: 'seo', schemaVersion: 1, values: DEFAULT_ADMIN_SEO_VALUES, version: 0, updatedBy: claims.sub, updatedAt: clock().toISOString() });
+    if (!value && ['seo', 'properties', 'display'].includes(target)) return output({ namespace: target, schemaVersion: 1, values: effectiveValues(target), version: 0, updatedBy: claims.sub, updatedAt: clock().toISOString() });
     if (!value) throw new SettingsServiceError('SETTINGS_NOT_FOUND');
-    return output(target === 'seo' ? { ...value, values: { ...DEFAULT_ADMIN_SEO_VALUES, ...value.values } } : value);
+    return output({ ...value, values: effectiveValues(target, value.values) });
   };
   const getPublicSeo = async (): Promise<PublicSeoSettings> => {
     const stored = await dependencies.repository.find('seo');

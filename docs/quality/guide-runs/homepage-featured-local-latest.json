@@ -3,7 +3,9 @@
   "mockedRoutes": false,
   "checks": [
     "Reproduced selection outside the first three behind four older featured properties",
+    "chromium: unselect removes automatic fallback, published directory entry preserved, previous deselection respected, reselect restores first position",
     "chromium ar 390: save without order, latest selection first in real homepage, no overflow, stale write rejected, expired selection explained and excluded",
+    "webkit: unselect removes automatic fallback, published directory entry preserved, previous deselection respected, reselect restores first position",
     "webkit en 1440: save without order, latest selection first in real homepage, no overflow, stale write rejected, expired selection explained and excluded"
   ],
   "browserErrors": [],

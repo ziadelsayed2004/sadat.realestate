@@ -1,6 +1,5 @@
 import { ProviderSecurity } from './security.tsx';
 import { ProviderIdentitySubscription } from './identity-subscription.tsx';
-import { CompanyEditor } from '../admin_accounts/company-editor.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import {
   providerSettingsPatchSchema,
@@ -84,8 +83,6 @@ function SettingsTabs({ locale, active }: { readonly locale: SupportedLocale; re
 
 export function ProviderSettings({ locale, session, authClient, apiOrigin, tab = 'account', load, actions }: ProviderSettingsProps) {
   const copy = getProviderSettingsCopy(locale);
-  const [developer, setDeveloper] = useState(false);
-  useEffect(() => { let active = true; void authClient?.getProviderApplicationStatus?.().then(application => { if (active) setDeveloper(application.providerType === 'developer_company' && application.status === 'approved'); }, () => {}); return () => { active = false; }; }, [authClient]);
   const [state, setState] = useState<ProviderSettingsViewState>('loading');
   const [data, setData] = useState<ProviderSettingsData | undefined>();
   const [form, setForm] = useState<SettingsForm>({ email: '', whatsappNumber: '', officeAddress: '', website: '' });
@@ -148,7 +145,6 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
     <section className="provider-dashboard provider-settings" data-testid="provider-settings-page" data-screen-id={screenId} data-route="/provider/settings" data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/settings" authClient={authClient} />
       <div className="provider-dashboard__content">
-        {developer && tab === 'account' ? <CompanyEditor owner providerId="self" locale={locale} authorization={authClient} apiOrigin={apiOrigin} /> : null}
         {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'empty' ? <div className="provider-settings__empty" data-state="empty"><h1>{copy.states.empty.title}</h1><p>{copy.states.empty.body}</p></div> : null}
         {state === 'success' && data !== undefined ? (

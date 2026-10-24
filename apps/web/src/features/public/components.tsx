@@ -80,57 +80,6 @@ export function PublicCategoryGlyph({ slug }: { readonly slug: string }) {
   );
 }
 
-type PublicHomepageLocaleText = Readonly<Record<SupportedLocale, string>>;
-
-const articlePresentation: Readonly<Record<string, {
-  readonly label: PublicHomepageLocaleText;
-  readonly duration: PublicHomepageLocaleText;
-  readonly author: PublicHomepageLocaleText;
-}>> = Object.freeze({
-  buying_guide: {
-    label: { ar: '\u0646\u0635\u0627\u0626\u062d \u0634\u0631\u0627\u0621', en: 'Buying tips',},
-    duration: { ar: '8 \u062f\u0642\u0627\u0626\u0642', en: '8 min read',},
-    author: { ar: '\u0623\u062d\u0645\u062f \u0645\u062d\u0645\u0648\u062f', en: 'Ahmed Mahmoud',}
-  },
-  market_news: {
-    label: { ar: '\u0627\u0633\u062a\u062b\u0645\u0627\u0631', en: 'Investment',},
-    duration: { ar: '6 \u062f\u0642\u0627\u0626\u0642', en: '6 min read',},
-    author: { ar: '\u0633\u0627\u0631\u0629 \u0623\u062d\u0645\u062f', en: 'Sarah Ahmed',}
-  },
-  city_services: {
-    label: { ar: '\u062e\u062f\u0645\u0627\u062a', en: 'Services',},
-    duration: { ar: '5 \u062f\u0642\u0627\u0626\u0642', en: '5 min read',},
-    author: { ar: '\u0645\u062d\u0645\u062f \u0639\u0644\u064a', en: 'Mohamed Ali',}
-  }
-});
-
-const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.freeze([
-  {
-    key: 'buying_guide',
-    type: 'article',
-    title: { ar: 'دليلك الكامل للشراء في مدينة السادات 2026', en: 'Your complete guide to buying in Sadat City in 2026' },
-    body: { ar: 'كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.', en: 'Everything you need to know before buying a property in Sadat City.' },
-    imageUrl: '/assets/canonical/public/article-buying-guide.png',
-    order: 10
-  },
-  {
-    key: 'market_news',
-    type: 'article',
-    title: { ar: 'أفضل المناطق للاستثمار العقاري في السادات', en: 'Top real-estate investment areas in Sadat City' },
-    body: { ar: 'دليل شامل للمناطق ذات العائد الاستثماري الأعلى.', en: 'A guide to the areas with the strongest investment returns.' },
-    imageUrl: '/assets/canonical/public/article-investment.png',
-    order: 20
-  },
-  {
-    key: 'city_services',
-    type: 'article',
-    title: { ar: 'خدمات مدينة السادات: ما المتاح وما المخطط له', en: 'Sadat City services: what is available and what is planned' },
-    body: { ar: 'استعراض شامل للخدمات المتاحة في المدينة.', en: 'A complete overview of the services available across the city.' },
-    imageUrl: '/assets/canonical/public/article-services.png',
-    order: 30
-  }
-]);
-
 export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Object.freeze([
   { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés' }, imageUrl: '/assets/canonical/public/category-restaurants-cafes.png', propertyCount: 0, order: 10 },
   { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms' }, imageUrl: '/assets/canonical/public/category-showrooms.png', propertyCount: 0, order: 20 },
@@ -140,19 +89,6 @@ export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> 
   { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex' }, imageUrl: '/assets/canonical/public/category-duplex.png', propertyCount: 0, order: 60 },
   { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa' }, imageUrl: '/assets/canonical/public/category-villa.png', propertyCount: 0, order: 70 }
 ]);
-
-function withCanonicalHomepageContent(content: readonly PublicHomepageContent[]): readonly PublicHomepageContent[] {
-  const result = [...content];
-  for (const type of ['article'] as const) {
-    const minimum = 3;
-    const existingKeys = new Set(result.filter(item => item.type === type).map(item => item.key));
-    for (const fallback of canonicalHomepageContent.filter(item => item.type === type)) {
-      if (result.filter(item => item.type === type).length >= minimum) break;
-      if (!existingKeys.has(fallback.key)) result.push(fallback);
-    }
-  }
-  return result;
-}
 
 export function fallbackPropertyImage(slug?: string, kind?: string): string {
   const key = `${slug ?? ''} ${kind ?? ''}`.toLowerCase();
@@ -618,7 +554,12 @@ function Hero({
   readonly locations: readonly PublicHomepageLocation[];
 }) {
   const section = sections.find(item => item.key === 'hero');
-  const slides = useMemo(() => ordered(banners).filter(item => item.key.startsWith('banner_')), [banners]);
+  const slides = useMemo(() => {
+    const ads = ordered(banners).filter(item => item.key.startsWith('banner_'));
+    if (!ads.some(item => item.keepOriginalHero)) return ads;
+    const original = banners.find(item => !item.key.startsWith('banner_') && item.presentation !== 'featured' && !item.key.startsWith('featured_') && !item.key.startsWith('banner-'));
+    return [{ ...original, key: 'original_homepage_hero', order: -1, imageUrl: original?.imageUrl ?? '/assets/canonical/public/home-hero-sadat-city.png' }, ...ads];
+  }, [banners]);
   const [slideKey, setSlideKey] = useState<string>();
   const [requestedKey, setRequestedKey] = useState<string>();
   const [ready, setReady] = useState<readonly string[]>([]);
@@ -932,9 +873,8 @@ function ContentGrid({
             : type === 'about'
               ? copy.aboutEyebrow
               : type === 'article'
-                ? articlePresentation[item.key]?.label[locale] ?? title
+                ? title
                 : title;
-          const articleDetails = type === 'article' ? articlePresentation[item.key] : undefined;
           const communityTitle = bodyLines[0] ?? localizedText(item.title, locale) ?? item.key;
           const communityBody = bodyLines.slice(1).join('\n');
           return (
@@ -958,12 +898,9 @@ function ContentGrid({
                   <p className="public-homepage__content-type">{contentType}</p>
                 </div>
                 <div className="public-homepage__article-body">
-                  <h3><a className="public-homepage__article-link" href={`/articles?lang=${locale}`}>{localizedText(item.title, locale) ?? item.key}</a></h3>
+                  <h3><a className="public-homepage__article-link" href={replaceLocaleInUrl(item.targetUrl ?? '/articles', locale)}>{localizedText(item.title, locale) ?? item.key}</a></h3>
                   {bodyLines[0] === undefined ? null : <p>{bodyLines[0]}</p>}
-                  {articleDetails === undefined ? <a href="/articles">{copy.readMore}</a> : <div className="public-homepage__article-meta">
-                    <span>{articleDetails.duration[locale]}<svg viewBox="0 0 20 20" focusable="false"><circle cx="10" cy="10" r="7" /><path d="M10 6v4l2.5 1.5" /></svg></span>
-                    <span>{articleDetails.author[locale]}</span>
-                  </div>}
+                  <a href={replaceLocaleInUrl(item.targetUrl ?? '/articles', locale)}>{copy.readMore}</a>
                 </div>
               </> : null}
             </article>
@@ -1126,6 +1063,7 @@ function HomepageContent({
 }) {
   const sections = ordered(data.sections);
   const [requestSent, setRequestSent] = useState(false);
+  useEffect(() => { if (!requestSent) return; const timer = window.setTimeout(() => setRequestSent(false), 10000); return () => clearTimeout(timer); }, [requestSent]);
   useEffect(() => {
     const url = new URL(window.location.href);
     if (url.searchParams.get('notice') !== 'ad-request-sent') return;
@@ -1135,7 +1073,7 @@ function HomepageContent({
   }, []);
   const sectionText = (key: string, field: 'title' | 'body') => localizedText(sections.find(item => item.key === key)?.[field], locale);
   const sectionCopy = { ...copy, propertiesTitle: sectionText('featured_properties', 'title') ?? copy.propertiesTitle, articlesTitle: sectionText('articles', 'title') ?? copy.articlesTitle, communityTitle: sectionText('community', 'title') ?? copy.communityTitle, tips: sectionText('tips', 'title') ?? copy.tips };
-  const content = withCanonicalHomepageContent(data.content);
+  const content = data.content;
   const categories = data.categories;
   const locations = data.locations ?? [];
   return (
@@ -1190,7 +1128,14 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
   const [view, setView] = useState<PublicHomepageViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
-  useEffect(() => { setApplicationSubmitted(new URLSearchParams(window.location.search).get('providerApplication') === 'submitted'); }, []);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('providerApplication') !== 'submitted') return;
+    setApplicationSubmitted(true); url.searchParams.delete('providerApplication');
+    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+    const timer = window.setTimeout(() => setApplicationSubmitted(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
   useEffect(() => {
     if (view !== 'success' || !data || !window.location.hash) return;
     let id: string;
@@ -1247,7 +1192,7 @@ export function PublicHomepage({ locale, authenticatedRole, initialData, initial
   return (
     <div className="public-homepage" data-page="public-home" data-homepage-state={view}>
       <PublicSiteHeader locale={locale} copy={copy} authenticatedRole={authenticatedRole} />
-      {applicationSubmitted ? <div className="public-homepage__container" role="status"><p>{locale === 'ar' ? 'تم إرسال طلب حسابك بنجاح. سنراجع البيانات والمستندات ونبلغك بالنتيجة.' : 'Your account application has been sent. We will review your details and documents and notify you of the result.'}</p><a href={`/provider-application/status?lang=${locale}`}>{locale === 'ar' ? 'متابعة حالة الطلب' : 'Track application status'}</a></div> : null}
+      {applicationSubmitted ? <div className="public-homepage__request-success"><Toast open tone="success" title={locale === 'ar' ? 'تم إرسال طلب حسابك بنجاح' : 'Account application sent'} message={locale === 'ar' ? 'سنراجع البيانات والمستندات ونبلغك بالنتيجة.' : 'We will review your details and documents and notify you.'} action={<a href={`/provider-application/status?lang=${locale}`}>{locale === 'ar' ? 'متابعة حالة الطلب' : 'Track application status'}</a>} onDismiss={() => setApplicationSubmitted(false)} dismissLabel={locale === 'ar' ? 'إغلاق رسالة النجاح' : 'Dismiss success message'} /></div> : null}
       {view === 'success' && data !== undefined ? (
         <HomepageContent locale={locale} copy={copy} data={data} />
       ) : view === 'success' ? (

@@ -278,7 +278,7 @@ describe('Admin banners, tips, and homepage administration', () => {
     fireEvent.change(screen.getByLabelText(copy.schedule.startDate), { target: { value: '2026-10-05' } });
     fireEvent.change(screen.getByLabelText(copy.schedule.endDate), { target: { value: '2026-10-06' } });
     fireEvent.submit(screen.getByTestId('admin-home-banner-editor').querySelector('form')!);
-    await waitFor(() => expect(document.querySelector('.admin-home__editor [role="alert"]')).toHaveTextContent(copy.mutation.placementNotFound));
+    await waitFor(() => expect(screen.getAllByRole('alert').some(element => element.textContent?.includes(copy.mutation.placementNotFound))).toBe(true));
     expect(screen.queryByText('errors.notFound')).not.toBeInTheDocument();
     expect(document.getElementById('admin-home-banner-title-en')).toHaveValue('New banner');
   });

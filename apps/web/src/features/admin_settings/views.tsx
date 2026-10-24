@@ -36,6 +36,7 @@ import {
   stringDraft
 } from './data.ts';
 import { getAdminSettingsCopy } from './copy.ts';
+import { settingsFieldHelp } from './field-help.ts';
 import { getAdminAdsCopy } from '../admin_ads/copy.ts';
 import { paymentAccountSchema, walletPaymentAccountSchema } from '@sadat-real-estate/contracts';
 import './styles.css';
@@ -114,8 +115,6 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'max_images', kind: 'number', labelKey: 'max_images' },
     { key: 'accepted_image_formats', kind: 'array', labelKey: 'accepted_image_formats' },
     { key: 'max_image_size_mb', kind: 'number', labelKey: 'max_image_size_mb' },
-    { key: 'hide_provider_contact', kind: 'boolean', labelKey: 'hide_provider_contact' },
-    { key: 'contact_visibility', kind: 'select', labelKey: 'contact_visibility', options: [{ value: 'authenticated', labelKey: 'option_authenticated' }, { value: 'public', labelKey: 'option_public' }, { value: 'after_request', labelKey: 'option_after_request' }] }
   ],
   requests: [],
   advertising: [
@@ -145,9 +144,6 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'two_factor_authentication', kind: 'boolean', labelKey: 'two_factor_authentication' }
   ],
   display: [
-    { key: 'default_locale', kind: 'select', labelKey: 'default_locale', options: [{ value: 'ar', labelKey: 'option_arabic' }, { value: 'en', labelKey: 'option_english' }] },
-    { key: 'page_direction', kind: 'select', labelKey: 'page_direction', options: [{ value: 'rtl', labelKey: 'option_rtl' }, { value: 'ltr', labelKey: 'option_ltr' }] },
-    { key: 'page_size', kind: 'number', labelKey: 'page_size' },
     { key: 'population_label', kind: 'localized', labelKey: 'population_label' },
     { key: 'show_population_counter', kind: 'boolean', labelKey: 'show_population_counter' },
     { key: 'blocked_word_review', kind: 'boolean', labelKey: 'blocked_word_review' },
@@ -176,7 +172,7 @@ function namespaceForPath(path: string): SettingsNamespace | undefined {
 function fieldsForValues(namespace: SettingsNamespace, values: DraftValues): readonly Field[] {
   const known = FIELD_MAP[namespace];
   const knownKeys = new Set(known.map(field => field.key));
-  if (namespace === 'social' || namespace === 'contact') return known;
+  if (['social', 'contact', 'properties', 'display'].includes(namespace)) return known;
   const dynamic = Object.keys(values).filter(key => !knownKeys.has(key) && !(namespace === 'advertising' && /^(vodafone_cash|instapay)_recipient_(name|account)$/u.test(key))).map(key => {
     const value = values[key];
     if (value !== undefined && typeof value === 'object' && !Array.isArray(value)) return { key, kind: 'localized' as const, labelKey: key };
@@ -237,10 +233,10 @@ function PrimitiveField({ field, values, copy, locale, hint, onChangeText, onCha
   const method = field.key.match(/^(vodafone_cash|instapay)_payment_details$/u)?.[1];
   const legacy = Array.isArray(values[field.key]) ? values[field.key] as string[] : [];
   if (method) return <fieldset className="admin-settings__payment-fields"><legend>{label}</legend>{['name', 'account'].map((part, index) => { const key = `${method}_recipient_${part}`; return <label key={part} htmlFor={`admin-settings-${key}`}>{copy.fields[`payment_recipient_${part}`]}<input id={`admin-settings-${key}`} value={stringDraft(values[key] ?? (legacy.length >= 2 ? legacy[index] : undefined))} type={part === 'account' && method === 'vodafone_cash' ? 'tel' : 'text'} maxLength={part === 'name' ? 120 : method === 'vodafone_cash' ? 16 : 160} minLength={part === 'name' ? 2 : 3} dir={part === 'account' ? 'ltr' : undefined} required={Array.isArray(values.payment_proof_methods) && values.payment_proof_methods.includes(method)} onChange={event => onChangeText(key, event.target.value)} /></label>; })}{legacy.length === 1 ? <p style={{ gridColumn: '1 / -1' }}>{copy.fields.payment_recipient_legacy}: <bdi>{legacy[0]}</bdi></p> : null}</fieldset>;
-  if (field.kind === 'boolean') return <label className="admin-settings__boolean" htmlFor={`admin-settings-${field.key}`}><span>{label}</span><input id={`admin-settings-${field.key}`} type="checkbox" checked={booleanDraft(values[field.key])} onChange={event => onChangeBoolean(field.key, event.target.checked)} /></label>;
+  if (field.kind === 'boolean') return <label className="admin-settings__boolean" htmlFor={`admin-settings-${field.key}`}><span>{label}{hint ? <small className="admin-settings__hint">{hint}</small> : null}</span><input id={`admin-settings-${field.key}`} type="checkbox" checked={booleanDraft(values[field.key])} onChange={event => onChangeBoolean(field.key, event.target.checked)} /></label>;
   if (field.kind === 'select') return <label htmlFor={`admin-settings-${field.key}`}>{label}<select id={`admin-settings-${field.key}`} aria-label={label} aria-describedby={hint ? `admin-settings-${field.key}-hint` : undefined} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)}><option value="">{copy.selectPlaceholder}</option>{stringDraft(values[field.key]) && !field.options?.some(option => option.value === values[field.key]) ? <option value={stringDraft(values[field.key])}>{stringDraft(values[field.key])}</option> : null}{field.options?.map(option => <option key={option.value} value={option.value}>{copy.fields[option.labelKey] ?? option.value}</option>)}</select>{hint ? <small id={`admin-settings-${field.key}-hint`} className="admin-settings__hint">{hint}</small> : null}</label>;
-  if (field.kind === 'array') return <label style={{ gridColumn: '1 / -1' }} htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} /></label>;
-  if (field.kind === 'number') return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type="number" inputMode="decimal" value={numberDraft(values[field.key])} onChange={event => onChangeNumber(field.key, event.target.value)} /></label>;
+  if (field.kind === 'array') return <label style={{ gridColumn: '1 / -1' }} htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} />{hint ? <small className="admin-settings__hint">{hint}</small> : null}</label>;
+  if (field.kind === 'number') return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type="number" inputMode="decimal" value={numberDraft(values[field.key])} onChange={event => onChangeNumber(field.key, event.target.value)} />{hint ? <small className="admin-settings__hint">{hint}</small> : null}</label>;
   return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} aria-label={label} aria-describedby={hint ? `admin-settings-${field.key}-hint` : undefined} type={field.kind === 'url' ? 'url' : field.key.endsWith('phone') || field.key === 'whatsapp_number' ? 'tel' : 'text'} dir={field.kind === 'url' || field.key === 'whatsapp_number' || field.key.endsWith('phone') ? 'ltr' : undefined} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)} />{hint ? <small id={`admin-settings-${field.key}-hint`} className="admin-settings__hint">{hint}</small> : null}</label>;
 }
 
@@ -253,7 +249,7 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
   const emptyValues = emptyValuesCopy(locale);
   const showEmptyValues = namespace === 'requests' && fields.length === 0;
   const dirty = JSON.stringify(values) !== JSON.stringify(data?.values ?? {});
-  const renderField = (field: Field) => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField locale={locale} key={field.key} field={field} values={values} copy={copy} hint={namespace === 'platform' ? (copy.guide.fieldHelp as Readonly<Record<string, string>>)[field.key] : undefined} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />;
+  const renderField = (field: Field) => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField locale={locale} key={field.key} field={field} values={values} copy={copy} hint={settingsFieldHelp(locale, field.key) ?? (namespace === 'platform' ? (copy.guide.fieldHelp as Readonly<Record<string, string>>)[field.key] : undefined)} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />;
   const nameKeys = ['platform_name', 'short_name', 'description'];
   const officeKeys = ['city', 'primary_email', 'primary_phone', 'office_address', 'working_hours', 'map_url'];
   const savedName = localizedDraft(data?.values.platform_name);
@@ -307,6 +303,8 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
         <section className="admin-settings__field-section" aria-labelledby="settings-office-section"><h3 id="settings-office-section">{copy.guide.officeSection}</h3><div className="admin-settings__fields">{fields.filter(field => officeKeys.includes(field.key)).map(renderField)}</div></section>
         <details className="admin-settings__additional"><summary>{copy.guide.advanced}</summary><p className="admin-settings__hint">{copy.guide.advancedHelp}</p><div className="admin-settings__fields">{fields.filter(field => !nameKeys.includes(field.key) && !officeKeys.includes(field.key)).map(renderField)}</div></details>
       </> : <div className="admin-settings__fields">{showEmptyValues ? <div className="admin-settings__empty-values" data-state="empty-values" role="status"><div className="admin-settings__empty-icon" aria-hidden="true">?</div><div><h3>{emptyValues.title}</h3><p>{emptyValues.body}</p></div></div> : fields.map(renderField)}</div>}
+      {namespace === 'properties' ? <p className="admin-settings__hint">{locale === 'ar' ? 'خصوصية التواصل: قوائم العقارات لا تعرض بيانات التواصل. ظهور هوية العارض يتبع اعتماد حسابه واشتراكه، وبيانات العملاء تتبع صلاحيات الطلبات والعمولة. الخيارات القديمة لإخفاء التواصل محفوظة ولا تتحكم في هذه القواعد.' : 'Property lists do not expose contact details. Provider identity follows account approval and subscription; customer data follows request and commission permissions. Legacy contact toggles are preserved but do not control these rules.'}</p> : null}
+      {namespace === 'display' ? <p className="admin-settings__hint">{locale === 'ar' ? 'لغة الزائر من اختيار اللغة، واتجاه الصفحة يتبعها تلقائيًا. حجم القائمة يتبع الصفحة نفسها. القيم القديمة لهذه الحقول محفوظة وليست مفاتيح عامة لكل الصفحات.' : 'Visitors choose their language; direction follows it automatically. Each list controls its own page size. Legacy language, direction and page-size values are preserved, rather than exposed as global controls.'}</p> : null}
       {namespace === 'contact' ? <p className="admin-settings__hint">{locale === 'ar' ? 'اكتب عنوان المقر وألصق رابط موقعه من «مشاركة» في خرائط Google. الضغط على العنوان بالفوتر يفتح هذا الموقع. لو أضفت العنوان فقط، يفتح البحث عنه على الخريطة. أحدث حفظ هنا أو في بيانات المنصة هو الذي يظهر للزوار.' : 'Enter the office address and paste its location link from Share in Google Maps. The footer address opens that location; an address without a link opens a map search. The latest save here or in platform details is shown publicly.'}</p> : null}
       {namespace === 'contact' || namespace === 'social' ? <p className="admin-settings__hint">{locale === 'ar' ? 'يظهر الرقم والروابط المحفوظة في أزرار الموقع والفوتر. اترك الحقل فارغًا لإخفاء الزر. رقم مصري: 01012345678 أو +201012345678. روابط التواصل: فيسبوك وإنستجرام فقط.' : 'Saved contacts appear on the site and footer. Leave a field empty to hide its button. Use an international phone number. Social links support Facebook and Instagram only.'}</p> : null}
       <p className="admin-settings__hint" role="status">{dirty ? copy.guide.unsaved : saved ? copy.saved : data ? copy.guide.savedStatus : copy.states.empty.title}</p>

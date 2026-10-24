@@ -17,7 +17,7 @@ export function createFeaturedPropertyManager(connection: Connection, authorizat
       if (before.version !== input.version) throw new ApiContractError('PROPERTY_VERSION_CONFLICT', 'errors.conflict', 409);
       const at = new Date();
       const order = input.order ?? 0;
-      await properties.updateOne({ _id: key, version: input.version }, { $set: { featured: input.featured, featuredOrder: input.featured ? order : null, featuredAt: input.featured ? at : null, updatedAt: at }, $inc: { version: 1 } }, { session });
+      await properties.updateOne({ _id: key, version: input.version }, { $set: { featured: input.featured, homepageExcluded: !input.featured, featuredOrder: input.featured ? order : null, featuredAt: input.featured ? at : null, updatedAt: at }, $inc: { version: 1 } }, { session });
       await audit.record({ actorType: 'admin', actorId, targetType: 'property', targetId: id, action: 'property.featured', reason: input.reason, before: { featured: before.featured ?? false, order: before.featuredOrder }, after: { featured: input.featured, order, featuredAt: input.featured ? at.toISOString() : null }, ...context, occurredAt: at }, session);
       return { id, featured: input.featured, order, version: input.version + 1 };
     });

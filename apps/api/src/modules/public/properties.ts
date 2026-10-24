@@ -1,5 +1,5 @@
 import { createProviderVisibilityReader } from '../provider/visibility.js';
-import { visiblePublicOrganizations } from '../public/identity.js';
+import { individualPublicIdentity, visiblePublicOrganizations } from '../public/identity.js';
 import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { organizationSlugSchema, propertyMapUrlSchema, propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
@@ -168,6 +168,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
       base.sourceVerified = policy?.approved === true;
     }
     if (policy?.contact && typeof organization?.contactPhone === 'string') { base.contact = { phone: organization.contactPhone }; base.contactVisible = true; }
+    if (policy?.providerType === 'individual_broker' && policy.publicIdentity) Object.assign(base, await individualPublicIdentity(connection, owner));
     const project = base.projectId ? await connection.collection('projects').findOne({ _id: new Types.ObjectId(base.projectId), status: 'published' }, { projection: { _id: 1, slug: 1, name: 1, description: 1, status: 1 } }) : null;
     const location = base.locationId ? await connection.collection('locations').findOne({ _id: new Types.ObjectId(base.locationId), active: true }, { projection: { name: 1, active: 1 } }) : null;
     const media = await connection.collection('property_media').find({ propertyId: new Types.ObjectId(base.id), active: true, processingState: 'ready' }, { projection: { _id: 1, propertyId: 1, kind: 1, imageUrl: 1, originalFilename: 1, detectedMime: 1, byteSize: 1, sortOrder: 1, isCover: 1, processingState: 1, active: 1 } }).sort({ sortOrder: 1, _id: 1 }).limit(50).toArray();

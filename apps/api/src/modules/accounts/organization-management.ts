@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { ApiContractError } from '../contracts/error-boundary.js';
 import type { AccountAuthorization, AccountRequestContext } from './service.js';
 import type { AuditWriter } from '../audit/writer.js';
+import { identitySubscriptionActive } from '../provider/visibility.js';
 
 const idSchema = z.string().regex(/^[a-f0-9]{24}$/);
 const text = z.object({ ar: z.string().trim().max(200).optional(), en: z.string().trim().max(200).optional() }).refine(value => value.ar || value.en);
@@ -17,13 +18,30 @@ export function createOrganizationManager(connection: Connection, authorization:
       if (!user) throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
       const profile = await connection.collection('provider_profiles').findOne({ userId: key }, { session });
       const application = await connection.collection('provider_applications').findOne({ userId: key }, { session });
-      if (owner && (user.status !== 'verified' || application?.status !== 'approved' || application.providerType !== 'developer_company')) throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
+      const subscribed = owner && identitySubscriptionActive(await connection.collection('provider_identity_subscriptions').findOne({ _id: key }, { session }), new Date());
+      if (owner && (user.status !== 'verified' || application?.status !== 'approved' || profile?.status !== 'approved' || profile.providerType !== application.providerType || (application.providerType !== 'developer_company' && !subscribed))) throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
+      const individual = application?.providerType === 'individual_broker';
       const owners = [key, profile?._id, application?._id].filter(Boolean);
-      const organizations = connection.collection('organizations'), row = await organizations.findOne({ providerId: { $in: [...owners, ...owners.map(String)] } }, { session });
+      const organizations = connection.collection('organizations');
+      let row = individual && profile ? { ...profile, slug: `broker-${key}`, name: profile.publicDisplayName ?? { ar: application?.displayName ?? '', en: application?.displayName ?? '' }, imageUrl: profile.publicImageUrl ?? '', logoUrl: profile.publicImageUrl ?? '' } : await organizations.findOne({ providerId: { $in: [...owners, ...owners.map(String)] } }, { session });
+      if (!row && owner && profile && application && ['brokerage_office', 'developer_company'].includes(application.providerType)) {
+        const name = [application.brandName, application.legalCompanyName, application.legalBusinessName, application.displayName].find(value => typeof value === 'string' && value.trim());
+        if (typeof name === 'string') {
+          const entry = { _id: profile._id, providerId: profile._id, kind: application.providerType, slug: `${application.providerType === 'developer_company' ? 'developer' : 'office'}-${key}`, name: { ar: name, en: name }, status: 'approved', version: 0, createdAt: new Date(), updatedAt: new Date() };
+          await organizations.updateOne({ _id: profile._id }, { $setOnInsert: entry }, { session, upsert: true });
+          row = await organizations.findOne({ _id: profile._id }, { session });
+          const ids = [...owners, ...owners.map(String)];
+          await connection.collection('properties').updateMany({ providerId: { $in: ids }, organizationId: null }, { $set: { organizationId: profile._id }, $inc: { version: 1 } }, { session });
+        }
+      }
       if (!row) throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
       const project = (record: typeof row) => ({ id: String(record._id), slug: record.slug, name: record.name, description: record.description ?? {}, imageUrl: record.imageUrl ?? '', logoUrl: record.logoUrl ?? '', status: record.status, version: record.version ?? 0 });
       if (raw === undefined) return project(row);
       const input = patch.parse(raw), { version, reason, ...changes } = input;
+      if (individual && (changes.logoUrl !== undefined || changes.imageUrl !== undefined)) {
+        const image = (changes.logoUrl !== undefined ? changes.logoUrl : changes.imageUrl) ?? null;
+        changes.imageUrl = image; changes.logoUrl = image;
+      }
       if (owner && changes.status !== undefined) throw new ApiContractError('FORBIDDEN', 'errors.forbidden', 403);
       if ((row.version ?? 0) !== version) throw new ApiContractError('VERSION_CONFLICT', 'errors.conflict', 409);
       for (const imageUrl of [changes.imageUrl, changes.logoUrl]) {
@@ -36,7 +54,8 @@ export function createOrganizationManager(connection: Connection, authorization:
       if (changes.description) savedChanges.description = Object.fromEntries(Object.entries(changes.description).filter(([, value]) => value?.trim()).map(([lang, value]) => [lang, value!.trim()]));
       const clearDescription = savedChanges.description !== undefined && Object.keys(savedChanges.description).length === 0;
       if (clearDescription) delete savedChanges.description;
-      await organizations.updateOne({ _id: row._id }, { $set: { ...savedChanges, updatedAt: at }, ...(clearDescription ? { $unset: { description: '' } } : {}), $inc: { version: 1 } }, { session });
+      if (individual) await connection.collection('provider_profiles').updateOne({ _id: row._id }, { $set: { ...(changes.name ? { publicDisplayName: changes.name } : {}), ...(changes.logoUrl !== undefined || changes.imageUrl !== undefined ? { publicImageUrl: changes.logoUrl ?? changes.imageUrl ?? '' } : {}), ...(changes.description ? { description: changes.description } : {}), updatedAt: at }, $inc: { version: 1 } }, { session });
+      else await organizations.updateOne({ _id: row._id }, { $set: { ...savedChanges, updatedAt: at }, ...(clearDescription ? { $unset: { description: '' } } : {}), $inc: { version: 1 } }, { session });
       if (context) await audit.record({ actorType: owner ? 'provider' : 'admin', actorId, targetType: 'organization', targetId: String(row._id), action: changes.status === 'inactive' ? 'organization.remove_from_directory' : 'organization.update', reason, before: project(row), after: { ...project(row), ...changes, version: version + 1 }, ...context, occurredAt: at }, session);
       return { ...project(row), ...changes, version: version + 1 };
     });

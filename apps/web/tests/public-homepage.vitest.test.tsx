@@ -76,6 +76,22 @@ describe('public homepage', () => {
     expect(screen.getByRole('button', { name: 'Next categories' })).toHaveAttribute('aria-controls', 'homepage-category-rail');
   });
 
+  it.each([
+    ['/?notice=ad-request-sent&lang=en', 'Track my requests'],
+    ['/?providerApplication=submitted&lang=en', 'Track application status']
+  ])('dismisses the confirmation after exactly ten seconds for %s', (url, action) => {
+    vi.useFakeTimers();
+    window.history.replaceState({}, '', url);
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+    try {
+      expect(screen.getByRole('link', { name: action })).toBeInTheDocument();
+      act(() => { vi.advanceTimersByTime(9999); });
+      expect(screen.getByRole('link', { name: action })).toBeInTheDocument();
+      act(() => { vi.advanceTimersByTime(1); });
+      expect(screen.queryByRole('link', { name: action })).not.toBeInTheDocument();
+    } finally { result.unmount(); vi.useRealTimers(); window.history.replaceState({}, '', '/'); }
+  });
+
   it('separates success text, tracking action and dismiss control', async () => {
     window.history.replaceState({}, '', '/?notice=ad-request-sent&lang=ar');
     const result = renderWithLocale(<PublicHomepage locale="ar" initialData={homepageData} />, { locale: 'ar' });

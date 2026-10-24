@@ -58,6 +58,9 @@ export interface SeekerProfileRecord {
 }
 
 export interface ProviderProfileRecord {
+  publicDisplayName?: { ar?: string; en?: string };
+  publicImageUrl?: string;
+  description?: { ar?: string; en?: string };
   userId: Types.ObjectId;
   providerType: ProviderType;
   status: ProviderProfileState;
@@ -182,6 +185,9 @@ seekerProfileSchema.index({ userId: 1 }, { name: 'seeker_profiles_user_unique', 
 
 const providerProfileSchema = new Schema<ProviderProfileRecord>(
   {
+    publicDisplayName: { ar: { type: String, trim: true, maxLength: 200 }, en: { type: String, trim: true, maxLength: 200 } },
+    publicImageUrl: { type: String, match: /^(?:|\/api\/v1\/public\/organization-photos\/[a-f0-9]{24})$/ },
+    description: { ar: { type: String, maxLength: 5000 }, en: { type: String, maxLength: 5000 } },
     userId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
     providerType: { type: String, enum: PROVIDER_TYPES, required: true, immutable: true },
     status: {

@@ -20,7 +20,7 @@ try {
   const stamp = new Date();
   await connection.collection('properties').insertMany(ids.map((id, index) => {
     const property = { ...template, _id: id, slug: `featured-auto-${suffix}-${index}`, name: { ar: `عقار تلقائي ${index}`, en: `Automatic property ${index}` }, version: 0, featured: index < 4, featuredOrder: index < 4 ? 0 : 99999, featuredAt: index < 4 ? new Date(stamp.getTime() - 60000 + index) : undefined, createdAt: stamp, updatedAt: stamp };
-    delete property.publicCode; delete property.expiresAt;
+    delete property.publicCode; delete property.expiresAt; delete property.homepageExcluded;
     return property;
   }));
   const home = async () => {
@@ -31,6 +31,8 @@ try {
   assert(!(await home()).properties.slice(0, 3).some(property => property.id === String(targetId)));
   report.checks.push('Reproduced selection outside the first three behind four older featured properties');
   for (const [name, engine, locale, width] of [['chromium', chromium, 'ar', 390], ['webkit', webkit, 'en', 1440]]) {
+    const budget = await fetch(base + '/api/v1/public/bootstrap');
+    if (budget.status === 429 || Number(budget.headers.get('ratelimit-remaining')) < 65) await new Promise(resolve => setTimeout(resolve, 60000));
     browser = await engine.launch();
     const context = await browser.newContext({ viewport: { width, height: 950 } });
     const login = await context.request.post(base + '/api/v1/auth/login', { data: { email: 'admin.demo@example.invalid', password: 'LocalPreview-Admin-Only-2026!' } });
@@ -67,6 +69,27 @@ try {
     await page.locator('.public-homepage__property-card').first().screenshot({ path: `${output}/${name}-first-property.png` });
     const stale = await context.request.put(`${base}/api/v1/admin/properties/${targetId}/featured`, { headers: { authorization: `Bearer ${token}` }, data: { version: savedData.version - 1, featured: false, reason: 'Local stale request test' } });
     assert.equal(stale.status(), 409);
+    await page.goto(`${base}/admin/properties/review?propertyId=${targetId}&lang=${locale}`);
+    await expect(control.getByRole('checkbox')).toBeChecked();
+    await control.getByRole('checkbox').uncheck();
+    const [removed] = await Promise.all([
+      page.waitForResponse(response => response.url().endsWith(`/properties/${targetId}/featured`) && response.request().method() === 'PUT'), saveButton.click()
+    ]);
+    assert.equal(removed.status(), 200);
+    assert(!(await home()).properties.some(property => property.id === String(targetId)), 'Unfeatured property must not return as latest automatic fallback');
+    const directory = await context.request.get(`${base}/api/v1/public/properties?search=Automatic`);
+    assert.equal(directory.status(), 200);
+    assert((await directory.json()).data.items.some(property => property.id === String(targetId)), 'Published property remains searchable');
+    await connection.collection('properties').updateOne({ _id: targetId }, { $unset: { homepageExcluded: '' }, $set: { featured: false, featuredOrder: null } });
+    assert(!(await home()).properties.some(property => property.id === String(targetId)), 'Previous explicit null-order deselections are also excluded');
+    await page.goto(`${base}/admin/properties/review?propertyId=${targetId}&lang=${locale}`);
+    await control.getByRole('checkbox').check();
+    const [reselected] = await Promise.all([
+      page.waitForResponse(response => response.url().endsWith(`/properties/${targetId}/featured`) && response.request().method() === 'PUT'), saveButton.click()
+    ]);
+    assert.equal(reselected.status(), 200);
+    assert.equal((await home()).properties[0].id, String(targetId));
+    report.checks.push(`${name}: unselect removes automatic fallback, published directory entry preserved, previous deselection respected, reselect restores first position`);
     await connection.collection('properties').updateOne({ _id: targetId }, { $set: { expiresAt: new Date('2020-01-01') }, $inc: { version: 1 } });
     await page.goto(`${base}/admin/properties/review?propertyId=${targetId}&lang=${locale}`);
     await expect(page.locator('[data-auth-resolution=pending]')).toHaveCount(0);

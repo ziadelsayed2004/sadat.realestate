@@ -1,4 +1,4 @@
-import { visiblePublicOrganizations } from '../public/identity.js';
+import { attachIndividualPublicIdentities, visiblePublicOrganizations } from '../public/identity.js';
 import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { publicHomepageCategorySchema, publicPropertyAmenitySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicPropertyAmenity, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
@@ -77,6 +77,8 @@ export function createPublicPropertySearchService(dependencies: { repository: Pu
 }
 
 type MongoPropertyRow = {
+  providerId?: unknown;
+  sourceType?: unknown;
   _id?: unknown;
   slug?: string;
   kind?: string;
@@ -145,7 +147,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const sort: Record<string, 1 | -1> = { [sortField]: direction, slug: 1, _id: 1 };
       const collection = connection.collection('properties');
       const [rows, total, taxonomyRows, allLocationRows] = await Promise.all([
-        collection.find(filter, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, locationId: 1, organizationId: 1, viewCount: 1, paymentPlans: 1, featured: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
+        collection.find(filter, { projection: { _id: 1, providerId: 1, sourceType: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, locationId: 1, organizationId: 1, viewCount: 1, paymentPlans: 1, featured: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
         collection.countDocuments(filter),
         connection.collection('property_taxonomy').find({ kind: { $in: ['category', 'type'] }, active: true }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, kind: 1, categoryId: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(200).toArray() as Promise<TaxonomyMongoRow[]>,
         connection.collection('locations').find({ active: true }, { projection: { _id: 1, name: 1, kind: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(500).toArray() as Promise<NamedMongoRow[]>
@@ -202,7 +204,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicPropertyAmenitySchema.safeParse({ id: id(row._id), kind: row.kind, groupKey: row.groupKey, name: row.name, ...(row.detail === undefined ? {} : { detail: row.detail }), ...(row.distanceLabel === undefined ? {} : { distanceLabel: row.distanceLabel }), slug: row.slug, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: coveredRows.flatMap((row) => { const value = source({ ...row, viewCount: row.viewCount ?? legacyViews.get(String(row._id)) ?? 0 }, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
+      return { items: await attachIndividualPublicIdentities(connection, coveredRows.flatMap((row) => { const value = source({ ...row, viewCount: row.viewCount ?? legacyViews.get(String(row._id)) ?? 0 }, names, organizations, featuredSlugs); return value ? [value] : []; }), coveredRows), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
     }
   };
 }

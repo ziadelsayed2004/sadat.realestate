@@ -30,9 +30,9 @@ export function FeaturedPropertyControl({ property, locale, onSaved }: { propert
       setFeedback(ar ? 'تعذر الحفظ؛ تحقق من الصلاحيات وحدّث العقار ثم حاول مجددًا.' : 'Save failed. Check permissions and reload the property.');
     } finally { setBusy(false); }
   };
-  return <details open className="admin-properties__action-card" id="property-homepage-featured">
+  return <details open className="admin-properties__action-card admin-properties__featured" id="property-homepage-featured">
     <summary>{ar ? 'عقارات مختارة في الرئيسية' : 'Homepage property selection'}</summary>
-    <p>{ar ? 'الترتيب تلقائي: آخر عقار تختاره يظهر أولًا ضمن ٣ عقارات. وباقي الأماكن تُكمل بأحدث العقارات المنشورة.' : 'Automatic order: the last property selected appears first among 3 properties. Remaining places show the latest published properties.'}</p>
+    <p>{ar ? 'اختيار العقار يضعه أولًا ضمن ٣ عقارات بالرئيسية. إلغاء الاختيار يزيله من هذا القسم فقط، ويظل ظاهرًا في قائمة العقارات إذا كان منشورًا.' : 'Select this property to place it first among 3 homepage properties. Unselecting removes it from this section only; a published property remains in the property directory.'}</p>
     {!visible(property) ? <p>{ar ? 'هذا العقار غير ظاهر للزوار حاليًا. الاختيار وحده لا ينشره ولا يجدّد صلاحيته.' : 'This property is not currently public. Selecting it does not publish it or renew its expiry.'}</p> : null}
     <form onSubmit={event => { event.preventDefault(); if (!busy) void save(); }}>
       <label><input type="checkbox" checked={featured} disabled={busy} onChange={event => setFeatured(event.target.checked)} />{ar ? 'تمييز العقار في الرئيسية' : 'Feature on homepage'}</label>

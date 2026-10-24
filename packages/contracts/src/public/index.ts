@@ -105,6 +105,7 @@ export const publicHomepageContentSchema = z.object({
 }).strict();
 
 export const publicHomepageBannerSchema = z.object({
+  keepOriginalHero: z.boolean().optional(),
   key: z.string().trim().min(2).max(64).regex(/^[a-z][a-z0-9_]*$/),
   title: localizedTextSchema.optional(),
   altText: localizedTextSchema.optional(),

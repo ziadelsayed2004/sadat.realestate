@@ -1,5 +1,6 @@
 import { createServer, type Server } from 'node:http';
 import { initializeDeveloperOrganizations } from './modules/organizations/provider-profile.js';
+import { startIdentityNotificationWorker } from './modules/provider/subscription-notifications.js';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -274,8 +275,9 @@ async function runEntrypoint(): Promise<void> {
     commissionConfirmations,
     commissionChangeLog
   });
+  const stopIdentityNotifications = startIdentityNotificationWorker(database.nativeConnection);
   const shutdown = createGracefulShutdown({
-    stopServer: () => stopApiServer(server),
+    stopServer: () => { stopIdentityNotifications(); return stopApiServer(server); },
     disconnectDatabase: () => database.disconnect(),
     onExitCode: (code) => { process.exitCode = code; }
   });
@@ -286,6 +288,7 @@ async function runEntrypoint(): Promise<void> {
   try {
     await startApiServer(server, runtimeEnvironment.api);
   } catch (error) {
+    stopIdentityNotifications();
     process.off('SIGINT', shutdown);
     process.off('SIGTERM', shutdown);
     await database.disconnect();

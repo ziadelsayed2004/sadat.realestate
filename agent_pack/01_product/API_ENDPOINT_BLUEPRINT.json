@@ -3103,5 +3103,17 @@
     "purpose": "Create an audited community category",
     "status": "implemented",
     "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/public-identity-subscription",
+    "module": "provider",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Read the approved provider account identity display subscription and eligibility to edit public name and photo",
+    "status": "implemented",
+    "apiVersion": "v1"
   }
 ]
