@@ -143,7 +143,7 @@ export interface HomepageSectionChanges {
   key?: string;
   title?: LocalizedText;
   eyebrow?: LocalizedText | null;
-  body?: LocalizedText;
+  body?: LocalizedText | null;
   order?: number;
   visible?: boolean;
   status?: 'draft' | 'published' | 'inactive';

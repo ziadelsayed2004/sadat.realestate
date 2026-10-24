@@ -333,7 +333,7 @@ export const homepageSectionPatchSchema = z
     version: z.number().int().nonnegative(),
     title: localizedTextSchema.optional(),
     eyebrow: homepageEyebrowSchema.nullable().optional(),
-    body: localizedTextSchema.optional(),
+    body: localizedTextSchema.nullable().optional(),
     order: displayOrder.optional(),
     visible: z.boolean().optional(),
     status: homepageSectionStatusSchema.optional(),

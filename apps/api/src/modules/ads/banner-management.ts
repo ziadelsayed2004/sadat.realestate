@@ -1,3 +1,4 @@
+import { bannerSlideOverrides } from './banner-images.js';
 import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import { Types, type Connection } from 'mongoose';
@@ -56,11 +57,13 @@ export async function readPublishedBannerRows(connection: Connection, at = new D
     { $limit: Math.min(1000, Math.max(1, Number(settings.maxActiveBanners) || 100)) },
     { $unwind: '$media' },
     { $limit: 100 },
-    { $project: { _id: 1, title: 1, altText: 1, body: 1, targetUrl: 1, placementKey: 1, featured: 1, keepOriginalHero: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
+    { $project: { _id: 1, title: 1, altText: 1, body: 1, targetUrl: 1, placementKey: 1, featured: 1, keepOriginalHero: 1, slides: 1, mediaId: '$media._id', displaySeconds: { $ifNull: ['$displaySeconds', Math.min(60, Math.max(3, Number(settings.defaultDisplaySeconds) || 8))] }, 'media.url': 1 } }
   ]).toArray();
   const published: typeof rows = [];
   for (const row of rows) {
-    if (row.placementKey !== 'homepage.featured') { published.push(row); continue; }
+    if (row.placementKey !== 'homepage.featured') {
+      published.push({ ...row, ...bannerSlideOverrides(Array.isArray(row.slides) ? row.slides : undefined, row.mediaId.toString()) }); continue;
+    }
     const creative = featuredCreativeSchema.safeParse(row.featured);
     if (!creative.success) continue;
     try {

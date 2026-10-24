@@ -1,0 +1,16 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium: both descriptions cleared in MongoDB; direct-link editor closed; two repeated edits persisted; stale save refused and draft preserved",
+    "chromium: in-app field reference opens at its linked topic",
+    "chromium: two live image previews, independent text and links saved and publicly projected; unrelated media override refused; original platform introduction retained",
+    "chromium: complete phone image at its natural ratio, full-height desktop/tablet photograph, independently rotating copy/links; no overflow at 390/820/1440 and Arabic RTL verified at 390/1440",
+    "webkit: both descriptions cleared in MongoDB; direct-link editor closed; two repeated edits persisted; stale save refused and draft preserved",
+    "webkit: in-app field reference opens at its linked topic",
+    "webkit: two live image previews, independent text and links saved and publicly projected; unrelated media override refused; original platform introduction retained",
+    "webkit: complete phone image at its natural ratio, full-height desktop/tablet photograph, independently rotating copy/links; no overflow at 390/820/1440 and Arabic RTL verified at 390/1440"
+  ],
+  "errors": [],
+  "cleanup": true
+}

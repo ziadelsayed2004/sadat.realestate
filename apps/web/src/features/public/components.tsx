@@ -602,13 +602,14 @@ function Hero({
   const managed = banner?.key.startsWith('banner_');
   const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
   const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
-  const body = (managed ? localizedText(banner?.body, locale) : undefined) ?? localizedText(section?.body, locale) ?? localizedText(banner?.body, locale) ?? copy.heroFallbackBody;
+  const body = managed ? localizedText(banner?.body, locale) ?? '' : section ? localizedText(section.body, locale) ?? '' : localizedText(banner?.body, locale) ?? copy.heroFallbackBody;
   const titleLines = title.split('\n');
   const eyebrow = (localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel).replace(/\u{1f3d9}\ufe0f?\s*/gu, '').trim();
 
   return (
     <section id="homepage-hero" style={{ scrollMarginTop: '8rem' }} className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
       <div className="public-homepage__hero-visual">
+      <div className="public-homepage__hero-picture">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
         {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
       </div>
@@ -617,6 +618,7 @@ function Hero({
         <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm9 5 7 7-7 7' : 'm15 5-7 7 7 7'} /></svg></button>
         <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm15 5-7 7 7 7' : 'm9 5 7 7-7 7'} /></svg></button>
       </div> : null}
+      </div>
         <div className="public-homepage__hero-heading">
         <p className="public-homepage__eyebrow">{eyebrow}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
@@ -951,7 +953,7 @@ function HomepageAbout({ locale, copy, content, section }: { readonly locale: Su
       <div className="public-homepage__about-content">
         <p className="public-homepage__eyebrow">{copy.aboutEyebrow}</p>
         <h2 id="public-homepage-about" style={{ scrollMarginTop: '8rem' }} className="public-homepage__about-title">{localizedText(section?.title ?? item.title, locale) ?? item.key}</h2>
-        {(localizedText(section?.body, locale) ?? bodyLines[0]) && <p className="public-homepage__about-body">{localizedText(section?.body, locale) ?? bodyLines[0]}</p>}
+        {(section ? localizedText(section.body, locale) : bodyLines[0]) && <p className="public-homepage__about-body">{section ? localizedText(section.body, locale) : bodyLines[0]}</p>}
         <div className="public-homepage__about-grid">
           {aboutPoints.map((point, i) => (
             <div className="public-homepage__about-feature" key={point.title}>

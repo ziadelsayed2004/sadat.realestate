@@ -6,20 +6,20 @@ export function settingsHelp(locale: SupportedLocale) {
     platform: 'راجع اسم المنصة المحفوظ وبيانات المكتب، ثم عدّل الخانات المطلوبة واضغط حفظ التغييرات.',
     contact: 'أرقام التواصل وروابط الخريطة وفيسبوك وإنستجرام التي يستخدمها زوار الموقع.',
     social: 'روابط صفحات المنصة على مواقع التواصل الاجتماعي.',
-    properties: 'اختيارات مراجعة العقارات ونشرها، وحدود الصور وظهور بيانات التواصل.',
+    properties: 'مراجعة العقارات ونشرها وانتهاء صلاحيتها، وعدد الصور وصيغها وحجمها.',
     requests: 'راجع إعدادات متابعة طلبات العملاء المتاحة لحسابك.',
     advertising: 'مواضع الإعلانات ومقاسات الصور ومدة صلاحية عرض السعر وطرق إثبات الدفع.',
     seo: 'عنوان الموقع ووصفه في نتائج البحث، والرابط الأساسي وإعدادات الفهرسة.',
-    'privacy-security': 'إعدادات حماية بيانات العملاء والمستندات، وأمان حسابات الإدارة.',
-    display: 'اللغة واتجاه الصفحة وعدد النتائج، وعداد السكان وإعدادات منشورات المجتمع.'
+    'privacy-security': 'مدة جلسة الإدارة والتحقق الإضافي. بيانات العملاء والملاحظات والمستندات الخاصة محمية بالصلاحيات دائمًا؛ القيم القديمة محفوظة ولا تكشفها للعامة.',
+    display: 'إظهار عداد السكان وفحص كلمات المجتمع وحد النشر اليومي ومهلة متابعة المراجعة.'
   } : {
     platform: 'Review the saved platform name and office details, edit the fields you need, then save your changes.',
     contact: 'Contact numbers, map and social links used by visitors.', social: 'Links to the platform’s social media pages.',
-    properties: 'Property review, publication, image limits and contact visibility choices.', requests: 'Review the customer request settings available to your account.',
+    properties: 'Property review, publication, expiry, image count, formats and size.', requests: 'Review the customer request settings available to your account.',
     advertising: 'Advertising placements, image sizes, quote validity and payment proof methods.',
     seo: 'The site title and description in search results, canonical address and indexing settings.',
-    'privacy-security': 'Customer data, document privacy and administrator account security settings.',
-    display: 'Language, page direction, result count, population counter and community post settings.'
+    'privacy-security': 'Administrator session duration and additional verification. Customer data, internal notes and private documents remain permission protected; legacy values do not make them public.',
+    display: 'Population visibility, community word checks, daily posting limits and review follow-up period.'
   };
   return { descriptions, guide: ar ? {
     original: 'الاسم الأساسي للموقع', savedName: 'الاسم المحفوظ في الإعدادات',

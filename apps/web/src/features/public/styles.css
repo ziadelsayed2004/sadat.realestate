@@ -2586,10 +2586,12 @@
 
 /* Keep the hero photograph visible beneath the navy text overlay. */
 .public-homepage .public-homepage__hero { display: block; min-block-size: calc(100svh - var(--public-header-height, 110px)); padding: 0 0 32px; box-sizing: border-box; }
-.public-homepage__hero .public-homepage__hero-visual { position: relative; inset: auto; display: grid; min-block-size: max(420px, calc(100svh - var(--public-header-height, 110px) - 120px)); align-items: center; isolation: isolate; }
-.public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; }
+.public-homepage__hero .public-homepage__hero-visual { position: static; display: grid; min-block-size: max(420px, calc(100svh - var(--public-header-height, 110px) - 120px)); align-items: center; }
+.public-homepage__hero-picture { position: absolute; inset: 0; z-index: 0; }
+.public-homepage__hero-heading { position: relative; z-index: 2; }
+.public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; z-index: 0; }
 .public-homepage__hero .public-homepage__hero-media > img { inline-size: 100%; block-size: 100%; aspect-ratio: auto; object-fit: cover; opacity: 1; }
-.public-homepage__hero .public-homepage__hero-shade { display: block; background: linear-gradient(180deg, #18243e38, #18243ebf 50%, #18243ee8); }
+.public-homepage__hero .public-homepage__hero-shade { display: block; z-index: 1; background: linear-gradient(180deg, #18243e38, #18243ebf 50%, #18243ee8); }
 .public-homepage__hero-heading { display: grid; justify-items: center; gap: 16px; inline-size: min(900px, calc(100% - 128px)); margin: auto; padding: 64px 0 88px; text-align: center; overflow-wrap: anywhere; }
 .public-homepage__hero .public-homepage__hero-content { position: relative; z-index: 3; padding: 0; margin-block-start: -48px; }
 .public-homepage__hero .public-homepage__search { inline-size: 100%; margin: 0; }
@@ -2597,8 +2599,12 @@
 .public-homepage__hero-slider svg { display: block; width: 22px; height: 22px; }
 @media (max-width: 767px) {
   .public-homepage .public-homepage__hero { padding-block-end: 24px; }
-  .public-homepage__hero .public-homepage__hero-visual { min-block-size: clamp(360px, 60svh, 520px); }
-  .public-homepage__hero-heading { inline-size: calc(100% - 104px); gap: 12px; padding-block: 40px 68px; }
+  .public-homepage__hero .public-homepage__hero-visual { min-block-size: 0; display: block; }
+  .public-homepage__hero-picture { position: relative; inset: auto; }
+  .public-homepage__hero .public-homepage__hero-media { position: relative; inset: auto; }
+  .public-homepage__hero .public-homepage__hero-media > img { block-size: auto; object-fit: contain; }
+  .public-homepage__hero .public-homepage__hero-shade { display: none; }
+  .public-homepage__hero-heading { inline-size: calc(100% - 40px); gap: 12px; padding-block: 24px 64px; }
   .public-homepage__hero .public-homepage__eyebrow { font-size: .7rem; padding: 6px 8px; }
   .public-homepage__hero .public-homepage__hero-content { inline-size: calc(100% - 24px); margin-block-start: -32px; }
   .public-homepage__hero-slider { padding-inline: 8px; }

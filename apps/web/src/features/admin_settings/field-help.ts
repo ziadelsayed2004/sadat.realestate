@@ -1,5 +1,42 @@
-export function settingsFieldHelp(locale: 'ar' | 'en', key: string): string | undefined {
-  const help: Record<string, [string, string]> = {
+export const SETTINGS_FIELD_HELP: Record<string, [string, string]> = {
+    platform_name: ['اسم تعريفي محفوظ للمنصة؛ لا يبدّل صورة الشعار أو عنوان نتائج البحث. عدّل نص الرئيسية من إدارة محتوى الرئيسية.', 'Stored platform name; it does not replace the logo or SEO title. Edit homepage text in Homepage content.'],
+    short_name: ['اختصار تعريفي محفوظ للاسم، وليس تغييرًا للشعار.', 'Stored short name; it does not change the logo.'],
+    description: ['نبذة تعريفية محفوظة؛ نص الرئيسية ووصف نتائج البحث لهما صفحتا تحرير منفصلتان.', 'Stored introduction. Homepage copy and search metadata have separate editors.'],
+    city: ['مدينة عمل المنصة المسجلة؛ لا تغيّر مناطق العقارات أو عناوينها تلقائيًا.', 'Recorded operating city; it does not rewrite property locations.'],
+    timezone: ['تفضيل محفوظ. مواعيد الإعلانات والاشتراكات المعروضة تعمل بتوقيت مصر، ولا تتغير بهذا الاختيار.', 'Stored preference. Advertising and subscription schedules still use Egypt time.'],
+    currency: ['تفضيل محفوظ؛ عملة كل عقار تُحدد في بياناته. لا يحوّل الأسعار أو العملات المحفوظة تلقائيًا.', 'Stored preference. Each property has its own currency; existing prices and currencies are not converted.'],
+    default_locale: ['تفضيل محفوظ؛ لغة الزائر يحددها اختيار اللغة أو الرابط، واتجاه الصفحة يتبعها.', 'Stored preference. Visitor language comes from the language selector or URL; direction follows it.'],
+    primary_email: ['بريد إداري محفوظ؛ لا يغير حساب الدخول أو خادم إرسال رموز التحقق.', 'Stored administration email; it does not change login or OTP delivery configuration.'],
+    primary_phone: ['رقم الاتصال الظاهر بالموقع. رقم مصري مثل 01012345678. الفارغ يخفي زر الاتصال؛ أحدث حفظ هنا أو في بيانات المنصة هو المعتمد.', 'Public call number, e.g. 01012345678. Empty hides the call button; the latest platform/contact save wins.'],
+    whatsapp_number: ['رقم واتساب المنصة، مثل +201012345678. يظهر في أزرار التواصل؛ فارغ يخفيها.', 'Platform WhatsApp number, e.g. +201012345678. Empty hides WhatsApp buttons.'],
+    office_address: ['عنوان المقر في الفوتر؛ الضغط عليه يفتح الخريطة المحددة، أو البحث عن العنوان إن لم تحدد رابطًا.', 'Footer address. Opens the map URL or searches the address if no map is provided.'],
+    working_hours: ['أوقات العمل الظاهرة في الفوتر؛ نص توضيحي لا يفتح الموقع أو يغلقه تلقائيًا.', 'Office hours shown in the footer; this text does not enable or disable the website.'],
+    map_url: ['رابط موقع المقر من مشاركة خرائط Google، وليس رابط الموقع الإلكتروني أو صورة. فارغ مع عنوان مكتوب يفتح البحث عن العنوان.', 'Google Maps location from Share, not a website or image URL. An address without a map link opens map search.'],
+    facebook_url: ['رابط صفحة فيسبوك الكامل HTTPS. فارغ يخفي الأيقونة. أحدث حفظ في التواصل أو الاجتماعي هو المعتمد.', 'Full HTTPS Facebook page URL. Empty hides its icon; the latest contact/social save wins.'],
+    instagram_url: ['رابط حساب إنستجرام الكامل HTTPS. فارغ يخفي الأيقونة؛ لا تكتب اسم الحساب وحده.', 'Full HTTPS Instagram profile URL. Empty hides the icon; do not enter only a username.'],
+    supported_placements: ['كود موضع في كل سطر. موضعا homepage.hero وhomepage.featured أساسيان. تشغيل الموضع وترتيبه يتمان من صفحة البانرات.', 'One placement code per line. homepage.hero and homepage.featured are built in. Enable and order positions in Banners.'],
+    supported_ad_types: ['نوع في كل سطر؛ banner وfeatured_card أساسيان. لا يضيف كتابة اسم جديد تصميم إعلان جديد تلقائيًا.', 'One type per line; banner and featured_card are built in. A new identifier does not create a new advertising design.'],
+    desktop_dimensions: ['مقاس الصورة بالبكسل مثل 1200x400. يمكن فصل مقاسات إضافية بمسافة. يطبق حد المقاسات على الرفع الجديد؛ فارغ يترك قيود الرفع الأساسية.', 'Image size in pixels, e.g. 1200x400. Separate additional sizes with spaces. Empty leaves standard upload limits.'],
+    mobile_dimensions: ['مقاس إضافي مقبول مثل 750x900، وليس نسخة هاتف منفصلة للصورة. الصورة نفسها تظهر على الأجهزة بحسب نسبة أبعادها.', 'Additional accepted size, e.g. 750x900, not a separate mobile image. The same image is displayed across devices.'],
+    accepted_file_formats: ['كل صيغة في سطر: image/jpeg أو image/png أو image/webp. فارغ يستخدم الصيغ الأساسية المدعومة؛ الحد الأساسي 10 ميجابايت للصورة.', 'One MIME per line: image/jpeg, image/png or image/webp. Empty uses supported defaults; the base image limit is 10 MB.'],
+    quote_validity_days: ['صلاحية عرض السعر الجديد من 1 إلى 90 يومًا؛ لا تغيّر تلقائيًا موعد عرض سبق إصداره.', 'New quote validity, 1–90 days. Existing quote deadlines are unchanged.'],
+    payment_proof_methods: ['طرق الدفع التي يمكن للعارض تقديم إثبات لها. تفعيل طريقة لا يؤكد وصول المال؛ راجع الإثبات قبل الاعتماد.', 'Methods available for submitting payment proof. Enabling a method does not verify payment.'],
+    vodafone_cash_payment_details: ['اسم مستلم المبلغ ورقم المحفظة الصحيح؛ يظهران للعارض عند اختيار فودافون كاش.', 'Recipient name and wallet number shown when Vodafone Cash is chosen.'],
+    instapay_payment_details: ['اسم المستلم وحساب إنستاباي؛ يظهران للعارض لاستخدامهما في التحويل.', 'Recipient name and InstaPay account shown for transfers.'],
+    bank_transfer_payment_details: ['تعليمات التحويل البنكي، كل سطر معلومة مثل البنك والمستفيد ورقم الحساب. لا تدخل كلمات مرور.', 'Bank, beneficiary and account instructions, one detail per line. Do not enter passwords.'],
+    cash_payment_details: ['تعليمات التسليم النقدي ومكانه، كل معلومة في سطر. الدفع يظل بحاجة لاعتماد الإدارة.', 'Cash payment location and instructions, one detail per line. Administrative approval is still required.'],
+    default_seo_title: ['العنوان الأساسي في تبويب المتصفح ونتائج البحث، مع إمكانية عنوان خاص لكل صفحة.', 'Default browser/search title; individual pages may have their own titles.'],
+    default_meta_description: ['وصف مختصر لمحركات البحث؛ لا يغيّر وصف بانر الرئيسية، ومحرك البحث قد يعرض مقتطفًا آخر.', 'Search description, separate from the homepage banner. Search engines may choose another snippet.'],
+    title_separator: ['الفاصل بين عنوان الصفحة واسم الموقع، مثل | أو —.', 'Separator between page title and site name, e.g. | or —.'],
+    canonical_domain: ['أصل الموقع مثل https://elsadatrealestate.com بدون مسار أو بارامترات؛ يستخدم للروابط الأساسية والفهرسة.', 'Site origin, e.g. https://elsadatrealestate.com without a path or query. Used for canonical URLs.'],
+    allow_indexing: ['السماح لمحركات البحث بالفهرسة. لا يضمن الظهور أو ترتيبًا محددًا؛ الإيقاف يطلب عدم الفهرسة.', 'Allows indexing. It does not guarantee visibility or ranking; disabling requests no indexing.'],
+    sitemap_status: ['تفعيل خريطة روابط الصفحات العامة لمحركات البحث؛ لا ينشر المحتوى المسودة.', 'Enables the public-page sitemap; it does not publish draft content.'],
+    google_search_console_verification: ['قيمة كود التحقق من Google فقط، بدون وسم HTML كامل أو كلمة مرور.', 'Google verification token only, not a full HTML tag or password.'],
+    hide_customer_contact: ['بيانات العميل محمية بصلاحيات الطلبات؛ القيمة القديمة محفوظة ولا تسمح بكشفها للعامة.', 'Customer data remains protected by request permissions; this legacy value does not make it public.'],
+    hide_internal_notes: ['الملاحظات الداخلية خاصة بصلاحيات الإدارة؛ القيمة القديمة لا تحولها إلى محتوى عام.', 'Internal notes remain restricted by permissions; this legacy value does not publish them.'],
+    hide_private_documents: ['المستندات الخاصة محمية بصلاحيات التحميل؛ القيمة القديمة لا تفتحها للزوار.', 'Private downloads remain permission protected; this legacy value does not open them to visitors.'],
+    admin_session_timeout_minutes: ['أقصى عمر لجلسة دخول الإدارة بالدقائق من وقت إصدارها؛ ليست مهلة خمول. قد يطلب تسجيل الدخول مجددًا.', 'Maximum administrator session age in minutes since issuance, not an inactivity timer. May require signing in again.'],
+    two_factor_authentication: ['بعد كلمة مرور الأدمن، يطلب رمز تحقق إضافيًا. تأكد من عمل بريد رموز التحقق قبل التفعيل؛ قد تحتاج إعادة الدخول.', 'Requires an additional verification code after the admin password. Ensure OTP email works before enabling.'],
     requires_admin_review: ['مفعّل: العقار يمر على الإدارة قبل النشر. إيقافه يلغي اشتراط المراجعة، ولا يغيّر العقارات المنشورة سابقًا.', 'Enabled: properties require administrative review before publication. Existing published properties are unchanged.'],
     publication_after_approval: ['تلقائي: يُنشر العقار بعد اعتماده. يدوي: الاعتماد وحده لا ينشره وتحتاج إجراء النشر.', 'Automatic publishes after approval; manual requires a separate publish action.'],
     automatic_expiry: ['مدة صلاحية النشر. عند انتهائها يختفي العقار من العرض العام دون حذف بياناته. «بلا انتهاء» يبقيه حتى أرشفته.', 'Publication lifetime. Expired properties disappear publicly without deleting their records. Never keeps them until archived.'],
@@ -11,7 +48,10 @@ export function settingsFieldHelp(locale: 'ar' | 'en', key: string): string | un
     blocked_word_action: ['مراجعة: ينتظر قرار الإدارة. رفض: يُرفض المنشور المطابق لقائمة الكلمات.', 'Review holds matching posts for administration; reject refuses them.'],
     daily_post_limit: ['عدد منشورات المجتمع لكل حساب يوميًا، من 1 إلى 100. فارغ = بلا حد يومي إضافي.', 'Community posts per account per day, 1–100. Empty means no additional daily limit.'],
     moderation_wait_hours: ['مهلة المتابعة للمراجعة من 1 إلى 168 ساعة؛ لا تعني الموافقة التلقائية. فارغ = بلا مهلة محددة.', 'Review follow-up period, 1–168 hours. It does not auto-approve posts. Empty means no specified period.'],
-    show_population_counter: ['يظهر عداد السكان عند توفر قيمة منشورة. الأرقام نفسها تُعدّل من رابط إحصاءات المدينة أعلاه.', 'Shows population when a published value exists. Edit the values using the city statistics link above.']
-  };
-  return help[key]?.[locale === 'ar' ? 0 : 1];
+    show_population_counter: ['يظهر عداد السكان عند توفر قيمة منشورة. الأرقام نفسها تُعدّل من رابط إحصاءات المدينة أعلاه.', 'Shows population when a published value exists. Edit the values using the city statistics link above.'],
+    population_label: ['اسم عداد السكان الظاهر في الرئيسية، بالعربية والإنجليزية. لا يغيّر الرقم أو مصدره.', 'Population counter label on the homepage, in Arabic and English. It does not change the value or source.']
+};
+
+export function settingsFieldHelp(locale: 'ar' | 'en', key: string): string | undefined {
+  return SETTINGS_FIELD_HELP[key]?.[locale === 'ar' ? 0 : 1];
 }

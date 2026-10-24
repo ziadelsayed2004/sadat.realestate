@@ -15,10 +15,20 @@ import { audienceLabels, GUIDE_AUDIENCES, sectionsForAudience } from '../src/fea
 import { guideAsText, guideAsMarkdown, GUIDE_EDITION } from '../src/features/admin_user_guide/export.ts';
 import { guideQuickActions } from '../src/features/admin_user_guide/quick-actions.ts';
 import { guideAsHtml } from '../src/features/admin_user_guide/catalog-export.ts';
+import { SETTINGS_FIELD_HELP } from '../src/features/admin_settings/field-help.ts';
 
 const admin = { status: 'authenticated' as const, role: 'admin' as const };
 const topics = GUIDE_SECTIONS.flatMap(section => section.topics);
 const paths = new Set(topics.flatMap(topic => topic.links.map(link => new URL(link.path, 'https://example.test').pathname)));
+
+it('explains each general settings control and preserves the distinction between saved preferences and working controls', () => {
+  const source = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../src/features/admin_settings/views.tsx'), 'utf8');
+  const fields = [...source.slice(source.indexOf('const FIELD_MAP'), source.indexOf('const FIELD_MAP') + source.slice(source.indexOf('const FIELD_MAP')).indexOf('\n};')).matchAll(/key: '([a-z_]+)'/gu)].map(match => match[1]!);
+  for (const key of fields) expect(SETTINGS_FIELD_HELP[key], key).toBeDefined();
+  const reference = GUIDE_SECTIONS.find(section => section.id === 'settings-reference');
+  expect(reference?.topics).toHaveLength(9);
+  expect(guideAsMarkdown(reference ? [reference] : [])).toContain('لا يحوّل الأسعار');
+});
 
 it('keeps every downloadable account guide in sync with its on-screen instructions', () => {
   for (const [audience, filename] of [['owner-admin', 'owner-user-guide'], ['staff-admin', 'user-guide-staff'], ['developer', 'user-guide-company'], ['individual_broker', 'user-guide-individual'], ['brokerage_office', 'user-guide-office'], ['seeker', 'user-guide-seeker']] as const) {

@@ -1,7 +1,7 @@
 import { getEditableCopyCatalog, localizeCopy } from '../localization/copy-catalog.ts';
 import type { AdminSettingsNamespace, SupportedLocale } from '@sadat-real-estate/contracts';
 import type { AdminSettingsState } from './views.tsx';
-import type { settingsHelp } from './help.ts';
+import { settingsHelp } from './help.ts';
 
 export interface AdminSettingsCopy {
   readonly eyebrow: string;
@@ -30,5 +30,5 @@ export interface AdminSettingsCopy {
 }
 
 export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy & ReturnType<typeof settingsHelp> {
-  return localizeCopy('admin_settings/copy#getAdminSettingsCopy', locale, getEditableCopyCatalog(locale)['admin_settings/copy#getAdminSettingsCopy'] as unknown as AdminSettingsCopy & ReturnType<typeof settingsHelp>);
+  return { ...localizeCopy('admin_settings/copy#getAdminSettingsCopy', locale, getEditableCopyCatalog(locale)['admin_settings/copy#getAdminSettingsCopy'] as unknown as AdminSettingsCopy & ReturnType<typeof settingsHelp>), ...settingsHelp(locale) };
 }

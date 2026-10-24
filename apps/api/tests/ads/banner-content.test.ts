@@ -2,8 +2,27 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { createAdSettingsService } from '../../src/modules/ads/service.js';
-import { adBannerMediaSchema } from '@sadat-real-estate/contracts';
+import { adBannerMediaSchema, adSettingsSchema } from '@sadat-real-estate/contracts';
 import type { AdBannerRepository } from '../../src/modules/ads/service.js';
+
+test('keeps independent slide copy and links, falls back to banner copy and prunes removed image overrides', async () => {
+  const admin = { sub: 'aaaaaaaaaaaaaaaaaaaaaaaa', role: 'admin', status: 'verified' } as AccessTokenClaims;
+  const now = new Date('2026-10-10T12:00:00Z');
+  const service = createAdSettingsService({ now: () => now, settings: adSettingsSchema.parse({ enabled: true, allowedSurfaces: ['homepage'], maxActiveBanners: 100, defaultDisplaySeconds: 8, version: 0, updatedBy: admin.sub, updatedAt: now.toISOString() }) });
+  await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Home' }, width: 1200, height: 400, active: true, sortOrder: 0, allowedLocales: ['ar', 'en'], targetUrlRequired: false });
+  const banner = await service.createBanner(admin, { placementKey: 'homepage.hero', title: { en: 'Platform' }, body: { en: 'Default description' }, targetUrl: 'https://example.com/', startAt: '2026-10-10T00:00:00Z', endAt: '2026-10-11T00:00:00Z' });
+  const images = await Promise.all([1, 2].map(index => service.createBannerMedia(admin, banner.id, { url: `https://example.com/${index}.png`, mime: 'image/png', width: 1200, height: 400 })));
+  let saved = await service.updateBanner(admin, banner.id, { expectedVersion: banner.version, mediaIds: images.map(image => image.id), slides: [{ mediaId: images[0]!.id, title: { en: 'Company one' }, body: { en: 'First image description' }, targetUrl: 'https://example.com/one' }], status: 'active', reason: 'Publish independent slides' });
+  let published = await service.listPublicBanners('homepage', 'en');
+  assert.deepEqual(published.map(row => row.resolvedTitle), ['Company one', 'Platform']);
+  assert.deepEqual(published.map(row => row.targetUrl), ['https://example.com/one', 'https://example.com/']);
+  await assert.rejects(service.updateBanner(admin, banner.id, { expectedVersion: saved.version, slides: [{ mediaId: 'bbbbbbbbbbbbbbbbbbbbbbbb', title: { en: 'Unselected media' } }], reason: 'Reject unselected image' }));
+  await assert.rejects(service.updateBanner(admin, banner.id, { expectedVersion: saved.version, slides: [{ mediaId: images[0]!.id, targetUrl: 'javascript:alert(1)' }], reason: 'Reject unsafe URL' }));
+  saved = await service.updateBanner(admin, banner.id, { expectedVersion: saved.version, mediaIds: [images[1]!.id], reason: 'Remove first image' });
+  assert.deepEqual(saved.slides, []);
+  published = await service.listPublicBanners('homepage', 'en');
+  assert.deepEqual(published.map(row => row.resolvedTitle), ['Platform']);
+});
 
 test('featured lists report actual public visibility only after administrative authorization', async () => {
   const admin = { sub: 'aaaaaaaaaaaaaaaaaaaaaaaa', role: 'admin', status: 'verified' } as AccessTokenClaims;

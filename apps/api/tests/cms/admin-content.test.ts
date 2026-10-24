@@ -188,9 +188,10 @@ function repository(): CmsAdminContentRepository {
     async updateHomepageSection(id, version, input, actorId, at) {
       if (id !== homepage.id) return { kind: 'not_found' };
       if (version !== homepage.version) return { kind: 'version_conflict' };
-      const { eyebrow, ...changes } = input;
-      homepage = { ...homepage, ...changes, ...(eyebrow ? { eyebrow } : {}), updatedBy: actorId, version: version + 1, updatedAt: at };
+      const { eyebrow, body, ...changes } = input;
+      homepage = { ...homepage, ...changes, ...(eyebrow ? { eyebrow } : {}), ...(body ? { body } : {}), updatedBy: actorId, version: version + 1, updatedAt: at };
       if (eyebrow === null) delete homepage.eyebrow;
+      if (body === null) delete homepage.body;
       return { kind: 'written', item: homepage };
     },
     async listDisplaySettings() { return [display]; },
@@ -493,4 +494,24 @@ test('serves a sourced population value and requires its version for updates', a
   assert.equal(unavailable.namespace, 'population');
   assert.equal(unavailable.items[0]?.status, 'unavailable');
   assert.equal('value' in (unavailable.items[0] ?? {}), false);
+});
+
+
+test('clears a homepage description explicitly and replaces locale maps without reviving old text', async () => {
+  const { service } = createService();
+  const context = { requestId: 'clear-home-description', traceId: 'a'.repeat(32) };
+  let result = await service.get({ userId: adminId }, 'homepage');
+  if (result.namespace !== 'homepage') throw new Error('Unexpected namespace');
+  const original = result.items[0]!;
+  result = await service.put({ userId: adminId }, 'homepage', { id: original.id, version: original.version, body: null, reason: 'Remove unwanted description' }, context);
+  if (result.namespace !== 'homepage') throw new Error('Unexpected namespace');
+  assert.equal(result.items[0]?.body, undefined);
+  let row = result.items[0]!;
+  result = await service.put({ userId: adminId }, 'homepage', { id: row.id, version: row.version, body: { ar: 'New Arabic', en: 'New English' }, reason: 'Set both translations' }, context);
+  if (result.namespace !== 'homepage') throw new Error('Unexpected namespace');
+  row = result.items[0]!;
+  const next = await service.put({ userId: adminId }, 'homepage', { id: row.id, version: row.version, body: { en: 'Only English' }, reason: 'Remove one translation' }, context);
+  if (next.namespace !== 'homepage') throw new Error('Unexpected namespace');
+  assert.deepEqual(next.items[0]?.body, { en: 'Only English' });
+  await assert.rejects(service.put({ userId: adminId }, 'homepage', { id: row.id, version: row.version, body: null, reason: 'Stale overwrite' }, context), (error: unknown) => error instanceof CmsAdminContentServiceError && error.code === 'CMS_CONTENT_VERSION_CONFLICT');
 });

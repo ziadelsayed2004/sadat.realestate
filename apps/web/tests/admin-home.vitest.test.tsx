@@ -148,6 +148,20 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('Admin banners, tips, and homepage administration', () => {
+  it('clears the saved description and closes a direct-link editor after save and cancel', async () => {
+    const requests: Array<{ method: string; path: string; body: unknown }> = [];
+    const source = createAdminHomeSource({ apiClient: apiClientFor(requests) });
+    renderWithLocale(<AdminHome url={`/admin/content/homepage?contentId=${homepageId}`} locale="en" session={session} initialContent={homepage} source={source} />, { locale: 'en' });
+    const editor = await screen.findByTestId('admin-home-homepage-editor');
+    fireEvent.change(editor.querySelector('#admin-home-homepage-body-en')!, { target: { value: '' } });
+    fireEvent.change(within(editor).getByLabelText('Change reason'), { target: { value: 'Clear outdated description' } });
+    fireEvent.submit(editor.querySelector('form')!);
+    await waitFor(() => expect(screen.queryByTestId('admin-home-homepage-editor')).not.toBeInTheDocument());
+    expect(requests.find(request => request.method === 'PUT')?.body).toMatchObject({ id: homepageId, version: 4, body: null });
+    fireEvent.click(within(screen.getByTestId(`admin-home-homepage-${homepageId}`)).getByRole('button', { name: 'Edit' }));
+    fireEvent.click(within(screen.getByTestId('admin-home-homepage-editor')).getAllByRole('button', { name: 'Cancel' })[0]!);
+    expect(screen.queryByTestId('admin-home-homepage-editor')).not.toBeInTheDocument();
+  });
   it.each(['ar', 'en'] as const)('finds stopped banners, previews privately, and edits without publishing in %s', async locale => {
     const copy = getAdminHomeCopy(locale);
     const source = createAdminHomeSource({ apiClient: apiClientFor([]) });

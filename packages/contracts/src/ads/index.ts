@@ -152,8 +152,13 @@ export const adBannerMediaDeleteSchema = z.object({ expectedVersion: z.number().
 const bannerMediaIds = z.array(id).max(20).refine(value => new Set(value).size === value.length, 'Image IDs must be unique');
 const bannerDisplaySeconds = z.number().int().min(3).max(60);
 
+export const adBannerSlideSchema = z.object({ mediaId: id, title: localizedTextSchema.optional(), body: localizedTextSchema.optional(), targetUrl: publicHttpsUrl.optional() }).strict();
+export type AdBannerSlide = z.infer<typeof adBannerSlideSchema>;
+const bannerSlides = z.array(adBannerSlideSchema).max(20).refine(value => new Set(value.map(slide => slide.mediaId)).size === value.length, 'Slide image IDs must be unique');
+
 export const adBannerSchema = z.object({
   keepOriginalHero: z.boolean().optional(),
+  slides: bannerSlides.optional(),
   publiclyVisible: z.boolean().optional(),
   featured: featuredCreativeSchema.optional(),
   id,
@@ -175,9 +180,14 @@ export const adBannerSchema = z.object({
   updatedBy: id,
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true })
-}).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
+}).strict().superRefine((value, ctx) => {
+  bannerDateRange(value, ctx);
+  const images = value.mediaIds ?? (value.mediaId ? [value.mediaId] : []);
+  if (value.slides?.some(slide => !images.includes(slide.mediaId)) || (value.placementKey !== 'homepage.hero' && value.slides?.length)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['slides'], message: 'Slide overrides require selected hero images' });
+});
 export const adBannerCreateSchema = z.object({
   keepOriginalHero: z.boolean().optional(),
+  slides: bannerSlides.optional(),
   featured: featuredCreativeSchema.optional(),
   adRequestId: id.optional(),
   placementKey,
@@ -194,6 +204,7 @@ export const adBannerCreateSchema = z.object({
 }).strict().superRefine((value, ctx) => bannerDateRange(value, ctx));
 export const adBannerPatchSchema = z.object({
   keepOriginalHero: z.boolean().optional(),
+  slides: bannerSlides.optional(),
   featured: featuredCreativeSchema.optional(),
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(2).max(500),

@@ -1,4 +1,4 @@
-import { bannerImageChanges, selectedBannerMediaIds } from './banner-images.js';
+import { bannerImageChanges, selectedBannerMediaIds, bannerSlideOverrides } from './banner-images.js';
 import { currentBannerStatus } from './banner-status.js';
 import { randomBytes } from 'node:crypto';
 import { validateBannerCampaign } from './banner-campaign.js';
@@ -353,21 +353,24 @@ export function createAdSettingsService(seed: {
     }
     return updated;
   };
-  const publicProjection = (banner: AdBanner, media: AdBannerMedia, locale: SupportedLocale) => adBannerPublicSchema.parse({
-    id: banner.id,
-    placementKey: banner.placementKey,
-    title: banner.title,
-    ...(banner.altText ? { altText: banner.altText } : {}),
-    resolvedTitle: resolveLocalizedText(banner.title, locale),
-    ...(banner.altText ? { resolvedAltText: resolveLocalizedText(banner.altText, locale) } : {}),
-    imageUrl: media.url,
-    displaySeconds: banner.displaySeconds ?? Math.min(60, Math.max(3, settings.defaultDisplaySeconds)),
-    ...(banner.targetUrl ? { targetUrl: banner.targetUrl } : {}),
-    startAt: banner.startAt,
-    endAt: banner.endAt,
-    sortOrder: banner.sortOrder,
-    status: 'active'
-  });
+  const publicProjection = (banner: AdBanner, media: AdBannerMedia, locale: SupportedLocale) => {
+    banner = { ...banner, ...bannerSlideOverrides(banner.slides, media.id) };
+    return adBannerPublicSchema.parse({
+      id: banner.id,
+      placementKey: banner.placementKey,
+      title: banner.title,
+      ...(banner.altText ? { altText: banner.altText } : {}),
+      resolvedTitle: resolveLocalizedText(banner.title, locale),
+      ...(banner.altText ? { resolvedAltText: resolveLocalizedText(banner.altText, locale) } : {}),
+      imageUrl: media.url,
+      displaySeconds: banner.displaySeconds ?? Math.min(60, Math.max(3, settings.defaultDisplaySeconds)),
+      ...(banner.targetUrl ? { targetUrl: banner.targetUrl } : {}),
+      startAt: banner.startAt,
+      endAt: banner.endAt,
+      sortOrder: banner.sortOrder,
+      status: 'active'
+    });
+  };
 
   return {
     async createPlacement(claims: AccessTokenClaims, input: unknown) {
