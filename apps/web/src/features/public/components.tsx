@@ -1,3 +1,4 @@
+import { CarouselArrow, useOutgoingSlide } from './carousel.tsx';
 import { categoryImageUrl } from '../design_system/category-image.ts';
 import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
 import { TipCard } from './tip-card.tsx';
@@ -439,12 +440,14 @@ function BannerMedia({
   copy,
   locale,
   hidden,
+  exiting = false,
   onLoad
 }: {
   readonly banner: PublicHomepageBanner | undefined;
   readonly copy: PublicHomepageCopy;
   readonly locale: SupportedLocale;
   readonly hidden: boolean;
+  readonly exiting?: boolean;
   readonly onLoad: () => void;
 }) {
   const [failed, setFailed] = useState(false);
@@ -460,8 +463,11 @@ function BannerMedia({
       decoding="async"
       loading="eager"
       fetchPriority={hidden ? 'low' : 'high'}
-      hidden={hidden}
-      style={hidden ? { display: 'none' } : undefined}
+      hidden={hidden && !exiting}
+      aria-hidden={hidden}
+      data-active={!hidden || undefined}
+      data-exiting={exiting || undefined}
+      style={hidden && !exiting ? { display: 'none' } : undefined}
       ref={node => { if (node?.complete && node.naturalWidth > 0) onLoad(); }}
       onLoad={onLoad}
       onError={() => { if (failed) onLoad(); else setFailed(true); }}
@@ -577,6 +583,7 @@ function Hero({
   const imageKey = (item: PublicHomepageBanner | undefined) => item?.imageUrl ?? '';
   // Keep URL-keyed image nodes mounted so no-store media is not requested again on every slide.
   const media = [...new Map((slides.length ? slides : [banner]).map(item => [imageKey(item), item])).entries()];
+  const outgoingImage = useOutgoingSlide(imageKey(banner));
   const slideKeys = slides.map(item => item.key).join(',');
   useEffect(() => {
     if (!requestedKey) return;
@@ -611,19 +618,27 @@ function Hero({
       <div className="public-homepage__hero-visual">
       <div className="public-homepage__hero-picture">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
-        {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
+        {media.map(([url, item]) => <BannerMedia key={url} banner={url === imageKey(banner) ? banner : item} copy={copy} locale={locale} hidden={url !== imageKey(banner)} exiting={url === outgoingImage} onLoad={() => setReady(current => current.includes(url) ? current : [...current, url])} />)}
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
-      {slides.length > 1 ? <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? 'صور الإعلان' : 'Advertisement images'}>
-        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة السابقة' : 'Previous image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm9 5 7 7-7 7' : 'm15 5-7 7 7 7'} /></svg></button>
-        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? 'الصورة التالية' : 'Next image'}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={locale === 'ar' ? 'm15 5-7 7 7 7' : 'm9 5 7 7-7 7'} /></svg></button>
-      </div> : null}
+      {slides.length > 1 ? <>
+      <div className="public-homepage__hero-slider" dir={locale === 'ar' ? 'rtl' : 'ltr'} role="group" aria-label={locale === 'ar' ? '\u0635\u0648\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646' : 'Advertisement images'}>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + slides.length - 1) % slides.length]!.key)} aria-label={locale === 'ar' ? '\u0627\u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u0633\u0627\u0628\u0642\u0629' : 'Previous image'}><CarouselArrow locale={locale} /></button>
+        <button type="button" onClick={() => setRequestedKey(slides[(activeIndex + 1) % slides.length]!.key)} aria-label={locale === 'ar' ? '\u0627\u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u062a\u0627\u0644\u064a\u0629' : 'Next image'}><CarouselArrow locale={locale} next /></button>
+      </div>
+
+      </> : null}
       </div>
         <div className="public-homepage__hero-heading">
+        <div className="public-homepage__hero-copy" key={banner?.key ?? 'original'}>
         <p className="public-homepage__eyebrow">{eyebrow}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
         {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
+        </div>
+        {slides.length > 1 ? (
+      <div className="public-homepage__hero-dots" role="group" aria-label={locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631 \u0635\u0648\u0631\u0629 \u0627\u0644\u0628\u0627\u0646\u0631' : 'Hero image selection'}>{slides.map((item, index) => <button key={item.key} type="button" aria-pressed={index === activeIndex} aria-label={`${locale === 'ar' ? '\u0635\u0648\u0631\u0629' : 'Image'} ${index + 1}`} onClick={() => setRequestedKey(item.key)}><span /></button>)}</div>
+        ) : null}
         </div>
       </div>
       <div className="public-homepage__hero-content">
@@ -1015,7 +1030,7 @@ function BannerGrid({
       aria-label={locale === 'ar' ? 'الإعلانات المميزة' : 'Featured promotions'}
     >
       <div className="public-homepage__banner-card">
-        <FeaturedCard banner={banner} locale={locale} />
+        <div className="public-homepage__banner-slide" key={banner.key}><FeaturedCard banner={banner} locale={locale} /></div>
         {carouselBanners.length > 1 ? <>
         <button
           className="public-homepage__banner-control public-homepage__banner-control--previous"
@@ -1024,7 +1039,7 @@ function BannerGrid({
           onClick={() => setActiveIndex(index => (index - 1 + carouselBanners.length) % carouselBanners.length)}
           disabled={carouselBanners.length < 2}
         >
-          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M12 15l-5-5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <CarouselArrow locale={locale} />
         </button>
         <button
           className="public-homepage__banner-control public-homepage__banner-control--next"
@@ -1033,21 +1048,20 @@ function BannerGrid({
           onClick={() => setActiveIndex(index => (index + 1) % carouselBanners.length)}
           disabled={carouselBanners.length < 2}
         >
-          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <CarouselArrow locale={locale} next />
         </button>
         </> : null}
       </div>
-      {carouselBanners.length > 1 ? <div className="public-homepage__banner-dots" role="tablist" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
+      {carouselBanners.length > 1 ? <div className="public-homepage__banner-dots" role="group" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
         {carouselBanners.map((item, index) => (
           <button
             key={item.key}
             type="button"
-            role="tab"
-            aria-selected={index === activeIndex}
+            aria-pressed={index === activeIndex}
             aria-label={`${locale === 'ar' ? 'الإعلان' : 'Slide'} ${index + 1}`}
             className={`public-homepage__banner-dot${index === activeIndex ? ' is-active' : ''}`}
             onClick={() => setActiveIndex(index)}
-          />
+          ><span /></button>
         ))}
       </div> : null}
     </section>

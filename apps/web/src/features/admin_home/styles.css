@@ -165,9 +165,8 @@
 .admin-home__draft-preview-frame[data-mobile] { inline-size: min(100%, 390px); min-block-size: 28rem; margin-inline: auto; }
 .admin-home__draft-preview-frame > img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
 .admin-home__draft-preview-frame::after { position: absolute; inset: 0; z-index: 0; background: linear-gradient(#17233d38,#17233dcc); content: ''; pointer-events: none; }
-.admin-home__draft-preview-frame[data-mobile] { min-block-size: 0; display: block; }
-.admin-home__draft-preview-frame[data-mobile] > img { position: relative; block-size: auto; object-fit: contain; }
-.admin-home__draft-preview-frame[data-mobile]::after { display: none; }
+.admin-home__draft-preview-frame[data-mobile] { min-block-size: 34rem; display: grid; }
+.admin-home__draft-preview-frame[data-mobile] > img { position: absolute; block-size: 100%; object-fit: cover; }
 .admin-home__slide-copy { display: grid; gap: 1rem; min-inline-size: 0; }
 .admin-home__slide-copy details { padding: 1rem; border: 1px solid #ded8c9; border-radius: .75rem; }
 .admin-home__slide-copy summary { cursor: pointer; margin-block-end: .75rem; overflow-wrap: anywhere; }

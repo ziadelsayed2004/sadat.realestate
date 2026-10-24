@@ -185,14 +185,17 @@ touch "$OPERATOR_REPOSITORY/package-lock.json" "$OPERATOR_REPOSITORY/deploy/nati
 printf '#!/usr/bin/env bash\nif [[ $1 == -u ]]; then echo 0; else echo elsadat; fi\n' > "$SANDBOX/bin/id"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$SANDBOX/bin/chown"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$SANDBOX/bin/node"
-printf '#!/usr/bin/env bash\nexit 0\n' > "$SANDBOX/bin/systemctl"
+printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$*" >> "$SANDBOX/systemctl.commands"\n' > "$SANDBOX/bin/systemctl"
 printf '#!/usr/bin/env bash\nwhile [[ $1 == --* ]]; do shift; done\nexec "$@"\n' > "$SANDBOX/bin/setpriv"
 printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$*" >> "$SANDBOX/git.commands"\n' > "$SANDBOX/bin/git"
 printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$*" >> "$SANDBOX/npm.commands"\n' > "$SANDBOX/bin/npm"
 printf '#!/usr/bin/env bash\nif [[ $FAIL_COPY == true ]]; then exit 11; fi\nfor ARG in "$@"; do SRC=$DEST; DEST=$ARG; done\ncp -R "$SRC/." "$DEST"\n' > "$SANDBOX/bin/rsync"
 chmod +x "$SANDBOX/bin/"*
 export FIXTURE_RELEASE_ID=20261015T000002Z
+rm -f "$SANDBOX/systemctl.commands"
+printf '#!/usr/bin/env bash\nexec "$@"\n' > "$SANDBOX/bin/sudo"
 bash "$FIXTURE/manage-production.sh" update
+[[ $(grep -c '^restart elsadat-api.service elsadat-web.service$' "$SANDBOX/systemctl.commands") == 1 ]]
 [[ $(readlink "$SANDBOX/current") == "$SANDBOX/releases/$FIXTURE_RELEASE_ID" ]]
 [[ -z $(find "$SANDBOX/staging" -maxdepth 1 -type d -name 'reviewed.*' -print) ]]
 if grep -E 'clone' "$SANDBOX/git.commands"; then exit 74; fi

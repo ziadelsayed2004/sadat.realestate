@@ -2541,8 +2541,11 @@
   line-height: 1;
   pointer-events: auto;
   cursor: pointer;
+  box-shadow: 0 3px 12px #0003;
+  transition: background .2s, color .2s;
 }
 
+.public-homepage__hero-slider button:hover { background: #d1a044; color: #17233d; }
 .public-homepage__hero-slider button:focus-visible {
   outline: 3px solid white;
   outline-offset: 3px;
@@ -2590,7 +2593,18 @@
 .public-homepage__hero-picture { position: absolute; inset: 0; z-index: 0; }
 .public-homepage__hero-heading { position: relative; z-index: 2; }
 .public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; z-index: 0; }
-.public-homepage__hero .public-homepage__hero-media > img { inline-size: 100%; block-size: 100%; aspect-ratio: auto; object-fit: cover; opacity: 1; }
+.public-homepage__hero .public-homepage__hero-media > img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; aspect-ratio: auto; object-fit: cover; opacity: 1; }
+.public-homepage__hero-image[data-active] { z-index: 2; animation: hero-image-in .6s ease-out both; }
+.public-homepage__hero-image[data-exiting] { z-index: 1; pointer-events: none; }
+.public-homepage__hero-copy { display: grid; justify-items: center; gap: inherit; inline-size: 100%; min-inline-size: 0; animation: hero-copy-in .45s ease-out both; }
+@keyframes hero-image-in { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
+@keyframes hero-copy-in { from { opacity: 0; transform: translateY(.6rem); } to { opacity: 1; transform: translateY(0); } }
+.public-homepage__hero-dots { position: relative; z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; }
+.public-homepage__hero-dots button { display: grid; place-items: center; inline-size: 2.75rem; block-size: 2.75rem; padding: 0; border: 0; border-radius: 999px; background: transparent; cursor: pointer; }
+.public-homepage__hero-dots span { inline-size: .5rem; block-size: .5rem; border-radius: 999px; background: #ffffffa3; box-shadow: 0 1px 4px #0006; transition: inline-size .3s, background .3s; }
+.public-homepage__hero-dots [aria-pressed=true] span { inline-size: 1.75rem; background: #e3b556; }
+.public-homepage__hero-dots button:focus-visible { outline: 2px solid #e3b556; outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) { .public-homepage__hero-image[data-active], .public-homepage__hero-copy { animation: none; } .public-homepage__hero-dots span { transition: none; } }
 .public-homepage__hero .public-homepage__hero-shade { display: block; z-index: 1; background: linear-gradient(180deg, #18243e38, #18243ebf 50%, #18243ee8); }
 .public-homepage__hero-heading { display: grid; justify-items: center; gap: 16px; inline-size: min(900px, calc(100% - 128px)); margin: auto; padding: 64px 0 88px; text-align: center; overflow-wrap: anywhere; }
 .public-homepage__hero .public-homepage__hero-content { position: relative; z-index: 3; padding: 0; margin-block-start: -48px; }
@@ -2599,16 +2613,16 @@
 .public-homepage__hero-slider svg { display: block; width: 22px; height: 22px; }
 @media (max-width: 767px) {
   .public-homepage .public-homepage__hero { padding-block-end: 24px; }
-  .public-homepage__hero .public-homepage__hero-visual { min-block-size: 0; display: block; }
-  .public-homepage__hero-picture { position: relative; inset: auto; }
-  .public-homepage__hero .public-homepage__hero-media { position: relative; inset: auto; }
-  .public-homepage__hero .public-homepage__hero-media > img { block-size: auto; object-fit: contain; }
-  .public-homepage__hero .public-homepage__hero-shade { display: none; }
-  .public-homepage__hero-heading { inline-size: calc(100% - 40px); gap: 12px; padding-block: 24px 64px; }
+  .public-homepage__hero .public-homepage__hero-visual { position: relative; min-block-size: max(34rem, calc(100svh - var(--public-header-height, 65px))); display: grid; }
+  .public-homepage__hero-picture { position: absolute; inset: 0; }
+  .public-homepage__hero .public-homepage__hero-media { position: absolute; inset: 0; }
+  .public-homepage__hero .public-homepage__hero-media > img { block-size: 100%; object-fit: cover; }
+  .public-homepage__hero .public-homepage__hero-shade { display: block; background: linear-gradient(180deg, #18243e30, #18243ea6 44%, #18243edb); }
+  .public-homepage__hero-heading { inline-size: calc(100% - 104px); gap: 12px; padding-block: 48px 80px; }
   .public-homepage__hero .public-homepage__eyebrow { font-size: .7rem; padding: 6px 8px; }
   .public-homepage__hero .public-homepage__hero-content { inline-size: calc(100% - 24px); margin-block-start: -32px; }
   .public-homepage__hero-slider { padding-inline: 8px; }
-  .public-homepage__hero-slider button { inline-size: 40px; block-size: 40px; flex-basis: 40px; }
+  .public-homepage__hero-slider button { inline-size: 44px; block-size: 44px; flex-basis: 44px; }
 }
 
 .public-homepage__section-heading h2 { line-height: 1.5; margin-block-end: 0; }

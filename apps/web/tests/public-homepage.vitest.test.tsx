@@ -171,7 +171,8 @@ describe('public homepage', () => {
       expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: 'Previous banner' }));
       expect(screen.getByRole('heading', { name: 'First card' })).toBeInTheDocument();
-      fireEvent.click(screen.getByRole('tab', { name: 'Slide 2' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Slide 2' }));
+      expect(screen.getByRole('button', { name: 'Slide 2' })).toHaveAttribute('aria-pressed', 'true');
       expect(screen.getByRole('heading', { name: 'Second card' })).toBeInTheDocument();
       fireEvent.mouseEnter(result.container.querySelector('#homepage-featured')!);
       fireEvent.focus(screen.getByRole('button', { name: 'Next banner' }));
@@ -197,6 +198,27 @@ describe('public homepage', () => {
     expect(screen.getByRole('heading', { name: 'Other card' })).toBeVisible();
     window.history.replaceState({}, '', '/');
   });
+  it('keeps the outgoing hero photograph for the transition and makes pagination keyboard accessible', async () => {
+    vi.useFakeTimers();
+    const data = publicHomepageDataSchema.parse({ ...homepageData, banners: [
+      { key: 'banner_first', title: { en: 'First hero' }, imageUrl: '/first.jpg', order: 0 },
+      { key: 'banner_second', title: { en: 'Second hero' }, imageUrl: '/second.jpg', order: 1 }
+    ] });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} load={async () => data} />, { locale: 'en' });
+    try {
+      const images = result.container.querySelectorAll('.public-homepage__hero-image');
+      images.forEach(image => fireEvent.load(image));
+      const dot = screen.getByRole('button', { name: 'Image 2' });
+      fireEvent.click(dot);
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Second hero');
+      expect(dot).toHaveAttribute('aria-pressed', 'true');
+      expect(images[0]).toHaveAttribute('data-exiting');
+      expect(images[0]).not.toHaveAttribute('hidden');
+      await act(() => vi.advanceTimersByTimeAsync(650));
+      expect(images[0]).toHaveAttribute('hidden');
+      expect(images[1]).toHaveAttribute('data-active');
+    } finally { result.unmount(); vi.useRealTimers(); }
+  });
   it('keeps the featured timer running across background data refreshes and hides controls for one card', async () => {
     vi.useFakeTimers();
     const banners = [{ key: 'featured_first', presentation: 'featured' as const, title: { en: 'First card' }, order: 0 }, { key: 'featured_second', presentation: 'featured' as const, title: { en: 'Second card' }, order: 1 }];
@@ -211,7 +233,7 @@ describe('public homepage', () => {
     expect(single.container.querySelector('#homepage-featured')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Next banner' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Previous banner' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('tablist', { name: 'Banner selection' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Banner selection' })).not.toBeInTheDocument();
   });
   it.each(['ar', 'en'] as const)('displays the managed banner title over its image instead of the old homepage heading in %s', locale => {
     const title = { ar: 'حبيبة مجدي مديرة المبيعات', en: 'Habiba Magdy sales manager' };

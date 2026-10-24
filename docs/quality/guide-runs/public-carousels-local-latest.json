@@ -1,0 +1,20 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "chromium ar 390: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "chromium ar 820: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "chromium ar 1440: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "chromium en 390: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "chromium en 820: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "chromium en 1440: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit ar 390: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit ar 820: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit ar 1440: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit en 390: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit en 820: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow",
+    "webkit en 1440: stable featured/hero heights, arrows on opposite sides with correct direction, selected pagination, smooth animation and no page overflow"
+  ],
+  "errors": [],
+  "cleanup": true
+}

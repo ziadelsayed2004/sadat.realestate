@@ -154,7 +154,11 @@ case "$MODE" in
   update) ;;
 esac
 
-systemctl restart elsadat-api.service elsadat-web.service
+# deploy-release already activates and health-checks the new services. Data modes
+# need a fresh process after their writes; a normal update must not restart twice.
+if [[ "$MODE" != update ]]; then
+  systemctl restart elsadat-api.service elsadat-web.service
+fi
 services_stopped=false
 bash /opt/elsadatrealestate/current/deploy/native/healthcheck.sh
 curl --fail --silent --show-error --max-time 15 "$PUBLIC_ORIGIN/" >/dev/null

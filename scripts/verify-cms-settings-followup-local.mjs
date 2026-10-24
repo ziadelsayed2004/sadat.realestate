@@ -103,7 +103,7 @@ try {
     await expect(preview).toContainText('Independent description 2');
     await expect(preview).toContainText('https://elsadatrealestate.com/properties?image=2');
     await preview.getByRole('button', { name: 'Phone view' }).click();
-    await expect(preview.locator('.admin-home__draft-preview-frame > img')).toHaveCSS('object-fit', 'contain');
+    await expect(preview.locator('.admin-home__draft-preview-frame > img')).toHaveCSS('object-fit', 'cover');
     await preview.screenshot({ path: `${output}/${engineName}-live-preview.png` });
     await bannerEditor.locator('#admin-home-banner-reason').fill('Save separate company slides');
     await bannerEditor.locator('button[type=submit]').click();
@@ -121,13 +121,13 @@ try {
     for (const width of [390, 820, 1440]) {
       await page.setViewportSize({ width, height: 950 });
       await page.goto(`${base}/?lang=en&heroAd=${banner.id}`); await ready(page);
-      const hero = page.locator('#homepage-hero'), photo = hero.locator('.public-homepage__hero-image:not([hidden])');
+      const hero = page.locator('#homepage-hero'), photo = hero.locator('.public-homepage__hero-image[data-active]');
       await expect(hero.getByRole('heading', { level: 1 })).toHaveText(`Company 1 ${engineName}`);
       await expect(hero.getByRole('link', { name: 'View advertisement' })).toHaveAttribute('href', 'https://elsadatrealestate.com/properties?image=1');
       await expect(photo).toBeVisible();
       await page.waitForFunction(() => [...document.querySelectorAll('.public-homepage__hero-image')].some(image => !image.hidden && image.complete && image.naturalWidth > 0));
       const geometry = await photo.evaluate(image => ({ width: image.clientWidth, height: image.clientHeight, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, fit: getComputedStyle(image).objectFit }));
-      if (width === 390) { assert.equal(geometry.fit, 'contain'); assert(Math.abs(geometry.width / geometry.height - geometry.naturalWidth / geometry.naturalHeight) < 0.02); }
+      if (width === 390) { assert.equal(geometry.fit, 'cover'); const picture = await hero.locator('.public-homepage__hero-picture').boundingBox(), visual = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(picture.height - visual.height) < 1); assert(visual.height >= 700); }
       else { const picture = await hero.locator('.public-homepage__hero-picture').boundingBox(), container = await hero.boundingBox(); assert(Math.abs(picture.height - container.height) < 1); }
       await noOverflow(page);
       await page.screenshot({ path: `${output}/${engineName}-home-${width}.png` });
@@ -145,7 +145,7 @@ try {
       await page.screenshot({ path: `${output}/${engineName}-home-ar-${width}.png` });
       await page.waitForLoadState('networkidle');
     }
-    report.checks.push(`${engineName}: complete phone image at its natural ratio, full-height desktop/tablet photograph, independently rotating copy/links; no overflow at 390/820/1440 and Arabic RTL verified at 390/1440`);
+    report.checks.push(`${engineName}: phone photograph fills the viewport behind its copy, full-height desktop/tablet photograph, independently rotating copy/links; no overflow at 390/820/1440 and Arabic RTL verified at 390/1440`);
     await browser.close(); browser = undefined;
     await db.collection('ad_banners').updateOne({ _id: new mongoose.Types.ObjectId(banner.id) }, { $set: { status: 'draft' } });
   }
