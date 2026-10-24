@@ -125,7 +125,7 @@ async function main() {
       console.log(JSON.stringify({ status: 'PLAN_ONLY_NO_DELETION', manifestFile, records: plan.records.length, counts, preservedCollections: plan.preservedCollections }, null, 2));
     } else {
       const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
-      console.log(JSON.stringify(await applyTrialCleanup(connection, manifest, process.env.TRIAL_CLEANUP_BACKUP_DIR ?? '/var/backups/elsadatrealestate/trial-content'), null, 2));
+      console.log(JSON.stringify(await applyTrialCleanup(connection, manifest, process.env.TRIAL_CLEANUP_BACKUP_DIR ?? '/var/backups/elsadatrealestate-trial-content'), null, 2));
     }
   } finally { await connection.close(); }
 }

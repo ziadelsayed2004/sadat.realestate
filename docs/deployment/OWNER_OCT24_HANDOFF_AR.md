@@ -79,7 +79,7 @@ sudo bash deploy/native/trial-content-cleanup.sh select-all /var/backups/elsadat
 sudo bash deploy/native/trial-content-cleanup.sh apply /var/backups/elsadatrealestate/trial-content-plan.json DELETE_REVIEWED_TRIAL_CONTENT
 ```
 
-يحفظ التنفيذ نسخة EJSON للسجلات المختارة، ويتحقق منها، ثم يحذف داخل transaction واحدة. يطبع مسار النسخة وعدد المحذوفات ويعيد تشغيل API وWeb. إذا تغيرت البيانات منذ المعاينة يرفض التنفيذ؛ أنشئ خطة جديدة باسم ملف جديد وراجعها. عند إلغاء التنظيف قبل التنفيذ أعد تشغيل الخدمات:
+يحفظ التنفيذ نسخة EJSON للسجلات المختارة في `/var/backups/elsadatrealestate-trial-content` بصلاحيات المدير، ويتحقق منها، ثم يحذف داخل transaction واحدة. المجلد مستقل عن مجلد النسخ الدورية، وأمر النسخة الكاملة يعمل بحساب خدمة `elsadat` للحفاظ على صلاحيات ملفاتها المعتادة. يطبع التنفيذ مسار النسخة وعدد المحذوفات ويعيد تشغيل API وWeb. إذا تغيرت البيانات منذ المعاينة يرفض التنفيذ؛ أنشئ خطة جديدة باسم ملف جديد وراجعها. عند إلغاء التنظيف قبل التنفيذ أعد تشغيل الخدمات:
 
 ```bash
 sudo systemctl start elsadat-api.service elsadat-web.service

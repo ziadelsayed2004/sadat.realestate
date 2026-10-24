@@ -15,7 +15,8 @@ set -a
 source "${PRODUCTION_ENV_FILE:-/etc/elsadatrealestate/production.env}"
 set +a
 if [[ $mode == backup ]]; then
-  exec bash deploy/native/backup.sh
+  exec runuser -u elsadat --preserve-environment -- \
+    bash /opt/elsadatrealestate/current/deploy/native/backup.sh
 fi
 if [[ $mode == apply ]]; then
   if [[ $confirmation != DELETE_REVIEWED_TRIAL_CONTENT ]]; then echo 'TRIAL_CLEANUP_CONFIRMATION_REQUIRED' >&2; exit 2; fi
