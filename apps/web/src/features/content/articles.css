@@ -154,6 +154,7 @@
   padding-inline: 0.625rem;
   color: var(--color-brand-accent);
   background: #fef3c6;
+  border-radius: var(--radius-full);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

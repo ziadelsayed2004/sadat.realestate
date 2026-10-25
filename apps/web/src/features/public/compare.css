@@ -724,6 +724,6 @@
   color: var(--color-on-brand);
   background: var(--color-brand-primary);
   border: 0;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   cursor: pointer;
 }
