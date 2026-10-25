@@ -69,7 +69,7 @@ try {
       const visual = await hero.locator('.public-homepage__hero-visual').boundingBox(), image = await heroPhoto.boundingBox();
       const search = await hero.locator('.public-homepage__search').boundingBox();
       const dots = await hero.locator('.public-homepage__hero-dots').boundingBox();
-      const scrollBefore = await page.evaluate(() => scrollY);
+      const scrollBefore = await page.evaluate(() => window.scrollY);
       const arrow = await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).boundingBox();
       assert(search.y >= image.y && search.y + search.height <= image.y + image.height - 8, 'Search panel must float fully inside the photograph');
       assert(dots.y + dots.height <= search.y + 1, 'Pagination must stay above search');
@@ -79,7 +79,7 @@ try {
       await expect(hero.locator('h1')).toHaveText(secondHeroTitle[locale]);
       await expect(hero.locator('.public-homepage__hero-image[data-active]')).toHaveCSS('animation-name', 'hero-image-in');
       const target = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(visual.height - target.height) < 1);
-      const scrollAfter = await page.evaluate(() => scrollY);
+      const scrollAfter = await page.evaluate(() => window.scrollY);
       const searchAfter = await hero.locator('.public-homepage__search').boundingBox(), dotsAfter = await hero.locator('.public-homepage__hero-dots').boundingBox();
       assert(Math.abs(searchAfter.y + scrollAfter - search.y - scrollBefore) < 1, JSON.stringify({message:'Search position must not change for long copy and a square image',search,searchAfter,scrollBefore,scrollAfter}));
       assert(Math.abs(dotsAfter.y + scrollAfter - dots.y - scrollBefore) < 1, 'Pagination position must remain stable');
