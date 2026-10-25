@@ -1,0 +1,26 @@
+{
+  "status": "PASS_LOCAL",
+  "apiMocks": false,
+  "checks": [
+    "chromium 390px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "chromium 820px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "chromium 1440px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "chromium ar 320x568: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "chromium ar 390x844: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "chromium ar 390x360: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "chromium en 320x568: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "chromium en 390x844: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "chromium en 390x360: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit 390px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "webkit 820px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "webkit 1440px: uploaded 3:2 image fills matching home/search/detail frames without stretch, sidebars or horizontal overflow; exact price retained",
+    "webkit ar 320x568: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit ar 390x844: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit ar 390x360: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit en 320x568: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit en 390x844: locale list opens upward inside the floating menu, remains unclipped and changes language",
+    "webkit en 390x360: locale list opens upward inside the floating menu, remains unclipped and changes language"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

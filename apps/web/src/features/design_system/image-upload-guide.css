@@ -1,0 +1,7 @@
+.image-upload-guide { min-inline-size: 0; }
+.image-upload-guide__hint { display: flex; align-items: start; gap: .75rem; padding: .875rem; margin-block: .75rem; background: #fff9e9; border: 1px solid #e8dbb8; border-radius: .875rem; font-size: .8125rem; line-height: 1.7; color: #344054; }
+.image-upload-guide__shape { display: grid; place-items: center; flex: 0 0 3rem; border: 2px solid #bd9446; border-radius: .375rem; font-size: .7rem; direction: ltr; }
+.image-upload-guide__hint > div { min-inline-size: 0; overflow-wrap: anywhere; }
+.image-upload-guide .image-upload-guide__hint p { margin: .25rem 0 0; }
+.image-upload-guide__results { padding-inline-start: 1.25rem; font-size: .8125rem; line-height: 1.8; overflow-wrap: anywhere; }
+.image-upload-guide__results li[data-match="false"] { color: #854d0e; }

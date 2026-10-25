@@ -236,7 +236,7 @@ describe('provider property media, contact, and review completion', () => {
     fireEvent.change(input, { target: { files: [new File(['jpeg'], 'front.jpg', { type: 'image/jpeg' })] } });
     await waitFor(() => expect(uploaded).toHaveBeenCalledTimes(1));
     expect(uploaded).toHaveBeenCalledWith(expect.objectContaining({ propertyId, kind: 'image', contentType: 'image/jpeg', filename: 'front.jpg' }));
-    expect(screen.getByText('front.jpg')).toBeInTheDocument();
+    expect(screen.getAllByText('front.jpg').length).toBeGreaterThan(0);
     expect(screen.queryByText(/storageKey|https?:\/\//u)).not.toBeInTheDocument();
     fireEvent.change(input, { target: { files: [new File(['pdf'], 'plan.pdf', { type: 'application/pdf' })] } });
     await waitFor(() => expect(screen.getByText(copy.media.invalidFileBody)).toBeInTheDocument());

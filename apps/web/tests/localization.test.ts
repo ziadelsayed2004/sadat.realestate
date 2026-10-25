@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import {
   createTranslator,
   getTranslationCatalog,
@@ -20,6 +21,23 @@ import {
 } from '../src/features/localization/index.ts';
 import arMessages from '../src/features/localization/messages/ar.json';
 import enMessages from '../src/features/localization/messages/en.json';
+
+test('early locale script preserves the server locale without a query or cookie', () => {
+  const template = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const script = template.match(/<script>\s*([\s\S]*?)<\/script>/u)?.[1];
+  assert.ok(script);
+  for (const scenario of [
+    { server: 'en', search: '', cookie: '', expected: 'en' },
+    { server: 'ar', search: '', cookie: '', expected: 'ar' },
+    { server: 'en', search: '', cookie: 'sadat-real-estate.locale=ar', expected: 'ar' },
+    { server: 'ar', search: '?lang=en', cookie: 'sadat-real-estate.locale=ar', expected: 'en' }
+  ]) {
+    const document = { cookie: scenario.cookie, documentElement: { lang: scenario.server, dir: '' } };
+    runInNewContext(script, { document, location: { search: scenario.search }, URLSearchParams });
+    assert.equal(document.documentElement.lang, scenario.expected);
+    assert.equal(document.documentElement.dir, scenario.expected === 'ar' ? 'rtl' : 'ltr');
+  }
+});
 
 function translationLeafPaths(value: unknown, prefix = '', result: string[] = []): string[] {
   if (typeof value === 'string') {

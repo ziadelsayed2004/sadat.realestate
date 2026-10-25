@@ -1,3 +1,4 @@
+import { ImageUploadGuide } from '../design_system/image-upload-guide.tsx';
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { PropertyPhotoGuide } from './photo-guide.tsx';
 import {
@@ -328,6 +329,7 @@ function MediaView({
       <section className="provider-property-completion__card" aria-labelledby="provider-property-media-upload">
         <h2 id="provider-property-media-upload">{copy.titles.media}</h2>
         <p>{labels.acceptedTypes}</p>
+        <ImageUploadGuide locale={locale} kind="property">
         <div className="provider-property-completion__empty provider-property-completion__media-dropzone" role="status">
           <img src={providerMediaUploadIcon} alt="" width={22} height={22} />
           <strong>{dropzoneTitle}</strong>
@@ -335,6 +337,7 @@ function MediaView({
           <label className="provider-property-completion__file-button provider-property-completion__file-button--primary" htmlFor="provider-property-media-image">{labels.chooseImage}</label>
           <input id="provider-property-media-image" type="file" accept="image/jpeg,image/png" onChange={event => onFile('image', event)} disabled={busy} />
         </div>
+        </ImageUploadGuide>
         <div className="provider-property-completion__upload-actions">
           <label className="provider-property-completion__file-button" htmlFor="provider-property-media-video">{labels.chooseVideo}</label>
           <input id="provider-property-media-video" type="file" accept="video/mp4,.mp4" onChange={event => onFile('video', event)} disabled={busy} />

@@ -620,12 +620,15 @@ select:not(.a11y-visually-hidden):disabled {
   position: relative;
   display: grid;
   place-items: center;
-  min-block-size: 12rem;
+  min-block-size: 0;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
   background: var(--color-surface-soft);
 }
 
 .ui-property-card__media > img {
+  position: absolute;
+  inset: 0;
   display: block;
   inline-size: 100%;
   block-size: 100%;
@@ -847,6 +850,14 @@ a.ui-property-card__title::after {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+.custom-locale-switcher[data-placement="up"] .custom-locale-dropdown-menu {
+  top: auto;
+  bottom: calc(100% + 6px);
+  max-block-size: min(16rem, calc(100dvh - 2rem));
+  overflow-y: auto;
+  transform-origin: bottom center;
 }
 
 .custom-locale-option {

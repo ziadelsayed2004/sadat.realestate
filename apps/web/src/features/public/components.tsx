@@ -218,7 +218,7 @@ export function PublicSiteHeader({
         </div>
         {links.map(([href, label]) => <a key={href} href={localeHref(href)} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
         <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
-          <LocaleSwitcher locale={locale} label={copy.localeLabel} />
+          <LocaleSwitcher locale={locale} label={copy.localeLabel} placement="up" />
           {role === undefined ? <>
             <a className="public-homepage__login" href={localeHref('/auth/login')} onClick={() => setMenuOpen(false)}>{copy.login}</a>
             <a className="public-homepage__signup" href={localeHref('/auth/register')} onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>

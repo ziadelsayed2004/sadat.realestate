@@ -1,3 +1,4 @@
+import { ImageUploadGuide } from '../design_system/image-upload-guide.tsx';
 import { ImageFitField } from '../provider/image-fit-field.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
@@ -61,7 +62,7 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
         <p>{field === 'logoUrl' ? ar ? 'صورة مربعة؛ المقاس المقترح 512 × 512 بكسل. يظهر الشعار كاملًا.' : 'Square image; suggested size 512 × 512 px. The full logo stays visible.' : ar ? 'صورة عريضة؛ المقاس المقترح 1600 × 900 بكسل.' : 'Wide image; suggested size 1600 × 900 px.'}</p>
         {field === 'imageUrl' ? <ImageFitField locale={locale} value={company.coverFit ?? 'cover'} onChange={coverFit => setCompany({ ...company, coverFit })} disabled={busy} /> : null}
         {company[field] ? <CompanyPhoto fit={field === 'imageUrl' ? company.coverFit ?? 'cover' : 'contain'} imageUrl={company[field]!} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={field === 'logoUrl' ? ar ? 'معاينة لوجو الشركة' : 'Company logo preview' : ar ? 'معاينة غلاف الشركة' : 'Company cover preview'} /> : null}
-        <label>{field === 'logoUrl' ? ar ? 'رفع لوجو الشركة' : 'Upload company logo' : ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void upload(field, file); }} /></label>
+        <ImageUploadGuide locale={locale} kind={field === 'logoUrl' ? 'logo' : 'cover'}><label>{field === 'logoUrl' ? ar ? 'رفع لوجو الشركة' : 'Upload company logo' : ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void upload(field, file); }} /></label></ImageUploadGuide>
         {company[field] ? <Button type="button" variant="secondary" onClick={() => setImage(field, null)}>{field === 'logoUrl' ? ar ? 'إزالة اللوجو' : 'Remove logo' : ar ? 'إزالة الغلاف' : 'Remove cover'}</Button> : null}
       </fieldset>)}</div>
       {!owner ? <label>{ar ? 'سبب التعديل أو الحذف' : 'Change or removal reason'}<input value={reason} minLength={3} onChange={event => setReason(event.target.value)} required /></label> : null}

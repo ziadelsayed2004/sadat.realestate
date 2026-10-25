@@ -8,9 +8,10 @@
       (() => {
         const params = new URLSearchParams(location.search);
         const cookieLocale = document.cookie.match(/(?:^|;\s*)sadat-real-estate\.locale=(ar|en)(?:;|$)/)?.[1];
+        const serverLocale = document.documentElement.lang;
         const locale = params.get('lang') === 'en' || params.get('lang') === 'ar'
           ? params.get('lang')
-          : cookieLocale === 'en' ? 'en' : 'ar';
+          : cookieLocale === 'en' || cookieLocale === 'ar' ? cookieLocale : serverLocale === 'en' ? 'en' : 'ar';
         document.documentElement.lang = locale;
         document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
       })();

@@ -235,7 +235,7 @@ try {
       if (width === 390) assert.equal(await logo.evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
       const cards = page.locator('.public-developer-profile__property-card'); await expect(cards).toContainText(['Local standalone']); await expect(cards).toHaveCount(1);
       if (unitReview) {
-        const frame = await cards.locator('.public-developer-profile__property-media').boundingBox(); assert(Math.abs(frame.width / frame.height - 4 / 3) < .02);
+        const frame = await cards.locator('.public-developer-profile__property-media').boundingBox(); assert(Math.abs(frame.width / frame.height - 3 / 2) < .02);
         const image = await cards.locator('.public-developer-profile__property-media img').boundingBox(); assert(Math.abs(image.height - frame.height) <= 1 && Math.abs(image.width - frame.width) <= 1);
         assert.deepEqual(await cards.evaluate(el => { const style = getComputedStyle(el); return [style.backgroundColor, style.borderTopWidth, style.paddingTop]; }), ['rgb(255, 255, 255)', '1px', '0px']);
         await expect(cards.locator('.public-developer-profile__property-footer')).toContainText('عرض تفاصيل العقار');

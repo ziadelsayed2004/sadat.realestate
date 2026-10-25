@@ -1,3 +1,4 @@
+import { ImageUploadGuide } from '../design_system/image-upload-guide.tsx';
 import { categoryImageUrl, DEFAULT_CATEGORY_IMAGE } from '../design_system/category-image.ts';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
@@ -225,7 +226,7 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
         <FormField id="admin-master-data-name-en" label={copy.labels.nameEn} value={form.nameEn} placeholder={copy.placeholders.nameEn} onChange={nameEn => onChange({ nameEn })} />
         {tab === 'categories' ? <div className="admin-master-data__field--wide">
           <img src={previewUrl ?? (form.imageUrl.startsWith('/api/') ? undefined : form.imageUrl)} alt={locale === 'ar' ? 'معاينة صورة النوع' : 'Property type image preview'} style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
-          <label className="admin-master-data__field">{locale === 'ar' ? 'تغيير الصورة من جهازك' : 'Change image from your device'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) onImage(file); }} /></label>
+          <ImageUploadGuide locale={locale} kind="logo"><label className="admin-master-data__field">{locale === 'ar' ? 'تغيير الصورة من جهازك' : 'Change image from your device'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) onImage(file); }} /></label></ImageUploadGuide>
           <p>{locale === 'ar' ? 'JPG أو PNG أو WebP حتى 10 ميجابايت. بعد رفع الصورة اضغط حفظ لتظهر في الموقع.' : 'JPG, PNG or WebP, up to 10 MB. After uploading, save to display it on the website.'}</p>
           <Button type="button" variant="secondary" disabled={busy} onClick={() => onChange({ imageUrl: DEFAULT_CATEGORY_IMAGE })}>{locale === 'ar' ? 'استخدام القالب الافتراضي' : 'Use default template'}</Button>
         </div> : null}

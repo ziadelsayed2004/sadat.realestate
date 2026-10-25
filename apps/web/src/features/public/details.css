@@ -205,15 +205,16 @@
 }
 
 .public-property-details__gallery-main {
-  min-block-size: clamp(18rem, 43vw, 34rem);
+  aspect-ratio: 3 / 2;
   background: var(--color-surface-soft);
 }
 
 .public-property-details__gallery-main > img {
+  position: absolute;
+  inset: 0;
   display: block;
   inline-size: 100%;
   block-size: 100%;
-  min-block-size: 24rem;
   object-fit: cover;
 }
 
@@ -742,12 +743,6 @@
     border-radius: 1rem;
   }
 
-  .public-property-details__gallery-main,
-  .public-property-details__gallery-main > img {
-    min-block-size: 15rem;
-    block-size: clamp(15rem, 74vw, 20rem);
-  }
-
   .public-property-details__summary h1 {
     font-size: clamp(1.35rem, 6vw, 1.75rem);
   }
@@ -846,12 +841,6 @@
     height: auto;
     border-radius: 12px;
     border: 0;
-  }
-
-  .public-property-details__gallery-main,
-  .public-property-details__gallery-main > img {
-    height: 384px;
-    min-height: 384px;
   }
 
   .public-property-details__gallery-thumbnails:has(button:only-child) {

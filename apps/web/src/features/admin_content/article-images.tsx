@@ -1,3 +1,4 @@
+import { ImageUploadGuide } from '../design_system/image-upload-guide.tsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import { Button } from '../design_system/index.ts';
@@ -40,8 +41,8 @@ export function ArticleImages({ value, locale, upload, load, onChange, onBusy, o
       {id !== value.coverId ? <Button type="button" size="sm" variant="secondary" onClick={() => onChange({ coverId: id, galleryIds: [...(value.coverId ? [value.coverId] : []), ...value.galleryIds.filter(item => item !== id)] })}>{ar ? 'تعيين كغلاف' : 'Use as cover'}</Button> : null}
       <Button type="button" size="sm" variant="secondary" onClick={() => onChange({ ...(id !== value.coverId && value.coverId ? { coverId: value.coverId } : {}), galleryIds: value.galleryIds.filter(item => item !== id) })}>{ar ? 'إزالة' : 'Remove'}</Button>
     </div>)}</div>
-    <label>{ar ? 'رفع أو تغيير صورة الغلاف' : 'Upload or replace cover'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file, true); }} /></label>
-    <label>{ar ? 'إضافة صورة' : 'Add image'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || Boolean(value.coverId && value.galleryIds.length >= 12)} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file); }} /></label>
+    <ImageUploadGuide locale={locale} kind="article"><label>{ar ? 'رفع أو تغيير صورة الغلاف' : 'Upload or replace cover'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file, true); }} /></label></ImageUploadGuide>
+    <ImageUploadGuide locale={locale} kind="article"><label>{ar ? 'إضافة صورة' : 'Add image'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || Boolean(value.coverId && value.galleryIds.length >= 12)} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void select(file); }} /></label></ImageUploadGuide>
     {busy ? <p role="status">{ar ? 'جارٍ رفع وفحص الصورة…' : 'Uploading and scanning image…'}</p> : null}{error ? <p role="alert">{error}</p> : null}
   </fieldset>;
 }

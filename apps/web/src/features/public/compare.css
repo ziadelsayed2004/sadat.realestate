@@ -81,17 +81,6 @@
   overflow: hidden;
 }
 
-.public-property-comparison__card .ui-property-card__media {
-  min-block-size: 13rem;
-}
-
-.public-property-comparison__card .ui-property-card__media > img {
-  display: block;
-  inline-size: 100%;
-  block-size: 13rem;
-  object-fit: cover;
-}
-
 .public-property-comparison__intro-text {
   display: flex;
   flex-direction: column;
@@ -505,14 +494,8 @@
 
   .public-property-comparison__card {
     direction: rtl;
-    grid-template-rows: 11rem 14.875rem;
+    grid-template-rows: auto minmax(14.875rem, auto);
     border-color: #efeff1;
-  }
-
-  .public-property-comparison__card .ui-property-card__media,
-  .public-property-comparison__card .ui-property-card__media > img {
-    min-block-size: 11rem;
-    block-size: 11rem;
   }
 
   .public-property-comparison__card .ui-property-card__body {

@@ -7,6 +7,7 @@ export interface LocaleSwitcherProps {
   readonly label?: string | undefined;
   readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
   readonly className?: string | undefined;
+  readonly placement?: 'up' | 'down' | undefined;
 }
 
 const LOCALE_OPTIONS: readonly { readonly value: SupportedLocale; readonly label: string; readonly nativeName: string }[] = [
@@ -18,7 +19,8 @@ export function LocaleSwitcher({
   locale,
   label = 'تغيير اللغة / Change language',
   onLocaleChange,
-  className
+  className,
+  placement = 'down'
 }: LocaleSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -69,6 +71,7 @@ export function LocaleSwitcher({
       ref={containerRef}
       className={`custom-locale-switcher${isOpen ? ' is-open' : ''}${className ? ` ${className}` : ''}`}
       data-custom-locale-switcher="true"
+      data-placement={placement}
     >
       <button
         type="button"
