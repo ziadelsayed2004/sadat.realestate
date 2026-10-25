@@ -27,7 +27,8 @@ test('office sources use the actual account type and a reachable public slug acr
       assert.equal(publicProfile?.kind, 'brokerage_office');
       assert.equal(publicProfile?.contactPhone, undefined);
       assert.equal(publicProfile?.contactAddress, undefined);
-      assert.deepEqual(publicProfile?.properties, []);
+      assert.deepEqual(publicProfile?.properties.map(item => item.id), [propertyId.toHexString()]);
+      assert.equal(publicProfile?.stats.availableProperties, 1);
       assert.equal(details?.contact, undefined);
       assert.equal(JSON.stringify(details).includes('+201111111111'), false);
     }
