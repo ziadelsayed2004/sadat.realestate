@@ -713,8 +713,8 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   padding: 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 0.875rem;
-  box-shadow: var(--shadow-card);
+  border-radius: 1rem;
+  box-shadow: 0 3px 12px #17233d0a;
 }
 
 .public-developer-profile__project-media {
@@ -735,6 +735,9 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   object-fit: contain;
 }
 
+.public-developer-profile__project-card:not([data-project-detail]) .public-developer-profile__project-media { aspect-ratio: auto; }
+.public-developer-profile__project-card:not([data-project-detail]) .public-developer-profile__project-media > img { position: static; block-size: auto; }
+
 .public-developer-profile__project-media-fallback,
 .public-developer-profile__property-media-fallback {
   background: linear-gradient(135deg, var(--color-brand-soft), var(--color-surface-soft));
@@ -753,8 +756,8 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 }
 
 .public-developer-profile__project-content {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   min-width: 0;
   min-block-size: 0;
@@ -834,15 +837,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 }
 
 .public-developer-profile__project-content > .public-developer-profile__project-link {
-  justify-content: center;
-  justify-self: stretch;
   min-block-size: 2.75rem;
-  margin-block-start: 0.625rem;
-  padding-inline: 0.75rem;
-  color: var(--color-text-strong);
-  background: #fff0be;
-  border: 1px solid #ead291;
-  border-radius: .75rem;
   font-size: 0.875rem;
 }
 
@@ -1505,7 +1500,6 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   margin-block-start: 0.25rem;
 }
 
-.public-developer-profile__project-card .public-developer-profile__project-link::after { display: none; }
 .public-developer-profile__project-card[data-project-detail] { grid-template-rows: auto auto; padding: 0; }
 [data-project-detail] .public-developer-profile__project-media { aspect-ratio: 16 / 9; }
 .public-developer-profile__website { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-block-size: 2.75rem; box-sizing: border-box; margin-block-start: 1rem; padding: .625rem 1rem; background: #f5ce68; border: 1px solid #dbb44f; border-radius: .75rem; color: #17233d; font-weight: 600; text-decoration: none; white-space: normal; }

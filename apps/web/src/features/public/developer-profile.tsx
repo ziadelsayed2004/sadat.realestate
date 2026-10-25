@@ -249,15 +249,15 @@ function ProjectCard({ project, developerSlug, detail = false, locale, copy }: {
       <div className="public-developer-profile__project-content">
         {localizedText(project.locationName, locale) ? <span className="public-developer-profile__project-location"><ProfileIcon name="location" />{localizedText(project.locationName, locale)}</span> : null}
         {detail ? <h1>{name}</h1> : <h3>{name}</h3>}
-        <div className="public-developer-profile__project-meta">
+        {meta.some(([, value]) => value) ? <div className="public-developer-profile__project-meta">
           {meta.map(([label, value], index) => value ? <span key={`${label}-${index}`}><strong>{value}</strong>{label ? <small>{label}</small> : null}</span> : null)}
-        </div>
+        </div> : null}
         {localizedText(project.deliveryLabel, locale) ? <p className="public-developer-profile__project-delivery"><ProfileIcon name="calendar" />{localizedText(project.deliveryLabel, locale)}</p> : null}
         {localizedText(project.priceLabel, locale) ? <p className="public-developer-profile__project-price">{localizedText(project.priceLabel, locale)}</p> : null}
         {detail ? <div className="public-developer-profile__overview-content">
           {description ? <p>{description}</p> : <p>{copy.noDescription}</p>}
           {website ? <a className="public-developer-profile__website" href={website} rel="noopener noreferrer" target="_blank"><ProfileIcon name="external" />{copy.openWebsite}</a> : null}
-        </div> : <>{description ? <p>{description}</p> : null}<a className="public-developer-profile__project-link" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}>{copy.viewProject}<ProfileIcon name="arrow" /></a></>}
+        </div> : <>{description ? <p>{description}</p> : null}<a className="public-developer-profile__project-link public-developer-profile__property-footer" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}><span>{copy.viewProject}</span><ProfileIcon name="arrow" /></a></>}
       </div>
     </article>
   );

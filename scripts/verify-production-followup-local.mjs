@@ -16,6 +16,7 @@ const oid = () => new mongoose.Types.ObjectId(), stamp = new Date(), prefix = `f
 const password = 'Local-Followup!2026', users = [], properties = [], organizations = [], projects = [], contexts = [];
 const report = { status: 'RUNNING', mockedApiRoutes: false, checks: [], browserErrors: [], cleanup: false };
 const profileCards = process.argv.includes('--profile-cards');
+const naturalProjectCards = process.argv.includes('--project-card-layout');
 const unitReview = process.argv.includes('--unit-review') || profileCards;
 const output = '.tmp/production-followup', storageRoot = path.resolve(env.PRIVATE_STORAGE_LOCAL_ROOT || path.join(os.tmpdir(), 'sadat-real-estate-private-storage'));
 await mkdir(output, { recursive: true });
@@ -70,6 +71,42 @@ try {
   const unit = await listing(developer, 'Local project unit', true), officeHome = await listing(office, 'Local office listing');
   // Account/profile aliases used by older published office data must still hydrate.
   await db.collection('properties').updateOne({ _id: officeHome._id }, { $unset: { organizationId: '' }, $set: { providerId: office.profileId.toString() } });
+  if (naturalProjectCards) {
+    const squareImage = await sharp({ create: { width: 447, height: 447, channels: 3, background: '#17233d' } }).png().toBuffer();
+    const squarePhoto = await json(await owner.request.post(base + '/api/v1/provider/organization-photos', { headers: { ...headers, 'content-type': 'image/png' }, data: squareImage }), 201);
+    const squareProject = await json(await owner.request.post(base + '/api/v1/provider/projects', { headers, data: { name: { en: 'Square project' }, imageUrl: squarePhoto.imageUrl, imageFit: 'cover', reason: 'Local square project image fixture' } }), 201);
+    projects.push({ _id: new mongoose.Types.ObjectId(squareProject.id) });
+    await db.collection('projects').updateOne({ _id: new mongoose.Types.ObjectId(squareProject.id) }, { $set: { status: 'published' } });
+    await owner.close(); contexts.splice(contexts.indexOf(owner), 1); await browser.close(); browser = undefined;
+    for (const engine of [chromium, webkit]) {
+      browser = await engine.launch(); const context = await browser.newContext(); contexts.push(context); const page = await context.newPage();
+      page.on('pageerror', error => report.browserErrors.push(String(error)));
+      for (const width of [390, 820, 1440]) {
+        await rateWindow(); await page.setViewportSize({ width, height: 950 });
+        await visit(page, `${base}/developers/${developer.org.slug}?lang=ar`);
+        const propertyCard = page.locator('.public-developer-profile__property-card').first();
+        const propertyStyle = await propertyCard.evaluate(el => { const style = getComputedStyle(el); return [style.backgroundColor, style.borderRadius, style.boxShadow]; });
+        for (const [slug, ratio] of [[created.slug, 640 / 960], [squareProject.slug, 1]]) {
+          const card = page.locator(`[id="project-${slug}"]`), image = card.locator('.public-developer-profile__project-media > img');
+          await expect(image).toBeVisible(); await expect.poll(() => image.evaluate(el => el.naturalWidth > 0)).toBe(true);
+          const media = await image.locator('..').boundingBox(), bounds = await image.boundingBox();
+          assert(Math.abs(bounds.width / bounds.height - ratio) < .01, 'full image keeps its original proportions');
+          assert(Math.abs(media.width - bounds.width) < 1 && Math.abs(media.height - bounds.height) < 1, 'no sidebars or cropped image edges');
+          assert.deepEqual(await card.evaluate(el => { const style = getComputedStyle(el); return [style.backgroundColor, style.borderRadius, style.boxShadow]; }), propertyStyle);
+          const action = card.getByRole('link', { name: 'عرض المشروع' });
+          assert.equal(await action.evaluate(el => getComputedStyle(el).backgroundColor), 'rgba(0, 0, 0, 0)');
+          assert.equal(await action.evaluate(el => getComputedStyle(el).borderTopWidth), '1px');
+          await card.screenshot({ path: `${output}/${engine.name()}-natural-project-${ratio === 1 ? 'square' : 'portrait'}-${width}.png` });
+        }
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        const linkedMedia = page.locator(`[id="project-${created.slug}"] .public-developer-profile__project-media`); await linkedMedia.scrollIntoViewIfNeeded();
+        const target = await linkedMedia.boundingBox(); await page.mouse.click(target.x + target.width / 2, target.y + target.height / 2); await page.waitForLoadState('networkidle');
+        await expect(page.locator('[data-project-detail] h1')).toHaveText('كمبوند الاختبار المحلي');
+        report.checks.push(`${engine.name()} ${width}px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow`);
+      }
+      await context.close(); contexts.splice(contexts.indexOf(context), 1); await browser.close(); browser = undefined;
+    }
+  } else {
   const draft = await json(await owner.request.post(base + '/api/v1/provider/properties', { headers, data: { kind: 'unit', name: { en: 'Local draft project unit' }, transactionType: 'sale', projectId: created.id, reason: 'Local project property creation' } }), 201);
   properties.push({ _id: new mongoose.Types.ObjectId(draft.id) }); assert.equal(draft.projectId, created.id);
   const details = await json(await owner.request.patch(base + `/api/v1/provider/properties/${draft.id}/steps/details`, { headers, data: { version: draft.version, deliveryStatus: 'partial_infrastructure', reason: 'Local partial infrastructure check' } }));
@@ -180,7 +217,7 @@ try {
         const logoImage = logo.locator('img'); assert.equal(await logoImage.evaluate(el => getComputedStyle(el).objectFit), 'contain');
         assert.deepEqual(await logoImage.evaluate(el => [getComputedStyle(el).borderTopWidth,getComputedStyle(el).paddingTop]), ['0px','0px']);
         assert.equal(await cards.locator('.public-developer-profile__property-media img').evaluate(el => getComputedStyle(el).objectFit), 'contain');
-        const cardFrame = await projectImage.locator('..').boundingBox(); assert(Math.abs(cardFrame.width/cardFrame.height-4/3)<.02);
+        const cardFrame = await projectImage.locator('..').boundingBox(); assert(Math.abs(cardFrame.width/cardFrame.height-640/960)<.02);
       }
       await page.screenshot({ path: `${output}/${engine.name()}-company-${width}.png`, fullPage: true });
       await visit(page, `${base}/developers/${developer.org.slug}/projects/${created.slug}?lang=ar`); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' })).toBeVisible(); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local standalone' })).toHaveCount(0);
@@ -261,6 +298,7 @@ try {
   await visit(adminPage, base + `/admin/properties/review?propertyId=${draft.id}&lang=ar`); await expect(adminPage.locator('.admin-property-editor__floor-plan')).toContainText('PDF'); await expect(adminPage.locator('.admin-property-editor__floor-plan a').first()).toHaveAttribute('href', /^blob:/u); await expect(adminPage.locator('#admin-property-delivery-status')).toHaveValue('partial_infrastructure');
   await adminPage.waitForLoadState('networkidle');
   report.checks.push('Admin browser: the seeker report appears with its real property and reason in moderation; review opens a protected PDF document and edits the saved partial-infrastructure delivery option');
+  }
   assert.deepEqual(report.browserErrors, []); report.status = 'PASS_LOCAL';
 } catch (error) { report.status = 'FAIL_LOCAL'; report.error = String(error.stack ?? error); process.exitCode = 1; }
 finally {
@@ -271,6 +309,6 @@ finally {
   await db.collection('organizations').deleteMany({ _id: { $in: orgIds } }); await db.collection('projects').deleteMany({ _id: { $in: projects.map(value => value._id) } });
   for (const name of ['properties', 'property_media', 'property_reports', 'property_view_events']) await db.collection(name).deleteMany({ $or: [{ _id: { $in: propertyIds } }, { propertyId: { $in: propertyIds } }] });
   await db.collection('audit_logs').deleteMany({ $or: [{ actorId: { $in: userIds.map(String) } }, { targetId: { $in: [...propertyIds, ...projects.map(value => value._id)].map(String) } }] });
-  await db.close(); report.cleanup = true; await writeFile(`docs/quality/guide-runs/${profileCards ? 'profile-cards' : unitReview ? 'unit-review' : 'production-followup'}-local-latest.json`, JSON.stringify(report, null, 2) + '\n');
+  await db.close(); report.cleanup = true; await writeFile(`docs/quality/guide-runs/${naturalProjectCards ? 'project-card-layout' : profileCards ? 'profile-cards' : unitReview ? 'unit-review' : 'production-followup'}-local-latest.json`, JSON.stringify(report, null, 2) + '\n');
 }
 console.log(JSON.stringify(report, null, 2));

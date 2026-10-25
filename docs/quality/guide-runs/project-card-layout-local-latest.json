@@ -1,0 +1,14 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedApiRoutes": false,
+  "checks": [
+    "chromium 390px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow",
+    "chromium 820px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow",
+    "chromium 1440px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow",
+    "webkit 390px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow",
+    "webkit 820px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow",
+    "webkit 1440px: square/portrait project images retain all edges at full card width, card surface/radius/shadow match property cards, the simple footer and whole-card navigation work without horizontal overflow"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}
