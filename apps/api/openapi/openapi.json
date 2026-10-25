@@ -29402,6 +29402,10 @@
               },
               "showPopulationCounter": {
                 "type": "boolean"
+              },
+              "roundPropertyPrices": {
+                "type": "boolean",
+                "description": "Display EGP prices of at least one million as approximate one-decimal millions. Absent or false keeps exact prices; stored amounts and search values are unchanged."
               }
             }
           },

@@ -1,4 +1,5 @@
 export const SETTINGS_FIELD_HELP: Record<string, [string, string]> = {
+    round_property_prices: ['مقفول افتراضيًا: 3,250,000 جنيه يظهر بنفس الرقم. عند التفعيل: أسعار الجنيه من مليون فأكثر تُعرض بالمليون مقربة لخانة واحدة، مثل «حوالي 3.3 مليون جنيه». يؤثر على العرض فقط؛ السعر المحفوظ والبحث والأقساط لا تتغير.', 'Off by default: 3,250,000 is shown exactly. When enabled, EGP prices of at least one million use one decimal, e.g. “Approx. EGP 3.3M”. Display only; saved prices, search and installments are unchanged.'],
     platform_name: ['اسم تعريفي محفوظ للمنصة؛ لا يبدّل صورة الشعار أو عنوان نتائج البحث. عدّل نص الرئيسية من إدارة محتوى الرئيسية.', 'Stored platform name; it does not replace the logo or SEO title. Edit homepage text in Homepage content.'],
     short_name: ['اختصار تعريفي محفوظ للاسم، وليس تغييرًا للشعار.', 'Stored short name; it does not change the logo.'],
     description: ['نبذة تعريفية محفوظة؛ نص الرئيسية ووصف نتائج البحث لهما صفحتا تحرير منفصلتان.', 'Stored introduction. Homepage copy and search metadata have separate editors.'],

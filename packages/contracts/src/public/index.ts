@@ -155,6 +155,7 @@ export const publicBootstrapDataSchema = z.object({
     address: localizedTextSchema.optional()
   }).strict().optional(),
   display: z.object({
+    roundPropertyPrices: z.boolean().optional(),
     populationCount: z.number().int().nonnegative().max(100_000_000).optional(),
     populationLabel: localizedTextSchema.optional(),
     showPopulationCounter: z.boolean().optional()

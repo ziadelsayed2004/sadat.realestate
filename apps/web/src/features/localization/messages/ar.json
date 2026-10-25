@@ -2179,6 +2179,7 @@
       "population_count": "قيمة عداد السكان",
       "population_label": "النص التوضيحي للعداد",
       "show_population_counter": "إظهار العداد في الصفحة الرئيسية",
+      "round_property_prices": "تقريب أسعار العقارات بالمليون",
       "blocked_word_review": "مراجعة تلقائية بالكلمات المحظورة",
       "blocked_words": "الكلمات المحظورة (كلمة في كل سطر)",
       "blocked_word_action": "الإجراء التلقائي عند الاكتشاف",

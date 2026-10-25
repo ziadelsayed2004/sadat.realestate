@@ -6,6 +6,7 @@ type Contact = NonNullable<PublicBootstrapData['contact']>;
 let cached: Contact = {};
 let checkedAt = 0;
 let pending: Promise<Contact> | undefined;
+const priceListeners = new Set<(value: boolean) => void>();
 const listeners = new Set<(contact: Contact) => void>();
 
 export function refreshPublicContact(): Promise<Contact> {
@@ -13,6 +14,7 @@ export function refreshPublicContact(): Promise<Contact> {
   pending = new ApiClient().request('/public/bootstrap', { responseSchema: publicBootstrapSuccessEnvelopeSchema })
     .then(response => {
       cached = response.data.data.contact ?? {};
+      priceListeners.forEach(listener => listener(response.data.data.display.roundPropertyPrices === true));
       checkedAt = Date.now();
       listeners.forEach(listener => listener(cached));
       return cached;
@@ -30,6 +32,19 @@ export function usePublicContact(): Contact {
     return () => { listeners.delete(setContact); window.removeEventListener('focus', refresh); };
   }, []);
   return contact;
+}
+
+export function usePublicPriceRounding(initialValue: boolean | undefined, active: boolean): boolean {
+  const [rounding, setRounding] = useState(initialValue === true);
+  useEffect(() => {
+    if (!active) return;
+    priceListeners.add(setRounding);
+    const refresh = () => { void refreshPublicContact(); };
+    refresh();
+    window.addEventListener('focus', refresh);
+    return () => { priceListeners.delete(setRounding); window.removeEventListener('focus', refresh); };
+  }, [active]);
+  return rounding;
 }
 
 export function WhatsAppIcon() {

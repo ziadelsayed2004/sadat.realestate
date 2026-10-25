@@ -1,0 +1,20 @@
+{
+  "status": "PASS_LOCAL",
+  "apiMocks": false,
+  "checks": [
+    "chromium 390px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "chromium 1440px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "chromium 390px rounding ON: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "chromium 1440px rounding ON: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "chromium 390px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "chromium 1440px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 390px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 1440px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 390px rounding ON: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 1440px rounding ON: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 390px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow",
+    "webkit 1440px rounding OFF: real admin toggle persists, bootstrap/SSR/hydrated home/list/details/comparison agree, SEO and stored price stay exact, no horizontal overflow"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

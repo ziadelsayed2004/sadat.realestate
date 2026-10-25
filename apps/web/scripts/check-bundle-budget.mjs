@@ -76,7 +76,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // and their bilingual guide; keep the individual chunk limit unchanged.
 // Named administrative project/provider context and compact unit cards add
 // about 4.1 KB over 2,778,228 bytes. Existing headroom plus four KiB bounds it.
-const maxJavaScriptBytes = 2_719 * 1024 + 128;
+// Exact shared prices, the optional display policy and its guide add about
+// 2.7 KB to 2,783,964 bytes. Bound the additional payload to three KiB.
+const maxJavaScriptBytes = 2_722 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

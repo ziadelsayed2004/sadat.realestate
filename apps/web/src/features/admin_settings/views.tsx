@@ -141,6 +141,7 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'two_factor_authentication', kind: 'boolean', labelKey: 'two_factor_authentication' }
   ],
   display: [
+    { key: 'round_property_prices', kind: 'boolean', labelKey: 'round_property_prices' },
     { key: 'population_label', kind: 'localized', labelKey: 'population_label' },
     { key: 'show_population_counter', kind: 'boolean', labelKey: 'show_population_counter' },
     { key: 'blocked_word_review', kind: 'boolean', labelKey: 'blocked_word_review' },
@@ -277,7 +278,7 @@ function SettingsForm({ namespace, data, values, locale, saving, blocked, onChan
       }
     }
     const success = await onSave({ schemaVersion: data?.schemaVersion ?? 1, values: values as AdminSettingsValues, expectedVersion: data?.version ?? 0, reason: trimmedReason });
-    if (success) { setSaved(true); setReason(''); if (namespace === 'contact' || namespace === 'social') void refreshPublicContact(); }
+    if (success) { setSaved(true); setReason(''); if (namespace === 'contact' || namespace === 'social' || namespace === 'display') void refreshPublicContact(); }
   }
 
   return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}>

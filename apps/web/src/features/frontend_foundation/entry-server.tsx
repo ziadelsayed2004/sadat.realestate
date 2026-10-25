@@ -1,7 +1,8 @@
 import { renderToString } from 'react-dom/server';
 import { type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationDirectoryQuery, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type PublicPropertySearchQuery, type PublicSeoSettings, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
-import { ApiClientError } from '../contracts/index.ts';
+import { ApiClient, ApiClientError } from '../contracts/index.ts';
+import { publicBootstrapSuccessEnvelopeSchema } from '@sadat-real-estate/contracts';
 import { getPublicDevelopersCopy, getPublicHomepageCopy, getPublicPropertyComparisonCopy, getPublicPropertyDetailsCopy, getPublicPropertyListingCopy, loadPublicDeveloperDirectory, loadPublicDeveloperProfile, loadPublicHomepage, loadPublicPropertyComparison, loadPublicPropertyDetails, loadPublicPropertyList, localizedText, parsePublicDeveloperDirectoryQuery, parsePublicPropertyComparisonIds, parsePublicPropertySearchQuery, propertyDetailsSlugFromUrl, publicDeveloperProfileSlugFromUrl, publicDeveloperProfileUrl, publicDeveloperProjectSlugFromUrl, publicDeveloperProjectUrl, publicPropertyDetailsUrl } from '../public/index.ts';
 import { getPublicAboutTeamCopy, getPublicArticlesCopy, loadPublicAbout, loadPublicArticleDetails, loadPublicArticles, loadPublicTeam, parsePublicArticleListQuery, publicArticleSlugFromUrl, publicArticleUrl, type PublicArticleDetailsViewState } from '../content/index.ts';
 import { getCommunityCopy, loadPublicCommunity, parseCommunityListQuery } from '../community/index.ts';
@@ -14,6 +15,7 @@ export type ServerRenderSeo = PublicSeoMetadata;
 export { createRobotsTxt, createSitemapXml, loadPublicSeoSettings } from '../seo/index.ts';
 
 export interface ServerRenderOptions {
+  readonly priceRounding?: boolean;
   readonly acceptLanguage?: string;
   readonly preferredLocale?: string;
   readonly apiOrigin?: string;
@@ -37,6 +39,7 @@ export interface ServerRenderOptions {
 }
 
 export interface ServerRenderResult {
+  readonly priceRounding?: boolean;
   readonly html: string;
   readonly locale: SupportedLocale;
   readonly direction: 'rtl' | 'ltr';
@@ -227,6 +230,9 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   const parsedUrl = new URL(url, 'http://sadat.local');
   const locale = resolveLocale(parsedUrl.searchParams.get('lang') ?? options.preferredLocale, options.acceptLanguage);
   const route = resolveRoute(url);
+  const priceRoundingPromise = options.priceRounding !== undefined ? Promise.resolve(options.priceRounding) : options.apiOrigin && route.kind === 'matched' && route.surface === 'public'
+    ? new ApiClient({ baseUrl: options.apiOrigin }).request('/public/bootstrap', { responseSchema: publicBootstrapSuccessEnvelopeSchema, signal: AbortSignal.timeout(1_500) }).then(result => result.data.data.display.roundPropertyPrices === true).catch(() => false)
+    : Promise.resolve(false);
   const copy = getFoundationCopy(locale);
   let publicSeoSettings = options.publicSeoSettings;
   const publicSeoSettingsPromise = publicSeoSettings === undefined && options.apiOrigin !== undefined && route.kind === 'matched' && route.surface === 'public'
@@ -487,6 +493,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   const configuredPublicOrigin = normalizePublicOrigin(publicSeoSettings?.canonicalUrl) ?? options.publicOrigin;
 
   const appProps = {
+    priceRounding: await priceRoundingPromise,
     url,
     locale,
     ...(homepageData === undefined ? {} : { homepageData }),
@@ -524,6 +531,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
 
   return {
     html: renderToString(<App {...appProps} />),
+    priceRounding: appProps.priceRounding,
     locale,
     direction: directionForLocale(locale),
     statusCode: route.kind === 'not_found' || propertyDetailsInitialState === 'not_found' || developerProfileInitialState === 'not_found' || articleDetailsInitialState === 'not_found' ? 404 : 200,

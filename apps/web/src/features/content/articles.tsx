@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { PublicPriceRoundingContext } from '../public/price-display.tsx';
 import type {
   ArticleListQuery,
   ArticlePublic,
@@ -98,14 +99,8 @@ function readTime(body: string | undefined): number {
   return Math.max(1, Math.ceil(body.trim().split(/\s+/u).length / 180));
 }
 
-function relatedPropertyPrice(item: PublicPropertyListItem, locale: SupportedLocale): string | undefined {
-  const price = item.price;
-  if (price === undefined) return undefined;
-  if (locale === 'ar' && price.currency === 'EGP') {
-    if (price.amount >= 1_000_000) return `${(price.amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 })} \u0645\u0644\u064a\u0648\u0646 \u062c\u0646\u064a\u0647`;
-    return `${price.amount.toLocaleString('en-US')} \u062c\u0646\u064a\u0647`;
-  }
-  return formatMoney(price, locale);
+function relatedPropertyPrice(item: PublicPropertyListItem, locale: SupportedLocale, rounding: boolean): string | undefined {
+  return formatMoney(item.price, locale, rounding);
 }
 
 function summary(body: string | undefined, copy: PublicArticlesCopy): string {
@@ -353,6 +348,7 @@ function RelatedPropertyRail({
   readonly locale: SupportedLocale;
   readonly copy: PublicArticlesCopy;
 }) {
+  const rounding = useContext(PublicPriceRoundingContext);
   const items = data?.items.slice(0, 3) ?? [];
   if (items.length === 0) return null;
   return (
@@ -361,7 +357,7 @@ function RelatedPropertyRail({
       <div className="public-article-details__property-list">
         {items.map((item: PublicPropertyListItem) => {
           const title = localizedText(item.name, locale) ?? item.slug;
-          const price = relatedPropertyPrice(item, locale);
+          const price = relatedPropertyPrice(item, locale, rounding);
           return (
             <a className="public-article-details__property" href={`/properties/${encodeURIComponent(item.slug)}?lang=${locale}`} key={item.id}>
               <PublicMediaImage src={item.imageUrl} alt="" fallback={<span className="public-article-details__property-placeholder" aria-hidden="true">⌂</span>} />

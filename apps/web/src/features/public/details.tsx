@@ -1,3 +1,4 @@
+import { PublicPriceRoundingContext } from './price-display.tsx';
 import { PropertyReport } from './property-report.tsx';
 import { useContext, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
@@ -298,20 +299,14 @@ function DetailLineIcon({ kind, index }: { readonly kind: DetailLineIconKind; re
   return <svg className="public-property-details__line-icon" viewBox="0 0 20 20" focusable="false" aria-hidden="true">{icon}</svg>;
 }
 
-function detailsPrice(value: PublicPropertyDetailsData['price'], locale: SupportedLocale): string | undefined {
-  if (value === undefined) return undefined;
-  if (value.currency === 'EGP' && value.amount >= 1_000_000) {
-    const millions = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000);
-    if (locale === 'ar') return `${millions} مليون جنيه`;
-    return `EGP ${millions}M`;
-  }
-  return formatMoney(value, locale);
+function detailsPrice(value: PublicPropertyDetailsData['price'], locale: SupportedLocale, rounding = false): string | undefined {
+  return formatMoney(value, locale, rounding);
 }
 
-function detailsRelatedPrice(value: PublicPropertyDetailsData['price'], transactionType: PublicPropertyDetailsData['transactionType'], locale: SupportedLocale): string | undefined {
+function detailsRelatedPrice(value: PublicPropertyDetailsData['price'], transactionType: PublicPropertyDetailsData['transactionType'], locale: SupportedLocale, rounding: boolean): string | undefined {
   if (value === undefined) return undefined;
-  if (transactionType === 'rent') return `${formatMoney(value, locale)} ${locale === 'ar' ? '/ شهر' : '/ month'}`;
-  return detailsPrice(value, locale);
+  if (transactionType === 'rent') return `${formatMoney(value, locale, rounding)} ${locale === 'ar' ? '/ شهر' : '/ month'}`;
+  return detailsPrice(value, locale, rounding);
 }
 
 function PropertySummary({
@@ -323,6 +318,7 @@ function PropertySummary({
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyDetailsCopy;
 }) {
+  const rounding = useContext(PublicPriceRoundingContext);
   const title = localizedText(data.name, locale) ?? data.slug;
   const deliveryCopy = getPublicPropertyListingCopy(locale);
   const summaryLabels = locale === 'ar'
@@ -347,7 +343,7 @@ function PropertySummary({
           <h1 id="public-property-details-title">{title}</h1>
           {data.publicCode ? <p className="public-property-details__code">{copy.code}: <bdi dir="ltr">{data.publicCode}</bdi></p> : null}
         </div>
-        {data.price === undefined ? null : <p className="public-property-details__price">{detailsPrice(data.price, locale)}</p>}
+        {data.price === undefined ? null : <p className="public-property-details__price">{detailsPrice(data.price, locale, rounding)}</p>}
       </div>
       {facts.length === 0 ? null : <dl className="public-property-details__facts">{facts.map(fact => <div key={fact.label}><PropertyFactIcon kind={fact.kind} /><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>}
       {mapUrl ? <a className="public-property-details__map-link" href={mapUrl} target="_blank" rel="noopener noreferrer" data-action="open-map"><DetailLineIcon kind="location" />{copy.openMap}</a> : null}
@@ -450,6 +446,7 @@ function RelatedProperties({
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyDetailsCopy;
 }) {
+  const rounding = useContext(PublicPriceRoundingContext);
   if (properties.length === 0) return null;
   return (
     <section className="public-property-details__related" aria-labelledby="public-property-details-related-title">
@@ -472,7 +469,7 @@ function RelatedProperties({
               title={relatedTitle}
               href={`/properties/${property.slug}`}
               location={relatedLocation === undefined ? undefined : <span className="public-property-details__related-location"><DetailLineIcon kind="location" />{relatedLocation}</span>}
-              price={detailsRelatedPrice(property.price, property.transactionType, locale)}
+              price={detailsRelatedPrice(property.price, property.transactionType, locale, rounding)}
               features={relatedFeatures}
               source={sourceName === undefined ? undefined : <span className="public-property-details__related-source">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="20" height="20" loading="lazy" decoding="async" /> : null}<span>{locale === 'ar' ? '\u0628\u0648\u0627\u0633\u0637\u0629 ' :'By '}{sourceName}</span>{property.sourceVerified || property.sourceType === 'developer_company' ? <b>{locale === 'ar' ? '\u0645\u0648\u062b\u0642' :'Verified'}</b> : null}</span>}
               mediaOverlay={<div className="public-property-details__related-badges"><span className={`public-property-details__related-badge public-property-details__related-badge--${property.transactionType}`}>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.publicCode ? <span className="public-property-details__related-code" dir="ltr">{property.publicCode}</span> : null}</div>}

@@ -1,3 +1,4 @@
+import { PublicPriceRoundingContext } from './price-display.tsx';
 import { PropertyProjectLabel } from './property-project-label.tsx';
 import { PropertyViews } from './property-views.tsx';
 import { CarouselArrow, useOutgoingSlide } from './carousel.tsx';
@@ -684,6 +685,7 @@ function PropertyGrid({
   readonly copy: PublicHomepageCopy;
   readonly properties: readonly PublicHomepageProperty[];
 }) {
+  const rounding = useContext(PublicPriceRoundingContext);
   const listingCopy = getPublicPropertyListingCopy(locale);
   const [comparedIds, setComparedIds] = useState<readonly string[]>([]);
 
@@ -718,7 +720,7 @@ function PropertyGrid({
             key={property.id}
             title={title}
             href={'/properties/' + property.slug}
-            price={formatMoney(property.price, locale)}
+            price={formatMoney(property.price, locale, rounding)}
             location={localizedText(property.locationName, locale)}
             source={<>{sourceName === undefined ? null : <span className="public-homepage__source-identity"><span className="public-homepage__source-logo"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="36" height="36" loading="lazy" decoding="async" /></span><span className="public-homepage__source-copy"><span>{sourceName}</span>{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}<PropertyProjectLabel name={property.projectName} url={property.projectUrl} locale={locale} /></>}
             features={features}

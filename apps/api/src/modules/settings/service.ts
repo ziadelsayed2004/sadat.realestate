@@ -133,7 +133,7 @@ function effectiveValues(target: AdminSettingsNamespace, stored: AdminSettingsDa
   }
   if (target === 'display') {
     const policy = communityRuntimeSettings(stored);
-    return { show_population_counter: true, ...stored, blocked_word_review: policy.blockedWordReview, blocked_words: policy.blockedWords, blocked_word_action: policy.blockedWordAction };
+    return { show_population_counter: true, ...stored, round_property_prices: stored.round_property_prices === true, blocked_word_review: policy.blockedWordReview, blocked_words: policy.blockedWords, blocked_word_action: policy.blockedWordAction };
   }
   return stored;
 }
@@ -198,6 +198,7 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     await requirePermission(dependencies, claims.sub, 'admin:settings.manage');
     const target = namespace(unparsedNamespace);
     const data = adminSettingsUpdateSchema.parse(unparsedInput);
+    if (target === 'display' && data.values.round_property_prices !== undefined && typeof data.values.round_property_prices !== 'boolean') throw new ApiContractError('SETTINGS_INVALID_PRICE_ROUNDING', 'errors.validation', 400);
     if (target === 'advertising') {
       for (const method of ['vodafone_cash', 'instapay', 'bank_transfer', 'cash']) {
         const key = `${method}_payment_details`;

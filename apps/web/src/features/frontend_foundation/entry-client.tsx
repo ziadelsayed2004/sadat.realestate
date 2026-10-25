@@ -194,6 +194,7 @@ function readPublicContentInitialState(id: 'about' | 'team', source: Document = 
 const authClient = new AuthClient();
 
 function readAppProps(source: Document = document, url = window.location.href) {
+  const priceRounding = source.getElementById('sadat-public-price-rounding')?.textContent === 'true';
   const homepageData = readHomepageBootstrap(source);
   const propertyListData = readPropertyListBootstrap(source);
   const propertyDetailsData = readPropertyDetailsBootstrap(source);
@@ -218,6 +219,7 @@ function readAppProps(source: Document = document, url = window.location.href) {
   return {
     url,
     locale,
+    priceRounding,
     ...(homepageData === undefined ? {} : { homepageData }),
     ...(propertyListData === undefined ? {} : { propertyListData }),
     ...(propertyDetailsData === undefined ? {} : { propertyDetailsData }),

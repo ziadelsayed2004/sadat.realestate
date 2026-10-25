@@ -1,3 +1,4 @@
+import { PublicPriceRoundingContext } from './price-display.tsx';
 import { PropertyProjectLabel } from './property-project-label.tsx';
 import { PropertyViews } from './property-views.tsx';
 import { categoryImageUrl } from '../design_system/category-image.ts';
@@ -110,17 +111,9 @@ function isListEmpty(data: PublicPropertyListData): boolean {
   return data.total === 0 || data.items.length === 0;
 }
 
-function listingPrice(
-  value: PublicPropertyListData['items'][number]['price'],
-  transactionType: PublicPropertyListData['items'][number]['transactionType'],
-  locale: SupportedLocale
-): string | undefined {
-  if (value === undefined || locale !== 'ar' || value.currency !== 'EGP') return formatMoney(value, locale);
-
-  const amount = value.amount >= 1_000_000
-    ? `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000)} مليون جنيه`
-    : `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value.amount)} جنيه`;
-  return transactionType === 'rent' ? `${amount} / شهر` : amount;
+function listingPrice(value: PublicPropertyListData['items'][number]['price'], transactionType: PublicPropertyListData['items'][number]['transactionType'], locale: SupportedLocale, rounding: boolean): string | undefined {
+  const amount = formatMoney(value, locale, rounding);
+  return amount && transactionType === 'rent' ? `${amount} / ${locale === 'ar' ? 'شهر' : 'month'}` : amount;
 }
 
 function stateCopy(state: PublicPropertyListingViewState, copy: PublicPropertyListingCopy): { readonly title: string; readonly body: string } {
@@ -335,6 +328,7 @@ function PropertyResults({
   readonly comparedIds: readonly string[];
   readonly onToggleCompare: (id: string) => void;
 }) {
+  const rounding = useContext(PublicPriceRoundingContext);
   const role = useContext(PublicAuthRoleContext);
   const pageCount = Math.ceil(data.total / data.limit);
   const homepageCopy = getPublicHomepageCopy(locale);
@@ -346,7 +340,7 @@ function PropertyResults({
             key={property.id}
             title={localizedText(property.name, locale) ?? property.slug}
             href={'/properties/' + property.slug + '?lang=' + locale}
-            price={listingPrice(property.price, property.transactionType, locale)}
+            price={listingPrice(property.price, property.transactionType, locale, rounding)}
             location={localizedText(property.locationName, locale)}
             source={<><span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span><PropertyViews count={property.viewCount} locale={locale} /><PropertyProjectLabel name={property.projectName} url={property.projectUrl} locale={locale} /></>}
             mediaOverlay={<div className="ui-property-card__badges"><span data-badge="transaction">{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.installmentAvailable ? <span data-badge="installment">{copy.installment}</span> : null}{property.featured ? <span data-badge="featured">{copy.featured}</span> : null}{property.publicCode ? <span data-badge="code"><bdi dir="ltr">{property.publicCode}</bdi></span> : null}</div>}

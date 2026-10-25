@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { PublicPriceRoundingContext } from './price-display.tsx';
+import { useContext, useEffect, useState } from 'react';
 import type {
   PublicPropertyRelatedProperty,
   PublicPropertyComparisonData,
@@ -120,11 +121,8 @@ function localizedOptional(value: Parameters<typeof localizedText>[0], locale: S
   return localizedText(value, locale) ?? fallback;
 }
 
-function comparisonMoney(property: PublicPropertyRelatedProperty, locale: SupportedLocale): string | undefined {
-  if (locale === 'ar' && property.price?.currency === 'EGP' && property.price.amount >= 1_000_000) {
-    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(property.price.amount / 1_000_000) + ' مليون جنيه';
-  }
-  return formatMoney(property.price, locale);
+function comparisonMoney(property: PublicPropertyRelatedProperty, locale: SupportedLocale, rounding: boolean): string | undefined {
+  return formatMoney(property.price, locale, rounding);
 }
 
 type ComparisonField = PublicPropertyComparisonField | 'finishing';
@@ -133,7 +131,8 @@ function fieldValue(
   property: PublicComparisonProperty,
   field: ComparisonField,
   locale: SupportedLocale,
-  copy: PublicPropertyComparisonCopy
+  copy: PublicPropertyComparisonCopy,
+  rounding: boolean
 ): string {
   switch (field) {
     case 'kind': return localizedOptional(property.propertyTypeName, locale, property.kind === 'property' ? copy.property : copy.unit);
@@ -143,7 +142,7 @@ function fieldValue(
     case 'project': return localizedOptional(property.projectName, locale, copy.valueUnavailable);
     case 'developer': return localizedOptional(property.sourceName, locale, copy.valueUnavailable);
     case 'publicCode': return property.publicCode ?? copy.valueUnavailable;
-    case 'price': return comparisonMoney(property, locale) ?? copy.valueUnavailable;
+    case 'price': return comparisonMoney(property, locale, rounding) ?? copy.valueUnavailable;
     case 'installment': return property.installmentAvailable === true ? copy.available : copy.valueUnavailable;
     case 'area': return formatArea(property.area, locale, copy.sqm) ?? copy.valueUnavailable;
     case 'bedrooms': return property.layout?.bedrooms === undefined ? copy.valueUnavailable : String(property.layout.bedrooms);
@@ -203,10 +202,12 @@ function ComparisonGroup({
   readonly copy: PublicPropertyComparisonCopy;
   readonly showDifferences: boolean;
 }) {
+
+  const rounding = useContext(PublicPriceRoundingContext);
   const availableFields = fields.filter(field => field === 'finishing' ? data.fields.includes('deliveryStatus') && data.items.some(item => item.finishing?.length) : data.fields.includes(field));
   const visibleFields = availableFields.filter(field => {
     if (!showDifferences || data.items.length < 2) return true;
-    const values = data.items.map(item => fieldValue(item, field, locale, copy));
+    const values = data.items.map(item => field === 'price' ? JSON.stringify(item.price) : fieldValue(item, field, locale, copy, rounding));
     return new Set(values).size > 1;
   });
   if (visibleFields.length === 0) return null;
@@ -225,9 +226,9 @@ function ComparisonGroup({
           <tbody>
             {visibleFields.map(field => (
               <tr key={field}>
-                {data.items[0] !== undefined ? <td>{fieldValue(data.items[0], field, locale, copy)}</td> : null}
+                {data.items[0] !== undefined ? <td>{fieldValue(data.items[0], field, locale, copy, rounding)}</td> : null}
                 <th scope="row">{fieldLabel(field, copy)}</th>
-                {data.items[1] !== undefined ? <td>{fieldValue(data.items[1], field, locale, copy)}</td> : null}
+                {data.items[1] !== undefined ? <td>{fieldValue(data.items[1], field, locale, copy, rounding)}</td> : null}
               </tr>
             ))}
           </tbody>
@@ -280,6 +281,8 @@ function ComparisonCards({
   readonly copy: PublicPropertyComparisonCopy;
   readonly onRemove: (propertyId: string) => void;
 }) {
+
+  const rounding = useContext(PublicPriceRoundingContext);
   return (
     <div className="public-property-comparison__cards" data-item-count={data.items.length}>
       {data.items.map(property => {
@@ -292,7 +295,7 @@ function ComparisonCards({
             title={title}
             href={publicPropertyDetailsUrl(property.slug)}
             location={localizedOptional(property.locationName, locale, copy.valueUnavailable)}
-            price={comparisonMoney(property, locale)}
+            price={comparisonMoney(property, locale, rounding)}
             source={property.sourceName !== undefined ? (
               <span className="public-property-comparison__source-content">
                 {property.sourceImageUrl !== undefined ? <PublicMediaImage src={property.sourceImageUrl} alt="" loading="eager" fallback={<span className="public-property-comparison__source-image-fallback" aria-hidden="true" />} /> : null}

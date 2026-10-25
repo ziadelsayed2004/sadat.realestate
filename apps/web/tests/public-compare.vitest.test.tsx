@@ -13,6 +13,7 @@ import {
   publicPropertyComparisonUrl
 } from '../src/features/public/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { PublicPriceRoundingContext } from '../src/features/public/price-display.tsx';
 
 const firstId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const secondId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
@@ -86,6 +87,13 @@ afterEach(() => {
 });
 
 describe('public property comparison', () => {
+  it('compares actual prices even when optional rounded labels happen to match', () => {
+    const data = publicPropertyComparisonDataSchema.parse({ ...comparisonData, items: [{ ...firstProperty, price: { amount: 3_250_000, currency: 'EGP' } }, { ...secondProperty, price: { amount: 3_250_001, currency: 'EGP' } }] });
+    renderWithLocale(<PublicPriceRoundingContext.Provider value={true}><PublicPropertyComparison locale="en" url={`/compare?propertyIds=${firstId}&propertyIds=${secondId}`} initialData={data} /></PublicPriceRoundingContext.Provider>, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: 'Show differences only' }));
+    const row = screen.getByRole('row', { name: /Price.*Approx\. EGP 3\.3M/u });
+    expect(within(row).getAllByText('Approx. EGP 3.3M')).toHaveLength(2);
+  });
   it.each(['ar', 'en'] as const)('shows partial infrastructure separately from saved finishing and the project name in %s', locale => {
     const data = publicPropertyComparisonDataSchema.parse({ ...comparisonData, items: [{ ...firstProperty, deliveryStatus: 'partial_infrastructure', finishing: [{ en: 'Premium finishing', ar: 'تشطيب فاخر' }], projectName: { en: 'Owner compound', ar: 'كمبوند الشركة' } }, secondProperty] });
     const copy = getPublicPropertyComparisonCopy(locale);

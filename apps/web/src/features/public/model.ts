@@ -31,13 +31,18 @@ export function isHomepageEmpty(data: PublicHomepageData): boolean {
     && data.banners.length === 0;
 }
 
-export function formatMoney(value: PropertyMoney | undefined, locale: SupportedLocale): string | undefined {
+export function formatMoney(value: PropertyMoney | undefined, locale: SupportedLocale, roundPropertyPrices = false): string | undefined {
   if (value === undefined) return undefined;
+  if (roundPropertyPrices && value.currency === 'EGP' && value.amount >= 1_000_000) {
+    const millions = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000);
+    return locale === 'ar' ? `حوالي ${millions} مليون جنيه` : `Approx. EGP ${millions}M`;
+  }
   try {
     return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: value.currency,
-      maximumFractionDigits: 0
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 20
     }).format(value.amount);
   } catch {
     return String(value.amount) + ' ' + value.currency;

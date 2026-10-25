@@ -276,6 +276,7 @@ function renderDocument(template, result, cspNonce) {
   const metadata = '<html lang="' + result.locale + '" dir="' + result.direction + '">';
   const title = '<title>' + escapeHtml(result.title) + '</title>';
   const homepageBootstrap = renderHomepageBootstrap(result.homepageData, cspNonce);
+  const priceBootstrap = typeof result.priceRounding === 'boolean' ? `<script id="sadat-public-price-rounding" type="application/json" nonce="${escapeHtml(cspNonce)}">${JSON.stringify(result.priceRounding)}</script>` : '';
   const propertyListBootstrap = renderPropertyListBootstrap(result.propertyListData, cspNonce);
   const propertyDetailsBootstrap = renderPropertyDetailsBootstrap(result.propertyDetailsData, result.propertyDetailsInitialState, cspNonce);
   const propertyComparisonBootstrap = renderPropertyComparisonBootstrap(result.propertyComparisonData, result.propertyComparisonInitialState, cspNonce);
@@ -297,7 +298,7 @@ function renderDocument(template, result, cspNonce) {
     .replace(/<title>[\s\S]*?<\/title>/i, title)
     .replace('</head>', seoMetadata + '</head>')
     .replace('<!--ssr-outlet-->', result.html)
-    .replace('</body>', homepageBootstrap + propertyListBootstrap + propertyDetailsBootstrap + propertyComparisonBootstrap + developerListBootstrap + developerProfileBootstrap + articleListBootstrap + articleDetailsBootstrap + communityBootstrap + aboutBootstrap + teamBootstrap + '</body>');
+    .replace('</body>', priceBootstrap + homepageBootstrap + propertyListBootstrap + propertyDetailsBootstrap + propertyComparisonBootstrap + developerListBootstrap + developerProfileBootstrap + articleListBootstrap + articleDetailsBootstrap + communityBootstrap + aboutBootstrap + teamBootstrap + '</body>');
 }
 
 function sendCrawlerDocument(request, response, body, contentType) {

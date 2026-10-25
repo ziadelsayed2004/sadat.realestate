@@ -34,6 +34,19 @@ const providerClaims: AccessTokenClaims = {
   sub: '0123456789abcdef01234567'
 };
 
+test('price rounding defaults off and requires a boolean through versioned administrative writes', async () => {
+  const repo = repository();
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: repo, audit: { async record() { return 'audit-id'; } } });
+  const current = await service.get(adminClaims, 'display');
+  assert.equal(current.values.round_property_prices, false);
+  const input = { schemaVersion: 1, values: { round_property_prices: true }, expectedVersion: 0, reason: 'Enable optional approximate prices' };
+  const enabled = await service.update(adminClaims, 'display', input, { requestId: 'price-on', traceId: 'price-on' });
+  assert.equal((await service.get(adminClaims, 'display')).values.round_property_prices, true);
+  await service.update(adminClaims, 'display', { ...input, values: { round_property_prices: false }, expectedVersion: enabled.version }, { requestId: 'price-off', traceId: 'price-off' });
+  assert.equal((await service.get(adminClaims, 'display')).values.round_property_prices, false);
+  await assert.rejects(service.update(adminClaims, 'display', { ...input, values: { round_property_prices: 'true' } }, { requestId: 'invalid', traceId: 'invalid' }), error => error instanceof Error && 'code' in error && error.code === 'SETTINGS_INVALID_PRICE_ROUNDING');
+});
+
 test('saves a valid Google Maps link from platform details and rejects unsafe destinations', async () => {
   const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: repository(), audit: { async record() { return 'audit-id'; } } });
   const input = { schemaVersion: 1, values: { office_address: { en: 'Office 5, Sadat City' }, map_url: 'https://maps.app.goo.gl/Abc123' }, expectedVersion: 0, reason: 'Set the real office location' };

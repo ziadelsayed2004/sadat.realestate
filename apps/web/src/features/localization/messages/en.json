@@ -2179,6 +2179,7 @@
       "population_count": "Population counter value",
       "population_label": "Population counter label",
       "show_population_counter": "Show counter on homepage",
+      "round_property_prices": "Round property prices to millions",
       "blocked_word_review": "Review blocked words automatically",
       "blocked_words": "Blocked words (one per line)",
       "blocked_word_action": "Action when detected",

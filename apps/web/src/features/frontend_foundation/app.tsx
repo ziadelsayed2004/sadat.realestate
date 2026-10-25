@@ -1,4 +1,5 @@
 import { AdminFeatured } from '../admin_featured/views.tsx';
+import { PublicPriceDisplay } from '../public/price-display.tsx';
 import { authCompletionHref } from '../auth/redirect.ts';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicContentListData, CommunityPublicPostListData, PublicHomepageData, PublicOrganizationDirectoryQuery, PublicOrganizationListData, PublicOrganizationProfile, PublicPropertyComparisonData, PublicPropertyDetails, PublicPropertyListData, PublicPropertySearchQuery, SupportedLocale } from '@sadat-real-estate/contracts';
@@ -43,6 +44,7 @@ import './interactions.css';
 const AdminUserGuide = lazy(() => import('../admin_user_guide/views.tsx'));
 
 export interface AppProps {
+  readonly priceRounding?: boolean | undefined;
   readonly url: string;
   readonly locale: SupportedLocale;
   readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
@@ -84,6 +86,7 @@ export function App({
   assets,
   session = ANONYMOUS_ROUTE_SESSION,
   authClient,
+  priceRounding,
   homepageData,
   homepageInitialState = 'loading',
   propertyListData,
@@ -383,7 +386,7 @@ export function App({
       <RouteShell route={route} locale={locale} copy={copy} assets={assets} authClient={authClient} onLocaleChange={onLocaleChange}>
 
         <PublicAuthRoleContext.Provider key={protectedRoute ? (authSnapshot?.status ?? 'server') : 'public'} value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>
-          {content}
+          <PublicPriceDisplay initialValue={priceRounding} active={route.kind === 'matched' && route.surface === 'public'}>{content}</PublicPriceDisplay>
         </PublicAuthRoleContext.Provider>
       </RouteShell>
     </RouteErrorBoundary>

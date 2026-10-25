@@ -18,3 +18,9 @@ test('ignores malformed display settings instead of changing the public homepage
   assert.deepEqual(displayRuntimeSettings({ population_count: -1, population_label: [], show_population_counter: 'yes' }), {});
   assert.deepEqual(displayRuntimeSettings(undefined), {});
 });
+
+test('exposes only an explicit boolean price rounding preference', () => {
+  assert.deepEqual(displayRuntimeSettings({ round_property_prices: true }), { roundPropertyPrices: true });
+  assert.deepEqual(displayRuntimeSettings({ round_property_prices: false }), { roundPropertyPrices: false });
+  for (const value of ['true', 1, null]) assert.deepEqual(displayRuntimeSettings({ round_property_prices: value }), {});
+});

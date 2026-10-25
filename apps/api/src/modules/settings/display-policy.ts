@@ -1,6 +1,7 @@
 import type { Connection } from 'mongoose';
 
 export interface DisplayRuntimeSettings {
+  roundPropertyPrices?: boolean;
   populationCount?: number;
   populationLabel?: { ar?: string; en?: string };
   showPopulationCounter?: boolean;
@@ -26,6 +27,7 @@ export function displayRuntimeSettings(values: Record<string, unknown> | undefin
   const populationCount = values.population_count;
   const populationLabel = localized(values.population_label);
   return {
+    ...(typeof values.round_property_prices === 'boolean' ? { roundPropertyPrices: values.round_property_prices } : {}),
     ...(typeof populationCount === 'number' && Number.isSafeInteger(populationCount) && populationCount >= 0 && populationCount <= 100_000_000 ? { populationCount } : {}),
     ...(populationLabel ? { populationLabel } : {}),
     ...(typeof values.show_population_counter === 'boolean' ? { showPopulationCounter: values.show_population_counter } : {})
