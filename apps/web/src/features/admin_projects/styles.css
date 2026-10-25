@@ -73,6 +73,8 @@
 .admin-projects__table th,
 .admin-projects__table td { padding: 16px 18px; border-block-end: 1px solid #eef0f3; text-align: start; vertical-align: middle; }
 .admin-projects__table td { overflow-wrap: anywhere; }
+.admin-projects__identity { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; text-decoration: none; }
+.admin-projects__identity > img { display: block; inline-size: 5rem; block-size: 5rem; flex: 0 0 5rem; object-fit: contain; border-radius: .5rem; background: #f4f5f3; }
 .admin-projects__table th { background: #fffdf8; color: #5e6b80; font-size: .84rem; font-weight: 800; white-space: nowrap; }
 .admin-projects__table tbody tr:hover { background: #fffdf8; }
 .admin-projects__table code { color: #68768b; font-size: .8rem; }

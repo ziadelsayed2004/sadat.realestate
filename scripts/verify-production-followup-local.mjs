@@ -15,7 +15,8 @@ const db = await mongoose.createConnection(uri.href).asPromise(), base = 'http:/
 const oid = () => new mongoose.Types.ObjectId(), stamp = new Date(), prefix = `followup-${Date.now()}`;
 const password = 'Local-Followup!2026', users = [], properties = [], organizations = [], projects = [], contexts = [];
 const report = { status: 'RUNNING', mockedApiRoutes: false, checks: [], browserErrors: [], cleanup: false };
-const unitReview = process.argv.includes('--unit-review');
+const profileCards = process.argv.includes('--profile-cards');
+const unitReview = process.argv.includes('--unit-review') || profileCards;
 const output = '.tmp/production-followup', storageRoot = path.resolve(env.PRIVATE_STORAGE_LOCAL_ROOT || path.join(os.tmpdir(), 'sadat-real-estate-private-storage'));
 await mkdir(output, { recursive: true });
 let browser;
@@ -54,6 +55,7 @@ try {
   const fullCompany = await json(await owner.request.patch(base + '/api/v1/provider/organization', { headers, data: { version: filledCompany.version, name: filledCompany.name, coverFit: 'contain', reason: 'Local owner chooses full image' } })); assert.equal(fullCompany.coverFit, 'contain');
   const created = await json(await owner.request.post(base + '/api/v1/provider/projects', { headers, data: { name: { ar: 'كمبوند الاختبار المحلي', en: 'Local compound' }, imageUrl: photo.imageUrl, imageFit: 'contain', reason: 'Local owner project fixture' } }), 201);
   const project = { ...created, _id: new mongoose.Types.ObjectId(created.id) }; projects.push(project);
+  if (profileCards) await db.collection('projects').updateOne({ _id: project._id }, { $set: { website: 'https://example.com/local-compound' } });
   await db.collection('projects').updateOne({ _id: project._id }, { $set: { status: 'published' } });
   const projectList = await json(await owner.request.get(base + '/api/v1/provider/projects?limit=100', { headers }));
   assert(projectList.items.some(item => item.id === created.id)); assert(projectList.items.every(item => item.providerId === String(developer.id)));
@@ -73,7 +75,7 @@ try {
   const details = await json(await owner.request.patch(base + `/api/v1/provider/properties/${draft.id}/steps/details`, { headers, data: { version: draft.version, deliveryStatus: 'partial_infrastructure', reason: 'Local partial infrastructure check' } }));
   assert.equal(details.deliveryStatus, 'partial_infrastructure'); assert.equal((await db.collection('properties').findOne({ _id: new mongoose.Types.ObjectId(draft.id) })).deliveryStatus, 'partial_infrastructure');
   const foreignProject = oid(); projects.push({ _id: foreignProject });
-  await db.collection('projects').insertOne({ _id: foreignProject, providerId: office.id, organizationId: office.org._id, name: { en: 'Other owner private project' }, slug: 'other-owner', status: 'draft', version: 0 });
+  await db.collection('projects').insertOne({ _id: foreignProject, providerId: office.id, organizationId: office.org._id, name: { en: 'Other owner private project' }, slug: 'other-owner', status: 'draft', version: 0, createdAt: stamp, updatedAt: stamp });
   const denied = await owner.request.post(base + '/api/v1/provider/properties', { headers, data: { kind: 'unit', name: { en: 'Foreign project attempt' }, transactionType: 'sale', projectId: String(foreignProject), reason: 'Local ownership isolation check' } });
   if (denied.status() === 201) properties.push({ _id: new mongoose.Types.ObjectId((await denied.json()).data.id) });
   assert([400, 403, 404].includes(denied.status()), `Foreign project must be rejected, received ${denied.status()}`);
@@ -102,6 +104,7 @@ try {
         assert.equal((await reviewer.request.get(base + `/api/v1/admin/providers/${developer.applicationId}`, { headers: reviewHeaders })).status(), 200);
         const reviewPage = await reviewer.newPage(); reviewPage.on('pageerror', error => report.browserErrors.push(String(error)));
         for (const width of [390, 820, 1440]) {
+          if (profileCards) await rateWindow();
           await reviewPage.setViewportSize({ width, height: 950 });
           await visit(reviewPage, base + `/admin/properties/review?propertyId=${draft.id}&lang=ar`);
           const summary = reviewPage.locator('.admin-property-review-summary');
@@ -118,10 +121,25 @@ try {
             await summary.getByRole('link', { name: 'مراجعة المشروع بالإدارة' }).click(); await reviewPage.waitForLoadState('networkidle');
             await expect(reviewPage.locator('.admin-projects__detail-card').filter({ hasText: 'كمبوند الاختبار المحلي' }).first()).toBeVisible();
           }
+          if (profileCards) {
+            await visit(reviewPage, base + '/admin/projects?lang=ar');
+            const identity = reviewPage.getByTestId(`admin-project-${created.id}`).locator('.admin-projects__identity');
+            await expect(identity).toBeVisible();
+            const image = identity.locator('img'); await expect(image).toHaveJSProperty('naturalHeight', 960);
+            assert.equal(await image.evaluate(el => getComputedStyle(el).objectFit), 'contain');
+            assert(await reviewPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+            await identity.screenshot({ path: `${output}/${engine.name()}-admin-project-image-${width}.png` });
+            await identity.click(); await reviewPage.waitForLoadState('networkidle');
+            const preview = reviewPage.getByAltText('معاينة صورة المشروع'); await expect(preview).toHaveJSProperty('naturalHeight', 960);
+            assert.equal(await preview.evaluate(el => getComputedStyle(el).objectFit), 'contain');
+            const frame = await preview.locator('..').boundingBox(), bounds = await preview.boundingBox(); assert(Math.abs(frame.height - bounds.height) < 1);
+          }
         }
+        if (profileCards) await rateWindow();
         const providerRead = await json(await owner.request.get(base + `/api/v1/provider/properties/${draft.id}`, { headers }));
         assert.equal(providerRead.reviewContext, undefined, 'administrative project context is never emitted in provider reads');
         report.checks.push(`${engine.name()}: pending unit identifies its draft compound and provider at 390/820/1440px; real administrative project/provider links work, draft public link is absent, technical IDs are collapsed, provider reads exclude administrative context`);
+        if (profileCards) report.checks.push(`${engine.name()}: administrative project thumbnails and protected editor previews retain the complete portrait at 390/820/1440px, with working review navigation and no horizontal overflow`);
       } finally { await reviewer.close(); contexts.splice(contexts.indexOf(reviewer), 1); await reviewBrowser.close(); }
     }
     await db.collection('projects').updateOne({ _id: project._id }, { $set: { status: 'published' } });
@@ -143,6 +161,7 @@ try {
     await rateWindow(); browser = await engine.launch(); const guest = await browser.newContext(); contexts.push(guest); const page = await guest.newPage();
     page.on('pageerror', error => report.browserErrors.push(String(error)));
     for (const width of [390, 820, 1440]) {
+      if (profileCards) await rateWindow();
       await page.setViewportSize({ width, height: 950 });
       await visit(page, `${base}/developers/${developer.org.slug}?lang=ar`); await expect(page.locator('.public-developer-profile__identity')).toBeVisible();
       const logo = page.locator('.public-developer-profile__identity-logo');
@@ -156,8 +175,21 @@ try {
         await expect(cards.locator('.public-developer-profile__property-footer')).toContainText('عرض تفاصيل العقار');
       }
       const projectImage = page.locator('.public-developer-profile__project-media > img'); assert.equal(await projectImage.evaluate(el => getComputedStyle(el).objectFit), 'contain');
+      if (profileCards) {
+        const hero = page.locator('.public-developer-profile__hero-media > img'); await expect(hero).toHaveAttribute('src', photo.imageUrl);
+        const logoImage = logo.locator('img'); assert.equal(await logoImage.evaluate(el => getComputedStyle(el).objectFit), 'contain');
+        assert.deepEqual(await logoImage.evaluate(el => [getComputedStyle(el).borderTopWidth,getComputedStyle(el).paddingTop]), ['0px','0px']);
+        assert.equal(await cards.locator('.public-developer-profile__property-media img').evaluate(el => getComputedStyle(el).objectFit), 'contain');
+        const cardFrame = await projectImage.locator('..').boundingBox(); assert(Math.abs(cardFrame.width/cardFrame.height-4/3)<.02);
+      }
       await page.screenshot({ path: `${output}/${engine.name()}-company-${width}.png`, fullPage: true });
       await visit(page, `${base}/developers/${developer.org.slug}/projects/${created.slug}?lang=ar`); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' })).toBeVisible(); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local standalone' })).toHaveCount(0);
+      if (profileCards) {
+        const website = page.getByRole('link', { name: 'زيارة الموقع الإلكتروني' }); await expect(website).toHaveAttribute('href','https://example.com/local-compound'); await expect(website).toHaveAttribute('rel','noopener noreferrer');
+        assert.equal(await website.evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(245, 206, 104)'); assert.equal(await website.locator('svg').count(),1);
+        await page.keyboard.press('Tab'); await website.focus(); assert(await website.evaluate(el => el.matches(':focus-visible') && (getComputedStyle(el).outlineStyle !== 'none' || getComputedStyle(el).boxShadow !== 'none')), 'keyboard focus has a visible indicator');
+        await page.screenshot({ path: `${output}/${engine.name()}-project-website-${width}.png`, fullPage: true });
+      }
       if (unitReview) {
         const label = page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' }).locator('.public-property-project-label'); await label.scrollIntoViewIfNeeded();
         assert(await label.evaluate(el => { const box = el.getBoundingClientRect(); return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.closest('a') === el; }), 'the project label must stay clickable above the card’s stretched property link');
@@ -239,6 +271,6 @@ finally {
   await db.collection('organizations').deleteMany({ _id: { $in: orgIds } }); await db.collection('projects').deleteMany({ _id: { $in: projects.map(value => value._id) } });
   for (const name of ['properties', 'property_media', 'property_reports', 'property_view_events']) await db.collection(name).deleteMany({ $or: [{ _id: { $in: propertyIds } }, { propertyId: { $in: propertyIds } }] });
   await db.collection('audit_logs').deleteMany({ $or: [{ actorId: { $in: userIds.map(String) } }, { targetId: { $in: [...propertyIds, ...projects.map(value => value._id)].map(String) } }] });
-  await db.close(); report.cleanup = true; await writeFile(`docs/quality/guide-runs/${unitReview ? 'unit-review' : 'production-followup'}-local-latest.json`, JSON.stringify(report, null, 2) + '\n');
+  await db.close(); report.cleanup = true; await writeFile(`docs/quality/guide-runs/${profileCards ? 'profile-cards' : unitReview ? 'unit-review' : 'production-followup'}-local-latest.json`, JSON.stringify(report, null, 2) + '\n');
 }
 console.log(JSON.stringify(report, null, 2));

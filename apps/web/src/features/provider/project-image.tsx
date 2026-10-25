@@ -35,7 +35,7 @@ export function ProjectImage({ value, onChange, onBusy, locale, authorization, a
   }
   return <div><label htmlFor="project-image-file">{ar ? 'صورة المشروع' : 'Project image'}</label>
     <p>{ar ? 'المقاس المقترح 1600 × 900 بكسل (16:9). JPG أو PNG أو WebP حتى 10 ميجابايت. احفظ المشروع بعد الرفع.' : 'Recommended: 1600 × 900 pixels (16:9). JPG, PNG or WebP up to 10 MB. Save the project after uploading.'}</p>
-    {preview ? <img src={preview} alt={ar ? 'معاينة صورة المشروع' : 'Project image preview'} style={{ width: '100%', maxHeight: 240, objectFit: fit }} /> : null}
+    {preview ? <div style={{ position: 'relative', aspectRatio: '16 / 9', maxHeight: 320, background: '#f4f5f3' }}><img src={preview} alt={ar ? 'معاينة صورة المشروع' : 'Project image preview'} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit }} /></div> : null}
     <input id="project-image-file" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || disabled} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ''; }} />
     {value ? <Button type="button" variant="secondary" disabled={busy || disabled} onClick={() => onChange('')}>{ar ? 'إزالة صورة المشروع' : 'Remove project image'}</Button> : null}
     {busy ? <p role="status">{ar ? 'جارٍ رفع وفحص الصورة…' : 'Uploading and checking image…'}</p> : null}

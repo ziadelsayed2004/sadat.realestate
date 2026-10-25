@@ -1,5 +1,6 @@
 import { useAdminAttentionRead } from '../routing/admin-attention.tsx';
 import { ProjectEditor } from './editor.tsx';
+import { CompanyPhoto } from '../admin_accounts/company-photo.tsx';
 import { loadAdminProject } from './data.ts';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectData, ProjectListQuery, ProjectReviewAction, ProjectStatus, SupportedLocale } from '@sadat-real-estate/contracts';
@@ -119,7 +120,7 @@ function ProjectStatusStrip({ locale, selected, onSelect }: { readonly locale: S
   );
 }
 
-function ProjectTable({ projects, locale, onReview }: { readonly projects: readonly ProjectData[]; readonly locale: SupportedLocale; readonly onReview: (id: string) => void }) {
+function ProjectTable({ projects, locale, onReview, authorization, apiOrigin }: { readonly projects: readonly ProjectData[]; readonly locale: SupportedLocale; readonly onReview: (id: string) => void; readonly authorization?: AdminProjectsAuthorizationSource | undefined; readonly apiOrigin?: string | undefined }) {
   const copy = getAdminProjectsCopy(locale);
   return (
     <div className="admin-projects__table-wrap">
@@ -136,7 +137,7 @@ function ProjectTable({ projects, locale, onReview }: { readonly projects: reado
         <tbody>
           {projects.map(project => (
             <tr key={project.id} data-testid={`admin-project-${project.id}`}>
-              <td><a className="admin-projects__name" href={localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}`)}>{localizedValue(project.name, locale)}</a></td>
+              <td><a className="admin-projects__name admin-projects__identity" href={localePath(locale, `${ADMIN_PROJECT_REVIEW_ROUTE}?projectId=${project.id}`)}>{project.imageUrl ? <CompanyPhoto imageUrl={project.imageUrl} owner={false} authorization={authorization} apiOrigin={apiOrigin} alt="" /> : null}<span>{localizedValue(project.name, locale)}</span></a></td>
               <td><StatusBadge status={project.status} locale={locale} /></td>
               <td><ProjectVisibility project={project} locale={locale} /></td>
               <td>{dateLabel(project.updatedAt, locale)}</td>
@@ -327,7 +328,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
         {showProjectList && state === 'success' && data !== undefined ? <>
           <section className="admin-projects__panel" aria-labelledby="admin-projects-table-title">
             <div className="admin-projects__panel-heading"><div><h2 id="admin-projects-table-title">{copy.allProjects}</h2><p>{copy.count(data.total)}</p></div></div>
-            <ProjectTable projects={data.items} locale={locale} onReview={id => { window.location.href = reviewPath(id); }} />
+            <ProjectTable projects={data.items} locale={locale} authorization={authClient} apiOrigin={apiOrigin} onReview={id => { window.location.href = reviewPath(id); }} />
             <div className="admin-projects__pagination"><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => { setQuery(current => ({ ...current, page: page - 1 })); setAttempt(value => value + 1); }}>{copy.previous}</Button><span>{copy.page(page, totalPages)}</span><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => { setQuery(current => ({ ...current, page: page + 1 })); setAttempt(value => value + 1); }}>{copy.next}</Button></div>
           </section>
         </> : null}

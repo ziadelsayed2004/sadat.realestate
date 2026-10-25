@@ -1,0 +1,31 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedApiRoutes": false,
+  "checks": [
+    "chromium: pending unit identifies its draft compound and provider at 390/820/1440px; real administrative project/provider links work, draft public link is absent, technical IDs are collapsed, provider reads exclude administrative context",
+    "chromium: administrative project thumbnails and protected editor previews retain the complete portrait at 390/820/1440px, with working review navigation and no horizontal overflow",
+    "webkit: pending unit identifies its draft compound and provider at 390/820/1440px; real administrative project/provider links work, draft public link is absent, technical IDs are collapsed, provider reads exclude administrative context",
+    "webkit: administrative project thumbnails and protected editor previews retain the complete portrait at 390/820/1440px, with working review navigation and no horizontal overflow",
+    "Real Mongo/API: office account/profile aliases hydrate published units while preserving kind and contact privacy; project list and unit links are owner-only; partial infrastructure persists; PDF uploads and streams as application/pdf; project labels link to the right compound",
+    "Provider browser: entering Add property to this project automatically selects its named project; all own projects load without expanding/searching or entering an ID",
+    "chromium 390px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "chromium 820px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "chromium 1440px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "chromium: contain/cover applies to cover and project; PDF renders a working document link; guests sign in to report, verified seeker creates a private real report, duplicate rejected, missing target rejected",
+    "webkit 390px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "webkit 820px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "webkit 1440px: borderless phone identity, complete image fit, office named correctly with working units/anchor, compound units separated, visible view badges and project labels, listing cards without overflow",
+    "webkit: contain/cover applies to cover and project; PDF renders a working document link; guests sign in to report, verified seeker creates a private real report, duplicate rejected, missing target rejected",
+    "chromium provider: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "chromium seeker: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "chromium admin: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "chromium: protected API access stays valid in both tabs through rotation; logout and explicit old-refresh replay still revoke access immediately",
+    "webkit provider: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "webkit seeker: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "webkit admin: simultaneous two-tab rotations ×3, offline recovery retains authenticated screen, reload restores cookie, logout broadcasts and revoked refresh stays anonymous",
+    "webkit: protected API access stays valid in both tabs through rotation; logout and explicit old-refresh replay still revoke access immediately",
+    "Admin browser: the seeker report appears with its real property and reason in moderation; review opens a protected PDF document and edits the saved partial-infrastructure delivery option"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

@@ -39,7 +39,7 @@ export interface PublicDeveloperProfileProps {
 }
 
 type LocalizedValue = NonNullable<PublicOrganizationProfile['locations']>[number];
-type IconName = 'arrow' | 'calendar' | 'check' | 'location' | 'mail' | 'phone' | 'project' | 'shield' | 'unit' | 'whatsapp';
+type IconName = 'arrow' | 'calendar' | 'check' | 'external' | 'location' | 'mail' | 'phone' | 'project' | 'shield' | 'unit' | 'whatsapp';
 
 function errorState(error: unknown): PublicDeveloperProfileViewState {
   if (error instanceof ApiClientError && error.status === 404) return 'not_found';
@@ -90,6 +90,8 @@ function ProfileIcon({ name }: { readonly name: IconName }) {
       return <svg {...common}><path d="m5 12 4 4L19 6" /></svg>;
     case 'arrow':
       return <svg {...common}><path d="M5 12h13m-5-5 5 5-5 5" /></svg>;
+    case 'external':
+      return <svg {...common}><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" /></svg>;
     case 'calendar':
       return <svg {...common}><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4m8-4v4M4 10h16" /></svg>;
     case 'location':
@@ -254,7 +256,7 @@ function ProjectCard({ project, developerSlug, detail = false, locale, copy }: {
         {localizedText(project.priceLabel, locale) ? <p className="public-developer-profile__project-price">{localizedText(project.priceLabel, locale)}</p> : null}
         {detail ? <div className="public-developer-profile__overview-content">
           {description ? <p>{description}</p> : <p>{copy.noDescription}</p>}
-          {website ? <a href={website} rel="noopener noreferrer" target="_blank">{copy.openWebsite}</a> : null}
+          {website ? <a className="public-developer-profile__website" href={website} rel="noopener noreferrer" target="_blank"><ProfileIcon name="external" />{copy.openWebsite}</a> : null}
         </div> : <>{description ? <p>{description}</p> : null}<a className="public-developer-profile__project-link" href={`${publicDeveloperProjectUrl(developerSlug, project.slug)}?lang=${locale}`}>{copy.viewProject}<ProfileIcon name="arrow" /></a></>}
       </div>
     </article>
