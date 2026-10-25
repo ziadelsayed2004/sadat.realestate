@@ -343,15 +343,16 @@
   line-height: 1.25rem;
 }
 
-.public-homepage__hero h1 {
+.public-homepage__hero :is(h1, .public-homepage__hero-size-title) {
   max-inline-size: 42rem;
   margin: 0;
+  font-weight: var(--font-weight-bold);
   font-size: clamp(2.25rem, 6vw, 5rem);
   line-height: var(--line-height-display);
 }
 
-.public-homepage__hero h1 span,
-.public-homepage__hero h1 strong {
+.public-homepage__hero :is(h1, .public-homepage__hero-size-title) span,
+.public-homepage__hero :is(h1, .public-homepage__hero-size-title) strong {
   display: block;
   color: var(--color-on-brand);
 }
@@ -1600,7 +1601,7 @@
     width: min(calc(100% - 5rem), 76.875rem);
   }
 
-  .public-homepage__hero h1 {
+  .public-homepage__hero :is(h1, .public-homepage__hero-size-title) {
     max-inline-size: 48rem;
     font-size: 3.75rem;
     font-weight: var(--font-weight-extrabold);
@@ -2555,7 +2556,7 @@
 .public-homepage__category-controls svg { inline-size: 20px; block-size: 20px; }
 .public-homepage__category-rail { overscroll-behavior-inline: contain; }
 @media (max-width: 767px) {
-  .public-homepage__hero h1 { font-size: clamp(1.8rem, 7.5vw, 2.6rem); line-height: 1.35; }
+  .public-homepage__hero :is(h1, .public-homepage__hero-size-title) { font-size: clamp(1.8rem, 7.5vw, 2.6rem); line-height: 1.35; }
   .public-homepage__hero-body { font-size: .95rem; line-height: 1.7; }
   .public-homepage__category-rail .public-homepage__category-image { max-inline-size: 56px; block-size: 52px; object-fit: contain; }
 }
@@ -2571,6 +2572,9 @@
 .public-homepage__hero-image[data-active] { z-index: 2; animation: hero-image-in .6s ease-out both; }
 .public-homepage__hero-image[data-exiting] { z-index: 1; pointer-events: none; }
 .public-homepage__hero-copy { display: grid; justify-items: center; gap: inherit; inline-size: 100%; min-inline-size: 0; animation: hero-copy-in .45s ease-out both; }
+.public-homepage__hero-copy-stack { display: grid; inline-size: 100%; min-inline-size: 0; gap: inherit; }
+.public-homepage__hero-copy-stack > .public-homepage__hero-copy { grid-area: 1 / 1; align-self: center; }
+.public-homepage__hero-copy-stack > .public-homepage__hero-copy--sizer { visibility: hidden; pointer-events: none; animation: none; }
 @keyframes hero-image-in { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
 @keyframes hero-copy-in { from { opacity: 0; transform: translateY(.6rem); } to { opacity: 1; transform: translateY(0); } }
 .public-homepage__hero-dots { position: relative; z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; }

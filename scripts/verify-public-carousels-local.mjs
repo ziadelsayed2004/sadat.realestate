@@ -31,7 +31,8 @@ try {
     return banner;
   }
   const heroA = await create('homepage.hero', copy('ابحث عن عقارك الآن في مدينة السادات', 'First hero'), '/assets/canonical/public/home-hero-sadat-city.png');
-  await create('homepage.hero', copy('البانر الثاني', 'Second hero'), '/assets/canonical/public/listing-property-home.png');
+  const secondHeroTitle = copy('مدينة السادات.. مستقبل الاستثمار العقاري بين يديك', 'Sadat City: the future of real estate investment is in your hands');
+  await create('homepage.hero', secondHeroTitle, '/assets/sadat-real-estate-logo.png', { body: copy('اكتشف أسلوب حياة فريد يجمع بين الفخامة والهدوء في قلب مدينة السادات، حيث تلتقي المساحات الخضراء بالتصاميم المعمارية الحديثة وخيارات السكن والاستثمار المتنوعة.', 'Discover a unique lifestyle combining comfort and calm in Sadat City, where green spaces meet modern architecture and a variety of homes and investment opportunities.'), targetUrl: 'https://elsadatrealestate.com/properties' });
   const featured = { advertiserProviderId: String(user), destination: { kind: 'organization', id: String(organization) }, highlight: copy('اختيار مناسب لعقارك', 'Find your next property'), ctaLabel: copy('شاهد التفاصيل', 'View details') };
   const cardA = await create('homepage.featured', copy('إعلان أول', 'First promotion'), '/assets/canonical/public/home-hero-sadat-city.png', { featured });
   await create('homepage.featured', copy('إعلان بعنوان طويل لاختبار ثبات ارتفاع القسم أثناء الانتقال بين الصور المختلفة', 'A considerably longer second promotion title to verify stable slide dimensions'), '/assets/sadat-real-estate-logo.png', { featured, body: copy('تفاصيل أطول للشركة واختيارات العقارات ومواعيد التواصل مع الإدارة.'.repeat(7), 'Longer company information, property options and contact times. '.repeat(9)) });
@@ -68,15 +69,21 @@ try {
       const visual = await hero.locator('.public-homepage__hero-visual').boundingBox(), image = await heroPhoto.boundingBox();
       const search = await hero.locator('.public-homepage__search').boundingBox();
       const dots = await hero.locator('.public-homepage__hero-dots').boundingBox();
+      const scrollBefore = await page.evaluate(() => scrollY);
       const arrow = await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).boundingBox();
       assert(search.y >= image.y && search.y + search.height <= image.y + image.height - 8, 'Search panel must float fully inside the photograph');
       assert(dots.y + dots.height <= search.y + 1, 'Pagination must stay above search');
       assert(arrow.y + arrow.height <= search.y, 'Navigation must stay clear of search');
       if (width === 390) { assert(visual.height >= 844 - 90); assert(Math.abs(image.width - width) < 1); assert(Math.abs(image.height - visual.height) < 1); }
       await hero.getByRole('button', { name: locale === 'ar' ? 'الصورة التالية' : 'Next image', exact: true }).click();
-      await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'البانر الثاني' : 'Second hero');
+      await expect(hero.locator('h1')).toHaveText(secondHeroTitle[locale]);
       await expect(hero.locator('.public-homepage__hero-image[data-active]')).toHaveCSS('animation-name', 'hero-image-in');
       const target = await hero.locator('.public-homepage__hero-visual').boundingBox(); assert(Math.abs(visual.height - target.height) < 1);
+      const scrollAfter = await page.evaluate(() => scrollY);
+      const searchAfter = await hero.locator('.public-homepage__search').boundingBox(), dotsAfter = await hero.locator('.public-homepage__hero-dots').boundingBox();
+      assert(Math.abs(searchAfter.y + scrollAfter - search.y - scrollBefore) < 1, JSON.stringify({message:'Search position must not change for long copy and a square image',search,searchAfter,scrollBefore,scrollAfter}));
+      assert(Math.abs(dotsAfter.y + scrollAfter - dots.y - scrollBefore) < 1, 'Pagination position must remain stable');
+      assert.equal(await hero.getByRole('heading', { level: 1 }).count(), 1);
       const heroDot = hero.getByRole('button', { name: locale === 'ar' ? 'صورة 1' : 'Image 1', exact: true });
       await heroDot.focus(); await page.keyboard.press('Enter');
       await expect(hero.locator('h1')).toHaveText(locale === 'ar' ? 'ابحث عن عقارك الآن في مدينة السادات' : 'First hero');

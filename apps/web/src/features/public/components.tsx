@@ -610,11 +610,19 @@ function Hero({
     return () => window.clearTimeout(timer);
   }, [slideKeys, activeIndex, banner?.displaySeconds, hidden, reducedMotion]);
   const managed = banner?.key.startsWith('banner_');
-  const advertisementTarget = managed ? safePublicUrl(banner?.targetUrl) : undefined;
-  const title = (managed ? localizedText(banner?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
-  const body = managed ? localizedText(banner?.body, locale) ?? '' : section ? localizedText(section.body, locale) ?? '' : localizedText(banner?.body, locale) ?? copy.heroFallbackBody;
-  const titleLines = title.split('\n');
-  const eyebrow = (localizedText(section?.eyebrow, locale) ?? localizedText(banner?.eyebrow, locale) ?? copy.heroLabel).replace(/\u{1f3d9}\ufe0f?\s*/gu, '').trim();
+  // Reserve the largest slide's copy before rotation, including unloaded images.
+  // The active slide remains the only accessible title/link.
+  const copySlides = (slides.length ? slides : [banner]).map(item => {
+    const isAd = item?.key.startsWith('banner_');
+    return {
+      key: item?.key ?? 'original',
+      active: item === banner,
+      eyebrow: (localizedText(section?.eyebrow, locale) ?? localizedText(item?.eyebrow, locale) ?? copy.heroLabel).replace(/\u{1f3d9}\ufe0f?\s*/gu, '').trim(),
+      title: ((isAd ? localizedText(item?.title, locale) : undefined) ?? localizedText(section?.title, locale) ?? localizedText(item?.title, locale) ?? copy.heroFallbackTitle).split('\n'),
+      body: isAd ? localizedText(item?.body, locale) ?? '' : section ? localizedText(section.body, locale) ?? '' : localizedText(item?.body, locale) ?? copy.heroFallbackBody,
+      target: isAd ? safePublicUrl(item?.targetUrl) : undefined
+    };
+  });
 
   return (
     <section id="homepage-hero" style={{ scrollMarginTop: '8rem' }} className={`public-homepage__hero${managed ? ' public-homepage__hero--advertisement' : ''}`} aria-labelledby="public-homepage-hero-title">
@@ -635,11 +643,15 @@ function Hero({
 
       </> : null}
         <div className="public-homepage__hero-heading">
-        <div className="public-homepage__hero-copy" key={banner?.key ?? 'original'}>
-        <p className="public-homepage__eyebrow">{eyebrow}</p>
-        <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
-        <p className="public-homepage__hero-body">{body}</p>
-        {advertisementTarget ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={advertisementTarget.startsWith('/') ? replaceLocaleInUrl(advertisementTarget, locale) : advertisementTarget}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
+        <div className="public-homepage__hero-copy-stack">
+        {copySlides.map(item => {
+          const Title = item.active ? 'h1' : 'div';
+          return <div className={`public-homepage__hero-copy${item.active ? '' : ' public-homepage__hero-copy--sizer'}`} key={item.key} aria-hidden={item.active ? undefined : true} inert={!item.active}>
+        <p className="public-homepage__eyebrow">{item.eyebrow}</p>
+        <Title className="public-homepage__hero-size-title" id={item.active ? 'public-homepage-hero-title' : undefined}><span>{item.title[0]}</span>{item.title.slice(1).map((line, index) => <strong key={index}>{line}</strong>)}</Title>
+        <p className="public-homepage__hero-body">{item.body}</p>
+        {item.target ? <a className="public-homepage__banner-cta public-homepage__hero-ad-link" href={item.target.startsWith('/') ? replaceLocaleInUrl(item.target, locale) : item.target}>{locale === 'ar' ? 'عرض الإعلان' : 'View advertisement'}</a> : null}
+        </div>; })}
         </div>
         {slides.length > 1 ? (
       <div className="public-homepage__hero-dots" role="group" aria-label={locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631 \u0635\u0648\u0631\u0629 \u0627\u0644\u0628\u0627\u0646\u0631' : 'Hero image selection'}>{slides.map((item, index) => <button key={item.key} type="button" aria-pressed={index === activeIndex} aria-label={`${locale === 'ar' ? '\u0635\u0648\u0631\u0629' : 'Image'} ${index + 1}`} onClick={() => setRequestedKey(item.key)}><span /></button>)}</div>
