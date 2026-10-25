@@ -91,7 +91,9 @@ const maxJavaScriptBytes = 2_719 * 1024 + 128;
 // add 3.2 KiB above the 271,798-byte baseline; allow a bounded four KiB.
 // Unit-card media/body styling adds about 1.6 KB to the public route. Existing
 // headroom plus one KiB covers it; retain the individual JS chunk cap.
-const maxRouteStylesheetBytes = 270 * 1024 + 512;
+// Side/bottom profile navigation and missing design tokens add 507 bytes after
+// removing superseded profile layout overrides. Allow a bounded 512 bytes.
+const maxRouteStylesheetBytes = 271 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

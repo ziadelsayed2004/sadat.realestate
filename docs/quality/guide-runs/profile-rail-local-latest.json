@@ -1,0 +1,26 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedApiRoutes": false,
+  "checks": [
+    "chromium ar 320px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 390px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 820px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 1024px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 1280px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 1440px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium ar 1920px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium en 390px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "chromium en 1440px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 320px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 390px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 820px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 1024px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 1280px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 1440px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit ar 1920px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit en 390px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow",
+    "webkit en 1440px: default directory/profile covers fill their frames; side/bottom rail links, active marker and safe WhatsApp spacing work; square/portrait project images retain all edges at full card width, card styling and whole-card navigation work without horizontal overflow"
+  ],
+  "browserErrors": [],
+  "cleanup": true
+}

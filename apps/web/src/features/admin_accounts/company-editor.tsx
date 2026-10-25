@@ -43,7 +43,7 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
     setBusy(true); setFeedback('');
     const images = Object.fromEntries([...changedImages].map(field => [field, company[field] || null]));
     try {
-      const result = await client.request(endpoint, { method: 'PATCH', headers: headers(), json: { version: company.version, name: company.name, description: company.description, ...(!individual ? { coverFit: company.coverFit ?? 'contain' } : {}), ...images, ...(owner ? {} : { status }), reason: reason.trim() }, responseSchema: z.object({ data: schema }) });
+      const result = await client.request(endpoint, { method: 'PATCH', headers: headers(), json: { version: company.version, name: company.name, description: company.description, ...(!individual ? { coverFit: company.coverFit ?? 'cover' } : {}), ...images, ...(owner ? {} : { status }), reason: reason.trim() }, responseSchema: z.object({ data: schema }) });
       setCompany(result.data.data); setChangedImages(new Set()); setFeedback(ar ? 'تم حفظ ملف الشركة.' : 'Company profile saved.');
     } catch { setFeedback(ar ? 'تعذر الحفظ. بياناتك موجودة؛ تحقق من الصلاحيات وحدّث البيانات قبل إعادة المحاولة.' : 'Could not save. Your details are preserved; check permissions and reload before retrying.'); }
     finally { setBusy(false); }
@@ -59,8 +59,8 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
       <div className="admin-company-editor__images">{(individual ? ['logoUrl'] as const : ['imageUrl', 'logoUrl'] as const).map(field => <fieldset key={field} className={`admin-company-editor__image admin-company-editor__image--${field === 'logoUrl' ? 'logo' : 'cover'}`} disabled={busy}>
         <legend>{individual ? ar ? 'صورة العرض' : 'Public photo' : field === 'logoUrl' ? ar ? 'لوجو الشركة' : 'Company logo' : ar ? 'صورة غلاف الشركة' : 'Company cover'}</legend>
         <p>{field === 'logoUrl' ? ar ? 'صورة مربعة؛ المقاس المقترح 512 × 512 بكسل. يظهر الشعار كاملًا.' : 'Square image; suggested size 512 × 512 px. The full logo stays visible.' : ar ? 'صورة عريضة؛ المقاس المقترح 1600 × 900 بكسل.' : 'Wide image; suggested size 1600 × 900 px.'}</p>
-        {field === 'imageUrl' ? <ImageFitField locale={locale} value={company.coverFit ?? 'contain'} onChange={coverFit => setCompany({ ...company, coverFit })} disabled={busy} /> : null}
-        {company[field] ? <CompanyPhoto fit={field === 'imageUrl' ? company.coverFit ?? 'contain' : 'contain'} imageUrl={company[field]!} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={field === 'logoUrl' ? ar ? 'معاينة لوجو الشركة' : 'Company logo preview' : ar ? 'معاينة غلاف الشركة' : 'Company cover preview'} /> : null}
+        {field === 'imageUrl' ? <ImageFitField locale={locale} value={company.coverFit ?? 'cover'} onChange={coverFit => setCompany({ ...company, coverFit })} disabled={busy} /> : null}
+        {company[field] ? <CompanyPhoto fit={field === 'imageUrl' ? company.coverFit ?? 'cover' : 'contain'} imageUrl={company[field]!} owner={owner} authorization={authorization} apiOrigin={apiOrigin} alt={field === 'logoUrl' ? ar ? 'معاينة لوجو الشركة' : 'Company logo preview' : ar ? 'معاينة غلاف الشركة' : 'Company cover preview'} /> : null}
         <label>{field === 'logoUrl' ? ar ? 'رفع لوجو الشركة' : 'Upload company logo' : ar ? 'رفع صورة الشركة' : 'Upload company image'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void upload(field, file); }} /></label>
         {company[field] ? <Button type="button" variant="secondary" onClick={() => setImage(field, null)}>{field === 'logoUrl' ? ar ? 'إزالة اللوجو' : 'Remove logo' : ar ? 'إزالة الغلاف' : 'Remove cover'}</Button> : null}
       </fieldset>)}</div>

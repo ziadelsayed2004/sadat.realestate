@@ -12,7 +12,7 @@
 .article-image-carousel__track { display: flex; gap: 16px; width: 100%; min-width: 0; max-width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-inline: contain; scrollbar-width: thin; scrollbar-color: #bc9348 #f2f1eb; padding-block-end: 10px; }
 .article-image-carousel .article-image-carousel__card { position: relative; flex: 0 0 calc((100% - 16px) / 2); aspect-ratio: 4 / 3; min-width: 0; margin: 0; overflow: hidden; border: 1px solid #e4e6df; border-radius: 12px; background: #f2f1eb; scroll-snap-align: start; box-sizing: border-box; }
 .article-image-carousel .article-image-carousel__card:only-child { flex-basis: min(100%, 520px); }
-.article-image-carousel .article-image-carousel__card > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; min-width: 0; max-width: 100%; max-height: 100%; object-fit: contain; }
+.article-image-carousel .article-image-carousel__card > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; min-width: 0; max-width: 100%; max-height: 100%; object-fit: cover; }
 .article-image-carousel__empty { padding: 24px; border-radius: 12px; background: #f2f1eb; text-align: center; line-height: 1.8; overflow-wrap: anywhere; }
 .article-image-carousel__empty p { margin: 0 0 8px; }
 .article-image-carousel__notice { margin: 8px 0 0; font-size: .875rem; line-height: 1.7; overflow-wrap: anywhere; }

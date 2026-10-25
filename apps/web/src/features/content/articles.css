@@ -956,9 +956,9 @@
 .public-articles__card-byline { margin-block-start: 20px; padding-block-start: 12px; line-height: 1.8; gap: 12px; align-items: baseline; flex-wrap: wrap; }
 .public-articles__card-byline time { white-space: normal; }
 
-/* Keep the entire editorial cover visible, including portrait and text images. */
-.public-article-details .public-article-details__hero-media { aspect-ratio: 16 / 9; block-size: auto; min-block-size: 0; max-block-size: min(520px, 70vh); background: #f2f1eb; }
-.public-article-details .public-article-details__hero-media > img { display: block; inline-size: 100%; block-size: 100%; min-block-size: 0; max-block-size: 100%; object-fit: contain; }
+/* Natural proportions keep editorial text/images complete without letterboxing. */
+.public-article-details .public-article-details__hero-media { aspect-ratio: auto; block-size: auto; min-block-size: 0; max-block-size: none; background: #f2f1eb; }
+.public-article-details .public-article-details__hero-media > img { display: block; inline-size: 100%; block-size: auto; min-block-size: 0; max-block-size: none; }
 .public-articles__card-summary { overflow-wrap: anywhere; }
 
 /* Unbroken pasted text must never determine the grid or image width. */

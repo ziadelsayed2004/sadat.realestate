@@ -7,6 +7,7 @@
   --color-page-background: #faf8f2;
   --color-surface: #ffffff;
   --color-surface-soft: #f3e8d0;
+  --color-surface-muted: var(--color-surface-soft);
   --color-text: #17233d;
   --color-text-strong: #17233d;
   --color-text-secondary: #6b7280;
@@ -15,6 +16,9 @@
   --color-brand-interactive: #17233d;
   --color-brand-soft: #f3e8d0;
   --color-accent-text: #d1a044;
+  --color-accent: var(--color-brand-accent);
+  --color-on-accent: var(--color-text-strong);
+  --color-text-critical: #b91c1c;
   --color-border: #e8e1d2;
   --color-border-strong: #d6c8a8;
   --color-status-info: #38bdf8;
@@ -32,6 +36,7 @@
   --font-size-body: 1rem;
   --font-size-body-large: 1.125rem;
   --font-size-section-title: 1.25rem;
+  --font-size-heading-three: 1.5rem;
   --font-size-heading-two: 1.875rem;
   --font-size-heading-one: 2.25rem;
   --font-size-display: 3rem;

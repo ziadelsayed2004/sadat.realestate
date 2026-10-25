@@ -87,7 +87,7 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
     return label === undefined ? [] : [{ key: `${organization.id}-location-${index}`, label }];
   });
   return (
-    <article className="public-developer-directory__card" data-fit={organization.coverFit ?? 'contain'}>
+    <article className="public-developer-directory__card" data-fit={organization.coverFit ?? (organization.imageUrl ? 'cover' : 'contain')}>
       <div className="public-developer-directory__card-media">
         <PublicMediaImage src={organization.imageUrl ?? organization.logoUrl} alt={title} fallback={<div className="public-developer-directory__placeholder"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 56V20l22-12 22 12v36M24 56V40h16v16M22 24h4m12 0h4m-20 8h4m12 0h4" fill="none" stroke="currentColor" strokeWidth="3" /></svg><span>{title}</span></div>} />
         <span className="public-developer-directory__card-logo" aria-hidden="true">

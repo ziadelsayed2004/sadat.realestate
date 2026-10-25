@@ -148,7 +148,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   return (
     <section className="public-developer-profile__hero" aria-label={title}>
       <div className="public-developer-profile__toolbar"><a className="public-developer-profile__back" href={`/developers?lang=${locale}`}><ProfileIcon name="arrow" />{copy.backToDirectory}</a></div>
-      <div className="public-developer-profile__hero-media" data-fit={data.coverFit ?? 'contain'}>
+      <div className="public-developer-profile__hero-media" data-fit={data.coverFit ?? 'cover'}>
         <PublicMediaImage src={data.coverFit ? data.imageUrl : data.imageUrl?.replace(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/u, '$&?variant=cover')} alt={title} fallback={<div className="public-developer-profile__cover-fallback" data-state="missing_image"><ProfileIcon name="unit" /><span>{copy.imageUnavailable}</span></div>} loading="eager" />
       </div>
       <div className="public-developer-profile__identity">
@@ -205,15 +205,15 @@ function ProfileTabs({ copy }: { readonly copy: PublicDevelopersCopy }) {
     };
   }, []);
 
-  const link = (id: ProfileSectionId, label: string) => (
-    <a className={activeSection === id ? 'is-active' : undefined} aria-current={activeSection === id ? 'location' : undefined} href={`#${id}`} onClick={() => setActiveSection(id)}>{label}</a>
+  const link = (id: ProfileSectionId, label: string, icon: IconName) => (
+    <a className={activeSection === id ? 'is-active' : undefined} aria-current={activeSection === id ? 'location' : undefined} href={`#${id}`} onClick={() => setActiveSection(id)}><ProfileIcon name={icon} /><span>{label}</span></a>
   );
   return (
     <nav className="public-developer-profile__tabs" aria-label={copy.profileOverview}>
-      {link('developer-overview', copy.profileOverview)}
-      {link('developer-projects', copy.profileProjects)}
-      {link('developer-properties', copy.profileProperties)}
-      {role === undefined || role === 'seeker' ? link('developer-contact', copy.profileContact) : null}
+      {link('developer-overview', copy.profileOverview, 'shield')}
+      {link('developer-projects', copy.profileProjects, 'project')}
+      {link('developer-properties', copy.profileProperties, 'unit')}
+      {role === undefined || role === 'seeker' ? link('developer-contact', copy.profileContact, 'mail') : null}
     </nav>
   );
 }
@@ -431,6 +431,7 @@ function ProfileSuccess({ data, locale, copy: originalCopy, actions }: { readonl
   return (
     <>
       <ProfileHero data={data} locale={locale} copy={copy} />
+      <div className="public-developer-profile__body">
       <ProfileTabs copy={copy} />
       <div className="public-developer-profile__content">
         <div className="public-developer-profile__layout">
@@ -443,6 +444,7 @@ function ProfileSuccess({ data, locale, copy: originalCopy, actions }: { readonl
           </div>
         </div>
       </div>
+      </div>
     </>
   );
 }
@@ -450,12 +452,13 @@ function ProfileSuccess({ data, locale, copy: originalCopy, actions }: { readonl
 function ProjectSuccess({ data, project, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly project: PublicOrganizationProject; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
   const role = useContext(PublicAuthRoleContext);
   const projectData = { ...data, projects: [project], properties: data.properties.filter(property => property.projectId === project.id) };
-  return <div className="public-developer-profile__content">
+  return <div className="public-developer-profile__body">
     <nav className="public-developer-profile__tabs" aria-label={copy.profileProjects}>
-      <a href={`/developers/${data.slug}?lang=${locale}#developer-projects`}>{localizedText(data.name, locale) ?? data.slug}</a>
-      <a href="#developer-properties">{copy.availableUnitsTitle}</a>
-      {role === undefined || role === 'seeker' ? <a href="#developer-contact">{copy.profileContact}</a> : null}
+      <a href={`/developers/${data.slug}?lang=${locale}#developer-projects`}><ProfileIcon name="project" /><span>{localizedText(data.name, locale) ?? data.slug}</span></a>
+      <a href="#developer-properties"><ProfileIcon name="unit" /><span>{copy.profileProperties}</span></a>
+      {role === undefined || role === 'seeker' ? <a href="#developer-contact"><ProfileIcon name="mail" /><span>{copy.profileContact}</span></a> : null}
     </nav>
+    <div className="public-developer-profile__content">
     <div className="public-developer-profile__layout">
       <ProfileAside data={data} copy={copy} compact />
       <div className="public-developer-profile__main">
@@ -463,6 +466,7 @@ function ProjectSuccess({ data, project, locale, copy, actions }: { readonly dat
         <PropertiesSection data={projectData} locale={locale} copy={copy} />
         <ContactSection data={projectData} projectId={project.id} locale={locale} copy={copy} actions={actions} />
       </div>
+    </div>
     </div>
   </div>;
 }
