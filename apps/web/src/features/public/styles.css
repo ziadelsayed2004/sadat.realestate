@@ -2633,3 +2633,19 @@
 .public-homepage__section-description { margin-block: 16px 28px; line-height: 1.8; clear: both; }
 .public-site-footer__hours { white-space: pre-line; line-height: 1.8; }
 .public-homepage__category-section .public-homepage__section-description { margin-block: 20px 28px; }
+
+.public-property-views { display: inline-flex; align-items: center; gap: .375rem; padding: .375rem .625rem; border-radius: 999px; color: #17233d; background: #f5ecd8; font-size: .75rem; line-height: 1.5; white-space: nowrap; }
+.public-property-views svg { inline-size: 1rem; block-size: 1rem; flex: none; }
+.public-property-views strong { font-variant-numeric: tabular-nums; }
+.public-homepage__property-card .ui-property-card__media { position: relative; }
+.public-homepage__property-card .ui-property-card__media .public-property-views { position: absolute; inset-inline-start: .75rem; inset-block-end: .75rem; z-index: 2; background: #fffffff2; box-shadow: 0 2px 8px #17233d26; }
+.public-property-project-label { display: block; inline-size: fit-content; max-inline-size: 100%; padding: .3rem .65rem; border-radius: .5rem; background: #edf4ef; color: #165748; font-size: .8rem; line-height: 1.6; overflow-wrap: anywhere; text-decoration: none; }
+.public-property-project-label:hover { text-decoration: underline; }
+.public-property-report { padding: 1rem; border: 1px solid var(--color-border); border-radius: 1rem; background: var(--color-surface); }
+.public-property-report p { color: var(--color-text-secondary); font-size: .875rem; line-height: 1.7; }
+.public-property-report form, .public-property-report label { display: grid; gap: .75rem; }
+.public-property-report form { gap: 1rem; }
+.public-property-report select, .public-property-report textarea { inline-size: 100%; padding: .75rem; border: 1px solid var(--color-border); border-radius: .625rem; background: var(--color-surface); color: var(--color-text-strong); font: inherit; }
+.public-property-details__floor-plan { display: grid; place-content: center; gap: .75rem; padding: 2rem; min-block-size: 16rem; text-align: center; overflow-wrap: anywhere; }
+.public-property-details__floor-plan strong { color: #ad3333; font-size: 2rem; }
+.public-property-details__floor-plan a { padding: .75rem; border-radius: .75rem; color: #17233d; background: #f3e8d0; }

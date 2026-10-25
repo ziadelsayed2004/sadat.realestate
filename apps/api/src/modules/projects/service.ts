@@ -44,7 +44,7 @@ export interface ProjectProviderPolicy {
 export function publicProjectProjection(project: StoredProject, developer: ProjectPublicDeveloper | null = null, linkedProperties: ProjectPublicProperty[] = []): ProjectPublicData | null {
   if (project.status !== 'published') return null;
   const properties = linkedProperties.filter(property => property.status === 'published' && property.active !== false).sort((left, right) => left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en'));
-  return projectPublicDataSchema.parse({ id: project.id, slug: project.slug, name: project.name, ...(project.description ? { description: project.description } : {}), ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}), ...(project.website ? { website: project.website } : {}), developer, linkedPublishedProperties: properties });
+  return projectPublicDataSchema.parse({ id: project.id, slug: project.slug, name: project.name, ...(project.description ? { description: project.description } : {}), ...(project.imageFit ? { imageFit: project.imageFit } : {}), ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}), ...(project.website ? { website: project.website } : {}), developer, linkedPublishedProperties: properties });
 }
 
 function actions(project: StoredProject, actor: 'provider' | 'admin'): ProjectData['availableActions'] {
@@ -59,7 +59,7 @@ function data(project: StoredProject, actor: 'provider' | 'admin' = 'provider'):
     providerId: project.providerId,
     name: project.name,
     slug: project.slug,
-    ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}),
+    ...(project.imageFit ? { imageFit: project.imageFit } : {}), ...(project.imageUrl ? { imageUrl: project.imageUrl } : {}),
     ...(project.description ? { description: project.description } : {}),
     ...(project.locationId ? { locationId: project.locationId } : {}),
     ...(project.organizationId ? { organizationId: project.organizationId } : {}),
@@ -144,7 +144,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       await provider(claims);
       const parsed = projectCreateSchema.parse(input);
       await validateImage(parsed.imageUrl, claims.sub);
-      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug ?? generateIdentifier('project', parsed.name), ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.imageUrl ? { imageUrl: parsed.imageUrl } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
+      const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug ?? generateIdentifier('project', parsed.name), ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.imageFit ? { imageFit: parsed.imageFit } : {}), ...(parsed.imageUrl ? { imageUrl: parsed.imageUrl } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
       return data(write(result));
     },
     async update(claims: AccessTokenClaims, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData> {
@@ -155,6 +155,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       if (!before) throw new ProjectServiceError('PROJECT_NOT_FOUND');
       if (!['draft', 'needs_changes'].includes(before.status)) throw new ProjectServiceError('PROJECT_TRANSITION_INVALID');
       const changes: ProjectChanges = {};
+      if (parsed.imageFit !== undefined) changes.imageFit = parsed.imageFit;
       if (parsed.name !== undefined) changes.name = parsed.name;
       if (parsed.slug !== undefined) changes.slug = parsed.slug;
       if (parsed.description !== undefined) changes.description = parsed.description;

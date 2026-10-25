@@ -1123,3 +1123,15 @@
 }
 
 .public-property-listing__card-actions{display:grid;gap:.5rem;width:100%}
+
+@media (min-width: 64rem) {
+  .public-property-listing__body { grid-template-columns: minmax(15rem, 17rem) minmax(0, 1fr); gap: 1.5rem; }
+  .public-property-listing__cards:not(.is-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .public-property-listing__card .ui-property-card__body { padding: 1.125rem; gap: .875rem; }
+  .public-property-listing__card .ui-property-card__title { font-size: 1.125rem; line-height: 1.6; }
+  .public-property-listing__cards:not(.is-list) .ui-property-card__media { block-size: auto; aspect-ratio: 16 / 10; overflow: hidden; }
+  .public-property-listing__cards:not(.is-list) .ui-property-card__media > img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+}
+@media (min-width: 90rem) {
+  .public-property-listing__cards:not(.is-list) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

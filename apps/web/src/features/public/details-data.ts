@@ -1,3 +1,4 @@
+import { propertyReportCreateSchema, propertyReportDataSchema, type PropertyReportCreate, type PropertyReportData } from '@sadat-real-estate/contracts';
 import {
   favoriteSaveDataSchema,
   favoritePropertyParamsSchema,
@@ -47,6 +48,7 @@ export interface PublicContactRequestInput {
 }
 
 export interface PublicPropertyDetailsActions {
+  submitReport?(propertyId: string, input: PropertyReportCreate): Promise<PropertyReportData>;
   recordView?(slug: string): Promise<void>;
   saveProperty?(propertyId: string): Promise<FavoriteSaveData>;
   submitContact(input: PublicContactRequestInput): Promise<RequestData>;
@@ -119,6 +121,12 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
   const viewingResponseSchema = successEnvelopeSchema(viewingDataSchema);
 
   const actions: PublicPropertyDetailsActions = {
+    async submitReport(propertyId, input) {
+      const id = favoritePropertyParamsSchema.parse({ propertyId }).propertyId;
+      const headers = actionHeaders(options);
+      const result = await client.request(`/provider/properties/${id}/reports`, { method: 'POST', ...(headers ? { headers } : {}), json: propertyReportCreateSchema.parse(input), responseSchema: successEnvelopeSchema(propertyReportDataSchema) });
+      return result.data.data;
+    },
     async recordView(slug) {
       const headers = actionHeaders(options);
       await client.request(`${PUBLIC_PROPERTY_DETAILS_ROUTE_PREFIX}/${encodeURIComponent(propertySlugSchema.parse(slug))}/views`, {
@@ -180,6 +188,7 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
     }
   }
   return {
+    submitReport: (propertyId, input) => withSession(() => actions.submitReport!(propertyId, input)),
     recordView: slug => withSession(() => actions.recordView!(slug)),
     saveProperty: propertyId => withSession(() => actions.saveProperty!(propertyId)),
     submitContact: input => withSession(() => actions.submitContact(input)),

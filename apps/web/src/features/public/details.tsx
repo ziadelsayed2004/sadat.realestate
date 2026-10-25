@@ -1,3 +1,4 @@
+import { PropertyReport } from './property-report.tsx';
 import { useContext, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type {
   PublicPropertyDetails as PublicPropertyDetailsData,
@@ -119,11 +120,13 @@ function NotFoundNotice({ copy }: { readonly copy: PublicPropertyDetailsCopy }) 
 }
 
 function Gallery({
+  locale,
   media,
   copy,
   transactionType,
   installmentAvailable
 }: {
+  readonly locale: SupportedLocale;
   readonly media: readonly PublicPropertyMedia[];
   readonly copy: PublicPropertyDetailsCopy;
   readonly transactionType: PublicPropertyDetailsData['transactionType'];
@@ -147,10 +150,10 @@ function Gallery({
         <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{transactionType === 'sale' ? copy.sale : copy.rent}</span>
       </div>
       <div className="public-property-details__gallery-main" style={{ position: 'relative' }}>
-        {selected?.kind === 'video' ? videoFailed ? <UxStateView state="error" title={copy.videoUnavailable} /> : <video key={selected.id} src={safePublicUrl(selected.imageUrl)} controls playsInline preload="metadata" aria-label={copy.galleryTitle} onError={() => setVideoFailed(true)} style={{ width: '100%', height: '100%', maxHeight: '70vh', objectFit: 'contain', background: '#111' }} /> : <PublicMediaImage
+        {selected?.kind === 'floor_plan' ? <div className="public-property-details__floor-plan"><strong>PDF</strong><p>{selected.originalFilename}</p><p>{locale === 'ar' ? 'مخطط توزيع العقار: ملف اختياري يوضح الغرف أو الأدوار، وليس خريطة الموقع.' : 'An optional property floor plan showing rooms or floors, rather than a location map.'}</p><a href={safePublicUrl(selected.imageUrl)} target="_blank" rel="noopener noreferrer">{locale === 'ar' ? 'فتح أو تنزيل المخطط (PDF)' : 'Open or download floor plan (PDF)'}</a></div> : selected?.kind === 'video' ? videoFailed ? <UxStateView state="error" title={copy.videoUnavailable} /> : <video key={selected.id} src={safePublicUrl(selected.imageUrl)} controls playsInline preload="metadata" aria-label={copy.galleryTitle} onError={() => setVideoFailed(true)} style={{ width: '100%', height: '100%', maxHeight: '70vh', objectFit: 'contain', background: '#111' }} /> : <PublicMediaImage
           src={selected?.imageUrl}
           alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
-          fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
+          fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
           loading="eager"
           previewWidth={1600}
         />}
@@ -168,7 +171,7 @@ function Gallery({
               onClick={() => { setSelectedId(item.id); setVideoFailed(false); }}
               role="listitem"
             >
-              <span aria-hidden="true">{item.kind === 'video' ? '▶' : index + 1}</span>
+              <span aria-hidden="true">{item.kind === 'video' ? '▶' : item.kind === 'floor_plan' ? 'PDF' : index + 1}</span>
             </button>
           ))}
         </div>
@@ -332,7 +335,7 @@ function PropertySummary({
     ...(data.layout?.bedrooms === undefined ? [] : [{ kind: 'bedrooms' as const, label: copy.bedrooms, value: String(data.layout.bedrooms) }]),
     ...(data.layout?.bathrooms === undefined ? [] : [{ kind: 'bathrooms' as const, label: copy.bathrooms, value: String(data.layout.bathrooms) }]),
     ...(data.layout?.floor === undefined ? [] : [{ kind: 'floor' as const, label: copy.floor, value: String(data.layout.floor) }]),
-    ...(data.deliveryStatus === undefined ? [] : [{ kind: 'delivery' as const, label: summaryLabels.delivery, value: { ready_to_move: deliveryCopy.readyToMove, under_construction: deliveryCopy.underConstruction, future_delivery: deliveryCopy.futureDelivery }[data.deliveryStatus] }]),
+    ...(data.deliveryStatus === undefined ? [] : [{ kind: 'delivery' as const, label: summaryLabels.delivery, value: { ready_to_move: deliveryCopy.readyToMove, under_construction: deliveryCopy.underConstruction, future_delivery: deliveryCopy.futureDelivery, partial_infrastructure: locale === 'ar' ? 'تأسيس جزئي' : 'Partial infrastructure' }[data.deliveryStatus] }]),
     ...(finishing === undefined ? [] : [{ kind: 'finishing' as const, label: summaryLabels.finishing, value: localizedText(finishing.detail, locale) ?? localizedText(finishing.name, locale) ?? finishing.slug }])
   ];
 
@@ -747,12 +750,13 @@ function SuccessDetails({
         <PropertyReturnLink locale={locale} copy={copy} />
         <div className="public-property-details__layout">
           <div className="public-property-details__main-column">
-            <Gallery media={galleryMedia(data)} copy={copy} transactionType={data.transactionType} installmentAvailable={data.installmentAvailable} />
+            <Gallery locale={locale} media={galleryMedia(data)} copy={copy} transactionType={data.transactionType} installmentAvailable={data.installmentAvailable} />
             <PropertySummary data={data} locale={locale} copy={copy} />
             <SourceAndProject data={data} locale={locale} copy={copy} />
             <Description data={data} locale={locale} copy={copy} />
             <Amenities data={data} locale={locale} />
             <LocationAdvisory locale={locale} />
+            <PropertyReport propertyId={data.id} locale={locale} actions={actions} />
             <RelatedProperties properties={data.relatedProperties} locale={locale} copy={copy} />
           </div>
           <RequestPanel data={data} locale={locale} copy={copy} url={url} actions={actions} onContactSubmitted={onContactSubmitted} />
@@ -874,7 +878,7 @@ export function PublicPropertyDetails({
     <div className="public-property-details" data-page="public-property-details" data-details-state={visibleView}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
       {refreshFailed ? <p className="public-property-details__validation" role="alert">{copy.errorBody} <button type="button" onClick={retry}>{copy.retryLabel}</button></p> : null}
-      {visibleView === 'success' && visibleData !== undefined ? <SuccessDetails data={visibleData} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined || slug === undefined ? undefined : () => setContactRefresh({ slug, authorizationHeader })} /> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
+      {visibleView === 'success' && visibleData !== undefined ? <><SuccessDetails data={visibleData} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined || slug === undefined ? undefined : () => setContactRefresh({ slug, authorizationHeader })} /></> : visibleView === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={visibleView === 'success' ? 'empty' : visibleView} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

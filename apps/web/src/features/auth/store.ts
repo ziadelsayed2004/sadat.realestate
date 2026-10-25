@@ -91,6 +91,9 @@ export class AuthStore {
   private accessToken: string | undefined;
   private snapshot: AuthSnapshot = anonymousSnapshot();
   private disposed = false;
+  private sessionGeneration = 0;
+
+  getSessionGeneration(): number { return this.sessionGeneration; }
 
   constructor(options: AuthStoreOptions = {}) {
     this.sync = options.sync ?? new BrowserAuthSync();
@@ -147,6 +150,7 @@ export class AuthStore {
   }
 
   clear(options: ClearAuthOptions = {}): AuthSnapshot {
+    this.sessionGeneration += 1;
     this.accessToken = undefined;
     this.setSnapshot(anonymousSnapshot());
     if (options.broadcast ?? true) this.sync.publishLogout();
@@ -181,6 +185,7 @@ export class AuthStore {
   }
 
   dispose(): void {
+    this.sessionGeneration += 1;
     if (this.disposed) return;
     this.disposed = true;
     this.unsubscribeSync();

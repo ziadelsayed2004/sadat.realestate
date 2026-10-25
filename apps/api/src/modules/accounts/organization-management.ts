@@ -8,7 +8,7 @@ import { identitySubscriptionActive } from '../provider/visibility.js';
 const idSchema = z.string().regex(/^[a-f0-9]{24}$/);
 const text = z.object({ ar: z.string().trim().max(200).optional(), en: z.string().trim().max(200).optional() }).refine(value => value.ar || value.en);
 const photoUrl = z.string().regex(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/).nullable().optional();
-const patch = z.object({ version: z.number().int().nonnegative(), name: text.optional(), description: z.object({ ar: z.string().max(5000).optional(), en: z.string().max(5000).optional() }).optional(), imageUrl: photoUrl, logoUrl: photoUrl, status: z.enum(['approved', 'inactive']).optional(), reason: z.string().trim().min(3).max(500) }).strict();
+const patch = z.object({ version: z.number().int().nonnegative(), name: text.optional(), description: z.object({ ar: z.string().max(5000).optional(), en: z.string().max(5000).optional() }).optional(), coverFit: z.enum(['cover','contain']).optional(), imageUrl: photoUrl, logoUrl: photoUrl, status: z.enum(['approved', 'inactive']).optional(), reason: z.string().trim().min(3).max(500) }).strict();
 export function createOrganizationManager(connection: Connection, authorization: AccountAuthorization, audit: AuditWriter) {
   return async (actorId: string, providerId: string, raw?: unknown, context?: AccountRequestContext, owner = false) => {
     const key = new Types.ObjectId(idSchema.parse(providerId));
@@ -35,7 +35,7 @@ export function createOrganizationManager(connection: Connection, authorization:
         }
       }
       if (!row) throw new ApiContractError('NOT_FOUND', 'errors.notFound', 404);
-      const project = (record: typeof row) => ({ id: String(record._id), slug: record.slug, name: record.name, description: record.description ?? {}, imageUrl: record.imageUrl ?? '', logoUrl: record.logoUrl ?? '', status: record.status, version: record.version ?? 0 });
+      const project = (record: typeof row) => ({ id: String(record._id), slug: record.slug, name: record.name, description: record.description ?? {}, imageUrl: record.imageUrl ?? '', coverFit: record.coverFit ?? 'contain', logoUrl: record.logoUrl ?? '', status: record.status, version: record.version ?? 0 });
       if (raw === undefined) return project(row);
       const input = patch.parse(raw), { version, reason, ...changes } = input;
       if (individual && (changes.logoUrl !== undefined || changes.imageUrl !== undefined)) {

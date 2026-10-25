@@ -1,3 +1,5 @@
+import { PropertyProjectLabel } from './property-project-label.tsx';
+import { PropertyViews } from './property-views.tsx';
 import { categoryImageUrl } from '../design_system/category-image.ts';
 import { useEffect, useState, useContext, type FormEvent, type ReactNode } from 'react';
 import type {
@@ -47,7 +49,7 @@ interface ListingFilterDraft {
   readonly projectId: string;
   readonly propertyCategoryId: string;
   readonly propertyTypeId: string;
-  readonly deliveryStatus: '' | 'ready_to_move' | 'under_construction' | 'future_delivery';
+  readonly deliveryStatus: '' | 'ready_to_move' | 'under_construction' | 'future_delivery' | 'partial_infrastructure';
   readonly sort: PublicPropertySearchQuery['sort'];
   readonly direction: PublicPropertySearchQuery['direction'];
 }
@@ -294,7 +296,8 @@ function ListingFilters({
               { value: '', label: copy.valuePlaceholder },
               { value: 'ready_to_move', label: copy.readyToMove },
               { value: 'under_construction', label: copy.underConstruction },
-              { value: 'future_delivery', label: copy.futureDelivery }
+              { value: 'future_delivery', label: copy.futureDelivery },
+              { value: 'partial_infrastructure', label: locale === 'ar' ? 'تأسيس جزئي' : 'Partial infrastructure' }
             ]}
           />
         </FilterField>
@@ -345,7 +348,7 @@ function PropertyResults({
             href={'/properties/' + property.slug + '?lang=' + locale}
             price={listingPrice(property.price, property.transactionType, locale)}
             location={localizedText(property.locationName, locale)}
-            source={<><span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span><span className="public-property-listing__views">{copy.views}: {(property.viewCount ?? 0).toLocaleString(locale)}</span></>}
+            source={<><span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span><PropertyViews count={property.viewCount} locale={locale} /><PropertyProjectLabel name={property.projectName} url={property.projectUrl} locale={locale} /></>}
             mediaOverlay={<div className="ui-property-card__badges"><span data-badge="transaction">{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.installmentAvailable ? <span data-badge="installment">{copy.installment}</span> : null}{property.featured ? <span data-badge="featured">{copy.featured}</span> : null}{property.publicCode ? <span data-badge="code"><bdi dir="ltr">{property.publicCode}</bdi></span> : null}</div>}
             features={propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3)}
             image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<span className="public-homepage__content-media-fallback" />} />}

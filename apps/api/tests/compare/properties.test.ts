@@ -6,6 +6,14 @@ import { createMongoosePublicPropertyComparisonRepository, createPublicPropertyC
 
 const id = '0123456789abcdef01234567'; const other = '1123456789abcdef01234567';
 const localized = { ar: 'شقة', en: 'Apartment' };
+
+test('comparison retains partial delivery, independent finishing choices and public project affiliation', async () => {
+  const result = await createPublicPropertyComparisonService({ repository: repository([row(id, { deliveryStatus: 'partial_infrastructure', finishing: [{ en: 'Premium finishing' }], projectId: other, projectName: { en: 'Owner compound' }, projectUrl: '/developers/owner-company/projects/owner-compound' })]) }).compare({ propertyIds: [id] });
+  assert.equal(result.items[0]?.deliveryStatus, 'partial_infrastructure');
+  assert.deepEqual(result.items[0]?.finishing, [{ en: 'Premium finishing' }]);
+  assert.deepEqual(result.items[0]?.projectName, { en: 'Owner compound' });
+  assert.equal(result.items[0]?.projectUrl, '/developers/owner-company/projects/owner-compound');
+});
 const row = (value: string, overrides: Partial<PublicPropertyComparisonSource> = {}): PublicPropertyComparisonSource => ({ id: value, slug: value === id ? 'first' : 'second', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true, ...overrides });
 function repository(rows: PublicPropertyComparisonSource[]): PublicPropertyComparisonRepository { return { async findPublished(ids) { return rows.filter((item) => ids.includes(item.id) && item.status === 'published' && item.active); } }; }
 

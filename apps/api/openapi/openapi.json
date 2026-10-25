@@ -21719,6 +21719,14 @@
           "imageUrl": {
             "type": "string",
             "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "imageFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Optional image framing: contain shows the full original with space; cover fills the frame and crops edges. Existing records default to contain."
           }
         }
       },
@@ -21799,6 +21807,14 @@
               "null"
             ],
             "pattern": "^/api/v1/public/organization-photos/[a-f0-9]{24}$"
+          },
+          "imageFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Optional image framing: contain shows the full original with space; cover fills the frame and crops edges. Existing records default to contain."
           }
         }
       },
@@ -21914,6 +21930,14 @@
                 "pattern": "^https?://"
               }
             ]
+          },
+          "imageFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Optional image framing: contain shows the full original with space; cover fills the frame and crops edges. Existing records default to contain."
           }
         }
       },
@@ -22082,6 +22106,14 @@
                 "pattern": "^https?://"
               }
             ]
+          },
+          "imageFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Optional image framing: contain shows the full original with space; cover fills the frame and crops edges. Existing records default to contain."
           }
         }
       },
@@ -24273,6 +24305,14 @@
           "propertyCount": {
             "type": "integer",
             "minimum": 0
+          },
+          "coverFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Organization cover framing, independent of the logo: contain shows the complete original; cover fills the frame and crops edges."
           }
         }
       },
@@ -24334,6 +24374,14 @@
             "type": "string",
             "format": "uri",
             "maxLength": 2048
+          },
+          "imageFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Optional image framing: contain shows the full original with space; cover fills the frame and crops edges. Existing records default to contain."
           }
         }
       },
@@ -24834,6 +24882,14 @@
           },
           "price": {
             "$ref": "#/components/schemas/PropertyMoney"
+          },
+          "projectName": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "projectUrl": {
+            "type": "string",
+            "pattern": "^/developers/[a-z0-9-]+/projects/[a-z0-9-]+$",
+            "description": "Internal link to the published project in its visible organization, when available."
           }
         }
       },
@@ -28926,7 +28982,8 @@
         "enum": [
           "ready_to_move",
           "under_construction",
-          "future_delivery"
+          "future_delivery",
+          "partial_infrastructure"
         ]
       },
       "PublicPropertyListItem": {
@@ -29922,7 +29979,8 @@
                 "enum": [
                   "ready_to_move",
                   "under_construction",
-                  "future_delivery"
+                  "future_delivery",
+                  "partial_infrastructure"
                 ]
               }
             },
@@ -31729,7 +31787,8 @@
                 "enum": [
                   "ready_to_move",
                   "under_construction",
-                  "future_delivery"
+                  "future_delivery",
+                  "partial_infrastructure"
                 ]
               }
             },
@@ -32944,6 +33003,14 @@
           "version": {
             "type": "integer",
             "minimum": 0
+          },
+          "coverFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Organization cover framing, independent of the logo: contain shows the complete original; cover fills the frame and crops edges."
           }
         },
         "required": [
@@ -33010,6 +33077,14 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 500
+          },
+          "coverFit": {
+            "type": "string",
+            "enum": [
+              "cover",
+              "contain"
+            ],
+            "description": "Organization cover framing, independent of the logo: contain shows the complete original; cover fills the frame and crops edges."
           }
         },
         "required": [

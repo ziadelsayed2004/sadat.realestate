@@ -159,6 +159,7 @@ interface LeanSession {
   userId: Types.ObjectId;
   expiresAt: Date;
   revokedAt?: Date;
+  replacedBySessionId?: Types.ObjectId;
 }
 
 class ConcurrentAccountTransitionError extends Error {
@@ -490,11 +491,26 @@ export function createMongooseAccountRepository(
         Session.findOne({
           _id: objectId(input.sessionId),
           userId,
-          revokedAt: { $exists: false },
           expiresAt: { $gt: input.now }
-        }).select('_id userId expiresAt revokedAt').lean<LeanSession | null>().exec()
+        }).select('_id userId expiresAt revokedAt replacedBySessionId').lean<LeanSession | null>().exec()
       ]);
-      return Boolean(user && session);
+      if (!user || !session) return false;
+      // Rotation consumes the refresh token, not an otherwise unexpired access
+      // token in another tab. Its replacement chain must still end in a live
+      // session for the same user. Logout, replay detection and administrative
+      // revocation remove that live leaf; none may be bypassed by an old JWT.
+      let current: LeanSession | null = session;
+      const seen = new Set<string>();
+      for (let depth = 0; current && depth < 64; depth += 1) {
+        const key = current._id.toHexString();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        if (!current.revokedAt) return true;
+        if (!current.replacedBySessionId) return false;
+        current = await Session.findOne({ _id: current.replacedBySessionId, userId, expiresAt: { $gt: input.now } })
+          .select('_id userId expiresAt revokedAt replacedBySessionId').lean<LeanSession | null>().exec();
+      }
+      return false;
     },
 
     async transitionAccount(input) {

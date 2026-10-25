@@ -1,3 +1,4 @@
+import { PropertyProjectLabel } from './property-project-label.tsx';
 import { WhatsAppIcon, usePublicContact } from './contact.tsx';
 import { getWhatsAppLink, getWhatsAppUrl } from '../frontend_foundation/config.ts';
 import { createPublicPropertyDetailsActions, type PublicPropertyDetailsActions } from './details-data.ts';
@@ -145,8 +146,8 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   return (
     <section className="public-developer-profile__hero" aria-label={title}>
       <div className="public-developer-profile__toolbar"><a className="public-developer-profile__back" href={`/developers?lang=${locale}`}><ProfileIcon name="arrow" />{copy.backToDirectory}</a></div>
-      <div className="public-developer-profile__hero-media">
-        <PublicMediaImage src={data.imageUrl?.replace(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/u, '$&?variant=cover')} alt={title} fallback={<div className="public-developer-profile__cover-fallback" data-state="missing_image"><ProfileIcon name="unit" /><span>{copy.imageUnavailable}</span></div>} loading="eager" />
+      <div className="public-developer-profile__hero-media" data-fit={data.coverFit ?? 'contain'}>
+        <PublicMediaImage src={data.coverFit ? data.imageUrl : data.imageUrl?.replace(/^\/api\/v1\/public\/organization-photos\/[a-f0-9]{24}$/u, '$&?variant=cover')} alt={title} fallback={<div className="public-developer-profile__cover-fallback" data-state="missing_image"><ProfileIcon name="unit" /><span>{copy.imageUnavailable}</span></div>} loading="eager" />
       </div>
       <div className="public-developer-profile__identity">
         <div className="public-developer-profile__identity-actions">
@@ -238,7 +239,7 @@ function ProjectCard({ project, developerSlug, detail = false, locale, copy }: {
     ['', projectType]
   ];
   return (
-    <article className="public-developer-profile__project-card" id={anchorId} data-project-detail={detail || undefined}>
+    <article className="public-developer-profile__project-card" id={anchorId} data-fit={project.imageFit ?? 'contain'} data-project-detail={detail || undefined}>
       <div className="public-developer-profile__project-media">
         <PublicMediaImage src={project.imageUrl} alt={name} fallback={<img src="/assets/sadat-real-estate-logo.png" alt={copy.imageUnavailable} loading="lazy" />} />
         {localizedText(project.statusLabel, locale) ? <span className="public-developer-profile__project-status">{localizedText(project.statusLabel, locale)}</span> : null}
@@ -285,6 +286,7 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
               <article className="public-developer-profile__property-card" key={property.id}>
                 <PublicMediaImage src={property.imageUrl} alt={name} fallback={<span className="public-developer-profile__property-media-fallback" />} />
                 <div className="public-developer-profile__badges"><span>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span><span>{propertyLabel(property, copy)}</span></div>
+                <PropertyProjectLabel name={data.projects.find(project => project.id === property.projectId)?.name} url={property.projectId && data.projects.find(project => project.id === property.projectId) ? publicDeveloperProjectUrl(data.slug, data.projects.find(project => project.id === property.projectId)!.slug) : undefined} locale={locale} />
                 <h3><a className="public-developer-profile__project-link" href={'/properties/' + encodeURIComponent(property.slug) + '?lang=' + locale}>{name}</a></h3>
               </article>
             );
@@ -416,7 +418,8 @@ function ContactSection({ data, locale, copy, actions, projectId = '' }: { reado
   );
 }
 
-function ProfileSuccess({ data, locale, copy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+function ProfileSuccess({ data, locale, copy: originalCopy, actions }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly actions: PublicPropertyDetailsActions }) {
+  const copy = data.kind === 'brokerage_office' ? { ...originalCopy, backToDirectory: locale === 'ar' ? 'العودة للشركات والمكاتب' : 'Back to companies and offices', descriptionTitle: locale === 'ar' ? 'عن المكتب' : 'About the office', projectsSectionTitle: locale === 'ar' ? 'مشروعات المكتب' : 'Office projects', availableUnitsTitle: locale === 'ar' ? 'الوحدات المتاحة لدى المكتب' : 'Available office listings', activitySummary: locale === 'ar' ? 'ملخص نشاط المكتب' : 'Office activity', contactDeveloper: locale === 'ar' ? 'تواصل مع المكتب' : 'Contact the office', availableUnitsEmpty: locale === 'ar' ? 'لا توجد وحدات مستقلة متاحة حاليًا؛ وحدات المشروع تظهر داخله.' : 'No standalone listings are currently available. Project units appear inside their project.' } : originalCopy;
   return (
     <>
       <ProfileHero data={data} locale={locale} copy={copy} />
@@ -427,7 +430,7 @@ function ProfileSuccess({ data, locale, copy, actions }: { readonly data: Public
           <div className="public-developer-profile__main">
             <ProfileOverview data={data} locale={locale} copy={copy} />
             <ProjectsSection data={data} locale={locale} copy={copy} />
-            <PropertiesSection data={data} locale={locale} copy={copy} />
+            <PropertiesSection data={{ ...data, properties: data.properties.filter(property => !property.projectId) }} locale={locale} copy={copy} />
             <ContactSection data={data} locale={locale} copy={copy} actions={actions} />
           </div>
         </div>

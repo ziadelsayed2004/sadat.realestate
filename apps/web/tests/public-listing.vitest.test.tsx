@@ -59,7 +59,7 @@ describe('public property listing', () => {
   it.each([undefined, 0, 127])('shows the saved view count, defaulting missing counts to zero (%s)', viewCount => {
     const data = { ...listingData, items: listingData.items.map(item => ({ ...item, viewCount })) };
     const result = renderWithLocale(<PublicPropertyListing locale="en" initialData={data} />, { locale: 'en' });
-    expect(result.container.querySelector('.public-property-listing__views')).toHaveTextContent(`Views: ${viewCount ?? 0}`);
+    expect(result.container.querySelector('.public-property-views')).toHaveTextContent(`${viewCount ?? 0}views`);
   });
   it.each(['ar', 'en'] as const)('shows only the saved public code and keeps identifier URLs out of the card text in %s', locale => {
     const slug = 'property-57cf2f4327104b7787553eced1535f3c';

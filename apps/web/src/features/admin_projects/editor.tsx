@@ -1,3 +1,4 @@
+import { ImageFitField } from '../provider/image-fit-field.tsx';
 import { ProjectImage } from '../provider/project-image.tsx';
 import { useEffect, useState } from 'react';
 import type { ProjectData, SupportedLocale } from '@sadat-real-estate/contracts';
@@ -10,6 +11,7 @@ export function ProjectEditor({ project, locale, authorization, apiOrigin, onSav
   useEffect(() => { if (window.location.hash === '#project-edit') document.getElementById('project-edit')?.scrollIntoView(); }, []);
   const [name, setName] = useState({ ar: project.name.ar ?? '', en: project.name.en ?? '' });
   const [description, setDescription] = useState({ ar: project.description?.ar ?? '', en: project.description?.en ?? '' });
+  const [imageFit, setImageFit] = useState<'cover' | 'contain'>(project.imageFit ?? 'contain');
   const [website, setWebsite] = useState(project.website ?? '');
   const [slug, setSlug] = useState(project.slug);
   const [preview, setPreview] = useState(false);
@@ -22,7 +24,7 @@ export function ProjectEditor({ project, locale, authorization, apiOrigin, onSav
     if (busy || uploading) return;
     setBusy(true); setFeedback(''); setFailed(false);
     try {
-      const next = await updateAdminProject(project.id, { version: project.version, reason: 'Administrative project edit', name: localized(name), description: Object.values(description).some(value => value.trim()) ? localized(description) : null, slug, website: website.trim() || null, ...(imageUrl !== (project.imageUrl ?? '') ? { imageUrl: imageUrl || null } : {}) }, { authorization, apiOrigin });
+      const next = await updateAdminProject(project.id, { version: project.version, reason: 'Administrative project edit', imageFit, name: localized(name), description: Object.values(description).some(value => value.trim()) ? localized(description) : null, slug, website: website.trim() || null, ...(imageUrl !== (project.imageUrl ?? '') ? { imageUrl: imageUrl || null } : {}) }, { authorization, apiOrigin });
       onSaved(next); setPreview(false); setFeedback(ar ? 'تم حفظ المشروع.' : 'Project saved.');
     } catch (error) {
       setFailed(true);
@@ -32,7 +34,7 @@ export function ProjectEditor({ project, locale, authorization, apiOrigin, onSav
   return <form id="project-edit" className="admin-projects__action-card" onSubmit={event => { event.preventDefault(); void save(); }} onChange={() => setFeedback('')}><h2>{ar ? 'تعديل المشروع' : 'Edit project'}</h2><fieldset disabled={busy}>
     {(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'اسم المشروع' : 'Project name'} {language.toUpperCase()}<input value={name[language]} onChange={event => setName(values => ({ ...values, [language]: event.target.value }))} /></label>)}
     {(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'وصف المشروع' : 'Project description'} {language.toUpperCase()}<textarea value={description[language]} onChange={event => setDescription(values => ({ ...values, [language]: event.target.value }))} /></label>)}
-    <ProjectImage value={imageUrl} onChange={setImageUrl} onBusy={setUploading} locale={locale} authorization={authorization} apiOrigin={apiOrigin} admin disabled={busy} />
+    <ImageFitField value={imageFit} onChange={setImageFit} locale={locale} /><ProjectImage fit={imageFit} value={imageUrl} onChange={setImageUrl} onBusy={setUploading} locale={locale} authorization={authorization} apiOrigin={apiOrigin} admin disabled={busy} />
     <label>{ar ? 'الرابط المختصر' : 'Slug'}<input value={slug} pattern="[a-z0-9]+(-[a-z0-9]+)*" minLength={2} maxLength={120} required onChange={event => setSlug(event.target.value)} /></label>
     <label>{ar ? 'موقع المشروع (اختياري)' : 'Project website (optional)'}<input type="url" value={website} onChange={event => setWebsite(event.target.value)} /></label>
     <Button type="button" variant="secondary" aria-expanded={preview} onClick={() => setPreview(value => !value)}>{ar ? 'معاينة قبل الحفظ' : 'Preview before saving'}</Button>

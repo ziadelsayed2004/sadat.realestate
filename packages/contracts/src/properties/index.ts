@@ -10,7 +10,7 @@ export const propertyKindSchema = z.enum(PROPERTY_KINDS);
 
 export const PROPERTY_TRANSACTION_TYPES = ['sale', 'rent'] as const;
 export const propertyTransactionTypeSchema = z.enum(PROPERTY_TRANSACTION_TYPES);
-export const PROPERTY_DELIVERY_STATUSES = ['ready_to_move', 'under_construction', 'future_delivery'] as const;
+export const PROPERTY_DELIVERY_STATUSES = ['ready_to_move', 'under_construction', 'future_delivery', 'partial_infrastructure'] as const;
 export const propertyDeliveryStatusSchema = z.enum(PROPERTY_DELIVERY_STATUSES);
 
 export const PROPERTY_STATUSES = [

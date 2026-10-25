@@ -3,8 +3,8 @@ import { cmsTeamPhotoSchema, successEnvelopeSchema, type SupportedLocale } from 
 import { ApiClient, buildApiUrl } from '../contracts/index.ts';
 import { Button } from '../design_system/index.ts';
 
-export function ProjectImage({ value, onChange, onBusy, locale, authorization, apiOrigin, admin = false, disabled = false }: {
-  value: string; onChange: (value: string) => void; onBusy?: (busy: boolean) => void; locale: SupportedLocale;
+export function ProjectImage({ value, onChange, onBusy, locale, authorization, apiOrigin, admin = false, disabled = false, fit = 'contain' }: {
+  fit?: 'cover' | 'contain'; value: string; onChange: (value: string) => void; onBusy?: (busy: boolean) => void; locale: SupportedLocale;
   authorization?: { getAuthorizationHeader: () => string | undefined } | undefined; apiOrigin?: string | undefined; admin?: boolean; disabled?: boolean;
 }) {
   const ar = locale === 'ar';
@@ -35,7 +35,7 @@ export function ProjectImage({ value, onChange, onBusy, locale, authorization, a
   }
   return <div><label htmlFor="project-image-file">{ar ? 'صورة المشروع' : 'Project image'}</label>
     <p>{ar ? 'المقاس المقترح 1600 × 900 بكسل (16:9). JPG أو PNG أو WebP حتى 10 ميجابايت. احفظ المشروع بعد الرفع.' : 'Recommended: 1600 × 900 pixels (16:9). JPG, PNG or WebP up to 10 MB. Save the project after uploading.'}</p>
-    {preview ? <img src={preview} alt={ar ? 'معاينة صورة المشروع' : 'Project image preview'} style={{ width: '100%', maxHeight: 240, objectFit: 'contain' }} /> : null}
+    {preview ? <img src={preview} alt={ar ? 'معاينة صورة المشروع' : 'Project image preview'} style={{ width: '100%', maxHeight: 240, objectFit: fit }} /> : null}
     <input id="project-image-file" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || disabled} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ''; }} />
     {value ? <Button type="button" variant="secondary" disabled={busy || disabled} onClick={() => onChange('')}>{ar ? 'إزالة صورة المشروع' : 'Remove project image'}</Button> : null}
     {busy ? <p role="status">{ar ? 'جارٍ رفع وفحص الصورة…' : 'Uploading and checking image…'}</p> : null}

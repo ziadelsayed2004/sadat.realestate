@@ -86,12 +86,20 @@ afterEach(() => {
 });
 
 describe('public property comparison', () => {
+  it.each(['ar', 'en'] as const)('shows partial infrastructure separately from saved finishing and the project name in %s', locale => {
+    const data = publicPropertyComparisonDataSchema.parse({ ...comparisonData, items: [{ ...firstProperty, deliveryStatus: 'partial_infrastructure', finishing: [{ en: 'Premium finishing', ar: 'تشطيب فاخر' }], projectName: { en: 'Owner compound', ar: 'كمبوند الشركة' } }, secondProperty] });
+    const copy = getPublicPropertyComparisonCopy(locale);
+    renderWithLocale(<PublicPropertyComparison locale={locale} url={`/compare?lang=${locale}&propertyIds=${firstId}&propertyIds=${secondId}`} initialData={data} />, { locale });
+    expect(within(screen.getByRole('row', { name: new RegExp(copy.deliveryStatus) })).getAllByRole('cell')[0]).toHaveTextContent(locale === 'ar' ? 'تأسيس جزئي' : 'Partial infrastructure');
+    expect(within(screen.getByRole('row', { name: new RegExp(copy.finishingStatus) })).getAllByRole('cell')[0]).toHaveTextContent(locale === 'ar' ? 'تشطيب فاخر' : 'Premium finishing');
+    expect(screen.getByText(locale === 'ar' ? 'كمبوند الشركة' : 'Owner compound')).toBeVisible();
+  });
   it.each(['ar', 'en'] as const)('shows saved finishing choices and does not infer them from delivery status in %s', locale => {
     const finishing = { ar: 'تشطيب فاخر', en: 'Premium finishing' };
     const data = publicPropertyComparisonDataSchema.parse({ ...comparisonData, items: [{ ...firstProperty, finishing: [finishing] }, { ...secondProperty, deliveryStatus: 'ready_to_move' }] });
     const copy = getPublicPropertyComparisonCopy(locale);
     renderWithLocale(<PublicPropertyComparison locale={locale} url={`/compare?lang=${locale}&propertyIds=${firstId}&propertyIds=${secondId}`} initialData={data} />, { locale });
-    const cells = within(screen.getByRole('row', { name: new RegExp(copy.deliveryStatus) })).getAllByRole('cell');
+    const cells = within(screen.getByRole('row', { name: new RegExp(copy.finishingStatus) })).getAllByRole('cell');
     expect(cells[0]).toHaveTextContent(finishing[locale]);
     expect(cells[1]).toHaveTextContent(copy.valueUnavailable);
     fireEvent.click(screen.getByRole('button', { name: copy.showDifferences }));

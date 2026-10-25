@@ -14,6 +14,7 @@ export interface StoredProject {
   locationId?: string;
   organizationId?: string;
   imageUrl?: string;
+  imageFit?: 'cover' | 'contain';
   website?: string;
   status: ProjectStatus;
   submittedAt?: Date;
@@ -49,6 +50,7 @@ export type ProjectChanges = {
   locationId?: string | null;
   organizationId?: string | null;
   imageUrl?: string | null;
+  imageFit?: 'cover' | 'contain';
   website?: string | null;
 };
 
@@ -73,6 +75,7 @@ function stored(r: ProjectRecord & { _id: Types.ObjectId }): StoredProject {
     ...(r.description ? { description: structuredClone(r.description) } : {}),
     ...(r.locationId ? { locationId: r.locationId.toHexString() } : {}),
     ...(r.organizationId ? { organizationId: r.organizationId.toHexString() } : {}),
+    ...(r.imageFit ? { imageFit: r.imageFit } : {}),
     ...(r.imageUrl ? { imageUrl: r.imageUrl } : {}),
     ...(r.website ? { website: r.website } : {}),
     status: r.status,
@@ -198,7 +201,7 @@ export function createMongooseProjectRepository(connection: Connection, models: 
       try {
         return await tx(async session => {
           const set: Record<string, unknown> = { updatedAt: input.metadata.changedAt };
-          for (const key of ['name', 'slug', 'description', 'imageUrl', 'website'] as const) if (input.changes[key] !== undefined) set[key] = input.changes[key];
+          for (const key of ['name', 'slug', 'description', 'imageUrl', 'imageFit', 'website'] as const) if (input.changes[key] !== undefined) set[key] = input.changes[key];
           if (input.changes.locationId !== undefined) set.locationId = input.changes.locationId === null ? null : new Types.ObjectId(input.changes.locationId);
           if (input.changes.organizationId !== undefined) set.organizationId = input.changes.organizationId === null ? null : new Types.ObjectId(input.changes.organizationId);
           const result = await models.Project.findOneAndUpdate({ _id: input.id, providerId: input.providerId, version: input.expectedVersion, status: input.metadata.adminEdit ? { $ne: 'archived' } : { $in: ['draft', 'needs_changes'] } }, { $set: set, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });

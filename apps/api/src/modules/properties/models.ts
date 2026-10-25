@@ -97,7 +97,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   },
   description: localized,
   propertyTypeId: { type: Schema.Types.ObjectId, ref: 'PropertyTaxonomy' },
-  deliveryStatus: { type: String, enum: ['ready_to_move', 'under_construction', 'future_delivery'] },
+  deliveryStatus: { type: String, enum: ['ready_to_move', 'under_construction', 'future_delivery', 'partial_infrastructure'] },
   area: area,
   layout: layout,
   price: money,

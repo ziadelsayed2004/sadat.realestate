@@ -111,6 +111,7 @@ export class AuthClient {
   private readonly apiClient: AuthApiClient;
   private readonly sessionHintStorage: AuthSessionHintStorage | undefined;
   private refreshPromise: Promise<AuthSnapshot> | undefined;
+  private logoutPromise: Promise<LogoutData> | undefined;
   private pendingSecondFactorToken: string | undefined;
   private readonly renewal: SessionRenewal;
   private readonly unsubscribeRenewal: () => void;
@@ -396,15 +397,17 @@ export class AuthClient {
   }
 
   refresh(): Promise<AuthSnapshot> {
+    if (this.logoutPromise) return this.logoutPromise.then(() => this.store.getSnapshot());
     if (this.refreshPromise !== undefined) return this.refreshPromise;
     // Keep an authenticated screen mounted while its expired token is renewed.
     // Switching to `refreshing` here remounts provider navigation, which can
     // repeatedly request a failing endpoint and start another refresh.
     if (this.store.getSnapshot().status !== 'authenticated') this.store.beginRefresh();
     // The refresh cookie is shared between tabs and rotates after each use.
+    const generation = this.store.getSessionGeneration();
     const pending = typeof navigator !== 'undefined' && navigator.locks
-      ? navigator.locks.request('sadat-auth-refresh', () => this.performRefresh())
-      : this.performRefresh();
+      ? navigator.locks.request('sadat-auth-refresh', () => this.performRefresh(generation))
+      : this.performRefresh(generation);
     const settled = pending.then(
       (snapshot) => {
         if (this.refreshPromise === settled) this.refreshPromise = undefined;
@@ -419,20 +422,34 @@ export class AuthClient {
     return settled;
   }
 
-  async logout(): Promise<LogoutData> {
+  logout(): Promise<LogoutData> {
+    if (this.logoutPromise) return this.logoutPromise;
+    // Clear all tabs immediately. A late refresh must not restore a logged-out user.
+    this.markSessionHint(false);
+    this.store.clear();
+    this.logoutPromise = this.performLogout().finally(() => { this.logoutPromise = undefined; });
+    return this.logoutPromise;
+  }
+
+  private async performLogout(): Promise<LogoutData> {
     this.renewal.clear();
     try {
+      // Revoke the cookie after any in-flight rotation has finished.
+      await this.refreshPromise?.catch(() => undefined);
       emptyAuthRequestSchema.parse({});
-      const response = await this.apiClient.request('/auth/logout', {
+      const request = () => this.apiClient.request('/auth/logout', {
         method: 'POST',
         json: {},
         responseSchema: logoutSuccessEnvelopeSchema
       });
+      const response = await (typeof navigator !== 'undefined' && navigator.locks
+        ? navigator.locks.request('sadat-auth-refresh', request)
+        : request());
       return response.data.data;
     } finally {
       this.pendingSecondFactorToken = undefined;
       this.markSessionHint(false);
-      this.store.clear();
+      this.store.clear({ broadcast: false });
     }
   }
 
@@ -443,7 +460,8 @@ export class AuthClient {
     this.store.dispose();
   }
 
-  private async performRefresh(): Promise<AuthSnapshot> {
+  private async performRefresh(generation: number): Promise<AuthSnapshot> {
+    if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
     try {
       emptyAuthRequestSchema.parse({});
       const response = await this.apiClient.request('/auth/refresh', {
@@ -451,8 +469,10 @@ export class AuthClient {
         json: {},
         responseSchema: authSessionSuccessEnvelopeSchema
       });
+      if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
       return this.setSession(response.data.data);
     } catch (error: unknown) {
+      if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
       if (isInvalidRefreshError(error)) {
         this.markSessionHint(false);
         return this.store.clear();

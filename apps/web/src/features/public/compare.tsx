@@ -127,9 +127,11 @@ function comparisonMoney(property: PublicPropertyRelatedProperty, locale: Suppor
   return formatMoney(property.price, locale);
 }
 
+type ComparisonField = PublicPropertyComparisonField | 'finishing';
+
 function fieldValue(
   property: PublicComparisonProperty,
-  field: PublicPropertyComparisonField,
+  field: ComparisonField,
   locale: SupportedLocale,
   copy: PublicPropertyComparisonCopy
 ): string {
@@ -138,7 +140,7 @@ function fieldValue(
     case 'transactionType': return property.transactionType === 'sale' ? copy.sale : copy.rent;
     case 'sourceName': return localizedOptional(property.sourceName, locale, copy.valueUnavailable);
     case 'sourceType': return sourceTypeValue(property, copy);
-    case 'project': return copy.valueUnavailable;
+    case 'project': return localizedOptional(property.projectName, locale, copy.valueUnavailable);
     case 'developer': return localizedOptional(property.sourceName, locale, copy.valueUnavailable);
     case 'publicCode': return property.publicCode ?? copy.valueUnavailable;
     case 'price': return comparisonMoney(property, locale) ?? copy.valueUnavailable;
@@ -147,12 +149,13 @@ function fieldValue(
     case 'bedrooms': return property.layout?.bedrooms === undefined ? copy.valueUnavailable : String(property.layout.bedrooms);
     case 'bathrooms': return property.layout?.bathrooms === undefined ? copy.valueUnavailable : String(property.layout.bathrooms);
     case 'floor': return property.layout?.floor === undefined ? copy.valueUnavailable : String(property.layout.floor);
-    case 'deliveryStatus': return property.finishing?.map(value => localizedText(value, locale)).filter(Boolean).join(locale === 'ar' ? '، ' : ', ') || copy.valueUnavailable;
+    case 'finishing': return property.finishing?.map(value => localizedText(value, locale)).filter(Boolean).join(locale === 'ar' ? '، ' : ', ') || copy.valueUnavailable;
+    case 'deliveryStatus': return property.deliveryStatus ? ({ ready_to_move: locale === 'ar' ? 'جاهز للتسليم' : 'Ready to move', under_construction: locale === 'ar' ? 'تحت الإنشاء' : 'Under construction', future_delivery: locale === 'ar' ? 'تسليم مستقبلي' : 'Future delivery', partial_infrastructure: locale === 'ar' ? 'تأسيس جزئي' : 'Partial infrastructure' })[property.deliveryStatus] : copy.valueUnavailable;
     case 'locationName': return localizedOptional(property.locationName, locale, copy.valueUnavailable);
   }
 }
 
-function fieldLabel(field: PublicPropertyComparisonField, copy: PublicPropertyComparisonCopy): string {
+function fieldLabel(field: ComparisonField, copy: PublicPropertyComparisonCopy): string {
   switch (field) {
     case 'kind': return copy.propertyType;
     case 'transactionType': return copy.transactionType;
@@ -168,17 +171,18 @@ function fieldLabel(field: PublicPropertyComparisonField, copy: PublicPropertyCo
     case 'bathrooms': return copy.bathrooms;
     case 'floor': return copy.floor;
     case 'deliveryStatus': return copy.deliveryStatus;
+    case 'finishing': return copy.finishingStatus;
     case 'locationName': return copy.location;
   }
 }
 
 const fieldGroups: ReadonlyArray<{
   readonly title: keyof Pick<PublicPropertyComparisonCopy, 'basicTitle' | 'priceTitle' | 'dimensionsTitle' | 'locationTitle'>;
-  readonly fields: readonly PublicPropertyComparisonField[];
+  readonly fields: readonly ComparisonField[];
 }> = [
   { title: 'basicTitle', fields: ['kind', 'transactionType', 'sourceName', 'sourceType', 'project', 'developer', 'publicCode'] },
   { title: 'priceTitle', fields: ['price', 'installment'] },
-  { title: 'dimensionsTitle', fields: ['area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus'] },
+  { title: 'dimensionsTitle', fields: ['area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus', 'finishing'] },
   { title: 'locationTitle', fields: ['locationName'] }
 ];
 
@@ -192,14 +196,14 @@ function ComparisonGroup({
   showDifferences
 }: {
   readonly data: PublicPropertyComparisonData;
-  readonly fields: readonly PublicPropertyComparisonField[];
+  readonly fields: readonly ComparisonField[];
   readonly id: string;
   readonly title: string;
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyComparisonCopy;
   readonly showDifferences: boolean;
 }) {
-  const availableFields = fields.filter(field => data.fields.includes(field));
+  const availableFields = fields.filter(field => field === 'finishing' ? data.fields.includes('deliveryStatus') && data.items.some(item => item.finishing?.length) : data.fields.includes(field));
   const visibleFields = availableFields.filter(field => {
     if (!showDifferences || data.items.length < 2) return true;
     const values = data.items.map(item => fieldValue(item, field, locale, copy));

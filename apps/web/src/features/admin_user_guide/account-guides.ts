@@ -67,7 +67,8 @@ export function sectionsForAudience(sections: readonly GuideSection[], audience:
   const journey = { individual_broker: 'individual-journey', brokerage_office: 'office-journey', developer: 'developer-journey', seeker: '' }[audience];
   return sections.map(section => ({ ...section, topics: section.topics.filter(topic => {
     if (topic.id === 'use-guide' || topic.id === 'errors') return true;
-    if (audience === 'seeker') return section.id === 'visitor-seeker';
+    if (audience === 'seeker') return section.id === 'visitor-seeker' || topic.id === 'reports-views-sessions';
+    if (section.id === 'production-followup') return topic.id !== 'project-unit-placement' || audience === 'developer';
     return section.id === 'provider' || topic.id === journey || topic.id === 'provider-ad-workflow';
   }) })).filter(section => section.topics.length > 0);
 }

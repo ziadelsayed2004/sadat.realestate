@@ -1,3 +1,5 @@
+import { PropertyProjectLabel } from './property-project-label.tsx';
+import { PropertyViews } from './property-views.tsx';
 import { CarouselArrow, useOutgoingSlide } from './carousel.tsx';
 import { categoryImageUrl } from '../design_system/category-image.ts';
 import { FeaturedCard, FEATURED_CARD_SECONDS } from './featured-card.tsx';
@@ -718,9 +720,10 @@ function PropertyGrid({
             href={'/properties/' + property.slug}
             price={formatMoney(property.price, locale)}
             location={localizedText(property.locationName, locale)}
-            source={sourceName === undefined ? undefined : <span className="public-homepage__source-identity"><span className="public-homepage__source-logo"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="36" height="36" loading="lazy" decoding="async" /></span><span className="public-homepage__source-copy"><span>{sourceName}</span>{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}
+            source={<>{sourceName === undefined ? null : <span className="public-homepage__source-identity"><span className="public-homepage__source-logo"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="36" height="36" loading="lazy" decoding="async" /></span><span className="public-homepage__source-copy"><span>{sourceName}</span>{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}<PropertyProjectLabel name={property.projectName} url={property.projectUrl} locale={locale} /></>}
             features={features}
             image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<span className="public-homepage__content-media-fallback" />} />}
+            mediaOverlay={<PropertyViews count={property.viewCount} locale={locale} />}
             imageAlt={title}
             className="public-property-listing__card public-homepage__property-card"
             action={<button type="button" className={`public-property-listing__compare-button${compared ? ' is-selected' : ''}`} aria-pressed={compared} onClick={() => toggleCompare(property.id)}>{compared ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : listingCopy.addToCompare}</button>}

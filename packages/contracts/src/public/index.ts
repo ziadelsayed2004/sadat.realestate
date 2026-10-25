@@ -69,6 +69,8 @@ export const publicHomepagePropertySchema = z.object({
   transactionType: propertyTransactionTypeSchema,
   imageUrl: publicUrlSchema.optional(),
   projectId: propertyObjectIdSchema.optional(),
+  projectName: localizedTextSchema.optional(),
+  projectUrl: z.string().regex(/^\/developers\/[a-z0-9-]+\/projects\/[a-z0-9-]+$/u).optional(),
   description: localizedTextSchema.optional(),
   area: propertyAreaSchema.optional(),
   layout: propertyLayoutSchema.optional(),

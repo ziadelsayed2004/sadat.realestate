@@ -119,6 +119,9 @@ export function createApp(dependencies: AppDependencies): Express {
   }
   if (dependencies.sessionManagement) app.use('/api/v1', createSessionManagementRouter(dependencies.sessionManagement));
   if (dependencies.seeker) app.use('/api/v1', createSeekerRouter(dependencies.seeker));
+  // Reports accept all verified account roles. Resolve their specific route
+  // before the provider/property routers' broader provider-only guards.
+  if (dependencies.moderation) app.use('/api/v1', createModerationRouter(dependencies.moderation));
   if (dependencies.provider) app.use('/api/v1', createProviderRouter(dependencies.provider));
   if (dependencies.adminAds) app.use('/api/v1', createAdminAdsRouter(dependencies.adminAds));
   if (dependencies.adminBanners) app.use('/api/v1', createAdminBannerRouter(dependencies.adminBanners));
@@ -133,7 +136,6 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.projects) app.use('/api/v1', createProjectRouter(dependencies.projects));
   if (dependencies.properties) app.use('/api/v1', createPropertyRouter(dependencies.properties));
   if (dependencies.propertyMedia) app.use('/api/v1', createPropertyMediaRouter(dependencies.propertyMedia));
-  if (dependencies.moderation) app.use('/api/v1', createModerationRouter(dependencies.moderation));
   if (dependencies.publicHomepage) app.use('/api/v1', createPublicRouter(dependencies.publicHomepage));
   if (dependencies.publicSearch) app.use('/api/v1', createPublicSearchRouter(dependencies.publicSearch));
   if (dependencies.publicCompare) app.use('/api/v1', createPublicCompareRouter(dependencies.publicCompare));

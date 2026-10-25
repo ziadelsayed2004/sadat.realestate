@@ -88,7 +88,7 @@ describe('Provider projects', () => {
     expect(mutations.create).not.toHaveBeenCalled();
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create new project' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'Ahmed project' }, reason: 'Create new project' }));
+    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'Ahmed project' }, reason: 'Create new project', imageFit: 'contain' }));
   });
   it('loads the owner-scoped project list with strict query and authorization', async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null }> = [];
@@ -196,7 +196,7 @@ describe('Provider projects', () => {
     fireEvent.change(screen.getByLabelText('Project name — English'), { target: { value: 'New project' } });
     fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create project' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'New project' }, reason: 'Create project' }));
+    await waitFor(() => expect(mutations.create).toHaveBeenCalledWith({ name: { en: 'New project' }, reason: 'Create project', imageFit: 'contain' }));
 
     await waitFor(() => expect(screen.getByTestId(`provider-project-${projectId}`)).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: `Edit: ${draft.name.en}` }));

@@ -59,6 +59,7 @@ export interface PublicPropertyComparisonCopy {
   readonly bathrooms: string;
   readonly floor: string;
   readonly deliveryStatus: string;
+  readonly finishingStatus: string;
   readonly location: string;
   readonly developerCompany: string;
   readonly brokerageOffice: string;
@@ -126,7 +127,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     bedrooms: 'غرف النوم',
     bathrooms: 'الحمامات',
     floor: 'الدور',
-    deliveryStatus: 'حالة التشطيب',
+    deliveryStatus: 'حالة التسليم',
+    finishingStatus: 'حالة التشطيب',
     location: 'الموقع',
     developerCompany: 'شركة تطوير عقاري',
     brokerageOffice: 'مكتب وساطة عقارية',
@@ -192,7 +194,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
     floor: 'Floor',
-    deliveryStatus: 'Finish status',
+    deliveryStatus: 'Delivery status',
+    finishingStatus: 'Finish status',
     location: 'Location',
     developerCompany: 'Real-estate developer',
     brokerageOffice: 'Brokerage office',

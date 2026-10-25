@@ -125,7 +125,7 @@ describe('public developer directory and profiles', () => {
     expect(screen.getByRole('link', { name: 'View project' })).toHaveAttribute('href', '/developers/approved-builder/projects/central-project?lang=en');
     expect(result.container.querySelector('details.public-developer-profile__project-details')).toBeNull();
     expect(result.container.querySelector('a[href*="/properties?projectId="]')).toBeNull();
-    expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home?lang=en');
+    expect(screen.queryByRole('link', { name: 'Published home' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Send inquiry' })).toBeInTheDocument();
     expect(result.container.querySelector('form[action="/auth/login"]')).toBeNull();
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();

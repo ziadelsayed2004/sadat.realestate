@@ -1,4 +1,19 @@
 import assert from 'node:assert/strict';
+
+test('rejects foreign project references within the property write transaction before saving or auditing', async () => {
+  let filter: Record<string, unknown> = {}, writes = 0;
+  const session = { withTransaction: async (run: () => Promise<unknown>) => run(), endSession: async () => {} };
+  const connection = { startSession: async () => session, collection: () => ({ findOne: async (query: Record<string, unknown>, options: { session: unknown }) => { filter = query; assert.equal(options.session, session); return null; } }) } as unknown as Connection;
+  const models = { Property: class { constructor() { writes += 1; } } } as unknown as PropertyModels;
+  const repository = createMongoosePropertyRepository(connection, models, { record: async () => { writes += 1; } } as AuditWriter);
+  const providerId = 'a'.repeat(24), organizationId = 'b'.repeat(24), projectId = 'c'.repeat(24);
+  const result = await repository.create({ property: { providerId, source: { providerId, sourceType: 'developer_company', organizationId }, projectId, kind: 'unit', name: { en: 'Foreign attempt' }, slug: 'foreign-attempt', transactionType: 'sale', status: 'draft', active: true }, metadata: { actorId: providerId, reason: 'Validate project ownership', requestId: 'project-ownership', traceId: 'a'.repeat(32), changedAt: new Date() } });
+  assert.equal(result.kind, 'not_found'); assert.equal(writes, 0);
+  assert.equal(String(filter._id), projectId);
+  assert.deepEqual((filter.providerId as { $in: unknown[] }).$in.map(String), [providerId, providerId]);
+  assert.deepEqual((filter.organizationId as { $in: unknown[] }).$in.map(String), [organizationId, organizationId]);
+  assert.deepEqual(filter.status, { $nin: ['archived', 'rejected'] });
+});
 import test from 'node:test';
 import { type Connection, Types } from 'mongoose';
 import { propertyAdminListQuerySchema, propertyListQuerySchema } from '@sadat-real-estate/contracts';

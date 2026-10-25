@@ -44,6 +44,7 @@ export interface ProviderPropertyWizardProps {
   readonly session: RouteSession;
   readonly step: ProviderPropertyStep;
   readonly propertyId?: string | undefined;
+  readonly initialProjectId?: string | undefined;
   readonly authClient?: ProviderPropertyAuthClient | undefined;
   readonly apiOrigin?: string | undefined;
   readonly initialData?: PropertyData | undefined;
@@ -54,6 +55,7 @@ export interface ProviderPropertyWizardProps {
   readonly loadLocations?: ProviderPropertyLocationsLoadAction | undefined;
   readonly resolveMapCoordinates?: MapCoordinatesAction | undefined;
   readonly loadParents?: ProviderPropertyParentsLoader | undefined;
+  readonly loadProjects?: ProviderProjectsLoader | undefined;
 }
 
 interface BasicForm {
@@ -375,7 +377,7 @@ function LocationFormView({
   );
 }
 
-export function ProviderPropertyWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, initialState = 'loading', load, create, save, loadLocations, resolveMapCoordinates, loadParents }: ProviderPropertyWizardProps) {
+export function ProviderPropertyWizard({ locale, session, step, propertyId, initialProjectId, authClient, apiOrigin, initialData, initialState = 'loading', load, create, save, loadLocations, resolveMapCoordinates, loadParents, loadProjects }: ProviderPropertyWizardProps) {
   const copy = getProviderPropertyCopy(locale);
   const currentCopy = useRef(copy);
   currentCopy.current = copy;
@@ -383,7 +385,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
   const isNew = propertyId === undefined && property === undefined;
   const draftId = propertyId ?? property?.id;
   const [state, setState] = useState<ProviderPropertyWizardState>(() => isNew ? 'success' : initialData === undefined ? initialState : 'success');
-  const [basic, setBasic] = useState<BasicForm>(() => initialData === undefined ? emptyBasic(copy) : basicFromProperty(initialData, copy));
+  const [basic, setBasic] = useState<BasicForm>(() => initialData === undefined ? { ...emptyBasic(copy), ...(initialProjectId && /^[a-f0-9]{24}$/u.test(initialProjectId) ? { projectId: initialProjectId, kind: 'unit' as const } : {}) } : basicFromProperty(initialData, copy));
   const [location, setLocation] = useState<LocationForm>(() => initialData === undefined ? emptyLocation(copy) : locationFromProperty(initialData, copy));
   const [attempt, setAttempt] = useState(0);
   const [mutationState, setMutationState] = useState<MutationState>('idle');
@@ -400,7 +402,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
   const locationsAction = useMemo(() => loadLocations ?? ((signal?: AbortSignal) => loadProviderPropertyLocations({ apiOrigin, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, loadLocations]);
   const parentsAction = useMemo(() => loadParents ?? ((query, signal) => loadProviderPropertyParentOptions(query, { apiOrigin, authorization: authClient, ...(signal ? { signal } : {}) })), [loadParents, apiOrigin, authClient]);
   const mapCoordinatesAction = useMemo(() => resolveMapCoordinates ?? ((mapUrl: string, signal: AbortSignal) => resolveProviderPropertyMapCoordinates(mapUrl, { propertyId: draftId!, apiOrigin, authorization: authClient, signal })), [resolveMapCoordinates, draftId, apiOrigin, authClient]);
-  const projectsAction = useMemo<ProviderProjectsLoader>(() => (query, signal) => loadProviderProjects({ query, apiOrigin, authorization: authClient, ...(signal ? { signal } : {}) }), [apiOrigin, authClient]);
+  const projectsAction = useMemo<ProviderProjectsLoader>(() => loadProjects ?? ((query, signal) => loadProviderProjects({ query, apiOrigin, authorization: authClient, ...(signal ? { signal } : {}) })), [apiOrigin, authClient, loadProjects]);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {

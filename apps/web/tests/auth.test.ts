@@ -24,6 +24,37 @@ import type {
 
 const REQUEST_ID = 'auth-test-request';
 const USER_ID = 'a'.repeat(24);
+
+test('logout waits for rotation and a late refresh cannot restore the session', async () => {
+  let resolveRefresh!: (value: ApiClientResponse<unknown>) => void;
+  const pending = new Promise<ApiClientResponse<unknown>>(resolve => { resolveRefresh = resolve; });
+  const api = new FakeApiClient(async path => path === '/auth/refresh' ? pending : response({ loggedOut: true }));
+  const store = new AuthStore(); store.setSession(session('provider'));
+  const client = new AuthClient({ apiClient: api, store });
+  const refresh = client.refresh();
+  const logout = client.logout();
+  assert.equal(store.getSnapshot().status, 'anonymous');
+  assert.equal(api.calls.some(call => call.path === '/auth/logout'), false);
+  resolveRefresh(response(session('provider', 'late.token.value')));
+  await refresh; await logout;
+  assert.equal(store.getSnapshot().status, 'anonymous');
+  assert.equal(store.getAccessToken(), undefined);
+  assert.equal(api.calls.at(-1)?.path, '/auth/logout');
+  client.dispose();
+});
+
+test('another tab clearing the session invalidates an in-flight refresh response', async () => {
+  let resolveRefresh!: (value: ApiClientResponse<unknown>) => void;
+  const pending = new Promise<ApiClientResponse<unknown>>(resolve => { resolveRefresh = resolve; });
+  const store = new AuthStore(); store.setSession(session('seeker'));
+  const client = new AuthClient({ apiClient: new FakeApiClient(async () => pending), store });
+  const refresh = client.refresh();
+  store.clear({ broadcast: false });
+  resolveRefresh(response(session('seeker', 'stale.token.value')));
+  assert.equal((await refresh).status, 'anonymous');
+  assert.equal(client.getAccessToken(), undefined);
+  client.dispose();
+});
 const challenge = {
   accepted: true as const,
   challengeId: '00000000-0000-4000-8000-000000000001',

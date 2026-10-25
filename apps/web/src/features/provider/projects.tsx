@@ -1,3 +1,4 @@
+import { ImageFitField } from './image-fit-field.tsx';
 import { ProjectImage } from './project-image.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -51,12 +52,13 @@ interface ProjectFormState {
   readonly slug: string;
   readonly locationId: string;
   readonly imageUrl: string;
+  readonly imageFit: 'cover' | 'contain';
   readonly website: string;
   readonly reason: string;
 }
 
 function blankForm(): ProjectFormState {
-  return { name: { ar: '', en: '',}, description: { ar: '', en: '',}, slug: '', locationId: '', website: '', imageUrl: '', reason: '' };
+  return { name: { ar: '', en: '',}, description: { ar: '', en: '',}, slug: '', locationId: '', website: '', imageUrl: '', imageFit: 'contain', reason: '' };
 }
 
 function formForProject(project: ProjectData): ProjectFormState {
@@ -67,6 +69,7 @@ function formForProject(project: ProjectData): ProjectFormState {
     locationId: project.locationId ?? '',
     website: project.website ?? '',
     imageUrl: project.imageUrl ?? '',
+    imageFit: project.imageFit ?? 'contain',
     reason: ''
   };
 }
@@ -180,6 +183,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
       const parsed = projectCreateSchema.safeParse({
         name,
         ...(form.imageUrl ? { imageUrl: form.imageUrl } : {}),
+        imageFit: form.imageFit,
         ...(descriptionValue === undefined ? {} : { description: descriptionValue }),
         ...(form.locationId.trim() === '' ? {} : { locationId: form.locationId.trim() }),
         ...(form.website.trim() === '' ? {} : { website: form.website.trim() }),
@@ -198,6 +202,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     }
     const candidate: Record<string, unknown> = { version: project.version, description: descriptionValue ?? null, reason };
     if (name !== undefined) candidate.name = name;
+    if (form.imageFit !== (project.imageFit ?? 'contain')) candidate.imageFit = form.imageFit;
     if (form.imageUrl !== (project.imageUrl ?? '')) candidate.imageUrl = form.imageUrl || null;
     if (form.locationId.trim() !== (project.locationId ?? '')) candidate.locationId = form.locationId.trim() === '' ? null : form.locationId.trim();
     if (form.website.trim() !== (project.website ?? '')) candidate.website = form.website.trim() === '' ? null : form.website.trim();
@@ -230,7 +235,7 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
           <legend>{copy.form.name}</legend>
           {LOCALE_KEYS.map(localeKey => <Input key={localeKey} id={`provider-project-name-${localeKey}`} label={`${copy.form.name} — ${copy.form.localeLabels[localeKey]}`} value={form.name[localeKey]} onChange={event => updateLocalized('name', localeKey, event.target.value)} state={invalidFields.includes('name') ? 'error' : 'default'} required={localeKey === locale} />)}
         </fieldset>
-        <ProjectImage locale={locale} value={form.imageUrl} onChange={value => update('imageUrl', value)} onBusy={setUploading} authorization={authClient} apiOrigin={apiOrigin} disabled={saving} />
+        <ImageFitField locale={locale} value={form.imageFit} onChange={value => update('imageFit', value)} disabled={saving} /><ProjectImage fit={form.imageFit} locale={locale} value={form.imageUrl} onChange={value => update('imageUrl', value)} onBusy={setUploading} authorization={authClient} apiOrigin={apiOrigin} disabled={saving} />
         <Input id="provider-project-reason" label={copy.form.reason} value={form.reason} onChange={event => update('reason', event.target.value)} helpText={copy.submitDialog.reasonHelp} error={invalidFields.includes('reason') ? copy.submitDialog.reasonHelp : undefined} state={invalidFields.includes('reason') ? 'error' : 'default'} required minLength={5} maxLength={500} />
         <fieldset disabled={saving}>
           <legend>{copy.form.description}</legend>
@@ -344,7 +349,7 @@ function ProjectRow({ project, locale, copy, onEdit, onSubmit }: {
       <td><p className="provider-projects__state-help">{copy.statusDescriptions[project.status]}</p>{showReason ? <span className="provider-projects__reason"><strong>{copy.reason}</strong> {project.reviewReason}</span> : null}</td>
       <td><time dateTime={project.updatedAt}>{dateLabel(project.updatedAt, locale)}</time></td>
       <td>
-        <div className="provider-projects__actions">
+        <div className="provider-projects__actions"><a href={`/provider/properties/new/basic?projectId=${project.id}&lang=${locale}`}>{locale === 'ar' ? 'إضافة عقار لهذا المشروع' : 'Add property to this project'}</a>
           <Button size="xs" variant="secondary" onClick={() => setDetailsOpen(true)} aria-label={`${copy.details}: ${name}`}>{copy.details}</Button>
           {project.availableActions.includes('update') ? <Button size="xs" variant="secondary" onClick={() => onEdit(project)} aria-label={`${copy.edit}: ${name}`}>{copy.edit}</Button> : null}
           {project.availableActions.includes('submit') ? <Button size="xs" onClick={() => onSubmit(project)} aria-label={`${copy.submit}: ${name}`}>{copy.submit}</Button> : null}

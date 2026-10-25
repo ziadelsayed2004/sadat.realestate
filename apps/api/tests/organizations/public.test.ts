@@ -11,6 +11,22 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'شركة موثوقة', en: 'Trusted Company' };
 
+test('subscribed office exposes its published owned units without turning into a developer or exposing contact', async () => {
+  const db = database('brokerage_office'), organizationId = new Types.ObjectId('a'.repeat(24));
+  db.rows.organizations = [{ _id: organizationId, providerId: profileId, kind: 'brokerage_office', slug: 'subscribed-office', name: localized, imageUrl: '/office.png', coverFit: 'cover', contactPhone: '01012345678', status: 'approved' }];
+  db.rows.provider_identity_subscriptions = [{ _id: account, status: 'active', paymentConfirmed: true, startAt: new Date('2020-01-01'), endAt: new Date('2099-01-01') }];
+  db.rows.properties = [{ _id: new Types.ObjectId('b'.repeat(24)), providerId: account, slug: 'office-home', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true }, { _id: new Types.ObjectId('c'.repeat(24)), organizationId, slug: 'office-draft', kind: 'property', name: localized, transactionType: 'sale', status: 'draft', active: true }];
+  const service = createPublicOrganizationService({ repository: createMongoosePublicOrganizationRepository(db.connection) });
+  const profile = await service.get('subscribed-office');
+  assert.equal(profile?.kind, 'brokerage_office');
+  assert.equal(profile?.coverFit, 'cover');
+  assert.deepEqual(profile?.properties.map(value => value.slug), ['office-home']);
+  assert.equal(profile?.stats.availableProperties, 1);
+  assert.equal(profile?.contactPhone, undefined);
+  db.rows.provider_identity_subscriptions = [];
+  assert.equal(await service.get('subscribed-office'), null);
+});
+
 test('finds developer properties stored under account/profile aliases and uses their ready cover image', async () => {
   const db = database('developer_company'), organizationId = new Types.ObjectId('a'.repeat(24));
   const propertyId = new Types.ObjectId('b'.repeat(24)), mediaId = new Types.ObjectId('c'.repeat(24));

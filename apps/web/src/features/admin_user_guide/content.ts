@@ -4,6 +4,7 @@ import { recentGuideTopic } from './recent-updates.ts';
 import { adPaymentsGuide, adPublicationGuide } from './advertising-guide.ts';
 import { ACCOUNT_GUIDES } from './account-guides.ts';
 import { featuredIdentityGuide } from './featured-identity-guide.ts';
+import { PRODUCTION_FOLLOWUP_GUIDE } from './production-followup.ts';
 
 /** Arabic operating reference. Links open selection screens, never invented record IDs. */
 export interface GuideLink { readonly label: string; readonly path: string }
@@ -24,6 +25,7 @@ const links = (...items: readonly (readonly [string, string])[]): GuideLink[] =>
 const topic = (id: string, title: string, summary: string, before: string, steps: readonly string[], fields: GuideTopic['fields'], result: string, questions: GuideTopic['questions'], related: GuideLink[], limitation?: string): GuideTopic => ({ id, title, summary, before, steps, fields, result, questions, links: related, ...(limitation === undefined ? {} : { limitation }) });
 
 const BASE_GUIDE_SECTIONS: readonly GuideSection[] = [
+  PRODUCTION_FOLLOWUP_GUIDE,
   ACCOUNT_GUIDES,
   SETTINGS_REFERENCE,
   { id: 'featured-identity', title: 'إعلانات الرئيسية وظهور المكاتب', description: 'النشر واشتراك الهوية وحماية العميل.', topics: [featuredIdentityGuide] },

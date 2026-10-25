@@ -1,10 +1,11 @@
+import { attachPublicProjectLabels } from '../public/project-labels.js';
 import { visiblePublicOrganizations } from '../public/identity.js';
 import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonItemSchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
 
-export interface PublicPropertyComparisonSource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; propertyTypeName?: unknown; finishing?: unknown[]; publicCode?: string; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; organizationId?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
+export interface PublicPropertyComparisonSource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; propertyTypeName?: unknown; finishing?: unknown[]; publicCode?: string; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; organizationId?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; projectName?: unknown; projectUrl?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
 export interface PublicPropertyComparisonRepository { findPublished(ids: string[]): Promise<PublicPropertyComparisonSource[]> }
 export class PublicPropertyComparisonError extends Error { constructor(readonly code: 'PROPERTY_UNAVAILABLE') { super(code); this.name = 'PublicPropertyComparisonError'; } }
 
@@ -27,6 +28,8 @@ function card(source: PublicPropertyComparisonSource) {
     ...(source.sourceImageUrl ? { sourceImageUrl: source.sourceImageUrl } : {}),
     ...(source.sourceVerified !== undefined ? { sourceVerified: source.sourceVerified } : {}),
     ...(source.projectId ? { projectId: source.projectId } : {}),
+    ...(source.projectName ? { projectName: source.projectName } : {}),
+    ...(source.projectUrl ? { projectUrl: source.projectUrl } : {}),
     ...(source.description !== undefined ? { description: source.description } : {}),
     ...(source.area !== undefined ? { area: source.area } : {}),
     ...(source.layout !== undefined ? { layout: source.layout } : {}),
@@ -105,7 +108,7 @@ export function createMongoosePublicPropertyComparisonRepository(connection: Con
       return value && (row as Row).name !== undefined ? [[value, (row as Row).name] as const] : [];
     }));
     const rowById = new Map(rows.map(row => [id((row as Row)._id), row as Row]));
-    return mapped.map(value => {
+    return attachPublicProjectLabels(connection, mapped.map(value => {
       const row = rowById.get(value.id)!;
       const selected = new Set(featureIds(row));
       const finishing = finishingOptions.filter(option => selected.has(id(option._id)!)).map(option => option.name);
@@ -118,6 +121,6 @@ export function createMongoosePublicPropertyComparisonRepository(connection: Con
         ...(id(row.propertyTypeId) && propertyTypeById.has(id(row.propertyTypeId)!) ? { propertyTypeName: propertyTypeById.get(id(row.propertyTypeId)!) } : {}),
         ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceVerified: true } : {})
       };
-    });
+    }));
   } };
 }

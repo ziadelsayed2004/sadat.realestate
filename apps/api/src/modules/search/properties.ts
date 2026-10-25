@@ -1,3 +1,4 @@
+import { attachPublicProjectLabels } from '../public/project-labels.js';
 import { attachIndividualPublicIdentities, visiblePublicOrganizations } from '../public/identity.js';
 import { attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
@@ -12,6 +13,8 @@ export interface PublicPropertySearchSource {
   transactionType: string;
   imageUrl?: string;
   projectId?: string;
+  projectName?: unknown;
+  projectUrl?: string;
   propertyTypeId?: string;
   locationId?: string;
   organizationId?: string;
@@ -44,6 +47,8 @@ function item(source: PublicPropertySearchSource) {
     name: source.name,
     transactionType: source.transactionType,
     ...(source.imageUrl ? { imageUrl: source.imageUrl } : {}),
+    ...(source.projectName !== undefined ? { projectName: source.projectName } : {}),
+    ...(source.projectUrl ? { projectUrl: source.projectUrl } : {}),
     ...(source.projectId ? { projectId: source.projectId } : {}),
     ...(source.locationName !== undefined ? { locationName: source.locationName } : {}),
     ...(source.sourceName !== undefined ? { sourceName: source.sourceName } : {}),
@@ -204,7 +209,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicPropertyAmenitySchema.safeParse({ id: id(row._id), kind: row.kind, groupKey: row.groupKey, name: row.name, ...(row.detail === undefined ? {} : { detail: row.detail }), ...(row.distanceLabel === undefined ? {} : { distanceLabel: row.distanceLabel }), slug: row.slug, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: await attachIndividualPublicIdentities(connection, coveredRows.flatMap((row) => { const value = source({ ...row, viewCount: row.viewCount ?? legacyViews.get(String(row._id)) ?? 0 }, names, organizations, featuredSlugs); return value ? [value] : []; }), coveredRows), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
+      return { items: await attachPublicProjectLabels(connection, await attachIndividualPublicIdentities(connection, coveredRows.flatMap((row) => { const value = source({ ...row, viewCount: row.viewCount ?? legacyViews.get(String(row._id)) ?? 0 }, names, organizations, featuredSlugs); return value ? [value] : []; }), coveredRows)), total, categories, propertyTypes, locations, ...(amenities === undefined ? {} : { amenities }) };
     }
   };
 }

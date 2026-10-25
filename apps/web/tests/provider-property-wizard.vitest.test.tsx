@@ -5,8 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import { getProviderPropertyCopy } from '../src/features/provider_property/copy.ts';
 import { createProviderProperty, loadProviderProperty, loadProviderPropertyParentOptions, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
-import { ProviderPropertyWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
+import { ProviderPropertyWizard as OriginalProviderPropertyWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+
+const emptyProjects = async () => ({ items: [], page: 1, limit: 100, total: 0 });
+function ProviderPropertyWizard(props: ComponentProps<typeof OriginalProviderPropertyWizard>) { return <OriginalProviderPropertyWizard loadProjects={emptyProjects} {...props} />; }
 
 const providerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const propertyId = 'bbbbbbbbbbbbbbbbbbbbbbbb';

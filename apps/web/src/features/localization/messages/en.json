@@ -3799,7 +3799,7 @@
         "transaction": "Transaction type",
         "sourceType": "Property source type",
         "organizationId": "Organization ID",
-        "projectId": "Project ID",
+        "projectId": "Project (optional)",
         "parentPropertyId": "Building or main property",
         "reason": "Draft save reason",
         "locationId": "Area or district",
@@ -3865,7 +3865,7 @@
         "slug": "Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.",
         "sourceType": "Select the property source type.",
         "organizationId": "Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.",
-        "projectId": "The project ID is optional; if provided, it must contain exactly 24 digits or letters a–f.",
+        "projectId": "Choose from your projects, or leave empty for a standalone listing.",
         "parentPropertyId": "Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.",
         "reason": "Enter a save reason of 5–500 characters on one line.",
         "providerId": "The provider account could not be identified. Sign in as a provider and try again."
@@ -4149,14 +4149,15 @@
     "bedrooms": "Bedrooms",
     "bathrooms": "Bathrooms",
     "floor": "Floor",
-    "deliveryStatus": "Finish status",
+    "deliveryStatus": "Delivery status",
     "location": "Location",
     "developerCompany": "Real-estate developer",
     "brokerageOffice": "Brokerage office",
     "individualBroker": "Individual broker",
     "sqm": "sqm",
     "footerDescription": "Safe comparison of published property data from approved sources.",
-    "footerLinks": "Platform links"
+    "footerLinks": "Platform links",
+    "finishingStatus": "Finish status"
   },
   "public/copy#getPublicHomepageCopy": {
     "brand": "Sadat Real Estate",

@@ -1640,3 +1640,15 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   .public-developer-profile__identity-actions { grid-template-columns: 1fr; }
   .public-developer-profile__tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .25rem; }
 }
+
+.public-developer-profile__hero-media[data-fit="cover"] > img,
+.public-developer-profile__project-card[data-fit="cover"] .public-developer-profile__project-media > img { object-fit: cover; }
+.public-developer-profile__hero-media[data-fit="contain"] > img,
+.public-developer-profile__project-card[data-fit="contain"] .public-developer-profile__project-media > img { object-fit: contain; }
+.public-developer-directory__card[data-fit="cover"] .public-developer-directory__card-media > img { object-fit: cover; }
+.public-developer-directory__card[data-fit="contain"] .public-developer-directory__card-media > img { object-fit: contain; }
+@media (max-width: 36rem) {
+  .public-developer-profile__hero-media { border: 0; border-radius: 0; padding: 0; }
+  .public-developer-profile__identity-logo,
+  .public-developer-profile__identity-logo > img { border: 0; padding: 0; background: transparent; box-shadow: none; border-radius: .5rem; }
+}

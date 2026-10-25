@@ -298,7 +298,7 @@ export function App({
         ? <ProviderPropertyCompletionWizard locale={locale} session={effectiveSession} authClient={authClient} step={providerPropertyCompletionStep} propertyId={providerPropertyWizardId!} />
         : providerPropertyAdvancedStep !== undefined
         ? <ProviderPropertyAdvancedWizard locale={locale} session={effectiveSession} authClient={authClient} step={providerPropertyAdvancedStep} propertyId={providerPropertyWizardId!} />
-        : <ProviderPropertyWizard locale={locale} session={effectiveSession} authClient={authClient} step={providerPropertyWizardStep} propertyId={providerPropertyWizardId} />
+        : <ProviderPropertyWizard initialProjectId={seekerUrl.searchParams.get('projectId') ?? undefined} locale={locale} session={effectiveSession} authClient={authClient} step={providerPropertyWizardStep} propertyId={providerPropertyWizardId} />
     ) : isSeekerOverview ? (
       <SeekerOverview locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isSeekerRequests || isSeekerRequestDetails ? (

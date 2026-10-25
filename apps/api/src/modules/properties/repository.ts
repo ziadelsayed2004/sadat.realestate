@@ -160,6 +160,16 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     finally { await session.endSession(); }
   }
 
+  async function ownProject(projectId: string, providerId: string, source: PropertySource, session: ClientSession): Promise<boolean> {
+    if (source.sourceType !== 'developer_company' || !source.organizationId) return false;
+    return Boolean(await connection.collection('projects').findOne({
+      _id: new Types.ObjectId(projectId),
+      providerId: { $in: [new Types.ObjectId(providerId), providerId] },
+      organizationId: { $in: [new Types.ObjectId(source.organizationId), source.organizationId] },
+      status: { $nin: ['archived', 'rejected'] }
+    }, { session, projection: { _id: 1 } }));
+  }
+
   async function update(input: {
     providerId: string;
     id: string;
@@ -174,6 +184,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     try {
       return await transaction(async (session) => {
         const set: Record<string, unknown> = { ...input.changes, updatedAt: input.metadata.changedAt };
+        if (typeof set.projectId === 'string' && set.projectId !== input.before.projectId && !await ownProject(set.projectId, input.providerId, input.before.source, session)) return { kind: 'not_found' as const };
         if ('projectId' in set && set.projectId) set.projectId = new Types.ObjectId(set.projectId as string);
         if ('parentPropertyId' in set && set.parentPropertyId) set.parentPropertyId = new Types.ObjectId(set.parentPropertyId as string);
         if ('locationId' in set && set.locationId) {
@@ -305,6 +316,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     async create(input) {
       try {
         return await transaction(async (session) => {
+          if (input.property.projectId && !await ownProject(input.property.projectId, input.property.providerId, input.property.source, session)) return { kind: 'not_found' as const };
           const organizationId = input.property.source.organizationId ? new Types.ObjectId(input.property.source.organizationId) : undefined;
           const payload = {
             providerId: new Types.ObjectId(input.property.providerId),
