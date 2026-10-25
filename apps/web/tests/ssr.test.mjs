@@ -291,14 +291,16 @@ test('SSR returns 404 and noindex when the project is absent from the published 
 });
 
 test('SSR renders the public developer profile and truthful profile projection', async () => {
-  const result = await render('/developers/approved-builder?lang=en', { developerProfileData });
+  const data = { ...developerProfileData, properties: [...developerProfileData.properties, { ...developerProfileData.properties[0], id: 'dddddddddddddddddddddddd', slug: 'standalone-home', name: { en: 'Standalone home' }, projectId: undefined }] };
+  const result = await render('/developers/approved-builder?lang=en', { developerProfileData: data });
   assert.equal(result.statusCode, 200);
   assert.equal(result.locale, 'en');
   assert.match(result.html, /data-page="public-developer-profile"/);
   assert.match(result.html, /data-developer-profile-state="success"/);
   assert.match(result.html, /Approved builder/);
   assert.match(result.html, /Central project/);
-  assert.match(result.html, /Published home/);
+  assert.doesNotMatch(result.html, /Published home/);
+  assert.match(result.html, /Standalone home/);
   assert.equal(result.developerProfileInitialState, undefined);
   assert.equal(result.seo?.canonicalPath, '/developers/approved-builder');
   assert.equal(result.seo?.jsonLd['@type'], 'Organization');
