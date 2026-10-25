@@ -22572,6 +22572,9 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100000
+          },
+          "reviewContext": {
+            "$ref": "#/components/schemas/PropertyReviewContext"
           }
         }
       },
@@ -33217,6 +33220,73 @@
               "ar",
               "en"
             ]
+          }
+        }
+      },
+      "PropertyReviewContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "readOnly": true,
+        "description": "Minimal owned project and provider context for authorized property review, including unpublished projects. Administrative links require their corresponding view permission. Never emitted in provider reads or accepted in writes.",
+        "properties": {
+          "organization": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "kind"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "developer_company",
+                  "brokerage_office"
+                ]
+              },
+              "adminPath": {
+                "type": "string",
+                "pattern": "^/admin/providers/[a-f0-9]{24}$"
+              },
+              "publicPath": {
+                "type": "string",
+                "pattern": "^/developers/[a-z0-9-]+$"
+              },
+              "projectsPath": {
+                "type": "string",
+                "pattern": "^/developers/[a-z0-9-]+#developer-projects$"
+              }
+            }
+          },
+          "project": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "status"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              "status": {
+                "$ref": "#/components/schemas/ProjectStatus"
+              },
+              "adminPath": {
+                "type": "string",
+                "pattern": "^/admin/projects/review\\?projectId=[a-f0-9]{24}$"
+              },
+              "publicPath": {
+                "type": "string",
+                "pattern": "^/developers/[a-z0-9-]+/projects/[a-z0-9-]+$"
+              }
+            }
+          },
+          "projectUnavailable": {
+            "type": "boolean"
           }
         }
       }

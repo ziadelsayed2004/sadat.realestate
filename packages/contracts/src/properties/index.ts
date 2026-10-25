@@ -259,7 +259,27 @@ export const propertyContactStepSchema = draftPatch({
 
 export const propertyStepSchema = z.union([propertyCoreStepSchema, propertyLocationStepSchema, propertyDetailsStepSchema, propertyPricingStepSchema, propertyFeaturesServicesStepSchema, propertyContactStepSchema]);
 
+// Administrative review metadata; never accepted in property writes or emitted to providers.
+export const propertyReviewContextSchema = z.object({
+  organization: z.object({
+    name: localizedTextSchema,
+    kind: z.enum(['developer_company', 'brokerage_office']),
+    adminPath: z.string().regex(/^\/admin\/providers\/[a-f0-9]{24}$/u).optional(),
+    publicPath: z.string().regex(/^\/developers\/[a-z0-9-]+$/u).optional(),
+    projectsPath: z.string().regex(/^\/developers\/[a-z0-9-]+#developer-projects$/u).optional()
+  }).strict().optional(),
+  project: z.object({
+    name: localizedTextSchema,
+    status: z.enum(['draft', 'pending_review', 'needs_changes', 'approved', 'published', 'rejected', 'hidden', 'archived']),
+    adminPath: z.string().regex(/^\/admin\/projects\/review\?projectId=[a-f0-9]{24}$/u).optional(),
+    publicPath: z.string().regex(/^\/developers\/[a-z0-9-]+\/projects\/[a-z0-9-]+$/u).optional()
+  }).strict().optional(),
+  projectUnavailable: z.boolean().optional()
+}).strict();
+export type PropertyReviewContext = z.infer<typeof propertyReviewContextSchema>;
+
 export const propertyDataSchema = z.object({
+  reviewContext: propertyReviewContextSchema.optional(),
   hasEditDraft: z.boolean().optional(),
   featured: z.boolean().optional(),
   featuredOrder: z.number().int().min(0).max(100000).optional(),

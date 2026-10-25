@@ -15,6 +15,7 @@ const db = await mongoose.createConnection(uri.href).asPromise(), base = 'http:/
 const oid = () => new mongoose.Types.ObjectId(), stamp = new Date(), prefix = `followup-${Date.now()}`;
 const password = 'Local-Followup!2026', users = [], properties = [], organizations = [], projects = [], contexts = [];
 const report = { status: 'RUNNING', mockedApiRoutes: false, checks: [], browserErrors: [], cleanup: false };
+const unitReview = process.argv.includes('--unit-review');
 const output = '.tmp/production-followup', storageRoot = path.resolve(env.PRIVATE_STORAGE_LOCAL_ROOT || path.join(os.tmpdir(), 'sadat-real-estate-private-storage'));
 await mkdir(output, { recursive: true });
 let browser;
@@ -85,6 +86,46 @@ try {
   const xref = Buffer.byteLength(pdfDocument); pdfDocument += `xref\n0 5\n0000000000 65535 f \n${offsets.slice(1).map(offset => String(offset).padStart(10, '0') + ' 00000 n \n').join('')}trailer\n<</Size 5/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF\n`;
   const pdf = Buffer.from(pdfDocument);
   const plan = await json(await owner.request.post(base + `/api/v1/provider/properties/${draft.id}/media`, { headers: { ...headers, 'content-type': 'application/pdf', 'x-media-kind': 'floor_plan', 'x-file-name': 'floor-plan.pdf' }, data: pdf }), 201);
+  if (unitReview) {
+    await db.collection('projects').updateOne({ _id: project._id }, { $set: { status: 'draft' } });
+    await db.collection('properties').updateOne({ _id: new mongoose.Types.ObjectId(draft.id) }, { $set: { status: 'pending_review', imageUrl: photo.imageUrl } });
+    await db.collection('properties').updateOne({ _id: unit._id }, { $set: { imageUrl: photo.imageUrl } });
+    for (const engine of [chromium, webkit]) {
+      await rateWindow(); const reviewBrowser = await engine.launch();
+      const reviewer = await reviewBrowser.newContext(); contexts.push(reviewer);
+      try {
+        const adminSession = await json(await reviewer.request.post(base + '/api/v1/auth/login', { data: { email: 'admin.demo@example.invalid', password: 'LocalPreview-Admin-Only-2026!' } }));
+        const reviewHeaders = { authorization: `Bearer ${adminSession.accessToken}` };
+        const pending = await json(await reviewer.request.get(base + `/api/v1/admin/properties/${draft.id}`, { headers: reviewHeaders }));
+        assert.equal(pending.reviewContext.project.name.en, 'Local compound'); assert.equal(pending.reviewContext.project.status, 'draft');
+        assert.equal(pending.reviewContext.project.publicPath, undefined); assert.equal(pending.reviewContext.organization.adminPath, `/admin/providers/${developer.applicationId}`);
+        assert.equal((await reviewer.request.get(base + `/api/v1/admin/providers/${developer.applicationId}`, { headers: reviewHeaders })).status(), 200);
+        const reviewPage = await reviewer.newPage(); reviewPage.on('pageerror', error => report.browserErrors.push(String(error)));
+        for (const width of [390, 820, 1440]) {
+          await reviewPage.setViewportSize({ width, height: 950 });
+          await visit(reviewPage, base + `/admin/properties/review?propertyId=${draft.id}&lang=ar`);
+          const summary = reviewPage.locator('.admin-property-review-summary');
+          await expect(summary.getByRole('heading', { name: 'كمبوند الاختبار المحلي' })).toBeVisible();
+          await expect(summary.getByRole('heading', { name: 'شركة الاختبار المحلي' })).toBeVisible();
+          await expect(summary.getByRole('link', { name: 'فتح المشروع في الموقع' })).toHaveCount(0);
+          await expect(summary.locator('.admin-property-review-summary__technical')).not.toHaveAttribute('open', '');
+          const mediaFrame = await summary.locator('.admin-property-review-summary__media').boundingBox(), mediaImage = await summary.locator('.admin-property-review-summary__media img').boundingBox();
+          assert(mediaFrame && mediaImage && Math.abs(mediaImage.height - mediaFrame.height) <= 1 && Math.abs(mediaImage.width - mediaFrame.width) <= 1, 'the full portrait preview must fit its frame rather than overflowing and being clipped');
+          assert.equal(await summary.locator('.admin-property-review-summary__media img').evaluate(el => getComputedStyle(el).objectFit), 'contain');
+          assert(await reviewPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+          await summary.screenshot({ path: `${output}/${engine.name()}-pending-compound-review-${width}.png` });
+          if (width === 390) {
+            await summary.getByRole('link', { name: 'مراجعة المشروع بالإدارة' }).click(); await reviewPage.waitForLoadState('networkidle');
+            await expect(reviewPage.locator('.admin-projects__detail-card').filter({ hasText: 'كمبوند الاختبار المحلي' }).first()).toBeVisible();
+          }
+        }
+        const providerRead = await json(await owner.request.get(base + `/api/v1/provider/properties/${draft.id}`, { headers }));
+        assert.equal(providerRead.reviewContext, undefined, 'administrative project context is never emitted in provider reads');
+        report.checks.push(`${engine.name()}: pending unit identifies its draft compound and provider at 390/820/1440px; real administrative project/provider links work, draft public link is absent, technical IDs are collapsed, provider reads exclude administrative context`);
+      } finally { await reviewer.close(); contexts.splice(contexts.indexOf(reviewer), 1); await reviewBrowser.close(); }
+    }
+    await db.collection('projects').updateOne({ _id: project._id }, { $set: { status: 'published' } });
+  }
   await db.collection('properties').updateOne({ _id: new mongoose.Types.ObjectId(draft.id) }, { $set: { status: 'published', active: true } });
   assert.equal((await json(await owner.request.get(base + `/api/v1/public/properties/${draft.slug}`))).deliveryStatus, 'partial_infrastructure');
   assert((await json(await owner.request.get(base + '/api/v1/public/properties?deliveryStatus=partial_infrastructure&limit=100'))).items.some(item => item.id === draft.id));
@@ -108,9 +149,20 @@ try {
       await expect(page.locator('.public-developer-profile__hero-media > img')).toHaveJSProperty('naturalHeight', 960);
       if (width === 390) assert.equal(await logo.evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
       const cards = page.locator('.public-developer-profile__property-card'); await expect(cards).toContainText(['Local standalone']); await expect(cards).toHaveCount(1);
+      if (unitReview) {
+        const frame = await cards.locator('.public-developer-profile__property-media').boundingBox(); assert(Math.abs(frame.width / frame.height - 4 / 3) < .02);
+        const image = await cards.locator('.public-developer-profile__property-media img').boundingBox(); assert(Math.abs(image.height - frame.height) <= 1 && Math.abs(image.width - frame.width) <= 1);
+        assert.deepEqual(await cards.evaluate(el => { const style = getComputedStyle(el); return [style.backgroundColor, style.borderTopWidth, style.paddingTop]; }), ['rgb(255, 255, 255)', '1px', '0px']);
+        await expect(cards.locator('.public-developer-profile__property-footer')).toContainText('عرض تفاصيل العقار');
+      }
       const projectImage = page.locator('.public-developer-profile__project-media > img'); assert.equal(await projectImage.evaluate(el => getComputedStyle(el).objectFit), 'contain');
       await page.screenshot({ path: `${output}/${engine.name()}-company-${width}.png`, fullPage: true });
       await visit(page, `${base}/developers/${developer.org.slug}/projects/${created.slug}?lang=ar`); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' })).toBeVisible(); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local standalone' })).toHaveCount(0);
+      if (unitReview) {
+        const label = page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' }).locator('.public-property-project-label'); await label.scrollIntoViewIfNeeded();
+        assert(await label.evaluate(el => { const box = el.getBoundingClientRect(); return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.closest('a') === el; }), 'the project label must stay clickable above the card’s stretched property link');
+        await page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local project unit' }).screenshot({ path: `${output}/${engine.name()}-unit-card-${width}.png` });
+      }
       await visit(page, `${base}/developers/${office.org.slug}?lang=ar#developer-properties`); await expect(page.locator('.public-developer-profile__property-card').filter({ hasText: 'Local office listing' })).toBeVisible(); await expect(page.locator('.public-developer-profile__kind')).toHaveText('مكتب وساطة');
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await page.screenshot({ path: `${output}/${engine.name()}-office-${width}.png`, fullPage: true });
@@ -187,6 +239,6 @@ finally {
   await db.collection('organizations').deleteMany({ _id: { $in: orgIds } }); await db.collection('projects').deleteMany({ _id: { $in: projects.map(value => value._id) } });
   for (const name of ['properties', 'property_media', 'property_reports', 'property_view_events']) await db.collection(name).deleteMany({ $or: [{ _id: { $in: propertyIds } }, { propertyId: { $in: propertyIds } }] });
   await db.collection('audit_logs').deleteMany({ $or: [{ actorId: { $in: userIds.map(String) } }, { targetId: { $in: [...propertyIds, ...projects.map(value => value._id)].map(String) } }] });
-  await db.close(); report.cleanup = true; await writeFile('docs/quality/guide-runs/production-followup-local-latest.json', JSON.stringify(report, null, 2) + '\n');
+  await db.close(); report.cleanup = true; await writeFile(`docs/quality/guide-runs/${unitReview ? 'unit-review' : 'production-followup'}-local-latest.json`, JSON.stringify(report, null, 2) + '\n');
 }
 console.log(JSON.stringify(report, null, 2));

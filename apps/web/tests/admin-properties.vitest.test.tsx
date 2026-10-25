@@ -40,6 +40,18 @@ const candidateId = 'dddddddddddddddddddddddd';
 const reportId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const properties: AdminPropertyListData = { items: [property], page: 1, limit: 20, total: 1 };
 
+it.each(['ar', 'en'] as const)('names an unpublished compound and provider with authorized links in review (%s)', async locale => {
+  const data = propertyDataSchema.parse({ ...property, kind: 'unit', projectId: 'd'.repeat(24), reviewContext: { project: { name: { ar: 'كمبوند الشركة', en: 'Owner compound' }, status: 'draft', adminPath: `/admin/projects/review?projectId=${'d'.repeat(24)}` }, organization: { name: { ar: 'شركة المطور', en: 'Owner developer' }, kind: 'developer_company', adminPath: `/admin/providers/${'b'.repeat(24)}`, publicPath: '/developers/owner-company', projectsPath: '/developers/owner-company#developer-projects' } } });
+  renderWithLocale(<AdminProperties locale={locale} session={session} view="review" propertyId={data.id} initialProperties={{ ...properties, items: [data] }} />, { locale });
+  expect(await screen.findByRole('heading', { name: locale === 'ar' ? 'كمبوند الشركة' : 'Owner compound' })).toBeVisible();
+  expect(screen.getByRole('heading', { name: locale === 'ar' ? 'شركة المطور' : 'Owner developer' })).toBeVisible();
+  expect(screen.getByRole('link', { name: locale === 'ar' ? 'مراجعة المشروع بالإدارة' : 'Review project in administration' })).toHaveAttribute('href', `/admin/projects/review?projectId=${'d'.repeat(24)}&lang=${locale}`);
+  expect(screen.getByRole('link', { name: locale === 'ar' ? 'المشروعات المنشورة' : 'Published projects' })).toHaveAttribute('href', `/developers/owner-company?lang=${locale}#developer-projects`);
+  expect(screen.queryByRole('link', { name: locale === 'ar' ? 'فتح المشروع في الموقع' : 'Open public project' })).not.toBeInTheDocument();
+  expect(screen.queryByText('developer_company')).not.toBeInTheDocument();
+  expect(screen.queryByText('unit', { exact: true })).not.toBeInTheDocument();
+});
+
 it.each(['published', 'pending_review', 'expired'] as const)('saves automatic homepage selection and explains the actual %s visibility', async state => {
   const current = propertyDataSchema.parse({ ...property, status: state === 'pending_review' ? state : 'published', ...(state === 'expired' ? { expiresAt: '2020-01-01T00:00:00.000Z' } : {}) });
   const saved = { ...current, featured: true, version: current.version + 1 };

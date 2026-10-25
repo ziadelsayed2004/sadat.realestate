@@ -1,3 +1,4 @@
+import type { PropertyReviewContextReader } from './review-context.js';
 import { generateIdentifier } from '../shared/identifiers.js';
 import {
   propertyCoreStepSchema,
@@ -56,7 +57,7 @@ export class PropertyServiceError extends Error {
 }
 
 export interface PropertyMutationContext { requestId: string; traceId: string }
-export interface PropertyAuthorization { authorize(adminId: string, permission: 'admin:properties.view' | 'admin:properties.review' | 'admin:properties.manage'): Promise<boolean>; }
+export interface PropertyAuthorization { authorize(adminId: string, permission: 'admin:properties.view' | 'admin:properties.review' | 'admin:properties.manage' | 'admin:projects.view' | 'admin:providers.view'): Promise<boolean>; }
 export interface PropertyService {
   startEdit(claims: AccessTokenClaims, id: string, input: unknown, context: PropertyMutationContext): Promise<PropertyData>;
   requestDeactivation(claims: AccessTokenClaims, id: string, input: unknown, context: PropertyMutationContext): Promise<PropertyData>;
@@ -170,7 +171,7 @@ function validation(record: StoredProperty): ReturnType<typeof propertyValidatio
   return propertyValidationDataSchema.parse({ valid: issues.length === 0, issues });
 }
 
-export function createPropertyService(dependencies: { repository: PropertyRepository; resolveSource?: (accountId: string) => Promise<StoredProperty['source'] | undefined>; authorization?: PropertyAuthorization; settings?: PropertySettingsReader; now?: () => Date }): PropertyService {
+export function createPropertyService(dependencies: { repository: PropertyRepository; reviewContext?: PropertyReviewContextReader; resolveSource?: (accountId: string) => Promise<StoredProperty['source'] | undefined>; authorization?: PropertyAuthorization; settings?: PropertySettingsReader; now?: () => Date }): PropertyService {
   const now = dependencies.now ?? (() => new Date());
   async function adminPermission(adminId: string, permission: 'admin:properties.review' | 'admin:properties.manage'): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, permission)) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
@@ -178,19 +179,20 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
   async function adminViewPermission(adminId: string): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, 'admin:properties.view')) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
   }
-  async function adminProjection(adminId: string): Promise<(record: StoredProperty) => PropertyData> {
+  async function adminProjection(adminId: string, includeContext = true): Promise<(record: StoredProperty) => Promise<PropertyData>> {
     const [canReview, canManage] = await Promise.all([
       dependencies.authorization!.authorize(adminId, 'admin:properties.review'),
       dependencies.authorization!.authorize(adminId, 'admin:properties.manage')
     ]);
-    return record => {
+    const contextPermissions = includeContext && dependencies.reviewContext ? { projects: await dependencies.authorization!.authorize(adminId, 'admin:projects.view'), providers: await dependencies.authorization!.authorize(adminId, 'admin:providers.view') } : undefined;
+    return async record => {
       const output = data(record, 'admin');
       const availableActions = output.availableActions.filter(action => ['hide', 'restore', 'archive', 'approve_deactivation', 'reject_deactivation'].includes(action) ? canManage : canReview);
       if (canManage && record.status !== 'archived') {
         if (!availableActions.includes('archive')) availableActions.push('archive');
         availableActions.push('update');
       }
-      return { ...output, availableActions };
+      return { ...output, availableActions, ...(contextPermissions && dependencies.reviewContext ? { reviewContext: await dependencies.reviewContext(record, contextPermissions) } : {}) };
     };
   }
   return {
@@ -223,8 +225,8 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       await adminViewPermission(adminId);
       const query = propertyAdminListQuerySchema.parse(unparsedQuery) as PropertyAdminListQuery;
       const result = await dependencies.repository.listAdmin(query);
-      const project = await adminProjection(adminId);
-      return { data: { items: result.items.map(project) }, page: query.page, limit: query.limit, total: result.total };
+      const project = await adminProjection(adminId, false);
+      return { data: { items: await Promise.all(result.items.map(project)) }, page: query.page, limit: query.limit, total: result.total };
     },
     async adminGet(adminId, id) {
       await adminViewPermission(adminId);

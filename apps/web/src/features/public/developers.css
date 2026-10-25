@@ -1042,8 +1042,7 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
   border-radius: var(--radius-md);
 }
 
-.public-developer-profile__project-card > img,
-.public-developer-profile__property-card > img {
+.public-developer-profile__project-card > img {
   display: block;
   inline-size: 100%;
   block-size: 8rem;
@@ -1052,10 +1051,29 @@ html:has(.public-developer-profile[data-developer-profile-state='success']) {
 }
 
 .public-developer-profile__property-card {
-  background: var(--color-surface-soft);
-  border: 2px solid var(--color-border-strong);
-  box-shadow: var(--shadow-card);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  align-content: start;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 3px 12px #17233d0a;
 }
+.public-developer-profile__property-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #edf1ef; }
+.public-developer-profile__property-media > img,
+.public-developer-profile__property-media-fallback { position: absolute; inset: 0; display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.public-developer-profile__property-badges { position: absolute; inset-block-start: .75rem; inset-inline: .75rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+.public-developer-profile__property-badges span { padding: .25rem .625rem; border-radius: 999px; background: #fffffff2; color: #17233d; font-size: .75rem; box-shadow: 0 1px 4px #17233d14; }
+.public-developer-profile__property-badges span:first-child { background: #fff1c9; }
+.public-developer-profile__property-content { display: flex; flex-direction: column; gap: .75rem; padding: 1rem; min-inline-size: 0; }
+.public-developer-profile__property-card .public-developer-profile__property-source { color: #65736c; font-size: .75rem; line-height: 1.6; }
+.public-developer-profile__property-card h3 { font-size: 1.125rem; line-height: 1.6; overflow-wrap: anywhere; }
+.public-developer-profile__property-card h3 a { color: #17233d; font: inherit; text-decoration: none; }
+.public-developer-profile__property-card .public-property-project-label { position: relative; z-index: 2; }
+.public-developer-profile__property-footer { display: flex; justify-content: space-between; align-items: center; gap: .75rem; margin-block-start: auto; padding-block-start: .75rem; border-block-start: 1px solid var(--color-border); color: #165748; font-size: .875rem; font-weight: 600; }
+.public-developer-profile__property-footer svg { inline-size: 1.125rem; block-size: 1.125rem; }
 
 .public-developer-profile__project-card h3,
 .public-developer-profile__project-card p,

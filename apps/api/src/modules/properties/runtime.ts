@@ -9,8 +9,9 @@ import { createPropertyService } from './service.js';
 import type { PropertyRouterDependencies } from './router.js';
 import { createMongoosePropertySettingsReader } from '../settings/property-policy.js';
 import { createProviderPropertySourceResolver } from './provider-source.js';
+import { createPropertyReviewContextReader } from './review-context.js';
 
 export function createPropertyRuntime(connection: Connection, accessTokens: AccessTokenService, audit: AuditWriter, rbac?: Pick<RbacService, 'authorize'>): PropertyRouterDependencies {
   const models = createPropertyModels(connection);
-  return { accessTokens, featured: createFeaturedPropertyManager(connection, rbac, audit), service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), resolveSource: createProviderPropertySourceResolver(connection), settings: createMongoosePropertySettingsReader(connection), ...(rbac ? { authorization: rbac } : {}) }) };
+  return { accessTokens, featured: createFeaturedPropertyManager(connection, rbac, audit), service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), resolveSource: createProviderPropertySourceResolver(connection), reviewContext: createPropertyReviewContextReader(connection), settings: createMongoosePropertySettingsReader(connection), ...(rbac ? { authorization: rbac } : {}) }) };
 }

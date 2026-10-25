@@ -284,10 +284,16 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
             const name = localizedText(property.name, locale) ?? property.slug;
             return (
               <article className="public-developer-profile__property-card" key={property.id}>
-                <PublicMediaImage src={property.imageUrl} alt={name} fallback={<span className="public-developer-profile__property-media-fallback" />} />
-                <div className="public-developer-profile__badges"><span>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span><span>{propertyLabel(property, copy)}</span></div>
-                <PropertyProjectLabel name={data.projects.find(project => project.id === property.projectId)?.name} url={property.projectId && data.projects.find(project => project.id === property.projectId) ? publicDeveloperProjectUrl(data.slug, data.projects.find(project => project.id === property.projectId)!.slug) : undefined} locale={locale} />
-                <h3><a className="public-developer-profile__project-link" href={'/properties/' + encodeURIComponent(property.slug) + '?lang=' + locale}>{name}</a></h3>
+                <div className="public-developer-profile__property-media">
+                  <PublicMediaImage src={property.imageUrl} alt={name} fallback={<span className="public-developer-profile__property-media-fallback" />} />
+                  <div className="public-developer-profile__property-badges"><span>{property.transactionType === 'sale' ? locale === 'ar' ? 'للبيع' : 'For sale' : locale === 'ar' ? 'للإيجار' : 'For rent'}</span><span>{propertyLabel(property, copy)}</span></div>
+                </div>
+                <div className="public-developer-profile__property-content">
+                  <p className="public-developer-profile__property-source">{localizedText(data.name, locale)}</p>
+                  <h3><a className="public-developer-profile__project-link" href={'/properties/' + encodeURIComponent(property.slug) + '?lang=' + locale}>{name}</a></h3>
+                  <PropertyProjectLabel name={data.projects.find(project => project.id === property.projectId)?.name} url={property.projectId && data.projects.find(project => project.id === property.projectId) ? publicDeveloperProjectUrl(data.slug, data.projects.find(project => project.id === property.projectId)!.slug) : undefined} locale={locale} />
+                  <div className="public-developer-profile__property-footer" aria-hidden="true"><span>{locale === 'ar' ? 'عرض تفاصيل العقار' : 'View property details'}</span><ProfileIcon name="arrow" /></div>
+                </div>
               </article>
             );
           })}

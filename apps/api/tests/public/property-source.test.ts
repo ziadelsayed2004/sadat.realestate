@@ -5,6 +5,36 @@ import { publicPropertySourceSchema } from '@sadat-real-estate/contracts';
 import { account, application, profile, policyId, database } from '../helpers/provider-identity-db.js';
 import { createMongoosePublicPropertyDetailsRepository, createPublicPropertyDetailsService } from '../../src/modules/public/properties.js';
 import { createMongoosePublicOrganizationRepository, createPublicOrganizationService } from '../../src/modules/organizations/public.js';
+import { createPropertyReviewContextReader } from '../../src/modules/properties/review-context.js';
+import type { StoredProperty } from '../../src/modules/properties/repository.js';
+
+test('administrative review names an owned unpublished compound across all legacy owner aliases and scopes its links', async () => {
+  const projectId = new Types.ObjectId('e'.repeat(24));
+  for (const owner of [account, profile, application]) {
+    const db = fixture('developer_company', owner);
+    db.rows.projects = [{ _id: projectId, providerId: account, organizationId, slug: 'owner-compound', name: { ar: 'كمبوند الشركة', en: 'Owner compound' }, status: 'draft' }];
+    const property: StoredProperty = { id: propertyId.toHexString(), providerId: owner.toHexString(), source: { providerId: owner.toHexString(), sourceType: 'developer_company', organizationId: organizationId.toHexString() }, projectId: projectId.toHexString(), kind: 'unit', name: { en: 'Pending unit' }, slug: 'pending-unit', transactionType: 'sale', status: 'pending_review', active: true, version: 0, createdAt: new Date(), updatedAt: new Date() };
+    const read = createPropertyReviewContextReader(db.connection);
+    const context = await read(property, { projects: true, providers: true });
+    assert.deepEqual(context.project?.name, { ar: 'كمبوند الشركة', en: 'Owner compound' });
+    assert.equal(context.project?.status, 'draft');
+    assert.equal(context.project?.adminPath, `/admin/projects/review?projectId=${projectId}`);
+    assert.equal(context.project?.publicPath, undefined);
+    assert.equal(context.organization?.adminPath, `/admin/providers/${application}`);
+    assert.equal(context.organization?.projectsPath, '/developers/sadat-business#developer-projects');
+    const restricted = await read(property, { projects: false, providers: false });
+    assert.equal(restricted.project?.adminPath, undefined); assert.equal(restricted.organization?.adminPath, undefined);
+    db.rows.projects[0]!.status = 'published';
+    assert.equal((await read(property, { projects: false, providers: false })).project?.publicPath, '/developers/sadat-business/projects/owner-compound');
+    delete db.rows.projects[0]!.organizationId;
+    assert.equal((await read(property, { projects: false, providers: false })).project?.name.en, 'Owner compound', 'legacy project without an organization key still needs a verified owner match');
+    db.rows.projects[0]!.organizationId = new Types.ObjectId('f'.repeat(24));
+    const foreign = await read(property, { projects: true, providers: true });
+    assert.equal(foreign.project, undefined); assert.equal(foreign.projectUnavailable, true);
+    db.rows.organizations![0]!.providerId = new Types.ObjectId('f'.repeat(24));
+    assert.deepEqual(await read(property, { projects: true, providers: true }), { projectUnavailable: true });
+  }
+});
 
 const propertyId = new Types.ObjectId('a'.repeat(24));
 const organizationId = new Types.ObjectId('b'.repeat(24));
