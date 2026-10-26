@@ -39,11 +39,6 @@ fi
   sha256sum --check --status SHA256SUMS
 )
 
-deleted=$(find "$resolved_private" -mindepth 1 -maxdepth 1 -printf '.' | wc -c)
-find "$resolved_private" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
-remaining=$(find "$resolved_private" -mindepth 1 -maxdepth 1 -print -quit)
-if [[ -n "$remaining" ]]; then
-  echo 'PRODUCTION_PRIVATE_FILES_RESIDUE' >&2
-  exit 1
-fi
-echo "PRODUCTION_PRIVATE_FILES_PURGED top_level_entries=$deleted"
+script_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
+# Retained configuration/taxonomy images still reference private storage bytes.
+node "$script_root/apps/api/dist/modules/database/purge-private-files.js"

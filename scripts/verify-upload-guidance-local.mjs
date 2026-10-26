@@ -53,7 +53,7 @@ try {
       const routes=[['details',`/properties/${prefix}-${engine.name()}?lang=en`,'.public-property-details__gallery-main'],['listing',`/properties?search=${prefix}&lang=en`,'.ui-property-card__media'],['home','/?lang=en','.public-homepage__property-card .ui-property-card__media']];
       for(const [name,url,selector]of routes) {
         await visit(page,url);const frame=page.locator(selector).filter({has:page.locator(`img[src*="${id}"]`)}).first();await expect(frame).toBeVisible(); const image=frame.locator('img').first(); await expect(image).toHaveJSProperty('naturalWidth',900);
-        const box=await frame.boundingBox(),imageBox=await image.boundingBox();assert(Math.abs(box.width/box.height-1.5)<.02,JSON.stringify({name,width,box}));assert(Math.abs(box.height-imageBox.height)<1); assert.equal(await image.evaluate(el=>getComputedStyle(el).objectFit),'cover');
+        const box=await frame.boundingBox(),imageBox=await image.boundingBox();assert(Math.abs(box.width/box.height-1.5)<.02,JSON.stringify({name,width,box}));assert(Math.abs(box.height-imageBox.height)<1); assert.equal(await image.evaluate(el=>getComputedStyle(el).objectFit),name==='details'?'contain':'cover');
         assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
         if(name==='home') assert(await page.locator('.public-homepage__section--properties').evaluateAll(sections=>sections.every(section=>[...section.querySelectorAll('.ui-property-card')].every(card=>card.getBoundingClientRect().bottom<=section.getBoundingClientRect().bottom+1))), 'Property cards must remain inside their homepage section');
         if(name==='details') await frame.screenshot({path:`${output}/${engine.name()}-gallery-${width}.png`});

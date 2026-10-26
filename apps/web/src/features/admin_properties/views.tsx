@@ -157,7 +157,7 @@ function propertyLabels(locale: SupportedLocale) {
 }
 
 function PropertySource({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {
-  return <div className="admin-properties__source"><a className="admin-properties__action-link" href={localePath(locale, `/admin/providers/${property.source.providerId}`)}>{propertyLabels(locale).source[property.source.sourceType]}</a><code dir="ltr">{property.source.providerId}</code></div>;
+  return <div className="admin-properties__source"><a className="admin-properties__action-link" href={localePath(locale, `/admin/providers/${property.source.providerId}`)}>{property.providerDisplayName ?? propertyLabels(locale).source[property.source.sourceType]}</a>{property.providerDisplayName ? <small>{propertyLabels(locale).source[property.source.sourceType]}</small> : null}<code dir="ltr">{property.source.providerId}</code></div>;
 }
 
 

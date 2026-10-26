@@ -40,6 +40,11 @@ const candidateId = 'dddddddddddddddddddddddd';
 const reportId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const properties: AdminPropertyListData = { items: [property], page: 1, limit: 20, total: 1 };
 
+it('shows the actual account name alongside its type in administrative property rows', () => {
+  renderWithLocale(<AdminProperties locale="en" session={session} view="list" initialProperties={{ ...properties, items: [{ ...property, providerDisplayName: 'Actual provider' }] }} />, { locale: 'en' });
+  expect(screen.getAllByRole('link', { name: 'Actual provider' }).length).toBeGreaterThan(0);
+});
+
 it.each(['ar', 'en'] as const)('names an unpublished compound and provider with authorized links in review (%s)', async locale => {
   const data = propertyDataSchema.parse({ ...property, kind: 'unit', projectId: 'd'.repeat(24), reviewContext: { project: { name: { ar: 'كمبوند الشركة', en: 'Owner compound' }, status: 'draft', adminPath: `/admin/projects/review?projectId=${'d'.repeat(24)}` }, organization: { name: { ar: 'شركة المطور', en: 'Owner developer' }, kind: 'developer_company', adminPath: `/admin/providers/${'b'.repeat(24)}`, publicPath: '/developers/owner-company', projectsPath: '/developers/owner-company#developer-projects' } } });
   renderWithLocale(<AdminProperties locale={locale} session={session} view="review" propertyId={data.id} initialProperties={{ ...properties, items: [data] }} />, { locale });

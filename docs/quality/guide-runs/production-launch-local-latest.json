@@ -1,9 +1,10 @@
 {
   "environment": "isolated-local-mongodb",
   "mockedDatabase": false,
-  "commit": "872c65d14ef728de865b314a6f78c82bd95d3454",
-  "startedAt": "2026-09-12T09:38:42.180Z",
+  "commit": "27be1f3fa496345cf06b4a6034aabb2de9a2791a",
+  "startedAt": "2026-10-26T16:23:34.022Z",
   "checks": [
+    "preview lists manual trials and stale preview aborts without deletion",
     "dry-run retains all records",
     "unknown collection aborts before deletion",
     "retained location cannot lose its parent",

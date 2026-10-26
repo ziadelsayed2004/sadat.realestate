@@ -272,7 +272,7 @@ function ProjectsSection({ data, locale, copy }: { readonly data: PublicOrganiza
   );
 }
 
-function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
+function PropertiesSection({ data, locale, copy, projectUnitCount = 0 }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy; readonly projectUnitCount?: number }) {
   const role = useContext(PublicAuthRoleContext);
   return (
     <section className="public-developer-profile__section public-developer-profile__properties-section" id="developer-properties" aria-labelledby="public-developer-properties-title">
@@ -280,7 +280,8 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
         <h2 id="public-developer-properties-title">{copy.availableUnitsTitle}</h2>
         {role === undefined || role === 'seeker' ? <a href="#developer-contact">{copy.availableUnitsAction}<ProfileIcon name="arrow" /></a> : null}
       </div>
-      {data.properties.length === 0 ? <p className="public-developer-profile__empty public-developer-profile__empty--units"><ProfileIcon name="unit" />{copy.availableUnitsEmpty}</p> : (
+      {projectUnitCount > 0 ? <p className="public-developer-profile__empty"><a href="#developer-projects">{locale === 'ar' ? `${projectUnitCount} وحدة منشورة داخل المشروعات — عرض المشروعات` : `${projectUnitCount} published units inside projects — view projects`}</a></p> : null}
+      {data.properties.length === 0 && projectUnitCount === 0 ? <p className="public-developer-profile__empty public-developer-profile__empty--units"><ProfileIcon name="unit" />{copy.availableUnitsEmpty}</p> : (
         <div className="public-developer-profile__property-grid">
           {data.properties.map(property => {
             const name = localizedText(property.name, locale) ?? property.slug;
@@ -439,7 +440,7 @@ function ProfileSuccess({ data, locale, copy: originalCopy, actions }: { readonl
           <div className="public-developer-profile__main">
             <ProfileOverview data={data} locale={locale} copy={copy} />
             <ProjectsSection data={data} locale={locale} copy={copy} />
-            <PropertiesSection data={{ ...data, properties: data.properties.filter(property => !property.projectId) }} locale={locale} copy={copy} />
+            <PropertiesSection data={{ ...data, properties: data.properties.filter(property => !data.projects.some(project => project.id === property.projectId)) }} projectUnitCount={data.properties.filter(property => data.projects.some(project => project.id === property.projectId)).length} locale={locale} copy={copy} />
             <ContactSection data={data} locale={locale} copy={copy} actions={actions} />
           </div>
         </div>

@@ -26,7 +26,7 @@ export function createMongoosePublicSitemapSource(connection: Connection): Publi
       const projection = { slug: 1, updatedAt: 1 };
       const [properties, organizations, articles] = await Promise.all([
         connection.collection('properties').find({ status: 'published', active: true }, { projection }).sort({ slug: 1 }).limit(5_000).toArray(),
-        connection.collection('organizations').find({ status: 'approved' }, { projection: { ...projection, providerId: 1 } }).sort({ slug: 1 }).limit(2_000).toArray(),
+        connection.collection('organizations').find({ status: 'approved' }, { projection: { ...projection, providerId: 1, kind: 1 } }).sort({ slug: 1 }).limit(2_000).toArray(),
         connection.collection('articles').find({ status: 'published' }, { projection }).sort({ slug: 1 }).limit(2_000).toArray()
       ]);
       return [

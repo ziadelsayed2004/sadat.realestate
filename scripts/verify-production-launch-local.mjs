@@ -50,6 +50,9 @@ try {
   await connection.collection('roles').insertMany([{ name: 'Real role' }, { name: 'QA role', synthetic: true }]);
   await connection.collection('admin_settings').insertMany([{ namespace: 'privacy-security', schemaVersion: 1, version: 0, updatedBy: rootId, updatedAt: new Date(), values: { two_factor_authentication: true } }, { namespace: 'demo', seedKey: 'legacy-demo' }]);
   await connection.collection('properties').insertOne({ ownerId: otherId, synthetic: true });
+  await connection.collection('properties').insertOne({ ownerId: otherId, name: { en: 'Manual trial property' } });
+  await connection.collection('provider_identity_subscriptions').insertOne({ _id: otherId, status: 'active' });
+  await connection.collection('organization_photos').insertOne({ storageKey: 'organization/trial.webp' });
   await connection.collection('community_reactions').insertOne({ userId: otherId, postId: new Types.ObjectId(), reaction: 'like' });
   await connection.collection('database_migrations').insertOne({ id: 'preserved' });
   const beforeLogin = await auth.loginAdmin({ email, password });
@@ -57,7 +60,11 @@ try {
   assert.ok('refreshToken' in beforeLogin);
   const planned = await purgeProductionDatabase(connection, { mode: 'plan', keepAdminEmail: email });
   assert.equal(planned.usersAfter, 2);
-  assert.equal(await connection.collection('properties').countDocuments({}), 1);
+  assert.equal(await connection.collection('properties').countDocuments({}), 2);
+  assert(planned.preview.some(row => row.collection === 'properties' && row.label?.en === 'Manual trial property'));
+  await assert.rejects(purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email, previewHash: '0'.repeat(64) }), /PREVIEW_CHANGED/);
+  assert.equal(await connection.collection('properties').countDocuments({}), 2);
+  evidence.checks.push('preview lists manual trials and stale preview aborts without deletion');
   evidence.checks.push('dry-run retains all records');
   await connection.collection('unreviewed_fixture').insertOne({ value: 1 });
   await assert.rejects(purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email }), /UNREVIEWED_COLLECTION/);
@@ -73,10 +80,11 @@ try {
   await connection.collection('admin_credentials').updateOne({ userId: rootId }, { $set: { synthetic: true } });
   await assert.rejects(purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email }), /SYNTHETIC_RESIDUE/);
   assert.equal(await connection.collection('users').countDocuments({}), 2);
-  assert.equal(await connection.collection('properties').countDocuments({}), 1);
+  assert.equal(await connection.collection('properties').countDocuments({}), 2);
   await connection.collection('admin_credentials').updateOne({ userId: rootId }, { $unset: { synthetic: '' } });
   evidence.checks.push('residue failure rolls back the complete MongoDB transaction');
-  const applied = await purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email });
+  const approvedPreview = await purgeProductionDatabase(connection, { mode: 'plan', keepAdminEmail: email });
+  const applied = await purgeProductionDatabase(connection, { mode: 'apply', keepAdminEmail: email, previewHash: approvedPreview.previewHash });
   assert.equal(applied.usersAfter, 1);
   assert.equal(applied.syntheticAfter, 0);
   assert.deepEqual(await connection.collection('users').listIndexes().toArray(), indexesBefore);
@@ -86,6 +94,8 @@ try {
   assert.equal(await connection.collection('admin_settings').countDocuments({}), 1);
   assert.equal(await connection.collection('database_migrations').countDocuments({}), 1);
   assert.equal(await connection.collection('properties').countDocuments({}), 0);
+  assert.equal(await connection.collection('provider_identity_subscriptions').countDocuments({}), 0);
+  assert.equal(await connection.collection('organization_photos').countDocuments({}), 0);
   assert.equal(await connection.collection('community_reactions').countDocuments({}), 0);
   evidence.checks.push('purge retains real references and administrator only', 'community reactions are removed', 'all old admin sessions revoked');
   await assert.rejects(auth.refresh(beforeLogin.refreshToken), /INVALID_REFRESH_TOKEN/);

@@ -21,6 +21,7 @@ test('command guards fail before opening a database connection', async () => {
   await assert.rejects(runProductionLaunchCommand('apply', { ...source, PRODUCTION_LAUNCH_CONFIRM: 'wrong' }, factory), /CONFIRMATION_REQUIRED/);
   await assert.rejects(runProductionLaunchCommand('apply', source, factory, async () => { throw new Error('INVALID_BACKUP'); }), /INVALID_BACKUP/);
   await assert.rejects(runProductionLaunchCommand('apply', { ...source, KEEP_ADMIN_EMAIL: '' }, factory), /EMAIL_INVALID/);
+  await assert.rejects(runProductionLaunchCommand('apply', { ...source, PRODUCTION_LAUNCH_PREVIEW_SHA256: undefined }, factory), /REVIEWED_PREVIEW_REQUIRED/);
   assert.equal(connections, 0);
 });
 
@@ -30,6 +31,7 @@ function environment(overrides: Record<string, string | undefined> = {}) {
     KEEP_ADMIN_EMAIL: 'root@example.com',
     PRODUCTION_LAUNCH_CONFIRM: PRODUCTION_LAUNCH_CONFIRMATION,
     PRODUCTION_LAUNCH_BACKUP_DIR: '/var/backups/elsadatrealestate/verified',
+    PRODUCTION_LAUNCH_PREVIEW_SHA256: 'a'.repeat(64),
     ...overrides
   };
 }
@@ -169,6 +171,11 @@ test('plan and failed eligibility checks never delete data', async () => {
   const plan = await purgeProductionDatabase(planned.connection, { mode: 'plan', keepAdminEmail: 'root@example.com' });
   assert.equal(plan.status, 'planned');
   assert.equal(planned.data.get('properties')?.length, 1);
+  assert.match(plan.previewHash!, /^[a-f0-9]{64}$/u);
+  assert.equal(plan.preview?.some(row => row.collection === 'properties'), true);
+  planned.data.get('properties')!.push({ _id: new Types.ObjectId(), name: { en: 'Created after preview' } });
+  await assert.rejects(purgeProductionDatabase(planned.connection, { mode: 'apply', keepAdminEmail: 'root@example.com', previewHash: plan.previewHash! }), /PREVIEW_CHANGED/);
+  assert.equal(planned.data.get('properties')?.length, 2);
 
   const invalid = fakeConnection({ ...seed, admin_bootstrap: [] });
   await assert.rejects(

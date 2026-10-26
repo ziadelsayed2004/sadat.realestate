@@ -1,0 +1,28 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "checks": [
+    "Real administrative subscriptions: inactive developer hidden; activation lists developer; paid office stays out of directory",
+    "Names resolve on real admin list; subscribed office retains public property name/photo; developer units return after reactivation",
+    "chromium 390px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium 820px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium 1093px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium 1366px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium 1518px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium 1920px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "chromium provider: website return follows user guide directly in desktop and mobile sidebar",
+    "chromium seeker: website return follows user guide directly in desktop and mobile sidebar",
+    "chromium admin: website return follows user guide directly in desktop and mobile sidebar",
+    "webkit 390px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit 820px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit 1093px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit 1366px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit 1518px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit 1920px: home/search image never covers title or price; 3:2 cards and full portrait details; unpublished-project unit remains visible; no horizontal overflow",
+    "webkit provider: website return follows user guide directly in desktop and mobile sidebar",
+    "webkit seeker: website return follows user guide directly in desktop and mobile sidebar",
+    "webkit admin: website return follows user guide directly in desktop and mobile sidebar"
+  ],
+  "errors": [],
+  "cleanup": true
+}

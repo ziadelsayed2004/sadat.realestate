@@ -69,6 +69,7 @@ export function DashboardAccountMenu({ locale, children, triggerClassName = '', 
     }}>
       <a role="menuitem" href={settingsHref}>{settingsLabel ?? (locale === 'ar' ? 'إعدادات الحساب' : 'Account settings')}</a>
       <a role="menuitem" href={guideHref}><UserGuideIcon />{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</a>
+      <a role="menuitem" href={`/?lang=${locale}`}>{locale === 'ar' ? 'العودة للموقع' : 'Back to website'}</a>
       <button role="menuitem" type="button" className="dashboard-account__logout" disabled={signingOut} onClick={onSignOut}><img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="18" height="18" />{signingOut ? (locale === 'ar' ? 'جاري تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}</button>
     </div> : null}
   </div>;

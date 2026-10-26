@@ -53,7 +53,7 @@ test('archives projects with review permission and the current version while kee
   await assert.rejects(fixture(true, false).service.create(claims(), create, context), error => error.code === 'PROJECT_FORBIDDEN');
 });
 
-test('project links match company approval and published membership independently of commission acknowledgement', async () => {
+test('project links require an active company subscription and published membership independently of commission acknowledgement', async () => {
   let unavailable: string | undefined;
   let lookups = 0;
   let profileLoads = 0;
@@ -65,7 +65,8 @@ test('project links match company approval and published membership independentl
     provider_applications: { _id: new Types.ObjectId('d'.repeat(24)), userId: new Types.ObjectId(provider), providerType: 'developer_company', status: 'approved' },
     provider_profiles: { _id: profileId, userId: new Types.ObjectId(provider), providerType: 'developer_company', status: 'approved' },
     users: { _id: new Types.ObjectId(provider), status: 'verified' },
-    commission_confirmations: { _id: new Types.ObjectId('e'.repeat(24)) }
+    commission_confirmations: { _id: new Types.ObjectId('e'.repeat(24)) },
+    provider_identity_subscriptions: { _id: new Types.ObjectId(provider), status: 'active', paymentConfirmed: true, startAt: new Date('2000-01-01'), endAt: new Date('2099-01-01') }
   };
   const connection = { collection: (name: string) => ({ findOne: async () => {
     lookups += 1;
@@ -82,7 +83,7 @@ test('project links match company approval and published membership independentl
   assert.deepEqual(await Promise.all([repository.publicPath(project), repository.publicPath(project)]), ['/developers/approved-builder/projects/project', '/developers/approved-builder/projects/project']);
   assert.equal(profileLoads, previousLoads + 1);
   for (unavailable of ['commission_confirmations', 'commission_policies']) assert.equal(await repository.publicPath(project), '/developers/approved-builder/projects/project', unavailable);
-  for (unavailable of ['organizations', 'provider_applications', 'provider_profiles', 'users', 'projects']) assert.equal(await repository.publicPath(project), undefined, unavailable);
+  for (unavailable of ['organizations', 'provider_applications', 'provider_profiles', 'users', 'projects', 'provider_identity_subscriptions']) assert.equal(await repository.publicPath(project), undefined, unavailable);
   unavailable = undefined;
   rows.users!.status = 'restricted';
   assert.equal(await repository.publicPath(project), undefined);

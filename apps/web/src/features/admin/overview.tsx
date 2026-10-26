@@ -175,6 +175,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
                     </li>
                   );
                 })}
+                {group.items.some(item => item.id === 'user-guide') ? <li><a href={localePath(locale, '/')}><span className="admin-dashboard__navigation-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z" /></svg></span><span>{copy.sidebar.website}</span></a></li> : null}
               </ul>
             </div>
           ))}
@@ -185,10 +186,6 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
           <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{account?.displayName.slice(0, 1) ?? copy.sidebar.avatar}</span>
           <span><strong>{account?.displayName ?? copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>
         </div>
-        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">
-          <span className="admin-dashboard__navigation-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z" /></svg></span>
-          <span>{copy.sidebar.website}</span>
-        </a>
         <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}>
           <span className="admin-dashboard__navigation-icon" aria-hidden="true"><img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" /></span>
           <span>{signingOut ? copy.sidebar.signingOut : copy.sidebar.signOut}</span>

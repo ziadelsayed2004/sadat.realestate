@@ -279,6 +279,7 @@ export const propertyReviewContextSchema = z.object({
 export type PropertyReviewContext = z.infer<typeof propertyReviewContextSchema>;
 
 export const propertyDataSchema = z.object({
+  providerDisplayName: z.string().trim().min(1).max(200).optional(),
   reviewContext: propertyReviewContextSchema.optional(),
   hasEditDraft: z.boolean().optional(),
   featured: z.boolean().optional(),

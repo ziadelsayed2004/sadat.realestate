@@ -13,9 +13,11 @@ test('identity policy fails closed for unknown and unapproved accounts; subscrip
   }
   const individual = providerVisibility({ accountId: account.toHexString(), providerType: 'individual_broker', approved: true, subscribed: true, acknowledged: true });
   assert.deepEqual([individual.publicIdentity, individual.customerIdentity, individual.contact], [true, false, false]);
-  assert.equal(directoryIdentityVisible(individual), true);
+  assert.equal(directoryIdentityVisible(individual), false);
   assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'brokerage_office', approved: true, subscribed: false, acknowledged: true })), false);
-  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'developer_company', approved: true, subscribed: false, acknowledged: false })), true);
+  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'developer_company', approved: true, subscribed: false, acknowledged: false })), false);
+  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'developer_company', approved: true, subscribed: true, acknowledged: false })), true);
+  assert.equal(directoryIdentityVisible(providerVisibility({ accountId: account.toHexString(), providerType: 'brokerage_office', approved: true, subscribed: true, acknowledged: false })), false);
 });
 test('paid office visibility is half-open and never reveals customer identity or contact details', () => {
   const row = { status: 'active', paymentConfirmed: true, startAt: new Date('2026-10-10T09:00:00Z'), endAt: new Date('2026-10-10T10:00:00Z') };

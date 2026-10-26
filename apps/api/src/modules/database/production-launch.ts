@@ -18,6 +18,7 @@ export interface ProductionLaunchEnvironment {
   mode: ProductionLaunchMode;
   keepAdminEmail: string;
   backupDirectory?: string;
+  previewHash?: string;
 }
 
 export interface ProductionLaunchCollectionCount {
@@ -35,6 +36,8 @@ export interface ProductionLaunchResult {
   usersAfter: number;
   syntheticAfter: number;
   collections: ProductionLaunchCollectionCount[];
+  previewHash?: string;
+  preview?: Array<{ collection: string; id: string; label?: unknown }>;
 }
 
 export class ProductionLaunchError extends Error {
@@ -68,7 +71,9 @@ export function parseProductionLaunchEnvironment(
   }
   const backupDirectory = source.PRODUCTION_LAUNCH_BACKUP_DIR?.trim();
   if (!backupDirectory) throw new ProductionLaunchError('PRODUCTION_LAUNCH_BACKUP_REQUIRED');
-  return { mode, keepAdminEmail, backupDirectory };
+  const previewHash = source.PRODUCTION_LAUNCH_PREVIEW_SHA256?.trim();
+  if (!previewHash || !/^[a-f0-9]{64}$/u.test(previewHash)) throw new ProductionLaunchError('PRODUCTION_LAUNCH_REVIEWED_PREVIEW_REQUIRED');
+  return { mode, keepAdminEmail, backupDirectory, previewHash };
 }
 
 function safeCollectionName(name: string): boolean {
@@ -208,6 +213,24 @@ async function assertResidue(db: NativeDatabase, names: readonly string[], admin
   }
 }
 
+async function reviewedPreview(db: NativeDatabase, names: readonly string[], adminId: Types.ObjectId, session?: ClientSession) {
+  const preview: NonNullable<ProductionLaunchResult['preview']> = [];
+  const hash = createHash('sha256').update(adminId.toHexString());
+  for (const collection of names) {
+    const filter = purgeFilter(collection, adminId);
+    if (filter === null) continue;
+    const rows = await db.collection(collection).find(filter, { ...(session ? { session } : {}), projection: { _id: 1, name: 1, title: 1, normalizedEmail: 1, brandName: 1, displayName: 1, slug: 1, status: 1, version: 1, updatedAt: 1 } }).toArray();
+    rows.sort((a, b) => String(a._id).localeCompare(String(b._id), 'en'));
+    hash.update(collection);
+    for (const row of rows) {
+      hash.update(JSON.stringify(row));
+      const label = row.name ?? row.title ?? row.brandName ?? row.displayName ?? row.normalizedEmail ?? row.slug;
+      preview.push({ collection, id: String(row._id), ...(label ? { label } : {}) });
+    }
+  }
+  return { preview, previewHash: hash.digest('hex') };
+}
+
 export async function purgeProductionDatabase(
   connection: Connection,
   environment: ProductionLaunchEnvironment
@@ -225,6 +248,7 @@ export async function purgeProductionDatabase(
   )))).reduce((a, b) => a + b, 0);
   if (environment.mode === 'plan') {
     return {
+      ...await reviewedPreview(db, names, adminId),
       status: 'planned', keptAdminId: adminId.toHexString(), usersBefore,
       usersAfter: usersBefore, syntheticAfter: syntheticBefore,
       collections: before.map(row => ({ ...row, deleted: 0, after: row.before }))
@@ -237,6 +261,7 @@ export async function purgeProductionDatabase(
     if (!transactionAdminId.equals(adminId)) {
       throw new ProductionLaunchError('PRODUCTION_LAUNCH_ADMIN_CHANGED');
     }
+    if (environment.previewHash && (await reviewedPreview(db, names, adminId, session)).previewHash !== environment.previewHash) throw new ProductionLaunchError('PRODUCTION_LAUNCH_PREVIEW_CHANGED');
     await assertReferenceParents(db, names, session);
     const rows: ProductionLaunchCollectionCount[] = [];
     for (const row of before) {
@@ -272,7 +297,7 @@ function parseEnvironmentFile(contents: string): Record<string, string> {
   return result;
 }
 
-async function resolvedSource(source: Record<string, string | undefined>) {
+export async function resolvedProductionLaunchSource(source: Record<string, string | undefined>) {
   if (source.MONGODB_URI) return source;
   const file = source.PRODUCTION_ENV_FILE?.trim() || '/etc/elsadatrealestate/production.env';
   return { ...parseEnvironmentFile(await readFile(file, 'utf8')), ...Object.fromEntries(Object.entries(source).filter(([, value]) => value !== undefined)) };
@@ -284,7 +309,7 @@ export async function runProductionLaunchCommand(
   connectionFactory: typeof createDatabaseConnection = createDatabaseConnection,
   backupVerifier: typeof verifyProductionBackup = verifyProductionBackup
 ): Promise<ProductionLaunchResult> {
-  const environmentSource = await resolvedSource(source);
+  const environmentSource = await resolvedProductionLaunchSource(source);
   const environment = parseProductionLaunchEnvironment(environmentSource, mode);
   if (mode === 'apply') await backupVerifier(environment.backupDirectory!);
   const runtime = parseRuntimeEnvironment(environmentSource);
@@ -312,6 +337,7 @@ if (isEntrypoint()) {
       const deleted = result.collections.reduce((sum, row) => sum + row.deleted, 0);
       const candidates = result.collections.reduce((sum, row) => sum + row.candidates, 0);
       process.stdout.write(`PRODUCTION_LAUNCH_${result.status.toUpperCase()} users_before=${result.usersBefore} users_after=${result.usersAfter} candidates=${candidates} deleted=${deleted} synthetic_after=${result.syntheticAfter} collections=${result.collections.length}\n`);
+      if (result.status === 'planned') process.stdout.write(JSON.stringify({ keptAdminId: result.keptAdminId, previewHash: result.previewHash, collections: result.collections, candidates: result.preview }, null, 2) + '\n');
     }).catch(error => {
       const code = error instanceof ProductionLaunchError ? error.code : 'PRODUCTION_LAUNCH_FAILED';
       process.stderr.write(`${code}; no credentials or connection details were emitted.\n`);

@@ -1,4 +1,4 @@
-import { createProviderVisibilityReader } from '../provider/visibility.js';
+import { createProviderVisibilityReader, directoryIdentityVisible } from '../provider/visibility.js';
 import { individualPublicIdentity, visiblePublicOrganizations } from '../public/identity.js';
 import { publicPropertyCoverUrl, attachPublicPropertyCovers } from '../media/public-cover.js';
 import { Types, type Connection } from 'mongoose';
@@ -148,7 +148,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     // The account type is authoritative even for legacy drafts saved as an individual source.
     if (policy?.providerType) base.sourceType = policy.providerType;
     let organization: Row | null = null;
-    if (policy?.publicIdentity && policy.accountId) {
+    if (policy?.publicIdentity && policy.accountId && policy.providerType !== 'individual_broker') {
       const account = new Types.ObjectId(policy.accountId);
       const [profiles, applications] = await Promise.all([
         connection.collection('provider_profiles').find({ userId: account }, { projection: { _id: 1 } }).toArray(),
@@ -163,7 +163,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
       const organizationId = id(organization._id);
       if (organizationId) base.organizationId = organizationId;
       const slug = organizationSlugSchema.safeParse(organization.slug);
-      if (slug.success) base.organizationSlug = slug.data;
+      if (slug.success && policy && (policy.providerType === 'brokerage_office' || directoryIdentityVisible(policy))) base.organizationSlug = slug.data;
       base.sourceName = organization.name; if (typeof organization.imageUrl === 'string') base.sourceImageUrl = organization.imageUrl;
       base.sourceVerified = policy?.approved === true;
     }

@@ -34,7 +34,7 @@ export async function visiblePublicOrganizations<T extends object>(connection: C
   const result: T[] = [];
   for (let offset = 0; offset < rows.length; offset += 8) {
     const group = rows.slice(offset, offset + 8);
-    const allowed = await Promise.all(group.map(row => visible((row as { providerId?: unknown }).providerId)));
+    const allowed = await Promise.all(group.map(row => scope === 'directory' && (row as { kind?: unknown }).kind !== 'developer_company' ? false : visible((row as { providerId?: unknown }).providerId)));
     result.push(...group.filter((_row, index) => allowed[index]));
   }
   return result;

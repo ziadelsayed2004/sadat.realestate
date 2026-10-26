@@ -1,0 +1,14 @@
+{
+  "status": "PASS_LOCAL",
+  "mockedRoutes": false,
+  "accessTokenSeconds": 6,
+  "checks": [
+    "chromium provider: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works",
+    "webkit provider: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works",
+    "chromium seeker: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works",
+    "webkit seeker: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works",
+    "chromium admin: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works",
+    "webkit admin: two tabs survive several real token expirations, cookie rotations, offline outage and reload; explicit logout still works"
+  ],
+  "cleanup": true
+}

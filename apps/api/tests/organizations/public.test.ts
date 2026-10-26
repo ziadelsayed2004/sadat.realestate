@@ -18,6 +18,8 @@ test('subscribed office exposes its published owned units without turning into a
   db.rows.properties = [{ _id: new Types.ObjectId('b'.repeat(24)), providerId: account, slug: 'office-home', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true }, { _id: new Types.ObjectId('c'.repeat(24)), organizationId, slug: 'office-draft', kind: 'property', name: localized, transactionType: 'sale', status: 'draft', active: true }];
   const service = createPublicOrganizationService({ repository: createMongoosePublicOrganizationRepository(db.connection) });
   const profile = await service.get('subscribed-office');
+  assert.equal((await service.list({})).total, 0);
+  assert.equal((await visiblePublicOrganizations(db.connection, db.rows.organizations!)).length, 1);
   assert.equal(profile?.kind, 'brokerage_office');
   assert.equal(profile?.coverFit, 'cover');
   assert.deepEqual(profile?.properties.map(value => value.slug), ['office-home']);
@@ -29,6 +31,7 @@ test('subscribed office exposes its published owned units without turning into a
 
 test('finds developer properties stored under account/profile aliases and uses their ready cover image', async () => {
   const db = database('developer_company'), organizationId = new Types.ObjectId('a'.repeat(24));
+  db.rows.provider_identity_subscriptions = [{ _id: account, status: 'active', paymentConfirmed: true, startAt: new Date('2020-01-01'), endAt: new Date('2099-01-01') }];
   const propertyId = new Types.ObjectId('b'.repeat(24)), mediaId = new Types.ObjectId('c'.repeat(24));
   db.rows.organizations = [{ _id: organizationId, providerId: profileId, kind: 'developer_company', slug: 'cover-company', name: localized, status: 'approved' }];
   const property = { _id: propertyId, providerId: account, slug: 'company-property', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true };
@@ -75,7 +78,7 @@ test('an empty optional description cannot hide an approved company or its indep
   assert.deepEqual((await service.get(row.slug))?.description, { en: 'A valid company description' });
 });
 
-test('approved developer companies and published projects stay browsable without commission acknowledgement, while contact and other identity scopes stay protected', async () => {
+test('developer directory requires a current paid subscription; contact still requires commission acknowledgement', async () => {
   const db = database('developer_company');
   const organizationId = new Types.ObjectId('a'.repeat(24));
   const projectId = new Types.ObjectId('b'.repeat(24));
@@ -90,11 +93,14 @@ test('approved developer companies and published projects stay browsable without
     assert.deepEqual(profile?.projects.map(item => item.slug), ['published-project']);
     return profile;
   };
+  assert.equal((await service.list({})).total, 0);
+  assert.equal(await service.get('new-life'), null);
+  db.rows.provider_identity_subscriptions = [{ _id: account, status: 'active', paymentConfirmed: true, startAt: new Date('2020-01-01'), endAt: new Date('2099-01-01') }];
   for (const deletedAt of [undefined, null]) {
     if (deletedAt === undefined) delete db.rows.users![0]!.deletedAt; else db.rows.users![0]!.deletedAt = deletedAt;
     const profile = await assertListed();
     assert.equal(profile?.contactPhone, undefined); assert.equal(profile?.whatsappUrl, undefined); assert.equal(profile?.contactAddress, undefined);
-    assert.deepEqual(await visiblePublicOrganizations(db.connection, [organization]), []);
+    assert.equal((await visiblePublicOrganizations(db.connection, [organization])).length, 1);
     assert.equal((await createMongoosePublicSitemapSource(db.connection).list()).some(item => item.path === '/developers/new-life'), true);
   }
   db.rows.commission_confirmations!.push({ accountId: account.toHexString(), source: 'policy', sourceRecordId: policyId.toHexString(), policyVersion: 1, status: 'acknowledged' });
@@ -105,6 +111,10 @@ test('approved developer companies and published projects stay browsable without
     db.rows.organizations![0]!.providerId = owner;
     await assertListed();
   }
+  db.rows.provider_identity_subscriptions![0]!.endAt = new Date('2020-01-02');
+  assert.equal((await service.list({})).total, 0);
+  assert.equal(await service.get('new-life'), null);
+  db.rows.provider_identity_subscriptions![0]!.endAt = new Date('2099-01-01');
   for (const [collection, field, value] of [['users', 'status', 'suspended'], ['users', 'deletedAt', new Date()], ['provider_profiles', 'status', 'suspended'], ['provider_applications', 'status', 'pending_review'], ['organizations', 'status', 'inactive']] as const) {
     const row = db.rows[collection]![0]!, before = row[field]; row[field] = value;
     assert.equal((await service.list({})).items.length, 0, `${collection}.${field}`);

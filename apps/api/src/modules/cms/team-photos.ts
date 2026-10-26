@@ -98,7 +98,7 @@ export function createTeamPhotos(dependencies: {
         }
         const individual = !company ? await connection.collection('provider_profiles').findOne({ publicImageUrl: imageUrl, providerType: 'individual_broker', status: 'approved' }, { projection: { userId: 1 } }) : null;
         const individualVisible = individual?.userId ? (await createProviderVisibilityReader(connection).read(String(individual.userId))).publicIdentity : false;
-        if (!individualVisible && (!company || (await visiblePublicOrganizations(connection, [company], 'directory')).length === 0)) throw missing();
+        if (!individualVisible && (!company || (await visiblePublicOrganizations(connection, [company])).length === 0)) throw missing();
       }
       if (!claims && !organization && !await connection.collection(taxonomy ? 'property_taxonomy' : article ? 'articles' : 'cms_team_members').findOne(taxonomy
         ? { imageUrl: `/api/v1/public/taxonomy-photos/${id}`, active: true }

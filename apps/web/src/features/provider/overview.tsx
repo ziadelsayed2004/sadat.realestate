@@ -180,7 +180,7 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
             );
           })}
           <li data-provider-nav="userGuide"><a href={localeForProviderPath(locale, '/provider/user-guide')} aria-current={activePath === '/provider/user-guide' ? 'page' : undefined} data-active={activePath === '/provider/user-guide' ? 'true' : undefined} onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}><UserGuideIcon /></span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a></li>
-          <li className="provider-dashboard__mobile-website">
+          <li data-provider-nav="website">
             <a href={localeForProviderPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMobileMenuOpen(false)}>
               <span aria-hidden="true">↗</span><span>{websiteLabel}</span>
             </a>
@@ -193,7 +193,6 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
         </ul>
         <footer className="provider-dashboard__navigation-footer">
           <div className="provider-dashboard__navigation-profile"><strong>{providerLabel}</strong><small>{locale === 'ar' ? 'حساب مزود عقار' : 'Provider account'}</small></div>
-          <a className="provider-dashboard__website-link" href={localeForProviderPath(locale, '/')}><span>{websiteLabel}</span><span aria-hidden="true">↗</span></a>
           <button type="button" onClick={signOut} disabled={signingOut}><img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="16" height="16" />{logoutLabel}</button>
         </footer>
       </nav>

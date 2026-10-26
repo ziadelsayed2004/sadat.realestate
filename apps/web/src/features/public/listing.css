@@ -768,7 +768,7 @@
     margin-block-start: 0;
     padding: 0;
     overflow: hidden;
-    grid-template-rows: 208px 1fr;
+    grid-template-rows: auto 1fr;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgb(15 23 42 / 0.13);
   }

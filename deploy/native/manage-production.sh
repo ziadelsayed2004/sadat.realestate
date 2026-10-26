@@ -36,6 +36,10 @@ if [[ "$MODE" == launch ]]; then
     echo 'PRODUCTION_LAUNCH_CONFIRMATION_REQUIRED' >&2
     exit 2
   fi
+  if [[ ! ${PRODUCTION_LAUNCH_PREVIEW_SHA256:-} =~ ^[a-f0-9]{64}$ ]]; then
+    echo 'PRODUCTION_LAUNCH_REVIEWED_PREVIEW_REQUIRED' >&2
+    exit 2
+  fi
 fi
 if [[ ! -d "$OPERATOR_REPOSITORY/.git" || ! -f "$OPERATOR_REPOSITORY/package-lock.json" ]]; then
   echo 'OPERATOR_REPOSITORY_INVALID' >&2
@@ -121,6 +125,7 @@ case "$MODE" in
       exit 2
     fi
     launch_admin_email=$KEEP_ADMIN_EMAIL
+    launch_preview_hash=$PRODUCTION_LAUNCH_PREVIEW_SHA256
     systemctl stop elsadat-api.service elsadat-web.service
     services_stopped=true
     # shellcheck disable=SC1090
@@ -128,6 +133,7 @@ case "$MODE" in
     source "$PRODUCTION_ENV_FILE"
     set +a
     KEEP_ADMIN_EMAIL=$launch_admin_email
+    PRODUCTION_LAUNCH_PREVIEW_SHA256=$launch_preview_hash
     export KEEP_ADMIN_EMAIL
     backup_output=$(runuser -u elsadat --preserve-environment -- \
       bash /opt/elsadatrealestate/current/deploy/native/backup.sh)
@@ -145,9 +151,13 @@ case "$MODE" in
       PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
       KEEP_ADMIN_EMAIL="$KEEP_ADMIN_EMAIL" \
       PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
+      PRODUCTION_LAUNCH_PREVIEW_SHA256="$PRODUCTION_LAUNCH_PREVIEW_SHA256" \
       PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
       npm --prefix /opt/elsadatrealestate/current run production:launch:purge -- --apply
     PRODUCTION_LAUNCH_BACKUP_DIR="$backup_dir" \
+      PRODUCTION_ENV_FILE="$PRODUCTION_ENV_FILE" \
+      KEEP_ADMIN_EMAIL="$KEEP_ADMIN_EMAIL" \
+      PRODUCTION_LAUNCH_PREVIEW_SHA256="$PRODUCTION_LAUNCH_PREVIEW_SHA256" \
       PRODUCTION_LAUNCH_CONFIRM=PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN \
       bash /opt/elsadatrealestate/current/deploy/native/purge-private-files.sh
     ;;

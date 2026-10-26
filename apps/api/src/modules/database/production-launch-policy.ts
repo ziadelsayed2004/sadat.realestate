@@ -9,7 +9,8 @@ export const LAUNCH_REFERENCE_COLLECTIONS = new Set([
   'roles', 'admin_settings', 'cms_settings', 'cms_display_settings',
   'settings_seo', 'settings_privacy_policies', 'commission_policies',
   'locations', 'property_taxonomy', 'features_services', 'article_categories',
-  'ad_placements', 'ad_settings', 'cms_population_source_cache'
+  'ad_placements', 'ad_settings', 'cms_population_source_cache',
+  'cms_team_categories', 'community_categories', 'taxonomy_photos', 'rbac_roles'
 ]);
 
 export const LAUNCH_PURGED_COLLECTIONS = new Set([
@@ -23,7 +24,11 @@ export const LAUNCH_PURGED_COLLECTIONS = new Set([
   'notifications', 'organizations', 'otp_challenges', 'outbox_events', 'payment_proofs',
   'projects', 'properties', 'property_media', 'property_reports', 'provider_applications',
   'provider_documents', 'provider_profiles', 'provider_settings', 'request_issues',
-  'requests', 'seeker_profiles', 'sessions', 'viewing_schedule_locks', 'viewings'
+  'requests', 'seeker_profiles', 'sessions', 'viewing_schedule_locks', 'viewings',
+  'cms_banners', 'cms_homepage_metrics', 'cms_article_photos', 'cms_team_photos',
+  'organization_photos', 'organization_reconciliations', 'property_edit_drafts',
+  'property_media_drafts', 'property_view_events', 'provider_identity_subscriptions',
+  'commission_snapshots', 'admin_attention_reads'
 ]);
 
 export function launchSyntheticFilter(): Record<string, unknown> {

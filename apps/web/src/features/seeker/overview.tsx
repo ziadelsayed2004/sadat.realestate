@@ -213,12 +213,12 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
           })}
         </ul>
         <a href={localeForSeekerPath(locale, '/seeker/user-guide')} aria-current={activePath === '/seeker/user-guide' ? 'page' : undefined} data-active={activePath === '/seeker/user-guide' || undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true" className="seeker-dashboard__nav-icon"><UserGuideIcon /></span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a>
+        <a href={localeForSeekerPath(locale, '/')} onClick={() => setMenuOpen(false)}>{websiteLabel}<span aria-hidden="true">↗</span></a>
         <div className="seeker-dashboard__nav-footer">
           <div className="seeker-dashboard__nav-footer-profile">
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
             <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
           </div>
-          <a href={localeForSeekerPath(locale, '/')} onClick={() => setMenuOpen(false)}>{websiteLabel}<span aria-hidden="true">↗</span></a>
           <button className="seeker-dashboard__logout" type="button" disabled={signingOut} onClick={signOut}>
             <span>{signOutLabel}</span><SeekerIcon name="logout" />
           </button>

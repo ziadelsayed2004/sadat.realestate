@@ -22575,6 +22575,12 @@
           },
           "reviewContext": {
             "$ref": "#/components/schemas/PropertyReviewContext"
+          },
+          "providerDisplayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Provider display name resolved by the server for authorized administrative views only."
           }
         }
       },

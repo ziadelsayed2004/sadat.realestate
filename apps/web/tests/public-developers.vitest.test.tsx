@@ -56,6 +56,14 @@ const profileData = publicOrganizationProfileSchema.parse({
   }
 });
 
+it('keeps a published unit visible if its project is unpublished and links to project units otherwise', () => {
+  const result = renderWithLocale(<PublicDeveloperProfile locale="en" url="/developers/approved-builder?lang=en" initialData={{ ...profileData, projects: [] }} />, { locale: 'en' });
+  expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home?lang=en');
+  result.rerender(<PublicDeveloperProfile key="published" locale="en" url="/developers/approved-builder?lang=en" initialData={profileData} />);
+  expect(screen.queryByRole('link', { name: 'Published home' })).toBeNull();
+  expect(screen.getByRole('link', { name: '1 published units inside projects — view projects' })).toHaveAttribute('href', '#developer-projects');
+});
+
 describe('public developer directory and profiles', () => {
   it.each([
     { imageUrl: undefined, logoUrl: undefined, expected: '/assets/sadat-real-estate-logo.png' },

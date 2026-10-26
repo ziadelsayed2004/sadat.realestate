@@ -5,11 +5,12 @@ import { createMongooseProviderCommissionSource } from './commission-repository.
 export interface ProviderVisibility {
   accountId?: string; providerType?: ProviderType; approved: boolean;
   publicIdentity: boolean; customerIdentity: boolean; contact: boolean;
+  subscriptionActive?: boolean;
 }
 export interface ProviderVisibilityReader { read(providerId: string): Promise<ProviderVisibility>; }
-/** A reviewed developer's company and published projects may be browsed before commission acknowledgement. */
+/** The developer directory is reserved for approved, currently subscribed developers. */
 export function directoryIdentityVisible(value: ProviderVisibility): boolean {
-  return value.providerType === 'developer_company' ? value.approved : value.publicIdentity;
+  return value.providerType === 'developer_company' && value.approved && value.subscriptionActive === true;
 }
 const hidden: ProviderVisibility = { approved: false, publicIdentity: false, customerIdentity: false, contact: false };
 export function identitySubscriptionActive(row: Record<string, unknown> | null, at: Date): boolean {
@@ -17,7 +18,7 @@ export function identitySubscriptionActive(row: Record<string, unknown> | null, 
 }
 export function providerVisibility(input: { accountId: string; providerType: ProviderType; approved: boolean; acknowledged: boolean; subscribed: boolean }): ProviderVisibility {
   const developer = input.approved && input.providerType === 'developer_company' && input.acknowledged;
-  return { accountId: input.accountId, providerType: input.providerType, approved: input.approved,
+  return { accountId: input.accountId, providerType: input.providerType, approved: input.approved, subscriptionActive: input.approved && input.subscribed,
     publicIdentity: developer || input.approved && input.subscribed,
     customerIdentity: developer, contact: developer };
 }

@@ -80,7 +80,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // 2.7 KB to 2,783,964 bytes. Bound the additional payload to three KiB.
 // Upload ratio inspection, guidance and its bilingual operating guide add
 // about eight KiB above 2,786,702 bytes; keep route/chunk limits fixed.
-const maxJavaScriptBytes = 2_730 * 1024 + 128;
+// Provider account-name projections and the revised directory/image guidance
+// have a bounded 2 KiB allowance. Chunk and stylesheet limits stay unchanged.
+const maxJavaScriptBytes = 2_732 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

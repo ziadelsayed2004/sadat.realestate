@@ -12,18 +12,19 @@ describe('dashboard account menu', () => {
     const controls = screen.getAllByRole('menuitem');
     expect(controls[0]).toHaveAttribute('href', `/seeker/settings?lang=${locale}`);
     expect(controls[1]).toHaveAttribute('href', `/seeker/user-guide?lang=${locale}`);
+    expect(controls[2]).toHaveAttribute('href', `/?lang=${locale}`);
     expect(controls[0]).toHaveFocus();
     fireEvent.keyDown(controls[0]!, { key: 'ArrowUp' });
-    expect(controls[2]).toHaveFocus();
-    fireEvent.keyDown(controls[2]!, { key: 'Escape' });
+    expect(controls[3]).toHaveFocus();
+    fireEvent.keyDown(controls[3]!, { key: 'Escape' });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
     fireEvent.keyDown(trigger, { key: 'ArrowUp' });
-    expect(screen.getAllByRole('menuitem')[2]).toHaveFocus();
+    expect(screen.getAllByRole('menuitem')[3]).toHaveFocus();
     fireEvent.pointerDown(document.body);
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     fireEvent.click(trigger);
-    fireEvent.click(screen.getAllByRole('menuitem')[2]!);
+    fireEvent.click(screen.getAllByRole('menuitem')[3]!);
     expect(onSignOut).toHaveBeenCalledTimes(1);
   });
   it('disables logout while the request is pending', () => {
