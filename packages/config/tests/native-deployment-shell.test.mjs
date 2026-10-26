@@ -8,6 +8,97 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const bash = process.platform === 'win32' ? 'C:/Program Files/Git/bin/bash.exe' : 'bash';
 
+test('reviewed launch handles expired timers, pins the active release and restores services on cancellation or failure', () => {
+  const temporaryRoot = path.join(root, '.tmp');
+  fs.mkdirSync(temporaryRoot, { recursive: true });
+  const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'launch-reviewed-'));
+  try {
+    const script = fs.readFileSync(path.join(root, 'deploy/native/launch-reviewed.sh'), 'utf8')
+      .replaceAll('/opt/elsadatrealestate', '${SANDBOX}')
+      .replaceAll('/root/sadat-launch-review.', '${SANDBOX}/sad-launch-review.')
+      .replace('if [[ $EUID -ne 0 ]]; then', 'if false; then');
+    fs.writeFileSync(path.join(sandbox, 'launch.sh'), script);
+    fs.writeFileSync(path.join(sandbox, 'fixture.sh'), String.raw`set -Eeuo pipefail
+cd "$1"
+export SANDBOX=$PWD
+mkdir -p "$SANDBOX/bin" "$SANDBOX/releases/fixture/deploy/native" "$SANDBOX/releases/fixture/apps/api/dist/modules/database"
+ln -s "$SANDBOX/releases/fixture" "$SANDBOX/current"
+touch "$SANDBOX/releases/fixture/apps/api/dist/modules/database/production-launch.js"
+printf 'echo LOCK >> "$SANDBOX/events"\n' > "$SANDBOX/current/deploy/native/deployment-lock.sh"
+printf 'echo BACKUP >> "$SANDBOX/events"\n[[ $FAIL_BACKUP != true ]] || exit 12\necho "NATIVE_BACKUP_OK path=$SANDBOX/backup off_server_copy_required=true"\n' > "$SANDBOX/current/deploy/native/backup.sh"
+printf 'echo FILES >> "$SANDBOX/events"\n' > "$SANDBOX/current/deploy/native/purge-private-files.sh"
+printf 'echo HEALTH >> "$SANDBOX/events"\n' > "$SANDBOX/current/deploy/native/healthcheck.sh"
+printf 'APP_ENV=production\nKEEP_ADMIN_EMAIL=wrong@example.invalid\n' > "$SANDBOX/production.env"
+cat > "$SANDBOX/bin/systemctl" <<'CONTROL'
+#!/usr/bin/env bash
+echo "SYSTEMCTL $*" >> "$SANDBOX/events"
+if [[ $1 == list-units && $ACTIVE_TIMER == true ]]; then
+  echo 'elsadat-launch-resume-123.timer loaded active waiting resume'
+fi
+exit 0
+CONTROL
+cat > "$SANDBOX/bin/sudo" <<'SUDO'
+#!/usr/bin/env bash
+shift 2
+exec "$@"
+SUDO
+cat > "$SANDBOX/bin/runuser" <<'USER'
+#!/usr/bin/env bash
+while [[ $1 != -- ]]; do shift; done
+shift
+exec "$@"
+USER
+cat > "$SANDBOX/bin/npm" <<'NPM'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+[[ $KEEP_ADMIN_EMAIL == root@example.invalid ]]
+[[ $2 == "$SANDBOX/releases/fixture" ]]
+if [[ $* == *production:launch:plan* ]]; then
+  echo PLAN >> "$SANDBOX/events"
+  cat "$SANDBOX/preview.json"
+else
+  echo APPLY >> "$SANDBOX/events"
+  [[ $PRODUCTION_LAUNCH_PREVIEW_SHA256 == $(printf 'a%.0s' {1..64}) ]]
+  [[ $PRODUCTION_LAUNCH_BACKUP_DIR == "$SANDBOX/backup" ]]
+  [[ $PRODUCTION_LAUNCH_CONFIRM == PURGE_ALL_DATA_EXCEPT_CONFIRMED_SUPER_ADMIN ]]
+  [[ $FAIL_APPLY != true ]] || exit 13
+fi
+NPM
+chmod +x "$SANDBOX/bin/"*
+export PATH="$SANDBOX/bin:$PATH"
+export KEEP_ADMIN_EMAIL=root@example.invalid PRODUCTION_ENV_FILE="$SANDBOX/production.env"
+export ACTIVE_TIMER=false FAIL_BACKUP=false FAIL_APPLY=false
+printf '{"keptAdminId":"root","previewHash":"%s","collections":[{"collection":"users","before":2,"candidates":1}],"candidates":[{"collection":"users","id":"trial"}]}' "$(printf 'a%.0s' {1..64})" > "$SANDBOX/preview.json"
+
+printf 'DELETE_TRIAL_DATA\n' | bash "$SANDBOX/launch.sh"
+[[ $(grep -c '^APPLY$' "$SANDBOX/events") == 1 ]]
+[[ $(tail -n 1 "$SANDBOX/events") == HEALTH ]]
+! grep -q 'SYSTEMCTL stop elsadat-launch-resume-' "$SANDBOX/events"
+
+for scenario in cancel backup apply; do
+  : > "$SANDBOX/events"
+  export ACTIVE_TIMER=true FAIL_BACKUP=false FAIL_APPLY=false
+  answer=DELETE_TRIAL_DATA
+  if [[ $scenario == cancel ]]; then answer=CANCEL; fi
+  if [[ $scenario == backup ]]; then export FAIL_BACKUP=true; fi
+  if [[ $scenario == apply ]]; then export FAIL_APPLY=true; fi
+  if printf '%s\n' "$answer" | bash "$SANDBOX/launch.sh"; then exit 71; fi
+  [[ $(tail -n 1 "$SANDBOX/events") == 'SYSTEMCTL start elsadat-api.service elsadat-web.service' ]]
+  grep -q 'SYSTEMCTL stop elsadat-launch-resume-123.timer' "$SANDBOX/events"
+  ! grep -q '^FILES$' "$SANDBOX/events"
+  if [[ $scenario != apply ]]; then ! grep -q '^APPLY$' "$SANDBOX/events"; fi
+done
+echo REVIEWED_LAUNCH_FIXTURE_OK
+`);
+    const result = spawnSync(bash, [path.join(sandbox, 'fixture.sh').replaceAll('\\', '/'), sandbox.replaceAll('\\', '/')], { encoding: 'utf8', windowsHide: true, env: { ...process.env, MSYS: 'winsymlinks:nativestrict' } });
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}\n${result.error?.message ?? ''}`);
+    assert.match(result.stdout, /REVIEWED_LAUNCH_FIXTURE_OK/u);
+  } finally {
+    assert.equal(path.dirname(sandbox), temporaryRoot);
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
 test('native backup writes portable checksums and detects changed archive bytes', () => {
   const temporaryRoot = path.join(root, '.tmp');
   fs.mkdirSync(temporaryRoot, { recursive: true });
