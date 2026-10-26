@@ -123,8 +123,12 @@ export async function verifyProductionBackup(
     if (!metadata.isFile() || metadata.size === 0) {
       throw new ProductionLaunchError('PRODUCTION_LAUNCH_BACKUP_ARTIFACT_INVALID');
     }
-    const expected = checksums.split(/\r?\n/u).map(line => line.trim().split(/\s+/u))
-      .find(parts => parts.at(-1)?.replace(/^\*/u, '') === filename)?.[0];
+    // Native backups previously recorded absolute paths; newer manifests use
+    // relative names. Accept only this artifact's exact path, never a basename
+    // match that could silently select another directory's checksum.
+    const expected = checksums.split(/\r?\n/u)
+      .map(line => /^([0-9a-f]{64}) [ *](.+)$/u.exec(line))
+      .find(entry => entry && (entry[2] === filename || entry[2] === artifact))?.[1];
     if (!expected || !/^[0-9a-f]{64}$/u.test(expected) || await sha256(artifact) !== expected) {
       throw new ProductionLaunchError('PRODUCTION_LAUNCH_BACKUP_CHECKSUM_INVALID');
     }

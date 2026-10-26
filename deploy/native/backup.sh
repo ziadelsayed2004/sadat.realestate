@@ -14,7 +14,10 @@ chmod 0600 "$CONFIG"
 
 mongodump --config "$CONFIG" --archive="$DESTINATION/mongodb.archive.gz" --gzip
 tar -C /var/lib/elsadatrealestate -czf "$DESTINATION/private-files.tar.gz" private
-sha256sum "$DESTINATION/mongodb.archive.gz" "$DESTINATION/private-files.tar.gz" > "$DESTINATION/SHA256SUMS"
+(
+  cd "$DESTINATION"
+  sha256sum mongodb.archive.gz private-files.tar.gz > SHA256SUMS
+)
 find "$BACKUP_ROOT" -mindepth 1 -maxdepth 1 -type d -mtime "+$RETENTION" -exec rm -rf -- {} +
 echo "NATIVE_BACKUP_OK path=$DESTINATION off_server_copy_required=true"
 

@@ -8,6 +8,54 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const bash = process.platform === 'win32' ? 'C:/Program Files/Git/bin/bash.exe' : 'bash';
 
+test('native backup writes portable checksums and detects changed archive bytes', () => {
+  const temporaryRoot = path.join(root, '.tmp');
+  fs.mkdirSync(temporaryRoot, { recursive: true });
+  const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'backup-checksum-'));
+  try {
+    const script = fs.readFileSync(path.join(root, 'deploy/native/backup.sh'), 'utf8');
+    fs.writeFileSync(path.join(sandbox, 'backup.sh'), script.replaceAll('/var/lib/elsadatrealestate', '${SANDBOX}/storage'));
+    fs.writeFileSync(path.join(sandbox, 'fixture.sh'), String.raw`set -Eeuo pipefail
+cd "$1"
+export SANDBOX=$PWD
+mkdir -p "$SANDBOX/bin" "$SANDBOX/storage/private"
+printf 'retained upload' > "$SANDBOX/storage/private/photo.webp"
+cat > "$SANDBOX/bin/mongodump" <<'DUMP'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+for argument in "$@"; do
+  if [[ $argument == --archive=* ]]; then
+    archive=$(printf '%s' "$argument" | cut -c11-)
+    printf 'database fixture' > "$archive"
+  fi
+done
+DUMP
+chmod +x "$SANDBOX/bin/mongodump"
+export PATH="$SANDBOX/bin:$PATH"
+export BACKUP_ROOT="$SANDBOX/backups with spaces"
+export MONGODB_URI=mongodb://fixture.invalid/unused
+bash "$SANDBOX/backup.sh"
+for backup in "$BACKUP_ROOT/"*; do
+  cd "$backup"
+  sha256sum --check --status SHA256SUMS
+  [[ $(wc -l < SHA256SUMS) == 2 ]]
+  grep -Eq '^[a-f0-9]{64} [ *]mongodb.archive.gz$' SHA256SUMS
+  grep -Eq '^[a-f0-9]{64} [ *]private-files.tar.gz$' SHA256SUMS
+  tar -tzf private-files.tar.gz | grep -q private/photo.webp
+  printf 'changed bytes' >> mongodb.archive.gz
+  if sha256sum --check --status SHA256SUMS; then exit 72; fi
+done
+echo NATIVE_BACKUP_CHECKSUM_FIXTURE_OK
+`);
+    const result = spawnSync(bash, [path.join(sandbox, 'fixture.sh').replaceAll('\\', '/'), sandbox.replaceAll('\\', '/')], { encoding: 'utf8', windowsHide: true });
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}\n${result.error?.message ?? ''}`);
+    assert.match(result.stdout, /NATIVE_BACKUP_CHECKSUM_FIXTURE_OK/u);
+  } finally {
+    assert.equal(path.dirname(sandbox), temporaryRoot);
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
 test('failed release cleanup and disk recovery preserve the active release', () => {
   const temporaryRoot = path.join(root, '.tmp');
   fs.mkdirSync(temporaryRoot, { recursive: true });

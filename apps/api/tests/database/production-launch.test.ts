@@ -204,16 +204,27 @@ test('plan and failed eligibility checks never delete data', async () => {
 test('backup verification requires non-empty artifacts with matching checksums inside the backup root', async () => {
   const temporary = await mkdtemp(path.join(os.tmpdir(), 'sadat-launch-'));
   try {
-    const backup = path.join(temporary, '20260911T120000Z');
-    await mkdir(backup);
+    const backup = path.join(temporary, 'backup with spaces', '20260911T120000Z');
+    await mkdir(backup, { recursive: true });
     const artifacts = {
       'mongodb.archive.gz': Buffer.from('mongo-backup'),
       'private-files.tar.gz': Buffer.from('private-backup')
     };
     for (const [name, value] of Object.entries(artifacts)) await writeFile(path.join(backup, name), value);
-    const checksums = Object.entries(artifacts).map(([name, value]) => `${createHash('sha256').update(value).digest('hex')}  ${name}`).join('\n');
-    await writeFile(path.join(backup, 'SHA256SUMS'), `${checksums}\n`);
-    assert.equal(await verifyProductionBackup(backup, temporary), await realpathForTest(backup));
+    const canonicalBackup = await realpathForTest(backup);
+    const manifest = (location: (name: string) => string, marker = ' ') => Object.entries(artifacts)
+      .map(([name, value]) => `${createHash('sha256').update(value).digest('hex')} ${marker}${location(name)}`).join('\n');
+    for (const checksums of [
+      manifest(name => name),
+      manifest(name => path.join(canonicalBackup, name)),
+      manifest(name => path.join(canonicalBackup, name), '*')
+    ]) {
+      await writeFile(path.join(backup, 'SHA256SUMS'), `${checksums}\n`);
+      assert.equal(await verifyProductionBackup(backup, temporary), canonicalBackup);
+    }
+    await writeFile(path.join(backup, 'SHA256SUMS'), manifest(name => path.join(temporary, 'other-backup', name)));
+    await assert.rejects(verifyProductionBackup(backup, temporary), /PRODUCTION_LAUNCH_BACKUP_CHECKSUM_INVALID/);
+    await writeFile(path.join(backup, 'SHA256SUMS'), manifest(name => name));
     await writeFile(path.join(backup, 'mongodb.archive.gz'), 'tampered');
     await assert.rejects(verifyProductionBackup(backup, temporary), /PRODUCTION_LAUNCH_BACKUP_CHECKSUM_INVALID/);
   } finally {
