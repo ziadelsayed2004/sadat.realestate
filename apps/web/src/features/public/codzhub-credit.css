@@ -1,8 +1,9 @@
 @font-face{font-family:CodzhubWordmark;src:url('/assets/fonts/lemonada/codzhub-wordmark.woff') format('woff');font-style:normal;font-weight:300 700;font-display:swap}
-.public-site-footer__credit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.5rem;padding:.875rem 1rem;border-block-start:1px solid #ffffff14;font-size:.75rem;color:#b8bfcd}
-.public-site-footer__credit a{display:inline-flex;align-items:center;gap:.375rem;padding:.25rem .625rem;border:1px solid #7370bb55;border-radius:999px;background:#111d35;color:#c6bfff;text-decoration:none}
-.public-site-footer__credit a:hover{border-color:#12d8ff;color:#fff}
+.public-site-footer__credit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.5rem;padding:.875rem 5rem;border-block-start:1px solid #ffffff14;font-size:.75rem;color:#b8bfcd}
+.public-site-footer__credit a{display:inline-flex;align-items:center;direction:ltr;gap:.125rem;padding:.125rem .875rem .125rem .25rem;border:1px solid #2f7bff40;border-radius:.875rem;background:#111d35;color:#fff;text-decoration:none}
+.public-site-footer__credit a:hover{border-color:#12d8ff;color:#fff;background:#15233f}
 .public-site-footer__credit a:focus-visible{outline:2px solid #12d8ff;outline-offset:3px}
-.public-site-footer__credit strong{font-family:CodzhubWordmark,sans-serif;font-size:.875rem;font-weight:600;background:linear-gradient(110deg,#b4a7ff,#73a6ff 45%,#52e2ff 75%,#7cf5bf);background-clip:text;-webkit-background-clip:text;color:transparent;direction:ltr}
-.public-site-footer__credit svg{inline-size:.875rem;block-size:.875rem;flex:none}
+.public-site-footer__credit strong{display:inline-flex;font-family:CodzhubWordmark,sans-serif;font-size:1.125rem;font-style:italic;font-weight:700;letter-spacing:-.04em;line-height:1;color:#fff}
+.public-site-footer__credit strong span:last-child{color:#12d8ff}
+.public-site-footer__credit-mark{display:block;inline-size:3rem;block-size:3rem;object-fit:contain;flex:none}
 .public-site-footer .public-site-footer__bottom{block-size:auto;min-block-size:3.3125rem;padding-inline:5rem}

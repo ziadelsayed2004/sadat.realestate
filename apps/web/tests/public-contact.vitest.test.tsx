@@ -73,5 +73,8 @@ describe('configured public contacts', () => {
     render(<PublicSiteFooter locale="ar" />);
     expect(screen.getByRole('link', { name: 'تصميم وتطوير CodzHub' })).toHaveAttribute('href', 'https://codzhub.com/');
     expect(screen.getByRole('link', { name: 'تصميم وتطوير CodzHub' })).toHaveAttribute('rel', 'noopener noreferrer');
+    const credit = screen.getByRole('link', { name: 'تصميم وتطوير CodzHub' });
+    expect(credit.querySelector('img')).toHaveAttribute('src', '/assets/brand/codzhub-code-spark-light.png');
+    expect(credit.querySelector('strong')).toHaveTextContent('CodzHub');
   });
 });

@@ -44,6 +44,8 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
       await page.waitForFunction(() => Number(document.querySelector('.public-floating-actions__value').getAttribute('stroke-dashoffset')) < 1);
       const credit = page.locator('.public-site-footer__credit a');
       assert.equal(await credit.getAttribute('href'), 'https://codzhub.com/');
+      assert(await credit.locator('img').evaluate(image => image.complete && image.naturalWidth > 0));
+      assert.equal(await credit.locator('strong span:last-child').evaluate(element => getComputedStyle(element).color), 'rgb(18, 216, 255)');
       await page.evaluate(() => document.fonts.ready);
       assert(await credit.locator('strong').evaluate(element => getComputedStyle(element).fontFamily.includes('CodzhubWordmark')));
       await page.evaluate(() => document.fonts.load('600 14px CodzhubWordmark', 'CodzHub'));

@@ -415,7 +415,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
       <div className="public-site-footer__bottom">
         <span>{labels.copyright}<span className="public-site-footer__desktop-legal"> · {labels.legal}</span></span>
       </div>
-      <div className="public-site-footer__credit"><span>{locale === 'ar' ? 'تصميم وتطوير' : 'Designed and developed by'}</span><a href="https://codzhub.com/" target="_blank" rel="noopener noreferrer" aria-label={locale === 'ar' ? 'تصميم وتطوير CodzHub' : 'Designed and developed by CodzHub'}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 16" /></svg><strong lang="en">CodzHub</strong></a></div>
+      <div className="public-site-footer__credit"><span>{locale === 'ar' ? 'تصميم وتطوير' : 'Designed and developed by'}</span><a href="https://codzhub.com/" target="_blank" rel="noopener noreferrer" aria-label={locale === 'ar' ? 'تصميم وتطوير CodzHub' : 'Designed and developed by CodzHub'}><img className="public-site-footer__credit-mark" src="/assets/brand/codzhub-code-spark-light.png" width="48" height="48" alt="" /><strong lang="en"><span>Codz</span><span>Hub</span></strong></a></div>
       <PublicFloatingActions locale={locale} whatsapp={whatsapp} />
     </footer>
   );
