@@ -2,8 +2,8 @@
 .public-floating-actions :is(a,button){display:grid;place-items:center;inline-size:3.5rem;block-size:3.5rem;padding:0;border:1px solid #dacda9;border-radius:50%;box-shadow:0 5px 20px #17243b24;text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s;background:#fffdf8;color:#18243c}
 .public-floating-actions :is(a,button):hover{transform:translateY(-3px);box-shadow:0 8px 24px #17243b33}
 .public-floating-actions :is(a,button):focus-visible{outline:3px solid #d3a13d;outline-offset:4px}
-.public-floating-actions .public-floating-actions__whatsapp{background:#125345;color:#fff;border:3px solid #fffdf8}
-.public-floating-actions .public-floating-actions__whatsapp:hover{background:#176855;color:#fff}
+.public-floating-actions .public-floating-actions__whatsapp{background:#25d366;color:#fff;border-color:#25d366}
+.public-floating-actions .public-floating-actions__whatsapp:hover{background:#1ebe5d;border-color:#1ebe5d;color:#fff}
 .public-floating-actions__whatsapp svg{inline-size:1.75rem;block-size:1.75rem}
 .public-floating-actions__top{position:relative}
 .public-floating-actions__top[hidden]{display:none}

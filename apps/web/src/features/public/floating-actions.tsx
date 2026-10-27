@@ -29,7 +29,6 @@ export function PublicFloatingActions({ locale, whatsapp }: { readonly locale: S
   const top = locale === 'ar' ? 'العودة لأعلى الصفحة' : 'Back to top';
   const contact = locale === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp';
   return <div className="public-floating-actions">
-    {whatsapp ? <a className="public-floating-actions__whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label={contact} title={contact}><WhatsAppIcon /></a> : null}
     <button className="public-floating-actions__top" type="button" hidden={!scroll.visible} aria-label={top} title={top} onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>
       <svg className="public-floating-actions__progress" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
         <circle className="public-floating-actions__track" cx="28" cy="28" r="24" />
@@ -37,5 +36,6 @@ export function PublicFloatingActions({ locale, whatsapp }: { readonly locale: S
       </svg>
       <svg className="public-floating-actions__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5m-7 7 7-7 7 7" /></svg>
     </button>
+    {whatsapp ? <a className="public-floating-actions__whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label={contact} title={contact}><WhatsAppIcon /></a> : null}
   </div>;
 }

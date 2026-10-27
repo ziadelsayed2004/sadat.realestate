@@ -38,14 +38,19 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
         return Math.abs(Number(document.querySelector('.public-floating-actions__value').getAttribute('stroke-dashoffset')) - expected) < 1;
       });
       const waBounds = await whatsapp.boundingBox(), topBounds = await top.boundingBox();
-      assert(waBounds.y + waBounds.height < topBounds.y);
+      assert(topBounds.y + topBounds.height < waBounds.y);
+      assert.equal(await whatsapp.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(37, 211, 102)');
       assert(topBounds.x >= 0 && topBounds.x + topBounds.width <= width);
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       await page.waitForFunction(() => Number(document.querySelector('.public-floating-actions__value').getAttribute('stroke-dashoffset')) < 1);
       const credit = page.locator('.public-site-footer__credit a');
       assert.equal(await credit.getAttribute('href'), 'https://codzhub.com/');
       assert(await credit.locator('img').evaluate(image => image.complete && image.naturalWidth > 0));
-      assert.equal(await credit.locator('strong span:last-child').evaluate(element => getComputedStyle(element).color), 'rgb(18, 216, 255)');
+      assert.equal(await credit.locator('strong span:last-child').evaluate(element => getComputedStyle(element).color), 'rgb(47, 123, 255)');
+      assert.equal(await credit.locator('strong span:first-child').evaluate(element => getComputedStyle(element).color), 'rgb(255, 255, 255)');
+      const creditStyle = await credit.evaluate(element => { const style = getComputedStyle(element); return { border: style.borderTopWidth, background: style.backgroundColor }; });
+      assert.deepEqual(creditStyle, { border: '0px', background: 'rgba(0, 0, 0, 0)' });
+      assert.equal(await page.locator('.public-site-footer__credit').evaluate(element => getComputedStyle(element).backgroundColor), 'rgba(0, 0, 0, 0)');
       await page.evaluate(() => document.fonts.ready);
       assert(await credit.locator('strong').evaluate(element => getComputedStyle(element).fontFamily.includes('CodzhubWordmark')));
       await page.evaluate(() => document.fonts.load('600 14px CodzhubWordmark', 'CodzHub'));
@@ -63,7 +68,7 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
         });
         await page.evaluate(() => window.scrollTo(0, 500));
         await top.waitFor({ state: 'visible' });
-        const bounds = await top.boundingBox();
+        const bounds = await whatsapp.boundingBox();
         assert(bounds.y + bounds.height <= height - 90, 'floating controls must clear profile bottom navigation');
       }
       evidence.checks.push(`${name} ${width} ${locale}: scroll progress, top action, WhatsApp order, hosted font, footer link and viewport fit`);

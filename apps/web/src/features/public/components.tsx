@@ -415,7 +415,11 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
       <div className="public-site-footer__bottom">
         <span>{labels.copyright}<span className="public-site-footer__desktop-legal"> · {labels.legal}</span></span>
       </div>
-      <div className="public-site-footer__credit"><span>{locale === 'ar' ? 'تصميم وتطوير' : 'Designed and developed by'}</span><a href="https://codzhub.com/" target="_blank" rel="noopener noreferrer" aria-label={locale === 'ar' ? 'تصميم وتطوير CodzHub' : 'Designed and developed by CodzHub'}><img className="public-site-footer__credit-mark" src="/assets/brand/codzhub-code-spark-light.png" width="48" height="48" alt="" /><strong lang="en"><span>Codz</span><span>Hub</span></strong></a></div>
+      <div className="public-site-footer__credit" dir="ltr" lang="en">
+        <span className="public-site-footer__credit-author">Ziad <span>Elsayed</span></span>
+        <span className="public-site-footer__credit-year">© 2026</span>
+        <a href="https://codzhub.com/" target="_blank" rel="noopener noreferrer" aria-label={locale === 'ar' ? 'تصميم وتطوير CodzHub' : 'Designed and developed by CodzHub'}><strong><span>Codz</span><span>Hub</span></strong><img className="public-site-footer__credit-mark" src="/assets/brand/codzhub-code-spark-light.png" width="36" height="36" alt="" /></a>
+      </div>
       <PublicFloatingActions locale={locale} whatsapp={whatsapp} />
     </footer>
   );

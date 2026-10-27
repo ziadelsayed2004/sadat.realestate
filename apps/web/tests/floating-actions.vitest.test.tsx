@@ -22,7 +22,7 @@ it.each(['ar', 'en'] as const)('tracks scroll, clamps progress, updates after a 
   fireEvent.scroll(window);
   const top = await screen.findByRole('button', { name: label });
   expect(container.querySelector('.public-floating-actions__value')).toHaveAttribute('stroke-dashoffset', '50');
-  expect(whatsapp.compareDocumentPosition(top) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(top.compareDocumentPosition(whatsapp) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   fireEvent.click(top);
   expect(scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'smooth' });
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
