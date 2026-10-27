@@ -14,7 +14,7 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
   const browser = await engine.launch();
   try {
     for (const width of [390, 1440]) {
-      const page = await browser.newPage({ viewport: { width, height: 1000 } });
+      const page = await browser.newPage({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await routeAdminCommissionApis(page);
@@ -55,7 +55,10 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
       assert.equal((await floor.locator('dd').innerText()).trim(), '2');
       assert(await floor.locator('dt').isVisible());
       assert(await floor.locator('dd').evaluate(element => { const style = getComputedStyle(element, '::before'); return style.display === 'none' || style.content === 'none'; }));
-      await card.screenshot({ path: `${output}/${name}-${width}-views-floor.png` });
+      await card.evaluate(element => element.scrollIntoView({ behavior: 'instant', block: 'center' }));
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForFunction(() => Array.from(document.images).filter(image => image.closest('.public-homepage__property-card')).every(image => image.complete));
+      await page.screenshot({ path: `${output}/${name}-${width}-views-floor.png` });
       assert.deepEqual(errors, []);
       checks.push(`${name} ${width}: owner 2%, rent .5→1 month, activation/edit and distinct views/floor`);
       await page.close();

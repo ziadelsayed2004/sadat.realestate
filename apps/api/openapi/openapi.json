@@ -14453,6 +14453,56 @@
           }
         }
       }
+    },
+    "/api/v1/admin/commission-policies/{policyId}": {
+      "parameters": [
+        {
+          "name": "policyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "updateAdminCommissionPolicy",
+        "summary": "Approve, stop or edit a commission policy",
+        "description": "Requires admin:commissions.manage. Uses optimistic versioning, reason, effective-period/overlap validation and transactional audit. Sale and rental terms are independent; no collection or settlement occurs.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommissionPolicyPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CommissionPolicySuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/CommissionPolicyError"
+          },
+          "403": {
+            "$ref": "#/components/responses/CommissionPolicyError"
+          },
+          "409": {
+            "$ref": "#/components/responses/CommissionPolicyError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -19447,6 +19497,12 @@
           },
           "readOnly": {
             "const": true
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -27821,7 +27877,7 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 80,
-            "pattern": "^[a-z][a-z0-9_.-]*$"
+            "description": "Provider type enum for provider_type; account/organization ID for entity scopes; no key for default."
           }
         }
       },
@@ -27908,6 +27964,12 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -27960,6 +28022,12 @@
           "effectiveTo": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -28103,6 +28171,12 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -28138,6 +28212,12 @@
           "effectiveTo": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -28157,6 +28237,7 @@
           "source": {
             "type": "string",
             "enum": [
+              "exception",
               "account_override",
               "policy",
               "none"
@@ -28190,6 +28271,12 @@
           "currency": {
             "type": "string",
             "pattern": "^[A-Z]{3}$"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -28325,6 +28412,12 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -28371,6 +28464,12 @@
           "effectiveTo": {
             "type": "string",
             "format": "date-time"
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         }
       },
@@ -30699,6 +30798,12 @@
               "active",
               "inactive"
             ]
+          },
+          "rentMonths": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 12,
+            "description": "Rental commission as a multiple of monthly rent, independent of sale commission. 0.5 is half a month; absence means unspecified."
           }
         },
         "minProperties": 3
@@ -33299,6 +33404,82 @@
             "type": "boolean"
           }
         }
+      },
+      "CommissionPolicyPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedVersion",
+          "reason"
+        ],
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 500
+          },
+          "label": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 160
+          },
+          "kind": {
+            "$ref": "#/components/schemas/CommissionPolicyKind"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/CommissionScope"
+          },
+          "percentageBps": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "rentMonths": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 12
+          },
+          "fixedAmountMinor": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Z]{3}$"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectiveTo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CommissionPolicyStatus"
+          }
+        },
+        "description": "Requires one changed field in addition to version and reason. Activation validates the effective window and rejects overlapping active scope policies."
       }
     }
   }

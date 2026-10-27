@@ -7512,6 +7512,43 @@
             },
             "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft policy; no bank, settlement, or universal-rate claim is made."
           }
+        },
+        {
+          "name": "Approve or Edit Commission Policy",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0,\n  \"reason\": \"Approve agreed owner sale and rental commission\",\n  \"status\": \"active\",\n  \"percentageBps\": 200,\n  \"rentMonths\": 0.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-policies/:policyId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-policies",
+                ":policyId"
+              ]
+            },
+            "description": "Requires admin:commissions.manage. Approve a current draft or edit independent sale/rental terms with expectedVersion and a reason. Refresh before retrying a version conflict."
+          }
         }
       ]
     },
