@@ -16,6 +16,8 @@ export const communityPostCategorySchema = z.union([z.enum(['question', 'experie
 const communityCategoryLabelSchema = localizedTextSchema.refine(value => Object.values(value).every(text => (text?.length ?? 0) <= 160), 'Category labels must not exceed 160 characters');
 export const communityCategorySchema = z.object({ key: communityPostCategorySchema, label: communityCategoryLabelSchema }).strict();
 export const communityCategoryCreateSchema = z.object({ label: communityCategoryLabelSchema, reason: z.string().trim().min(3).max(500) }).strict();
+export const communityCategoryParamsSchema = z.object({ categoryKey: communityPostCategorySchema }).strict();
+export const communityCategoryDeleteSchema = z.object({ reason: z.string().trim().min(3).max(500).regex(/^[^\u0000-\u001f\u007f]*$/u), confirm: z.literal(true) }).strict();
 export const communityCategoryListSuccessEnvelopeSchema = successEnvelopeSchema(z.object({ items: z.array(communityCategorySchema).max(200) }).strict());
 export type CommunityCategory = z.infer<typeof communityCategorySchema>;
 export const communityPostSchema = z.object({

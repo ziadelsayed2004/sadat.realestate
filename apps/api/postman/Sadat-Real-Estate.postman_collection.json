@@ -7161,6 +7161,39 @@
               ]
             }
           }
+        },
+        {
+          "name": "Delete community category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Remove unused category from choices\",\n  \"confirm\": true\n}"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/categories/:categoryKey",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "categories",
+                ":categoryKey"
+              ]
+            },
+            "description": "Retires the category without deleting posts. Requires admin:community.moderate; use a selected default or custom categoryKey."
+          }
         }
       ]
     },

@@ -427,7 +427,7 @@ export function PublicCommunity({
   const submitPost = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidationError(false);
-    const parsed = communityPostCreateSchema.safeParse({ title, body, category });
+    const parsed = communityPostCreateSchema.safeParse({ title, body, ...(selectedCategory ? { category: selectedCategory } : {}) });
     if (!parsed.success || !isAuthenticated) {
       setValidationError(true);
       return;
@@ -485,11 +485,13 @@ export function PublicCommunity({
 
   const pageCount = data === undefined || data.limit <= 0 ? 0 : Math.ceil(data.total / data.limit);
   const customCategories = useCommunityCategories(locale);
-  const filters = [...communityFilters(locale), ...customCategories.filter(item => item.key.startsWith("custom_"))];
+  const filters = customCategories === undefined ? communityFilters(locale) : [communityFilters(locale)[0]!, ...customCategories];
   const categoryOptions = filters
     .filter((filter): filter is { readonly key: PostCategory; readonly label: string } => filter.key !== 'all')
     .map(filter => ({ value: filter.key, label: filter.label }));
-  const visiblePosts = data?.items.filter(post => activeFilter === 'all' || postPresentation(post, locale).categoryKey === activeFilter) ?? [];
+  const selectedCategory = categoryOptions.find(item => item.value === category)?.value ?? categoryOptions[0]?.value;
+  const visibleFilter = filters.some(item => item.key === activeFilter) ? activeFilter : 'all';
+  const visiblePosts = data?.items.filter(post => visibleFilter === 'all' || postPresentation(post, locale).categoryKey === visibleFilter) ?? [];
   const filteredEmpty = view === 'success' && data !== undefined && visiblePosts.length === 0;
   const recoverList = () => {
     if (filteredEmpty) {
@@ -548,7 +550,7 @@ export function PublicCommunity({
           <Button variant="accent" onClick={openComposer} startIcon={<span aria-hidden="true">+</span>}>{copy.createPost}</Button>
         </header>
         <div className="public-community__filters" aria-label={copy.allPosts}>
-          {filters.map(filter => <button key={filter.key} type="button" data-category-filter={filter.key} className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}
+          {filters.map(filter => <button key={filter.key} type="button" data-category-filter={filter.key} className={visibleFilter === filter.key ? 'is-active' : ''} aria-pressed={visibleFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}
         </div>
         <p className="public-community__notice" role="note">{copy.moderationNotice}</p>
         {notice === undefined ? null : <p className="public-community__success" role="status"><strong>{copy.successTitle}:</strong> {notice}</p>}
@@ -604,7 +606,7 @@ export function PublicCommunity({
                 <CustomSelect
                   id="community-post-category"
                   name="category"
-                  value={category}
+                  value={selectedCategory ?? ''}
                   onChange={value => setCategory(value as PostCategory)}
                   ariaLabel={getCommunityPresentationCopy(locale).categoryLabel}
                   options={categoryOptions}

@@ -238,11 +238,6 @@
   transform: scale(0.94);
 }
 
-.public-homepage__menu-toggle:focus-visible {
-  outline: 3px solid var(--color-brand-accent);
-  outline-offset: 3px;
-}
-
 .public-homepage__signup,
 .public-homepage__primary-action {
   display: inline-flex;
@@ -1279,11 +1274,6 @@
   inset: 0;
   z-index: 2;
   content: '';
-}
-
-.public-homepage__content-card:has(.public-homepage__article-link:focus-visible) {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 3px;
 }
 
 .public-homepage__article-body h3 {
@@ -2608,7 +2598,8 @@
 .public-homepage__section-heading > a { display: inline-flex; align-items: center; justify-content: center; min-block-size: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--color-brand-accent); border-radius: .75rem; background: #f3e8d0; color: #17233d; box-shadow: 0 2px 5px #17233d0d; }
 .public-homepage__section-heading > a:hover { background: var(--color-brand-accent); color: #17233d; }
 .public-homepage__section-description { margin-block: 16px 28px; line-height: 1.8; clear: both; }
-.public-site-footer__hours { white-space: pre-line; line-height: 1.8; }
+.public-site-footer__hours { display: grid; gap: .375rem; padding: .75rem; border: 1px solid #cfa44466; border-radius: .75rem; background: #ffffff08; white-space: pre-line; line-height: 1.8; }
+.public-site-footer__hours strong { color: #d3a13d; }
 .public-homepage__category-section .public-homepage__section-description { margin-block: 20px 28px; }
 
 .public-property-views { display: inline-flex; align-items: center; gap: .375rem; padding: .375rem .625rem; border-radius: 999px; color: #17233d; background: #f5ecd8; font-size: .75rem; line-height: 1.5; white-space: nowrap; }

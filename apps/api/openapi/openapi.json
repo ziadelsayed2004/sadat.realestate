@@ -14503,6 +14503,62 @@
           }
         }
       }
+    },
+    "/api/v1/admin/community/categories/{categoryKey}": {
+      "delete": {
+        "operationId": "deleteCommunityCategory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Requires admin:community.moderate and explicit confirmation. Retires a default or custom category from new post choices and filters, preserving existing posts and their category labels. Removal and audit commit together; retries are idempotent.",
+        "parameters": [
+          {
+            "name": "categoryKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^(question|experience|advice|service|area|property|custom_[a-f0-9]{24})$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommunityCategoryDelete"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category retired; remaining selectable categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityCategoryListSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AuthError"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -33520,6 +33576,25 @@
           }
         },
         "description": "Requires one changed field in addition to version and reason. Activation validates the effective window and rejects overlapping active scope policies."
+      },
+      "CommunityCategoryDelete": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reason",
+          "confirm"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          },
+          "confirm": {
+            "type": "boolean",
+            "const": true
+          }
+        }
       }
     }
   }

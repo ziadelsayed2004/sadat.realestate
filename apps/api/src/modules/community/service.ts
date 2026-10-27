@@ -258,14 +258,15 @@ export function createCommunityService(
     async publicPage(query) {
       const posts = await this.publicList();
       const start = (query.page - 1) * query.limit;
-      const labels = new Map((await categories?.list() ?? []).map(item => [item.key, item.label]));
-      const items = posts.slice(start, start + query.limit).map(post => ({ ...publicPost(post, 0), ...(post.category && labels.has(post.category) ? { categoryName: labels.get(post.category) } : {}) }));
+      const selected = posts.slice(start, start + query.limit);
+      const labels = new Map((await categories?.labels(selected.flatMap(post => post.category ? [post.category] : [])) ?? []).map(item => [item.key, item.label]));
+      const items = selected.map(post => ({ ...publicPost(post, 0), ...(post.category && labels.has(post.category) ? { categoryName: labels.get(post.category) } : {}) }));
       return { items, page: query.page, limit: query.limit, total: posts.length };
     },
     async publicDetail(postId) {
       const post = await repository.getPost(postId);
       if (!post || post.status !== 'published') return undefined;
-      const label = (await categories?.list())?.find(item => item.key === post.category)?.label;
+      const label = (await categories?.labels([post.category ?? 'question']))?.find(item => item.key === (post.category ?? 'question'))?.label;
       return { post: { ...publicPost(post, 0), ...(label ? { categoryName: label } : {}) }, comments: [] };
     },
     async adminPage(claims, query) {

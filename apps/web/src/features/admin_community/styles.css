@@ -62,3 +62,7 @@
 .admin-community__category-manager fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); align-items: end; gap: 16px; padding: 0; border: 0; }
 .admin-community__category-manager label { display: grid; gap: 8px; line-height: 1.7; }
 .admin-community__category-manager input { inline-size: 100%; min-inline-size: 0; box-sizing: border-box; padding: 10px; border: 1px solid #d7ded9; border-radius: 10px; font: inherit; }
+.admin-community__category-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; list-style: none; }
+.admin-community__category-list li { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border: 1px solid #ded8c9; border-radius: 12px; max-inline-size: 100%; min-inline-size: 0; }
+.admin-community__category-list li > span { min-inline-size: 0; overflow-wrap: anywhere; }
+.admin-community__category-delete { display: grid; gap: 12px; padding: 16px; margin-block: 16px; border: 1px solid #e8c5c5; border-radius: 12px; background: #fff9f8; }

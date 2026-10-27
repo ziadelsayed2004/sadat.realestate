@@ -390,7 +390,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
             {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
             {officeMap ? <a href={officeMap} target="_blank" rel="noopener noreferrer">{officeAddress ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
-            {localizedText(contact.workingHours, locale) ? <span className="public-site-footer__hours">{locale === "ar" ? "ساعات العمل: " : "Working hours: "}{localizedText(contact.workingHours, locale)}</span> : null}
+            {localizedText(contact.workingHours, locale) ? <div className="public-site-footer__hours"><strong>{locale === 'ar' ? 'ساعات العمل' : 'Working hours'}</strong><span>{localizedText(contact.workingHours, locale)}</span></div> : null}
           </div>
         </div>
         <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">

@@ -1,0 +1,51 @@
+import { expect, test } from '@playwright/test';
+import { communityCategoryDeleteSchema } from '@sadat-real-estate/contracts';
+import { routeAdminCommunityApis } from './admin-community.fixtures.ts';
+import { getCommunityCopy } from '../../src/features/community/copy.ts';
+
+test('removes categories with retry and confirmation, keeps existing posts and excludes retired composer choices', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-en') ? 'en' : 'ar', ar = locale === 'ar';
+  const key = 'custom_' + 'c'.repeat(24);
+  let items = [{ key: 'question', label: { ar: 'سؤال', en: 'Question' } }, { key: 'experience', label: { ar: 'تجربة', en: 'Experience' } }, { key, label: { ar: 'أخبار المدينة', en: 'City news' } }];
+  let attempts = 0;
+  const envelope = (data: unknown) => ({ data, meta: { requestId: 'category-delete-e2e' } });
+  await routeAdminCommunityApis(page);
+  await page.route('**/api/v1/public/community/categories', route => route.fulfill({ json: envelope({ items }) }));
+  await page.route('**/api/v1/admin/community/categories/*', async route => {
+    expect(route.request().method()).toBe('DELETE');
+    communityCategoryDeleteSchema.parse(route.request().postDataJSON());
+    if (++attempts === 1) { await route.fulfill({ status: 503, json: { error: { code: 'UNAVAILABLE', messageKey: 'errors.unavailable', requestId: 'category-failed', details: [] } } }); return; }
+    items = items.filter(item => !route.request().url().endsWith(`/${item.key}`));
+    await route.fulfill({ json: envelope({ items }) });
+  });
+  await page.goto(`/admin/community?lang=${locale}`);
+  const manager = page.locator('.admin-community__category-manager');
+  await manager.locator('summary').click();
+  await manager.getByRole('button', { name: ar ? 'حذف أخبار المدينة' : 'Delete City news', exact: true }).click();
+  await manager.getByRole('button', { name: ar ? 'إلغاء' : 'Cancel', exact: true }).click();
+  expect(attempts).toBe(0);
+  await manager.getByRole('button', { name: ar ? 'حذف أخبار المدينة' : 'Delete City news', exact: true }).click();
+  const reason = manager.getByLabel(ar ? 'سبب حذف التصنيف' : 'Category deletion reason');
+  await reason.fill('Remove obsolete choice');
+  const confirm = manager.getByRole('button', { name: ar ? 'تأكيد حذف التصنيف' : 'Confirm category deletion', exact: true });
+  await confirm.click();
+  await expect(manager.getByRole('status')).toContainText(ar ? 'تعذر' : 'Could not');
+  await expect(reason).toHaveValue('Remove obsolete choice');
+  await confirm.click();
+  await expect(manager.getByRole('button', { name: ar ? 'حذف أخبار المدينة' : 'Delete City news', exact: true })).toHaveCount(0);
+  await manager.getByRole('button', { name: ar ? 'حذف سؤال' : 'Delete Question', exact: true }).click();
+  await reason.fill('Remove unused default'); await confirm.click();
+  await expect(manager.getByRole('button', { name: ar ? 'حذف سؤال' : 'Delete Question', exact: true })).toHaveCount(0);
+  await manager.screenshot({ path: info.outputPath('remaining-community-categories.png') });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.route('**/api/v1/public/community/posts**', route => route.fulfill({ json: envelope({ items: [{ id: 'a'.repeat(24), title: 'Preserved published post', body: 'Existing content remains available', category: key, categoryName: { ar: 'أخبار المدينة', en: 'City news' }, likeCount: 0, dislikeCount: 0, commentCount: 0, createdAt: '2026-10-27T10:00:00.000Z' }], page: 1, limit: 20, total: 1 }) }));
+  await page.goto(`/community?lang=${locale}`);
+  await expect(page.getByText('Preserved published post', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-category-filter="experience"]')).toBeVisible();
+  await expect(page.locator('[data-category-filter="question"]')).toHaveCount(0);
+  await expect(page.locator(`[data-category-filter="${key}"]`)).toHaveCount(0);
+  await page.getByRole('button', { name: getCommunityCopy(locale).createPost, exact: true }).click();
+  await expect(page.locator('#community-post-category')).toContainText(ar ? 'تجربة' : 'Experience');
+  await page.locator('#community-post-category').click();
+  await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(1);
+});

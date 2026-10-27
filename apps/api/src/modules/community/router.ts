@@ -1,6 +1,8 @@
 import { Router, type Request, type RequestHandler, type Response } from 'express';
 import {
   communityCategoryCreateSchema,
+  communityCategoryDeleteSchema,
+  communityCategoryParamsSchema,
   communityCategoryListSuccessEnvelopeSchema,
   communityCommentCreateRequestSchema,
   communityCommentMutationDataSchema,
@@ -40,6 +42,7 @@ import type { CommunityService } from './service.js';
 export const COMMUNITY_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/public/community/categories', operationId: 'listCommunityCategories' },
   { method: 'POST', path: '/api/v1/admin/community/categories', operationId: 'createCommunityCategory' },
+  { method: 'DELETE', path: '/api/v1/admin/community/categories/:categoryKey', operationId: 'deleteCommunityCategory' },
   { method: 'GET', path: '/api/v1/public/community/posts', operationId: 'listPublicCommunityPosts' },
   { method: 'GET', path: '/api/v1/public/community/posts/:postId', operationId: 'getPublicCommunityPost' },
   { method: 'POST', path: '/api/v1/public/community/posts', operationId: 'createCommunityPost' },
@@ -150,6 +153,17 @@ export function createCommunityRouter(dependencies: CommunityRouterDependencies)
   });
   router.post('/admin/community/categories', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (request, response) => {
     try { if (!dependencies.categories) throw new Error('FORBIDDEN'); const input = communityCategoryCreateSchema.parse(request.body); await dependencies.categories.create(adminClaims(response), input, { requestId: requestId(request), traceId: getRequestContext()?.traceId ?? requestId(request) }); const items = await dependencies.categories.list(); response.setHeader('Cache-Control', 'no-store'); response.status(201).json(communityCategoryListSuccessEnvelopeSchema.parse(toSuccessResponse({ items }, requestId(request)))); } catch (error) { sendError(request, response, error); }
+  });
+  router.delete('/admin/community/categories/:categoryKey', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (request, response) => {
+    try {
+      if (!dependencies.categories) throw new Error('FORBIDDEN');
+      const { categoryKey } = communityCategoryParamsSchema.parse(request.params);
+      const input = communityCategoryDeleteSchema.parse(request.body);
+      await dependencies.categories.remove(adminClaims(response), categoryKey, input, { requestId: requestId(request), traceId: getRequestContext()?.traceId ?? requestId(request) });
+      const items = await dependencies.categories.list();
+      response.setHeader('Cache-Control', 'no-store');
+      response.json(communityCategoryListSuccessEnvelopeSchema.parse(toSuccessResponse({ items }, requestId(request))));
+    } catch (error) { sendError(request, response, error); }
   });
   router.use('/admin/community/posts', createAdminRbacAuthMiddleware(dependencies.accessTokens));
   router.use('/admin/community/comments', createAdminRbacAuthMiddleware(dependencies.accessTokens));

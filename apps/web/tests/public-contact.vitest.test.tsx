@@ -6,6 +6,17 @@ import { getWhatsAppLink, getWhatsAppUrl } from '../src/features/frontend_founda
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 describe('configured public contacts', () => {
+  it.each(['ar', 'en'] as const)('shows only configured working hours with a separate heading in %s', async locale => {
+    let contact: { workingHours?: { ar: string; en: string } } = { workingHours: { ar: 'نعمل على مدار 24 ساعة\nتواصل معنا في أي وقت', en: 'Open 24 hours\nContact us anytime' } };
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'hours' } }), { headers: { 'Content-Type': 'application/json' } })));
+    await refreshPublicContact();
+    const { container } = render(<PublicSiteFooter locale={locale} />);
+    expect(container.querySelector('.public-site-footer__hours strong')).toHaveTextContent(locale === 'ar' ? 'ساعات العمل' : 'Working hours');
+    expect(container.querySelector('.public-site-footer__hours > span')).toHaveTextContent(locale === 'ar' ? 'نعمل على مدار 24 ساعة' : 'Open 24 hours');
+    contact = {};
+    await act(async () => { await refreshPublicContact(); });
+    expect(container.querySelector('.public-site-footer__hours')).toBeNull();
+  });
   it.each(['ar', 'en'] as const)('opens the saved office map and falls back to searching the saved address in %s', async locale => {
     let contact: { address: { ar: string; en: string }; mapUrl?: string } = { address: { ar: 'المقر في مدينة السادات', en: 'Sadat City office' }, mapUrl: 'https://maps.app.goo.gl/Abc123' };
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'office-contact' } }), { headers: { 'content-type': 'application/json' } })));

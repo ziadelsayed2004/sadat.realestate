@@ -89,7 +89,10 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // per-chunk and stylesheet budgets remain unchanged.
 // Multiple team departments and their selection/filter guidance add ~1.4 KiB;
 // reserve a bounded 2 KiB while preserving route and chunk limits.
-const maxJavaScriptBytes = 2_751 * 1024 + 128;
+// Community category deletion, retained-label choices and bilingual confirmation
+// add about 2.3 KiB to the 2,815,837-byte baseline. Existing headroom plus two
+// KiB bounds this feature; per-chunk and route-stylesheet limits stay unchanged.
+const maxJavaScriptBytes = 2_753 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route
