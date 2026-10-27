@@ -4,9 +4,97 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { mergePresentation, mongoToolsRestoreUri, restorePresentationFile, selectPresentationRows } from '../../../scripts/restore-site-presentation.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const bash = process.platform === 'win32' ? 'C:/Program Files/Git/bin/bash.exe' : 'bash';
+
+test('presentation recovery excludes business data and company ads, preserves new edits and is idempotent', async () => {
+  assert.equal(mongoToolsRestoreUri('mongodb://test:password@127.0.0.1:27017/sadat?replicaSet=rs0', 'sadat'), 'mongodb://test:password@127.0.0.1:27017/?replicaSet=rs0&authSource=sadat');
+  assert.equal(mongoToolsRestoreUri('mongodb://127.0.0.1:27017/sadat?replicaSet=rs0&authSource=admin', 'sadat'), 'mongodb://127.0.0.1:27017/?replicaSet=rs0&authSource=admin');
+  const source = new Map([
+    ['users', [{ _id: 'trial-user' }]], ['properties', [{ _id: 'trial-property' }]],
+    ['articles', [{ _id: 'trial-article' }]], ['community_posts', [{ _id: 'trial-post' }]],
+    ['cms_team_members', [{ _id: 'team', key: 'team', name: { ar: 'الفريق القديم' }, updatedBy: 'old-admin', synthetic: true }]],
+    ['property_taxonomy', [{ _id: 'category', slug: 'apartments', kind: 'category', imageUrl: '/assets/category.png', seedKey: 'trial' }]],
+    ['ad_banners', [
+      { _id: 'hero', placementKey: 'homepage.hero', targetUrl: '/properties', mediaIds: ['image'] },
+      { _id: 'paid', placementKey: 'homepage.hero', adRequestId: 'old-request' },
+      { _id: 'company', placementKey: 'homepage.featured', featured: { advertiserProviderId: 'removed-provider' } },
+      { _id: 'external', placementKey: 'homepage.hero', targetUrl: 'https://company.invalid/' }
+    ]],
+    ['ad_banner_media', [{ _id: 'image', bannerId: 'hero', storageKey: 'quarantine/hero' }, { _id: 'company-image', bannerId: 'company', storageKey: 'quarantine/company' }]],
+    ['cms_banners', [{ _id: 'bad-link', key: 'old-company', targetUrl: '/developers/deleted-company' }]]
+  ]);
+  const selected = selectPresentationRows(source, 'root', 'template');
+  assert.equal(selected.has('users'), false);
+  assert.equal(selected.has('properties'), false);
+  assert.equal(selected.has('articles'), false);
+  assert.equal(selected.has('community_posts'), false);
+  assert.deepEqual(selected.get('ad_banners').map(row => row._id), ['hero']);
+  assert.deepEqual(selected.get('ad_banner_media').map(row => row._id), ['image']);
+  assert.equal(selected.get('cms_banners')[0].key, 'platform_ad_template');
+  assert.equal(selected.get('cms_banners')[0].presentation, 'featured');
+  assert.equal(selected.get('cms_team_members')[0].updatedBy, 'root');
+  assert.equal('synthetic' in selected.get('cms_team_members')[0], false);
+  assert.equal('seedKey' in selected.get('property_taxonomy')[0], false);
+  const currentTeam = { _id: 'team', key: 'team', name: { ar: 'تعديل بعد التنظيف' } };
+  const data = new Map([['cms_team_members', [currentTeam]], ['users', [{ _id: 'root' }]]]);
+  const db = { collection(name) {
+    if (!data.has(name)) data.set(name, []);
+    return {
+      async findOne(filter) { return data.get(name).find(row => Object.entries(filter).every(([key, value]) => row[key] === value)) ?? null; },
+      async countDocuments() { return data.get(name).length; },
+      async updateOne(filter, update) { if (!data.get(name).some(row => row._id === filter._id)) data.get(name).push({ ...filter, ...update.$setOnInsert }); }
+    };
+  } };
+  const connection = { db, async transaction(operation) { return operation({}); } };
+  const files = [];
+  await mergePresentation(connection, selected, async key => { files.push(key); });
+  assert.deepEqual(data.get('users'), [{ _id: 'root' }]);
+  assert.deepEqual(data.get('cms_team_members'), [currentTeam]);
+  assert.equal(data.get('properties').length, 0);
+  assert.equal(data.get('articles').length, 0);
+  assert.equal(data.get('community_posts').length, 0);
+  assert.deepEqual(files, ['quarantine/hero']);
+  const repeated = await mergePresentation(connection, selected, async () => {});
+  assert.equal(repeated.collections.reduce((sum, row) => sum + row.insert, 0), 0);
+  const conflict = new Map([['property_taxonomy', [{ _id: 'different-id', slug: 'apartments' }]]]);
+  await assert.rejects(mergePresentation(connection, conflict, async () => { throw new Error('MUST_NOT_RESTORE_FILES'); }), /PRESENTATION_KEY_CONFLICT/);
+  await assert.rejects(mergePresentation(connection, new Map([['users', []]]), async () => {}), /PRESENTATION_COLLECTION_FORBIDDEN/);
+});
+
+test('presentation files recover only selected archive members and reject paths and overwrites', async () => {
+  const temporaryRoot = path.join(root, '.tmp');
+  fs.mkdirSync(temporaryRoot, { recursive: true });
+  const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'presentation-files-'));
+  const tar = process.platform === 'win32' ? 'C:/Program Files/Git/usr/bin/tar.exe' : 'tar';
+  const originalPath = process.env.PATH;
+  try {
+    if (process.platform === 'win32') process.env.PATH = `C:/Program Files/Git/usr/bin;${originalPath}`;
+    const source = path.join(sandbox, 'source');
+    const destination = path.join(sandbox, 'destination');
+    fs.mkdirSync(path.join(source, 'private/quarantine'), { recursive: true });
+    fs.mkdirSync(destination);
+    fs.writeFileSync(path.join(source, 'private/quarantine/team'), 'team photo bytes');
+    fs.writeFileSync(path.join(source, 'private/quarantine/property'), 'excluded property bytes');
+    const archive = path.join(sandbox, 'private-files.tar.gz');
+    const packed = spawnSync(tar, ['--create', '--gzip', '--force-local', '--file', archive, '-C', source, 'private'], { encoding: 'utf8', windowsHide: true });
+    assert.equal(packed.status, 0, packed.stderr);
+    await restorePresentationFile(destination, archive, 'quarantine/team', tar);
+    assert.equal(fs.readFileSync(path.join(destination, 'quarantine/team'), 'utf8'), 'team photo bytes');
+    assert.equal(fs.existsSync(path.join(destination, 'quarantine/property')), false);
+    await restorePresentationFile(destination, archive, 'quarantine/team', tar);
+    await assert.rejects(restorePresentationFile(destination, archive, '../outside', tar), /STORAGE_KEY_INVALID/);
+    fs.writeFileSync(path.join(destination, 'quarantine/team'), 'newer bytes');
+    await assert.rejects(restorePresentationFile(destination, archive, 'quarantine/team', tar), /PRIVATE_FILE_CONFLICT/);
+    assert.equal(fs.readFileSync(path.join(destination, 'quarantine/team'), 'utf8'), 'newer bytes');
+  } finally {
+    process.env.PATH = originalPath;
+    assert.equal(path.dirname(sandbox), temporaryRoot);
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
 
 test('reviewed launch handles expired timers, pins the active release and restores services on cancellation or failure', () => {
   const temporaryRoot = path.join(root, '.tmp');
@@ -18,6 +106,10 @@ test('reviewed launch handles expired timers, pins the active release and restor
       .replaceAll('/root/sadat-launch-review.', '${SANDBOX}/sad-launch-review.')
       .replace('if [[ $EUID -ne 0 ]]; then', 'if false; then');
     fs.writeFileSync(path.join(sandbox, 'launch.sh'), script);
+    fs.writeFileSync(path.join(sandbox, 'restore.sh'), fs.readFileSync(path.join(root, 'deploy/native/restore-site-presentation.sh'), 'utf8')
+      .replaceAll('/opt/elsadatrealestate', '${SANDBOX}')
+      .replaceAll('/var/backups/elsadatrealestate', '${SANDBOX}/backups')
+      .replace('if [[ $EUID -ne 0 ]]; then', 'if false; then'));
     fs.writeFileSync(path.join(sandbox, 'fixture.sh'), String.raw`set -Eeuo pipefail
 cd "$1"
 export SANDBOX=$PWD
@@ -88,6 +180,38 @@ for scenario in cancel backup apply; do
   ! grep -q '^FILES$' "$SANDBOX/events"
   if [[ $scenario != apply ]]; then ! grep -q '^APPLY$' "$SANDBOX/events"; fi
 done
+mkdir -p "$SANDBOX/operator/deploy/native" "$SANDBOX/operator/scripts" "$SANDBOX/backups/source"
+cp "$SANDBOX/restore.sh" "$SANDBOX/operator/deploy/native/restore-site-presentation.sh"
+printf '// staged application-readable helper\n' > "$SANDBOX/operator/scripts/restore-site-presentation.mjs"
+printf 'backup bytes' > "$SANDBOX/backups/source/file"
+(cd "$SANDBOX/backups/source"; sha256sum file > SHA256SUMS)
+cat > "$SANDBOX/bin/install" <<'INSTALL'
+#!/usr/bin/env bash
+shift 6
+cp "$1" "$2"
+INSTALL
+cat > "$SANDBOX/bin/node" <<'NODE'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+[[ $1 == /tmp/elsadat-restore-presentation.*.mjs && -f $1 ]]
+echo "RUNNER $1" >> "$SANDBOX/events"
+[[ $FAIL_RESTORE != true ]] || exit 21
+echo RESTORED >> "$SANDBOX/events"
+NODE
+chmod +x "$SANDBOX/bin/install" "$SANDBOX/bin/node"
+export FAIL_APPLY=false FAIL_BACKUP=false FAIL_RESTORE=false
+: > "$SANDBOX/events"
+bash "$SANDBOX/operator/deploy/native/restore-site-presentation.sh" "$SANDBOX/backups/source"
+grep -q '^RESTORED$' "$SANDBOX/events"
+[[ $(tail -n 1 "$SANDBOX/events") == HEALTH ]]
+runner_path=$(sed -n 's/^RUNNER //p' "$SANDBOX/events")
+[[ ! -e $runner_path ]]
+: > "$SANDBOX/events"
+export FAIL_RESTORE=true
+if bash "$SANDBOX/operator/deploy/native/restore-site-presentation.sh" "$SANDBOX/backups/source"; then exit 72; fi
+[[ $(tail -n 1 "$SANDBOX/events") == 'SYSTEMCTL start elsadat-api.service elsadat-web.service' ]]
+runner_path=$(sed -n 's/^RUNNER //p' "$SANDBOX/events")
+[[ ! -e $runner_path ]]
 echo REVIEWED_LAUNCH_FIXTURE_OK
 `);
     const result = spawnSync(bash, [path.join(sandbox, 'fixture.sh').replaceAll('\\', '/'), sandbox.replaceAll('\\', '/')], { encoding: 'utf8', windowsHide: true, env: { ...process.env, MSYS: 'winsymlinks:nativestrict' } });

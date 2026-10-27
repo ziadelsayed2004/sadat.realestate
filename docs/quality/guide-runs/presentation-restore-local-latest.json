@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "environment": "isolated-local-replica-set",
+  "checks": [
+    "real MongoDB archive and private tar backup pass checksum verification",
+    "real mongorestore imports only the selected namespaces into temporary collections",
+    "all categories and selected image bytes recover while listings, articles, community posts and accounts remain cleared",
+    "real public homepage projection shows hero banners, platform featured template, population and taxonomy with zero listings",
+    "re-running the recovery adds no duplicates and preserves post-reset edits",
+    "a genuinely published featured ad automatically replaces the platform template"
+  ],
+  "cleanup": true,
+  "restored": {
+    "collections": [
+      {
+        "collection": "cms_homepage_sections",
+        "source": 1,
+        "insert": 0,
+        "existing": 1
+      },
+      {
+        "collection": "cms_homepage_metrics",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "cms_population_values",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "cms_population_source_cache",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "cms_about_blocks",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "cms_real_estate_tips",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "cms_team_members",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "cms_team_categories",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "cms_team_photos",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "property_taxonomy",
+        "source": 2,
+        "insert": 2,
+        "existing": 0
+      },
+      {
+        "collection": "taxonomy_photos",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "features_services",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "locations",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "article_categories",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "community_categories",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "cms_banners",
+        "source": 2,
+        "insert": 2,
+        "existing": 0
+      },
+      {
+        "collection": "cms_settings",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "cms_display_settings",
+        "source": 0,
+        "insert": 0,
+        "existing": 0
+      },
+      {
+        "collection": "ad_settings",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "ad_placements",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "ad_banners",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      },
+      {
+        "collection": "ad_banner_media",
+        "source": 1,
+        "insert": 1,
+        "existing": 0
+      }
+    ],
+    "files": 3
+  }
+}

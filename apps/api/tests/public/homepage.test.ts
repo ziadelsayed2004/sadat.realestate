@@ -8,6 +8,25 @@ const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
 const localized = { ar: 'الرئيسية', en: 'Home' };
 
+test('shows the platform advertising template as a featured card without a provider account', async () => {
+  const template = { key: 'platform_ad_template', title: { ar: 'مساحتك الإعلانية هنا' }, ctaLabel: { ar: 'تصفح العقارات' }, imageUrl: '/assets/canonical/public/home-hero-sadat-city.png', targetUrl: '/properties', order: 0, active: true, status: 'published' };
+  const connection = {
+    collection(name: string) { return {
+      async findOne() { return null; },
+      async countDocuments() { return 0; },
+      aggregate() { return { async toArray() { return []; } }; },
+      find() { return { sort() { return { limit() { return { async toArray() { return name === 'cms_banners' ? [template] : []; } }; } }; } }; }
+    }; }
+  } as unknown as Connection;
+  const result = publicHomepageProjection(await createMongoosePublicHomepageRepository(connection).read());
+  assert.equal(result.banners[0]?.presentation, 'featured');
+  assert.equal(result.banners[0]?.targetUrl, '/properties');
+  assert.deepEqual(result.banners[0]?.ctaLabel, { ar: 'تصفح العقارات' });
+  assert.equal(result.banners[0]?.advertiserVerified, undefined);
+  assert.equal(result.properties.length, 0);
+  assert.equal(result.developers.length, 0);
+});
+
 test('keeps an explicitly removed property out of homepage fallback without changing its published status', () => {
   const property = sources().properties[0]!;
   const result = publicHomepageProjection(sources({ properties: [{ ...property, featured: false, homepageExcluded: true, updatedAt: Date.now() }, { ...property, id: secondId, slug: 'eligible-fallback' }] }));

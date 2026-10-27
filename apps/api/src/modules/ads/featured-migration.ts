@@ -10,7 +10,7 @@ export async function importLegacyFeatured(connection: Connection, audit: AuditW
     await session.withTransaction(async () => {
       count = 0;
       await connection.collection('ad_placements').updateOne({ key: 'homepage.featured' }, { $inc: { bannerWriteVersion: 1 } }, { session });
-      const rows = await connection.collection('cms_banners').find({ key: { $not: /^banner_/ }, migratedBannerId: { $exists: false } }, { session }).sort({ order: 1, _id: 1 }).limit(100).toArray();
+      const rows = await connection.collection('cms_banners').find({ key: { $not: /^banner_/, $ne: 'platform_ad_template' }, migratedBannerId: { $exists: false } }, { session }).sort({ order: 1, _id: 1 }).limit(100).toArray();
       const last = await connection.collection('ad_banners').find({ placementKey: 'homepage.featured' }, { session }).sort({ sortOrder: -1 }).limit(1).next();
       let order = (last?.sortOrder ?? -1) + 1;
       for (const row of rows) {
