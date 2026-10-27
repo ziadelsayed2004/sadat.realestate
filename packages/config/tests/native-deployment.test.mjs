@@ -96,7 +96,8 @@ test('both deployment copies exclude generated evidence before copying, while ke
     }
     assert.ok(fs.existsSync(path.join(root, evidence)), evidence);
   }
-  assert.doesNotMatch(filters, /design_sources|public\/assets|tests\/e2e/u);
+  assert.doesNotMatch(filters, /design_sources\/final_screens|public\/assets|tests\/e2e/u);
+  assert.match(filters, /\/docs\/design_sources\/recovery_candidates\/\*\*\*/u);
   assert.ok(clone.indexOf('check-disk-space.sh') < clone.indexOf('git clone'));
   assert.match(clone, /git clone .*--no-checkout/u);
   assert.ok(clone.indexOf('sparse-checkout set') < clone.indexOf('checkout --force'));

@@ -1602,7 +1602,7 @@
   .public-developer-profile__tabs { position: fixed; inset: auto .5rem max(.5rem, env(safe-area-inset-bottom)); z-index: 35; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .25rem; padding: .375rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
   .public-developer-profile__tabs a { flex-direction: column; justify-content: center; gap: .25rem; padding: .375rem .125rem; font-size: .6875rem; line-height: 1.4; }
   .public-developer-profile__tabs a.is-active { box-shadow: inset 0 -2px var(--color-brand-accent); }
-  .public-developer-profile .public-site-footer__floating-whatsapp { inset-block-end: calc(5.75rem + env(safe-area-inset-bottom)); }
+  .public-developer-profile .public-floating-actions { --public-floating-bottom: 5.75rem; }
   .public-developer-profile__identity { grid-template-columns: 6rem minmax(0, 1fr); grid-template-areas: 'logo copy' 'actions actions'; }
   .public-developer-profile__identity-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

@@ -276,7 +276,7 @@ test('failed release cleanup and disk recovery preserve the active release', () 
   fs.mkdirSync(temporaryRoot, { recursive: true });
   const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'deployment-shell-'));
   try {
-    for (const file of ['deploy-release.sh', 'check-disk-space.sh', 'recover-disk-space.sh', 'deployment-lock.sh', 'prune-deployments.sh']) {
+    for (const file of ['deploy-release.sh', 'check-disk-space.sh', 'recover-disk-space.sh', 'deployment-lock.sh', 'prune-deployments.sh', 'clean-release-artifacts.sh']) {
       const script = fs.readFileSync(path.join(root, 'deploy/native', file), 'utf8');
       // Exercise the actual scripts with only their fixed server root redirected.
       fs.writeFileSync(path.join(sandbox, file), script.replaceAll('/opt/elsadatrealestate', '${SANDBOX}'));
@@ -315,6 +315,13 @@ STATUS=$?
 set -e
 [[ $STATUS == 11 && -d "$SANDBOX/current" ]]
 touch "$SANDBOX/current/runtime.txt"
+mkdir -p "$SANDBOX/current/coverage" "$SANDBOX/current/node_modules/.cache" "$SANDBOX/current/apps/web/dist/client" "$SANDBOX/private/preserved"
+touch "$SANDBOX/current/coverage/report" "$SANDBOX/current/node_modules/.cache/generated" "$SANDBOX/current/apps/web/dist/client/index.html" "$SANDBOX/private/preserved/upload"
+ln -s "$SANDBOX/private/preserved" "$SANDBOX/current/test-results"
+bash "$FIXTURE/clean-release-artifacts.sh" "$(readlink -e "$SANDBOX/current")"
+[[ ! -d "$SANDBOX/current/coverage" && ! -d "$SANDBOX/current/node_modules/.cache" ]]
+[[ -f "$SANDBOX/current/apps/web/dist/client/index.html" && -f "$SANDBOX/private/preserved/upload" && -L "$SANDBOX/current/test-results" ]]
+if bash "$FIXTURE/clean-release-artifacts.sh" "$SANDBOX/private/preserved"; then exit 73; fi
 mkdir -p "$SANDBOX/releases/20261004T152255Z" "$SANDBOX/current/docs/quality/screens" "$SANDBOX/staging/reviewed-source/docs/quality" "$SANDBOX/private" "$SANDBOX/backups"
 touch "$SANDBOX/private/upload.txt" "$SANDBOX/backups/database.archive"
 set +e
@@ -351,7 +358,7 @@ test('retention is bounded, protects rollback and storage, and recovers space be
   fs.mkdirSync(temporaryRoot, { recursive: true });
   const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'deployment-retention-'));
   try {
-    for (const file of ['deployment-lock.sh', 'prune-deployments.sh', 'check-disk-space.sh', 'deploy-release.sh', 'manage-production.sh', 'healthcheck.sh', 'deploy-from-github.sh']) {
+    for (const file of ['deployment-lock.sh', 'prune-deployments.sh', 'check-disk-space.sh', 'deploy-release.sh', 'manage-production.sh', 'healthcheck.sh', 'deploy-from-github.sh', 'clean-release-artifacts.sh']) {
       fs.writeFileSync(path.join(sandbox, file), fs.readFileSync(path.join(root, 'deploy/native', file), 'utf8').replaceAll('/opt/elsadatrealestate', '${SANDBOX}'));
     }
     const fixture = `set -Eeuo pipefail

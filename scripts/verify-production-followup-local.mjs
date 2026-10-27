@@ -104,7 +104,7 @@ try {
           assert(navBox.x >= 0 && navBox.x + navBox.width <= width + 1);
           if (width <= 1024) {
             assert(navBox.y + navBox.height <= 950 && navBox.y > 800);
-            const whatsApp = await page.locator('.public-site-footer__floating-whatsapp').boundingBox(); assert(whatsApp.y + whatsApp.height < navBox.y);
+            const whatsApp = await page.locator('.public-floating-actions__whatsapp').boundingBox(); assert(whatsApp.y + whatsApp.height < navBox.y);
             await tabs.locator('[href="#developer-contact"]').click(); await page.waitForLoadState('networkidle');
             await expect(page.locator('#developer-contact')).toBeInViewport();
           } else {

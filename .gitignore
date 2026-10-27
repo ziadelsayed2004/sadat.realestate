@@ -19,3 +19,24 @@ apps/web/playwright-report/
 /playwright-report/
 .playwright-*/
 **/.playwright-*/
+# Generated QA captures and rejected Figma exports. Approved design sources,
+# Playwright golden snapshots and public product assets remain versioned.
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.auth/
+/docs/quality/**/*.png
+/docs/quality/**/*.jpg
+/docs/quality/**/*.jpeg
+/docs/quality/**/*.webp
+/docs/quality/**/*.gif
+/docs/quality/**/*.webm
+/docs/quality/**/*.mp4
+/docs/quality/**/*.zip
+/docs/quality/**/*.trace
+!/docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png
+/docs/design_sources/recovery_candidates/
+/docs/assets/*.png
+/docs/assets/*.jpg
+/docs/assets/*.jpeg
+/docs/assets/*.webp

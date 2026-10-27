@@ -66,4 +66,10 @@ for TARGET in "$ROOT"/staging/github.* "$ROOT"/staging/reviewed.* "$ROOT/staging
   rm -rf -- "$TARGET"
   echo "DEPLOYMENT_STALE_SOURCE_REMOVED source=${TARGET##*/}"
 done
+# Historical active/rollback releases may predate automatic artifact cleanup.
+for TARGET in "$ACTIVE" "$ROLLBACK"; do
+  [[ -n "$TARGET" && -d "$TARGET" && ! -L "$TARGET" ]] || continue
+  bash "$SCRIPT_DIR/clean-release-artifacts.sh" "$TARGET"
+done
+
 echo 'DEPLOYMENT_PRUNE_OK current_and_rollback=preserved database_uploads_backups=untouched'

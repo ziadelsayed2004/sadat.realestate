@@ -82,7 +82,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // about eight KiB above 2,786,702 bytes; keep route/chunk limits fixed.
 // Provider account-name projections and the revised directory/image guidance
 // have a bounded 2 KiB allowance. Chunk and stylesheet limits stay unchanged.
-const maxJavaScriptBytes = 2_732 * 1024 + 128;
+// Scroll progress controls and the small footer credit add about 1.5 KiB.
+// Reserve one KiB above the previous total cap; per-chunk limits are unchanged.
+const maxJavaScriptBytes = 2_733 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route
@@ -99,7 +101,9 @@ const maxJavaScriptBytes = 2_732 * 1024 + 128;
 // headroom plus one KiB covers it; retain the individual JS chunk cap.
 // Side/bottom profile navigation and missing design tokens add 507 bytes after
 // removing superseded profile layout overrides. Allow a bounded 512 bytes.
-const maxRouteStylesheetBytes = 271 * 1024;
+// Floating actions and the locally hosted wordmark add 1.6 KiB to the public
+// route; the replaced legacy WhatsApp rules no longer ship inside JavaScript.
+const maxRouteStylesheetBytes = 271 * 1024 + 1536;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

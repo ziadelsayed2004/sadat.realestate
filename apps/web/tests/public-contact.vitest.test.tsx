@@ -69,4 +69,9 @@ describe('configured public contacts', () => {
     expect(screen.queryByRole('link', { name: 'WhatsApp' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Facebook' })).toBeNull();
   });
+  it('links the CodzHub developer credit separately from the platform copyright', () => {
+    render(<PublicSiteFooter locale="ar" />);
+    expect(screen.getByRole('link', { name: 'تصميم وتطوير CodzHub' })).toHaveAttribute('href', 'https://codzhub.com/');
+    expect(screen.getByRole('link', { name: 'تصميم وتطوير CodzHub' })).toHaveAttribute('rel', 'noopener noreferrer');
+  });
 });

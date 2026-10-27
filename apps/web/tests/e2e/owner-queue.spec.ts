@@ -69,7 +69,7 @@ test('footer exposes configured contact links and both price limits remain optio
   const searches: string[] = [];
   await page.route('**/api/v1/public/properties?**', route => { searches.push(route.request().url()); return route.fulfill({ json: envelope({ items: [], categories: [], locations: [], propertyTypes: [], page: 1, limit: 20, total: 0 }) }); });
   await page.goto(`/properties?lang=${locale}`);
-  await expect(page.locator('.public-site-footer__floating-whatsapp')).toHaveAttribute('href', /wa\.me\/201012345678/);
+  await expect(page.locator('.public-floating-actions__whatsapp')).toHaveAttribute('href', /wa\.me\/201012345678/);
   await expect(page.locator('.public-site-footer__social a[aria-label="Facebook"]')).toHaveAttribute('href', 'https://www.facebook.com/example');
   await expect(page.locator('.public-site-footer a[href*="google.com/maps"]')).toBeAttached();
   const min = page.locator('#public-property-min-price'); const max = page.locator('#public-property-max-price');
