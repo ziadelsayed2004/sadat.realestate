@@ -7,11 +7,11 @@ import { TeamCategoriesManager } from '../src/features/admin_content/team-catego
 describe('team department selection', () => {
   it('offers saved departments and lets the owner open their editor from the member form', () => {
     const change = vi.fn();
-    render(<><details id="team-departments"><summary>Departments</summary></details><TeamDepartmentField value="" categories={DEFAULT_TEAM_CATEGORIES} locale="en" disabled={false} onChange={change} /></>);
-    const select = screen.getByLabelText('Team department');
-    expect(screen.getByRole('option', { name: 'Sales' })).toHaveValue('sales');
-    fireEvent.change(select, { target: { value: 'sales' } });
-    expect(change).toHaveBeenCalledWith('sales');
+    render(<><details id="team-departments"><summary>Departments</summary></details><TeamDepartmentField value={['sales']} categories={DEFAULT_TEAM_CATEGORIES} locale="en" disabled={false} onChange={change} /></>);
+    expect(screen.getByRole('group', { name: 'Team departments' })).toBeVisible();
+    expect(screen.getByRole('checkbox', { name: 'Sales' })).toBeChecked();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Support' }));
+    expect(change).toHaveBeenCalledWith(['sales', 'support']);
     const scroll = vi.fn(); document.getElementById('team-departments')!.scrollIntoView = scroll;
     fireEvent.click(screen.getByRole('button', { name: 'Add or edit a department' }));
     expect(document.getElementById('team-departments')).toHaveAttribute('open');
@@ -20,8 +20,8 @@ describe('team department selection', () => {
   });
 
   it('preserves a previously assigned inactive or unavailable department', () => {
-    render(<TeamDepartmentField value="old-department" categories={[]} locale="en" disabled={false} onChange={() => undefined} />);
-    expect(screen.getByLabelText('Team department')).toHaveValue('old-department');
+    render(<TeamDepartmentField value={['old-department']} categories={[]} locale="en" disabled={false} onChange={() => undefined} />);
+    expect(screen.getByRole('checkbox', { name: 'old-department' })).toBeChecked();
     expect(teamDepartmentLabel(undefined, [], 'en')).toBe('Unassigned');
     expect(teamDepartmentLabel('sales', DEFAULT_TEAM_CATEGORIES, 'en')).toBe('Sales');
   });

@@ -1,3 +1,4 @@
+import { teamMemberCategoryKeys } from '@sadat-real-estate/contracts';
 import { AboutWebsiteLink } from './about-website-link.tsx';
 import { TeamDepartmentField, teamDepartmentLabel } from './team-department.tsx';
 import { TeamCategoriesManager } from './team-categories.tsx';
@@ -504,7 +505,7 @@ function AboutBlockForm({ block, editStats, locale, onCancel, onSave }: { readon
 function TeamMemberForm({ member, locale, onCancel, onSave, uploadPhoto, loadPhoto, categories }: { readonly uploadPhoto: TeamPhotoUpload; readonly loadPhoto: TeamPhotoLoader; categories: readonly TeamCategory[]; readonly member: CmsAdminTeamMember | undefined; readonly locale: SupportedLocale; readonly onCancel: () => void; readonly onSave: (input: unknown) => Promise<void> }) {
   const editorRef = useEditorReveal();
   const copy = getAdminCmsCopy(locale);
-  const [category, setCategory] = useState(member?.category ?? '');
+  const [category, setCategory] = useState<string[]>(() => teamMemberCategoryKeys(member ?? {}));
   const [name, setName] = useState<LocalizedDraft>(() => localizedDraft(member?.name));
   const [title, setTitle] = useState<LocalizedDraft>(() => localizedDraft(member?.title));
   const [bio, setBio] = useState<LocalizedDraft>(() => localizedDraft(member?.bio));
@@ -522,7 +523,7 @@ function TeamMemberForm({ member, locale, onCancel, onSave, uploadPhoto, loadPho
     if (saving || uploadingPhoto) return;
     if (reason.trim().length < 5) { setFeedback(copy.reasonRequired); return; }
     try {
-      const common = { ...(category ? { category } : member?.category ? { category: null } : {}), name: parseLocalized(name), title: parseLocalized(title), ...(Object.values(bio).some(value => value.trim() !== '') ? { bio: parseLocalized(bio) } : member?.bio ? { bio: null } : {}), ...(photoAssetId !== undefined && (photoAssetId !== null || member !== undefined) ? { photoAssetId } : {}), order: Number(order), active, status, reason: reason.trim() };
+      const common = { categories: category, name: parseLocalized(name), title: parseLocalized(title), ...(Object.values(bio).some(value => value.trim() !== '') ? { bio: parseLocalized(bio) } : member?.bio ? { bio: null } : {}), ...(photoAssetId !== undefined && (photoAssetId !== null || member !== undefined) ? { photoAssetId } : {}), order: Number(order), active, status, reason: reason.trim() };
       setSaving(true); setFeedback(undefined);
       await onSave(member === undefined ? { ...common } : { id: member.id, version: member.version, ...common });
     } catch (error) { setFeedback(cmsMutationMessage(error, locale)); } finally { setSaving(false); }
@@ -538,7 +539,7 @@ function AboutBlockList({ items, locale, onEdit, onPreview }: { readonly items: 
 
 function TeamMemberList({ items, categories, locale, onEdit, onPreview, onDelete }: { readonly categories: readonly TeamCategory[]; readonly items: readonly CmsAdminTeamMember[]; readonly locale: SupportedLocale; readonly onEdit: (item: CmsAdminTeamMember) => void; readonly onPreview: (item: CmsAdminTeamMember) => void; readonly onDelete: (item: CmsAdminTeamMember) => void }) {
   const copy = getAdminCmsCopy(locale);
-  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-team-${item.id}`}><div><strong>{localizedValue(item.name, locale)}</strong><p>{locale === 'ar' ? '\u0627\u0644\u0642\u0633\u0645' : 'Department'}: {teamDepartmentLabel(item.category, categories, locale)}</p><small>{localizedValue(item.title, locale)} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.edit}</Button> : null}{item.availableActions.includes('delete') ? <Button type="button" size="sm" variant="secondary" onClick={() => onDelete(item)}>{copy.delete}</Button> : null}</div></article>)}</div>;
+  return <div className="admin-cms__record-grid">{items.map(item => <article className="admin-cms__record-card" key={item.id} data-testid={`admin-cms-team-${item.id}`}><div><strong>{localizedValue(item.name, locale)}</strong><p>{locale === 'ar' ? 'الأقسام' : 'Departments'}: {teamMemberCategoryKeys(item).map(key => teamDepartmentLabel(key, categories, locale)).join(locale === 'ar' ? '، ' : ', ') || teamDepartmentLabel(undefined, categories, locale)}</p><small>{localizedValue(item.title, locale)} · {copy.order}: {item.order}</small></div><CmsStatusBadge status={item.status} locale={locale} /><div className="admin-content__row-actions"><Button type="button" size="sm" variant="secondary" onClick={() => onPreview(item)}>{copy.preview}</Button>{item.availableActions.includes('update') ? <Button type="button" size="sm" onClick={() => onEdit(item)}>{copy.edit}</Button> : null}{item.availableActions.includes('delete') ? <Button type="button" size="sm" variant="secondary" onClick={() => onDelete(item)}>{copy.delete}</Button> : null}</div></article>)}</div>;
 }
 
 export interface AdminCmsContentProps {

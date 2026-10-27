@@ -22,3 +22,11 @@
   .admin-team-departments > summary, .admin-team-departments__body { padding: 18px; }
   .admin-team-departments__fields { padding: 14px; }
 }
+
+.admin-team-department-field { min-inline-size: 0; }
+.admin-team-department-field__options { display: flex; flex-wrap: wrap; gap: .5rem; border: 1px solid #ded8c9; border-radius: 1rem; padding: .75rem; margin: 0; min-inline-size: 0; }
+.admin-team-department-field__options legend { font-weight: 700; padding-inline: .25rem; }
+.admin-team-department-field__choice { display: inline-flex !important; align-items: center; gap: .5rem; padding: .6rem .75rem; border-radius: 999px; border: 1px solid #ded8c9; cursor: pointer; font-weight: 500; }
+.admin-team-department-field__choice:has(input:checked) { background: #e6f2ec; border-color: #145a49; color: #145a49; }
+.admin-team-department-field__choice input { inline-size: 18px !important; block-size: 18px !important; min-block-size: 18px !important; margin: 0; accent-color: #145a49; flex: none; }
+.admin-team-department-field__choice:focus-within { outline: 2px solid #cda347; outline-offset: 2px; }

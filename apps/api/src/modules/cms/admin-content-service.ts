@@ -1,6 +1,7 @@
 import { generateIdentifier } from '../shared/identifiers.js';
 import { populationStatement, type AutomaticPopulationReader } from './automatic-population.js';
 import {
+  teamMemberCategoryKeys,
   cmsAdminAboutBlockPutSchema,
   cmsAdminAboutBlockSchema,
   cmsAdminContentDataSchema,
@@ -306,7 +307,11 @@ export function createCmsAdminContentService(dependencies: {
       if (namespace === 'team') {
         const input = cmsAdminTeamMemberPutSchema.parse(unparsedInput) as CmsAdminTeamMemberPut;
         const existing = 'id' in input ? await dependencies.repository.findTeam(input.id!) : undefined;
-        if (input.category && input.category !== existing?.category) await dependencies.validateTeamCategory?.(input.category);
+        const categoryKeys = teamMemberCategoryKeys(input);
+        const previousCategories = new Set(teamMemberCategoryKeys(existing ?? {}));
+        for (const category of categoryKeys) if (!previousCategories.has(category)) await dependencies.validateTeamCategory?.(category);
+        const categoryChanges = input.categories !== undefined || input.category !== undefined
+          ? { categories: categoryKeys, category: categoryKeys[0] ?? null } : {};
         const photoChanged = input.photoAssetId !== undefined && input.photoAssetId !== existing?.photoAssetId;
         if (photoChanged && input.photoAssetId) await dependencies.validateTeamPhoto?.(input.photoAssetId);
         const imageChanges = photoChanged
@@ -317,7 +322,7 @@ export function createCmsAdminContentService(dependencies: {
           const update = input as Extract<CmsAdminTeamMemberPut, { id: string }>;
           if (update.status !== undefined) requirePublish(update.status, authorization.publish);
           row = teamResult(await dependencies.repository.updateTeam(update.id, update.version, {
-            ...(update.category !== undefined ? { category: update.category } : {}),
+            ...categoryChanges,
             ...(update.name !== undefined ? { name: update.name } : {}),
             ...(update.title !== undefined ? { title: update.title } : {}),
             ...(update.bio !== undefined ? { bio: update.bio } : {}),
@@ -332,7 +337,7 @@ export function createCmsAdminContentService(dependencies: {
           requirePublish(create.status, authorization.publish);
           row = teamResult(await dependencies.repository.createTeam({
             key: create.key ?? generateIdentifier('team', undefined, '_'), name: create.name, title: create.title,
-            ...(create.category ? { category: create.category } : {}),
+            ...(categoryKeys.length ? { category: categoryKeys[0]!, categories: categoryKeys } : { categories: [] }),
             ...(create.bio ? { bio: create.bio } : {}),
             ...(create.photoAssetId ? { photoAssetId: create.photoAssetId } : {}),
             ...(imageChanges.imageUrl ? { imageUrl: imageChanges.imageUrl } : {}),

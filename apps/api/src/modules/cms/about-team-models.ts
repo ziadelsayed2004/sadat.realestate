@@ -28,6 +28,7 @@ export interface TeamMemberDocument {
   photoAssetId?: Types.ObjectId;
   imageUrl?: string;
   category?: string;
+  categories?: string[];
   order: number;
   active: boolean;
   status: "draft" | "published" | "inactive";
@@ -74,6 +75,7 @@ export const teamMemberSchema = new Schema<TeamMemberDocument>(
     photoAssetId: { type: Schema.Types.ObjectId, ref: "Upload" },
     imageUrl: { type: String, trim: true, maxlength: 2048 },
     category: { type: String, match: /^[a-z][a-z0-9_]{1,63}$/ },
+    categories: { type: [{ type: String, match: /^[a-z][a-z0-9_]{1,63}$/ }], default: undefined, validate: { validator: (items: string[] | undefined) => items === undefined || (items.length <= 100 && new Set(items).size === items.length), message: 'Invalid team departments' } },
     order: { type: Number, min: 0, required: true },
     active: { type: Boolean, default: true },
     status: {

@@ -1,5 +1,29 @@
 import assert from'node:assert/strict';import test from'node:test';import{aboutBlockCreateSchema,teamMemberCreateSchema}from'@sadat-real-estate/contracts';import{aboutBlockSchema,teamMemberSchema}from'../../src/modules/cms/about-team-models.js';import{parseAboutBlock,parseTeamMember,publicAboutBlock,publicTeamMember,sortPublished}from'../../src/modules/cms/about-team.js';
 const text={ar:'عن المنصة',en:'About platform'};
+
+test('team storage preserves the legacy category fallback and validates new department arrays', async () => {
+  const { createConnection } = await import('mongoose');
+  const { registerAboutTeamModels } = await import('../../src/modules/cms/about-team-models.js');
+  const connection = createConnection();
+  try {
+    const { team } = registerAboutTeamModels(connection);
+    const member = new team({ key: 'legacy_member', name: text, title: text, category: 'sales', order: 0, updatedBy: 'aaaaaaaaaaaaaaaaaaaaaaaa' });
+    assert.equal(member.categories, undefined);
+    assert.equal(member.validateSync(), undefined);
+    member.categories = ['sales', 'support'];
+    assert.equal(member.validateSync(), undefined);
+    member.categories = ['sales', 'sales'];
+    assert.ok(member.validateSync()?.errors.categories);
+  } finally { await connection.close(); }
+});
+
+test('accepts multiple unique departments, rejects malformed/duplicate groups and publishes them together', () => {
+  const member = { key: 'tarek', name: text, title: text, categories: ['sales', 'support'], order: 0, active: true, status: 'published' as const, reason: 'Assign sales and support' };
+  assert.deepEqual(parseTeamMember(member).categories, ['sales', 'support']);
+  assert.deepEqual(publicTeamMember(member)?.categories, ['sales', 'support']);
+  for (const categories of [['sales', 'sales'], ['Invalid department'], Array.from({ length: 101 }, (_, i) => `category_${i}`)]) assert.equal(teamMemberCreateSchema.safeParse({ ...member, categories }).success, false);
+  assert.deepEqual(parseTeamMember({ ...member, categories: [] }).categories, []);
+});
 test('validates editable About statistics and preserves publication safety', () => {
   const stat = { value: '2,500+', label: text, visible: false };
   const block = { key: 'about_intro', title: text, body: text, order: 0, reason: 'Update About statistics', stats: [stat] };

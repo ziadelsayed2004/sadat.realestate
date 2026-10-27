@@ -26174,6 +26174,16 @@
           "imageUrl": {
             "type": "string",
             "maxLength": 2048
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "description": "Selected team departments. When present this array takes precedence over legacy category; [] explicitly clears all assignments."
           }
         }
       },
@@ -26345,6 +26355,16 @@
           "category": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "description": "Selected team departments. When present this array takes precedence over legacy category; [] explicitly clears all assignments."
           }
         }
       },
@@ -27437,6 +27457,16 @@
           "category": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "description": "Selected team departments. When present this array takes precedence over legacy category; [] explicitly clears all assignments."
           }
         }
       },
@@ -27501,6 +27531,16 @@
                 "type": "null"
               }
             ]
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "description": "Selected team departments. When present this array takes precedence over legacy category; [] explicitly clears all assignments."
           }
         }
       },

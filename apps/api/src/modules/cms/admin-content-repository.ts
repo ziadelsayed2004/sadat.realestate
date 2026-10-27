@@ -36,6 +36,7 @@ export interface StoredTeamMember {
   photoAssetId?: string;
   imageUrl?: string;
   category?: string;
+  categories?: string[];
   order: number;
   active: boolean;
   status: 'draft' | 'published' | 'inactive';
@@ -112,6 +113,7 @@ export interface TeamMemberChanges {
   photoAssetId?: string | null;
   imageUrl?: string | null;
   category?: string | null;
+  categories?: string[];
   order?: number;
   active?: boolean;
   status?: 'draft' | 'published' | 'inactive';
@@ -221,6 +223,7 @@ function mapTeam(record: TeamMemberDocument): StoredTeamMember {
     ...(record.bio ? { bio: record.bio } : {}),
     ...(record.photoAssetId ? { photoAssetId: record.photoAssetId.toHexString() } : {}),
     ...(record.category ? { category: record.category } : {}),
+    ...(record.categories !== undefined ? { categories: record.categories } : {}),
     ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     order: record.order,
     active: record.active,
@@ -350,6 +353,7 @@ export function createMongooseCmsAdminContentRepository(models: CmsAdminContentM
           ...(input.bio === undefined ? {} : { bio: input.bio }),
           ...(input.photoAssetId ? { photoAssetId: new Types.ObjectId(input.photoAssetId) } : {}),
           ...(input.category ? { category: input.category } : {}),
+          ...(input.categories !== undefined ? { categories: input.categories } : {}),
           ...(input.imageUrl ? { imageUrl: input.imageUrl } : {}),
           order: input.order,
           active: input.active,

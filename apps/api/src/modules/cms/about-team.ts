@@ -54,6 +54,7 @@ export function publicTeamMember(
         photoAssetId?: string;
         imageUrl?: string;
         category?: string;
+        categories?: string[];
         order: number;
         status: "draft" | "published" | "inactive";
         active: boolean;
@@ -69,6 +70,7 @@ export function publicTeamMember(
     photoAssetId: value.photoAssetId,
     imageUrl: value.imageUrl,
     category: value.category,
+    ...(value.categories !== undefined ? { categories: value.categories } : {}),
     order: value.order,
   });
 }

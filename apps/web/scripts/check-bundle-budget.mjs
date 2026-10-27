@@ -87,7 +87,9 @@ const maxJavaScriptChunkBytes = 650 * 1024;
 // Typed commission categories, independent rental terms, policy approval/editing
 // and their bilingual guide add ~15.6 KB. Bound this feature to another 16 KiB;
 // per-chunk and stylesheet budgets remain unchanged.
-const maxJavaScriptBytes = 2_749 * 1024 + 128;
+// Multiple team departments and their selection/filter guidance add ~1.4 KiB;
+// reserve a bounded 2 KiB while preserving route and chunk limits.
+const maxJavaScriptBytes = 2_751 * 1024 + 128;
 // Vite emits one base stylesheet and mutually exclusive feature stylesheets.
 // Summing public, seeker, provider, and Admin CSS rejects healthy code splitting:
 // no browser route downloads all four feature chunks. Enforce the largest route

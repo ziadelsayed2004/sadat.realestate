@@ -141,7 +141,7 @@ function repository(): CmsAdminContentRepository {
       if (teamDeleted || id !== team.id) return { kind: 'not_found' };
       if (version !== team.version) return { kind: 'version_conflict' };
       team = { ...team, ...input, updatedBy: actorId, version: version + 1, updatedAt: at };
-      for (const field of ['bio', 'photoAssetId', 'imageUrl'] as const) if (input[field] === null) delete team[field];
+      for (const field of ['bio', 'photoAssetId', 'imageUrl', 'category'] as const) if (input[field] === null) delete team[field];
       return { kind: 'written', item: team };
     },
     async deleteTeam(id, version) {
@@ -234,10 +234,11 @@ test('stops and resumes homepage content without losing text, with audit, permis
   assert.deepEqual(allowed.audits, ['cms.homepage.write', 'cms.homepage.write']);
 });
 
-function createService(options: { manage?: boolean; publish?: boolean; automaticPopulation?: () => Promise<import('../../src/modules/cms/automatic-population.js').PopulationSnapshot | null> } = {}) {
+function createService(options: { manage?: boolean; publish?: boolean; validateTeamCategory?: (key: string) => Promise<void>; automaticPopulation?: () => Promise<import('../../src/modules/cms/automatic-population.js').PopulationSnapshot | null> } = {}) {
   const audits: string[] = [];
   const created = createCmsAdminContentService({
     repository: repository(),
+    ...(options.validateTeamCategory ? { validateTeamCategory: options.validateTeamCategory } : {}),
     ...(options.automaticPopulation ? { automaticPopulation: options.automaticPopulation } : {}),
     authorization: {
       async authorize(_userId, permission) {
@@ -251,6 +252,25 @@ function createService(options: { manage?: boolean; publish?: boolean; automatic
   });
   return { service: created, audits };
 }
+
+test('saves multiple departments, preserves inactive assignments and legacy updates, and clears all without resurrection', async () => {
+  const checked: string[] = [];
+  const { service } = createService({ validateTeamCategory: async key => { checked.push(key); if (key === 'missing') throw new Error('Department unavailable'); } });
+  const context = { requestId: 'multiple-departments', traceId: 'a'.repeat(32) };
+  const read = async () => { const data = await service.get({ userId: adminId }, 'team'); if (data.namespace !== 'team') throw Error('Expected team'); return data.items[0]!; };
+  await service.put({ userId: adminId }, 'team', { id: secondId, version: 1, order: 0, categories: ['sales', 'support'], reason: 'Assign sales and support' }, context);
+  assert.deepEqual((await read()).categories, ['sales', 'support']);
+  assert.equal((await read()).category, 'sales');
+  assert.deepEqual(checked, ['sales', 'support']);
+  await service.put({ userId: adminId }, 'team', { id: secondId, version: 2, order: 0, title: { en: 'Senior sales and support' }, reason: 'Update member title only' }, context);
+  assert.deepEqual((await read()).categories, ['sales', 'support']);
+  await assert.rejects(service.put({ userId: adminId }, 'team', { id: secondId, version: 3, order: 0, categories: ['sales', 'missing'], reason: 'Invalid department assignment' }, context), /Department unavailable/);
+  assert.equal((await read()).version, 3);
+  await service.put({ userId: adminId }, 'team', { id: secondId, version: 3, order: 0, categories: [], reason: 'Remove all member departments' }, context);
+  assert.deepEqual((await read()).categories, []); assert.equal((await read()).category, undefined);
+  await service.put({ userId: adminId }, 'team', { id: secondId, version: 4, order: 0, category: 'sales', reason: 'Legacy client chooses one department' }, context);
+  assert.deepEqual((await read()).categories, ['sales']);
+});
 
 test('automatic population is read-only and does not overwrite manual About statistics', async () => {
   const { service, audits } = createService({ automaticPopulation: async () => ({ value: 79120, year: 2026, checkedAt: '2026-10-11T10:00:00.000Z' }) });

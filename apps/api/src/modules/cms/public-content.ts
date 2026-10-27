@@ -22,6 +22,7 @@ type PublishedTeamSource = {
   photoAssetId?: string;
   imageUrl?: string;
   category?: string;
+  categories?: string[];
   order: number;
   status: 'draft' | 'published' | 'inactive';
   active: boolean;
@@ -94,7 +95,7 @@ export function createMongoosePublicAboutTeamRepository(connection: Connection):
     async listTeam() {
       const rows = await models.team
         .find({ status: 'published', active: true })
-        .select({ _id: 0, key: 1, name: 1, title: 1, bio: 1, photoAssetId: 1, imageUrl: 1, category: 1, order: 1, status: 1, active: 1 })
+        .select({ _id: 0, key: 1, name: 1, title: 1, bio: 1, photoAssetId: 1, imageUrl: 1, category: 1, categories: 1, order: 1, status: 1, active: 1 })
         .sort({ order: 1, key: 1 })
         .lean()
         .exec();
@@ -106,6 +107,7 @@ export function createMongoosePublicAboutTeamRepository(connection: Connection):
         ...(row.photoAssetId === undefined ? {} : { photoAssetId: row.photoAssetId.toString() }),
         ...(row.imageUrl === undefined ? {} : { imageUrl: row.imageUrl }),
         ...(row.category === undefined ? {} : { category: row.category }),
+        ...(row.categories === undefined ? {} : { categories: row.categories }),
         order: row.order,
         status: row.status,
         active: row.active

@@ -1,3 +1,4 @@
+import { teamMemberCategoryKeys } from '@sadat-real-estate/contracts';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ABOUT_STATS } from '@sadat-real-estate/contracts';
 import type { CmsPublicContent, CmsPublicContentListData, SupportedLocale } from '@sadat-real-estate/contracts';
@@ -239,14 +240,17 @@ function teamFilters(locale: SupportedLocale): ReadonlyArray<{ readonly key: str
   ];
 }
 
+function memberDepartments(member: CmsPublicContent): string[] {
+  return member.categories !== undefined || member.category ? teamMemberCategoryKeys(member) : teamPresentation[member.key]?.category ? [teamPresentation[member.key]!.category] : [];
+}
+
 function TeamCard({ locale, copy, member, priority, department }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly member: CmsPublicContent; readonly priority: boolean; readonly department: string }) {
-  const presentation = teamPresentation[member.key];
   const name = localizedText(member.name, locale) ?? member.key;
   const role = localizedText(member.role, locale) ?? copy.roleUnavailable;
   const bio = localizedText(member.bio, locale) ?? copy.bioUnavailable;
   const fallback = <div className="public-team__media-fallback"><UxStateView state="missing_image" title={copy.imageUnavailable} /></div>;
   return (
-    <article className="public-team__card" data-team-category={member.category ?? presentation?.category ?? 'unknown'}>
+    <article className="public-team__card" data-team-category={memberDepartments(member)[0] ?? 'unknown'} data-team-categories={memberDepartments(member).join(' ')}>
       <div className="public-team__media" data-media-state={member.imageUrl === undefined ? 'unavailable' : 'success'}>
         {member.imageUrl === undefined ? fallback : <PublicMediaImage src={member.imageUrl} alt="" fallback={fallback} className="public-team__photo" loading={priority ? 'eager' : 'lazy'} />}
       </div>
@@ -258,14 +262,14 @@ function TeamCard({ locale, copy, member, priority, department }: { readonly loc
 function TeamContent({ locale, copy, data }: { readonly locale: SupportedLocale; readonly copy: PublicAboutTeamCopy; readonly data: CmsPublicContentListData }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const filters = data.categories ? [{ key: 'all', label: locale === 'ar' ? 'الكل' : 'All' }, ...data.categories.map(item => ({ key: item.key, label: item.label[locale] ?? item.label.ar ?? item.label.en ?? item.key }))] : teamFilters(locale);
-  const visibleMembers = data.items.filter(member => activeFilter === 'all' || (member.category ?? teamPresentation[member.key]?.category) === activeFilter);
+  const visibleMembers = data.items.filter(member => activeFilter === 'all' || memberDepartments(member).includes(activeFilter));
   return (
     <>
       <section className="public-team__intro" aria-labelledby="public-team-title">
         <p className="public-team__eyebrow">{copy.teamEyebrow}</p><h1 id="public-team-title">{copy.teamTitle}</h1><p>{copy.teamSubtitle}</p>
         <div className="public-team__filters" aria-label={copy.teamTitle}>{filters.map(filter => <button key={filter.key} type="button" className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}</div>
       </section>
-      <section className="public-team__content" aria-label={copy.teamTitle}><div className="public-team__grid">{visibleMembers.map((member, index) => <TeamCard key={member.key} locale={locale} copy={copy} member={member} priority={index === 0} department={filters.find(filter => filter.key === (member.category ?? teamPresentation[member.key]?.category))?.label ?? (locale === 'ar' ? 'غير مصنف' : 'Unassigned')} />)}</div></section>
+      <section className="public-team__content" aria-label={copy.teamTitle}><div className="public-team__grid">{visibleMembers.map((member, index) => <TeamCard key={member.key} locale={locale} copy={copy} member={member} priority={index === 0} department={memberDepartments(member).map(key => filters.find(filter => filter.key === key)?.label ?? key).join(locale === 'ar' ? '، ' : ', ') || (locale === 'ar' ? 'غير مصنف' : 'Unassigned')} />)}</div></section>
     </>
   );
 }

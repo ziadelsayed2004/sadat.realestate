@@ -1,5 +1,6 @@
 import type { SupportedLocale, TeamCategory } from '@sadat-real-estate/contracts';
 import { Button } from '../design_system/index.ts';
+import './team-categories.css';
 
 export function teamDepartmentLabel(category: string | undefined, categories: readonly TeamCategory[], locale: SupportedLocale): string {
   const item = categories.find(item => item.key === category);
@@ -7,10 +8,11 @@ export function teamDepartmentLabel(category: string | undefined, categories: re
 }
 
 export function TeamDepartmentField({ value, categories, locale, disabled, onChange }: {
-  value: string; categories: readonly TeamCategory[]; locale: SupportedLocale; disabled: boolean; onChange: (value: string) => void;
+  value: readonly string[]; categories: readonly TeamCategory[]; locale: SupportedLocale; disabled: boolean; onChange: (value: string[]) => void;
 }) {
   const ar = locale === 'ar';
-  const options = categories.filter(item => item.active || item.key === value);
+  const options = categories.filter(item => item.active || value.includes(item.key));
+  const keys = [...options.map(item => item.key), ...value.filter(key => !options.some(item => item.key === key))];
   const manage = () => {
     const manager = document.getElementById('team-departments');
     if (manager instanceof HTMLDetailsElement) {
@@ -19,15 +21,13 @@ export function TeamDepartmentField({ value, categories, locale, disabled, onCha
       manager.querySelector('summary')?.focus({ preventScroll: true });
     }
   };
-  return <div>
-    <label htmlFor="admin-cms-team-category">{ar ? 'قسم الفريق' : 'Team department'}
-      <select id="admin-cms-team-category" value={value} disabled={disabled} onChange={event => onChange(event.target.value)} aria-describedby="admin-cms-team-category-help">
-        <option value="">{ar ? 'غير مصنف' : 'Unassigned'}</option>
-        {value && !options.some(item => item.key === value) ? <option value={value}>{value}</option> : null}
-        {options.map(item => <option key={item.key} value={item.key}>{teamDepartmentLabel(item.key, categories, locale)}</option>)}
-      </select>
-    </label>
-    <p id="admin-cms-team-category-help" className="admin-content__muted">{ar ? 'اختر إدارة أو مبيعات أو قسمًا أنشأته. يظهر الشخص تحت هذا القسم في صفحة فريق العمل. اكتب «مدير المبيعات» مثلًا في المسمى الوظيفي.' : 'Choose management, sales or a department you created. The person appears under it on the Team page. Enter a title such as Sales Manager separately.'}</p>
-    <Button type="button" size="sm" variant="secondary" onClick={manage}>{ar ? 'إضافة أو تعديل قسم' : 'Add or edit a department'}</Button>
+  return <div className="admin-team-department-field">
+    <fieldset id="admin-cms-team-category" className="admin-team-department-field__options" disabled={disabled} aria-describedby="admin-cms-team-category-help">
+      <legend>{ar ? 'أقسام الفريق' : 'Team departments'}</legend>
+      {keys.map(key => <label key={key} className="admin-team-department-field__choice"><input type="checkbox" checked={value.includes(key)} onChange={event => onChange(event.target.checked ? [...value, key] : value.filter(item => item !== key))} />{teamDepartmentLabel(key, categories, locale)}{categories.find(item => item.key === key)?.active === false ? <small>{ar ? '(متوقف)' : '(Inactive)'}</small> : null}</label>)}
+      {keys.length === 0 ? <p>{ar ? 'أضف قسمًا أولًا من الزر أدناه.' : 'Add a department using the button below.'}</p> : null}
+    </fieldset>
+    <p id="admin-cms-team-category-help" className="admin-content__muted">{ar ? 'اختَر قسمًا أو أكثر، مثل مبيعات ودعم. يظهر الشخص مرة واحدة في «الكل»، وتحت كل قسم اخترته. إلغاء كل الاختيارات يجعله غير مصنف. المسمى الوظيفي مستقل.' : 'Choose one or more departments, such as Sales and Support. The member appears once under All and in each selected department. Clear all choices for Unassigned. Job title is separate.'}</p>
+    <Button type="button" size="sm" variant="secondary" disabled={disabled} onClick={manage}>{ar ? 'إضافة أو تعديل قسم' : 'Add or edit a department'}</Button>
   </div>;
 }

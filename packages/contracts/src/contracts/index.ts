@@ -1,7 +1,7 @@
 export { cmsAdminTeamMemberDeleteSchema } from '../cms/index.js';
 export { paymentAccountSchema, walletPaymentAccountSchema } from '../payments/index.js';
 export type { PaymentAccount } from '../payments/index.js';
-export { DEFAULT_TEAM_CATEGORIES, teamCategorySchema, teamCategoryKeySchema, teamCategoryListSchema, teamCategoryPutSchema, teamCategoryListSuccessEnvelopeSchema, type TeamCategory } from '../cms/index.js';
+export { teamMemberCategoryKeys, DEFAULT_TEAM_CATEGORIES, teamCategorySchema, teamCategoryKeySchema, teamCategoryListSchema, teamCategoryPutSchema, teamCategoryListSuccessEnvelopeSchema, type TeamCategory } from '../cms/index.js';
 export {
   apiErrorSchema,
   createErrorEnvelope,

@@ -11,6 +11,10 @@ const url = z.url().max(2048);
 const publicAssetUrl = z.string().trim().max(2048).refine(value => value.startsWith('/') || z.url().safeParse(value).success);
 export const teamCategoryKeySchema = z.string().regex(/^[a-z][a-z0-9_]{1,63}$/);
 const teamCategory = teamCategoryKeySchema;
+const teamCategories = z.array(teamCategory).max(100).refine(items => new Set(items).size === items.length, { message: 'Team departments must be unique' });
+export function teamMemberCategoryKeys(member: { categories?: readonly string[] | undefined; category?: string | null | undefined }): string[] {
+  return member.categories !== undefined ? [...member.categories] : member.category ? [member.category] : [];
+}
 export const teamCategorySchema = z.object({ key: teamCategoryKeySchema, label: localizedTextSchema, order: z.number().int().nonnegative().max(10000), active: z.boolean(), version: z.number().int().nonnegative() }).strict();
 export const teamCategoryListSchema = z.object({ items: z.array(teamCategorySchema).max(100) }).strict();
 export const teamCategoryPutSchema = z.object({ key: teamCategoryKeySchema.optional(), label: localizedTextSchema, order: z.number().int().nonnegative().max(10000).default(0), active: z.boolean().default(true), version: z.number().int().nonnegative().optional(), reason: z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/) }).strict();
@@ -182,6 +186,7 @@ export const teamMemberCreateSchema = z
     photoAssetId: objectId.optional(),
     imageUrl: publicAssetUrl.optional(),
     category: teamCategory.optional(),
+    categories: teamCategories.optional(),
     order,
     active: z.boolean().default(true),
     status: cmsSettingStatusSchema.default("draft"),
@@ -197,6 +202,7 @@ export const teamMemberPatchSchema = z
     photoAssetId: objectId.nullish(),
     imageUrl: publicAssetUrl.nullish(),
     category: teamCategory.nullable().optional(),
+    categories: teamCategories.optional(),
     order,
     active: z.boolean().optional(),
     status: cmsSettingStatusSchema.optional(),
@@ -219,6 +225,7 @@ export const cmsPublicContentSchema = z
     photoAssetId: objectId.optional(),
     imageUrl: publicAssetUrl.optional(),
     category: teamCategory.optional(),
+    categories: teamCategories.optional(),
     order,
   })
   .strict();
@@ -440,6 +447,7 @@ export const cmsAdminTeamMemberSchema = z
     photoAssetId: objectId.optional(),
     imageUrl: publicAssetUrl.optional(),
     category: teamCategory.optional(),
+    categories: teamCategories.optional(),
     order,
     active: z.boolean(),
     status: cmsSettingStatusSchema,

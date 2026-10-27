@@ -31,6 +31,24 @@ const teamData = cmsPublicContentListDataSchema.parse({
 });
 
 describe('public About and Team content', () => {
+  it('shows one member in each assigned department without duplicating All, and honors explicit clearing', () => {
+    const data = cmsPublicContentListDataSchema.parse({ items: [
+      { ...teamData.items[0], key: 'multi_member', categories: ['sales', 'support'], category: 'sales', name: { en: 'Tarek' } },
+      { ...teamData.items[0], key: 'legacy_member', category: 'management', name: { en: 'Legacy member' } },
+      { ...teamData.items[0], key: 'team_ahmed', categories: [], name: { en: 'Unassigned member' } }
+    ] });
+    renderWithLocale(<PublicTeam locale="en" initialData={data} />, { locale: 'en' });
+    expect(document.querySelectorAll('.public-team__card')).toHaveLength(3);
+    expect(document.querySelector('[data-team-categories="sales support"] .public-team__department')).toHaveTextContent('Sales, Support');
+    for (const label of ['Sales', 'Support']) {
+      fireEvent.click(screen.getByRole('button', { name: label }));
+      expect(document.querySelectorAll('.public-team__card')).toHaveLength(1);
+      expect(screen.getByRole('heading', { name: 'Tarek' })).toBeInTheDocument();
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Management' }));
+    expect(screen.getByRole('heading', { name: 'Legacy member' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Unassigned member' })).not.toBeInTheDocument();
+  });
   it('prioritizes the first visible portrait and defers later portraits after filtering', () => {
     const data = cmsPublicContentListDataSchema.parse({ items: ['management', 'sales', 'sales'].map((category, index) => ({
       ...teamData.items[0], key: `member_${index}`, category, imageUrl: `/api/v1/public/team-photos/${index}`, order: index

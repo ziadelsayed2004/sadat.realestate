@@ -47,6 +47,21 @@ function apiClientFor(requests: Array<{ method: string; path: string; body: unkn
 }
 
 describe('admin About, Team, and population CMS content', () => {
+  it('edits a legacy member into Sales and Support and keeps both selections after failed saving', async () => {
+    const initial = cmsAdminContentDataSchema.parse({ namespace: 'team', items: [{ ...team.items[0], category: 'sales' }] });
+    const update = vi.fn().mockRejectedValueOnce(new Error('temporary failure')).mockResolvedValue(initial);
+    renderWithLocale(<AdminCmsContent path="/admin/content/team" locale="en" session={session} initialData={initial} update={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getAdminCmsCopy('en').edit }));
+    await screen.findByRole('checkbox', { name: 'Sales' });
+    expect(screen.getByRole('checkbox', { name: 'Sales' })).toBeChecked();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Support' }));
+    fireEvent.change(screen.getByLabelText(getAdminCmsCopy('en').reason), { target: { value: 'Assign sales and support' } });
+    fireEvent.submit(screen.getByTestId('admin-cms-team-editor').querySelector('form')!);
+    await waitFor(() => expect(update).toHaveBeenCalledWith('team', expect.objectContaining({ id: teamId, version: 2, categories: ['sales', 'support'] })));
+    await screen.findByRole('alert');
+    expect(screen.getByRole('checkbox', { name: 'Support' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Sales' })).toBeChecked();
+  });
   it.each(['ar', 'en'] as const)('opens statistics directly and preserves edits after a failed save in %s', async locale => {
     const copy = getAdminCmsCopy(locale);
     const update = vi.fn(async () => { throw new ApiClientError('Conflict', { code: 'HTTP_ERROR', status: 409 }); });
