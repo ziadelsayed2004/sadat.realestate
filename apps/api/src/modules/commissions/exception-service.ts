@@ -58,7 +58,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
   };
   const validateMutation = (current: CommissionException, next: CommissionException) => {
     if (current.status !== 'active') return;
-    const changedEffectiveOrValue = current.accountId !== next.accountId || current.kind !== next.kind || current.percentageBps !== next.percentageBps || current.fixedAmountMinor !== next.fixedAmountMinor || current.currency !== next.currency || current.effectiveFrom !== next.effectiveFrom || current.effectiveTo !== next.effectiveTo || current.reason !== next.reason;
+    const changedEffectiveOrValue = current.accountId !== next.accountId || current.rentMonths !== next.rentMonths || current.kind !== next.kind || current.percentageBps !== next.percentageBps || current.fixedAmountMinor !== next.fixedAmountMinor || current.currency !== next.currency || current.effectiveFrom !== next.effectiveFrom || current.effectiveTo !== next.effectiveTo || current.reason !== next.reason;
     if (next.status === 'active' && changedEffectiveOrValue) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_INVALID_STATE');
     if (next.status === 'draft') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_INVALID_STATE');
   };
@@ -72,7 +72,8 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
       updatedAt: now(),
       lastMutationReason: mutationReason
     };
-    if (patch.percentageBps === null) delete nextInput.percentageBps;
+    if (patch.rentMonths === null) delete nextInput.rentMonths;
+      if (patch.percentageBps === null) delete nextInput.percentageBps;
     if (patch.fixedAmountMinor === null) delete nextInput.fixedAmountMinor;
     if (patch.currency === null) delete nextInput.currency;
     if (patch.effectiveTo === null) delete nextInput.effectiveTo;

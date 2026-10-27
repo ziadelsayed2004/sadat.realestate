@@ -10,7 +10,7 @@ export function PropertyReviewSummary({ property, locale, authorization, apiOrig
   const ar = locale === 'ar', copy = getAdminPropertiesCopy(locale);
   const context = property.reviewContext, organization = context?.organization, project = context?.project;
   const sourceKind = organization?.kind ?? property.source.sourceType;
-  const sourceLabel = ({ developer_company: ar ? 'شركة تطوير' : 'Developer company', brokerage_office: ar ? 'مكتب وساطة' : 'Brokerage office', individual_broker: ar ? 'وسيط فردي' : 'Individual broker' })[sourceKind];
+  const sourceLabel = ({ developer_company: ar ? 'شركة تطوير' : 'Developer company', brokerage_office: ar ? 'مكتب وساطة' : 'Brokerage office', individual_broker: ar ? 'مالك عقار' : 'Property owner' })[sourceKind];
   const link = (path: string, label: string) => <a key={path} href={replaceLocaleInUrl(path, locale)}>{label}</a>;
   return <article className="admin-properties__detail-card admin-property-review-summary">
     <div className="admin-property-review-summary__media"><AdminPropertyCover property={property} locale={locale} authorization={authorization} apiOrigin={apiOrigin} /></div>

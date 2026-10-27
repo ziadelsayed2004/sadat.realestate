@@ -137,7 +137,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
       suspended: 'موقوف مؤقتًا'
     },
     providerTypeLabels: {
-      individual_broker: 'وسيط عقاري فردي',
+      individual_broker: 'مالك عقار',
       brokerage_office: 'مكتب وساطة عقارية',
       developer_company: 'شركة تطوير عقاري'
     }
@@ -212,7 +212,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
       suspended: 'Temporarily suspended'
     },
     providerTypeLabels: {
-      individual_broker: 'Individual broker',
+      individual_broker: 'Property owner',
       brokerage_office: 'Brokerage office',
       developer_company: 'Developer company'
     }

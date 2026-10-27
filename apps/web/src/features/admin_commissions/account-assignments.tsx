@@ -1,3 +1,4 @@
+import { rentLabel } from './rent-field.tsx';
 import { useEffect, useState } from 'react';
 import type { CommissionAccountOverrideListData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { Button } from '../design_system/index.ts';
@@ -31,7 +32,7 @@ export function AccountAssignments({ accountId, locale, source, canManage, revis
     <Button size="sm" variant="secondary" disabled={busy} onClick={() => setAttempt(value => value + 1)}>{ar ? 'تحديث القائمة' : 'Refresh list'}</Button>
     {!data && !error ? <p role="status">{ar ? 'جارٍ التحميل…' : 'Loading…'}</p> : null}
     {data?.items.map(item => <article key={item.id} className="admin-commissions__subpanel" data-testid={`account-assignment-${item.id}`}>
-      <p><strong>{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}</strong> — {copy.statuses[item.status]}</p>
+      <p><strong>{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}</strong> — {copy.statuses[item.status]}</p><p>{rentLabel(item.rentMonths, locale)}</p>
       <p>{copy.labels.effectiveFrom}: <time dateTime={item.effectiveFrom}>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'Africa/Cairo' }).format(new Date(item.effectiveFrom))}</time>{item.effectiveTo ? <> — {copy.labels.effectiveTo}: <time dateTime={item.effectiveTo}>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'Africa/Cairo' }).format(new Date(item.effectiveTo))}</time></> : null}</p>
       {canManage && item.status !== 'archived' ? <Button size="sm" variant="secondary" disabled={busy} onClick={() => { setSelected(item.id); setReason(''); }}>{ar ? 'إلغاء التخصيص المحفوظ' : 'Cancel saved assignment'}</Button> : null}
       {selected === item.id ? <form className="admin-commissions__form" onSubmit={event => { event.preventDefault(); void cancel(); }}>

@@ -89,6 +89,16 @@ test('protects policy routes with admin authentication and commission permission
     assert.equal(created.data.key, policyInput.key);
     assert.equal(created.data.status, 'draft');
     assert.equal('secret' in created.data, false);
+    const update = (body: unknown) => fetch(`${baseUrl}/api/v1/admin/commission-policies/${String(created.data.id)}`, { method: 'PATCH', headers: { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const active = await update({ expectedVersion: 0, reason: 'Approve owner agreement', status: 'active', effectiveFrom: '2026-08-01T00:00:00.000Z', percentageBps: 200, rentMonths: 0.5 });
+    assert.equal(active.status, 200);
+    assert.equal((await active.json() as { data: { rentMonths: number } }).data.rentMonths, 0.5);
+    assert.equal((await update({ expectedVersion: 0, reason: 'Stale edit must fail', percentageBps: 150 })).status, 409);
+    const edited = await update({ expectedVersion: 1, reason: 'Change rental agreement', rentMonths: 1 });
+    assert.equal(edited.status, 200);
+    const editedData = (await edited.json() as { data: { rentMonths: number; percentageBps: number } }).data;
+    assert.equal(editedData.rentMonths, 1);
+    assert.equal(editedData.percentageBps, 200);
   });
 });
 
@@ -100,6 +110,8 @@ test('separates view and manage permissions and rejects invalid policy payloads'
       body: JSON.stringify(policyInput)
     });
     assert.equal(response.status, 403);
+    const patch = await fetch(`${baseUrl}/api/v1/admin/commission-policies/aaaaaaaaaaaaaaaaaaaaaaaa`, { method: 'PATCH', headers: { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' }, body: JSON.stringify({ expectedVersion: 0, reason: 'Unauthorized approval', status: 'active' }) });
+    assert.equal(patch.status, 403);
   });
 
   await withServer(['admin:commissions.manage'], async baseUrl => {

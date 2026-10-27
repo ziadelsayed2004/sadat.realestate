@@ -132,7 +132,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     location: 'الموقع',
     developerCompany: 'شركة تطوير عقاري',
     brokerageOffice: 'مكتب وساطة عقارية',
-    individualBroker: 'وسيط عقاري',
+    individualBroker: 'مالك عقار',
     sqm: 'م²',
     footerDescription: 'مقارنة آمنة لبيانات العقارات المنشورة من مصادر معتمدة.',
     footerLinks: 'روابط المنصة'
@@ -199,7 +199,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     location: 'Location',
     developerCompany: 'Real-estate developer',
     brokerageOffice: 'Brokerage office',
-    individualBroker: 'Individual broker',
+    individualBroker: 'Property owner',
     sqm: 'sqm',
     footerDescription: 'Safe comparison of published property data from approved sources.',
     footerLinks: 'Platform links'

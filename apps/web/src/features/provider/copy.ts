@@ -67,7 +67,7 @@ export interface ProviderCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
   ar: {
-    accountType: { label: 'نوع حسابك', types: { individual_broker: 'مزوّد عقارات فردي', brokerage_office: 'مكتب وساطة عقارية', developer_company: 'شركة تطوير عقاري' } },
+    accountType: { label: 'نوع حسابك', types: { individual_broker: 'مالك عقار', brokerage_office: 'مكتب وساطة عقارية', developer_company: 'شركة تطوير عقاري' } },
     nav: {
       overview: 'لوحة التحكم',
       properties: 'عقاراتي',
@@ -160,7 +160,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
     unavailable: 'غير متاح'
   },
   en: {
-    accountType: { label: 'Account type', types: { individual_broker: 'Individual property provider', brokerage_office: 'Real estate brokerage office', developer_company: 'Real estate development company' } },
+    accountType: { label: 'Account type', types: { individual_broker: 'Property owner', brokerage_office: 'Real estate brokerage office', developer_company: 'Real estate development company' } },
     nav: {
       overview: 'Dashboard',
       properties: 'My properties',

@@ -1,3 +1,4 @@
+import { rentLabel } from '../admin_commissions/rent-field.tsx';
 import { AdvertisingSteps, AdPlacementGuide, adPlacementName } from '../admin_ads/placement-guide.tsx';
 import { paymentProofError } from './payment-proof-error.ts';
 import { PaymentAccounts } from './payment-accounts.tsx';
@@ -451,7 +452,7 @@ function commissionValue(data: ProviderCommissionProjection, locale: SupportedLo
 }
 
 function commissionIdentity(data: ProviderCommissionProjection): string {
-  return JSON.stringify([data.source, data.policyVersion, data.effectiveAt, data.kind, data.percentageBps, data.fixedAmountMinor, data.currency]);
+  return JSON.stringify([data.source, data.policyVersion, data.effectiveAt, data.kind, data.percentageBps, data.fixedAmountMinor, data.currency, data.rentMonths]);
 }
 
 function CommissionContent({ data, locale, copy, confirming, feedback, onConfirm }: { readonly data: ProviderCommissionProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly confirming: boolean; readonly feedback?: string; readonly onConfirm: () => void }) {
@@ -462,7 +463,7 @@ function CommissionContent({ data, locale, copy, confirming, feedback, onConfirm
   return (
     <section className="provider-commission__card" aria-labelledby="provider-commission-card-heading">
       <div className="provider-commission__card-heading"><h2 id="provider-commission-card-heading">{copy.commission.appliedPolicy}</h2><Badge tone={data.source === 'none' ? 'neutral' : 'success'}>{data.source === 'none' ? copy.commission.unavailable : locale === 'ar' ? 'نشطة' : 'Active'}</Badge></div>
-      {data.source === 'none' ? <div className="provider-commission__none"><h3>{copy.commission.noneTitle}</h3><p>{copy.commission.noneBody}</p></div> : <><div className="provider-commission__hero"><span>{copy.commission.kind}</span><strong>{commissionValue(data, locale, copy)}</strong><small>{kindLabel}</small></div><dl className="provider-advertising__definition-list"><div><dt>{copy.commission.source}</dt><dd>{sourceLabel}</dd></div><div><dt>{copy.commission.effectiveAt}</dt><dd>{dateLabel(data.effectiveAt, locale)}</dd></div><div><dt>{copy.commission.version}</dt><dd>{data.policyVersion ?? copy.commission.unavailable}</dd></div></dl></>}
+      {data.source === 'none' ? <div className="provider-commission__none"><h3>{copy.commission.noneTitle}</h3><p>{copy.commission.noneBody}</p></div> : <><div className="provider-commission__hero"><span>{locale === 'ar' ? 'عمولة البيع' : 'Sale commission'}</span><strong>{commissionValue(data, locale, copy)}</strong><small>{kindLabel}</small></div><dl className="provider-advertising__definition-list"><div><dt>{locale === 'ar' ? 'عمولة الإيجار' : 'Rental commission'}</dt><dd>{rentLabel(data.rentMonths, locale)}</dd></div><div><dt>{copy.commission.source}</dt><dd>{sourceLabel}</dd></div><div><dt>{copy.commission.effectiveAt}</dt><dd>{dateLabel(data.effectiveAt, locale)}</dd></div><div><dt>{copy.commission.version}</dt><dd>{data.policyVersion ?? copy.commission.unavailable}</dd></div></dl></>}
       <p className="provider-commission__readonly">{copy.commission.readOnly}</p>
       <p className="provider-commission__readonly">{locale === 'ar' ? 'تأكيد الاطلاع لا يغيّر عمولتك ولا يفعّل استثناء. الاستثناء يظهر بعد اعتماد الإدارة له على حسابك، ويصلك إشعار عند التفعيل أو الإيقاف.' : 'Acknowledging does not change your commission or activate an exception. Exceptions appear after admin approval for your account, with a notification when activated or stopped.'}</p>
       {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}

@@ -17,7 +17,7 @@ const overlaps = (left: { effectiveFrom: string; effectiveTo?: string | undefine
 const applies = (item: { effectiveFrom: string; effectiveTo?: string | undefined; status: string }, at: Date) => item.status === 'active' && new Date(item.effectiveFrom) <= at && (!item.effectiveTo || new Date(item.effectiveTo) > at);
 // A retry of the same draft must not create another record or overwrite a change.
 function retryDraft(existing: CommissionAccountOverride, input: CommissionAccountOverrideCreate, activate = false): CommissionAccountOverride {
-  const fields = ['kind', 'percentageBps', 'fixedAmountMinor', 'currency', 'effectiveFrom', 'effectiveTo'] as const;
+  const fields = ['rentMonths', 'kind', 'percentageBps', 'fixedAmountMinor', 'currency', 'effectiveFrom', 'effectiveTo'] as const;
   if ((existing.status === 'draft' || (activate && existing.status === 'active')) && fields.every(field => existing[field] === input[field])) return existing;
   throw new CommissionAccountServiceError('COMMISSION_ACCOUNT_DUPLICATE');
 }
@@ -42,13 +42,13 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
   const toReadModel = async (accountId: string, at: Date): Promise<CommissionAccountCommission> => {
     if (seed.resolutionSource) {
       const selected = await seed.resolutionSource.getForProvider(accountId, at);
-      return commissionAccountCommissionSchema.parse({ accountId, source: selected?.source ?? 'none', effectiveAt: selected?.effectiveAt ?? at.toISOString(), ...(selected?.source === 'policy' ? { policyId: selected.policyId } : {}), ...(selected?.sourceVersion !== undefined ? { policyVersion: selected.sourceVersion } : {}), ...(selected?.kind ? { kind: selected.kind } : {}), ...(selected?.percentageBps !== undefined ? { percentageBps: selected.percentageBps } : {}), ...(selected?.fixedAmountMinor !== undefined ? { fixedAmountMinor: selected.fixedAmountMinor } : {}), ...(selected?.currency ? { currency: selected.currency } : {}) });
+      return commissionAccountCommissionSchema.parse({ accountId, source: selected?.source ?? 'none', effectiveAt: selected?.effectiveAt ?? at.toISOString(), ...(selected?.source === 'policy' ? { policyId: selected.policyId } : {}), ...(selected?.sourceVersion !== undefined ? { policyVersion: selected.sourceVersion } : {}), ...(selected?.kind ? { kind: selected.kind } : {}), ...(selected?.rentMonths !== undefined ? { rentMonths: selected.rentMonths } : {}), ...(selected?.percentageBps !== undefined ? { percentageBps: selected.percentageBps } : {}), ...(selected?.fixedAmountMinor !== undefined ? { fixedAmountMinor: selected.fixedAmountMinor } : {}), ...(selected?.currency ? { currency: selected.currency } : {}) });
     }
     const override = (await allOverrides()).filter(item => item.accountId === accountId && applies(item, at)).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || b.version - a.version || b.id.localeCompare(a.id))[0];
-    if (override) return commissionAccountCommissionSchema.parse({ accountId, source: 'account_override', effectiveAt: at.toISOString(), kind: override.kind, ...(override.percentageBps !== undefined ? { percentageBps: override.percentageBps } : {}), ...(override.fixedAmountMinor !== undefined ? { fixedAmountMinor: override.fixedAmountMinor } : {}), ...(override.currency ? { currency: override.currency } : {}) });
+    if (override) return commissionAccountCommissionSchema.parse({ accountId, source: 'account_override', effectiveAt: at.toISOString(), kind: override.kind, ...(override.rentMonths !== undefined ? { rentMonths: override.rentMonths } : {}), ...(override.percentageBps !== undefined ? { percentageBps: override.percentageBps } : {}), ...(override.fixedAmountMinor !== undefined ? { fixedAmountMinor: override.fixedAmountMinor } : {}), ...(override.currency ? { currency: override.currency } : {}) });
     const policy = (await allPolicies()).filter(item => item.scope.kind === 'default' && applies(item, at)).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || b.version - a.version || b.id.localeCompare(a.id))[0];
     if (!policy) return commissionAccountCommissionSchema.parse({ accountId, source: 'none', effectiveAt: at.toISOString() });
-    return commissionAccountCommissionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), policyId: policy.id, policyVersion: policy.version, kind: policy.kind, ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
+    return commissionAccountCommissionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), policyId: policy.id, policyVersion: policy.version, kind: policy.kind, ...(policy.rentMonths !== undefined ? { rentMonths: policy.rentMonths } : {}), ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
   };
   return {
     async createOverride(claims: AccessTokenClaims, accountId: string, input: unknown, context?: { requestId: string; traceId: string }, activate = false): Promise<CommissionAccountOverride> {
@@ -101,6 +101,7 @@ export function createCommissionAccountService(seed: { overrides?: CommissionAcc
       const { expectedVersion: _expectedVersion, reason: _reason, ...patch } = parsed;
       void _expectedVersion; void _reason;
       const nextInput: Record<string, unknown> = { ...current, ...patch, version: current.version + 1, updatedBy: claims.sub, updatedAt: now() };
+      if (patch.rentMonths === null) delete nextInput.rentMonths;
       if (patch.percentageBps === null) delete nextInput.percentageBps;
       if (patch.fixedAmountMinor === null) delete nextInput.fixedAmountMinor;
       if (patch.currency === null) delete nextInput.currency;

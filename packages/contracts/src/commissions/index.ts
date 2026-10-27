@@ -13,9 +13,12 @@ export const COMMISSION_SCOPE_KINDS = ['default', 'provider_type', 'transaction_
 export const commissionPolicyKindSchema = z.enum(COMMISSION_POLICY_KINDS);
 export const commissionPolicyStatusSchema = z.enum(COMMISSION_POLICY_STATUSES);
 export const commissionScopeKindSchema = z.enum(COMMISSION_SCOPE_KINDS);
-export const commissionScopeSchema = z.object({ kind: commissionScopeKindSchema, key: policyKeySchema.optional() }).strict().superRefine((value, ctx) => {
+export const commissionScopeSchema = z.object({ kind: commissionScopeKindSchema, key: z.string().trim().min(2).max(80).optional() }).strict().superRefine((value, ctx) => {
   if (value.kind === 'default' && value.key) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['key'], message: 'Default scope cannot define a key' });
   if (value.kind !== 'default' && !value.key) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['key'], message: 'Scoped policy requires a key' });
+  if (value.key && ['account', 'organization'].includes(value.kind) && !objectIdSchema.safeParse(value.key).success && !policyKeySchema.safeParse(value.key).success) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['key'], message: 'Account/organization scope requires an ID' });
+  if (value.kind === 'provider_type' && !['individual_broker', 'brokerage_office', 'developer_company'].includes(value.key ?? '')) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['key'], message: 'Select a valid provider type' });
+  if (value.key && ['transaction_type', 'property_kind'].includes(value.kind) && !policyKeySchema.safeParse(value.key).success) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['key'], message: 'Invalid scope key' });
 });
 export const commissionPolicySchema = z.object({
   id: objectIdSchema,
@@ -23,6 +26,7 @@ export const commissionPolicySchema = z.object({
   label: z.string().trim().min(2).max(160),
   kind: commissionPolicyKindSchema,
   scope: commissionScopeSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -36,6 +40,7 @@ export const commissionPolicySchema = z.object({
   updatedAt: dateSchema
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage policy requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage policies define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed policy requires amount and currency' });
@@ -46,6 +51,7 @@ export const commissionPolicyCreateSchema = z.object({
   label: z.string().trim().min(2).max(160),
   kind: commissionPolicyKindSchema,
   scope: commissionScopeSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -53,6 +59,7 @@ export const commissionPolicyCreateSchema = z.object({
   effectiveTo: dateSchema.optional()
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage policy requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage policies define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed policy requires amount and currency' });
@@ -64,6 +71,7 @@ export const commissionPolicyPatchSchema = z.object({
   label: z.string().trim().min(2).max(160).optional(),
   kind: commissionPolicyKindSchema.optional(),
   scope: commissionScopeSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).nullable().optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).nullable().optional(),
   fixedAmountMinor: moneyMinorSchema.nullable().optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).nullable().optional(),
@@ -85,6 +93,7 @@ export const commissionAccountOverrideSchema = z.object({
   id: objectIdSchema,
   accountId: objectIdSchema,
   kind: commissionPolicyKindSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -99,6 +108,7 @@ export const commissionAccountOverrideSchema = z.object({
   updatedAt: dateSchema
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage override requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage overrides define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed override requires amount and currency' });
@@ -106,6 +116,7 @@ export const commissionAccountOverrideSchema = z.object({
 });
 export const commissionAccountOverrideCreateSchema = z.object({
   kind: commissionPolicyKindSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -113,6 +124,7 @@ export const commissionAccountOverrideCreateSchema = z.object({
   effectiveTo: dateSchema.optional()
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage override requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage overrides define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed override requires amount and currency' });
@@ -122,6 +134,7 @@ export const commissionAccountOverridePatchSchema = z.object({
   expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(2).max(500),
   kind: commissionPolicyKindSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).nullable().optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).nullable().optional(),
   fixedAmountMinor: moneyMinorSchema.nullable().optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).nullable().optional(),
@@ -138,6 +151,7 @@ export const commissionAccountCommissionSchema = z.object({
   policyId: objectIdSchema.optional(),
   policyVersion: z.number().int().nonnegative().optional(),
   kind: commissionPolicyKindSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional()
@@ -168,6 +182,7 @@ export const commissionExceptionSchema = z.object({
   id: objectIdSchema,
   accountId: objectIdSchema,
   kind: commissionPolicyKindSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -187,6 +202,7 @@ export const commissionExceptionSchema = z.object({
   updatedAt: dateSchema
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage exception requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage exceptions define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed exception requires amount and currency' });
@@ -199,6 +215,7 @@ export const commissionExceptionSchema = z.object({
 export const commissionExceptionCreateSchema = z.object({
   accountId: objectIdSchema,
   kind: commissionPolicyKindSchema,
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
@@ -207,6 +224,7 @@ export const commissionExceptionCreateSchema = z.object({
   effectiveTo: dateSchema.optional()
 }).strict().superRefine((value, ctx) => {
   if (value.effectiveTo && new Date(value.effectiveTo) <= new Date(value.effectiveFrom)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['effectiveTo'], message: 'effectiveTo must be after effectiveFrom' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage exception requires percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage exceptions define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed exception requires amount and currency' });
@@ -217,6 +235,7 @@ export const commissionExceptionPatchSchema = z.object({
   reason: z.string().trim().min(2).max(500),
   exceptionReason: z.string().trim().min(2).max(500).optional(),
   kind: commissionPolicyKindSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).nullable().optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).nullable().optional(),
   fixedAmountMinor: moneyMinorSchema.nullable().optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).nullable().optional(),
@@ -254,12 +273,13 @@ export const commissionResolutionSchema = z.object({
   exceptionId: objectIdSchema.optional(),
   accountOverrideId: objectIdSchema.optional(),
   kind: commissionPolicyKindSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional()
 }).strict().superRefine((value, ctx) => {
   if (value.source === 'none') {
-    if (value.sourceRecordId !== undefined || value.sourceVersion !== undefined || value.policyId !== undefined || value.exceptionId !== undefined || value.accountOverrideId !== undefined || value.kind !== undefined || value.percentageBps !== undefined || value.fixedAmountMinor !== undefined || value.currency !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['source'], message: 'A none resolution cannot contain a source record or value' });
+    if (value.sourceRecordId !== undefined || value.sourceVersion !== undefined || value.policyId !== undefined || value.exceptionId !== undefined || value.accountOverrideId !== undefined || value.kind !== undefined || value.percentageBps !== undefined || value.fixedAmountMinor !== undefined || value.currency !== undefined || value.rentMonths !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['source'], message: 'A none resolution cannot contain a source record or value' });
     return;
   }
   if (value.sourceRecordId === undefined || value.sourceVersion === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['sourceRecordId'], message: 'A selected resolution requires source identity and version' });
@@ -269,6 +289,7 @@ export const commissionResolutionSchema = z.object({
   if (value.source !== 'policy' && value.policyId !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['policyId'], message: 'Only policy resolutions define policyId' });
   if (value.source !== 'exception' && value.exceptionId !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['exceptionId'], message: 'Only exception resolutions define exceptionId' });
   if (value.source !== 'account_override' && value.accountOverrideId !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['accountOverrideId'], message: 'Only account override resolutions define accountOverrideId' });
+  if (value.kind === 'exempt' && value.rentMonths !== undefined && value.rentMonths !== 0) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['rentMonths'], message: 'Exemption cannot charge rental commission' });
   if (value.kind === 'percentage' && value.percentageBps === undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Percentage resolutions require percentageBps' });
   if (value.kind !== 'percentage' && value.percentageBps !== undefined) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['percentageBps'], message: 'Only percentage resolutions define percentageBps' });
   if (value.kind === 'fixed' && (value.fixedAmountMinor === undefined || value.currency === undefined)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['fixedAmountMinor'], message: 'Fixed resolutions require amount and currency' });

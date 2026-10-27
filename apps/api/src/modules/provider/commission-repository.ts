@@ -5,6 +5,8 @@ import {
   type CommissionResolution
 } from '@sadat-real-estate/contracts';
 import type { ProviderCommissionSource } from './commission.js';
+import { commissionScopePriority } from '../commissions/scope.js';
+import { providerTypeSchema, commissionScopeSchema } from '@sadat-real-estate/contracts';
 
 type MongoRow = Record<string, unknown>;
 type CommissionSource = Exclude<CommissionResolution['source'], 'none'>;
@@ -16,6 +18,7 @@ interface CommissionCandidate {
   effectiveTo?: string;
   version: number;
   kind: CommissionPolicyKind;
+  rentMonths?: number;
   percentageBps?: number;
   fixedAmountMinor?: number;
   currency?: string;
@@ -27,6 +30,7 @@ const COMMISSION_PROJECTION = {
   accountId: 1,
   scope: 1,
   kind: 1,
+  rentMonths: 1,
   percentageBps: 1,
   fixedAmountMinor: 1,
   currency: 1,
@@ -83,6 +87,7 @@ function candidate(value: unknown, source: CommissionSource): CommissionCandidat
     ...(effectiveTo ? { effectiveTo } : {}),
     version,
     kind: candidateKind,
+    ...(typeof row.rentMonths === 'number' ? { rentMonths: row.rentMonths } : {}),
     ...(percentageBps !== undefined ? { percentageBps } : {}),
     ...(fixedAmountMinor !== undefined ? { fixedAmountMinor } : {}),
     ...(currency ? { currency } : {})
@@ -112,6 +117,7 @@ function resolve(accountId: string, selected: CommissionCandidate): CommissionRe
     ...(selected.source === 'exception' ? { exceptionId: selected.id } : {}),
     ...(selected.source === 'account_override' ? { accountOverrideId: selected.id } : {}),
     kind: selected.kind,
+    ...(selected.rentMonths !== undefined ? { rentMonths: selected.rentMonths } : {}),
     ...(selected.percentageBps !== undefined ? { percentageBps: selected.percentageBps } : {}),
     ...(selected.fixedAmountMinor !== undefined ? { fixedAmountMinor: selected.fixedAmountMinor } : {}),
     ...(selected.currency ? { currency: selected.currency } : {})
@@ -124,7 +130,7 @@ export function createMongooseProviderCommissionSource(connection: Connection): 
       const accountId = new Types.ObjectId(providerId);
       const accountFilter = { $in: [providerId, accountId] };
       const now = at;
-      const [exceptionRows, overrideRows, policyRows] = await Promise.all([
+      const [exceptionRows, overrideRows, policyRows, profile] = await Promise.all([
         connection.collection('commission_exceptions').find(
           { accountId: accountFilter, status: 'active' },
           { projection: COMMISSION_PROJECTION }
@@ -134,10 +140,20 @@ export function createMongooseProviderCommissionSource(connection: Connection): 
           { projection: COMMISSION_PROJECTION }
         ).toArray(),
         connection.collection('commission_policies').find(
-          { 'scope.kind': 'default', status: 'active' },
+          { status: 'active' },
           { projection: COMMISSION_PROJECTION }
-        ).toArray()
+        ).toArray(),
+        connection.collection('provider_profiles').findOne({ userId: accountFilter }, { projection: { providerType: 1, organizationId: 1 } })
       ]);
+
+      const providerType = providerTypeSchema.safeParse(profile?.providerType);
+      const context = { accountId: providerId, providerType: providerType.success ? providerType.data : undefined, organizationId: id(profile?.organizationId) };
+      const scopedPolicies = policyRows.flatMap(row => {
+        const scope = commissionScopeSchema.safeParse(row.scope);
+        const priority = scope.success ? commissionScopePriority(scope.data, context) : 0;
+        const value = candidate(row, 'policy');
+        return value && priority > 0 && activeAt(value, now) ? [{ value, priority }] : [];
+      }).sort((a, b) => b.priority - a.priority || b.value.effectiveFrom.localeCompare(a.value.effectiveFrom) || b.value.version - a.value.version || b.value.id.localeCompare(a.value.id));
 
       const candidates = (rows: readonly MongoRow[], source: CommissionSource) => rows.flatMap(row => {
         const value = candidate(row, source);
@@ -146,7 +162,7 @@ export function createMongooseProviderCommissionSource(connection: Connection): 
       // Match resolver precedence; a newer default must not replace a personal exception.
       const selected = choose(candidates(exceptionRows, 'exception'), now)
         ?? choose(candidates(overrideRows, 'account_override'), now)
-        ?? choose(candidates(policyRows, 'policy'), now);
+        ?? scopedPolicies[0]?.value;
 
       return selected ? resolve(providerId, selected) : undefined;
     }

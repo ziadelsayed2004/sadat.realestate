@@ -59,14 +59,16 @@ export function createCommissionPolicyService(seed: { policies?: CommissionPolic
       const values = (await all()).filter(item => (!query.status || item.status === query.status) && (!query.scopeKind || item.scope.kind === query.scopeKind) && (at === undefined || (new Date(item.effectiveFrom).getTime() <= at && (!item.effectiveTo || new Date(item.effectiveTo).getTime() > at)))).sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || a.key.localeCompare(b.key) || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
-    async updatePolicy(claims: AccessTokenClaims, policyId: string, input: unknown) {
+    async updatePolicy(claims: AccessTokenClaims, policyId: string, input: unknown, context?: { requestId: string; traceId: string }) {
       admin(claims);
       const current = await get(policyId);
+      if (current.status === 'archived') throw new CommissionPolicyServiceError('COMMISSION_INVALID_STATE');
       const parsed = commissionPolicyPatchSchema.parse(input);
       if (parsed.expectedVersion !== current.version) throw new CommissionPolicyServiceError('COMMISSION_VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: _reason, ...patch } = parsed;
       void _expectedVersion; void _reason;
       const nextInput: Record<string, unknown> = { ...current, ...patch, version: current.version + 1, updatedBy: claims.sub, updatedAt: now() };
+      if (patch.rentMonths === null) delete nextInput.rentMonths;
       if (patch.percentageBps === null) delete nextInput.percentageBps;
       if (patch.fixedAmountMinor === null) delete nextInput.fixedAmountMinor;
       if (patch.currency === null) delete nextInput.currency;
@@ -74,7 +76,10 @@ export function createCommissionPolicyService(seed: { policies?: CommissionPolic
       const next = commissionPolicySchema.parse(nextInput);
       validateActive(next, await all());
       if (repository) {
-        const result = await repository.replace(next, current.version);
+        const event: AuditRecordInput = { actorType: 'admin', actorId: claims.sub, targetType: 'commission_policy', targetId: next.id,
+          action: 'commission_policy.update', reason: parsed.reason, before: current, after: next,
+          requestId: context?.requestId ?? 'commission-policy-service', traceId: context?.traceId ?? '0'.repeat(32), occurredAt: new Date(next.updatedAt) };
+        const result = repository.replaceWithAudit ? await repository.replaceWithAudit(next, current.version, event) : await repository.replace(next, current.version);
         if (result.kind === 'not_found') throw new CommissionPolicyServiceError('COMMISSION_NOT_FOUND');
         if (result.kind === 'version_conflict') throw new CommissionPolicyServiceError('COMMISSION_VERSION_CONFLICT');
       } else {

@@ -16,6 +16,8 @@ import {
   commissionExceptionListQuerySchema,
   commissionExceptionListSuccessEnvelopeSchema,
   commissionPolicyCreateSchema,
+  commissionPolicyPatchSchema,
+  type CommissionPolicyPatch,
   commissionPolicySuccessEnvelopeSchema,
   commissionPolicyListQuerySchema,
   commissionPolicyListSuccessEnvelopeSchema,
@@ -85,6 +87,7 @@ export interface AdminCommissionAccountLoadOptions extends CommonOptions {
 
 export type AdminCommissionPolicyLoader = (query: CommissionPolicyListQuery, signal?: AbortSignal) => Promise<CommissionPolicyListData>;
 export type AdminCommissionPolicyMutation = (input: CommissionPolicyCreate, signal?: AbortSignal) => Promise<CommissionPolicy>;
+export type AdminCommissionPolicyUpdate = (id: string, input: CommissionPolicyPatch) => Promise<CommissionPolicy>;
 export type AdminCommissionExceptionLoader = (query: CommissionExceptionListQuery, signal?: AbortSignal) => Promise<CommissionExceptionListData>;
 export type AdminCommissionExceptionMutation = (input: CommissionExceptionCreate, signal?: AbortSignal) => Promise<CommissionException>;
 export type AdminCommissionExceptionUpdate = (id: string, input: CommissionExceptionPatch) => Promise<CommissionException>;
@@ -222,6 +225,7 @@ export function createAdminCommissionsSource(options: Omit<CommonOptions, 'signa
   return {
     loadPolicies: (query: CommissionPolicyListQuery, signal?: AbortSignal) => loadAdminCommissionPolicies({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createPolicy: (input: CommissionPolicyCreate, signal?: AbortSignal) => createAdminCommissionPolicy(input, { ...options, ...(signal === undefined ? {} : { signal }) }),
+    updatePolicy: async (id: string, input: CommissionPolicyPatch) => (await clientFor(options).request(`${ADMIN_COMMISSION_POLICIES_API_ROUTE}/${accountIdForPath(id)}`, { method: 'PATCH', responseSchema: commissionPolicySuccessEnvelopeSchema, json: commissionPolicyPatchSchema.parse(input), ...requestOptions(options) })).data.data,
     loadAccount: (accountId: string, query?: { readonly at?: string }, signal?: AbortSignal) => loadAdminAccountCommission(accountId, { ...options, query, ...(signal === undefined ? {} : { signal }) }),
     createAccountOverride: (accountId: string, input: CommissionAccountOverrideCreate, signal?: AbortSignal) => createAdminAccountCommissionOverride(accountId, input, { ...options, ...(signal === undefined ? {} : { signal }) }),
     loadAssignments: async (accountId: string, page: number, signal?: AbortSignal) => (await clientFor(options).request(`${ADMIN_COMMISSION_ACCOUNT_API_ROUTE}/${accountIdForPath(accountId)}/assignments`, { responseSchema: commissionAccountOverrideListSuccessEnvelopeSchema, query: { page, limit: 20 }, ...requestOptions(options), ...(signal ? { signal } : {}) })).data.data,

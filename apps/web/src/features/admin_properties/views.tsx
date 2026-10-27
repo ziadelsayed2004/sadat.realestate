@@ -152,8 +152,8 @@ function PageHeading({ copy, view, locale }: { readonly copy: AdminPropertiesCop
 
 function propertyLabels(locale: SupportedLocale) {
   return locale === 'ar'
-    ? { source: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' }, kind: { property: 'عقار', unit: 'وحدة' }, transaction: { sale: 'بيع', rent: 'إيجار' } }
-    : { source: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' }, kind: { property: 'Property', unit: 'Unit' }, transaction: { sale: 'Sale', rent: 'Rent' } };
+    ? { source: { individual_broker: 'مالك عقار', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' }, kind: { property: 'عقار', unit: 'وحدة' }, transaction: { sale: 'بيع', rent: 'إيجار' } }
+    : { source: { individual_broker: 'Property owner', brokerage_office: 'Brokerage office', developer_company: 'Developer company' }, kind: { property: 'Property', unit: 'Unit' }, transaction: { sale: 'Sale', rent: 'Rent' } };
 }
 
 function PropertySource({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {

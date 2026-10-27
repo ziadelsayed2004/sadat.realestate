@@ -13,7 +13,8 @@ import { CommissionPolicyServiceError, type CommissionPolicyService } from './po
 
 export const ADMIN_COMMISSION_POLICY_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/commission-policies', operationId: 'listAdminCommissionPolicies' },
-  { method: 'POST', path: '/api/v1/admin/commission-policies', operationId: 'createAdminCommissionPolicy' }
+  { method: 'POST', path: '/api/v1/admin/commission-policies', operationId: 'createAdminCommissionPolicy' },
+  { method: 'PATCH', path: '/api/v1/admin/commission-policies/:policyId', operationId: 'updateAdminCommissionPolicy' }
 ] as const;
 
 export interface CommissionPolicyRouterDependencies {
@@ -102,6 +103,15 @@ export function createCommissionPolicyRouter(
     } catch (error) {
       sendError(request, response, error);
     }
+  });
+
+  router.patch('/admin/commission-policies/:policyId', async (request, response) => {
+    try {
+      await requirePermission(dependencies, response, 'admin:commissions.manage');
+      if (!/^[a-f0-9]{24}$/.test(request.params.policyId ?? '')) throw new CommissionPolicyServiceError('COMMISSION_NOT_FOUND');
+      const data = await dependencies.service.updatePolicy(claims(response), request.params.policyId as string, request.body ?? {}, mutationContext(request));
+      response.status(200).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
   });
 
   return router;

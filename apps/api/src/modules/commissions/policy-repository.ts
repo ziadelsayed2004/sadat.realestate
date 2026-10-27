@@ -20,6 +20,7 @@ export interface CommissionPolicyRepository {
   insert(policy: CommissionPolicy): Promise<CommissionPolicyWriteResult>;
   insertWithAudit?(policy: CommissionPolicy, event: AuditRecordInput): Promise<CommissionPolicyWriteResult>;
   replace(policy: CommissionPolicy, expectedVersion: number): Promise<CommissionPolicyReplaceResult>;
+  replaceWithAudit?(policy: CommissionPolicy, expectedVersion: number, event: AuditRecordInput): Promise<CommissionPolicyReplaceResult>;
 }
 
 function document(value: unknown): Record<string, unknown> {
@@ -84,6 +85,7 @@ export function createMongooseCommissionPolicyRepository(
             label: 1,
             kind: 1,
             scope: 1,
+            rentMonths: 1,
             percentageBps: 1,
             fixedAmountMinor: 1,
             currency: 1,
@@ -113,6 +115,7 @@ export function createMongooseCommissionPolicyRepository(
             label: 1,
             kind: 1,
             scope: 1,
+            rentMonths: 1,
             percentageBps: 1,
             fixedAmountMinor: 1,
             currency: 1,
@@ -131,6 +134,23 @@ export function createMongooseCommissionPolicyRepository(
     },
 
     insert,
+
+    async replaceWithAudit(policy, expectedVersion, event) {
+      if (!audit) throw new Error('COMMISSION_POLICY_AUDIT_UNAVAILABLE');
+      await ensureIndexes();
+      const session = await connection.startSession();
+      try {
+        return await session.withTransaction(async () => {
+          const result = await collection.replaceOne({ id: policy.id, version: expectedVersion }, policy, { session });
+          if (result.matchedCount !== 1) {
+            const current = await collection.findOne({ id: policy.id }, { projection: { id: 1 }, session });
+            return { kind: current ? 'version_conflict' : 'not_found' } as CommissionPolicyReplaceResult;
+          }
+          await audit.record(event, session);
+          return { kind: 'written' } as CommissionPolicyReplaceResult;
+        });
+      } finally { await session.endSession(); }
+    },
 
     async insertWithAudit(policy, event) {
       if (!audit) throw new Error('COMMISSION_POLICY_AUDIT_UNAVAILABLE');

@@ -38,7 +38,7 @@ test('office and developer repair authority inline with saved documents preserve
   }
 });
 
-test('individual broker repairs locations inline before reviewing documents', async ({ page }, testInfo) => {
+test('property owner repairs locations inline before reviewing documents', async ({ page }, testInfo) => {
   const locale = localeForProject();
   const ar = locale === 'ar';
   let current = application('brokerage_office', {

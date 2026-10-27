@@ -114,7 +114,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     sourceTitle: 'مصدر هذا العقار',
     publishedSource: 'مصدر منشور معتمد',
     sourceTypes: {
-      individual_broker: 'وسيط عقاري فردي',
+      individual_broker: 'مالك عقار',
       brokerage_office: 'مكتب وساطة عقارية',
       developer_company: 'شركة تطوير عقاري'
     },
@@ -207,7 +207,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     sourceTitle: 'Property source',
     publishedSource: 'Approved published source',
     sourceTypes: {
-      individual_broker: 'Individual broker',
+      individual_broker: 'Property owner',
       brokerage_office: 'Brokerage office',
       developer_company: 'Developer company'
     },

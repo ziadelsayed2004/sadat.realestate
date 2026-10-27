@@ -1,5 +1,13 @@
 # Commission policies
 
+## Current category and rental agreement support
+
+Active provider-type policies are now selected using the persisted provider profile (`individual_broker`, shown as Property owner; `brokerage_office`; `developer_company`). Account-scoped policies precede type policies; exceptions and account overrides remain ahead of policies. Unrelated, future and expired scopes do not apply. The create form exposes default, provider type and account choices with readable labels rather than free-form keys.
+
+Agreements accept optional `rentMonths` (0–12 monthly rental units), independent of the sale `percentageBps`/fixed amount. `0.5` is half one month's rent, not 0.5% or half the lease's total value. Legacy agreements without this field remain unspecified; they do not acquire a rental rate implicitly. The field survives policy/override/exception persistence, administrative and provider projections, and resolver snapshots. Exempt agreements may only specify zero rental commission.
+
+`PATCH /api/v1/admin/commission-policies/:policyId` now exposes policy approval, stopping, and edits under `admin:commissions.manage`, with reason, optimistic version checks, effective-window/overlap validation and transactional audit persistence. New policies still start as drafts. The admin UI includes an explicit approval action after creation and in the policy list, plus sale/rental editing. The explicit `scripts/configure-default-commissions.mjs --apply` command creates the agreed 2% owner / 1.5% office policies with half-month rent only where no policy already exists for the category; company agreements are untouched.
+
 Commission policies are versioned, effective-dated records. Each policy is explicitly `percentage`, `fixed`, or `exempt`, with scope (`default`, provider type, transaction type, property kind, organization, or account) and a stable key. Percentage values use integer basis points; fixed values use integer minor units and an ISO currency. Exempt policies carry neither amount field.
 
 New policies start as `draft`. Activation requires the effective window to contain the current time and rejects overlapping active policies with the same scope. Every mutation requires an expected version and a bounded reason. Lists support strict status/scope/time filters and deterministic ordering. No universal commission value is supplied; later resolver/snapshot tasks select an active policy at a commercial event.

@@ -407,7 +407,7 @@
       "suspended": "Suspended"
     },
     "providerTypeLabels": {
-      "individual_broker": "Individual broker",
+      "individual_broker": "Property owner",
       "brokerage_office": "Brokerage office",
       "developer_company": "Developer company"
     },
@@ -879,7 +879,7 @@
     },
     "descriptions": {
       "policies": "Review explicit policies and their effective windows.",
-      "newPolicy": "Choose the commission type, scope and start date. Enter 2.5 for 2.5%; the policy code is generated automatically. Policies are saved as drafts before activation.",
+      "newPolicy": "Choose the account category, sale rate, rental commission and start date. Policy codes are generated automatically. Save the draft, then approve it to apply.",
       "history": "Review the chronological record of sensitive changes.",
       "account": "Choose a provider account to view its current commission. An override here applies only to this account.",
       "exceptions": "Review account-linked commission exceptions.",
@@ -2759,7 +2759,7 @@
     "accountType": {
       "label": "Account type",
       "types": {
-        "individual_broker": "Individual property provider",
+        "individual_broker": "Property owner",
         "brokerage_office": "Real estate brokerage office",
         "developer_company": "Real estate development company"
       }
@@ -3433,8 +3433,8 @@
     "guidanceBody": "The next step will request the fields and documents for the provider type you choose. Applications are subject to administrative review before approval.",
     "options": {
       "individual_broker": {
-        "title": "Individual broker",
-        "description": "For a real-estate professional operating as an individual."
+        "title": "Property owner",
+        "description": "For a property owner listing and managing their property."
       },
       "brokerage_office": {
         "title": "Brokerage office",
@@ -3642,7 +3642,7 @@
       "suspended": "Temporarily suspended"
     },
     "providerTypeLabels": {
-      "individual_broker": "Individual broker",
+      "individual_broker": "Property owner",
       "brokerage_office": "Brokerage office",
       "developer_company": "Developer company"
     }
@@ -3821,7 +3821,7 @@
         "longitude": "30.74"
       },
       "sourceTypeLabels": {
-        "individual_broker": "Individual broker",
+        "individual_broker": "Property owner",
         "brokerage_office": "Brokerage office",
         "developer_company": "Developer company"
       },
@@ -3865,7 +3865,7 @@
         "name": "Enter a property name in at least one language.",
         "slug": "Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.",
         "sourceType": "Select the property source type.",
-        "organizationId": "Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.",
+        "organizationId": "Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Property owners do not need an organization.",
         "projectId": "Choose from your projects, or leave empty for a standalone listing.",
         "parentPropertyId": "Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.",
         "reason": "Enter a save reason of 5–500 characters on one line.",
@@ -4154,7 +4154,7 @@
     "location": "Location",
     "developerCompany": "Real-estate developer",
     "brokerageOffice": "Brokerage office",
-    "individualBroker": "Individual broker",
+    "individualBroker": "Property owner",
     "sqm": "sqm",
     "footerDescription": "Safe comparison of published property data from approved sources.",
     "footerLinks": "Platform links",
@@ -4251,7 +4251,7 @@
     "sourceTitle": "Property source",
     "publishedSource": "Approved published source",
     "sourceTypes": {
-      "individual_broker": "Individual broker",
+      "individual_broker": "Property owner",
       "brokerage_office": "Brokerage office",
       "developer_company": "Developer company"
     },

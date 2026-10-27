@@ -10,6 +10,7 @@ import {
   type CommissionResolution,
   type CommissionSnapshot
 } from '@sadat-real-estate/contracts';
+import { commissionScopePriority, type CommissionScopeContext } from './scope.js';
 
 type CommissionResolverErrorCode =
   | 'COMMISSION_RESOLUTION_INVALID_ACCOUNT'
@@ -37,6 +38,7 @@ export function createCommissionResolverService(seed: {
   policies?: CommissionPolicy[];
   snapshots?: CommissionSnapshot[];
   now?: () => Date;
+  accounts?: CommissionScopeContext[];
 } = {}) {
   const exceptions = seed.exceptions ?? [];
   const overrides = seed.overrides ?? [];
@@ -50,17 +52,17 @@ export function createCommissionResolverService(seed: {
     const exception = exceptions
       .filter(item => item.accountId === accountId && applies(item, at))
       .sort(byEffectiveDate)[0];
-    if (exception) return commissionResolutionSchema.parse({ accountId, source: 'exception', effectiveAt: at.toISOString(), sourceRecordId: exception.id, sourceVersion: exception.version, exceptionId: exception.id, kind: exception.kind, ...(exception.percentageBps !== undefined ? { percentageBps: exception.percentageBps } : {}), ...(exception.fixedAmountMinor !== undefined ? { fixedAmountMinor: exception.fixedAmountMinor } : {}), ...(exception.currency ? { currency: exception.currency } : {}) });
+    if (exception) return commissionResolutionSchema.parse({ accountId, source: 'exception', effectiveAt: at.toISOString(), sourceRecordId: exception.id, sourceVersion: exception.version, exceptionId: exception.id, kind: exception.kind, ...(exception.rentMonths !== undefined ? { rentMonths: exception.rentMonths } : {}), ...(exception.percentageBps !== undefined ? { percentageBps: exception.percentageBps } : {}), ...(exception.fixedAmountMinor !== undefined ? { fixedAmountMinor: exception.fixedAmountMinor } : {}), ...(exception.currency ? { currency: exception.currency } : {}) });
 
     const override = overrides
       .filter(item => item.accountId === accountId && applies(item, at))
       .sort(byEffectiveDate)[0];
-    if (override) return commissionResolutionSchema.parse({ accountId, source: 'account_override', effectiveAt: at.toISOString(), sourceRecordId: override.id, sourceVersion: override.version, accountOverrideId: override.id, kind: override.kind, ...(override.percentageBps !== undefined ? { percentageBps: override.percentageBps } : {}), ...(override.fixedAmountMinor !== undefined ? { fixedAmountMinor: override.fixedAmountMinor } : {}), ...(override.currency ? { currency: override.currency } : {}) });
+    if (override) return commissionResolutionSchema.parse({ accountId, source: 'account_override', effectiveAt: at.toISOString(), sourceRecordId: override.id, sourceVersion: override.version, accountOverrideId: override.id, kind: override.kind, ...(override.rentMonths !== undefined ? { rentMonths: override.rentMonths } : {}), ...(override.percentageBps !== undefined ? { percentageBps: override.percentageBps } : {}), ...(override.fixedAmountMinor !== undefined ? { fixedAmountMinor: override.fixedAmountMinor } : {}), ...(override.currency ? { currency: override.currency } : {}) });
 
     const policy = policies
-      .filter(item => item.scope.kind === 'default' && applies(item, at))
-      .sort(byEffectiveDate)[0];
-    if (policy) return commissionResolutionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), sourceRecordId: policy.id, sourceVersion: policy.version, policyId: policy.id, kind: policy.kind, ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
+      .filter(item => commissionScopePriority(item.scope, seed.accounts?.find(account => account.accountId === accountId) ?? { accountId }) > 0 && applies(item, at))
+      .sort((a, b) => commissionScopePriority(b.scope, seed.accounts?.find(account => account.accountId === accountId) ?? { accountId }) - commissionScopePriority(a.scope, seed.accounts?.find(account => account.accountId === accountId) ?? { accountId }) || byEffectiveDate(a, b))[0];
+    if (policy) return commissionResolutionSchema.parse({ accountId, source: 'policy', effectiveAt: at.toISOString(), sourceRecordId: policy.id, sourceVersion: policy.version, policyId: policy.id, kind: policy.kind, ...(policy.rentMonths !== undefined ? { rentMonths: policy.rentMonths } : {}), ...(policy.percentageBps !== undefined ? { percentageBps: policy.percentageBps } : {}), ...(policy.fixedAmountMinor !== undefined ? { fixedAmountMinor: policy.fixedAmountMinor } : {}), ...(policy.currency ? { currency: policy.currency } : {}) });
     return commissionResolutionSchema.parse({ accountId, source: 'none', effectiveAt: at.toISOString() });
   };
 

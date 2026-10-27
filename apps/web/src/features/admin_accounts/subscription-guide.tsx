@@ -3,11 +3,11 @@ import type { ProviderType, SupportedLocale } from '@sadat-real-estate/contracts
 export function ProviderSubscriptionGuide({ locale, providerType, providerId }: { locale: SupportedLocale; providerType?: ProviderType | undefined; providerId?: string | undefined }) {
   const ar = locale === 'ar';
   const cycles = ar ? [
-    ['individual_broker', 'وسيط فردي', 'استكمال الحساب وصورتي البطاقة ← اعتماد الحساب ← سداد اشتراك ظهور الاسم والصورة خارج المنصة ← الإدارة تؤكد الدفع وتحدد المدة. الاشتراك لا يتيح بيانات العملاء أو وسائل التواصل.'],
+    ['individual_broker', 'مالك عقار', 'استكمال الحساب وصورتي البطاقة ← اعتماد الحساب ← سداد اشتراك ظهور الاسم والصورة خارج المنصة ← الإدارة تؤكد الدفع وتحدد المدة. الاشتراك لا يتيح بيانات العملاء أو وسائل التواصل.'],
     ['brokerage_office', 'مكتب وساطة', 'استكمال المكتب وصورتي البطاقة ← اعتماد الحساب ← الاتفاق على اشتراك الظهور وسداد المبلغ خارج المنصة ← الإدارة تؤكد الدفع وتحدد البداية والنهاية. يظهر اسم وصورة المكتب أثناء المدة فقط؛ عند انتهائها يتوقف ظهور الهوية حتى التجديد.'],
     ['developer_company', 'شركة مطورة', 'الشركة المعتمدة ومشروعاتها المنشورة تظهر في الدليل. اشتراك ظهور الاسم والصورة متاح من النموذج أدناه، ويظل اتفاق العمولة وتأكيده مستقلًا؛ إظهار التواصل وبيانات العملاء مرتبط بتأكيد العمولة.']
   ] : [
-    ['individual_broker', 'Individual broker', 'Complete the account and ID images → approval → pay externally for name/photo display → administration confirms payment and dates. This subscription never grants access to customer data or contact details.'],
+    ['individual_broker', 'Property owner', 'Complete the account and ID images → approval → pay externally for name/photo display → administration confirms payment and dates. This subscription never grants access to customer data or contact details.'],
     ['brokerage_office', 'Brokerage office', 'Complete the office and both ID images → approval → agree and pay externally for identity display → administration confirms payment and sets start/end dates. The office name/photo appears only during that period; renew to restore identity display after expiry.'],
     ['developer_company', 'Developer company', 'Approved companies and published projects appear in the directory. Name/photo display subscriptions can be managed below. Commission agreement and acknowledgement remain independent; customer identity and contact require acknowledgement.']
   ];

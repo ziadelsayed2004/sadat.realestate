@@ -356,3 +356,8 @@
 }
 
 .admin-commissions__form > fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+
+.admin-commissions__help { line-height: 1.85; }
+.admin-commissions__help summary { cursor: pointer; font-weight: 700; color: #145a49; }
+.admin-commissions__help ol { padding-inline-start: 1.5rem; }
+.admin-commissions__field small, .admin-commissions__table td > small { display: block; font-size: .8rem; line-height: 1.7; color: #687386; }

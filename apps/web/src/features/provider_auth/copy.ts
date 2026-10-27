@@ -32,8 +32,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderTypeCopy>> = {
     guidanceBody: 'سنطلب في الخطوة التالية البيانات والوثائق المناسبة لنوع مقدم العقار الذي اخترته. تخضع الطلبات للمراجعة الإدارية قبل الموافقة.',
     options: {
       individual_broker: {
-        title: 'وسيط عقاري فردي',
-        description: 'للمهني العقاري الذي يعمل بصفته الفردية.'
+        title: 'مالك عقار',
+        description: 'لمالك عقار يريد عرض عقاره وإدارة طلباته.'
       },
       brokerage_office: {
         title: 'مكتب وساطة عقارية',
@@ -57,8 +57,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderTypeCopy>> = {
     guidanceBody: 'The next step will request the fields and documents for the provider type you choose. Applications are subject to administrative review before approval.',
     options: {
       individual_broker: {
-        title: 'Individual broker',
-        description: 'For a real-estate professional operating as an individual.'
+        title: 'Property owner',
+        description: 'For a property owner listing and managing their property.'
       },
       brokerage_office: {
         title: 'Brokerage office',

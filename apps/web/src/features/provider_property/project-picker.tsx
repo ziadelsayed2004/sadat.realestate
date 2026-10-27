@@ -13,7 +13,7 @@ export function PropertyProjectPicker({ locale, label, value, onChange, load, er
     return () => { controller.abort(); window.clearTimeout(timer); };
   }, [search, page, attempt, load]);
   const items = data?.items.filter(item => item.status !== 'archived' && item.status !== 'rejected') ?? [];
-  if (state === 'unavailable' && !value) return <p>{ar ? 'المشروعات متاحة لشركات التطوير المعتمدة. حساب المكتب أو الوسيط يكمل بإعلان عقار مستقل.' : 'Projects are available to approved developers. Offices and brokers can continue with a standalone property listing.'}</p>;
+  if (state === 'unavailable' && !value) return <p>{ar ? 'المشروعات متاحة لشركات التطوير المعتمدة. حساب المكتب أو مالك العقار يكمل بإعلان عقار مستقل.' : 'Projects are available to approved developers. Offices and property owners can continue with a standalone property listing.'}</p>;
   return <section className="provider-property-wizard__field"><h3>{ar ? 'ربط الإعلان بمشروع (اختياري)' : 'Link to a project (optional)'}{value ? ' ✓' : ''}</h3>
     <p>{ar ? 'لو العقار ضمن مشروع مسجل عندك اختاره بالاسم. لو إعلان مستقل سيب الاختيار فاضي.' : 'Choose one of your registered projects by name. Leave empty for a standalone listing.'}</p>
     <details><summary>{ar ? 'بحث في مشاريعك (اختياري)' : 'Search your projects (optional)'}</summary><label htmlFor="provider-property-project-search">{ar ? 'ابحث باسم المشروع' : 'Search your projects'}</label><input id="provider-property-project-search" type="search" value={search} maxLength={80} onChange={event => { setSearch(event.target.value); setPage(1); }} /></details>

@@ -73,6 +73,7 @@ function project(
     effectiveAt: parsed.data.effectiveAt,
     policyVersion: parsed.data.sourceVersion,
     kind: parsed.data.kind,
+    ...(parsed.data.rentMonths !== undefined ? { rentMonths: parsed.data.rentMonths } : {}),
     ...(parsed.data.percentageBps !== undefined ? { percentageBps: parsed.data.percentageBps } : {}),
     ...(parsed.data.fixedAmountMinor !== undefined ? { fixedAmountMinor: parsed.data.fixedAmountMinor } : {}),
     ...(parsed.data.currency !== undefined ? { currency: parsed.data.currency } : {}),

@@ -339,13 +339,14 @@ export const providerCommissionProjectionSchema = z.object({
   effectiveAt: providerAdvertisingDateSchema,
   policyVersion: z.number().int().nonnegative().optional(),
   kind: commissionPolicyKindSchema.optional(),
+  rentMonths: z.number().finite().min(0).max(12).optional(),
   percentageBps: z.number().int().nonnegative().max(10_000).optional(),
   fixedAmountMinor: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional(),
   readOnly: z.literal(true)
 }).strict().superRefine((value, context) => {
   if (value.source === 'none') {
-    if (value.policyVersion !== undefined || value.kind !== undefined || value.percentageBps !== undefined || value.fixedAmountMinor !== undefined || value.currency !== undefined) {
+    if (value.policyVersion !== undefined || value.kind !== undefined || value.percentageBps !== undefined || value.fixedAmountMinor !== undefined || value.currency !== undefined || value.rentMonths !== undefined) {
       context.addIssue({ code: z.ZodIssueCode.custom, path: ['source'], message: 'An unavailable commission cannot contain policy values' });
     }
     return;

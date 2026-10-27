@@ -5,8 +5,8 @@ const PROVIDER_INQUIRY: readonly [string, string] = ['هل أحتاج حساب �
 export const ACCOUNT_GUIDES: GuideSection = {
   id: 'account-types', title: 'خطوات كل نوع حساب', description: 'اختر نوع الحساب لتقرأ المهام التي تخصه؛ الدليل لا يمنح صلاحيات جديدة.', topics: [
     {
-      id: 'individual-journey', title: 'دليل عارض العقار / الوسيط الفردي', summary: 'من التسجيل إلى نشر العقار ومتابعة العملاء.', before: 'اختر وسيطًا فرديًا إذا كنت تعمل باسمك، وليس باسم مؤسسة.',
-      steps: ['سجّل كمقدم عقار واختر وسيطًا فرديًا، ثم فعّل البريد.', 'أكمل البيانات والمستندات وانتظر الاعتماد؛ استكمل النواقص في الطلب نفسه.', 'بعد الاعتماد أضف العقار وأكمل خطواته الثماني ثم أرسله للمراجعة.', 'تابع الحالة والتعديلات المطلوبة؛ حفظ المسودة لا ينشرها.', 'تابع العملاء والمعاينات والإشعارات والعمولة. للترويج افتح طلبات الإعلانات.'],
+      id: 'individual-journey', title: 'دليل مالك العقار', summary: 'من التسجيل إلى نشر العقار ومتابعة العملاء.', before: 'اختر مالك عقار لعرض عقارك باسمك، وليس باسم مؤسسة.',
+      steps: ['سجّل كمقدم عقار واختر مالك عقار، ثم فعّل البريد.', 'أكمل البيانات والمستندات وانتظر الاعتماد؛ استكمل النواقص في الطلب نفسه.', 'بعد الاعتماد أضف العقار وأكمل خطواته الثماني ثم أرسله للمراجعة.', 'تابع الحالة والتعديلات المطلوبة؛ حفظ المسودة لا ينشرها.', 'تابع العملاء والمعاينات والإشعارات والعمولة. للترويج افتح طلبات الإعلانات.'],
       fields: [['معرّف المؤسسة', 'لا يُدخل للفرد.'], ['المراجعة', 'يُراجع الحساب والعقار كل منهما في مساره؛ اعتماد الحساب لا ينشر كل مسودة.']], result: 'حساب معتمد وعقار منشور بعد المراجعة وطلبات يمكن متابعتها.',
       questions: [PROVIDER_INQUIRY],
       links: [{ label: 'العقارات', path: '/properties' }, { label: 'الشركات', path: '/developers' }, { label: 'حساب المقدّم', path: '/provider' }, { label: 'إضافة عقار', path: '/provider/properties/new/basic' }, { label: 'العملاء والاستفسارات', path: '/provider/customer-requests' }]
@@ -59,7 +59,7 @@ export const ACCOUNT_GUIDES: GuideSection = {
 
 export const GUIDE_AUDIENCES = ['all', 'seeker', 'individual_broker', 'brokerage_office', 'developer', 'owner-admin', 'staff-admin'] as const;
 export type GuideAudience = typeof GUIDE_AUDIENCES[number];
-export const audienceLabels: Record<GuideAudience, string> = { all: 'كل أنواع الحسابات', seeker: 'العميل / الباحث عن عقار', individual_broker: 'عارض العقار / الوسيط الفردي', brokerage_office: 'مكتب وساطة', developer: 'شركة تطوير', 'owner-admin': 'الأدمن الرئيسي / الأونر', 'staff-admin': 'أدمن بصلاحيات محدودة' };
+export const audienceLabels: Record<GuideAudience, string> = { all: 'كل أنواع الحسابات', seeker: 'العميل / الباحث عن عقار', individual_broker: 'مالك العقار', brokerage_office: 'مكتب وساطة', developer: 'شركة تطوير', 'owner-admin': 'الأدمن الرئيسي / الأونر', 'staff-admin': 'أدمن بصلاحيات محدودة' };
 
 export function sectionsForAudience(sections: readonly GuideSection[], audience: GuideAudience): GuideSection[] {
   if (audience === 'all') return [...sections];

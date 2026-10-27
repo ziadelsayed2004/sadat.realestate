@@ -76,7 +76,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         projectId: 'اختياري', parentPropertyId: 'اختر العقار من قائمتك', reason: 'حفظ البيانات الأساسية',
          locationId: '24 حرفاً سداسياً عشرينياً', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
-      sourceTypeLabels: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' },
+      sourceTypeLabels: { individual_broker: 'مالك عقار', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' },
       kindLabels: { property: 'عقار مستقل', unit: 'وحدة تابعة لعقار أو مشروع' },
       parentPicker: {
         search: 'ابحث باسم العمارة أو العقار', help: 'يعني العمارة أو العقار المسجّل اللي الوحدة جزء منه، زي شقة داخل عمارة. اختاره بالاسم من عقاراتك. الحقل اختياري لو اخترت مشروع.',
@@ -92,7 +92,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         name: 'اكتب اسماً للعقار في لغة واحدة على الأقل.',
         slug: 'المعرّف المختصر يجب أن يكون من 2 إلى 120 حرفاً إنجليزياً صغيراً أو رقماً، مع شرطة بين الكلمات، مثل sadat-apartment.',
         sourceType: 'اختر نوع مصدر العقار.',
-        organizationId: 'أدخل معرّف المؤسسة لمكتب الوساطة أو الشركة: يتكون من 24 حرفاً من الأرقام والحروف a إلى f؛ الوسيط الفردي لا يحتاج مؤسسة.',
+        organizationId: 'أدخل معرّف المؤسسة لمكتب الوساطة أو الشركة: يتكون من 24 حرفاً من الأرقام والحروف a إلى f؛ مالك العقار لا يحتاج مؤسسة.',
         projectId: 'اختار المشروع من قائمة مشاريعك أو اتركه بدون مشروع للإعلان المستقل.',
         parentPropertyId: 'اختر العمارة أو العقار الرئيسي من القائمة، أو اربط الوحدة بمشروع. للإعلان غير المرتبط اختر «عقار مستقل».',
         reason: 'اكتب سبب الحفظ من 5 إلى 500 حرف في سطر واحد.',
@@ -144,7 +144,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         projectId: 'Optional', parentPropertyId: 'Choose from your properties', reason: 'Save basic property data',
         locationId: '24 hexadecimal characters', mapUrl: 'https://maps.app.goo.gl/…', latitude: '30.62', longitude: '30.74'
       },
-      sourceTypeLabels: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' },
+      sourceTypeLabels: { individual_broker: 'Property owner', brokerage_office: 'Brokerage office', developer_company: 'Developer company' },
       kindLabels: { property: 'Standalone property', unit: 'Unit within a property or project' },
       parentPicker: {
         search: 'Search by building or property name', help: 'The registered building or property this unit belongs to, such as an apartment inside a building. Choose it by name from your properties. Optional if you selected a project.',
@@ -160,7 +160,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
         name: 'Enter a property name in at least one language.',
         slug: 'Use 2–120 lowercase English letters or digits, with hyphens between words, for example sadat-apartment.',
         sourceType: 'Select the property source type.',
-        organizationId: 'Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Individual brokers do not need an organization.',
+        organizationId: 'Offices and developers need an organization ID containing exactly 24 digits or letters a–f. Property owners do not need an organization.',
         projectId: 'Choose from your projects, or leave empty for a standalone listing.',
         parentPropertyId: 'Select the building or main property, or link the unit to a project. For an unlinked listing choose “Standalone property”.',
         reason: 'Enter a save reason of 5–500 characters on one line.',

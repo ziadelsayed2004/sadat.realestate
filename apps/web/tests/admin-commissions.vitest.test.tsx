@@ -111,6 +111,23 @@ const loaders = {
 };
 
 describe('Admin commission policies, exceptions, and confirmations', () => {
+  it.each([['owner', 'Prepare a 2% property owner policy', 'individual_broker', 200], ['office', 'Prepare a 1.5% office policy', 'brokerage_office', 150]] as const)('prepares and activates the %s sale policy with independently editable monthly rent', async (_name, preset, scopeKey, percentageBps) => {
+    window.history.pushState({}, '', '/admin/commissions/new');
+    const draft = { ...policy, status: 'draft' as const, version: 0, percentageBps, rentMonths: 0.5, scope: { kind: 'provider_type' as const, key: scopeKey } };
+    const create = vi.fn(async () => draft);
+    const update = vi.fn(async () => ({ ...draft, status: 'active' as const, version: 1 }));
+    renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createPolicy={create} updatePolicy={update} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: preset }));
+    expect(screen.getByLabelText('Account category')).toHaveValue(scopeKey);
+    expect(screen.getByLabelText('Rental commission (months)')).toHaveValue(0.5);
+    fireEvent.click(screen.getByRole('button', { name: getAdminCommissionsCopy('en').actions.save }));
+    await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ percentageBps, rentMonths: 0.5, scope: draft.scope })));
+    fireEvent.change(screen.getByLabelText('Policy approval or stop reason'), { target: { value: 'Approve agreed rates' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Approve and activate policy' }));
+    await screen.findByText('Policy approved and applied to the selected category.');
+    expect(update).toHaveBeenCalledWith(policy.id, expect.objectContaining({ expectedVersion: 0, status: 'active' }));
+    expect(create).toHaveBeenCalledTimes(1);
+  });
   it('creates a six-percent exception starting now with no ending date by default', async () => {
     window.history.pushState({}, '', '/admin/commissions/exceptions/new');
     const update = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue({ ...exception, status: 'active', version: 1 });
@@ -223,9 +240,14 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     fireEvent.submit(form);
     await waitFor(() => expect(create).toHaveBeenCalledWith(expect.objectContaining({ percentageBps: 250 })));
     expect(create.mock.calls[0]?.[0]).not.toHaveProperty('key');
+    // A saved draft is locked to avoid accidentally creating duplicates. A fresh
+    // form is used for the next, distinct policy.
+    result.unmount();
+    renderWithLocale(<AdminCommissions locale="en" session={session} {...loaders} createPolicy={create} />, { locale: 'en' });
+    fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'Fixed commission' } });
     fireEvent.change(screen.getByLabelText('Kind'), { target: { value: 'fixed' } });
     fireEvent.change(screen.getByLabelText('Commission amount'), { target: { value: '125.50' } });
-    fireEvent.submit(form);
+    fireEvent.submit(document.querySelector('form.admin-commissions__form')!);
     await waitFor(() => expect(create).toHaveBeenLastCalledWith(expect.objectContaining({ fixedAmountMinor: 12550, currency: 'EGP' })));
   });
 
@@ -246,7 +268,7 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     expect(result.container).not.toHaveTextContent('errors.conflict');
     expect(percentage).toHaveValue(3);
     expect(screen.getByLabelText(copy.labels.effectiveTo!)).toHaveValue('2026-10-06');
-    expect(create).toHaveBeenCalledWith(accountId, { kind: 'percentage', percentageBps: 300, effectiveFrom: '2026-10-05T00:00:00.000Z', effectiveTo: '2026-10-06T00:00:00.000Z' });
+    expect(create).toHaveBeenCalledWith(accountId, { kind: 'percentage', percentageBps: 300, rentMonths: 0.5, effectiveFrom: '2026-10-05T00:00:00.000Z', effectiveTo: '2026-10-06T00:00:00.000Z' });
   });
 
   it('refreshes the effective commission after saving without a draft warning', async () => {
