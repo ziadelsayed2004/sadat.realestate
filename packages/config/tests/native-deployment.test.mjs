@@ -15,6 +15,31 @@ function runGit(args, options = {}) {
   assert.equal(result.status, 0, result.stderr || result.error?.message);
 }
 
+test('release copy without Git metadata still verifies generated-capture ignore rules', () => {
+  fs.mkdirSync(temporaryRoot, { recursive: true });
+  const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'release-without-git-'));
+  const release = path.join(sandbox, 'release');
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^GIT_/iu.test(key)));
+  delete env.NODE_TEST_CONTEXT;
+  env.GIT_CEILING_DIRECTORIES = sandbox;
+  try {
+    for (const file of ['.gitignore', 'packages/config/tests/workspace-policy.test.mjs', 'packages/config/scripts/workspace-policy.mjs']) {
+      const destination = path.join(release, file);
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.copyFileSync(path.join(root, file), destination);
+    }
+    const checkout = spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: release, env, encoding: 'utf8', windowsHide: true });
+    assert.equal(checkout.status, 128, 'The regression fixture must not have or discover a .git directory');
+    const result = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-name-pattern=generated captures', 'packages/config/tests/workspace-policy.test.mjs'], { cwd: release, env, encoding: 'utf8', windowsHide: true });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.stdout, /generated captures stay ignored/u);
+    assert.equal(fs.existsSync(path.join(release, '.git')), false, 'Verification must not initialize Git in the production release');
+  } finally {
+    assert.equal(path.dirname(path.resolve(sandbox)), path.resolve(temporaryRoot));
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
 // Read the real ledgers so adding required evidence cannot silently break deployment.
 const requiredQualityEvidence = [...new Set(fs.readdirSync(path.join(root, 'agent_pack/07_finish')).flatMap(feature => {
   const ledgerPath = path.join(root, 'agent_pack/07_finish', feature, 'design-comparison.json');

@@ -4,6 +4,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 import { loadWorkspaceGraph, validateWorkspaceGraph } from '../scripts/workspace-policy.mjs';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -11,9 +12,28 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..',
 test('generated captures stay ignored while approved references and product assets remain versionable', () => {
   const ignored = ['docs/quality/new-capture.png', 'docs/quality/figma_parity/screens/PUB-01/runtime-new.png', 'docs/design_sources/recovery_candidates/rejected.png', 'docs/assets/new-raw.png', 'apps/web/test-results/new.png', 'apps/web/blob-report/new.zip'];
   const kept = ['apps/web/public/assets/product.png', 'docs/design_sources/final_screens/public/PUB-01.png', 'apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/baseline.png', 'docs/quality/figma_parity/screens/SEK-04/runtime-after-source-refresh-ar-2026-09-13.png'];
-  const result = spawnSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: rootDir, input: [...ignored, ...kept].join('\n') + '\n', encoding: 'utf8', windowsHide: true });
-  assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(result.stdout.trim().split(/\r?\n/u).sort(), ignored.sort());
+  // Deployment copies source without .git. Check the shipped rules in a small
+  // isolated fixture so the same assertion runs in checkouts and release folders.
+  const temporaryRoot = path.resolve(tmpdir());
+  const sandbox = fs.mkdtempSync(path.join(temporaryRoot, 'sadat-ignore-rules-'));
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^GIT_/iu.test(key)));
+  const config = path.join(sandbox, 'empty-git-config');
+  const template = path.join(sandbox, 'empty-template');
+  fs.writeFileSync(config, '');
+  fs.mkdirSync(template);
+  Object.assign(env, { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: config });
+  try {
+    fs.copyFileSync(path.join(rootDir, '.gitignore'), path.join(sandbox, '.gitignore'));
+    const initialized = spawnSync('git', ['init', '--quiet', `--template=${template}`, '.'], { cwd: sandbox, env, encoding: 'utf8', windowsHide: true });
+    assert.equal(initialized.status, 0, initialized.stderr);
+    const result = spawnSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: sandbox, env, input: [...ignored, ...kept].join('\n') + '\n', encoding: 'utf8', windowsHide: true });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(result.stdout.trim().split(/\r?\n/u).sort(), ignored.sort());
+  } finally {
+    assert.equal(path.dirname(path.resolve(sandbox)), temporaryRoot);
+    assert.ok(path.basename(sandbox).startsWith('sadat-ignore-rules-'));
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
 });
 
 function graphCopy() {
