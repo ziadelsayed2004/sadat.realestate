@@ -12,7 +12,7 @@ const evidence = { status: 'RUNNING', checks: [], errors: [] };
 for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
   const browser = await engine.launch();
   try {
-    for (const [width, height, locale] of [[390, 844, 'ar'], [820, 1000, 'ar'], [1440, 900, 'en']]) {
+    for (const [width, height, locale] of [[320, 800, 'ar'], [360, 800, 'ar'], [390, 844, 'en'], [440, 956, 'ar'], [820, 1000, 'ar'], [1440, 900, 'en']]) {
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
       const page = await context.newPage();
       page.on('console', msg => { if (msg.type() === 'error') console.log('CONSOLE_ERROR', name, width, msg.text().slice(0, 240)); });
@@ -55,6 +55,18 @@ for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
       assert(await credit.locator('strong').evaluate(element => getComputedStyle(element).fontFamily.includes('CodzhubWordmark')));
       await page.evaluate(() => document.fonts.load('600 14px CodzhubWordmark', 'CodzHub'));
       assert(await page.evaluate(() => document.fonts.check('600 14px CodzhubWordmark', 'CodzHub')));
+      if (width <= 600) {
+        const row = page.locator('.public-site-footer__credit');
+        const layout = await row.evaluate(element => {
+          const children = Array.from(element.children).map(child => child.getBoundingClientRect());
+          return { left: Math.min(...children.map(box => box.left)), right: Math.max(...children.map(box => box.right)), overlap: Math.min(...children.map(box => box.bottom)) - Math.max(...children.map(box => box.top)) };
+        });
+        assert(Math.abs((layout.left + layout.right) / 2 - width / 2) < 1, 'mobile credit must be centered in the viewport');
+        assert(layout.overlap > 0, 'mobile credit must stay on one line');
+        const creditBounds = await row.boundingBox();
+        const wa = await whatsapp.boundingBox();
+        assert(creditBounds.y + creditBounds.height <= wa.y || layout.right < wa.x, `mobile credit must clear WhatsApp: width=${width} right=${layout.right} WhatsApp=${wa.x}`);
+      }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await page.screenshot({ path: `${output}/${name}-${width}-${locale}-footer.png` });
       await page.locator('.public-floating-actions').screenshot({ path: `${output}/${name}-${width}-controls.png` });

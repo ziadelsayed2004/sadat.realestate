@@ -3,14 +3,14 @@
 #app :is(input, textarea, [contenteditable="true"]), #app [contenteditable="true"] * { -webkit-user-select: text; user-select: text; }
 #app :is(img, a) { -webkit-user-drag: none; }
 #app :is(a, button, [role="button"]), #app :is(a, button, [role="button"]):is(:hover, :focus, :active) { text-decoration: none !important; }
-#app :is(a, button, input, select, textarea, summary, [tabindex]):focus { outline: none !important; }
-#app :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  box-shadow: 0 0 0 3px rgb(15 74 59 / 24%) !important;
-}
-#app :is(input, select, textarea):focus { border-color: #397c68; box-shadow: 0 0 0 3px rgb(15 74 59 / 14%) !important; }
+/* Keyboard focus uses the control's color treatment, without an extra frame. */
+body :is(:focus, :focus-within), body :focus-visible::before, body :focus-visible::after { outline: none !important; }
+body :focus, body .admin-section-search:focus-within { box-shadow: none !important; }
+body :is(a, button, summary, [role="button"]):focus-visible { filter: brightness(.85); }
+body :is(input, select, textarea):focus { border-color: #397c68; }
 #app :is(button, [role="button"], .ui-button) { touch-action: manipulation; }
 #app input:is([type="checkbox"], [type="radio"]) { accent-color: #155b4f; }
 #app input:is([type="url"], [type="email"], [type="tel"]) { direction: ltr; text-align: start; }
 @media (forced-colors: active) {
-  #app :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid Highlight !important; outline-offset: 3px; box-shadow: none !important; }
+  body :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid Highlight !important; outline-offset: 3px; box-shadow: none !important; }
 }

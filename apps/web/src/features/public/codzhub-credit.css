@@ -2,13 +2,12 @@
 .public-site-footer__credit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.75rem;padding:.625rem 5rem;border-block-start:1px solid #ffffff14;background:transparent;color:#fff}
 .public-site-footer__credit a{display:inline-flex;align-items:center;gap:.375rem;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:inherit;text-decoration:none}
 .public-site-footer__credit a:hover{background:transparent;color:inherit;opacity:.85}
-.public-site-footer__credit a:focus-visible{outline:2px solid #2f7bff;outline-offset:5px}
 .public-site-footer__credit strong,.public-site-footer__credit-author{font-family:CodzhubWordmark,sans-serif;font-size:.875rem;font-style:italic;font-weight:700;letter-spacing:-.04em;line-height:1.6}
-.public-site-footer__credit strong{display:inline-flex;color:#fff}
+.public-site-footer__credit strong{display:inline-flex}
 .public-site-footer__credit strong span:first-child{color:#fff}
 .public-site-footer__credit strong span:last-child,.public-site-footer__credit-author span{color:#2f7bff}
 .public-site-footer__credit-author{padding-inline-end:.75rem;border-inline-end:1px solid #ffffff26;white-space:nowrap}
 .public-site-footer__credit-year{font-family:CodzhubWordmark,sans-serif;font-size:.75rem;color:#b8bfcd;white-space:nowrap}
 .public-site-footer__credit-mark{display:block;inline-size:2.25rem;block-size:2.25rem;object-fit:contain;flex:none}
 .public-site-footer .public-site-footer__bottom{block-size:auto;min-block-size:3.3125rem;padding-inline:5rem}
-@media(max-width:600px){.public-site-footer__credit{gap:.5rem;padding:.75rem 4.5rem .75rem .5rem}.public-site-footer__credit strong,.public-site-footer__credit-author{font-size:.8125rem}.public-site-footer__credit-author{padding-inline-end:.5rem}.public-site-footer__credit a{gap:.25rem}.public-site-footer__credit-mark{inline-size:2rem;block-size:2rem}}
+@media(max-width:600px){.public-site-footer__credit{flex-wrap:nowrap;gap:.375rem;padding:.75rem}.public-site-footer__credit strong,.public-site-footer__credit-author{font-size:clamp(.5rem,2.5vw,.625rem)}.public-site-footer__credit-author{padding-inline-end:.375rem}.public-site-footer__credit-year{font-size:.5625rem}.public-site-footer__credit a{gap:.25rem}.public-site-footer__credit-mark{inline-size:1.25rem;block-size:1.25rem}}
