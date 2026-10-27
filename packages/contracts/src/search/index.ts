@@ -34,7 +34,7 @@ export const publicPropertyListItemSchema = publicHomepagePropertySchema.extend(
   locationName: localizedTextSchema.optional(),
   sourceName: localizedTextSchema.optional(),
   sourceImageUrl: z.union([z.url().max(2_048), z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
-  sourceType: z.enum(['brokerage_office', 'developer_company']).optional(),
+  sourceType: z.enum(['individual_broker', 'brokerage_office', 'developer_company']).optional(),
   publicCode: z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),
   viewCount: z.number().int().nonnegative().optional(),
   installmentAvailable: z.boolean().optional(),
