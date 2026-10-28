@@ -63,6 +63,10 @@ const AUTH_ERROR_MAP = Object.freeze({
     statusCode: 401,
     messageKey: 'errors.auth.refreshTokenReused'
   },
+  SESSION_REFRESH_CONFLICT: {
+    statusCode: 409,
+    messageKey: 'errors.conflict'
+  },
   INVALID_OTP: {
     statusCode: 401,
     messageKey: 'errors.auth.invalidOtp'
@@ -162,6 +166,7 @@ function sendError(
   clearCookie: boolean,
   policy: AuthCookiePolicy
 ): void {
+  if (error instanceof AuthServiceError && error.code === 'SESSION_REFRESH_CONFLICT') response.setHeader('Retry-After', '1');
   // Temporary infrastructure failures and invalid form submissions do not
   // revoke an otherwise valid refresh cookie. Successful password changes and
   // logout clear it explicitly; invalid/replayed sessions still fail closed.

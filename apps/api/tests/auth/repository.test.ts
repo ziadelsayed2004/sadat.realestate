@@ -92,12 +92,13 @@ test('creates account credentials without conflicting with schema-managed timest
   assert.equal('updatedAt' in ((update?.$setOnInsert as Record<string, unknown>) ?? {}), false);
 });
 
-test('allows one concurrent refresh winner and treats the loser as reuse', async () => {
+test('allows one concurrent refresh winner without revoking it, and removes the losing orphan session', async () => {
   const userId = new Types.ObjectId('0123456789abcdef01234567');
   const currentId = new Types.ObjectId('111111111111111111111111');
   let updateAttempt = 0;
   let familyRevocations = 0;
   let activityWrites = 0;
+  let orphanRemovals = 0;
   const current = {
     _id: currentId,
     userId,
@@ -106,6 +107,7 @@ test('allows one concurrent refresh winner and treats the loser as reuse', async
   const Session = {
     findOne: () => query(current),
     async create() { return { _id: new Types.ObjectId() }; },
+    deleteOne: () => ({ async exec() { orphanRemovals++; return { deletedCount: 1 }; } }),
     updateOne: () => ({
       async exec() {
         updateAttempt += 1;
@@ -142,8 +144,9 @@ test('allows one concurrent refresh winner and treats the loser as reuse', async
       now: new Date('2026-08-12T12:00:00.000Z')
     })
   ]);
-  assert.deepEqual([first.kind, second.kind].sort(), ['reuse_detected', 'rotated']);
-  assert.equal(familyRevocations, 1);
+  assert.deepEqual([first.kind, second.kind].sort(), ['rotated', 'rotation_conflict']);
+  assert.equal(familyRevocations, 0);
+  assert.equal(orphanRemovals, 1);
   assert.equal(activityWrites, 1);
 });
 
@@ -153,7 +156,7 @@ test('detects replayed rotated tokens, expired tokens, inactive accounts, and lo
     _id: new Types.ObjectId(),
     userId,
     expiresAt: new Date('2026-09-11T12:00:00.000Z'),
-    revokedAt: new Date('2026-08-12T12:00:00.000Z'),
+    revokedAt: new Date('2026-08-12T11:59:29.000Z'),
     replacedBySessionId: new Types.ObjectId()
   };
   let revokedAll = 0;
@@ -197,6 +200,21 @@ test('detects replayed rotated tokens, expired tokens, inactive accounts, and lo
   assert.equal(await repository.revokeSession('a'.repeat(43), new Date()), true);
   logoutModified = 0;
   assert.equal(await repository.revokeSession('a'.repeat(43), new Date()), false);
+});
+
+test('recently consumed refresh tokens get no credentials, do not revoke the winner, and become replay after the overlap window', async () => {
+  let revocations = 0;
+  const now = new Date('2026-10-28T10:00:00Z');
+  const current = { _id: new Types.ObjectId(), userId: new Types.ObjectId(), expiresAt: new Date(now.getTime() + 86_400_000), revokedAt: now, replacedBySessionId: new Types.ObjectId() };
+  const Session = { findOne: () => query(current), updateMany: () => ({ async exec() { revocations++; return { modifiedCount: 1 }; } }) };
+  const repository = createMongooseAuthRepository({ Session } as unknown as IdentityModels, {} as AuthModels);
+  const input = { currentTokenHash: 'a'.repeat(43), replacementTokenHash: 'b'.repeat(43), replacementExpiresAt: current.expiresAt, now };
+  assert.deepEqual(await repository.rotateSession(input), { kind: 'rotation_conflict' });
+  assert.equal(revocations, 0);
+  assert.deepEqual(await repository.rotateSession({ ...input, now: new Date(now.getTime() + 30_001) }), { kind: 'reuse_detected' });
+  assert.equal(revocations, 1);
+  Reflect.deleteProperty(current, 'replacedBySessionId');
+  assert.deepEqual(await repository.rotateSession(input), { kind: 'invalid' }, 'explicit revocation cannot be treated as a refresh race');
 });
 
 test('persists only hashed OTP material and enforces resend cooldown by normalized target', async () => {

@@ -39,6 +39,7 @@ export type SessionRotationResult =
   | { kind: 'rotated'; account: AuthAccount; sessionId: string; authenticationMethod: 'password' | 'otp' | 'mfa' }
   | { kind: 'invalid' }
   | { kind: 'reuse_detected' }
+  | { kind: 'rotation_conflict' }
   | { kind: 'account_not_active' };
 
 export interface AuthRepository {
@@ -322,6 +323,9 @@ export function createMongooseAuthRepository(
 
       if (current.revokedAt) {
         if (current.replacedBySessionId) {
+          // An overlapping request gets no authority and must retry with the
+          // browser's new cookie. Do not revoke the winning rotation or erase it.
+          if (current.revokedAt.getTime() >= input.now.getTime() - 30_000) return { kind: 'rotation_conflict' };
           await revokeAll(current.userId, input.now);
           return { kind: 'reuse_detected' };
         }
@@ -368,8 +372,8 @@ export function createMongooseAuthRepository(
         }
       ).exec();
       if (rotation.modifiedCount !== 1) {
-        await revokeAll(current.userId, input.now);
-        return { kind: 'reuse_detected' };
+        await Session.deleteOne({ _id: replacementId, tokenHash: input.replacementTokenHash, revokedAt: { $exists: false } }).exec();
+        return { kind: 'rotation_conflict' };
       }
       if (account.roleType === 'admin') await User.updateOne({ _id: current.userId, roleType: 'admin', status: 'verified', deletedAt: null },
         { $max: { lastAdminActivityAt: input.now } }, { timestamps: false }).exec();

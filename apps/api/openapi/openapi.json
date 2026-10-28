@@ -447,6 +447,24 @@
           "403": {
             "$ref": "#/components/responses/AuthError"
           },
+          "409": {
+            "description": "SESSION_REFRESH_CONFLICT: a concurrent rotation already consumed this cookie. No credentials are issued and the browser cookie is preserved.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "const": "1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "413": {
             "$ref": "#/components/responses/AuthError"
           },
@@ -456,7 +474,8 @@
           "500": {
             "$ref": "#/components/responses/AuthError"
           }
-        }
+        },
+        "description": "Refresh tokens rotate on success. An overlapping request using a token consumed within 30 seconds returns SESSION_REFRESH_CONFLICT (409) with Retry-After: 1, no credentials and no Set-Cookie. Retry using the browser cookie after the winning response. Older replay still revokes sessions; explicit revocation remains invalid."
       }
     },
     "/api/v1/auth/logout": {

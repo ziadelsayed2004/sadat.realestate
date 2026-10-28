@@ -14,7 +14,8 @@ export type AuthServiceErrorCode =
   | 'INVALID_CREDENTIALS'
   | 'ACCOUNT_NOT_ACTIVE'
   | 'INVALID_REFRESH_TOKEN'
-  | 'REFRESH_TOKEN_REUSED';
+  | 'REFRESH_TOKEN_REUSED'
+  | 'SESSION_REFRESH_CONFLICT';
 
 export class AuthServiceError extends Error {
   readonly code: AuthServiceErrorCode;
@@ -183,6 +184,7 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
       });
       if (result.kind === 'invalid') throw new AuthServiceError('INVALID_REFRESH_TOKEN');
       if (result.kind === 'reuse_detected') throw new AuthServiceError('REFRESH_TOKEN_REUSED');
+      if (result.kind === 'rotation_conflict') throw new AuthServiceError('SESSION_REFRESH_CONFLICT');
       if (result.kind === 'account_not_active') throw new AuthServiceError('ACCOUNT_NOT_ACTIVE');
       return {
         data: responseData(

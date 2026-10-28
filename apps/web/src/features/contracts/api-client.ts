@@ -38,6 +38,7 @@ export interface ApiClientOptions {
 }
 
 export interface ApiRequestOptions<TResponse> {
+  keepalive?: boolean;
   responseSchema: ContractSchema<TResponse>;
   method?: HttpMethod;
   query?: QueryValues;
@@ -330,6 +331,7 @@ export class ApiClient {
     headers.set('x-request-id', requestId);
 
     const init: RequestInit = { method, headers, credentials: this.credentials, cache: 'no-store' };
+    if (options.keepalive !== undefined) init.keepalive = options.keepalive;
     if (options.signal) init.signal = options.signal;
     if (options.json !== undefined) {
       init.body = JSON.stringify(options.json);

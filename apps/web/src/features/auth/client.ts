@@ -103,6 +103,7 @@ function isInvalidRefreshError(error: unknown): boolean {
   if (!(error instanceof ApiClientError)) return false;
   return error.status === 401
     || error.apiError?.code === AUTH_ERROR_CODES.INVALID_REFRESH_TOKEN
+    || error.apiError?.code === AUTH_ERROR_CODES.ACCOUNT_NOT_ACTIVE
     || error.apiError?.code === AUTH_ERROR_CODES.REFRESH_TOKEN_REUSED;
 }
 
@@ -120,9 +121,9 @@ export class AuthClient {
     this.apiClient = options.apiClient ?? new ApiClient();
     this.store = options.store ?? new AuthStore();
     this.sessionHintStorage = options.sessionHintStorage ?? browserSessionHintStorage();
-    this.renewal = new SessionRenewal(() => this.refresh(), () => this.store.getSnapshot().status === 'authenticated');
+    this.renewal = new SessionRenewal(() => this.refresh(), () => this.store.getSnapshot().status !== 'anonymous');
     this.unsubscribeRenewal = this.store.subscribe(snapshot => {
-      if (snapshot.status === 'anonymous' || snapshot.status === 'error') this.renewal.clear();
+      if (snapshot.status === 'anonymous') this.renewal.clear();
     });
   }
 
@@ -464,11 +465,17 @@ export class AuthClient {
     if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
     try {
       emptyAuthRequestSchema.parse({});
-      const response = await this.apiClient.request('/auth/refresh', {
-        method: 'POST',
-        json: {},
-        responseSchema: authSessionSuccessEnvelopeSchema
-      });
+      let response;
+      for (let attempt = 0; ; attempt++) {
+        if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
+        try {
+          response = await this.apiClient.request('/auth/refresh', { method: 'POST', json: {}, keepalive: true, responseSchema: authSessionSuccessEnvelopeSchema });
+          break;
+        } catch (error) {
+          if (!(error instanceof ApiClientError) || error.apiError?.code !== AUTH_ERROR_CODES.SESSION_REFRESH_CONFLICT || attempt >= 3) throw error;
+          await new Promise(resolve => setTimeout(resolve, 250 * 2 ** attempt));
+        }
+      }
       if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
       return this.setSession(response.data.data);
     } catch (error: unknown) {
@@ -481,6 +488,7 @@ export class AuthClient {
       // A network failure or a rolling restart is not evidence that the
       // refresh cookie was revoked. Keep the current screen and its draft.
       if (this.store.getSnapshot().status !== 'authenticated') this.store.setError(requestId);
+      this.renewal.retry();
       throw error;
     }
   }

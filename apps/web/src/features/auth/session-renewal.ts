@@ -18,6 +18,10 @@ export class SessionRenewal {
     this.timer = undefined;
     this.expiresAt = 0;
   }
+  retry(): void {
+    this.expiresAt = Date.now();
+    this.arm(15_000);
+  }
   dispose(): void {
     this.disposed = true;
     this.clear();

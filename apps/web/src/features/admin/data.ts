@@ -4,12 +4,14 @@ import {
   type AdminOverviewData,
   type AdminOverviewQuery
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient } from '../contracts/index.ts';
+import { createAdminSessionClient } from '../admin_ads/data.ts';
 
 export const ADMIN_OVERVIEW_ROUTE = '/admin/overview' as const;
 
 export interface AdminAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 export interface AdminOverviewLoadOptions {
@@ -25,12 +27,6 @@ export type AdminOverviewLoader = (signal?: AbortSignal) => Promise<AdminOvervie
 const OVERVIEW_RANGE_DAYS = 30;
 const DAY_MS = 24 * 60 * 60 * 1_000;
 
-function clientFor(options: Pick<AdminOverviewLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
-  if (options.apiClient !== undefined) return options.apiClient;
-  const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  return new ApiClient(clientOptions);
-}
-
 function authorizationHeaders(source: AdminAuthorizationSource | undefined): HeadersInit | undefined {
   const authorization = source?.getAuthorizationHeader();
   return authorization === undefined ? undefined : { authorization };
@@ -43,7 +39,7 @@ export function adminOverviewRange(clock: () => Date = () => new Date()): AdminO
 }
 
 export async function loadAdminOverview(options: AdminOverviewLoadOptions = {}): Promise<AdminOverviewData> {
-  const client = clientFor(options);
+  const client = createAdminSessionClient(options);
   const headers = authorizationHeaders(options.authorization);
   const query = adminOverviewRange(options.clock);
   const response = await client.request(ADMIN_OVERVIEW_ROUTE, {

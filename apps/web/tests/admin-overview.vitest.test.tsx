@@ -8,6 +8,21 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 import { AdminAttentionContext } from '../src/features/routing/admin-attention.tsx';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
+
+it('refreshes an expired overview read once and retries with the new authorization header', async () => {
+  let token = 'expired';
+  const refresh = vi.fn(async () => { token = 'renewed'; });
+  const headers: (string | null)[] = [];
+  const client = new ApiClient({ fetcher: async (_input, options) => {
+    const authorization = new Headers(options?.headers).get('authorization'); headers.push(authorization);
+    return authorization === 'Bearer expired'
+      ? new Response(JSON.stringify({ error: { code: 'AUTHENTICATION_REQUIRED', messageKey: 'errors.authenticationRequired', details: [], requestId: 'expired-overview' } }), { status: 401 })
+      : new Response(JSON.stringify({ data: overview, meta: { requestId: 'renewed-overview' } }));
+  } });
+  expect(await loadAdminOverview({ apiClient: client, authorization: { getAuthorizationHeader: () => `Bearer ${token}`, refresh } })).toEqual(overview);
+  expect(refresh).toHaveBeenCalledOnce();
+  expect(headers).toEqual(['Bearer expired', 'Bearer renewed']);
+});
 const overview = adminOverviewDataSchema.parse({
   range: { from: '2026-07-20T00:00:00.000Z', to: '2026-08-19T00:00:00.000Z' },
   metrics: {

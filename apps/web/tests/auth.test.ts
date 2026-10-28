@@ -55,6 +55,19 @@ test('another tab clearing the session invalidates an in-flight refresh response
   assert.equal(client.getAccessToken(), undefined);
   client.dispose();
 });
+
+test('a failed refresh from an older login cannot clear a newly authenticated session', async () => {
+  let rejectRefresh!: (error: unknown) => void;
+  const pending = new Promise<ApiClientResponse<unknown>>((_resolve, reject) => { rejectRefresh = reject; });
+  const store = new AuthStore();
+  const client = new AuthClient({ apiClient: new FakeApiClient(async path => path === '/auth/refresh' ? pending : response(session('admin', 'new.login.token'))), store });
+  const refresh = client.refresh();
+  await client.loginAdmin({ email: 'admin@example.com', password: 'Example-Password!123' });
+  rejectRefresh(new ApiClientError('old cookie rejected', { code: 'HTTP_ERROR', status: 401 }));
+  assert.equal((await refresh).status, 'authenticated');
+  assert.equal(client.getAccessToken(), 'new.login.token');
+  client.dispose();
+});
 const challenge = {
   accepted: true as const,
   challengeId: '00000000-0000-4000-8000-000000000001',

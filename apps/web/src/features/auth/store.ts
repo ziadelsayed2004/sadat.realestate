@@ -124,6 +124,7 @@ export class AuthStore {
   setSession(session: unknown, availableActions?: unknown): AuthSnapshot {
     const parsedSession = authSessionDataSchema.parse(session);
     const normalizedActions = normalizeAvailableActions(availableActions);
+    this.sessionGeneration += 1;
     this.accessToken = parsedSession.accessToken;
     this.setSnapshot(authenticatedSnapshot(parsedSession.user, normalizedActions));
     return this.snapshot;

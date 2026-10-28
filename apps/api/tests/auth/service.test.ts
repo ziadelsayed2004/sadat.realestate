@@ -231,6 +231,8 @@ test('rotates an opaque refresh token and maps invalid, reuse, and inactive outc
   await rejectsWithCode(() => auth.refresh('R'.repeat(43)), 'INVALID_REFRESH_TOKEN');
   outcome = { kind: 'reuse_detected' };
   await rejectsWithCode(() => auth.refresh('R'.repeat(43)), 'REFRESH_TOKEN_REUSED');
+  outcome = { kind: 'rotation_conflict' };
+  await rejectsWithCode(() => auth.refresh('R'.repeat(43)), 'SESSION_REFRESH_CONFLICT');
   outcome = { kind: 'account_not_active' };
   await rejectsWithCode(() => auth.refresh('R'.repeat(43)), 'ACCOUNT_NOT_ACTIVE');
   await rejectsWithCode(() => auth.refresh('malformed'), 'INVALID_REFRESH_TOKEN');

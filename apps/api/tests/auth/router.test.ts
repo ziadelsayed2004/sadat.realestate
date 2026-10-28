@@ -112,6 +112,18 @@ test('a temporary refresh failure preserves its cookie so the same session can r
   }, { async refresh() { if (++attempts === 1) throw new Error('Temporary database interruption'); return issued(replacementToken); } });
 });
 
+test('refresh contention returns a retryable conflict without clearing the winning cookie or issuing credentials', async () => {
+  await withAuthServer(async baseUrl => {
+    const response = await fetch(`${baseUrl}/api/v1/auth/refresh`, { method: 'POST', headers: { Cookie: `sadat_refresh=${currentToken}` } });
+    assert.equal(response.status, 409);
+    assert.equal(response.headers.get('set-cookie'), null);
+    assert.equal(response.headers.get('retry-after'), '1');
+    const body = await response.json() as AuthResponseBody;
+    assert.equal(body.error?.code, 'SESSION_REFRESH_CONFLICT');
+    assert.equal(body.data, undefined);
+  }, { refresh: async () => { throw new AuthServiceError('SESSION_REFRESH_CONFLICT'); } });
+});
+
 test('explicit logout still clears the browser cookie during a revocation outage', async () => {
   await withAuthServer(async baseUrl => {
     const response = await fetch(`${baseUrl}/api/v1/auth/logout`, { method: 'POST', headers: { Cookie: `sadat_refresh=${replacementToken}` } });

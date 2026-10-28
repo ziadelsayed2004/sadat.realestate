@@ -50,3 +50,37 @@ it('restores an expired idle tab on visibility/focus and never renews a logged-o
   expect(calls).toBe(2);
   client.dispose();
 });
+
+it('recovers from an outage during initial restoration without another login or reload', async () => {
+  vi.useFakeTimers();
+  Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+  let calls = 0;
+  const client = new AuthClient({ apiClient: new ApiClient({ fetcher: async () => {
+    if (++calls === 1) throw new Error('Rolling restart');
+    return new Response(JSON.stringify({ data: { accessToken: 'restored.admin.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'a'.repeat(24), roleType: 'admin', status: 'verified' } }, meta: { requestId: 'restore-retry' } }));
+  } }) });
+  await expect(client.refresh()).rejects.toThrow();
+  expect(client.getSnapshot().status).toBe('error');
+  await vi.advanceTimersByTimeAsync(15_000);
+  expect(client.getSnapshot().status).toBe('authenticated');
+  expect(calls).toBe(2);
+  client.dispose();
+});
+
+it('retries a concurrent refresh conflict using the latest cookie without broadcasting logout', async () => {
+  vi.useFakeTimers();
+  let calls = 0;
+  const logout = vi.fn();
+  const fetcher = vi.fn<typeof fetch>(async (_url, options) => {
+    expect(options?.keepalive).toBe(true);
+    if (++calls === 1) return new Response(JSON.stringify({ error: { code: 'SESSION_REFRESH_CONFLICT', messageKey: 'errors.conflict', details: [], requestId: 'overlapping-tab' } }), { status: 409 });
+    return new Response(JSON.stringify({ data: { accessToken: 'renewed.admin.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'a'.repeat(24), roleType: 'admin', status: 'verified' } }, meta: { requestId: 'renewal-winner' } }));
+  });
+  const client = new AuthClient({ apiClient: new ApiClient({ fetcher }), store: new AuthStore({ sync: { publishLogout: logout, subscribe: () => () => {}, close: vi.fn() } }) });
+  const promise = client.refresh();
+  await vi.advanceTimersByTimeAsync(250);
+  expect((await promise).status).toBe('authenticated');
+  expect(calls).toBe(2);
+  expect(logout).not.toHaveBeenCalled();
+  client.dispose();
+});
