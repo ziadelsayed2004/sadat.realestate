@@ -14,6 +14,7 @@ import { getSeekerCopy } from './copy.ts';
 import { createSeekerNotificationsLoader, createSeekerOverviewLoader, createSeekerProfileLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
 import './styles.css';
 import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.tsx';
+import { DashboardLanguage, useDashboardNavigation } from '../dashboard_account/chrome.tsx';
 
 export type SeekerOverviewViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 
@@ -32,7 +33,6 @@ export interface SeekerOverviewProps {
 }
 
 export type SeekerIconName = 'overview' | 'requests' | 'viewings' | 'saved' | 'notifications' | 'profile' | 'settings' | 'search' | 'logout';
-const SEEKER_DRAWER_MEDIA_QUERY = '(max-width: 1100px)';
 
 const seekerIconAssets: Readonly<Record<SeekerIconName, string>> = {
   overview: '/assets/canonical/provider/navigation/overview.svg',
@@ -74,7 +74,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, onDisplayNameChange, unreadNotifications }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onDisplayNameChange?: ((displayName: string) => void) | undefined; readonly unreadNotifications?: number | undefined }) {
   const copy = getSeekerCopy(locale);
   const [displayName, setDisplayName] = useState<string>();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { open: menuOpen, setOpen: setMenuOpen } = useDashboardNavigation();
   const [signingOut, setSigningOut] = useState(false);
   const [fetchedUnread, setFetchedUnread] = useState(0);
   const unreadCount = unreadNotifications ?? fetchedUnread;
@@ -120,28 +120,8 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
     return () => controller.abort();
   }, [apiOrigin, authClient, onDisplayNameChange]);
   useEffect(() => {
-    if (!menuOpen) return undefined;
-    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
-    if (!isMobile) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false);
-    };
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', closeOnEscape);
-    const closeOnDesktopResize = () => {
-      if (typeof window.matchMedia === 'function' && !window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches) setMenuOpen(false);
-    };
-    window.addEventListener('resize', closeOnDesktopResize);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', closeOnEscape);
-      window.removeEventListener('resize', closeOnDesktopResize);
-    };
-  }, [menuOpen]);
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [activePath]);
+    if (window.matchMedia?.('(max-width: 1100px)').matches) setMenuOpen(false);
+  }, [activePath, setMenuOpen]);
   const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' :'Search properties in Sadat City…';
   const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' :'Seeker dashboard menu';
   const closeMenuLabel = locale === 'ar' ? 'إغلاق قائمة لوحة الباحث' :'Close seeker dashboard menu';
@@ -159,8 +139,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
     });
   };
   const toggleMenu = () => {
-    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
-    if (isMobile) setMenuOpen(current => !current);
+    setMenuOpen(current => !current);
   };
   const items = [
     ['overview', '/seeker'],
@@ -173,15 +152,11 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
   ] as const;
   return (
     <>
-      <header className="seeker-dashboard__topbar">
+      <header className="seeker-dashboard__topbar" data-dashboard-header="true">
+        <div className="dashboard-header-actions">
         <button className="seeker-dashboard__menu-button" type="button" aria-label={menuOpen ? closeMenuLabel : menuLabel} aria-expanded={menuOpen} aria-controls="seeker-dashboard-navigation" onClick={toggleMenu}>
           <span aria-hidden="true" className="seeker-dashboard__menu-glyph"><i /><i /><i /></span>
         </button>
-        <a className="seeker-dashboard__search" href={localeForSeekerPath(locale, '/')} aria-label={searchLabel}>
-          <SeekerIcon name="search" className="seeker-dashboard__search-icon" />
-          <span className="seeker-dashboard__search-label">{searchLabel}</span>
-        </a>
-        <div className="seeker-dashboard__topbar-actions">
           <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel} aria-description={unreadCount > 0 ? `${unreadCount} ${copy.overview.cards.notifications}` : undefined}>
             <SeekerIcon name="notifications" />{unreadCount > 0 ? <i aria-hidden="true" data-testid="seeker-notifications-indicator" /> : null}
           </a>
@@ -190,6 +165,11 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
             <span className="seeker-dashboard__account-copy"><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
           </DashboardAccountMenu>
         </div>
+        <a className="seeker-dashboard__search" href={localeForSeekerPath(locale, '/')} aria-label={searchLabel}>
+          <SeekerIcon name="search" className="seeker-dashboard__search-icon" />
+          <span className="seeker-dashboard__search-label">{searchLabel}</span>
+        </a>
+        <a className="dashboard-header-brand" href={localeForSeekerPath(locale, '/')} aria-label={websiteLabel}><img src="/assets/sadat-real-estate-logo.png" alt="" width="56" height="49" /></a>
       </header>
       <button className={`seeker-dashboard__backdrop${menuOpen ? ' is-open' : ''}`} type="button" aria-label={closeMenuLabel} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} disabled={!menuOpen} onClick={() => setMenuOpen(false)} />
       <nav id="seeker-dashboard-navigation" className={`seeker-dashboard__nav${menuOpen ? ' is-open' : ''}`} aria-label={copy.overview.eyebrow}>
@@ -215,6 +195,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
         <a href={localeForSeekerPath(locale, '/seeker/user-guide')} aria-current={activePath === '/seeker/user-guide' ? 'page' : undefined} data-active={activePath === '/seeker/user-guide' || undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true" className="seeker-dashboard__nav-icon"><UserGuideIcon /></span><span>{locale === 'ar' ? 'دليل الاستخدام' : 'User guide'}</span></a>
         <a href={localeForSeekerPath(locale, '/')} onClick={() => setMenuOpen(false)}>{websiteLabel}<span aria-hidden="true">↗</span></a>
         <div className="seeker-dashboard__nav-footer">
+          <DashboardLanguage locale={locale} />
           <div className="seeker-dashboard__nav-footer-profile">
             <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
             <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>

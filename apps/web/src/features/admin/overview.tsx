@@ -15,6 +15,7 @@ import { UserGuideIcon } from '../dashboard_account/menu.tsx';
 import { sidebarGroups, type AdminSidebarIcon } from '../routing/admin-navigation-model.ts';
 import { AdminAttentionContext, AdminAttentionBadge, AdminAttentionQueues, adminAttentionCount } from '../routing/admin-attention.tsx';
 import { AdminAccountContext } from '../routing/admin-account.tsx';
+import { DashboardLanguage } from '../dashboard_account/chrome.tsx';
 
 export interface AdminOverviewProps {
   readonly locale: SupportedLocale;
@@ -182,6 +183,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
         </div>
       </div>
       <div className="admin-dashboard__navigation-footer">
+        <DashboardLanguage locale={locale} />
         <div className="admin-dashboard__navigation-profile">
           <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{account?.displayName.slice(0, 1) ?? copy.sidebar.avatar}</span>
           <span><strong>{account?.displayName ?? copy.sidebar.profileTitle}</strong><small>{copy.sidebar.profileSubtitle}</small></span>

@@ -15,6 +15,7 @@ import { DashboardAccountMenu, UserGuideIcon } from '../dashboard_account/menu.t
 import { createProviderNotificationsLoader, type ProviderNotificationsLoader } from './notifications-data.ts';
 import type { NotificationListData } from '@sadat-real-estate/contracts';
 import { providerPropertyOpenPath } from './property-path.ts';
+import { DashboardLanguage, useDashboardNavigation } from '../dashboard_account/chrome.tsx';
 
 export type ProviderOverviewViewState = ProviderOverviewBaseState;
 
@@ -104,7 +105,7 @@ function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: s
 export function ProviderNavigation({ locale, activePath, authClient, unreadCount = 0 }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined; readonly unreadCount?: number }) {
   const copy = getProviderCopy(locale);
   const [signingOut, setSigningOut] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { open: mobileMenuOpen, setOpen: setMobileMenuOpen } = useDashboardNavigation();
   const [providerType, setProviderType] = useState<ProviderType | undefined>();
   const [applicationStatus, setApplicationStatus] = useState<ProviderOverviewData['application']['status'] | undefined>(() => {
     const user = authClient?.getSnapshot?.().user;
@@ -144,21 +145,21 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
   };
   return (
     <>
-      <header className="provider-dashboard__topbar">
-        <button className="provider-dashboard__menu-button" type="button" aria-expanded={mobileMenuOpen} aria-controls="provider-navigation-list" onClick={() => setMobileMenuOpen(open => !open)}>
+      <header className="provider-dashboard__topbar" data-dashboard-header="true">
+        <div className="dashboard-header-actions">
+        <button className="provider-dashboard__menu-button" type="button" aria-expanded={mobileMenuOpen} aria-controls="provider-dashboard-navigation" onClick={() => setMobileMenuOpen(open => !open)}>
           <img src={`${providerNavigationAssetRoot}/menu.svg`} alt="" width="20" height="20" />
           <span className="a11y-visually-hidden">{locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu'}</span>
         </button>
-        <span className="provider-dashboard__mobile-brand"><strong>{copy.overview.eyebrow}</strong><img src="/assets/sadat-real-estate-logo.png" alt="" width="24" height="24" /></span>
-        <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
-        <span className="provider-dashboard__topbar-spacer" />
-        <DashboardAccountMenu locale={locale} settingsHref={localeForProviderPath(locale, '/provider/settings')} guideHref={localeForProviderPath(locale, '/provider/user-guide')} signingOut={signingOut} onSignOut={signOut}><span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span></DashboardAccountMenu>
         {applicationStatus === undefined || applicationStatus === 'approved' ? <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
           <img src={navigationIcons.notifications.default} alt="" width="18" height="18" />{unreadCount > 0 ? <span className="provider-dashboard__notification-count">{new Intl.NumberFormat(locale).format(unreadCount)}</span> : null}
         </a> : null}
+        <DashboardAccountMenu locale={locale} settingsHref={localeForProviderPath(locale, '/provider/settings')} guideHref={localeForProviderPath(locale, '/provider/user-guide')} signingOut={signingOut} onSignOut={signOut}><span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span></DashboardAccountMenu>
+        </div>
+        <a className="dashboard-header-brand" href={localeForProviderPath(locale, '/')} aria-label={websiteLabel}><img src="/assets/sadat-real-estate-logo.png" alt="" width="56" height="49" /></a>
       </header>
       {mobileMenuOpen ? <button className="provider-dashboard__navigation-backdrop" type="button" aria-label={locale === 'ar' ? 'إغلاق قائمة التنقل' : 'Close navigation menu'} onClick={() => setMobileMenuOpen(false)} /> : null}
-      <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow} data-mobile-open={mobileMenuOpen ? 'true' : undefined}>
+      <nav id="provider-dashboard-navigation" className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow} data-mobile-open={mobileMenuOpen ? 'true' : undefined}>
         <div className="provider-dashboard__brand">
           <img src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
         </div>
@@ -192,6 +193,7 @@ export function ProviderNavigation({ locale, activePath, authClient, unreadCount
           </li>
         </ul>
         <footer className="provider-dashboard__navigation-footer">
+          <DashboardLanguage locale={locale} />
           <div className="provider-dashboard__navigation-profile"><strong>{providerLabel}</strong><small>{locale === 'ar' ? 'حساب مزود عقار' : 'Provider account'}</small></div>
           <button type="button" onClick={signOut} disabled={signingOut}><img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="16" height="16" />{logoutLabel}</button>
         </footer>

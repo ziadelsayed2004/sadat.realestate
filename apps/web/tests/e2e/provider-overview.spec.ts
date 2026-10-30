@@ -283,14 +283,14 @@ test.describe('PRV-01 Provider Overview', () => {
     expect(contentBox).not.toBeNull();
     expect(navigationBox?.width).toBe(240);
     expect(navigationBox?.x).toBe(locale === 'ar' ? 1337 : 0);
-    expect(topbarBox?.width).toBe(1337);
-    expect(topbarBox?.height).toBe(56);
+    expect(topbarBox?.width).toBe(1577);
+    expect(topbarBox?.height).toBe(64);
     expect(contentBox?.width).toBe(1337);
     expect(insightsBox?.height).toBe(277);
     expect(chartBox?.y).toBe(quickActionsBox?.y);
     expect(chartBox?.height).toBe(277);
-    await expect(page.locator('.provider-dashboard__website-link')).toBeVisible();
-    await expect(page.locator('.provider-dashboard__website-link')).toHaveAttribute('href', `/?lang=${locale}`);
+    await expect(page.locator('[data-provider-nav="website"] a')).toBeVisible();
+    await expect(page.locator('[data-provider-nav="website"] a')).toHaveAttribute('href', `/?lang=${locale}`);
     await expect(metricGrid).toHaveCSS('grid-template-columns', '313.25px 313.25px 313.25px 313.25px');
     await page.screenshot({ path: testInfo.outputPath(`provider-1577-${locale}.png`), fullPage: true });
   });
@@ -318,52 +318,18 @@ test.describe('PRV-01 Provider Overview', () => {
     await expect(publishedRow.locator('td:last-child a')).toHaveAttribute('href', publishedHref);
     await expect(publishedRow.locator('td:last-child a')).toHaveText(locale === 'ar' ? 'فتح العقار' : 'Open property');
 
-    if (testInfo.project.name.includes('mobile')) {
-      await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '56px');
-      await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('position', 'fixed');
-      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(4);
-      const metricColumns = await page.locator('.provider-dashboard__metric-grid').evaluate(element =>
-        getComputedStyle(element).gridTemplateColumns.split(' ').map(value => Number.parseFloat(value))
-      );
-      const expectedColumnWidth = (viewportWidth - 40) / 2;
-      expect(metricColumns).toHaveLength(2);
-      expect(metricColumns[0]).toBeCloseTo(expectedColumnWidth, 1);
-      expect(metricColumns[1]).toBeCloseTo(expectedColumnWidth, 1);
-      const menu = page.locator('.provider-dashboard__menu-button');
-      await menu.click();
-      await expect(menu).toHaveAttribute('aria-expanded', 'true');
-      await expect(page.locator('.provider-dashboard__navigation li:visible')).toHaveCount(12);
-      await expect(page.locator('.provider-dashboard__mobile-website a')).toBeVisible();
-      await expect(page.locator('.provider-dashboard__mobile-website a')).toHaveAttribute('href', `/?lang=${locale}`);
-      await page.locator('.provider-dashboard__navigation').screenshot({ path: testInfo.outputPath(`provider-navigation-${locale}.png`) });
-      await page.locator('.provider-dashboard__navigation-backdrop').click({ position: { x: 2, y: 300 } });
-      await expect(menu).toHaveAttribute('aria-expanded', 'false');
-      const navigation = page.locator('.provider-dashboard__navigation');
-      for (const height of [844, 650, 844]) {
-        await page.setViewportSize({ width: viewportWidth, height });
-        for (const scroll of [0, 450, 900, 300, 50_000]) {
-          await page.evaluate(y => window.scrollTo(0, y), scroll);
-          await expect.poll(async () => {
-            const box = (await navigation.boundingBox())!;
-            return Math.abs(box.y + box.height - height);
-          }).toBeLessThanOrEqual(1);
-          for (const link of await navigation.locator('li:visible a').all()) {
-            const box = (await link.boundingBox())!;
-            const barBox = (await navigation.boundingBox())!;
-            expect(box.y).toBeGreaterThanOrEqual(barBox.y);
-            expect(box.y + box.height).toBeLessThanOrEqual(height);
-          }
-        }
-        const lastRow = page.locator('.provider-dashboard__recent tbody tr').last();
-        const rowBox = (await lastRow.boundingBox())!;
-        const barBox = (await navigation.boundingBox())!;
-        expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(barBox.y);
-      }
-      await page.screenshot({ path: testInfo.outputPath(`provider-navigation-scrolled-${locale}.png`) });
-    } else {
-      await expect(page.locator('.provider-dashboard__navigation')).toHaveCSS('width', '72px');
-      await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '64px');
-      expect(geometry.columns).toContain('72px');
-    }
+    await expect(page.locator('.provider-dashboard__topbar')).toHaveCSS('height', '64px');
+    const navigation = page.locator('.provider-dashboard__navigation');
+    const menu = page.locator('.provider-dashboard__menu-button');
+    await expect(navigation).toBeHidden();
+    await menu.click();
+    await expect(menu).toHaveAttribute('aria-expanded', 'true');
+    await expect(navigation).toBeVisible();
+    await expect(navigation.locator('[data-provider-nav="website"] a')).toHaveAttribute('href', `/?lang=${locale}`);
+    await expect(navigation.locator('.dashboard-sidebar-language')).toBeVisible();
+    await navigation.screenshot({ path: testInfo.outputPath(`provider-navigation-${locale}.png`) });
+    await page.keyboard.press('Escape');
+    await expect(menu).toHaveAttribute('aria-expanded', 'false');
+    await expect(navigation).toBeHidden();
   });
 });

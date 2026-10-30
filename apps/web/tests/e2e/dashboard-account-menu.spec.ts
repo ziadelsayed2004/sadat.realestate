@@ -21,6 +21,62 @@ async function setup(page: Page, account: typeof accounts[number], locale: 'ar' 
 }
 
 for (const account of accounts) {
+  test(`${account} keeps dashboard controls together and language in the sidebar`, async ({ page }) => {
+    const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+    const role = await setup(page, account, locale);
+    const path = `/${role}/settings${role === 'admin' ? '/platform' : ''}`;
+    for (const width of [320, 820, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`${path}?lang=${locale}`);
+      const header = page.locator('[data-dashboard-header]');
+      await expect(header).toBeVisible();
+      await expect(header.locator('[data-custom-locale-switcher]')).toHaveCount(0);
+      const actions = header.locator('.dashboard-header-actions');
+      const toggle = actions.locator('button[aria-controls]').first();
+      const bell = actions.locator(role === 'admin' ? '.admin-attention__bell' : `.${role}-dashboard__topbar-notifications`);
+      const accountMenu = actions.locator('.dashboard-account__trigger');
+      const sidebar = page.locator(`#${await toggle.getAttribute('aria-controls')}`);
+      await expect(toggle).toHaveAttribute('aria-expanded', width > 1100 ? 'true' : 'false');
+      const controls = await Promise.all([toggle.boundingBox(), bell.boundingBox(), accountMenu.boundingBox()]);
+      for (const box of controls) {
+        expect(box).not.toBeNull();
+        expect(box!.x).toBeGreaterThanOrEqual(0);
+        expect(box!.x + box!.width).toBeLessThanOrEqual(width);
+        expect(box!.height).toBeGreaterThanOrEqual(44);
+      }
+      const [menuBox, bellBox, accountBox] = controls;
+      if (locale === 'ar') {
+        expect(menuBox!.x).toBeGreaterThanOrEqual(bellBox!.x + bellBox!.width);
+        expect(bellBox!.x).toBeGreaterThanOrEqual(accountBox!.x + accountBox!.width);
+        expect(width - menuBox!.x - menuBox!.width).toBeLessThanOrEqual(24);
+      } else {
+        expect(menuBox!.x + menuBox!.width).toBeLessThanOrEqual(bellBox!.x);
+        expect(bellBox!.x + bellBox!.width).toBeLessThanOrEqual(accountBox!.x);
+        expect(menuBox!.x).toBeLessThanOrEqual(24);
+      }
+      await accountMenu.click();
+      await expect(page.getByRole('menu')).toBeVisible();
+      await page.keyboard.press('Escape');
+      // Open the compact drawer without changing the desktop rail state.
+      if (await toggle.getAttribute('aria-expanded') === 'false') await toggle.click();
+      await expect(sidebar).toBeVisible();
+      await toggle.click();
+      await expect(sidebar).toBeHidden();
+      await toggle.click();
+      await expect(sidebar).toBeVisible();
+      const language = sidebar.locator('.dashboard-sidebar-language');
+      await language.scrollIntoViewIfNeeded();
+      await expect(language).toBeVisible();
+      await language.locator('.custom-locale-pill-btn').click();
+      await expect(language.getByRole('listbox')).toBeVisible();
+      await page.screenshot({ path: test.info().outputPath(`header-${width}.png`) });
+      await language.getByRole('listbox').getByRole('option', { name: locale === 'ar' ? 'English' : 'العربية', exact: true }).click();
+      await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'ltr' : 'rtl');
+      await expect(page).toHaveURL(new RegExp(`lang=${locale === 'ar' ? 'en' : 'ar'}`));
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    }
+  });
+
   test(`${account} has a guide icon, a working account dropdown and readable settings`, async ({ page }) => {
     const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
     const role = await setup(page, account, locale);

@@ -1,5 +1,5 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import { createContext, useContext, type ReactNode, useEffect, useState } from 'react';
+import { createContext, useContext, type ReactNode, useState } from 'react';
 import { BrandMark, type DesignAssetCatalog } from '../design_system/index.ts';
 import type { FoundationCopy } from '../frontend_foundation/locale.js';
 import { directionForLocale } from '../frontend_foundation/locale.js';
@@ -11,6 +11,7 @@ import { DashboardAccountMenu } from '../dashboard_account/menu.tsx';
 import { AdminSectionSearch } from './admin-section-search.tsx';
 import { AdminAccountContext, AdminAccountProvider } from './admin-account.tsx';
 import type { AuthSnapshot } from '../auth/store.ts';
+import { DashboardLocaleContext, useDashboardNavigation } from '../dashboard_account/chrome.tsx';
 
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
@@ -52,7 +53,7 @@ function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
 }
 
 function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
-  const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
+  const { open: adminSidebarOpen, setOpen: setAdminSidebarOpen } = useDashboardNavigation(kind === 'admin');
   const [signingOut, setSigningOut] = useState(false);
   const account = useContext(AdminAccountContext);
   const signOut = () => {
@@ -65,24 +66,6 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const adminHeader = kind === 'admin' ? copy.adminHeader : undefined;
-  useEffect(() => {
-    if (kind !== 'admin') return;
-    const compactQuery = window.matchMedia('(max-width: 1100px)');
-    const closeForDesktop = (event: MediaQueryListEvent) => { if (!event.matches) setAdminSidebarOpen(false); };
-    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setAdminSidebarOpen(false); };
-    compactQuery.addEventListener('change', closeForDesktop);
-    document.addEventListener('keydown', closeOnEscape);
-    return () => {
-      compactQuery.removeEventListener('change', closeForDesktop);
-      document.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [kind]);
-  useEffect(() => {
-    if (kind !== 'admin' || !adminSidebarOpen || !window.matchMedia('(max-width: 1100px)').matches) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previousOverflow; };
-  }, [adminSidebarOpen, kind]);
   const body = (
     <main id="main-content" className="app-main" tabIndex={-1}>
       {children}
@@ -91,6 +74,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
 
   return (
     <RouteShellAuthContext.Provider value={authClient}>
+      <DashboardLocaleContext.Provider value={onLocaleChange}>
       <AdminAttentionProvider enabled={kind === 'admin'} authorization={authClient}>
       <div
         className={`app-shell route-shell route-shell--${kind} surface-${route.surface}`}
@@ -112,8 +96,8 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
         data-surface={route.surface}
         dir={directionForLocale(locale)}
       >
-        <header className="app-header route-shell__header">
-        <BrandMark label={copy.brand} assets={assets} />
+        <header className="app-header route-shell__header" data-dashboard-header={kind === 'admin' || undefined}>
+        {kind !== 'admin' ? <BrandMark label={copy.brand} assets={assets} /> : null}
         {adminHeader === undefined ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {kind === 'auth' ? null : <>
@@ -123,11 +107,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
           </div>
         ) : (
           <div className="admin-shell-header" data-admin-header="true">
-            <DashboardAccountMenu locale={locale} triggerClassName="admin-shell-header__identity" settingsHref={`/admin/settings?lang=${locale}`} settingsLabel={locale === 'ar' ? 'الإعدادات العامة' : 'General settings'} guideHref={`/admin/user-guide?lang=${locale}`} signingOut={signingOut} onSignOut={signOut}>
-              <span aria-hidden="true" className="admin-shell-header__avatar">{account?.displayName.slice(0, 1) ?? 'م'}</span>
-              <span className="admin-shell-header__identity-copy"><strong>{account?.displayName ?? adminHeader.role}</strong><small>{surfaceLabel}</small></span>
-            </DashboardAccountMenu>
-            <AdminSectionSearch locale={locale} label={adminHeader.searchLabel} placeholder={adminHeader.search} />
+            <div className="dashboard-header-actions">
             <button
               aria-controls="admin-dashboard-navigation"
               aria-expanded={adminSidebarOpen}
@@ -139,10 +119,16 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
             >
               <span aria-hidden="true" className="admin-shell-header__menu-glyph"><i /><i /><i /></span>
             </button>
-            <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
             <AdminAttentionBell locale={locale} />
+            <DashboardAccountMenu locale={locale} triggerClassName="admin-shell-header__identity" settingsHref={`/admin/settings?lang=${locale}`} settingsLabel={locale === 'ar' ? 'الإعدادات العامة' : 'General settings'} guideHref={`/admin/user-guide?lang=${locale}`} signingOut={signingOut} onSignOut={signOut}>
+              <span aria-hidden="true" className="admin-shell-header__avatar">{account?.displayName.slice(0, 1) ?? 'م'}</span>
+              <span className="admin-shell-header__identity-copy"><strong>{account?.displayName ?? adminHeader.role}</strong><small>{surfaceLabel}</small></span>
+            </DashboardAccountMenu>
+            </div>
+            <AdminSectionSearch locale={locale} label={adminHeader.searchLabel} placeholder={adminHeader.search} />
           </div>
         )}
+        {kind === 'admin' ? <BrandMark label={copy.brand} assets={assets} /> : null}
         </header>
         {kind === 'admin' ? <button aria-label={adminHeader?.closeMenu} className="admin-dashboard__navigation-backdrop" data-testid="admin-sidebar-backdrop" onClick={() => setAdminSidebarOpen(false)} type="button" /> : null}
         {dashboard ? (
@@ -155,6 +141,7 @@ function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleCha
         ) : body}
       </div>
       </AdminAttentionProvider>
+      </DashboardLocaleContext.Provider>
     </RouteShellAuthContext.Provider>
   );
 }

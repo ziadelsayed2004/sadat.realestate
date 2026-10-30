@@ -124,17 +124,12 @@ test.describe('F4 Provider Dashboard QA', () => {
       const { viewportWidth } = shellGeometry;
       if (viewportWidth > 1100) {
         await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeVisible();
-        await expect(page.locator('.provider-dashboard__navigation-footer button'), routeCase.label).toBeVisible();
+        await expect(page.locator('.provider-dashboard__navigation-footer > button'), routeCase.label).toBeVisible();
         expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(240, 0);
-      } else if (viewportWidth > 620) {
-        await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeVisible();
-        await expect(page.locator('.provider-dashboard__navigation-footer'), routeCase.label).toBeHidden();
-        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(72, 0);
       } else {
-        await expect(page.locator('.provider-dashboard__navigation-footer'), routeCase.label).toBeHidden();
-        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(viewportWidth, 0);
+        await expect(page.locator('.provider-dashboard__navigation'), routeCase.label).toBeHidden();
       }
-      expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(viewportWidth > 620 && viewportWidth <= 1100 ? 64 : 56, 0);
+      expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(64, 0);
       expect(shellGeometry.documentWidth, `${routeCase.label}: ${JSON.stringify(shellGeometry)}`).toBeLessThanOrEqual(shellGeometry.viewportWidth);
 
       await expect(page.locator('.a11y-skip-link')).toHaveCount(0);
@@ -143,6 +138,7 @@ test.describe('F4 Provider Dashboard QA', () => {
       await mainTarget.focus();
   await expect(mainTarget).toBeFocused();
       const firstNavigationLink = page.locator('.provider-dashboard__navigation a:visible').first();
+      if (viewportWidth <= 1100) await page.locator('.provider-dashboard__menu-button').click();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink).toBeFocused();
     });

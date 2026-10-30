@@ -1,3 +1,5 @@
+@import './navigation.css';
+
 .dashboard-account { position: relative; flex: 0 0 auto; min-inline-size: 0; }
 .dashboard-account__trigger { display: flex; align-items: center; gap: .4rem; min-block-size: 44px; min-inline-size: 44px; padding: .25rem; border: 0; border-radius: .75rem; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
 .dashboard-account__chevron { flex: 0 0 14px; }
@@ -13,19 +15,48 @@
 .dashboard-account .provider-dashboard__topbar-avatar { display: grid; }
 @media (max-width: 760px) { .admin-shell-header__identity-copy { max-inline-size: 5rem; white-space: normal; } }
 @media (max-width: 640px) { .seeker-dashboard__topbar-profile .seeker-dashboard__account-copy { display: none; } }
+
+/* One reading order for every dashboard, mirrored by the selected language. */
+.route-shell [data-dashboard-header] {
+  display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;
+  direction: inherit; gap: clamp(.75rem, 2vw, 2rem); box-sizing: border-box;
+  position: sticky; inset-block-start: 0; z-index: 60;
+  grid-column: 1 / -1; grid-row: 1; block-size: 64px; min-block-size: 64px;
+  padding: 8px clamp(12px, 2vw, 24px); background: #fff;
+  border-block-end: 1px solid #e4e7e1;
+}
+.route-shell [data-dashboard-header] .admin-shell-header {
+  display: flex; flex: 1; justify-content: flex-start; min-inline-size: 0; gap: inherit; direction: inherit;
+}
+.route-shell [data-dashboard-header] .dashboard-header-actions {
+  display: flex; flex: 0 1 auto; align-items: center; gap: 10px; min-inline-size: 0;
+}
+.route-shell [data-dashboard-header] :is(.admin-shell-header__menu, .provider-dashboard__menu-button, .seeker-dashboard__menu-button, .admin-attention__bell, .provider-dashboard__topbar-notifications, .seeker-dashboard__topbar-notifications) {
+  position: relative; inset: auto; display: grid; place-items: center; flex: 0 0 44px;
+  inline-size: 44px; block-size: 44px; margin: 0; padding: 0; box-sizing: border-box;
+  border: 1px solid #e5dcc8; border-radius: 13px; background: #fff; color: #1b2942;
+  box-shadow: none; cursor: pointer; order: 0;
+}
+.route-shell [data-dashboard-header] .dashboard-account { flex: 0 1 auto; }
+.route-shell [data-dashboard-header] .dashboard-account__trigger { direction: inherit; min-inline-size: 44px; gap: 8px; }
+.route-shell [data-dashboard-header] :is(.admin-shell-header__avatar, .provider-dashboard__topbar-avatar, .seeker-dashboard__avatar) {
+  display: grid; flex: 0 0 36px; inline-size: 36px; block-size: 36px;
+  border: 0; border-radius: 50%; background: #e4eee9; color: #155b4f;
+}
+.route-shell [data-dashboard-header] :is(.admin-shell-header__identity-copy, .seeker-dashboard__account-copy) {
+  display: grid; max-inline-size: 10rem; min-inline-size: 0; text-align: start; white-space: nowrap;
+}
+.route-shell [data-dashboard-header] :is(.admin-shell-header__identity-copy, .seeker-dashboard__account-copy) strong { overflow: hidden; text-overflow: ellipsis; font-size: .8rem; }
+.route-shell [data-dashboard-header] :is(.admin-shell-header__search, .seeker-dashboard__search) { flex: 1; max-inline-size: 540px; min-inline-size: 0; margin-inline: auto; direction: inherit; }
+.route-shell [data-dashboard-header] :is(.brand, .dashboard-header-brand) { display: flex; flex: 0 0 auto; margin-inline-start: auto; align-items: center; }
+.route-shell [data-dashboard-header] :is(.brand-image, .dashboard-header-brand img) { display: block; inline-size: auto; block-size: 46px; max-inline-size: 60px; object-fit: contain; }
+.dashboard-sidebar-language { display: grid; gap: 6px; padding-block: 10px; border-block-end: 1px solid #edf0eb; margin-block-end: 8px; }
+.dashboard-sidebar-language > span { color: #7c8794; font-size: .75rem; text-align: start; }
+.dashboard-sidebar-language .custom-locale-switcher { inline-size: 100%; }
+.dashboard-sidebar-language .custom-locale-pill-btn { inline-size: 100%; justify-content: space-between; min-block-size: 44px; }
+.dashboard-sidebar-language .custom-locale-dropdown-menu { min-inline-size: 100%; }
 @media (max-width: 760px) {
-  .route-shell--admin .admin-shell-header { gap: 6px; }
-  .route-shell--admin .admin-shell-header__menu { position: static; flex: 0 0 44px; }
-}
-@media (max-width: 640px) {
-  .seeker-dashboard[dir="rtl"] .seeker-dashboard__topbar { grid-template-columns: auto minmax(0, 1fr) auto; }
-  .seeker-dashboard__topbar-profile .dashboard-account__chevron { display: none; }
-}
-@media (max-width: 480px) {
-  .admin-shell-header .dashboard-account__chevron,
-  .admin-shell-header .locale-pill-globe { display: none; }
-  .admin-shell-header .custom-locale-pill-btn { padding-inline: 8px; gap: 6px; }
-}
-@media (max-width: 360px) {
-  .admin-shell-header .admin-shell-header__identity-copy { display: none; }
+  .route-shell [data-dashboard-header] :is(.admin-shell-header__search, .seeker-dashboard__search) { display: none; }
+  .route-shell [data-dashboard-header] :is(.admin-shell-header__identity-copy, .seeker-dashboard__account-copy, .dashboard-account__chevron) { display: none; }
+  .route-shell [data-dashboard-header] .dashboard-header-actions { gap: 8px; }
 }

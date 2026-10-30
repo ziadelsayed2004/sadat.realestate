@@ -226,7 +226,7 @@
 }
 .provider-dashboard__navigation-footer .provider-dashboard__website-link:hover,
 .provider-dashboard__navigation-footer .provider-dashboard__website-link:focus-visible { background: #f3f4f6; color: #17233d; }
-.provider-dashboard__navigation-footer button {
+.provider-dashboard__navigation-footer > button {
   display: flex;
   align-items: center;
   gap: 8px;

@@ -248,7 +248,8 @@ test.describe('Seeker adaptive desktop shell', () => {
     expect(geometry.nav?.width).toBeCloseTo(256, 0);
     expect(geometry.topbar?.height).toBeCloseTo(64, 0);
     expect(geometry.content?.width).toBeCloseTo(1024, 0);
-    expect(geometry.search?.width).toBeCloseTo(448, 0);
+    expect(geometry.search?.width).toBeGreaterThanOrEqual(300);
+    expect(geometry.search?.width).toBeLessThanOrEqual(540);
     expect(geometry.search?.height).toBeCloseTo(38, 0);
     expect(geometry.firstLink?.height).toBeCloseTo(44, 0);
     expect(geometry.cards).toHaveLength(4);

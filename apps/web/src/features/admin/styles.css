@@ -573,6 +573,8 @@
 @media (min-width: 1101px) {
   .route-shell--admin > .route-shell__header { position: sticky; top: 0; z-index: 30; height: 64px; flex-wrap: nowrap; }
   .admin-dashboard__navigation { top: 64px; height: calc(100dvh - 64px); }
+  .route-shell--admin[data-admin-sidebar-open="false"] .route-shell__body > .app-main > :has(> .admin-dashboard__navigation) { grid-template-columns: minmax(0, 1fr); }
+  .route-shell--admin[data-admin-sidebar-open="false"] .admin-dashboard__navigation { display: none; }
 }
 
 @media (max-width: 1100px) {

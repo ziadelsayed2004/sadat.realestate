@@ -1,0 +1,43 @@
+/* Dashboard navigation follows the header menu on both sides of the breakpoint. */
+.route-shell .provider-dashboard { grid-template-rows: 64px minmax(calc(100dvh - 64px), auto); padding-block-end: 0; }
+.route-shell .provider-dashboard > .provider-dashboard__navigation {
+  grid-column: 1; grid-row: 2; position: sticky; inset: auto; inset-block-start: 64px;
+  display: flex; flex-direction: column; min-block-size: 0; block-size: calc(100dvh - 64px);
+  max-block-size: calc(100dvh - 64px); inline-size: auto; padding: 0; overflow: auto;
+  border-radius: 0; box-shadow: none;
+}
+.route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__navigation-footer { display: grid; }
+.route-shell .provider-dashboard > .provider-dashboard__navigation ul { flex: 1 0 auto; }
+.route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__mobile-logout { display: none; }
+@media (min-width: 1101px) {
+  .route-shell .provider-dashboard:has(> .provider-dashboard__navigation:not([data-mobile-open])) { grid-template-columns: 0 minmax(0, 1fr); }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation:not([data-mobile-open]) { display: none; }
+  .route-shell .provider-dashboard__navigation-backdrop { display: none; }
+  .route-shell .seeker-dashboard { grid-template-rows: 64px minmax(calc(100dvh - 64px), auto); }
+  .route-shell .seeker-dashboard > .seeker-dashboard__nav { grid-row: 2; position: sticky; inset-block-start: 64px; min-block-size: 0; block-size: calc(100dvh - 64px); max-block-size: calc(100dvh - 64px); overflow: auto; }
+  .route-shell .seeker-dashboard:has(> .seeker-dashboard__nav:not(.is-open)) { grid-template-columns: 0 minmax(0, 1fr); }
+  .route-shell .seeker-dashboard > .seeker-dashboard__nav:not(.is-open) { display: none; }
+}
+@media (max-width: 1100px) {
+  .route-shell .provider-dashboard { grid-template-columns: minmax(0, 1fr); }
+  .route-shell .provider-dashboard > .provider-dashboard__content { grid-column: 1; grid-row: 2; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation {
+    position: fixed; inset: 64px auto 0; inset-inline-start: 0; z-index: 55;
+    inline-size: min(20rem, calc(100vw - 48px)); background: #fff;
+    visibility: hidden; pointer-events: none; transform: translateX(-104%);
+    border-inline-end: 1px solid #e4e7e1;
+  }
+  .route-shell[dir="rtl"] .provider-dashboard > .provider-dashboard__navigation { transform: translateX(104%); }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation[data-mobile-open] { transform: none; visibility: visible; pointer-events: auto; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation ul { display: grid; grid-template-columns: 1fr; padding: 8px; overflow: visible; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation li { display: block; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation a { justify-content: flex-start; flex-direction: row; min-block-size: 44px; block-size: auto; padding: 8px 12px; gap: 12px; font-size: .9rem; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation a > span:not([class]) { display: block; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__brand { display: flex; min-block-size: 64px; justify-content: center; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__brand img { block-size: 48px; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__navigation-title { display: block; }
+  .route-shell .provider-dashboard > .provider-dashboard__navigation .provider-dashboard__notification-count { position: static; margin-inline-start: auto; }
+  .route-shell .provider-dashboard__navigation-backdrop { display: block; position: fixed; inset: 64px 0 0; z-index: 50; border: 0; background: rgb(23 35 61 / 28%); }
+  .route-shell .seeker-dashboard > .seeker-dashboard__nav { inset-block-start: 64px; min-block-size: 0; block-size: calc(100dvh - 64px); z-index: 55; box-sizing: border-box; }
+  .route-shell .seeker-dashboard > .seeker-dashboard__backdrop { inset-block-start: 64px; z-index: 50; }
+}
