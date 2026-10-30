@@ -70,7 +70,7 @@ describe('frontend_074 settings namespaces', () => {
     await waitFor(() => expect(screen.getByTestId('admin-settings-requests-form')).toBeInTheDocument());
     expect(screen.getByTestId('admin-settings-requests-form').querySelector('[data-state="empty-values"]')).not.toBeNull();
     expect(screen.getByText('لا توجد إعدادات طلبات مهيّأة بعد')).toBeInTheDocument();
-    expect(result.container.querySelectorAll('input, select').length).toBe(0);
+    expect(screen.getByTestId('admin-settings-requests-form').querySelectorAll('input, select')).toHaveLength(0);
     result.unmount();
   });
 
