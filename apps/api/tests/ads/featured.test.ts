@@ -46,6 +46,22 @@ test('an unapproved advertiser cannot publish; external links cannot be a featur
   assert.equal(adBannerCreateSchema.safeParse({ placementKey: 'homepage.featured', title: { en: 'Ad' }, startAt: '2026-10-10T00:00:00Z', endAt: '2026-10-11T00:00:00Z', featured: { advertiserProviderId: application.toHexString(), destination: { kind: 'external', id: 'https://outside.invalid' } } }).success, false);
 });
 
+test('featured advertiser identity uses the logo and never substitutes the company cover', async () => {
+  const db = fixture();
+  const company = db.rows.organizations![0]!;
+  const logoUrl = '/api/v1/public/organization-photos/eeeeeeeeeeeeeeeeeeeeeeee';
+  company.logoUrl = logoUrl;
+  const creative = { advertiserProviderId: account.toHexString(), destination: { kind: 'property' as const, id: owned.toHexString() } };
+  assert.equal((await featuredOptions(db.connection, account.toHexString())).advertisers[0]?.imageUrl, logoUrl);
+  assert.equal((await resolveFeatured(db.connection, creative)).advertiser.imageUrl, logoUrl);
+  for (const missingLogo of [undefined, null, '']) {
+    company.logoUrl = missingLogo;
+    const advertiser = (await resolveFeatured(db.connection, creative)).advertiser;
+    assert.equal(advertiser.imageUrl, undefined);
+    assert.equal(advertiser.name.en, 'Actual company');
+  }
+});
+
 test('null deletion fields do not exclude valid featured advertisers but real deletion does', async () => {
   const db = fixture();
   db.rows.users![0]!.deletedAt = null;

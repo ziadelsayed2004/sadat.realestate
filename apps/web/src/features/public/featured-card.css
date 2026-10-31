@@ -68,8 +68,7 @@
 .public-homepage__banner-provider > img {
   inline-size: 2.5rem;
   block-size: 2.5rem;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
   flex-shrink: 0;
 }
 .public-homepage__banner-verified {

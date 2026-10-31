@@ -24,11 +24,11 @@ export async function featuredAdvertiser(connection: Connection, providerId: str
   const business = applications.find(value => value.status === 'approved' && ['individual_broker', 'brokerage_office', 'developer_company'].includes(String(value.providerType)));
   if (!user || !business || !profiles.some(value => value.status === 'approved' && value.providerType === business.providerType)) return undefined;
   const ownerIds = [account, ...profiles.map(row => row._id), ...applications.map(row => row._id)];
-  const organization = await connection.collection('organizations').findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, status: 'approved' }, { projection: { _id: 1, name: 1, slug: 1, imageUrl: 1 } });
+  const organization = await connection.collection('organizations').findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, status: 'approved' }, { projection: { _id: 1, name: 1, slug: 1, logoUrl: 1 } });
   const businessName = [business?.brandName, business?.tradeName, business?.displayName, business?.legalCompanyName, business?.legalBusinessName].find(value => typeof value === 'string' && value.trim());
   const name = organization?.name ?? (typeof businessName === 'string' ? { ar: businessName.trim(), en: businessName.trim() } : undefined);
   if (!name) return undefined;
-  return { ownerIds, organization, identity: { id: account.toString(), aliases: ownerIds.map(value => value.toString()), name, ...(typeof organization?.imageUrl === 'string' ? { imageUrl: organization.imageUrl } : {}), verified: true } };
+  return { ownerIds, organization, identity: { id: account.toString(), aliases: ownerIds.map(value => value.toString()), name, ...(typeof organization?.logoUrl === 'string' && organization.logoUrl.trim() ? { imageUrl: organization.logoUrl } : {}), verified: true } };
 }
 export async function featuredOptions(connection: Connection, providerId?: string) {
   const advertisers: FeaturedOptions['advertisers'] = [];
