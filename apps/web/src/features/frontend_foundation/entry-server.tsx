@@ -15,6 +15,7 @@ export type ServerRenderSeo = PublicSeoMetadata;
 export { createRobotsTxt, createSitemapXml, loadPublicSeoSettings } from '../seo/index.ts';
 
 export interface ServerRenderOptions {
+  readonly clientAddress?: string;
   readonly priceRounding?: boolean;
   readonly acceptLanguage?: string;
   readonly preferredLocale?: string;
@@ -230,13 +231,14 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   const parsedUrl = new URL(url, 'http://sadat.local');
   const locale = resolveLocale(parsedUrl.searchParams.get('lang') ?? options.preferredLocale, options.acceptLanguage);
   const route = resolveRoute(url);
+  const apiClient = new ApiClient({ ...(options.apiOrigin ? { baseUrl: options.apiOrigin } : {}), ...(options.clientAddress ? { headers: { 'x-forwarded-for': options.clientAddress } } : {}) });
   const priceRoundingPromise = options.priceRounding !== undefined ? Promise.resolve(options.priceRounding) : options.apiOrigin && route.kind === 'matched' && route.surface === 'public'
-    ? new ApiClient({ baseUrl: options.apiOrigin }).request('/public/bootstrap', { responseSchema: publicBootstrapSuccessEnvelopeSchema, signal: AbortSignal.timeout(1_500) }).then(result => result.data.data.display.roundPropertyPrices === true).catch(() => false)
+    ? apiClient.request('/public/bootstrap', { responseSchema: publicBootstrapSuccessEnvelopeSchema, signal: AbortSignal.timeout(1_500) }).then(result => result.data.data.display.roundPropertyPrices === true).catch(() => false)
     : Promise.resolve(false);
   const copy = getFoundationCopy(locale);
   let publicSeoSettings = options.publicSeoSettings;
   const publicSeoSettingsPromise = publicSeoSettings === undefined && options.apiOrigin !== undefined && route.kind === 'matched' && route.surface === 'public'
-    ? loadPublicSeoSettings({ apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) }).catch(() => undefined)
+    ? loadPublicSeoSettings({ apiClient, apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) }).catch(() => undefined)
     : undefined;
   let homepageData = options.homepageData;
   let propertyListData = options.propertyListData;
@@ -267,7 +269,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     if (communityData === undefined && options.apiOrigin !== undefined) {
       try {
         communityData = await loadPublicCommunity({
-          apiOrigin: options.apiOrigin,
+          apiClient, apiOrigin: options.apiOrigin,
           query: parseCommunityListQuery(url),
           signal: AbortSignal.timeout(1_500)
         });
@@ -281,7 +283,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   if (route.kind === 'matched' && route.id === 'public-about') {
     if (aboutData === undefined && options.apiOrigin !== undefined) {
       try {
-        aboutData = await loadPublicAbout({ apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) });
+        aboutData = await loadPublicAbout({ apiClient, apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) });
       } catch {
         aboutInitialState = 'retry';
       }
@@ -292,7 +294,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   if (route.kind === 'matched' && route.id === 'public-team') {
     if (teamData === undefined && options.apiOrigin !== undefined) {
       try {
-        teamData = await loadPublicTeam({ apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) });
+        teamData = await loadPublicTeam({ apiClient, apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) });
       } catch {
         teamInitialState = 'retry';
       }
@@ -303,7 +305,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
   if (homepageData === undefined && options.apiOrigin !== undefined && route.kind === 'matched' && route.id === 'public-home') {
     try {
       homepageData = await loadPublicHomepage({
-        apiOrigin: options.apiOrigin,
+        apiClient, apiOrigin: options.apiOrigin,
         signal: AbortSignal.timeout(1_500)
       });
     } catch {
@@ -316,7 +318,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     if (propertyListData === undefined && options.apiOrigin !== undefined) {
       try {
         propertyListData = await loadPublicPropertyList({
-          apiOrigin: options.apiOrigin,
+          apiClient, apiOrigin: options.apiOrigin,
           query: propertyListQuery,
           signal: AbortSignal.timeout(1_500)
         });
@@ -334,7 +336,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
       if (propertyDetailsData === undefined && options.apiOrigin !== undefined) {
         try {
           propertyDetailsData = await loadPublicPropertyDetails({
-            apiOrigin: options.apiOrigin,
+            apiClient, apiOrigin: options.apiOrigin,
             slug,
             signal: AbortSignal.timeout(1_500)
           });
@@ -357,7 +359,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     } else if (propertyComparisonData === undefined && options.apiOrigin !== undefined) {
       try {
         propertyComparisonData = await loadPublicPropertyComparison({
-          apiOrigin: options.apiOrigin,
+          apiClient, apiOrigin: options.apiOrigin,
           propertyIds,
           signal: AbortSignal.timeout(1_500)
         });
@@ -374,7 +376,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     if (developerListData === undefined && options.apiOrigin !== undefined) {
       try {
         developerListData = await loadPublicDeveloperDirectory({
-          apiOrigin: options.apiOrigin,
+          apiClient, apiOrigin: options.apiOrigin,
           query: developerListQuery,
           signal: AbortSignal.timeout(1_500)
         });
@@ -392,7 +394,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
       if (developerProfileData === undefined && options.apiOrigin !== undefined) {
         try {
           developerProfileData = await loadPublicDeveloperProfile({
-            apiOrigin: options.apiOrigin,
+            apiClient, apiOrigin: options.apiOrigin,
             slug,
             signal: AbortSignal.timeout(1_500)
           });
@@ -416,7 +418,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     if (articleListData === undefined && options.apiOrigin !== undefined) {
       try {
         articleListData = await loadPublicArticles({
-          apiOrigin: options.apiOrigin,
+          apiClient, apiOrigin: options.apiOrigin,
           query: articleListQuery,
           signal: AbortSignal.timeout(1_500)
         });
@@ -435,7 +437,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
       if (articleDetailsData === undefined && options.apiOrigin !== undefined) {
         try {
           articleDetailsData = await loadPublicArticleDetails({
-            apiOrigin: options.apiOrigin,
+            apiClient, apiOrigin: options.apiOrigin,
             slug,
             locale,
             signal: AbortSignal.timeout(1_500)
@@ -450,7 +452,7 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
         if (relatedArticles === undefined && options.apiOrigin !== undefined) {
           try {
             relatedArticles = await loadPublicArticles({
-              apiOrigin: options.apiOrigin,
+              apiClient, apiOrigin: options.apiOrigin,
               query: { locale, page: 1, limit: 20 },
               signal: AbortSignal.timeout(1_500)
             });

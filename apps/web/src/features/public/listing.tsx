@@ -2,7 +2,7 @@ import { PublicPriceRoundingContext } from './price-display.tsx';
 import { PropertyProjectLabel } from './property-project-label.tsx';
 import { PropertyViews } from './property-views.tsx';
 import { categoryImageUrl } from '../design_system/category-image.ts';
-import { useEffect, useState, useContext, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, useRef, useContext, type FormEvent, type ReactNode } from 'react';
 import type {
   PublicHomepageCategory,
   PublicPropertyListData,
@@ -27,6 +27,7 @@ import { formatMoney, localizedText, propertyFeatures } from './model.ts';
 import { publicPropertyComparisonUrl } from './compare-data.ts';
 import { publicPageState, pushPublicPage, savePublicListingFilters, savePublicListingView } from '../frontend_foundation/public-history.ts';
 import './listing.css';
+import { HomepagePriceRange } from './price-range.tsx';
 
 export type PublicPropertyListingViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
 
@@ -207,7 +208,7 @@ function ListingFilters({
   readonly copy: PublicPropertyListingCopy;
   readonly locale: SupportedLocale;
   readonly onCommit: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
-  readonly onDraftChange: (key: 'minPrice' | 'maxPrice', value: string) => void;
+  readonly onDraftChange: (minPrice: string, maxPrice: string) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onReset: () => void;
   readonly error: boolean;
@@ -215,6 +216,7 @@ function ListingFilters({
   readonly locations: NonNullable<PublicPropertyListData['locations']>;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const form = useRef<HTMLFormElement>(null);
   useEffect(() => {
     const restore = () => { if (window.location.pathname === '/properties') setExpanded(publicPageState()?.filtersExpanded === true); };
     restore();
@@ -239,7 +241,7 @@ function ListingFilters({
         <button type="button" className="public-property-listing__filters-toggle" aria-expanded={expanded} aria-controls="public-property-listing-filter-form" onClick={toggleExpanded}>{expanded ? (locale === 'ar' ? 'إخفاء الفلاتر' : 'Hide filters') : (locale === 'ar' ? 'عرض الفلاتر' : 'Show filters')}</button>
         <button type="button" className="public-property-listing__reset" onClick={onReset}>{copy.resetFilters}</button>
       </div>
-      <form id="public-property-listing-filter-form" onSubmit={onSubmit} aria-label={copy.filtersTitle}>
+      <form ref={form} id="public-property-listing-filter-form" onSubmit={onSubmit} aria-label={copy.filtersTitle}>
         <fieldset className="public-property-listing__filter-chips">
           <legend>{copy.transactionLabel}</legend>
           <label><input type="radio" name="transactionType" value="" checked={draft.transactionType === ''} onChange={() => onCommit('transactionType', '')} /> {copy.allTransactions}</label>
@@ -252,14 +254,7 @@ function ListingFilters({
           <label><input type="radio" name="installmentAvailable" value="true" checked={draft.installmentAvailable === 'true'} onChange={() => onCommit('installmentAvailable', 'true')} /> {locale === 'ar' ? 'متاح بالتقسيط' : 'Installments available'}</label>
           <label><input type="radio" name="installmentAvailable" value="false" checked={draft.installmentAvailable === 'false'} onChange={() => onCommit('installmentAvailable', 'false')} /> {locale === 'ar' ? 'بدون تقسيط' : 'No installments'}</label>
         </fieldset>
-        <div className="public-property-listing__price-range">
-          <FilterField id="public-property-min-price" label={`${copy.minPrice} (${locale === 'ar' ? 'اختياري' : 'optional'})`}>
-            <input id="public-property-min-price" name="minPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.minPrice} onChange={event => onDraftChange('minPrice', event.currentTarget.value)} />
-          </FilterField>
-          <FilterField id="public-property-max-price" label={`${copy.maxPrice} (${locale === 'ar' ? 'اختياري' : 'optional'})`}>
-            <input id="public-property-max-price" name="maxPrice" type="number" inputMode="numeric" min="0" step="1" placeholder={copy.valuePlaceholder} value={draft.maxPrice} onChange={event => onDraftChange('maxPrice', event.currentTarget.value)} />
-          </FilterField>
-        </div>
+        <HomepagePriceRange locale={locale} transactionType={draft.transactionType} minPrice={draft.minPrice} maxPrice={draft.maxPrice} onChange={onDraftChange} onApply={() => form.current?.requestSubmit()} />
         <fieldset className="public-property-listing__filter-chips public-property-listing__filter-chips--types">
           <legend>{copy.propertyType}</legend>
           <label><input type="radio" name="propertyTypeId" value="" checked={draft.propertyTypeId === ''} onChange={() => onCommit('propertyTypeId', '')} /> {copy.allKinds}</label>
@@ -525,7 +520,7 @@ export function PublicPropertyListing({
         {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={categoryImageUrl(item.imageUrl)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{locale === 'ar' ? 'إجمالي' : 'Total'} {item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
-        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onDraftChange={(key, value) => { setDraft(previous => ({ ...previous, [key]: value })); setFilterError(false); }} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
+        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onDraftChange={(minPrice, maxPrice) => { setDraft(previous => ({ ...previous, minPrice, maxPrice })); setFilterError(false); }} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">

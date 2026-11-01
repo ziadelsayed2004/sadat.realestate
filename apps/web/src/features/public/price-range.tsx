@@ -3,10 +3,11 @@ import { publicPropertySearchQuerySchema, type SupportedLocale } from '@sadat-re
 
 export interface HomepagePriceRangeProps {
   readonly locale: SupportedLocale;
-  readonly transactionType: 'sale' | 'rent';
+  readonly transactionType: '' | 'sale' | 'rent';
   readonly minPrice: string;
   readonly maxPrice: string;
   readonly onChange: (minPrice: string, maxPrice: string) => void;
+  readonly onApply?: (() => void) | undefined;
 }
 
 export function isHomepagePriceRangeValid(min: string, max: string): boolean {
@@ -15,7 +16,7 @@ export function isHomepagePriceRangeValid(min: string, max: string): boolean {
   }).success;
 }
 
-export function HomepagePriceRange({ locale, transactionType, minPrice, maxPrice, onChange }: HomepagePriceRangeProps) {
+export function HomepagePriceRange({ locale, transactionType, minPrice, maxPrice, onChange, onApply }: HomepagePriceRangeProps) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -48,7 +49,7 @@ export function HomepagePriceRange({ locale, transactionType, minPrice, maxPrice
     return () => { document.removeEventListener('pointerdown', closeOutside); document.removeEventListener('keydown', escape); };
   }, [open]);
 
-  function finish() { setOpen(false); trigger.current?.focus(); }
+  function finish() { onApply?.(); setOpen(false); trigger.current?.focus(); }
 
   return <div className="homepage-price-range" ref={root} data-open={open}>
     <input type="hidden" name="minPrice" value={minPrice} disabled={minPrice === ''} />
@@ -57,7 +58,7 @@ export function HomepagePriceRange({ locale, transactionType, minPrice, maxPrice
       <span dir={valid && minPrice !== '' && maxPrice !== '' ? 'ltr' : undefined}>{summary}</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" /></svg>
     </button>
     {open ? <section id={`${id}-panel`} className="homepage-price-range__panel" aria-label={copy.range}>
-      <header><strong>{transactionType === 'rent' ? copy.rent : copy.sale}</strong><small>{copy.unit}</small></header>
+      <header><strong>{transactionType === 'rent' ? copy.rent : transactionType === 'sale' ? copy.sale : copy.range}</strong><small>{copy.unit}</small></header>
       <p className="homepage-price-range__help">{copy.help}</p>
       <div className="homepage-price-range__sliders" dir="ltr" style={{ '--range-start': `${Math.min(100, lower / ceiling * 100)}%`, '--range-end': `${Math.min(100, upper / ceiling * 100)}%` } as CSSProperties}>
         <div className="homepage-price-range__track" aria-hidden="true" />

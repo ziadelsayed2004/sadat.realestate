@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { createSessionClient } from '../src/features/contracts/session-client.ts';
 import {
   ApiClient,
   ApiClientError,
@@ -28,6 +29,37 @@ const errorResponse = (requestId: string, code = 'TEMPORARY_UNAVAILABLE') => ({
     details: [],
     requestId
   }
+});
+
+test('default safe reads recover transient errors, but a timed-out write is never replayed', async () => {
+  let reads = 0;
+  const read = new ApiClient({ fetcher: async () => ++reads === 1 ? new Response('', { status: 503 }) : new Response(JSON.stringify(homepageResponse('recovered'))) });
+  await read.request('/public/home', { responseSchema: publicHomepageSuccessEnvelopeSchema, retry: { baseDelayMs: 0 } });
+  assert.equal(reads, 2);
+  let writes = 0;
+  const hanging = new ApiClient({ fetcher: async (_url, init) => {
+    writes++;
+    return new Promise((_resolve, reject) => init?.signal?.addEventListener('abort', () => reject(new DOMException('Timed out', 'AbortError')), { once: true }));
+  } });
+  await assert.rejects(hanging.request('/admin/properties/example', { method: 'PATCH', json: { version: 1 }, timeoutMs: 15, responseSchema: logoutSuccessEnvelopeSchema }), error => error instanceof ApiClientError && error.code === 'NETWORK_ERROR');
+  assert.equal(writes, 1);
+});
+
+test('session requests renew once after an explicit 401 and never replay forbidden or uncertain writes', async () => {
+  let token = 'Bearer old'; let renewals = 0;
+  const seen: string[] = [];
+  const apiClient = new ApiClient({ fetcher: async (_url, init) => {
+    seen.push(new Headers(init?.headers).get('authorization')!);
+    return seen.length === 1 ? new Response(JSON.stringify(errorResponse('expired')), { status: 401 }) : new Response(JSON.stringify(logoutResponse('saved')));
+  } });
+  const client = createSessionClient({ apiClient, authorization: { getAuthorizationHeader: () => token, refresh: async () => { renewals++; token = 'Bearer new'; } } });
+  await client.request('/admin/properties/example', { method: 'PATCH', json: { version: 1 }, responseSchema: logoutSuccessEnvelopeSchema });
+  assert.deepEqual(seen, ['Bearer old', 'Bearer new']);
+  assert.equal(renewals, 1);
+  let denied = 0;
+  const forbidden = createSessionClient({ apiClient: new ApiClient({ fetcher: async () => { denied++; return new Response('', { status: 403 }); } }), authorization: { getAuthorizationHeader: () => token, refresh: async () => { renewals++; } } });
+  await assert.rejects(forbidden.request('/admin/properties/example', { method: 'PATCH', responseSchema: logoutSuccessEnvelopeSchema }));
+  assert.equal(denied, 1); assert.equal(renewals, 1);
 });
 
 test('API client uses generated envelopes, one /api/v1 prefix, request IDs, JSON, and query encoding', async () => {

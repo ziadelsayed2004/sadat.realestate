@@ -1,7 +1,39 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { createServer } from 'node:http';
 
 const { render } = await import('../dist/server/entry-server.js');
+const { requestClientAddress } = await import('../client-address.mjs');
+
+test('SSR preserves the real visitor only from the trusted native proxy and rejects spoofed or malformed headers', () => {
+  const request = (peer, forwarded) => ({ socket: { remoteAddress: peer }, headers: { 'x-real-ip': forwarded } });
+  assert.equal(requestClientAddress(request('127.0.0.1', '198.51.100.1')), '198.51.100.1');
+  assert.equal(requestClientAddress(request('::ffff:127.0.0.1', '2001:db8::1')), '2001:db8::1');
+  assert.equal(requestClientAddress(request('198.51.100.2', '198.51.100.1')), '198.51.100.2');
+  assert.equal(requestClientAddress(request('127.0.0.1', '198.51.100.1, 198.51.100.2')), '127.0.0.1');
+});
+
+test('SSR forwards the visitor to every API load without exposing the address in hydrated data', async () => {
+  const addresses = [];
+  const api = createServer((request, response) => {
+    addresses.push(request.headers['x-forwarded-for']);
+    response.setHeader('content-type', 'application/json');
+    if (request.url.startsWith('/api/v1/public/properties?')) {
+      response.end(JSON.stringify({ data: { items: [], page: 1, limit: 20, total: 0 }, meta: { requestId: 'ssr-visitor-properties' } }));
+    } else {
+      response.statusCode = 404;
+      response.end('{}');
+    }
+  });
+  await new Promise(resolve => api.listen(0, '127.0.0.1', resolve));
+  try {
+    const result = await render('/properties?lang=en', { apiOrigin: `http://127.0.0.1:${api.address().port}`, clientAddress: '198.51.100.7' });
+    assert.ok(addresses.length >= 3);
+    assert.ok(addresses.every(address => address === '198.51.100.7'));
+    assert.equal(JSON.stringify(result).includes('198.51.100.7'), false);
+    assert.equal(result.statusCode, 200);
+  } finally { await new Promise(resolve => api.close(resolve)); }
+});
 
 const propertyDetailsData = {
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',

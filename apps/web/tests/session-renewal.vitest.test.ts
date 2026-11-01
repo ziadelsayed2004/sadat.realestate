@@ -56,14 +56,16 @@ it('recovers from an outage during initial restoration without another login or 
   Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
   let calls = 0;
   const client = new AuthClient({ apiClient: new ApiClient({ fetcher: async () => {
-    if (++calls === 1) throw new Error('Rolling restart');
+    if (++calls <= 2) throw new Error('Rolling restart');
     return new Response(JSON.stringify({ data: { accessToken: 'restored.admin.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: 'a'.repeat(24), roleType: 'admin', status: 'verified' } }, meta: { requestId: 'restore-retry' } }));
   } }) });
-  await expect(client.refresh()).rejects.toThrow();
+  const restoration = expect(client.refresh()).rejects.toThrow();
+  await vi.advanceTimersByTimeAsync(250);
+  await restoration;
   expect(client.getSnapshot().status).toBe('error');
   await vi.advanceTimersByTimeAsync(15_000);
   expect(client.getSnapshot().status).toBe('authenticated');
-  expect(calls).toBe(2);
+  expect(calls).toBe(3);
   client.dispose();
 });
 

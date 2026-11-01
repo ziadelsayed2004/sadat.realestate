@@ -20,6 +20,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 import type { AdminPropertyListData } from '../src/features/admin_properties/index.ts';
 import { getAdminPropertiesCopy } from '../src/features/admin_properties/copy.ts';
 import { FeaturedPropertyControl } from '../src/features/admin_properties/featured.tsx';
+import { PropertyReviewSummary } from '../src/features/admin_properties/review-summary.tsx';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 const property = propertyDataSchema.parse({
@@ -39,6 +40,13 @@ const property = propertyDataSchema.parse({
 const candidateId = 'dddddddddddddddddddddddd';
 const reportId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const properties: AdminPropertyListData = { items: [property], page: 1, limit: 20, total: 1 };
+
+it('identifies a standalone owner by account name when there is no public organization', () => {
+  const data = propertyDataSchema.parse({ ...property, source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, providerDisplayName: 'Actual property owner' });
+  renderWithLocale(<PropertyReviewSummary property={data} locale="en" status="Published" />, { locale: 'en' });
+  expect(screen.getByRole('heading', { name: 'Actual property owner' })).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Provider administration profile' })).toHaveAttribute('href', `/admin/providers/${'b'.repeat(24)}?lang=en`);
+});
 
 it('shows the actual account name alongside its type in administrative property rows', () => {
   renderWithLocale(<AdminProperties locale="en" session={session} view="list" initialProperties={{ ...properties, items: [{ ...property, providerDisplayName: 'Actual provider' }] }} />, { locale: 'en' });

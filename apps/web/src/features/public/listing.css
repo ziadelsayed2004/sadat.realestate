@@ -37,18 +37,7 @@
   line-height: 1.7;
 }
 
-.public-property-listing__price-range {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: end;
-  gap: 0.75rem;
-}
-
-.public-property-listing__price-range input {
-  inline-size: 100%;
-  direction: ltr;
-  text-align: start;
-}
+.public-property-listing__filters .homepage-price-range__panel { inline-size: 100%; }
 
 .public-property-listing__reset,
 .public-property-listing__view-toggle button {

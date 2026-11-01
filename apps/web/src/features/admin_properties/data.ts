@@ -24,7 +24,8 @@ import {
   type PropertyReview,
   type PropertyVisibility
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import type { ApiClient } from '../contracts/index.ts';
+import { createSessionClient } from '../contracts/session-client.ts';
 
 export const ADMIN_PROPERTIES_ROUTE = '/admin/properties' as const;
 export const ADMIN_PROPERTY_REVIEW_ROUTE = '/admin/properties/review' as const;
@@ -77,10 +78,8 @@ type PropertyListWithMeta = {
   readonly total: number;
 };
 
-function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
-  if (options.apiClient !== undefined) return options.apiClient;
-  const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  return new ApiClient(clientOptions);
+function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin' | 'authorization'>): Pick<ApiClient, 'request'> {
+  return createSessionClient(options);
 }
 
 function headersFor(source: AdminPropertiesAuthorizationSource | undefined): HeadersInit | undefined {

@@ -87,14 +87,16 @@ describe('provider property media, contact, and review completion', () => {
   it('shows a load failure rather than an empty review and retries only the media request', async () => {
     const fetcher = vi.fn(async (_input: RequestInfo | URL) => success({ items: [] }, 'review-media-retry'));
     fetcher.mockRejectedValueOnce(new Error('Temporary network failure'));
+    fetcher.mockRejectedValueOnce(new Error('Temporary network failure'));
+    fetcher.mockRejectedValueOnce(new Error('Temporary network failure'));
     vi.stubGlobal('fetch', fetcher);
     const copy = getProviderPropertyCompletionCopy('en');
     renderWithLocale(<ProviderPropertyCompletionWizard locale="en" session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={property()} />, { locale: 'en' });
-    await screen.findByText('Could not load existing media. Retry before editing it.');
+    await screen.findByText('Could not load existing media. Retry before editing it.', {}, { timeout: 3000 });
     expect(screen.queryByText(copy.review.noMedia)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: copy.media.retry }));
     await screen.findByText(copy.review.noMedia);
-    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(fetcher).toHaveBeenCalledTimes(4);
     expect(fetcher.mock.calls.every(([input]) => String(input).endsWith(`/provider/properties/${propertyId}/media`))).toBe(true);
   });
   it('removes public-sharing controls and clears legacy opt-ins when contact details are saved', async () => {

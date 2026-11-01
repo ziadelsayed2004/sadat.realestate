@@ -15,6 +15,9 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const session = { status: 'authenticated' as const, role: 'admin' as const };
 beforeEach(() => {
+  server.use(http.get('*/api/v1/admin/providers/:providerId/organization', () => HttpResponse.json({ data: {
+    id: provider.id, slug: 'office-provider', version: 0, name: { en: 'Provider Office' }, description: {}, imageUrl: null, logoUrl: null, status: 'approved'
+  } })));
   server.use(http.get('*/api/v1/admin/providers/:providerId/public-identity-subscription', () => HttpResponse.json({
     data: { providerId: provider.id, status: 'inactive', paymentConfirmed: false, version: 0, visible: false, canManage: false },
     meta: { requestId: 'test-account-office-identity' }
@@ -141,6 +144,7 @@ describe('Admin account and verification views', () => {
     const open = vi.spyOn(window, 'open').mockImplementation(() => null);
     const grant = vi.fn().mockResolvedValue({ url: '/api/v1/private/provider-documents/dddddddddddddddddddddddd', expiresAt: '2026-08-18T09:00:00.000Z', method: 'GET' });
     renderWithLocale(<AdminAccounts locale="en" session={session} view="providers" detailId={provider.id} initialProviderData={provider} loadDocumentAccess={grant} />, { locale: 'en' });
+    expect(await screen.findByRole('combobox', { name: /Image display/ })).toBeVisible();
     await waitFor(() => expect(screen.getByTestId(`admin-document-${provider.documents[0]!.id}`)).toBeInTheDocument());
     expect(screen.getByRole('heading', { name: 'Provider Owner', level: 1 })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: getAdminAccountsCopy('en').actions.openDocument }));

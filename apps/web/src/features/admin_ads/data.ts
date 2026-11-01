@@ -38,7 +38,8 @@ import {
   type PaymentProofData,
   type PaymentProofReview
 } from '@sadat-real-estate/contracts';
-import { ApiClient, ApiClientError, buildApiUrl, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, buildApiUrl } from '../contracts/index.ts';
+import { createSessionClient } from '../contracts/session-client.ts';
 
 export const ADMIN_ADS_REQUESTS_ROUTE = '/admin/ads/requests' as const;
 export const ADMIN_ADS_PENDING_PROOFS_ROUTE = '/admin/ads/payment-proofs/pending' as const;
@@ -106,24 +107,7 @@ export type AdminAdsLedgerLoader = (query: AdLedgerQuery, signal?: AbortSignal) 
 
 export { clientFor as createAdminSessionClient, requestOptions as adminSessionOptions };
 function clientFor(options: Pick<CommonOptions, 'apiClient' | 'apiOrigin' | 'authorization'>): Pick<ApiClient, 'request'> {
-  const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  const client = options.apiClient ?? new ApiClient(clientOptions);
-  return {
-    async request(path, request) {
-      try {
-        return await client.request(path, request);
-      } catch (error) {
-        const source = options.authorization;
-        if (!(error instanceof ApiClientError) || error.status !== 401 || !source?.refresh || !source.getAuthorizationHeader() || request.signal?.aborted) throw error;
-        await source.refresh();
-        const authorization = source.getAuthorizationHeader();
-        if (!authorization || request.signal?.aborted) throw error;
-        const headers = new Headers(request.headers);
-        headers.set('authorization', authorization);
-        return client.request(path, { ...request, headers });
-      }
-    }
-  };
+  return createSessionClient(options);
 }
 
 function headersFor(source: AdminAdsAuthorizationSource | undefined): HeadersInit | undefined {

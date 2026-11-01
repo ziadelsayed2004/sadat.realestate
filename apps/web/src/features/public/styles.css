@@ -2393,7 +2393,7 @@
   }
 }
 
-.public-homepage__search-row .homepage-price-range {
+.homepage-price-range {
   position: relative;
   min-inline-size: 0;
   color: #17233d;
@@ -2401,7 +2401,7 @@
 
 .homepage-price-range[data-open='true'] { z-index: 210; }
 
-.public-homepage__search-row .homepage-price-range__trigger {
+.homepage-price-range__trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2421,7 +2421,7 @@
 }
 
 .homepage-price-range__trigger > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.homepage-price-range__trigger svg { flex: 0 0 auto; transition: transform 180ms ease-in-out; }
+.homepage-price-range__trigger svg { flex: 0 0 auto; inline-size: 1.25rem; block-size: 1.25rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 180ms ease-in-out; }
 .homepage-price-range[data-open='true'] .homepage-price-range__trigger svg { transform: rotate(180deg); }
 .homepage-price-range__trigger:hover,
 .homepage-price-range__trigger:focus-visible,
@@ -2453,7 +2453,7 @@
 
 .homepage-price-range__sliders { position: relative; block-size: 2.75rem; margin: 0.625rem 0.75rem; }
 .homepage-price-range__track { position: absolute; inset-inline: 0; inset-block-start: calc(50% - 3px); block-size: 6px; background: linear-gradient(to right, #e8e4d9 var(--range-start), #d1a044 var(--range-start), #d1a044 var(--range-end), #e8e4d9 var(--range-end)); border-radius: 1rem; }
-.public-homepage__search-row .homepage-price-range input[type='range'] {
+.homepage-price-range input[type='range'] {
   position: absolute;
   inset: 0;
   inline-size: 100%;
@@ -2478,9 +2478,9 @@
 .homepage-price-range input[type='range']:focus-visible::-moz-range-thumb { outline: 3px solid #17233d; outline-offset: 3px; }
 
 .homepage-price-range__values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
-.public-homepage__search-row .homepage-price-range__values label { position: static; display: grid; gap: 0.375rem; block-size: auto; }
-.public-homepage__search-row .homepage-price-range__values label > span { position: static; inline-size: auto; block-size: auto; clip: auto; clip-path: none; overflow: visible; color: #17233d; font-size: 0.8125rem; }
-.public-homepage__search-row .homepage-price-range__values input { box-sizing: border-box; inline-size: 100%; min-inline-size: 0; min-block-size: 2.875rem; block-size: 2.875rem; padding: 0.5rem 0.625rem; background: #faf8f2; color: #17233d; border: 1px solid #e8e4d9; border-radius: 0.625rem; font: inherit; font-size: 0.875rem; direction: ltr; text-align: start; }
+.homepage-price-range__values label { position: static; display: grid; gap: 0.375rem; block-size: auto; }
+.homepage-price-range__values label > span { position: static; inline-size: auto; block-size: auto; clip: auto; clip-path: none; overflow: visible; color: #17233d; font-size: 0.8125rem; }
+.homepage-price-range__values input { box-sizing: border-box; inline-size: 100%; min-inline-size: 0; min-block-size: 2.875rem; block-size: 2.875rem; padding: 0.5rem 0.625rem; background: #faf8f2; color: #17233d; border: 1px solid #e8e4d9; border-radius: 0.625rem; font: inherit; font-size: 0.875rem; direction: ltr; text-align: start; }
 .homepage-price-range__values input:focus-visible { outline: 2px solid #d1a044; outline-offset: 2px; }
 .homepage-price-range__panel footer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-block-start: 1rem; }
 .homepage-price-range__panel footer button { min-block-size: 2.75rem; padding: 0.5rem 1rem; border: 0; border-radius: 0.75rem; color: #17233d; background: #f5f2eb; font: inherit; font-size: 0.875rem; cursor: pointer; transition: background-color 180ms ease-in-out; }

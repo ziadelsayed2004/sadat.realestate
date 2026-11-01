@@ -69,6 +69,10 @@
   inline-size: 2.5rem;
   block-size: 2.5rem;
   object-fit: contain;
+  border-radius: 50%;
+  padding: 3px;
+  box-sizing: border-box;
+  background: #fff;
   flex-shrink: 0;
 }
 .public-homepage__banner-verified {

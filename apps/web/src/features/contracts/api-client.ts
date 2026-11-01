@@ -38,6 +38,7 @@ export interface ApiClientOptions {
 }
 
 export interface ApiRequestOptions<TResponse> {
+  timeoutMs?: number;
   keepalive?: boolean;
   responseSchema: ContractSchema<TResponse>;
   method?: HttpMethod;
@@ -79,7 +80,7 @@ interface PayloadReadResult {
 const SAFE_RETRY_METHODS = new Set<HttpMethod>(['GET', 'HEAD', 'OPTIONS']);
 const RETRYABLE_STATUS_CODES = new Set([408, 425, 429, 500, 502, 503, 504]);
 const DEFAULT_RETRY: ResolvedRetryOptions = {
-  maxAttempts: 1,
+  maxAttempts: 3,
   baseDelayMs: 250,
   maxDelayMs: 2_000,
   retryUnsafeMethods: false
@@ -343,13 +344,25 @@ export class ApiClient {
     const retry = resolveRetryOptions({ ...this.defaultRetry, ...(options.retry ?? {}) });
     for (let attempt = 1; attempt <= retry.maxAttempts; attempt += 1) {
       throwIfAborted(options.signal);
+      const timeoutMs = options.timeoutMs ?? (SAFE_RETRY_METHODS.has(method) ? 20_000 : 120_000);
+      if (!Number.isFinite(timeoutMs) || timeoutMs < 1 || timeoutMs > 300_000) throw new ApiClientError('Invalid request timeout.', { code: 'CONFIGURATION_ERROR' });
+      const controller = new AbortController();
+      let timedOut = false;
+      const cancel = () => controller.abort(options.signal?.reason);
+      options.signal?.addEventListener('abort', cancel, { once: true });
+      const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
+      init.signal = controller.signal;
       try {
         const response = await this.fetcher(url, init);
         const read = await readResponsePayload(response);
+        // A stalled response body is a transport timeout too, not invalid JSON.
+        if (controller.signal.aborted) throw controller.signal.reason;
         if (!response.ok) {
           const error = httpError(response, read.payload, read.parseError, requestId);
           if (attempt < retry.maxAttempts && canRetry(error, method, retry)) {
-            await waitForRetry(retryDelay(attempt, retry), options.signal);
+            const retryAfter = Number(response.headers.get('retry-after'));
+            clearTimeout(timeout);
+            await waitForRetry(Math.max(retryDelay(attempt, retry), Number.isFinite(retryAfter) ? Math.min(60_000, retryAfter * 1000) : 0), options.signal);
             continue;
           }
           throw error;
@@ -372,12 +385,18 @@ export class ApiClient {
           headers: response.headers
         };
       } catch (error) {
-        const clientError = normalizeThrownError(error, options.signal, requestId);
+        clearTimeout(timeout);
+        const clientError = timedOut && !options.signal?.aborted
+          ? new ApiClientError('The API request timed out.', { code: 'NETWORK_ERROR', requestId, cause: error })
+          : normalizeThrownError(error, options.signal, requestId);
         if (attempt < retry.maxAttempts && canRetry(clientError, method, retry)) {
           await waitForRetry(retryDelay(attempt, retry), options.signal);
           continue;
         }
         throw clientError;
+      } finally {
+        clearTimeout(timeout);
+        options.signal?.removeEventListener('abort', cancel);
       }
     }
     throw new ApiClientError('The API request could not be completed.', { code: 'NETWORK_ERROR', requestId });

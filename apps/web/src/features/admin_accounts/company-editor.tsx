@@ -3,16 +3,16 @@ import { ImageFitField } from '../provider/image-fit-field.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import { ApiClient } from '../contracts/index.ts';
 import { Button } from '../design_system/index.ts';
 import type { AdminAccountsAuthorizationSource } from './data.ts';
 import './company-editor.css';
 import { CompanyPhoto } from './company-photo.tsx';
+import { createSessionClient } from '../contracts/session-client.ts';
 
 const schema = z.object({ coverFit: z.enum(['cover', 'contain']).optional(), id: z.string(), slug: z.string(), version: z.number(), name: z.object({ ar: z.string().optional(), en: z.string().optional() }), description: z.object({ ar: z.string().optional(), en: z.string().optional() }), imageUrl: z.string().nullable(), logoUrl: z.string().nullable().optional(), status: z.string() });
 type ImageField = 'imageUrl' | 'logoUrl';
-export function CompanyEditor({ providerId, locale, authorization, apiOrigin, owner = false, identity = false }: { identity?: boolean; owner?: boolean; providerId: string; locale: SupportedLocale; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined }) {
-  const ar = locale === 'ar', client = useMemo(() => new ApiClient(apiOrigin ? { baseUrl: apiOrigin } : {}), [apiOrigin]);
+export function CompanyEditor({ providerId, locale, authorization, apiOrigin, owner = false, identity = false, directory = true }: { directory?: boolean; identity?: boolean; owner?: boolean; providerId: string; locale: SupportedLocale; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined }) {
+  const ar = locale === 'ar', client = useMemo(() => createSessionClient({ apiOrigin, authorization }), [apiOrigin, authorization]);
   const [company, setCompany] = useState<z.infer<typeof schema>>(), [busy, setBusy] = useState(false), [feedback, setFeedback] = useState(''), [reason, setReason] = useState(owner ? 'Company profile updated by its owner' : ''), [attempt, setAttempt] = useState(0);
   const [changedImages, setChangedImages] = useState<ReadonlySet<ImageField>>(() => new Set());
   const endpoint = owner ? '/provider/organization' : `/admin/providers/${providerId}/organization`;
@@ -51,10 +51,10 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
   }
   const individual = company?.slug.startsWith('broker-') === true;
   return <section className="admin-accounts__detail-card admin-company-editor" id="company-profile-editor">
-    <h2>{identity ? (ar ? 'اسمك وصورتك للعرض العام' : 'Your public name and photo') : owner ? (ar ? 'بيانات شركتك والغلاف واللوجو' : 'Your company details, cover and logo') : (ar ? 'إدارة ملف الشركة والغلاف واللوجو' : 'Manage company profile, cover and logo')}</h2>
+    <h2>{identity ? (ar ? 'اسمك وصورتك للعرض العام' : 'Your public name and photo') : individual ? (ar ? 'إدارة اسم العرض والصورة' : 'Manage public name and photo') : owner ? (ar ? 'بيانات شركتك والغلاف واللوجو' : 'Your company details, cover and logo') : (ar ? 'إدارة ملف الشركة والغلاف واللوجو' : 'Manage company profile, cover and logo')}</h2>
     {owner && !individual ? <p>{ar ? 'الغلاف صورة عريضة أعلى صفحة الشركة، واللوجو شعار مربع يظهر في هوية الشركة وكروتها. ارفع كل صورة في مكانها ثم اضغط حفظ.' : 'The cover is the wide image above your company page. The square logo identifies your company on its profile and cards. Upload each separately, then save.'}</p> : null}
     {company ? <form onSubmit={event => { event.preventDefault(); void save(); }}>
-      {!individual ? <a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a> : null}
+      {!individual && directory ? <a href={`/developers/${company.slug}?lang=${locale}`} target="_blank" rel="noreferrer">{ar ? 'عرض صفحة الشركة' : 'View company page'}</a> : null}
       {(['ar', 'en'] as const).map(lang => <label key={lang}>{ar ? `${individual ? 'اسم العرض' : 'اسم الشركة'} — ${lang === 'ar' ? 'العربية' : 'الإنجليزية'}` : `${individual ? 'Display name' : 'Company name'} — ${lang}`}<input value={company.name[lang] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, name: { ...company.name, [lang]: event.target.value } })} /></label>)}
       <label>{ar ? 'نبذة الشركة' : 'Company description'}<textarea value={company.description[locale] ?? ''} disabled={busy} onChange={event => setCompany({ ...company, description: { ...company.description, [locale]: event.target.value } })} /></label>
       <div className="admin-company-editor__images">{(individual ? ['logoUrl'] as const : ['imageUrl', 'logoUrl'] as const).map(field => <fieldset key={field} className={`admin-company-editor__image admin-company-editor__image--${field === 'logoUrl' ? 'logo' : 'cover'}`} disabled={busy}>
@@ -66,8 +66,8 @@ export function CompanyEditor({ providerId, locale, authorization, apiOrigin, ow
         {company[field] ? <Button type="button" variant="secondary" onClick={() => setImage(field, null)}>{field === 'logoUrl' ? ar ? 'إزالة اللوجو' : 'Remove logo' : ar ? 'إزالة الغلاف' : 'Remove cover'}</Button> : null}
       </fieldset>)}</div>
       {!owner ? <label>{ar ? 'سبب التعديل أو الحذف' : 'Change or removal reason'}<input value={reason} minLength={3} onChange={event => setReason(event.target.value)} required /></label> : null}
-      <div><Button disabled={busy || reason.trim().length < 3} type="submit">{ar ? 'حفظ ملف الشركة' : 'Save company'}</Button>{!owner ? <Button type="button" variant="danger" disabled={busy || reason.trim().length < 3} onClick={() => void save(company.status === 'inactive' ? 'approved' : 'inactive')}>{company.status === 'inactive' ? ar ? 'إعادة عرض الشركة' : 'Restore company' : ar ? 'حذف الشركة من الدليل' : 'Remove company from directory'}</Button> : null}</div>
-      {!owner ? <p>{ar ? 'الحذف من الدليل يخفي ملف الشركة ويمكن الرجوع عنه؛ لا يحذف حسابها أو سجلاتها المالية.' : 'Removing the directory profile is reversible and preserves the account and financial history.'}</p> : null}
+      <div><Button disabled={busy || reason.trim().length < 3} type="submit">{individual ? ar ? 'حفظ اسم العرض والصورة' : 'Save public identity' : ar ? 'حفظ ملف الشركة' : 'Save company'}</Button>{!owner && directory ? <Button type="button" variant="danger" disabled={busy || reason.trim().length < 3} onClick={() => void save(company.status === 'inactive' ? 'approved' : 'inactive')}>{company.status === 'inactive' ? ar ? 'إعادة عرض الشركة' : 'Restore company' : ar ? 'حذف الشركة من الدليل' : 'Remove company from directory'}</Button> : null}</div>
+      {!owner && directory ? <p>{ar ? 'الحذف من الدليل يخفي ملف الشركة ويمكن الرجوع عنه؛ لا يحذف حسابها أو سجلاتها المالية.' : 'Removing the directory profile is reversible and preserves the account and financial history.'}</p> : null}
     </form> : <Button onClick={() => setAttempt(value => value + 1)}>{ar ? 'إعادة تحميل الملف' : 'Reload profile'}</Button>}
     {feedback ? <p role="status">{feedback}</p> : null}
   </section>;

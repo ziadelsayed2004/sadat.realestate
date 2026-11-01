@@ -1,6 +1,7 @@
 import { createServer as createHttpServer } from 'node:http';
 import { Readable } from 'node:stream';
 import { randomBytes } from 'node:crypto';
+import { requestClientAddress } from './client-address.mjs';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -10,6 +11,7 @@ const appRoot = path.dirname(new URL(import.meta.url).pathname).replace(/^\/[A-Z
 const clientRoot = path.resolve(appRoot, 'dist/client');
 const serverRoot = path.resolve(appRoot, 'dist/server');
 const entryModulePath = path.resolve(serverRoot, 'entry-server.js');
+
 const defaultHost = '127.0.0.1';
 const defaultPort = 4173;
 
@@ -433,6 +435,7 @@ async function renderDevelopmentPage(request, response, vite) {
       acceptLanguage: getAcceptLanguage(request),
       preferredLocale: getPreferredLocale(request),
       apiOrigin: process.env.WEB_API_ORIGIN,
+      clientAddress: requestClientAddress(request),
       ...(publicOrigin === undefined ? {} : { publicOrigin })
     });
     const transformedTemplate = await vite.transformIndexHtml(requestUrl, template);
@@ -537,6 +540,7 @@ async function createProductionServer() {
         acceptLanguage: getAcceptLanguage(request),
         preferredLocale: getPreferredLocale(request),
         apiOrigin: process.env.WEB_API_ORIGIN,
+        clientAddress: requestClientAddress(request),
         ...(publicOrigin === undefined ? {} : { publicOrigin })
       });
       const cspNonce = createCspNonce();

@@ -98,18 +98,19 @@ describe('public property listing', () => {
   it('applies a price range once, preserves the selected category, and rejects reversed prices', async () => {
     window.history.replaceState({}, '', '/properties?lang=en');
     const load = vi.fn().mockResolvedValue(listingData);
-    const copy = getPublicPropertyListingCopy('en');
     renderWithLocale(<PublicPropertyListing locale="en" initialData={listingData} initialQuery={{ ...defaultPublicPropertySearchQuery(), propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb' }} load={load} />, { locale: 'en' });
-    fireEvent.change(screen.getByLabelText(`${copy.minPrice} (optional)`), { target: { value: '1000000' } });
-    fireEvent.change(screen.getByLabelText(`${copy.maxPrice} (optional)`), { target: { value: '2000000' } });
+    fireEvent.click(screen.getByRole('button', { name: /^Price range:/ }));
+    fireEvent.change(screen.getByRole('spinbutton', { name: /Minimum price/ }), { target: { value: '1000000' } });
+    fireEvent.change(screen.getByRole('spinbutton', { name: /Maximum price/ }), { target: { value: '2000000' } });
     expect(load).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
+    fireEvent.click(screen.getByRole('button', { name: /^Apply$/ }));
     await waitFor(() => expect(load).toHaveBeenCalledTimes(1));
     expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyCategoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', minPrice: 1000000, maxPrice: 2000000 }), expect.any(AbortSignal));
     expect(window.location.search).toContain('lang=en');
-    fireEvent.change(screen.getByLabelText(`${copy.maxPrice} (optional)`), { target: { value: '500000' } });
-    fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
-    expect(screen.getByRole('alert')).toHaveTextContent(copy.invalidFilters);
+    fireEvent.click(screen.getByRole('button', { name: /^Price range:/ }));
+    fireEvent.change(screen.getByRole('spinbutton', { name: /Maximum price/ }), { target: { value: '500000' } });
+    expect(screen.getByRole('button', { name: /^Apply$/ })).toBeDisabled();
+    expect(screen.getByRole('alert')).toHaveTextContent('minimum no higher than the maximum');
     expect(load).toHaveBeenCalledTimes(1);
   });
 

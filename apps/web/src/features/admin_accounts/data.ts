@@ -37,7 +37,8 @@ import {
   type ProviderReviewData,
   type ProviderReviewRequest
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import type { ApiClient } from '../contracts/index.ts';
+import { createSessionClient } from '../contracts/session-client.ts';
 
 export const ADMIN_USERS_ROUTE = '/admin/users' as const;
 export const ADMIN_PROVIDERS_ROUTE = '/admin/providers' as const;
@@ -49,6 +50,7 @@ const accountReportSuccessEnvelopeSchema = successEnvelopeSchema(accountReportDa
 
 export interface AdminAccountsAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly refresh?: (() => Promise<unknown>) | undefined;
 }
 
 interface CommonLoadOptions {
@@ -80,10 +82,8 @@ export type AdminAccountReportsLoader = (query: AccountReportListQuery, signal?:
 export type AdminAccountReportResolver = (reportId: string, input: AccountReportResolve, signal?: AbortSignal) => Promise<AccountReportData>;
 export type AdminAccountTransitionLoader = (userId: string, input: AccountTransitionRequest, signal?: AbortSignal) => Promise<AccountTransitionData>;
 
-function clientFor(options: Pick<CommonLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
-  if (options.apiClient !== undefined) return options.apiClient;
-  const clientOptions: ApiClientOptions = options.apiOrigin === undefined ? {} : { baseUrl: options.apiOrigin };
-  return new ApiClient(clientOptions);
+function clientFor(options: Pick<CommonLoadOptions, 'apiClient' | 'apiOrigin' | 'authorization'>): Pick<ApiClient, 'request'> {
+  return createSessionClient(options);
 }
 
 function headersFor(source: AdminAccountsAuthorizationSource | undefined): HeadersInit | undefined {

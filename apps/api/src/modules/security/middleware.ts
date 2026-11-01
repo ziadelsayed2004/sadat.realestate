@@ -113,7 +113,8 @@ function createRateLimitMiddleware(options: RateLimitOptions): RequestHandler {
       return;
     }
     const now = Date.now();
-    const key = request.ip || request.socket.remoteAddress || 'unknown';
+    const mediaRead = ['GET', 'HEAD'].includes(request.method) && /\/(?:media\/[^/]+\/content|organization-photos\/[^/]+|taxonomy-photos\/[^/]+|article-photos\/[^/]+)(?:\?|$)/u.test(request.path);
+    const key = `${mediaRead ? 'media' : 'api'}:${request.ip || request.socket.remoteAddress || 'unknown'}`;
     const current = buckets.get(key);
     const bucket = !current || current.resetAt <= now
       ? { count: 0, resetAt: now + options.windowMs }

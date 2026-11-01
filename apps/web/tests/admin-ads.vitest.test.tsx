@@ -171,7 +171,7 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     const refresh = vi.fn();
     await expect(loadAdminAdRequests({ apiClient: new ApiClient({ fetcher }), authorization: { ...authorization, refresh } })).rejects.toMatchObject({ status });
     expect(refresh).not.toHaveBeenCalled();
-    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(status === 503 ? 3 : 1);
   });
 
   it('stops after one unsuccessful advertising renewal instead of looping', async () => {

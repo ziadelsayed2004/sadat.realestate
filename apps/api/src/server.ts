@@ -234,6 +234,9 @@ async function runEntrypoint(): Promise<void> {
     uploadEnvironment
   );
   const server = createApiServer({
+    // The checked-in native runtime binds to loopback behind Nginx. Never trust
+    // forwarding headers from an arbitrary remote peer.
+    security: { trustProxy: 'loopback' },
     database,
     auth,
     sessionManagement,

@@ -45,6 +45,29 @@ test('rejects disallowed CORS preflight without exposing internals', async () =>
   });
 });
 
+test('loopback proxy policy isolates real visitors while untrusted forwarded headers cannot evade limits', async () => {
+  await withServer({ trustProxy: 'loopback', rateLimit: { max: 1 } }, async baseUrl => {
+    const request = (ip: string) => fetch(`${baseUrl}/api/probe`, { headers: { 'x-forwarded-for': ip } });
+    assert.equal((await request('198.51.100.1')).status, 404);
+    assert.equal((await request('198.51.100.2')).status, 404);
+    assert.equal((await request('198.51.100.1')).status, 429);
+  });
+  await withServer({ trustProxy: false, rateLimit: { max: 1 } }, async baseUrl => {
+    await fetch(`${baseUrl}/api/probe`, { headers: { 'x-forwarded-for': '198.51.100.1' } });
+    assert.equal((await fetch(`${baseUrl}/api/probe`, { headers: { 'x-forwarded-for': '198.51.100.2' } })).status, 429);
+  });
+});
+
+test('media reads have a bounded independent bucket and cannot exhaust account/page requests', async () => {
+  await withServer({ rateLimit: { max: 1 } }, async baseUrl => {
+    const image = `${baseUrl}/api/v1/admin/properties/abc/media/def/content`;
+    assert.equal((await fetch(image)).status, 404);
+    assert.equal((await fetch(image)).status, 429);
+    assert.equal((await fetch(`${baseUrl}/api/probe`)).status, 404);
+    assert.equal((await fetch(`${baseUrl}/api/probe`)).status, 429);
+  });
+});
+
 test('enforces JSON body limits and returns a redacted error envelope', async () => {
   await withServer({ jsonBodyLimit: 32 }, async (baseUrl) => {
     const response = await fetch(`${baseUrl}/health`, {

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { propertyDataSchema, type PropertyData, type SupportedLocale } from '@sadat-real-estate/contracts';
-import { ApiClient } from '../contracts/index.ts';
+import { createSessionClient } from '../contracts/session-client.ts';
 import { RouteShellAuthContext } from '../routing/shells.tsx';
 import { Button } from '../design_system/index.ts';
 
@@ -17,7 +17,7 @@ export function FeaturedPropertyControl({ property, locale, onSaved }: { propert
   const save = async () => {
     setBusy(true); setFeedback('');
     try {
-      const result = await new ApiClient().request(`/admin/properties/${property.id}/featured`, {
+      const result = await createSessionClient({ authorization: auth?.getAuthorizationHeader ? { getAuthorizationHeader: auth.getAuthorizationHeader, refresh: auth.refresh } : undefined }).request(`/admin/properties/${property.id}/featured`, {
         method: 'PUT', json: { version: property.version, featured, reason: 'Manage homepage featured property' },
         headers: { authorization: auth?.getAuthorizationHeader?.() ?? '' }, responseSchema: z.object({ data: propertyDataSchema })
       });

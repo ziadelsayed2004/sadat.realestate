@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buildApiUrl } from '../contracts/api-client.ts';
 import type { AdminAccountsAuthorizationSource } from './data.ts';
+import { fetchWithSession } from '../contracts/session-client.ts';
 
 export function CompanyPhoto({ imageUrl, owner, authorization, apiOrigin, alt, fit = 'contain' }: { imageUrl: string; owner: boolean; authorization?: AdminAccountsAuthorizationSource | undefined; apiOrigin?: string | undefined; alt: string; fit?: 'cover' | 'contain' }) {
   const [preview, setPreview] = useState('');
@@ -9,7 +10,7 @@ export function CompanyPhoto({ imageUrl, owner, authorization, apiOrigin, alt, f
     if (!id) { setPreview(imageUrl); return; }
     const controller = new AbortController(); let url = '';
     setPreview('');
-    void fetch(buildApiUrl(apiOrigin, `${owner ? '/provider' : '/admin/providers'}/organization-photos/${id}`), { credentials: 'include', headers: { authorization: authorization?.getAuthorizationHeader() ?? '' }, signal: controller.signal })
+    void fetchWithSession(buildApiUrl(apiOrigin, `${owner ? '/provider' : '/admin/providers'}/organization-photos/${id}`), authorization, { credentials: 'include', signal: controller.signal })
       .then(async response => { if (!response.ok) return; const blob = await response.blob(); if (!controller.signal.aborted && blob.type.startsWith('image/')) { url = URL.createObjectURL(blob); setPreview(url); } }).catch(() => {});
     return () => { controller.abort(); if (url) URL.revokeObjectURL(url); };
   }, [imageUrl, owner, authorization, apiOrigin]);

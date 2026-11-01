@@ -4,12 +4,56 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { AdminPropertyEditor } from '../src/features/admin_properties/editor.tsx';
 import { AdminPropertyCover, AdminPropertyPhoto } from '../src/features/admin_properties/photo.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { useState } from 'react';
 
 const property = propertyDataSchema.parse({ id: 'a'.repeat(24), kind: 'property', name: { en: 'Published villa', ar: 'فيلا منشورة' }, slug: 'published-villa', transactionType: 'sale', source: { providerId: 'b'.repeat(24), sourceType: 'individual_broker' }, status: 'published', active: true, version: 3, createdAt: '2026-10-08T10:00:00Z', updatedAt: '2026-10-08T10:00:00Z', availableActions: ['update'] });
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.editor.test' };
 const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { requestId: 'editor-test' } }), { headers: { 'content-type': 'application/json' } });
 const plan = { name: { ar: 'خطة سنوية', en: 'Annual plan' }, installments: 12, frequency: 'monthly' as const, downPayment: { amount: 100000, currency: 'EGP' }, installmentAmount: { amount: 75000, currency: 'EGP' } };
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+it('recovers a real version conflict without losing local edits or overwriting untouched server fields', async () => {
+  const latest = { ...property, name: { en: 'Published villa', ar: 'عنوان أحدث من السيرفر' }, price: { amount: 2500000, currency: 'EGP' }, version: 4 };
+  const bodies: Record<string, unknown>[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input, init) => {
+    if (String(input).endsWith('/media')) return response({ items: [] });
+    if (init?.method !== 'PATCH') return response(latest);
+    const body = JSON.parse(String(init.body)); bodies.push(body);
+    return bodies.length === 1
+      ? new Response(JSON.stringify({ error: { code: 'PROPERTY_VERSION_CONFLICT', messageKey: 'errors.conflict', details: [], requestId: 'conflict' } }), { status: 409 })
+      : response({ ...latest, name: body.name, version: 5 });
+  }));
+  function Editor() { const [current, setCurrent] = useState(property); return <AdminPropertyEditor initialProperty={current} locale="en" authorization={authorization} onSaved={setCurrent} />; }
+  renderWithLocale(<Editor />, { locale: 'en' });
+  fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Local title change' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  const reload = await screen.findByRole('button', { name: 'Load latest and keep my edits' });
+  expect(bodies).toHaveLength(1);
+  fireEvent.click(reload);
+  await waitFor(() => expect(screen.getByLabelText('Price')).toHaveValue(2500000));
+  expect(screen.getByLabelText('Property title EN')).toHaveValue('Local title change');
+  expect(screen.getByLabelText('Property title AR')).toHaveValue(latest.name.ar);
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(bodies).toHaveLength(2));
+  expect(bodies[1]).toEqual({ version: 4, reason: 'Administrative property edit', name: { en: 'Local title change', ar: latest.name.ar } });
+});
+
+it('renews the session for a save exactly once after authorization expires', async () => {
+  let token = 'Bearer expired';
+  const refresh = vi.fn(async () => { token = 'Bearer renewed'; });
+  const writes: string[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (_input, init) => {
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    writes.push(new Headers(init.headers).get('authorization')!);
+    return writes.length === 1 ? new Response('', { status: 401 }) : response({ ...property, name: { en: 'Updated title' }, version: 4 });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={property} locale="en" authorization={{ getAuthorizationHeader: () => token, refresh }} onSaved={() => undefined} />, { locale: 'en' });
+  fireEvent.change(screen.getByLabelText('Property title EN'), { target: { value: 'Updated title' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Changes saved'));
+  expect(writes).toEqual(['Bearer expired', 'Bearer renewed']);
+  expect(refresh).toHaveBeenCalledTimes(1);
+});
 
 it('explicitly removes old installment data even when its incompatible fields are absent from the loaded projection', async () => {
   const writes: unknown[] = [];
@@ -121,10 +165,9 @@ it('renews an expired session once and uses the refreshed authorization for the 
   renderWithLocale(<AdminPropertyPhoto propertyId={property.id} mediaId={'c'.repeat(24)} filename="Cover" locale="en" authorization={{ getAuthorizationHeader: () => token, refresh }} />, { locale: 'en' });
   await screen.findByRole('img', { name: 'Cover' });
   expect(refresh).toHaveBeenCalledTimes(1);
-  // The token change revalidates the mounted preview under the renewed session.
-  await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
+  // A credential rotation must not reload every successfully fetched preview.
+  expect(fetcher).toHaveBeenCalledTimes(2);
   expect(new Headers(fetcher.mock.calls[1]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
-  expect(new Headers(fetcher.mock.calls[2]?.[1]?.headers).get('authorization')).toBe('Bearer renewed');
 });
 
 it('recovers one transient preview failure and offers a fresh request after an image decode failure', async () => {

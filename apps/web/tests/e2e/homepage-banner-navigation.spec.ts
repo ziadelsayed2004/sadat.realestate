@@ -16,18 +16,21 @@ test('featured advertiser logo stays separate from the cover and is shown withou
   const identity = card.locator('.public-homepage__banner-provider > img');
   await expect(identity).toHaveAttribute('src', logo);
   await expect(identity).toHaveCSS('object-fit', 'contain');
-  await expect(identity).toHaveCSS('border-radius', '0px');
+  await expect(identity).toHaveCSS('border-radius', '50%');
   await expect.poll(() => identity.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBe(180);
   await expect(card.locator('.public-homepage__banner-media-wrapper img')).toHaveAttribute('src', promotion.imageUrl!);
+  await page.evaluate(() => document.fonts.ready);
+  await card.scrollIntoViewIfNeeded();
   await card.screenshot({ path: test.info().outputPath('featured-advertiser-logo.png') });
 });
 
-test('only the promotion button navigates, carousel controls stay on home and the project opens expanded', async ({ page }) => {
+test('only the promotion button navigates, carousel controls stay on home and its configured project is visible', async ({ page }) => {
   const lang = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
   await routePublicHomepageApi(page);
   const home = publicHomepageFixture();
   const promotion = home.data.banners.find(item => item.key === 'city_banner')!;
-  promotion.targetUrl = '/properties/demo-open-view-apartment';
+  promotion.targetUrl = '/developers/as-real-estate-development#project-elite-compound';
+  promotion.ctaLabel = { ar: 'اكتشف المشروع', en: 'Discover the project' };
   await page.route('**/api/v1/public/home**', route => route.fulfill({ json: home }));
   await page.route('**/api/v1/public/developers/as-real-estate-development', async route => {
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -50,20 +53,22 @@ test('only the promotion button navigates, carousel controls stay on home and th
     await card.locator(selector).click();
     expect(page.url()).toBe(homeUrl);
   }
-  await card.click({ position: { x: 8, y: 8 } }); expect(page.url()).toBe(homeUrl);
+  // The top edge can sit underneath the fixed mobile header after the preceding
+  // content clicks. Test the inert card background at a visible side midpoint.
+  const cardBounds = await card.boundingBox();
+  await card.click({ position: { x: 8, y: cardBounds!.height / 2 } }); expect(page.url()).toBe(homeUrl);
   await card.locator('.public-homepage__banner-control--next').click();
   await expect(page.locator('.public-homepage__banner-dot').nth(1)).toHaveClass(/is-active/u);
   expect(page.url()).toBe(homeUrl);
   await card.locator('.public-homepage__banner-control--previous').click();
   await expect(page.locator('.public-homepage__banner-dot').first()).toHaveClass(/is-active/u);
   expect(page.url()).toBe(homeUrl);
-  const cta = card.getByRole('link', { name: lang === 'ar' ? 'اكتشف المشروع' : 'Discover the project', exact: true });
+  const cta = card.locator('.public-homepage__banner-cta');
   await expect(cta).toHaveAttribute('href', `/developers/as-real-estate-development?lang=${lang}#project-elite-compound`);
   await cta.click();
   await expect(page).toHaveURL(new RegExp(`/developers/as-real-estate-development\\?lang=${lang}#project-elite-compound$`));
   const project = page.locator('#project-elite-compound');
   await expect(project).toBeVisible();
-  await expect(project.locator('details')).toHaveAttribute('open', '');
   await expect(project).toContainText(lang === 'ar' ? 'تفاصيل كمبوند النخبة' : 'Elite Compound details');
   await expect.poll(() => project.evaluate(element => {
     const bounds = element.getBoundingClientRect();

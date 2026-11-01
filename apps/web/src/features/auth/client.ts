@@ -469,7 +469,7 @@ export class AuthClient {
       for (let attempt = 0; ; attempt++) {
         if (generation !== this.store.getSessionGeneration()) return this.store.getSnapshot();
         try {
-          response = await this.apiClient.request('/auth/refresh', { method: 'POST', json: {}, keepalive: true, responseSchema: authSessionSuccessEnvelopeSchema });
+          response = await this.apiClient.request('/auth/refresh', { method: 'POST', json: {}, keepalive: true, timeoutMs: 20_000, retry: { maxAttempts: 2, retryUnsafeMethods: true }, responseSchema: authSessionSuccessEnvelopeSchema });
           break;
         } catch (error) {
           if (!(error instanceof ApiClientError) || error.apiError?.code !== AUTH_ERROR_CODES.SESSION_REFRESH_CONFLICT || attempt >= 3) throw error;
