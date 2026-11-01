@@ -218,6 +218,11 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
 }) {
   const saving = mutationState === 'saving';
   const invalid = (field: string) => validationFields.includes(field) || undefined;
+  const [categoryId, setCategoryId] = useState('');
+  const categories = [...new Map(propertyTypes.flatMap(type => type.categoryId && type.categoryName ? [[type.categoryId, type.categoryName] as const] : [])).entries()];
+  const savedCategoryId = propertyTypes.find(type => type.id === form.propertyTypeId)?.categoryId;
+  const selectedCategoryId = savedCategoryId ?? categoryId;
+  const visibleTypes = selectedCategoryId ? propertyTypes.filter(type => type.categoryId === selectedCategoryId) : propertyTypes;
   const updateDescription = (value: string) => setForm({ ...form, description: { ...form.description, [locale]: value } });
   return (
     <form className="provider-property-wizard__form" data-form-step="details" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
@@ -233,11 +238,18 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
           <Input id="provider-property-floor" type="number" min="0" step="1" label={advancedCopy.labels.floor} value={form.floor} placeholder={advancedCopy.placeholders.floor} onChange={event => setForm({ ...form, floor: event.target.value })} aria-invalid={invalid('floor')} />
           <Input id="provider-property-total-floors" type="number" min="1" step="1" label={advancedCopy.labels.totalFloors} value={form.totalFloors} placeholder={advancedCopy.placeholders.totalFloors} onChange={event => setForm({ ...form, totalFloors: event.target.value })} aria-invalid={invalid('totalFloors')} />
           <div className="provider-property-wizard__field">
+            <label htmlFor="provider-property-category">{locale === 'ar' ? 'تصنيف العقار' : 'Property category'}</label>
+            <select id="provider-property-category" value={selectedCategoryId} disabled={saving || propertyTypesState !== 'success'} onChange={event => { setCategoryId(event.target.value); setForm({ ...form, propertyTypeId: '' }); }}>
+              <option value="">{locale === 'ar' ? 'كل التصنيفات' : 'All categories'}</option>
+              {categories.map(([id, name]) => <option key={id} value={id}>{name[locale] ?? name.ar ?? name.en}</option>)}
+            </select>
+          </div>
+          <div className="provider-property-wizard__field">
             <label htmlFor="provider-property-type-id">{advancedCopy.labels.propertyTypeId}</label>
             <select id="provider-property-type-id" value={form.propertyTypeId} onChange={event => setForm({ ...form, propertyTypeId: event.target.value })} aria-invalid={invalid('propertyTypeId')} disabled={propertyTypesState !== 'success'}>
               <option value="">{propertyTypesState === 'loading' ? advancedCopy.propertyTypeCatalogLoading : advancedCopy.propertyTypeSelectPlaceholder}</option>
               {form.propertyTypeId && !propertyTypes.some(type => type.id === form.propertyTypeId) ? <option value={form.propertyTypeId}>{locale === 'ar' ? 'النوع المحفوظ غير متاح حاليًا' : 'Saved property type currently unavailable'}</option> : null}
-              {propertyTypes.map(type => <option key={type.id} value={type.id}>{type.name[locale] ?? type.name.ar ?? type.name.en ?? type.slug}</option>)}
+              {visibleTypes.map(type => <option key={type.id} value={type.id}>{type.name[locale] ?? type.name.ar ?? type.name.en ?? type.slug}</option>)}
             </select>
             {propertyTypesState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryPropertyTypes}>{copy.retry}</button> : null}
           </div>

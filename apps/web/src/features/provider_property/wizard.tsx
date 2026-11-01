@@ -268,6 +268,7 @@ function BasicFormView({
 }
 
 function LocationFormView({
+  propertyId,
   locale,
   copy,
   form,
@@ -295,6 +296,7 @@ function LocationFormView({
   readonly locationsState: 'loading' | 'success' | 'error';
   readonly onRetryLocations: () => void;
   readonly resolveMapCoordinates: MapCoordinatesAction;
+  readonly propertyId: string;
 }) {
   const wizard = copy.wizard;
   const saving = mutationState === 'saving';
@@ -341,6 +343,7 @@ function LocationFormView({
       <p className="provider-property-wizard__help">{locale === 'ar' ? 'لو بتعدّل عقارًا منشورًا، يظل ظاهرًا بنسخته الحالية أثناء حفظ المسودة. إرساله للمراجعة يوقف عرضه مؤقتًا لحين اعتماد الإدارة.' : 'A published listing stays visible while you save a draft. Submitting for review temporarily hides it until administration approves.'}</p>
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-location-title">
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-location-title">{wizard.locationTitle}</h2><span>{wizard.steps.location}</span></div>
+        <aside className="provider-property-wizard__help"><strong>{locale === 'ar' ? 'تصنيف العقار: سكني، تجاري أو غيره' : 'Property category: residential, commercial or another category'}</strong><p>{locale === 'ar' ? 'اختيار التصنيف ونوع العقار متاح في خطوة تفاصيل العقار التالية. احفظ أي تعديل للموقع قبل الانتقال.' : 'Choose the category and property type in the next Property details step. Save any location changes before moving on.'}</p><a href={navigationPath(locale, `/provider/properties/${encodeURIComponent(propertyId)}/details`)}>{locale === 'ar' ? 'اختيار التصنيف ونوع العقار' : 'Choose property category and type'}</a></aside>
         <div className="provider-property-wizard__grid">
           <div className="provider-property-wizard__field provider-property-wizard__location-picker">
             <label htmlFor="provider-property-location-search">{wizard.locationSearchLabel}</label>
@@ -550,7 +553,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, init
       <div className="provider-dashboard__content provider-property-wizard__content">
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
-          step === 'basic' ? <BasicFormView loadProjects={projectsAction} currentId={draftId} loadParents={parentsAction} loadParent={loadAction} invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView resolveMapCoordinates={mapCoordinatesAction} locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
+          step === 'basic' ? <BasicFormView loadProjects={projectsAction} currentId={draftId} loadParents={parentsAction} loadParent={loadAction} invalidFields={invalidFields} sourceType={property?.source.sourceType} locale={locale} copy={copy} form={basic} setForm={next => { setBasic(next); setInvalidFields([]); setValidationError(false); }} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView propertyId={propertyId!} resolveMapCoordinates={mapCoordinatesAction} locale={locale} copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} locations={locations} locationsState={locationsState} onRetryLocations={() => setLocationsAttempt(value => value + 1)} />
         ) : null}
       </div>
     </section>

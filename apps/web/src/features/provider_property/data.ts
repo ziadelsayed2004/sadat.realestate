@@ -103,7 +103,7 @@ export interface ProviderPropertySubmitOptions extends ProviderPropertyRequestOp
 export type ProviderPropertyCreate = PropertyCreate;
 export type ProviderPropertyLocationOption = PublicPropertyLocation;
 export type ProviderPropertyParentsLoader = (query: ProviderPropertiesQuery, signal?: AbortSignal) => Promise<ProviderPropertiesData>;
-export type ProviderPropertyTypeOption = PublicHomepageCategory;
+export type ProviderPropertyTypeOption = PublicHomepageCategory & { categoryName?: PublicHomepageCategory['name'] | undefined };
 export type ProviderPropertyStepInput = PropertyCoreStep | PropertyLocationStep | PropertyDetailsStep | PropertyPricingStep | PropertyFeaturesServicesStep | PropertyContactStep;
 
 function clientFor(options: Pick<ProviderPropertyRequestOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -149,7 +149,7 @@ export async function loadProviderPropertyTypes(options: ProviderPropertyRequest
     query: { page: 1, limit: 1 },
     ...(options.signal === undefined ? {} : { signal: options.signal })
   });
-  return response.data.data.propertyTypes;
+  return response.data.data.propertyTypes.map(type => ({ ...type, categoryName: response.data.data.categories.find(category => category.id === type.categoryId)?.name }));
 }
 
 export async function loadProviderPropertyAmenities(options: ProviderPropertyRequestOptions = {}): Promise<readonly PublicPropertyAmenity[]> {

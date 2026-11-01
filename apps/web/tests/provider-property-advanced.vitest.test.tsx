@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { getProviderPropertyAdvancedCopy } from '../src/features/provider_property/steps-copy.ts';
 import { ProviderPropertyAdvancedWizard, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
-import { loadProviderProperty, loadProviderPropertyAmenities, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
+import { loadProviderProperty, loadProviderPropertyAmenities, loadProviderPropertyTypes, saveProviderPropertyStep } from '../src/features/provider_property/data.ts';
 import { getProviderPropertyCopy } from '../src/features/provider_property/copy.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 import { ApiClientError } from '../src/features/contracts/index.ts';
@@ -47,6 +47,28 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('Provider property advanced wizard steps', () => {
+  it('loads named parent categories from the public catalog, including types with no published inventory', async () => {
+    const category = { id: '1'.repeat(24), slug: 'residential', name: { en: 'Residential' }, propertyCount: 0, order: 0 };
+    const type = { ...category, id: '2'.repeat(24), slug: 'apartment', name: { en: 'Apartment' }, categoryId: category.id };
+    const apiClient = new ApiClient({ fetcher: async () => success({ items: [], categories: [category], propertyTypes: [type], page: 1, limit: 1, total: 0 }, 'empty-catalog') });
+    await expect(loadProviderPropertyTypes({ apiClient })).resolves.toEqual([{ ...type, categoryName: category.name }]);
+  });
+  it('selects a residential or commercial category, clears an incompatible type and saves the chosen child type', async () => {
+    const residential = '1'.repeat(24), commercial = '2'.repeat(24);
+    const apartment = { id: '3'.repeat(24), categoryId: residential, categoryName: { en: 'Residential' }, slug: 'apartment', name: { en: 'Apartment' }, propertyCount: 0, order: 0 };
+    const shop = { id: '4'.repeat(24), categoryId: commercial, categoryName: { en: 'Commercial' }, slug: 'shop', name: { en: 'Shop' }, propertyCount: 0, order: 1 };
+    const save = vi.fn(async () => property({ version: 3, propertyTypeId: shop.id }));
+    renderWithLocale(<ProviderPropertyAdvancedWizard locale="en" session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={property({ propertyTypeId: apartment.id, area: { value: 100, unit: 'sqm' } })} loadPropertyTypes={async () => [apartment, shop]} save={save} />, { locale: 'en' });
+    const category = await screen.findByRole('combobox', { name: 'Property category' });
+    await waitFor(() => expect(category).toHaveValue(residential));
+    fireEvent.change(category, { target: { value: commercial } });
+    expect(screen.queryByRole('option', { name: 'Apartment' })).toBeNull();
+    const type = screen.getByRole('combobox', { name: getProviderPropertyAdvancedCopy('en').labels.propertyTypeId });
+    expect(type).toHaveValue('');
+    fireEvent.change(type, { target: { value: shop.id } });
+    fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('en').wizard.saveDraft }));
+    await waitFor(() => expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ propertyTypeId: shop.id })));
+  });
   it('uses only the implemented detail, pricing, and feature step routes', async () => {
     const requests: Array<{ path: string; method: string; authorization: string | null; json?: unknown }> = [];
     const client = new ApiClient({

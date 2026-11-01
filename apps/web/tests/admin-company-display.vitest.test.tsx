@@ -6,6 +6,26 @@ import { server } from '../src/features/testing/msw/server.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 describe('Admin provider image display', () => {
+  it.each(['ar', 'en'] as const)('edits both company names and descriptions with a usable audited save in %s', async locale => {
+    const profile = { id: 'a'.repeat(24), slug: 'developer-example', version: 4, name: { ar: 'شركة', en: 'Company' }, description: { ar: 'نبذة', en: 'About' }, imageUrl: null, logoUrl: null, status: 'approved' };
+    let saved: Record<string, unknown> | undefined;
+    server.use(
+      http.get('*/api/v1/admin/providers/:id/organization', () => HttpResponse.json({ data: profile })),
+      http.patch('*/api/v1/admin/providers/:id/organization', async ({ request }) => { saved = await request.json() as Record<string, unknown>; return HttpResponse.json({ data: { ...profile, ...saved, version: 5 } }); })
+    );
+    renderWithLocale(<CompanyEditor providerId={'b'.repeat(24)} locale={locale} />, { locale });
+    const ar = locale === 'ar';
+    fireEvent.change(await screen.findByLabelText(ar ? 'اسم الشركة — العربية' : 'Company name — ar'), { target: { value: 'اسم جديد' } });
+    fireEvent.change(screen.getByLabelText(ar ? 'اسم الشركة — الإنجليزية' : 'Company name — en'), { target: { value: 'New company' } });
+    fireEvent.change(screen.getByLabelText(ar ? 'نبذة الشركة — العربية' : 'Company description — ar'), { target: { value: 'نبذة جديدة' } });
+    fireEvent.change(screen.getByLabelText(ar ? 'نبذة الشركة — الإنجليزية' : 'Company description — en'), { target: { value: 'New description' } });
+    const save = screen.getByRole('button', { name: ar ? 'حفظ ملف الشركة' : 'Save company' });
+    expect(save).toBeEnabled();
+    fireEvent.click(save);
+    await waitFor(() => expect(saved).toMatchObject({ version: 4, name: { ar: 'اسم جديد', en: 'New company' }, description: { ar: 'نبذة جديدة', en: 'New description' }, reason: expect.any(String) }));
+    expect(saved).not.toHaveProperty('imageUrl');
+    expect(saved).not.toHaveProperty('logoUrl');
+  });
   it.each(['developer', 'office'])('saves the %s cover fitting without changing its logo or cover', async kind => {
     const profile = { id: 'a'.repeat(24), slug: `${kind}-sample`, version: 2, name: { en: 'Provider' }, description: {}, imageUrl: null, logoUrl: null, coverFit: 'cover', status: 'approved' };
     let saved: Record<string, unknown> | undefined;

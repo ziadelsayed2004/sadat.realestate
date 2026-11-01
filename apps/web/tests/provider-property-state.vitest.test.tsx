@@ -1,6 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import { propertyDataSchema, type PropertyData } from '@sadat-real-estate/contracts';
 import { describe, expect, it } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../src/features/testing/msw/server.ts';
+import { App } from '../src/features/frontend_foundation/app.tsx';
 import { getProviderPropertyCopy } from '../src/features/provider_property/copy.ts';
 import { getProviderPropertyStateCopy } from '../src/features/provider_property/state-copy.ts';
 import { ProviderPropertyCompletionWizard, ProviderPropertyStatePage, type ProviderPropertyAuthClient } from '../src/features/provider_property/index.ts';
@@ -38,6 +41,14 @@ const authClient: ProviderPropertyAuthClient = {
 };
 
 describe('provider property submission and state screens', () => {
+  it.each(['ar', 'en'] as const)('opens a published property from the bare dashboard detail URL in %s', async locale => {
+    server.use(http.get(`*/api/v1/provider/properties/${propertyId}`, () => HttpResponse.json({ data: property({ status: 'published' }), meta: { requestId: 'bare-property-details' } })));
+    renderWithLocale(<App url={`/provider/properties/${propertyId}?lang=${locale}`} locale={locale} session={session} />, { locale });
+    const copy = getProviderPropertyStateCopy(locale);
+    expect(await screen.findByRole('heading', { name: copy.statuses.published.title, level: 1 })).toBeVisible();
+    expect(screen.getByRole('link', { name: copy.actions.viewPublic })).toHaveAttribute('href', `/properties/provider-property?lang=${locale}`);
+    expect(document.querySelector('[data-screen-id="PRV-14"]')).toBeInTheDocument();
+  });
   it.each([
     ['submitted', 'pending_review', 'PRV-12'],
     ['rejected', 'rejected', 'PRV-13'],

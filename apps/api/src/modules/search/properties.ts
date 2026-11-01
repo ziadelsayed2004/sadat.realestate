@@ -186,7 +186,8 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const propertyTypes = typeRows.flatMap((row) => {
         const rowId = id(row._id);
         if (!rowId || typeof row.slug !== 'string' || row.name === undefined || typeof row.order !== 'number') return [];
-        const parsed = publicHomepageCategorySchema.safeParse({ id: rowId, slug: row.slug, name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), propertyCount: countById.get(rowId) ?? 0, order: row.order });
+        const categoryId = id(row.categoryId);
+        const parsed = publicHomepageCategorySchema.safeParse({ id: rowId, ...(categoryId ? { categoryId } : {}), slug: row.slug, name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), propertyCount: countById.get(rowId) ?? 0, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
       const countByCategoryId = new Map<string, number>();

@@ -56,6 +56,21 @@ test('returns a safe empty page when no public rows exist', async () => {
   assert.deepEqual(await service.list({}), { items: [], categories: [{ id: other, slug: 'residential', name: localized, propertyCount: 0, order: 0 }], propertyTypes: [{ id: other, slug: 'apartments', name: localized, propertyCount: 0, order: 0 }], page: 1, limit: 20, total: 0 });
 });
 
+test('public type catalog retains the immutable parent category without requiring any published properties', async () => {
+  const categoryId = '1'.repeat(24), typeId = '2'.repeat(24);
+  const connection = { collection(name: string) { return {
+    find() { return { sort() { return this; }, skip() { return this; }, limit() { return this; }, async toArray() { return name === 'property_taxonomy' ? [
+      { _id: categoryId, kind: 'category', slug: 'residential', name: { en: 'Residential' }, order: 0, active: true },
+      { _id: typeId, kind: 'type', categoryId, slug: 'apartment', name: { en: 'Apartment' }, order: 0, active: true }
+    ] : []; } }; },
+    aggregate() { return { async toArray() { return []; } }; },
+    async countDocuments() { return 0; }
+  }; } } as unknown as Connection;
+  const result = await createMongoosePublicPropertySearchRepository(connection).list(publicPropertySearchQuerySchema.parse({}));
+  assert.equal(result.propertyTypes[0]?.categoryId, categoryId);
+  assert.equal(result.categories[0]?.id, categoryId);
+});
+
 test('unit and installment filters constrain both rows and counts without accepting boolean-like operators', async () => {
   for (const input of ['true', 'false', true, false]) {
     const expected = input === 'true' || input === true;

@@ -45,6 +45,11 @@ function success(data: unknown, requestId: string): Response {
 }
 
 describe('Provider property wizard', () => {
+  it('explains category selection on the location step and links to the exact property details step', async () => {
+    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} step="location" propertyId={propertyId} initialData={property()} loadLocations={async () => []} />, { locale: 'en' });
+    expect(screen.getByRole('link', { name: 'Choose property category and type' })).toHaveAttribute('href', `/provider/properties/${propertyId}/details?lang=en`);
+    await screen.findByText(getProviderPropertyCopy('en').wizard.locationCatalogEmptyTitle);
+  });
   it.each(['ar', 'en'] as const)('recovers from an unlinked unit using the standalone action in %s', async locale => {
     const copy = getProviderPropertyCopy(locale);
     const create = vi.fn(async () => property());
